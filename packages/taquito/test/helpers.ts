@@ -218,7 +218,7 @@ export class RegisterGlobalConstantOperationBuilder {
   }
 }
 
-export class RollupOriginationOperationBuilder {
+export class TxRollupOriginationOperationBuilder {
   private result: OperationContentsAndResultTxRollupOrigination['metadata']['operation_result'] =
     defaultResult;
   private data: Omit<OperationContentsAndResultTxRollupOrigination, 'metadata'>;

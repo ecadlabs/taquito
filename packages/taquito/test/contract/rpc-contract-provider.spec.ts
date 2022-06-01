@@ -1376,8 +1376,8 @@ describe('RpcContractProvider test', () => {
     });
   });
 
-  describe('originateRollup', () => {
-    it('should produce a reveal and originateRollup operation', async (done) => {
+  describe('originateTxRollup', () => {
+    it('should produce a reveal and originateTxRollup operation', async (done) => {
       const result = await rpcContractProvider.originateTxRollup({
         storageLimit: 6000,
         gasLimit: 5000,

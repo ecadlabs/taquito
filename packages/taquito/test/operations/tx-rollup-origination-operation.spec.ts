@@ -1,10 +1,10 @@
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { defaultConfigConfirmation } from '../../src/context';
-import { RevealOperationBuilder, RollupOriginationOperationBuilder } from '../helpers';
+import { RevealOperationBuilder, TxRollupOriginationOperationBuilder } from '../helpers';
 import { TxRollupOriginationOperation } from '../../src/operations/rollup-origination-operation';
 
-describe('RollupOriginationOperation', () => {
+describe('TxRollupOriginationOperation', () => {
   let fakeContext: any;
   const fakeForgedBytes = {} as ForgedBytes;
 
@@ -139,7 +139,7 @@ describe('RollupOriginationOperation', () => {
   });
 
   it('should return the error if there is one', () => {
-    const txBuilder = new RollupOriginationOperationBuilder();
+    const txBuilder = new TxRollupOriginationOperationBuilder();
 
     const op = new TxRollupOriginationOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
@@ -176,7 +176,7 @@ describe('RollupOriginationOperation', () => {
   });
 
   it('status should contains status for RegisterGlobalConstant operation only', () => {
-    const txBuilder = new RollupOriginationOperationBuilder();
+    const txBuilder = new TxRollupOriginationOperationBuilder();
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new TxRollupOriginationOperation(
@@ -195,7 +195,7 @@ describe('RollupOriginationOperation', () => {
   });
 
   it('status should contains status for RegisterGlobalConstant operation only', () => {
-    const txBuilder = new RollupOriginationOperationBuilder();
+    const txBuilder = new TxRollupOriginationOperationBuilder();
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new TxRollupOriginationOperation(
@@ -214,7 +214,7 @@ describe('RollupOriginationOperation', () => {
   });
 
   it('revealStatus should be unknown when there is no reveal operation', () => {
-    const txBuilder = new RollupOriginationOperationBuilder();
+    const txBuilder = new TxRollupOriginationOperationBuilder();
 
     const op = new TxRollupOriginationOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',

@@ -15,8 +15,8 @@ import {
   registerGlobalConstantNoReveal,
   registerGlobalConstantWithReveal,
   registerGlobalConstantWithError,
-  originateRollupNoReveal,
-  originateRollupWithReveal,
+  originateTxRollupNoReveal,
+  originateTxRollupWithReveal,
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 
@@ -745,7 +745,7 @@ describe('RPCEstimateProvider test signer', () => {
 
     it('should produce a batch operation containing 2 originateRollup, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue({
-        contents: [originateRollupNoReveal.contents[0], originateRollupNoReveal.contents[0]],
+        contents: [originateTxRollupNoReveal.contents[0], originateTxRollupNoReveal.contents[0]],
       });
       const estimate = await estimateProvider.batch([
         { kind: OpKind.TX_ROLLUP_ORIGINATION },
@@ -918,7 +918,7 @@ describe('RPCEstimateProvider test signer', () => {
       mockForger.forge.mockResolvedValue(new Array(64).fill('aa').join(''));
     });
     it('should return the correct estimate for originateRollup operation', async (done) => {
-      mockRpcClient.runOperation.mockResolvedValue(originateRollupNoReveal);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
       const estimate = await estimateProvider.originateTxRollup();
       expect(estimate).toMatchObject({
         gasLimit: 1521,
@@ -930,7 +930,7 @@ describe('RPCEstimateProvider test signer', () => {
 
     it('should produce a reveal and a originateRollup operation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
-      mockRpcClient.runOperation.mockResolvedValue(originateRollupWithReveal);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupWithReveal);
       const estimate = await estimateProvider.originateTxRollup();
       expect(estimate).toMatchObject({
         gasLimit: 1521,
@@ -941,7 +941,7 @@ describe('RPCEstimateProvider test signer', () => {
     });
 
     it('should use the storage limit the user specified', async (done) => {
-      mockRpcClient.runOperation.mockResolvedValue(originateRollupNoReveal);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
       await estimateProvider.originateTxRollup({
         storageLimit: 200,
@@ -963,7 +963,7 @@ describe('RPCEstimateProvider test signer', () => {
     });
 
     it('should use the gas limit the user specified', async (done) => {
-      mockRpcClient.runOperation.mockResolvedValue(originateRollupNoReveal);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.originateTxRollup({
         gasLimit: 200,
@@ -985,7 +985,7 @@ describe('RPCEstimateProvider test signer', () => {
     });
 
     it('should use the fees the user specified', async (done) => {
-      mockRpcClient.runOperation.mockResolvedValue(originateRollupNoReveal);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
       await estimateProvider.originateTxRollup({
         fee: 10000,
@@ -1281,7 +1281,7 @@ describe('RPCEstimateProvider test wallet', () => {
             },
           },
           registerGlobalConstantNoReveal.contents[0],
-          originateRollupNoReveal.contents[0],
+          originateTxRollupNoReveal.contents[0],
         ],
       });
       const estimate = await estimateProvider.batch([
@@ -1390,7 +1390,7 @@ describe('RPCEstimateProvider test wallet', () => {
       });
       // Simulate real op size
       mockForger.forge.mockResolvedValue(new Array(64).fill('aa').join(''));
-      mockRpcClient.runOperation.mockResolvedValue(originateRollupNoReveal);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
       const estimate = await estimateProvider.originateTxRollup();
       expect(estimate).toMatchObject({
         gasLimit: 1521,
@@ -1402,7 +1402,7 @@ describe('RPCEstimateProvider test wallet', () => {
 
     it('should throw an error if account is unrevealed', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
-      mockRpcClient.runOperation.mockResolvedValue(originateRollupWithReveal);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupWithReveal);
       try {
         await estimateProvider.originateTxRollup();
       } catch (e) {

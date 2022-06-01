@@ -1280,7 +1280,7 @@ export const registerGlobalConstantWithError = {
     'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
 };
 
-export const originateRollupNoReveal = {
+export const originateTxRollupNoReveal = {
   contents: [
     {
       kind: 'tx_rollup_origination',
@@ -1332,7 +1332,7 @@ export const originateRollupNoReveal = {
     'sigSX6zMYe1S9SjbJmRvqtvsETEYa9pSH9Y1ShpcUr1PwKr1hBxw2pKFUFZ1yuDDcTMB6GkuxuoPvp4pHrMYuC14Q8xyt4Tz',
 };
 
-export const originateRollupWithReveal = {
+export const originateTxRollupWithReveal = {
   contents: [
     {
       kind: 'reveal',
