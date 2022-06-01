@@ -1,0 +1,35 @@
+name: Integration Tests Tezedge
+
+on:
+  pull_request:
+  push:
+    # TODO: target only master before merging
+    branches:
+      - '*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  tezedge-integration-tests-ithacanet:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node }}
+    - run: npm ci
+    - run: npm run lerna -- bootstrap
+    - run: npm run build
+    - name: Tailscale
+      uses: tailscale/github-action@v1
+      with:
+        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+        version: 1.22.2
+    - run: cd integration-tests && npm run test:ithacanet -- --maxWorkers=8
+      env:
+        TEZOS_RPC_ITHACANET: http://ecad-ithacanet-tezedge.i.tez.ie:8732
