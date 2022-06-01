@@ -58,8 +58,8 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const contract = await op.contract();
-      const TOCHANGE_why_is_this_symbol = await contract.storage()
-      expect(JSON.stringify(TOCHANGE_why_is_this_symbol)).toEqual(JSON.stringify(UnitValue))
+      const symbolReturn = await contract.storage()
+      expect(JSON.stringify(symbolReturn)).toEqual(JSON.stringify(UnitValue))
       const methodCall = await contract.methods.default('txr1di1E5BgY6QSPx61eE62P7KW93ckGwH2e7', 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
       await methodCall.confirmation();
 
@@ -86,6 +86,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       const methodCall = await contract.methods.default(pkh).send();
       await methodCall.confirmation();
       expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      throw {...contract}
       done();
     })
   })

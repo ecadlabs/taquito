@@ -105,8 +105,7 @@ export function b58decode(payload: string) {
  * @param value
  * @returns string of bytes
  */
-// b58decodeRollup or b58decodePrefixless
-export function b58decodeRollup (payload: string) {
+export function b58decodeL2Address (payload: string) {
   const buf: Buffer = bs58check.decode(payload);
 
   // tz4 address currently
@@ -138,7 +137,7 @@ export function encodePubKey(value: string) {
  * @param value Address to base58 encode (tz4) hex dec
  * @returns return address
  */
-export function encodePubKeyRollup(value: string) {
+export function encodePubKeyL2Address(value: string) {
   return b58cencode(value, prefix.tz4)
 }
 /**

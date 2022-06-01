@@ -13,7 +13,8 @@ export enum Prefix {
   EDPK = 'edpk',
   SPPK = 'sppk',
   P2PK = 'p2pk',
-  BLPK = 'blpk',
+  // would like to be checked. all ive have seen have uppercase BL and theres always a BLpk1... but 1 isnt part of the prefix
+  BLPK = 'BLpk',
 
   EDESK = 'edesk',
   SPESK = 'spesk',
@@ -115,6 +116,9 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.EDPK]: 32,
   [Prefix.SPPK]: 33,
   [Prefix.P2PK]: 33,
+  //working with value in comment for base58.ml line 445 but not consistent with the three above
+  [Prefix.BLPK]: 48,
+
   [Prefix.EDSIG]: 64,
   [Prefix.SPSIG]: 64,
   [Prefix.P2SIG]: 64,
