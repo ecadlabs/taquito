@@ -1,4 +1,4 @@
-name: Integration Tests Tezedge
+name: Tezedge Integration Tests
 
 on:
   pull_request:
