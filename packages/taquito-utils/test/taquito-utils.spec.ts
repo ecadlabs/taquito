@@ -1,4 +1,4 @@
-import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash, getPkhfromPk, encodeKeyHash, encodeKey, encodePubKey, b58decodeL2Address, encodePubKeyL2Address } from '../src/taquito-utils';
+import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash, getPkhfromPk, encodeKeyHash, encodeKey, encodePubKey, b58decodeL2Address, encodeL2Address } from '../src/taquito-utils';
 
 describe('Encode expr', () => {
   it('Should encode expression properly', () => {
@@ -182,6 +182,6 @@ describe('decode l2_address', () => {
 })
 describe('encode l2_address', () => {
   it('should encode hex to address', () => {
-    expect(encodePubKeyL2Address('af2dc3c40667abc0e89c0ef40171d22aed08d5eb')).toEqual('tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8')
+    expect(encodeL2Address('af2dc3c40667abc0e89c0ef40171d22aed08d5eb')).toEqual('tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8')
   })
 })

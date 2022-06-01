@@ -101,7 +101,7 @@ export function b58decode(payload: string) {
 
 /**
  *
- * @description b58 decode a string without predfined prefix
+ * @description b58 decode a string without predefined prefix
  * @param value
  * @returns string of bytes
  */
@@ -137,7 +137,7 @@ export function encodePubKey(value: string) {
  * @param value Address to base58 encode (tz4) hex dec
  * @returns return address
  */
-export function encodePubKeyL2Address(value: string) {
+export function encodeL2Address(value: string) {
   return b58cencode(value, prefix.tz4)
 }
 /**
