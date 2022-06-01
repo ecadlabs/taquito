@@ -86,7 +86,6 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       const methodCall = await contract.methods.default(pkh).send();
       await methodCall.confirmation();
       expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-      throw {...contract}
       done();
     })
   })
