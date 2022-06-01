@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { OpKind, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
-  const jakartanetAndMondaynet = (protocol === Protocols.PtJakart2) || (protocol === Protocols.ProtoALpha) ? test : test.skip;
+  const jakartanetAndMondaynet = (protocol === Protocols.PtJakart2) || (protocol === Protocols.ProtoALpha) ? it : it.skip;
   const Tezos = lib;
   describe(`Test tx rollup origination using: ${rpc}`, () => {
 
