@@ -116,7 +116,7 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.SPPK]: 33,
   [Prefix.P2PK]: 33,
   //working with value in comment for base58.ml line 445 but not consistent with the three above
-  [Prefix.BLPK]: 76,
+  [Prefix.BLPK]: 48,
 
   [Prefix.EDSIG]: 64,
   [Prefix.SPSIG]: 64,
