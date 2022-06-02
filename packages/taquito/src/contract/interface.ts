@@ -6,7 +6,7 @@ import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { RegisterGlobalConstantOperation } from '../operations/register-global-constant-operation';
 import { RevealOperation } from '../operations/reveal-operation';
-import { TxRollupOriginationOperation } from '../operations/rollup-origination-operation';
+import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,

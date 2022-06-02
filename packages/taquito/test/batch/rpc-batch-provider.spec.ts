@@ -224,8 +224,8 @@ describe('OperationBatch test', () => {
     });
   });
 
-  describe('withRollupOrigination', () => {
-    it('should produce a batch operation which contains an originateRollup operation', async (done) => {
+  describe('withTxRollupOrigination', () => {
+    it('should produce a batch operation which contains an originateTxRollup operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
 
@@ -253,7 +253,7 @@ describe('OperationBatch test', () => {
       done();
     });
 
-    it('should produce a batch operation which contains an originateRollup operation where fee, gas limit and storage limit are specified by the user', async (done) => {
+    it('should produce a batch operation which contains an originateTxRollup operation where fee, gas limit and storage limit are specified by the user', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
 
@@ -288,7 +288,7 @@ describe('OperationBatch test', () => {
       done();
     });
 
-    it('should produce a batch operation which contains a reveal and a originateRollup operation', async (done) => {
+    it('should produce a batch operation which contains a reveal and a originateTxRollup operation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const estimateReveal = new Estimate(1000000, 0, 64, 250);
       const estimate = new Estimate(1230000, 93, 142, 250);
@@ -447,8 +447,8 @@ describe('OperationBatch test', () => {
     });
   });
 
-  describe('with originateRollup operation', () => {
-    it('should produce a batch operation which contains an originateRollup operation', async (done) => {
+  describe('with originateTxRollup operation', () => {
+    it('should produce a batch operation which contains an originateTxRollup operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
 
@@ -482,7 +482,7 @@ describe('OperationBatch test', () => {
       done();
     });
 
-    it('should produce a batch operation which contains an originateRollup operation where fee, gas limit and storage limit are specified by the user', async (done) => {
+    it('should produce a batch operation which contains an originateTxRollup operation where fee, gas limit and storage limit are specified by the user', async (done) => {
       const opToBatch: ParamsWithKind[] = [
         {
           kind: OpKind.TX_ROLLUP_ORIGINATION,
@@ -516,7 +516,7 @@ describe('OperationBatch test', () => {
       done();
     });
 
-    it('should produce a batch operation which contains a reveal and a originateRollup operation', async (done) => {
+    it('should produce a batch operation which contains a reveal and a originateTxRollup operation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const estimateReveal = new Estimate(1000000, 0, 64, 250);
       const estimate = new Estimate(1230000, 93, 142, 250);

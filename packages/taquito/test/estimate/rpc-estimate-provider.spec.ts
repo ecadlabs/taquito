@@ -743,7 +743,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    it('should produce a batch operation containing 2 originateRollup, no reveal', async (done) => {
+    it('should produce a batch operation containing 2 originateTxRollup, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [originateTxRollupNoReveal.contents[0], originateTxRollupNoReveal.contents[0]],
       });
@@ -905,7 +905,7 @@ describe('RPCEstimateProvider test signer', () => {
     });
   });
 
-  describe('originateRollup', () => {
+  describe('originateTxRollup', () => {
     beforeEach(() => {
       mockRpcClient.getConstants.mockResolvedValue({
         hard_gas_limit_per_operation: new BigNumber(1040000),
@@ -917,7 +917,7 @@ describe('RPCEstimateProvider test signer', () => {
       // Simulate real op size
       mockForger.forge.mockResolvedValue(new Array(64).fill('aa').join(''));
     });
-    it('should return the correct estimate for originateRollup operation', async (done) => {
+    it('should return the correct estimate for originateTxRollup operation', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
       const estimate = await estimateProvider.originateTxRollup();
       expect(estimate).toMatchObject({
@@ -928,7 +928,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    it('should produce a reveal and a originateRollup operation', async (done) => {
+    it('should produce a reveal and a originateTxRollup operation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(originateTxRollupWithReveal);
       const estimate = await estimateProvider.originateTxRollup();
@@ -1379,8 +1379,8 @@ describe('RPCEstimateProvider test wallet', () => {
     });
   });
 
-  describe('originateRollup', () => {
-    it('should return the correct estimate for originateRollup operation', async (done) => {
+  describe('originateTxRollup', () => {
+    it('should return the correct estimate for originateTxRollup operation', async (done) => {
       mockRpcClient.getConstants.mockResolvedValue({
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_storage_limit_per_operation: new BigNumber(60000),

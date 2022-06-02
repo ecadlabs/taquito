@@ -44,7 +44,7 @@ import {
   ValidationResult,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { TxRollupOriginationOperation } from '../operations/rollup-origination-operation';
+import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 export class RpcContractProvider
   extends OperationEmitter
   implements ContractProvider, StorageProvider

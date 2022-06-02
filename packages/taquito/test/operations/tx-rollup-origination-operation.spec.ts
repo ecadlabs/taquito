@@ -2,7 +2,7 @@ import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { defaultConfigConfirmation } from '../../src/context';
 import { RevealOperationBuilder, TxRollupOriginationOperationBuilder } from '../helpers';
-import { TxRollupOriginationOperation } from '../../src/operations/rollup-origination-operation';
+import { TxRollupOriginationOperation } from '../../src/operations/tx-rollup-origination-operation';
 
 describe('TxRollupOriginationOperation', () => {
   let fakeContext: any;

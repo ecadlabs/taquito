@@ -64,7 +64,7 @@ const defaultRegisterGlobalConstantData = {
   value: { int: '0' },
 };
 
-const defaultOriginateRollupData = {
+const defaultOriginateTxRollupData = {
   kind: OpKind.TX_ROLLUP_ORIGINATION as OpKind.TX_ROLLUP_ORIGINATION,
   source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
   fee: '2991',
@@ -226,7 +226,7 @@ export class TxRollupOriginationOperationBuilder {
   constructor(
     private _data: Partial<Omit<OperationContentsAndResultTxRollupOrigination, 'metadata'>> = {}
   ) {
-    this.data = { ...defaultOriginateRollupData, ...this._data };
+    this.data = { ...defaultOriginateTxRollupData, ...this._data };
   }
 
   withResult(
