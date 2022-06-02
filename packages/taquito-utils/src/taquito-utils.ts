@@ -101,6 +101,19 @@ export function b58decode(payload: string) {
 
 /**
  *
+ * @description b58 decode a string without predefined prefix
+ * @param value
+ * @returns string of bytes
+ */
+export function b58decodeL2Address (payload: string) {
+  const buf: Buffer = bs58check.decode(payload);
+
+  // tz4 address currently
+  return buf2hex(buf.slice(3, 42))
+}
+
+/**
+ *
  * @description Base58 encode an address using predefined prefix
  *
  * @param value Address to base58 encode (tz1, tz2, tz3 or KT1)
@@ -118,7 +131,15 @@ export function encodePubKey(value: string) {
 
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
-
+/**
+ *
+ * @description Base58 encode an address without predefined prefix
+ * @param value Address to base58 encode (tz4) hex dec
+ * @returns return address
+ */
+export function encodeL2Address(value: string) {
+  return b58cencode(value, prefix.tz4)
+}
 /**
  *
  * @description Base58 encode a key according to its prefix
@@ -191,7 +212,6 @@ export const mergebuf = (b1: Uint8Array, b2: Uint8Array): Uint8Array => {
  * @param s michelson json
  */
 
-// TODO Zainen check use
 export const mic2arr = function me2(s: any): any {
   let ret: any = [];
   if (Object.prototype.hasOwnProperty.call(s, 'prim')) {
@@ -279,6 +299,9 @@ export const getPkhfromPk = (publicKey: string): string => {
       encodingPrefix = prefix[Prefix.TZ3];
       prefixLen = prefixLength[Prefix.TZ3];
       break;
+    case Prefix.BLPK:
+      encodingPrefix = prefix[Prefix.TZ4];
+      prefixLen = prefixLength[Prefix.TZ4]
   }
 
   const hashed = hash(decoded, prefixLen);

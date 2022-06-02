@@ -1,4 +1,4 @@
-import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash, getPkhfromPk, encodeKeyHash, encodeKey, encodePubKey } from '../src/taquito-utils';
+import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash, getPkhfromPk, encodeKeyHash, encodeKey, encodePubKey, b58decodeL2Address, encodeL2Address } from '../src/taquito-utils';
 
 describe('Encode expr', () => {
   it('Should encode expression properly', () => {
@@ -168,4 +168,20 @@ describe('Public Key conversions', () => {
       getPkhfromPk(publicKey)
     }).toThrowError();
   })
+  it('should be able to get phk from tz4 Public key', () => {
+    const publicKey = 'BLpk1w1wkESXN91Ry39ZMRAhaaHJsDaMZ8wBax5QsKPEKPWTjDBk6dgKMDkoejxxPWJf52cm2osh'
+    const result = getPkhfromPk(publicKey)
+
+    expect(result).toEqual('tz4WjcodNRoS9LpvDcjuVLHEvWBAqcCwQjJt')
+  })
 });
+describe('decode l2_address', () => {
+  it('should return hex of address', () => {
+    expect(b58decodeL2Address('tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8')).toEqual('af2dc3c40667abc0e89c0ef40171d22aed08d5eb')
+  })
+})
+describe('encode l2_address', () => {
+  it('should encode hex to address', () => {
+    expect(encodeL2Address('af2dc3c40667abc0e89c0ef40171d22aed08d5eb')).toEqual('tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8')
+  })
+})
