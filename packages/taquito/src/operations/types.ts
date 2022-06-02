@@ -16,7 +16,8 @@ export type ParamsWithKind =
   | withKind<TransferParams, OpKind.TRANSACTION>
   | withKind<ActivationParams, OpKind.ACTIVATION>
   | withKind<RegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>
-  | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>;
+  | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>
+  | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
 
@@ -50,14 +51,16 @@ export type RPCOpWithFee =
   | RPCDelegateOperation
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
-  | RPCTxRollupOriginationOperation;
+  | RPCTxRollupOriginationOperation
+  | RPCTxRollupBatchOperation;
 export type RPCOpWithSource =
   | RPCTransferOperation
   | RPCOriginationOperation
   | RPCDelegateOperation
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
-  | RPCTxRollupOriginationOperation;
+  | RPCTxRollupOriginationOperation
+  | RPCTxRollupBatchOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
@@ -70,6 +73,7 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'reveal',
       'register_global_constant',
       'tx_rollup_origination',
+      'tx_rollup_submit_batch',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -84,6 +88,7 @@ export const isOpRequireReveal = <T extends { kind: OpKind }>(
       'origination',
       'register_global_constant',
       'tx_rollup_origination',
+      'tx_rollup_submit_batch',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -327,6 +332,31 @@ export interface TxRollupOriginateParams {
   storageLimit?: number;
 }
 
+/**
+ * @description RPC tx rollup batch operation
+ */
+export interface RPCTxRollupBatchOperation {
+  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  source: string;
+  rollup: string;
+  content: string;
+}
+
+/**
+ * @description Parameters for the `txRollupSubmitBatch` method
+ */
+export interface TxRollupBatchParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  rollup: string;
+  content: string;
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -334,7 +364,8 @@ export type RPCOperation =
   | RPCRevealOperation
   | RPCActivateOperation
   | RPCRegisterGlobalConstantOperation
-  | RPCTxRollupOriginationOperation;
+  | RPCTxRollupOriginationOperation
+  | RPCTxRollupBatchOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

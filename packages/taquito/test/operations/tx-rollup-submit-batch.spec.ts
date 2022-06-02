@@ -1,56 +1,44 @@
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { defaultConfigConfirmation } from '../../src/context';
-import { RevealOperationBuilder, TxRollupOriginationOperationBuilder } from '../helpers';
-import { TxRollupOriginationOperation } from '../../src/operations/tx-rollup-origination-operation';
+import { RevealOperationBuilder, TxRollupSubmitBatchOperationBuilder } from '../helpers';
+import { TxRollupBatchOperation } from '../../src/operations/tx-rollup-batch-operation';
 
-describe('TxRollupOriginationOperation', () => {
+describe('TxRollupBatchOperation', () => {
   let fakeContext: any;
   const fakeForgedBytes = {} as ForgedBytes;
 
   const successfulResult = [
     {
-      kind: 'tx_rollup_origination',
-      source: 'tz2Np59GwL7s4NapRiPmU48Nhz65q1kxVmks',
-      fee: '417',
-      counter: '236200',
-      gas_limit: '1521',
-      storage_limit: '4000',
-      tx_rollup_origination: {},
+      kind: 'tx_rollup_submit_batch',
+      source: 'tz2MRqRjuMz7i7GjFcwTGE3HF3cbh9sQavXX',
+      fee: '580',
+      counter: '249650',
+      gas_limit: '2869',
+      storage_limit: '0',
+      rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+      content: '626c6f62',
       metadata: {
         balance_updates: [
           {
             kind: 'contract',
-            contract: 'tz2Np59GwL7s4NapRiPmU48Nhz65q1kxVmks',
-            change: '-417',
+            contract: 'tz2MRqRjuMz7i7GjFcwTGE3HF3cbh9sQavXX',
+            change: '-580',
             origin: 'block',
           },
           {
             kind: 'accumulator',
             category: 'block fees',
-            change: '417',
+            change: '580',
             origin: 'block',
           },
         ],
         operation_result: {
           status: 'applied',
-          balance_updates: [
-            {
-              kind: 'contract',
-              contract: 'tz2Np59GwL7s4NapRiPmU48Nhz65q1kxVmks',
-              change: '-1000000',
-              origin: 'block',
-            },
-            {
-              kind: 'burned',
-              category: 'storage fees',
-              change: '1000000',
-              origin: 'block',
-            },
-          ],
-          consumed_gas: '1421',
-          consumed_milligas: '1420108',
-          originated_rollup: 'txr1WAEQXaXsM1n4R77G5BDfr8pwiFS5SEbBE',
+          balance_updates: [],
+          consumed_gas: '2769',
+          consumed_milligas: '2768514',
+          paid_storage_size_diff: '0',
         },
       },
     },
@@ -71,40 +59,21 @@ describe('TxRollupOriginationOperation', () => {
       },
     });
   });
-  it('should contains the address of the newly created rollup given a successful result', () => {
-    const op = new TxRollupOriginationOperation(
+
+  it('should return the batch content', () => {
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
-      {} as any,
+      { content: '626c6f62' } as any,
       '',
       fakeForgedBytes,
       successfulResult,
       fakeContext
     );
-    expect(op.originatedRollup).toEqual('txr1WAEQXaXsM1n4R77G5BDfr8pwiFS5SEbBE');
-  });
-
-  it('originatedRollup is undefined given an wrong result', () => {
-    const wrongResults: any[] = [
-      {},
-      [{ kind: 'tx_rollup_origination' }],
-      [{ kind: 'tx_rollup_origination', metadata: {} }],
-    ];
-
-    wrongResults.forEach((result) => {
-      const op = new TxRollupOriginationOperation(
-        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
-        {} as any,
-        '',
-        fakeForgedBytes,
-        result,
-        fakeContext
-      );
-      expect(op.originatedRollup).toBeUndefined();
-    });
+    expect(op.content).toEqual('626c6f62');
   });
 
   it('should return the fee', () => {
-    const op = new TxRollupOriginationOperation(
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       { fee: 450 } as any,
       '',
@@ -116,7 +85,7 @@ describe('TxRollupOriginationOperation', () => {
   });
 
   it('should return the gasLimit', () => {
-    const op = new TxRollupOriginationOperation(
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       { gas_limit: 450 } as any,
       '',
@@ -127,7 +96,7 @@ describe('TxRollupOriginationOperation', () => {
     expect(op.gasLimit).toEqual(450);
   });
   it('should return the storageLimit', () => {
-    const op = new TxRollupOriginationOperation(
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       { storage_limit: 450 } as any,
       '',
@@ -139,9 +108,9 @@ describe('TxRollupOriginationOperation', () => {
   });
 
   it('should return the error if there is one', () => {
-    const txBuilder = new TxRollupOriginationOperationBuilder();
+    const txBuilder = new TxRollupSubmitBatchOperationBuilder();
 
-    const op = new TxRollupOriginationOperation(
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
@@ -164,7 +133,7 @@ describe('TxRollupOriginationOperation', () => {
   });
 
   it('error should be undefined when no error', () => {
-    const op = new TxRollupOriginationOperation(
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
@@ -176,10 +145,10 @@ describe('TxRollupOriginationOperation', () => {
   });
 
   it('status should contains status for RegisterGlobalConstant operation only', () => {
-    const txBuilder = new TxRollupOriginationOperationBuilder();
+    const txBuilder = new TxRollupSubmitBatchOperationBuilder();
     const revealBuilder = new RevealOperationBuilder();
 
-    const op = new TxRollupOriginationOperation(
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
@@ -195,10 +164,10 @@ describe('TxRollupOriginationOperation', () => {
   });
 
   it('status should contains status for RegisterGlobalConstant operation only', () => {
-    const txBuilder = new TxRollupOriginationOperationBuilder();
+    const txBuilder = new TxRollupSubmitBatchOperationBuilder();
     const revealBuilder = new RevealOperationBuilder();
 
-    const op = new TxRollupOriginationOperation(
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
@@ -214,9 +183,9 @@ describe('TxRollupOriginationOperation', () => {
   });
 
   it('revealStatus should be unknown when there is no reveal operation', () => {
-    const txBuilder = new TxRollupOriginationOperationBuilder();
+    const txBuilder = new TxRollupSubmitBatchOperationBuilder();
 
-    const op = new TxRollupOriginationOperation(
+    const op = new TxRollupBatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',

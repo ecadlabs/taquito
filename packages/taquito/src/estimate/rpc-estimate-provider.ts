@@ -19,6 +19,7 @@ import {
   RevealParams,
   RegisterGlobalConstantParams,
   TxRollupOriginateParams,
+  TxRollupBatchParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -30,6 +31,7 @@ import {
   createTransferOperation,
   createRegisterGlobalConstantOperation,
   createTxRollupOriginationOperation,
+  createTxRollupBatchOperation,
 } from '../contract/prepare';
 import {
   validateAddress,
@@ -392,6 +394,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             })
           );
           break;
+        case OpKind.TX_ROLLUP_SUBMIT_BATCH:
+          operations.push(
+            await createTxRollupBatchOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
         default:
           throw new InvalidOperationKindError((params as any).kind);
       }
@@ -515,6 +525,36 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createTxRollupOriginationOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a tx rollup batch operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  async txRollupSubmitBatch(params: TxRollupBatchParams) {
+    const { fee, storageLimit, gasLimit, ...rest } = params;
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createTxRollupBatchOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });

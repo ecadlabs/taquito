@@ -46,8 +46,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(op.status).toBe('applied');
 
-      console.log(op.hash)
-
       done();
     });
 

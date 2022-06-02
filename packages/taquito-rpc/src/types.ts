@@ -1050,7 +1050,8 @@ export type InternalOperationResultKindEnum =
   | OpKind.DELEGATION
   | OpKind.REGISTER_GLOBAL_CONSTANT
   | OpKind.SET_DEPOSITS_LIMIT
-  | OpKind.TX_ROLLUP_ORIGINATION;
+  | OpKind.TX_ROLLUP_ORIGINATION
+  | OpKind.TX_ROLLUP_SUBMIT_BATCH;
 
 export type SuccessfulManagerOperationResultKindEnum =
   | OpKind.REVEAL

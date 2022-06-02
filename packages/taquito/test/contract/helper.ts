@@ -1413,3 +1413,113 @@ export const originateTxRollupWithReveal = {
   signature:
     'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG',
 };
+
+export const txRollupSubmitBatchNoReveal = {
+  contents: [
+    {
+      kind: 'tx_rollup_submit_batch',
+      source: 'tz1QWLc8oL7Bo7BMa6CKfFioeJ4XdmCFf2xZ',
+      fee: '580',
+      counter: '249650',
+      gas_limit: '2869',
+      storage_limit: '0',
+      rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+      content: '626c6f62',
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz2MRqRjuMz7i7GjFcwTGE3HF3cbh9sQavXX',
+            change: '-580',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '580',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          balance_updates: [],
+          consumed_gas: '2769',
+          consumed_milligas: '2768514',
+          paid_storage_size_diff: '0',
+        },
+      },
+    },
+  ],
+  signature:
+    'sigey8PfR2sGSVFM7Z6GUyaoNYsehzQDsM9dZysyQ9MMCeB885dXHKuJ7dNUp2pMysq3jwyUqwoDnNRLe5ge2w8ARDVRN5Eb',
+};
+
+export const txRollupSubmitBatchWithReveal = {
+  contents: [
+    {
+      kind: 'reveal',
+      source: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
+      fee: '374',
+      counter: '236199',
+      gas_limit: '1100',
+      storage_limit: '0',
+      public_key: 'sppk7cjFJ3JSeJEjimFTdDQq4HgJBjr5PCPj4U94CDGVfQeh3gEY19b',
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
+            change: '-374',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '374',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          consumed_gas: '1000',
+          consumed_milligas: '1000000',
+        },
+      },
+    },
+    {
+      kind: 'tx_rollup_submit_batch',
+      source: 'tz1QWLc8oL7Bo7BMa6CKfFioeJ4XdmCFf2xZ',
+      fee: '580',
+      counter: '249650',
+      gas_limit: '2869',
+      storage_limit: '0',
+      rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+      content: '626c6f62',
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz2MRqRjuMz7i7GjFcwTGE3HF3cbh9sQavXX',
+            change: '-580',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '580',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          balance_updates: [],
+          consumed_gas: '2769',
+          consumed_milligas: '2768514',
+          paid_storage_size_diff: '0',
+        },
+      },
+    },
+  ],
+  signature:
+    'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG',
+};
