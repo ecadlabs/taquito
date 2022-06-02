@@ -6,6 +6,7 @@ import {
   OperationContentsAndResultOrigination,
   OperationContentsAndResultDelegation,
   OperationContentsAndResultRegisterGlobalConstant,
+  OperationContentsAndResultTxRollupOrigination,
 } from '@taquito/rpc';
 
 const defaultTransferData = {
@@ -60,7 +61,17 @@ const defaultRegisterGlobalConstantData = {
   counter: '121619',
   gas_limit: '26260',
   storage_limit: '257',
-  value: {int: '0'}
+  value: { int: '0' },
+};
+
+const defaultOriginateTxRollupData = {
+  kind: OpKind.TX_ROLLUP_ORIGINATION as OpKind.TX_ROLLUP_ORIGINATION,
+  source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+  fee: '2991',
+  counter: '121619',
+  gas_limit: '26260',
+  storage_limit: '257',
+  tx_rollup_origination: {},
 };
 
 const defaultResult = {
@@ -69,7 +80,8 @@ const defaultResult = {
 };
 
 export class TransferOperationBuilder {
-  private result: OperationContentsAndResultTransaction['metadata']['operation_result'] = defaultResult;
+  private result: OperationContentsAndResultTransaction['metadata']['operation_result'] =
+    defaultResult;
   private data: Omit<OperationContentsAndResultTransaction, 'metadata'>;
 
   constructor(
@@ -97,7 +109,8 @@ export class TransferOperationBuilder {
 }
 
 export class DelegationOperationBuilder {
-  private result: OperationContentsAndResultDelegation['metadata']['operation_result'] = defaultResult;
+  private result: OperationContentsAndResultDelegation['metadata']['operation_result'] =
+    defaultResult;
   private data: Omit<OperationContentsAndResultDelegation, 'metadata'>;
 
   constructor(private _data: Partial<Omit<OperationContentsAndResultDelegation, 'metadata'>> = {}) {
@@ -122,7 +135,8 @@ export class DelegationOperationBuilder {
   }
 }
 export class OriginationOperationBuilder {
-  private result: OperationContentsAndResultOrigination['metadata']['operation_result'] = defaultResult;
+  private result: OperationContentsAndResultOrigination['metadata']['operation_result'] =
+    defaultResult;
   private data: Omit<OperationContentsAndResultOrigination, 'metadata'>;
 
   constructor(
@@ -174,7 +188,8 @@ export class RevealOperationBuilder {
 }
 
 export class RegisterGlobalConstantOperationBuilder {
-  private result: OperationContentsAndResultRegisterGlobalConstant['metadata']['operation_result'] = defaultResult;
+  private result: OperationContentsAndResultRegisterGlobalConstant['metadata']['operation_result'] =
+    defaultResult;
   private data: Omit<OperationContentsAndResultRegisterGlobalConstant, 'metadata'>;
 
   constructor(
@@ -184,13 +199,44 @@ export class RegisterGlobalConstantOperationBuilder {
   }
 
   withResult(
-    result: Partial<OperationContentsAndResultRegisterGlobalConstant['metadata']['operation_result']>
+    result: Partial<
+      OperationContentsAndResultRegisterGlobalConstant['metadata']['operation_result']
+    >
   ) {
     this.result = { ...defaultResult, ...result };
     return this;
   }
 
   build(): OperationContentsAndResultRegisterGlobalConstant {
+    return {
+      ...this.data,
+      metadata: {
+        balance_updates: [],
+        operation_result: this.result,
+      },
+    };
+  }
+}
+
+export class TxRollupOriginationOperationBuilder {
+  private result: OperationContentsAndResultTxRollupOrigination['metadata']['operation_result'] =
+    defaultResult;
+  private data: Omit<OperationContentsAndResultTxRollupOrigination, 'metadata'>;
+
+  constructor(
+    private _data: Partial<Omit<OperationContentsAndResultTxRollupOrigination, 'metadata'>> = {}
+  ) {
+    this.data = { ...defaultOriginateTxRollupData, ...this._data };
+  }
+
+  withResult(
+    result: Partial<OperationContentsAndResultTxRollupOrigination['metadata']['operation_result']>
+  ) {
+    this.result = { ...defaultResult, ...result };
+    return this;
+  }
+
+  build(): OperationContentsAndResultTxRollupOrigination {
     return {
       ...this.data,
       metadata: {
