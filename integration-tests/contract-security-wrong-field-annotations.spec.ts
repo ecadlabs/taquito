@@ -58,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    mondaynet('Verify annotation combinations on ithacanet', async () => {
+    mondaynet('Verify annotation combinations on mondaynet', async () => {
       const addition = await Tezos.contract.originate({
         code: securityWrongAnnotations,
         init: `0`,
@@ -98,14 +98,13 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
               .call({
                 entrypoint: 'addNoAnnot',
                 param: {
-                  0: `1`,
-                  1: `2`,
+                  valueA: `1`,
+                  valueB: `2`,
                 },
               })
               .send();
           })
           .then((op2) => {
-            console.log(`Awaiting for ${op2.hash} to be confirmed...`);
             return op2.confirmation().then(() => op2.hash);
           });
       } catch (error: any) {
@@ -124,14 +123,14 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
             .call({
               entrypoint: 'AddWrongAnnot',
               param: {
-                a: `1`,
-                b: `2`,
+                valueA: `1`,
+                valueB: `2`,
               },
             })
             .send();
         })
         .then((op3) => {
-          return op3.confirmation(3).then(() => op3.hash);
+          return op3.confirmation().then(() => op3.hash);
         });
       } catch (error: any) {
         expect(error.message).toContain('[valueA] Value is not a number: undefined');
@@ -235,8 +234,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
             .callWrongAnnot({
               entrypoint: 'AddNoAnnot',
               param: {
-                1: `1`,
-                2: `2`,
+                a: `1`,
+                b: `2`,
               },
             })
             .send();
