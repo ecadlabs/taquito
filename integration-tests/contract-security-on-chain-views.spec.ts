@@ -52,14 +52,14 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                         PUSH nat 1;
                       };
                   }`,
-          init: `0`
+                  init: 'Unit'
         });
 
         await opGetter.confirmation();
         expect(opGetter.hash).toBeDefined();
 
       } catch (error: any) {
-        expect(error.message).toContain('michelson_v1.invalid_expression_kind');
+        expect(error.message).toContain('michelson_v1.bad_stack');
       }
       done();
     });
