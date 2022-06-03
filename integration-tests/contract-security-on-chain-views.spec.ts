@@ -7,9 +7,9 @@ import { CONFIGS } from './config';
  * Naive - meaning: WE just try it without thinking whether this test makes sense in regards with the used underlying architecture. 
  * We think of the underlying architecture (type system, stack separation, etc.) as a black box.
  * 
- * TC-V-012: On-chain view - add instruction
- * TC-V-013: On-chain view - dig instruction
- * TC-V-014: On-chain view - dup instruction
+ * TC-V-002: On-chain view - add instruction
+ * TC-V-003: On-chain view - dig instruction
+ * TC-V-004: On-chain view - dup instruction
 **/
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
@@ -25,18 +25,33 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     mondaynet("Verify we can access the stack of the caller by using the instruction add.", async (done) => {
       try {
         const opGetter = await Tezos.contract.originate({
-          code: ` { parameter address;
-            storage nat;
-            code
-              {
-                UNPAIR;
-                UNIT;
-                VIEW "rogue" nat;
-                IF_NONE { FAIL } {};
-                ADD;
-                NIL operation;
-                PAIR;
-              };}`,
+          code: ` { parameter unit;
+                    storage unit;
+                    code
+                      {
+                        DROP;
+                        UNIT;
+                        NIL operation;
+                        PAIR;
+                      };
+                    view
+                      "rogue" unit nat
+                      {
+                        # We assume that the on-chain view stack is just on top of the caller stack.
+                    
+                        # DROP view input
+                        DROP;
+                    
+                        # On the caller stack the top value is a "nat". So, we try to access this by using instruction "add".
+                        PUSH nat 3;
+                        ADD;
+                        # we leave this addition result on stack.
+                    
+                        # Since, add consumes two stack elements, we have to push another nat (the result of the view) to stack in order 
+                        # to restore a correct stack.
+                        PUSH nat 1;
+                      };
+                  }`,
           init: `0`
         });
 
