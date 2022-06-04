@@ -59,10 +59,10 @@ function validatePrefixedValue(value: string, prefixes: Prefix[]) {
   return ValidationResult.VALID;
 }
 
-const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3,Prefix.TZ4];
-const contractPrefix = [Prefix.KT1,Prefix.TXR1];
+const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3, Prefix.TZ4];
+const contractPrefix = [Prefix.KT1, Prefix.TXR1];
 const signaturePrefix = [Prefix.EDSIG, Prefix.P2SIG, Prefix.SPSIG, Prefix.SIG];
-const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK];
+const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK, Prefix.BLPK];
 const operationPrefix = [Prefix.O];
 const protocolPrefix = [Prefix.P];
 const blockPrefix = [Prefix.B]

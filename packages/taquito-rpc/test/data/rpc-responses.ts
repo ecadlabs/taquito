@@ -4099,10 +4099,69 @@ export const blockJakartanetSample = {
               },
             },
           },
+          {
+            kind: 'tx_rollup_finalize_commitment',
+            source: 'tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY',
+            fee: '507',
+            counter: '182232',
+            gas_limit: '2602',
+            storage_limit: '0',
+            rollup: 'txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY',
+                  change: '-507',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '507',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                balance_updates: [],
+                consumed_gas: '2502',
+                consumed_milligas: '2501420',
+                level: 0,
+              },
+            },
+          },
         ],
         signature:
           'sigmpiJiuk1wbno2KAvxFufUkZ4JnrTuuxmVWmGVP3bPKNft8Nv8LZwkKAKtvUeBSiBEMxa5vAxcKc5FddwZvhjuZyydZeKD',
       },
     ],
   ],
+};
+
+export const txRollupState = {
+  last_removed_commitment_hashes: null,
+  finalized_commitments: {
+    next: 0,
+  },
+  unfinalized_commitments: {
+    next: 0,
+  },
+  uncommitted_inboxes: {
+    newest: 0,
+    oldest: 0,
+  },
+  commitment_newest_hash: null,
+  tezos_head_level: 63691,
+  burn_per_byte: '0',
+  allocated_storage: '4000',
+  occupied_storage: '40',
+  inbox_ema: 0,
+  commitments_watermark: null,
+};
+
+export const txRollupInbox = {
+  inbox_length: 1,
+  cumulated_size: 4,
+  merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
 };

@@ -78,13 +78,13 @@ export interface EstimationProvider {
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for a rollup origination operation
+   * @description Estimate gasLimit, storageLimit and fees for a tx rollup origination operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
    * @param Estimate
    */
-  originateTxRollup(params: TxRollupOriginateParams): Promise<Estimate>;
+  txRollupOriginate(params: TxRollupOriginateParams): Promise<Estimate>;
 
   /**
    *

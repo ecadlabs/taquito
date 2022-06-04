@@ -518,7 +518,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    *
    * @param TxRollupOriginateParams Originate tx rollup operation parameter
    */
-  async originateTxRollup(params?: TxRollupOriginateParams) {
+  async txRollupOriginate(params?: TxRollupOriginateParams) {
     params = params ? params : {};
     const { fee, storageLimit, gasLimit, ...rest } = params;
     const pkh = (await this.getKeys()).publicKeyHash;

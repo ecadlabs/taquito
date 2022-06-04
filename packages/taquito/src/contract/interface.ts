@@ -188,7 +188,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param TxRollupOriginateParams Originate rollup operation parameter
    */
-  originateTxRollup(params?: TxRollupOriginateParams): Promise<TxRollupOriginationOperation>;
+  txRollupOriginate(params?: TxRollupOriginateParams): Promise<TxRollupOriginationOperation>;
 
   /**
    *

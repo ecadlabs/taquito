@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done()
     })
     jakartanetAndMondaynet('should succeed to originate a rollup with auto-estimate of the fees', async (done) => {
-      const op = await Tezos.contract.originateTxRollup();
+      const op = await Tezos.contract.txRollupOriginate();
       await op.confirmation()
       expect(op.hash).toBeDefined();
       expect(op.originatedRollup).toBeDefined();
@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     });
 
     jakartanetAndMondaynet('should succeed to originate a rollup with defined fees', async (done) => {
-      const op = await Tezos.contract.originateTxRollup({
+      const op = await Tezos.contract.txRollupOriginate({
         storageLimit: 6000,
         gasLimit: 2000,
         fee: 500

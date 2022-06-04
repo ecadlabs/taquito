@@ -16,6 +16,7 @@ import {
   OperationContentsAndResultTxRollupOrigination,
   OperationContentsAndResultTxRollupSubmitBatch,
   OperationContentsAndResultTxRollupCommit,
+  OperationContentsAndResultTxRollupFinalizeCommitment,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -2547,6 +2548,43 @@ describe('RpcClient test', () => {
       expect(content.metadata.operation_result.consumed_milligas).toEqual('3737532');
       done();
     });
+
+    it('should access the properties of the operation type tx_rollup_finalize_commitment, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[3] as OperationContentsAndResultTxRollupFinalizeCommitment;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_FINALIZE_COMMITMENT);
+      expect(content.source).toEqual('tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY');
+      expect(content.fee).toEqual('507');
+      expect(content.counter).toEqual('182232');
+      expect(content.gas_limit).toEqual('2602');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-507');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('507');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('2502');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('2501420');
+      expect(content.metadata.operation_result.level).toEqual(0);
+      done();
+    });
   });
 
   describe('getBakingRights', () => {
@@ -3103,6 +3141,73 @@ describe('RpcClient test', () => {
         'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
       );
       expect(protocols.protocol).toEqual('PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx');
+
+      done();
+    });
+  });
+
+  describe('getTxRollupState', () => {
+    it('should query the correct url and return a rollup state response', async (done) => {
+      const mockResponse = {
+        last_removed_commitment_hashes: null,
+        finalized_commitments: {
+          next: 0,
+        },
+        unfinalized_commitments: {
+          next: 0,
+        },
+        uncommitted_inboxes: {
+          newest: 0,
+          oldest: 0,
+        },
+        commitment_newest_hash: null,
+        tezos_head_level: 63691,
+        burn_per_byte: '0',
+        allocated_storage: '4000',
+        occupied_storage: '40',
+        inbox_ema: 0,
+        commitments_watermark: null,
+      };
+
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockResponse));
+
+      const txRollupState = await client.getTxRollupState('txrID');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/state`,
+      });
+
+      expect(txRollupState).toBeDefined();
+      expect(txRollupState).toEqual(mockResponse);
+
+      done();
+    });
+  });
+
+  describe('getTxRollupInbox', () => {
+    it('should query the correct url and return a rollup inbox response', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          inbox_length: 1,
+          cumulated_size: 4,
+          merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
+        })
+      );
+
+      const txRollupInbox = await client.getTxRollupInbox('txrID', '0');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/inbox/0`,
+      });
+
+      expect(txRollupInbox).toBeDefined();
+      expect(txRollupInbox!.inbox_length).toEqual(1);
+      expect(txRollupInbox!.cumulated_size).toEqual(4);
+      expect(txRollupInbox!.merkle_root).toEqual(
+        'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
+      );
 
       done();
     });

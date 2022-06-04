@@ -323,7 +323,7 @@ export interface RPCTxRollupOriginationOperation {
 }
 
 /**
- * @description Parameters for the `originateTxRollup` method
+ * @description Parameters for the `txRollupOriginate` method
  */
 export interface TxRollupOriginateParams {
   source?: string;

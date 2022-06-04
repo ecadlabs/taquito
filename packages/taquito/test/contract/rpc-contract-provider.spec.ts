@@ -78,7 +78,7 @@ describe('RpcContractProvider test', () => {
     batch: jest.Mock<any, any>;
     reveal: jest.Mock<any, any>;
     registerGlobalConstant: jest.Mock<any, any>;
-    originateTxRollup: jest.Mock<any, any>;
+    txRollupOriginate: jest.Mock<any, any>;
     txRollupSubmitBatch: jest.Mock<any, any>;
   };
 
@@ -130,7 +130,7 @@ describe('RpcContractProvider test', () => {
       batch: jest.fn(),
       reveal: jest.fn(),
       registerGlobalConstant: jest.fn(),
-      originateTxRollup: jest.fn(),
+      txRollupOriginate: jest.fn(),
       txRollupSubmitBatch: jest.fn(),
     };
 
@@ -1378,9 +1378,9 @@ describe('RpcContractProvider test', () => {
     });
   });
 
-  describe('originateTxRollup', () => {
-    it('should produce a reveal and originateTxRollup operation', async (done) => {
-      const result = await rpcContractProvider.originateTxRollup({
+  describe('txRollupOriginate', () => {
+    it('should produce a reveal and txRollupOriginate operation', async (done) => {
+      const result = await rpcContractProvider.txRollupOriginate({
         storageLimit: 6000,
         gasLimit: 5000,
         fee: 700,
@@ -1411,8 +1411,8 @@ describe('RpcContractProvider test', () => {
 
     it('should estimate when no fee are specified', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.originateTxRollup.mockResolvedValue(estimate);
-      const result = await rpcContractProvider.originateTxRollup();
+      mockEstimate.txRollupOriginate.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.txRollupOriginate();
       expect(result.raw).toEqual({
         counter: 0,
         opOb: {

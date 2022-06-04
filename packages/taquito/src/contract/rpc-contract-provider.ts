@@ -456,11 +456,11 @@ export class RpcContractProvider
    *
    * @param TxRollupOriginateParams Originate rollup operation parameter
    */
-  async originateTxRollup(params?: TxRollupOriginateParams) {
+  async txRollupOriginate(params?: TxRollupOriginateParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(
       params ? params : {},
-      this.estimator.originateTxRollup.bind(this.estimator)
+      this.estimator.txRollupOriginate.bind(this.estimator)
     );
     const operation = await createTxRollupOriginationOperation({
       ...params,
