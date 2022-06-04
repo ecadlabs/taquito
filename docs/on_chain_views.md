@@ -225,8 +225,8 @@ Tezos.contract.at(contractTopLevelViews)
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-const contractTopLevelViews = 'KT1H7Bg7r7Aa9sci2hoJtmTdS7W64aq4vev8';
-const contractCallFib = 'KT1EcJTojUXgbMj2s7VowWTxs9ca4qSUqW4s';
+const contractTopLevelViews = 'KT1EcJTojUXgbMj2s7VowWTxs9ca4qSUqW4s'; 
+const contractCallFib = 'KT1H7Bg7r7Aa9sci2hoJtmTdS7W64aq4vev8';
 const fibPosition = 7;
 
 Tezos.wallet.at(contractTopLevelViews)
