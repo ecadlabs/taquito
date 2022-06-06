@@ -143,7 +143,6 @@ export function encodePubKey(value: string) {
   if (b58cencodeRollupAddress(value).startsWith('txr1')) {
     return b58cencodeRollupAddress(value)
   }
-  return b58cencode(value.substring(3), prefix.txr1)
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
 /**
