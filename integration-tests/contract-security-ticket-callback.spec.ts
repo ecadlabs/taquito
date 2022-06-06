@@ -6,7 +6,7 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    mondaynet("Verify ticket is not easily created by a callback", async (done) => {
+    mondaynet('Verify ticket is not easily created by a callback', async (done) => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter (or (address %init) (ticket %setToken string)) ;
@@ -32,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                        CONS ;
                        PAIR }
                      { DROP ; NIL operation ; PAIR } } }}`,
-          init: 'Unit'
+          init: 'Unit',
         });
 
         await opCaller.confirmation();
@@ -65,7 +65,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 SWAP;
                 PAIR;
               };}`,
-              init: 'Unit'
+          init: 'Unit',
         });
 
         await opGetter.confirmation();
@@ -74,16 +74,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         const opGetterContract = await opGetter.contract();
         expect(await opGetterContract.storage()).toBeTruthy();
 
-        await Tezos.contract
-          .at(opCallerContract.address)
-          .then((contract) => {
-            return contract.methods.init(opGetterContract.address).send();
-          })
-          .then((op) => {
-            return op.confirmation().then(() => op.hash);
-          }) 
+        const opSend = await opCallerContract.methods.init(opGetterContract.address).send();
+        await opSend.confirmation();
+        
       } catch (error: any) {
-        expect(error.message).toContain('{\"prim\":\"Unit\"}');
+        expect(error.message).toContain('{"prim":"Unit"}');
       }
       done();
     });

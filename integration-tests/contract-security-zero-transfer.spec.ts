@@ -16,6 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     });
 
     mondaynet('Verify that Transactions of 0ꜩ towards a contract without code are forbidden', async () => {
+      try{
       const op = await Tezos.contract.originate({
         code: `{ parameter address ;
                       storage unit ;
@@ -40,16 +41,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       const contract = await op.contract();
       expect(await contract.storage()).toBeTruthy();
 
-      try{
       const publicKeyHash = await Tezos.signer.publicKeyHash();
-      await Tezos.contract
-      .at(contract.address)
-      .then((contract) => {
-        return contract.methods.default(publicKeyHash).send();
-      })
-      .then((op) => {
-        return op.confirmation().then(() => op.hash);
-      }) 
+
+      const opSend = await contract.methods.default(publicKeyHash).send();
+      await opSend.confirmation();
+
     } catch (error: any) {
       expect(error.message).toContain('contract.empty_transaction');
     }

@@ -2,16 +2,16 @@ import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 /**
- * TC-002/003 This test case originates a contract with a "payout" entrypoint. When calling the payout entrypoint, a contract can transfer 
- * all available tez amounts except a "minLockedValue," which can be shared by a contract to a provided destination address. 
- * The test case tries to move the balance to an "attacker contract," which immediately calls the "payout" entrypoint again. 
- * Not updating the balance would make the Attacker glad.   The attacker should not be successful since the credit is instantly 
+ * TC-002/003 This test case originates a contract with a "payout" entrypoint. When calling the payout entrypoint, a contract can transfer
+ * all available tez amounts except a "minLockedValue," which can be shared by a contract to a provided destination address.
+ * The test case tries to move the balance to an "attacker contract," which immediately calls the "payout" entrypoint again.
+ * Not updating the balance would make the Attacker glad.   The attacker should not be successful since the credit is instantly
  * updated when executing the transfer transaction. Any reentrancy (after the transfer transaction operation) to the contract finds the updated balance.
-*/
+ */
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
   const address = 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys';
 
   describe(`Test contracts using: ${rpc}`, () => {
@@ -103,23 +103,15 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       const attackContract = await attackContractOp.contract();
       expect(await attackContract.storage()).toBeTruthy();
 
-      await Tezos.contract
-        .at(vestingContract.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .payout({
-              amount: 3000000,
-              destination: attackContract.address,
-            })
-            .send();
-        })
-        .then((op) => {
-          return op.confirmation().then(() => op.hash);
-        })
+      const opSend = await vestingContract.methodsObject
+        .payout({ amount: 3000000, destination: attackContract.address })
+        .send();
+      await opSend.confirmation();
 
-      /** If the reentry had succeeded the vesting contract would have had less than 5 remaining 
+      /** If the reentry had succeeded the vesting contract would have had less than 5 remaining
        * Since there are still 5 the reentry failed
-      */
+       */
+      
       Tezos.tz.getBalance(vestingContract.address).then((vbalance) => {
         let result = vbalance.toNumber();
         expect((result = 5000000));

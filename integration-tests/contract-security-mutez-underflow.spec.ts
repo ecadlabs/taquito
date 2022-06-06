@@ -5,11 +5,11 @@ import { CONFIGS } from './config';
  *  TC-004: Example of mutez underflow - showing that SUB_MUTEZ; ASSERT_SOME prevents underflow by catching and going to FAILWITH
  *  To see why the test fails with error message {\"prim\":\"Unit\"}, look at the Micheline form of the contract.
  *  If underflows are not prevented the contract is unusable. Any tokens locked in the contract will be irretrievable, etc.
-*/
+ */
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -18,6 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     });
 
     mondaynet('Verify mutez underflow example', async (done) => {
+      try {
         const op = await Tezos.contract.originate({
           code: `        { parameter unit ;
             storage mutez ;
@@ -28,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                    ASSERT_SOME ;
                    NIL operation ;
                    PAIR } }`,
-               init:    { int: '0' },
+          init: { int: '0' },
         });
 
         await op.confirmation();
@@ -36,19 +37,13 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const contract = await op.contract();
         expect(await contract.storage()).toBeTruthy();
+        
+        const opSend = await contract.methods.default(0).send();
+        await opSend.confirmation();
 
-        try{
-         await Tezos.contract
-          .at(contract.address)
-          .then((contract) => {
-            return contract.methods.default(0).send()
-          })
-          .then((op) => {
-            return op.confirmation().then(() => op.hash);
-          })
-        } catch (error: any) {
-          expect(error.message).toContain('{\"prim\":\"Unit\"}');
-        }
+      } catch (error: any) {
+        expect(error.message).toContain('{"prim":"Unit"}');
+      }
       done();
     });
   });

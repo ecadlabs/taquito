@@ -2,14 +2,14 @@ import { Protocols } from '@taquito/taquito';
 import { doesNotMatch } from 'assert';
 import { CONFIGS } from './config';
 
-/** 
- * TC-005: Example of mutez overflow. If overflows are not prevented the contract is unusable. 
+/**
+ * TC-005: Example of mutez overflow. If overflows are not prevented the contract is unusable.
  * Any tokens locked in the contract will be irretrievable, etc.
-*/
+ */
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -39,12 +39,10 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         const contract = await op.contract();
         expect(await contract.storage()).toBeTruthy();
 
-        await Tezos.wallet
-          .transfer({ to: contract.address, amount: 0 })
-          .send()
-          .then((op) => {
-            return op.confirmation().then(() => op.opHash);
-          });
+        const opContract = await op.contract();
+        const opSend = await opContract.methods.default(0).send();
+        await opSend.confirmation();
+        
       } catch (error: any) {
         expect(error.message).toContain('tez.multiplication_overflow');
       }
