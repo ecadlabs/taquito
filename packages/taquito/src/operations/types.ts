@@ -61,7 +61,7 @@ export type RPCOpWithSource =
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
-): op is withKind<T, InternalOperationResultKindEnum> => {
+): op is withKind<T, Exclude<OpKind, OpKind.ACTIVATION>> => {
   return (
     [
       'transaction',
