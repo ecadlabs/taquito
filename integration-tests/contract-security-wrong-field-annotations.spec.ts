@@ -70,43 +70,30 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       //Calls entrypoint: (pair %add (nat %valueA) (nat %valueB))
       //Calling Michelson code: CONTRACT %add (pair (nat %valueA) (nat %valueB)) ;
 
-      const op1 = await Tezos.contract
-        .at(contractAddition.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .call({
-              entrypoint: 'add',
-              param: {
-                valueA: `1`,
-                valueB: `2`,
-              },
-            })
-            .send();
-        })
-        .then((op1) => {
-          return op1.confirmation().then(() => op1.hash);
-        });
+      const opSend1 = await contractAddition.methodsObject
+      .call({
+        entrypoint: 'add',
+        param: {
+          valueA: `1`,
+          valueB: `2`,
+        },
+      }).send();
+      await opSend1.confirmation();
 
       //Testcase #2
       // Calls entrypoint: (pair %addNoAnnot nat nat))
       // Calling Michelson code: CONTRACT %addNoAnnot (pair (nat %valueA) (nat %valueB)) ;
       try {
-        const op2 = await Tezos.contract
-          .at(contractAddition.address)
-          .then((contract) => {
-            return contract.methodsObject
-              .call({
-                entrypoint: 'addNoAnnot',
-                param: {
-                  valueA: `1`,
-                  valueB: `2`,
-                },
-              })
-              .send();
-          })
-          .then((op2) => {
-            return op2.confirmation().then(() => op2.hash);
-          });
+          const opSend2 = await contractAddition.methodsObject
+          .call({
+            entrypoint: 'addNoAnnot',
+            param: {
+              valueA: `1`,
+              valueB: `2`,
+            },
+          }).send();
+          await opSend2.confirmation();
+
       } catch (error: any) {
         expect(error.message).toContain('[valueA] Value is not a number: undefined');
       }
@@ -116,22 +103,15 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       // Calling Michelson code: CONTRACT %addWrongAnnot (pair (nat %valueA) (nat %valueB)) ;
       
       try{
-      const op3 = await Tezos.contract
-        .at(contractAddition.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .call({
-              entrypoint: 'AddWrongAnnot',
-              param: {
-                valueA: `1`,
-                valueB: `2`,
-              },
-            })
-            .send();
-        })
-        .then((op3) => {
-          return op3.confirmation().then(() => op3.hash);
-        });
+      const opSend3 = await contractAddition.methodsObject
+      .call({
+        entrypoint: 'AddWrongAnnot',
+        param: {
+          valueA: `1`,
+          valueB: `2`,
+        },
+      }).send();
+      await opSend3.confirmation();
       } catch (error: any) {
         expect(error.message).toContain('[valueA] Value is not a number: undefined');
       }
@@ -140,109 +120,74 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       // Calls entrypoint: (pair %add (nat %valueA) (nat %valueB))
       // Calling Michelson code: CONTRACT %add (pair nat nat) ;
 
-      const op4 = await Tezos.contract
-        .at(contractAddition.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .callNoAnnot({
-              entrypoint: 'Add',
-              param: {
-                valueA: `1`,
-                valueB: `2`,
-                1: `1`,
-                2: `2`,
-              },
-            })
-            .send();
-        })
-        .then((op4) => {
-          return op4.confirmation().then(() => op4.hash);
-        });
+      const opSend4 = await contractAddition.methodsObject
+      .callNoAnnot({
+        entrypoint: 'Add',
+        param: {
+          valueA: `1`,
+          valueB: `2`,
+          1: `1`,
+          2: `2`,
+        },
+      }).send();
+      await opSend4.confirmation();
 
       //Testcase #5
       // Calls entrypoint: CONTRACT %addNoAnnot (pair nat nat) ;
       // Calling Michelson code: CONTRACT %addNoAnnot (pair (nat %valueA) (nat %valueB)) ;
 
-      const op5 = await Tezos.contract
-        .at(contractAddition.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .callNoAnnot({
-              entrypoint: 'AddNoAnnot',
-              param: {
-                1: `1`,
-                2: `2`,
-              },
-            })
-            .send();
-        })
-        .then((op5) => {
-          return op5.confirmation().then(() => op5.hash);
-        });
+      const opSend5 = await contractAddition.methodsObject
+      .callNoAnnot({
+        entrypoint: 'AddNoAnnot',
+        param: {
+          1: `1`,
+          2: `2`,
+        },
+      }).send();
+      await opSend5.confirmation();
 
       //Testcase #6
       // Calls entrypoint: CONTRACT %addWrongAnnot (pair nat nat) ;
       // Calling Michelson code: CONTRACT %addWrongAnnot (pair (nat %valueA) (nat %valueB)) ;
 
-      const op6 = await Tezos.contract
-        .at(contractAddition.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .callNoAnnot({
-              entrypoint: 'AddWrongAnnot',
-              param: {
-                1: `1`,
-                2: `2`,
-              },
-            })
-            .send();
-        })
-        .then((op6) => {
-          return op6.confirmation().then(() => op6.hash);
-        });
+      const opSend6 = await contractAddition.methodsObject
+      .callNoAnnot({
+        entrypoint: 'AddWrongAnnot',
+        param: {
+          1: `1`,
+          2: `2`,
+        },
+      }).send();
+      await opSend6.confirmation();
 
       //Testcase #7
       // Calls entrypoint: (pair %add (nat %valueA) (nat %valueB))
       // Calling Michelson code: CONTRACT %add (pair (nat %a) (nat %b)) ;
 
-       const op7 = await Tezos.contract
-         .at(contractAddition.address)
-         .then((contract) => {
-           return contract.methodsObject
-             .callWrongAnnot({
-               entrypoint: 'Add',
-               param: {
-                 a: `1`,
-                 b: `2`,
-               },
-             })
-             .send();
-         })
-         .then((op7) => {
-           return op7.confirmation().then(() => op7.hash);
-         });
+      const opSend7 = await contractAddition.methodsObject
+      .callWrongAnnot({
+        entrypoint: 'Add',
+        param: {
+          a: `1`,
+          b: `2`,
+        },
+      }).send();
+      await opSend7.confirmation();
 
       //Testcase #8
       // Calls entrypoint: (pair %addNoAnnot nat nat))
       // Calling Michelson code: CONTRACT %add (pair (nat %a) (nat %b))
 
       try{
-      const op = await Tezos.contract
-        .at(contractAddition.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .callWrongAnnot({
-              entrypoint: 'AddNoAnnot',
-              param: {
-                a: `1`,
-                b: `2`,
-              },
-            })
-            .send();
-        })
-        .then((op8) => {
-          return op8.confirmation().then(() => op8.hash);
-        })
+      const opSend8 = await contractAddition.methodsObject
+      .callWrongAnnot({
+        entrypoint: 'AddNoAnnot',
+        param: {
+          a: `1`,
+          b: `2`,
+        },
+      }).send();
+      await opSend8.confirmation();
       } catch (error: any) {
         expect(error.message).toContain('[a] Value is not a number: undefined');
       }
@@ -251,22 +196,15 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       // Calls entrypoint: (pair %addWrongAnnot (nat %a) (nat %b))
       // Calling Michelson code: CONTRACT %add (pair (nat %a) (nat %b))
 
-      const op9 = await Tezos.contract
-        .at(contractAddition.address)
-        .then((contract) => {
-          return contract.methodsObject
-            .callWrongAnnot({
-              entrypoint: 'AddWrongAnnot',
-              param: {
-                a: `1`,
-                b: `2`,
-              },
-            })
-            .send();
-        })
-        .then((op9) => {
-          return op9.confirmation().then(() => op9.hash);
-        });
+      const opSend9 = await contractAddition.methodsObject
+      .callWrongAnnot({
+        entrypoint: 'AddWrongAnnot',
+        param: {
+          a: `1`,
+          b: `2`,
+        },
+      }).send();
+      await opSend9.confirmation();
     });
   });
 });
