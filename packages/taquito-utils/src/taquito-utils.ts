@@ -140,8 +140,9 @@ export function encodePubKey(value: string) {
 
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
   }
-  if (b58cencodeRollupAddress(value).startsWith('txr1')) {
-    return b58cencodeRollupAddress(value)
+  const checkTxr1 = b58cencodeRollupAddress(value)
+  if (checkTxr1.startsWith('txr1')) {
+    return checkTxr1
   }
   return b58cencode(value.substring(2, 42), prefix.KT);
 }

@@ -104,9 +104,7 @@ export class AddressToken extends ComparableToken {
   }
   compare(address1: string, address2: string) {
     const isImplicit = (address: string) => {
-      // handle two different addresses one with tz the other with txr
-      // redundant... should be removed? or kept for clarity? same happens with KT1 addresses, goes to super
-      return address.startsWith('tz') && !address.startsWith('txr')
+      return address.startsWith('tz')
     }
     const implicit1 = isImplicit(address1)
     const implicit2 = isImplicit(address2)
