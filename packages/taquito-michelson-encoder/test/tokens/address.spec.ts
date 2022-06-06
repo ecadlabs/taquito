@@ -131,9 +131,14 @@ describe("Address Token with txr1", () => {
       expect(() => token.ToKey({bytes: '', string: ''})).toThrowError(AddressValidationError)
     })
   })
-  // describe('compare', () => {
-  //   it('should ')
-  // })
+  describe('compare', () => {
+    it('should order addresses correctly', () => {
+      expect(token.compare('KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv', 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')).toEqual(1)
+      expect(token.compare('tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2', 'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS')).toEqual(1)
+      expect(token.compare('KT1CDEg2oY3VfMa1neB7hK5LoVMButvivKYv', 'KT1XM8VUFBiM9AC5czWU15fEeE9nmuEYWt3Y')).toEqual(-1)
+      expect(token.compare('txr1YpFMKsYwTJ4YBmYqy2kw4pxCUgeQkZmwo', 'txr1YpFMKsYwTJ4YBmYqy2kw4pxCUgeQkZmwo')).toEqual(0)
+    })
+  })
   describe('find return tokens', () => {
     it('should return or not return token', () => {
       expect(token.findAndReturnTokens('address', [])).toEqual([token])
