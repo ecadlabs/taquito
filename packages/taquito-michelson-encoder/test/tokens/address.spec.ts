@@ -81,8 +81,6 @@ describe("Address Token with txr1", () => {
       expect(() => token.EncodeObject({})).toThrowError(AddressValidationError)
       expect(() => token.EncodeObject(1)).toThrowError(AddressValidationError)
       expect(() => token.EncodeObject('tz4QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toThrowError(AddressValidationError)
-      // does not throw error should this throw an error if given a token that
-      // expect(() => token.EncodeObject('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toThrowError(AddressValidationError)
     })
   })
 
