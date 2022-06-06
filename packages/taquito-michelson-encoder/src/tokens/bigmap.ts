@@ -69,8 +69,17 @@ export class BigMapToken extends Token {
     return new BigMapValidationError(value, this, 'Value must be a MichelsonMap');
   }
 
+  private mightCoerce(val: any): any {
+    if (typeof val === 'object') {
+      // Empty object can be coerced into MichelsonMap
+      if (Object.keys(val).length === 0)
+        return new MichelsonMap()
+    }
+    return val
+  }
+
   public Encode(args: any[]): any {
-    const val: MichelsonMap<any, any> = args.pop();
+    const val: MichelsonMap<any, any> = this.mightCoerce(args.pop());
 
     const err = this.isValid(val);
     if (err) {
@@ -88,7 +97,7 @@ export class BigMapToken extends Token {
   }
 
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
-    const val: MichelsonMap<any, any> = args;
+    const val: MichelsonMap<any, any> = this.mightCoerce(args);
 
     const err = this.isValid(val);
     if (err) {
