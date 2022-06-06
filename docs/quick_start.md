@@ -228,5 +228,5 @@ Tezos.wallet
 </Tabs>
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
-[smart_contract_source]: https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug
-[smart_contract_on_better_call_dev]: https://better-call.dev/ithacanet/KT1Gx18RNNvFvrv1gb9abBWCqxEPyFT5duTP/operations
+[smart_contract_source]: https://ide.ligolang.org/p/2sVshnZ_Aat5pIuUypIBsQ
+[smart_contract_on_better_call_dev]: https://better-call.dev/ithacanet/KT1A3dyvS4pWd9b9yLLMBKLxc6S6G5b58BsK/operations
