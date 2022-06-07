@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import  * as fs from 'fs';
 import path from 'path';
 import { inspect } from 'util';
 import { Contract, ContractOptions } from '../src/michelson-contract';
@@ -46,7 +46,6 @@ const contracts: {
     'ticket_builder_fungible.tz',
   ],
   ill_typed: [
-    'create_contract_rootname.tz',
     'ticket_apply.tz',
     'never_literal.tz',
     'multiple_code_field.tz',
@@ -167,6 +166,7 @@ const contracts: {
     'uncomb.tz',
     'self_with_entrypoint.tz',
     'mul_overflow.tz',
+    'create_contract_rootname.tz',
     'balance.tz',
     'reverse_loop.tz',
     'contract.tz',

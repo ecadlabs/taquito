@@ -46,7 +46,6 @@ const contracts: {
     'ticket_builder_fungible.tz',
   ],
   ill_typed: [
-    'create_contract_rootname.tz',
     'ticket_apply.tz',
     'never_literal.tz',
     'view_toplevel_invalid_arity.tz',
@@ -190,6 +189,7 @@ const contracts: {
     'uncomb.tz',
     'self_with_entrypoint.tz',
     'mul_overflow.tz',
+    'create_contract_rootname.tz',
     'balance.tz',
     'reverse_loop.tz',
     'contract.tz',
