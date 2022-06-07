@@ -25,6 +25,7 @@ const contracts: {
     'comb0.tz',
     'comb1.tz',
     'contract_annotation_default.tz',
+    'create_contract_rootname.tz',
     // "dip_failwith.tz",
     'dup0.tz',
     'failwith_big_map.tz',
@@ -238,7 +239,6 @@ const contracts: {
     'contains_all.tz',
     'contract.tz',
     'create_contract.tz',
-    'create_contract_rootname.tz',
     'create_contract_rootname_alt.tz',
     'create_contract_with_view.tz',
     'diff_timestamps.tz',
@@ -404,7 +404,6 @@ describe('PtJakarta', () => {
             expect(() => Contract.parse(src, options)).toThrow();
             return;
           }
-
           try {
             Contract.parse(src, options);
           } catch (err) {
@@ -418,3 +417,23 @@ describe('PtJakarta', () => {
     });
   }
 });
+
+// describe('contract validate', () => {
+//   it('annot', async () => {
+//     const options: ContractOptions = {
+//       protocol: Protocol.PtJakarta
+//     }
+//     const filename = path.resolve(__dirname, 'contracts_013', 'opcodes', 'create_contract_rootname_alt.tz');
+//     const contract = fs.readFileSync(filename).toString();
+
+//     let parsed;
+
+//     try {
+//       parsed = Contract.parse(contract, options);
+//     } catch(e) {
+//       console.log(e);
+//     }
+
+//     console.log('PARSED: ', JSON.stringify(parsed));
+//   });
+// })
