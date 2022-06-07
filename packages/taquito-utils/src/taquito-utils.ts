@@ -63,14 +63,6 @@ export function b58cencode(value: string | Uint8Array, prefix: Uint8Array) {
   return bs58check.encode(Buffer.from(n.buffer));
 }
 
-export function b58cencodeRollupAddress(value: string | Uint8Array) {
-  const payloadAr = typeof value === 'string' ? Uint8Array.from(Buffer.from(value, 'hex')) : value
-
-  const n = new Uint8Array(payloadAr.length)
-  n.set(payloadAr)
-  return bs58check.encode(Buffer.from(n.buffer));
-}
-
 /**
  *
  * @description Base58 decode a string and remove the prefix from it
@@ -96,15 +88,19 @@ export function b58decode(payload: string) {
     [prefix.tz3.toString()]: '0002',
   };
 
+  const rollupPrefMap = {
+    [prefix.txr1.toString()]: '02',
+  }
+
   const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
+  const rollupPref = rollupPrefMap[new Uint8Array(buf.slice(0, 4)).toString()]
   if (pref) {
     // tz addresses
     const hex = buf2hex(buf.slice(3));
     return pref + hex;
-  } else if (payload.startsWith("txr")) {
-    // txr addresses
-    const hex = buf2hex(buf)
-    return hex;
+  } else if (rollupPref) {
+    const hex = buf2hex(buf.slice(4))
+    return rollupPref + hex + '00'
   } else {
     // other (kt addresses)
     return '01' + buf2hex(buf.slice(3, 42)) + '00';
@@ -139,10 +135,9 @@ export function encodePubKey(value: string) {
     };
 
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
-  }
-  const checkTxr1 = b58cencodeRollupAddress(value)
-  if (checkTxr1.startsWith('txr1')) {
-    return checkTxr1
+  } else if (value.substring(0, 2) === '02') {
+    // 42 also works but the removes the 00 padding at the end
+    return b58cencode(value.substring(2, value.length - 2), prefix.txr1)
   }
   return b58cencode(value.substring(2, 42), prefix.KT);
 }

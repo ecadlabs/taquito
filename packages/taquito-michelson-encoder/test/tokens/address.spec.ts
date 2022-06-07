@@ -50,14 +50,13 @@ describe('Address token', () => {
 });
 describe("Address Token with txr1", () => {
   let token: AddressToken;
-  const bytes = b58decode("txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL");
   beforeEach(() => {
     token = new AddressToken({prim: "address", args: [], annots: []}, 0, null as any)
   });
 
   describe('test ToBigMapKey', () => {
     it("to bytes", () => {
-      expect(token.ToBigMapKey('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL')).toEqual({ key: { bytes }, type: { prim: 'bytes' } })
+      expect(token.ToBigMapKey('txr1MfFbj6diPLS2MN2ntoid6cyuk4mUzLibP')).toEqual({ key: { bytes: '02012e7a294c836eeb02010b907c2632b88ed3e23a00' }, type: { prim: 'bytes' } })
     })
   })
 
@@ -117,12 +116,12 @@ describe("Address Token with txr1", () => {
     })
     it('should return string', () => {
       expect(token.Execute({string: 'txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL', bytes: ""})).toEqual('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL')
-      expect(token.Execute({bytes, string: ''})).toEqual('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL')
+      expect(token.Execute({bytes: '02f16e732d45ba6f24d5ec421f20ab199b3a82907100', string: ''})).toEqual('txr1jZaQfi9zdwzJteYkRBSN9D7RDvMh1QNkL')
     })
   })
   describe("Tokey", () => {
     it('should change bytes to pkh', () => {
-      expect(token.ToKey({bytes})).toEqual('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL')
+      expect(token.ToKey({bytes: '02012e7a294c836eeb02010b907c2632b88ed3e23a00'})).toEqual('txr1MfFbj6diPLS2MN2ntoid6cyuk4mUzLibP')
       expect(token.ToKey({string: 'txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL'})).toEqual('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL')
     })
     it('throw error if empty', () => {

@@ -1,4 +1,3 @@
-import { b58decode } from '../src/taquito-utils';
 import { encodeExpr, char2Bytes, bytes2Char, encodeOpHash, getPkhfromPk, encodeKeyHash, encodeKey, encodePubKey, b58decodeL2Address, encodeL2Address } from '../src/taquito-utils';
 
 describe('Encode expr', () => {
@@ -35,8 +34,7 @@ describe('encodePubKey', () => {
   });
 
   it('Should encode address properly (txr1)', () => {
-    const decoded = b58decode('txr1X9N7MQfJENXxAFGpgxv17z1A9ntGMdQ6i');
-    expect(encodePubKey(decoded)).toEqual('txr1X9N7MQfJENXxAFGpgxv17z1A9ntGMdQ6i')
+    expect(encodePubKey('02f16e732d45ba6f24d5ec421f20ab199b3a82907100')).toEqual('txr1jZaQfi9zdwzJteYkRBSN9D7RDvMh1QNkL')
   })
 });
 
