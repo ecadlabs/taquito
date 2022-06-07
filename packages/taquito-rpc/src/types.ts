@@ -1109,9 +1109,9 @@ export interface BlockMetadata {
   level_info?: LevelInfo;
   voting_period_kind?: string;
   voting_period_info?: VotingPeriodBlockResult;
-  nonce_hash?: any;
+  nonce_hash?: string;
   consumed_gas: string;
-  deactivated: any[];
+  deactivated: string[];
   balance_updates: OperationBalanceUpdates;
   liquidity_baking_escape_ema?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
