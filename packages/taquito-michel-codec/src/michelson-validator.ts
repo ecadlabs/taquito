@@ -760,6 +760,13 @@ export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
             if (assertArgs(sec, 1)) {
               assertMichelsonPassableType(sec.args[0]);
             }
+
+            if (sec.annots) {
+              throw new MichelsonValidationError(
+                sec,
+                'Annotation must be part of the parameter type'
+              );
+            }
             break;
 
           case 'storage':
