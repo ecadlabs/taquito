@@ -138,6 +138,7 @@ export interface BlockFullHeader {
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
   liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
+  liquidity_baking_toggle_vote?: LiquidityBakingToggleVotes;
   signature: string;
 }
 
@@ -450,50 +451,50 @@ export type OperationContents =
   | OperationContentsTransferTicket;
 
 export interface OperationContentsAndResultMetadataExtended {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
   slots?: number[];
   endorsement_power?: number;
 }
 
 export interface OperationContentsAndResultMetadataPreEndorsement {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
   preendorsement_power: number;
 }
 
 export interface OperationContentsAndResultMetadataReveal {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultReveal;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataTransaction {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultTransaction;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataDelegation {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultDelegation;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataRegisterGlobalConstant {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultRegisterGlobalConstant;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataSetDepositsLimit {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultSetDepositsLimit;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadata {
-  balance_updates: OperationMetadataBalanceUpdates[];
+  balance_updates?: OperationMetadataBalanceUpdates[];
 }
 
 export interface OperationContentsAndResultMetadataTxRollupOrigination {
@@ -830,6 +831,10 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTxRollupRejection
   | OperationContentsAndResultTransferTicket;
 
+export enum OPERATION_METADATA {
+  TOO_LARGE = 'too large',
+}
+
 export interface OperationEntry {
   protocol: string;
   chain_id: string;
@@ -837,6 +842,7 @@ export interface OperationEntry {
   branch: string;
   contents: (OperationContents | OperationContentsAndResult)[];
   signature?: string;
+  metadata?: OPERATION_METADATA;
 }
 
 export interface BlockResponse {
@@ -1021,6 +1027,10 @@ export interface ScriptedContracts {
   storage: MichelsonV1Expression;
 }
 
+export interface BondId {
+  tx_rollup: string;
+}
+
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
   category?: BalanceUpdateCategoryEnum;
@@ -1032,6 +1042,7 @@ export interface OperationBalanceUpdatesItem {
   participation?: boolean;
   revelation?: boolean;
   committer?: string;
+  bond_id?: BondId;
 }
 
 export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
@@ -1047,9 +1058,7 @@ export type InternalOperationResultKindEnum =
   | OpKind.REVEAL
   | OpKind.TRANSACTION
   | OpKind.ORIGINATION
-  | OpKind.DELEGATION
-  | OpKind.REGISTER_GLOBAL_CONSTANT
-  | OpKind.SET_DEPOSITS_LIMIT;
+  | OpKind.DELEGATION;
 
 export type SuccessfulManagerOperationResultKindEnum =
   | OpKind.REVEAL
@@ -1061,9 +1070,7 @@ export type InternalOperationResultEnum =
   | OperationResultReveal
   | OperationResultTransaction
   | OperationResultDelegation
-  | OperationResultOrigination
-  | OperationResultRegisterGlobalConstant
-  | OperationResultSetDepositsLimit;
+  | OperationResultOrigination;
 
 export interface OperationResultTxRollupOrigination {
   status: OperationResultStatusEnum;
@@ -1198,6 +1205,7 @@ export interface OperationResultTransaction {
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
   lazy_storage_diff?: LazyStorageDiff[];
+  ticket_hash?: string;
 }
 
 export interface OperationResultReveal {
@@ -1273,6 +1281,7 @@ export enum METADATA_BALANCE_UPDATES_CATEGORY {
   MINTED = 'minted',
   TX_ROLLUP_REJECTION_REWARDS = 'tx_rollup_rejection_rewards',
   TX_ROLLUP_REJECTION_PUNISHMENTS = 'tx_rollup_rejection_punishments',
+  BONDS = 'bonds',
 }
 export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
 
@@ -1413,7 +1422,10 @@ export type Ratio = { numerator: number; denominator: number };
 export interface ConstantsResponseProto013
   extends Omit<
     ConstantsResponseProto012,
-    'blocks_per_voting_period' | 'cache_layout' | 'delegate_selection'
+    | 'blocks_per_voting_period'
+    | 'cache_layout'
+    | 'delegate_selection'
+    | 'liquidity_baking_escape_ema_threshold'
   > {
   cache_layout_size?: number;
   cache_sampler_state_cycles?: number;
@@ -1578,7 +1590,9 @@ export interface BlockMetadata {
   deactivated: any[];
   balance_updates: OperationBalanceUpdates;
   liquidity_baking_escape_ema?: number;
+  liquidity_baking_toggle_ema?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
+  consumed_milligas?: string;
 }
 
 export type RPCRunOperationParam = {
@@ -1594,9 +1608,13 @@ export type RPCRunCodeParam = {
   chain_id: string;
   source?: string;
   payer?: string;
-  gas?: BigNumber;
+  gas?: string;
+  self?: string;
   entrypoint?: string;
   balance?: string;
+  unparsing_mode?: UnparsingMode;
+  now?: string;
+  level?: string;
 };
 
 export type RunCodeResult = {

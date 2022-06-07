@@ -1,4 +1,4 @@
-import { Schema } from '@taquito/michelson-encoder';
+import { Schema } from '../src/schema/storage';
 import { optimizedEncoding } from './helpers';
 
 describe('Exact reverse for Schema.Execute', () => {

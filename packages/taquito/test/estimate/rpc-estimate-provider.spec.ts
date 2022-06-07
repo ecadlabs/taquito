@@ -15,6 +15,8 @@ import {
   registerGlobalConstantNoReveal,
   registerGlobalConstantWithReveal,
   registerGlobalConstantWithError,
+  originateTxRollupNoReveal,
+  originateTxRollupWithReveal,
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 
@@ -740,6 +742,20 @@ describe('RPCEstimateProvider test signer', () => {
       );
       done();
     });
+
+    it('should produce a batch operation containing 2 originateTxRollup, no reveal', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [originateTxRollupNoReveal.contents[0], originateTxRollupNoReveal.contents[0]],
+      });
+      const estimate = await estimateProvider.batch([
+        { kind: OpKind.TX_ROLLUP_ORIGINATION },
+        { kind: OpKind.TX_ROLLUP_ORIGINATION },
+      ]);
+      expect(estimate.length).toEqual(2);
+      expect(estimate[0].gasLimit).toEqual(1521);
+      expect(estimate[1].gasLimit).toEqual(1521);
+      done();
+    });
   });
 
   describe('registerGlobalConstant', () => {
@@ -885,6 +901,108 @@ describe('RPCEstimateProvider test signer', () => {
         kind: 'permanent',
         message: '(permanent) proto.011-PtHangzH.context.storage_error',
       });
+      done();
+    });
+  });
+
+  describe('originateTxRollup', () => {
+    beforeEach(() => {
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        cost_per_byte: new BigNumber(1000),
+        tx_rollup_origination_size: 4000,
+      });
+      // Simulate real op size
+      mockForger.forge.mockResolvedValue(new Array(64).fill('aa').join(''));
+    });
+    it('should return the correct estimate for originateTxRollup operation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
+      const estimate = await estimateProvider.originateTxRollup();
+      expect(estimate).toMatchObject({
+        gasLimit: 1521,
+        storageLimit: 4000,
+        suggestedFeeMutez: 417,
+      });
+      done();
+    });
+
+    it('should produce a reveal and a originateTxRollup operation', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupWithReveal);
+      const estimate = await estimateProvider.originateTxRollup();
+      expect(estimate).toMatchObject({
+        gasLimit: 1521,
+        storageLimit: 4000,
+        suggestedFeeMutez: 417,
+      });
+      done();
+    });
+
+    it('should use the storage limit the user specified', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
+      await estimateProvider.originateTxRollup({
+        storageLimit: 200,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '0',
+                storage_limit: '200',
+                gas_limit: '1040000',
+              }),
+            ]),
+          }),
+        })
+      );
+      done();
+    });
+
+    it('should use the gas limit the user specified', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
+      await estimateProvider.originateTxRollup({
+        gasLimit: 200,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '0',
+                storage_limit: '60000',
+                gas_limit: '200',
+              }),
+            ]),
+          }),
+        })
+      );
+      done();
+    });
+
+    it('should use the fees the user specified', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
+      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000000000'));
+      await estimateProvider.originateTxRollup({
+        fee: 10000,
+      });
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '10000',
+                storage_limit: '60000',
+                gas_limit: '1040000',
+              }),
+            ]),
+          }),
+        })
+      );
       done();
     });
   });
@@ -1163,6 +1281,7 @@ describe('RPCEstimateProvider test wallet', () => {
             },
           },
           registerGlobalConstantNoReveal.contents[0],
+          originateTxRollupNoReveal.contents[0],
         ],
       });
       const estimate = await estimateProvider.batch([
@@ -1175,11 +1294,13 @@ describe('RPCEstimateProvider test wallet', () => {
             args: [{ int: '998' }, { int: '999' }],
           },
         },
+        { kind: OpKind.TX_ROLLUP_ORIGINATION },
       ]);
-      expect(estimate.length).toEqual(3);
+      expect(estimate.length).toEqual(4);
       expect(estimate[0].gasLimit).toEqual(1100);
       expect(estimate[1].gasLimit).toEqual(1100);
       expect(estimate[2].gasLimit).toEqual(1330);
+      expect(estimate[3].gasLimit).toEqual(1521);
       done();
     });
 
@@ -1249,6 +1370,41 @@ describe('RPCEstimateProvider test wallet', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       try {
         await estimateProvider.reveal({});
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+      done();
+    });
+  });
+
+  describe('originateTxRollup', () => {
+    it('should return the correct estimate for originateTxRollup operation', async (done) => {
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        cost_per_byte: new BigNumber(1000),
+        tx_rollup_origination_size: 4000,
+      });
+      // Simulate real op size
+      mockForger.forge.mockResolvedValue(new Array(64).fill('aa').join(''));
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupNoReveal);
+      const estimate = await estimateProvider.originateTxRollup();
+      expect(estimate).toMatchObject({
+        gasLimit: 1521,
+        storageLimit: 4000,
+        suggestedFeeMutez: 417,
+      });
+      done();
+    });
+
+    it('should throw an error if account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.runOperation.mockResolvedValue(originateTxRollupWithReveal);
+      try {
+        await estimateProvider.originateTxRollup();
       } catch (e) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
