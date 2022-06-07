@@ -1,4 +1,3 @@
-import { Signer } from './../packages/taquito/src/signer/interface';
 import { TezosToolkit } from '@taquito/taquito'
 import { InMemorySigner } from '@taquito/signer';
 import Faucet from './faucet-interface';
@@ -32,7 +31,7 @@ const { activation_code, pkh } = JSON.parse(`{
 
 async function example() {
     const provider = 'https://ithacanet.ecadinfra.com/'
-    const signer: Signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+    const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
     const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider( signer );
     try {

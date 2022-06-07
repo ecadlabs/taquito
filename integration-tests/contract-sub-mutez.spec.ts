@@ -9,44 +9,45 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-     it(
-       'originate a contract with SUB MUTEZ',
-       async () => {
-         const op = await Tezos.contract.originate({
-             code: `{ parameter (or (or (mutez %decrement) (mutez %increment)) (mutez %reset)) ;
-               storage mutez ;
-               code { UNPAIR ;
-                      IF_LEFT { IF_LEFT { SWAP ; SUB_MUTEZ; ASSERT_SOME } { ADD } } { SWAP ; DROP } ;
+    it(
+      'originate a contract with SUB MUTEZ',
+      async () => {
+        const op = await Tezos.contract.originate({
+            code: `{ parameter (or (or (mutez %decrement) (mutez %increment)) (mutez %reset)) ;
+              storage mutez ;
+              code { UNPAIR ;
+                    IF_LEFT { IF_LEFT { SWAP ; SUB_MUTEZ; ASSERT_SOME } { ADD } } { SWAP ; DROP } ;
+                    NIL operation ;
+                    PAIR } }
+                  `,
+            init: `0`,
+          });
+          await op.confirmation()
+          expect(op.hash).toBeDefined();
+          expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+          const contract = await op.contract();
+
+          expect(await contract.storage()).toBeTruthy();
+      }
+    );
+
+    it('fail to originate a contract on Ithaca with SUB', async () => {
+      try {
+        await Tezos.contract.originate({
+            code: `{ parameter (or (or (mutez %decrement) (mutez %increment)) (mutez %reset)) ;
+                storage mutez ;
+                code { UNPAIR ;
+                      IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { SWAP ; DROP } ;
                       NIL operation ;
                       PAIR } }
-                   `,
-             init: `0`,
-           });
-           await op.confirmation()
-           expect(op.hash).toBeDefined();
-           expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-           const contract = await op.contract();
-     
-           expect(await contract.storage()).toBeTruthy();
-       }
-     );
-
-     it('fail to originate a contract on Ithaca with SUB', async () => {
-        try {
-         await Tezos.contract.originate({
-             code: `{ parameter (or (or (mutez %decrement) (mutez %increment)) (mutez %reset)) ;
-                 storage mutez ;
-                 code { UNPAIR ;
-                        IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { SWAP ; DROP } ;
-                        NIL operation ;
-                        PAIR } }
-                   `,
-             init: `0`,
-           });
-       } catch (error: any) {
-         expect(error.message).toContain("michelson_v1.deprecated_instruction")
-       }
-     });
+                  `,
+            init: `0`,
+          });
+      } catch (e: unknown) {
+      const error = e as Record<string, unknown>
+      expect(error.message).toContain("michelson_v1.deprecated_instruction")
+      }
+    });
 
   });
 });

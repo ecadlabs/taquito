@@ -4,10 +4,12 @@ import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 import { fa2TokenFactory } from '../integration-tests/data/fa2-token-factory';
 import Faucet from './faucet-interface';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const nodeCrypto = require('crypto');
 
 async function createAddress() {
@@ -31,10 +33,10 @@ async function example() {
      mnemonic.join(' '),
      activation_code
    );
-  
+
   try {
     console.log('Deploying Tzip12BigMapsTokenMetadata contract...');
-    
+
     const LocalTez1 = await createAddress();
 			const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
 			const LocalTez2 = await createAddress();

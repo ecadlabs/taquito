@@ -4,6 +4,7 @@ import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-cont
 import { char2Bytes } from '@taquito/utils';
 import Faucet from './faucet-interface';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/'
@@ -17,10 +18,10 @@ async function example() {
      mnemonic.join(' '),
      activation_code
    );
-  
+
   try {
     console.log('Deploying Tzip16Storage contract...');
-   
+
     const metadataJSON = {
       "name": "test",
       "description": "A metadata test",

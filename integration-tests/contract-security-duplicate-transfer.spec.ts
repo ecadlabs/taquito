@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           const publicKeyHash = await Tezos.signer.publicKeyHash();
           const op = await Tezos.contract.originate({
             balance: '8',
-            code: `{ 
+            code: `{
             parameter unit;
             storage unit;
             code
@@ -56,8 +56,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           const opContract = await op.contract();
           const opSend = await opContract.methods.default(0).send();
           await opSend.confirmation();
-          
-        } catch (error: any) {
+
+        } catch (e: unknown) {
+          const error = e as Record<string, unknown>
           expect(error.message).toContain('internal_operation_replay');
         }
         done();

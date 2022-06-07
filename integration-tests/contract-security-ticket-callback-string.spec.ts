@@ -7,7 +7,7 @@ import { CONFIGS } from './config';
 
 // Naively* trying to create an own ticket from scratch.
 // We assume that the ticket is just a (pair string cty nat) and can "easily" be created via a callback.
-// *Naively - meaning: WE just try it without thinking whether this test makes sense in regards with the used underlying architecture. 
+// *Naively - meaning: WE just try it without thinking whether this test makes sense in regards with the used underlying architecture.
 // We think of the underlying architecture (type system, stack separation, etc.) as a black box.
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
@@ -82,7 +82,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
         const opSend = await opCallerContract.methods.init(`${opGetterContract.address}`).send();
         await opSend.confirmation()
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('{\"prim\":\"Unit\"}');
       }
       done();
@@ -154,7 +155,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(await opGetterContract.storage()).toBeTruthy();
         const opSend = await opCallerContract.methods.init( `${opGetterContract.address}`, `${opGetterContract.address}`).send();
         await opSend.confirmation()
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('{\"prim\":\"Unit\"}');
       }
       done();
@@ -226,11 +228,12 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
         const opSend = await opCallerContract.methods.init( `${opGetterContract.address}`, `${opCallerContract.address}`).send();
         await opSend.confirmation()
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('{\"prim\":\"Unit\"}');
       }
       done();
-    });  
+    });
   });
 });
 

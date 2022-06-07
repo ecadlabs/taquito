@@ -36,7 +36,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         });
 
         await opTicketsDup.confirmation();
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
@@ -67,7 +68,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         });
 
         await opTicketsDup.confirmation();
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
@@ -93,13 +95,14 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 UNIT;
                 NIL operation;
                 PAIR;
-              };        
+              };
         }`,
           storage: 0,
         });
 
         await opTicketsDup.confirmation();
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
@@ -121,13 +124,14 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 UNIT;
                 NIL operation;
                 PAIR;
-              };       
+              };
         }`,
           storage: 0,
         });
 
         await opTicketsDup.confirmation();
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
@@ -149,13 +153,14 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 UNIT;
                 NIL operation;
                 PAIR;
-              };       
+              };
         }`,
           storage: 0,
         });
 
         await opTicketsDup.confirmation();
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
@@ -183,7 +188,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         });
 
         await opTicketsDup.confirmation();
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();

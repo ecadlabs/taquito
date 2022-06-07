@@ -42,8 +42,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
         const batchOp = await batch.send();
         await batchOp.confirmation();
-      } catch (error: any) {
-        expect(error.message).toContain('substraction_below_zero'); 
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
+        expect(error.message).toContain('substraction_below_zero');
       }
       done();
     });

@@ -22,7 +22,8 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
     mondaynet('Verify that you cannot prefund a non existent smart contract', async () => {
       try {
         await Tezos.contract.at(testContractAddress);
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         // Contract Address cannot be prefunded because it cannot be loaded into Taquito
         expect(error.message).toContain('Http error response: (404)');
       }

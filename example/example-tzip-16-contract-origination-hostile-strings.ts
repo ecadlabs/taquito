@@ -5,6 +5,7 @@ import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-cont
 import { MichelsonMap } from "@taquito/taquito";
 import Faucet from './faucet-interface';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/';
@@ -54,7 +55,7 @@ async function example() {
             taco_shop_storage: tacoShopStorageMap
         },
     });
-    const contract = await op.confirmation();
+    await op.confirmation();
     const contractAddress = (await op.contract()).address;
 
     console.log('Contract Address', contractAddress);

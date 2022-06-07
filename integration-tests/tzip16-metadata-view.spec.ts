@@ -60,7 +60,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 		});
 
 	test('Deploy a contract with metadata having a couple of views (example taken from TZComet) and call the views',2, async (done: () => void) => {
-	
+
 			const metadataBigMAp = new MichelsonMap();
 			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
 			metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample2)))
@@ -79,8 +79,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 			try {
 				await metadataViews['an-empty-useless-view']().executeView();
-			} catch (e: any) {
-				expect(e.message).toContain('Http error response');
+			} catch (e: unknown) {
+        const err = e as Record<string, unknown>
+				expect(err.message).toContain('Http error response');
 			}
 
 			const viewMultiplyNegativeNumberResult = await metadataViews['multiply-negative-number-or-call-failwith']().executeView(-2);

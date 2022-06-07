@@ -76,8 +76,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
         const opSend = await opCallerContract.methods.init(opGetterContract.address).send();
         await opSend.confirmation();
-        
-      } catch (error: any) {
+
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('{"prim":"Unit"}');
       }
       done();

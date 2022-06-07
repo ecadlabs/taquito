@@ -4,6 +4,7 @@ import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
 import Faucet from './faucet-interface';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/';
@@ -19,7 +20,6 @@ async function example() {
      activation_code
    );
 
-  
   try {
     console.log('Deploying the knownContract...');
     const opknownContract = await tezos.contract.originate({

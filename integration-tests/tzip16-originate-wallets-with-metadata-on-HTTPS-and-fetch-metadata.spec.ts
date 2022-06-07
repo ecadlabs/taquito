@@ -45,7 +45,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             contractAddressEmptyMetadata = (await op.contract()).address;
             expect(op.opHash).toBeDefined();
             done();
-        }); 
+        });
 
         it('Fetch the empty metadata of the wallet api contract', async (done) => {
 
@@ -175,11 +175,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const contract = await Tezos.wallet.at(contractAddressInvalidMetadata, tzip16);
             try {
                 await contract.tzip16().getMetadata();
-            } catch (error: any) {
+            } catch (e: unknown) {
+                const error = e as Record<string, unknown>
                 expect(error.message).toContain(`Invalid metadata`);
             }
 
             done();
-        }); 
+        });
     });
 })

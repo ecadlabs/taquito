@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                         storage (option (ticket string));
                         code
                           {
-                            UNPAIR; 
+                            UNPAIR;
                             SWAP;
                             IF_NONE {
                                       SOME;
@@ -33,7 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                                     };
                             NIL operation;
                             PAIR;
-                          }     
+                          }
                     }`,
           init: 'None',
         });
@@ -67,7 +67,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                           UNIT;
                           SWAP;
                           PAIR;
-                        }    
+                        }
                     }`,
           init: 'Unit',
         });
@@ -79,7 +79,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(await opDupOpContract.storage()).toBeTruthy();
         const opSend = await opDupOpContract.methods.default(`${opJoinContract.address}`).send();
         await opSend.confirmation();
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('internal_operation_replay');
       }
       done();
@@ -93,7 +94,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                     code
                       {
                         DROP ; # drop storage and input
-                        EMPTY_MAP nat (ticket string); 
+                        EMPTY_MAP nat (ticket string);
                         PUSH nat 1;
                         PUSH string "test";
                         TICKET;
@@ -114,7 +115,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         await opMapDup.confirmation();
         expect(opMapDup.hash).toBeDefined();
         expect(opMapDup.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();
@@ -128,7 +130,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                     code
                       {
                         DROP ; # drop storage and input
-                        EMPTY_BIG_MAP nat (ticket string); 
+                        EMPTY_BIG_MAP nat (ticket string);
                         PUSH nat 1;
                         PUSH string "test";
                         TICKET;
@@ -149,7 +151,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         await opGetter.confirmation();
         expect(opGetter.hash).toBeDefined();
         expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
       done();

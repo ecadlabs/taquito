@@ -1,4 +1,3 @@
-import { Signer } from './../packages/taquito/src/signer/interface';
 /// How to use:
 ///   Ensure the Testfunder account tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys has at least 2k tokens
 ///   for the testnet in use. The script will first check if addresses used in the script are funded,
@@ -37,7 +36,7 @@ import BigNumber from 'bignumber.js';
 // const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/';
-export const signer: Signer = new InMemorySigner(
+export const signer = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
 export const tezos = new TezosToolkit(provider);

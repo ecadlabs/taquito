@@ -51,7 +51,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           code: depositContractCodeHangzhou,
           init: depositContractStorageHangzhou,
         });
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error.message).toContain(
           'michelson_v1.deprecated_instruction'
         );

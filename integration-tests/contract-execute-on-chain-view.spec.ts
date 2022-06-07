@@ -6,7 +6,7 @@ import { HttpResponseError } from "@taquito/http-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
- 
+
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
     beforeEach(async (done) => {
@@ -73,7 +73,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       try {
         // view that always fails
         await contract.contractViews.test_failwith(3).executeView({ viewCaller: contract.address });
-      } catch (error: any) {
+      } catch (e: unknown) {
+        const error = e as Record<string, unknown>
         expect(error).toBeInstanceOf(HttpResponseError)
       }
 

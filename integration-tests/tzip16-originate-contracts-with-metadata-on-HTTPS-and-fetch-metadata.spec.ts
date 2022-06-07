@@ -48,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
-        }); 
+        });
 
         test('Fetch the empty metadata of the contract', 2, async (done: () => void) => {
 
@@ -181,11 +181,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const contract = await Tezos.contract.at(contractAddressInvalidMetadata, tzip16);
             try {
                 await contract.tzip16().getMetadata();
-            } catch (error: any) {
+            } catch (e: unknown) {
+                const error = e as Record<string, unknown>
                 expect(error.message).toContain(`Invalid metadata`);
             }
 
             done();
-        }); 
+        });
     });
 })

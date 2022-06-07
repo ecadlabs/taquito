@@ -382,7 +382,8 @@ describe('OnChainView test', () => {
       await view.executeView({
         viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
       });
-    } catch (error: any) {
+    } catch (e: unknown) {
+      const error = e as Record<string, unknown>
       expect(error).toBeInstanceOf(HttpResponseError);
     }
 
@@ -403,7 +404,8 @@ describe('OnChainView test', () => {
       await view.executeView({
         viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
       });
-    } catch (error: any) {
+    } catch (e: unknown) {
+      const error = e as Record<string, unknown>
       expect(error).toBeInstanceOf(ViewSimulationError);
       expect(error.message).toEqual(
         'The simulation of the on-chain view named add failed with: {"prim":"Unit"}'

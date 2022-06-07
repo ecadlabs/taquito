@@ -4,6 +4,7 @@ import { contractCode, metadataViewsExample1 } from '../integration-tests/data/m
 import { char2Bytes } from '@taquito/utils';
 import Faucet from './faucet-interface';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/'
@@ -17,10 +18,10 @@ async function example() {
      mnemonic.join(' '),
      activation_code
    );
-  
+
   try {
     console.log('Deploying Tzip16OffChainOne contract...');
-   
+
     const metadataBigMAp = new MichelsonMap();
     metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
     metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample1)))

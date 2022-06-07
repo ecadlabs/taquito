@@ -29,7 +29,7 @@ async function example() {
             }
         }
         await Promise.all(promisesRpc);
-        
+
         const durationRpcPack = new Date().getTime() - startRpcPack;
 
         // Fetch values of the big map using local implementation to pack data
@@ -63,7 +63,7 @@ example();
 
 // Code to deploy the contract used in the example:
 /*
-        const signer: Signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+        const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
         const tezos = new TezosToolkit(rpc);
         tezos.setSignerProvider( signer );
 

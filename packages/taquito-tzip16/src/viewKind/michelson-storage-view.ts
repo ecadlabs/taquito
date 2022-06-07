@@ -1,3 +1,4 @@
+import { HttpResponseError } from './../../../taquito-http-utils/src/taquito-http-utils';
 import { ParameterSchema } from '@taquito/michelson-encoder';
 import {
   RpcClientInterface,
@@ -190,7 +191,8 @@ export class MichelsonStorageView implements View {
     let result: any;
     try {
       result = await this.rpc.runCode(viewScript as any);
-    } catch (error: any) {
+    } catch (e: unknown) {
+      const error = e as HttpResponseError
       const failWith = validateAndExtractFailwith(error);
       throw failWith
         ? new ViewSimulationError(
