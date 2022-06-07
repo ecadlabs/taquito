@@ -1,4 +1,3 @@
-import { b58decode } from '@taquito/utils';
 import { AddressToken, AddressValidationError } from '../../src/tokens/comparable/address';
 
 describe('Address token', () => {
