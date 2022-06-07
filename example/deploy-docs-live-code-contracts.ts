@@ -29,7 +29,6 @@ import {
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
-// import Faucet from './faucet-interface';
 import BigNumber from 'bignumber.js';
 
 

@@ -88,6 +88,7 @@ Set `CancellableRpcClient` on our `TezosToolkit` instance instead of using the d
 import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
 
+// safe to not have typed as Signer?
 const signer: Signer = new InMemorySigner('your_key');
 const customRpcClient = new CancellableRpcClient('your_RPC_URL')  
 const tezos = new TezosToolkit(customRpcClient);
