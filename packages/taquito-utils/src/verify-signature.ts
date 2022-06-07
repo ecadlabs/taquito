@@ -14,7 +14,7 @@ import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
 import { InvalidMessageError, InvalidPublicKeyError, InvalidSignatureError } from './errors';
 
-type PkPrefix = Prefix.EDPK | Prefix.SPPK | Prefix.P2PK;
+type PkPrefix = Prefix.EDPK | Prefix.SPPK | Prefix.P2PK | Prefix.BLPK;
 type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
 
 /**

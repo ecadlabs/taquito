@@ -16,6 +16,7 @@ import {
   OperationContentsAndResultTxRollupOrigination,
   OperationContentsAndResultTxRollupSubmitBatch,
   OperationContentsAndResultTxRollupCommit,
+  OperationContentsAndResultTxRollupFinalizeCommitment,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -994,7 +995,7 @@ describe('RpcClient test', () => {
       });
       const endorsement = response.operations[0][0]
         .contents[0] as OperationContentsAndResultEndorsement;
-      expect(endorsement.metadata.balance_updates[0].kind).toEqual('contract');
+      expect(endorsement.metadata.balance_updates![0].kind).toEqual('contract');
 
       done();
     });
@@ -1237,8 +1238,8 @@ describe('RpcClient test', () => {
       });
       const transaction = response.operations[0][0]
         .contents[0] as OperationContentsAndResultTransaction;
-      expect(transaction.metadata.balance_updates[0].kind).toEqual('contract');
-      expect(transaction.metadata.balance_updates[0].change).toEqual('-2820');
+      expect(transaction.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(transaction.metadata.balance_updates![0].change).toEqual('-2820');
       expect(transaction.metadata.operation_result.status).toEqual('applied');
       expect(transaction.metadata.operation_result.consumed_gas).toEqual('24660');
       done();
@@ -2271,18 +2272,18 @@ describe('RpcClient test', () => {
           },
         ],
       });
-      expect(content.metadata.balance_updates[0].kind).toEqual('contract');
-      expect(content.metadata.balance_updates[0].contract).toBeDefined();
-      expect(content.metadata.balance_updates[0].contract).toEqual(
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toBeDefined();
+      expect(content.metadata.balance_updates![0].contract).toEqual(
         'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D'
       );
-      expect(content.metadata.balance_updates[0].change).toBeDefined();
-      expect(content.metadata.balance_updates[0].change).toEqual('-372');
-      expect(content.metadata.balance_updates[0].origin).toBeDefined();
-      expect(content.metadata.balance_updates[0].origin).toEqual('block');
-      expect(content.metadata.balance_updates[0].category).toBeUndefined();
-      expect(content.metadata.balance_updates[0].delegate).toBeUndefined();
-      expect(content.metadata.balance_updates[0].cycle).toBeUndefined();
+      expect(content.metadata.balance_updates![0].change).toBeDefined();
+      expect(content.metadata.balance_updates![0].change).toEqual('-372');
+      expect(content.metadata.balance_updates![0].origin).toBeDefined();
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+      expect(content.metadata.balance_updates![0].category).toBeUndefined();
+      expect(content.metadata.balance_updates![0].delegate).toBeUndefined();
+      expect(content.metadata.balance_updates![0].cycle).toBeUndefined();
 
       expect(content.metadata.operation_result.global_address).toBeDefined();
       expect(content.metadata.operation_result.status).toEqual('applied');
@@ -2305,16 +2306,16 @@ describe('RpcClient test', () => {
       const response = await client.getBlock();
 
       // To avoid dealing with the space in the property name returned by the RPC
-      expect(response.metadata.balance_updates[0].category).toBeDefined();
-      expect(response.metadata.balance_updates[0].category).toEqual(
+      expect(response.metadata.balance_updates![0].category).toBeDefined();
+      expect(response.metadata.balance_updates![0].category).toEqual(
         METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES
       );
-      expect(response.metadata.balance_updates[1].category).toBeDefined();
-      expect(response.metadata.balance_updates[1].category).toEqual(
+      expect(response.metadata.balance_updates![1].category).toBeDefined();
+      expect(response.metadata.balance_updates![1].category).toEqual(
         METADATA_BALANCE_UPDATES_CATEGORY.BAKING_REWARDS
       );
-      expect(response.metadata.balance_updates[3].category).toBeDefined();
-      expect(response.metadata.balance_updates[3].category).toEqual(
+      expect(response.metadata.balance_updates![3].category).toBeDefined();
+      expect(response.metadata.balance_updates![3].category).toEqual(
         METADATA_BALANCE_UPDATES_CATEGORY.BAKING_BONUSES
       );
 
@@ -2345,7 +2346,7 @@ describe('RpcClient test', () => {
 
       expect(response.metadata.proposer).toBeDefined();
       expect(response.metadata.proposer).toEqual('tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9');
-      expect(response.metadata.balance_updates[0].category).toBeDefined();
+      expect(response.metadata.balance_updates![0].category).toBeDefined();
 
       done();
     });
@@ -2389,18 +2390,18 @@ describe('RpcClient test', () => {
       expect(content.storage_limit).toEqual('10000');
       expect(content.limit).toBeDefined();
       expect(content.limit).toEqual('3');
-      expect(content.metadata.balance_updates[0].kind).toEqual('contract');
-      expect(content.metadata.balance_updates[0].contract).toBeDefined();
-      expect(content.metadata.balance_updates[0].contract).toEqual(
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toBeDefined();
+      expect(content.metadata.balance_updates![0].contract).toEqual(
         'tz2FViF6XzJ4PqD5TTuaAtZScmiwpJBGBpSh'
       );
-      expect(content.metadata.balance_updates[0].change).toBeDefined();
-      expect(content.metadata.balance_updates[0].change).toEqual('-1500');
-      expect(content.metadata.balance_updates[0].origin).toBeDefined();
-      expect(content.metadata.balance_updates[0].origin).toEqual('block');
-      expect(content.metadata.balance_updates[0].category).toBeUndefined();
-      expect(content.metadata.balance_updates[0].delegate).toBeUndefined();
-      expect(content.metadata.balance_updates[0].cycle).toBeUndefined();
+      expect(content.metadata.balance_updates![0].change).toBeDefined();
+      expect(content.metadata.balance_updates![0].change).toEqual('-1500');
+      expect(content.metadata.balance_updates![0].origin).toBeDefined();
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+      expect(content.metadata.balance_updates![0].category).toBeUndefined();
+      expect(content.metadata.balance_updates![0].delegate).toBeUndefined();
+      expect(content.metadata.balance_updates![0].cycle).toBeUndefined();
 
       expect(content.metadata.operation_result.status).toEqual('applied');
       expect(content.metadata.operation_result.consumed_gas).toBeDefined();
@@ -2545,6 +2546,43 @@ describe('RpcClient test', () => {
       expect(content.metadata.operation_result.balance_updates).toBeDefined();
       expect(content.metadata.operation_result.consumed_gas).toEqual('3738');
       expect(content.metadata.operation_result.consumed_milligas).toEqual('3737532');
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_finalize_commitment, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[3] as OperationContentsAndResultTxRollupFinalizeCommitment;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_FINALIZE_COMMITMENT);
+      expect(content.source).toEqual('tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY');
+      expect(content.fee).toEqual('507');
+      expect(content.counter).toEqual('182232');
+      expect(content.gas_limit).toEqual('2602');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-507');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('507');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('2502');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('2501420');
+      expect(content.metadata.operation_result.level).toEqual(0);
       done();
     });
   });

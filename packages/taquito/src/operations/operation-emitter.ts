@@ -122,12 +122,6 @@ export abstract class OperationEmitter {
             return {
               ...op,
             };
-          case OpKind.REVEAL:
-            return {
-              ...op,
-              ...getSource(op),
-              ...getFee(op),
-            };
           case OpKind.ORIGINATION:
             return {
               ...op,
@@ -149,13 +143,10 @@ export abstract class OperationEmitter {
             }
             return cops;
           }
+          case OpKind.REVEAL:
           case OpKind.DELEGATION:
-            return {
-              ...op,
-              ...getSource(op),
-              ...getFee(op),
-            };
           case OpKind.REGISTER_GLOBAL_CONSTANT:
+          case OpKind.TX_ROLLUP_ORIGINATION:
             return {
               ...op,
               ...getSource(op),

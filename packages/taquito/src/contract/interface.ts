@@ -6,6 +6,7 @@ import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { RegisterGlobalConstantOperation } from '../operations/register-global-constant-operation';
 import { RevealOperation } from '../operations/reveal-operation';
+import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
@@ -15,6 +16,7 @@ import {
   ParamsWithKind,
   RevealParams,
   RegisterGlobalConstantParams,
+  TxRollupOriginateParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 
@@ -175,4 +177,14 @@ export interface ContractProvider extends StorageProvider {
   registerGlobalConstant(
     params: RegisterGlobalConstantParams
   ): Promise<RegisterGlobalConstantOperation>;
+
+  /**
+   *
+   * @description Originate a new tx rollup. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TxRollupOriginateParams Originate rollup operation parameter
+   */
+  originateTxRollup(params?: TxRollupOriginateParams): Promise<TxRollupOriginationOperation>;
 }

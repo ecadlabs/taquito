@@ -13,6 +13,8 @@ import {
   RevealParams,
   RegisterGlobalConstantParams,
   RPCRegisterGlobalConstantOperation,
+  TxRollupOriginateParams,
+  RPCTxRollupOriginationOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
@@ -165,4 +167,20 @@ export const createRegisterGlobalConstantOperation = async ({
     storage_limit: storageLimit,
     source,
   } as RPCRegisterGlobalConstantOperation;
+};
+
+export const createTxRollupOriginationOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+}: TxRollupOriginateParams) => {
+  return {
+    kind: OpKind.TX_ROLLUP_ORIGINATION,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    source,
+    tx_rollup_origination: {},
+  } as RPCTxRollupOriginationOperation;
 };
