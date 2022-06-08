@@ -66,7 +66,7 @@ export class TransactionOperation extends Operation
     return this.params.storage_limit;
   }
 
-  private sumProp<T>(arr: T[], prop: keyof T) {
+  private sumProp(arr: any[], prop: string) {
     return arr.reduce((prev, current) => {
       return prop in current ? Number(current[prop]) + prev : prev;
     }, 0);

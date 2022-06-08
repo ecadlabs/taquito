@@ -1111,6 +1111,7 @@ export interface BlockMetadata {
   voting_period_info?: VotingPeriodBlockResult;
   nonce_hash?: string;
   consumed_gas: string;
+  // came over with rebase as incoming. safe to remove?
   // "deactivated": [ $Signature.Public_key_hash ... ],
   deactivated: string[];
   balance_updates: OperationBalanceUpdates;
