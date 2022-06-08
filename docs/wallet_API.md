@@ -25,7 +25,7 @@ yarn add @taquito/taquito
 
 Make sure you have the latest version (`7.1.0` when this article was written, but the API became available from `6.3.2-beta.0`).
 
-Once the package is downloaded, you can install the wallet of your choice. The wallet API supports different kinds of wallets. _Beacon_, _Temple_ and _TezBridge_ wallets are available to use at the moment. You can install one or multiple wallets according to your needs:
+Once the package is downloaded, you can install the wallet of your choice. The wallet API supports different kinds of wallets. _Beacon_, _Temple_ and _TezBridge_ (deprecated v13) wallets are available to use at the moment. You can install one or multiple wallets according to your needs:
 
 ```
 
@@ -37,7 +37,7 @@ npm install @temple-wallet/dapp
 
 ```
 
-Remember that some wallets may require an extra step in addition to the package installation. For example, TezBridge requires a plugin file, Temple must be used with an extension installed in the browser. We will explain the requirements for the different wallets in detail in the sections below.
+Remember that some wallets may require an extra step in addition to the package installation. For example, TezBridge (deprecated v13) requires a plugin file, Temple must be used with an extension installed in the browser. We will explain the requirements for the different wallets in detail in the sections below.
 
 ## Connecting the wallet
 
@@ -132,7 +132,7 @@ Tezos.setWalletProvider(wallet);
 
 ### - Development wallets
 
-During the development of your dapp, you may prefer a less "user-friendly" option that gives you more information and details than a more user-friendly wallet. You may also want to install and set up a wallet quickly that requires less boilerplate than the Beacon SDK. In these cases, you can choose between the Tezbridge wallet (for more details in a lightweight format) and the Temple Wallet (for a quick setup using the Temple wallet extension).
+During the development of your dapp, you may prefer a less "user-friendly" option that gives you more information and details than a more user-friendly wallet. You may also want to install and set up a wallet quickly that requires less boilerplate than the Beacon SDK. In these cases, you can choose between the Tezbridge wallet(deprecated v13) (for more details in a lightweight format) and the Temple Wallet (for a quick setup using the Temple wallet extension).
 
 - Temple wallet
 
@@ -214,7 +214,7 @@ ThanosWallet.isAvailable()
   .catch((err) => console.log(err));
 ```
 
-- TezBridge wallet
+- TezBridge wallet (deprecated v13)
 
 > Note that the TezBridge wallet may not work correctly since the Delphi upgrade might be deprecated in the future.
 
@@ -250,7 +250,7 @@ Tezos.setWalletProvider(wallet);
 const userAddress = await wallet.getPKH();
 ```
 
-#### Try the TezBridge wallet!
+#### Try the TezBridge wallet! (deprecated v13)
 
 ```js live noInline wallet
 //import { TezBridgeWallet } from '@taquito/tezbridge-wallet';

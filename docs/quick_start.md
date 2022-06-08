@@ -40,10 +40,13 @@ You can set which signer you wish to use as follows:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-import { TezBridgeSigner } from '@taquito/tezbridge-signer';
+import { RemoteSigner } from '@taquito/remote-signer';
 
-const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-tezos.setProvider({ signer: new TezBridgeSigner() });
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+Tezos.setProvider({
+  signer: new RemoteSigner(pkh, rootUrl, { headers: requestHeaders });,
+});
 ```
 
 ## Examples

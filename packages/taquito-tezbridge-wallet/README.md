@@ -1,4 +1,4 @@
-# Taquito Tezbridge Wallet package
+# Taquito Tezbridge Wallet package (deprecated v13)
 
 `@taquito/tezbridge-wallet` is an npm package that provides developers with Tezbridge Wallet functionality for Taquito. 
 

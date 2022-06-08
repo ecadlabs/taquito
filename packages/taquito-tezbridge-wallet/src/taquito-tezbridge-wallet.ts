@@ -1,6 +1,7 @@
 /**
  * @packageDocumentation
  * @module @taquito/tezbridge-wallet
+ * @deprecated
  */
 import {
   createOriginationOperation,
