@@ -249,8 +249,9 @@ export class Schema {
    * @param valueType type of value to look for
    *
    */
-   FindFirstInTopLevelPair(storage: any, valueType: any) {
-    return this.findValue(this.root['val'], storage, valueType);
+  // WARN could be breaking change check if works correctly to allow for inserted return type or default to MichelsonV1ExpressionBase or undefined
+  FindFirstInTopLevelPair<T extends MichelsonV1Expression>(storage: any, valueType: any) {
+    return this.findValue(this.root['val'], storage, valueType) as T | MichelsonV1ExpressionBase | undefined;
   }
 
   // TODO check these type casts
