@@ -80,7 +80,7 @@ describe("TxRollupL2Address Token", () => {
       expect(token.Execute({bytes: '', string: 'tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf'})).toEqual("tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf")
     })
     it("should return string", () => {
-      expect(token.Execute({bytes,})).toEqual("tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf")
+      expect(token.Execute({bytes})).toEqual("tz49XoaXbDZcWi2R1iKxQUxtBWXt4g4S1qtf")
     })
   })
   describe('ToKey', () => {

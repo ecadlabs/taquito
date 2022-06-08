@@ -70,6 +70,9 @@ export class AddressToken extends ComparableToken {
     if (val.string) {
       return val.string;
     }
+    if (!val.bytes) {
+      throw new AddressValidationError(val, this, `cannot be missing both string and bytes: ${val}`)
+    }
 
     return encodePubKey(val.bytes);
   }
@@ -92,6 +95,9 @@ export class AddressToken extends ComparableToken {
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;
+    }
+    if (!bytes) {
+      throw new AddressValidationError({bytes, string}, this, `cannot be missing both string and bytes ${{string, bytes}}`)
     }
 
     return encodePubKey(bytes);
