@@ -15,6 +15,8 @@ import {
   RPCRegisterGlobalConstantOperation,
   TxRollupOriginateParams,
   RPCTxRollupOriginationOperation,
+  TxRollupBatchParams,
+  RPCTxRollupBatchOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
@@ -183,4 +185,23 @@ export const createTxRollupOriginationOperation = async ({
     source,
     tx_rollup_origination: {},
   } as RPCTxRollupOriginationOperation;
+};
+
+export const createTxRollupBatchOperation = async ({
+  content,
+  rollup,
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+}: TxRollupBatchParams) => {
+  return {
+    kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    source,
+    content,
+    rollup,
+  } as RPCTxRollupBatchOperation;
 };

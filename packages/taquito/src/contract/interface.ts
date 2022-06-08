@@ -17,8 +17,10 @@ import {
   RevealParams,
   RegisterGlobalConstantParams,
   TxRollupOriginateParams,
+  TxRollupBatchParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
+import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -186,5 +188,15 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param TxRollupOriginateParams Originate rollup operation parameter
    */
-  originateTxRollup(params?: TxRollupOriginateParams): Promise<TxRollupOriginationOperation>;
+  txRollupOriginate(params?: TxRollupOriginateParams): Promise<TxRollupOriginationOperation>;
+
+  /**
+   *
+   * @description Submit a tx rollup batch. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TxRollupBatchParams Batch tx rollup operation parameter
+   */
+  txRollupSubmitBatch(params: TxRollupBatchParams): Promise<TxRollupBatchOperation>;
 }

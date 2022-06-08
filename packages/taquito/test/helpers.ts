@@ -7,6 +7,7 @@ import {
   OperationContentsAndResultDelegation,
   OperationContentsAndResultRegisterGlobalConstant,
   OperationContentsAndResultTxRollupOrigination,
+  OperationContentsAndResultTxRollupSubmitBatch,
 } from '@taquito/rpc';
 
 const defaultTransferData = {
@@ -64,7 +65,7 @@ const defaultRegisterGlobalConstantData = {
   value: { int: '0' },
 };
 
-const defaultOriginateTxRollupData = {
+const defaultTxRollupOriginateData = {
   kind: OpKind.TX_ROLLUP_ORIGINATION as OpKind.TX_ROLLUP_ORIGINATION,
   source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
   fee: '2991',
@@ -72,6 +73,17 @@ const defaultOriginateTxRollupData = {
   gas_limit: '26260',
   storage_limit: '257',
   tx_rollup_origination: {},
+};
+
+const defaultTxSubmitBatchData = {
+  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH as OpKind.TX_ROLLUP_SUBMIT_BATCH,
+  source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+  fee: '2991',
+  counter: '121619',
+  gas_limit: '26260',
+  storage_limit: '257',
+  rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+  content: '626c6f62',
 };
 
 const defaultResult = {
@@ -226,7 +238,7 @@ export class TxRollupOriginationOperationBuilder {
   constructor(
     private _data: Partial<Omit<OperationContentsAndResultTxRollupOrigination, 'metadata'>> = {}
   ) {
-    this.data = { ...defaultOriginateTxRollupData, ...this._data };
+    this.data = { ...defaultTxRollupOriginateData, ...this._data };
   }
 
   withResult(
@@ -237,6 +249,35 @@ export class TxRollupOriginationOperationBuilder {
   }
 
   build(): OperationContentsAndResultTxRollupOrigination {
+    return {
+      ...this.data,
+      metadata: {
+        balance_updates: [],
+        operation_result: this.result,
+      },
+    };
+  }
+}
+
+export class TxRollupSubmitBatchOperationBuilder {
+  private result: OperationContentsAndResultTxRollupSubmitBatch['metadata']['operation_result'] =
+    defaultResult;
+  private data: Omit<OperationContentsAndResultTxRollupSubmitBatch, 'metadata'>;
+
+  constructor(
+    private _data: Partial<Omit<OperationContentsAndResultTxRollupSubmitBatch, 'metadata'>> = {}
+  ) {
+    this.data = { ...defaultTxSubmitBatchData, ...this._data };
+  }
+
+  withResult(
+    result: Partial<OperationContentsAndResultTxRollupSubmitBatch['metadata']['operation_result']>
+  ) {
+    this.result = { ...defaultResult, ...result };
+    return this;
+  }
+
+  build(): OperationContentsAndResultTxRollupSubmitBatch {
     return {
       ...this.data,
       metadata: {

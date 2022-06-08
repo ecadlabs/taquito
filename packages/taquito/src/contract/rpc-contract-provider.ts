@@ -22,6 +22,7 @@ import {
   RPCOperation,
   TransferParams,
   withKind,
+  TxRollupBatchParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -34,6 +35,7 @@ import {
   createTxRollupOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  createTxRollupBatchOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -45,6 +47,7 @@ import {
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
+import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 export class RpcContractProvider
   extends OperationEmitter
   implements ContractProvider, StorageProvider
@@ -453,11 +456,11 @@ export class RpcContractProvider
    *
    * @param TxRollupOriginateParams Originate rollup operation parameter
    */
-  async originateTxRollup(params?: TxRollupOriginateParams) {
+  async txRollupOriginate(params?: TxRollupOriginateParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(
       params ? params : {},
-      this.estimator.originateTxRollup.bind(this.estimator)
+      this.estimator.txRollupOriginate.bind(this.estimator)
     );
     const operation = await createTxRollupOriginationOperation({
       ...params,
@@ -468,6 +471,38 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new TxRollupOriginationOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   *
+   * @description Submit a tx rollup batch. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TxRollupBatchParams Batch tx rollup operation parameter
+   */
+  async txRollupSubmitBatch(params: TxRollupBatchParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.txRollupSubmitBatch.bind(this.estimator)
+    );
+    const operation = await createTxRollupBatchOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: publicKeyHash });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TxRollupBatchOperation(
       hash,
       operation,
       publicKeyHash,

@@ -147,6 +147,7 @@ export abstract class OperationEmitter {
           case OpKind.DELEGATION:
           case OpKind.REGISTER_GLOBAL_CONSTANT:
           case OpKind.TX_ROLLUP_ORIGINATION:
+          case OpKind.TX_ROLLUP_SUBMIT_BATCH:
             return {
               ...op,
               ...getSource(op),
