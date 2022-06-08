@@ -1,0 +1,40 @@
+## A simple fungible token contract implemented using tickets of type
+## [ticket unit].
+
+## To store and transfer the tokens see ticket_wallet_fungible.tz
+
+## For non-fungible tokens, see ticket_builder_non_fungible.tz
+
+parameter (or (ticket %burn unit) (pair %mint (contract %destination (ticket unit)) (nat %amount)));
+storage address;
+code
+  {
+    AMOUNT; PUSH mutez 0; ASSERT_CMPEQ;
+
+    UNPAIR;
+    IF_LEFT
+      {
+        # Burn entrypoint
+
+        # Check that the ticket is ticketed by ourselves
+        READ_TICKET; CAR; SELF_ADDRESS; ASSERT_CMPEQ;
+
+        # Drop the ticket
+        DROP;
+
+        # Finish
+        NIL operation
+      }
+      {
+        # Mint entrypoint
+
+        # Authenticate SENDER
+        DUP @manager 2; SENDER; ASSERT_CMPEQ;
+
+        UNPAIR;
+        SWAP; UNIT; TICKET;
+        PUSH mutez 0; SWAP; TRANSFER_TOKENS;
+        NIL operation; SWAP; CONS
+      };
+    PAIR
+  }

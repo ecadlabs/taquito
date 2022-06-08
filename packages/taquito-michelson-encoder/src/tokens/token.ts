@@ -117,8 +117,7 @@ export abstract class ComparableToken extends Token {
     key: { [key: string]: string | object[] };
     type: { prim: string; args?: object[] };
   };
-
-  abstract ToKey(val: string): any;
+  abstract ToKey(val: string | MichelsonV1Expression): any;
 
   compare(o1: string, o2: string): number {
     if (o1 === o2) {

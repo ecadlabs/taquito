@@ -66,7 +66,10 @@ export const BallotSchema = {
 };
 
 export const EndorsementSchema = {
+  slot: CODEC.INT16,
   level: CODEC.INT32,
+  round: CODEC.INT32,
+  block_payload_hash: CODEC.BLOCK_PAYLOAD_HASH,
 };
 
 export const SeedNonceRevelationSchema = {

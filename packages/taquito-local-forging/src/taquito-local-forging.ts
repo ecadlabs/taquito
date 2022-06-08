@@ -8,8 +8,6 @@ import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { decodersProto12 } from './proto12-ithaca/decoder';
-import { encodersProto12 } from './proto12-ithaca/encoder';
 import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
 import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
@@ -28,15 +26,7 @@ export { ProtocolsHash } from './protocols';
 const PROTOCOL_CURRENT = ProtocolsHash.Psithaca2;
 
 export function getCodec(codec: CODEC, proto: ProtocolsHash) {
-  if (proto === ProtocolsHash.Psithaca2) {
-    return {
-      encoder: encodersProto12[codec],
-      decoder: (hex: string) => {
-        const consumer = Uint8ArrayConsumer.fromHexString(hex);
-        return decodersProto12[codec](consumer) as any;
-      },
-    };
-  } else if (ProtoInferiorTo(proto, ProtocolsHash.Psithaca2)) {
+  if (proto === ProtocolsHash.Psithaca2 || ProtoInferiorTo(proto, ProtocolsHash.Psithaca2)) {
     return {
       encoder: encoders[codec],
       decoder: (hex: string) => {
@@ -78,6 +68,11 @@ export class LocalForger implements Forger {
           continue;
         } else if (content.kind === 'transaction' && diff[0] === 'parameters') {
           continue;
+        } else if (
+          content.kind === ('tx_rollup_submit_batch' as unknown) &&
+          diff[0] === 'burn_limit'
+        ) {
+          continue;
         } else {
           throw new InvalidOperationSchemaError(
             `Missing properties: ${diff.join(', ').toString()}`
@@ -87,7 +82,7 @@ export class LocalForger implements Forger {
         throw new InvalidOperationSchemaError(`Missing properties: ${diff.join(', ').toString()}`);
       }
     }
-    const forged = this.codec.encoder(params).toLowerCase()
+    const forged = this.codec.encoder(params).toLowerCase();
     return Promise.resolve(forged);
   }
 

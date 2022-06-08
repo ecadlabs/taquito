@@ -16,4 +16,13 @@ export enum OpKind {
   BALLOT = 'ballot',
   FAILING_NOOP = 'failing_noop',
   REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
+  TX_ROLLUP_ORIGINATION = 'tx_rollup_origination',
+  TX_ROLLUP_SUBMIT_BATCH = 'tx_rollup_submit_batch',
+  TX_ROLLUP_COMMIT = 'tx_rollup_commit',
+  TX_ROLLUP_RETURN_BOND = 'tx_rollup_return_bond',
+  TX_ROLLUP_FINALIZE_COMMITMENT = 'tx_rollup_finalize_commitment',
+  TX_ROLLUP_REMOVE_COMMITMENT = 'tx_rollup_remove_commitment',
+  TX_ROLLUP_REJECTION = 'tx_rollup_rejection',
+  TX_ROLLUP_DISPATCH_TICKETS = 'tx_rollup_dispatch_tickets',
+  TRANSFER_TICKET = 'transfer_ticket',
 }

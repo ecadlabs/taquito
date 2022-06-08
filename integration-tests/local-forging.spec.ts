@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { commonCases, hangzhouCases, ithacaCases, jakartaCases } from '../packages/taquito-local-forging/test/allTestsCases';
+import { commonCases, jakartaCases } from '../packages/taquito-local-forging/test/allTestsCases';
 import { LocalForger, ProtocolsHash } from '@taquito/local-forging'
 import { Protocols, TezosToolkit } from "@taquito/taquito";
 
@@ -20,30 +20,6 @@ CONFIGS().forEach(({ rpc, protocol }) => {
                 expect(result).toEqual(rpcResult);
                 expect(await localForger.parse(result)).toEqual(expected || operation);
 
-                done();
-            });
-        });
-
-        // all protocols since hangzhounet
-        hangzhouCases.forEach(({ name, operation, expected }) => {
-            const localForger = new LocalForger(protocol as unknown as ProtocolsHash);
-            it(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
-                const result = await localForger.forge(operation);
-                const rpcResult = await Tezos.rpc.forgeOperations(operation);
-                expect(result).toEqual(rpcResult);
-                expect(await localForger.parse(result)).toEqual(expected || operation);
-                done();
-            });
-        });
-
-        // all protocols since ithaca
-        ithacaCases.forEach(({ name, operation, expected }) => {
-            const localForger = new LocalForger(protocol as unknown as ProtocolsHash);
-            it(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
-                const result = await localForger.forge(operation);
-                const rpcResult = await Tezos.rpc.forgeOperations(operation);
-                expect(result).toEqual(rpcResult);
-                expect(await localForger.parse(result)).toEqual(expected || operation);
                 done();
             });
         });

@@ -5,7 +5,12 @@ import {
   RegisterDelegateParams,
   ParamsWithKind,
 } from '../operations';
-import { RevealParams, RegisterGlobalConstantParams } from '../operations/types';
+import {
+  RevealParams,
+  RegisterGlobalConstantParams,
+  TxRollupOriginateParams,
+  TxRollupBatchParams,
+} from '../operations/types';
 import { Estimate } from './estimate';
 
 export interface EstimationProvider {
@@ -70,4 +75,24 @@ export interface EstimationProvider {
    * @param params registerGlobalConstant operation parameter
    */
   registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a tx rollup origination operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  txRollupOriginate(params: TxRollupOriginateParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a tx rollup batch operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  txRollupSubmitBatch(params: TxRollupBatchParams): Promise<Estimate>;
 }
