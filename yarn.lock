@@ -1848,7 +1848,7 @@
     "@stablelib/salsa20" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
-"@taquito/beacon-wallet@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-beacon-wallet":
+"@taquito/beacon-wallet@file:/Users/zainen/code/taquito/packages/taquito-beacon-wallet":
   "resolved" "file:packages/taquito-beacon-wallet"
   "version" "12.1.1"
   dependencies:
@@ -1856,7 +1856,7 @@
     "@taquito/taquito" "^12.1.1"
     "libsodium-wrappers" "0.7.9"
 
-"@taquito/contracts-library@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-contracts-library":
+"@taquito/contracts-library@file:/Users/zainen/code/taquito/packages/taquito-contracts-library":
   "resolved" "file:packages/taquito-contracts-library"
   "version" "12.1.1"
   dependencies:
@@ -1865,13 +1865,13 @@
     "@taquito/utils" "^12.1.1"
     "bignumber.js" "^9.0.2"
 
-"@taquito/http-utils@^12.1.1", "@taquito/http-utils@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-http-utils":
+"@taquito/http-utils@^12.1.1", "@taquito/http-utils@file:/Users/zainen/code/taquito/packages/taquito-http-utils":
   "resolved" "file:packages/taquito-http-utils"
   "version" "12.1.1"
   dependencies:
     "axios" "^0.26.0"
 
-"@taquito/ledger-signer@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-ledger-signer":
+"@taquito/ledger-signer@file:/Users/zainen/code/taquito/packages/taquito-ledger-signer":
   "resolved" "file:packages/taquito-ledger-signer"
   "version" "12.1.1"
   dependencies:
@@ -1881,18 +1881,18 @@
     "@taquito/utils" "^12.1.1"
     "buffer" "^6.0.3"
 
-"@taquito/local-forging@^12.1.1", "@taquito/local-forging@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-local-forging":
+"@taquito/local-forging@file:/Users/zainen/code/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
   "version" "12.1.1"
   dependencies:
     "@taquito/utils" "^12.1.1"
     "bignumber.js" "^9.0.2"
 
-"@taquito/michel-codec@^12.1.1", "@taquito/michel-codec@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-michel-codec":
+"@taquito/michel-codec@file:/Users/zainen/code/taquito/packages/taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
   "version" "12.1.1"
 
-"@taquito/michelson-encoder@^12.1.1", "@taquito/michelson-encoder@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-michelson-encoder":
+"@taquito/michelson-encoder@file:/Users/zainen/code/taquito/packages/taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "12.1.1"
   dependencies:
@@ -1901,7 +1901,7 @@
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
-"@taquito/remote-signer@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-remote-signer":
+"@taquito/remote-signer@file:/Users/zainen/code/taquito/packages/taquito-remote-signer":
   "resolved" "file:packages/taquito-remote-signer"
   "version" "12.1.1"
   dependencies:
@@ -1912,7 +1912,7 @@
     "@taquito/utils" "^12.1.1"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/rpc@^12.1.1", "@taquito/rpc@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-rpc":
+"@taquito/rpc@^11.2.0", "@taquito/rpc@^12.1.1", "@taquito/rpc@file:/Users/zainen/code/taquito/packages/taquito-rpc":
   "resolved" "file:packages/taquito-rpc"
   "version" "12.1.1"
   dependencies:
@@ -1920,66 +1920,46 @@
     "@taquito/utils" "^12.1.1"
     "bignumber.js" "^9.0.2"
 
-"@taquito/signer@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-signer":
+"@taquito/signer@file:/Users/zainen/code/taquito/packages/taquito-signer":
   "resolved" "file:packages/taquito-signer"
   "version" "12.1.1"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
     "@stablelib/nacl" "^1.0.3"
-    "@taquito/taquito" "^12.1.1"
-    "@taquito/utils" "^12.1.1"
     "elliptic" "^6.5.4"
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/taquito@^12.1.1", "@taquito/taquito@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito":
+"@taquito/taquito@^12.1.1", "@taquito/taquito@file:/Users/zainen/code/taquito/packages/taquito":
   "resolved" "file:packages/taquito"
   "version" "12.1.1"
   dependencies:
-    "@taquito/http-utils" "^12.1.1"
-    "@taquito/local-forging" "^12.1.1"
-    "@taquito/michel-codec" "^12.1.1"
-    "@taquito/michelson-encoder" "^12.1.1"
-    "@taquito/rpc" "^12.1.1"
-    "@taquito/utils" "^12.1.1"
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
-"@taquito/tezbridge-signer@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-tezbridge-signer":
+"@taquito/tezbridge-signer@file:/Users/zainen/code/taquito/packages/taquito-tezbridge-signer":
   "resolved" "file:packages/taquito-tezbridge-signer"
   "version" "12.1.1"
   dependencies:
-    "@taquito/utils" "^12.1.1"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/tezbridge-wallet@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-tezbridge-wallet":
+"@taquito/tezbridge-wallet@file:/Users/zainen/code/taquito/packages/taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
   "version" "12.1.1"
-  dependencies:
-    "@taquito/taquito" "^12.1.1"
 
-"@taquito/tzip12@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-tzip12":
+"@taquito/tzip12@file:/Users/zainen/code/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "12.1.1"
-  dependencies:
-    "@taquito/michelson-encoder" "^12.1.1"
-    "@taquito/taquito" "^12.1.1"
-    "@taquito/tzip16" "^12.1.1"
 
-"@taquito/tzip16@^12.1.1", "@taquito/tzip16@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-tzip16":
+"@taquito/tzip16@file:/Users/zainen/code/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "12.1.1"
   dependencies:
-    "@taquito/http-utils" "^12.1.1"
-    "@taquito/michelson-encoder" "^12.1.1"
-    "@taquito/rpc" "^12.1.1"
-    "@taquito/taquito" "^12.1.1"
-    "@taquito/utils" "^12.1.1"
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
-"@taquito/utils@^12.1.1", "@taquito/utils@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-utils":
+"@taquito/utils@^12.1.1", "@taquito/utils@file:/Users/zainen/code/taquito/packages/taquito-utils":
   "resolved" "file:packages/taquito-utils"
   "version" "12.1.1"
   dependencies:
@@ -11009,10 +10989,10 @@
     "type-fest" "^0.4.1"
     "write-json-file" "^3.2.0"
 
-"ws@^7.4.6":
-  "integrity" "sha512-ri1Id1WinAX5Jqn9HejiGb8crfRio0Qgu8+MtL36rlTA6RLsMdWt1Az/19A2Qij6uSHUMphEFaTKa4WG+UNHNw=="
-  "resolved" "https://registry.npmjs.org/ws/-/ws-7.5.8.tgz"
-  "version" "7.5.8"
+"ws@^7.4.5":
+  "integrity" "sha512-6ezXvzOZupqKj4jUqbQ9tXuJNo+BR2gU8fFRk3XCP3e0G6WT414u5ELe6Y0vtp7kmSJ3F7YWObSNr1ESsgi4vw=="
+  "resolved" "https://registry.npmjs.org/ws/-/ws-7.5.0.tgz"
+  "version" "7.5.0"
 
 "xml-name-validator@^3.0.0":
   "integrity" "sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw=="

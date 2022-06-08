@@ -1,4 +1,4 @@
-import { MichelsonV1Expression } from '@taquito/rpc';
+import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
 import { TokenSchema } from '../schema/types';
 
 /**
@@ -28,17 +28,38 @@ export interface SemanticEncoding {
 
 export abstract class Token {
   constructor(
-    protected val: { prim: string; args?: any[]; annots?: any[] },
+    protected val: MichelsonV1ExpressionExtended,
     protected idx: number,
     protected fac: TokenFactory
   ) {}
 
   protected typeWithoutAnnotations() {
-    const removeArgsRec = (val: Token['val']): { prim: string; args?: any[] } => {
+    const handleMichelsonExpression = (val: MichelsonV1Expression): MichelsonV1Expression => {
+      if (typeof val === 'object') {
+        if (Array.isArray(val)) {
+          const array = val as MichelsonV1Expression[];
+          return array.map((item) => handleMichelsonExpression(item));
+        }
+        const extended = val as MichelsonV1ExpressionExtended;
+        if (extended.args) {
+          return {
+            prim: extended.prim,
+            args: extended.args.map((x) => handleMichelsonExpression(x)),
+          };
+        } else {
+          return {
+            prim: extended.prim,
+          };
+        }
+      }
+      return val;
+    };
+
+    const handleMichelsonExtended = (val: MichelsonV1ExpressionExtended): Omit<MichelsonV1ExpressionExtended, 'annots'> => {
       if (val.args) {
         return {
           prim: val.prim,
-          args: val.args.map((x) => removeArgsRec(x)),
+          args: val.args.map((x) => handleMichelsonExpression(x)),
         };
       } else {
         return {
@@ -47,7 +68,7 @@ export abstract class Token {
       }
     };
 
-    return removeArgsRec(this.val);
+    return handleMichelsonExtended(this.val);
   }
 
   annot() {

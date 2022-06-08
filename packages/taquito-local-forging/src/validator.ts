@@ -19,19 +19,19 @@ import {
 } from './schema/operation';
 
 type OperationKind =
-  | 'activate_account'
-  | 'reveal'
-  | 'delegation'
-  | 'transaction'
-  | 'origination'
-  | 'ballot'
-  | 'endorsement'
-  | 'seed_nonce_revelation'
-  | 'proposals'
-  | 'register_global_constant'
-  | 'transfer_ticket'
-  | 'tx_rollup_origination'
-  | 'tx_rollup_submit_batch';
+  | OpKind.ACTIVATION
+  | OpKind.REVEAL
+  | OpKind.DELEGATION
+  | OpKind.TRANSACTION
+  | OpKind.ORIGINATION
+  | OpKind.BALLOT
+  | OpKind.ENDORSEMENT
+  | OpKind.SEED_NONCE_REVELATION
+  | OpKind.PROPOSALS
+  | OpKind.REGISTER_GLOBAL_CONSTANT
+  | OpKind.TRANSFER_TICKET
+  | OpKind.TX_ROLLUP_ORIGINATION
+  | OpKind.TX_ROLLUP_SUBMIT_BATCH;
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
