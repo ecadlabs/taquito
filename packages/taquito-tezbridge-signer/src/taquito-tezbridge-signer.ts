@@ -1,6 +1,7 @@
 /**
  * @packageDocumentation
  * @module @taquito/tezbridge-signer
+ * @deprecated
  */
 import {
   b58cdecode,

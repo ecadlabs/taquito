@@ -3,6 +3,9 @@ title: TezBridge Signer
 author: Simon Boissonneault-Robert
 ---
 
+:::note
+TezBridge Signer is deprecated in v13
+:::
 ## Usage
 
 You first need to include https://www.tezbridge.com/plugin.js in your application to use this signer
