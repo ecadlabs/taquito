@@ -63,7 +63,7 @@
   "dependencies": {
     "@airgap/beacon-dapp": "^3.1.1",
     "@taquito/taquito": "^13.0.0-beta-RC.0",
-    "libsodium-wrappers": "0.7.9"
+    "libsodium-wrappers": "0.7.10"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
