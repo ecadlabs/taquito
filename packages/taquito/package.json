@@ -87,7 +87,7 @@
     "rxjs": "^6.6.3"
   },
   "devDependencies": {
-    "@babel/types": "7.18.4",
+    "@babel/types": "7.16.0",
     "@types/bluebird": "^3.5.36",
     "@types/estree": "^0.0.50",
     "@types/jest": "^26.0.23",
