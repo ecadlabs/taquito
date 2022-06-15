@@ -1,6 +1,9 @@
 name: Mondaynet Integration Tests
 
 on:
+  push:
+    branches:
+      - '**mondaynet**'
   schedule:
     - cron: '0 0 * * 2'
   # Allows to run this workflow manually from the Actions tab
