@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
         const rpcUrl = 'https://mainnet-archive.api.tez.ie/';
         Tezos.setRpcProvider(rpcUrl)
-        it('succesfully fails at fetching constants for level 0', async (done) => {
+        it('successfully fails at fetching constants for level 0', async (done) => {
             try {
                 await Tezos.rpc.getConstants({ block: "0" });
                 expect.assertions(1);
@@ -458,7 +458,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     describe(`Fetch constants for testnet`, () => {
 
-        ithacanet(`succesfully fetches all constants for ithacanet using ${rpc}`, async (done) => {
+        ithacanet(`successfully fetches all constants for ithacanet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto012 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 
@@ -516,7 +516,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        jakartanet(`succesfully fetches all constants for jakartanet using ${rpc}`, async (done) => {
+        jakartanet(`successfully fetches all constants for jakartanet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto013 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 
@@ -596,7 +596,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        mondaynet(`succesfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
+        mondaynet(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto012 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 
