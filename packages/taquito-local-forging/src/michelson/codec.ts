@@ -6,16 +6,15 @@ import { opMappingReverse, opMapping } from '../constants';
 import { pad } from '../utils';
 import { InvalidHexStringError, UnexpectedMichelsonValueError } from '../error';
 
-export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
 export type BytesValue = { bytes: string };
 export type StringValue = { string: string };
 export type IntValue = { int: string };
-export type MichelsonValue =
-  | PrimValue
-  | BytesValue
-  | StringValue
-  | IntValue
-  | (PrimValue | BytesValue | StringValue | IntValue)[];
+
+export type MichelsonValueTypes = PrimValue | BytesValue | StringValue | IntValue
+
+export type MichelsonValue = MichelsonValueTypes | MichelsonValueTypes[];
+
+export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
 
 export const isPrim = (value: MichelsonValue): value is PrimValue => {
   return 'prim' in value;

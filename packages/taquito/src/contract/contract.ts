@@ -33,7 +33,7 @@ export class ContractView {
     private name: string,
     private callbackParametersSchema: ParameterSchema,
     private parameterSchema: ParameterSchema,
-    private args: any[],
+    private args: MichelsonV1Expression[], //is this correct for what this could be?
     private rpc: RpcClientInterface,
     private readProvider: TzReadProvider
   ) {}
