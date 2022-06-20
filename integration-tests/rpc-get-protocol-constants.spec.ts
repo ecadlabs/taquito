@@ -639,6 +639,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                     numerator: 2,
                 },
                 max_slashing_period: 2,
+                max_wrapped_proof_binary_size: 30000,
                 frozen_deposits_percentage: 10,
                 double_baking_punishment: new BigNumber(640000000),
                 ratio_of_frozen_deposits_slashed_per_double_endorsement: {
@@ -649,7 +650,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 delay_increment_per_round: new BigNumber(15),
                 dal_parametric: {
                     availability_threshold: 50,
-                    endorsement_lag: 2,
+                    endorsement_lag: 1,
                     feature_enable: false,
                     number_of_shards: 2048,
                     number_of_slots: 256,
