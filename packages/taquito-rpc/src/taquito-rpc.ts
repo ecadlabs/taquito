@@ -394,6 +394,7 @@ export class RpcClient implements RpcClientInterface {
       'frozen_deposits_limit',
       'staking_balance',
       'delegated_balance',
+      'voting_power',
     ]);
 
     return {
@@ -457,6 +458,7 @@ export class RpcClient implements RpcClientInterface {
       'endorsing_reward_per_slot',
       'double_baking_punishment',
       'delay_increment_per_round',
+      'tx_rollup_commitment_bond',
     ]);
 
     return {
@@ -593,7 +595,8 @@ export class RpcClient implements RpcClientInterface {
       method: 'GET',
     });
 
-    return response;
+    const casted: any = castToBigNumber(response, ['yay', 'nay', 'pass']);
+    return casted;
   }
 
   /**
@@ -650,6 +653,13 @@ export class RpcClient implements RpcClientInterface {
       method: 'GET',
     });
 
+    response.map((item) => {
+      if (item.voting_power) {
+        item.voting_power = new BigNumber(item.voting_power);
+      }
+      return item;
+    });
+
     return response;
   }
 
@@ -665,6 +675,10 @@ export class RpcClient implements RpcClientInterface {
     const response = await this.httpBackend.createRequest<ProposalsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/votes/proposals`),
       method: 'GET',
+    });
+
+    response.map((item) => {
+      return (item[1] = new BigNumber(item[1]));
     });
 
     return response;

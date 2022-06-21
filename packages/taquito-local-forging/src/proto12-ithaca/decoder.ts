@@ -16,13 +16,12 @@ import {
 } from '../schema/operation';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { blockPayloadHashDecoder } from './codec';
-import { CODEC_PROT0_12 } from './constants';
 import { EndorsementSchemaProto12, operationDecoderProto12 } from './schema';
 
 export const decodersProto12: { [key: string]: Decoder } = {
   ...decoders,
   [CODEC.INT16]: int16Decoder,
-  [CODEC_PROT0_12.BLOCK_PAYLOAD_HASH]: blockPayloadHashDecoder,
+  [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashDecoder,
 };
 
 decodersProto12[CODEC.OPERATION] = operationDecoderProto12(decodersProto12);

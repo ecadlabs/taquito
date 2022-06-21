@@ -7,12 +7,14 @@ import {
   encodeKeyHash,
   encodeKey,
   encodePubKey,
-  b58decode,
   b58cdecode,
   prefix,
   Prefix,
   b58cencode,
+  num2PaddedHex,
+  hex2Bytes,
 } from '../src/taquito-utils';
+import BigNumber from 'bignumber.js';
 
 describe('Encode expr', () => {
   it('Should encode expression properly', () => {
@@ -200,5 +202,44 @@ describe('Public Key conversions', () => {
     expect(() => {
       getPkhfromPk(publicKey);
     }).toThrowError();
+  });
+});
+
+describe('Hex conversions', () => {
+  it('Should be able to convert a number to a hex string', () => {
+    const result = num2PaddedHex(64);
+
+    expect(result).toEqual('40');
+  });
+
+  it('Should be able to convert a number to a padded hex string when the length param is passed', () => {
+    const result = num2PaddedHex(20, 64);
+
+    expect(result).toEqual('0000000000000014');
+  });
+
+  it('Should be able to convert a negative number to a hex string', () => {
+    const result = num2PaddedHex(-20, 64);
+
+    expect(result).toEqual('ffffffffffffffec');
+  });
+
+  it('Should be able to convert a BigNumber to a hex string', () => {
+    const result = num2PaddedHex(new BigNumber(64));
+
+    expect(result).toEqual('40');
+  });
+
+  it('Should be able to convert a negative BigNumber to a hex string', () => {
+    const result = num2PaddedHex(new BigNumber(-20));
+
+    expect(result).toEqual('ec');
+  });
+
+  it('Should be able to convert hex to bytes', () => {
+    const result: Buffer = hex2Bytes('abcd');
+
+    expect(result).toBeDefined();
+    expect(result).toEqual(Buffer.from('abcd', 'hex'));
   });
 });

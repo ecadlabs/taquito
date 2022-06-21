@@ -2,6 +2,9 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
+import Faucet from './faucet-interface';
+
+const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://ithacanet.ecadinfra.com/';
 
@@ -10,26 +13,10 @@ async function example() {
 
   await importKey(
      tezos,
-     'noriqgjl.gtsyulgy@teztnets.xyz',
-     'st3sZBRLWF',
-     [
-      "escape",
-      "camera",
-      "credit",
-      "endorse",
-      "auto",
-      "lamp",
-      "advance",
-      "orange",
-      "fluid",
-      "virus",
-      "argue",
-      "knee",
-      "pluck",
-      "remove",
-      "scheme"
-     ].join(' '),
-     '7d414378d9071328313cca699d6922f1b59d076a'
+     email,
+     password,
+     mnemonic.join(' '),
+     activation_code
    );
 
   

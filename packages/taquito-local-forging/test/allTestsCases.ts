@@ -29,8 +29,15 @@ import {
   codeContractWithConstant,
 } from './data/contract_with_constant';
 import { codeViewsTopLevel, storageViewsTopLevel } from './data/contract_views_top_level';
+import { opMappingProto13 } from './../src/proto13-jakarta/constants-proto13';
 
-function extractOp(startIndex: number, endIndex: number) {
+function extractOp(
+  startIndex: number,
+  endIndex: number,
+  opMap: {
+    [key: string]: string;
+  }
+) {
   const result = [];
   let i = startIndex;
   for (i; i <= endIndex; i++) {
@@ -38,7 +45,7 @@ function extractOp(startIndex: number, endIndex: number) {
     if (key.length === 1) {
       key = '0' + key;
     }
-    result.push(opMapping[key]);
+    result.push(opMap[key]);
   }
   return result;
 }
@@ -458,7 +465,7 @@ export const commonCases: TestCase[] = [
     },
   },
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(0, 140).map((op) => {
+  ...extractOp(0, 140, opMapping).map((op) => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -816,7 +823,7 @@ export const commonCases: TestCase[] = [
 
 export const hangzhouCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `chest` were added in the hangzhou protocol
-  ...extractOp(141, 146).map((op) => {
+  ...extractOp(141, 146, opMapping).map((op) => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -948,7 +955,7 @@ export const priorIthacaCases: TestCase[] = [
 
 export const ithacaCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `sub_mutez` were added in the ithaca protocol
-  ...extractOp(147, 147).map((op) => {
+  ...extractOp(147, 147, opMapping).map((op) => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -1007,4 +1014,30 @@ export const ithacaCases: TestCase[] = [
       ],
     },
   },
+];
+
+export const jakartaCases: TestCase[] = [
+  ...extractOp(132, 150, opMappingProto13).map((op) => {
+    return {
+      name: `Origination operation (${op})`,
+      operation: {
+        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+        contents: [
+          {
+            kind: 'origination',
+            counter: '1',
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+            balance: '0',
+            script: {
+              code: genericCode(op),
+              storage: genericStorage,
+            },
+          },
+        ],
+      },
+    };
+  }),
 ];

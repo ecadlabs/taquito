@@ -17,7 +17,6 @@ import {
   endorsingRights,
   ballotList,
   ballots,
-  currentPeriodKind,
   currentProposal,
   currentQuorum,
   votesListing,

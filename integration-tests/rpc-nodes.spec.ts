@@ -17,8 +17,6 @@ CONFIGS().forEach(
     rpc,
   }) => {
     const Tezos = lib;
-    const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
-    const hangzhounet = protocol === Protocols.PtHangz2 ? test : test.skip;
 
     beforeAll(async (done) => {
       await setup();
@@ -93,7 +91,7 @@ CONFIGS().forEach(
           if (protocol === Protocols.Psithaca2) {
             chainId = ChainIds.ITHACANET2
           } else {
-            chainId = ChainIds.HANGZHOUNET
+            chainId = ChainIds.JAKARTANET2
           }
 
           const params: RPCRunViewParam = {
@@ -107,7 +105,7 @@ CONFIGS().forEach(
 
           const views = await Tezos.rpc.runView(params)
           expect(views).toBeDefined();
-          expect(views).toEqual({"data": {"int": "100"}});
+          expect(views).toEqual({ "data": { "int": "100" } });
           done();
         });
 
@@ -171,17 +169,7 @@ CONFIGS().forEach(
           done();
         });
 
-        hangzhounet('Retrieves the list of delegates allowed to bake a block', async (done) => {
-          const bakingRights = await rpcClient.getBakingRights({
-            max_priority: 2
-          });
-          expect(bakingRights).toBeDefined();
-          expect(bakingRights[0].priority).toBeDefined();
-          expect(bakingRights[0].round).toBeUndefined();
-          done();
-        });
-
-        ithacanet('Retrieves the list of delegates allowed to bake a block', async (done) => {
+        it('Retrieves the list of delegates allowed to bake a block', async (done) => {
           const bakingRights = await rpcClient.getBakingRights({
             max_round: '2'
           });
@@ -191,16 +179,7 @@ CONFIGS().forEach(
           done();
         });
 
-        hangzhounet('Retrieves the list of delegates allowed to endorse a block', async (done) => {
-          const endorsingRights = await rpcClient.getEndorsingRights();
-          expect(endorsingRights).toBeDefined();
-          expect(endorsingRights[0].delegate).toBeDefined();
-          expect(typeof endorsingRights[0].delegate).toEqual('string');
-          expect(endorsingRights[0].delegates).toBeUndefined();
-          done();
-        });
-
-        ithacanet('Retrieves the list of delegates allowed to endorse a block', async (done) => {
+        it('Retrieves the list of delegates allowed to endorse a block', async (done) => {
           const endorsingRights = await rpcClient.getEndorsingRights();
           expect(endorsingRights).toBeDefined();
           expect(endorsingRights[0].delegates).toBeDefined();
@@ -293,6 +272,16 @@ CONFIGS().forEach(
 
         it('Simulate the validation of an operation', async (done) => {
           try {
+            // the account needs to be revealed first
+            const reveal = await Tezos.contract.reveal({});
+            await reveal.confirmation();
+          } catch (ex) {
+            expect(ex).toEqual(expect.objectContaining({
+              message: expect.stringContaining('has already been revealed')
+            }))
+          }
+
+          try {
             const operation: any = {
               branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
               contents: [
@@ -377,7 +366,8 @@ CONFIGS().forEach(
         });
 
         it('getSaplingDiffById', async (done) => {
-          const saplingDiffById = await rpcClient.getSaplingDiffById('168');
+          const saplingStateId = (await rpcClient.getStorage(knownSaplingContract) as any)['int']
+          const saplingDiffById = await rpcClient.getSaplingDiffById(saplingStateId);
           expect(saplingDiffById).toBeDefined();
           done();
         });
