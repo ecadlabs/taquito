@@ -236,3 +236,12 @@ export function validateProtocol(value: any): ValidationResult {
 export function validateBlock(value: any): ValidationResult {
   return validatePrefixedValue(value, blockPrefix);
 }
+
+/**
+ * @description Used to check if a spending key is valid.
+ * @returns 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ *
+ */
+export function validateSpendingKey(value: any): ValidationResult {
+  return validatePrefixedValue(value, [Prefix.SASK]);
+}

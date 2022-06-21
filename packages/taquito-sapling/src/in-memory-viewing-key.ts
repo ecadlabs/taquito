@@ -1,0 +1,76 @@
+import { b58cdecode, b58cencode, Prefix, prefix, validateSpendingKey } from '@taquito/utils';
+import * as sapling from '@airgap/sapling-wasm';
+import { InvalidSpendingKey } from './error';
+
+/**
+ * @description Holds the viewing key
+ */
+export class InMemoryViewingKey {
+  #fullViewingKey: Buffer;
+  constructor(fullViewingKey: string) {
+    this.#fullViewingKey = Buffer.from(fullViewingKey, 'hex');
+  }
+
+  /**
+   * @description Allows to instantiate the InMemoryViewingKey from a Base58Check-encoded spending key
+   *
+   * @param spendingKey Base58Check-encoded spending key
+   * @example
+   * ```
+   * await InMemoryViewingKey.fromSpendingKey('sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L')
+   * ```
+   *
+   */
+  static async fromSpendingKey(spendingKey: string) {
+    if (validateSpendingKey(spendingKey) !== 3) {
+      throw new InvalidSpendingKey(spendingKey);
+    }
+    const decoded = b58cdecode(spendingKey, prefix[Prefix.SASK]);
+    const vk = await sapling.getExtendedFullViewingKeyFromSpendingKey(decoded);
+    return new InMemoryViewingKey(vk.toString('hex'));
+  }
+
+  /**
+   * @description Retrieve the full viewing key
+   * @returns Buffer representing the full viewing key
+   *
+   */
+  getFullViewingKey() {
+    return this.#fullViewingKey;
+  }
+
+  /**
+   * @description Retrieve the outgoing viewing key
+   * @returns Buffer representing the outgoing viewing key
+   *
+   */
+  async getOutgoingViewingKey() {
+    return sapling.getOutgoingViewingKey(this.#fullViewingKey);
+  }
+
+  /**
+   * @description Retrieve the incoming viewing key
+   * @returns Buffer representing the incoming viewing key
+   *
+   */
+  async getIncomingViewingKey() {
+    return sapling.getIncomingViewingKey(this.#fullViewingKey);
+  }
+
+  /**
+   * @description Retrieve a payment address
+   * @param addressIndex used to determine which diversifier should be used to derive the address, default is 0
+   * @returns Base58Check-encoded address and its index
+   *
+   */
+  async getAddress(addressIndex?: number) {
+    const { index, raw } = await sapling.getPaymentAddressFromViewingKey(
+      this.#fullViewingKey,
+      addressIndex
+    );
+    return {
+      address: b58cencode(raw, prefix[Prefix.ZET1]),
+      addressIndex: index.readInt32LE(),
+    };
+  }
+}

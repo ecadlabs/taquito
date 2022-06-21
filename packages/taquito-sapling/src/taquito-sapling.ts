@@ -4,3 +4,4 @@
  */
 
 export { SaplingTransactionViewer } from './sapling-transaction-viewer';
+export { InMemoryViewingKey } from './in-memory-viewing-key';
