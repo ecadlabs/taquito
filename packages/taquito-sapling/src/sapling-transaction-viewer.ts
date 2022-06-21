@@ -82,7 +82,7 @@ export class SaplingTransactionViewer {
 
   /**
    * @description Retrieve all the incoming and outgoing transactions associated with the configured viewing key.
-   * The response properties are in Uint8Array format; use the getIncomingAnd Outgoing Transactions method for readable properties
+   * The response properties are in Uint8Array format; use the getIncomingAndOutgoingTransactions method for readable properties
    *
    * @param saplingId sapling id that can be found in the contract storage
    *
