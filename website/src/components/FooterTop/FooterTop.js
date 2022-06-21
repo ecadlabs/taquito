@@ -6,7 +6,7 @@ import ECADSvg from '../../../static/img/ECAD_logo.svg';
 const FeatureList = [
   {
     title: 'Powered by',
-    url: 'https://tezos-homebase.herokuapp.com/explorer/daos',
+    url: 'https://ecadlabs.com',
   },
 ];
 
