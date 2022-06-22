@@ -55,8 +55,20 @@ export class MapToken extends Token {
     return map;
   }
 
+  private objLitToMichelsonMap(val: any): any {
+    if (val instanceof MichelsonMap) return val;
+    if (typeof val === 'object') {
+      if (Object.keys(val).length === 0) {
+        return new MichelsonMap();
+      } else {
+        return MichelsonMap.fromLiteral(val);
+      }
+    }
+    return val;
+  }
+
   public Encode(args: any[]): any {
-    const val: MichelsonMap<any, any> = args.pop();
+    const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args.pop());
 
     const err = this.isValid(val);
     if (err) {
@@ -74,7 +86,7 @@ export class MapToken extends Token {
   }
 
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
-    const val: MichelsonMap<any, any> = args;
+    const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args);
 
     const err = this.isValid(val);
     if (err) {
