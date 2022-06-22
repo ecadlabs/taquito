@@ -30,6 +30,10 @@ author: Roxane Letourneau
 | Marigold         | Ithacanet   | https://ithacanet.tezos.marigold.dev/  | [Check](https://ithacanet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 | Marigold         | Jakartanet  | https://jakartanet.tezos.marigold.dev/ | [Check](https://jakartanet.tezos.marigold.dev/chains/main/blocks/head/header)  |
 
+## List of commercial node operators
+
+* [MIDL.dev Tezos RPC service](https://midl.dev/tezos-rpc) offers a commercial node service for a fee
+
 ## How to run a node
 
 Running a node is a good way of contributing to Tezos by increasing the decentralization of the network.
