@@ -27,9 +27,9 @@ This paragraph is a little reminder of how to use Taquito to fetch the storage o
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-const contractAddress: string = 'KT1NzbR52g8TBAKzDH5TXEtxiARFuwzvC4hi';
+const contractAddress: string = 'KT1NASCf1Dr3SZu4RewZSRjd4mHvh8uADxf2';
 
-const Tezos = new TezosToolkit('https://testnet-tezos.giganode.io');
+const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 const contract = await Tezos.contract.at(contractAddress);
 const storage: MichelsonMap<string, BigNumber> = await contract.storage();

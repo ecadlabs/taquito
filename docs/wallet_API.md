@@ -291,7 +291,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ```js live noInline wallet
 Tezos.wallet
-  .transfer({ to: 'KT1KgtEEbDuw1b7QEFKh3VW6wzvQGYjawDwa', amount: 0.2 })
+  .transfer({ to: 'KT1T1KsEcVvsVGoHYrzjCzuJjviUDM3uyGmh', amount: 0.2 })
   .send()
   .then((op) => {
     println(`Waiting for ${op.opHash} to be confirmed...`);
@@ -325,7 +325,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1HiLoD3TnPcWwcK51Bbpy4eAVbTuhdB6hf')
+  .at('KT1C9Vjt3p3whEst9h1ykmNMFiQ36QfkYdDW')
   .then((contract) => contract.methods.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -348,7 +348,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1HiLoD3TnPcWwcK51Bbpy4eAVbTuhdB6hf')
+  .at('KT1C9Vjt3p3whEst9h1ykmNMFiQ36QfkYdDW')
   .then((contract) =>
     contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
   )
