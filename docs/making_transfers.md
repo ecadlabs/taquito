@@ -26,7 +26,7 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 // const Tezos = new TezosToolkit('https://jakartanet.api.tez.ie');
 
 render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/ithacanet/', {
+fetch('https://api.tez.ie/keys/jakartanet/', {
   method: 'POST',
   headers: { Authorization: 'Bearer taquito-example' },
 })
@@ -46,7 +46,7 @@ fetch('https://api.tez.ie/keys/ithacanet/', {
     render(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => render(`Operation injected: https://ithaca.tzstats.com/${hash}`))
+  .then((hash) => render(`Operation injected: https://jakarta.tzstats.com/${hash}`))
   .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 

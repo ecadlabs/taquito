@@ -5,7 +5,7 @@ import Faucet from './faucet-interface';
 // always use a new faucet to run this file. each faucet only usable once
 // update Faucet below if failed to activate
 // Match Provider eco system
-// https://teztnets.xyz/ithacanet-faucet
+// https://teztnets.xyz/jakartanet-faucet
 const { activation_code, pkh } = JSON.parse(`{
 	"pkh": "tz1MUCsnsGUV6uS5xFiWXsUhJxQjB5bCkP7a",
 	"mnemonic": [

@@ -34,7 +34,7 @@ npm run test # This runs all tests against all pre-configured testnets
 Depending on where we are in the Tezos protocol proposal upgrade cycle, there could be more than one testnet network configured in the Taquito integration-tests. Targeting a specific testnet can be done using environment variables. The testnet environment variables are found in `taquito/integration-tests/config.ts` (See Configuration section below)  
 
 ```
-ITHACANET=true npm run test
+jakartaNET=true npm run test
 ```
 
 To target a specific test within the suite, use the jest `--testNamePattern=<regex>` parameter, or `-t` for short.
@@ -58,19 +58,19 @@ See the `taquito/integration-tests/config.ts` file for details of test configura
 If the different testnets are configured in the config.ts file you can run on a given test net by using the command line paramater like this for a test file:
 
 ```
-npm run test:ithacanet "manager-wallet-scenario.spec.ts"
+npm run test:jakartanet "manager-wallet-scenario.spec.ts"
 ```
 
 or like this for a spec with a test file
 
 ```
-npm run test:ithacanet -- -t "Originate FA1.2 contract and fetch data from view entrypoints" 
+npm run test:jakartanet -- -t "Originate FA1.2 contract and fetch data from view entrypoints" 
 ```
 
 ## How to run against a specific RPC URL
 
 To run tests against a node which is not preconfigured in Taquito you can use 
-`export TEZOS_RPC_ITHACANET='http://localhost:8732'`. 
+`export TEZOS_RPC_jakartaNET='http://localhost:8732'`. 
 
 ## How to use a faucet instead of the keygen api
 
