@@ -64,7 +64,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const contract = await op.contract();
-      console.log('Contract address: ' + contract.address);
 
       done();
     });
