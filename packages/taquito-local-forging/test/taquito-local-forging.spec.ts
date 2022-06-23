@@ -37,14 +37,6 @@ describe('Forge and parse operations jakarta', () => {
       done();
     });
   });
-
-  jakartaCases.forEach(({ name, operation, expected }) => {
-    test(`Jakarta test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
 });
 
 describe('Forge should validate parameters against the schema', () => {

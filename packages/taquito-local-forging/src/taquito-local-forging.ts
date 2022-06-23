@@ -34,14 +34,6 @@ export function getCodec(codec: CODEC, proto: ProtocolsHash) {
         return decoders[codec](consumer) as any;
       },
     };
-  } else if (ProtoInferiorTo(proto, ProtocolsHash.Psithaca2)) {
-    return {
-      encoder: encodersProto13[codec],
-      decoder: (hex: string) => {
-        const consumer = Uint8ArrayConsumer.fromHexString(hex);
-        return decodersProto13[codec](consumer) as any;
-      },
-    };
   } else {
     return {
       encoder: encodersProto13[codec],
@@ -54,7 +46,7 @@ export function getCodec(codec: CODEC, proto: ProtocolsHash) {
 }
 
 export class LocalForger implements Forger {
-  constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
+  constructor(public readonly protocolHash = PROTOCOL_CURRENT) { }
 
   private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 
