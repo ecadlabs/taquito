@@ -36,6 +36,8 @@ import {
   RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
+  TxRollupInboxResponse,
+  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
@@ -257,5 +259,18 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   }
   async getProtocols({ block }: RPCOptions = defaultRPCOptions): Promise<ProtocolsResponse> {
     return this.rpc.getProtocols({ block });
+  }
+  async getTxRollupState(
+    txRollupId: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<TxRollupStateResponse> {
+    return this.rpc.getTxRollupState(txRollupId, { block });
+  }
+  async getTxRollupInbox(
+    txRollupId: string,
+    blockLevel: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<TxRollupInboxResponse | null> {
+    return this.rpc.getTxRollupInbox(txRollupId, blockLevel, { block });
   }
 }

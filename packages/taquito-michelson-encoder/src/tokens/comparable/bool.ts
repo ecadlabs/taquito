@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../../schema/types';
-import { Token, TokenFactory, ComparableToken } from '../token';
+import { Token, TokenFactory, ComparableToken, SemanticEncoding } from '../token';
 
 export class BoolToken extends ComparableToken {
   static prim: 'bool' = 'bool';
@@ -21,7 +21,10 @@ export class BoolToken extends ComparableToken {
     return { prim: val ? 'True' : 'False' };
   }
 
-  public EncodeObject(val: any) {
+  public EncodeObject(val: any, semantic?: SemanticEncoding) {
+    if (semantic && semantic[BoolToken.prim]) {
+      return semantic[BoolToken.prim](val);
+    }
     return { prim: val ? 'True' : 'False' };
   }
 
@@ -42,7 +45,7 @@ export class BoolToken extends ComparableToken {
 
   ToBigMapKey(val: string): { key: { [key: string]: string }; type: { prim: string } } {
     return {
-      key: this.EncodeObject(val),
+      key: this.EncodeObject(val) as any,
       type: { prim: BoolToken.prim },
     };
   }

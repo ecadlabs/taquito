@@ -52,6 +52,8 @@ import {
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
+  TxRollupStateResponse,
+  TxRollupInboxResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -979,6 +981,52 @@ export class RpcClient implements RpcClientInterface {
   async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
     return this.httpBackend.createRequest<ProtocolsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/protocols`),
+      method: 'GET',
+    });
+  }
+
+  /**
+   *
+   * @param tx_rollup_id the transaction rollup ID
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the state of a rollup
+   *
+   * @see https://tezos.gitlab.io/jakarta/rpc.html#get-block-id-context-tx-rollup-tx-rollup-id-state
+   */
+
+  async getTxRollupState(
+    txRollupId: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<TxRollupStateResponse> {
+    return this.httpBackend.createRequest<TxRollupStateResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/tx_rollup/${txRollupId}/state`
+      ),
+      method: 'GET',
+    });
+  }
+
+  /**
+   *
+   * @param tx_rollup_id the transaction rollup ID
+   * @param block_level the block level
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the inbox of a transaction rollup
+   *
+   * @see https://tezos.gitlab.io/jakarta/rpc.html#get-block-id-context-tx-rollup-tx-rollup-id-inbox-block-level
+   */
+
+  async getTxRollupInbox(
+    txRollupId: string,
+    blockLevel: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<TxRollupInboxResponse | null> {
+    return this.httpBackend.createRequest<TxRollupInboxResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/tx_rollup/${txRollupId}/inbox/${blockLevel}`
+      ),
       method: 'GET',
     });
   }

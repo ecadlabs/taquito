@@ -192,7 +192,7 @@ export class LedgerSigner implements Signer {
     };
   }
 
-  private async signWithLedger(message: any): Promise<Buffer> {
+  private async signWithLedger(message: Buffer[]): Promise<Buffer> {
     // first element of the message represents the path
     let ledgerResponse = await this.transport.send(
       this.CLA,

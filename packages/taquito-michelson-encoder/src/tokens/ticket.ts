@@ -1,7 +1,7 @@
 import { TicketTokenSchema } from '../schema/types';
 import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
-import { Token, TokenFactory, Semantic } from './token';
+import { Token, TokenFactory, Semantic, SemanticEncoding } from './token';
 
 /**
  *  @category Error
@@ -37,7 +37,10 @@ export class TicketToken extends Token {
     throw new EncodeTicketError();
   }
 
-  public EncodeObject(_args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[TicketToken.prim]) {
+      return semantic[TicketToken.prim](args, this.val);
+    }
     throw new EncodeTicketError();
   }
 

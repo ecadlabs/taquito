@@ -13,6 +13,7 @@ export enum Prefix {
   EDPK = 'edpk',
   SPPK = 'sppk',
   P2PK = 'p2pk',
+  BLPK = 'BLpk',
 
   EDESK = 'edesk',
   SPESK = 'spesk',
@@ -68,6 +69,7 @@ export const prefix = {
   [Prefix.EDPK]: new Uint8Array([13, 15, 37, 217]),
   [Prefix.SPPK]: new Uint8Array([3, 254, 226, 86]),
   [Prefix.P2PK]: new Uint8Array([3, 178, 139, 127]),
+  [Prefix.BLPK]: new Uint8Array([6, 149, 135, 204]),
 
   [Prefix.EDESK]: new Uint8Array([7, 90, 60, 179, 41]),
   [Prefix.SPESK]: new Uint8Array([0x09, 0xed, 0xf1, 0xae, 0x96]),
@@ -116,6 +118,9 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.EDPK]: 32,
   [Prefix.SPPK]: 33,
   [Prefix.P2PK]: 33,
+  //working with value in comment for base58.ml line 445 but not consistent with the three above
+  [Prefix.BLPK]: 48,
+
   [Prefix.EDSIG]: 64,
   [Prefix.SPSIG]: 64,
   [Prefix.P2SIG]: 64,

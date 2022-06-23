@@ -78,6 +78,8 @@ describe('RpcContractProvider test', () => {
     batch: jest.Mock<any, any>;
     reveal: jest.Mock<any, any>;
     registerGlobalConstant: jest.Mock<any, any>;
+    txRollupOriginate: jest.Mock<any, any>;
+    txRollupSubmitBatch: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -128,6 +130,8 @@ describe('RpcContractProvider test', () => {
       batch: jest.fn(),
       reveal: jest.fn(),
       registerGlobalConstant: jest.fn(),
+      txRollupOriginate: jest.fn(),
+      txRollupSubmitBatch: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -1361,6 +1365,133 @@ describe('RpcContractProvider test', () => {
               fee: '475',
               gas_limit: '1330',
               kind: 'register_global_constant',
+              source: 'test_pub_key_hash',
+              storage_limit: '93',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+  });
+
+  describe('txRollupOriginate', () => {
+    it('should produce a reveal and txRollupOriginate operation', async (done) => {
+      const result = await rpcContractProvider.txRollupOriginate({
+        storageLimit: 6000,
+        gasLimit: 5000,
+        fee: 700,
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              tx_rollup_origination: {},
+              counter: '2',
+              fee: '700',
+              gas_limit: '5000',
+              kind: 'tx_rollup_origination',
+              source: 'test_pub_key_hash',
+              storage_limit: '6000',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should estimate when no fee are specified', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.txRollupOriginate.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.txRollupOriginate();
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              tx_rollup_origination: {},
+              counter: '2',
+              fee: '475',
+              gas_limit: '1330',
+              kind: 'tx_rollup_origination',
+              source: 'test_pub_key_hash',
+              storage_limit: '93',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+  });
+
+  describe('txRollupSubmitBatch', () => {
+    it('should produce a reveal and txRollupSubmitBatch operation', async (done) => {
+      const result = await rpcContractProvider.txRollupSubmitBatch({
+        content: '1234',
+        rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
+        storageLimit: 6000,
+        gasLimit: 5000,
+        fee: 700,
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              content: '1234',
+              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
+              counter: '2',
+              fee: '700',
+              gas_limit: '5000',
+              kind: 'tx_rollup_submit_batch',
+              source: 'test_pub_key_hash',
+              storage_limit: '6000',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should estimate when no fee are specified', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.txRollupSubmitBatch.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.txRollupSubmitBatch({
+        content: '1234',
+        rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              content: '1234',
+              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
+              counter: '2',
+              fee: '475',
+              gas_limit: '1330',
+              kind: 'tx_rollup_submit_batch',
               source: 'test_pub_key_hash',
               storage_limit: '93',
             },

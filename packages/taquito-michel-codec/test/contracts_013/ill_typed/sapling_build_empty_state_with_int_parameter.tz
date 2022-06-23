@@ -1,0 +1,10 @@
+parameter nat;
+storage (sapling_state 8);
+code {
+       UNPAIR;
+       SWAP;
+       DROP;
+       SAPLING_EMPTY_STATE;
+       NIL operation;
+       PAIR;
+     };

@@ -57,29 +57,29 @@
 .slick-prev {
   left: -25px;
 }
-[dir="rtl"] .slick-prev {
+[dir='rtl'] .slick-prev {
   right: -25px;
   left: auto;
 }
 .slick-prev:before {
-  content: "←";
+  content: '←';
 }
-[dir="rtl"] .slick-prev:before {
-  content: "→";
+[dir='rtl'] .slick-prev:before {
+  content: '→';
 }
 
 .slick-next {
   right: -25px;
 }
-[dir="rtl"] .slick-next {
+[dir='rtl'] .slick-next {
   right: auto;
   left: -25px;
 }
 .slick-next:before {
-  content: "→";
+  content: '→';
 }
-[dir="rtl"] .slick-next:before {
-  content: "←";
+[dir='rtl'] .slick-next:before {
+  content: '←';
 }
 
 /* Dots */
@@ -139,6 +139,7 @@
   opacity: 1;
 }
 .slick-dots li button:before {
+  margin-top: 50px;
   font-size: 6px;
   line-height: 20px;
 
@@ -146,14 +147,20 @@
   top: 0;
   left: 0;
 
-  width: 20px;
-  height: 20px;
+  height: 8px;
+  width: 8px;
+  background-color: var(--ifm-color-secondary);
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 15px;
 
-  content: "•";
+  content: ' ';
   text-align: center;
 
   opacity: 0.25;
-  color: black;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

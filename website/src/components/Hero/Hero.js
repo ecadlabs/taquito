@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-// import clsx from "clsx";
+/* eslint-disable @typescript-eslint/no-var-requires */
+import React from 'react';
 import styles from './Hero.module.scss';
-// import Slider from "react-slick";
-
-// import SVGExample from './example-logo.svg'
+import Slider from 'react-slick';
+import '../../../static/slick/slick.css';
+import '../../../static/slick/slick-theme.css';
 
 const FeatureList = [
   {
@@ -60,30 +60,31 @@ const FeatureList = [
 ];
 
 function Feature({ title, description, link, features }) {
-  const checkTitle = (e) => {
-    setUserAction(true);
-    isVisible === e.target.id
-      ? toggleIsVisible(`${features[0].title}`)
-      : toggleIsVisible(e.target.id);
+  const sliderSettings = {
+    arrows: false,
+    dots: true,
+    infinite: true,
+    autoplay: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    initialSlide: 0,
+    dotsClass: 'slick-dots slick-thumb',
+    autoplaySpeed: 7000,
+
+    // customPaging: () => (
+    //   <div style={{ marginTop: '100px' }}>
+    //     <div
+    //       style={{
+    //         height: '6px',
+    //         width: '6px',
+    //         background: 'red',
+    //         // borderRadius: '100%',
+    //         // backgroundColor: theme.colors.textLightGray,
+    //       }}
+    //     />
+    //   </div>
+    // ),
   };
-
-  const [isVisible, toggleIsVisible] = useState(`${features[0].title}`);
-  const [userAction, setUserAction] = useState(false);
-
-  const featuresIndex = features.findIndex((object) => {
-    return object.title === isVisible;
-  });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const checkEnd = (index) => {
-        return features.length - 1 === index ? index * 0 : index + 1;
-      };
-
-      !userAction && toggleIsVisible(`${features[checkEnd(featuresIndex)].title}`);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [isVisible, userAction]);
 
   return (
     <div className={styles.content}>
@@ -102,28 +103,12 @@ function Feature({ title, description, link, features }) {
         </div>
       </div>
       <div className={styles.carouselContainer}>
-        <div className={styles.carousel}>
-          <div className={styles.videoBlock}>
-            {features.map((feature, index) => {
-              return (
-                isVisible === feature.title && (
-                  <img key={index} autoPlay={true} muted src={feature.gif} />
-                )
-              );
-            })}
-          </div>
-        </div>
-        <div className={styles.dotMenu}>
-          {features.map((feature, index) => {
-            return (
-              <div
-                key={index}
-                className={isVisible === feature.title ? styles.dots : styles.inactivedots}
-                id={feature.title}
-                onClick={(e) => checkTitle(e)}
-              ></div>
-            );
-          })}
+        <div className={styles.carouselBox}>
+          <Slider className={styles.slider} {...sliderSettings}>
+            {features.map((feature, index) => (
+              <img key={index} src={feature.gif} />
+            ))}
+          </Slider>
         </div>
       </div>
     </div>
@@ -131,15 +116,11 @@ function Feature({ title, description, link, features }) {
 }
 
 export default function Hero() {
-  const Logo = require('../../../static/img/example.png').default;
-
   return (
     <section className={styles.features}>
       <div className={styles.container}>
         <Feature {...FeatureList[0]} />
       </div>
-      {/* <div className={styles.leftPurpleLine}></div>
-      <div className={styles.rightPurpleLine}></div> */}
     </section>
   );
 }

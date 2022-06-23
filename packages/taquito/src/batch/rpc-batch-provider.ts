@@ -6,8 +6,10 @@ import {
   createOriginationOperation,
   createRegisterGlobalConstantOperation,
   createRevealOperation,
+  createTxRollupOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  createTxRollupBatchOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -22,6 +24,8 @@ import {
   withKind,
   RevealParams,
   RegisterGlobalConstantParams,
+  TxRollupOriginateParams,
+  TxRollupBatchParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -135,6 +139,28 @@ export class OperationBatch extends OperationEmitter {
     return this;
   }
 
+  /**
+   *
+   * @description Add an operation to originate a rollup to the batch
+   *
+   * @param params Rollup origination operation parameter
+   */
+  withTxRollupOrigination(params?: TxRollupOriginateParams) {
+    this.operations.push({ kind: OpKind.TX_ROLLUP_ORIGINATION, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Add an operation to submit a tx rollup batch to the batch
+   *
+   * @param params Tx rollup batch operation parameter
+   */
+  withTxRollupSubmitBatch(params: TxRollupBatchParams) {
+    this.operations.push({ kind: OpKind.TX_ROLLUP_SUBMIT_BATCH, ...params });
+    return this;
+  }
+
   private async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -157,6 +183,14 @@ export class OperationBatch extends OperationEmitter {
         };
       case OpKind.REGISTER_GLOBAL_CONSTANT:
         return createRegisterGlobalConstantOperation({
+          ...param,
+        });
+      case OpKind.TX_ROLLUP_ORIGINATION:
+        return createTxRollupOriginationOperation({
+          ...param,
+        });
+      case OpKind.TX_ROLLUP_SUBMIT_BATCH:
+        return createTxRollupBatchOperation({
           ...param,
         });
       default:
@@ -187,6 +221,12 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.REGISTER_GLOBAL_CONSTANT:
           this.withRegisterGlobalConstant(param);
+          break;
+        case OpKind.TX_ROLLUP_ORIGINATION:
+          this.withTxRollupOrigination(param);
+          break;
+        case OpKind.TX_ROLLUP_SUBMIT_BATCH:
+          this.withTxRollupSubmitBatch(param);
           break;
         default:
           throw new InvalidOperationKindError((param as any).kind);
