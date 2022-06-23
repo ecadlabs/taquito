@@ -49,7 +49,7 @@ Each contract description will include the storage in Michelson and the storage 
 
 ## IncrementContract
 
-[KT1A3dyvS4pWd9b9yLLMBKLxc6S6G5b58BsK](https://better-call.dev/jakartanet/KT1A3dyvS4pWd9b9yLLMBKLxc6S6G5b58BsK/code)
+[KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2](https://better-call.dev/jakartanet/KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2/code)
 
 This contract serves as the default introductory example on the [Ligo-WEB-IDE](https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug)
 It has two endpoints, %decrement and %increment. The contract is used to demo addition and subtraction by a smart contract. This contract has neither an FA1.2 nor an FA2 interface.
@@ -83,7 +83,7 @@ storage: 1;
 
 ## MichelsonMapContract
 
-[KT1NzbR52g8TBAKzDH5TXEtxiARFuwzvC4hi](https://better-call.dev/jakartanet/KT1NzbR52g8TBAKzDH5TXEtxiARFuwzvC4hi/code)
+[KT1NASCf1Dr3SZu4RewZSRjd4mHvh8uADxf2](https://better-call.dev/jakartanet/KT1NASCf1Dr3SZu4RewZSRjd4mHvh8uADxf2/code)
 
 The contract supports a [Michelson Tutorial](https://tezostaquito.io/docs/michelsonmap). It has a default endpoint that takes a pair of an address and an amount of tez.
 
@@ -476,7 +476,7 @@ storageMap.set('3', { current_stock: '50', max_price: '60' });
 
 ## MapWithMapandBigmapContract
 
-[KT1RBE127YSA96FwCYrA8sazvr8pt1TYaThS](https://better-call.dev/jakartanet/KT1RBE127YSA96FwCYrA8sazvr8pt1TYaThS/code)
+[KT1Na57o4VNiX1dFP2ookfRBFnQLboLwV4u5](https://better-call.dev/jakartanet/KT1Na57o4VNiX1dFP2ookfRBFnQLboLwV4u5/code)
 
 The get method of the MichelsonMap class accesses the values of the map and values of the bigMap. The difference is that the value gets returned directly for a map while the get method on a bigMap returns a promise.
 
@@ -681,7 +681,7 @@ const op = await tezos.contract.originate({
 
 ## BigMapsWithLedgerContract
 
-[KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj](https://better-call.dev/jakartanet/KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj/code)
+[KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9](https://better-call.dev/jakartanet/KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9/code)
 
 This contract is used in Taquito integration tests. It is not a FA1.2 contract, since Entrypoint "transfer" has type (pair (pair (address %0) (address %1)) (nat %2)), but should have type (pair address address nat). Also not an FA2 contract as it does not have an entrypoint for update_operators.
 

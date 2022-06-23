@@ -171,7 +171,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/jakartanet/KT1Rf9znRBHPW4BW8NbFuYeHKdykrAyb21si/operations`);
+    println(`Operation injected: https://better-call.dev/jakartanet/KT1GhkZzKSBjMxY4kKURNhhYiSVuTyBaGspe/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -202,6 +202,6 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/jakartanet/KT1Rf9znRBHPW4BW8NbFuYeHKdykrAyb21si/operations`);
+    println(`Operation injected: https://better-call.dev/jakartanet/KT1GhkZzKSBjMxY4kKURNhhYiSVuTyBaGspe/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

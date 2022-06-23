@@ -69,12 +69,12 @@ npm run test:jakartanet -- -t "Originate FA1.2 contract and fetch data from view
 
 ## How to run against a specific RPC URL
 
-To run tests against a node which is not preconfigured in Taquito you can use 
-`export TEZOS_RPC_jakartaNET='http://localhost:8732'`. 
+To run tests against a node that is not preconfigured in Taquito you can use 
+`export TEZOS_RPC_JAKARTANET='http://localhost:8732'`. 
 
 ## How to use a faucet instead of the keygen api
 
-By default the integration tests will use an ephemeral key handled by the Keygen API. To use a faucet instead you can use the cli option <testnet>-faucet, like this:
+By default, the integration tests will use an ephemeral key handled by the Keygen API. To use a faucet instead you can use the cli option <testnet>-faucet, like this:
 
 ```
 npm run test:hangzhounet-faucet "manager-wallet-scenario.spec.ts"
