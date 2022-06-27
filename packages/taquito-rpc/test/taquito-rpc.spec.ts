@@ -2608,19 +2608,19 @@ describe('RpcClient test', () => {
       expect(content.context_hash).toEqual('CoV7iqRirVx7sZa5TAK9ymoEJBrW6z4hwwrzMhz6YLeHYXrQwRWG');
       expect(content.message_index).toEqual(0);
       expect(content.message_result_path).toBeDefined();
-      expect(content.message_result_path![0]).toEqual(
+      expect(content.message_result_path[0]).toEqual(
         'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB'
       );
 
       expect(content.tickets_info).toBeDefined();
 
-      expect((content.tickets_info![0].contents as MichelsonV1ExpressionBase).string).toEqual(
+      expect((content.tickets_info[0].contents as MichelsonV1ExpressionBase).string).toEqual(
         'third-deposit'
       );
-      expect((content.tickets_info![0].ty as MichelsonV1ExpressionExtended).prim).toEqual('string');
-      expect(content.tickets_info![0].ticketer).toEqual('KT1EMQxfYVvhTJTqMiVs2ho2dqjbYfYKk6BY');
-      expect(content.tickets_info![0].amount).toEqual('2');
-      expect(content.tickets_info![0].claimer).toEqual('tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM');
+      expect((content.tickets_info[0].ty as MichelsonV1ExpressionExtended).prim).toEqual('string');
+      expect(content.tickets_info[0].ticketer).toEqual('KT1EMQxfYVvhTJTqMiVs2ho2dqjbYfYKk6BY');
+      expect(content.tickets_info[0].amount).toEqual('2');
+      expect(content.tickets_info[0].claimer).toEqual('tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM');
 
       done();
     });
