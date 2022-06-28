@@ -28,6 +28,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       })
       const contract = await op.contract();
       expect(op.status).toEqual('applied')
+      console.log("contract address : "+contract.address)
+     
 
       // Utility function that mimics the PAIR operation of michelson
       // file deepcode ignore no-any: any is good enough
@@ -123,6 +125,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       ).send()
 
       await op2.confirmation();
+
       done();
     })
   })
