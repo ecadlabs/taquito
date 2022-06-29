@@ -5,6 +5,7 @@ import { InvalidSpendingKey } from './error';
 /**
  * @description Holds the viewing key
  */
+
 export class InMemoryViewingKey {
   #fullViewingKey: Buffer;
   constructor(fullViewingKey: string) {
@@ -21,7 +22,7 @@ export class InMemoryViewingKey {
    * ```
    *
    */
-  static async fromSpendingKey(spendingKey: string) {
+   static async fromSpendingKey(spendingKey: string) {
     if (validateSpendingKey(spendingKey) !== 3) {
       throw new InvalidSpendingKey(spendingKey);
     }
