@@ -7,7 +7,7 @@ describe('Signature token', () => {
   });
 
   describe('EncodeObject', () => {
-    it('Should encode address to string', () => {
+    it('Should encode signature to string', () => {
       expect(
         token.EncodeObject(
           'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd'
@@ -20,7 +20,7 @@ describe('Signature token', () => {
   });
 
   describe('Encode', () => {
-    it('Should encode address to string', () => {
+    it('Should encode signature to string', () => {
       expect(
         token.Encode([
           'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
