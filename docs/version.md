@@ -2,6 +2,162 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v13.0.0
+
+**BREAKING CHANGES**
+The `NaiveEstimateProvider` class that was deprecated in v11 has been removed.
+
+## Summary
+### Jakarta support
+- `@taquito/rpc` - Allow retrieving the state and inbox of a rollup #1617
+- `@taquito/rpc` - Added appropriate types related to TORU #1614, #1676
+- `@taquito/local-forging` - Added support for the operations `transfer_ticket`, `tx_rollup_origination` and `tx_rollup_submit_batch` #1615
+- `@taquito/michelson-encoder` - Added support for the new type`tx_rollup_l2_address` #1613
+- `@taquito/michel-codec` - Added support for the new type`tx_rollup_l2_address` and the new instruction `MIN_BLOCK_TIME` #1612
+- `@taquito/michel-codec` - Annotating the top-level parameter constructor to designate the root entry point is now forbidden #1611
+- `@taquito/taquito` - Added support for the `tx_rollup_origination` and `tx_rollup_submit_batch` operations #1616
+
+### Documentation
+- Remove outdated RPC nodes: https://tezostaquito.io/docs/next/rpc_nodes/
+- Fixed broken links #1629
+
+### Others
+- Add to The Taquito Integration Tests the Contract Security tests from InferenceAG / TezosSecurityBaselineChecking #1631, #1632, #1654
+- `@taquito/beacon-wallet` - The beacon-dapp is updated to version 3.1.1: https://github.com/airgap-it/beacon-sdk/releases/tag/v3.1.1
+
+
+
+## `@taquito/rpc` - Allow retrieving the state and inbox of a rollup
+
+A new method named `getTxRollupState`, which allows accessing a rollup's state, has been added to the `RpcClient` class. It takes a `txRollupId` (a `string`) as a parameter.
+
+A new method named `getTxRollupInbox`, which allows accessing the inbox of a transaction rollup, has been added to the RpcClient class. It takes a `txRollupId` as a parameter and a `blockLevel`.
+
+## `@taquito/rpc` - Added appropriate types related to TORU
+
+TORU brings several new operation kinds that can be found in a block response. New interfaces representing the new operations have been added to the `OperationContents` and `OperationContentsAndResult` types of the RPC package. The new operation kinds are: `Tx_rollup_origination`, `Tx_rollup_submit_batch`, `Tx_rollup_commit`, `Tx_rollup_return_bond`, `Tx_rollup_finalize_commitment`, `Tx_rollup_remove_commitment`, `Tx_rollup_rejection`, `Tx_rollup_dispatch_tickets` and `Transfer_ticket`.
+
+The `liquidity_baking_escape_vote` property in `BlockFullHeader` is replaced with `liquidity_baking_toggle_vote` the value of which can be `on`, `off` or `pass`.
+
+**Breaking change**: The `balance_updates` property of the different `OperationContentsAndResultMetadata` is now optional.
+
+The `OperationBalanceUpdatesItem` can now contain a `bond_id` property of type `BondId`. `BondId` has a `tx_rollup` property.
+
+The `OperationResultTxRollupOrigination` can now contain a `ticket_hash` property. 
+
+The `METADATA_BALANCE_UPDATES_CATEGORY` enum contains an additional `BONDS` category.
+
+Several properties were added in the ConstantsResponse for proto013.
+
+The `liquidity_baking_escape_ema` property in `BlockMetadata` is replaced by `liquidity_baking_toggle_ema` and `BlockMetadata` also contains a new `consumed_milligas` property.
+
+The `RPCRunOperationParam` parameter has new optional properties: `self`, `unparsing_mode`, `now` and `level`.
+
+## `@taquito/local-forging` -Added support for the operations `transfer_ticket`, `tx_rollup_origination` and `tx_rollup_submit_batch`
+
+Added support to forge and unforge the new operation kinds `transfer_ticket`, `tx_rollup_origination` and `tx_rollup_submit_batch` related to TORU. We plan to add support for the remaining operations in a subsequent release.
+
+## `@taquito/michelson-encoder` - Added support for the the new type`tx_rollup_l2_address`
+
+We created a new class `TxRollupL2AddressToken` in the michelson-encoder to support the new Michelson type `tx_rollup_l2_address`. This type is used to identify accounts on transaction rollups' ledgers. Those accounts are prefixed with `tz4`. 
+The `TxRollupL2AddressToken` class allows users of Taquito to pass `tz4` addresses in storage or smart contract entry points using the Taquito JS abstraction.  
+
+## `@taquito/michel-codec` - Added support for the new type`tx_rollup_l2_address` and the new instruction `MIN_BLOCK_TIME`
+
+@taquitp/michel-codec is responsible, among others, for validating Michelson code to ensure its correctness. The package now supports the new `MIN_BLOCK_TIME` instruction and the `tx_rollup_l2_address` type.
+
+> A new instruction MIN_BLOCK_TIME has been added. It can be used to push the current minimal time between blocks onto the stack. The value is obtained from the protocol's minimal_block_delay constant.
+
+*Reference: https://tezos.gitlab.io/protocols/013jakarta.html#michelson*
+
+## `@taquito/michel-codec` - Annotating the top-level parameter constructor to designate the root entry point is now forbidden
+
+If the top-level parameter constructor is annotated when parsing a contract, a `MichelsonValidationError` exception will be thrown.
+
+> Annotating the parameter toplevel constructor to designate the root entrypoint is now forbidden. Put the annotation on the parameter type instead. E.g. replace parameter %a int; by parameter (int %a);
+
+*Reference: https://tezos.gitlab.io/protocols/013jakarta.html#michelson*
+
+## `@taquito/taquito` - Added support for the `tx_rollup_origination` and `tx_rollup_submit_batch` operations
+
+We added support on the contract, batch, and estimate API allowing users to deploy a tx rollup using Taquito and send a batch to a tx rollup.
+
+We plan to add support for the remaining operations related to TORU in subsequent releases.
+
+**Example of originating a rollup with Taquito:**
+```typescript=
+const op = await Tezos.contract.originateTxRollup();
+await op.confirmation();
+
+const rollup = op.originatedRollup;
+```
+The `originateTxRollup` method takes optional `storageLimit`, `gasLimit` and `fee` as parameters.
+
+**Example of sending a batch to a rollup with Taquito:**
+```typescript=
+const op = await Tezos.contract.txRollupSubmitBatch({
+    content: '626c6f62',
+    rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w'
+});
+await op.confirmation();
+```
+The `txRollupSubmitBatch` method also takes optional `storageLimit`, `gasLimit` and `fee` as parameters.
+
+## Known Issues
+- Version stamp is out of date, resulting in `getVersionInfo()` to return the older version (12.1.0) instead of the current release candidate. This will be fixed in the full release. 
+
+# Taquito v12.1.0-beta
+
+## Summary
+### Jakarta initial support
+- Compatibility with the Jakarta protocol
+
+### Improvements
+- `@taquito/taquito` - Avoid doing POST call to fetch contract script with the RPC #1532
+- Review and improve Error classes in Taquito #1472
+- `@taquito/http-utils` - Make HttpBackend.defaultTimeout configurable #751
+- `@taquito/local-forging` - Reject Invalid Inputs When Forging #483
+
+### Documentation
+- How to capture failwith errors: https://tezostaquito.io/docs/next/failwith_errors
+
+
+
+## Compatibility with the Jakarta protocol
+We addressed the Jakarta protocol's breaking changes, making this version of Taquito compatible with the Jakarta protocol. This early integration has been possible by using the Mondaynet testnet. 
+
+The Jakarta protocol addresses the [malleability issue](https://tezos.gitlab.io/alpha/sapling.html#preventing-malleability) discovered in Sapling. It introduces changes around the sapling related types and instructions that are now supported in Taquito:
+- The encoding of `sapling_transaction` has changed; we added support for it in the `@taquito/local-forging` package and support for `sapling_transaction_deprecated`. 
+
+- The optional type returned by the `SAPLING_VERIFY_UPDATE` instruction contains an additional property named `bound_data`. We added support for it in the `@taquito/michel-codec` package.
+
+This release introduces some breaking changes in the `@taquito/rpc` package:
+- The type of the proposal response items returned by the `getProposals` methods has changed from `[string, number]` to `[string, BigNumber]`.
+- The type of the properties in the response of the `getBallots` methods have changed from `number` to `BigNumber`.
+- In the response of `getVotesListings`, the field `rolls` is now optional as it has been replaced by `voting_power`, which type is a `BigNumber`.
+- In the response of `getDelegates`, the type of the `voting_power` property has changed from `number` to `BigNumber`.
+
+Note that support for new features brought by the Jakarta protocol is not part of the current release.
+
+## `@taquito/taquito` - Avoid doing POST call to fetch contract script with the RPC
+
+In the latest versions, the RPC `context/contracts/{contractAddress}/script/normalized` endpoint was used to fetch the script when building the contract abstraction. This endpoint which is a POST call has been replaced with `context/contracts/{contractAddress}`, which is a GET call instead. The reason for changing the endpoints is that it is more convenient to avoid POST calls when reading from the chain, as this prevents caching using standard HTTP caches. Also, both endpoints return expanded global constants for all protocols so far.
+
+## Review and improve Error classes in Taquito
+
+Many error classes in Taquito returned a regular `Error` class. We adjusted them to use custom errors to provide a better error handling experience for our users. The errors are now available on the typedoc documentation in an `Error Classes` section for the different packages.
+
+Note that this improvement results in a potential breaking change for users who were catching the regular Error.
+
+## `@taquito/http-utils` - Make HttpBackend.defaultTimeout configurable
+
+The timeout has been added to the construction of the HttpBackend class with a default value of 30000 milliseconds.
+
+A different timeout value can be configured when creating an instance of RpcClient as follows:
+
+```javascript=
+new RpcClient('url', 'chain', new HttpBackend(50000));
+```
 
 # Taquito v12.1.0-beta
 

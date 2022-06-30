@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../schema/types';
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class Bls12381g2ValidationError extends TokenValidationError {
   name = 'Bls12381g2ValidationError';
@@ -42,11 +42,14 @@ export class Bls12381g2Token extends Token {
     return { bytes: val };
   }
 
-  EncodeObject(val: string | Uint8Array) {
+  EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+    if (semantic && semantic[Bls12381g2Token.prim]) {
+      return semantic[Bls12381g2Token.prim](val);
     }
     return { bytes: val };
   }

@@ -1,4 +1,4 @@
-import { MichelsonV1Expression } from '@taquito/rpc';
+import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
 import { TokenSchema } from '../schema/types';
 
 /**
@@ -22,19 +22,46 @@ export interface Semantic {
   [key: string]: (value: MichelsonV1Expression, schema: MichelsonV1Expression) => any;
 }
 
+export interface SemanticEncoding {
+  [key: string]: (value: any, type?: MichelsonV1Expression) => MichelsonV1Expression;
+}
+
 export abstract class Token {
   constructor(
-    protected val: { prim: string; args?: any[]; annots?: any[] },
+    protected val: MichelsonV1ExpressionExtended,
     protected idx: number,
     protected fac: TokenFactory
   ) {}
 
   protected typeWithoutAnnotations() {
-    const removeArgsRec = (val: Token['val']): { prim: string; args?: any[] } => {
+    const handleMichelsonExpression = (val: MichelsonV1Expression): MichelsonV1Expression => {
+      if (typeof val === 'object') {
+        if (Array.isArray(val)) {
+          const array = val as MichelsonV1Expression[];
+          return array.map((item) => handleMichelsonExpression(item));
+        }
+        const extended = val as MichelsonV1ExpressionExtended;
+        if (extended.args) {
+          return {
+            prim: extended.prim,
+            args: extended.args.map((x) => handleMichelsonExpression(x)),
+          };
+        } else {
+          return {
+            prim: extended.prim,
+          };
+        }
+      }
+      return val;
+    };
+
+    const handleMichelsonExtended = (
+      val: MichelsonV1ExpressionExtended
+    ): Omit<MichelsonV1ExpressionExtended, 'annots'> => {
       if (val.args) {
         return {
           prim: val.prim,
-          args: val.args.map((x) => removeArgsRec(x)),
+          args: val.args.map((x) => handleMichelsonExpression(x)),
         };
       } else {
         return {
@@ -43,7 +70,7 @@ export abstract class Token {
       }
     };
 
-    return removeArgsRec(this.val);
+    return handleMichelsonExtended(this.val);
   }
 
   annot() {
@@ -76,7 +103,7 @@ export abstract class Token {
 
   public abstract Encode(_args: any[]): any;
 
-  public abstract EncodeObject(args: any): any;
+  public abstract EncodeObject(args: any, semantics?: SemanticEncoding): any;
 
   public ExtractSignature() {
     return [[this.ExtractSchema()]];
@@ -92,8 +119,7 @@ export abstract class ComparableToken extends Token {
     key: { [key: string]: string | object[] };
     type: { prim: string; args?: object[] };
   };
-
-  abstract ToKey(val: string): any;
+  abstract ToKey(val: string | MichelsonV1Expression): any;
 
   compare(o1: string, o2: string): number {
     if (o1 === o2) {

@@ -1,5 +1,5 @@
 import { OrTokenSchema } from '../schema/types';
-import { Token, TokenFactory, Semantic, ComparableToken } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 
 /**
  *  @category Error
@@ -88,7 +88,7 @@ export class OrToken extends ComparableToken {
     return newSig;
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const label = Object.keys(args)[0];
 
     const leftToken = this.createToken(this.val.args[0], this.idx);
@@ -100,19 +100,19 @@ export class OrToken extends ComparableToken {
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
 
     if (String(leftToken.annot()) === String(label) && !(leftToken instanceof OrToken)) {
-      return { prim: 'Left', args: [leftToken.EncodeObject(args[label])] };
+      return { prim: 'Left', args: [leftToken.EncodeObject(args[label], semantic)] };
     } else if (String(rightToken.annot()) === String(label) && !(rightToken instanceof OrToken)) {
-      return { prim: 'Right', args: [rightToken.EncodeObject(args[label])] };
+      return { prim: 'Right', args: [rightToken.EncodeObject(args[label], semantic)] };
     } else {
       if (leftToken instanceof OrToken) {
-        const val = leftToken.EncodeObject(args);
+        const val = leftToken.EncodeObject(args, semantic);
         if (val) {
           return { prim: 'Left', args: [val] };
         }
       }
 
       if (rightToken instanceof OrToken) {
-        const val = rightToken.EncodeObject(args);
+        const val = rightToken.EncodeObject(args, semantic);
         if (val) {
           return { prim: 'Right', args: [val] };
         }

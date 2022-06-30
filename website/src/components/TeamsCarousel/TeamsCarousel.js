@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useRef } from 'react';
-import clsx from 'clsx';
 import styles from './TeamsCarousel.module.scss';
 import Slider from 'react-slick';
 import '../../../static/slick/slick.css';
@@ -18,14 +18,9 @@ const FeatureList = [
         url: 'https://kolibri.finance/',
       },
       {
-        Image: require('../../../static/img/cryptoverse_wars.png').default,
-        title: 'Cryptoverse Wars',
-        url: 'https://cryptocodeschool.in/tezos/',
-      },
-      {
-        Image: require('../../../static/img/plenty.png').default,
-        title: 'Plenty',
-        url: 'https://www.plentydefi.com/',
+        Image: require('../../../static/img/sweet.png').default,
+        title: 'Sweet',
+        url: 'https://sweet.io/',
       },
       {
         Image: require('../../../static/img/interpop_logo.png').default,
@@ -33,24 +28,24 @@ const FeatureList = [
         url: 'https://www.interpop.io/',
       },
       {
+        Image: require('../../../static/img/quipuswap-logo.png').default,
+        title: 'QuipuSwap',
+        url: 'https://quipuswap.com/',
+      },
+      {
         Image: require('../../../static/img/spruce_logo.png').default,
         title: 'Spruce',
         url: 'https://www.spruceid.com/',
       },
       {
-        Image: require('../../../static/img/sweet.png').default,
-        title: 'Sweet',
-        url: 'https://sweet.io/',
+        Image: require('../../../static/img/plenty.png').default,
+        title: 'Plenty',
+        url: 'https://www.plentydefi.com/',
       },
       {
         Image: require('../../../static/img/Kukai_logo.png').default,
         title: 'Kukai',
         url: 'https://wallet.kukai.app/',
-      },
-      {
-        Image: require('../../../static/img/quipuswap-logo.png').default,
-        title: 'QuipuSwap',
-        url: 'https://quipuswap.com/',
       },
       {
         Image: require('../../../static/img/tezos_mandala.png').default,
@@ -79,8 +74,8 @@ const FeatureList = [
       },
       {
         Image: require('../../../static/img/Group.png').default,
-        title: 'Tocqueville Group',
-        url: 'https://tqtezos.com',
+        title: 'Tezos Domains',
+        url: 'https://tezos.domains',
       },
       {
         Image: require('../../../static/img/Ligoland_logo.png').default,
@@ -90,7 +85,7 @@ const FeatureList = [
       {
         Image: require('../../../static/img/Vector_1.png').default,
         title: 'Homebase',
-        url: 'https://tezos-homebase.herokuapp.com/explorer/daos',
+        url: 'https://tezos-homebase.io/',
       },
       {
         Image: require('../../../static/img/radion_logo.png').default,

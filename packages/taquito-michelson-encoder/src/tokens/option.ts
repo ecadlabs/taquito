@@ -1,5 +1,5 @@
 import { OptionTokenSchema } from '../schema/types';
-import { Token, TokenFactory, Semantic, ComparableToken } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 
 export class OptionToken extends ComparableToken {
   static prim: 'option' = 'option';
@@ -41,14 +41,14 @@ export class OptionToken extends ComparableToken {
     return { prim: 'Some', args: [this.schema().Encode(args)] };
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const value = args;
 
     if (value === undefined || value === null) {
       return { prim: 'None' };
     }
 
-    return { prim: 'Some', args: [this.schema().EncodeObject(value)] };
+    return { prim: 'Some', args: [this.schema().EncodeObject(value, semantic)] };
   }
 
   public Execute(val: any, semantics?: Semantic) {

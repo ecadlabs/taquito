@@ -39,7 +39,7 @@ export class ContractView {
   ) {}
 
   async read(chainId?: ChainIds) {
-    if (validateContractAddress(chainId) == ValidationResult.VALID) {
+    if (validateContractAddress(chainId ?? '') == ValidationResult.VALID) {
       throw new DeprecationError(
         `Since version 12, the lambda view no longer depends on a lambda contract. The read method no longer accepts a contract address as a parameter.`
       );

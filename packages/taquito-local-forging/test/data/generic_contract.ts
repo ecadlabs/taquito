@@ -2,7 +2,7 @@ export const genericStorage = {
   prim: 'Unit',
 };
 
-export const genericCode = (op: any) => [
+export const genericCode = (op: string) => [
   {
     prim: 'parameter',
     args: [{ prim: 'unit' }],

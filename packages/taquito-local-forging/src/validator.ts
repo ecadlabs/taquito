@@ -1,3 +1,10 @@
+import { OpKind } from '@taquito/rpc';
+import { OperationContents } from '@taquito/rpc';
+import {
+  TransferTicketSchema,
+  TxRollupOriginationSchema,
+  TxRollupSubmitBatchSchema,
+} from './proto13-jakarta/schema/operation-proto13';
 import {
   ActivationSchema,
   DelegationSchema,
@@ -12,16 +19,19 @@ import {
 } from './schema/operation';
 
 type OperationKind =
-  | 'activate_account'
-  | 'reveal'
-  | 'delegation'
-  | 'transaction'
-  | 'origination'
-  | 'ballot'
-  | 'endorsement'
-  | 'seed_nonce_revelation'
-  | 'proposals'
-  | 'register_global_constant';
+  | OpKind.ACTIVATION
+  | OpKind.REVEAL
+  | OpKind.DELEGATION
+  | OpKind.TRANSACTION
+  | OpKind.ORIGINATION
+  | OpKind.BALLOT
+  | OpKind.ENDORSEMENT
+  | OpKind.SEED_NONCE_REVELATION
+  | OpKind.PROPOSALS
+  | OpKind.REGISTER_GLOBAL_CONSTANT
+  | OpKind.TRANSFER_TICKET
+  | OpKind.TX_ROLLUP_ORIGINATION
+  | OpKind.TX_ROLLUP_SUBMIT_BATCH;
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
@@ -34,6 +44,9 @@ const OperationKindMapping = {
   seed_nonce_revelation: SeedNonceRevelationSchema,
   proposals: ProposalsSchema,
   register_global_constant: RegisterGlobalConstantSchema,
+  transfer_ticket: TransferTicketSchema,
+  tx_rollup_origination: TxRollupOriginationSchema,
+  tx_rollup_submit_batch: TxRollupSubmitBatchSchema,
 };
 
 // Asymmetric difference: only account for things in arr2 that are not present in arr1, not vice versa
@@ -48,7 +61,7 @@ const deleteArrayElementByValue = (array: string[], item: string) => {
 /**
  * @returns A boolean value to indicate whether the operation kind is valid or not
  */
-export const validateOperationKind = (opKind: string) => {
+export const validateOperationKind = (opKind: OpKind) => {
   const opKindList = Object.keys(OperationKindMapping);
   return opKindList.includes(opKind);
 };
@@ -59,8 +72,8 @@ export const validateOperationKind = (opKind: string) => {
  *
  *  @returns array element differences if there are missing required property keys
  */
-export const validateMissingProperty = (operationContent: any) => {
-  const kind: OperationKind = operationContent.kind;
+export const validateMissingProperty = (operationContent: OperationContents) => {
+  const kind = operationContent.kind as OperationKind;
 
   const keys = Object.keys(operationContent);
   const cleanKeys = deleteArrayElementByValue(keys, 'kind');

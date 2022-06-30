@@ -4,7 +4,7 @@ import { Expr, GlobalConstantHashAndValue, Parser, Prim, ProtocolID } from '@taq
 import { OriginateParams } from '../operations/types';
 import { InvalidInitParameter, InvalidCodeParameter } from '../contract/errors';
 import { Schema } from '@taquito/michelson-encoder';
-import { MichelsonV1Expression } from '@taquito/rpc';
+import { MichelsonV1Expression, MichelsonV1ExpressionBase } from '@taquito/rpc';
 import { Protocols } from '../constants';
 
 export class MichelCodecParser implements ParserProvider {
@@ -105,13 +105,15 @@ export class MichelCodecParser implements ParserProvider {
       for (const token of globalConstantTokens) {
         const tokenArgs = token.tokenVal.args;
         if (tokenArgs) {
-          const hash: string = tokenArgs[0]['string'];
-          const michelineValue = await this.context.globalConstantsProvider.getGlobalConstantByHash(
-            hash
-          );
-          Object.assign(globalConstantsHashAndValue, {
-            [hash]: michelineValue,
-          });
+          const expression = tokenArgs[0] as MichelsonV1ExpressionBase;
+          if (expression.string) {
+            const hash: string = expression.string;
+            const michelineValue =
+              await this.context.globalConstantsProvider.getGlobalConstantByHash(hash);
+            Object.assign(globalConstantsHashAndValue, {
+              [hash]: michelineValue,
+            });
+          }
         }
       }
     }

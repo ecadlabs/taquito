@@ -35,7 +35,6 @@ describe('validateAddress', () => {
     expect(validateAddress('KT1')).toEqual(ValidationResult.INVALID_CHECKSUM);
     expect(validateAddress('tz4')).toEqual(ValidationResult.INVALID_CHECKSUM);
     expect(validateAddress('test')).toEqual(ValidationResult.NO_PREFIX_MATCHED);
-    expect(validateAddress([])).toEqual(ValidationResult.NO_PREFIX_MATCHED);
     expect(validateAddress('')).toEqual(ValidationResult.NO_PREFIX_MATCHED);
   });
 });
@@ -54,7 +53,6 @@ describe('validateChain', () => {
     expect(validateChain('tz3')).toEqual(ValidationResult.NO_PREFIX_MATCHED);
     expect(validateChain('KT1')).toEqual(ValidationResult.NO_PREFIX_MATCHED);
     expect(validateChain('test')).toEqual(ValidationResult.NO_PREFIX_MATCHED);
-    expect(validateChain([])).toEqual(ValidationResult.NO_PREFIX_MATCHED);
     expect(validateChain('')).toEqual(ValidationResult.NO_PREFIX_MATCHED);
   });
 });

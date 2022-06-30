@@ -89,15 +89,36 @@ export function b58decode(payload: string) {
     [prefix.tz3.toString()]: '0002',
   };
 
+  const rollupPrefMap = {
+    [prefix.txr1.toString()]: '02',
+  };
+
   const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
+  const rollupPref = rollupPrefMap[new Uint8Array(buf.slice(0, 4)).toString()];
   if (pref) {
     // tz addresses
     const hex = buf2hex(buf.slice(3));
     return pref + hex;
+  } else if (rollupPref) {
+    const hex = buf2hex(buf.slice(4));
+    return rollupPref + hex + '00';
   } else {
     // other (kt addresses)
     return '01' + buf2hex(buf.slice(3, 42)) + '00';
   }
+}
+
+/**
+ *
+ * @description b58 decode a string without predefined prefix
+ * @param value
+ * @returns string of bytes
+ */
+export function b58decodeL2Address(payload: string) {
+  const buf: Buffer = bs58check.decode(payload);
+
+  // tz4 address currently
+  return buf2hex(buf.slice(3, 42));
 }
 
 /**
@@ -115,11 +136,21 @@ export function encodePubKey(value: string) {
     };
 
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
+  } else if (value.substring(0, 2) === '02') {
+    // 42 also works but the removes the 00 padding at the end
+    return b58cencode(value.substring(2, value.length - 2), prefix.txr1);
   }
-
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
-
+/**
+ *
+ * @description Base58 encode an address without predefined prefix
+ * @param value Address to base58 encode (tz4) hex dec
+ * @returns return address
+ */
+export function encodeL2Address(value: string) {
+  return b58cencode(value, prefix.tz4);
+}
 /**
  *
  * @description Base58 encode a key according to its prefix
@@ -191,6 +222,7 @@ export const mergebuf = (b1: Uint8Array, b2: Uint8Array): Uint8Array => {
  *
  * @param s michelson json
  */
+
 export const mic2arr = function me2(s: any): any {
   let ret: any = [];
   if (Object.prototype.hasOwnProperty.call(s, 'prim')) {
@@ -243,7 +275,7 @@ export const mic2arr = function me2(s: any): any {
 export const buf2hex = (buffer: Buffer): string => {
   const byteArray = new Uint8Array(buffer);
   const hexParts: string[] = [];
-  byteArray.forEach((byte: any) => {
+  byteArray.forEach((byte) => {
     const hex = byte.toString(16);
     const paddedHex = `00${hex}`.slice(-2);
     hexParts.push(paddedHex);
@@ -278,6 +310,9 @@ export const getPkhfromPk = (publicKey: string): string => {
       encodingPrefix = prefix[Prefix.TZ3];
       prefixLen = prefixLength[Prefix.TZ3];
       break;
+    case Prefix.BLPK:
+      encodingPrefix = prefix[Prefix.TZ4];
+      prefixLen = prefixLength[Prefix.TZ4];
   }
 
   const hashed = hash(decoded, prefixLen);

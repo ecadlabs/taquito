@@ -9,7 +9,7 @@ export enum ValidationResult {
   VALID,
 }
 
-export function isValidPrefix(value: any): value is Prefix {
+export function isValidPrefix(value: unknown): value is Prefix {
   if (typeof value !== 'string') {
     return false;
   }
@@ -26,7 +26,7 @@ export function isValidPrefix(value: any): value is Prefix {
  * @param value Value to validate
  * @param prefixes prefix the value should have
  */
-function validatePrefixedValue(value: any, prefixes: Prefix[]) {
+function validatePrefixedValue(value: string, prefixes: Prefix[]) {
   const match = new RegExp(`^(${prefixes.join('|')})`).exec(value);
   if (!match || match.length === 0) {
     return ValidationResult.NO_PREFIX_MATCHED;
@@ -61,7 +61,7 @@ function validatePrefixedValue(value: any, prefixes: Prefix[]) {
 const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3, Prefix.TZ4];
 const contractPrefix = [Prefix.KT1, Prefix.TXR1];
 const signaturePrefix = [Prefix.EDSIG, Prefix.P2SIG, Prefix.SPSIG, Prefix.SIG];
-const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK];
+const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK, Prefix.BLPK];
 const operationPrefix = [Prefix.O];
 const protocolPrefix = [Prefix.P];
 const blockPrefix = [Prefix.B];
@@ -81,7 +81,7 @@ const blockPrefix = [Prefix.B];
  * // This example return 3 which correspond to VALID
  * ```
  */
-export function validateAddress(value: any): ValidationResult {
+export function validateAddress(value: string): ValidationResult {
   return validatePrefixedValue(value, [...implicitPrefix, ...contractPrefix]);
 }
 
@@ -100,7 +100,7 @@ export function validateAddress(value: any): ValidationResult {
  * // This example return 3 which correspond to VALID
  * ```
  */
-export function validateChain(value: any): ValidationResult {
+export function validateChain(value: string): ValidationResult {
   return validatePrefixedValue(value, [Prefix.NET]);
 }
 
@@ -119,7 +119,7 @@ export function validateChain(value: any): ValidationResult {
  * // This example return 3 which correspond to VALID
  * ```
  */
-export function validateContractAddress(value: any): ValidationResult {
+export function validateContractAddress(value: string): ValidationResult {
   return validatePrefixedValue(value, contractPrefix);
 }
 
@@ -138,7 +138,7 @@ export function validateContractAddress(value: any): ValidationResult {
  * // This example return 0 which correspond to NO_PREFIX_MATCHED
  * ```
  */
-export function validateKeyHash(value: any): ValidationResult {
+export function validateKeyHash(value: string): ValidationResult {
   return validatePrefixedValue(value, implicitPrefix);
 }
 
@@ -157,7 +157,7 @@ export function validateKeyHash(value: any): ValidationResult {
  * // This example return 3 which correspond to VALID
  * ```
  */
-export function validateSignature(value: any): ValidationResult {
+export function validateSignature(value: string): ValidationResult {
   return validatePrefixedValue(value, signaturePrefix);
 }
 
@@ -176,7 +176,7 @@ export function validateSignature(value: any): ValidationResult {
  * // This example return 3 which correspond to VALID
  * ```
  */
-export function validatePublicKey(value: any): ValidationResult {
+export function validatePublicKey(value: string): ValidationResult {
   return validatePrefixedValue(value, pkPrefix);
 }
 
@@ -195,7 +195,7 @@ export function validatePublicKey(value: any): ValidationResult {
  * // This example return 3 which correspond to VALID
  * ```
  */
-export function validateOperation(value: any): ValidationResult {
+export function validateOperation(value: string): ValidationResult {
   return validatePrefixedValue(value, operationPrefix);
 }
 
@@ -214,7 +214,7 @@ export function validateOperation(value: any): ValidationResult {
  * // This example return 3 which correspond to VALID
  * ```
  */
-export function validateProtocol(value: any): ValidationResult {
+export function validateProtocol(value: string): ValidationResult {
   return validatePrefixedValue(value, protocolPrefix);
 }
 
@@ -233,7 +233,7 @@ export function validateProtocol(value: any): ValidationResult {
  * // This example return 3 which correspond to VALID
  * ```
  */
-export function validateBlock(value: any): ValidationResult {
+export function validateBlock(value: string): ValidationResult {
   return validatePrefixedValue(value, blockPrefix);
 }
 

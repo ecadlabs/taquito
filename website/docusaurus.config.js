@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 module.exports = {
@@ -55,6 +56,10 @@ module.exports = {
       },
       items: [
         {
+          type: 'search',
+          position: 'right'
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
           className: 'header-link',
@@ -68,7 +73,7 @@ module.exports = {
           className: 'header-link button_link',
         },
         {
-          href: 'https://discord.gg/tURNUPwp',
+          href: 'https://t.me/tezostaquito',
           position: 'right',
           className: 'header-link header-discord-link',
           'aria-label': 'Discord',
@@ -168,11 +173,11 @@ module.exports = {
       ],
     },
 
-    // algolia: {
-    //   apiKey: 'process.env.ALGOLIA_SEARCH_API_KEY',
-    //   indexName: 'taquito',
-    //   appId: 'process.env.ALGOLIA_APPLICATION_ID',
-    // }
+    algolia: {
+      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
+      indexName: 'taquito',
+      appId: process.env.ALGOLIA_APPLICATION_ID,
+    },
   },
   presets: [
     [

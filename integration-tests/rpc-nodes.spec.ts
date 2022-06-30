@@ -18,6 +18,10 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
+    const jakartanetAndIthacanet = protocol === Protocols.Psithaca2 || protocol === Protocols.PtJakart2 ? test: test.skip;
+    const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+    const jakartanetIt = protocol === Protocols.PtJakart2 ? it: it.skip;
+
     beforeAll(async (done) => {
       await setup();
       done();
@@ -261,11 +265,20 @@ CONFIGS().forEach(
         });
 
         // We will send invalid signedOpBytes and see if the node returns the expected error message
-        it('Inject an operation in node and broadcast it', async (done) => {
+        jakartanetAndIthacanet('Inject an operation in node and broadcast it', async (done) => {
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
             expect(ex.message).toMatch('Invalid_argument "Hex.to_char: 112 is an invalid char');
+          }
+          done();
+        });
+
+        mondaynet('Inject an operation in node and broadcast it', async (done) => {
+          try {
+            const injectedOperation = await rpcClient.injectOperation('operation');
+          } catch (ex: any) {
+            expect(ex.message).toContain('Http error response:');
           }
           done();
         });
@@ -383,6 +396,18 @@ CONFIGS().forEach(
         it('getProtocols', async (done) => {
           const protocols = await rpcClient.getProtocols();
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
+          done();
+        });
+
+        jakartanetIt('getTxRollupInbox', async (done) => {
+          const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
+          expect(inbox).toBeDefined();
+          done();
+        });
+
+        jakartanetIt('getTxRollupState', async (done) => {
+          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+          expect(state).toBeDefined();
           done();
         });
       });

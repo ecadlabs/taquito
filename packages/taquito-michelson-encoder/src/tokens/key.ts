@@ -1,4 +1,10 @@
-import { ComparableToken, Token, TokenFactory, TokenValidationError } from './token';
+import {
+  ComparableToken,
+  SemanticEncoding,
+  Token,
+  TokenFactory,
+  TokenValidationError,
+} from './token';
 import {
   encodeKey,
   validatePublicKey,
@@ -56,10 +62,14 @@ export class KeyToken extends ComparableToken {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[KeyToken.prim]) {
+      return semantic[KeyToken.prim](val);
     }
 
     return { string: val };

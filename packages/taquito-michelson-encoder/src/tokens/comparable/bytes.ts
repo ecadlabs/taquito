@@ -1,5 +1,11 @@
 import { BaseTokenSchema } from '../../schema/types';
-import { TokenFactory, ComparableToken, TokenValidationError, Token } from '../token';
+import {
+  TokenFactory,
+  ComparableToken,
+  TokenValidationError,
+  Token,
+  SemanticEncoding,
+} from '../token';
 
 export class BytesValidationError extends TokenValidationError {
   name = 'BytesValidationError';
@@ -50,11 +56,15 @@ export class BytesToken extends ComparableToken {
     return { bytes: String(val).toString() };
   }
 
-  public EncodeObject(val: string | Uint8Array) {
+  public EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[BytesToken.prim]) {
+      return semantic[BytesToken.prim](val);
     }
 
     return { bytes: String(val).toString() };

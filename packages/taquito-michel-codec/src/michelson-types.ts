@@ -77,7 +77,8 @@ type MichelsonNoArgInstructionID =
   | 'VOTING_POWER'
   | 'XOR'
   | 'RENAME'
-  | 'OPEN_CHEST';
+  | 'OPEN_CHEST'
+  | 'MIN_BLOCK_TIME';
 
 type MichelsonRegularInstructionID =
   | 'CONTRACT'
@@ -159,7 +160,8 @@ export type MichelsonSimpleComparableTypeID =
   | 'key'
   | 'unit'
   | 'signature'
-  | 'chain_id';
+  | 'chain_id'
+  | 'tx_rollup_l2_address';
 
 export type MichelsonTypeID =
   | MichelsonSimpleComparableTypeID

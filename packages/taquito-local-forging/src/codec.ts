@@ -327,3 +327,6 @@ export const valueParameterDecoder = (val: Uint8ArrayConsumer) => {
   const value = extractRequiredLen(val);
   return valueDecoder(new Uint8ArrayConsumer(value));
 };
+
+export const blockPayloadHashEncoder = prefixEncoder(Prefix.VH);
+export const blockPayloadHashDecoder = prefixDecoder(Prefix.VH);

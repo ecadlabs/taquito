@@ -18,6 +18,8 @@ import {
   TransferParams,
   RevealParams,
   RegisterGlobalConstantParams,
+  TxRollupOriginateParams,
+  TxRollupBatchParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -28,6 +30,8 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
   createRegisterGlobalConstantOperation,
+  createTxRollupOriginationOperation,
+  createTxRollupBatchOperation,
 } from '../contract/prepare';
 import {
   validateAddress,
@@ -133,7 +137,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   private getEstimationPropertiesFromOperationContent(
     content: PreapplyResponse['contents'][0],
     size: number,
-    costPerByte: BigNumber
+    costPerByte: BigNumber,
+    tx_rollup_origination_size: number
   ): EstimateProperties {
     const operationResults = flattenOperationResult({ contents: [content] });
     let totalGas = 0;
@@ -153,6 +158,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         'storage_size' in result && 'global_address' in result
           ? Number(result.storage_size) || 0
           : 0;
+      totalStorage += 'originated_rollup' in result ? tx_rollup_origination_size : 0;
     });
 
     if (totalGas !== 0 && totalMilligas === 0) {
@@ -180,7 +186,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
   private async prepareEstimate(
     params: PrepareOperationParams,
-    constants: Pick<ConstantsResponse, 'cost_per_byte'>,
+    constants: Pick<ConstantsResponse, 'cost_per_byte' | 'tx_rollup_origination_size'>,
     pkh: string
   ) {
     const prepared = await this.prepareOperation(params, pkh);
@@ -194,7 +200,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     };
 
     const { opResponse } = await this.simulate(operation);
-    const { cost_per_byte } = constants;
+    const { cost_per_byte, tx_rollup_origination_size } = constants;
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
     // Fail early in case of errors
@@ -215,7 +221,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         x,
         // TODO: Calculate a specific opSize for each operation.
         x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : opbytes.length / 2 / numberOfOps,
-        cost_per_byte
+        cost_per_byte,
+        tx_rollup_origination_size ?? 0
       );
     });
   }
@@ -379,6 +386,22 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             })
           );
           break;
+        case OpKind.TX_ROLLUP_ORIGINATION:
+          operations.push(
+            await createTxRollupOriginationOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
+        case OpKind.TX_ROLLUP_SUBMIT_BATCH:
+          operations.push(
+            await createTxRollupBatchOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
         default:
           throw new InvalidOperationKindError((params as any).kind);
       }
@@ -471,6 +494,67 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createRegisterGlobalConstantOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a rollup origination operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param TxRollupOriginateParams Originate tx rollup operation parameter
+   */
+  async txRollupOriginate(params?: TxRollupOriginateParams) {
+    params = params ? params : {};
+    const { fee, storageLimit, gasLimit, ...rest } = params;
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createTxRollupOriginationOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a tx rollup batch operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  async txRollupSubmitBatch(params: TxRollupBatchParams) {
+    const { fee, storageLimit, gasLimit, ...rest } = params;
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createTxRollupBatchOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });

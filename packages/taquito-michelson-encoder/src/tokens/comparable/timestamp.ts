@@ -1,5 +1,5 @@
 import { BaseTokenSchema } from '../../schema/types';
-import { Token, TokenFactory, ComparableToken } from '../token';
+import { Token, TokenFactory, ComparableToken, SemanticEncoding } from '../token';
 
 export class TimestampToken extends ComparableToken {
   static prim: 'timestamp' = 'timestamp';
@@ -27,7 +27,10 @@ export class TimestampToken extends ComparableToken {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[TimestampToken.prim]) {
+      return semantic[TimestampToken.prim](val);
+    }
     return { string: val };
   }
 

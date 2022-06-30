@@ -236,5 +236,29 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       expect(bigMapValue['1']).toEqual(expect.objectContaining(new MichelsonMap()));
       done();
     });
+
+    it('originate a contract with empty bigMap but represented with object literal', async (done) => {
+      const signer = await Tezos.signer.publicKeyHash();
+      const objLitAsMichelsonMap = {
+        [signer]: { 0: '1', 1: {} },
+        'tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1': { 0: '2', 1: {} },
+        'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD': { 0: '3', 1: {} },
+        'tz3YjfexGakCDeCseXFUpcXPSAN9xHxE9TH2': { 0: '4', 1: {} },
+      }
+      const op = await Tezos.contract.originate({
+        code: tokenCode,
+        storage: {
+          0: objLitAsMichelsonMap,
+          1: signer,
+          2: true,
+          3: '3',
+        },
+      });
+
+      await op.contract();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      done();
+    });
   });
 });

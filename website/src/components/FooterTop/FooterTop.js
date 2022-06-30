@@ -1,16 +1,15 @@
 import React from 'react';
-import clsx from 'clsx';
 import styles from './FooterTop.module.css';
 import ECADSvg from '../../../static/img/ECAD_logo.svg';
 
 const FeatureList = [
   {
     title: 'Powered by',
-    url: 'https://tezos-homebase.herokuapp.com/explorer/daos',
+    url: 'https://ecadlabs.com',
   },
 ];
 
-function Feature({ title, url, image }) {
+function Feature({ title, url }) {
   return (
     <div className={styles.Contentcontainer}>
       <h5 className={styles.headline}>{title}</h5>

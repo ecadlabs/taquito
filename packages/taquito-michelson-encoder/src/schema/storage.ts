@@ -1,9 +1,20 @@
-import { MichelsonV1Expression, MichelsonV1ExpressionExtended, ScriptResponse } from '@taquito/rpc';
+import {
+  MichelsonV1Expression,
+  MichelsonV1ExpressionBase,
+  MichelsonV1ExpressionExtended,
+  ScriptResponse,
+} from '@taquito/rpc';
 import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
-import { BigMapKeyType, Semantic, Token, TokenValidationError } from '../tokens/token';
+import {
+  BigMapKeyType,
+  Semantic,
+  SemanticEncoding,
+  Token,
+  TokenValidationError,
+} from '../tokens/token';
 import {
   InvalidRpcResponseError,
   InvalidBigMapSchema,
@@ -18,7 +29,10 @@ import { Falsy, TokenSchema } from './types';
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
 
 // collapse comb pair
-function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): Token['val'] {
+function collapse(
+  val: Token['val'] | MichelsonV1Expression,
+  prim: string = PairToken.prim
+): Token['val'] {
   if (Array.isArray(val)) {
     return collapse(
       {
@@ -28,22 +42,23 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): Tok
       prim
     );
   }
-  if (val.prim === prim && val.args && val.args.length > 2) {
+  const extended = val as MichelsonV1ExpressionExtended;
+  if (extended.prim === prim && extended.args && extended.args.length > 2) {
     return {
-      ...val,
+      ...extended,
       args: [
-        val.args?.[0],
+        extended.args?.[0],
         {
           prim: prim,
-          args: val.args?.slice(1),
+          args: extended.args?.slice(1),
         },
       ],
     };
   }
-  return val;
+  return extended;
 }
 
-function deepEqual(a: Token['val'] | any[], b: Token['val'] | any[]): boolean {
+function deepEqual(a: MichelsonV1Expression, b: MichelsonV1Expression): boolean {
   const ac = collapse(a);
   const bc = collapse(b);
   return (
@@ -52,7 +67,7 @@ function deepEqual(a: Token['val'] | any[], b: Token['val'] | any[]): boolean {
       (ac.args !== undefined &&
         bc.args !== undefined &&
         ac.args.length === bc.args.length &&
-        ac.args.every((v, i) => deepEqual(v, bc.args?.[i])))) &&
+        ac.args.every((v, i) => deepEqual(v, bc.args?.[i] ?? {})))) &&
     ((ac.annots === undefined && bc.annots === undefined) ||
       (ac.annots !== undefined &&
         bc.annots !== undefined &&
@@ -69,7 +84,7 @@ export class Schema {
 
   public [schemaTypeSymbol] = true;
 
-  public static isSchema(obj: any): obj is Schema {
+  public static isSchema(obj: Schema): boolean {
     return obj && obj[schemaTypeSymbol] === true;
   }
 
@@ -81,7 +96,19 @@ export class Schema {
       val &&
       val.script &&
       Array.isArray(val.script.code) &&
-      (val.script.code.find((x: any) => x.prim === 'storage') as MichelsonV1ExpressionExtended);
+      (val.script.code.find((x) => {
+        if (!Array.isArray(x)) {
+          const checkExtended = x as MichelsonV1ExpressionExtended;
+          if (checkExtended.prim) {
+            return checkExtended.prim === 'storage';
+          } else {
+            return false;
+          }
+        } else {
+          // storage passed along as original storage value
+          this.fromRPCResponse({ script: { code: x, storage: val.script.storage } });
+        }
+      }) as MichelsonV1ExpressionExtended);
 
     if (!storage || !Array.isArray(storage.args)) {
       throw new InvalidRpcResponseError(val.script);
@@ -172,9 +199,9 @@ export class Schema {
     }
   }
 
-  Encode(_value?: any) {
+  Encode(value?: any, semantics?: SemanticEncoding) {
     try {
-      return this.root.EncodeObject(_value);
+      return this.root.EncodeObject(value, semantics);
     } catch (ex) {
       if (ex instanceof TokenValidationError) {
         throw ex;
@@ -234,23 +261,29 @@ export class Schema {
     return this.findValue(this.root['val'], storage, valueType) as T | undefined;
   }
 
-  private findValue(schema: Token['val'] | any[], storage: any, valueToFind: any): any {
+  // TODO check these type casts
+  private findValue(
+    schema: MichelsonV1Expression,
+    storage: any,
+    valueToFind: any
+  ): MichelsonV1ExpressionBase | undefined {
     if (deepEqual(valueToFind, schema)) {
       return storage;
     }
-    if (Array.isArray(schema) || schema['prim'] === 'pair') {
+    if (Array.isArray(schema) || (schema as MichelsonV1ExpressionExtended).prim === 'pair') {
       const sch = collapse(schema);
-      const str = collapse(storage, 'Pair');
-      if (sch.args === undefined || str.args === undefined) {
+      const strg = collapse(storage, 'Pair');
+      if (sch.args === undefined || strg.args === undefined) {
         throw new MissingArgumentError('Tokens have no arguments'); // unlikely
       }
-      return (
-        this.findValue(sch.args[0], str.args[0], valueToFind) ||
-        this.findValue(sch.args[1], str.args[1], valueToFind)
-      );
+      if (sch.args[0])
+        return (
+          // unsafe
+          this.findValue(sch.args[0] as MichelsonV1ExpressionExtended, strg.args[0], valueToFind) ||
+          this.findValue(sch.args[1] as MichelsonV1ExpressionExtended, strg.args[1], valueToFind)
+        );
     }
   }
-
   /**
    * @description Look up the schema to find any occurrence of a particular token.
    *

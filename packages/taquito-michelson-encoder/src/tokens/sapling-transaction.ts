@@ -1,5 +1,5 @@
 import { SaplingTransactionTokenSchema } from '../schema/types';
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingTransactionValidationError extends TokenValidationError {
   name = 'SaplingTransactionValidationError';
@@ -46,8 +46,11 @@ export class SaplingTransactionToken extends Token {
     return { bytes: String(val).toString() };
   }
 
-  EncodeObject(val: string | Uint8Array) {
+  EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.validateBytes(this.convertUint8ArrayToHexString(val));
+    if (semantic && semantic[SaplingTransactionToken.prim]) {
+      return semantic[SaplingTransactionToken.prim](val);
+    }
     return { bytes: String(val).toString() };
   }
 

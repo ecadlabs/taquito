@@ -1,6 +1,7 @@
+import { TokenSchema } from './../schema/types';
 import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
 import { ContractTokenSchema } from '../schema/types';
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class ContractValidationError extends TokenValidationError {
   name = 'ContractValidationError';
@@ -33,6 +34,9 @@ export class ContractToken extends Token {
     if (val.string) {
       return val.string;
     }
+    if (!val.bytes) {
+      throw new ContractValidationError(val, this, 'must contain bytes or string');
+    }
 
     return encodePubKey(val.bytes);
   }
@@ -46,10 +50,13 @@ export class ContractToken extends Token {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+    if (semantic && semantic[ContractToken.prim]) {
+      return semantic[ContractToken.prim](val);
     }
     return { string: val };
   }
@@ -67,7 +74,7 @@ export class ContractToken extends Token {
     return {
       __michelsonType: ContractToken.prim,
       schema: {
-        parameter: valueSchema.generateSchema(),
+        parameter: this.val.args[0] ? valueSchema.generateSchema() : ({} as TokenSchema),
       },
     };
   }

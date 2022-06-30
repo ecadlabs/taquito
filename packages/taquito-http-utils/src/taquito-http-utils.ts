@@ -13,12 +13,15 @@ enum ResponseType {
   TEXT = 'text',
   JSON = 'json',
 }
+// Z TODO change any type >.>
+type ObjectType = Record<string, any>;
+
 export interface HttpRequestOptions {
   url: string;
   method?: 'GET' | 'POST';
   timeout?: number;
   json?: boolean;
-  query?: { [key: string]: any };
+  query?: ObjectType;
   headers?: { [key: string]: string };
   mimeType?: string;
 }
@@ -56,7 +59,7 @@ export class HttpRequestFailed extends Error {
 export class HttpBackend {
   constructor(private timeout: number = 30000) {}
 
-  protected serialize(obj?: { [key: string]: any }) {
+  protected serialize(obj?: ObjectType) {
     if (!obj) {
       return '';
     }
@@ -108,14 +111,13 @@ export class HttpBackend {
 
     if (!json) {
       resType = ResponseType.TEXT;
-      transformResponse = [(v: any) => v];
+      transformResponse = [<Type>(v: Type) => v];
     } else {
       resType = ResponseType.JSON;
     }
 
-    let response;
     try {
-      response = await axios.request<T>({
+      const response = await axios.request<T>({
         url: url + this.serialize(query),
         method: method ?? 'GET',
         headers: headers,
@@ -124,8 +126,10 @@ export class HttpBackend {
         timeout: timeout,
         data: data,
       });
-    } catch (err: any) {
-      if (err.response) {
+
+      return response.data;
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
         let errorData;
 
         if (typeof err.response.data === 'object') {
@@ -142,10 +146,8 @@ export class HttpBackend {
           url + this.serialize(query)
         );
       } else {
-        throw new HttpRequestFailed(err);
+        throw new HttpRequestFailed(err as string);
       }
     }
-
-    return response.data;
   }
 }

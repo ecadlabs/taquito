@@ -1,6 +1,13 @@
 import { MichelsonMap } from '../michelson-map';
 import { MapTokenSchema } from '../schema/types';
-import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
+import {
+  ComparableToken,
+  Semantic,
+  SemanticEncoding,
+  Token,
+  TokenFactory,
+  TokenValidationError,
+} from './token';
 
 export class MapValidationError extends TokenValidationError {
   name = 'MapValidationError';
@@ -48,8 +55,20 @@ export class MapToken extends Token {
     return map;
   }
 
+  private objLitToMichelsonMap(val: any): any {
+    if (val instanceof MichelsonMap) return val;
+    if (typeof val === 'object') {
+      if (Object.keys(val).length === 0) {
+        return new MichelsonMap();
+      } else {
+        return MichelsonMap.fromLiteral(val);
+      }
+    }
+    return val;
+  }
+
   public Encode(args: any[]): any {
-    const val: MichelsonMap<any, any> = args.pop();
+    const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args.pop());
 
     const err = this.isValid(val);
     if (err) {
@@ -66,12 +85,16 @@ export class MapToken extends Token {
       });
   }
 
-  public EncodeObject(args: any): any {
-    const val: MichelsonMap<any, any> = args;
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
+    const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args);
 
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[MapToken.prim]) {
+      return semantic[MapToken.prim](val);
     }
 
     return Array.from(val.keys())
