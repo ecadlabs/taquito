@@ -323,6 +323,16 @@ export function hex2Bytes(hex: string): Buffer {
 
 /**
  *
+ * @description
+ *
+ * @param
+ */
+export function toHexBuf(val: number | BigNumber, bitLength = 8) {
+  return Buffer.from(num2PaddedHex(val, bitLength), 'hex');
+}
+
+/**
+ *
  * @description Converts a number or BigNumber to a padded hexadecimal string
  * @param val The value that will be converted into a padded hexadecimal string value
  * @param bitLength The length of bits
