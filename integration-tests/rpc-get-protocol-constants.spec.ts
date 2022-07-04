@@ -670,7 +670,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 sc_rollup_message_size_limit: 4096,
                 sc_rollup_max_lookahead_in_blocks: 30000,
                 sc_rollup_max_outbox_messages_per_level: 100,
-                sc_rollup_stake_amount: "32000000",
+                sc_rollup_stake_amount: "10000000000",
                 tx_rollup_commitment_bond: new BigNumber(10000000000),
                 tx_rollup_cost_per_byte_ema_factor: 120,
                 tx_rollup_enable: true,
