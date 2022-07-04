@@ -26,9 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       })
       const contract = await op.contract();
-      expect(op.status).toEqual('applied')
-      console.log("contract address : "+contract.address)
-     
+      expect(op.status).toEqual('applied')     
 
       // Utility function that mimics the PAIR operation of michelson
       // file deepcode ignore no-any: any is good enough
@@ -126,51 +124,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await op2.confirmation();
       console.log("op2")
       expect(op2.status).toEqual('applied')
-      
-      // const op3 = await contract.methods.main(
-      //   // Counter
-      //   "1",
-      //   // Sub function
-      //   'operation',
-      //   // Action
-      //   MANAGER_LAMBDA.setDelegate("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh"),
-      //   // Signature list
-      //   [signature1.prefixSig, signature2.prefixSig, null]
-      // ).send()
-
-      // await op3.confirmation();
-      // console.log("op3")
-      // expect(op3.status).toEqual('applied')
-
-      // const op4 = await contract.methods.main(
-      //   // Counter
-      //   "2",
-      //   // Sub function
-      //   'operation',
-      //   // Action
-      //   MANAGER_LAMBDA.removeDelegate(),
-      //   // Signature list
-      //   [signature1.prefixSig, signature2.prefixSig, null]
-      // ).send()
-
-      // await op4.confirmation();
-      // console.log("op4")
-      // expect(op4.status).toEqual('applied')
-
-      const op5 = await contract.methods.main(
-        // Counter
-        "3",
-        // Sub function
-        'operation',
-        // Action
-        MANAGER_LAMBDA.transferToContract("KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca", 500),
-        // Signature list
-        [signature1.prefixSig, signature2.prefixSig, null]
-      ).send()
-
-      await op5.confirmation();
-      console.log("op5")
-      expect(op5.status).toEqual('applied')
 
       done();
     })
