@@ -70,7 +70,6 @@ export class BigMapToken extends Token {
   }
 
   private objLitToMichelsonMap(val: any): any {
-    console.error("JCC val is: ", val);
     if (val instanceof MichelsonMap) return val;
     if (typeof val === 'object') {
       if (Object.keys(val).length === 0) {
