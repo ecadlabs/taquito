@@ -386,6 +386,7 @@ export enum Protocol {
   Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   PtJakarta = 'PtJakartaiDz69SfDDLXJSiuZqTSeSKRDbKVZC8MNzJnvRjvnGw',
   PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
+  PtKathma = 'PtKathmaHPSjL3WDmUCJP7iHBsUix65HdAgSeVacukogRK6hum6',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
@@ -413,7 +414,8 @@ const protoLevel: Record<ProtocolID, number> = {
   Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A: 12,
   PtJakartaiDz69SfDDLXJSiuZqTSeSKRDbKVZC8MNzJnvRjvnGw: 13,
   PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY: 13,
-  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 14,
+  PtKathmaHPSjL3WDmUCJP7iHBsUix65HdAgSeVacukogRK6hum6: 14,
+  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 15,
 };
 
 export function ProtoGreaterOfEqual(a: ProtocolID, b: ProtocolID): boolean {

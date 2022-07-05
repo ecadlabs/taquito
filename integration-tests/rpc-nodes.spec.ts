@@ -18,7 +18,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const jakartanetAndIthacanet = protocol === Protocols.Psithaca2 || protocol === Protocols.PtJakart2 ? test: test.skip;
+    const jakartanetAndKathmandunet = protocol === Protocols.PtJakart2|| protocol === Protocols.PtKathma ? test: test.skip;
     const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
     const jakartanetIt = protocol === Protocols.PtJakart2 ? it: it.skip;
 
@@ -92,7 +92,7 @@ CONFIGS().forEach(
         it('Executes tzip4 views by calling runView ', async (done) => {
           let chainId: string;
 
-          if (protocol === Protocols.Psithaca2) {
+          if (protocol === Protocols.PtKathma) {
             chainId = ChainIds.ITHACANET2
           } else {
             chainId = ChainIds.JAKARTANET2
@@ -265,7 +265,7 @@ CONFIGS().forEach(
         });
 
         // We will send invalid signedOpBytes and see if the node returns the expected error message
-        jakartanetAndIthacanet('Inject an operation in node and broadcast it', async (done) => {
+        jakartanetAndKathmandunet('Inject an operation in node and broadcast it', async (done) => {
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {

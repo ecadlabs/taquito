@@ -90,12 +90,12 @@ The Beacon wallet requires an extra step to set up the network to connect to and
 ```js
 await wallet.requestPermissions({
   network: {
-    type: 'mainnet' | 'ithacanet' | 'jakartanet' | 'custom',
+    type: 'mainnet' | 'kathmandunet' | 'jakartanet' | 'custom',
   },
 });
 ```
 
-You can choose among `mainnet`, `jakartanet` `ithacanet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+You can choose among `mainnet`, `jakartanet` `kathmandunet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
 ```js
 const userAddress = await wallet.getPKH();
@@ -166,7 +166,7 @@ const wallet = new ThanosWallet('MyAwesomeDapp');
 The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
 
 ```js
-await wallet.connect('mainnet' | 'jakartanet' | 'ithacanet' | 'labnet' | 'sandbox');
+await wallet.connect('mainnet' | 'jakartanet' | 'kathmandunet' | 'labnet' | 'sandbox');
 ```
 
 (Temple used to be called Thanos and some Taquito code still uses the name Thanos.)

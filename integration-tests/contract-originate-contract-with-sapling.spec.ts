@@ -17,7 +17,7 @@ import {
 CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
   const Tezos = lib;
   const jakartanetAndMondaynet = protocol === Protocols.ProtoALpha || protocol === Protocols.PtJakart2 ? test: test.skip;
-  const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
+  const kathmandunet = protocol === Protocols.PtKathma ? test : test.skip;
 
   interface StorageType {
     left: SaplingStateAbstraction;
@@ -30,7 +30,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanet('Originates a Sapling Double contract', async (done) => {
+    kathmandunet('Originates a Sapling Double contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractDouble,
         init: `(Pair {} {})`,
@@ -80,7 +80,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanet('Originates a Sapling Drop contract', async (done) => {
+    kathmandunet('Originates a Sapling Drop contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractDrop,
         init: { prim: 'Unit' },
@@ -114,7 +114,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanet('Originates a Sapling Send contract', async (done) => {
+    kathmandunet('Originates a Sapling Send contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractSend,
         init: { prim: 'Unit' },
@@ -175,7 +175,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanet('Originates a Use Existing State Sapling contract', async (done) => {
+    kathmandunet('Originates a Use Existing State Sapling contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractUseExistingState,
         init: `{}`,

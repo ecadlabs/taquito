@@ -1,4 +1,4 @@
-export const depositContractCodeIthaca = [
+export const depositContractCode = [
   {
     prim: 'parameter',
     args: [
@@ -1716,7 +1716,7 @@ export const depositContractCodeIthaca = [
     ],
   },
 ];
-export const depositContractStorageIthaca = {
+export const depositContractStorage = {
   prim: 'Pair',
   args: [
     [

@@ -34,7 +34,7 @@ import Faucet from './faucet-interface';
 
 const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
 
-const provider = 'https://jakartanet.ecadinfra.com/';
+const provider = 'https://kathmandunet.ecadinfra.com/';
 export const signer: any = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
@@ -83,23 +83,23 @@ async function checkBalances(users: string | any[]) {
 
   // IF FAILS try uncommenting below and running with lending other tezos instance funds
 
-  // used to top up other account so it wouldnt fail
-  // const tezosLender = new TezosToolkit(provider)
-  // await importKey(
-  //   tezosLender,
-  //   email,
-  //   password,
-  //   mnemonic.join(' '),
-  //   activation_code
-  // );
+  // // used to top up other account so it wouldnt fail
+  //  const tezosLender = new TezosToolkit(provider)
+  //  await importKey(
+  //    tezosLender,
+  //    email,
+  //    password,
+  //    mnemonic.join(' '),
+  //    activation_code
+  //  );
 
-  // console.log("checking fund of tezos instance")
-  // const tezBalance = await tezos.tz.getBalance(pkh)
-  // console.log("original balance", tezBalance, await signer.publicKeyHash())
-  // const sendFunds = await tezosLender.contract.transfer({to: await signer.publicKeyHash(), amount: 100})
-  // await sendFunds.confirmation()
-  // const tezBalance2 = await tezos.tz.getBalance(pkh)
-  // console.log("next balance", tezBalance2)
+  //  console.log("checking fund of tezos instance")
+  //  const tezBalance = await tezos.tz.getBalance(pkh)
+  //  console.log("original balance", tezBalance, await signer.publicKeyHash())
+  //  const sendFunds = await tezosLender.contract.transfer({to: await signer.publicKeyHash(), amount: 100})
+  //  await sendFunds.confirmation()
+  //  const tezBalance2 = await tezos.tz.getBalance(pkh)
+  //  console.log("next balance", tezBalance2)
 
   // console.log("balance of tezos instance", tezBalance)
   console.log('checking funds of users...');

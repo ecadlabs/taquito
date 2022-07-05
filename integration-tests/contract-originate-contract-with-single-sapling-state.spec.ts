@@ -5,7 +5,7 @@ import { singleSaplingStateContractJProtocol } from './data/single_sapling_state
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const ithacanet = protocol === Protocols.Psithaca2 ? test: test.skip;
+  const kathmandunet = protocol === Protocols.PtKathma ? test: test.skip;
   const jakartanetAndMondaynet = protocol === Protocols.ProtoALpha || protocol === Protocols.PtJakart2 ? test: test.skip;
 
   describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    ithacanet('Originates a contract with a single sapling state in its storage for Ithaca', async (done) => {
+    kathmandunet('Originates a contract with a single sapling state in its storage for kathmandu', async (done) => {
        const op = await Tezos.contract.originate({
         code: singleSaplingStateContract,
          init: '{}'
@@ -22,6 +22,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        await op.confirmation();
        expect(op.hash).toBeDefined();
        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+       const contract = await op.contract();
+       console.log(contract.address)
        done();
      });
 

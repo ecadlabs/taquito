@@ -6,7 +6,7 @@ import { Protocols } from "@taquito/taquito";
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const jakartanetAndMondaynet = protocol === Protocols.ProtoALpha || protocol === Protocols.PtJakart2 ? test: test.skip;
-  const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
+  const kathmandunet = protocol === Protocols.PtKathma ? test : test.skip;
 
   describe(`Test origination of contracts made with wallet api with sapling using: ${rpc}`, () => {
 
@@ -15,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done()
     })
 
-    ithacanet('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
+    kathmandunet('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
       const op = await Tezos.wallet.originate({
         code: saplingContractDouble,
         storage: {
