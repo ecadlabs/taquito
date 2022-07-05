@@ -198,3 +198,15 @@ export const spendDescription = [
     ),
   },
 ];
+
+export const transaction = {
+  spendDescriptions: spendDescription,
+  outputDescriptions: outputDescription,
+  signature: Buffer.from(
+    'sigoioDSmBSzHiPu2S4PHRfnw9JAovRsJRmwtJeHgfd517qfc4bHTv8KASNBcYvrjAm6Bincu7pDkiAQdwZwujqvsBspnQuR',
+    'hex'
+  ),
+  balance: Buffer.from('123'),
+  root: Buffer.from('root'),
+  boundData: Buffer.from('00000000', 'hex'),
+};

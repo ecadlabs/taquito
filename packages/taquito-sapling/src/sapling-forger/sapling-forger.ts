@@ -1,4 +1,4 @@
-import { SpendDescription, OutputDescription } from '../types';
+import { SpendDescription, OutputDescription, SaplingTransaction } from '../types';
 import { toHexBuf, buf2hex } from '@taquito/utils';
 
 export class SaplingForger {
@@ -11,21 +11,14 @@ export class SaplingForger {
    * @param root root of the merkle tree
    * @returns Forged sapling transaction of type Buffer
    */
-  forgeSaplingTransaction(
-    spendDescriptions: SpendDescription[],
-    outputDescriptions: OutputDescription[],
-    signature: Buffer,
-    balance: Buffer,
-    root: Buffer,
-    boundData: Buffer
-  ): Buffer {
-    const spendBuf = this.forgeSpendDescriptions(spendDescriptions);
+  forgeSaplingTransaction(tx: SaplingTransaction): Buffer {
+    const spendBuf = this.forgeSpendDescriptions(tx.spendDescriptions);
     const spend = Buffer.concat([toHexBuf(spendBuf.length, 32), spendBuf]);
 
-    const outputBuf = this.forgeOutputDescriptions(outputDescriptions);
+    const outputBuf = this.forgeOutputDescriptions(tx.outputDescriptions);
     const output = Buffer.concat([toHexBuf(outputBuf.length, 32), outputBuf]);
 
-    return Buffer.concat([spend, output, signature, balance, root, boundData]);
+    return Buffer.concat([spend, output, tx.signature, tx.balance, tx.root, tx.boundData]);
   }
 
   /**

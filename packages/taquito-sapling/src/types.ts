@@ -1,5 +1,3 @@
-import BigNumber from 'bignumber.js';
-
 export interface SpendDescription {
   cv: Buffer;
   nf: Buffer;
@@ -26,7 +24,8 @@ export interface Ciphertext {
 export interface SaplingTransaction {
   spendDescriptions: SpendDescription[];
   outputDescriptions: OutputDescription[];
-  bindingSignature: Buffer;
-  balance: BigNumber;
-  root: string;
+  signature: Buffer;
+  balance: Buffer;
+  root: Buffer;
+  boundData: Buffer;
 }
