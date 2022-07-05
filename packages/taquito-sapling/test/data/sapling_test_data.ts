@@ -151,16 +151,16 @@ export const sapling_state_diff: SaplingDiffResponse = {
 export const ct = {
   cv: Buffer.from('29903c784606d64aca3bcaa6774dda35c1e727dfff92f3d9b365f01214f8f761', 'hex'),
   epk: Buffer.from('9a1ebe13be50701d802c60db1f1d73d82f7b0b5aae53deed1252f326141aab3a', 'hex'),
-  payload_enc: Buffer.from(
+  payloadEnc: Buffer.from(
     '86413ef92762cea59b418d73284298254ee3a16ce85c5bde80391c56d64ecb8730f66dc28492305e33f5f187b795e0914873b65c030c8198365ea87c5fb2b5c3e8efb9b86c3badc4f054caf53cda83',
     'hex'
   ),
-  nonce_enc: Buffer.from('00c4991af491d2677166fbdc0828519f7e44d8ea66ce56ac', 'hex'),
-  payload_out: Buffer.from(
+  nonceEnc: Buffer.from('00c4991af491d2677166fbdc0828519f7e44d8ea66ce56ac', 'hex'),
+  payloadOut: Buffer.from(
     'e4f7436d591f59694a90fb2d0ed5d001b00f78939a2b5a4f0349469a44718fa4160632cc3fd0ffa25698f6e7e6a57f3d11c4bd8645a9357dca54aa849687097005daee7875b4fb770801261b7678a0e9',
     'hex'
   ),
-  nonce_out: Buffer.from('612d936ab32db491301bd2c145690c4846024ccc342e7261', 'hex'),
+  nonceOut: Buffer.from('612d936ab32db491301bd2c145690c4846024ccc342e7261', 'hex'),
 };
 
 export const outputDescription = [

@@ -358,9 +358,9 @@ export function hex2Bytes(hex: string): Buffer {
 
 /**
  *
- * @description
+ * @description Converts a number or Bignumber to hexadecimal  string
  *
- * @param
+ * @param val The value  that will be converted to a hexadecimal string value
  */
 export function toHexBuf(val: number | BigNumber, bitLength = 8) {
   return Buffer.from(num2PaddedHex(val, bitLength), 'hex');

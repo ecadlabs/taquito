@@ -1,4 +1,4 @@
-import { SpendDescription, OutputDescription } from '../sapling-state/interface';
+import { SpendDescription, OutputDescription } from '../types';
 import { toHexBuf, buf2hex } from '@taquito/utils';
 
 export class SaplingForger {
@@ -16,7 +16,8 @@ export class SaplingForger {
     outputDescriptions: OutputDescription[],
     signature: Buffer,
     balance: Buffer,
-    root: Buffer
+    root: Buffer,
+    boundData: Buffer
   ): Buffer {
     const spendBuf = this.forgeSpendDescriptions(spendDescriptions);
     const spend = Buffer.concat([toHexBuf(spendBuf.length, 32), spendBuf]);
@@ -24,7 +25,7 @@ export class SaplingForger {
     const outputBuf = this.forgeOutputDescriptions(outputDescriptions);
     const output = Buffer.concat([toHexBuf(outputBuf.length, 32), outputBuf]);
 
-    return Buffer.concat([spend, output, signature, balance, root]);
+    return Buffer.concat([spend, output, signature, balance, root, boundData]);
   }
 
   /**
@@ -66,16 +67,16 @@ export class SaplingForger {
   forgeOutputDescription(desc: OutputDescription): Buffer {
     const ct = desc.ciphertext;
 
-    const payloadEnc = buf2hex(ct.payload_enc);
+    const payloadEnc = buf2hex(ct.payloadEnc);
 
     return Buffer.concat([
       ct.cv,
       ct.epk,
       toHexBuf(payloadEnc.length, 32),
-      ct.payload_enc,
-      ct.nonce_enc,
-      ct.payload_out,
-      ct.nonce_out,
+      ct.payloadEnc,
+      ct.nonceEnc,
+      ct.payloadOut,
+      ct.nonceOut,
     ]);
   }
 }
