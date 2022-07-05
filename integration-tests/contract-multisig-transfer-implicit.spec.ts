@@ -122,7 +122,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       ).send()
 
       await op2.confirmation();
-      console.log("op2")
       expect(op2.status).toEqual('applied')
 
       done();
