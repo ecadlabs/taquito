@@ -36,7 +36,7 @@ jobs:
         RUN_INTEGRATION: true
 
   integration-tests-jakartanet:
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [12.x]
