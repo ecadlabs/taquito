@@ -77,5 +77,5 @@ export const tokens = [
   Bls12381g2Token,
   ChestToken,
   ChestKeyToken,
-  GlobalConstantToken
+  GlobalConstantToken,
 ];

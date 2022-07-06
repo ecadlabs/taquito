@@ -14,7 +14,7 @@ enum ResponseType {
   JSON = 'json',
 }
 // Z TODO change any type >.>
-type ObjectType = Record<string, any>
+type ObjectType = Record<string, any>;
 
 export interface HttpRequestOptions {
   url: string;

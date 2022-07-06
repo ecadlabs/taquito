@@ -107,7 +107,7 @@ export class RpcContractProvider
 
     let contractSchema: Schema;
     if (Schema.isSchema(schema as Schema)) {
-      contractSchema = schema as Schema
+      contractSchema = schema as Schema;
     } else {
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
     }

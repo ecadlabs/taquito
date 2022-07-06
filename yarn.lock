@@ -2707,6 +2707,9 @@
   "resolved" "https://registry.npmjs.org/acorn/-/acorn-7.4.1.tgz"
   "version" "7.4.1"
 
+"acorn@^8.7.0":
+  "version" "8.7.1"
+
 "add-stream@^1.0.0":
   "integrity" "sha512-qQLMr+8o0WC4FZGQTcJiKBVC59JylcPSrTtk6usvmIDFUOCKegapy1VHQwRbFMOFyb/inzUVqHs+eMYKDM1YeQ=="
   "resolved" "https://registry.npmjs.org/add-stream/-/add-stream-1.0.0.tgz"
@@ -8846,8 +8849,8 @@
 "string-width@^5.0.0":
   "version" "5.1.2"
   dependencies:
-    "eastasianwidth" "^0.2.0"
     "emoji-regex" "^9.2.2"
+    "is-fullwidth-code-point" "^4.0.0"
     "strip-ansi" "^7.0.1"
 
 "strip-ansi@^4.0.0":

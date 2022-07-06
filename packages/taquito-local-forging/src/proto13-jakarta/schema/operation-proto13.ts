@@ -1,4 +1,4 @@
-import { CODEC } from "../../constants";
+import { CODEC } from '../../constants';
 
 export const TransferTicketSchema = {
   source: CODEC.PKH,

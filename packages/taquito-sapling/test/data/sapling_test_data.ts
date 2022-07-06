@@ -147,3 +147,66 @@ export const sapling_state_diff: SaplingDiffResponse = {
     'b87015941340848c4ed1b2852c9371476b7706ef00b9d88ed64cb503bbf6f937',
   ],
 };
+
+export const ct = {
+  cv: Buffer.from('29903c784606d64aca3bcaa6774dda35c1e727dfff92f3d9b365f01214f8f761', 'hex'),
+  epk: Buffer.from('9a1ebe13be50701d802c60db1f1d73d82f7b0b5aae53deed1252f326141aab3a', 'hex'),
+  payloadEnc: Buffer.from(
+    '86413ef92762cea59b418d73284298254ee3a16ce85c5bde80391c56d64ecb8730f66dc28492305e33f5f187b795e0914873b65c030c8198365ea87c5fb2b5c3e8efb9b86c3badc4f054caf53cda83',
+    'hex'
+  ),
+  nonceEnc: Buffer.from('00c4991af491d2677166fbdc0828519f7e44d8ea66ce56ac', 'hex'),
+  payloadOut: Buffer.from(
+    'e4f7436d591f59694a90fb2d0ed5d001b00f78939a2b5a4f0349469a44718fa4160632cc3fd0ffa25698f6e7e6a57f3d11c4bd8645a9357dca54aa849687097005daee7875b4fb770801261b7678a0e9',
+    'hex'
+  ),
+  nonceOut: Buffer.from('612d936ab32db491301bd2c145690c4846024ccc342e7261', 'hex'),
+};
+
+export const outputDescription = [
+  {
+    cm: Buffer.from('7b1948a11abdcc241e362ddb5df01203ddfd1de5c24034e067ccd43006dc6706', 'hex'),
+    proof: Buffer.from(
+      'b4d81b58638d535275111ab1df4e0289248c7510bc8c09e96f73cc446bda300d17455230448c4d67792358b8903bfbbca2135ca487cb447025ac8abbb2f4913f12cba1b7a72b601af99702336f54e1d95749968c34cc84eaf41c8c1ad77159a10dec8091ad5d8c7d17eec384886c204646a106d69895b10f26d4ff7ae57e8f8cc362983fc19c47f00d235e3d3abc7561838e749c54622f445e074d59091447270b8c555d3568f437fa95c02b71f028ddc364f2f78d63d287e28f74c554eb310c',
+      'hex'
+    ),
+    ciphertext: ct,
+  },
+];
+
+export const spendDescription = [
+  {
+    cv: Buffer.from('29903c784606d64aca3bcaa6774dda35c1e727dfff92f3d9b365f01214f8f761', 'hex'),
+    nf: Buffer.from('test1'),
+    rk: Buffer.from('test2'),
+    proof: Buffer.from(
+      'b4d81b58638d535275111ab1df4e0289248c7510bc8c09e96f73cc446bda300d17455230448c4d67792358b8903bfbbca2135ca487cb447025ac8abbb2f4913f12cba1b7a72b601af99702336f54e1d95749968c34cc84eaf41c8c1ad77159a10dec8091ad5d8c7d17eec384886c204646a106d69895b10f26d4ff7ae57e8f8cc362983fc19c47f00d235e3d3abc7561838e749c54622f445e074d59091447270b8c555d3568f437fa95c02b71f028ddc364f2f78d63d287e28f74c554eb310c',
+      'hex'
+    ),
+    signature: Buffer.from(
+      'sigoioDSmBSzHiPu2S4PHRfnw9JAovRsJRmwtJeHgfd517qfc4bHTv8KASNBcYvrjAm6Bincu7pDkiAQdwZwujqvsBspnQuR',
+      'hex'
+    ),
+  },
+  {
+    cv: Buffer.from('test4'),
+    nf: Buffer.from('test5'),
+    rk: Buffer.from('test6'),
+    proof: Buffer.from('test7'),
+    signature: Buffer.from(
+      'sigoioDSmBSzHiPu2S4PHRfnw9JAovRsJRmwtJeHgfd517qfc4bHTv8KASNBcYvrjAm6Bincu7pDkiAQdwZwujqvsBspnQuR'
+    ),
+  },
+];
+
+export const transaction = {
+  spendDescriptions: spendDescription,
+  outputDescriptions: outputDescription,
+  signature: Buffer.from(
+    'sigoioDSmBSzHiPu2S4PHRfnw9JAovRsJRmwtJeHgfd517qfc4bHTv8KASNBcYvrjAm6Bincu7pDkiAQdwZwujqvsBspnQuR',
+    'hex'
+  ),
+  balance: Buffer.from('123'),
+  root: Buffer.from('root'),
+  boundData: Buffer.from('00000000', 'hex'),
+};
