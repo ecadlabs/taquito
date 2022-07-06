@@ -1,7 +1,7 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 
-const provider = 'https://ithacanet.ecadinfra.com/'
+const provider = 'https://jakartanet.ecadinfra.com/'
 
 async function example() {
   const tezos = new TezosToolkit(provider);

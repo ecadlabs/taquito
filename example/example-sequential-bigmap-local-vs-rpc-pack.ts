@@ -1,16 +1,16 @@
 import { BigMapAbstraction, TezosToolkit, MichelCodecPacker } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
-const rpc = 'https://ithacanet.ecadinfra.com';
+const rpc = 'https://jakartanet.ecadinfra.com';
 const numberOfValueToFetch = 410; // max 410
-const repeat = 1; // How many time we want to fetch all the keys
+const repeat = 1; // How many times we want to fetch all the keys
 
 async function example() {
 
     try {
         const tezos = new TezosToolkit(rpc);
 
-        const contractAddress = 'KT1N5Z6hh8SuJgQGoh7QQfUAeofNV4NzKpbn';
+        const contractAddress = 'KT1Hrp5i3P5BUATvkP7scdqY5PHBmYyz3CNA';
         const contract = await tezos.contract.at(contractAddress);
 
         interface StorageType {

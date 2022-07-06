@@ -4131,6 +4131,64 @@ export const blockJakartanetSample = {
               },
             },
           },
+          {
+            kind: 'tx_rollup_dispatch_tickets',
+            source: 'tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM',
+            fee: '835',
+            counter: '252405',
+            gas_limit: '4354',
+            storage_limit: '86',
+            tx_rollup: 'txr1YMZxstAHqQ9V313sYjLBCHBXsvSmDZuTs',
+            level: 4,
+            context_hash: 'CoV7iqRirVx7sZa5TAK9ymoEJBrW6z4hwwrzMhz6YLeHYXrQwRWG',
+            message_index: 0,
+            message_result_path: ['txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB'],
+            tickets_info: [
+              {
+                contents: {
+                  string: 'third-deposit',
+                },
+                ty: {
+                  prim: 'string',
+                },
+                ticketer: 'KT1EMQxfYVvhTJTqMiVs2ho2dqjbYfYKk6BY',
+                amount: '2',
+                claimer: 'tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM',
+              },
+            ],
+          },
+          {
+            kind: 'tx_rollup_remove_commitment',
+            source: 'tz1M1PXyMAhAsXroc6DtuWUUeHvb79ZzCnCp',
+            fee: '574',
+            counter: '252310',
+            gas_limit: '3272',
+            storage_limit: '0',
+            rollup: 'txr1YMZxstAHqQ9V313sYjLBCHBXsvSmDZuTs',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1M1PXyMAhAsXroc6DtuWUUeHvb79ZzCnCp',
+                  change: '-574',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '574',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                balance_updates: [],
+                consumed_gas: '3172',
+                consumed_milligas: '3171088',
+                level: 0,
+              },
+            },
+          },
         ],
         signature:
           'sigmpiJiuk1wbno2KAvxFufUkZ4JnrTuuxmVWmGVP3bPKNft8Nv8LZwkKAKtvUeBSiBEMxa5vAxcKc5FddwZvhjuZyydZeKD',

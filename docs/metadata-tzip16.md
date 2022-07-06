@@ -99,7 +99,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1GL5WBtKc6PgFAk4cSGp5Dg8RSXQPk4zkR';
+const contractAddress = 'KT1UCrgZ3xpuMQaHGgZv5FmYVL1ST6sACSsa';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -123,7 +123,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1GL5WBtKc6PgFAk4cSGp5Dg8RSXQPk4zkR';
+const contractAddress = 'KT1UCrgZ3xpuMQaHGgZv5FmYVL1ST6sACSsa';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -157,7 +157,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1Qrn8qpdZAFwuzh6qrnA3uA2bQJkVdMLRr';
+const contractAddress = 'KT1C1EJh8zizUjEyRJ1BunqL58w2u4Zwv6o7';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -180,7 +180,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1Qrn8qpdZAFwuzh6qrnA3uA2bQJkVdMLRr';
+const contractAddress = 'KT1C1EJh8zizUjEyRJ1BunqL58w2u4Zwv6o7';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -213,7 +213,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1FYBzqkMQ5g4XRiHenHbN43xVgFEEEoPHu';
+const contractAddress = 'KT1TUufULv5wbZeTRxEzdR7eBzGu6kXBMinS';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -237,7 +237,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1FYBzqkMQ5g4XRiHenHbN43xVgFEEEoPHu';
+const contractAddress = 'KT1TUufULv5wbZeTRxEzdR7eBzGu6kXBMinS';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -271,7 +271,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1PT8xPJZovECeVwAxuSSzAAoKok9EYmy2w';
+const contractAddress = 'KT1BJLSSAzTBMVWKbTnGE3UYWMopW2VZ8Mb3';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -295,7 +295,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1PT8xPJZovECeVwAxuSSzAAoKok9EYmy2w';
+const contractAddress = 'KT1BJLSSAzTBMVWKbTnGE3UYWMopW2VZ8Mb3';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -361,7 +361,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1TzUzfjd8cZsFD3YfuFxKRgCnireksh8M7';
+const contractAddress = 'KT1JJm8dr4JzCMZRN31ccoWL2K49q1oQAd1Q';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -390,7 +390,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1TzUzfjd8cZsFD3YfuFxKRgCnireksh8M7';
+const contractAddress = 'KT1JJm8dr4JzCMZRN31ccoWL2K49q1oQAd1Q';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -431,7 +431,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1Q1PFYduhRqWohspCcWdZ7j6mDg5xrgqJG';
+const contractAddress = 'KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -462,7 +462,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1Q1PFYduhRqWohspCcWdZ7j6mDg5xrgqJG';
+const contractAddress = 'KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -503,7 +503,7 @@ values={[
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
-const contractAddress = 'KT1Q1PFYduhRqWohspCcWdZ7j6mDg5xrgqJG';
+const contractAddress = 'KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR';
 
 Tezos.contract
   .at(contractAddress)
@@ -540,7 +540,7 @@ Tezos.contract
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
-const contractAddress = 'KT1Q1PFYduhRqWohspCcWdZ7j6mDg5xrgqJG';
+const contractAddress = 'KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR';
 
 Tezos.wallet
   .at(contractAddress)

@@ -17,6 +17,10 @@ import {
   OperationContentsAndResultTxRollupSubmitBatch,
   OperationContentsAndResultTxRollupCommit,
   OperationContentsAndResultTxRollupFinalizeCommitment,
+  OperationContentsAndResultTxRollupDispatchTickets,
+  MichelsonV1ExpressionBase,
+  MichelsonV1ExpressionExtended,
+  OperationContentsAndResultTxRollupRemoveCommitment,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -2582,6 +2586,76 @@ describe('RpcClient test', () => {
       expect(content.metadata.operation_result.balance_updates).toBeDefined();
       expect(content.metadata.operation_result.consumed_gas).toEqual('2502');
       expect(content.metadata.operation_result.consumed_milligas).toEqual('2501420');
+      expect(content.metadata.operation_result.level).toEqual(0);
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_dispatch_tickets, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[4] as OperationContentsAndResultTxRollupDispatchTickets;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_DISPATCH_TICKETS);
+      expect(content.source).toEqual('tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM');
+      expect(content.fee).toEqual('835');
+      expect(content.counter).toEqual('252405');
+      expect(content.gas_limit).toEqual('4354');
+      expect(content.storage_limit).toEqual('86');
+      expect(content.tx_rollup).toEqual('txr1YMZxstAHqQ9V313sYjLBCHBXsvSmDZuTs');
+      expect(content.level).toEqual(4);
+      expect(content.context_hash).toEqual('CoV7iqRirVx7sZa5TAK9ymoEJBrW6z4hwwrzMhz6YLeHYXrQwRWG');
+      expect(content.message_index).toEqual(0);
+      expect(content.message_result_path).toBeDefined();
+      expect(content.message_result_path[0]).toEqual(
+        'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB'
+      );
+
+      expect(content.tickets_info).toBeDefined();
+
+      expect((content.tickets_info[0].contents as MichelsonV1ExpressionBase).string).toEqual(
+        'third-deposit'
+      );
+      expect((content.tickets_info[0].ty as MichelsonV1ExpressionExtended).prim).toEqual('string');
+      expect(content.tickets_info[0].ticketer).toEqual('KT1EMQxfYVvhTJTqMiVs2ho2dqjbYfYKk6BY');
+      expect(content.tickets_info[0].amount).toEqual('2');
+      expect(content.tickets_info[0].claimer).toEqual('tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM');
+
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_remove_commitment, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[5] as OperationContentsAndResultTxRollupRemoveCommitment;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_REMOVE_COMMITMENT);
+      expect(content.source).toEqual('tz1M1PXyMAhAsXroc6DtuWUUeHvb79ZzCnCp');
+      expect(content.fee).toEqual('574');
+      expect(content.counter).toEqual('252310');
+      expect(content.gas_limit).toEqual('3272');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1YMZxstAHqQ9V313sYjLBCHBXsvSmDZuTs');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1M1PXyMAhAsXroc6DtuWUUeHvb79ZzCnCp'
+      );
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('574');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('3172');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('3171088');
       expect(content.metadata.operation_result.level).toEqual(0);
       done();
     });
