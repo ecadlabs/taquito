@@ -6,6 +6,7 @@ import {
   Token,
   SemanticEncoding,
 } from '../token';
+import { stripHexPrefix } from '@taquito/utils';
 
 export class BytesValidationError extends TokenValidationError {
   name = 'BytesValidationError';
@@ -46,8 +47,12 @@ export class BytesToken extends ComparableToken {
 
   public Encode(args: any[]): any {
     let val = args.pop();
-
     val = this.convertUint8ArrayToHexString(val);
+
+    if (val.startsWith('0x')) {
+      val = stripHexPrefix(val);
+    }
+
     const err = this.isValid(val);
     if (err) {
       throw err;
@@ -58,6 +63,11 @@ export class BytesToken extends ComparableToken {
 
   public EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
+
+    if (typeof val === 'string' && val.startsWith('0x')) {
+      val = stripHexPrefix(val);
+    }
+
     const err = this.isValid(val);
     if (err) {
       throw err;
