@@ -4,8 +4,8 @@
  */
  export class InvalidSpendingKey extends Error {
   public name = 'InvalidSpendingKey';
-  constructor(sk: string) {
-    super(`The spending key is invalid: ${sk}`);
+  constructor(sk: string, reason = "The spending key is invalid") {
+    super(`${reason}: ${sk}`);
   }
 }
 
