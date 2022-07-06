@@ -101,7 +101,7 @@ const mondaynetEphemeral = {
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
+    requestHeaders: { Authorization: 'Bearer taquito' },
   },
 };
 
