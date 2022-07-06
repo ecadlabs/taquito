@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done()
     })
 
-    it('originates contract made with wallet API and calls deposit method with unit param', async (done) => {
+    it('originates a contract made with wallet API and calls deposit method with unit param', async (done) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: depositContractCode,
