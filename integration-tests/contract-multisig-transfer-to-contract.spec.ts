@@ -110,6 +110,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
       const signature1 = await account1.signer.sign(packed, new Uint8Array())
       const signature2 = await account2.signer.sign(packed, new Uint8Array())
 
+      const start_balance = await Tezos.tz.getBalance(knownContract)
+
       const op2 = await contract.methods.main(
         // Counter
         "0",
@@ -124,6 +126,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
       await op2.confirmation();
       expect(op2.status).toEqual('applied')
 
+      const end_balance = await Tezos.tz.getBalance(knownContract)
+      expect(end_balance.toNumber()).toEqual((start_balance.toNumber() + 1))
+      
       done();
     })
   })

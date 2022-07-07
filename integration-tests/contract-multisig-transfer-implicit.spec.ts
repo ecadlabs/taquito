@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup()
       done()
     })
-    test('test manager transfers scenarios', async (done: () => void) => {
+    test('test manager transfers scenarios', async (done) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
@@ -122,7 +122,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       ).send()
 
       await op2.confirmation();
-      console.log("op2")
+
       expect(op2.status).toEqual('applied')
 
       done();

@@ -22,9 +22,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
-      const account = await Tezos.rpc.getDelegate(pkh)
-      expect(account).toEqual(pkh)  
-
       // Originate the multisig contract
       const op2 = await Tezos.contract.originate({
         balance: "1",
@@ -36,7 +33,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       })
       const contract = await op2.contract();
-      expect(op.status).toEqual('applied')
+      expect(op2.status).toEqual('applied')
+
+      const delegate = await Tezos.rpc.getDelegate(contract.address)
+      expect(delegate).toEqual(null)  
 
       // Utility function that mimics the PAIR operation of michelson
       // file deepcode ignore no-any: any is good enough
@@ -131,6 +131,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         [signature1.prefixSig, signature2.prefixSig, null]
       ).send()
       await op3.confirmation();
+
+      const delegate2 = await Tezos.rpc.getDelegate(contract.address)
+      expect(delegate2).toEqual(pkh)  
     })
   })
 });
