@@ -5,7 +5,7 @@ import { genericMultisig } from "./data/multisig";
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
  
-  describe(`Generic Multisig set delegate: ${rpc}`, () => {
+  describe(`Generic Multisig remove delegate: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup(true)
       done()
