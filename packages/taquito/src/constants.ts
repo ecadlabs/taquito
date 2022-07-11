@@ -30,7 +30,7 @@ export enum Protocols {
   PsiThaCa = 'PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP',
   Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
-  PtKathma = 'PtKathmaHPSjL3WDmUCJP7iHBsUix65HdAgSeVacukogRK6hum6',
+  PtKathma = 'PtKathmaXYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -60,5 +60,5 @@ export enum ChainIds {
   ITHACANET = 'NetXbhmtAbMukLc',
   ITHACANET2 = 'NetXnHfVqm9iesp',
   JAKARTANET2 = 'NetXLH1uAxK7CCh',
-  KATHMANDUNET = 'NetXLH1uAxK7CCh'
+  KATHMANDUNET = 'NetXdnUSgMs7Xc3'
 }

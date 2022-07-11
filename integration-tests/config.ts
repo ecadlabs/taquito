@@ -63,10 +63,10 @@ interface FaucetConfig {
 const kathmandunetEphemeral = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1TvLcwteSHnHmmfbXSuMZcPSx5wwa7QjLV',
-  knownBigMapContract: '', // bug
-  knownTzip1216Contract: 'KT1JbHrdccPg2VnNt9WgaEWvjkA3eCPBLxYi', 
-  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k', //  not done yet
+  knownContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
+  knownBigMapContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
+  knownTzip1216Contract: 'KT1HuHX1RzwZcbianWaeW14tQbdPEJSFrte6',
+  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
   protocol: Protocols.PtKathma,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -108,9 +108,9 @@ const mondaynetEphemeral = {
 const kathmandunetFaucet = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
-  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
-  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
+  knownBigMapContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
+  knownTzip1216Contract: 'KT1HuHX1RzwZcbianWaeW14tQbdPEJSFrte6',
   knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
   protocol: Protocols.PtKathma,
   signerConfig: {

@@ -286,6 +286,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			try {
 				await contract.tzip12().getTokenMetadata(3);
 			} catch (err) {
+				console.log(err)
 				expect(err).toBeInstanceOf(ViewSimulationError);
 			}
 			done();

@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { Protocols, ChainIds } from '@taquito/taquito';
+import { Protocols, ChainIds } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -8,23 +8,26 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 CONFIGS().forEach(
   ({
     lib,
+    protocol,
+    rpc,
+    setup,
     knownBaker,
     knownContract,
     knownBigMapContract,
     knownSaplingContract,
-    setup,
-    protocol,
-    rpc,
   }) => {
     const Tezos = lib;
-
-    const jakartanetAndKathmandunet = protocol === Protocols.PtJakart2|| protocol === Protocols.PtKathma ? test: test.skip;
     const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
-    const jakartanetIt = protocol === Protocols.PtJakart2 ? it: it.skip;
 
     beforeAll(async (done) => {
-      await setup();
-      done();
+      try {
+        await setup()
+      }
+      catch (ex: any) {
+        fail(ex.message)
+      } finally {
+        done()
+      }
     });
 
     const rpcList: Array<string> = [rpc];
@@ -33,7 +36,7 @@ CONFIGS().forEach(
       Tezos.setRpcProvider(rpc);
 
       const rpcClient = new RpcClientCache(new RpcClient(rpc));
-
+      
       describe(`Test calling all methods from RPC node: ${rpc}`, () => {
         it('Get the head block hash', async (done) => {
           const blockHash = await rpcClient.getBlockHash();
@@ -90,13 +93,18 @@ CONFIGS().forEach(
         });
 
         it('Executes tzip4 views by calling runView ', async (done) => {
+          
           let chainId: string;
 
+          console.log("protocol :"+ protocol)
+
           if (protocol === Protocols.PtKathma) {
-            chainId = ChainIds.ITHACANET2
+            chainId = ChainIds.KATHMANDUNET
           } else {
             chainId = ChainIds.JAKARTANET2
           }
+
+          console.log("chainId :"+ chainId)
 
           const params: RPCRunViewParam = {
             contract: knownBigMapContract,
@@ -265,7 +273,7 @@ CONFIGS().forEach(
         });
 
         // We will send invalid signedOpBytes and see if the node returns the expected error message
-        jakartanetAndKathmandunet('Inject an operation in node and broadcast it', async (done) => {
+        it('Inject an operation in node and broadcast it', async (done) => {
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
@@ -395,17 +403,19 @@ CONFIGS().forEach(
 
         it('getProtocols', async (done) => {
           const protocols = await rpcClient.getProtocols();
+          console.log(protocol);
+          console.log(protocols);
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
           done();
         });
 
-        jakartanetIt('getTxRollupInbox', async (done) => {
+        it('getTxRollupInbox', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        jakartanetIt('getTxRollupState', async (done) => {
+        it('getTxRollupState', async (done) => {
           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
           expect(state).toBeDefined();
           done();

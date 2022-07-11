@@ -2391,7 +2391,7 @@
     "@stablelib/salsa20" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
-"@taquito/beacon-wallet@file:/Users/zainensuzuki/code/taquito/packages/taquito-beacon-wallet":
+"@taquito/beacon-wallet@file:/home/mike/taquito/packages/taquito-beacon-wallet":
   "resolved" "file:packages/taquito-beacon-wallet"
   "version" "13.0.0"
   dependencies:
@@ -2399,7 +2399,7 @@
     "@taquito/taquito" "^13.0.0"
     "libsodium-wrappers" "0.7.9"
 
-"@taquito/contracts-library@file:/Users/zainensuzuki/code/taquito/packages/taquito-contracts-library":
+"@taquito/contracts-library@file:/home/mike/taquito/packages/taquito-contracts-library":
   "resolved" "file:packages/taquito-contracts-library"
   "version" "13.0.0"
   dependencies:
@@ -2421,13 +2421,13 @@
   dependencies:
     "axios" "^0.26.0"
 
-"@taquito/http-utils@file:/Users/zainensuzuki/code/taquito/packages/taquito-http-utils":
+"@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
   "resolved" "file:packages/taquito-http-utils"
   "version" "13.0.0"
   dependencies:
     "axios" "^0.26.0"
 
-"@taquito/ledger-signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-ledger-signer":
+"@taquito/ledger-signer@file:/home/mike/taquito/packages/taquito-ledger-signer":
   "resolved" "file:packages/taquito-ledger-signer"
   "version" "13.0.0"
   dependencies:
@@ -2444,7 +2444,7 @@
     "@taquito/utils" "^13.0.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/local-forging@file:/Users/zainensuzuki/code/taquito/packages/taquito-local-forging":
+"@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
   "version" "13.0.0"
   dependencies:
@@ -2455,7 +2455,7 @@
   "resolved" "file:packages/taquito-michel-codec"
   "version" "13.0.0"
 
-"@taquito/michel-codec@file:/Users/zainensuzuki/code/taquito/packages/taquito-michel-codec":
+"@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
   "version" "13.0.0"
 
@@ -2468,7 +2468,7 @@
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
-"@taquito/michelson-encoder@file:/Users/zainensuzuki/code/taquito/packages/taquito-michelson-encoder":
+"@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "13.0.0"
   dependencies:
@@ -2477,7 +2477,7 @@
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
-"@taquito/remote-signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-remote-signer":
+"@taquito/remote-signer@file:/home/mike/taquito/packages/taquito-remote-signer":
   "resolved" "file:packages/taquito-remote-signer"
   "version" "13.0.0"
   dependencies:
@@ -2505,7 +2505,7 @@
     "@taquito/utils" "^13.0.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/rpc@file:/Users/zainensuzuki/code/taquito/packages/taquito-rpc":
+"@taquito/rpc@file:/home/mike/taquito/packages/taquito-rpc":
   "resolved" "file:packages/taquito-rpc"
   "version" "13.0.0"
   dependencies:
@@ -2513,7 +2513,7 @@
     "@taquito/utils" "^13.0.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-signer":
+"@taquito/signer@file:/home/mike/taquito/packages/taquito-signer":
   "resolved" "file:packages/taquito-signer"
   "version" "13.0.0"
   dependencies:
@@ -2539,7 +2539,7 @@
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
-"@taquito/taquito@file:/Users/zainensuzuki/code/taquito/packages/taquito":
+"@taquito/taquito@file:/home/mike/taquito/packages/taquito":
   "resolved" "file:packages/taquito"
   "version" "13.0.0"
   dependencies:
@@ -2552,20 +2552,20 @@
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
-"@taquito/tezbridge-signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-tezbridge-signer":
+"@taquito/tezbridge-signer@file:/home/mike/taquito/packages/taquito-tezbridge-signer":
   "resolved" "file:packages/taquito-tezbridge-signer"
   "version" "13.0.0"
   dependencies:
     "@taquito/utils" "^13.0.0"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/tezbridge-wallet@file:/Users/zainensuzuki/code/taquito/packages/taquito-tezbridge-wallet":
+"@taquito/tezbridge-wallet@file:/home/mike/taquito/packages/taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
   "version" "13.0.0"
   dependencies:
     "@taquito/taquito" "^13.0.0"
 
-"@taquito/tzip12@file:/Users/zainensuzuki/code/taquito/packages/taquito-tzip12":
+"@taquito/tzip12@file:/home/mike/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "13.0.0"
   dependencies:
@@ -2585,7 +2585,7 @@
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
-"@taquito/tzip16@file:/Users/zainensuzuki/code/taquito/packages/taquito-tzip16":
+"@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "13.0.0"
   dependencies:
@@ -2624,7 +2624,7 @@
     "elliptic" "^6.5.4"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/utils@file:/Users/zainensuzuki/code/taquito/packages/taquito-utils":
+"@taquito/utils@file:/home/mike/taquito/packages/taquito-utils":
   "resolved" "file:packages/taquito-utils"
   "version" "13.0.0"
   dependencies:
@@ -3650,13 +3650,6 @@
   "integrity" "sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA=="
   "resolved" "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.2.0.tgz"
   "version" "2.2.0"
-
-"bindings@^1.5.0":
-  "integrity" "sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ=="
-  "resolved" "https://registry.npmjs.org/bindings/-/bindings-1.5.0.tgz"
-  "version" "1.5.0"
-  dependencies:
-    "file-uri-to-path" "1.0.0"
 
 "blakejs@^1.1.1":
   "integrity" "sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ=="
@@ -5347,9 +5340,6 @@
   dependencies:
     "flat-cache" "^3.0.4"
 
-"file-uri-to-path@1.0.0":
-  "version" "1.0.0"
-
 "filename-reserved-regex@^2.0.0":
   "version" "2.0.0"
 
@@ -5535,15 +5525,6 @@
 
 "fs.realpath@^1.0.0":
   "version" "1.0.0"
-
-"fsevents@^1.2.7":
-  "version" "1.2.13"
-  dependencies:
-    "bindings" "^1.5.0"
-    "nan" "^2.12.1"
-
-"fsevents@^2.1.2", "fsevents@~2.3.2":
-  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "version" "1.1.1"
@@ -7369,9 +7350,6 @@
 
 "mute-stream@0.0.8":
   "version" "0.0.8"
-
-"nan@^2.12.1":
-  "version" "2.15.0"
 
 "nanomatch@^1.2.9":
   "version" "1.2.13"
