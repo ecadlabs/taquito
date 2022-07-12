@@ -1021,7 +1021,6 @@ export class RpcClientCache implements RpcClientInterface {
     } else {
       const response = this.rpcClient.getProtocols({ block });
       this.put(key, response);
-      console.log(response)
       return response;
     }
   }
