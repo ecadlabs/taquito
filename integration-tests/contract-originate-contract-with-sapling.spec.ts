@@ -32,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
 
     kathmandunet('Originates a Sapling Double contract', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractDouble,
+        code: saplingContractDoubleJProto,
         init: `(Pair {} {})`,
       });
       await op.confirmation();
@@ -82,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
 
     kathmandunet('Originates a Sapling Drop contract', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractDrop,
+        code: saplingContractDropJProto,
         init: { prim: 'Unit' },
       });
       await op.confirmation();
@@ -116,7 +116,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
 
     kathmandunet('Originates a Sapling Send contract', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractSend,
+        code: saplingContractSendJProto,
         init: { prim: 'Unit' },
       });
       await op.confirmation();
@@ -177,7 +177,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
 
     kathmandunet('Originates a Use Existing State Sapling contract', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractUseExistingState,
+        code: saplingContractUseExistingStateJProto,
         init: `{}`,
       });
       await op.confirmation();

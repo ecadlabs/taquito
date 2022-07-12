@@ -204,6 +204,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       done();
     });
 
+    // ISSUE #1751
     it('Return undefined when BigMap key is not found', async (done) => {
       const myContract = await Tezos.contract.at(knownBigMapContract);
       const contractStorage: any = await myContract.storage();

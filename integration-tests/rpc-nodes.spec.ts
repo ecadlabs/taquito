@@ -20,14 +20,8 @@ CONFIGS().forEach(
     const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
     beforeAll(async (done) => {
-      try {
         await setup()
-      }
-      catch (ex: any) {
-        fail(ex.message)
-      } finally {
         done()
-      }
     });
 
     const rpcList: Array<string> = [rpc];
@@ -96,15 +90,11 @@ CONFIGS().forEach(
           
           let chainId: string;
 
-          console.log("protocol :"+ protocol)
-
           if (protocol === Protocols.PtKathma) {
             chainId = ChainIds.KATHMANDUNET
           } else {
             chainId = ChainIds.JAKARTANET2
           }
-
-          console.log("chainId :"+ chainId)
 
           const params: RPCRunViewParam = {
             contract: knownBigMapContract,
@@ -277,7 +267,7 @@ CONFIGS().forEach(
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
-            expect(ex.message).toMatch('Invalid_argument "Hex.to_char: 112 is an invalid char');
+            expect(ex.message).toMatch('Invalid_argument(\"Hex.to_char: 112 is an invalid char\")');
           }
           done();
         });
@@ -403,8 +393,6 @@ CONFIGS().forEach(
 
         it('getProtocols', async (done) => {
           const protocols = await rpcClient.getProtocols();
-          console.log(protocol);
-          console.log(protocols);
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
           done();
         });
