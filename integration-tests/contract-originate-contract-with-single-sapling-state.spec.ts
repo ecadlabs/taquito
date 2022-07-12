@@ -19,7 +19,6 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
        expect(op.hash).toBeDefined();
        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
        const contract = await op.contract();
-       console.log(contract.address)
        done();
      });
   });

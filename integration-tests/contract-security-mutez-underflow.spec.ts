@@ -11,7 +11,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
   const kathmandunet = protocol === Protocols.PtKathma ? test : test.skip;
-  console.log(protocol)
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
