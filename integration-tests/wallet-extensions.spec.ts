@@ -44,8 +44,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract
         it('configures a ContractsLibrary and a Tzip16Module on the TezosToolkit instance', async (done) => {
             const contractsLibrary = new ContractsLibrary();
             
-            console.log("knownBigMapContract :"+knownBigMapContract)
-            console.log("knownTzip1216Contract :"+knownTzip1216Contract)
             // We intentionally load a script that does not match the knownBigMapContract script
             contractsLibrary.addContract({
                 [knownBigMapContract]: {
