@@ -8,8 +8,7 @@ import { managerCode } from "./data/manager_code";
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => {
   const Tezos = lib;
   const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
-  const kathmandunet = (protocol === Protocols.PtKathma) ? test : test.skip;
-  console.log(protocol)
+  const kathmandunet = (protocol === Protocols.PtKathmaX) ? test : test.skip;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;

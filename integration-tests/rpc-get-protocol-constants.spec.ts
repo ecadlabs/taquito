@@ -6,7 +6,7 @@ import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponsePr
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
    
-    const kathmandunet = (protocol === Protocols.PtKathma) ? test : test.skip;
+    const kathmandunet = (protocol === Protocols.PtKathmaX) ? test : test.skip;
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
     const ithacanet = (protocol === Protocols.Psithaca2) ? test : test.skip;
     const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;

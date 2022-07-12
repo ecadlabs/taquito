@@ -61,13 +61,13 @@ interface FaucetConfig {
 }
 
 const kathmandunetEphemeral = {
-  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
   knownBigMapContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
   knownTzip1216Contract: 'KT1HuHX1RzwZcbianWaeW14tQbdPEJSFrte6',
   knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
-  protocol: Protocols.PtKathma,
+  protocol: Protocols.PtKathmaX,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
@@ -112,7 +112,7 @@ const kathmandunetFaucet = {
   knownBigMapContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
   knownTzip1216Contract: 'KT1HuHX1RzwZcbianWaeW14tQbdPEJSFrte6',
   knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
-  protocol: Protocols.PtKathma,
+  protocol: Protocols.PtKathmaX,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {

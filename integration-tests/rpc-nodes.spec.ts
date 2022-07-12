@@ -90,7 +90,7 @@ CONFIGS().forEach(
           
           let chainId: string;
 
-          if (protocol === Protocols.PtKathma) {
+          if (protocol === Protocols.PtKathmaX) {
             chainId = ChainIds.KATHMANDUNET
           } else {
             chainId = ChainIds.JAKARTANET2
