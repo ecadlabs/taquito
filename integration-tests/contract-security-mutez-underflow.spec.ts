@@ -10,6 +10,8 @@ import { CONFIGS } from './config';
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
+  const kathmandunet = protocol === Protocols.PtKathma ? test : test.skip;
+  console.log(protocol)
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -17,7 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    mondaynet('Verify mutez underflow example', async (done) => {
+    kathmandunet('Verify mutez underflow example', async (done) => {
       try {
         const op = await Tezos.contract.originate({
           code: `        { parameter unit ;

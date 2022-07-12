@@ -5,8 +5,8 @@ import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponsePr
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
-
-    const katmandunet = (protocol === Protocols.PtKathma) ? test : test.skip;
+   
+    const kathmandunet = (protocol === Protocols.PtKathma) ? test : test.skip;
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
     const ithacanet = (protocol === Protocols.Psithaca2) ? test : test.skip;
     const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
@@ -597,13 +597,13 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        katmandunet(`successfully fetches all constants for katmandunet using ${rpc}`, async (done) => {
+        kathmandunet(`successfully fetches all constants for kathmandunet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto013 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
-
             expect(constants).toEqual({
                 proof_of_work_nonce_size: 8,
                 nonce_length: 32,
+                nonce_revelation_threshold: 32,
                 max_anon_ops_per_block: 132,
                 max_operation_data_length: 32768,
                 max_proposals_per_delegate: 20,
@@ -613,7 +613,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 hard_gas_limit_per_operation: new BigNumber(1040000),
                 hard_gas_limit_per_block: new BigNumber(5200000),
                 proof_of_work_threshold: new BigNumber(-1),
-                tokens_per_roll: new BigNumber(6000000000),
+                tokens_per_roll: new BigNumber(8000000000),
                 seed_nonce_revelation_tip: new BigNumber(125000),
                 origination_size: 257,
                 cost_per_byte: new BigNumber(250),
@@ -623,7 +623,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 min_proposal_quorum: 500,
                 liquidity_baking_subsidy: new BigNumber(2500000),
                 liquidity_baking_sunset_level: 10000000,
-                liquidity_baking_toggle_ema_threshold: 1000000000,
+                liquidity_baking_toggle_ema_threshold: 100000,
                 max_allowed_global_constants_depth: 10000,
                 max_micheline_bytes_limit: 50000,
                 max_micheline_node_count: 50000,
@@ -640,6 +640,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                     numerator: 2,
                 },
                 max_slashing_period: 2,
+                max_wrapped_proof_binary_size: 30000,
                 frozen_deposits_percentage: 10,
                 double_baking_punishment: new BigNumber(640000000),
                 ratio_of_frozen_deposits_slashed_per_double_endorsement: {
@@ -647,31 +648,48 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                     numerator: 1,
                 },
                 minimal_block_delay: new BigNumber(15),
-                delay_increment_per_round: new BigNumber(7),
+                dal_parametric: {
+                        availability_threshold: 50,
+                        endorsement_lag: 1,
+                        feature_enable: false,
+                        number_of_shards: 2048,
+                        number_of_slots: 256,
+                      },
+                delay_increment_per_round: {
+                             c: [15],
+                             e: 1,
+                             s: 1,
+                            },
                 cache_layout_size: 3,
                 cache_sampler_state_cycles: 8,
                 cache_script_size: 100000000,
                 cache_stake_distribution_cycles: 8,
                 cycles_per_voting_period: 1,
                 sc_rollup_challenge_window_in_blocks: 20160,
+                sc_rollup_commitment_period_in_blocks: 30,
                 sc_rollup_enable: false,
+                sc_rollup_max_active_outbox_levels: 20160,
                 sc_rollup_max_available_messages: 1000000,
+                sc_rollup_max_lookahead_in_blocks: 30000,
+                sc_rollup_max_outbox_messages_per_level: 100,
                 sc_rollup_origination_size: 6314,
+                sc_rollup_stake_amount: "32000000",
                 tx_rollup_commitment_bond: new BigNumber(10000000000),
                 tx_rollup_cost_per_byte_ema_factor: 120,
                 tx_rollup_enable: true,
-                tx_rollup_finality_period: 40000,
+                tx_rollup_finality_period: 10,
                 tx_rollup_hard_size_limit_per_inbox: 500000,
                 tx_rollup_hard_size_limit_per_message: 5000,
-                tx_rollup_max_commitments_count: 80100,
-                tx_rollup_max_inboxes_count: 40100,
+                tx_rollup_max_commitments_count: 30,
+                tx_rollup_max_inboxes_count: 15,
                 tx_rollup_max_messages_per_inbox: 1010,
                 tx_rollup_max_ticket_payload_size: 2048,
                 tx_rollup_max_withdrawals_per_batch: 15,
                 tx_rollup_origination_size: 4000,
                 tx_rollup_rejection_max_proof_size: 30000,
-                tx_rollup_sunset_level: 3473409,
-                tx_rollup_withdraw_period: 40000,
+                tx_rollup_sunset_level: 17280,
+                tx_rollup_withdraw_period: 10,
+                vdf_difficulty: "50000",
             });
 
             done();
@@ -684,6 +702,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             expect(constants).toEqual({
                 proof_of_work_nonce_size: 8,
                 nonce_length: 32,
+                nonce_revelation_threshold: 32,
                 max_anon_ops_per_block: 132,
                 max_operation_data_length: 32768,
                 max_proposals_per_delegate: 20,
@@ -742,13 +761,13 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 cache_stake_distribution_cycles: 8,
                 cycles_per_voting_period: 1,
                 sc_rollup_challenge_window_in_blocks: 20160,
-                sc_rollup_enable: false,
-                sc_rollup_max_available_messages: 1000000,
-                sc_rollup_origination_size: 6314,
                 sc_rollup_commitment_period_in_blocks: 30,
+                sc_rollup_enable: false,
                 sc_rollup_max_active_outbox_levels: 20160,
+                sc_rollup_max_available_messages: 1000000,
                 sc_rollup_max_lookahead_in_blocks: 30000,
                 sc_rollup_max_outbox_messages_per_level: 100,
+                sc_rollup_origination_size: 6314,
                 sc_rollup_stake_amount: "32000000",
                 tx_rollup_commitment_bond: new BigNumber(10000000000),
                 tx_rollup_cost_per_byte_ema_factor: 120,
