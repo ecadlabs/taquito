@@ -267,16 +267,7 @@ CONFIGS().forEach(
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
-            expect(ex.message).toContain('Invalid_argument(\"Hex.to_char: 112 is an invalid char\")');
-          }
-          done();
-        });
-
-        mondaynet('Inject an operation in node and broadcast it', async (done) => {
-          try {
-            const injectedOperation = await rpcClient.injectOperation('operation');
-          } catch (ex: any) {
-            expect(ex.message).toContain('Http error response:');
+            expect(ex.message).toContain('Hex.to_char: 112 is an invalid char');
           }
           done();
         });
