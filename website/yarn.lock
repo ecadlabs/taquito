@@ -2869,14 +2869,8 @@
 
 "@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta":
   "resolved" "file:../packages/taquito"
-  "version" "13.0.0"
+  "version" "13.0.1"
   dependencies:
-    "@taquito/http-utils" "^13.0.0"
-    "@taquito/local-forging" "^13.0.0"
-    "@taquito/michel-codec" "^13.0.0"
-    "@taquito/michelson-encoder" "^13.0.0"
-    "@taquito/rpc" "^13.0.0"
-    "@taquito/utils" "^13.0.0"
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
@@ -5149,6 +5143,9 @@
 
 "fs.realpath@^1.0.0":
   "version" "1.0.0"
+
+"fsevents@~2.3.2":
+  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "version" "1.1.1"
