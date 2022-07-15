@@ -120,6 +120,16 @@ const signedPayload = await wallet.client.requestSignPayload(payload);
 const { signature } = signedPayload;
 ```
 
+## Verifying a signature
+
+To verify that the previously generated signature has actually been signed by a wallet, you can use the `veryfySignature` method from the Taquito utils. Here is an example where we check if the payload has been signed by the client wallet, using their public key:
+
+```js
+import {verifySignature} from "@taquito/utils";
+
+const isVerified = verifySignature(payloadBytes, (await wallet.client.getActiveAccount()).publicKey, signature)
+```
+
 ## Signing Michelson data
 
 Taquito also offers the possibility to sign Michelson code. This feature can be useful, for example, if you need to send a lambda to a contract to be executed but want to restrict the number of users who can submit a lambda by verifiying the signer's address. The signing of Michelson code requires the use of the `michel-codec` package:

@@ -1,12 +1,9 @@
 import { CONFIGS } from './config';
+
 import {
-  depositContractCodeHangzhou,
-  depositContractStorageHangzhou,
-} from './data/deposit_contract_hangzhou';
-import {
-  depositContractCodeIthaca,
-  depositContractStorageIthaca,
-} from './data/deposit_contract_ithaca';
+  depositContractCode,
+  depositContractStorage,
+} from './data/deposit_contract';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -18,12 +15,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it(
-      'originates a contract on Ithaca with SUB MUTEZ and sends base layer tokens when calling contract methods',
+      'originates a contract with SUB MUTEZ and sends base layer tokens when calling contract methods',
       async (done) => {
         const op = await Tezos.contract.originate({
           balance: '0',
-          code: depositContractCodeIthaca,
-          init: depositContractStorageIthaca,
+          code: depositContractCode,
+          init: depositContractStorage,
         });
         const contract = await op.contract();
 
@@ -43,20 +40,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         done();
       }
     );
-
-    it('fail to originate a contract on Ithaca with SUB', async () => {
-      try {
-        await Tezos.contract.originate({
-          balance: '0',
-          code: depositContractCodeHangzhou,
-          init: depositContractStorageHangzhou,
-        });
-      } catch (error: any) {
-        expect(error.message).toContain(
-          'michelson_v1.deprecated_instruction'
-        );
-      }
-    });
 
   });
 });

@@ -60,17 +60,17 @@ interface FaucetConfig {
   faucetKey: {};
 }
 
-const ithacanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
+const kathmandunetEphemeral = {
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
-  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
-  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
+  knownBigMapContract: 'KT1APh1knPdoeoRNn6zohaPQcXqLMzfqhqoD',
+  knownTzip1216Contract: 'KT1HuHX1RzwZcbianWaeW14tQbdPEJSFrte6',
   knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
-  protocol: Protocols.Psithaca2,
+  protocol: Protocols.PtKathmaX,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/ithacanet',
+    keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };
@@ -101,18 +101,18 @@ const mondaynetEphemeral = {
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
-    requestHeaders: { Authorization: 'Bearer taquito' },
+    requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };
 
-const ithacanetFaucet = {
-  rpc: process.env['TEZOS_RPC_ITHACANET'] || 'https://ithacanet.ecadinfra.com/',
+const kathmandunetFaucet = {
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT19oXBkAz1njVaTEypSzxGorWAFy6wnLLe1',
-  knownBigMapContract: 'KT1JmL7j8CY371kRF2oZoJmzi7EUWbLPjEqZ',
-  knownTzip1216Contract: 'KT1GxL96iix8MCTsCA1DBVfnZ4Gdk7EZW4Eq',
+  knownContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
+  knownBigMapContract: 'KT1APh1knPdoeoRNn6zohaPQcXqLMzfqhqoD',
+  knownTzip1216Contract: 'KT1HuHX1RzwZcbianWaeW14tQbdPEJSFrte6',
   knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
-  protocol: Protocols.Psithaca2,
+  protocol: Protocols.PtKathmaX,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {
@@ -180,19 +180,19 @@ const jakartanetFaucet = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(jakartanetFaucet, ithacanetFaucet);
+  providers.push(jakartanetFaucet, kathmandunetFaucet);
 } else if (process.env['RUN_JAKARTANET_WITH_FAUCET']) {
   providers.push(jakartanetFaucet);
-} else if (process.env['RUN_ITHACANET_WITH_FAUCET']) {
-  providers.push(ithacanetFaucet);
+} else if (process.env['RUN_KATHMANDUNET_WITH_FAUCET']) {
+  providers.push(kathmandunetFaucet);
 } else if (process.env['JAKARTANET']) {
   providers.push(jakartanetEphemeral);
-} else if (process.env['ITHACANET']) {
-  providers.push(ithacanetEphemeral);
+} else if (process.env['KATHMANDUNET']) {
+  providers.push(kathmandunetEphemeral);
 } else if (process.env['MONDAYNET']) {
   providers.push(mondaynetEphemeral);
 } else {
-  providers.push(jakartanetEphemeral, ithacanetEphemeral);
+  providers.push(jakartanetEphemeral, kathmandunetEphemeral);
 }
 
 const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];

@@ -6,7 +6,7 @@ import Faucet from './faucet-interface';
 
 const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
-const provider = 'https://jakartanet.ecadinfra.com/';
+const provider = 'https://kathmandunet.ecadinfra.com/';
 
 async function example() {
   const tezos = new TezosToolkit(provider);

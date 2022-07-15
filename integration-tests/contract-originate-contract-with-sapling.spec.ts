@@ -17,7 +17,7 @@ import {
 CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
   const Tezos = lib;
   const jakartanetAndMondaynet = protocol === Protocols.ProtoALpha || protocol === Protocols.PtJakart2 ? test: test.skip;
-  const ithacanet = protocol === Protocols.Psithaca2 ? test : test.skip;
+  const kathmandunet = protocol === Protocols.PtKathmaX ? test : test.skip;
 
   interface StorageType {
     left: SaplingStateAbstraction;
@@ -30,9 +30,9 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanet('Originates a Sapling Double contract', async (done) => {
+    kathmandunet('Originates a Sapling Double contract', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractDouble,
+        code: saplingContractDoubleJProto,
         init: `(Pair {} {})`,
       });
       await op.confirmation();
@@ -80,9 +80,9 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanet('Originates a Sapling Drop contract', async (done) => {
+    kathmandunet('Originates a Sapling Drop contract', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractDrop,
+        code: saplingContractDropJProto,
         init: { prim: 'Unit' },
       });
       await op.confirmation();
@@ -114,9 +114,9 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanet('Originates a Sapling Send contract', async (done) => {
+    kathmandunet('Originates a Sapling Send contract', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractSend,
+        code: saplingContractSendJProto,
         init: { prim: 'Unit' },
       });
       await op.confirmation();
@@ -175,9 +175,9 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    ithacanet('Originates a Use Existing State Sapling contract', async (done) => {
+    kathmandunet('Originates a Use Existing State Sapling contract', async (done) => {
       const op = await Tezos.contract.originate({
-        code: saplingContractUseExistingState,
+        code: saplingContractUseExistingStateJProto,
         init: `{}`,
       });
       await op.confirmation();

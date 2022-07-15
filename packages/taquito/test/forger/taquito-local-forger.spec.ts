@@ -8,7 +8,7 @@ describe('Taquito local forger', () => {
 
   beforeEach(() => {
     mockRpcClient.getProtocols.mockResolvedValue({
-      next_protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+      next_protocol: 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
     });
   });
 
