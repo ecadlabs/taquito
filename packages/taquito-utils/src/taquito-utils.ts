@@ -347,5 +347,5 @@ export function bytes2Char(hex: string): string {
  * @param hex string to strip prefix from
  */
 export function stripHexPrefix(hex: string): string {
-  return hex.slice(2);
+  return hex.startsWith('0x') ? hex.slice(2) : hex;
 }

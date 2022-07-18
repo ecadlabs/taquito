@@ -64,7 +64,7 @@ export class BytesToken extends ComparableToken {
   public EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
 
-    if (typeof val === 'string' && val.startsWith('0x')) {
+    if (typeof val === 'string') {
       val = stripHexPrefix(val);
     }
 
