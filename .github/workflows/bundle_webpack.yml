@@ -1,0 +1,36 @@
+name: Bundle Webpack
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  publish-website:
+    runs-on: ubuntu-latest
+    steps:
+    - 
+      name: Checkout repository
+      uses: actions/checkout@v3
+    -
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14.x
+    -
+      run: npm run lerna -- bootstrap
+    -
+      run: npm run lerna run build
+    -
+      working-directory: packages/taquito-local-forging
+      run: npm run build-webpack
+    -
+      uses: actions/upload-artifact@v3
+      with:
+        name: taquito-local-forging-mobilefriendly
+        path: |
+          packages/taquito-local-forging/dist/taquito_local_forging.js
+          packages/taquito-local-forging/dist/taquito_local_forging.js.map
