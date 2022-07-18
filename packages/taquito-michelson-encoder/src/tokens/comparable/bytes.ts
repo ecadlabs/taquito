@@ -47,11 +47,7 @@ export class BytesToken extends ComparableToken {
 
   public Encode(args: any[]): any {
     let val = args.pop();
-    val = this.convertUint8ArrayToHexString(val);
-
-    if (val.startsWith('0x')) {
-      val = stripHexPrefix(val);
-    }
+    val = stripHexPrefix(this.convertUint8ArrayToHexString(val));
 
     const err = this.isValid(val);
     if (err) {
