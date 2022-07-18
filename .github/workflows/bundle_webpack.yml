@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 jobs:
-  publish-website:
+  bundle-webpack:
     runs-on: ubuntu-latest
     steps:
     - 
@@ -23,7 +23,7 @@ jobs:
     -
       run: npm run lerna -- bootstrap
     -
-      run: npm run lerna run build
+      run: npm run build
     -
       working-directory: packages/taquito-local-forging
       run: npm run build-webpack
