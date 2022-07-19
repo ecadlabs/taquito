@@ -1,5 +1,5 @@
-// import { RollupRpcClient } from './../../taquito-rpc/src/taquito-rollup-rpc';
-// import { RollupRpcClientInterface } from './../../taquito-rpc/src/rollup-rpc-client-interface';
+import { RollupRpcClient } from './../../taquito-rpc/src/taquito-rollup-rpc';
+import { RollupRpcClientInterface } from './../../taquito-rpc/src/rollup-rpc-client-interface';
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Protocols } from './constants';
 import { Forger } from '@taquito/local-forging';
@@ -46,7 +46,7 @@ export const defaultConfigConfirmation: ConfigConfirmation = {
  */
 export class Context {
   private _rpcClient: RpcClientInterface;
-  // private _rollupRpcClient?: RollupRpcClientInterface;
+  private _rollupRpcClient?: RollupRpcClientInterface;
   private _forger: Forger;
   private _parser: ParserProvider;
   private _injector: Injector;
@@ -67,7 +67,6 @@ export class Context {
   constructor(
     private _rpc: RpcClientInterface | string,
     private _signer: Signer = new NoopSigner(),
-    // private _rollupRpc: RollupRpcClientInterface | string,
     private _proto?: Protocols,
     public readonly _config = new BehaviorSubject({
       ...defaultConfigConfirmation,
@@ -79,16 +78,18 @@ export class Context {
     parser?: ParserProvider,
     globalConstantsProvider?: GlobalConstantsProvider,
     readProvider?: TzReadProvider,
-    stream?: SubscribeProvider
+    stream?: SubscribeProvider,
+    private _rollupRpc?: RollupRpcClientInterface | string,
+
   ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
     } else {
       this._rpcClient = this._rpc;
     }
-    // if (this._rollupRpc) {
-    //   this._rollupRpcClient = typeof this._rollupRpc === 'string' ? new RollupRpcClient(this._rollupRpc) : this._rollupRpc
-    // }
+    if (this._rollupRpc) {
+      this._rollupRpcClient = typeof this._rollupRpc === 'string' ? new RollupRpcClient(this._rollupRpc) : this._rollupRpc
+    }
     this._forger = forger ? forger : new TaquitoLocalForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
@@ -127,13 +128,13 @@ export class Context {
     this._rpcClient = value;
   }
 
-  // get rollupRpc(): RollupRpcClientInterface {
-  //   return this._rollupRpcClient;
-  // }
+  get rollupRpc(): RollupRpcClientInterface {
+    return this._rollupRpcClient;
+  }
 
-  // set rollupRpc(value: RollupRpcClientInterface) {
-  //   this._rollupRpcClient = value;
-  // }
+  set rollupRpc(value: RollupRpcClientInterface) {
+    this._rollupRpcClient = value;
+  }
 
   get injector() {
     return this._injector;
@@ -244,7 +245,8 @@ export class Context {
       this._parser,
       this._globalConstantsProvider,
       this._readProvider,
-      this._stream
+      this._stream,
+      this._rollupRpc
     );
   }
 
