@@ -458,7 +458,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    it('Estimate transfer to regular address with a fixed fee', async (done) => {
+    mondaynet('Estimate transfer to regular address with a fixed fee', async (done) => {
       // fee, gasLimit and storage limit are not taken into account
       //const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
@@ -470,7 +470,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    it('Estimate transfer to regular address with insufficient balance', async (done) => {
+    mondaynet('Estimate transfer to regular address with insufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
        ).rejects.toMatchObject({
@@ -489,6 +489,28 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
         kind: 'temporary',
         message: '(temporary) proto.alpha.tez.subtraction_underflow',
       });
+      done();
+    });
+
+    it('Estimate transfer to regular address with a fixed fee', async (done) => {
+      // fee, gasLimit and storage limit are not taken into account
+      const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
+
+      await expect(LowAmountTez.estimate.transfer(params)).rejects.toEqual(
+        expect.objectContaining({
+          message: expect.stringContaining('balance_too_low'),
+        }));
+
+      done();
+    });
+
+    it('Estimate transfer to regular address with insufficient balance', async (done) => {
+      await expect(
+        LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
+      ).rejects.toEqual(
+        expect.objectContaining({
+          message: expect.stringContaining('balance_too_low'),
+        }));
       done();
     });
 
