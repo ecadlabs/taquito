@@ -1,4 +1,4 @@
-import { DEFAULT_FEE, MANAGER_LAMBDA, TezosToolkit, Protocols, ChainIds } from "@taquito/taquito";
+import { DEFAULT_FEE, MANAGER_LAMBDA, TezosToolkit, Protocols  } from "@taquito/taquito";
 import { Contract } from "taquito/src/contract/contract";
 import { CONFIGS } from "./config";
 import { originate, originate2, transferImplicit2 } from "./data/lambda";
