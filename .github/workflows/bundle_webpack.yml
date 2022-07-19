@@ -21,8 +21,8 @@ jobs:
       with:
         node-version: 16.14.2
     - run: npm install 
-    - run: npm run bootstrap
-    - run: npm run build
+    - run: npm run bootstrap -- --no-ci
+    - run: npm run build -- --no-ci
     -
       working-directory: packages/taquito-local-forging
       run: npm run build-webpack
