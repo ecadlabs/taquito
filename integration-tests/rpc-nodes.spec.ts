@@ -17,7 +17,7 @@ CONFIGS().forEach(
     knownSaplingContract,
   }) => {
     const Tezos = lib;
-    const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+    const jakartanet = protocol === Protocols.PtJakart2? test: test.skip;
 
     beforeAll(async (done) => {
         await setup()
@@ -394,7 +394,7 @@ CONFIGS().forEach(
           done();
         });
 
-        it('getTxRollupState', async (done) => {
+        jakartanet('getTxRollupState', async (done) => {
           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
           expect(state).toBeDefined();
           done();

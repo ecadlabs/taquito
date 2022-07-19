@@ -34,7 +34,7 @@ import Faucet from './faucet-interface';
 
 const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
 
-const provider = 'https://kathmandunet.ecadinfra.com/';
+const provider = 'http://mondaynet.ecadinfra.com:8732';
 export const signer: any = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
@@ -45,7 +45,8 @@ const contract_catalogue = new Map();
 
 const users: Array<string> = [
   //live code examples
-  'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+  //'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+  'tz1WWapeBd5gREA7tnGhm24qXJxX4V31WAav',
   'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
   'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
   'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
@@ -77,7 +78,7 @@ user_addresses.set('IntegrationTestUser', users[10]);
 
 const low_balance: Array<string> = [];
 
-const min_balance = 100000000;
+const min_balance = 10000000;
 
 async function checkBalances(users: string | any[]) {
 

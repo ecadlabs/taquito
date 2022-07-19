@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
         await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
         fail('Should throw during transfer with amount higher than balance')
       } catch (ex: any) {
-        expect(ex.message).toContain('balance_too_low')
+        expect(ex.message).toContain('(temporary) proto.alpha.tez.subtraction_underflow')
       }
       done();
     })

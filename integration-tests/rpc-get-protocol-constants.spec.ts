@@ -702,7 +702,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             expect(constants).toEqual({
                 proof_of_work_nonce_size: 8,
                 nonce_length: 32,
-                nonce_revelation_threshold: 16,
+                nonce_revelation_threshold: 64,
                 max_anon_ops_per_block: 132,
                 max_operation_data_length: 32768,
                 max_proposals_per_delegate: 20,

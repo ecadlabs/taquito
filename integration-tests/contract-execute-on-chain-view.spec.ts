@@ -1,7 +1,6 @@
 import { codeViewsTopLevel } from "../packages/taquito-local-forging/test/data/contract_views_top_level";
 import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
-import { Protocols } from "@taquito/taquito";
 import { HttpResponseError } from "@taquito/http-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -14,6 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done()
     })
     test(`As a user I want to originate a smart contract having top level views and simulate the views execution`, async (done) => {
+      
       // Contract origination
       const op = await Tezos.contract.originate({
         code: codeViewsTopLevel,
@@ -56,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         '1': new BigNumber(2000000), // BALANCE is the balance of the contract where the view is
         '2': contract.address, // SELF_ADDRESS is the address of the contract where the view is
         '3': contract.address, // SENDER
-        '4': await Tezos.wallet.pkh() // SOURCE
+        '4': 'tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU'// SOURCE
       });
 
       // return parameter of the view and storage value

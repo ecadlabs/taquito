@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
       done();
     });
 
-    test('Originates a contract with a single sapling state in its storage for kathmandu', async (done) => {
+    test('Originates a contract with a single sapling state in its storage', async (done) => {
        const op = await Tezos.contract.originate({
         code: singleSaplingStateContractJProtocol,
          init: '{}'
