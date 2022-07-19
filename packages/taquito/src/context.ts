@@ -1,3 +1,5 @@
+// import { RollupRpcClient } from './../../taquito-rpc/src/taquito-rollup-rpc';
+// import { RollupRpcClientInterface } from './../../taquito-rpc/src/rollup-rpc-client-interface';
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Protocols } from './constants';
 import { Forger } from '@taquito/local-forging';
@@ -44,6 +46,7 @@ export const defaultConfigConfirmation: ConfigConfirmation = {
  */
 export class Context {
   private _rpcClient: RpcClientInterface;
+  // private _rollupRpcClient?: RollupRpcClientInterface;
   private _forger: Forger;
   private _parser: ParserProvider;
   private _injector: Injector;
@@ -60,9 +63,11 @@ export class Context {
   public readonly batch = new RPCBatchProvider(this, this.estimate);
   public readonly wallet = new Wallet(this);
 
+  // CHECK ME changes order of constructor
   constructor(
     private _rpc: RpcClientInterface | string,
     private _signer: Signer = new NoopSigner(),
+    // private _rollupRpc: RollupRpcClientInterface | string,
     private _proto?: Protocols,
     public readonly _config = new BehaviorSubject({
       ...defaultConfigConfirmation,
@@ -81,6 +86,9 @@ export class Context {
     } else {
       this._rpcClient = this._rpc;
     }
+    // if (this._rollupRpc) {
+    //   this._rollupRpcClient = typeof this._rollupRpc === 'string' ? new RollupRpcClient(this._rollupRpc) : this._rollupRpc
+    // }
     this._forger = forger ? forger : new TaquitoLocalForger(this);
     this._injector = injector ? injector : new RpcInjector(this);
     this.operationFactory = new OperationFactory(this);
@@ -118,6 +126,14 @@ export class Context {
   set rpc(value: RpcClientInterface) {
     this._rpcClient = value;
   }
+
+  // get rollupRpc(): RollupRpcClientInterface {
+  //   return this._rollupRpcClient;
+  // }
+
+  // set rollupRpc(value: RollupRpcClientInterface) {
+  //   this._rollupRpcClient = value;
+  // }
 
   get injector() {
     return this._injector;

@@ -1,3 +1,5 @@
+import { RollupRpcClientInterface } from './../../taquito-rpc/src/rollup-rpc-client-interface';
+import { RollupRpcClient } from './../../taquito-rpc/src/taquito-rollup-rpc';
 /**
  * @packageDocumentation
  * @module @taquito/taquito
@@ -70,6 +72,7 @@ export interface SetProviderOptions {
   forger?: Forger;
   wallet?: WalletProvider;
   rpc?: string | RpcClientInterface;
+  rollupRpc?: string | RollupRpcClientInterface;
   readProvider?: TzReadProvider;
   stream?: string | SubscribeProvider;
   signer?: Signer;
@@ -92,6 +95,7 @@ export interface VersionInfo {
 export class TezosToolkit {
   private _options: SetProviderOptions = {};
   private _rpcClient: RpcClientInterface;
+  private _rollupRpcClient?: RollupRpcClientInterface;
   private _wallet: Wallet;
   private _context: Context;
   /**
@@ -102,11 +106,17 @@ export class TezosToolkit {
 
   public readonly format = format;
 
-  constructor(private _rpc: RpcClientInterface | string) {
+  constructor(
+    private _rpc: RpcClientInterface | string,
+    private _rollupRpc: RollupRpcClientInterface | string
+    ) {
     if (typeof this._rpc === 'string') {
       this._rpcClient = new RpcClient(this._rpc);
     } else {
       this._rpcClient = this._rpc;
+    }
+    if (this._rollupRpc) {
+      this._rollupRpcClient = typeof this._rollupRpc === 'string' ? new RollupRpcClient(this._rollupRpc) : this._rollupRpc
     }
     this._context = new Context(_rpc);
     this._wallet = new Wallet(this._context);
@@ -187,6 +197,19 @@ export class TezosToolkit {
     }
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
+  }
+
+  setRollupRpcProvider(rollupRpc?: SetProviderOptions['rollupRpc']) {
+    if (typeof rollupRpc === 'string') {
+      this._rollupRpcClient = new RollupRpcClient(rollupRpc)
+    } else if (rollupRpc === undefined) {
+      // do nothing
+    } else {
+      this._rollupRpcClient = rollupRpc
+    }
+    this._options.rollupRpc = this._rollupRpcClient
+    // this._context.rollupRpc = this._rollupRpcClient
+
   }
 
   /**
