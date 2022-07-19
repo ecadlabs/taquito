@@ -18,9 +18,6 @@
     "netlify:publish": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message 'Deployment for $GITHUB_REF'",
     "prepare": ""
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "jest": {
     "transform": {
       ".(ts|tsx)": "ts-jest"
