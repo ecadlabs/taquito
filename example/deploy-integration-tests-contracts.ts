@@ -2,6 +2,7 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
+import { singleSaplingStateContractJProtocol } from '../integration-tests/data/single_sapling_state_contract_jakarta_michelson';
 import Faucet from './faucet-interface';
 
 const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
@@ -60,6 +61,18 @@ async function example() {
     console.log('Awaiting confirmation...');
     const contractknownBigMapContract = await opknownBigMapContract.contract();
     console.log('The address of the knownBigMapContract is: ', contractknownBigMapContract.address);
+
+    console.log('Deploying the Sapling State Contract...');
+    const opknownSaplingContract = await tezos.contract.originate({
+       code: singleSaplingStateContractJProtocol,
+        init: '{}'
+      });
+      await opknownSaplingContract.confirmation();
+
+      console.log('Awaiting confirmation...');
+      const contractSaplingStateContract = await opknownSaplingContract.contract();
+      console.log('The address of the SaplingStateContract is: ', contractSaplingStateContract.address);
+
   } catch (ex) {
     console.error(ex);
   }

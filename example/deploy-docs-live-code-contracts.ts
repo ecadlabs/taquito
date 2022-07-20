@@ -46,6 +46,8 @@ const contract_catalogue = new Map();
 const users: Array<string> = [
   //live code examples
   'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+  'tz1WWapeBd5gREA7tnGhm24qXJxX4V31WAav',
+  'tz2PEc59TDZH6hAou8J9LZrpqr5r8F2k9ZMx',
   'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
   'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
   'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
@@ -77,7 +79,7 @@ user_addresses.set('IntegrationTestUser', users[10]);
 
 const low_balance: Array<string> = [];
 
-const min_balance = 100000000;
+const min_balance = 10000000;
 
 async function checkBalances(users: string | any[]) {
 
