@@ -195,7 +195,7 @@ describe('validateProtocol', () => {
     expect(validateProtocol('PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx')).toEqual(ValidationResult.VALID);
     expect(validateProtocol('PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP')).toEqual(ValidationResult.VALID);
     expect(validateProtocol('ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK')).toEqual(ValidationResult.VALID);
-
+    
     expect(validateProtocol('PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQE')).toEqual(ValidationResult.INVALID_CHECKSUM);
     expect(validateProtocol('PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95b3m53QJiXGmrbU')).toEqual(ValidationResult.INVALID_CHECKSUM);
 
@@ -208,7 +208,7 @@ describe('validateBlock', () => {
   it('Validate Block Hash properly', () => {
     expect(validateBlock('BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw')).toEqual(ValidationResult.VALID);
     expect(validateBlock('BMEdgRZbJJqUrtByoA5Jyuvy8mzp8mefbcrno82nQCAEbBCUhog')).toEqual(ValidationResult.VALID);
-
+    
     expect(validateBlock('BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EBw')).toEqual(ValidationResult.INVALID_CHECKSUM);
     expect(validateBlock('BMEdgRZbJJrtByoA5Jyuvy8mzp8mefbcrno82nQCAEbBCUhog')).toEqual(ValidationResult.INVALID_CHECKSUM);
 
