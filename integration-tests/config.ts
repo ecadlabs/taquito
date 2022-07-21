@@ -25,7 +25,7 @@ interface Config {
   knownContract: string;
   knownBigMapContract: string;
   knownTzip1216Contract: string; // Use contract Tzip12BigMapOffChain from ~/example/deploy-docs-live-code-contracts.ts
-  knownSaplingContract: string; //Originate with ~/taquito/integration-tests/contract-originate-contract-with-single-sapling-state.spec.ts
+  knownSaplingContract: string; 
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
@@ -63,11 +63,11 @@ interface FaucetConfig {
 const kathmandunetEphemeral = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
-  knownBigMapContract: 'KT1APh1knPdoeoRNn6zohaPQcXqLMzfqhqoD',
-  knownTzip1216Contract: 'KT1HuHX1RzwZcbianWaeW14tQbdPEJSFrte6',
-  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
-  protocol: Protocols.PtKathmaX,
+  knownContract: 'KT1U4BzANnCZv5bDvT61t12ZA3E3HmYy54D9',
+  knownBigMapContract: 'KT1F9ayqkd8G6CSdR3bqWiXxt9e1W34CW2Gx',
+  knownTzip1216Contract: 'KT1XF2yaeUVi2bYMqSLeKRBodmo1BwiPYmZf',
+  knownSaplingContract: 'KT1JVv7xPg321YhE2miGM8CfBPZWoWLqRRBW',
+  protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
@@ -108,11 +108,11 @@ const mondaynetEphemeral = {
 const kathmandunetFaucet = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1C1dVweTPcPdfX63kMUguD7zJPw5DMTe4k',
-  knownBigMapContract: 'KT1APh1knPdoeoRNn6zohaPQcXqLMzfqhqoD',
-  knownTzip1216Contract: 'KT1HuHX1RzwZcbianWaeW14tQbdPEJSFrte6',
-  knownSaplingContract: 'KT1CDenBWcgWjNZULc9GbJRTnQZQXYWrVT7k',
-  protocol: Protocols.PtKathmaX,
+  knownContract: 'KT1U4BzANnCZv5bDvT61t12ZA3E3HmYy54D9',
+  knownBigMapContract: 'KT1F9ayqkd8G6CSdR3bqWiXxt9e1W34CW2Gx',
+  knownTzip1216Contract: 'KT1XF2yaeUVi2bYMqSLeKRBodmo1BwiPYmZf',
+  knownSaplingContract: 'KT1JVv7xPg321YhE2miGM8CfBPZWoWLqRRBW',
+  protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {

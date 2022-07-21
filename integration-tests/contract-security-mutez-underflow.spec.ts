@@ -10,7 +10,7 @@ import { CONFIGS } from './config';
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
-  const kathmandunet = protocol === Protocols.PtKathmaX ? test : test.skip;
+  const kathmandunet = protocol === Protocols.PtKathman ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async (done) => {
