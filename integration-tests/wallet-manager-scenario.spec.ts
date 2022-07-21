@@ -51,7 +51,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => 
         await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
         fail('Should throw during transfer with amount higher than balance')
       } catch (ex: any) {
-<<<<<<< HEAD
         expect(ex.message).toContain('balance_too_low')
       }
       done();
@@ -98,11 +97,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => 
         fail('Should throw during transfer with amount higher than balance')
       } catch (ex: any) {
         expect(ex.message).toContain('(temporary) proto.alpha.tez.subtraction_underflow')
-=======
         (protocol === Protocols.PtKathman) ? 
         expect(ex.message).toMatch('(temporary) proto.014-PtKathma.tez.subtraction_underflow') 
         : expect(ex.message).toMatch('(temporary) proto.013-PtJakart.contract.balance_too_low') 
->>>>>>> mk-1728-convert-I-to-K
       }
       done();
     })

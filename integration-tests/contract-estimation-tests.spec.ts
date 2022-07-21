@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
   const Tezos = lib;
   const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
   const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
-  const kathmandunet = (protocol === Protocols.PtKathmaX) ? test : test.skip;
+  const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
 
   describe(`Estimate scenario using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
