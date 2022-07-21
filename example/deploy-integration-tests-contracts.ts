@@ -68,10 +68,12 @@ async function example() {
         init: '{}'
       });
       await opknownSaplingContract.confirmation();
+      const contract = await opknownSaplingContract.contract();
+      console.log(contract.address)
 
       console.log('Awaiting confirmation...');
       const contractSaplingStateContract = await opknownSaplingContract.contract();
-      console.log('The address of the SaplingStateContract is: ', contractSaplingStateContract.address);
+      console.log('The address of the  Sapling Contract is: ', contractSaplingStateContract.address);
 
   } catch (ex) {
     console.error(ex);

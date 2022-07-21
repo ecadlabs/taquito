@@ -67,7 +67,7 @@ const kathmandunetEphemeral = {
   knownBigMapContract: 'KT1F9ayqkd8G6CSdR3bqWiXxt9e1W34CW2Gx',
   knownTzip1216Contract: 'KT1XF2yaeUVi2bYMqSLeKRBodmo1BwiPYmZf',
   knownSaplingContract: 'KT1JVv7xPg321YhE2miGM8CfBPZWoWLqRRBW',
-  protocol: Protocols.PtKathmaX,
+  protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
@@ -112,7 +112,7 @@ const kathmandunetFaucet = {
   knownBigMapContract: 'KT1F9ayqkd8G6CSdR3bqWiXxt9e1W34CW2Gx',
   knownTzip1216Contract: 'KT1XF2yaeUVi2bYMqSLeKRBodmo1BwiPYmZf',
   knownSaplingContract: 'KT1JVv7xPg321YhE2miGM8CfBPZWoWLqRRBW',
-  protocol: Protocols.PtKathmaX,
+  protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
     faucetKey: {

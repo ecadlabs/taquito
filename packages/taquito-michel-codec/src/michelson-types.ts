@@ -386,7 +386,7 @@ export enum Protocol {
   Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   PtJakarta = 'PtJakartaiDz69SfDDLXJSiuZqTSeSKRDbKVZC8MNzJnvRjvnGw',
   PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
-  PtKathmaX = 'PtKathmaXYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt',
+  PtKathman = 'PtKathmanYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
@@ -414,7 +414,7 @@ const protoLevel: Record<ProtocolID, number> = {
   Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A: 12,
   PtJakartaiDz69SfDDLXJSiuZqTSeSKRDbKVZC8MNzJnvRjvnGw: 13,
   PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY: 13,
-  PtKathmaXYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt: 14,
+  PtKathmanYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt: 14,
   ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 15,
 };
 

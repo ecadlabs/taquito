@@ -6,7 +6,7 @@ import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponsePr
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
    
-    const kathmandunet = (protocol === Protocols.PtKathmaX) ? test : test.skip;
+    const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
     const ithacanet = (protocol === Protocols.Psithaca2) ? test : test.skip;
     const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
@@ -603,7 +603,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             expect(constants).toEqual({
                 proof_of_work_nonce_size: 8,
                 nonce_length: 32,
-                nonce_revelation_threshold: 32,
+                nonce_revelation_threshold: 256,
                 max_anon_ops_per_block: 132,
                 max_operation_data_length: 32768,
                 max_proposals_per_delegate: 20,
@@ -656,10 +656,10 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                         number_of_slots: 256,
                       },
                 delay_increment_per_round: {
-                             c: [15],
-                             e: 1,
-                             s: 1,
-                            },
+                        c: [15],
+                        e: 1,
+                        s: 1,
+                       },
                 cache_layout_size: 3,
                 cache_sampler_state_cycles: 8,
                 cache_script_size: 100000000,
@@ -689,7 +689,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 tx_rollup_rejection_max_proof_size: 30000,
                 tx_rollup_sunset_level: 17280,
                 tx_rollup_withdraw_period: 10,
-                vdf_difficulty: "50000",
+                vdf_difficulty: "8000000000",
             });
 
             done();
