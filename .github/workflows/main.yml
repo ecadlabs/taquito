@@ -37,7 +37,6 @@ jobs:
 
   integration-tests-jakartanet:
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       matrix:
         node: [12.x]
