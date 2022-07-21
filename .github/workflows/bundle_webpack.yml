@@ -27,7 +27,7 @@ jobs:
     -
       uses: actions/upload-artifact@v3
       with:
-        name: taquito-local-forging-mobilefriendly
+        name: taquito-local-forging-vanilla
         path: |
           packages/taquito-local-forging/dist/taquito_local_forging.js
           packages/taquito-local-forging/dist/taquito_local_forging.js.map
