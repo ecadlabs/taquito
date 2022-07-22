@@ -13,6 +13,12 @@ describe('Bytes token', () => {
       });
     });
 
+    it('Should encode byte string prefixed with 0x to bytes', () => {
+      expect(token.EncodeObject('0x1234')).toEqual({
+        bytes: '1234',
+      });
+    });
+
     it('Should encode Uint8Array to Michelson bytes format', () => {
       const uint8 = new Uint8Array([21, 31]);
       expect(token.EncodeObject(uint8)).toEqual({
@@ -29,6 +35,12 @@ describe('Bytes token', () => {
   describe('Encode', () => {
     it('Should encode address to bytes', () => {
       expect(token.Encode(['1234'])).toEqual({
+        bytes: '1234',
+      });
+    });
+
+    it('Should encode string prefixed with 0x to bytes', () => {
+      expect(token.Encode(['0x1234'])).toEqual({
         bytes: '1234',
       });
     });
@@ -55,7 +67,7 @@ describe('Bytes token', () => {
     it('Should generate the schema properly', () => {
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'bytes',
-        schema: 'bytes'
+        schema: 'bytes',
       });
     });
   });
