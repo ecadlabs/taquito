@@ -28,6 +28,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
+    - run: npm --version
     - run: npm ci 
     - run: npm run lerna -- bootstrap
     - run: npm run build
