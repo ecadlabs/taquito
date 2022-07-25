@@ -18,6 +18,8 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const jakartanet = protocol === Protocols.PtJakart2? test: test.skip;
+    const kathmandunet = protocol === Protocols.PtKathman? test: test.skip;
+    const mondaynet = protocol === Protocols.ProtoALpha? test: test.skip;
 
     beforeAll(async (done) => {
         await setup()
@@ -395,6 +397,18 @@ CONFIGS().forEach(
         });
 
         jakartanet('getTxRollupState', async (done) => {
+          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+          expect(state).toBeDefined();
+          done();
+        });
+
+        kathmandunet('getTxRollupState', async (done) => {
+          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+          expect(state).toBeDefined();
+          done();
+        });
+
+        mondaynet('getTxRollupState', async (done) => {
           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
           expect(state).toBeDefined();
           done();
