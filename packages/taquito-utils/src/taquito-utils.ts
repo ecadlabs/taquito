@@ -90,17 +90,17 @@ export function b58decode(payload: string) {
 
   const rollupPrefMap = {
     [prefix.txr1.toString()]: '02',
-  }
+  };
 
   const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
-  const rollupPref = rollupPrefMap[new Uint8Array(buf.slice(0, 4)).toString()]
+  const rollupPref = rollupPrefMap[new Uint8Array(buf.slice(0, 4)).toString()];
   if (pref) {
     // tz addresses
     const hex = buf2hex(buf.slice(3));
     return pref + hex;
   } else if (rollupPref) {
-    const hex = buf2hex(buf.slice(4))
-    return rollupPref + hex + '00'
+    const hex = buf2hex(buf.slice(4));
+    return rollupPref + hex + '00';
   } else {
     // other (kt addresses)
     return '01' + buf2hex(buf.slice(3, 42)) + '00';
@@ -113,11 +113,11 @@ export function b58decode(payload: string) {
  * @param value
  * @returns string of bytes
  */
-export function b58decodeL2Address (payload: string) {
+export function b58decodeL2Address(payload: string) {
   const buf: Buffer = bs58check.decode(payload);
 
   // tz4 address currently
-  return buf2hex(buf.slice(3, 42))
+  return buf2hex(buf.slice(3, 42));
 }
 
 /**
@@ -137,7 +137,7 @@ export function encodePubKey(value: string) {
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
   } else if (value.substring(0, 2) === '02') {
     // 42 also works but the removes the 00 padding at the end
-    return b58cencode(value.substring(2, value.length - 2), prefix.txr1)
+    return b58cencode(value.substring(2, value.length - 2), prefix.txr1);
   }
   return b58cencode(value.substring(2, 42), prefix.KT);
 }
@@ -148,7 +148,7 @@ export function encodePubKey(value: string) {
  * @returns return address
  */
 export function encodeL2Address(value: string) {
-  return b58cencode(value, prefix.tz4)
+  return b58cencode(value, prefix.tz4);
 }
 /**
  *
@@ -311,7 +311,7 @@ export const getPkhfromPk = (publicKey: string): string => {
       break;
     case Prefix.BLPK:
       encodingPrefix = prefix[Prefix.TZ4];
-      prefixLen = prefixLength[Prefix.TZ4]
+      prefixLen = prefixLength[Prefix.TZ4];
   }
 
   const hashed = hash(decoded, prefixLen);
@@ -338,4 +338,14 @@ export function char2Bytes(str: string) {
  */
 export function bytes2Char(hex: string): string {
   return Buffer.from(hex2buf(hex)).toString('utf8');
+}
+
+/**
+ *
+ * @description Strips the first 2 characters of a hex string (0x)
+ *
+ * @param hex string to strip prefix from
+ */
+export function stripHexPrefix(hex: string): string {
+  return hex.startsWith('0x') ? hex.slice(2) : hex;
 }
