@@ -403,7 +403,7 @@ CONFIGS().forEach(
         });
 
         kathmandunet('getTxRollupState', async (done) => {
-          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+          const state = await rpcClient.getTxRollupState('txr1heYRrmzBBD55YZtxcGiMYfiYA5WnXmwDo');
           expect(state).toBeDefined();
           done();
         });
