@@ -129,6 +129,9 @@ export class Context {
   }
 
   get rollupRpc(): RollupRpcClientInterface {
+    if (!this._rollupRpc || !this._rollupRpcClient) {
+      throw new Error("TODO error class")
+    }
     return this._rollupRpcClient;
   }
 
