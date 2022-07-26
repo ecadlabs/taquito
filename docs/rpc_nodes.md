@@ -21,13 +21,12 @@ author: Roxane Letourneau
 | ECAD Labs        | Kathmandunet   | https://kathmandunet.ecadinfra.com    | [Check](https://kathmandunet.ecadinfra.com/chains/main/blocks/head/header)      |
 | ECAD Labs        | Jakartanet  | https://jakartanet.ecadinfra.com   | [Check](https://jakartanet.ecadinfra.com/chains/main/blocks/head/header)      |
 | SmartPy          | Mainnet     | https://mainnet.smartpy.io         |  [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header)     |
-| SmartPy          | Kathmandunet   | https://kathmandunet.smartpy.io/      | [Check](https://kathmandunet.smartpy.io/chains/main/blocks/head/header)    |
+| SmartPy          | Jakartanet   | https://Jakartanet.smartpy.io/      | [Check](https://Jakartanet.smartpy.io/chains/main/blocks/head/header)    |
 | Tezos Foundation | Mainnet     | https://rpc.tzbeta.net/            | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)      |
 | Tezos Foundation | Jakartanet  | https://rpczero.tzbeta.net/        | [Check](https://rpczero.tzbeta.net/chains/main/blocks/head/header)      |
 | GigaNode         | Mainnet     | https://mainnet-tezos.giganode.io  |  [Check](https://mainnet-tezos.giganode.io/chains/main/blocks/head/header)     |
-| GigaNode         | Kathmandunet   | https://testnet-tezos.giganode.io/ | [Check](https://testnet-tezos.giganode.io/chains/main/blocks/head/header)      |
+| GigaNode         | Jakartanet   | https://testnet-tezos.giganode.io/ | [Check](https://testnet-tezos.giganode.io/chains/main/blocks/head/header)      |
 | Marigold         | Mainnet     | https://mainnet.tezos.marigold.dev/    | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
-| Marigold         | Kathmandunet   | https://kathmandunet.tezos.marigold.dev/  | [Check](https://kathmandunet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 | Marigold         | Jakartanet  | https://jakartanet.tezos.marigold.dev/ | [Check](https://jakartanet.tezos.marigold.dev/chains/main/blocks/head/header)  |
 
 ## List of commercial node operators
