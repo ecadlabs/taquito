@@ -196,7 +196,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       await op4.confirmation();
       const check_the_delegate_again = await Tezos.rpc.getDelegate(contract.address)
-      console.log(check_the_delegate_again)
       expect(check_the_delegate_again).toEqual(null)  
 
     })
