@@ -643,7 +643,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             expect(constants).toEqual({
                 proof_of_work_nonce_size: 8,
                 nonce_length: 32,
-                nonce_revelation_threshold: 64,
+                nonce_revelation_threshold: 32,
                 max_anon_ops_per_block: 132,
                 max_operation_data_length: 32768,
                 max_proposals_per_delegate: 20,
@@ -728,7 +728,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 tx_rollup_rejection_max_proof_size: 30000,
                 tx_rollup_sunset_level: 1000000,
                 tx_rollup_withdraw_period: 10,
-                vdf_difficulty: "50000",
+                vdf_difficulty: "1000000000",
             });
 
             done();

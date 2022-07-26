@@ -58,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         '1': new BigNumber(2000000), // BALANCE is the balance of the contract where the view is
         '2': contract.address, // SELF_ADDRESS is the address of the contract where the view is
         '3': contract.address, // SENDER
-        '4': await Tezos.wallet.pkh()// SOURCE
+        '4': 'tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU'// SOURCE
       });
 
       // return parameter of the view and storage value
