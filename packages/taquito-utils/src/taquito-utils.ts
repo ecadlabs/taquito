@@ -402,3 +402,13 @@ function padHexWithZero(hex: string, targetLength: number): string {
     return padString.repeat(padLength) + hex;
   }
 }
+
+/**
+ *
+ * @description Strips the first 2 characters of a hex string (0x)
+ *
+ * @param hex string to strip prefix from
+ */
+export function stripHexPrefix(hex: string): string {
+  return hex.startsWith('0x') ? hex.slice(2) : hex;
+}

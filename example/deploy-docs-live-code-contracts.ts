@@ -4,13 +4,13 @@
 ///   and top them up if needed. The script will then originate each contract needed for Live Code
 ///   examples in Taquito Docs and produce a JSON file with each Contract Identifier and its PKH.
 ///   Use the testpad script Docs Live Code Contract Origination (in https://ecadlabs.ontestpad.com/project/18/)
-///   with the desired chain (e.g. hangzhou) to match the originated scripts with their locations in the Docs.
+///   with the desired chain (e.g. jakarta) to match the originated scripts with their locations in the Docs.
 ///   The script will also print to console a json file of contracts to use in the code examples in taquito/examples
 ///   Execute this script with
 ///     node -r ts-node/register deploy-docs-live-code-contracts.ts
 
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner, importKey } from '@taquito/signer';
+import { InMemorySigner} from '@taquito/signer';
 import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 import { contractMapPairKey } from './data/contractMapPairKey';
 import { contractIncrementing } from './data/contractIncrementing';
@@ -34,7 +34,7 @@ import Faucet from './faucet-interface';
 
 const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
 
-const provider = 'https://ithacanet.ecadinfra.com/';
+const provider = 'https://jakartanet.ecadinfra.com/';
 export const signer: any = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );

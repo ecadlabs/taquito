@@ -37,7 +37,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -62,7 +62,7 @@ Tezos.estimate
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://jakartanet.api.tez.ie');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -88,7 +88,7 @@ Tezos.estimate
 
 ### Estimate a smart contract call
 
-This example will demonstrate how to estimate the fees related to calling a smart contract. The Ligo source code for the smart contract used in this example is at [Ligo Web IDE](https://ide.ligolang.org/p/N2QTykOAXBkXmiKcRCyg3Q).
+This example will demonstrate how to estimate the fees related to calling a smart contract. 
 
 <Tabs
 defaultValue="signer"
@@ -100,10 +100,10 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1A3dyvS4pWd9b9yLLMBKLxc6S6G5b58BsK')
+  .at('KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2')
   .then((contract) => {
     const i = 7;
     return contract.methods.increment(i).toTransferParams({});
@@ -130,10 +130,10 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://jakartanet.api.tez.ie');
 
 Tezos.wallet
-  .at('KT1A3dyvS4pWd9b9yLLMBKLxc6S6G5b58BsK')
+  .at('KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2')
   .then((contract) => {
     const i = 7;
     return contract.methods.increment(i).toTransferParams({});
@@ -172,7 +172,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 println(`Estimating the contract origination : `);
 Tezos.estimate
@@ -202,7 +202,7 @@ Tezos.estimate
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://jakartanet.api.tez.ie');
 
 println(`Estimating the contract origination : `);
 Tezos.estimate

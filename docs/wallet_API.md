@@ -69,7 +69,7 @@ Then, you can start initializing the wallet:
 const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://tezostaquito.io/img/favicon.svg',
-  preferredNetwork: 'ithacanet',
+  preferredNetwork: 'jakartanet',
   eventHandlers: {
     PERMISSION_REQUEST_SUCCESS: {
       handler: async (data) => {
@@ -83,19 +83,19 @@ const wallet = new BeaconWallet(options);
 
 The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/src/events.ts).
 
-> Note: if you want to use the Kukai wallet for testing on ithacanet, you must use the optional property `preferredNetwork` and set it to `ithacanet`, otherwise the mainnet version of the Kukai wallet will open.
+> Note: if you want to use the Kukai wallet for testing on jakartanet, you must use the optional property `preferredNetwork` and set it to `jakartanet`, otherwise the mainnet version of the Kukai wallet will open.
 
 The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
 
 ```js
 await wallet.requestPermissions({
   network: {
-    type: 'mainnet' | 'hangzhounet' | 'ithacanet' | 'custom',
+    type: 'mainnet' | 'ithacanet' | 'jakartanet' | 'custom',
   },
 });
 ```
 
-You can choose among `mainnet`, `ithacanet` `hangzhounet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+You can choose among `mainnet`, `jakartanet` `ithacanet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
 ```js
 const userAddress = await wallet.getPKH();
@@ -123,7 +123,7 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 // const wallet = new BeaconWallet(options);
 
 wallet
-  .requestPermissions({ network: { type: 'ithacanet' } })
+  .requestPermissions({ network: { type: 'jakartanet' } })
   .then((_) => wallet.getPKH())
   .then((address) => println(`Your address: ${address}`));
 
@@ -166,7 +166,7 @@ const wallet = new ThanosWallet('MyAwesomeDapp');
 The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
 
 ```js
-await wallet.connect('mainnet' | 'ithacanet' | 'hangzhounet' | 'labnet' | 'sandbox');
+await wallet.connect('mainnet' | 'jakartanet' | 'ithacanet' | 'labnet' | 'sandbox');
 ```
 
 (Temple used to be called Thanos and some Taquito code still uses the name Thanos.)
@@ -202,7 +202,7 @@ ThanosWallet.isAvailable()
   .then(() => {
     const mywallet = new ThanosWallet('MyAwesomeDapp');
     mywallet
-      .connect('ithacanet')
+      .connect('jakartanet')
       .then(() => {
         Tezos.setWalletProvider(mywallet);
         return mywallet.getPKH();
@@ -291,7 +291,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ```js live noInline wallet
 Tezos.wallet
-  .transfer({ to: 'KT1KgtEEbDuw1b7QEFKh3VW6wzvQGYjawDwa', amount: 0.2 })
+  .transfer({ to: 'KT1T1KsEcVvsVGoHYrzjCzuJjviUDM3uyGmh', amount: 0.2 })
   .send()
   .then((op) => {
     println(`Waiting for ${op.opHash} to be confirmed...`);
@@ -325,7 +325,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1HiLoD3TnPcWwcK51Bbpy4eAVbTuhdB6hf')
+  .at('KT1C9Vjt3p3whEst9h1ykmNMFiQ36QfkYdDW')
   .then((contract) => contract.methods.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -348,7 +348,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1HiLoD3TnPcWwcK51Bbpy4eAVbTuhdB6hf')
+  .at('KT1C9Vjt3p3whEst9h1ykmNMFiQ36QfkYdDW')
   .then((contract) =>
     contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
   )
