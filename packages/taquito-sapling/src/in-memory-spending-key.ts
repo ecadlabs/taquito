@@ -67,7 +67,7 @@ export class InMemorySpendingKey {
     const spendingKeyArr = new Uint8Array(await sapling.getExtendedSpendingKey(seed, derivationPath))
 
     const spendingKey = b58cencode(spendingKeyArr, prefix[Prefix.SASK])
-    // CHECK unnecessary catch ?
+
     if (ValidationResult.VALID !== 3) {
       throw new InvalidSpendingKey(spendingKey)
     }
