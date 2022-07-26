@@ -427,10 +427,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    /** Explanation of the change in Estimate transfer to regular address with a fixed fee from J to K **
-     *  We do a batch made of a reveal and a transaction. The initial balance of the account is 2374 mutez.
-     *  In the test we set a fee for the transaction. The reveal required a fee of 374.
-     *  There are three tests to verify the three different error cases reutned when the fee is 1999, 2000, or 2001:
+    /** Explanation of the change from J to K in the test 'Estimate transfer to regular address with a fixed fee' **
+     * 
+     *  The initial balance of the account is 2374 mutez. We do a batch made of a reveal and a transaction.
+     *  In this test we set a fee for the transaction. The reveal required a fee of 374.
+     * 
+     *  The critical values for the transaction fee in this context are 2000, 1999, and 2001.
+     *  Each results in a different error.
+     * 
+     *  In J all three values evoked the 'balance_too_low' error. In K only 2001 gets 'balance_too_low'. 
      */
 
      kathmandunet('Estimate transfer to regular address with a fixed fee of 2000 gets empty_implicit_contract', async (done) => {
