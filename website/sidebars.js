@@ -98,6 +98,13 @@ const sidebars = {
       items: ['ledger_integration_test', 'rpc_nodes_integration_test'],
     },
     {
+      type: 'category',
+      label: 'Sapling',
+      collapsed: false,
+      collapsible:false,
+      items: ['sapling_in_memory_spending_key']
+    },
+    {
       'Upgrading Guide': ['upgrading_guide'],
     },
     {
