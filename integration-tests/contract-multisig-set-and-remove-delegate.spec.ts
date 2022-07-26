@@ -22,7 +22,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
-      // Originate the multisig contract
       const op2 = await Tezos.contract.originate({
         balance: "1",
         code: genericMultisig,
@@ -38,8 +37,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const delegate = await Tezos.rpc.getDelegate(contract.address)
       expect(delegate).toEqual(null)  
 
-      // Utility function that mimics the PAIR operation of michelson
-      // file deepcode ignore no-any: any is good enough
       const pair = ({ data, type }: any, value: any) => {
         return {
           data: {
@@ -53,10 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       }
 
-      // Packing the data that need to be sign by each party of the multi-sig
-      // The data passed to this step is specific to this multi-sig implementation
-      // file deepcode ignore no-any: any is good enough
-      const { packed } = await Tezos.rpc.packData(pair({
+      const packed = await Tezos.rpc.packData(pair({
         data: {
           prim: 'Pair',
           args: [
@@ -116,24 +110,95 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       }, contract.address))
 
-      // Signing the packed
-      const signature1 = await account1.signer.sign(packed, new Uint8Array())
-      const signature2 = await account2.signer.sign(packed, new Uint8Array())
+      const signature1 = await account1.signer.sign(packed.packed, new Uint8Array())
+      const signature2 = await account2.signer.sign(packed.packed, new Uint8Array())
 
       const op3 = await contract.methods.main(
-        // Counter
         "0",
-        // Sub function
         'operation',
-        // Action
         MANAGER_LAMBDA.setDelegate(pkh),
-        // Signature list
         [signature1.prefixSig, signature2.prefixSig, null]
       ).send()
       await op3.confirmation();
 
-      const delegate2 = await Tezos.rpc.getDelegate(contract.address)
-      expect(delegate2).toEqual(pkh)  
+      const check_the_delegate = await Tezos.rpc.getDelegate(contract.address)
+      expect(check_the_delegate).toEqual(pkh)  
+
+      const packed2 = await Tezos.rpc.packData(pair({
+        data: {
+          prim: 'Pair',
+          args: [
+            { "int": "1" },
+            {
+              prim: 'Left',
+              args: [MANAGER_LAMBDA.removeDelegate()]
+            }
+          ]
+        } as any,
+        type: {
+          "prim": "pair",
+          "args":
+            [{
+              "prim": "nat",
+              "annots": ["%counter"]
+            },
+            {
+              "prim": "or",
+              "args":
+                [{
+                  "prim": "lambda",
+                  "args":
+                    [{ "prim": "unit" },
+                    {
+                      "prim": "list",
+                      "args":
+                        [{
+                          "prim":
+                            "operation"
+                        }]
+                    }],
+                  "annots":
+                    ["%operation"]
+                },
+                {
+                  "prim": "pair",
+                  "args":
+                    [{
+                      "prim": "nat",
+                      "annots":
+                        ["%threshold"]
+                    },
+                    {
+                      "prim": "list",
+                      "args":
+                        [{ "prim": "key" }],
+                      "annots":
+                        ["%keys"]
+                    }],
+                  "annots":
+                    ["%change_keys"]
+                }],
+              "annots": [":action"]
+            }],
+          "annots": [":payload"]
+        }
+      }, contract.address))
+
+      const signature3 = await account1.signer.sign(packed2.packed, new Uint8Array())
+      const signature4 = await account2.signer.sign(packed2.packed, new Uint8Array())
+      
+      const op4 = await contract.methods.main(
+        "1",
+        'operation',
+        MANAGER_LAMBDA.removeDelegate(),
+        [signature3.prefixSig, signature4.prefixSig, null]
+      ).send()
+
+      await op4.confirmation();
+      const check_the_delegate_again = await Tezos.rpc.getDelegate(contract.address)
+      console.log(check_the_delegate_again)
+      expect(check_the_delegate_again).toEqual(null)  
+
     })
   })
 });
