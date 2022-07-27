@@ -427,7 +427,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    /** Explanation of the change from J to K in the test 'Estimate transfer to regular address with a fixed fee' **
+    /** Explanation of the change from J to K in the test 'Estimate transfer to regular address with a fixed fee' 
      * 
      *  The initial balance of the account is 2374 mutez. We do a batch made of a reveal and a transaction.
      *  In this test we set a fee for the transaction. The reveal required a fee of 374.
