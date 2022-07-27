@@ -6,6 +6,14 @@
  */
 .playgroundEditorWrapper {
   position: relative;
+  font-size: 16px;
+
+}
+.liveEditorBg {
+  background-color: #f9f9f9 !important;
+}
+[data-theme='dark'] .liveEditorBg {
+  background-color: #2e2e2e !important;
 }
 
 .playgroundHeader {
@@ -32,6 +40,8 @@
   border-bottom-right-radius: var(--ifm-global-radius);
   position: relative;
   padding: 1rem;
+  font-family: monospace;
+  font-size: 14px;
 }
 
 .button {

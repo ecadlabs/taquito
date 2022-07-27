@@ -55,6 +55,135 @@ describe('Contract test where the value of the map "selling" is a big_map', () =
       },
       tokenAddress: 'address',
     });
+
+    expect(schema.generateSchema()).toEqual({
+      "__michelsonType": "pair",
+      schema: {
+        _euranov: {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+        admin: {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+        auctions: {
+          "__michelsonType": "big_map",
+          "schema": {
+            key: {
+              "__michelsonType": "address",
+              "schema": "address"
+            },
+            value: {
+              __michelsonType: 'map',
+              schema: {
+                key: {
+                  "__michelsonType": "nat",
+                  "schema": "nat"
+                },
+                value: {
+                  "__michelsonType": "pair",
+                  "schema": {
+                    assetId: {
+                      "__michelsonType": "nat",
+                      "schema": "nat"
+                    },
+                    bidCount: {
+                      "__michelsonType": "nat",
+                      "schema": "nat"
+                    },
+                    claimed: {
+                      "__michelsonType": "bool",
+                      "schema": "bool"
+                    },
+                    creator: {
+                      "__michelsonType": "address",
+                      "schema": "address"
+                    },
+                    currentBidAmount: {
+                      "__michelsonType": "mutez",
+                      "schema": "mutez"
+                    },
+                    currentBidOwner: {
+                      "__michelsonType": "address",
+                      "schema": "address"
+                    },
+                    duration: {
+                      "__michelsonType": "int",
+                      "schema": "int"
+                    },
+                    startTime: {
+                      "__michelsonType": "timestamp",
+                      "schema": "timestamp"
+                    },
+                  }
+                },
+              },
+            },
+          }
+        },
+        authorizedSC: {
+          "__michelsonType": "big_map",
+          "schema": {
+            key: {
+              "__michelsonType": "address",
+              "schema": "address"
+            },
+            value: {
+              "__michelsonType": "bool",
+              "schema": "bool"
+            },
+          },
+        },
+        balance: {
+          "__michelsonType": "int",
+          "schema": "int"
+        },
+        paused: {
+          "__michelsonType": "bool",
+          "schema": "bool"
+        },
+        selling: {
+          "__michelsonType": "map",
+          "schema": {
+            key: {
+              "__michelsonType": "address",
+              "schema": "address"
+            },
+            value: {
+              "__michelsonType": "big_map",
+              "schema": {
+                key: {
+                  "__michelsonType": "nat",
+                  "schema": "nat"
+                },
+                value: {
+                  "__michelsonType": "pair",
+                  "schema": {
+                    fee: {
+                      "__michelsonType": "nat",
+                      "schema": "nat"
+                    },
+                    owner: {
+                      "__michelsonType": "address",
+                      "schema": "address"
+                    },
+                    price: {
+                      "__michelsonType": "mutez",
+                      "schema": "mutez"
+                    },
+                  }
+                },
+              },
+            },
+          },
+        },
+        tokenAddress: {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+      }
+    });
   });
 
   it('Test storage parsing', () => {

@@ -24,16 +24,20 @@ import {
   ManagerKeyResponse,
   OperationHash,
   PackDataParams,
-  PeriodKindResponse,
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
+  ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
+  TxRollupInboxResponse,
+  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
@@ -77,7 +81,6 @@ export interface RpcClientInterface {
   ): Promise<EndorsingRightsResponse>;
   getBallotList(options?: RPCOptions): Promise<BallotListResponse>;
   getBallots(options?: RPCOptions): Promise<BallotsResponse>;
-  getCurrentPeriodKind(options?: RPCOptions): Promise<PeriodKindResponse>;
   getCurrentProposal(options?: RPCOptions): Promise<CurrentProposalResponse>;
   getCurrentQuorum(options?: RPCOptions): Promise<CurrentQuorumResponse>;
   getVotesListings(options?: RPCOptions): Promise<VotesListingsResponse>;
@@ -88,6 +91,7 @@ export interface RpcClientInterface {
   getEntrypoints(contract: string, options?: RPCOptions): Promise<EntrypointsResponse>;
   runOperation(op: RPCRunOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   runCode(code: RPCRunCodeParam, options?: RPCOptions): Promise<RunCodeResult>;
+  runView(viewParams: RPCRunViewParam, options?: RPCOptions): Promise<RunViewResult>;
   getChainId(): Promise<string>;
   packData(
     data: PackDataParams,
@@ -98,4 +102,48 @@ export interface RpcClientInterface {
   getSuccessorPeriod(options?: RPCOptions): Promise<VotingPeriodBlockResult>;
   getSaplingDiffById(id: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
+  getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
+  getTxRollupState(txRollupId: string, options?: RPCOptions): Promise<TxRollupStateResponse>;
+  getTxRollupInbox(
+    txRollupId: string,
+    blockLevel: string,
+    options?: RPCOptions
+  ): Promise<TxRollupInboxResponse | null>;
+}
+
+export enum RPCMethodName {
+  GET_BAKING_RIGHTS = 'getBakingRights',
+  GET_BALLOTS = 'getBallots',
+  GET_BALLOT_LIST = 'getBallotList',
+  GET_BIG_MAP_KEY = 'getBigMapKey',
+  GET_BIG_MAP_EXPR = 'getBigMapExpr',
+  GET_BLOCK_HASH = 'getBlockHash',
+  GET_BLOCK = 'getBlock',
+  GET_BLOCK_HEADER = 'getBlockHeader',
+  GET_BLOCK_METADATA = 'getBlockMetadata',
+  GET_BALANCE = 'getBalance',
+  GET_CHAIN_ID = 'getChainId',
+  GET_CONSTANTS = 'getConstants',
+  GET_CONTRACT = 'getContract',
+  GET_CURRENT_PERIOD = 'getCurrentPeriod',
+  GET_CURRENT_PROPOSAL = 'getCurrentProposal',
+  GET_CURRENT_QUORUM = 'getCurrentQuorum',
+  GET_DELEGATE = 'getDelegate',
+  GET_DELEGATES = 'getDelegates',
+  GET_ENDORSING_RIGHTS = 'getEndorsingRights',
+  GET_ENTRYPOINTS = 'getEntrypoints',
+  GET_LIVE_BLOCKS = 'getLiveBlocks',
+  GET_MANAGER_KEY = 'getManagerKey',
+  GET_NORMALIZED_SCRIPT = 'getNormalizedScript',
+  GET_PROPOSALS = 'getProposals',
+  GET_PROTOCOLS = 'getProtocols',
+  GET_SAPLING_DIFF_BY_CONTRACT = 'getSaplingDiffByContract',
+  GET_SAPLING_DIFF_BY_ID = 'getSaplingDiffById',
+  GET_SCRIPT = 'getScript',
+  GET_STORAGE = 'getStorage',
+  GET_SUCCESSOR_PERIOD = 'getSuccessorPeriod',
+  GET_TX_ROLLUP_INBOX = 'getTxRollupInbox',
+  GET_TX_ROLLUP_STATE = 'getTxRollupState',
+  GET_VOTES_LISTINGS = 'getVotesListings',
+  PACK_DATA = 'packData',
 }

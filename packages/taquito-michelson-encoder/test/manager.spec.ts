@@ -6,6 +6,10 @@ describe('Schema test', () => {
   it('Should parse storage schema properly', () => {
     const schema = new Schema(storage);
     expect(schema.ExtractSchema()).toEqual('key_hash');
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: "key_hash",
+      schema:'key_hash'
+    });
   });
 
   it('Should parse storage properly', () => {

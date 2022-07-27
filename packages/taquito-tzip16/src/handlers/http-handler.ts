@@ -11,7 +11,9 @@ export class HttpHandler implements Handler {
         return this.httpBackend.createRequest<string>({
             url: `${protocol}:${decodeURIComponent(location)}`,
             method: 'GET',
-            mimeType: "text; charset=utf-8",
+            headers: {
+              'Content-Type': 'text/plain; charset=utf-8'
+            },
             json: false
         })
     }

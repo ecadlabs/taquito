@@ -1,0 +1,4 @@
+# Appends the parameter to the string in storage
+parameter (string);
+storage (string);
+code { UNPAIR; SWAP; CONCAT; NIL operation; PAIR };

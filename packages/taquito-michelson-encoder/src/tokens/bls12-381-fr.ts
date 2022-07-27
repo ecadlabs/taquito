@@ -1,7 +1,8 @@
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { BaseTokenSchema } from '../schema/types';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class Bls12381frValidationError extends TokenValidationError {
-  name: string = 'Bls12381frValidationError';
+  name = 'Bls12381frValidationError';
   constructor(public value: any, public token: Bls12381frToken, message: string) {
     super(value, token, message);
   }
@@ -9,7 +10,7 @@ export class Bls12381frValidationError extends TokenValidationError {
 export class Bls12381frToken extends Token {
   // An element of the BLS12-381 scalar field Fr
   // see https://tezos.gitlab.io/michelson-reference/#type-bls12_381_fr
-  static prim = 'bls12_381_fr';
+  static prim: 'bls12_381_fr' = 'bls12_381_fr';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -45,7 +46,10 @@ export class Bls12381frToken extends Token {
     }
   }
 
-  EncodeObject(val: string | Uint8Array | number) {
+  EncodeObject(val: string | Uint8Array | number, semantic?: SemanticEncoding) {
+    if (semantic && semantic[Bls12381frToken.prim]) {
+      return semantic[Bls12381frToken.prim](val);
+    }
     if (typeof val === 'number') {
       return { int: val.toString() };
     } else {
@@ -62,8 +66,19 @@ export class Bls12381frToken extends Token {
     return val.bytes;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return Bls12381frToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: Bls12381frToken.prim,
+      schema: Bls12381frToken.prim,
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -71,6 +86,5 @@ export class Bls12381frToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

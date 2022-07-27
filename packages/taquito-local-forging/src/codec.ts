@@ -5,7 +5,11 @@ import {
   Prefix,
   prefix as prefixMap,
   prefixLength,
+  InvalidKeyHashError,
+  InvalidPublicKeyError,
+  InvalidAddressError,
 } from '@taquito/utils';
+import { OversizedEntryPointError, InvalidBallotValueError, DecodeBallotValueError } from './error';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
 import { extractRequiredLen, valueDecoder, valueEncoder, MichelsonValue } from './michelson/codec';
@@ -58,7 +62,7 @@ export const proposalsDecoder = (proposal: Uint8ArrayConsumer): string[] => {
 };
 
 export const proposalsEncoder = (proposals: string[]): string => {
-  return pad(32 * proposals.length) + proposals.map(x => proposalEncoder(x)).join('');
+  return pad(32 * proposals.length) + proposals.map((x) => proposalEncoder(x)).join('');
 };
 
 export const ballotEncoder = (ballot: string): string => {
@@ -70,7 +74,7 @@ export const ballotEncoder = (ballot: string): string => {
     case 'pass':
       return '02';
     default:
-      throw new Error(`Invalid ballot value: ${ballot}`);
+      throw new InvalidBallotValueError(ballot);
   }
 };
 
@@ -84,7 +88,7 @@ export const ballotDecoder = (ballot: Uint8ArrayConsumer): string => {
     case 0x02:
       return 'pass';
     default:
-      throw new Error(`Unable to decode ballot value ${value[0]}`);
+      throw new DecodeBallotValueError(value[0].toString());
   }
 };
 
@@ -116,6 +120,26 @@ export const int32Decoder = (val: Uint8ArrayConsumer) => {
   return finalNum;
 };
 
+export const int16Encoder = (val: number | string): string => {
+  const num = parseInt(String(val), 10);
+  const byte = [];
+  for (let i = 0; i < 2; i++) {
+    const shiftBy = (2 - (i + 1)) * 8;
+    byte.push((num & (0xff << shiftBy)) >> shiftBy);
+  }
+  return Buffer.from(byte).toString('hex');
+};
+
+export const int16Decoder = (val: Uint8ArrayConsumer) => {
+  const num = val.consume(2);
+  let finalNum = 0;
+  for (let i = 0; i < num.length; i++) {
+    finalNum = finalNum | (num[i] << ((num.length - (i + 1)) * 8));
+  }
+
+  return finalNum;
+};
+
 export const boolDecoder = (val: Uint8ArrayConsumer): boolean => {
   const bool = val.consume(1);
   return bool[0] === 0xff;
@@ -138,7 +162,7 @@ export const pkhEncoder = (val: string) => {
     case Prefix.TZ3:
       return '02' + prefixEncoder(Prefix.TZ3)(val);
     default:
-      throw new Error('Invalid public key hash');
+      throw new InvalidKeyHashError(val);
   }
 };
 
@@ -152,7 +176,7 @@ export const publicKeyEncoder = (val: string) => {
     case Prefix.P2PK:
       return '02' + prefixEncoder(Prefix.P2PK)(val);
     default:
-      throw new Error('Invalid PK');
+      throw new InvalidPublicKeyError(val);
   }
 };
 
@@ -166,7 +190,7 @@ export const addressEncoder = (val: string): string => {
     case Prefix.KT1:
       return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
     default:
-      throw new Error('Invalid address');
+      throw new InvalidAddressError(val);
   }
 };
 
@@ -180,7 +204,7 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
     case 0x02:
       return prefixDecoder(Prefix.P2PK)(val);
     default:
-      throw new Error('Invalid PK');
+      throw new InvalidPublicKeyError(val.toString());
   }
 };
 
@@ -189,12 +213,13 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
   switch (preamble[0]) {
     case 0x00:
       return pkhDecoder(val);
-    case 0x01:
+    case 0x01: {
       const address = prefixDecoder(Prefix.KT1)(val);
       val.consume(1);
       return address;
+    }
     default:
-      throw new Error('Invalid Address');
+      throw new InvalidAddressError(val.toString());
   }
 };
 
@@ -204,8 +229,8 @@ export const zarithEncoder = (n: string): string => {
   if (nn.isNaN()) {
     throw new TypeError(`Invalid zarith number ${n}`);
   }
+  // eslint-disable-next-line no-constant-condition
   while (true) {
-    // eslint-disable-line
     if (nn.lt(128)) {
       if (nn.lt(16)) fn.push('0');
       fn.push(nn.toString(16));
@@ -229,7 +254,7 @@ export const zarithDecoder = (n: Uint8ArrayConsumer): string => {
 
   let num = new BigNumber(0);
   for (let i = mostSignificantByte; i >= 0; i -= 1) {
-    let tmp = n.get(i) & 0x7f;
+    const tmp = n.get(i) & 0x7f;
     num = num.multipliedBy(128);
     num = num.plus(tmp);
   }
@@ -249,9 +274,7 @@ export const entrypointDecoder = (value: Uint8ArrayConsumer) => {
     const entrypoint = Buffer.from(entry).toString('utf8');
 
     if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
-      throw new Error(
-        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
-      );
+      throw new OversizedEntryPointError(entrypoint);
     }
     return entrypoint;
   }
@@ -276,9 +299,7 @@ export const entrypointEncoder = (entrypoint: string) => {
     return `${entrypointMappingReverse[entrypoint]}`;
   } else {
     if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
-      throw new Error(
-        `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
-      );
+      throw new OversizedEntryPointError(entrypoint);
     }
 
     const value = { string: entrypoint };
@@ -300,9 +321,12 @@ export const parametersEncoder = (val: { entrypoint: string; value: MichelsonVal
 export const valueParameterEncoder = (value: MichelsonValue) => {
   const valueEncoded = valueEncoder(value);
   return `${pad(valueEncoded.length / 2)}${valueEncoded}`;
-}
+};
 
 export const valueParameterDecoder = (val: Uint8ArrayConsumer) => {
   const value = extractRequiredLen(val);
   return valueDecoder(new Uint8ArrayConsumer(value));
-}
+};
+
+export const blockPayloadHashEncoder = prefixEncoder(Prefix.VH);
+export const blockPayloadHashDecoder = prefixDecoder(Prefix.VH);

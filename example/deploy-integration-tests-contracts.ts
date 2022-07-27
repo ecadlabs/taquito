@@ -2,35 +2,24 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
+import Faucet from './faucet-interface';
 
-const provider = 'https://idiazabalnet.ecadinfra.com';
+const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
+
+const provider = 'https://jakartanet.ecadinfra.com/';
 
 async function example() {
   const tezos = new TezosToolkit(provider);
 
   await importKey(
-    tezos,
-    'pqugfnyp.aricovrw@teztnets.xyz',
-    'PwMXISc7HK',
-    [
-      "drift",
-      "winner",
-      "prevent",
-      "sorry",
-      "loud",
-      "pattern",
-      "easy",
-      "buffalo",
-      "surround",
-      "exist",
-      "accuse",
-      "volume",
-      "loop",
-      "day",
-      "club",
-    ].join(' '),
-    '844a986d27f7989859bc82ebce16f293ab0f2da6'
-  );
+     tezos,
+     email,
+     password,
+     mnemonic.join(' '),
+     activation_code
+   );
+
+  
   try {
     console.log('Deploying the knownContract...');
     const opknownContract = await tezos.contract.originate({

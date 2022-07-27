@@ -8,8 +8,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
+<<<<<<< HEAD
     it('Verify contract.transfer for 2 XTZ to an address and waits for 2 confirmations', async (done) => {
       const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 }).send();
+=======
+    it('transfers 0.02 tez and waits for 2 confirmations with wallet', async (done) => {
+      const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 }).send();
+>>>>>>> master
       await op.confirmation()
       const [first, second] = await Promise.all([op.confirmation(), op.confirmation(2)])
       expect(second.currentConfirmation - first.currentConfirmation).toEqual(1)

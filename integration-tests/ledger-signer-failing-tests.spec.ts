@@ -32,7 +32,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                     await signer.publicKey();
                 }
                 catch (error: any) {
-                    expect(error.message).toBe(`Unable to retrieve public key`);
+                    expect(error.message).toBe(`Unable to retrieve public key from Ledger`);
                 }
                 done();
             });

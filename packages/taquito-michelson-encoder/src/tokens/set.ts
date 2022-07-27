@@ -1,14 +1,22 @@
-import { Token, TokenFactory, Semantic, TokenValidationError, ComparableToken } from './token';
+import { SetTokenSchema } from '../schema/types';
+import {
+  Token,
+  TokenFactory,
+  Semantic,
+  TokenValidationError,
+  ComparableToken,
+  SemanticEncoding,
+} from './token';
 
 export class SetValidationError extends TokenValidationError {
-  name: string = 'SetValidationError';
+  name = 'SetValidationError';
   constructor(public value: any, public token: SetToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class SetToken extends Token {
-  static prim = 'set';
+  static prim: 'set' = 'set';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -51,10 +59,14 @@ export class SetToken extends Token {
     }, []);
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(args);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[SetToken.prim]) {
+      return semantic[SetToken.prim](args);
     }
 
     return args
@@ -64,8 +76,19 @@ export class SetToken extends Token {
       }, []);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return SetToken.prim;
+  }
+
+  generateSchema(): SetTokenSchema {
+    return {
+      __michelsonType: SetToken.prim,
+      schema: this.KeySchema.generateSchema(),
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -74,6 +97,5 @@ export class SetToken extends Token {
     }
     this.KeySchema.findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

@@ -1,0 +1,376 @@
+[
+    {
+        "prim": "parameter",
+        "args": [
+            {
+                "prim": "list",
+                "args": [
+                    {
+                        "prim": "sapling_transaction",
+                        "args": [
+                            {
+                                "int": "8"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "prim": "storage",
+        "args": [
+            {
+                "prim": "sapling_state",
+                "args": [
+                    {
+                        "int": "8"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "prim": "code",
+        "args": [
+            [
+                {
+                    "prim": "UNPAIR"
+                },
+                {
+                    "prim": "NIL",
+                    "args": [
+                        {
+                            "prim": "operation"
+                        }
+                    ]
+                },
+                {
+                    "prim": "SWAP"
+                },
+                {
+                    "prim": "DIP",
+                    "args": [
+                        [
+                            {
+                                "prim": "SWAP"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "prim": "AMOUNT"
+                },
+                {
+                    "prim": "SWAP"
+                },
+                {
+                    "prim": "DIP",
+                    "args": [
+                        [
+                            {
+                                "prim": "SWAP"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "prim": "ITER",
+                    "args": [
+                        [
+                            {
+                                "prim": "SAPLING_VERIFY_UPDATE"
+                            },
+                            [
+                                {
+                                    "prim": "IF_NONE",
+                                    "args": [
+                                        [
+                                            [
+                                                {
+                                                    "prim": "UNIT"
+                                                },
+                                                {
+                                                    "prim": "FAILWITH"
+                                                }
+                                            ]
+                                        ],
+                                        []
+                                    ]
+                                }
+                            ],
+                            {
+                                "prim": "UNPAIR"
+                            },
+                            {
+                                "prim": "SWAP"
+                            },
+                            {
+                                "prim": "UNPAIR"
+                            },
+                            {
+                                "prim": "DUP"
+                            },
+                            {
+                                "prim": "DIP",
+                                "args": [
+                                    [
+                                        {
+                                            "prim": "ABS"
+                                        },
+                                        {
+                                            "prim": "PUSH",
+                                            "args": [
+                                                {
+                                                    "prim": "mutez"
+                                                },
+                                                {
+                                                    "int": "1"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "prim": "MUL"
+                                        }
+                                    ]
+                                ]
+                            },
+                            [
+                                {
+                                    "prim": "GT"
+                                },
+                                {
+                                    "prim": "IF",
+                                    "args": [
+                                        [
+                                            {
+                                                "prim": "DIP",
+                                                "args": [
+                                                    {
+                                                        "int": "2"
+                                                    },
+                                                    [
+                                                        {
+                                                            "prim": "UNPACK",
+                                                            "args": [
+                                                                {
+                                                                    "prim": "key_hash"
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+                                                            {
+                                                                "prim": "IF_NONE",
+                                                                "args": [
+                                                                    [
+                                                                        [
+                                                                            {
+                                                                                "prim": "UNIT"
+                                                                            },
+                                                                            {
+                                                                                "prim": "FAILWITH"
+                                                                            }
+                                                                        ]
+                                                                    ],
+                                                                    []
+                                                                ]
+                                                            }
+                                                        ],
+                                                        {
+                                                            "prim": "IMPLICIT_ACCOUNT"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            {
+                                                "prim": "SWAP"
+                                            },
+                                            {
+                                                "prim": "DIP",
+                                                "args": [
+                                                    [
+                                                        {
+                                                            "prim": "UNIT"
+                                                        },
+                                                        {
+                                                            "prim": "TRANSFER_TOKENS"
+                                                        },
+                                                        {
+                                                            "prim": "SWAP"
+                                                        },
+                                                        {
+                                                            "prim": "DIP",
+                                                            "args": [
+                                                                [
+                                                                    {
+                                                                        "prim": "CONS"
+                                                                    }
+                                                                ]
+                                                            ]
+                                                        }
+                                                    ]
+                                                ]
+                                            }
+                                        ],
+                                        [
+                                            {
+                                                "prim": "DIP",
+                                                "args": [
+                                                    {
+                                                        "int": "2"
+                                                    },
+                                                    [
+                                                        {
+                                                            "prim": "SWAP"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            {
+                                                "prim": "DIP",
+                                                "args": [
+                                                    [
+                                                        {
+                                                            "prim": "SWAP"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            {
+                                                "prim": "SWAP"
+                                            },
+                                            {
+                                                "prim": "SUB_MUTEZ"
+                                            },
+                                            [
+                                                {
+                                                    "prim": "IF_NONE",
+                                                    "args": [
+                                                        [
+                                                            [
+                                                                {
+                                                                    "prim": "UNIT"
+                                                                },
+                                                                {
+                                                                    "prim": "FAILWITH"
+                                                                }
+                                                            ]
+                                                        ],
+                                                        []
+                                                    ]
+                                                }
+                                            ],
+                                            {
+                                                "prim": "DIP",
+                                                "args": [
+                                                    {
+                                                        "int": "2"
+                                                    },
+                                                    [
+                                                        {
+                                                            "prim": "SIZE"
+                                                        },
+                                                        {
+                                                            "prim": "PUSH",
+                                                            "args": [
+                                                                {
+                                                                    "prim": "nat"
+                                                                },
+                                                                {
+                                                                    "int": "0"
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+                                                            [
+                                                                {
+                                                                    "prim": "COMPARE"
+                                                                },
+                                                                {
+                                                                    "prim": "EQ"
+                                                                }
+                                                            ],
+                                                            {
+                                                                "prim": "IF",
+                                                                "args": [
+                                                                    [],
+                                                                    [
+                                                                        [
+                                                                            {
+                                                                                "prim": "UNIT"
+                                                                            },
+                                                                            {
+                                                                                "prim": "FAILWITH"
+                                                                            }
+                                                                        ]
+                                                                    ]
+                                                                ]
+                                                            }
+                                                        ]
+                                                    ]
+                                                ]
+                                            },
+                                            {
+                                                "prim": "SWAP"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                },
+                {
+                    "prim": "DIP",
+                    "args": [
+                        [
+                            {
+                                "prim": "PUSH",
+                                "args": [
+                                    {
+                                        "prim": "mutez"
+                                    },
+                                    {
+                                        "int": "0"
+                                    }
+                                ]
+                            },
+                            [
+                                [
+                                    {
+                                        "prim": "COMPARE"
+                                    },
+                                    {
+                                        "prim": "EQ"
+                                    }
+                                ],
+                                {
+                                    "prim": "IF",
+                                    "args": [
+                                        [],
+                                        [
+                                            [
+                                                {
+                                                    "prim": "UNIT"
+                                                },
+                                                {
+                                                    "prim": "FAILWITH"
+                                                }
+                                            ]
+                                        ]
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                },
+                {
+                    "prim": "SWAP"
+                },
+                {
+                    "prim": "PAIR"
+                }
+            ]
+        ]
+    }
+]

@@ -9,7 +9,7 @@ In Tezos, a transfer operation transfers tokens between two addresses.
 
 When the `Babylon/proto005` protocol amendment came into effect, it changed how token transfer involving KT1 addresses work. The transfer of tokens _from_ a KT1 account is completed by calling the KT1's smart contract `do` method. The `do` method takes a lambda function, and it is the logic of this function that causes the desired transfer of tokens to happen.
 
-The Taquito [integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/manager-contract-scenario.spec.ts) can be useful to see how this works.
+The Taquito [integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/contract-manager-scenario.spec.ts) can be useful to see how this works.
 
 ## Transfer from an implicit tz1 address to a tz1 address
 
@@ -23,10 +23,10 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://jakartanet.api.tez.ie');
 
 render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/hangzhounet/', {
+fetch('https://api.tez.ie/keys/jakartanet/', {
   method: 'POST',
   headers: { Authorization: 'Bearer taquito-example' },
 })
@@ -46,7 +46,7 @@ fetch('https://api.tez.ie/keys/hangzhounet/', {
     render(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => render(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .then((hash) => render(`Operation injected: https://jakarta.tzstats.com/${hash}`))
   .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 

@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
                 const batchOpEstimate = await Tezos.estimate
                     .batch([
                         { kind: OpKind.DELEGATION, source: await Tezos.signer.publicKeyHash(), delegate: knownBaker },
-                        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+                        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
                     ])
 
                 expect(batchOpEstimate.length).toEqual(3);
@@ -29,7 +29,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
             done();
         });
 
+<<<<<<< HEAD
         it('Verify the contract.batch estimate where reveal is not needed', async (done) => {
+=======
+        it('Batch estimate where reveal is not needed', async (done) => {
+            const pkh = await Tezos.signer.publicKeyHash()
+>>>>>>> master
 
             try {
                 // do a reveal operation first
@@ -38,8 +43,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
 
                 const batchOpEstimate = await Tezos.estimate
                     .batch([
-                        { kind: OpKind.DELEGATION, source: await Tezos.signer.publicKeyHash(), delegate: knownBaker },
-                        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+                        { kind: OpKind.DELEGATION, source: pkh, delegate: knownBaker },
+                        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
                     ])
 
                 expect(batchOpEstimate.length).toEqual(2);
@@ -47,7 +52,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
             } catch (ex: any) {
                 if (signerConfig.type === SignerType.FAUCET) {
                     // When running the test multiple times with the same faucet, can not reveal an already revealed contract.
-                    expect(ex.message).toMatch('The current address is already revealed.')
+                    expect(ex.message).toMatch(`The publicKeyHash '${pkh}' has already been revealed.`)
                 } else {
                     throw ex
                 }

@@ -2,6 +2,8 @@
 title: Storage with/without annotations
 author: Roxane Letourneau
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 This section shows how to write storage when :
 
@@ -25,8 +27,16 @@ To do so, let's look at three examples of contract origination showing initial v
 
 We need to write the storage as a Javascript object and include the annotated names in it.
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 Tezos.contract
   .originate({
@@ -48,6 +58,35 @@ Tezos.contract
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline wallet
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+
+Tezos.wallet
+  .originate({
+    code: contractStorageAnnot,
+    storage: {
+      theAddress: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+      theBool: true,
+      theNat: '3',
+      theNumber: '5',
+      theTez: '10',
+    },
+  })
+  .send()
+  .then((originationOp) => {
+    println(`Waiting for confirmation of origination...`);
+    return originationOp.contract();
+  })
+  .then(() => {
+    println(`Origination completed.`);
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```   
+  </TabItem>
+</Tabs>
 
 ### When there is no annotation
 
@@ -63,8 +102,16 @@ Tezos.contract
 
 All properties in storage are accessible by the index corresponding to the order that the storage is defined.
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 Tezos.contract
   .originate({
@@ -86,6 +133,35 @@ Tezos.contract
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline wallet
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+
+Tezos.wallet
+  .originate({
+    code: contractStorageWithoutAnnot,
+    storage: {
+      0: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
+      1: true, //bool
+      2: '3', //nat
+      3: '5', //int
+      4: '10', //mutez
+    },
+  })
+  .send()
+  .then((originationOp) => {
+    println(`Waiting for confirmation of origination...`);
+    return originationOp.contract();
+  })
+  .then(() => {
+    println(`Origination completed.`);
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```  
+  </TabItem>
+</Tabs>
 
 ### When some arguments are annotated and others are not
 
@@ -103,8 +179,16 @@ In the following example, only the elements in positions 2 and 3 have an annotat
 
 Note that when proprieties have annotations, we cannot access them by index. For example, if you replace "theNat" by 2 and "theNumber" by 3 in this code example, it will fail.
 
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
 ```js live noInline
-// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 Tezos.contract
   .originate({
@@ -126,3 +210,33 @@ Tezos.contract
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
+
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline wallet
+// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+
+Tezos.wallet
+  .originate({
+    code: contractStorageWithAndWithoutAnnot,
+    storage: {
+      0: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
+      1: true, //bool
+      theNat: '3',
+      theNumber: '5',
+      4: '10', //mutez
+    },
+  })
+  .send()
+  .then((originationOp) => {
+    println(`Waiting for confirmation of origination...`);
+    return originationOp.contract();
+  })
+  .then(() => {
+    println(`Origination completed.`);
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```    
+  </TabItem>
+</Tabs>

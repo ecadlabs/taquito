@@ -1,13 +1,26 @@
 # Taquito Signer package
+*Documentation can be found [here](https://tezostaquito.io/docs/inmemory_signer)*  
+*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_signer.html)*
+
+`@taquito/signer` is an npm package that provides developers with signing functionality for Taquito.
+
+## General Information
+
+The Inmemory signer is a local signer implementation that allows you to directly use a private key in your browser or your nodejs app. When the InMemorySigner is configured, all Taquito functionalities that need signing support can be used. The operation will be signed automatically using the signer (no prompt).
+
+This signer implementation is for development workflows.
 
 **Storing private keys in memory is suitable for development workflows but risky for
-production use-cases! Use the InMemorySigner appropriately given your risk profile**
+production use-cases! Use the InMemorySigner appropriately given your risk profile.**
 
-`@taquito/signer` is an npm package that provides developers with signing functionality for Taquito. It can be injected as follows:
+## Install 
+```
+npm i --save @taquito/taquito
+npm i --save @taquito/signer
+```
 
+## Usage
 ### Loading an unencrypted private key
-
-If you configure Taquito this way, you will now be able to use every function that needs signing support.
 
 ```js
 import { InMemorySigner } from '@taquito/signer';
@@ -15,7 +28,7 @@ import { TezosToolkit } from '@taquito/taquito';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
-Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey('your_private_key') });
+Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey('edsk...') });
 ```
 
 ### Loading an encrypted private key with a passphrase
@@ -34,16 +47,15 @@ Tezos.setProvider({
 
 ### Using a testnet faucet key
 
-To load a faucet key (available from https://faucet.tzalpha.net/) for working a public testnet use the `importKey` function.
-You can do so as follows:
+To load a faucet key (available from https://teztnets.xyz/) for working with a public testnet, use the `importKey` function.
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/taquito-signer';
+import { importKey } from '@taquito/signer';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_TESTNET_RPC_URL');
 
-// A key faucet, similar to what is available from https://faucet.tzalpha.net/
+// A key faucet, similar to what is available from https://teztnets.xyz/
 const FAUCET_KEY = {
   mnemonic: [
     'cart',
@@ -79,14 +91,9 @@ importKey(
 // Your Tezos instance is now operably configured for signing with the faucet key.
 ```
 
-If you configure Taquito this way, you will now be able to use every function that needs signing support. The operation will be signed automatically using the signer (no prompt)
-
+## Additional info
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
-
-## API Documentation
-
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_signer.html)
 
 ## Disclaimer
 

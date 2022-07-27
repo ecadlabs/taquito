@@ -4,30 +4,33 @@
  */
 
 import { STATUS_CODE } from './status_code';
-
-// tslint:disable: strict-type-predicates
-const isNode =
-  typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
-// tslint:enable: strict-type-predicates
-
-const XMLHttpRequestCTOR = isNode ? require('xhr2-cookies').XMLHttpRequest : XMLHttpRequest;
+import axios from 'axios';
 
 export * from './status_code';
 export { VERSION } from './version';
 
-const defaultTimeout = 30000;
+enum ResponseType {
+  TEXT = 'text',
+  JSON = 'json',
+}
+// Z TODO change any type >.>
+type ObjectType = Record<string, any>
 
 export interface HttpRequestOptions {
   url: string;
   method?: 'GET' | 'POST';
   timeout?: number;
   json?: boolean;
-  query?: { [key: string]: any };
+  query?: ObjectType;
   headers?: { [key: string]: string };
   mimeType?: string;
 }
 
-export class HttpResponseError implements Error {
+/**
+ *  @category Error
+ *  @description This error will be thrown when the endpoint returns an HTTP error to the client
+ */
+export class HttpResponseError extends Error {
   public name = 'HttpResponse';
 
   constructor(
@@ -36,26 +39,34 @@ export class HttpResponseError implements Error {
     public statusText: string,
     public body: string,
     public url: string
-  ) {}
+  ) {
+    super(message);
+  }
 }
 
-export class HttpRequestFailed implements Error {
+/**
+ *  @category Error
+ *  @description Error that indicates a general failure in making the HTTP request
+ */
+export class HttpRequestFailed extends Error {
   public name = 'HttpRequestFailed';
-  public message: string;
 
-  constructor(public url: string, public innerEvent: any) {
-    this.message = `Request to ${url} failed`;
+  constructor(public errorDetail: string) {
+    super(errorDetail);
   }
 }
 
 export class HttpBackend {
-  protected serialize(obj?: { [key: string]: any }) {
+  constructor(private timeout: number = 30000) {}
+
+  protected serialize(obj?: ObjectType) {
     if (!obj) {
       return '';
     }
 
     const str = [];
     for (const p in obj) {
+      // eslint-disable-next-line no-prototype-builtins
       if (obj.hasOwnProperty(p) && typeof obj[p] !== 'undefined') {
         const prop = typeof obj[p].toJSON === 'function' ? obj[p].toJSON() : obj[p];
         // query arguments can have no value so we need some way of handling that
@@ -83,77 +94,60 @@ export class HttpBackend {
     }
   }
 
-  protected createXHR(): XMLHttpRequest {
-    return new XMLHttpRequestCTOR();
-  }
-
   /**
    *
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
    */
-  createRequest<T>(
-    {
-      url,
-      method,
-      timeout,
-      query,
-      headers = {},
-      json = true,
-      mimeType = undefined,
-    }: HttpRequestOptions,
-    data?: {}
+  async createRequest<T>(
+    { url, method, timeout = this.timeout, query, headers = {}, json = true }: HttpRequestOptions,
+    data?: object | string
   ) {
-    return new Promise<T>((resolve, reject) => {
-      const request = this.createXHR();
-      request.open(method || 'GET', `${url}${this.serialize(query)}`);
-      if (!headers['Content-Type']) {
-        request.setRequestHeader('Content-Type', 'application/json');
-      }
-      if (mimeType) {
-        request.overrideMimeType(`${mimeType}`);
-      }
-      for (const k in headers) {
-        request.setRequestHeader(k, headers[k]);
-      }
-      request.timeout = timeout || defaultTimeout;
-      request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-          if (json) {
-            try {
-              resolve(JSON.parse(request.response));
-            } catch (ex) {
-              reject(new Error(`Unable to parse response: ${request.response}`));
-            }
-          } else {
-            resolve(request.response);
-          }
+    let resType: ResponseType;
+    let transformResponse = undefined;
+
+    if (!headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    if (!json) {
+      resType = ResponseType.TEXT;
+      transformResponse = [<Type>(v: Type) => v];
+    } else {
+      resType = ResponseType.JSON;
+    }
+
+    try {
+      const response = await axios.request<T>({
+        url: url + this.serialize(query),
+        method: method ?? 'GET',
+        headers: headers,
+        responseType: resType,
+        transformResponse,
+        timeout: timeout,
+        data: data,
+      });
+
+      return response.data;
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        let errorData;
+
+        if (typeof err.response.data === 'object') {
+          errorData = JSON.stringify(err.response.data);
         } else {
-          reject(
-            new HttpResponseError(
-              `Http error response: (${this.status}) ${request.response}`,
-              this.status as STATUS_CODE,
-              request.statusText,
-              request.response,
-              url
-            )
-          );
+          errorData = err.response.data;
         }
-      };
 
-      request.ontimeout = function () {
-        reject(new Error(`Request timed out after: ${request.timeout}ms`));
-      };
-
-      request.onerror = function (err) {
-        reject(new HttpRequestFailed(url, err));
-      };
-
-      if (data) {
-        const dataStr = JSON.stringify(data);
-        request.send(dataStr);
+        throw new HttpResponseError(
+          `Http error response: (${err.response.status}) ${errorData}`,
+          err.response.status as STATUS_CODE,
+          err.response.statusText,
+          errorData,
+          url + this.serialize(query)
+        );
       } else {
-        request.send();
+        throw new HttpRequestFailed(err as string);
       }
-    });
+    }
   }
 }

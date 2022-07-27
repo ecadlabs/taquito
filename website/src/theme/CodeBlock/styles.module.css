@@ -5,6 +5,13 @@
   overflow: hidden;
   overflow-wrap: break-word;
   white-space: pre-wrap;
+  background-color: #f9f9f9 !important;
+  caret-color: #2e2e2e;
+}
+
+[data-theme='dark'] .codeBlock {
+  background-color: #2e2e2e !important;
+  caret-color: #f9f9f9;
 }
 
 .codeBlockWrapper {

@@ -1,15 +1,22 @@
-import { Token, TokenFactory, ComparableToken, TokenValidationError } from './token';
+import {
+  Token,
+  TokenFactory,
+  ComparableToken,
+  TokenValidationError,
+  SemanticEncoding,
+} from './token';
 import { validateChain, ValidationResult } from '@taquito/utils';
+import { BaseTokenSchema } from '../schema/types';
 
 export class ChainIDValidationError extends TokenValidationError {
-  name: string = 'ChainIDValidationError';
+  name = 'ChainIDValidationError';
   constructor(public value: any, public token: ChainIDToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class ChainIDToken extends ComparableToken {
-  static prim = 'chain_id';
+  static prim: 'chain_id' = 'chain_id';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -31,8 +38,19 @@ export class ChainIDToken extends ComparableToken {
     return val[Object.keys(val)[0]];
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return ChainIDToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: ChainIDToken.prim,
+      schema: ChainIDToken.prim,
+    };
   }
 
   public Encode(args: any[]): any {
@@ -46,16 +64,19 @@ export class ChainIDToken extends ComparableToken {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
+    if (semantic && semantic[ChainIDToken.prim]) {
+      return semantic[ChainIDToken.prim](val);
+    }
+
     return { string: val };
   }
 
-  // tslint:disable-next-line: variable-name
   public ToKey({ string }: any) {
     return string;
   }
@@ -72,6 +93,5 @@ export class ChainIDToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

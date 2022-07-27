@@ -12,37 +12,42 @@ import {
   RPCRevealOperation,
   RevealParams,
   RegisterGlobalConstantParams,
-  RPCRegisterGlobalConstantOperation
+  RPCRegisterGlobalConstantOperation,
+  TxRollupOriginateParams,
+  RPCTxRollupOriginationOperation,
+  TxRollupBatchParams,
+  RPCTxRollupBatchOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '../format';
-import { InvalidCodeParameter, InvalidInitParameter } from './errors';
+import { InvalidCodeParameter, InvalidInitParameter, OriginationParameterError } from './errors';
 
 export const createOriginationOperation = async ({
   code,
   init,
-  balance = "0",
+  balance = '0',
   delegate,
   storage,
   fee = DEFAULT_FEE.ORIGINATION,
   gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
   storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
-  mutez = false
+  mutez = false,
 }: OriginateParams) => {
-  // tslint:disable-next-line: strict-type-predicates
   if (storage !== undefined && init !== undefined) {
-    throw new Error(
-      "Storage and Init cannot be set a the same time. Please either use storage or init but not both.",
+    throw new OriginationParameterError(
+      'Storage and Init cannot be set a the same time. Please either use storage or init but not both.'
     );
   }
 
-  if(!Array.isArray(code)){
+  if (!Array.isArray(code)) {
     throw new InvalidCodeParameter('Wrong code parameter type, expected an array', code);
   }
 
   let contractStorage: Expr | undefined;
   if (storage !== undefined) {
-    const storageType = (code as Expr[]).find((p): p is Prim => ('prim' in p) && p.prim === 'storage');
+    const storageType = (code as Expr[]).find(
+      (p): p is Prim => 'prim' in p && p.prim === 'storage'
+    );
     if (storageType?.args === undefined) {
       throw new InvalidCodeParameter('The storage section is missing from the script', code);
     }
@@ -64,9 +69,7 @@ export const createOriginationOperation = async ({
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    balance: mutez
-      ? balance.toString()
-      : format('tz', 'mutez', balance).toString(),
+    balance: mutez ? balance.toString() : format('tz', 'mutez', balance).toString(),
     script,
   };
 
@@ -90,9 +93,7 @@ export const createTransferOperation = async ({
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    amount: mutez
-      ? amount.toString()
-      : format("tz", "mutez", amount).toString(),
+    amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
     destination: to,
     parameters: parameter,
   };
@@ -123,7 +124,7 @@ export const createRegisterDelegateOperation = async (
     gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
     storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
   }: RegisterDelegateParams,
-  source: string,
+  source: string
 ) => {
   return {
     kind: OpKind.DELEGATION,
@@ -141,7 +142,7 @@ export const createRevealOperation = async (
     storageLimit = DEFAULT_STORAGE_LIMIT.REVEAL,
   }: RevealParams,
   source: string,
-  publicKey: string,
+  publicKey: string
 ) => {
   return {
     kind: OpKind.REVEAL,
@@ -149,7 +150,7 @@ export const createRevealOperation = async (
     public_key: publicKey,
     source,
     gas_limit: gasLimit,
-    storage_limit: storageLimit
+    storage_limit: storageLimit,
   } as RPCRevealOperation;
 };
 
@@ -159,14 +160,48 @@ export const createRegisterGlobalConstantOperation = async ({
   fee,
   gasLimit,
   storageLimit,
-}: RegisterGlobalConstantParams
-) => {
+}: RegisterGlobalConstantParams) => {
   return {
     kind: OpKind.REGISTER_GLOBAL_CONSTANT,
     value,
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
-    source
+    source,
   } as RPCRegisterGlobalConstantOperation;
+};
+
+export const createTxRollupOriginationOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+}: TxRollupOriginateParams) => {
+  return {
+    kind: OpKind.TX_ROLLUP_ORIGINATION,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    source,
+    tx_rollup_origination: {},
+  } as RPCTxRollupOriginationOperation;
+};
+
+export const createTxRollupBatchOperation = async ({
+  content,
+  rollup,
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+}: TxRollupBatchParams) => {
+  return {
+    kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    source,
+    content,
+    rollup,
+  } as RPCTxRollupBatchOperation;
 };

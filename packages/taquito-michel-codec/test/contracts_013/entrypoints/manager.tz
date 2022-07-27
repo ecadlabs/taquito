@@ -1,0 +1,31 @@
+parameter
+  (or
+     (lambda %do unit (list operation))
+     (unit %default));
+storage key_hash;
+code
+  { UNPAIR ;
+    IF_LEFT
+      { # 'do' entrypoint
+        # Assert no token was sent:
+        # to send tokens, the default entry point should be used
+        PUSH mutez 0 ;
+        AMOUNT ;
+        ASSERT_CMPEQ ;
+        # Assert that the sender is the manager
+        DUUP ;
+        IMPLICIT_ACCOUNT ;
+        ADDRESS ;
+        SENDER ;
+        ASSERT_CMPEQ ;
+        # Execute the lambda argument
+        UNIT ;
+        EXEC ;
+        PAIR ;
+      }
+      { # 'default' entrypoint
+        DROP ;
+        NIL operation ;
+        PAIR ;
+      }
+  };

@@ -15,24 +15,24 @@ author: Roxane Letourneau
 
 *If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
-- ECAD Labs nodes:
-    - Mainnet: https://mainnet.api.tez.ie
-    - Hangzhounet: https://hangzhounet.api.tez.ie protocol `PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx`
-    - Granadanet: https://granadanet.api.tez.ie protocol `PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV`
-    - Idiazabalnet: https://idiazabalnet.ecadinfra.com/ protocol: `ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK`
-        - Idiazabalnet is an early testnet protocol that will become the `I` proposal. It includes many features, the most notable being the new "tenderbake" consensus algorithim. 
-- SmartPy public Tezos nodes
-    - Mainnet: https://mainnet.smartpy.io
-    - Granadanet: https://granadanet.smartpy.io/
-- Blockscale public nodes operated on behalf of the Tezos Foundation: 
-    - Mainnet: https://rpc.tzbeta.net/
-    - Next protocol/version testnet (Granadanet): https://rpczero.tzbeta.net/
-- Teznode Public nodes operated by LetzBake!:
-    - Mainnet: https://teznode.letzbake.com
-- ~~Tezos Giga Node from Tezos Ukraine~~ Was expected cease to operations on Oct 1st 2021, but status is unkown. See
-  [Announcment](https://twitter.com/GigaNode/status/1435265400699342854)
-    - ~~Mainnet: https://mainnet-tezos.giganode.io~~
-    - ~~Granada testnet: https://testnet-tezos.giganode.io/~~
+| Provider         | Net         | URL                                | Header      |  
+|------------------|-------------|------------------------------------|-------|
+| ECAD Labs        | Mainnet     | https://mainnet.api.tez.ie         | [Check](https://mainnet.api.tez.ie/chains/main/blocks/head/header)      |
+| ECAD Labs        | Ithacanet   | https://ithacanet.ecadinfra.com    | [Check](https://ithacanet.ecadinfra.com/chains/main/blocks/head/header)      |
+| ECAD Labs        | Jakartanet  | https://jakartanet.ecadinfra.com   | [Check](https://jakartanet.ecadinfra.com/chains/main/blocks/head/header)      |
+| SmartPy          | Mainnet     | https://mainnet.smartpy.io         |  [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header)     |
+| SmartPy          | Ithacanet   | https://ithacanet.smartpy.io/      | [Check](https://ithacanet.smartpy.io/chains/main/blocks/head/header)    |
+| Tezos Foundation | Mainnet     | https://rpc.tzbeta.net/            | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)      |
+| Tezos Foundation | Jakartanet  | https://rpczero.tzbeta.net/        | [Check](https://rpczero.tzbeta.net/chains/main/blocks/head/header)      |
+| GigaNode         | Mainnet     | https://mainnet-tezos.giganode.io  |  [Check](https://mainnet-tezos.giganode.io/chains/main/blocks/head/header)     |
+| GigaNode         | Ithacanet   | https://testnet-tezos.giganode.io/ | [Check](https://testnet-tezos.giganode.io/chains/main/blocks/head/header)      |
+| Marigold         | Mainnet     | https://mainnet.tezos.marigold.dev/    | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
+| Marigold         | Ithacanet   | https://ithacanet.tezos.marigold.dev/  | [Check](https://ithacanet.tezos.marigold.dev/chains/main/blocks/head/header)   |
+| Marigold         | Jakartanet  | https://jakartanet.tezos.marigold.dev/ | [Check](https://jakartanet.tezos.marigold.dev/chains/main/blocks/head/header)  |
+
+## List of commercial node operators
+
+* [MIDL.dev Tezos RPC service](https://midl.dev/tezos-rpc) offers a commercial node service for a fee
 
 ## How to run a node
 

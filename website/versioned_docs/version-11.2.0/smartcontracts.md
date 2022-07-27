@@ -1,0 +1,273 @@
+---
+title: Smart contract interaction
+author: Jev Bjorsell
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Taquito allows developers to interact with Smart Contracts as if they are "Plain Old Javascript Objects."
+
+The "Machine Language" of Tezos Smart Contracts is named [Michelson][3]. Michelson is a stack-based language that is human-readable. It's possible to author Smart-Contracts directly in Michelson. However, developers can use High-Level Languages (such as [Ligo][0] or [SmartPy][1]) to write smart contracts.
+
+Taquito makes developing applications (dApps or traditional programs) around a Tezos Smart Contract easy. Taquito can also "originate" (create) a new Smart Contract to the Tezos Blockchain.
+
+Michelson is a somewhat specialized language that isn't typical in Javascript or Typescript development contexts. Taquito helps to bridge the gap between the Tezos blockchain and a standard Javascript or Typescript development environment.
+
+## Taquito's Smart Contract Abstraction
+
+Taquito assists developers by reading the Michelson code for a given contract from the blockchain. Based on the retrieved Michelson code, Taquito generates a `contract` javascript object with methods and storage that correspond to the contract's Michelson entry points, storage definitions, and values.
+
+## The Counter Contract
+
+In this guide, we use a straightforward "counter" smart contract to illustrate how Taquito works.
+
+The counter contract has two entry points named `increment` and `decrement.` Taquito uses these entrypoints to generate corresponding javascript methods available to the developer.
+
+The counter contracts storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
+
+### Counter Contract in CameLIGO
+
+```ocaml
+type storage = int
+
+(* variant defining pseudo multi-entrypoint actions *)
+
+type action =
+| Increment of int
+| Decrement of int
+
+let add (a,b: int * int) : int = a + b
+let sub (a,b: int * int) : int = a - b
+
+(* real entrypoint that re-routes the flow based on the action provided *)
+
+let main (p,s: action * storage) =
+ let storage =
+   match p with
+   | Increment n -> add (s, n)
+   | Decrement n -> sub (s, n)
+ in ([] : operation list), storage
+
+```
+
+You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
+
+### Counter Contract Michelson source code
+
+```
+{ parameter (or (int %decrement) (int %increment)) ;
+  storage int ;
+  code { DUP ;
+         CDR ;
+         DIP { DUP } ;
+         SWAP ;
+         CAR ;
+         IF_LEFT
+           { DIP { DUP } ;
+             SWAP ;
+             DIP { DUP } ;
+             PAIR ;
+             DUP ;
+             CAR ;
+             DIP { DUP ; CDR } ;
+             SUB ;
+             DIP { DROP 2 } }
+           { DIP { DUP } ;
+             SWAP ;
+             DIP { DUP } ;
+             PAIR ;
+             DUP ;
+             CAR ;
+             DIP { DUP ; CDR } ;
+             ADD ;
+             DIP { DROP 2 } } ;
+         NIL operation ;
+         PAIR ;
+         DIP { DROP 2 } } }
+```
+
+## Loading the contract in Taquito
+
+To load the contract from the Tezos Blockchain, we use the `Tezos.contract.at` method.
+We can inspect the contract methods and data types using the `c.parameterSchema.ExtractSignatures()` method.
+
+The following example shows how to load the contract and view the methods on that contract.
+
+```js live noInline
+// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+
+Tezos.contract
+  .at('KT1UNTXxGgDMAD6pvVfLbuAMKie51FryR1Jy')
+  .then((c) => {
+    let methods = c.parameterSchema.ExtractSignatures();
+    println(JSON.stringify(methods, null, 2));
+  })
+  .catch((error) => console.log(`Error: ${error}`));
+```
+
+The `at()` method causes Taquito to query a Tezos nodes RPC API for the contracts "script" and "entrypoints." From these two inputs, Taquito builds an ordinary JavaScript object with methods that correspond to the Smart Contracts entrypoints.
+
+The `at` method returns a representation of the contract as a plain old javascript object. Taquito dynamically creates an `increment` and `decrement` method that the developer can call as follows:
+
+- `contract.methods.increment()`
+- `contract.methods.decrement()`
+
+In Tezos, to call an entrypoint on a contract, one must send a transfer operation. In the counter contract case, the transfer value can be `0` as the contract does not expect to receive any tokens. The transfer must have the appropriate Michelson values specified as "params" to call the `increment` entrypoint.
+
+We can inspect the transfer params produced by Taquito using the `toTransferParams()` method:
+
+```js live noInline
+// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+
+Tezos.contract
+  .at('KT1UNTXxGgDMAD6pvVfLbuAMKie51FryR1Jy')
+  .then((c) => {
+    let incrementParams = c.methods.increment(2).toTransferParams();
+    println(JSON.stringify(incrementParams, null, 2));
+  })
+  .catch((error) => console.log(`Error: ${error}`));
+```
+
+## Calling the Increment function
+
+In the next example, we call the `send()` method. This example requires a different ceremony for getting a temporary key for signing.
+
+We call the `send()` method on the `increment()` method. Taquito then forges this operation into a transfer operation (with a transfer value of zero), signs the operation with our testing key, and injects or broadcasts the operation to the Tezos RPC node.
+
+Then we wait for the `confirmation(3)` to complete. The `3` number tells Taquito how many confirmations to wait for before resolving the promise. `3` is a good value for this type of demonstration, but we recommend a higher value if you are dealing with mainnet transactions.
+
+```js live noInline
+// const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+
+Tezos.contract
+  .at('KT1UNTXxGgDMAD6pvVfLbuAMKie51FryR1Jy')
+  .then((contract) => {
+    const i = 7;
+
+    println(`Incrementing storage value by ${i}...`);
+    return contract.methods.increment(i).send();
+  })
+  .then((op) => {
+    println(`Waiting for ${op.hash} to be confirmed...`);
+    return op.confirmation(3).then(() => op.hash);
+  })
+  .then((hash) => println(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+## Choosing between the `methods` or `methodsObject` members to interact with smart contracts
+
+:::note
+Since Taquito version 10.2.0, the parameter can be passed in an object format when calling a smart contract entry point. 
+
+The `ContractAbstraction` class has a new member called `methodsObject`, which serves the same purpose as the `methods` member. The format expected by the smart contract method differs: `methods` expects flattened arguments while `methodsObject` expects an object.
+  
+It is at the user's discretion to use their preferred representation. We wanted to provide Taquito users with a way to pass an object when calling a contract entry point using a format similar to that used by the storage parameter when deploying a contract.
+
+An example showing the difference is provided below.
+:::
+
+<Tabs
+  defaultValue="flat"
+  values={[
+    {label: 'Flattened arguments', value: 'flat'}, 
+    {label: 'Parameter as an object', value: 'object'}
+  ]}>
+  <TabItem value='flat'>
+
+In the following example, a contract's `set_child_record` method will be called by passing the arguments using the flattened representation. The `methods` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow: 
+
+```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/hangzhounet');
+
+Tezos.contract.at('KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L')
+  .then((contract) => {
+    println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
+    println(`Inspect the signature of the 'set_child_record' contract method: ${
+      JSON.stringify(contract.methods.set_child_record().getSignature(), null, 2)
+    }`);
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+The preceding example returns an array which contains the different possible signatures. Different signatures are possible as the `set_child_record` method contains some optional arguments. In the following example the `set_child_record` method is called by passing the arguments in the flattened way: 
+
+```js live noInline
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/hangzhounet')
+// import { importKey } from '@taquito/signer';
+
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+.then(signer => {
+    return Tezos.contract.at('KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L')
+}).then((contract) => {
+   return contract.methods.set_child_record(
+    'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
+      new MichelsonMap(), //data
+      'EEEE', //label
+      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //owner
+      'FFFF', //parent
+      '10' //ttl(optional)
+   ).send()
+  })
+  .then((op) => {
+    println(`Awaiting for ${op.hash} to be confirmed...`);
+     return op.confirmation().then(() => op.hash);
+  })
+  .then((hash) => println(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+  </TabItem>
+  <TabItem value='object'>
+
+In the following example, a contract's `set_child_record` method will be called by passing the parameter in an object format. The `methodsObject` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow: 
+
+```js live noInline
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/hangzhounet');
+
+Tezos.contract.at('KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L')
+  .then((contract) => {
+    println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
+    println(`Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(contract.methodsObject.set_child_record().getSignature(), null, 2)}`);
+  })
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+The precedent example returns an object giving indication on how to structure the parameter when calling the`set_child_record` method. Here is an example where the `set_child_record` method is called by passing the parameter in an object format: 
+
+```js live noInline
+// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+// const Tezos = new TezosToolkit('https://api.tez.ie/rpc/hangzhounet')
+// import { importKey } from '@taquito/signer';
+
+importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+.then(signer => {
+    return Tezos.contract.at('KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L')
+}).then((contract) => {
+   return contract.methodsObject.set_child_record({
+    address: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    data: new MichelsonMap(),
+    label: 'EEEE',
+    owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', 
+    parent: 'FFFF',
+    ttl: '10'
+   }).send()
+  })
+  .then((op) => {
+    println(`Awaiting for ${op.hash} to be confirmed...`);
+     return op.confirmation().then(() => op.hash);
+  })
+  .then((hash) => println(`Operation injected: https://hangzhou.tzstats.com/${hash}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
+
+  </TabItem>
+</Tabs>
+
+
+[0]: https://ligolang.org/
+[1]: https://smartpy.io/
+[2]: https://ide.ligolang.org/p/839HdMaflPsQSA6k1Ce0Wg
+[3]: https://tezos.gitlab.io/whitedoc/michelson.html

@@ -1,4 +1,4 @@
-# Taquito Tezbridge Signer package
+# Taquito Tezbridge Signer package (deprecated v13)
 
 `@taquito/tezbridge-signer` is an npm package that provides developers with Tezbridge Signer functionality for Taquito. 
 

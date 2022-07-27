@@ -12,13 +12,24 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
+import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
+import { BlockIdentifier } from '../read-provider/interface';
+import { InvalidConfirmationCountError, ConfirmationUndefinedError } from '../error';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
-export class MissedBlockDuringConfirmationError implements Error {
-  name: string = 'MissedBlockDuringConfirmationError';
-  message: string =
-    'Taquito missed a block while waiting for operation confirmation and was not able to find the operation';
+/**
+ *  @category Error
+ *  @description Error that indicates a missed block when polling to retrieve new head block. This may happen when the polling interval is greater than the time between blocks.
+ */
+export class MissedBlockDuringConfirmationError extends Error {
+  name = 'MissedBlockDuringConfirmationError';
+
+  constructor() {
+    super(
+      'Taquito missed a block while waiting for operation confirmation and was not able to find the operation'
+    );
+  }
 }
 
 const MAX_BRANCH_ANCESTORS = 60;
@@ -33,7 +44,7 @@ export class WalletOperation {
 
   private lastHead: BlockResponse | undefined;
   protected newHead$: Observable<BlockResponse> = this._newHead$.pipe(
-    tap(newHead => {
+    tap((newHead) => {
       if (
         !this._included &&
         this.lastHead &&
@@ -49,7 +60,7 @@ export class WalletOperation {
 
   // Observable that emit once operation is seen in a block
   private confirmed$ = this.newHead$.pipe(
-    map(head => {
+    map((head) => {
       for (const opGroup of head.operations) {
         for (const op of opGroup) {
           if (op.hash === this.opHash) {
@@ -93,7 +104,15 @@ export class WalletOperation {
     protected readonly context: Context,
     private _newHead$: Observable<BlockResponse>
   ) {
-    this.confirmed$.pipe(first(), catchError(() => of(undefined))).subscribe();
+    if (validateOperation(this.opHash) !== ValidationResult.VALID) {
+      throw new InvalidOperationHashError(this.opHash);
+    }
+    this.confirmed$
+      .pipe(
+        first(),
+        catchError(() => of(undefined))
+      )
+      .subscribe();
   }
 
   async getCurrentConfirmation() {
@@ -101,7 +120,7 @@ export class WalletOperation {
       return 0;
     }
 
-    return combineLatest([this._includedInBlock, from(this.context.rpc.getBlock())])
+    return combineLatest([this._includedInBlock, from(this.context.readProvider.getBlock('head'))])
       .pipe(
         map(([foundAtBlock, head]) => {
           return head.header.level - foundAtBlock.header.level + 1;
@@ -111,16 +130,16 @@ export class WalletOperation {
       .toPromise();
   }
 
-  async isInCurrentBranch(tipBlockIdentifier: string = 'head') {
+  async isInCurrentBranch(tipBlockIdentifier: BlockIdentifier = 'head') {
     // By default it is assumed that the operation is in the current branch
     if (!this._included) {
       return true;
     }
 
-    const tipBlockHeader = await this.context.rpc.getBlockHeader({ block: tipBlockIdentifier });
+    const tipBlockHeaderLevel = await this.context.readProvider.getBlockLevel(tipBlockIdentifier);
     const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
 
-    const levelDiff = tipBlockHeader.level - inclusionBlock.header.level;
+    const levelDiff = tipBlockHeaderLevel - inclusionBlock.header.level;
 
     // Block produced before the operation is included are assumed to be part of the current branch
     if (levelDiff <= 0) {
@@ -132,13 +151,13 @@ export class WalletOperation {
       inclusionBlock.header.level + MAX_BRANCH_ANCESTORS
     );
 
-    const blocks = new Set(await this.context.rpc.getLiveBlocks({ block: String(tipBlockLevel) }));
+    const blocks = new Set(await this.context.readProvider.getLiveBlocks(tipBlockLevel));
     return blocks.has(inclusionBlock.hash);
   }
 
   confirmationObservable(confirmations?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
-      throw new Error('Confirmation count must be at least 1');
+      throw new InvalidConfirmationCountError('Confirmation count must be at least 1');
     }
 
     const { defaultConfirmationCount } = this.context.config;
@@ -146,7 +165,7 @@ export class WalletOperation {
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
     if (conf === undefined) {
-      throw new Error('Default confirmation count can not be undefined!');
+      throw new ConfirmationUndefinedError('Default confirmation count can not be undefined!');
     }
 
     return combineLatest([this._includedInBlock, this.newHead$]).pipe(
@@ -159,7 +178,7 @@ export class WalletOperation {
           expectedConfirmation: conf,
           currentConfirmation: head.header.level - foundAtBlock.header.level + 1,
           completed: head.header.level - foundAtBlock.header.level >= conf - 1,
-          isInCurrentBranch: () => this.isInCurrentBranch(head.hash),
+          isInCurrentBranch: () => this.isInCurrentBranch(head.hash as BlockIdentifier),
         };
       }),
       takeWhile(({ completed }) => !completed, true)

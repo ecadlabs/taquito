@@ -20,8 +20,8 @@ describe('Schema test', () => {
                 value: 'nat',
               },
             },
-          balance: 'nat',
-        },
+            balance: 'nat',
+          },
         },
       },
       name: 'string',
@@ -29,6 +29,63 @@ describe('Schema test', () => {
       symbol: 'string',
       totalSupply: 'nat',
       version: 'nat',
+    });
+
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: "pair",
+      schema: {
+        accounts: {
+          __michelsonType: "big_map",
+          schema: {
+            key: {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            value: {
+              __michelsonType: "pair",
+              schema: {
+                allowances: {
+                  __michelsonType: "map",
+                  schema: {
+                    key: {
+                      __michelsonType: "address",
+                      schema: "address"
+                    },
+                    value: {
+                      __michelsonType: "nat",
+                      schema: "nat"
+                    },
+                  },
+                },
+                balance: {
+                  __michelsonType: "nat",
+                  schema: "nat"
+                }
+              }
+            },
+          },
+        },
+        name: {
+          __michelsonType: "string",
+          schema: "string"
+        },
+        owner: {
+          __michelsonType: "address",
+          schema: "address"
+        },
+        symbol: {
+          __michelsonType: "string",
+          schema: "string"
+        },
+        totalSupply: {
+          __michelsonType: "nat",
+          schema: "nat"
+        },
+        version: {
+          __michelsonType: "nat",
+          schema: "nat"
+        },
+      }
     });
   });
 
@@ -164,7 +221,7 @@ describe('Schema test', () => {
         '5': 'address',
         '6': 'nat',
       },
-      createAccounts:  {
+      createAccounts: {
         list: {
           "6": "address",
           "7": "nat",
@@ -180,6 +237,133 @@ describe('Schema test', () => {
         '4': 'nat',
       },
     });
+
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: "or",
+      schema: {
+        allowance: {
+          __michelsonType: "pair",
+          schema: {
+            '4': {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            '5': {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            NatNatContract: {
+              __michelsonType: "contract",
+              schema: {
+                parameter: {
+                  __michelsonType: "pair",
+                  schema: {
+                    '0': {
+                      __michelsonType: "nat",
+                      schema: "nat"
+                    },
+                    '1': {
+                      __michelsonType: "nat",
+                      schema: "nat"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        approve: {
+          __michelsonType: "pair",
+          schema: {
+            '1': {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            '2': {
+              __michelsonType: "nat",
+              schema: "nat"
+            }
+          }
+        },
+        balanceOf: {
+          __michelsonType: "pair",
+          schema: {
+            '3': {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            NatContract: {
+              __michelsonType: "contract",
+              schema: {
+                parameter: {
+                  __michelsonType: "nat",
+                  schema: "nat"
+                }
+              }
+            },
+          }
+        },
+        createAccount: {
+          __michelsonType: "pair",
+          schema: {
+            '5': {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            '6': {
+              __michelsonType: "nat",
+              schema: "nat"
+            },
+          }
+        },
+        createAccounts: {
+          __michelsonType: "list",
+          schema: {
+            __michelsonType: "pair",
+            schema: {
+              "6": {
+                __michelsonType: "address",
+                schema: "address"
+              },
+              "7": {
+                __michelsonType: "nat",
+                schema: "nat"
+              },
+            }
+          },
+        },
+        transfer: {
+          __michelsonType: "pair",
+          schema: {
+            '0': {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            '1': {
+              __michelsonType: "nat",
+              schema: "nat"
+            },
+          }
+        },
+        transferFrom: {
+          __michelsonType: "pair",
+          schema: {
+            '2': {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            '3': {
+              __michelsonType: "address",
+              schema: "address"
+            },
+            '4': {
+              __michelsonType: "nat",
+              schema: "nat"
+            },
+          }
+        },
+      }
+    });
   });
 
   it('Should extract signature properly', () => {
@@ -190,12 +374,12 @@ describe('Schema test', () => {
     expect(sig).toContainEqual(['balanceOf', 'address', 'contract']);
     expect(sig).toContainEqual(['createAccount', 'address', 'nat']);
     expect(sig).toContainEqual(["createAccounts", {
-                                                      list: {
-                                                                "6": "address", 
-                                                                "7": "nat"
-                                                               }
-                                                    }
-                              ]);
+      list: {
+        "6": "address",
+        "7": "nat"
+      }
+    }
+    ]);
     expect(sig).toContainEqual(['transfer', 'address', 'nat']);
     expect(sig).toContainEqual(['transferFrom', 'address', 'address', 'nat']);
   });
@@ -217,5 +401,5 @@ describe('Schema test', () => {
     const valueFound = storageSchema.FindFirstInTopLevelPair(rpcContractResponse.script.storage, typeOfValueToFind);
     expect(valueFound).toEqual({ string: 'Token B' });
   });
-  
+
 });

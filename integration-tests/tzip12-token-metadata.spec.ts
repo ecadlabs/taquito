@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { compose, MichelsonMap } from '@taquito/taquito';
+import { compose, MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { tzip12 } from '../packages/taquito-tzip12/src/composer';
 import { Tzip12Module } from '../packages/taquito-tzip12/src/tzip12-extension';
@@ -286,7 +286,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			try {
 				await contract.tzip12().getTokenMetadata(3);
 			} catch (err) {
-				expect(err).toBeInstanceOf(TokenIdNotFound);
+				expect(err).toBeInstanceOf(ViewSimulationError);
 			}
 			done();
 		});

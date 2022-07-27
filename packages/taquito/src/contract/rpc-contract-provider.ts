@@ -14,6 +14,7 @@ import {
   DelegateParams,
   isOpRequireReveal,
   OriginateParams,
+  TxRollupOriginateParams,
   ParamsWithKind,
   RegisterDelegateParams,
   RegisterGlobalConstantParams,
@@ -21,20 +22,32 @@ import {
   RPCOperation,
   TransferParams,
   withKind,
+  TxRollupBatchParams,
 } from '../operations/types';
-import { ContractAbstraction } from './contract';
-import { InvalidDelegationSource } from './errors';
-import { ContractProvider, ContractSchema, EstimationProvider, StorageProvider } from './interface';
+import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
+import { InvalidDelegationSource, RevealOperationError } from './errors';
+import { ContractProvider, ContractSchema, StorageProvider } from './interface';
 import {
   createOriginationOperation,
   createRegisterDelegateOperation,
   createRegisterGlobalConstantOperation,
   createRevealOperation,
+  createTxRollupOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  createTxRollupBatchOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-
+import {
+  validateAddress,
+  validateContractAddress,
+  InvalidContractAddressError,
+  InvalidAddressError,
+  ValidationResult,
+} from '@taquito/utils';
+import { EstimationProvider } from '../estimate/estimate-provider-interface';
+import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
+import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 export class RpcContractProvider
   extends OperationEmitter
   implements ContractProvider, StorageProvider
@@ -54,20 +67,22 @@ export class RpcContractProvider
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
+    if (validateContractAddress(contract) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(contract);
+    }
+    const script = await this.context.readProvider.getScript(contract, 'head');
     if (!schema) {
-      schema = await this.rpc.getNormalizedScript(contract);
+      schema = script;
     }
 
     let contractSchema: Schema;
-    if (Schema.isSchema(schema)) {
-      contractSchema = schema;
+    if (Schema.isSchema(schema as Schema)) {
+      contractSchema = schema as Schema;
     } else {
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
     }
 
-    const storage = await this.rpc.getStorage(contract);
-
-    return contractSchema.Execute(storage, smartContractAbstractionSemantic(this)) as T; // Cast into T because only the caller can know the true type of the storage
+    return contractSchema.Execute(script.storage, smartContractAbstractionSemantic(this)) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
   /**
@@ -83,20 +98,22 @@ export class RpcContractProvider
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
+    if (validateContractAddress(contract) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(contract);
+    }
     if (!schema) {
-      schema = await this.rpc.getNormalizedScript(contract);
+      schema = (await this.rpc.getContract(contract)).script;
     }
 
     let contractSchema: Schema;
-    if (Schema.isSchema(schema)) {
-      contractSchema = schema;
+    if (Schema.isSchema(schema as Schema)) {
+      contractSchema = schema as Schema
     } else {
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
     }
 
     const encodedKey = contractSchema.EncodeBigMapKey(key);
 
-    // tslint:disable-next-line: deprecation
     const val = await this.rpc.getBigMapKey(contract, encodedKey);
 
     return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage
@@ -125,8 +142,14 @@ export class RpcContractProvider
     const encodedExpr = encodeExpr(packed);
 
     const bigMapValue = block
-      ? await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr, { block: String(block) })
-      : await this.context.rpc.getBigMapExpr(id.toString(), encodedExpr);
+      ? await this.context.readProvider.getBigMapValue(
+          { id: id.toString(), expr: encodedExpr },
+          block
+        )
+      : await this.context.readProvider.getBigMapValue(
+          { id: id.toString(), expr: encodedExpr },
+          'head'
+        );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
@@ -151,7 +174,7 @@ export class RpcContractProvider
     keys: Array<BigMapKeyType>,
     schema: Schema,
     block?: number,
-    batchSize: number = 5
+    batchSize = 5
   ): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
     const level = await this.getBlockForRequest(keys, block);
     const bigMapValues = new MichelsonMap<MichelsonMapKey, T | undefined>();
@@ -179,7 +202,7 @@ export class RpcContractProvider
   private async getBlockForRequest(keys: Array<BigMapKeyType>, block?: number) {
     return keys.length === 1 || typeof block !== 'undefined'
       ? block
-      : (await this.rpc.getBlock())?.header.level;
+      : await this.context.readProvider.getBlockLevel('head');
   }
 
   private async getBigMapValueOrUndefined<T>(
@@ -209,8 +232,8 @@ export class RpcContractProvider
    */
   async getSaplingDiffByID(id: string, block?: number) {
     const saplingState = block
-      ? await this.context.rpc.getSaplingDiffById(id.toString(), { block: String(block) })
-      : await this.context.rpc.getSaplingDiffById(id.toString());
+      ? await this.context.readProvider.getSaplingDiffById({ id: id.toString() }, block)
+      : await this.context.readProvider.getSaplingDiffById({ id: id.toString() }, 'head');
     return saplingState;
   }
 
@@ -239,7 +262,9 @@ export class RpcContractProvider
    *
    * @param OriginationOperation Originate operation parameter
    */
-  async originate(params: OriginateParams) {
+  async originate<TContract extends DefaultContractType = DefaultContractType>(
+    params: OriginateParams<ContractStorageType<TContract>>
+  ) {
     const estimate = await this.estimate(params, this.estimator.originate.bind(this.estimator));
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -256,7 +281,14 @@ export class RpcContractProvider
     });
     const forgedOrigination = await this.forge(preparedOrigination);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
-    return new OriginationOperation(hash, operation, forgedBytes, opResponse, context, this);
+    return new OriginationOperation<TContract>(
+      hash,
+      operation,
+      forgedBytes,
+      opResponse,
+      context,
+      this
+    );
   }
 
   /**
@@ -268,6 +300,13 @@ export class RpcContractProvider
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.delegate);
+    }
+
     // Since babylon delegation source cannot smart contract
     if (/kt1/i.test(params.source)) {
       throw new InvalidDelegationSource(params.source);
@@ -325,6 +364,13 @@ export class RpcContractProvider
    * @param Transfer operation parameter
    */
   async transfer(params: TransferParams) {
+    if (validateAddress(params.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to);
+    }
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+
     const publickKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(params, this.estimator.transfer.bind(this.estimator));
     const operation = await createTransferOperation({
@@ -364,7 +410,9 @@ export class RpcContractProvider
       const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
       return new RevealOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
     } else {
-      throw new Error('The current address is already revealed.');
+      throw new RevealOperationError(
+        `The publicKeyHash '${publicKeyHash}' has already been revealed.`
+      );
     }
   }
 
@@ -378,7 +426,10 @@ export class RpcContractProvider
    */
   async registerGlobalConstant(params: RegisterGlobalConstantParams) {
     const publickKeyHash = await this.signer.publicKeyHash();
-    const estimate = await this.estimate(params, this.estimator.registerGlobalConstant.bind(this.estimator));
+    const estimate = await this.estimate(
+      params,
+      this.estimator.registerGlobalConstant.bind(this.estimator)
+    );
     const operation = await createRegisterGlobalConstantOperation({
       ...params,
       ...estimate,
@@ -387,16 +438,100 @@ export class RpcContractProvider
     const prepared = await this.prepareOperation({ operation: ops, source: publickKeyHash });
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new RegisterGlobalConstantOperation(hash, operation, publickKeyHash, forgedBytes, opResponse, context);
+    return new RegisterGlobalConstantOperation(
+      hash,
+      operation,
+      publickKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
   }
 
-  async at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer: ContractAbstractionComposer<T> = x => x as any): Promise<T> {
+  /**
+   *
+   * @description Originate a new tx rollup. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TxRollupOriginateParams Originate rollup operation parameter
+   */
+  async txRollupOriginate(params?: TxRollupOriginateParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params ? params : {},
+      this.estimator.txRollupOriginate.bind(this.estimator)
+    );
+    const operation = await createTxRollupOriginationOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: publicKeyHash });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TxRollupOriginationOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   *
+   * @description Submit a tx rollup batch. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TxRollupBatchParams Batch tx rollup operation parameter
+   */
+  async txRollupSubmitBatch(params: TxRollupBatchParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.txRollupSubmitBatch.bind(this.estimator)
+    );
+    const operation = await createTxRollupBatchOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: publicKeyHash });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TxRollupBatchOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  async at<T extends DefaultContractType = DefaultContractType>(
+    address: string,
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
+  ): Promise<T> {
+    if (validateContractAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address);
+    }
     const rpc = this.context.withExtensions().rpc;
-    const script = await rpc.getNormalizedScript(address);
-    const entrypoints = await rpc.getEntrypoints(address);
-    const blockHeader = await this.rpc.getBlockHeader();
-    const chainId = blockHeader.chain_id;
-    const abs = new ContractAbstraction(address, script, this, this, entrypoints, chainId);
+    const readProvider = this.context.withExtensions().readProvider;
+    const script = await readProvider.getScript(address, 'head');
+    const entrypoints = await readProvider.getEntrypoints(address);
+    const abs = new ContractAbstraction(
+      address,
+      script,
+      this,
+      this,
+      entrypoints,
+      rpc,
+      readProvider
+    );
     return contractAbstractionComposer(abs, this.context);
   }
 

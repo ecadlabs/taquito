@@ -1,15 +1,22 @@
-import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
+import {
+  Token,
+  TokenFactory,
+  ComparableToken,
+  TokenValidationError,
+  SemanticEncoding,
+} from '../token';
 import BigNumber from 'bignumber.js';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class NatValidationError extends TokenValidationError {
-  name: string = 'NatValidationError';
+  name = 'NatValidationError';
   constructor(public value: any, public token: NatToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class NatToken extends ComparableToken {
-  static prim = 'nat';
+  static prim: 'nat' = 'nat';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -45,17 +52,32 @@ export class NatToken extends ComparableToken {
     }
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
+    if (semantic && semantic[NatToken.prim]) {
+      return semantic[NatToken.prim](val);
+    }
+
     return { int: new BigNumber(val).toFixed() };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return NatToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: NatToken.prim,
+      schema: NatToken.prim,
+    };
   }
 
   public ToBigMapKey(val: string | number) {
@@ -66,7 +88,7 @@ export class NatToken extends ComparableToken {
   }
 
   public ToKey({ int }: any) {
-    return int;
+    return new BigNumber(int);
   }
 
   compare(nat1: string | number, nat2: string | number) {
@@ -84,6 +106,5 @@ export class NatToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

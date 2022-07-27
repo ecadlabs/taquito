@@ -18,7 +18,7 @@ Methods in the RPC package map one-to-one to the corresponding Tezos RPC API end
 
 import { RpcClient } from '@taquito/rpc';
 
-const client = new RpcClient('https://hangzhounet-tezos.giganode.io', 'NetXjD3HPJJjmcd');
+const client = new RpcClient(' https://jakartanet.ecadinfra.com/', 'NetXLH1uAxK7CCh');
 ```
 
 The `RpcClient` constructor takes the URL of the node you want to use and the chain ID.
@@ -96,7 +96,20 @@ const packedData = await client.packData({ data: { string: 'test' }, type: { pri
 console.log('-- Packed data:', packedData);
 ```
 
-You can simulate the `PACK` instruction from Michelson with the `packData` method.
+You can simulate the `PACK` instruction from Michelson with the `packData` method.   
+
+This function will execute Tzip4 views normally referred to as 'Lambda Views'. You can learn more about Tzip4 [here](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints)
+```js
+// runs view
+const view = await client.runView({
+  contract: 'contractAddress',
+  entrypoint: 'contractEntrypoint',
+  chain_id: 'chainId',
+  input: {
+    string: 'testInput'
+  }
+});
+```
 
 ## Full documentation
 
