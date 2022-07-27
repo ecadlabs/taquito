@@ -501,9 +501,5 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
         });
         done();
       });
-
-
-
-
   });
 })
