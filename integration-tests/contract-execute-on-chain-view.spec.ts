@@ -7,6 +7,7 @@ import { HttpResponseError } from "@taquito/http-utils";
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const JandK = (protocol === Protocols.PtJakart2 || protocol === Protocols.PtKathman) ? test : test.skip;
  
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
@@ -14,7 +15,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup(true)
       done()
     })
-    test(`As a user I want to originate a smart contract having top level views and simulate the views execution`, async (done) => {
+    
+    JandK(`As a user I want to originate a smart contract having top level views and simulate the views execution`, async (done) => {
       
       // Contract origination
       const op = await Tezos.contract.originate({
