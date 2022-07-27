@@ -117,7 +117,7 @@ async function checkBalances(users: string | any[]) {
     console.error(ex);
   }
 
-  console.log(`Low balance addresses : ` + low_balance);
+  console.log(`Here are the Low balance addresses : ` + low_balance);
   tezos.setSignerProvider(signer);
   try {
     for (let i = 0; i < low_balance.length; i++) {
