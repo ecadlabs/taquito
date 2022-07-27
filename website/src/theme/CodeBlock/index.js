@@ -29,7 +29,6 @@ import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
-import { ThanosWallet } from '@thanos-wallet/dapp';
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
@@ -119,7 +118,6 @@ export default ({
           Tzip12Module, 
           tzip12,
           TezBridgeWallet,
-          ThanosWallet, 
           DerivationType, 
           TransportWebHID,
           compose,
