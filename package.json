@@ -108,5 +108,8 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"
+  },
+  "dependencies": {
+    "npm": "^8.15.0"
   }
 }
