@@ -15,11 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done()
     })
 
-<<<<<<< HEAD
     it('Verify wallet.originate for a contract with sapling states in its storage', async (done) => {
-=======
-    ithacanet('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
->>>>>>> master
       const op = await Tezos.wallet.originate({
         code: saplingContractDouble,
         storage: {

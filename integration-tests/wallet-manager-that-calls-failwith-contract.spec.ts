@@ -5,10 +5,6 @@ import { MANAGER_LAMBDA } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-<<<<<<< HEAD
-  const test = require('jest-retries');
-=======
->>>>>>> master
 
   describe(`Test contract origination of a contract that calls 2nd contract that FAILs through wallet api: ${rpc}`, () => {
 
@@ -16,11 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-<<<<<<< HEAD
     test('Verify that wallet.originate for a contract with code FAILWITH that links to another contract will fail', 2,  async (done: () => void) => {
-=======
-    test('Catches a Failwith from a contract made with wallet api called via a manager contract',  async (done) => {
->>>>>>> master
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: failwithContractCode,

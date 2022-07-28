@@ -12,11 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-<<<<<<< HEAD
-        hangzhounetOrHigher('Verify the contract.batch transfer and register global constant operations', async (done) => {
-=======
-        test('Batch transfer and register global constant operations', async (done) => {
->>>>>>> master
+        test('Verify the contract.batch transfer and register global constant operations', async (done) => {
             const batchOp = await Tezos.contract
                 .batch([
                     { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },

@@ -8,8 +8,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             await setup()
             done()
         })
+
         it('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async (done) => {
-            const receiver = await createAddress();
+         /** The new unrevealed implicit account is not created by the sender account. 
+         *  We create the new unrevealed implicit account with the createAddress function, which generates a random private key. 
+         * */
+         const receiver = await createAddress();
             const receiver_pkh = await receiver.signer.publicKeyHash();
 
             // create and fund the account we want to empty
@@ -33,14 +37,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             // // Emptying the account
             const totalFees = estimate.suggestedFeeMutez + estimate.burnFeeMutez;
             const maxAmount = balance.minus(totalFees).toNumber();
-<<<<<<< HEAD
 
             // Temporary fix, see https://gitlab.com/tezos/tezos/-/issues/1754
             // we need to increase the gasLimit and fee returned by the estimation
-=======
-            // // Temporary fix, see https://gitlab.com/tezos/tezos/-/issues/1754
-            // // we need to increase the gasLimit and fee returned by the estimation
->>>>>>> master
             const gasBuffer = 500;
             const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
             const increasedFee = (gasBuffer: number, opSize: number) => {
@@ -48,7 +47,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
              }
 
             const opTransfer = await sender.contract.transfer({
-<<<<<<< HEAD
                 to: receiver_pkh,
                 mutez: true,
                 amount: maxAmount - increasedFee(gasBuffer, Number(estimate.opSize)),
@@ -56,15 +54,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
                 gasLimit: estimate.gasLimit + gasBuffer,
                 storageLimit: estimate.storageLimit
             });
-=======
-                 to: receiver_pkh,
-                 mutez: true,
-                 amount: maxAmount - increasedFee(gasBuffer, Number(estimate.opSize)),
-                 fee: estimate.suggestedFeeMutez + increasedFee(gasBuffer, Number(estimate.opSize)), // baker fees
-                 gasLimit: estimate.gasLimit + gasBuffer,
-                 storageLimit: estimate.storageLimit 
-             });
->>>>>>> master
 
              await opTransfer.confirmation();
              const finalBalance = await Tezos.tz.getBalance(sender_pkh);

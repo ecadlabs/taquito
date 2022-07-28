@@ -34,7 +34,6 @@ CONFIGS().forEach(
 
       const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
-<<<<<<< HEAD
         describe(`Test calling all methods from RPC node: ${rpc}`, () => {
             it('Verify rpcClient.getBlockHash returns the head block hash', async (done) => {
                 const blockHash = await rpcClient.getBlockHash();
@@ -84,7 +83,7 @@ CONFIGS().forEach(
                 done();
             });
 
-              skipIdiazabalnet(`Verify that rpcClient.getDelegate for known baker returns an access the delegate of a contract`, async (done) => {
+              it(`Verify that rpcClient.getDelegate for known baker returns an access the delegate of a contract`, async (done) => {
                 const delegate = await rpcClient.getDelegate(knownBaker);
                 expect(delegate).toBeDefined();
                 done();
@@ -120,7 +119,7 @@ CONFIGS().forEach(
                 done();
             });
 
-            skipIdiazabalnet(`Verify that rpcClient.getDelegates for known baker returns information about a delegate from RPC`, async (done) => {
+            it(`Verify that rpcClient.getDelegates for known baker returns information about a delegate from RPC`, async (done) => {
                 const delegates = await rpcClient.getDelegates(knownBaker);
                 expect(delegates).toBeDefined();
                 done();
@@ -320,13 +319,6 @@ CONFIGS().forEach(
                 expect(successorPeriod).toBeDefined();
                 done();
             });
-=======
-      describe(`Test calling all methods from RPC node: ${rpc}`, () => {
-        it('Get the head block hash', async (done) => {
-          const blockHash = await rpcClient.getBlockHash();
-          expect(blockHash).toBeDefined();
-          done();
->>>>>>> master
         });
 
         it('List the ancestors of the head block', async (done) => {
@@ -700,5 +692,3 @@ CONFIGS().forEach(
         });
       });
     });
-  }
-);

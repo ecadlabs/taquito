@@ -5,24 +5,14 @@ import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }) => {
     const Tezos = lib;
-<<<<<<< HEAD
-    const test = require('jest-retries');
-
-    describe(`Test wallet.batch through wallet api using: ${rpc}`, () => {
-=======
     
     describe(`Test wallet.batch using: ${rpc}`, () => {
->>>>>>> master
         beforeEach(async (done) => {
             await setup();
             done();
         });
 
-<<<<<<< HEAD
-        test('Verify wallet.batch simple transfers with origination code in JSON Michelson format', 2, async (done: () => void) => {
-=======
-        test('Simple transfers with origination (with code in JSON Michelson format)', async (done) => {
->>>>>>> master
+        test('Verify wallet.batch simple transfers with origination code in JSON Michelson format', async (done) => {
             const batch = Tezos.wallet
                 .batch()
                 .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -51,11 +41,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-<<<<<<< HEAD
-        test('Verify wallet.batch simple transfers with origination code in Michelson format', 2, async (done: () => void) => {
-=======
-        test('Simple transfers with origination (with code in Michelson format)', async (done) => {
->>>>>>> master
+        test('Verify wallet.batch simple transfers with origination code in Michelson format', async (done) => {
             const batch = Tezos.wallet
                 .batch()
                 .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -84,11 +70,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-<<<<<<< HEAD
-        test('Verify wallet.batch simple transfers with origination', 2, async (done: () => void) => {
-=======
-        test('Simple transfers with origination using with', async (done) => {
->>>>>>> master
+        test('Verify wallet.batch simple transfers with origination', async (done) => {
             const op = await Tezos.wallet
                 .batch([
                     {
@@ -123,11 +105,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-<<<<<<< HEAD
-        test('Verify wallet.batch simple transfers from an account with low balance', 2, async (done: () => void) => {
-=======
-        test('Test batch from account with low balance', async (done) => {
->>>>>>> master
+        test('Verify wallet.batch simple transfers from an account with low balance', async (done) => {
             const LocalTez = await createAddress();
             const op = await Tezos.wallet.transfer({ to: await LocalTez.wallet.pkh(), amount: 2 }).send();
             await op.confirmation();
@@ -155,11 +133,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-<<<<<<< HEAD
-        test('Verify wallet.batch simple transfers with chained contract calls', 2, async (done: () => void) => {
-=======
-        test('Chain contract calls', async (done) => {
->>>>>>> master
+        test('Verify wallet.batch simple transfers with chained contract calls', async (done) => {
             const op = await Tezos.wallet
                 .originate({
                     balance: '1',
@@ -198,11 +172,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
 
-<<<<<<< HEAD
-        test('Verify wallet.batch with contract.method call', 2, async (done: () => void) => {
-=======
-        test('Batch transfers and method call', async (done) => {
->>>>>>> master
+        test('Verify wallet.batch with contract.method call', async (done) => {
             const contract = await Tezos.wallet.at(knownContract);
             const batch = await Tezos.wallet
                 .batch([
@@ -214,7 +184,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
 
             const conf1 = await batch.confirmation();
             const currentConf1 = await batch.getCurrentConfirmation();
-
+            
             expect(currentConf1).toEqual(1);
             expect(conf1).toEqual(
                 expect.objectContaining({

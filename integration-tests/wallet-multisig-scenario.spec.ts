@@ -10,11 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup()
       done()
     })
-<<<<<<< HEAD:integration-tests/multisig-wallet-scenario.spec.ts
     test('Verify contract.originate for a contract with multiple signatures', 2, async (done: () => void) => {
-=======
-    test('test manager transfers scenarios for wallet api contract', async (done) => {
->>>>>>> master:integration-tests/wallet-multisig-scenario.spec.ts
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();

@@ -75,13 +75,8 @@ const ithacanetEphemeral = {
   },
 };
 
-<<<<<<< HEAD
-const hangzhounetEphemeral: Config = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
-=======
 const jakartanetEphemeral = {
   rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com',
->>>>>>> master
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
   knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
@@ -95,15 +90,6 @@ const jakartanetEphemeral = {
   },
 };
 
-<<<<<<< HEAD
-const granadanetEphemeral: Config = {
-  rpc: process.env['TEZOS_RPC_GRANADANET'] || 'https://granadanet.api.tez.ie',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1JMwgeC7MwYiMiZd74gXK6wrY7QNf1NwLX',
-  knownBigMapContract: 'KT1VniFqNCPEq4MXvnjYGvUqdWDhooJM5Nae',
-  knownTzip1216Contract: 'KT1UbCaj7rCgiNi9X5oMnAsFSXSkGjwycL4p',
-  protocol: Protocols.PtGRANADs,
-=======
 const mondaynetEphemeral = {
   rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
   knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
@@ -112,7 +98,6 @@ const mondaynetEphemeral = {
   knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || '',
   knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || '',
   protocol: Protocols.ProtoALpha,
->>>>>>> master
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
@@ -173,49 +158,7 @@ const jakartanetFaucet = {
         "rare",
         "bridge",
         "arrange",
-<<<<<<< HEAD
-        "practice",
-        "fiber",
-        "speed",
-        "delay",
-        "economy",
-        "wine",
-        "cable",
-        "copper",
-        "sweet",
-        "bag",
-        "wasp"
-      ],
-      "email": "hxkxykcy.edpwomka@teztnets.xyz",
-      "password": "vzVIvhuItq",
-      "amount": "143524244923",
-      "secret": "c83d1fba98e408bc142b3a9568a27207e5544b99"
-    },
-  }
-}
-
-const hangzhounetFaucet: Config = {
-  rpc: process.env['TEZOS_RPC_HANGZHOUNET'] || 'https://hangzhounet.api.tez.ie',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1XfoRSZ88ioYHbuEKqHxJPawm9Rqc54uoy',
-  knownBigMapContract: 'KT1CnRSbp71FU8nz4xNEkcaASgMQDjNN85jd',
-  knownTzip1216Contract: 'KT1KquwVmLtq9StwCK46vpwRCxowqhcoV4g1',
-  protocol: Protocols.PtHangz2,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: {
-      "mnemonic": [
-        "hero",
-        "calm",
-        "fever",
-        "defense",
-        "sound",
-        "amount",
-        "critic",
-        "quote",
-=======
         "lab",
->>>>>>> master
         "finger",
         "then",
         "cube",

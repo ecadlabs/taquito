@@ -10,11 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       await setup()
       done()
     })
-<<<<<<< HEAD:integration-tests/manager-wallet-scenario.spec.ts
     test('Verify wallet.transfer from one Baker to another', 2, async (done: () => void) => {
-=======
-    test('tests manager transfer scenarioswith wallet APi contract', async (done) => {
->>>>>>> master:integration-tests/wallet-manager-scenario.spec.ts
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: managerCode,

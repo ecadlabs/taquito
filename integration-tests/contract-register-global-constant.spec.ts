@@ -4,14 +4,8 @@ const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-<<<<<<< HEAD
-  const hangzhounetOrHigher = (protocol === Protocols.PtHangz2 || protocol === Protocols.PtIdiaza) ? test : test.skip;
-
-  describe(`Test contract register global constants through contract api using: ${rpc}`, () => {
-=======
   
   describe(`Register global constants using: ${rpc}`, () => {
->>>>>>> master
     const randomAnnots = () => crypto.randomBytes(3).toString('hex');
     let annots = randomAnnots();
 
@@ -20,11 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-<<<<<<< HEAD
-    hangzhounetOrHigher('Verify contract.registerGlobalConstant to register a Micheline expression to the global table of constants', async (done) => {
-=======
-    test('Register a Micheline expression to the global table of constants', async (done) => {
->>>>>>> master
+    test('Verify contract.registerGlobalConstant to register a Micheline expression to the global table of constants', async (done) => {
       // We use a randomized annots in the Micheline expression because an expression can only be registered once.
       const op = await Tezos.contract.registerGlobalConstant({
         value: {
@@ -47,13 +37,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-<<<<<<< HEAD
-    hangzhounetOrHigher(
-      'Verify contract.registerGlobalConstant to register a global constant and deploy a contract with the constant',
-=======
     test(
-      'Register a Micheline expression to the global table of constants with auto-estimation of the fee, storage limit and gas limit',
->>>>>>> master
+      'Verify contract.registerGlobalConstant to register a global constant and deploy a contract with the constant with auto-estimation of the fee, storage limit and gas limit',
       async (done) => {
         const op = await Tezos.contract.registerGlobalConstant({
           value: {

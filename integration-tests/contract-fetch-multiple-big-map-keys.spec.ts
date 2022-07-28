@@ -8,11 +8,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const test = require('jest-retries');
 
     describe(`Test contract origination with multiple BigMap variations through contract api using: ${rpc}`, () => {
+        /**  The contract code doesn't have annotations, so the keys of the storage and of the bigmap are indexes. */
+
         beforeEach(async (done) => {
             await setup();
             done();
         });
-        test('Verify contract.originate for a contract with multiple BigMap (also fetching the Storage/BigMap)', 2, async (done: () => void) => {
+
+        test('Verify contract.originate for a contract with a BigMap with multiple values to be indexed (also fetching the Storage/BigMap)', 2, async (done: () => void) => {
 
             const signer = await Tezos.signer.publicKeyHash();
 

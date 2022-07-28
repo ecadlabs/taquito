@@ -30,11 +30,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-<<<<<<< HEAD
-    test('Verify contract.originate for a contract with sapling states in its storage', 2, async (done: () => void) => {
-=======
     ithacanet('Originates a Sapling Double contract', async (done) => {
->>>>>>> master
       const op = await Tezos.contract.originate({
         code: saplingContractDouble,
         init: `(Pair {} {})`,

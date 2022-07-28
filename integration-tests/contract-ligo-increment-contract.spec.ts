@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    it('Verify contract.originate for a contract in Michelson format produced by LIGO (also increments a counter in a storage)', async (done) => {
+    it('Verify contract.originate for a contract in JSON Michelson format produced by LIGO (also increments a counter in the storage)', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: ligoSample,
