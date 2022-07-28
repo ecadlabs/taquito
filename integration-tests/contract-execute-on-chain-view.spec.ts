@@ -60,7 +60,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         '1': new BigNumber(2000000), // BALANCE is the balance of the contract where the view is
         '2': contract.address, // SELF_ADDRESS is the address of the contract where the view is
         '3': contract.address, // SENDER
-        '4': 'tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU'// SOURCE
+        '4': source// SOURCE
       });
 
       // return parameter of the view and storage value
@@ -117,7 +117,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       });
       await op.confirmation();
       const contract = await op.contract();
-
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
@@ -144,6 +143,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           '4': 'address'
         }
       });
+
       const viewStepConstantsResult = await contract.contractViews.step_constants().executeView({ source, viewCaller: contract.address });
       expect(viewStepConstantsResult).toEqual({
         '0': new BigNumber(0), // AMOUNT is always 0
