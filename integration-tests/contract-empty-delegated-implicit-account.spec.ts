@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       await setup()
       done()
     })
-    test('Verify that new Account can be created, delegated and attempt to empty, it should fail despite delegation through contract api', 2,  async (done: () => void) => {
+    test('Verify that new Account can be created, delegated and attempt to empty, it should fail despite delegation through contract api', async (done: () => void) => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 0.02 });
       await op.confirmation();

@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    test('Verify that wallet.originate for a contract with code FAILWITH that links to another contract will fail', 2,  async (done: () => void) => {
+    test('Verify that wallet.originate for a contract with code FAILWITH that links to another contract will fail', async (done: () => void) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: failwithContractCode,
