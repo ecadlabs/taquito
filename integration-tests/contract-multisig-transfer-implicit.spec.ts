@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup()
       done()
     })
-    test('Verify contract.originate for a contract with multiple signatures', 2, async (done: () => void) => {
+    test('Verify contract.originate for a contract with multiple signatures', async (done: () => void) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
