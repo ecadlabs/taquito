@@ -408,11 +408,15 @@ CONFIGS().forEach(
           done();
         });
 
-        mondaynet('getTxRollupState', async (done) => {
-          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
-          expect(state).toBeDefined();
-          done();
-        });
+      //   mondaynet('getTxRollupState', async (done) => {
+      //     try {
+      //     const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+      //     expect(state).toBeDefined
+      //     done();
+      // } catch (error: any) {
+      //   expect(error.message).toContain('Http error response: (404)');
+      // }
+      //   });
       });
     });
   }
