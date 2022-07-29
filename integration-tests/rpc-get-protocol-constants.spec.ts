@@ -705,6 +705,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 sc_rollup_commitment_period_in_blocks: 30,
                 sc_rollup_enable: false,
                 sc_rollup_max_active_outbox_levels: 20160,
+                sc_rollup_message_size_limit: 4096,
                 sc_rollup_max_lookahead_in_blocks: 30000,
                 sc_rollup_max_number_of_messages_per_commitment_period: 32765,
                 sc_rollup_max_outbox_messages_per_level: 100,
