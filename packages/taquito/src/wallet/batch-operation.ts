@@ -29,12 +29,10 @@ export class BatchWalletOperation extends WalletOperation {
   public getOriginatedContractAddresses = async (): Promise<string[]> => {
     const opResult = await this.operationResults();
 
-    console.log(`DI DALEM: ${JSON.stringify(opResult)}`);
     const originationOpResults = opResult.filter(
       (x) => x.kind === 'origination'
     ) as OperationContentsAndResultOrigination[];
 
-    console.log(`ABIS FILTER: ${JSON.stringify(originationOpResults)}`);
     let addresses: string[] = [];
     for (const res of originationOpResults) {
       if (res.metadata.operation_result.originated_contracts) {
@@ -51,7 +49,6 @@ export class BatchWalletOperation extends WalletOperation {
     }
 
     const op = await this.operationResults();
-    console.log(`OPERATION RESULTS: ${JSON.stringify(op)}`);
 
     return (
       op
