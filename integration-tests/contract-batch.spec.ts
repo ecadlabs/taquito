@@ -2,7 +2,6 @@ import { CONFIGS } from './config';
 import { ligoSample, ligoSampleMichelson } from './data/ligo-simple-contract';
 import { managerCode } from './data/manager_code';
 import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
-import { BatchOperation } from 'taquito/dist/types/operations';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }) => {
     const Tezos = lib;
@@ -164,23 +163,18 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             done();
         });
 
-        test('Batch multiple originations and get contract address info from originatedConctractAddresses member variable', async (done) => {
+        test('Batch multiple originations and get contract address info from getOriginatedContractAddresses member function', async (done) => {
           const batch = Tezos.contract
               .batch()
               .withOrigination({
                 balance: '1',
                 code: ligoSample,
                 storage: 0
-              })
-              .withOrigination({
-                balance: '1',
-                code: ligoSampleMichelson,
-                storage: 0
-              })
+              });
               
           const op = await batch.send();
           await op.confirmation();
-          
+
           const addresses = op.getOriginatedContractAddresses();
           expect(op.status).toEqual('applied');
           expect(addresses.length).toEqual(2);

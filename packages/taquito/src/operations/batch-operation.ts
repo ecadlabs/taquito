@@ -34,13 +34,16 @@ export class BatchOperation
   }
 
   public getOriginatedContractAddresses(): string[] {
+    console.log(`${JSON.stringify(this.results)}`);
     const originationOpResults = this.results.filter(
       (x) => x.kind === 'origination'
     ) as OperationContentsAndResultOrigination[];
 
     let addresses: string[] = [];
     for (const res of originationOpResults) {
-      addresses = [...addresses, ...res.metadata.operation_result.originated_contracts!];
+      if (res.metadata.operation_result.originated_contracts) {
+        addresses = [...addresses, ...res.metadata.operation_result.originated_contracts];
+      }
     }
 
     return addresses;
