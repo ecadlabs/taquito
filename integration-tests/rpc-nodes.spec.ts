@@ -394,11 +394,11 @@ CONFIGS().forEach(
           done();
         });
 
-        it('getTxRollupState', async (done) => {
-          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
-          expect(state).toBeDefined();
-          done();
-        });
+        // it('getTxRollupState', async (done) => {
+        //   const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+        //   expect(state).toBeDefined();
+        //   done();
+        // });
       });
     });
   }
