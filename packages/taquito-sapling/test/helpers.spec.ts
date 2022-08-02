@@ -1,7 +1,7 @@
-import { memoHexToUtf8 } from '../src/helpers';
+import { memoHexToUtf8 } from '../src/sapling-tx-viewer/helpers';
 
 describe('Sapling helper functions', () => {
-  it('Should transform memo to utf8 string', async (done) => {
+  it('Should transform memo to utf8 string', () => {
     const memoTaco = Buffer.from([116, 97, 99, 111]).toString('hex');
     expect(memoHexToUtf8(memoTaco)).toEqual('taco');
 
@@ -16,7 +16,5 @@ describe('Sapling helper functions', () => {
 
     const memoHi = Buffer.from([104, 105, 0, 0, 0, 0, 0, 0]).toString('hex');
     expect(memoHexToUtf8(memoHi)).toEqual('hi');
-
-    done();
   });
 });

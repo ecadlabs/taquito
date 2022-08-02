@@ -8,7 +8,7 @@ import { MerkleTree, SaplingStateTree } from './interface';
 import { SaplingDiffResponse, SaplingTransactionCiphertext } from '@taquito/rpc';
 import { InvalidMerkleRootError, TreeConstructionFailure } from '../error';
 import { merkleHash } from '@airgap/sapling-wasm';
-import { Lazy, pairNodes, changeEndianness } from '../utils';
+import { Lazy, pairNodes, changeEndianness } from './utils';
 import { hex2Bytes, num2PaddedHex } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 

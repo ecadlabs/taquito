@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 export interface SpendDescription {
   cv: Buffer;
   nf: Buffer;
@@ -25,7 +27,7 @@ export interface SaplingTransaction {
   spendDescriptions: SpendDescription[];
   outputDescriptions: OutputDescription[];
   signature: Buffer;
-  balance: Buffer;
+  balance: BigNumber;
   root: Buffer;
   boundData: Buffer;
 }
