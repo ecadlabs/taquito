@@ -19,7 +19,6 @@ import { contractMapTacoShop } from './data/contractSingleMapStorage';
 import { contractJson } from './data/contractJson';
 import { contractOnChainViews } from './data/contractOnChainViews';
 import { tokenCode, tokenInit } from '../integration-tests/data/tokens';
-import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { tacoContractTzip16 } from '../integration-tests/data/modified-taco-contract';
 import {
   contractCode,
@@ -162,7 +161,6 @@ async function originateTheContracts() {
   contract_catalogue.set('ContractCallFib', await originateContractCallFib());
   contract_catalogue.set('ContractTopLevelViews', await originateContractTopLevelViews());
   contract_catalogue.set('TokenContract', await originateTokenContract());
-  contract_catalogue.set('Tzip12BigMapOffChainContract', await originateTZip12BigMapOffChain());
   contract_catalogue.set('Tzip16StorageContract', await originateTzip16Storage());
   contract_catalogue.set('Tzip16HTTPSContract', await originateTzip16Https());
   contract_catalogue.set('Tzip16SHA256Contract', await originateTzip16SHA256());
