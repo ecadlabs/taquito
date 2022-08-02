@@ -267,7 +267,7 @@ CONFIGS().forEach(
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
-            expect(ex.message).toContain('Hex.to_char: 112 is an invalid char');
+            expect(ex.message).toContain('112 is an invalid char');
           }
           done();
         });
