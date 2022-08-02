@@ -61,7 +61,7 @@ interface FaucetConfig {
 }
 
 const kathmandunetEphemeral = {
-  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
   knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
@@ -76,7 +76,7 @@ const kathmandunetEphemeral = {
 };
 
 const jakartanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'http://ecad-jakartanet-archive.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
   knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
