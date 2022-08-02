@@ -5588,6 +5588,9 @@
 "fs.realpath@^1.0.0":
   "version" "1.0.0"
 
+"fsevents@~2.3.2":
+  "version" "2.3.2"
+
 "function-bind@^1.1.1":
   "version" "1.1.1"
 

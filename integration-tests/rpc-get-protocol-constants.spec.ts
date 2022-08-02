@@ -676,7 +676,6 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                     numerator: 2,
                 },
                 max_slashing_period: 2,
-                max_wrapped_proof_binary_size: 30000,
                 frozen_deposits_percentage: 10,
                 double_baking_punishment: new BigNumber(640000000),
                 ratio_of_frozen_deposits_slashed_per_double_endorsement: {
@@ -697,6 +696,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 cache_script_size: 100000000,
                 cache_stake_distribution_cycles: 8,
                 cycles_per_voting_period: 1,
+                sc_max_wrapped_proof_binary_size: 30000,
                 sc_rollup_challenge_window_in_blocks: 20160,
                 sc_rollup_commitment_period_in_blocks: 30,
                 sc_rollup_enable: false,

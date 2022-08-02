@@ -37,6 +37,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => 
       const removeDelegateOp = await contract.methods.do(MANAGER_LAMBDA.removeDelegate()).send({ amount: 0 })
       await removeDelegateOp.confirmation();
       expect(removeDelegateOp.status).toBeTruthy
+      
+      const account = await Tezos.rpc.getDelegate(knownBaker)
+      expect(account).toEqual(knownBaker) 
       // Transfer from contract (kt1_alice) to contract (kt1 bob)
       // Notice that we are instructing the kt1_alice contract to send 1 token to kt1_bob. The transfer value is passed to the
       // lambda helper function. The transfer amount in the actual transfer operation is 0. We are not transferring the token
