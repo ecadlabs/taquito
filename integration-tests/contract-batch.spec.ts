@@ -170,11 +170,16 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
                 balance: '1',
                 code: ligoSample,
                 storage: 0
-              });
+              })
+              .withOrigination({
+                balance: '1',
+                code: ligoSampleMichelson,
+                storage: 0
+              })
               
           const op = await batch.send();
           await op.confirmation();
-
+          
           const addresses = op.getOriginatedContractAddresses();
           expect(op.status).toEqual('applied');
           expect(addresses.length).toEqual(2);
