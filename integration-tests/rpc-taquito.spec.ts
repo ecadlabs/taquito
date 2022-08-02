@@ -10,7 +10,6 @@ CONFIGS().forEach(({ rpc }) => {
             it('should find get a block using default syntax', async (done) => {
                 // defaults to /chains/main/blocks/head/
                 const block = await client.getBlock();
-
                 expect(block.protocol).toBeTruthy();
                 done();
             })
