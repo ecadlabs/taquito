@@ -2,16 +2,15 @@ import { CONFIGS } from "./config";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
   const Tezos = lib;
-  const test = require('jest-retries')
 
-  describe(`Generic Multisig: ${rpc}`, () => {
+  describe(`Generic Multisig transfer to contract: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('test manager transfers scenarios', 2, async (done: () => void) => {
+    test('test manager transfers scenarios', async (done: () => void) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
@@ -27,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       })
       const contract = await op.contract();
-      expect(op.status).toEqual('applied')
+      expect(op.status).toEqual('applied')  
 
       // Utility function that mimics the PAIR operation of michelson
       // file deepcode ignore no-any: any is good enough
@@ -54,7 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             { "int": "0" },
             {
               prim: 'Left',
-              args: [MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 500)]
+              args: [MANAGER_LAMBDA.transferToContract(knownContract, 1)]
             }
           ]
         } as any,
@@ -111,18 +110,25 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const signature1 = await account1.signer.sign(packed, new Uint8Array())
       const signature2 = await account2.signer.sign(packed, new Uint8Array())
 
+      const start_balance = await Tezos.tz.getBalance(knownContract)
+
       const op2 = await contract.methods.main(
         // Counter
         "0",
         // Sub function
         'operation',
         // Action
-        MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 500),
+        MANAGER_LAMBDA.transferToContract(knownContract, 1),
         // Signature list
         [signature1.prefixSig, signature2.prefixSig, null]
       ).send()
 
       await op2.confirmation();
+      expect(op2.status).toEqual('applied')
+
+      const end_balance = await Tezos.tz.getBalance(knownContract)
+      expect(end_balance.toNumber()).toEqual((start_balance.toNumber() + 1))
+      
       done();
     })
   })
