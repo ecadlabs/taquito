@@ -4,11 +4,9 @@ import { hex2buf, mergebuf } from '@taquito/utils';
 import { CommitmentsAndCiphertexts, RpcClient, RpcClientInterface } from '@taquito/rpc';
 import blake from 'blakejs';
 import { openSecretBox } from '@stablelib/nacl';
-import { InMemoryViewingKey } from './in-memory-viewing-key';
+import { InMemoryViewingKey } from '../sapling-keys/in-memory-viewing-key';
 import { bufToUint8Array, convertValueToBigNumber, readableFormat } from './helpers';
-
-const KDF_KEY = 'KDFSaplingForTezosV1';
-const OCK_KEY = 'OCK_keystringderivation_TEZOS';
+import { KDF_KEY, OCK_KEY } from '../constants';
 
 export interface SaplingIncomingAndOutgoingTransaction {
   incoming: SaplingIncomingTransaction[];
@@ -53,7 +51,7 @@ export class SaplingTransactionViewer {
    * @description Retrieve the unspent balance associated with the configured viewing key
    *
    * @param saplingId sapling id that can be found in the contract storage
-   * @returns the balance represented as a BigNumber
+   * @returns the balance in mutez represented as a BigNumber
    *
    */
   async getBalance(saplingId: string): Promise<BigNumber> {
@@ -109,7 +107,7 @@ export class SaplingTransactionViewer {
           i,
           nullifiers
         );
-        incoming.push({ ...decryptedAsReceiver, isSpent });
+        incoming.push({ ...decryptedAsReceiver, isSpent, position: i });
       }
       if (decryptedAsSender) {
         outgoing.push(decryptedAsSender);

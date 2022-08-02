@@ -1,5 +1,5 @@
-import { SaplingTransactionViewer } from '../src/sapling-transaction-viewer';
-import { InMemoryViewingKey } from '../src/in-memory-viewing-key';
+import { SaplingTransactionViewer } from '../src/sapling-tx-viewer/sapling-transaction-viewer';
+import { InMemoryViewingKey } from '../src/sapling-keys/in-memory-viewing-key';
 import { saplingStateDiff, saplingStateDiffMemo4 } from './data';
 import BigNumber from 'bignumber.js';
 
@@ -114,6 +114,7 @@ describe('SaplingTransactionViewer', () => {
             132, 27, 72, 208, 32, 138, 128, 112, 14, 34, 153, 61, 38, 89, 83, 150, 9, 75, 32, 82,
             221, 192, 178, 66, 70,
           ]),
+          position: 0,
           rcm: new Uint8Array([
             36, 172, 48, 219, 73, 224, 5, 79, 74, 89, 93, 209, 250, 102, 226, 180, 52, 197, 67, 240,
             191, 75, 110, 117, 240, 29, 231, 138, 161, 173, 197, 0,

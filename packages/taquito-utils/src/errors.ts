@@ -5,7 +5,9 @@
 export class InvalidKeyError extends Error {
   public name = 'InvalidKeyError';
   constructor(public key: string, public errorDetail?: string) {
-    super(`The key ${key} is invalid. ${errorDetail}`);
+    super();
+    const baseMessage = `The key ${key} is invalid.`;
+    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
   }
 }
 
@@ -16,7 +18,9 @@ export class InvalidKeyError extends Error {
 export class InvalidPublicKeyError extends Error {
   public name = 'InvalidPublicKeyError';
   constructor(public publicKey: string, errorDetail?: string) {
-    super(`The public key '${publicKey}' is invalid. ${errorDetail}`);
+    super();
+    const baseMessage = `The public key '${publicKey}' is invalid.`;
+    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
   }
 }
 
@@ -27,7 +31,9 @@ export class InvalidPublicKeyError extends Error {
 export class InvalidSignatureError extends Error {
   public name = 'InvalidSignatureError';
   constructor(public signature: string, errorDetail?: string) {
-    super(`The signature '${signature}' is invalid (${errorDetail})`);
+    super();
+    const baseMessage = `The signature '${signature}' is invalid.`;
+    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
   }
 }
 
@@ -38,7 +44,9 @@ export class InvalidSignatureError extends Error {
 export class InvalidMessageError extends Error {
   public name = 'InvalidMessageError';
   constructor(public msg: string, public errorDetail?: string) {
-    super(`The message '${msg}' is invalid. ${errorDetail}`);
+    super();
+    const baseMessage = `The message '${msg}' is invalid.`;
+    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
   }
 }
 
@@ -59,8 +67,10 @@ export class InvalidContractAddressError extends Error {
  */
 export class InvalidAddressError extends Error {
   public name = 'InvalidAddressError';
-  constructor(public address: string) {
-    super(`The address '${address}' is invalid`);
+  constructor(public address: string, errorDetail?: string) {
+    super();
+    const baseMessage = `The address '${address}' is invalid.`;
+    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
   }
 }
 

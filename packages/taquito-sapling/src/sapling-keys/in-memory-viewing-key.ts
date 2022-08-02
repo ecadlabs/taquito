@@ -1,6 +1,6 @@
 import { b58cdecode, b58cencode, Prefix, prefix, validateSpendingKey } from '@taquito/utils';
 import * as sapling from '@airgap/sapling-wasm';
-import { InvalidSpendingKey } from './error';
+import { InvalidSpendingKey } from '../error';
 
 /**
  * @description Holds the viewing key
