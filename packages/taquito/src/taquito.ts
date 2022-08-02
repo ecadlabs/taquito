@@ -10,7 +10,7 @@ import { Protocols } from './constants';
 import { ConfigConfirmation, Context, TaquitoProvider } from './context';
 import { ContractProvider } from './contract/interface';
 import { Extension } from './extension/extension';
-import { format } from './format';
+import { format } from '@taquito/utils';
 import { GlobalConstantsProvider } from './global-constants/interface-global-constants-provider';
 import { NoopGlobalConstantsProvider } from './global-constants/noop-global-constants-provider';
 import { Packer } from './packer/interface';

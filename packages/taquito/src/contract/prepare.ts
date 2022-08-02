@@ -19,7 +19,7 @@ import {
   RPCTxRollupBatchOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { format } from '../format';
+import { format } from '@taquito/utils';
 import { InvalidCodeParameter, InvalidInitParameter, OriginationParameterError } from './errors';
 
 export const createOriginationOperation = async ({
