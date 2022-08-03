@@ -25,7 +25,7 @@ author: Roxane Letourneau
 | SmartPy          | Jakartanet  | https://jakartanet.smartpy.io/     | [Check](https://jakartanet.smartpy.io/chains/main/blocks/head/header)    |
 | SmartPy          | Ghostnet    | https://ghostnet.smartpy.io/       | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header)    |
 | Tezos Foundation | Mainnet     | https://rpc.tzbeta.net/            | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)      |
-| Tezos Foundation | Jakertanet  | https://rpczero.tzbeta.net/        | [Check](https://rpczero.tzbeta.net/chains/main/blocks/head/header)      |
+| Tezos Foundation | Jakartanet  | https://rpczero.tzbeta.net/        | [Check](https://rpczero.tzbeta.net/chains/main/blocks/head/header)      |
 | GigaNode         | Mainnet     | https://mainnet-tezos.giganode.io  |  [Check](https://mainnet-tezos.giganode.io/chains/main/blocks/head/header)     |
 | GigaNode         | Jakartanet  | https://testnet-tezos.giganode.io/ | [Check](https://testnet-tezos.giganode.io/chains/main/blocks/head/header)      |
 | Marigold         | Mainnet     | https://mainnet.tezos.marigold.dev/    | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
