@@ -2,6 +2,8 @@
 title: RPC nodes
 author: Roxane Letourneau
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## What to consider when choosing a node
 
@@ -18,8 +20,6 @@ values={[
 {label: 'Commercial Nodes', value: 'commercialNodes'},
 ]}>
 <TabItem value="communityNodes">
-
-*If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
 | Provider         | Net         | URL                                | Header      |  
 |------------------|-------------|------------------------------------|-------|
@@ -40,13 +40,17 @@ values={[
 | Marigold         | Ghostnet    | https://ghostnet.tezos.marigold.dev/  | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 | TezTools         | Jakartanet  | https://eu01-node.teztools.net/  | [Check](https://eu01-node.teztools.net/chains/main/blocks/head/header)   |
 
+*If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 </TabItem>
   <TabItem value="commercialNodes">
 
-| Provider         | Net         | INFORMATION URL                                    |  
-|------------------|-------------|------------------------------------------------------------------------|
-| MIDL.dev         | Mainnet     | https://midl.dev/tezos-rpc/            |
-| Cryptonomic      | Mainnet     | https://github.com/keefertaylor/TezosKit/blob/master/docs/TezosNode.md |
+| Provider         |  Details                                    |  
+|------------------|------------------------------------------------------------------------|
+| MIDL.dev         |  https://midl.dev/tezos-rpc/            |
+| Cryptonomic      |  https://github.com/keefertaylor/TezosKit/blob/master/docs/TezosNode.md |
+| TezTools.io      |  https://t.me/teztools (Telegram) |
+
+*If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
   </TabItem>
 </Tabs>
