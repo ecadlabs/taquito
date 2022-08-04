@@ -273,6 +273,15 @@ CONFIGS().forEach(
           done();
         });
 
+        mondaynet('Inject an operation in node and broadcast it', async (done) => {
+          try {
+            const injectedOperation = await rpcClient.injectOperation('operation');
+          } catch (ex: any) {
+            expect(ex.message).toContain('Http error response:');
+          }
+          done();
+        });
+
         it('Simulate the validation of an operation', async (done) => {
           try {
             // the account needs to be revealed first
