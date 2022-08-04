@@ -38,6 +38,7 @@ values={[
 | Marigold         | Jakartanet  | https://jakartanet.tezos.marigold.dev/ | [Check](https://jakartanet.tezos.marigold.dev/chains/main/blocks/head/header)  |
 | Marigold         | Kathmandunet| https://kathmandunet.tezos.marigold.dev/  | [Check](https://kathmandunet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 | Marigold         | Ghostnet    | https://ghostnet.tezos.marigold.dev/  | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)   |
+| TezTools         | Jakartanet  | https://eu01-node.teztools.net/  | [Check](https://eu01-node.teztools.net/chains/main/blocks/head/header)   |
 
 </TabItem>
   <TabItem value="commercialNodes">
