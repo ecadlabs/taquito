@@ -400,7 +400,6 @@ CONFIGS().forEach(
            expect(state).toBeDefined();
            done();
          });
-
          
         kathmandunet('getTxRollupInbox', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ', '0');
