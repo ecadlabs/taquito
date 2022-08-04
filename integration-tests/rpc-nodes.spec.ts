@@ -268,6 +268,16 @@ CONFIGS().forEach(
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
             expect(ex.message).toContain('112 is an invalid char');
+
+          }
+          done();
+        });
+
+        mondaynet('Inject an operation in node and broadcast it', async (done) => {
+          try {
+            const injectedOperation = await rpcClient.injectOperation('operation');
+          } catch (ex: any) {
+            expect(ex.message).toContain('Http error response:');
           }
           done();
         });
