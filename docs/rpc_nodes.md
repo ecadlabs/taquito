@@ -28,6 +28,8 @@ author: Roxane Letourneau
 | GigaNode         | Jakartanet   | https://testnet-tezos.giganode.io/ | [Check](https://testnet-tezos.giganode.io/chains/main/blocks/head/header)      |
 | Marigold         | Mainnet     | https://mainnet.tezos.marigold.dev/    | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
 | Marigold         | Jakartanet  | https://jakartanet.tezos.marigold.dev/ | [Check](https://jakartanet.tezos.marigold.dev/chains/main/blocks/head/header)  |
+| Marigold         | Kathmandunet| https://kathmandunet.tezos.marigold.dev/  | [Check](https://kathmandunet.tezos.marigold.dev/chains/main/blocks/head/header)   |
+| Marigold         | Ghostnet    | https://ghostnet.tezos.marigold.dev/  | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 
 ## List of commercial node operators
 
