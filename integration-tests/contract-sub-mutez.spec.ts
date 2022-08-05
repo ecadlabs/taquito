@@ -31,7 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
        }
      );
 
-     it('fail to originate a contract on Ithaca with SUB', async () => {
+     it('fail to originate a contract with SUB', async () => {
         try {
          await Tezos.contract.originate({
              code: `{ parameter (or (or (mutez %decrement) (mutez %increment)) (mutez %reset)) ;

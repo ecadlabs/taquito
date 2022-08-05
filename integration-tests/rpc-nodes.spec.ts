@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { Protocols, ChainIds } from '@taquito/taquito';
+import { Protocols, ChainIds } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -8,23 +8,21 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 CONFIGS().forEach(
   ({
     lib,
+    protocol,
+    rpc,
+    setup,
     knownBaker,
     knownContract,
     knownBigMapContract,
     knownSaplingContract,
-    setup,
-    protocol,
-    rpc,
   }) => {
     const Tezos = lib;
-
-    const jakartanetAndIthacanet = protocol === Protocols.Psithaca2 || protocol === Protocols.PtJakart2 ? test: test.skip;
-    const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
-    const jakartanetIt = protocol === Protocols.PtJakart2 ? it: it.skip;
+    const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
+    const kathmandunet = protocol === Protocols.PtKathman ? test: test.skip;
 
     beforeAll(async (done) => {
-      await setup();
-      done();
+        await setup()
+        done()
     });
 
     const rpcList: Array<string> = [rpc];
@@ -33,7 +31,7 @@ CONFIGS().forEach(
       Tezos.setRpcProvider(rpc);
 
       const rpcClient = new RpcClientCache(new RpcClient(rpc));
-
+      
       describe(`Test calling all methods from RPC node: ${rpc}`, () => {
         it('Get the head block hash', async (done) => {
           const blockHash = await rpcClient.getBlockHash();
@@ -90,10 +88,11 @@ CONFIGS().forEach(
         });
 
         it('Executes tzip4 views by calling runView ', async (done) => {
+          
           let chainId: string;
 
-          if (protocol === Protocols.Psithaca2) {
-            chainId = ChainIds.ITHACANET2
+          if (protocol === Protocols.PtKathman) {
+            chainId = ChainIds.KATHMANDUNET
           } else {
             chainId = ChainIds.JAKARTANET2
           }
@@ -265,23 +264,15 @@ CONFIGS().forEach(
         });
 
         // We will send invalid signedOpBytes and see if the node returns the expected error message
-        jakartanetAndIthacanet('Inject an operation in node and broadcast it', async (done) => {
+        it('Inject an operation in node and broadcast it', async (done) => {
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
-            expect(ex.message).toMatch('112 is an invalid char');
+            expect(ex.message).toContain('112 is an invalid char');
           }
           done();
         });
 
-        mondaynet('Inject an operation in node and broadcast it', async (done) => {
-          try {
-            const injectedOperation = await rpcClient.injectOperation('operation');
-          } catch (ex: any) {
-            expect(ex.message).toContain('Http error response:');
-          }
-          done();
-        });
 
         it('Simulate the validation of an operation', async (done) => {
           try {
@@ -399,17 +390,30 @@ CONFIGS().forEach(
           done();
         });
 
-        jakartanetIt('getTxRollupInbox', async (done) => {
+        jakartanet('getTxRollupInbox', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        jakartanetIt('getTxRollupState', async (done) => {
-          const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
-          expect(state).toBeDefined();
+        jakartanet('getTxRollupState', async (done) => {
+           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+           expect(state).toBeDefined();
+           done();
+         });
+         
+        kathmandunet('getTxRollupInbox', async (done) => {
+          const inbox = await rpcClient.getTxRollupInbox('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ', '0');
+          expect(inbox).toBeDefined();
           done();
         });
+
+        kathmandunet('getTxRollupState', async (done) => {
+           const state = await rpcClient.getTxRollupState('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ');
+           expect(state).toBeDefined();
+           done();
+         });
+
       });
     });
   }

@@ -226,8 +226,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
           );
           expect(op.opHash).toBeDefined();
           expect(await op.status()).toEqual('applied');
-
-          console.log(await op.getOriginatedContractAddresses());
           expect((await op.getOriginatedContractAddresses()).length).toEqual(2);
           done();
         });
