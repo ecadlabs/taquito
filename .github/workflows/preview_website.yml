@@ -35,13 +35,4 @@ jobs:
     - uses: marocchino/sticky-pull-request-comment@v2
       with:
         header: netlify-preview
-        message: 'A new deploy preview is available on Netlify at https://${{ env.short_sha }}--tezostaquito.netlify.app'
-
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_USERNAME: Taquito Notifications
-        SLACK_ICON: https://imgur.com/1zlqzFu
-        SLACK_TITLE: Message
-        SLACK_MESSAGE: There is a new deployment preview available for Taquito at https://${{ env.short_sha }}--tezostaquito.netlify.app
+        message: 'A new deploy preview is available on Netlify at https://${{ env.short_sha }}--tezostaquito.netlify.app
