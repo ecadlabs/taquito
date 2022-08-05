@@ -39,6 +39,9 @@ values={[
 | Marigold         | Kathmandunet| https://kathmandunet.tezos.marigold.dev/  | [Check](https://kathmandunet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 | Marigold         | Ghostnet    | https://ghostnet.tezos.marigold.dev/  | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 | TezTools         | Jakartanet  | https://eu01-node.teztools.net/  | [Check](https://eu01-node.teztools.net/chains/main/blocks/head/header)   |
+| Ateza            | Mainnet     | https://rpc-mainnet.ateza.io | [Check](https://rpc-mainnet.ateza.io/chains/main/blocks/head/header)   |
+| Ateza            | Jakartanet  | https://rpc-testnet-one.ateza.io | [Check](https://rpc-testnet-one.ateza.io/chains/main/blocks/head/header)   |
+| Ateza            | Jakartanet  | https://rpc-testnet-two.ateza.io | [Check](https://rpc-testnet-two.ateza.io/chains/main/blocks/head/header)   |
 
 *If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 </TabItem>
