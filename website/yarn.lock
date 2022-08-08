@@ -3056,6 +3056,9 @@
     "defer-to-connect" "^1.0.1"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7589e4bf8 (try to fix json-lock merge conflicts)
 "@taquito/beacon-wallet@^13.0.1":
   "integrity" "sha512-HBJoIwVqV4UorqCzLYaKT1QSA2OoujhBidENYhPE+Km/w7ArGLcPCTrhNvtfViw8xyhG63/hlFztLC3mm0M8iA=="
   "resolved" "https://registry.npmjs.org/@taquito/beacon-wallet/-/beacon-wallet-13.0.1.tgz"
@@ -3134,6 +3137,7 @@
     "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/taquito@^13.0.1", "@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta":
+<<<<<<< HEAD
   "resolved" "file:../packages/taquito"
   "version" "13.0.1"
   dependencies:
@@ -3145,6 +3149,8 @@
     "@taquito/utils" "^13.0.1"
 =======
 "@taquito/taquito@^7.0.0 || ^7.0.0-beta || ^8.0.0-beta":
+=======
+>>>>>>> 7589e4bf8 (try to fix json-lock merge conflicts)
   "resolved" "file:../packages/taquito"
   "version" "13.0.1"
   dependencies:
