@@ -596,15 +596,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                         number_of_shards: 2048,
                         number_of_slots: 256,
                       },
-<<<<<<< HEAD
                 delay_increment_per_round: new BigNumber(15),
-=======
-                delay_increment_per_round: {
-                        c: [15],
-                        e: 1,
-                        s: 1,
-                       },
->>>>>>> c9482302e (changes to make test pass on new kathmandunet protocol)
                 cache_layout_size: 3,
                 cache_sampler_state_cycles: 8,
                 cache_script_size: 100000000,
@@ -632,13 +624,8 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 tx_rollup_max_withdrawals_per_batch: 15,
                 tx_rollup_origination_size: 4000,
                 tx_rollup_rejection_max_proof_size: 30000,
-<<<<<<< HEAD
                 tx_rollup_sunset_level: 10000000,
                 tx_rollup_withdraw_period: 40000,
-=======
-                tx_rollup_sunset_level: 17280,
-                tx_rollup_withdraw_period: 10,
->>>>>>> c9482302e (changes to make test pass on new kathmandunet protocol)
                 vdf_difficulty: "8000000000",
             });
 
