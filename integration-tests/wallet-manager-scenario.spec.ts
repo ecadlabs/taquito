@@ -1,8 +1,8 @@
 import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
-import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { MANAGER_LAMBDA, Protocols } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => {
   const Tezos = lib;
 
   describe(`Manager TZ: ${rpc}`, () => {
@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       await setup()
       done()
     })
-    test('tests manager transfer scenarioswith wallet APi contract', async (done) => {
+    test('tests manager transfer scenarios with wallet APi contract', async (done) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: managerCode,
@@ -37,6 +37,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       const removeDelegateOp = await contract.methods.do(MANAGER_LAMBDA.removeDelegate()).send({ amount: 0 })
       await removeDelegateOp.confirmation();
       expect(removeDelegateOp.status).toBeTruthy
+      
+      const account = await Tezos.rpc.getDelegate(knownBaker)
+      expect(account).toEqual(knownBaker) 
       // Transfer from contract (kt1_alice) to contract (kt1 bob)
       // Notice that we are instructing the kt1_alice contract to send 1 token to kt1_bob. The transfer value is passed to the
       // lambda helper function. The transfer amount in the actual transfer operation is 0. We are not transferring the token
@@ -50,7 +53,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
         await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
         fail('Should throw during transfer with amount higher than balance')
       } catch (ex: any) {
-        expect(ex.message).toMatch('balance_too_low')
+        (protocol === Protocols.PtJakart2) ? 
+          expect(ex.message).toContain('contract.balance_too_low') :
+          expect(ex.message).toContain('tez.subtraction_underflow') 
       }
       done();
     })

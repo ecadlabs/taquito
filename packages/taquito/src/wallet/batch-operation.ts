@@ -1,4 +1,9 @@
-import { BlockResponse, OperationContentsAndResultReveal, OpKind } from '@taquito/rpc';
+import {
+  BlockResponse,
+  OperationContentsAndResultOrigination,
+  OperationContentsAndResultReveal,
+  OpKind,
+} from '@taquito/rpc';
 import { Observable } from 'rxjs';
 import { BATCH_KINDS } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -16,10 +21,27 @@ export class BatchWalletOperation extends WalletOperation {
 
   public async revealOperation() {
     const operationResult = await this.operationResults();
-    return operationResult.find(x => x.kind === OpKind.REVEAL) as
+    return operationResult.find((x) => x.kind === OpKind.REVEAL) as
       | OperationContentsAndResultReveal
       | undefined;
   }
+
+  public getOriginatedContractAddresses = async (): Promise<string[]> => {
+    const opResult = await this.operationResults();
+
+    const originationOpResults = opResult.filter(
+      (x) => x.kind === 'origination'
+    ) as OperationContentsAndResultOrigination[];
+
+    let addresses: string[] = [];
+    for (const res of originationOpResults) {
+      if (res.metadata.operation_result.originated_contracts) {
+        addresses = [...addresses, ...res.metadata.operation_result.originated_contracts];
+      }
+    }
+
+    return addresses;
+  };
 
   async status(): Promise<OperationStatus> {
     if (!this._included) {
