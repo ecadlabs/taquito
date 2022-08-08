@@ -91,9 +91,13 @@ CONFIGS().forEach(
           
           let chainId: string;
 
+<<<<<<< HEAD
 
           if (protocol === Protocols.PtKathman) {
 
+=======
+          if (protocol === Protocols.PtKathman) {
+>>>>>>> c9482302e (changes to make test pass on new kathmandunet protocol)
             chainId = ChainIds.KATHMANDUNET
           } else {
             chainId = ChainIds.JAKARTANET2
