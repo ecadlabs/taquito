@@ -177,10 +177,10 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(751);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(651);
-      expect(estimate.totalCost).toEqual(651);
-      expect(estimate.usingBaseFeeMutez).toEqual(651);
-      expect(estimate.consumedMilligas).toEqual(3149456);
+      expect(estimate.minimalFeeMutez).toEqual(649);
+      expect(estimate.totalCost).toEqual(649);
+      expect(estimate.usingBaseFeeMutez).toEqual(649);
+      expect(estimate.consumedMilligas).toEqual(3149284);
       done();
     })
 
@@ -213,10 +213,10 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.storageLimit).toEqual(514);
       expect(estimate.suggestedFeeMutez).toEqual(911);
       expect(estimate.burnFeeMutez).toEqual(128500);
-      expect(estimate.minimalFeeMutez).toEqual(811);
-      expect(estimate.totalCost).toEqual(129311);
-      expect(estimate.usingBaseFeeMutez).toEqual(811);
-      expect(estimate.consumedMilligas).toEqual(4157632);
+      expect(estimate.minimalFeeMutez).toEqual(809);
+      expect(estimate.totalCost).toEqual(129309);
+      expect(estimate.usingBaseFeeMutez).toEqual(809);
+      expect(estimate.consumedMilligas).toEqual(4157460);
       done();
     })
 
