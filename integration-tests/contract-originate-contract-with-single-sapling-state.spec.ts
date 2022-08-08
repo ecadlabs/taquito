@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     jakartanetAndMondaynet('Originates a contract with a single sapling state in its storage for JProtocol', async (done) => {
       const op = await Tezos.contract.originate({
-       code: singleSaplingStateContractJProtocol,
+       code: singleSaplingStateContractJProtocol(),
         init: '{}'
       });
       await op.confirmation();
