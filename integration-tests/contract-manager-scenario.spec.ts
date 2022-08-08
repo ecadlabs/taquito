@@ -50,13 +50,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => 
         await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
         fail('Should throw during transfer with amount higher than balance')
       } catch (ex: any) {
-<<<<<<< HEAD
         (protocol === Protocols.PtJakart2) ? 
             expect(ex.message).toContain('contract.balance_too_low') :
             expect(ex.message).toContain('tez.subtraction_underflow') 
-=======
-        expect(ex.message).toMatch('(temporary) proto.014-PtKathma.tez.subtraction_underflow')
->>>>>>> c9482302e (changes to make test pass on new kathmandunet protocol)
       }
       done();
     })
