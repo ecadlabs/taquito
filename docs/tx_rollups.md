@@ -86,7 +86,6 @@ This second step is called a `Transfer Ticket` operation, which we support in Ta
 const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 const op = await Tezos.contract.transferTicket({
-    counter: 145,
     ticket_contents: { "string": "foobar" },
     ticket_ty: { "prim": "string" } ,
     ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
