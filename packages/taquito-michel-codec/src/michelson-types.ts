@@ -386,19 +386,7 @@ export enum Protocol {
   Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   PtJakarta = 'PtJakartaiDz69SfDDLXJSiuZqTSeSKRDbKVZC8MNzJnvRjvnGw',
   PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   PtKathman = 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-=======
-  PtKathma = 'PtKathmaHPSjL3WDmUCJP7iHBsUix65HdAgSeVacukogRK6hum6',
->>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
-=======
-  PtKathmaX = 'PtKathmaXYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt',
->>>>>>> 926dbb889 (fixes)
-=======
-  PtKathman = 'PtKathmanYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt',
->>>>>>> c9482302e (changes to make test pass on new kathmandunet protocol)
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
@@ -426,19 +414,7 @@ const protoLevel: Record<ProtocolID, number> = {
   Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A: 12,
   PtJakartaiDz69SfDDLXJSiuZqTSeSKRDbKVZC8MNzJnvRjvnGw: 13,
   PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY: 13,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg: 14,
-=======
-  PtKathmaHPSjL3WDmUCJP7iHBsUix65HdAgSeVacukogRK6hum6: 14,
->>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
-=======
-  PtKathmaXYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt: 14,
->>>>>>> 926dbb889 (fixes)
-=======
-  PtKathmanYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt: 14,
->>>>>>> c9482302e (changes to make test pass on new kathmandunet protocol)
   ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 15,
 };
 

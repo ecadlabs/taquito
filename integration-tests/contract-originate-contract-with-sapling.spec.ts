@@ -11,11 +11,6 @@ import {
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-<<<<<<< HEAD
-=======
-  const jakartanetAndMondaynet = protocol === Protocols.ProtoALpha || protocol === Protocols.PtJakart2 ? test: test.skip;
-  const kathmandunet = protocol === Protocols.PtKathman ? test : test.skip;
->>>>>>> c9482302e (changes to make test pass on new kathmandunet protocol)
 
   interface StorageType {
     left: SaplingStateAbstraction;
