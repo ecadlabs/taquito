@@ -270,12 +270,7 @@ CONFIGS().forEach(
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
-<<<<<<< HEAD
             expect(ex.message).toContain('112 is an invalid char');
-
-=======
-            expect(ex.message).toContain('Invalid_argument(\"Hex.to_char: 112 is an invalid char\")');
->>>>>>> b7831591e (correct knownbigmapcontract address)
           }
           done();
         });
