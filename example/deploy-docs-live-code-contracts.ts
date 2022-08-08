@@ -43,7 +43,7 @@ export const tezos = new TezosToolkit(provider);
 const contract_catalogue = new Map();
 
 const users: Array<string> = [
-  //live code examples
+  //live code examples  testets
   'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
   'tz1WWapeBd5gREA7tnGhm24qXJxX4V31WAav',
   'tz2PEc59TDZH6hAou8J9LZrpqr5r8F2k9ZMx',
