@@ -17,8 +17,15 @@ CONFIGS().forEach(
     knownSaplingContract,
   }) => {
     const Tezos = lib;
+<<<<<<< HEAD
     const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
     const kathmandunet = protocol === Protocols.PtKathman ? test: test.skip;
+=======
+
+    const jakartanetAndKathmandunet = protocol === Protocols.PtJakart2|| protocol === Protocols.PtKathma ? test: test.skip;
+    const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+    const jakartanetIt = protocol === Protocols.PtJakart2 ? it: it.skip;
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
 
     beforeAll(async (done) => {
         await setup()
@@ -91,8 +98,13 @@ CONFIGS().forEach(
           
           let chainId: string;
 
+<<<<<<< HEAD
           if (protocol === Protocols.PtKathman) {
             chainId = ChainIds.KATHMANDUNET
+=======
+          if (protocol === Protocols.PtKathma) {
+            chainId = ChainIds.ITHACANET2
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
           } else {
             chainId = ChainIds.JAKARTANET2
           }
@@ -264,7 +276,11 @@ CONFIGS().forEach(
         });
 
         // We will send invalid signedOpBytes and see if the node returns the expected error message
+<<<<<<< HEAD
         it('Inject an operation in node and broadcast it', async (done) => {
+=======
+        jakartanetAndKathmandunet('Inject an operation in node and broadcast it', async (done) => {
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {

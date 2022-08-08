@@ -30,7 +30,11 @@ export enum Protocols {
   PsiThaCa = 'PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP',
   Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
+<<<<<<< HEAD
   PtKathman = 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+=======
+  PtKathma = 'PtKathmaHPSjL3WDmUCJP7iHBsUix65HdAgSeVacukogRK6hum6',
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -45,7 +49,11 @@ export const protocols = {
   '011': [Protocols.PtHangz2], // hangzhou v2,
   '012': [Protocols.PsiThaCa, Protocols.Psithaca2],
   '013': [Protocols.PtJakart2],
+<<<<<<< HEAD
   '014': [Protocols.PtKathman],
+=======
+  '014': [Protocols.PtKathma],
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
   '015': [Protocols.ProtoALpha],
 };
 
@@ -60,5 +68,9 @@ export enum ChainIds {
   ITHACANET = 'NetXbhmtAbMukLc',
   ITHACANET2 = 'NetXnHfVqm9iesp',
   JAKARTANET2 = 'NetXLH1uAxK7CCh',
+<<<<<<< HEAD
   KATHMANDUNET = 'NetXazhm4yetmff'
+=======
+  KATHMANDUNET = 'NetXLH1uAxK7CCh'
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
 }

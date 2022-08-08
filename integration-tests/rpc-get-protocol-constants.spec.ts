@@ -5,8 +5,13 @@ import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponsePr
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
+<<<<<<< HEAD
    
     const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
+=======
+
+    const katmandunet = (protocol === Protocols.PtKathma) ? test : test.skip;
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
     const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
@@ -538,6 +543,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
+<<<<<<< HEAD
         kathmandunet(`successfully fetches all constants for kathmandunet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto013 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
@@ -545,6 +551,15 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 proof_of_work_nonce_size: 8,
                 nonce_length: 32,
                 nonce_revelation_threshold: 256,
+=======
+        katmandunet(`successfully fetches all constants for katmandunet using ${rpc}`, async (done) => {
+            Tezos.setRpcProvider(rpc);
+            const constants: ConstantsResponseProto013 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
+
+            expect(constants).toEqual({
+                proof_of_work_nonce_size: 8,
+                nonce_length: 32,
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
                 max_anon_ops_per_block: 132,
                 max_operation_data_length: 32768,
                 max_proposals_per_delegate: 20,
@@ -581,7 +596,10 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                     numerator: 2,
                 },
                 max_slashing_period: 2,
+<<<<<<< HEAD
                 max_wrapped_proof_binary_size: 30000,
+=======
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
                 frozen_deposits_percentage: 10,
                 double_baking_punishment: new BigNumber(640000000),
                 ratio_of_frozen_deposits_slashed_per_double_endorsement: {
@@ -589,6 +607,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                     numerator: 1,
                 },
                 minimal_block_delay: new BigNumber(15),
+<<<<<<< HEAD
                 dal_parametric: {
                         availability_threshold: 50,
                         endorsement_lag: 1,
@@ -597,12 +616,16 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                         number_of_slots: 256,
                       },
                 delay_increment_per_round: new BigNumber(15),
+=======
+                delay_increment_per_round: new BigNumber(7),
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
                 cache_layout_size: 3,
                 cache_sampler_state_cycles: 8,
                 cache_script_size: 100000000,
                 cache_stake_distribution_cycles: 8,
                 cycles_per_voting_period: 1,
                 sc_rollup_challenge_window_in_blocks: 20160,
+<<<<<<< HEAD
                 sc_rollup_commitment_period_in_blocks: 30,
                 sc_rollup_enable: false,
                 sc_rollup_max_active_outbox_levels: 20160,
@@ -611,6 +634,11 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 sc_rollup_max_outbox_messages_per_level: 100,
                 sc_rollup_origination_size: 6314,
                 sc_rollup_stake_amount: "32000000",
+=======
+                sc_rollup_enable: false,
+                sc_rollup_max_available_messages: 1000000,
+                sc_rollup_origination_size: 6314,
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
                 tx_rollup_commitment_bond: new BigNumber(10000000000),
                 tx_rollup_cost_per_byte_ema_factor: 120,
                 tx_rollup_enable: true,
@@ -624,9 +652,14 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 tx_rollup_max_withdrawals_per_batch: 15,
                 tx_rollup_origination_size: 4000,
                 tx_rollup_rejection_max_proof_size: 30000,
+<<<<<<< HEAD
                 tx_rollup_sunset_level: 10000000,
                 tx_rollup_withdraw_period: 40000,
                 vdf_difficulty: "8000000000",
+=======
+                tx_rollup_sunset_level: 3473409,
+                tx_rollup_withdraw_period: 40000,
+>>>>>>> 020b74181 (initial rendition of intengration tests change to kathmandunet)
             });
 
             done();
