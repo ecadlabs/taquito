@@ -2005,6 +2005,15 @@
   dependencies:
     "axios" "^0.26.0"
 
+<<<<<<< HEAD
+=======
+"@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
+  "resolved" "file:packages/taquito-http-utils"
+  "version" "13.0.0"
+  dependencies:
+    "axios" "^0.26.0"
+
+>>>>>>> 159beaee9 (fixes)
 "@taquito/ledger-signer@file:/home/mike/taquito/packages/taquito-ledger-signer":
   "resolved" "file:packages/taquito-ledger-signer"
   "version" "13.0.1"
@@ -2022,11 +2031,30 @@
     "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
 
+<<<<<<< HEAD
 "@taquito/michel-codec@^13.0.1", "@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
+=======
+"@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
+  "resolved" "file:packages/taquito-local-forging"
+  "version" "13.0.0"
+  dependencies:
+    "@taquito/utils" "^13.0.0"
+    "bignumber.js" "^9.0.2"
+
+"@taquito/michel-codec@^13.0.0":
+>>>>>>> 159beaee9 (fixes)
   "resolved" "file:packages/taquito-michel-codec"
   "version" "13.0.1"
 
+<<<<<<< HEAD
 "@taquito/michelson-encoder@^13.0.1", "@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
+=======
+"@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
+  "resolved" "file:packages/taquito-michel-codec"
+  "version" "13.0.0"
+
+"@taquito/michelson-encoder@^13.0.0":
+>>>>>>> 159beaee9 (fixes)
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "13.0.1"
   dependencies:
@@ -2035,6 +2063,18 @@
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
+<<<<<<< HEAD
+=======
+"@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
+  "resolved" "file:packages/taquito-michelson-encoder"
+  "version" "13.0.0"
+  dependencies:
+    "@taquito/rpc" "^13.0.0"
+    "@taquito/utils" "^13.0.0"
+    "bignumber.js" "^9.0.2"
+    "fast-json-stable-stringify" "^2.1.0"
+
+>>>>>>> 159beaee9 (fixes)
 "@taquito/remote-signer@file:/home/mike/taquito/packages/taquito-remote-signer":
   "resolved" "file:packages/taquito-remote-signer"
   "version" "13.0.1"
@@ -2063,6 +2103,17 @@
     "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
 
+<<<<<<< HEAD
+=======
+"@taquito/rpc@file:/home/mike/taquito/packages/taquito-rpc":
+  "resolved" "file:packages/taquito-rpc"
+  "version" "13.0.0"
+  dependencies:
+    "@taquito/http-utils" "^13.0.0"
+    "@taquito/utils" "^13.0.0"
+    "bignumber.js" "^9.0.2"
+
+>>>>>>> 159beaee9 (fixes)
 "@taquito/signer@file:/home/mike/taquito/packages/taquito-signer":
   "resolved" "file:packages/taquito-signer"
   "version" "13.0.1"
@@ -2089,6 +2140,22 @@
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
+<<<<<<< HEAD
+=======
+"@taquito/taquito@file:/home/mike/taquito/packages/taquito":
+  "resolved" "file:packages/taquito"
+  "version" "13.0.0"
+  dependencies:
+    "@taquito/http-utils" "^13.0.0"
+    "@taquito/local-forging" "^13.0.0"
+    "@taquito/michel-codec" "^13.0.0"
+    "@taquito/michelson-encoder" "^13.0.0"
+    "@taquito/rpc" "^13.0.0"
+    "@taquito/utils" "^13.0.0"
+    "bignumber.js" "^9.0.2"
+    "rxjs" "^6.6.3"
+
+>>>>>>> 159beaee9 (fixes)
 "@taquito/tezbridge-signer@file:/home/mike/taquito/packages/taquito-tezbridge-signer":
   "resolved" "file:packages/taquito-tezbridge-signer"
   "version" "13.0.1"
@@ -2114,11 +2181,31 @@
   "resolved" "file:packages/taquito-tzip16"
   "version" "13.0.1"
   dependencies:
+<<<<<<< HEAD
     "@taquito/http-utils" "^13.0.1"
     "@taquito/michelson-encoder" "^13.0.1"
     "@taquito/rpc" "^13.0.1"
     "@taquito/taquito" "^13.0.1"
     "@taquito/utils" "^13.0.1"
+=======
+    "@taquito/http-utils" "^13.0.0"
+    "@taquito/michelson-encoder" "^13.0.0"
+    "@taquito/rpc" "^13.0.0"
+    "@taquito/taquito" "^13.0.0"
+    "@taquito/utils" "^13.0.0"
+    "bignumber.js" "^9.0.2"
+    "crypto-js" "^4.1.1"
+
+"@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
+  "resolved" "file:packages/taquito-tzip16"
+  "version" "13.0.0"
+  dependencies:
+    "@taquito/http-utils" "^13.0.0"
+    "@taquito/michelson-encoder" "^13.0.0"
+    "@taquito/rpc" "^13.0.0"
+    "@taquito/taquito" "^13.0.0"
+    "@taquito/utils" "^13.0.0"
+>>>>>>> 159beaee9 (fixes)
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
@@ -2138,7 +2225,24 @@
 
 "@taquito/utils@^13.0.1", "@taquito/utils@file:/home/mike/taquito/packages/taquito-utils":
   "resolved" "file:packages/taquito-utils"
+<<<<<<< HEAD
   "version" "13.0.1"
+=======
+  "version" "13.0.0"
+  dependencies:
+    "@stablelib/blake2b" "^1.0.1"
+    "@stablelib/ed25519" "^1.0.2"
+    "@types/bs58check" "^2.1.0"
+    "blakejs" "^1.2.1"
+    "bs58check" "^2.1.2"
+    "buffer" "^6.0.3"
+    "elliptic" "^6.5.4"
+    "typedarray-to-buffer" "^4.0.0"
+
+"@taquito/utils@file:/home/mike/taquito/packages/taquito-utils":
+  "resolved" "file:packages/taquito-utils"
+  "version" "13.0.0"
+>>>>>>> 159beaee9 (fixes)
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -3166,6 +3270,7 @@
   "resolved" "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.2.0.tgz"
   "version" "2.2.0"
 
+<<<<<<< HEAD
 "bl@^4.0.3", "bl@^4.1.0":
   "integrity" "sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w=="
   "resolved" "https://registry.npmjs.org/bl/-/bl-4.1.0.tgz"
@@ -3176,6 +3281,14 @@
     "readable-stream" "^3.4.0"
 
 "blakejs@^1.1.1", "blakejs@^1.2.1":
+=======
+"blakejs@^1.1.1":
+  "integrity" "sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ=="
+  "resolved" "https://registry.npmjs.org/blakejs/-/blakejs-1.2.1.tgz"
+  "version" "1.2.1"
+
+"blakejs@^1.2.1":
+>>>>>>> 159beaee9 (fixes)
   "integrity" "sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ=="
   "resolved" "https://registry.npmjs.org/blakejs/-/blakejs-1.2.1.tgz"
   "version" "1.2.1"
