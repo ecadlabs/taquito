@@ -270,6 +270,7 @@ CONFIGS().forEach(
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
             expect(ex.message).toContain('112 is an invalid char');
+
           }
           done();
         });
