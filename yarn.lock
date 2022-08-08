@@ -2002,6 +2002,7 @@
 "@taquito/http-utils@^13.0.1", "@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
   "resolved" "file:packages/taquito-http-utils"
   "version" "13.0.1"
+<<<<<<< HEAD
   dependencies:
     "axios" "^0.26.0"
 
@@ -2010,6 +2011,8 @@
 "@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
   "resolved" "file:packages/taquito-http-utils"
   "version" "13.0.0"
+=======
+>>>>>>> 926dbb889 (fixes)
   dependencies:
     "axios" "^0.26.0"
 
@@ -2024,7 +2027,11 @@
     "@taquito/utils" "^13.0.1"
     "buffer" "^6.0.3"
 
+<<<<<<< HEAD
 "@taquito/local-forging@^13.0.1", "@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
+=======
+"@taquito/local-forging@^13.0.1":
+>>>>>>> 926dbb889 (fixes)
   "resolved" "file:packages/taquito-local-forging"
   "version" "13.0.1"
   dependencies:
@@ -2036,13 +2043,17 @@
 =======
 "@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
-  "version" "13.0.0"
+  "version" "13.0.1"
   dependencies:
-    "@taquito/utils" "^13.0.0"
+    "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
 
+<<<<<<< HEAD
 "@taquito/michel-codec@^13.0.0":
 >>>>>>> 159beaee9 (fixes)
+=======
+"@taquito/michel-codec@^13.0.1":
+>>>>>>> 926dbb889 (fixes)
   "resolved" "file:packages/taquito-michel-codec"
   "version" "13.0.1"
 
@@ -2051,10 +2062,14 @@
 =======
 "@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
-  "version" "13.0.0"
+  "version" "13.0.1"
 
+<<<<<<< HEAD
 "@taquito/michelson-encoder@^13.0.0":
 >>>>>>> 159beaee9 (fixes)
+=======
+"@taquito/michelson-encoder@^13.0.1":
+>>>>>>> 926dbb889 (fixes)
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "13.0.1"
   dependencies:
@@ -2067,10 +2082,10 @@
 =======
 "@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
-  "version" "13.0.0"
+  "version" "13.0.1"
   dependencies:
-    "@taquito/rpc" "^13.0.0"
-    "@taquito/utils" "^13.0.0"
+    "@taquito/rpc" "^13.0.1"
+    "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
@@ -2101,6 +2116,7 @@
   dependencies:
     "@taquito/http-utils" "^13.0.1"
     "@taquito/utils" "^13.0.1"
+<<<<<<< HEAD
     "bignumber.js" "^9.0.2"
 
 <<<<<<< HEAD
@@ -2111,6 +2127,8 @@
   dependencies:
     "@taquito/http-utils" "^13.0.0"
     "@taquito/utils" "^13.0.0"
+=======
+>>>>>>> 926dbb889 (fixes)
     "bignumber.js" "^9.0.2"
 
 >>>>>>> 159beaee9 (fixes)
@@ -2137,6 +2155,7 @@
     "@taquito/michelson-encoder" "^13.0.1"
     "@taquito/rpc" "^13.0.1"
     "@taquito/utils" "^13.0.1"
+<<<<<<< HEAD
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
@@ -2152,6 +2171,8 @@
     "@taquito/michelson-encoder" "^13.0.0"
     "@taquito/rpc" "^13.0.0"
     "@taquito/utils" "^13.0.0"
+=======
+>>>>>>> 926dbb889 (fixes)
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
@@ -2177,35 +2198,53 @@
     "@taquito/taquito" "^13.0.1"
     "@taquito/tzip16" "^13.0.1"
 
+<<<<<<< HEAD
 "@taquito/tzip16@^13.0.1", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "13.0.1"
   dependencies:
 <<<<<<< HEAD
+=======
+"@taquito/tzip16@^13.0.1":
+  "resolved" "file:packages/taquito-tzip16"
+  "version" "13.0.1"
+  dependencies:
+>>>>>>> 926dbb889 (fixes)
     "@taquito/http-utils" "^13.0.1"
     "@taquito/michelson-encoder" "^13.0.1"
     "@taquito/rpc" "^13.0.1"
     "@taquito/taquito" "^13.0.1"
     "@taquito/utils" "^13.0.1"
+<<<<<<< HEAD
 =======
     "@taquito/http-utils" "^13.0.0"
     "@taquito/michelson-encoder" "^13.0.0"
     "@taquito/rpc" "^13.0.0"
     "@taquito/taquito" "^13.0.0"
     "@taquito/utils" "^13.0.0"
+=======
+>>>>>>> 926dbb889 (fixes)
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
 "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
-  "version" "13.0.0"
+  "version" "13.0.1"
   dependencies:
+<<<<<<< HEAD
     "@taquito/http-utils" "^13.0.0"
     "@taquito/michelson-encoder" "^13.0.0"
     "@taquito/rpc" "^13.0.0"
     "@taquito/taquito" "^13.0.0"
     "@taquito/utils" "^13.0.0"
 >>>>>>> 159beaee9 (fixes)
+=======
+    "@taquito/http-utils" "^13.0.1"
+    "@taquito/michelson-encoder" "^13.0.1"
+    "@taquito/rpc" "^13.0.1"
+    "@taquito/taquito" "^13.0.1"
+    "@taquito/utils" "^13.0.1"
+>>>>>>> 926dbb889 (fixes)
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
@@ -2226,6 +2265,7 @@
 "@taquito/utils@^13.0.1", "@taquito/utils@file:/home/mike/taquito/packages/taquito-utils":
   "resolved" "file:packages/taquito-utils"
 <<<<<<< HEAD
+<<<<<<< HEAD
   "version" "13.0.1"
 =======
   "version" "13.0.0"
@@ -2243,6 +2283,9 @@
   "resolved" "file:packages/taquito-utils"
   "version" "13.0.0"
 >>>>>>> 159beaee9 (fixes)
+=======
+  "version" "13.0.1"
+>>>>>>> 926dbb889 (fixes)
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -3271,6 +3314,7 @@
   "version" "2.2.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 "bl@^4.0.3", "bl@^4.1.0":
   "integrity" "sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w=="
   "resolved" "https://registry.npmjs.org/bl/-/bl-4.1.0.tgz"
@@ -3289,6 +3333,9 @@
 
 "blakejs@^1.2.1":
 >>>>>>> 159beaee9 (fixes)
+=======
+"blakejs@^1.1.1", "blakejs@^1.2.1":
+>>>>>>> 926dbb889 (fixes)
   "integrity" "sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ=="
   "resolved" "https://registry.npmjs.org/blakejs/-/blakejs-1.2.1.tgz"
   "version" "1.2.1"
@@ -4642,6 +4689,12 @@
   "resolved" "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.208.tgz"
   "version" "1.4.208"
 
+<<<<<<< HEAD
+=======
+"electron-to-chromium@^1.4.17":
+  "version" "1.4.24"
+
+>>>>>>> 926dbb889 (fixes)
 "elliptic@^6.5.3", "elliptic@^6.5.4":
   "integrity" "sha512-iLhC6ULemrljPZb+QutR5TQGB+pdW6KGD5RSegS+8sorOZT+rdQFbsQFJgvN3eRqNALqJer4oQ16YvJHlU8hzQ=="
   "resolved" "https://registry.npmjs.org/elliptic/-/elliptic-6.5.4.tgz"
@@ -5328,8 +5381,11 @@
     "readable-stream" "^2.3.6"
 
 "follow-redirects@^1.14.4", "follow-redirects@^1.14.8":
+<<<<<<< HEAD
   "integrity" "sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA=="
   "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.1.tgz"
+=======
+>>>>>>> 926dbb889 (fixes)
   "version" "1.15.1"
 
 "for-in@^1.0.2":
@@ -5978,7 +6034,11 @@
   dependencies:
     "safer-buffer" ">= 2.1.2 < 3.0.0"
 
+<<<<<<< HEAD
 "ieee754@^1.1.13", "ieee754@^1.1.4", "ieee754@^1.2.1":
+=======
+"ieee754@^1.1.4", "ieee754@^1.2.1":
+>>>>>>> 926dbb889 (fixes)
   "integrity" "sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="
   "resolved" "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
   "version" "1.2.1"
@@ -7154,7 +7214,9 @@
     "libsodium" "^0.7.0"
 
 "libsodium@^0.7.0":
-  "version" "0.7.8"
+  "integrity" "sha512-eY+z7hDrDKxkAK+QKZVNv92A5KYkxfvIshtBJkmg5TSiCnYqZP3i9OO9whE79Pwgm4jGaoHgkM4ao/b9Cyu4zQ=="
+  "resolved" "https://registry.npmjs.org/libsodium/-/libsodium-0.7.10.tgz"
+  "version" "0.7.10"
 
 "lilconfig@2.0.5":
   "integrity" "sha512-xaYmXZtTHPAw5m+xLN8ab9C+3a8YmV3asNSPOATITbtwrfbwaLJj8h66H1WMIpALCkqsIzK3h7oQ+PdX+LQ9Eg=="

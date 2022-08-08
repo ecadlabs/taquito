@@ -30,7 +30,11 @@ export enum Protocols {
   PsiThaCa = 'PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP',
   Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
+<<<<<<< HEAD
   PtKathman = 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+=======
+  PtKathmaX = 'PtKathmaXYPEsBau83zRwXK19HAQRzZSj6pCXnvtyLZFjRxdQxt',
+>>>>>>> 926dbb889 (fixes)
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -45,7 +49,11 @@ export const protocols = {
   '011': [Protocols.PtHangz2], // hangzhou v2,
   '012': [Protocols.PsiThaCa, Protocols.Psithaca2],
   '013': [Protocols.PtJakart2],
+<<<<<<< HEAD
   '014': [Protocols.PtKathman],
+=======
+  '014': [Protocols.PtKathmaX],
+>>>>>>> 926dbb889 (fixes)
   '015': [Protocols.ProtoALpha],
 };
 
