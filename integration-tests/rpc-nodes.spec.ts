@@ -17,8 +17,12 @@ CONFIGS().forEach(
     knownSaplingContract,
   }) => {
     const Tezos = lib;
+<<<<<<< HEAD
     const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
     const kathmandunet = protocol === Protocols.PtKathman ? test: test.skip;
+=======
+    const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+>>>>>>> 8cca7da40170dec27305d53c32b2cb8f89c55ba0
 
     beforeAll(async (done) => {
         await setup()
@@ -92,7 +96,10 @@ CONFIGS().forEach(
           let chainId: string;
 
           if (protocol === Protocols.PtKathman) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8cca7da40170dec27305d53c32b2cb8f89c55ba0
             chainId = ChainIds.KATHMANDUNET
           } else {
             chainId = ChainIds.JAKARTANET2
@@ -270,6 +277,10 @@ CONFIGS().forEach(
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
             expect(ex.message).toContain('112 is an invalid char');
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cca7da40170dec27305d53c32b2cb8f89c55ba0
           }
           done();
         });
@@ -391,12 +402,17 @@ CONFIGS().forEach(
           done();
         });
 
+<<<<<<< HEAD
         jakartanet('getTxRollupInbox', async (done) => {
+=======
+        it('getTxRollupInbox', async (done) => {
+>>>>>>> 8cca7da40170dec27305d53c32b2cb8f89c55ba0
           const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
           expect(inbox).toBeDefined();
           done();
         });
 
+<<<<<<< HEAD
         jakartanet('getTxRollupState', async (done) => {
            const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
            expect(state).toBeDefined();
@@ -414,6 +430,13 @@ CONFIGS().forEach(
            expect(state).toBeDefined();
            done();
          });
+=======
+        // it('getTxRollupState', async (done) => {
+        //   const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+        //   expect(state).toBeDefined();
+        //   done();
+        // });
+>>>>>>> 8cca7da40170dec27305d53c32b2cb8f89c55ba0
       });
     });
   }

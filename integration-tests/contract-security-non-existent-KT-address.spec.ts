@@ -7,7 +7,10 @@ import { Protocols, TezosToolkit } from '@taquito/taquito';
 // KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn is the tzBTC contract on mainnet
 
 const Tezos = new TezosToolkit(new RpcClient(' https://mondaynet.ecadinfra.com:8732'));
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8cca7da40170dec27305d53c32b2cb8f89c55ba0
 const testContractAddress = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
 
 CONFIGS().forEach(({ rpc, setup, protocol }) => {

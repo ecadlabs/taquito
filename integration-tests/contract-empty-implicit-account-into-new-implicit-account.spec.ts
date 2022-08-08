@@ -4,7 +4,7 @@ import { CONFIGS } from "./config";
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
     const Tezos = lib;
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
-    const kathmandunet = (protocol === Protocols.Psithaca2) ? test : test.skip;
+    const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
 
     describe(`Test emptying a revealed implicit account into a new implicit account using: ${rpc}`, () => {
 

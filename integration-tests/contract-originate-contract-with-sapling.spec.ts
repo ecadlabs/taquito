@@ -134,4 +134,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     });
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 8cca7da40170dec27305d53c32b2cb8f89c55ba0
