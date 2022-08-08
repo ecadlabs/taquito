@@ -170,6 +170,7 @@ async function example() {
     const contract = await op.contract();
     console.log('Tzip12BigMapOffChainContract : ' + contract.address);
     return contract.address;
+
   } catch (ex) {
     console.error(ex);
   }
