@@ -173,14 +173,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
     kathmandunet('Estimate internal transfer to allocated implicit', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
-      expect(estimate.gasLimit).toEqual(3249);
+      expect(estimate.gasLimit).toEqual(3250);
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(749);
       expect(estimate.burnFeeMutez).toEqual(0);
       expect(estimate.minimalFeeMutez).toEqual(649);
       expect(estimate.totalCost).toEqual(649);
       expect(estimate.usingBaseFeeMutez).toEqual(649);
-      expect(estimate.consumedMilligas).toEqual(3148811);
+      expect(estimate.consumedMilligas).toEqual(3149112);
       done();
     })
 
@@ -209,14 +209,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
         50)
       ).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx)
-      expect(estimate.gasLimit).toEqual(4257);
+      expect(estimate.gasLimit).toEqual(4258);
       expect(estimate.storageLimit).toEqual(514);
       expect(estimate.suggestedFeeMutez).toEqual(909);
       expect(estimate.burnFeeMutez).toEqual(128500);
       expect(estimate.minimalFeeMutez).toEqual(809);
       expect(estimate.totalCost).toEqual(129309);
       expect(estimate.usingBaseFeeMutez).toEqual(809);
-      expect(estimate.consumedMilligas).toEqual(4156987);
+      expect(estimate.consumedMilligas).toEqual(4157288);
       done();
     })
 
@@ -244,7 +244,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.minimalFeeMutez).toEqual(696);
       expect(estimate.totalCost).toEqual(79946);
       expect(estimate.usingBaseFeeMutez).toEqual(696);
-      expect(estimate.consumedMilligas).toEqual(3556600);
+      expect(estimate.consumedMilligas).toEqual(3556901);
       done();
     })
 
@@ -275,7 +275,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.minimalFeeMutez).toEqual(903);
       expect(estimate.totalCost).toEqual(159403);
       expect(estimate.usingBaseFeeMutez).toEqual(903);
-      expect(estimate.consumedMilligas).toEqual(4972565);
+      expect(estimate.consumedMilligas).toEqual(4972866);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
@@ -325,7 +325,6 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
     jakartanet('Estimate transfer to regular address with a fixed fee', async (done) => {
       // fee, gasLimit and storage limit are not taken into account
       //const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
-
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) }
 
       await expect(LowAmountTez.estimate.transfer(params)).rejects.toEqual(
@@ -336,6 +335,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
     });
 
     jakartanet('Estimate transfer to regular address with insufficient balance', async (done) => {
+    // Issue #1752
+    it('Estimate transfer to regular address with insufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toEqual(
