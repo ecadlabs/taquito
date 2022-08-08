@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { depositContractCodeIthaca, depositContractStorageIthaca } from "./data/deposit_contract_ithaca";
+import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -14,8 +14,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     it('Originates contract and calls deposit method with unit param', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
-        code: depositContractCodeIthaca,
-        init: depositContractStorageIthaca
+        code: depositContractCode,
+        init: depositContractStorage
       })
       const contract = await op.contract()
 

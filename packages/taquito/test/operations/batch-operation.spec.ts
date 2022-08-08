@@ -1,5 +1,4 @@
 import { ForgedBytes } from '../../src/operations/types';
-import { OperationContentsAndResult } from '@taquito/rpc';
 import { BatchOperation } from '../../src/operations/batch-operation';
 import { defaultConfigConfirmation } from '../../src/context';
 import {
@@ -9,218 +8,16 @@ import {
   DelegationOperationBuilder,
 } from '../helpers';
 
+import {
+  resultOriginations,
+  successfulResult,
+  resultWithoutOrigination,
+  resultSingleOrigination,
+} from '../data/batch-results';
+
 describe('Batch operation', () => {
   let fakeContext: any;
   const fakeForgedBytes = {} as ForgedBytes;
-
-  const successfulResult = [
-    {
-      kind: 'transaction',
-      source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-      fee: '1831',
-      counter: '121636',
-      gas_limit: '15385',
-      storage_limit: '257',
-      amount: '1000000',
-      destination: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-      metadata: {
-        balance_updates: [
-          { kind: 'contract', contract: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys', change: '-1831' },
-          {
-            kind: 'freezer',
-            category: 'fees',
-            delegate: 'tz1VxS7ff4YnZRs8b4mMP4WaMVpoQjuo1rjf',
-            cycle: 55,
-            change: '1831',
-          },
-        ],
-        operation_result: {
-          status: 'applied',
-          storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-          balance_updates: [
-            {
-              kind: 'contract',
-              contract: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-              change: '-1000000',
-            },
-            {
-              kind: 'contract',
-              contract: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-              change: '1000000',
-            },
-          ],
-          consumed_gas: '15285',
-          storage_size: '232',
-        },
-      },
-    },
-    {
-      kind: 'transaction',
-      source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-      fee: '2991',
-      counter: '121637',
-      gas_limit: '26260',
-      storage_limit: '257',
-      amount: '0',
-      destination: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-      parameters: {
-        entrypoint: 'do',
-        value: [
-          { prim: 'DROP' },
-          { prim: 'NIL', args: [{ prim: 'operation' }] },
-          {
-            prim: 'PUSH',
-            args: [{ prim: 'key_hash' }, { string: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh' }],
-          },
-          { prim: 'IMPLICIT_ACCOUNT' },
-          { prim: 'PUSH', args: [{ prim: 'mutez' }, { int: '50' }] },
-          { prim: 'UNIT' },
-          { prim: 'TRANSFER_TOKENS' },
-          { prim: 'CONS' },
-        ],
-      },
-      metadata: {
-        balance_updates: [
-          { kind: 'contract', contract: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys', change: '-2991' },
-          {
-            kind: 'freezer',
-            category: 'fees',
-            delegate: 'tz1VxS7ff4YnZRs8b4mMP4WaMVpoQjuo1rjf',
-            cycle: 55,
-            change: '2991',
-          },
-        ],
-        operation_result: {
-          status: 'applied',
-          storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-          consumed_gas: '15953',
-          storage_size: '232',
-        },
-        internal_operation_results: [
-          {
-            kind: 'transaction',
-            source: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-            nonce: 0,
-            amount: '50',
-            destination: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-            result: {
-              status: 'applied',
-              balance_updates: [
-                {
-                  kind: 'contract',
-                  contract: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-                  change: '-50',
-                },
-                {
-                  kind: 'contract',
-                  contract: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-                  change: '50',
-                },
-              ],
-              consumed_gas: '10207',
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'transaction',
-      source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-      fee: '2947',
-      counter: '121638',
-      gas_limit: '25894',
-      storage_limit: '257',
-      amount: '0',
-      destination: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-      parameters: {
-        entrypoint: 'do',
-        value: [
-          { prim: 'DROP' },
-          { prim: 'NIL', args: [{ prim: 'operation' }] },
-          {
-            prim: 'PUSH',
-            args: [{ prim: 'key_hash' }, { string: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9' }],
-          },
-          { prim: 'SOME' },
-          { prim: 'SET_DELEGATE' },
-          { prim: 'CONS' },
-        ],
-      },
-      metadata: {
-        balance_updates: [
-          { kind: 'contract', contract: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys', change: '-2947' },
-          {
-            kind: 'freezer',
-            category: 'fees',
-            delegate: 'tz1VxS7ff4YnZRs8b4mMP4WaMVpoQjuo1rjf',
-            cycle: 55,
-            change: '2947',
-          },
-        ],
-        operation_result: {
-          status: 'applied',
-          storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-          consumed_gas: '15794',
-          storage_size: '232',
-        },
-        internal_operation_results: [
-          {
-            kind: 'delegation',
-            source: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-            nonce: 1,
-            delegate: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
-            result: { status: 'applied', consumed_gas: '10000' },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'transaction',
-      source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-      fee: '2897',
-      counter: '121639',
-      gas_limit: '25822',
-      storage_limit: '257',
-      amount: '0',
-      destination: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-      parameters: {
-        entrypoint: 'do',
-        value: [
-          { prim: 'DROP' },
-          { prim: 'NIL', args: [{ prim: 'operation' }] },
-          { prim: 'NONE', args: [{ prim: 'key_hash' }] },
-          { prim: 'SET_DELEGATE' },
-          { prim: 'CONS' },
-        ],
-      },
-      metadata: {
-        balance_updates: [
-          { kind: 'contract', contract: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys', change: '-2897' },
-          {
-            kind: 'freezer',
-            category: 'fees',
-            delegate: 'tz1VxS7ff4YnZRs8b4mMP4WaMVpoQjuo1rjf',
-            cycle: 55,
-            change: '2897',
-          },
-        ],
-        operation_result: {
-          status: 'applied',
-          storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-          consumed_gas: '15722',
-          storage_size: '232',
-        },
-        internal_operation_results: [
-          {
-            kind: 'delegation',
-            source: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
-            nonce: 2,
-            result: { status: 'applied', consumed_gas: '10000' },
-          },
-        ],
-      },
-    },
-  ] as unknown as OperationContentsAndResult[];
 
   beforeEach(() => {
     fakeContext = {
@@ -237,7 +34,7 @@ describe('Batch operation', () => {
       },
     });
   });
-  it('should contains compute the consummed gas, storage diff and storage size properly', () => {
+  it('should contains compute the consumed gas, storage diff and storage size properly', () => {
     const op = new BatchOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
@@ -346,6 +143,54 @@ describe('Batch operation', () => {
 
       expect(op.status).toEqual('backtracked');
       expect(op.revealStatus).toEqual('applied');
+    });
+
+    it('should be able to batch multiple origination operations and retrieve originated contract addresses using getOriginatedContractAddresses()', () => {
+      const op = new BatchOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        {} as any,
+        '',
+        fakeForgedBytes,
+        resultOriginations,
+        fakeContext
+      );
+
+      expect(op.status).toEqual('applied');
+      expect(op.getOriginatedContractAddresses().length).toEqual(2);
+      expect(op.getOriginatedContractAddresses()).toEqual([
+        'KT1Wr1xjQAzb44AcPRV9F9oyPurkFz7y2otC',
+        'KT1SG1LfkoMoEqR5srtiYeYcciaZfBTGzTgY',
+      ]);
+    });
+
+    it('should be able to handle non-existing "originated_contracts" property elegantly', () => {
+      const op = new BatchOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        {} as any,
+        '',
+        fakeForgedBytes,
+        resultWithoutOrigination,
+        fakeContext
+      );
+
+      expect(op.status).toEqual('applied');
+      expect(op.getOriginatedContractAddresses().length).toEqual(0);
+      expect(op.getOriginatedContractAddresses()).toEqual([]);
+    });
+
+    it('should be able to batch operations with a single origination', () => {
+      const op = new BatchOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        {} as any,
+        '',
+        fakeForgedBytes,
+        resultSingleOrigination,
+        fakeContext
+      );
+
+      expect(op.status).toEqual('applied');
+      expect(op.getOriginatedContractAddresses().length).toEqual(1);
+      expect(op.getOriginatedContractAddresses()).toEqual(['KT1Em8ALyerHtZd1s5s6quJDZrTRxnmdKcKd']);
     });
   });
 });
