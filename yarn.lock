@@ -1980,16 +1980,12 @@
   "version" "13.0.1"
   dependencies:
     "@airgap/beacon-dapp" "^3.1.3"
-    "@taquito/taquito" "^13.0.1"
     "libsodium-wrappers" "0.7.9"
 
 "@taquito/contracts-library@file:/home/mike/taquito/packages/taquito-contracts-library":
   "resolved" "file:packages/taquito-contracts-library"
   "version" "13.0.1"
   dependencies:
-    "@taquito/rpc" "^13.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
 
 "@taquito/http-utils@^12.1.1":
@@ -2023,8 +2019,6 @@
   dependencies:
     "@ledgerhq/hw-transport" "^6.20.0"
     "@stablelib/blake2b" "^1.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
     "buffer" "^6.0.3"
 
 <<<<<<< HEAD
@@ -2045,7 +2039,6 @@
   "resolved" "file:packages/taquito-local-forging"
   "version" "13.0.1"
   dependencies:
-    "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
 
 <<<<<<< HEAD
@@ -2084,8 +2077,6 @@
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "13.0.1"
   dependencies:
-    "@taquito/rpc" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
@@ -2096,9 +2087,6 @@
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
-    "@taquito/http-utils" "^13.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
     "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/rpc@^12.1.1":
@@ -2139,8 +2127,6 @@
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
     "@stablelib/nacl" "^1.0.3"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
     "elliptic" "^6.5.4"
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
@@ -2181,14 +2167,11 @@
   "resolved" "file:packages/taquito-tezbridge-signer"
   "version" "13.0.1"
   dependencies:
-    "@taquito/utils" "^13.0.1"
     "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/tezbridge-wallet@file:/home/mike/taquito/packages/taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
   "version" "13.0.1"
-  dependencies:
-    "@taquito/taquito" "^13.0.1"
 
 "@taquito/tzip12@file:/home/mike/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
