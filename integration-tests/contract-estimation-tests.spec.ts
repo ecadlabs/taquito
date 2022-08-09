@@ -56,11 +56,11 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(462);
+      expect(estimate.suggestedFeeMutez).toEqual(464);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(362);
-      expect(estimate.totalCost).toEqual(362);
-      expect(estimate.usingBaseFeeMutez).toEqual(362);
+      expect(estimate.minimalFeeMutez).toEqual(364);
+      expect(estimate.totalCost).toEqual(364);
+      expect(estimate.usingBaseFeeMutez).toEqual(364);
       expect(estimate.consumedMilligas).toEqual(1000040);
       done();
     })
@@ -95,11 +95,11 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(257);
-      expect(estimate.suggestedFeeMutez).toEqual(462);
+      expect(estimate.suggestedFeeMutez).toEqual(464);
       expect(estimate.burnFeeMutez).toEqual(64250);
-      expect(estimate.minimalFeeMutez).toEqual(362);
-      expect(estimate.totalCost).toEqual(64612);
-      expect(estimate.usingBaseFeeMutez).toEqual(362);
+      expect(estimate.minimalFeeMutez).toEqual(364);
+      expect(estimate.totalCost).toEqual(64614);
+      expect(estimate.usingBaseFeeMutez).toEqual(364);
       expect(estimate.consumedMilligas).toEqual(1000040);
       done();
     });
@@ -142,11 +142,11 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       })
       expect(estimate.gasLimit).toEqual(1569);
       expect(estimate.storageLimit).toEqual(571);
-      expect(estimate.suggestedFeeMutez).toEqual(800);
+      expect(estimate.suggestedFeeMutez).toEqual(802);
       expect(estimate.burnFeeMutez).toEqual(142750);
-      expect(estimate.minimalFeeMutez).toEqual(700);
-      expect(estimate.totalCost).toEqual(143450);
-      expect(estimate.usingBaseFeeMutez).toEqual(700);
+      expect(estimate.minimalFeeMutez).toEqual(702);
+      expect(estimate.totalCost).toEqual(143452);
+      expect(estimate.usingBaseFeeMutez).toEqual(702);
       expect(estimate.consumedMilligas).toEqual(1468957);
       done();
     });
@@ -191,11 +191,11 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       })
       expect(estimate.gasLimit).toEqual(1100);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(457);
+      expect(estimate.suggestedFeeMutez).toEqual(459);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(357);
-      expect(estimate.totalCost).toEqual(357);
-      expect(estimate.usingBaseFeeMutez).toEqual(357);
+      expect(estimate.minimalFeeMutez).toEqual(359);
+      expect(estimate.totalCost).toEqual(359);
+      expect(estimate.usingBaseFeeMutez).toEqual(359);
       expect(estimate.consumedMilligas).toEqual(1000000);
       done();
     })
@@ -235,12 +235,12 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(3250);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(749);
+      expect(estimate.suggestedFeeMutez).toEqual(751);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(649);
-      expect(estimate.totalCost).toEqual(649);
-      expect(estimate.usingBaseFeeMutez).toEqual(649);
-      expect(estimate.consumedMilligas).toEqual(3149370);
+      expect(estimate.minimalFeeMutez).toEqual(651);
+      expect(estimate.totalCost).toEqual(651);
+      expect(estimate.usingBaseFeeMutez).toEqual(651);
+      expect(estimate.consumedMilligas).toEqual(3149542);
       done();
     })
 
@@ -271,12 +271,12 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(4258);
       expect(estimate.storageLimit).toEqual(514);
-      expect(estimate.suggestedFeeMutez).toEqual(909);
+      expect(estimate.suggestedFeeMutez).toEqual(911);
       expect(estimate.burnFeeMutez).toEqual(128500);
-      expect(estimate.minimalFeeMutez).toEqual(809);
-      expect(estimate.totalCost).toEqual(129309);
-      expect(estimate.usingBaseFeeMutez).toEqual(809);
-      expect(estimate.consumedMilligas).toEqual(4157546);
+      expect(estimate.minimalFeeMutez).toEqual(811);
+      expect(estimate.totalCost).toEqual(129311);
+      expect(estimate.usingBaseFeeMutez).toEqual(811);
+      expect(estimate.consumedMilligas).toEqual(4157718);
       done();
     })
 
@@ -299,12 +299,12 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(3658);
       expect(estimate.storageLimit).toEqual(317);
-      expect(estimate.suggestedFeeMutez).toEqual(796);
+      expect(estimate.suggestedFeeMutez).toEqual(798);
       expect(estimate.burnFeeMutez).toEqual(79250);
-      expect(estimate.minimalFeeMutez).toEqual(696);
-      expect(estimate.totalCost).toEqual(79946);
-      expect(estimate.usingBaseFeeMutez).toEqual(696);
-      expect(estimate.consumedMilligas).toEqual(3557159);
+      expect(estimate.minimalFeeMutez).toEqual(698);
+      expect(estimate.totalCost).toEqual(79948);
+      expect(estimate.usingBaseFeeMutez).toEqual(698);
+      expect(estimate.consumedMilligas).toEqual(3557331);
       done();
     })
 
@@ -330,12 +330,12 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer(tx)
       expect(estimate.gasLimit).toEqual(5074);
       expect(estimate.storageLimit).toEqual(634);
-      expect(estimate.suggestedFeeMutez).toEqual(1003);
+      expect(estimate.suggestedFeeMutez).toEqual(1005);
       expect(estimate.burnFeeMutez).toEqual(158500);
-      expect(estimate.minimalFeeMutez).toEqual(903);
-      expect(estimate.totalCost).toEqual(159403);
-      expect(estimate.usingBaseFeeMutez).toEqual(903);
-      expect(estimate.consumedMilligas).toEqual(4973124);
+      expect(estimate.minimalFeeMutez).toEqual(905);
+      expect(estimate.totalCost).toEqual(159405);
+      expect(estimate.usingBaseFeeMutez).toEqual(905);
+      expect(estimate.consumedMilligas).toEqual(4973296);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
@@ -418,11 +418,11 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(460);
+      expect(estimate.suggestedFeeMutez).toEqual(462);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(360);
-      expect(estimate.totalCost).toEqual(360);
-      expect(estimate.usingBaseFeeMutez).toEqual(360);
+      expect(estimate.minimalFeeMutez).toEqual(362);
+      expect(estimate.totalCost).toEqual(362);
+      expect(estimate.usingBaseFeeMutez).toEqual(362);
       expect(estimate.consumedMilligas).toEqual(1000040);
       done();
     });
