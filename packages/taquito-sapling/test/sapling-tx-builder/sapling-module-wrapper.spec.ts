@@ -8,11 +8,11 @@ describe('SaplingWrapper', () => {
     expect(bytes.length).toEqual(24);
   });
 
-  it('randR', async (done) => {
+/*   it('randR', async (done) => {
     const randR = await saplingWrapper.randR();
     expect(randR.length).toEqual(32);
     done();
-  });
+  }); */
 
   it('getOutgoingViewingKey', async (done) => {
     const vk = Buffer.from(
@@ -75,7 +75,7 @@ describe('SaplingWrapper', () => {
     done();
   });
 
-  it('signSpendDescription', async (done) => {
+/*   it('signSpendDescription', async (done) => {
     const spendDescription = {
       cv: Buffer.from('a61b321b9b3c12d31a8f1cadad2fec37e219bea726998d9c3f311fd91092f859', 'hex'),
       proof: Buffer.from(
@@ -112,7 +112,7 @@ describe('SaplingWrapper', () => {
     expect(signedSpendDesc.nf).toEqual(spendDescription.nf);
 
     done();
-  });
+  }); */
 
   it('getPaymentAddressFromViewingKey', async (done) => {
     const vk = Buffer.from(
