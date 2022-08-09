@@ -1,5 +1,11 @@
-import { SpendDescription, OutputDescription, SaplingTransaction } from '../types';
-import { toHexBuf } from '@taquito/utils';
+import {
+  SaplingTransactionInput,
+  SaplingTransaction,
+  SaplingTransactionOutput,
+  SaplingTransactionPlaintext,
+} from '../types';
+import { char2Bytes, toHexBuf } from '@taquito/utils';
+import BigNumber from 'bignumber.js';
 
 export class SaplingForger {
   /**
@@ -12,18 +18,20 @@ export class SaplingForger {
    * @returns Forged sapling transaction of type Buffer
    */
   forgeSaplingTransaction(tx: SaplingTransaction): Buffer {
-    const spendBuf = this.forgeSpendDescriptions(tx.spendDescriptions);
+    const spendBuf = this.forgeSpendDescriptions(tx.inputs);
     const spend = Buffer.concat([toHexBuf(spendBuf.length, 32), spendBuf]);
 
-    const outputBuf = this.forgeOutputDescriptions(tx.outputDescriptions);
+    const outputBuf = this.forgeOutputDescriptions(tx.outputs);
     const output = Buffer.concat([toHexBuf(outputBuf.length, 32), outputBuf]);
+
+    const root = Buffer.from(tx.root, 'hex');
 
     return Buffer.concat([
       spend,
       output,
       tx.signature,
       toHexBuf(tx.balance, 64),
-      tx.root,
+      root,
       toHexBuf(tx.boundData.length, 32),
       tx.boundData,
     ]);
@@ -34,7 +42,7 @@ export class SaplingForger {
    * @param spendDescriptions list of spend descriptions
    * @returns concatenated forged bytes of type Buffer
    */
-  forgeSpendDescriptions(spendDescriptions: SpendDescription[]): Buffer {
+  forgeSpendDescriptions(spendDescriptions: SaplingTransactionInput[]): Buffer {
     const descriptions = [];
 
     for (const i of spendDescriptions) {
@@ -45,7 +53,7 @@ export class SaplingForger {
     return Buffer.concat(descriptions);
   }
 
-  forgeSpendDescription(desc: SpendDescription): Buffer {
+  forgeSpendDescription(desc: SaplingTransactionInput): Buffer {
     return Buffer.concat([desc.cv, desc.nf, desc.rk, desc.proof, desc.signature]);
   }
 
@@ -54,7 +62,7 @@ export class SaplingForger {
    * @param outputDescriptions list of output descriptions
    * @returns concatenated forged bytes of type Buffer
    */
-  forgeOutputDescriptions(outputDescriptions: OutputDescription[]): Buffer {
+  forgeOutputDescriptions(outputDescriptions: SaplingTransactionOutput[]): Buffer {
     const descriptions = [];
 
     for (const i of outputDescriptions) {
@@ -65,7 +73,7 @@ export class SaplingForger {
     return Buffer.concat(descriptions);
   }
 
-  forgeOutputDescription(desc: OutputDescription): Buffer {
+  forgeOutputDescription(desc: SaplingTransactionOutput): Buffer {
     const ct = desc.ciphertext;
 
     return Buffer.concat([
@@ -78,6 +86,29 @@ export class SaplingForger {
       ct.nonceEnc,
       ct.payloadOut,
       ct.nonceOut,
+    ]);
+  }
+
+  forgeUnsignedTxInput(unsignedSpendDescription: Omit<SaplingTransactionInput, 'signature'>) {
+    return Buffer.concat([
+      unsignedSpendDescription.cv,
+      unsignedSpendDescription.nf,
+      unsignedSpendDescription.rk,
+      unsignedSpendDescription.proof,
+    ]);
+  }
+
+  forgeTransactionPlaintext(txPlainText: SaplingTransactionPlaintext) {
+    const encodedMemo = Buffer.from(
+      char2Bytes(txPlainText.memo).padEnd(txPlainText.memoSize, '0'),
+      'hex'
+    );
+    return Buffer.concat([
+      txPlainText.diversifier,
+      toHexBuf(new BigNumber(txPlainText.amount), 64),
+      txPlainText.rcm,
+      toHexBuf(txPlainText.memoSize, 32),
+      encodedMemo,
     ]);
   }
 }

@@ -1,64 +1,47 @@
 import * as sapling from '@airgap/sapling-wasm';
 import BigNumber from 'bignumber.js';
 import { hex2buf, mergebuf } from '@taquito/utils';
-import { CommitmentsAndCiphertexts, RpcClient, RpcClientInterface } from '@taquito/rpc';
+import { CommitmentsAndCiphertexts, SaplingDiffResponse } from '@taquito/rpc';
 import blake from 'blakejs';
 import { openSecretBox } from '@stablelib/nacl';
 import { InMemoryViewingKey } from '../sapling-keys/in-memory-viewing-key';
 import { bufToUint8Array, convertValueToBigNumber, readableFormat } from './helpers';
 import { KDF_KEY, OCK_KEY } from '../constants';
+import { Input, SaplingContractId, SaplingIncomingAndOutgoingTransaction } from '../types';
+import { InvalidParameter } from '../error';
+import { TzReadProvider } from '@taquito/taquito';
 
-export interface SaplingIncomingAndOutgoingTransaction {
-  incoming: SaplingIncomingTransaction[];
-  outgoing: SaplingOutgoingTransaction[];
-}
-export interface SaplingIncomingTransaction {
-  value: BigNumber;
-  memo: string;
-  paymentAddress: string;
-  isSpent: boolean;
-}
-
-export interface SaplingOutgoingTransaction {
-  value: BigNumber;
-  memo: string;
-  paymentAddress: string;
-}
-
-export interface SaplingTransactionPropertiesRaw {
-  value: Uint8Array;
-  memo: Uint8Array;
-  paymentAddress: Uint8Array;
-  rcm: Uint8Array;
-}
 /**
- * @description Allows to retrieve and decrypt sapling transactions
+ * @description Allows to retrieve and decrypt sapling transactions using on a viewing key
+ *
+ * @param inMemoryViewingKey Holds the sapling viewing key
+ * @param saplingContractId Address of the sapling contract or sapling id if the smart contract contains multiple sapling states
+ * @param readProvider Allows to read data from the blockchain
  */
 export class SaplingTransactionViewer {
   #viewingKeyProvider: InMemoryViewingKey;
-  #rpcClient: RpcClientInterface;
+  #readProvider: TzReadProvider;
+  #saplingContractId: SaplingContractId;
 
-  constructor(inMemoryViewingKey: InMemoryViewingKey, rpc: string | RpcClientInterface) {
+  constructor(
+    inMemoryViewingKey: InMemoryViewingKey,
+    saplingContractId: SaplingContractId,
+    readProvider: TzReadProvider
+  ) {
     this.#viewingKeyProvider = inMemoryViewingKey;
-    if (typeof rpc === 'string') {
-      this.#rpcClient = new RpcClient(rpc);
-    } else {
-      this.#rpcClient = rpc;
-    }
+    this.#saplingContractId = saplingContractId;
+    this.#readProvider = readProvider;
   }
 
   /**
-   * @description Retrieve the unspent balance associated with the configured viewing key
+   * @description Retrieve the unspent balance associated with the configured viewing key and sapling state
    *
-   * @param saplingId sapling id that can be found in the contract storage
    * @returns the balance in mutez represented as a BigNumber
    *
    */
-  async getBalance(saplingId: string): Promise<BigNumber> {
+  async getBalance(): Promise<BigNumber> {
     let balance = new BigNumber(0);
-    const { commitments_and_ciphertexts, nullifiers } = await this.#rpcClient.getSaplingDiffById(
-      saplingId
-    );
+    const { commitments_and_ciphertexts, nullifiers } = await this.getSaplingDiff();
     for (let i = 0; i < commitments_and_ciphertexts.length; i++) {
       const decrypted = await this.decryptCiphertextAsReceiver(commitments_and_ciphertexts[i]);
       if (decrypted) {
@@ -82,15 +65,13 @@ export class SaplingTransactionViewer {
    * @description Retrieve all the incoming and outgoing transactions associated with the configured viewing key.
    * The response properties are in Uint8Array format; use the getIncomingAndOutgoingTransactions method for readable properties
    *
-   * @param saplingId sapling id that can be found in the contract storage
-   *
    */
-  async getIncomingAndOutgoingTransactionsRaw(saplingId: string) {
+  async getIncomingAndOutgoingTransactionsRaw() {
     const incoming = [];
     const outgoing = [];
-    const { commitments_and_ciphertexts, nullifiers } = await this.#rpcClient.getSaplingDiffById(
-      saplingId
-    );
+
+    const { commitments_and_ciphertexts, nullifiers } = await this.getSaplingDiff();
+
     for (let i = 0; i < commitments_and_ciphertexts.length; i++) {
       const decryptedAsReceiver = await this.decryptCiphertextAsReceiver(
         commitments_and_ciphertexts[i]
@@ -122,13 +103,9 @@ export class SaplingTransactionViewer {
   /**
    * @description Retrieve all the incoming and outgoing decoded transactions associated with the configured viewing key
    *
-   * @param saplingId sapling id that can be found in the contract storage
-   *
    */
-  async getIncomingAndOutgoingTransactions(
-    saplingId: string
-  ): Promise<SaplingIncomingAndOutgoingTransaction> {
-    const tx = await this.getIncomingAndOutgoingTransactionsRaw(saplingId);
+  async getIncomingAndOutgoingTransactions(): Promise<SaplingIncomingAndOutgoingTransaction> {
+    const tx = await this.getIncomingAndOutgoingTransactionsRaw();
     const incoming = tx.incoming.map(({ isSpent, ...rest }) => {
       return { ...readableFormat(rest), isSpent };
     });
@@ -138,9 +115,29 @@ export class SaplingTransactionViewer {
     return { incoming, outgoing };
   }
 
+  private async getSaplingDiff() {
+    let saplingDiffResponse: SaplingDiffResponse;
+    if (this.#saplingContractId.saplingId) {
+      saplingDiffResponse = await this.#readProvider.getSaplingDiffById(
+        { id: this.#saplingContractId.saplingId },
+        'head'
+      );
+    } else if (this.#saplingContractId.contractAddress) {
+      saplingDiffResponse = await this.#readProvider.getSaplingDiffByContract(
+        this.#saplingContractId.contractAddress,
+        'head'
+      );
+    } else {
+      throw new InvalidParameter(
+        'A contract address or a sapling id was expected in the SaplingTransactionViewer constructor.'
+      );
+    }
+    return saplingDiffResponse;
+  }
+
   private async decryptCiphertextAsReceiver(
     commitmentsAndCiphertexts: CommitmentsAndCiphertexts
-  ): Promise<SaplingTransactionPropertiesRaw | undefined> {
+  ): Promise<Omit<Input, 'position'> | undefined> {
     const commitment = commitmentsAndCiphertexts[0];
     const { epk, payload_enc, nonce_enc } = commitmentsAndCiphertexts[1];
 
@@ -180,7 +177,7 @@ export class SaplingTransactionViewer {
 
   private async decryptCiphertextAsSender(
     commitmentsAndCiphertexts: CommitmentsAndCiphertexts
-  ): Promise<SaplingTransactionPropertiesRaw | undefined> {
+  ): Promise<Omit<Input, 'position'> | undefined> {
     const commitment = commitmentsAndCiphertexts[0];
     const { epk, payload_enc, nonce_enc, payload_out, nonce_out, cv } =
       commitmentsAndCiphertexts[1];

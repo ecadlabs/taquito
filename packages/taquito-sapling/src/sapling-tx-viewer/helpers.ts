@@ -1,6 +1,6 @@
 import { b58cencode, bytes2Char, Prefix, prefix } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
-import { SaplingTransactionPropertiesRaw } from './sapling-transaction-viewer';
+import { Input } from '../types';
 
 export function memoHexToUtf8(memo: string) {
   const memoNoPadding = removeZeroPaddedBytesRight(memo);
@@ -12,7 +12,7 @@ function removeZeroPaddedBytesRight(memo: string) {
   return matchZeroRight ? matchZeroRight[1] : memo;
 }
 
-export function readableFormat(saplingTransactionProperties: SaplingTransactionPropertiesRaw) {
+export function readableFormat(saplingTransactionProperties: Omit<Input, 'position'>) {
   return {
     value: convertValueToBigNumber(saplingTransactionProperties.value),
     memo: memoHexToUtf8(Buffer.from(saplingTransactionProperties.memo).toString('hex')),

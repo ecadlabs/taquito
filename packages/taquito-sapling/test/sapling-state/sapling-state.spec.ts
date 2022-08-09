@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js';
 
 let state: SaplingState;
 
-describe('Sapling State Tree tests', async () => {
+describe('Sapling State Tree tests', () => {
   beforeEach(async () => {
     state = new SaplingState(32);
   });

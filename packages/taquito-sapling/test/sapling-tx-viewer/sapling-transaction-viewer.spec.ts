@@ -1,6 +1,6 @@
-import { SaplingTransactionViewer } from '../src/sapling-tx-viewer/sapling-transaction-viewer';
-import { InMemoryViewingKey } from '../src/sapling-keys/in-memory-viewing-key';
-import { saplingStateDiff, saplingStateDiffMemo4 } from './data';
+import { SaplingTransactionViewer } from '../../src/sapling-tx-viewer/sapling-transaction-viewer';
+import { InMemoryViewingKey } from '../../src/sapling-keys/in-memory-viewing-key';
+import { saplingStateDiff, saplingStateDiffMemo4 } from '../data';
 import BigNumber from 'bignumber.js';
 
 describe('SaplingTransactionViewer', () => {
@@ -19,20 +19,32 @@ describe('SaplingTransactionViewer', () => {
   });
 
   it('Should be instantiable', async (done) => {
-    const txViewer = new SaplingTransactionViewer(viewingKeyInMemory, mockRpcClient);
+    const txViewer = new SaplingTransactionViewer(
+      viewingKeyInMemory,
+      { saplingId: '123' },
+      mockRpcClient
+    );
     expect(txViewer).toBeDefined();
     done();
   });
 
-  it('Retrieve the correct balance from sapling state', async (done) => {
-    const txViewer = new SaplingTransactionViewer(viewingKeyInMemory, mockRpcClient);
-    expect(await txViewer.getBalance('3899')).toEqual(new BigNumber(5000000));
+  it('should retrieve the correct balance from sapling state', async (done) => {
+    const txViewer = new SaplingTransactionViewer(
+      viewingKeyInMemory,
+      { saplingId: '3899' },
+      mockRpcClient
+    );
+    expect(await txViewer.getBalance()).toEqual(new BigNumber(5000000));
     done();
   });
 
   it('Retrieve incoming and outgoing transactions in readable format', async (done) => {
-    const txViewer = new SaplingTransactionViewer(viewingKeyInMemory, mockRpcClient);
-    expect(await txViewer.getIncomingAndOutgoingTransactions('3899')).toEqual({
+    const txViewer = new SaplingTransactionViewer(
+      viewingKeyInMemory,
+      { saplingId: '3899' },
+      mockRpcClient
+    );
+    expect(await txViewer.getIncomingAndOutgoingTransactions()).toEqual({
       incoming: [
         {
           value: new BigNumber('10000000'),
@@ -103,8 +115,12 @@ describe('SaplingTransactionViewer', () => {
       'sask27SLmU9herddJFjvuQq9aVuzTx8nmu3zttpMCDWBH2V2MbvUcnxrH5AWGXXybqiqn9THT8GMQhJumHgM2rPQi3sx6FmD2WY4tXrEk7YupAQ9VG9MoM5YkpQFMqS6JkcWiZZCYz4ZWXDdi8Jycgv6qKXauWPA6EY7vVJUZX8Dh2rJGrCRm7huLQK3UpHkHar4sv332z6Cqwqcc7Drz7VzkGeUidG2MWQJvUvzPVzpnHPJx'
     );
 
-    const txViewer = new SaplingTransactionViewer(viewingKeyInMemory, mockRpcClient);
-    expect(await txViewer.getIncomingAndOutgoingTransactionsRaw('3899')).toEqual({
+    const txViewer = new SaplingTransactionViewer(
+      viewingKeyInMemory,
+      { saplingId: '3899' },
+      mockRpcClient
+    );
+    expect(await txViewer.getIncomingAndOutgoingTransactionsRaw()).toEqual({
       incoming: [
         {
           value: new Uint8Array([0, 0, 0, 0, 0, 152, 150, 128]),
@@ -131,8 +147,12 @@ describe('SaplingTransactionViewer', () => {
     viewingKeyInMemory = await InMemoryViewingKey.fromSpendingKey(
       'sask27SLmU9herddJ9EmreYA6y3Jmpxvrzk5891R8Z4osTGCoxfevAV9HafAAntWhRDHNxytBCN9qtFE7eBk9DE2ewEzvXUSSKRhrjF7pshtoc4oWGBS7Z1JJ4VHNanXCDc3qdUb45cp6QJS8sbzQqZNFycNyjNr3cXdodUfrGyHDsiX8JHPaL9ASJxauwmVqRmT6rYKEUagJUQEVzdHJ72Wd6ewEC1mHrMpvyNHkkcSkaLRr'
     );
-    const txViewer = new SaplingTransactionViewer(viewingKeyInMemory, mockRpcClient);
-    expect(await txViewer.getIncomingAndOutgoingTransactions('3899')).toEqual({
+    const txViewer = new SaplingTransactionViewer(
+      viewingKeyInMemory,
+      { saplingId: '3899' },
+      mockRpcClient
+    );
+    expect(await txViewer.getIncomingAndOutgoingTransactions()).toEqual({
       incoming: [
         {
           value: new BigNumber('7000000'),

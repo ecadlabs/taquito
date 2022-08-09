@@ -3,6 +3,323 @@
  * @module @taquito/sapling
  */
 
+import { BigNumber } from 'bignumber.js';
+import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
+import {
+  b58cdecode,
+  format,
+  InvalidAddressError,
+  InvalidKeyError,
+  prefix,
+  Prefix,
+  validateKeyHash,
+  ValidationResult,
+} from '@taquito/utils';
+import { InsufficientBalance, InvalidMemo } from './error';
+import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
+import { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
+import { SaplingForger } from './sapling-forger/sapling-forger';
+import { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
+import {
+  ChosenSpendableInputs,
+  Input,
+  ParametersSaplingTransaction,
+  ParametersUnshieldedTransaction,
+  SaplingContractDetails,
+  SaplingContractId,
+} from './types';
+import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
+import { defaultBoundData, defaultMemo } from './constants';
+
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';
 export { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
+
+/**
+ * @description Class that surfaces all of the sapling capability allowing to read from a sapling state and prepare transactions
+ *
+ * @param inMemorySpendingKey Holds the sapling spending key
+ * @param saplingContractDetails Contains the address of the sapling contract, the memo size, and an optional sapling id that must be defined if the sapling contract contains more than one sapling state
+ * @param readProvider Allows to read data from the blockchain
+ * @param packer Optional. Allows packing data. Use the `MichelCodecPacker` by default.
+ * @param saplingForger Optional. Allows serializing the sapling transactions. Use the `SaplingForger` by default.
+ * @param saplingTxBuilder Optional. Allows to prepare the sapling transactions. Use the `SaplingTransactionBuilder` by default.
+ */
+export class SaplingToolkit {
+  #inMemorySpendingKey: InMemorySpendingKey;
+  #saplingId: string | undefined;
+  #contractAddress: string;
+  #memoSize: number;
+  #readProvider: TzReadProvider;
+  #packer: Packer;
+  #saplingForger: SaplingForger;
+  #saplingTxBuilder: SaplingTransactionBuilder;
+  #saplingTransactionViewer: SaplingTransactionViewer | undefined;
+  constructor(
+    inMemorySpendingKey: InMemorySpendingKey,
+    saplingContractDetails: SaplingContractDetails,
+    readProvider: TzReadProvider,
+    packer = new MichelCodecPacker(),
+    saplingForger = new SaplingForger(),
+    saplingTxBuilder = new SaplingTransactionBuilder(
+      inMemorySpendingKey,
+      saplingForger,
+      saplingContractDetails,
+      readProvider
+    )
+  ) {
+    this.#inMemorySpendingKey = inMemorySpendingKey;
+    this.#saplingId = saplingContractDetails.saplingId;
+    this.#contractAddress = saplingContractDetails.contractAddress;
+    this.#memoSize = saplingContractDetails.memoSize;
+    this.#readProvider = readProvider;
+    this.#packer = packer;
+    this.#saplingForger = saplingForger;
+    this.#saplingTxBuilder = saplingTxBuilder;
+  }
+
+  /**
+   * @description Get an instance of `SaplingTransactionViewer` which allows to retrieve and decrypt sapling transactions and calculate the unspent balance.
+   */
+  async getSaplingTransactionViewer() {
+    let saplingTransactionViewer: SaplingTransactionViewer;
+
+    if (!this.#saplingTransactionViewer) {
+      const saplingViewingKey = await this.#inMemorySpendingKey.getInMemoryViewingKey();
+      saplingTransactionViewer = new SaplingTransactionViewer(
+        saplingViewingKey,
+        this.getSaplingContractId(),
+        this.#readProvider
+      );
+      this.#saplingTransactionViewer = saplingTransactionViewer;
+    }
+    return this.#saplingTransactionViewer;
+  }
+
+  /**
+   * @description Prepare a shielded transaction
+   * @param shieldedTxParams `to` is the payment address that will receive the shielded tokens (zet).
+   * `amount` is the amount of shielded tokens in tez by default.
+   * `mutez` needs to be set to true if the amount of shielded tokens is in mutez.
+   * `memo` is an empty string by default.
+   * @returns a string representing the sapling transaction
+   */
+  async prepareShieldedTransaction(shieldedTxParams: ParametersSaplingTransaction[]) {
+    const { formatedParams, totalAmount } = this.formatTransactionParams(
+      shieldedTxParams,
+      this.validateDestinationSaplingAddress
+    );
+    const root = await this.getRoot();
+
+    const { inputs, outputs, signature, balance } = await this.#saplingTxBuilder.createShieldTx(
+      formatedParams,
+      totalAmount,
+      defaultBoundData
+    );
+
+    const forgedSaplingTx = this.#saplingForger.forgeSaplingTransaction({
+      inputs,
+      outputs,
+      balance,
+      root,
+      boundData: defaultBoundData,
+      signature,
+    });
+
+    return forgedSaplingTx.toString('hex');
+  }
+
+  /**
+   * @description Prepare an unshielded transaction
+   * @param unshieldedTxParams `to` is the Tezos address that will receive the unshielded tokens (tz1, tz2 or tz3).
+   * `amount` is the amount of unshielded tokens in tez by default.
+   * `mutez` needs to be set to true if the amount of unshielded tokens is in mutez.
+   * @returns a string representing the sapling transaction.
+   */
+  async prepareUnshieldedTransaction(unshieldedTxParams: ParametersUnshieldedTransaction) {
+    const { formatedParams, totalAmount } = this.formatTransactionParams(
+      [unshieldedTxParams],
+      this.validateDestinationImplicitAddress
+    );
+
+    const boundData = await this.createBoundData(formatedParams[0].to);
+
+    const root = await this.getRoot();
+    const chosenInputs = await this.selectInputsToSpend(new BigNumber(formatedParams[0].amount));
+
+    const { inputs, outputs, signature, balance } = await this.#saplingTxBuilder.createSaplingTx(
+      [],
+      totalAmount,
+      boundData,
+      chosenInputs
+    );
+
+    const forgedSaplingTx = this.#saplingForger.forgeSaplingTransaction({
+      inputs,
+      outputs,
+      balance,
+      root,
+      boundData,
+      signature,
+    });
+
+    return forgedSaplingTx.toString('hex');
+  }
+
+  /**
+   * @description Prepare a sapling transaction (zet to zet)
+   * @param saplingTxParams `to` is the payment address that will receive the shielded tokens (zet).
+   * `amount` is the amount of unshielded tokens in tez by default.
+   * `mutez` needs to be set to true if the amount of unshielded tokens is in mutez.
+   * `memo` is an empty string by default.
+   * @returns a string representing the sapling transaction.
+   */
+  async prepareSaplingTransaction(saplingTxParams: ParametersSaplingTransaction[]) {
+    const { formatedParams, totalAmount } = this.formatTransactionParams(
+      saplingTxParams,
+      this.validateDestinationSaplingAddress
+    );
+
+    const root = await this.getRoot();
+    const chosenInputs = await this.selectInputsToSpend(totalAmount);
+    const { inputs, outputs, signature, balance } = await this.#saplingTxBuilder.createSaplingTx(
+      formatedParams,
+      totalAmount,
+      defaultBoundData,
+      chosenInputs
+    );
+
+    const forgedSaplingTx = this.#saplingForger.forgeSaplingTransaction({
+      inputs,
+      outputs,
+      balance,
+      root,
+      boundData: defaultBoundData,
+      signature,
+    });
+
+    return forgedSaplingTx.toString('hex');
+  }
+
+  private formatTransactionParams(
+    txParams: ParametersSaplingTransaction[],
+    validateDestination: (to: string) => void
+  ) {
+    const formatedParams: {
+      to: string;
+      amount: string;
+      memo: string;
+    }[] = [];
+
+    let totalAmount = new BigNumber(0);
+
+    txParams.forEach((param) => {
+      validateDestination(param.to);
+      const amountMutez = param.mutez
+        ? param.amount.toString()
+        : format('tz', 'mutez', param.amount).toString();
+      totalAmount = totalAmount.plus(new BigNumber(amountMutez));
+      const memo = param.memo ?? defaultMemo;
+      if (memo.length > this.#memoSize) {
+        throw new InvalidMemo(memo, 'The memo is too long.');
+      }
+
+      formatedParams.push({ to: param.to, amount: amountMutez, memo });
+    });
+
+    return { formatedParams, totalAmount };
+  }
+
+  private async getRoot() {
+    if (this.#saplingId) {
+      const { root } = await this.#readProvider.getSaplingDiffById({ id: this.#saplingId }, 'head');
+      return root;
+    } else {
+      const { root } = await this.#readProvider.getSaplingDiffByContract(
+        this.#contractAddress,
+        'head'
+      );
+      return root;
+    }
+  }
+  private async createBoundData(destination: string) {
+    const pref = destination.substr(0, 3);
+
+    let pad: Buffer;
+    switch (pref) {
+      case 'tz1': {
+        pad = Buffer.from('00', 'hex');
+        break;
+      }
+      case 'tz2': {
+        pad = Buffer.from('01', 'hex');
+        break;
+      }
+      case 'tz3': {
+        pad = Buffer.from('02', 'hex');
+        break;
+      }
+      default: {
+        throw new InvalidKeyError(destination, "The 'to' parameter contains an invalid prefix.");
+      }
+    }
+
+    const decodedDestination = b58cdecode(destination, prefix[pref]);
+    const padDestination = Buffer.concat([pad, Buffer.from(decodedDestination)]);
+    const packedDestination = await this.#packer.packData({
+      data: { bytes: padDestination.toString('hex') },
+      type: { prim: 'bytes' },
+    });
+
+    return Buffer.from(packedDestination.packed, 'hex');
+  }
+
+  private validateDestinationImplicitAddress(to: string) {
+    if (validateKeyHash(to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(
+        to,
+        "The 'to' parameter must be a Tezos public key hash (tz1, tz2, tz3)."
+      );
+    }
+  }
+
+  private validateDestinationSaplingAddress(to: string) {
+    if (!to.startsWith(Prefix.ZET1)) {
+      throw new InvalidAddressError(to, "The 'to' parameter must be a sapling address (zet1).");
+    }
+  }
+
+  private getSaplingContractId() {
+    let saplingContractId: SaplingContractId;
+    if (this.#saplingId) {
+      saplingContractId = { saplingId: this.#saplingId };
+    } else {
+      saplingContractId = { contractAddress: this.#contractAddress };
+    }
+    return saplingContractId;
+  }
+
+  private async selectInputsToSpend(amountMutez: BigNumber): Promise<ChosenSpendableInputs> {
+    const saplingTxViewer = await this.getSaplingTransactionViewer();
+
+    const { incoming } = await saplingTxViewer.getIncomingAndOutgoingTransactionsRaw();
+
+    const inputsToSpend: Input[] = [];
+    let sumSelectedInputs = new BigNumber(0);
+
+    incoming.forEach((input) => {
+      if (!input.isSpent && sumSelectedInputs.isLessThan(amountMutez)) {
+        const txAmount = convertValueToBigNumber(input.value);
+        sumSelectedInputs = sumSelectedInputs.plus(txAmount);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { isSpent, ...rest } = input;
+        inputsToSpend.push(rest);
+      }
+    });
+
+    if (sumSelectedInputs.isLessThan(new BigNumber(amountMutez))) {
+      throw new InsufficientBalance(sumSelectedInputs.toString(), amountMutez.toString());
+    }
+    return { inputsToSpend, sumSelectedInputs };
+  }
+}

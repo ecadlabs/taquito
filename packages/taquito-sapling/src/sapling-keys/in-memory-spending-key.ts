@@ -49,14 +49,14 @@ export class InMemorySpendingKey {
 
   /**
    *
-   * @param mnemonic list of words
+   * @param mnemonic strings of words
    * @param derivationPath tezos current standard 'm/'
    * @returns InMemorySpendingKey class instantiated
    */
 
-  static async fromMnemonic(mnemonic: string[], derivationPath = 'm/') {
+  static async fromMnemonic(mnemonic: string, derivationPath = 'm/') {
     // no password passed here. password provided only changes from sask -> MMXj
-    const fullSeed = await bip39.mnemonicToSeed(mnemonic.join(' '));
+    const fullSeed = await bip39.mnemonicToSeed(mnemonic);
 
     const first32: Buffer = fullSeed.slice(0, 32);
     const second32: Buffer = fullSeed.slice(32);
@@ -80,7 +80,7 @@ export class InMemorySpendingKey {
    *
    * @returns InMemoryViewingKey instantiated class
    */
-  async getSaplingViewer() {
+  async getInMemoryViewingKey() {
     let vk: Buffer;
     if (!this.#saplingViewingKey) {
       vk = await sapling.getExtendedFullViewingKeyFromSpendingKey(this.#skBuf);
