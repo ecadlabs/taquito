@@ -1815,6 +1815,13 @@
     "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
 
+"@taquito/http-utils@^12.1.1":
+  "integrity" "sha512-Zlp/eTRVjFs0XEIiAhgxkh6s9npF4dO+e/Sm2XWsDmNPoGI2jdXNH0L+NiKJIOkYcu0CXlcgriTeEaYnbeTvcA=="
+  "resolved" "https://registry.npmjs.org/@taquito/http-utils/-/http-utils-12.1.1.tgz"
+  "version" "12.1.1"
+  dependencies:
+    "axios" "^0.26.0"
+
 "@taquito/http-utils@^13.0.1", "@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
   "resolved" "file:packages/taquito-http-utils"
   "version" "13.0.1"
@@ -1831,18 +1838,18 @@
     "@taquito/utils" "^13.0.1"
     "buffer" "^6.0.3"
 
-"@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
+"@taquito/local-forging@^13.0.1", "@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
   "version" "13.0.1"
   dependencies:
     "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
 
-"@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
+"@taquito/michel-codec@^13.0.1", "@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
   "version" "13.0.1"
 
-"@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
+"@taquito/michelson-encoder@^13.0.1", "@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "13.0.1"
   dependencies:
@@ -1862,7 +1869,16 @@
     "@taquito/utils" "^13.0.1"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/rpc@^12.1.1", "@taquito/rpc@^13.0.1", "@taquito/rpc@file:/home/mike/taquito/packages/taquito-rpc":
+"@taquito/rpc@^12.1.1":
+  "integrity" "sha512-CgAF9kdmKLa/UbmiqApDtncCQGiG7kEOIYis8IIa0JUT9JD1H8WBbSNF/oNh4e0soWUK9BL2qU369RFnxIW+iA=="
+  "resolved" "https://registry.npmjs.org/@taquito/rpc/-/rpc-12.1.1.tgz"
+  "version" "12.1.1"
+  dependencies:
+    "@taquito/http-utils" "^12.1.1"
+    "@taquito/utils" "^12.1.1"
+    "bignumber.js" "^9.0.2"
+
+"@taquito/rpc@^13.0.1", "@taquito/rpc@file:/home/mike/taquito/packages/taquito-rpc":
   "resolved" "file:packages/taquito-rpc"
   "version" "13.0.1"
   dependencies:
@@ -1907,17 +1923,26 @@
   "resolved" "file:packages/taquito-tzip12"
   "version" "13.0.1"
 
-"@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
+"@taquito/tzip16@^13.0.1", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "13.0.1"
   dependencies:
-    "@taquito/http-utils" "^13.0.1"
-    "@taquito/michelson-encoder" "^13.0.1"
-    "@taquito/rpc" "^13.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
+
+"@taquito/utils@^12.1.1":
+  "integrity" "sha512-GxNSBrA02vwhy56ayWB49VZficB+j2oyhPdlsRb2CguephmyEYnlUaNV27ILa6dPDW+zv6+QWQj6GyqLBRpIlA=="
+  "resolved" "https://registry.npmjs.org/@taquito/utils/-/utils-12.1.1.tgz"
+  "version" "12.1.1"
+  dependencies:
+    "@stablelib/blake2b" "^1.0.1"
+    "@stablelib/ed25519" "^1.0.2"
+    "@types/bs58check" "^2.1.0"
+    "blakejs" "^1.1.1"
+    "bs58check" "^2.1.2"
+    "buffer" "^6.0.3"
+    "elliptic" "^6.5.4"
+    "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/utils@^13.0.1", "@taquito/utils@file:/home/mike/taquito/packages/taquito-utils":
   "resolved" "file:packages/taquito-utils"
@@ -3104,7 +3129,7 @@
   "resolved" "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.2.0.tgz"
   "version" "2.2.0"
 
-"blakejs@^1.2.1":
+"blakejs@^1.1.1", "blakejs@^1.2.1":
   "integrity" "sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ=="
   "resolved" "https://registry.npmjs.org/blakejs/-/blakejs-1.2.1.tgz"
   "version" "1.2.1"
