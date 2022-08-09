@@ -26,6 +26,7 @@
     "@taquito/tzip16": "^13.0.1",
     "@taquito/utils": "^13.0.1",
     "bignumber.js": "^9.0.2",
+    "bip39": "^3.0.4",
     "blakejs": "^1.2.1"
   },
   "private": true,
