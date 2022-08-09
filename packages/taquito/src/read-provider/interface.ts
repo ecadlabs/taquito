@@ -113,6 +113,16 @@ export interface TzReadProvider {
   ): Promise<SaplingDiffResponse>;
 
   /**
+   * @description Access the sapling state of a smart contract.
+   * @param contractAddress Address of the smart contract
+   * @param block from which we want to retrieve the sapling state
+   */
+  getSaplingDiffByContract(
+    contractAddress: string,
+    block: BlockIdentifier
+  ): Promise<SaplingDiffResponse>;
+
+  /**
    * @description Return the list of entrypoints of the contract
    * @param contract address of the contract we want to get the entrypoints of
    */
