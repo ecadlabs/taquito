@@ -69,7 +69,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(464);
+      expect(estimate.suggestedFeeMutez).toEqual(462);
       expect(estimate.burnFeeMutez).toEqual(0);
       expect(estimate.minimalFeeMutez).toEqual(364);
       expect(estimate.totalCost).toEqual(364);
@@ -108,7 +108,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(257);
-      expect(estimate.suggestedFeeMutez).toEqual(464);
+      expect(estimate.suggestedFeeMutez).toEqual(462);
       expect(estimate.burnFeeMutez).toEqual(64250);
       expect(estimate.minimalFeeMutez).toEqual(364);
       expect(estimate.totalCost).toEqual(64614);
@@ -159,7 +159,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       })
       expect(estimate.gasLimit).toEqual(1569);
       expect(estimate.storageLimit).toEqual(571);
-      expect(estimate.suggestedFeeMutez).toEqual(802);
+      expect(estimate.suggestedFeeMutez).toEqual(800);
       expect(estimate.burnFeeMutez).toEqual(142750);
       expect(estimate.minimalFeeMutez).toEqual(702);
       expect(estimate.totalCost).toEqual(143452);
@@ -207,7 +207,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       })
       expect(estimate.gasLimit).toEqual(1100);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(459);
+      expect(estimate.suggestedFeeMutez).toEqual(457);
       expect(estimate.burnFeeMutez).toEqual(0);
       expect(estimate.minimalFeeMutez).toEqual(359);
       expect(estimate.totalCost).toEqual(359);
