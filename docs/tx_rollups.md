@@ -8,8 +8,6 @@ A Transaction Optimistic Rollup (TORU) is an experimental temporary scaling solu
 
 This is a trimmed, more concise documentation of how to do TORU operations in Taquito. If you aren't yet familiar with rollup node interactions, please refer to this [documentation](https://tezos.gitlab.io/alpha/transaction_rollups.html?highlight=transaction%20rollups#transaction-rollups) by Nomadic Labs.
 
-Some new terms and jargon is introduced in the Jakartanet update regarding rollup nodes, please refer to this [glossary](https://)
-
 TORU currently supports the transferring of funds in the form of [tickets](https://tezostaquito.io/docs/tickets). Fund (or ticket) transfers can be done from:
 - Layer-1 to layer 2 (deposit)
 - Layer-2 to layer 2 (transfer)
@@ -101,3 +99,10 @@ const op = await Tezos.contract.transferTicket({
 ```
 tezos-tx-rollup-client-alpha rpc get "/context/head/tickets/${ticket_hash}"
 ```
+
+## Glossary
+- `Layer-1` refers to our main protocol networks related to on-chain transactions
+- `Layer-2` refers to rollup nodes deployed by any individual/group to receive transactions off-chain
+- `TORU` is short for Transactional Optimistic Rollup; the experimental, temporary introduction for rollup nodes
+- `SCORU` is short for Smart Contract Optimistic Rollup; the more 'permanent' solution that has yet to be be released
+- `Finality Period` refers to the number of blocks needed for the chain to finalize transactions on a rollup node (40,000 blocks on mainnet and testnets, 10 blocks on Mondaynet and Dailynet for ease of testing and demo purposes). See [documentation](https://tezos.gitlab.io/alpha/transaction_rollups.html?highlight=transaction%20rollups#commitments-and-rejections).
