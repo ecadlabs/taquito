@@ -25,7 +25,7 @@ type OtherEltsInner =
       inode_extender: INodeExtender;
     };
 
-type OtherElts =
+export type OtherElts =
   | {
       node: [string, { value: string } | { node: string }][];
     }
@@ -41,7 +41,7 @@ type State =
       other_elts: OtherElts;
     };
 
-interface Inode {
+export interface Inode {
   length: string;
   proofs: [string | null, string | null];
 }

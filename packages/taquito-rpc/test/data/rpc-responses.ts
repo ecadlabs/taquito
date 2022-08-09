@@ -4189,6 +4189,244 @@ export const blockJakartanetSample = {
               },
             },
           },
+          {
+            kind: 'tx_rollup_rejection',
+            source: 'tz1MDU45gNc9Ko1Q9obcz6hQkKSMiQRib6GZ',
+            fee: '2837',
+            counter: '266515',
+            gas_limit: '11633',
+            storage_limit: '0',
+            rollup: 'txr1V16e1hXyVKndP4aE8cujRfryoHTiHK9fG',
+            level: 11,
+            message: {
+              batch: '01b2530bd9f4d594ee6116286cbb045a972305e38e6365b396f49d153815fbdd15c8974b7fdc50aee4bc3f8195e95075ab0fca5d31927917ede7a408fe70c61cd4a0525b2836eca0e797cdf9ae9b3bf58735fd62a7bf21775d46940ae9bd83a8d501130187e8c631aba41d88a67da49cf5f4db947fdf5a76084f1d4b6c14531f6582b239db26dd0375ca7172cdbecd8b6f080ffa58c748f83cc7a2afce164c1bcc53712ff5a9e50c39fb0172acda0a'
+            },
+            message_position: '0',
+            message_path: [ 'txi1WZKF1fkUWfKbmaHbb5b8gn68rKSyUy4k7NnSVY4p79BKYz5RB' ],
+            message_result_hash: 'txmr344vtdPzvWsfnoSd3mJ3MCFA5ehKLQs1pK9WGcX4FEACg1rVgC',
+            message_result_path: [ 'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB' ],
+            previous_message_result: {
+              context_hash: 'CoVUv68XdJts8f6Ysaoxm4jnt4JKXfqx8WYVFnkj2UFfgKHJUrLs',
+              withdraw_list_hash: 'txw1sFoLju3ySMAdY6v1dcHUMqJ4Zxc1kcynC8xkYgCmH6bpNSDhV'
+            },
+            previous_message_result_path: [ 'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB' ],
+            proof: {
+              version: 3,
+              before: { node: 'CoVUv68XdJts8f6Ysaoxm4jnt4JKXfqx8WYVFnkj2UFfgKHJUrLs' },
+              after: { node: 'CoUn3twa3TmvNby5VAGeN2jHvzbfpmJAXcyDHJuLLAuuLiaZZnzC' },
+              state: [
+                {
+                  inode: {
+                    length: "14",
+                    proofs: [
+                      "CoVbQczQE6uDug4tWErtLgszzZBRDJKEGHgcQp8jGYSEfBLnsMXH",
+                      "CoWZ31tY65qh38Sfgm64Ny8kDTLQQMr5xuRDkDkz1JopiBnPDu11"
+                    ]
+                  }
+                },
+                {
+                  inode: {
+                    length: "6",
+                    proofs: [
+                      "CoVecMq8ageb8fsmr6MPdNDH583cEpfCjVu8dQJpBP4J5GxM4Fex",
+                      "CoUh6FXy5xrEqSswAJ8MmAWcJMUiLyCq53RQiEHoHdovYxzXLHVE"
+                    ]
+                  }
+                },
+                {
+                  inode: {
+                    length: "3",
+                    proofs: [
+                      null,
+                      "CoVPGhaCkq2yV5JJs8Bxq1idndEhBn3SCJe3rSH5eYvr9BnRnv8i"
+                    ]
+                  }
+                },
+                {
+                  inode: {
+                    length: "3",
+                    proofs: [
+                      "CoWawEsrigKz7nfmXdCE84Rj6sJzzSj3RdeyuySjaxzhFZ17EFjb",
+                      "CoVWwp2qJWcRXvNA4adk9nUHRvKT22qY8QEoaAYK2Fz5tviyCaBw"
+                    ]
+                  }
+                },
+                {
+                  other_elts: {
+                  node: [
+                    [
+                      "0287e8c631aba41d88a67da49cf5f4db947fdf5a76",
+                      { "value": "CoW4fTVfN6WBZ6XqT38EqLzn5raQUYkjSL4Ce7J2KsGKcFPjgUJy" }
+                    ],
+                    [
+                      "050000000100000002",
+                      { "value": "CoWQdcsnqDRRNEb1F4dRSPffKXfAnBXhhdpwo5mMyQibrXx5BKmF" }
+                    ]
+                  ]}
+                },
+                {
+                  other_elts: {
+                    other_elts: { value: "00000000" }
+                  }
+                },
+                {
+                  inode: {
+                    length: "3",
+                    proofs: [
+                          "CoW1wvLQ8e7wwDXM431GKDFZ5FJMTu9aGtHCY6NE9jmcH2rBn3UU",
+                          "CoWVAyWNj6anjKBcoGmpEKpcURyTSvjPBJiHs8TcWruhVwNKzbiv"
+                    ]
+                  }
+                },
+                {
+                  other_elts: {
+                    node: [
+                      [
+                        "0000000000",
+                        { "value": "CoWXftiVdu561NbMwSyvQ8aJ5mPNCdCiyL3e9MP5fpb12nhEa6BQ" }
+                      ],
+                      [
+                        "0000000001",
+                        { "value": "CoVjtgM389FfgNSs91E4J7mVWwvtAVkPCV8UrGR8onjUmbvAYFz1" }
+                      ]
+                    ]
+                  }
+                },
+                {
+                  other_elts: {
+                    other_elts: {
+                      "value": "00000000000000070000003087bdec4b6745183b7ea589128f836e037e92a8e7fbad7818c0e371840b78aca9cceb24d627c59ace2962c9b801606016"
+                    }
+                  }
+                },
+                {
+                  other_elts: {
+                    node: [
+                      [
+                        "021d4b6c14531f6582b239db26dd0375ca7172cdbe",
+                        { value: "CoWG69nMHdez4s8SahwsB2m5ZPCLqPre7Qmi5uwdJ9nhFsEX7RdN" }
+                      ]
+                    ]
+                  }
+                },
+                {
+                other_elts: {
+                  other_elts: { value: "00000001" }
+                  }
+                },
+                {
+                inode: {
+                  length: "8",
+                  proofs: [
+                      "CoV8yd9SQTRz1ic9WyiMNAfyTq3Q9Jq9iUwNPtT3Tuxm999F2GnY",
+                      "CoW6PzNAZdnTY1NB1AXS5gx23BGpm66FvBW2yahScM4d8LEa3csN"
+                    ]
+                  }
+                },
+                {
+                inode: {
+                  length: "4",
+                  proofs: [
+                      "CoWKdEp4XjM5dYvDJoYzsa9ofVRrqKrwbryd9TmKD9uTT1pVHTfb",
+                      "CoUzXw8c38PwQdyMUo7ZatPL5xWRfLuAuCQFvtMJJu3T5jt9qDLq"
+                    ]
+                  }
+                },
+                {
+                inode: {
+                  length: "3",
+                  proofs: [
+                      "CoWFsG1gkdG17aE9emaKrhEJEhc41VMpmG4mmTmjt6wPkdjfJmhj",
+                      "CoV4P6w3UKpWRmbFJVL1x46YHaxCBVNqJKBYhT29W9pjK2Vum5a2"
+                    ]
+                  }
+                },
+                {
+                  other_elts: {
+                    node: [
+                      [
+                        "04cd8b6f080ffa58c748f83cc7a2afce164c1bcc53712ff5a9e50c39fb0172acda",
+                        { value: "CoW4fTVfN6WBZ6XqT38EqLzn5raQUYkjSL4Ce7J2KsGKcFPjgUJy" }
+                      ],
+                      [
+                        "050000000000000000",
+                        { value: "CoVd2R5Mf2KMjBgCDpPYEmgQVbg7fXCcv6hmfFKUPyiNotbkKqkf" }
+                      ]
+                    ]
+                  }
+                },
+                {
+                  other_elts: {
+                    other_elts: { value: "0032" }
+                  }
+                },
+                {
+                  other_elts: {
+                    node: [
+                      [
+                        "050000000000000001",
+                        { value: "CoVZMPkooCZg5EDUd7PqvowuM7pknwEbcjGSaKzeCrsJUynoWKvR" }
+                      ]
+                    ]
+                  }
+                },
+                {
+                  other_elts: {
+                    other_elts: { value: "0028" }
+                  }
+                }
+              ]
+            },
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1MDU45gNc9Ko1Q9obcz6hQkKSMiQRib6GZ',
+                  change: '-2837',
+                  origin: 'block'
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '2837',
+                  origin: 'block'
+                }
+              ],
+              operation_result: {
+                status: 'applied',
+                balance_updates: [
+                  {
+                    kind: 'freezer',
+                    category: 'bonds',
+                    contract: 'tz1Lg9iLTS8Hk6kLfTN6rrrL9gYPfsTQ9z75',
+                    bond_id: { tx_rollup: 'txr1V16e1hXyVKndP4aE8cujRfryoHTiHK9fG' },
+                    change: '-10000000000',
+                    origin: 'block'
+                  },
+                  {
+                    kind: 'burned',
+                    category: 'tx_rollup_rejection_punishments',
+                    change: '10000000000',
+                    origin: 'block'
+                  },
+                  {
+                    kind: 'minted',
+                    category: 'tx_rollup_rejection_rewards',
+                    change: '-5000000000',
+                    origin: 'block'
+                  },
+                  {
+                    kind: 'contract',
+                    contract: 'tz1MDU45gNc9Ko1Q9obcz6hQkKSMiQRib6GZ',
+                    change: '5000000000',
+                    origin: 'block'
+                  }
+                ],
+                consumed_gas: '11533',
+                consumed_milligas: '11532006'
+              }
+            }
+          },
         ],
         signature:
           'sigmpiJiuk1wbno2KAvxFufUkZ4JnrTuuxmVWmGVP3bPKNft8Nv8LZwkKAKtvUeBSiBEMxa5vAxcKc5FddwZvhjuZyydZeKD',
