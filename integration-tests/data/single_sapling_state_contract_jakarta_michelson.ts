@@ -1,11 +1,11 @@
-export const singleSaplingStateContractJProtocol = `# This contract manages a shielded pool with a 1 to 1 conversion with respect to
+export const singleSaplingStateContractJProtocol = (memoSize = 8) => `# This contract manages a shielded pool with a 1 to 1 conversion with respect to
 # the mutez, updated by a list of Sapling transactions.
 # As a convention, all unshield transactions must contain in their bound_data
 # field a Micheline encoded public_key_hash which is used as the recipient of
 # the unshielded tez.
 
-storage (sapling_state 8);
-parameter (list (sapling_transaction 8));
+storage (sapling_state ${memoSize});
+parameter (list (sapling_transaction ${memoSize}));
 code { # Stack manipulation
        UNPAIR;
        NIL operation;
