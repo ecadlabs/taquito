@@ -70,6 +70,7 @@
     "@taquito/rpc": "^13.0.1",
     "@taquito/taquito": "^13.0.1",
     "@taquito/utils": "^13.0.1",
+    "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",
     "bip39": "^3.0.4",
     "blakejs": "^1.2.1",
