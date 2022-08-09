@@ -71,9 +71,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(462);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(364);
-      expect(estimate.totalCost).toEqual(364);
-      expect(estimate.usingBaseFeeMutez).toEqual(364);
+      expect(estimate.minimalFeeMutez).toEqual(362);
+      expect(estimate.totalCost).toEqual(362);
+      expect(estimate.usingBaseFeeMutez).toEqual(362);
       expect(estimate.consumedMilligas).toEqual(1000040);
       done();
     })
@@ -110,9 +110,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.storageLimit).toEqual(257);
       expect(estimate.suggestedFeeMutez).toEqual(462);
       expect(estimate.burnFeeMutez).toEqual(64250);
-      expect(estimate.minimalFeeMutez).toEqual(364);
-      expect(estimate.totalCost).toEqual(64614);
-      expect(estimate.usingBaseFeeMutez).toEqual(364);
+      expect(estimate.minimalFeeMutez).toEqual(362);
+      expect(estimate.totalCost).toEqual(64612);
+      expect(estimate.usingBaseFeeMutez).toEqual(362);
       expect(estimate.consumedMilligas).toEqual(1000040);
       done();
     });
@@ -161,9 +161,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.storageLimit).toEqual(571);
       expect(estimate.suggestedFeeMutez).toEqual(800);
       expect(estimate.burnFeeMutez).toEqual(142750);
-      expect(estimate.minimalFeeMutez).toEqual(702);
-      expect(estimate.totalCost).toEqual(143452);
-      expect(estimate.usingBaseFeeMutez).toEqual(702);
+      expect(estimate.minimalFeeMutez).toEqual(700);
+      expect(estimate.totalCost).toEqual(143450);
+      expect(estimate.usingBaseFeeMutez).toEqual(700);
       expect(estimate.consumedMilligas).toEqual(1468957);
       done();
     });
@@ -209,9 +209,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(457);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(359);
-      expect(estimate.totalCost).toEqual(359);
-      expect(estimate.usingBaseFeeMutez).toEqual(359);
+      expect(estimate.minimalFeeMutez).toEqual(357);
+      expect(estimate.totalCost).toEqual(357);
+      expect(estimate.usingBaseFeeMutez).toEqual(357);
       expect(estimate.consumedMilligas).toEqual(1000000);
       done();
     })
