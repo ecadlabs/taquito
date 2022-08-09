@@ -55,6 +55,10 @@ export type SaplingTransactionTokenSchema = {
   __michelsonType: 'sapling_transaction';
   schema: { memoSize: string };
 };
+export type SaplingTransactionDeprecatedTokenSchema = {
+  __michelsonType: 'sapling_transaction_deprecated';
+  schema: { memoSize: string };
+};
 export type TicketTokenSchema = {
   __michelsonType: 'ticket';
   schema: {
@@ -78,4 +82,5 @@ export type TokenSchema =
   | LambdaTokenSchema
   | SaplingStateTokenSchema
   | SaplingTransactionTokenSchema
+  | SaplingTransactionDeprecatedTokenSchema
   | TicketTokenSchema;
