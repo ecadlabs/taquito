@@ -17,10 +17,10 @@
     "netlify:publish": "netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --json --prod --message 'Deployment for $GITHUB_REF'"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-beta.19",
+    "@docusaurus/core": "2.0.0",
     "@docusaurus/plugin-google-gtag": "2.0.0-beta.19",
-    "@docusaurus/preset-classic": "2.0.0-beta.19",
-    "@docusaurus/theme-live-codeblock": "2.0.0-beta.19",
+    "@docusaurus/preset-classic": "2.0.0",
+    "@docusaurus/theme-live-codeblock": "2.0.0",
     "@docusaurus/theme-search-algolia": "2.0.0-beta.19",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
