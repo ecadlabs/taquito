@@ -19,7 +19,6 @@ import { contractMapTacoShop } from './data/contractSingleMapStorage';
 import { contractJson } from './data/contractJson';
 import { contractOnChainViews } from './data/contractOnChainViews';
 import { tokenCode, tokenInit } from '../integration-tests/data/tokens';
-import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { tacoContractTzip16 } from '../integration-tests/data/modified-taco-contract';
 import {
   contractCode,
@@ -34,7 +33,11 @@ import Faucet from './faucet-interface';
 
 const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
 
+<<<<<<< HEAD
 const provider = 'http://mondaynet.ecadinfra.com:8732';
+=======
+const provider = 'https://kathmandunet.ecadinfra.com/';
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
 export const signer: any = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
@@ -162,7 +165,6 @@ async function originateTheContracts() {
   contract_catalogue.set('ContractCallFib', await originateContractCallFib());
   contract_catalogue.set('ContractTopLevelViews', await originateContractTopLevelViews());
   contract_catalogue.set('TokenContract', await originateTokenContract());
-  contract_catalogue.set('Tzip12BigMapOffChainContract', await originateTZip12BigMapOffChain());
   contract_catalogue.set('Tzip16StorageContract', await originateTzip16Storage());
   contract_catalogue.set('Tzip16HTTPSContract', await originateTzip16Https());
   contract_catalogue.set('Tzip16SHA256Contract', await originateTzip16SHA256());
@@ -552,77 +554,6 @@ async function originateContractTopLevelViews() {
     await op.confirmation();
     const contract = await op.contract();
     console.log('ContractOnChainViews : ' + contract.address);
-    return contract.address;
-  } catch (ex) {
-    console.error(ex);
-  }
-}
-
-async function originateTZip12BigMapOffChain() {
-  tezos.setSignerProvider(signer);
-  try {
-    const ledger = new MichelsonMap();
-    ledger.set(
-      {
-        0: user_addresses.get('Eddy'),
-        1: 0,
-      },
-      '20000'
-    );
-    ledger.set(
-      {
-        0: user_addresses.get('Glen'),
-        1: 1,
-      },
-      '20000'
-    );
-
-    const url = 'https://storage.googleapis.com/tzip-16/fa2-views.json';
-    const bytesUrl = char2Bytes(url);
-    const metadata = new MichelsonMap();
-    metadata.set('', bytesUrl);
-
-    const operators = new MichelsonMap();
-
-    const tokens = new MichelsonMap();
-    const metadataMap0 = new MichelsonMap();
-    metadataMap0.set('', char2Bytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
-    metadataMap0.set('name', char2Bytes('Name from URI is prioritized!'));
-    const metadataMap1 = new MichelsonMap();
-    metadataMap1.set('name', char2Bytes('AliceToken'));
-    metadataMap1.set('symbol', char2Bytes('ALC'));
-    metadataMap1.set('decimals', '30');
-    metadataMap1.set('extra', char2Bytes('Add more data'));
-    const metadataMap2 = new MichelsonMap();
-    metadataMap2.set('name', char2Bytes('Invalid token metadata'));
-    tokens.set('0', {
-      metadata_map: metadataMap0,
-      total_supply: '20000',
-    });
-    tokens.set('1', {
-      metadata_map: metadataMap1,
-      total_supply: '20000',
-    });
-    tokens.set('2', {
-      metadata_map: metadataMap2,
-      total_supply: '20000',
-    });
-
-    const op = await tezos.contract.originate({
-      code: fa2ForTokenMetadataView,
-      storage: {
-        administrator: user_addresses.get('TestFunder'),
-        all_tokens: '2',
-        ledger,
-        metadata,
-        operators,
-        paused: false,
-        tokens,
-      },
-    });
-    await op.confirmation();
-    const contract = await op.contract();
-    console.log('Tzip12BigMapOffChainContract : ' + contract.address);
     return contract.address;
   } catch (ex) {
     console.error(ex);

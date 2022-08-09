@@ -60,5 +60,9 @@ export enum ChainIds {
   ITHACANET = 'NetXbhmtAbMukLc',
   ITHACANET2 = 'NetXnHfVqm9iesp',
   JAKARTANET2 = 'NetXLH1uAxK7CCh',
+<<<<<<< HEAD
   KATHMANDUNET = 'NetXazhm4yetmff',
+=======
+  KATHMANDUNET = 'NetXazhm4yetmff'
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
 }

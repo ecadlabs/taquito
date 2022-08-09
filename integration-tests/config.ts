@@ -24,7 +24,11 @@ interface Config {
   knownBaker: string;
   knownContract: string;
   knownBigMapContract: string;
+<<<<<<< HEAD
   knownTzip1216Contract: string; // Use contract Tzip12BigMapOffChain from ~/example/deploy-docs-live-code-contracts.ts
+=======
+  knownTzip1216Contract: string; 
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
   knownSaplingContract: string; 
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
@@ -61,12 +65,21 @@ interface FaucetConfig {
 }
 
 const kathmandunetEphemeral = {
+<<<<<<< HEAD
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1U4BzANnCZv5bDvT61t12ZA3E3HmYy54D9',
   knownBigMapContract: 'KT1F9ayqkd8G6CSdR3bqWiXxt9e1W34CW2Gx',
   knownTzip1216Contract: 'KT1XF2yaeUVi2bYMqSLeKRBodmo1BwiPYmZf',
   knownSaplingContract: 'KT1JVv7xPg321YhE2miGM8CfBPZWoWLqRRBW',
+=======
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
+  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+  knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
+  knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
+  knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -76,7 +89,7 @@ const kathmandunetEphemeral = {
 };
 
 const jakartanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'http://ecad-jakartanet-archive.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
   knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
@@ -108,10 +121,17 @@ const mondaynetEphemeral = {
 const kathmandunetFaucet = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+<<<<<<< HEAD
   knownContract: 'KT1U4BzANnCZv5bDvT61t12ZA3E3HmYy54D9',
   knownBigMapContract: 'KT1F9ayqkd8G6CSdR3bqWiXxt9e1W34CW2Gx',
   knownTzip1216Contract: 'KT1XF2yaeUVi2bYMqSLeKRBodmo1BwiPYmZf',
   knownSaplingContract: 'KT1JVv7xPg321YhE2miGM8CfBPZWoWLqRRBW',
+=======
+  knownContract: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+  knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
+  knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
+  knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,

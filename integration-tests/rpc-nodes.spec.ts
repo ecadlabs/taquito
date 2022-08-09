@@ -17,9 +17,14 @@ CONFIGS().forEach(
     knownSaplingContract,
   }) => {
     const Tezos = lib;
+<<<<<<< HEAD
     const jakartanet = protocol === Protocols.PtJakart2? test: test.skip;
     const kathmandunet = protocol === Protocols.PtKathman? test: test.skip;
     const mondaynet = protocol === Protocols.ProtoALpha? test: test.skip;
+=======
+    const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
+    const kathmandunet = protocol === Protocols.PtKathman ? test: test.skip;
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
 
     beforeAll(async (done) => {
         await setup()
@@ -269,10 +274,18 @@ CONFIGS().forEach(
           try {
             const injectedOperation = await rpcClient.injectOperation('operation');
           } catch (ex: any) {
+<<<<<<< HEAD
             expect(ex.message).toContain('Hex.to_char: 112 is an invalid char');
           }
           done();
         });
+=======
+            expect(ex.message).toContain('112 is an invalid char');
+          }
+          done();
+        });
+
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
 
         it('Simulate the validation of an operation', async (done) => {
           try {
@@ -390,19 +403,35 @@ CONFIGS().forEach(
           done();
         });
 
+<<<<<<< HEAD
         it('getTxRollupInbox', async (done) => {
+=======
+        jakartanet('getTxRollupInbox', async (done) => {
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
           const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
           expect(inbox).toBeDefined();
           done();
         });
 
         jakartanet('getTxRollupState', async (done) => {
+<<<<<<< HEAD
           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
           expect(state).toBeDefined();
+=======
+           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+           expect(state).toBeDefined();
+           done();
+         });
+         
+        kathmandunet('getTxRollupInbox', async (done) => {
+          const inbox = await rpcClient.getTxRollupInbox('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ', '0');
+          expect(inbox).toBeDefined();
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
           done();
         });
 
         kathmandunet('getTxRollupState', async (done) => {
+<<<<<<< HEAD
           const state = await rpcClient.getTxRollupState('txr1heYRrmzBBD55YZtxcGiMYfiYA5WnXmwDo');
           expect(state).toBeDefined();
           done();
@@ -417,6 +446,13 @@ CONFIGS().forEach(
       //   expect(error.message).toContain('Http error response: (404)');
       // }
       //   });
+=======
+           const state = await rpcClient.getTxRollupState('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ');
+           expect(state).toBeDefined();
+           done();
+         });
+
+>>>>>>> af632c6257f5ea2a696addae4fa1f142962d189a
       });
     });
   }
