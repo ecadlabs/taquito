@@ -107,7 +107,7 @@ describe('Sapling transactions builder', () => {
       signature,
     });
 
-    const tx = await saplingTransactionBuilder.createShieldTx(
+    const tx = await saplingTransactionBuilder.createShieldedTx(
       [
         {
           to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',

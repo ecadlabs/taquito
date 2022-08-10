@@ -16,7 +16,7 @@ describe('SaplingToolkit', () => {
   );
 
   let mockSaplingTxBuilder: {
-    createShieldTx: jest.Mock<any, any>;
+    createShieldedTx: jest.Mock<any, any>;
     createSaplingTx: jest.Mock<any, any>;
   };
 
@@ -28,7 +28,7 @@ describe('SaplingToolkit', () => {
 
   beforeEach(() => {
     mockSaplingTxBuilder = {
-      createShieldTx: jest.fn(),
+      createShieldedTx: jest.fn(),
       createSaplingTx: jest.fn(),
     };
 
@@ -124,7 +124,7 @@ describe('SaplingToolkit', () => {
       commitments_and_ciphertexts: [],
       nullifiers: [],
     });
-    mockSaplingTxBuilder.createShieldTx.mockResolvedValue({
+    mockSaplingTxBuilder.createShieldedTx.mockResolvedValue({
       inputs: [],
       outputs: [
         {
@@ -196,7 +196,7 @@ describe('SaplingToolkit', () => {
       commitments_and_ciphertexts: [],
       nullifiers: [],
     });
-    mockSaplingTxBuilder.createShieldTx.mockResolvedValue({
+    mockSaplingTxBuilder.createShieldedTx.mockResolvedValue({
       inputs: [],
       outputs: [
         {
