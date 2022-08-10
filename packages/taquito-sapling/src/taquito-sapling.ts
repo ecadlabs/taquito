@@ -29,7 +29,7 @@ import {
   SaplingContractId,
 } from './types';
 import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
-import { defaultBoundData, defaultMemo } from './constants';
+import { DEFAULT_BOUND_DATA, DEFAULT_MEMO } from './constants';
 
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';
@@ -111,10 +111,10 @@ export class SaplingToolkit {
     );
     const root = await this.getRoot();
 
-    const { inputs, outputs, signature, balance } = await this.#saplingTxBuilder.createShieldTx(
+    const { inputs, outputs, signature, balance } = await this.#saplingTxBuilder.createShieldedTx(
       formatedParams,
       totalAmount,
-      defaultBoundData
+      DEFAULT_BOUND_DATA
     );
 
     const forgedSaplingTx = this.#saplingForger.forgeSaplingTransaction({
@@ -122,7 +122,7 @@ export class SaplingToolkit {
       outputs,
       balance,
       root,
-      boundData: defaultBoundData,
+      boundData: DEFAULT_BOUND_DATA,
       signature,
     });
 
@@ -185,7 +185,7 @@ export class SaplingToolkit {
     const { inputs, outputs, signature, balance } = await this.#saplingTxBuilder.createSaplingTx(
       formatedParams,
       totalAmount,
-      defaultBoundData,
+      DEFAULT_BOUND_DATA,
       chosenInputs
     );
 
@@ -194,7 +194,7 @@ export class SaplingToolkit {
       outputs,
       balance,
       root,
-      boundData: defaultBoundData,
+      boundData: DEFAULT_BOUND_DATA,
       signature,
     });
 
@@ -219,7 +219,7 @@ export class SaplingToolkit {
         ? param.amount.toString()
         : format('tz', 'mutez', param.amount).toString();
       totalAmount = totalAmount.plus(new BigNumber(amountMutez));
-      const memo = param.memo ?? defaultMemo;
+      const memo = param.memo ?? DEFAULT_MEMO;
       if (memo.length > this.#memoSize) {
         throw new InvalidMemo(memo, 'The memo is too long.');
       }

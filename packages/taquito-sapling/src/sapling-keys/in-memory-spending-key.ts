@@ -49,7 +49,7 @@ export class InMemorySpendingKey {
 
   /**
    *
-   * @param mnemonic strings of words
+   * @param mnemonic string of words
    * @param derivationPath tezos current standard 'm/'
    * @returns InMemorySpendingKey class instantiated
    */

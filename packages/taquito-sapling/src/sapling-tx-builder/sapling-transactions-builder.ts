@@ -1,6 +1,6 @@
 import blake from 'blakejs';
 import { secretBox } from '@stablelib/nacl';
-import { defaultMemo, KDF_KEY, OCK_KEY } from '../constants';
+import { DEFAULT_MEMO, KDF_KEY, OCK_KEY } from '../constants';
 import { SaplingForger } from '../sapling-forger/sapling-forger';
 import { BigNumber } from 'bignumber.js';
 import {
@@ -51,7 +51,7 @@ export class SaplingTransactionBuilder {
     this.#readProvider = readProvider;
   }
 
-  async createShieldTx(
+  async createShieldedTx(
     saplingTransactionParams: {
       to: string;
       amount: string;
@@ -148,7 +148,7 @@ export class SaplingTransactionBuilder {
               saplingContext,
               address: payBackAddress,
               amount: txTotalAmount.toString(),
-              memo: defaultMemo,
+              memo: DEFAULT_MEMO,
               rcm,
               ovk,
             },

@@ -529,7 +529,7 @@ describe('SaplingToolkit', () => {
         amount: 10,
       })
     ).rejects.toThrowError(
-      'The transaction would spend 10000000 mutez while the balance is only 8000000 mutez.'
+      'Unable to spend 10000000 mutez while the balance is only 8000000 mutez.'
     );
 
     done();
@@ -683,7 +683,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      'The transaction would spend 10000000 mutez while the balance is only 8000000 mutez.'
+      'Unable to spend 10000000 mutez while the balance is only 8000000 mutez.'
     );
 
     done();

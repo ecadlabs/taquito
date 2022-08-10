@@ -9,11 +9,10 @@ import {
 import * as path from 'path';
 import * as fs from 'fs';
 import axios, { AxiosResponse } from 'axios';
+import { OUTPUT_PARAMS_FILE_NAME, SPEND_PARAMS_FILE_NAME, ZCASH_DOWNLOAD_URL } from '../constants';
 
 const SAPLING_PARAMS_DIR = path.resolve(__dirname, 'sapling-params');
-const ZCASH_DOWNLOAD_URL = 'https://download.z.cash/downloads';
-const SPEND_PARAMS_FILE_NAME = 'sapling-spend.params';
-const OUTPUT_PARAMS_FILE_NAME = 'sapling-output.params';
+
 export class SaplingWrapper {
   async withProvingContext<T>(action: (context: number) => Promise<T>) {
     await this.initSaplingParameters();

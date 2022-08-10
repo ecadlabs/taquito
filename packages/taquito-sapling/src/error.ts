@@ -50,7 +50,7 @@ export class InsufficientBalance extends Error {
   public name = 'InsufficientBalance';
   constructor(realBalance: string, amountToSpend: string) {
     super(
-      `The transaction would spend ${amountToSpend} mutez while the balance is only ${realBalance} mutez.`
+      `Unable to spend ${amountToSpend} mutez while balance is only ${realBalance} mutez.`
     );
   }
 }
