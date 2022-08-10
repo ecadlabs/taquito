@@ -114,8 +114,8 @@ export interface TzReadProvider {
 
   /**
    * @description Access the sapling state of a smart contract.
-   * @param contractAddress Address of the smart contract
-   * @param block from which we want to retrieve the sapling state
+   * @param contractAddress The address of the smart contract
+   * @param block The block you want to retrieve the sapling state from
    */
   getSaplingDiffByContract(
     contractAddress: string,
