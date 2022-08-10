@@ -1,11 +1,84 @@
 # Taquito Sapling package
-*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_rpc.html)*
+
+_Documentation can be found [here](https://tezostaquito.io/docs/next/sapling)_  
+_TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_sapling.html)_
 
 ## General Information
 
+Sapling is a protocol allowing to perform private transactions in a decentralized environment. This package allows to read from a sapling state (retrieve the balance and transaction history) and prepare sapling transactions.
+
 ## Install
 
+Install the package as follows
+
+```
+npm install @taquito/sapling
+```
 ## Usage
+
+**Retrieve a balance in the Sapling shielded pool**
+
+The returned balance is in mutez.
+
+```ts
+import { TezosToolkit } from '@taquito/taquito';
+import { SaplingToolkit } from '@taquito/sapling';
+
+const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+
+const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
+
+const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
+
+const saplingToolkit = new SaplingToolkit(
+    inMemorySpendingKey, 
+    { contractAddress: saplingContract.address, memoSize: 8 }, 
+    tezos.getFactory(RpcReadAdapter)()
+)
+
+const txViewer = await saplingToolkit.getSaplingTransactionViewer();
+const initialBalance = await txViewer.getBalance();
+```
+
+**Prepare a shielded transaction**
+
+A shielded transaction allows sending tokens from a Tezos account (tz1, tz2, tz3) to an address (zet).
+
+```ts
+import { TezosToolkit } from '@taquito/taquito';
+import { SaplingToolkit } from '@taquito/sapling';
+
+const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+// set up your signer on the TezosToolkit as usual
+const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
+
+const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
+
+const saplingToolkit = new SaplingToolkit(
+    inMemorySpendingKey, 
+    { contractAddress: saplingContract.address, memoSize: 8 }, 
+    tezos.getFactory(RpcReadAdapter)()
+)
+
+// Fetch a payment address (zet)
+const inMemoryViewingKey = await inMemorySpendingKey.getInMemoryViewingKey();
+const paymentAddress = (await inMemoryViewingKey.getAddress()).address;
+
+// prepare the shielded transaction
+const shieldedTx = await saplingToolkit.prepareShieldedTransaction([{
+    to: paymentAddress,
+    amount: 3,
+    memo: 'test',
+    mutez: false // set to false by default
+}])
+
+// Inject the sapling transaction using the ContractAbstraction
+// The amount MUST be specified in the send method to transfer the 3 tez to the shielded pool
+const op = await saplingContract.methods.default([shieldedTx]).send({ amount: 3 });
+await op.confirmation();
+```
+
+Refer to the website documentation for further examples and information: https://tezostaquito.io/docs/next/sapling
 
 ## Additional info
 
