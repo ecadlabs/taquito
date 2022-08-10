@@ -16,7 +16,7 @@ Taquito offers support for encrypted/unencrypted spending keys and mnemonics. Re
 
 **Viewing key**
 
-The viewing key is derived from the spending key. This key can be used to view all incoming and outgoing transactions. It must be handled securely to prevent a loss of privacy, as anyone having access to it can see the transaction history and the balance.
+The viewing key is derived from the spending key. This key can be used to view all incoming and outgoing transactions. It must be handled securely to prevent a loss of privacy, as anyone accessing it can see the transaction history and the balance.
 
 Refers to the following link for more information: [InMemoryViewingKey](./sapling_in_memory_viewing_key.md)
 
@@ -44,6 +44,7 @@ Here is an example of how to instantiate a `SaplingToolkit`:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
+import { SaplingToolkit } from '@taquito/sapling';
 
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
@@ -115,12 +116,24 @@ const initialBalance = await txViewer.getIncomingAndOutgoingTransactions();
 
 ## How to prepare a shielded transaction?
 
-Send tokens from a Tezos account (tz1, tz2, tz3) to an address (zet).
+A shielded transaction allows sending tokens from a Tezos account (tz1, tz2, tz3) to an address (zet). The `prepareShieldedTransaction` method of the `SaplingToolkit` takes an array of `ParametersSaplingTransaction`, making it possible to send tez to multiple addresses at once if needed. 
+
+The `ParametersSaplingTransaction` is an object made of:
+- a `to` property, which is the destination address (zet)
+- an `amount` property, which is the amount to shield in tez by default
+- an optional `memo` that cannot be longer than the specified memo size
+- an optional `mutez` property that must be set to true if the specified amount is in mutez rather than tez
+
+The `prepareShieldedTransaction` method returns the crafted sapling transaction parameter and does not perform any change on the shielded pool. A subsequent step where the sapling transaction parameter is submitted to the smart contract must be done. Note that in a case of a shielded transaction, the shielded amount must be sent along when calling the smart contract to transfer the tez to the shielded pool, or it will result in an error.
+
+Here is an example of how to prepare and inject a shielded transaction using Taquito:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
+import { SaplingToolkit } from '@taquito/sapling';
 
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+// set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
@@ -135,6 +148,7 @@ const saplingToolkit = new SaplingToolkit(
 const inMemoryViewingKey = await inMemorySpendingKey.getInMemoryViewingKey();
 const paymentAddress = (await inMemoryViewingKey.getAddress()).address;
 
+// prepare the shielded transaction
 const shieldedTx = await saplingToolkit.prepareShieldedTransaction([{
     to: paymentAddress,
     amount: 3,
@@ -150,10 +164,25 @@ await op.confirmation();
 
 ## How to prepare a sapling transaction?
 
-Send tokens from an address (zet) to an address (zet).
+A sapling transaction allows sending tokens from an address (zet) to an address (zet). The `prepareSaplingTransaction` method of the `SaplingToolkit` takes an array of `ParametersSaplingTransaction`, making it possible to send tez to multiple addresses at once if needed. 
+
+The `ParametersSaplingTransaction` is an object made of:
+- a `to` property, which is the destination address (zet)
+- an `amount` property, which is the amount to shield in tez by default
+- an optional `memo` that cannot be longer than the specified memo size
+- an optional `mutez` property that must be set to true if the specified amount is in mutez rather than tez
+
+The `prepareSaplingTransaction` method returns the crafted sapling transaction parameter and does not perform any change on the shielded pool. A subsequent step where the sapling transaction parameter is submitted to the smart contract must be done. 
+
+:::note
+A user should not use its own implicit account (tz1, tz2, tz3) to submit a sapling transaction but rather have a third party inject it.
+:::
+
+Here is an example of how to prepare and inject a sapling transaction using Taquito:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
+import { SaplingToolkit } from '@taquito/sapling';
 
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
@@ -179,10 +208,20 @@ await op.confirmation();
 
 ## How to prepare an unshielded transaction?
 
-Send tokens from an address (zet) to a Tezos account (tz1, tz2, tz3).
+An unshielded transaction allows sending tokens from an address (zet) to a Tezos account (tz1, tz2, tz3). The `prepareUnshieldedTransaction` method of the `SaplingToolkit` takes a single `ParametersUnshieldedTransaction`.
+
+The `ParametersUnshieldedTransaction` is an object made of:
+- a `to` property, which is the destination  account (tz1, tz2, tz3)
+- an `amount` property, which is the amount to shield in tez by default
+- an optional `mutez` property that must be set to true if the specified amount is in mutez rather than tez
+
+The `prepareUnshieldedTransaction` method returns the crafted sapling transaction parameter and does not perform any change on the shielded pool. A subsequent step where the sapling transaction parameter is submitted to the smart contract must be done to retrieve the tokens from the pool. 
+
+Here is an example of how to prepare and inject an unshielded transaction using Taquito:
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
+import { SaplingToolkit } from '@taquito/sapling';
 
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
@@ -213,7 +252,7 @@ The constructor of the `SaplingTransactionViewer` takes the following properties
 - an instance of `InMemoryViewingKey` 
 - the second parameter is an object containing:
   - the address of the sapling contract or a sapling id if the contract contains more than one sapling state.
-- an instance of a class implementing the `TzReadProvider` interface which allows to get data from the blockchain
+- an instance of a class implementing the `TzReadProvider` interface, which allows getting data from the blockchain
 
 Here is an example of how to instantiate a `SaplingTransactionViewer`:
 
@@ -234,3 +273,5 @@ const saplingTransactionViewer = new SaplingTransactionViewer(
     tezos.getFactory(RpcReadAdapter)()
 )
 ```
+
+Refer to these sections to [retrieve the balance](sapling#how-to-retrieve-my-balance-in-the-sapling-shielded-pool) and [view the transaction history](sapling#how-to-retrieve-my-transaction-history).
