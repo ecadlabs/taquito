@@ -42,7 +42,7 @@ const initialBalance = await txViewer.getBalance();
 
 **Prepare a shielded transaction**
 
-A shielded transaction allows sending tokens from a Tezos account (tz1, tz2, tz3) to an address (zet).
+A shielded transaction allows sending tokens from a Tezos account (tz1, tz2, tz3) to a Sapling address (zet).
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
