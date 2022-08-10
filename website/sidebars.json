@@ -66,8 +66,8 @@
     },
     {
       "type": "category",
-      "label": "Sapling",
-      "items": ["sapling_in_memory_spending_key"]
+      "label": "Native Mobile Development",
+      "items": ["mobile_bundle"]
     },
     {
       "Upgrading Guide": ["upgrading_guide"]

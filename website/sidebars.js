@@ -99,10 +99,11 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Sapling',
+      label: 'Native Mobile Development',
+      className: 'sidebarHeader',
       collapsed: false,
-      collapsible:false,
-      items: ['sapling_in_memory_spending_key']
+      collapsible: false,
+      items: ['mobile_bundle']
     },
     {
       'Upgrading Guide': ['upgrading_guide'],
