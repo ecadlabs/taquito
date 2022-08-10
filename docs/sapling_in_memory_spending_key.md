@@ -1,3 +1,8 @@
+---
+title: InMemorySpendingKey
+author: Zainen Suzuki
+---
+
 # Sapling Spending Key Instantiation
 
 :::caution Warning

@@ -71,7 +71,22 @@ const sidebars = {
       className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
-      items: ['michelson_encoder', 'contracts-library', 'taquito_utils'],
+      items: [
+        'michelson_encoder', 
+        'contracts-library', 
+        'taquito_utils',
+      {
+        type: 'category',
+        label: 'Sapling',
+        collapsed: true,
+        collapsible:true,
+        items: [
+          'sapling', 
+          'sapling_in_memory_spending_key', 
+          'sapling_in_memory_viewing_key'
+        ]
+      }
+    ],
     },
     {
       type: 'category',
@@ -96,13 +111,6 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: ['ledger_integration_test', 'rpc_nodes_integration_test'],
-    },
-    {
-      type: 'category',
-      label: 'Sapling',
-      collapsed: false,
-      collapsible:false,
-      items: ['sapling_in_memory_spending_key']
     },
     {
       'Upgrading Guide': ['upgrading_guide'],
