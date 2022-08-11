@@ -1903,6 +1903,12 @@
   "resolved" "file:packages/taquito"
   "version" "13.0.1"
   dependencies:
+    "@taquito/http-utils" "^13.0.1"
+    "@taquito/local-forging" "^13.0.1"
+    "@taquito/michel-codec" "^13.0.1"
+    "@taquito/michelson-encoder" "^13.0.1"
+    "@taquito/rpc" "^13.0.1"
+    "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
@@ -1922,11 +1928,20 @@
 "@taquito/tzip12@file:/home/mike/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "13.0.1"
+  dependencies:
+    "@taquito/michelson-encoder" "^13.0.1"
+    "@taquito/taquito" "^13.0.1"
+    "@taquito/tzip16" "^13.0.1"
 
 "@taquito/tzip16@^13.0.1", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "13.0.1"
   dependencies:
+    "@taquito/http-utils" "^13.0.1"
+    "@taquito/michelson-encoder" "^13.0.1"
+    "@taquito/rpc" "^13.0.1"
+    "@taquito/taquito" "^13.0.1"
+    "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
