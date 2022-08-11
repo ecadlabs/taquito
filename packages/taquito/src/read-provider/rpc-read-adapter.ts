@@ -160,6 +160,18 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
+   * @description Access the sapling state of a smart contract.
+   * @param contractAddress The address of the smart contract
+   * @param block The block you want to retrieve the sapling state from
+   */
+  async getSaplingDiffByContract(
+    contractAddress: string,
+    block: BlockIdentifier
+  ): Promise<SaplingDiffResponse> {
+    return this.context.rpc.getSaplingDiffByContract(contractAddress, { block: String(block) });
+  }
+
+  /**
    * @description Return the list of entrypoints of the contract
    * @param contract address of the contract we want to get the entrypoints of
    */
