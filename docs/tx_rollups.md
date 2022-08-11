@@ -20,10 +20,10 @@ To be able to interact or transfer funds on layer-2, you will first need to depo
 
 Depositing tickets from layer-1 to layer-2 can be done via a smart contract that facilitates the transfer to a tz4 address in a specified rollup node.
 
-Example of such contract can be found [here](https://tezos.gitlab.io/alpha/transaction_rollups.html?highlight=transaction%20rollups#depositing-assets-on-a-rollup)
+An example of such contract can be found [here](https://tezos.gitlab.io/alpha/transaction_rollups.html?highlight=transaction%20rollups#depositing-assets-on-a-rollup)
 
-Assuming the contract have been originated, interacting with the contract in Taquito would look something like this:
-```
+Assuming the contract has been originated, interacting with the contract in Taquito would look something like this:
+```javascript    
 const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 const deposit = Tezos.contract.at(SMART_CONTRACT_ADDRESS);
@@ -51,7 +51,7 @@ If the deposit is successful, you will be returned an operation hash that can be
 You also might want to look at `op.operationResults` to retrieve the `ticket_hash`. A ticket hash should look something like this: `exprtz9FgfdzufUADVsvP8Gj8d8PZr9RsBEjZ5GQKM8Kp5cKWww7di`
 
 ## Transfer
-Exchange of assets in the form of tickets can be done from a layer-2 address to another layer-2 address. Since transfer is a layer-2 operation, Taquito will not be supporting it. This may change in the future with SCORU (Smart Contract Optimistic Rollups).
+The exchange of assets in the form of tickets can be done from a layer-2 (`tz4`) address to another layer-2 address. Not to be confused with the `transfer_ticket` operation, this layer-2 operation will not be supported in Taquito. This may change in the future with SCORU (Smart Contract Optimistic Rollups).
 
 For instructions on how to conduct a transfer in layer-2 using the rollup client, refer to this [documentation](https://tezos.gitlab.io/alpha/transaction_rollups.html?highlight=transaction%20rollups#exchanging-assets-inside-a-rollup) by Nomadic Labs.
 
@@ -68,7 +68,7 @@ tezos-tx-rollup-client-alpha withdraw ${qty} of ${ticket_hash} from ${l2_src} to
 - `${l2_src}` is the BLS pair of keys generated with `tezos-client bls gen key`; or in other words, the tz4 address that holds the tickets 
 - `${l1_dst}` is the layer-1 address you would like to withdraw the tickets to
 
-After a successful withdrawal, your assets will exist back in layer-1 in the form of tickets.
+After a successful withdrawal, your assets will exist back in layer-1 in the form of tickets after the [finality period](#Glossary) ends. 
 
 :::warning
 Please note that this first step is a layer-2 operation which Taquito does not currently support. 
@@ -78,16 +78,16 @@ Please note that this first step is a layer-2 operation which Taquito does not c
 
 The second step is to use a Tezos operation that will transfer these tickets to a smart contract. You can use your own contracts to process the tickets as you'd like (e.g. allow access to XTZ existing in the tickets, etc).
 
-This second step is called a `Transfer Ticket` operation, which we support in Taquito. 
+This second step is called a `Transfer Ticket` operation, which Taquito supports.
 
 ```
 const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 const op = await Tezos.contract.transferTicket({
-    ticket_contents: { "string": "foobar" },
-    ticket_ty: { "prim": "string" } ,
-    ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-    ticket_amount: 5,
+    ticketContents: { "string": "foobar" },
+    ticketTy: { "prim": "string" } ,
+    ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+    ticketAmount: 5,
     destination: KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg,
     entrypoint: 'default',
 });
