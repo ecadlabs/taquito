@@ -1,0 +1,82 @@
+{
+    "name": "integration-tests",
+    "scripts": {
+      "test:faucet": "RUN_WITH_FAUCET=true jest --runInBand",
+      "test:jakartanet": "JAKARTANET=true jest",
+      "test:jakartanet-faucet": "RUN_JAKARTANET_WITH_FAUCET=true jest --runInBand",
+      "test:kathmandunet": "KATHMANDUNET=true jest",
+      "test:kathmandunet-faucet": "RUN_KATHMANDUNET_WITH_FAUCET=true jest --runInBand",
+      "test:originate-known-contracts": "MONDAYNET=true node -r ts-node/register originate-known-contracts.ts",
+      "test:mondaynet": "MONDAYNET=true jest",
+      "test": "jest"
+    },
+    "version": "13.0.1",
+    "dependencies": {
+      "@ledgerhq/hw-transport": "^6.20.0",
+      "@ledgerhq/hw-transport-node-hid": "^6.20.0",
+      "@taquito/http-utils": "^13.0.1",
+      "@taquito/local-forging": "^13.0.1",
+      "@taquito/michel-codec": "^13.0.1",
+      "@taquito/michelson-encoder": "^13.0.1",
+      "@taquito/remote-signer": "^13.0.1",
+      "@taquito/rpc": "^13.0.1",
+      "@taquito/signer": "^13.0.1",
+      "@taquito/taquito": "^13.0.1",
+      "@taquito/tzip12": "^13.0.1",
+      "@taquito/tzip16": "^13.0.1",
+      "@taquito/utils": "^13.0.1",
+      "bignumber.js": "^9.0.2",
+      "blakejs": "^1.2.1"
+    },
+    "private": true,
+    "jest": {
+      "transform": {
+        ".(ts|tsx)": "ts-jest"
+      },
+      "testEnvironment": "node",
+      "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+      "moduleFileExtensions": [
+        "ts",
+        "tsx",
+        "js"
+      ],
+      "coveragePathIgnorePatterns": [
+        "/node_modules/",
+        "/test/"
+      ],
+      "testPathIgnorePatterns": [
+        "./ledger-signer.spec.ts",
+        "./ledger-signer-failing-tests.spec.ts"
+      ],
+      "reporters": [
+        "default",
+        "jest-stare"
+      ],
+      "testResultsProcessor": "./node_modules/jest-stare"
+    },
+    "devDependencies": {
+      "@types/jest": "^26.0.23",
+      "@types/node": "^17.0.0",
+      "@typescript-eslint/eslint-plugin": "^5.28.0",
+      "@typescript-eslint/parser": "^5.28.0",
+      "eslint": "^8.17.0",
+      "jest": "^26.6.3",
+      "jest-config": "^26.6.3",
+      "jest-retries": "^1.0.1",
+      "jest-stare": "^2.3.0",
+      "lint-staged": "^13.0.1",
+      "ts-jest": "^26.4.4",
+      "ts-node": "^10.4.0",
+      "typescript": "~4.1.5"
+    },
+    "config": {
+      "commitizen": {
+        "path": "node_modules/cz-conventional-changelog"
+      }
+    },
+    "commitlint": {
+      "extends": [
+        "@commitlint/config-conventional"
+      ]
+    }
+  }
