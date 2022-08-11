@@ -308,7 +308,7 @@ export class TezosToolkit {
    */
   setReadProvider(readProvider?: SetProviderOptions['readProvider']) {
     const readP =
-      typeof readProvider === 'undefined' ? this.getFactory(RpcReadAdapter)() : readProvider;
+      typeof readProvider === 'undefined' ? new RpcReadAdapter(this._context.rpc) : readProvider;
     this._options.readProvider = readP;
     this._context.readProvider = readP;
   }
