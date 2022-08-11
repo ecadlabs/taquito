@@ -1,7 +1,8 @@
-import { Token, TokenFactory } from './token';
+import { LambdaTokenSchema } from '../schema/types';
+import { SemanticEncoding, Token, TokenFactory } from './token';
 
 export class LambdaToken extends Token {
-  static prim = 'lambda';
+  static prim: 'lambda' = 'lambda';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -9,6 +10,14 @@ export class LambdaToken extends Token {
     protected fac: TokenFactory
   ) {
     super(val, idx, fac);
+  }
+
+  get paramSchema() {
+    return this.createToken(this.val.args[0], this.idx);
+  }
+
+  get returnSchema() {
+    return this.createToken(this.val.args[1], this.idx + 1);
   }
 
   public Execute(val: any) {
@@ -24,17 +33,32 @@ export class LambdaToken extends Token {
     return val;
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[LambdaToken.prim]) {
+      return semantic[LambdaToken.prim](val);
+    }
     return val;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
-    const rightToken = this.createToken(this.val.args[1], this.idx + 1);
     return {
       [LambdaToken.prim]: {
-        parameters: leftToken.ExtractSchema(),
-        returns: rightToken.ExtractSchema(),
+        parameters: this.paramSchema.ExtractSchema(),
+        returns: this.returnSchema.ExtractSchema(),
+      },
+    };
+  }
+
+  generateSchema(): LambdaTokenSchema {
+    return {
+      __michelsonType: LambdaToken.prim,
+      schema: {
+        parameters: this.paramSchema.generateSchema(),
+        returns: this.returnSchema.generateSchema(),
       },
     };
   }
@@ -43,9 +67,8 @@ export class LambdaToken extends Token {
     if (LambdaToken.prim === tokenToFind) {
       tokens.push(this);
     }
-    this.createToken(this.val.args[0], this.idx).findAndReturnTokens(tokenToFind, tokens)
-    this.createToken(this.val.args[1], this.idx).findAndReturnTokens(tokenToFind, tokens)
+    this.createToken(this.val.args[0], this.idx).findAndReturnTokens(tokenToFind, tokens);
+    this.createToken(this.val.args[1], this.idx).findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

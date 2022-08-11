@@ -1,34 +1,21 @@
 import { TezosToolkit } from '@taquito/taquito';
 import { importKey } from '@taquito/signer';
 import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
+import Faucet from './faucet-interface';
 
-const provider = 'https://hangzhounet.api.tez.ie';
+const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
+
+const provider = 'https://jakartanet.ecadinfra.com/'
 
 async function example() {
   const tezos = new TezosToolkit(provider);
   await importKey(
-    tezos,
-    'peqjckge.qkrrajzs@tezos.example.org',
-    'y4BX7qS1UE',
-    [
-      'skate',
-      'damp',
-      'faculty',
-      'morning',
-      'bring',
-      'ridge',
-      'traffic',
-      'initial',
-      'piece',
-      'annual',
-      'give',
-      'say',
-      'wrestle',
-      'rare',
-      'ability',
-    ].join(' '),
-    '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
-  );
+     tezos,
+     email,
+     password,
+     mnemonic.join(' '),
+     activation_code
+   );
 
   try {
     console.log('Deploying Ligo Vote contract...');
@@ -54,5 +41,4 @@ async function example() {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

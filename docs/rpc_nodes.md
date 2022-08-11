@@ -2,6 +2,8 @@
 title: RPC nodes
 author: Roxane Letourneau
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## What to consider when choosing a node
 
@@ -11,28 +13,48 @@ author: Roxane Letourneau
 - **Reliability**: Consider your requirements for uptime, and choose your node option accordingly. If node availability is critical for your user-case,  consider self-hosting a node or contracting someone to operate a node specifically for you.
 - ** End-points support**: Public nodes have different policies on the end-points that they expose. Your use case may require specific end-points to be available to your app. We have made a suite of [integration tests](rpc_nodes_integration_test.md) for the Taquito RPC package. These tests show what RPC end-points are available on a given node. These tests are available here: integration-tests/rpc-nodes.spec.ts.
 
-## List of community-run nodes
+<Tabs
+defaultValue="communityNodes"
+values={[
+{label: "Community Run Nodes", value: 'communityNodes'},
+{label: 'Commercial Nodes', value: 'commercialNodes'},
+]}>
+<TabItem value="communityNodes">
+
+| Provider         | Net         | URL                                | Header      |  
+|------------------|-------------|------------------------------------|-------|
+| ECAD Labs        | Mainnet     | https://mainnet.api.tez.ie         | [Check](https://mainnet.api.tez.ie/chains/main/blocks/head/header)      |
+| ECAD Labs        | Kathmandunet   | https://kathmandunet.ecadinfra.com    | [Check](https://kathmandunet.ecadinfra.com/chains/main/blocks/head/header)      |
+| ECAD Labs        | Jakartanet  | https://jakartanet.ecadinfra.com   | [Check](https://jakartanet.ecadinfra.com/chains/main/blocks/head/header)      |
+| SmartPy          | Mainnet     | https://mainnet.smartpy.io         |  [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header)     |
+| SmartPy          | Jakartanet   | https://Jakartanet.smartpy.io/      | [Check](https://Jakartanet.smartpy.io/chains/main/blocks/head/header)    |
+| Tezos Foundation | Mainnet     | https://rpc.tzbeta.net/            | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)      |
+| Tezos Foundation | Jakartanet  | https://rpczero.tzbeta.net/        | [Check](https://rpczero.tzbeta.net/chains/main/blocks/head/header)      |
+| GigaNode         | Mainnet     | https://mainnet-tezos.giganode.io  |  [Check](https://mainnet-tezos.giganode.io/chains/main/blocks/head/header)     |
+| GigaNode         | Jakartanet   | https://testnet-tezos.giganode.io/ | [Check](https://testnet-tezos.giganode.io/chains/main/blocks/head/header)      |
+| Marigold         | Mainnet     | https://mainnet.tezos.marigold.dev/    | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
+| Marigold         | Jakartanet  | https://jakartanet.tezos.marigold.dev/ | [Check](https://jakartanet.tezos.marigold.dev/chains/main/blocks/head/header)  |
+| Marigold         | Kathmandunet| https://kathmandunet.tezos.marigold.dev/  | [Check](https://kathmandunet.tezos.marigold.dev/chains/main/blocks/head/header)   |
+| Marigold         | Ghostnet    | https://ghostnet.tezos.marigold.dev/  | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)   |
+| TezTools         | Jakartanet  | https://eu01-node.teztools.net/  | [Check](https://eu01-node.teztools.net/chains/main/blocks/head/header)   |
+| Ateza            | Mainnet     | https://rpc-mainnet.ateza.io | [Check](https://rpc-mainnet.ateza.io/chains/main/blocks/head/header)   |
+| Ateza            | Jakartanet  | https://rpc-testnet-one.ateza.io | [Check](https://rpc-testnet-one.ateza.io/chains/main/blocks/head/header)   |
+| Ateza            | Jakartanet  | https://rpc-testnet-two.ateza.io | [Check](https://rpc-testnet-two.ateza.io/chains/main/blocks/head/header)   |
 
 *If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
+</TabItem>
+  <TabItem value="commercialNodes">
 
-- ECAD Labs nodes:
-    - Mainnet: https://mainnet.api.tez.ie
-    - Hangzhounet: https://hangzhounet.api.tez.ie protocol `PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx`
-    - Granadanet: https://granadanet.api.tez.ie protocol `PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV`
-    - Idiazabalnet: https://idiazabalnet.ecadinfra.com/ protocol: `ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK`
-        - Idiazabalnet is an early testnet protocol that will become the `I` proposal. It includes many features, the most notable being the new "tenderbake" consensus algorithim. 
-- SmartPy public Tezos nodes
-    - Mainnet: https://mainnet.smartpy.io
-    - Granadanet: https://granadanet.smartpy.io/
-- Blockscale public nodes operated on behalf of the Tezos Foundation: 
-    - Mainnet: https://rpc.tzbeta.net/
-    - Next protocol/version testnet (Granadanet): https://rpczero.tzbeta.net/
-- Teznode Public nodes operated by LetzBake!:
-    - Mainnet: https://teznode.letzbake.com
-- ~~Tezos Giga Node from Tezos Ukraine~~ Was expected cease to operations on Oct 1st 2021, but status is unkown. See
-  [Announcment](https://twitter.com/GigaNode/status/1435265400699342854)
-    - ~~Mainnet: https://mainnet-tezos.giganode.io~~
-    - ~~Granada testnet: https://testnet-tezos.giganode.io/~~
+| Provider         |  Details                                    |  
+|------------------|------------------------------------------------------------------------|
+| MIDL.dev         |  https://midl.dev/tezos-rpc/            |
+| Cryptonomic      |  https://github.com/keefertaylor/TezosKit/blob/master/docs/TezosNode.md |
+| TezTools.io      |  https://t.me/teztools (Telegram) |
+
+*If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
+
+  </TabItem>
+</Tabs>
 
 ## How to run a node
 

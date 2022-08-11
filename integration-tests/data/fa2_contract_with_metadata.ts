@@ -1,4 +1,4 @@
-// Code obtains from https://github.com/tqtezos/stablecoin/#tezos-stablecoin
+// Code obtained from https://github.com/tqtezos/stablecoin/#tezos-stablecoin
 export const fa2ContractTzip16 = `{
     parameter
         (or

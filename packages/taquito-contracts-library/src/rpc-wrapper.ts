@@ -23,36 +23,43 @@ import {
   ManagerKeyResponse,
   MichelsonV1Expression,
   PackDataParams,
-  PeriodKindResponse,
   PreapplyParams,
   PreapplyResponse,
   ProposalsResponse,
+  ProtocolsResponse,
   RpcClientInterface,
   RPCOptions,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunViewParam,
   RunCodeResult,
+  RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
+  TxRollupInboxResponse,
+  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
+/**
+ * @deprecated RpcWrapperContractsLibrary has been deprecated in favor of ReadWrapperContractsLibrary
+ *
+ */
 export class RpcWrapperContractsLibrary implements RpcClientInterface {
   constructor(private rpc: RpcClientInterface, private contractslibrary: ContractsLibrary) {}
 
-  async getNormalizedScript(
+  async getContract(
     address: string,
-    unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: RPCOptions = defaultRPCOptions
-  ): Promise<ScriptResponse> {
+  ): Promise<ContractResponse> {
     const contractData = this.contractslibrary.getContract(address);
     if (contractData) {
-      return contractData.script;
+      return { script: contractData.script, balance: new BigNumber(NaN) };
     } else {
-      return this.rpc.getNormalizedScript(address, unparsingMode, { block });
+      return this.rpc.getContract(address, { block });
     }
   }
 
@@ -92,11 +99,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<ScriptResponse> {
     return this.rpc.getScript(address, { block });
   }
-  async getContract(
+  async getNormalizedScript(
     address: string,
+    unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
     { block }: RPCOptions = defaultRPCOptions
-  ): Promise<ContractResponse> {
-    return this.rpc.getContract(address, { block });
+  ): Promise<ScriptResponse> {
+    return this.rpc.getNormalizedScript(address, unparsingMode, { block });
   }
   async getManagerKey(
     address: string,
@@ -160,11 +168,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     return this.rpc.getBallots({ block });
   }
-  async getCurrentPeriodKind({
-    block,
-  }: RPCOptions = defaultRPCOptions): Promise<PeriodKindResponse> {
-    return this.rpc.getCurrentPeriodKind({ block });
-  }
   async getCurrentProposal({
     block,
   }: RPCOptions = defaultRPCOptions): Promise<CurrentProposalResponse> {
@@ -214,6 +217,18 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<RunCodeResult> {
     return this.rpc.runCode(code, { block });
   }
+  async runView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunViewResult> {
+    return this.rpc.runView(
+      {
+        unparsing_mode,
+        ...rest,
+      },
+      { block }
+    );
+  }
   async getChainId(): Promise<string> {
     return this.rpc.getChainId();
   }
@@ -241,5 +256,21 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     return this.rpc.getSaplingDiffByContract(contract, { block });
+  }
+  async getProtocols({ block }: RPCOptions = defaultRPCOptions): Promise<ProtocolsResponse> {
+    return this.rpc.getProtocols({ block });
+  }
+  async getTxRollupState(
+    txRollupId: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<TxRollupStateResponse> {
+    return this.rpc.getTxRollupState(txRollupId, { block });
+  }
+  async getTxRollupInbox(
+    txRollupId: string,
+    blockLevel: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<TxRollupInboxResponse | null> {
+    return this.rpc.getTxRollupInbox(txRollupId, blockLevel, { block });
   }
 }

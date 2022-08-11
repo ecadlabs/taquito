@@ -12,6 +12,8 @@ import { MapToken } from './map';
 
 import { BoolToken } from './comparable/bool';
 
+import { TxRollupL2AddressToken } from './comparable/tx_rollup_l2_address';
+
 import { OrToken } from './or';
 
 import { ContractToken } from './contract';
@@ -34,6 +36,7 @@ import { TicketToken } from './ticket';
 import { NeverToken } from './never';
 import { SaplingStateToken } from './sapling-state';
 import { SaplingTransactionToken } from './sapling-transaction';
+import { SaplingTransactionDeprecatedToken } from './sapling-transaction-deprecated';
 import { Bls12381frToken } from './bls12-381-fr';
 import { Bls12381g1Token } from './bls12-381-g1';
 import { Bls12381g2Token } from './bls12-381-g2';
@@ -47,6 +50,7 @@ export const tokens = [
   StringToken,
   BigMapToken,
   AddressToken,
+  TxRollupL2AddressToken,
   MapToken,
   BoolToken,
   OrToken,
@@ -69,10 +73,11 @@ export const tokens = [
   NeverToken,
   SaplingStateToken,
   SaplingTransactionToken,
+  SaplingTransactionDeprecatedToken,
   Bls12381frToken,
   Bls12381g1Token,
   Bls12381g2Token,
   ChestToken,
   ChestKeyToken,
-  GlobalConstantToken
+  GlobalConstantToken,
 ];

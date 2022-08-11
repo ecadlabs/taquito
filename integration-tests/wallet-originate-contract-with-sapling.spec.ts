@@ -1,9 +1,8 @@
 import { CONFIGS } from "./config";
-import { saplingContract } from "./data/sapling_contracts";
 import { SaplingStateValue } from '../packages/taquito-michelson-encoder/src/taquito-michelson-encoder';
+import { saplingContractDoubleJProto } from "./data/sapling_test_contracts";
 
-
-CONFIGS().forEach(({ lib, rpc, setup,  }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test origination of contracts made with wallet api with sapling using: ${rpc}`, () => {
@@ -13,19 +12,17 @@ CONFIGS().forEach(({ lib, rpc, setup,  }) => {
       done()
     })
 
-    it('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
+    test('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
       const op = await Tezos.wallet.originate({
-        code: saplingContract,
+        code: saplingContractDoubleJProto,
         storage: {
-          balance: 1,
-          ledger1: SaplingStateValue,
-          ledger2: SaplingStateValue
+          left: SaplingStateValue,
+          right: SaplingStateValue
         }
       }).send();
       await op.confirmation();
       expect(op.opHash).toBeDefined();
       done();
-    }); 
-
+    });
   });
 })

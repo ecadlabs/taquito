@@ -9,6 +9,7 @@ describe('Or token', () => {
     let tokenComplexNoAnnots: OrToken;
     let tokenNestedOr: OrToken;
     let tokenNestedOrWithoutAnnot: OrToken;
+    let tokenOrWithOption: OrToken;
     beforeEach(() => {
         token = createToken({ prim: 'or', args: [{ prim: 'int', annots: ['intTest'] }, { prim: 'string', annots: ['stringTest'] }], annots: [] }, 0) as OrToken;
         tokenNoAnnots = createToken({ prim: 'or', args: [{ prim: 'int' }, { prim: 'string' }], annots: [] }, 0) as OrToken;
@@ -16,6 +17,7 @@ describe('Or token', () => {
         tokenComplexNoAnnots = createToken({ prim: 'or', args: [{ prim: 'or', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'timestamp' }] }] }, { prim: 'pair', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'mutez' }] }, { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'timestamp' }] }] }] }, { prim: 'or', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'timestamp' }] }, { prim: 'or', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'pair', args: [{ prim: 'mutez' }, { prim: 'timestamp' }] }] }, { prim: 'nat' }] }] }] }, 0) as OrToken;
         tokenNestedOr = createToken({ "prim": "or", "args": [{ "prim": "or", "args": [{ "prim": "or", "args": [{ "prim": "address", "annots": ["%myAddress"] }, { "prim": "bytes", "annots": ["%myBytes"] }] }, { "prim": "or", "args": [{ "prim": "int", "annots": ["%myInt"] }, { "prim": "nat", "annots": ["%myNat"] }] }] }, { "prim": "or", "args": [{ "prim": "or", "args": [{ "prim": "pair", "args": [{ "prim": "nat" }, { "prim": "int" }], "annots": ["%myPair"] }, { "prim": "string", "annots": ["%myString"] }] }, { "prim": "mutez", "annots": ["%myTez"] }] }] }, 0) as OrToken;
         tokenNestedOrWithoutAnnot = createToken({ "prim": "or", "args": [{ "prim": "or", "args": [{ "prim": "or", "args": [{ "prim": "address" }, { "prim": "bytes" }] }, { "prim": "or", "args": [{ "prim": "int" }, { "prim": "nat" }] }] }, { "prim": "or", "args": [{ "prim": "or", "args": [{ "prim": "pair", "args": [{ "prim": "nat" }, { "prim": "int" }] }, { "prim": "string" }] }, { "prim": "mutez" }] }] }, 0) as OrToken;
+        tokenOrWithOption = createToken({ prim: 'or', args: [{ prim: 'int' }, { prim: 'or', args: [{ prim: 'nat' }, { prim: 'or', args: [{ prim: 'mutez' }, { prim: 'option', args: [{ prim: 'or', args: [{ prim: 'int' }, { prim: 'string' }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }, 0) as OrToken;
     });
 
     describe('EncodeObject', () => {
@@ -37,6 +39,8 @@ describe('Or token', () => {
             expect(tokenComplex.EncodeObject({ option2: { 2: 3, 3: 'test' } })).toEqual({ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }] }] });
             expect(tokenComplex.EncodeObject({ option3: { 3: 4, 4: 3, 5: "2019-09-06T15:08:29.000Z" } })).toEqual({ prim: 'Right', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '4' }, { prim: 'Pair', args: [{ int: '3' }, { string: "2019-09-06T15:08:29.000Z" }] }] }] }] }] });
             expect(tokenComplex.EncodeObject({ option4: 4 })).toEqual({ prim: 'Right', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '4' }] }] }] });
+        
+            expect(tokenOrWithOption.EncodeObject({ 3: { 1: 'test' } })).toEqual({ prim: 'Right', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ prim: 'Some', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }] }] }] });
         });
     });
 
@@ -67,7 +71,35 @@ describe('Or token', () => {
             it('Should extract schema properly', () => {
                 expect(token.ExtractSchema()).toEqual({ intTest: 'int', stringTest: 'string' });
 
+                expect(token.generateSchema()).toEqual({
+                    __michelsonType: 'or',
+                    schema: {
+                        intTest: {
+                            __michelsonType: 'int',
+                            schema: 'int'
+                        },
+                        stringTest: {
+                            __michelsonType: 'string',
+                            schema: 'string'
+                        }
+                    }
+                });
+
                 expect(tokenNoAnnots.ExtractSchema()).toEqual({ 0: 'int', 1: 'string' });
+
+                expect(tokenNoAnnots.generateSchema()).toEqual({
+                    __michelsonType: 'or',
+                    schema: {
+                        0: {
+                            __michelsonType: 'int',
+                            schema: 'int'
+                        },
+                        1: {
+                            __michelsonType: 'string',
+                            schema: 'string'
+                        }
+                    }
+                });
 
                 expect(tokenComplexNoAnnots.ExtractSchema()).toEqual({
                     0: { 0: 'nat', 1: 'nat', 2: "timestamp" },
@@ -77,6 +109,84 @@ describe('Or token', () => {
                     4: 'nat'
                 });
 
+                expect(tokenComplexNoAnnots.generateSchema()).toEqual({
+                    __michelsonType: 'or',
+                    schema: {
+                        0: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                0: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                1: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                2: {
+                                    __michelsonType: 'timestamp',
+                                    schema: 'timestamp'
+                                }
+                            }
+                        },
+                        1: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                1: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                2: {
+                                    __michelsonType: 'mutez',
+                                    schema: 'mutez'
+                                },
+                                3: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                4: {
+                                    __michelsonType: 'timestamp',
+                                    schema: 'timestamp'
+                                }
+                            }
+                        },
+                        2: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                2: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                3: {
+                                    __michelsonType: 'timestamp',
+                                    schema: 'timestamp'
+                                }
+                            }
+                        },
+                        3: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                3: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                4: {
+                                    __michelsonType: 'mutez',
+                                    schema: 'mutez'
+                                },
+                                5: {
+                                    __michelsonType: 'timestamp',
+                                    schema: 'timestamp'
+                                }
+                            }
+                        },
+                        4: {
+                            __michelsonType: 'nat',
+                            schema: 'nat'
+                        }
+                    }
+                });
+
                 expect(tokenComplex.ExtractSchema()).toEqual({
                     option0: { 0: 'nat', 1: 'nat', 2: "timestamp" },
                     option1: { 1: 'nat', 2: 'mutez', 3: 'nat', 4: "timestamp" },
@@ -84,6 +194,119 @@ describe('Or token', () => {
                     option3: { 3: 'nat', 4: 'mutez', 5: "timestamp" },
                     option4: 'nat'
                 });
+
+                expect(tokenComplex.generateSchema()).toEqual({
+                    __michelsonType: 'or',
+                    schema: {
+                        option0: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                0: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                1: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                2: {
+                                    __michelsonType: 'timestamp',
+                                    schema: 'timestamp'
+                                }
+                            }
+                        },
+                        option1: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                1: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                2: {
+                                    __michelsonType: 'mutez',
+                                    schema: 'mutez'
+                                },
+                                3: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                4: {
+                                    __michelsonType: 'timestamp',
+                                    schema: 'timestamp'
+                                }
+                            }
+                        },
+                        option2: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                2: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                3: {
+                                    __michelsonType: 'timestamp',
+                                    schema: 'timestamp'
+                                }
+                            }
+                        },
+                        option3: {
+                            __michelsonType: 'pair',
+                            schema: {
+                                3: {
+                                    __michelsonType: 'nat',
+                                    schema: 'nat'
+                                },
+                                4: {
+                                    __michelsonType: 'mutez',
+                                    schema: 'mutez'
+                                },
+                                5: {
+                                    __michelsonType: 'timestamp',
+                                    schema: 'timestamp'
+                                }
+                            }
+                        },
+                        option4: {
+                            __michelsonType: 'nat',
+                            schema: 'nat'
+                        }
+                    }
+                });
+
+                expect(tokenOrWithOption.generateSchema()).toEqual({
+                    __michelsonType: 'or',
+                    schema: {
+                        0: {
+                            __michelsonType: 'int',
+                            schema: 'int'
+                        },
+                        1: {
+                            __michelsonType: 'nat',
+                            schema: 'nat'
+                        },
+                        2: {
+                            __michelsonType: 'mutez',
+                            schema: 'mutez'
+                        },
+                        3: {
+                            __michelsonType: 'option',
+                            schema: {
+                                __michelsonType: 'or',
+                                schema: {
+                                0: {
+                                    __michelsonType: 'int',
+                                    schema: 'int'
+                                },
+                                1: {
+                                    __michelsonType: 'string',
+                                    schema: 'string'
+                                },
+                            }
+                            }
+                        },
+                    }
+                });
+
             });
         });
 

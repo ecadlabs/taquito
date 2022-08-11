@@ -1,5 +1,5 @@
-import sodium from 'libsodium-wrappers';
-import { b58cencode, b58cdecode, prefix, buf2hex, Prefix, isValidPrefix } from '@taquito/utils';
+import { hash } from '@stablelib/blake2b';
+import { b58cencode, b58cdecode, prefix, isValidPrefix, InvalidKeyError } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import elliptic from 'elliptic';
 
@@ -40,7 +40,7 @@ export class ECKey {
   ) {
     const keyPrefix = key.substr(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
-      throw new Error('key contains invalid prefix');
+      throw new InvalidKeyError(key, 'Key contains invalid prefix');
     }
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));
@@ -84,18 +84,14 @@ export class ECKey {
    * @returns Encoded public key hash
    */
   async publicKeyHash(): Promise<string> {
-    await sodium.ready;
-    return b58cencode(
-      sodium.crypto_generichash(20, new Uint8Array(this._publicKey)),
-      pref[this.curve].pkh
-    );
+    return b58cencode(hash(new Uint8Array(this._publicKey), 20), pref[this.curve].pkh);
   }
 
   /**
    * @returns Encoded private key
    */
   async secretKey(): Promise<string> {
-    let key = this._key;
+    const key = this._key;
 
     return b58cencode(key, pref[this.curve].sk);
   }

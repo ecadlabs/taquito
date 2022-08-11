@@ -28,5 +28,5 @@ module.exports = {
     '/coverage/**',
   ],
   name: 'Taquito',
-  excludePrivate: true
+  excludePrivate: true,
 };

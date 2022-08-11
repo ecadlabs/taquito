@@ -7,12 +7,15 @@
         "quick_start",
         "boilerplate",        
         "batch_API",
+        "beaconwallet-singleton",
+        "failwith_errors",
         "confirmation_event_stream",
         "set_delegate",
         "dapp_prelaunch",
         "estimate",
         "fa2_parameters",
         "lambda_view",
+        "liquidity_baking",
         "maps_bigmaps",
         "michelsonmap",
         "originate",
@@ -25,6 +28,7 @@
         "tickets",
         "transaction_limits",
         "making_transfers",
+        "on_chain_views",
         "tutorial_links",
         "tzip12",
         "metadata-tzip16",
@@ -32,7 +36,7 @@
         "wallet_API",
         "wallets",
         "web3js_taquito",
-        "taquito_utils"
+        "contracts_collection"
       ]
     },
     {
@@ -53,12 +57,17 @@
     {
       "type": "category",
       "label": "Modules customization",
-      "items": ["rpc-cache", "cancel_http_requests"]
+      "items": ["forger", "rpc-cache", "cancel_http_requests"]
     },
     {
       "type": "category",
       "label": "Running integration tests",
       "items": ["ledger_integration_test", "rpc_nodes_integration_test"]
+    },
+    {
+      "type": "category",
+      "label": "Native Mobile Development",
+      "items": ["mobile_bundle"]
     },
     {
       "Upgrading Guide": ["upgrading_guide"]

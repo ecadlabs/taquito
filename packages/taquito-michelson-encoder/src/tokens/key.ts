@@ -1,17 +1,31 @@
-import { ComparableToken, Token, TokenFactory, TokenValidationError } from './token';
-import { encodeKey, validatePublicKey, ValidationResult, Prefix, b58cdecode, prefix } from '@taquito/utils';
+import {
+  ComparableToken,
+  SemanticEncoding,
+  Token,
+  TokenFactory,
+  TokenValidationError,
+} from './token';
+import {
+  encodeKey,
+  validatePublicKey,
+  ValidationResult,
+  Prefix,
+  b58cdecode,
+  prefix,
+} from '@taquito/utils';
+import { BaseTokenSchema } from '../schema/types';
 
 const publicKeyPrefixLength = 4;
 
 export class KeyValidationError extends TokenValidationError {
-  name: string = 'KeyValidationError';
+  name = 'KeyValidationError';
   constructor(public value: any, public token: KeyToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class KeyToken extends ComparableToken {
-  static prim = 'key';
+  static prim: 'key' = 'key';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -21,7 +35,7 @@ export class KeyToken extends ComparableToken {
     super(val, idx, fac);
   }
 
-  public Execute(val: { bytes: string; string: string }): string {
+  public Execute(val: { bytes: string; string: string }) {
     if (val.string) {
       return val.string;
     }
@@ -48,17 +62,32 @@ export class KeyToken extends ComparableToken {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
+    if (semantic && semantic[KeyToken.prim]) {
+      return semantic[KeyToken.prim](val);
+    }
+
     return { string: val };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return KeyToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: KeyToken.prim,
+      schema: KeyToken.prim,
+    };
   }
 
   ToKey(val: any) {
@@ -78,11 +107,9 @@ export class KeyToken extends ComparableToken {
 
     if (keyPrefix1 === Prefix.EDPK && keyPrefix2 !== Prefix.EDPK) {
       return -1;
-    }
-    else if (keyPrefix1 === Prefix.SPPK && keyPrefix2 !== Prefix.SPPK) {
+    } else if (keyPrefix1 === Prefix.SPPK && keyPrefix2 !== Prefix.SPPK) {
       return keyPrefix2 === Prefix.EDPK ? 1 : -1;
-    }
-    else if (keyPrefix1 === Prefix.P2PK) {
+    } else if (keyPrefix1 === Prefix.P2PK) {
       if (keyPrefix2 !== Prefix.P2PK) {
         return 1;
       }
@@ -108,6 +135,5 @@ export class KeyToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

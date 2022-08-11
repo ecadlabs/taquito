@@ -1,14 +1,15 @@
-import { Semantic, Token, TokenFactory, TokenValidationError } from './token';
+import { SaplingStateTokenSchema } from '../schema/types';
+import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingStateValidationError extends TokenValidationError {
-  name: string = 'SaplingStateValidationError';
+  name = 'SaplingStateValidationError';
   constructor(public value: any, public token: SaplingStateToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class SaplingStateToken extends Token {
-  static prim = 'sapling_state';
+  static prim: 'sapling_state' = 'sapling_state';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -29,8 +30,9 @@ export class SaplingStateToken extends Token {
     if ('int' in val) {
       return val.int;
     } else {
-      // Unknown case
-      throw new Error(
+      throw new SaplingStateValidationError(
+        val,
+        this,
         `Sapling state is expecting an object with an int property. Got ${JSON.stringify(val)}`
       );
     }
@@ -49,7 +51,10 @@ export class SaplingStateToken extends Token {
     }
   }
 
-  EncodeObject(val: any): any {
+  EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[SaplingStateToken.prim]) {
+      return semantic[SaplingStateToken.prim](val);
+    }
     if (this.isValid(val)) {
       return [];
     } else {
@@ -61,10 +66,23 @@ export class SaplingStateToken extends Token {
     }
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return {
       [SaplingStateToken.prim]: {
         'memo-size': Number(this.val.args[0]['int']),
+      },
+    };
+  }
+
+  generateSchema(): SaplingStateTokenSchema {
+    return {
+      __michelsonType: SaplingStateToken.prim,
+      schema: {
+        memoSize: this.val.args[0]['int'],
       },
     };
   }
@@ -74,6 +92,5 @@ export class SaplingStateToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

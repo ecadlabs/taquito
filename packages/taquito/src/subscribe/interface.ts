@@ -1,4 +1,4 @@
-import { OperationEntry } from '@taquito/rpc';
+import { BlockResponse, OperationEntry } from '@taquito/rpc';
 
 export type FilterExpression = {
   or?: ExpressionOrOpFilter[];
@@ -23,14 +23,15 @@ export interface DestinationFilter {
 
 export type OpFilter = OpHashFilter | SourceFilter | KindFilter | DestinationFilter;
 
-export type ExpressionOrOpFilter = OpFilter | FilterExpression
+export type ExpressionOrOpFilter = OpFilter | FilterExpression;
 
 export type Filter = ExpressionOrOpFilter | ExpressionOrOpFilter[];
 
-export type OperationContent = OperationEntry['contents'][0] & {hash: string};
+export type OperationContent = OperationEntry['contents'][0] & { hash: string };
 
 export interface SubscribeProvider {
   subscribe(filter: 'head'): Subscription<string>;
+  subscribeBlock(filter: 'head'): Subscription<BlockResponse>;
   subscribeOperation(filter: Filter): Subscription<OperationContent>;
 }
 

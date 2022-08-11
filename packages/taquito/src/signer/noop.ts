@@ -1,9 +1,17 @@
 import { Signer } from './interface';
 
-export class UnconfiguredSignerError implements Error {
+/**
+ *  @category Error
+ *  @description Error that indicates the signer has been unconfigured in the TezosToolkit instance
+ */
+export class UnconfiguredSignerError extends Error {
   name = 'UnconfiguredSignerError';
-  message =
-    'No signer has been configured. Please configure one by calling setProvider({signer}) on your TezosToolkit instance.';
+
+  constructor() {
+    super(
+      'No signer has been configured. Please configure one by calling setProvider({signer}) on your TezosToolkit instance.'
+    );
+  }
 }
 
 /**

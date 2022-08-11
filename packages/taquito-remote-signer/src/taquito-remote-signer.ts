@@ -11,12 +11,41 @@ import {
   isValidPrefix,
   mergebuf,
   prefix,
-  verifySignature
+  verifySignature,
+  validateKeyHash,
+  ValidationResult,
+  InvalidKeyHashError,
+  ProhibitedActionError,
+  InvalidSignatureError,
 } from '@taquito/utils';
-import sodium from 'libsodium-wrappers';
+import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
-import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from './errors';
+import {
+  BadSigningDataError,
+  KeyNotFoundError,
+  OperationNotAuthorizedError,
+  PublicKeyMismatch,
+} from './errors';
 import { Signer } from '@taquito/taquito';
+
+/**
+ *  @category Error
+ *  @description Error
+ */
+export class SignatureVerificationFailedError extends Error {
+  public name = 'SignatureVerificationFailedError';
+  constructor(public bytes: string, public signature: string) {
+    super(
+      `
+        Signature failed verification against public key: 
+        {
+          bytes: ${bytes},
+          signature: ${signature}
+        }
+      `
+    );
+  }
+}
 
 interface PublicKeyResponse {
   public_key: string;
@@ -61,7 +90,11 @@ export class RemoteSigner implements Signer {
     private rootUrl: string,
     private options: RemoteSignerOptions = {},
     private http = new HttpBackend()
-  ) {}
+  ) {
+    if (validateKeyHash(this.pkh) !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(this.pkh);
+    }
+  }
 
   async publicKeyHash(): Promise<string> {
     return this.pkh;
@@ -91,7 +124,7 @@ export class RemoteSigner implements Signer {
   }
 
   async secretKey(): Promise<string> {
-    throw new Error('Secret key cannot be exposed');
+    throw new ProhibitedActionError('Secret key cannot be exposed');
   }
 
   async sign(bytes: string, watermark?: Uint8Array) {
@@ -109,12 +142,12 @@ export class RemoteSigner implements Signer {
         },
         watermarkedBytes
       );
-      let pref = signature.startsWith('sig')
+      const pref = signature.startsWith('sig')
         ? signature.substring(0, 3)
         : signature.substring(0, 5);
 
       if (!isValidPrefix(pref)) {
-        throw new Error(`Unsupported signature given by remote signer: ${signature}`);
+        throw new InvalidSignatureError(signature, 'Unsupported signature given by remote signer');
       }
 
       const decoded = b58cdecode(signature, prefix[pref]);
@@ -123,13 +156,7 @@ export class RemoteSigner implements Signer {
       await this.verifyPublicKey(pk);
       const signatureVerified = verifySignature(watermarkedBytes, pk, signature);
       if (!signatureVerified) {
-        throw new Error(
-          `Signature failed verification against public key:
-          {
-            bytes: ${watermarkedBytes},
-            signature: ${signature}
-          }`
-        );
+        throw new SignatureVerificationFailedError(watermarkedBytes, signature);
       }
 
       return {
@@ -156,18 +183,12 @@ export class RemoteSigner implements Signer {
   }
 
   async verifyPublicKey(publicKey: string) {
-    await sodium.ready;
     const curve = publicKey.substring(0, 2) as curves;
-    const _publicKey = toBuffer(b58cdecode(publicKey, pref[curve].pk));
+    const _publicKey = b58cdecode(publicKey, pref[curve].pk);
 
-    const publicKeyHash = b58cencode(sodium.crypto_generichash(20, _publicKey), pref[curve].pkh);
+    const publicKeyHash = b58cencode(hash(_publicKey, 20), pref[curve].pkh);
     if (publicKeyHash !== this.pkh) {
-      throw new Error(
-        `Requested public key does not match the initialized public key hash: {
-          publicKey: ${publicKey},
-          publicKeyHash: ${this.pkh}
-        }`
-      );
+      throw new PublicKeyMismatch(publicKeyHash, this.pkh);
     }
   }
 }

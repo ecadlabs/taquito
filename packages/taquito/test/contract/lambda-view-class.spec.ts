@@ -1,6 +1,6 @@
 import LambdaView from '../../src/contract/lambda-view';
 import { TezosToolkit } from '../../src/taquito';
-import { entrypoints, header, script } from './data-lambda-view-class';
+import { entrypoints, script } from './data-lambda-view-class';
 
 describe('LambdaView test', () => {
   let mockRpcClientView: any;
@@ -10,49 +10,51 @@ describe('LambdaView test', () => {
 
   beforeEach(() => {
     mockRpcClientView = {
-      getNormalizedScript: jest.fn(),
-      getBlockHeader: jest.fn(),
+      getContract: jest.fn(),
+      getChainId: jest.fn(),
       getEntrypoints: jest.fn(),
     };
 
-    mockRpcClientView.getNormalizedScript.mockResolvedValue(script);
-    mockRpcClientView.getBlockHeader.mockResolvedValue(header);
+    mockRpcClientView.getContract.mockResolvedValue({ script });
+    mockRpcClientView.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
 
     toolkitView = new TezosToolkit('url');
     toolkitView['_context'].rpc = mockRpcClientView;
 
     mockRpcClientLambda = {
-      getNormalizedScript: jest.fn(),
-      getBlockHeader: jest.fn(),
+      getContract: jest.fn(),
+      getChainId: jest.fn(),
       getEntrypoints: jest.fn(),
     };
 
-    mockRpcClientLambda.getNormalizedScript.mockResolvedValue({
-      code: [
-        {
-          prim: 'parameter',
-          args: [
-            {
-              prim: 'lambda',
-              args: [
-                { prim: 'unit' },
-                {
-                  prim: 'pair',
-                  args: [{ prim: 'list', args: [{ prim: 'operation' }] }, { prim: 'unit' }],
-                },
-              ],
-            },
-          ],
-        },
-        { prim: 'storage', args: [{ prim: 'unit' }] },
-        {
-          prim: 'code',
-          args: [[{ prim: 'CAR' }, { prim: 'UNIT' }, { prim: 'EXEC' }]],
-        },
-      ],
-      storage: { prim: 'Unit' },
+    mockRpcClientLambda.getContract.mockResolvedValue({
+      script: {
+        code: [
+          {
+            prim: 'parameter',
+            args: [
+              {
+                prim: 'lambda',
+                args: [
+                  { prim: 'unit' },
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'list', args: [{ prim: 'operation' }] }, { prim: 'unit' }],
+                  },
+                ],
+              },
+            ],
+          },
+          { prim: 'storage', args: [{ prim: 'unit' }] },
+          {
+            prim: 'code',
+            args: [[{ prim: 'CAR' }, { prim: 'UNIT' }, { prim: 'EXEC' }]],
+          },
+        ],
+        storage: { prim: 'Unit' },
+      },
     });
-    mockRpcClientLambda.getBlockHeader.mockResolvedValue(header);
+    mockRpcClientLambda.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
     mockRpcClientLambda.getEntrypoints.mockResolvedValue({ entrypoints: {} });
 
     toolkitLambda = new TezosToolkit('url');

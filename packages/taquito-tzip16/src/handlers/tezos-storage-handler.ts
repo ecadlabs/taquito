@@ -15,10 +15,10 @@ const typeOfValueToFind = {
   annots: ['%metadata'],
 };
 
-type BigMapId = { int: string };
+export type BigMapId = { int: string };
 
 export class TezosStorageHandler implements Handler {
-  private readonly TEZOS_STORAGE_REGEX = /^(?:\/\/(KT1\w{33})(?:\.(.+))?\/)?([\w|\%]+)$/;
+  private readonly TEZOS_STORAGE_REGEX = /^(?:\/\/(KT1\w{33})(?:\.(.+))?\/)?([\w|%]+)$/;
 
   async getMetadata(
     contractAbstraction: ContractAbstraction<ContractProvider | Wallet>,
@@ -29,20 +29,20 @@ export class TezosStorageHandler implements Handler {
     if (!parsedTezosStorageUri) {
       throw new InvalidUri(`tezos-storage:${location}`);
     }
-    const storage: any = await context.rpc.getNormalizedScript(
-      parsedTezosStorageUri.contractAddress || contractAbstraction.address
+    const script = await context.readProvider.getScript(
+      parsedTezosStorageUri.contractAddress || contractAbstraction.address,
+      'head'
     );
-    const bigMapId = Schema.fromRPCResponse({ script: storage }).FindFirstInTopLevelPair<BigMapId>(
-      storage.storage,
+    const bigMapId = Schema.fromRPCResponse({ script }).FindFirstInTopLevelPair<BigMapId>(
+      script.storage,
       typeOfValueToFind
     );
 
-    if (!bigMapId) {
+    if (!bigMapId || !bigMapId.int) {
       throw new BigMapMetadataNotFound();
     }
-
     const bytes = await context.contract.getBigMapKeyByID<string>(
-      bigMapId['int'].toString(),
+      bigMapId.int.toString(),
       parsedTezosStorageUri.path,
       new Schema(typeOfValueToFind)
     );

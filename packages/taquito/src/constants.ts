@@ -27,7 +27,11 @@ export enum Protocols {
   PsFLorena = 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
   PtGRANADs = 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
   PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
-  PtIdiaza = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK' // temporary protocol hash
+  PsiThaCa = 'PsiThaCaT47Zboaw71QWScM8sXeMM7bbQFncK9FLqYc6EKdpjVP',
+  Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
+  PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
+  PtKathman = 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+  ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
 export const protocols = {
@@ -39,27 +43,22 @@ export const protocols = {
   '009': [Protocols.PsFLorena],
   '010': [Protocols.PtGRANADs],
   '011': [Protocols.PtHangz2], // hangzhou v2,
-  '012': [Protocols.PtIdiaza]
+  '012': [Protocols.PsiThaCa, Protocols.Psithaca2],
+  '013': [Protocols.PtJakart2],
+  '014': [Protocols.PtKathman],
+  '015': [Protocols.ProtoALpha],
 };
 
-export enum DefaultLambdaAddresses {
-  MAINNET = 'KT1CPuTzwC7h7uLXd5WQmpMFso1HxrLBUtpE',
-  CARTHAGENET = 'KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6',
-  DELPHINET = 'KT19abMFs3haqyKYwqdLjK9GbtofryZLvpiK',
-  EDONET = 'KT1A64nVZDccAHGAsf1ZyVajXZcbiwjV3SnN',
-  FLORENCENET = 'KT1KCe3YqGnudsiCWb5twbe2DH5T3EMdLpSE',
-  GRANADANET = 'KT1BCun2vsA4GBQvsKAuGD5x873MfW2jsN9z',
-  HANGZHOUNET = 'KT1PWtBAr1hjK9M9s9oZNZFbfzPdkkD6PSJR',
-  IDIAZABALNET = 'KT1UaG13ygd6szzY7uCxK9ASLMvVFYBU7UtD'
-}
-
 export enum ChainIds {
-  MAINNET = "NetXdQprcVkpaWU",
-  CARTHAGENET = "NetXjD3HPJJjmcd",
-  DELPHINET = "NetXm8tYqnMWky1",
-  EDONET = "NetXSgo1ZT2DRUG",
-  FLORENCENET = "NetXxkAx4woPLyu",
-  GRANADANET = "NetXz969SFaFn8k", 
-  HANGZHOUNET = "NetXZSsxBpMQeAT",
-  IDIAZABALNET = "NetXxkAx4woPLyu"
+  MAINNET = 'NetXdQprcVkpaWU',
+  CARTHAGENET = 'NetXjD3HPJJjmcd',
+  DELPHINET = 'NetXm8tYqnMWky1',
+  EDONET = 'NetXSgo1ZT2DRUG',
+  FLORENCENET = 'NetXxkAx4woPLyu',
+  GRANADANET = 'NetXz969SFaFn8k',
+  HANGZHOUNET = 'NetXZSsxBpMQeAT',
+  ITHACANET = 'NetXbhmtAbMukLc',
+  ITHACANET2 = 'NetXnHfVqm9iesp',
+  JAKARTANET2 = 'NetXLH1uAxK7CCh',
+  KATHMANDUNET = 'NetXazhm4yetmff'
 }

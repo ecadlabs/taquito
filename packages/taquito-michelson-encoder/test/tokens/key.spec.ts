@@ -86,4 +86,13 @@ describe('Key token', () => {
       expect(token.compare("p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT", "sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj")).toEqual(1);
     });
   });
+
+  describe('generateSchema', () => {
+    it('Should generate the schema properly', () => {
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'key',
+        schema: 'key'
+      });
+    });
+  });
 });

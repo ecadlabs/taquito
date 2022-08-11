@@ -20,5 +20,19 @@ describe('Schema with a map as root storage', () => {
         value: 'string',
       },
     });
+
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: "map",
+      schema: {
+        key: {
+          __michelsonType: "nat",
+          schema: 'nat'
+        },
+        value: {
+          __michelsonType: "string",
+          schema: 'string'
+        }
+      },
+    });
   });
 });

@@ -224,18 +224,11 @@
           "name": "@taquito/michel-codec",
           "version": "8.0.4-beta.0",
           "description": "Michelson parser/validator/formatter",
-          "keywords": [
-            "tezos",
-            "blockchain",
-            "signer"
-          ],
+          "keywords": ["tezos", "blockchain", "signer"],
           "main": "./dist/taquito-michel-codec.umd.js",
           "module": "./dist/taquito-michel-codec.es5.js",
           "typings": "./dist/types/taquito-michel-codec.d.ts",
-          "files": [
-            "dist",
-            "signature.json"
-          ],
+          "files": ["dist", "signature.json"],
           "publishConfig": {
             "access": "public"
           },
@@ -259,11 +252,7 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": [
-              "prettier --write",
-              "tslint --fix",
-              "git add"
-            ]
+            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
           },
           "jest": {
             "transform": {
@@ -271,21 +260,12 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": [
-              "ts",
-              "tsx",
-              "js"
-            ],
+            "moduleFileExtensions": ["ts", "tsx", "js"],
             "moduleNameMapper": {
               "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
             },
-            "coveragePathIgnorePatterns": [
-              "/node_modules/",
-              "/test/"
-            ],
-            "collectCoverageFrom": [
-              "src/**/*.{js,ts}"
-            ]
+            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+            "collectCoverageFrom": ["src/**/*.{js,ts}"]
           },
           "devDependencies": {
             "@types/jest": "^26.0.16",

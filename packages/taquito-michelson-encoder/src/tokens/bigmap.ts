@@ -1,15 +1,27 @@
 import { MichelsonMap } from '../michelson-map';
-import { ComparableToken, Semantic, Token, TokenFactory, TokenValidationError } from './token';
+import { BigMapTokenSchema } from '../schema/types';
+import {
+  ComparableToken,
+  Semantic,
+  SemanticEncoding,
+  Token,
+  TokenFactory,
+  TokenValidationError,
+} from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing Big Map types
+ */
 export class BigMapValidationError extends TokenValidationError {
-  name: string = 'BigMapValidationError';
+  name = 'BigMapValidationError';
   constructor(public value: any, public token: BigMapToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class BigMapToken extends Token {
-  static prim = 'big_map';
+  static prim: 'big_map' = 'big_map';
   constructor(
     protected val: { prim: string; args: any[]; annots?: any[] },
     protected idx: number,
@@ -23,14 +35,28 @@ export class BigMapToken extends Token {
   }
 
   get KeySchema(): ComparableToken {
-    return (this.createToken(this.val.args[0], 0) as unknown) as ComparableToken;
+    return this.createToken(this.val.args[0], 0) as unknown as ComparableToken;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return {
       big_map: {
         key: this.KeySchema.ExtractSchema(),
         value: this.ValueSchema.ExtractSchema(),
+      },
+    };
+  }
+
+  generateSchema(): BigMapTokenSchema {
+    return {
+      __michelsonType: BigMapToken.prim,
+      schema: {
+        key: this.KeySchema.generateSchema(),
+        value: this.ValueSchema.generateSchema(),
       },
     };
   }
@@ -43,8 +69,20 @@ export class BigMapToken extends Token {
     return new BigMapValidationError(value, this, 'Value must be a MichelsonMap');
   }
 
+  private objLitToMichelsonMap(val: any): any {
+    if (val instanceof MichelsonMap) return val;
+    if (typeof val === 'object') {
+      if (Object.keys(val).length === 0) {
+        return new MichelsonMap();
+      } else {
+        return MichelsonMap.fromLiteral(val);
+      }
+    }
+    return val;
+  }
+
   public Encode(args: any[]): any {
-    const val: MichelsonMap<any, any> = args.pop();
+    const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args.pop());
 
     const err = this.isValid(val);
     if (err) {
@@ -53,7 +91,7 @@ export class BigMapToken extends Token {
 
     return Array.from(val.keys())
       .sort((a: any, b: any) => this.KeySchema.compare(a, b))
-      .map(key => {
+      .map((key) => {
         return {
           prim: 'Elt',
           args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
@@ -61,17 +99,21 @@ export class BigMapToken extends Token {
       });
   }
 
-  public EncodeObject(args: any): any {
-    const val: MichelsonMap<any, any> = args;
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
+    const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args);
 
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
+    if (semantic && semantic[BigMapToken.prim]) {
+      return semantic[BigMapToken.prim](val, this.val);
+    }
+
     return Array.from(val.keys())
       .sort((a: any, b: any) => this.KeySchema.compare(a, b))
-      .map(key => {
+      .map((key) => {
         return {
           prim: 'Elt',
           args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
@@ -88,7 +130,7 @@ export class BigMapToken extends Token {
       // Athens is returning an empty array for big map in storage
       // Internal: In taquito v5 it is still used to decode big map diff (as if they were a regular map)
       const map = new MichelsonMap(this.val);
-      val.forEach(current => {
+      val.forEach((current) => {
         map.set(this.KeySchema.ToKey(current.args[0]), this.ValueSchema.Execute(current.args[1]));
       });
       return map;
@@ -96,8 +138,9 @@ export class BigMapToken extends Token {
       // Babylon is returning an int with the big map id in contract storage
       return val.int;
     } else {
-      // Unknown case
-      throw new Error(
+      throw new BigMapValidationError(
+        val,
+        this,
         `Big map is expecting either an array (Athens) or an object with an int property (Babylon). Got ${JSON.stringify(
           val
         )}`
@@ -112,6 +155,5 @@ export class BigMapToken extends Token {
     this.KeySchema.findAndReturnTokens(tokenToFind, tokens);
     this.ValueSchema.findAndReturnTokens(tokenToFind, tokens);
     return tokens;
-  };
-
+  }
 }

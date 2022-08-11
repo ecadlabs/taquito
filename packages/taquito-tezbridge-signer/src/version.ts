@@ -1,8 +1,6 @@
 
 // IMPORTANT: THIS FILE IS AUTO GENERATED! DO NOT MANUALLY EDIT OR CHECKIN!
-/* tslint:disable */
 export const VERSION = {
-    "commitHash": "e4fb2f0ab9a459640e474bf65ae4578f4b948c63",
-    "version": "11.0.2"
+    "commitHash": "6d90b3d5e616a6e9b9ad9dd8453b5068e7396fff",
+    "version": "13.0.1"
 };
-/* tslint:enable */

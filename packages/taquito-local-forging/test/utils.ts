@@ -1,2 +1,3 @@
 export const fromHexString = (hexString: string) =>
-  new Uint8Array(hexString.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  new Uint8Array(hexString.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)));

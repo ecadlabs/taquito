@@ -1,0 +1,4 @@
+parameter unit;
+storage unit;
+code { DIP 1073741824 { }; # = 0x3fffffff + 1
+       DROP; }

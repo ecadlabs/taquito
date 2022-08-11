@@ -1,4 +1,4 @@
-import { OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
+import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
 import { BATCH_KINDS } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult } from './operation-errors';
@@ -14,7 +14,8 @@ import {
 
 export class BatchOperation
   extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
+{
   constructor(
     hash: string,
     private readonly params: RPCOperation[],
@@ -30,6 +31,21 @@ export class BatchOperation
     return arr.reduce((prev, current) => {
       return prop in current ? Number(current[prop]) + prev : prev;
     }, 0);
+  }
+
+  public getOriginatedContractAddresses(): string[] {
+    const originationOpResults = this.results.filter(
+      (x) => x.kind === 'origination'
+    ) as OperationContentsAndResultOrigination[];
+
+    let addresses: string[] = [];
+    for (const res of originationOpResults) {
+      if (res.metadata.operation_result.originated_contracts) {
+        addresses = [...addresses, ...res.metadata.operation_result.originated_contracts];
+      }
+    }
+
+    return addresses;
   }
 
   public get status() {
