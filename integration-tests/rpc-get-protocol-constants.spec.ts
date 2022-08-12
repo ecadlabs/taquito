@@ -603,6 +603,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             expect(constants).toEqual({
                 proof_of_work_nonce_size: 8,
                 nonce_length: 32,
+                nonce_revelation_threshold: 16,
                 max_anon_ops_per_block: 132,
                 max_operation_data_length: 32768,
                 max_proposals_per_delegate: 20,
@@ -639,7 +640,6 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                     numerator: 2,
                 },
                 max_slashing_period: 2,
-                max_wrapped_proof_binary_size: 30000,
                 frozen_deposits_percentage: 10,
                 double_baking_punishment: new BigNumber(640000000),
                 ratio_of_frozen_deposits_slashed_per_double_endorsement: {
@@ -660,12 +660,14 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 cache_script_size: 100000000,
                 cache_stake_distribution_cycles: 8,
                 cycles_per_voting_period: 1,
+                sc_max_wrapped_proof_binary_size: 30000,
                 sc_rollup_challenge_window_in_blocks: 20160,
                 sc_rollup_enable: false,
                 sc_rollup_max_available_messages: 1000000,
                 sc_rollup_origination_size: 6314,
                 sc_rollup_commitment_period_in_blocks: 30,
                 sc_rollup_max_active_outbox_levels: 20160,
+                sc_rollup_message_size_limit: 4096,
                 sc_rollup_max_lookahead_in_blocks: 30000,
                 sc_rollup_max_outbox_messages_per_level: 100,
                 sc_rollup_stake_amount: "32000000",
@@ -684,6 +686,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 tx_rollup_rejection_max_proof_size: 30000,
                 tx_rollup_sunset_level: 17280,
                 tx_rollup_withdraw_period: 10,
+                vdf_difficulty: "50000",
             });
 
             done();
