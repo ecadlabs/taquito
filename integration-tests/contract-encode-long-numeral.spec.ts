@@ -4,12 +4,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
     const test = require('jest-retries');
 
-    describe(`Test deploying contract having long numeral in storage and calling default entry point with long numeral using the contract API: ${rpc}`, () => {
+    describe(`Test contract origination for a contract having long numeral in storage and calling default entry point with long numeral through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
-        test('Originates contract and calls default method with long nat param', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract and then call default method with long nat param', 2, async (done: () => void) => {
             const code = `parameter nat; storage nat; code { CAR ; NIL operation ; PAIR }`;
             const op = await Tezos.contract.originate({
                 code,
@@ -26,13 +26,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
     });
 
-    describe(`Test deploying contract having long numeral in storage and calling default entry point with long numeral using the wallet API: ${rpc}`, () => {
+    describe(`Test contract originating having long numeral in storage and calling default entry point with long numeral through wallet api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
 
-        test('Originates contract and calls default method with long int param', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract and then call default method with long nat param', 2, async (done: () => void) => {
             const code = `parameter int; storage int; code { CAR ; NIL operation ; PAIR }`;
             const op = await Tezos.wallet.originate({
                 code,
