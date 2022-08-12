@@ -10,7 +10,6 @@ export enum ProtocolsHash {
   PtHangz2 = 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
   Psithaca2 = 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
-  PtKathman = 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -26,8 +25,7 @@ const protoLevel: Record<ProtocolsHash, number> = {
   PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx: 11,
   Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A: 12,
   PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY: 13,
-  PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg: 14,
-  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 15,
+  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 14,
 };
 
 export function ProtoInferiorTo(a: ProtocolsHash, b: ProtocolsHash): boolean {

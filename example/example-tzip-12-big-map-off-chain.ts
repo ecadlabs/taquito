@@ -3,11 +3,12 @@ import { importKey } from '@taquito/signer';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
 import Faucet from './faucet-interface';
-import nodeCrypto from 'crypto';
 
 const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
 
-const provider = 'https://kathmandunet.ecadinfra.com';
+const provider = 'https://jakartanet.ecadinfra.com';
+
+const nodeCrypto = require('crypto');
 
 async function createAddress() {
   const tezos = new TezosToolkit(provider)
