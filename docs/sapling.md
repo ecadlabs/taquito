@@ -137,7 +137,7 @@ import { RpcClient } from '@taquito/rpc';
 
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
-// Note you need to set up your signer on the TezosToolkit as usual
+// Note: you need to set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
@@ -191,7 +191,7 @@ import { RpcClient } from '@taquito/rpc';
 
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
-// Note you need to set up your signer on the TezosToolkit as usual
+// Note: you need to set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
@@ -233,7 +233,7 @@ import { RpcClient } from '@taquito/rpc';
 
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
-// Note you need to set up your signer on the TezosToolkit as usual
+// Note: you need to set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
@@ -273,7 +273,7 @@ import { RpcClient } from '@taquito/rpc';
 
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
-// Note you need to set up your signer on the TezosToolkit as usual
+// Note: you need to set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemoryViewingKey = new InMemoryViewingKey(
