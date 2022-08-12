@@ -61,6 +61,13 @@ export class ContractToken extends Token {
     return { string: val };
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

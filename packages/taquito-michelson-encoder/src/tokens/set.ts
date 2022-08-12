@@ -76,6 +76,13 @@ export class SetToken extends Token {
       }, []);
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

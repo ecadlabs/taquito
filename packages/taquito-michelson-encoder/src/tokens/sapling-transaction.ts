@@ -54,6 +54,10 @@ export class SaplingTransactionToken extends Token {
     return { bytes: String(val).toString() };
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

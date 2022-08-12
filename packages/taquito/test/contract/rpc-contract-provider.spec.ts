@@ -1856,4 +1856,191 @@ describe('RpcContractProvider test', () => {
       done();
     });
   });
+
+  describe('Testing Bug #1762 mapTypecheckError', () => {
+    it('should have a defined response and storage of 3 should not throw an error', async (done) => {
+      mockRpcClient.getEntrypoints.mockResolvedValue({
+        entrypoints: {},
+      })
+      mockRpcClient.getContract.mockResolvedValue({
+        "balance": "0",
+        "script": {
+          "code": [
+            {
+              "prim": "parameter",
+              "args": [
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "ticket",
+                      "args": [
+                        {
+                          "prim": "bytes"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "address"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "storage",
+              "args": [
+                {
+                  "prim": "map",
+                  "args": [
+                    {
+                      "prim": "address"
+                    },
+                    {
+                      "prim": "ticket",
+                      "args": [
+                        {
+                          "prim": "bytes"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "code",
+              "args": [
+                [
+                  {
+                    "prim": "UNPAIR"
+                  },
+                  {
+                    "prim": "UNPAIR"
+                  },
+                  {
+                    "prim": "READ_TICKET"
+                  },
+                  {
+                    "prim": "DROP"
+                  },
+                  {
+                    "prim": "DIG",
+                    "args": [
+                      {
+                        "int": "2"
+                      }
+                    ]
+                  },
+                  {
+                    "prim": "SWAP"
+                  },
+                  {
+                    "prim": "SOME"
+                  },
+                  {
+                    "prim": "DIG",
+                    "args": [
+                      {
+                        "int": "2"
+                      }
+                    ]
+                  },
+                  {
+                    "prim": "UPDATE"
+                  },
+                  {
+                    "prim": "NIL",
+                    "args": [
+                      {
+                        "prim": "operation"
+                      }
+                    ]
+                  },
+                  {
+                    "prim": "PAIR"
+                  }
+                ]
+              ]
+            }
+          ],
+          "storage": [
+            {
+              "prim": "Elt",
+              "args": [
+                {
+                  "string": "tz1QYD1zbK2gTUu1YWX8m7hPcKNkuXoxPo73"
+                },
+                {
+                  "prim": "Pair",
+                  "args": [
+                    {
+                      "string": "KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq"
+                    },
+                    {
+                      "bytes": "0505080a0000001601f37d4eddfff4e08fb1f19895ac9c83bc12d2b36800"
+                    },
+                    {
+                      "int": "2"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "Elt",
+              "args": [
+                {
+                  "string": "tz1cor8JEddCMvLFpWBK1EcNFDU3QgaSwvc1"
+                },
+                {
+                  "prim": "Pair",
+                  "args": [
+                    {
+                      "string": "KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq"
+                    },
+                    {
+                      "bytes": "0505080a0000001601f37d4eddfff4e08fb1f19895ac9c83bc12d2b36800"
+                    },
+                    {
+                      "int": "10000"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "Elt",
+              "args": [
+                {
+                  "string": "tz1h5GajcQWq4ybaWuwSiYrR5PvmUxndm8T8"
+                },
+                {
+                  "prim": "Pair",
+                  "args": [
+                    {
+                      "string": "KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq"
+                    },
+                    {
+                      "bytes": "050505030b"
+                    },
+                    {
+                      "int": "1000000"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      })
+      const rpcContract = await rpcContractProvider.at('KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq');
+      const storage = await rpcContract.storage() as any;
+      expect(rpcContract).toBeDefined();
+
+      const keyList = storage.keyMap;
+      expect(keyList.size).toEqual(3);
+      done();
+    })
+  })
 });

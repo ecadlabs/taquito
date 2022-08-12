@@ -76,6 +76,13 @@ export class BytesToken extends ComparableToken {
     return { bytes: String(val).toString() };
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   public Execute(val: any): string {
     return val.bytes;
   }

@@ -28,6 +28,10 @@ export class OperationToken extends Token {
     return { string: val };
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

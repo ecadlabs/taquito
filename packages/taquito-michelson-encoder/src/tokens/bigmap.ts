@@ -121,6 +121,13 @@ export class BigMapToken extends Token {
       });
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   public Execute(val: any[] | { int: string }, semantic?: Semantic) {
     if (semantic && semantic[BigMapToken.prim]) {
       return semantic[BigMapToken.prim](val as any, this.val);

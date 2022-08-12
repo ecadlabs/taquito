@@ -78,6 +78,13 @@ export class MutezToken extends ComparableToken {
     return { int: String(val).toString() };
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   public ToBigMapKey(val: string | number) {
     return {
       key: { int: String(val) },

@@ -25,6 +25,10 @@ export class UnitToken extends ComparableToken {
     return { prim: 'Unit' };
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   public Execute(_val: { prim: string }) {
     return UnitValue;
   }

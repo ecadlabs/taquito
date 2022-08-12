@@ -56,6 +56,10 @@ export class TxRollupL2AddressToken extends ComparableToken {
     return { string: val }
   }
 
+  public TypecheckValue(val: unknown) {
+    this.isValid(val);
+  }
+
   public Execute(val: {bytes?: string; string?: string}): string {
     if (val.string) {
       return val.string

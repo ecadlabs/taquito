@@ -3,6 +3,7 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
+import { TicketToken } from '../tokens/ticket';
 import {
   BigMapKeyType,
   Semantic,
@@ -150,7 +151,7 @@ export class Schema {
       return true;
     }
     try {
-      this.root.EncodeObject(val);
+      this.root.TypecheckValue(val)
       return true;
     } catch (ex) {
       return false;

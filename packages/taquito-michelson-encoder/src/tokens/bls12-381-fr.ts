@@ -62,6 +62,13 @@ export class Bls12381frToken extends Token {
     }
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   Execute(val: any): string {
     return val.bytes;
   }

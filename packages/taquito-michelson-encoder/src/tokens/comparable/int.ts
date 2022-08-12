@@ -78,6 +78,13 @@ export class IntToken extends ComparableToken {
     return { int: new BigNumber(val).toFixed() };
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   public ToBigMapKey(val: string | number) {
     return {
       key: { int: String(val) },

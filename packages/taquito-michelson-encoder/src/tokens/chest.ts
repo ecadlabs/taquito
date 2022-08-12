@@ -54,6 +54,13 @@ export class ChestToken extends Token {
     return { bytes: val };
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   Execute(val: any): string {
     return val.bytes;
   }

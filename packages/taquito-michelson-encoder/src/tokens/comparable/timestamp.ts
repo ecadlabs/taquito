@@ -34,6 +34,10 @@ export class TimestampToken extends ComparableToken {
     return { string: val };
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

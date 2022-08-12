@@ -41,7 +41,12 @@ export class TicketToken extends Token {
     if (semantic && semantic[TicketToken.prim]) {
       return semantic[TicketToken.prim](args, this.val);
     }
+
     throw new EncodeTicketError();
+  }
+
+  public TypecheckValue(_arg: unknown) {
+    return
   }
 
   public Execute(val: any, semantics?: Semantic) {

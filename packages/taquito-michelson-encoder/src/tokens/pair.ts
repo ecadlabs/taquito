@@ -158,6 +158,10 @@ export class PairToken extends ComparableToken {
     };
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   private traversal(getLeftValue: (token: Token) => any, getRightValue: (token: Token) => any) {
     const args = this.args();
 

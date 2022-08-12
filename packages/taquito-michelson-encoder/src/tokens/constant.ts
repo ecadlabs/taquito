@@ -57,6 +57,10 @@ export class GlobalConstantToken extends Token {
     );
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

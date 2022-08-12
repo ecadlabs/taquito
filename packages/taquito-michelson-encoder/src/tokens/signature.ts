@@ -56,8 +56,15 @@ export class SignatureToken extends ComparableToken {
     if (semantic && semantic[SignatureToken.prim]) {
       return semantic[SignatureToken.prim](val);
     }
-    
+
     return { string: val };
+  }
+
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
   }
 
   /**

@@ -43,6 +43,10 @@ export class StringToken extends ComparableToken {
     return { string: val };
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   public ToKey({ string }: any) {
     return string;
   }

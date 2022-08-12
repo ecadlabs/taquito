@@ -27,6 +27,11 @@ export class NeverToken extends Token {
     }
     throw new NeverTokenError(val, this, 'Assigning a value to the type never is forbidden.');
   }
+
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   public Execute(val: any) {
     throw new NeverTokenError(val, this, 'There is no literal value for the type never.');
   }

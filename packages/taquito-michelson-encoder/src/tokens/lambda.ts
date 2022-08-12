@@ -40,6 +40,10 @@ export class LambdaToken extends Token {
     return val;
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

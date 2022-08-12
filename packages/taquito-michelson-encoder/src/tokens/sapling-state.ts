@@ -66,6 +66,18 @@ export class SaplingStateToken extends Token {
     }
   }
 
+  public TypecheckValue(val: unknown) {
+    if (this.isValid(val)) {
+      return [];
+    } else {
+      throw new SaplingStateValidationError(
+        val,
+        this,
+        `Invalid sapling_state. Received: ${val} while expecting: {}`
+      );
+    }
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

@@ -103,6 +103,8 @@ export abstract class Token {
 
   public abstract EncodeObject(args: any, semantics?: SemanticEncoding): any;
 
+  public abstract TypecheckValue(arg: any): void;
+
   public ExtractSignature() {
     return [[this.ExtractSchema()]];
   }

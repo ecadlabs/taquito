@@ -66,6 +66,13 @@ export class AddressToken extends ComparableToken {
     return { string: val };
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   public Execute(val: { bytes: string; string: string }): string {
     if (val.string) {
       return val.string;

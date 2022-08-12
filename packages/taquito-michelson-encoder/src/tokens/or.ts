@@ -121,6 +121,10 @@ export class OrToken extends ComparableToken {
     }
   }
 
+  public TypecheckValue(_val: unknown) {
+    return
+  }
+
   public Execute(val: any, semantics?: Semantic): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;

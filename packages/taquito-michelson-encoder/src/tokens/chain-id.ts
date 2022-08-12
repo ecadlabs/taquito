@@ -77,6 +77,13 @@ export class ChainIDToken extends ComparableToken {
     return { string: val };
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   public ToKey({ string }: any) {
     return string;
   }

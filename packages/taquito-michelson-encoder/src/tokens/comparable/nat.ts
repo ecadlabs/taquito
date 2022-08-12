@@ -65,6 +65,13 @@ export class NatToken extends ComparableToken {
     return { int: new BigNumber(val).toFixed() };
   }
 
+  public TypecheckValue(val: unknown) {
+    const err = this.isValid(val);
+    if (err) {
+      throw err;
+    }
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *

@@ -28,6 +28,10 @@ export class BoolToken extends ComparableToken {
     return { prim: val ? 'True' : 'False' };
   }
 
+  public TypecheckValue(_arg: unknown) {
+    return
+  }
+
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema
    *
