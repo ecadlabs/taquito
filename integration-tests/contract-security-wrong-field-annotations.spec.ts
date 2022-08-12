@@ -15,6 +15,7 @@ import { securityWrongAnnotations } from './data/security-wrong-annotations-cont
  * the DEX is still able to interact e.g. with smart contracts which are not FA1.2/FA2 compatible, because they are using wrong annotations 
  * (e.g. "to" instead of "to_" for FA2 transfer entrypoints).
  *  
+ * An example of the test contract is here: https://better-call.dev/ithacanet/KT1C4NcV4ebR6gS7SzbavkkSx3HYhWTBPVJ9/operations
  * 
  * The contract used has six entrypoints:
  * 
