@@ -70,10 +70,10 @@
     "bs58check" "2.1.2"
     "libsodium-wrappers" "0.7.9"
 
-"@airgap/sapling-wasm@^0.0.8-beta.1":
-  "integrity" "sha512-aPCatfT7woR0cs868MplFXZC5S8zhHIKpTPowr4QxzPFB5NGGc0zAZC0Ux0+7pTvttwVCC99lwlSBY+dkiGkiw=="
-  "resolved" "https://registry.npmjs.org/@airgap/sapling-wasm/-/sapling-wasm-0.0.8-beta.1.tgz"
-  "version" "0.0.8-beta.1"
+"@airgap/sapling-wasm@^0.0.7":
+  "integrity" "sha512-IMODbGPTBYKuO5ztiHX9C1PTlhqZvmVWv7m7zj5+VMcbBxrk4+jBAf7FYTH5l+IUsNMaHBOuh8Qq3A1b/pm7jQ=="
+  "resolved" "https://registry.npmjs.org/@airgap/sapling-wasm/-/sapling-wasm-0.0.7.tgz"
+  "version" "0.0.7"
 
 "@ampproject/remapping@^2.1.0":
   "integrity" "sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w=="
@@ -3066,6 +3066,14 @@
   dependencies:
     "follow-redirects" "^1.14.8"
 
+"axios@^0.27.2":
+  "integrity" "sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ=="
+  "resolved" "https://registry.npmjs.org/axios/-/axios-0.27.2.tgz"
+  "version" "0.27.2"
+  dependencies:
+    "follow-redirects" "^1.14.9"
+    "form-data" "^4.0.0"
+
 "axios@0.24.0":
   "integrity" "sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA=="
   "resolved" "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz"
@@ -5187,7 +5195,7 @@
   "resolved" "https://registry.npmjs.org/flatted/-/flatted-3.2.6.tgz"
   "version" "3.2.6"
 
-"follow-redirects@^1.14.4", "follow-redirects@^1.14.8":
+"follow-redirects@^1.14.4", "follow-redirects@^1.14.8", "follow-redirects@^1.14.9":
   "integrity" "sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA=="
   "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.1.tgz"
   "version" "1.15.1"
@@ -5206,6 +5214,15 @@
   "integrity" "sha512-RHkBKtLWUVwd7SqRIvCZMEvAMoGUp0XU+seQiZejj0COz3RI3hWP4sCv3gZWWLjJTd7rGwcsF5eKZGii0r/hbg=="
   "resolved" "https://registry.npmjs.org/form-data/-/form-data-3.0.1.tgz"
   "version" "3.0.1"
+  dependencies:
+    "asynckit" "^0.4.0"
+    "combined-stream" "^1.0.8"
+    "mime-types" "^2.1.12"
+
+"form-data@^4.0.0":
+  "integrity" "sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww=="
+  "resolved" "https://registry.npmjs.org/form-data/-/form-data-4.0.0.tgz"
+  "version" "4.0.0"
   dependencies:
     "asynckit" "^0.4.0"
     "combined-stream" "^1.0.8"
