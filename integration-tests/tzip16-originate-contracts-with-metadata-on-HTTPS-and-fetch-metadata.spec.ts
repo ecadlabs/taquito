@@ -13,13 +13,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     const test = require('jest-retries');
 
-    describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored at HTTPS URL through contract api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-         test('Deploy a contract having empty metadata stored at an HTTPS URL', 2, async (done: () => void) => {
+         test('Verify contract.originate for a contract having empty metadata stored at an HTTPS URL', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/empty-metadata.json';
@@ -48,9 +48,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
-        }); 
+        });
 
-        test('Fetch the empty metadata of the contract', 2, async (done: () => void) => {
+        test('Verify that the metadata for the contract having empty metadata stored at an HTTPS URL can be fetched', 2, async (done: () => void) => {
 
             const contract = await Tezos.contract.at(contractAddressEmptyMetadata, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -62,7 +62,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-         test('Deploy a contract having valid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
+         test('Verify contract.originate for a contract having valid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
@@ -90,7 +90,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Deploy a contract having valid metadata which contains emoji stored at an HTTPS URL', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract having valid metadata which contains emoji stored at an HTTPS URL', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/emoji-in-metadata.json';
@@ -119,7 +119,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Fetch the metadata which contains emoji of the contract', 2, async (done: () => void) => {
+        test('Verify that the metadata for the contract which contains emoji of the contract can be fetched', 2, async (done: () => void) => {
 
             const contract = await Tezos.contract.at(contractAddressEmoji, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -147,7 +147,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Deploy a contract having invalid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract having invalid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/invalid.json';
@@ -176,7 +176,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Should fail to fetch invalid metadata of the contract', 2, async (done: () => void) => {
+        test('Verify that the invalid metadata of the contract failed to fetch', 2, async (done: () => void) => {
 
             const contract = await Tezos.contract.at(contractAddressInvalidMetadata, tzip16);
             try {
@@ -186,6 +186,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             }
 
             done();
-        }); 
+        });
     });
 })

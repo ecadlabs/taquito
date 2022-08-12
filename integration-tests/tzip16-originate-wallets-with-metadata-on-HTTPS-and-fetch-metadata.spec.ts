@@ -11,13 +11,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddressEmoji: string;
     let contractAddressInvalidMetadata: string;
 
-    describe(`Originating contracts made with wallet api having metadata stored at HTTPS URL using: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored at HTTPS URL through wallet api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-         it('Deploy a wallet api contract having empty metadata stored at an HTTPS URL', async (done) => {
+         it('Verify wallet.originate for a contract having empty metadata stored at an HTTPS URL', async (done) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/empty-metadata.json';
@@ -45,9 +45,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             contractAddressEmptyMetadata = (await op.contract()).address;
             expect(op.opHash).toBeDefined();
             done();
-        }); 
+        });
 
-        it('Fetch the empty metadata of the wallet api contract', async (done) => {
+        it('Verify that the metadata for the contract having empty metadata stored at an HTTPS URL can be fetched', async (done) => {
 
             const contract = await Tezos.wallet.at(contractAddressEmptyMetadata, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -59,7 +59,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-         it('Deploy a wallet api contract having valid metadata stored at an HTTPS URL', async (done) => {
+         it('Verify wallet.originate for a contract having valid metadata stored at an HTTPS URL', async (done) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
@@ -86,7 +86,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a wallet api contract having valid metadata which contains emoji stored at an HTTPS URL', async (done) => {
+        it('Verify wallet.originate for a contract having valid metadata which contains emoji stored at an HTTPS URL', async (done) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/emoji-in-metadata.json';
@@ -114,7 +114,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Fetch the metadata which contains emoji of the wallet api contract', async (done) => {
+        it('Verify that the metadata for the contract which contains emoji of the contract can be fetched', async (done) => {
 
             const contract = await Tezos.wallet.at(contractAddressEmoji, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -142,7 +142,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a wallet api contract having invalid metadata stored at an HTTPS URL', async (done) => {
+        it('Verify contract.originate for a contract having invalid metadata stored at an HTTPS URL', async (done) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/invalid.json';
@@ -170,7 +170,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Should fail to fetch invalid metadata of the wallet api contract', async (done) => {
+        it('Verify that the invalid metadata of the contract failed to fetch', async (done) => {
 
             const contract = await Tezos.wallet.at(contractAddressInvalidMetadata, tzip16);
             try {
@@ -180,6 +180,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             }
 
             done();
-        }); 
+        });
     });
 })
