@@ -5,13 +5,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
-  describe(`Test origination of a token contract using: ${rpc}`, () => {
+  describe(`Test contract origination of a token contract through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('originates a token contract made from wallet api and mints some tokens',2, async (done: () => void) => {
+    test('Verify wallet.originate for a token contract and mints some tokens',2, async (done: () => void) => {
       // TODO: Fails when using ephemeral keys
       const op = await Tezos.wallet.originate({
         balance: "1",
