@@ -10,6 +10,7 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
   createTxRollupBatchOperation,
+  createTransferTicketOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -26,6 +27,7 @@ import {
   RegisterGlobalConstantParams,
   TxRollupOriginateParams,
   TxRollupBatchParams,
+  TransferTicketParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -36,6 +38,8 @@ import {
   InvalidKeyHashError,
   ValidationResult,
   InvalidOperationKindError,
+  validateContractAddress,
+  InvalidContractAddressError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 
@@ -70,6 +74,20 @@ export class OperationBatch extends OperationEmitter {
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
+  }
+
+  /**
+   *
+   * @description Transfer tickets from a Tezos address (tz1,tz2 or tz3) to a smart contract address( KT1)
+   *
+   * @param params Transfer operation parameter
+   */
+  withTransferTicket(params: TransferTicketParams) {
+    if (validateContractAddress(params.destination) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(params.destination);
+    }
+    this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
+    return this
   }
 
   /**
@@ -193,6 +211,10 @@ export class OperationBatch extends OperationEmitter {
         return createTxRollupBatchOperation({
           ...param,
         });
+      case OpKind.TRANSFER_TICKET:
+        return createTransferTicketOperation({
+          ...param
+        })
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }
@@ -227,6 +249,9 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.TX_ROLLUP_SUBMIT_BATCH:
           this.withTxRollupSubmitBatch(param);
+          break;
+        case OpKind.TRANSFER_TICKET:
+          this.withTransferTicket(param);
           break;
         default:
           throw new InvalidOperationKindError((param as any).kind);
