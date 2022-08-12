@@ -131,7 +131,7 @@ describe('SaplingTransactionViewer', () => {
             221, 192, 178, 66, 70,
           ]),
           position: 0,
-          rcm: new Uint8Array([
+          randomCommitmentTrapdoor: new Uint8Array([
             36, 172, 48, 219, 73, 224, 5, 79, 74, 89, 93, 209, 250, 102, 226, 180, 52, 197, 67, 240,
             191, 75, 110, 117, 240, 29, 231, 138, 161, 173, 197, 0,
           ]),

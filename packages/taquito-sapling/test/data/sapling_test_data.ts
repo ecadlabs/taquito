@@ -150,8 +150,14 @@ export const sapling_state_diff: SaplingDiffResponse = {
 };
 
 export const ct = {
-  cv: Buffer.from('5990ecf3bba4ea96f6ea3623c9825c2fec949c6454325eea02edb96f8f67c4d1', 'hex'),
-  epk: Buffer.from('3d6713c38c922231eb9913506b6f3e3fe97dcfd49473b635116897ad958dd7b7', 'hex'),
+  commitmentValue: Buffer.from(
+    '5990ecf3bba4ea96f6ea3623c9825c2fec949c6454325eea02edb96f8f67c4d1',
+    'hex'
+  ),
+  ephemeralPublicKey: Buffer.from(
+    '3d6713c38c922231eb9913506b6f3e3fe97dcfd49473b635116897ad958dd7b7',
+    'hex'
+  ),
   payloadEnc: Buffer.from(
     '2929fb7899d521475898b5ae3e08b64a1f48b304cae6d420c45f68e9d9731d1fa0ce24187200561cc0720b40bc7dfa4b6b721312af56d7a4ecfebe7dc6d29a3acb61968a1b1588158adc89c8c861c3',
     'hex'
@@ -166,7 +172,10 @@ export const ct = {
 
 export const outputDescription = [
   {
-    cm: Buffer.from('2ce279d669436c31dcf28b8341bfe9163ae60dcc05c483c3ab6647186e706906', 'hex'),
+    commitment: Buffer.from(
+      '2ce279d669436c31dcf28b8341bfe9163ae60dcc05c483c3ab6647186e706906',
+      'hex'
+    ),
     proof: Buffer.from(
       '8991859c7b6ec23e9d1b7634a93b549bc190bf0bde3dfaf82e33fc215ef70eac93cc197deb25f0e79a78eb99c417ef7b985a7461529ae5df99cc21285e60f21746a1572ffe2e4ed9db617912fcc38d050ea876eddb18786f240437eb256c156419fe1e3546d7c21caf771d726af7350ab00d95c07b0c7bfd068bb6bb4d10ec4480fbaa710f5e6d5a78e0499cc41ec093a6c177aaa1e9156934feaeb08b8f71dbe2bb6b52023d5b9a250e5c90ef73982a8c049d068f8e4753491299dac24d5424',
       'hex'
@@ -177,9 +186,18 @@ export const outputDescription = [
 
 export const spendDescription = [
   {
-    cv: Buffer.from('25919e0a5b8cdd62985613838f8d26e6f53ee491946bf055aea003e69773816e', 'hex'),
-    nf: Buffer.from('208c4e296a95c34bf3886f62b3eaabc3c28feaf8067bf493030ae1f689fc4d85', 'hex'),
-    rk: Buffer.from('2658565805aeb044d7a5c7cc1b65fe967e4b5fcd8f3ae42758bf014150c24c5e', 'hex'),
+    commitmentValue: Buffer.from(
+      '25919e0a5b8cdd62985613838f8d26e6f53ee491946bf055aea003e69773816e',
+      'hex'
+    ),
+    nullifier: Buffer.from(
+      '208c4e296a95c34bf3886f62b3eaabc3c28feaf8067bf493030ae1f689fc4d85',
+      'hex'
+    ),
+    randomizedPublicKey: Buffer.from(
+      '2658565805aeb044d7a5c7cc1b65fe967e4b5fcd8f3ae42758bf014150c24c5e',
+      'hex'
+    ),
     proof: Buffer.from(
       'b2a06c5d13b05df8546c51a725e2c7ac7f671fa89ccf912a1ca81f8ef1cc652d563574f57dc094c1bf49eb7cd66acd3096191a5226239969e198259ec00b1218c949be6a982ea356a30fb5c0a2205767fe97e6654ea15ddeec0520f76cf96a0315b26ed670e529439c6bd80d74167167356adada9c1fd02bab9f165578d703bea3cb06e4aa19e9bb736d196eebd20e809709f28f88d3b82015171e7c18c94b013d3161e0847f53eaeecba0b1577d78a4dda9426f152953e4ece672f2f730b0e7',
       'hex'
@@ -206,7 +224,10 @@ export const transaction = {
 export const txPlainText = {
   diversifier: Buffer.from('6f3d5e524fa92140aeeeba', 'hex'),
   amount: '2000000',
-  rcm: Buffer.from('7ac1402d90bc7c0211690babf7bb0a9975fd7f5c0e0fd2307d095e851ab83505', 'hex'),
+  randomCommitmentTrapdoor: Buffer.from(
+    '7ac1402d90bc7c0211690babf7bb0a9975fd7f5c0e0fd2307d095e851ab83505',
+    'hex'
+  ),
   memoSize: 16,
   memo: 'A gift',
 };

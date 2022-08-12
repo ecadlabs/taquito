@@ -49,9 +49,7 @@ export class InvalidMemo extends Error {
 export class InsufficientBalance extends Error {
   public name = 'InsufficientBalance';
   constructor(realBalance: string, amountToSpend: string) {
-    super(
-      `Unable to spend ${amountToSpend} mutez while balance is only ${realBalance} mutez.`
-    );
+    super(`Unable to spend ${amountToSpend} mutez while the balance is only ${realBalance} mutez.`);
   }
 }
 

@@ -54,7 +54,13 @@ export class SaplingForger {
   }
 
   forgeSpendDescription(desc: SaplingTransactionInput): Buffer {
-    return Buffer.concat([desc.cv, desc.nf, desc.rk, desc.proof, desc.signature]);
+    return Buffer.concat([
+      desc.commitmentValue,
+      desc.nullifier,
+      desc.randomizedPublicKey,
+      desc.proof,
+      desc.signature,
+    ]);
   }
 
   /**
@@ -77,10 +83,10 @@ export class SaplingForger {
     const ct = desc.ciphertext;
 
     return Buffer.concat([
-      desc.cm,
+      desc.commitment,
       desc.proof,
-      ct.cv,
-      ct.epk,
+      ct.commitmentValue,
+      ct.ephemeralPublicKey,
       toHexBuf(ct.payloadEnc.length, 32),
       ct.payloadEnc,
       ct.nonceEnc,
@@ -91,9 +97,9 @@ export class SaplingForger {
 
   forgeUnsignedTxInput(unsignedSpendDescription: Omit<SaplingTransactionInput, 'signature'>) {
     return Buffer.concat([
-      unsignedSpendDescription.cv,
-      unsignedSpendDescription.nf,
-      unsignedSpendDescription.rk,
+      unsignedSpendDescription.commitmentValue,
+      unsignedSpendDescription.nullifier,
+      unsignedSpendDescription.randomizedPublicKey,
       unsignedSpendDescription.proof,
     ]);
   }
@@ -106,7 +112,7 @@ export class SaplingForger {
     return Buffer.concat([
       txPlainText.diversifier,
       toHexBuf(new BigNumber(txPlainText.amount), 64),
-      txPlainText.rcm,
+      txPlainText.randomCommitmentTrapdoor,
       toHexBuf(txPlainText.memoSize, 32),
       encodedMemo,
     ]);

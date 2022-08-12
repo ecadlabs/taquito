@@ -1,3 +1,4 @@
+import { Schema } from "@taquito/michelson-encoder";
 import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -11,20 +12,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done()
     })
     test('Simple origination scenario', 2, async (done: () => void) => {
-      const op = await Tezos.contract.originate({
-        balance: "1",
-        code: `parameter string;
-        storage string;
-        code {CAR;
-              PUSH string "Hello ";
-              CONCAT;
-              NIL operation; PAIR};
-        `,
-        init: `"test"`
-      })
-      await op.confirmation()
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      const schema = new Schema({
+        "prim": "sapling_transaction",
+        "args": [{ "prim":"8" }]
+    });
+      console.log(schema.generateSchema())
       done();
     });
   });

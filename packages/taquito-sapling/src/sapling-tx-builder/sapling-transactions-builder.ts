@@ -14,6 +14,7 @@ import {
   Ciphertext,
   SaplingContractDetails,
   SaplingTransaction,
+  SaplingTransactionParams,
 } from '../types';
 import { SaplingDiffResponse } from '@taquito/rpc';
 import { b58cdecode, Prefix, prefix } from '@taquito/utils';
@@ -52,11 +53,7 @@ export class SaplingTransactionBuilder {
   }
 
   async createShieldedTx(
-    saplingTransactionParams: {
-      to: string;
-      amount: string;
-      memo: string;
-    }[],
+    saplingTransactionParams: SaplingTransactionParams[],
     txTotalAmount: BigNumber,
     boundData: Buffer
   ): Promise<Pick<SaplingTransaction, 'inputs' | 'outputs' | 'signature' | 'balance'>> {
@@ -76,7 +73,7 @@ export class SaplingTransactionBuilder {
               address: b58cdecode(saplingTransactionParams[i].to, prefix[Prefix.ZET1]),
               amount: saplingTransactionParams[i].amount,
               memo: saplingTransactionParams[i].memo,
-              rcm,
+              randomCommitmentTrapdoor: rcm,
             })
           );
         }
@@ -100,20 +97,17 @@ export class SaplingTransactionBuilder {
     };
   }
 
-  // Note that the number of inputs is limited to 5208 and number of outputs to 2019
   async createSaplingTx(
-    saplingTransactionParams: {
-      to: string;
-      amount: string;
-      memo: string;
-    }[],
+    saplingTransactionParams: SaplingTransactionParams[],
     txTotalAmount: BigNumber,
     boundData: Buffer,
     chosenInputs: ChosenSpendableInputs
   ) {
-    const rcm = await this.#saplingWrapper.randR();
-    const vk = (await this.#inMemorySpendingKey.getInMemoryViewingKey()).getFullViewingKey();
-    const ovk = await this.#saplingWrapper.getOutgoingViewingKey(vk);
+    const randomCommitmentTrapdoor = await this.#saplingWrapper.randR();
+    const viewingKey = (
+      await this.#inMemorySpendingKey.getInMemoryViewingKey()
+    ).getFullViewingKey();
+    const outgoingViewingKey = await this.#saplingWrapper.getOutgoingViewingKey(viewingKey);
 
     const { signature, balance, inputs, outputs } = await this.#saplingWrapper.withProvingContext(
       async (saplingContext: number) => {
@@ -135,22 +129,24 @@ export class SaplingTransactionBuilder {
               address: b58cdecode(saplingTransactionParams[i].to, prefix[Prefix.ZET1]),
               amount: saplingTransactionParams[i].amount,
               memo: saplingTransactionParams[i].memo,
-              rcm,
-              ovk,
+              randomCommitmentTrapdoor,
+              outgoingViewingKey,
             })
           );
         }
 
         if (chosenInputs.sumSelectedInputs.isGreaterThan(sumAmountOutput)) {
-          const payBackAddress = await this.#saplingWrapper.getPaymentAddressFromViewingKey(vk);
+          const payBackAddress = await this.#saplingWrapper.getPaymentAddressFromViewingKey(
+            viewingKey
+          );
           const { payBackOutput, payBackAmount } = await this.createPaybackOutput(
             {
               saplingContext,
               address: payBackAddress,
               amount: txTotalAmount.toString(),
               memo: DEFAULT_MEMO,
-              rcm,
-              ovk,
+              randomCommitmentTrapdoor: randomCommitmentTrapdoor,
+              outgoingViewingKey: outgoingViewingKey,
             },
             chosenInputs.sumSelectedInputs
           );
@@ -192,49 +188,58 @@ export class SaplingTransactionBuilder {
   async prepareSaplingOutputDescription(
     parametersOutputDescription: ParametersOutputDescription
   ): Promise<SaplingTransactionOutput> {
-    const esk = await this.#saplingWrapper.randR();
-    const { cv, cm, proof } = await this.#saplingWrapper.preparePartialOutputDescription({
-      saplingContext: parametersOutputDescription.saplingContext,
-      address: parametersOutputDescription.address,
-      rcm: parametersOutputDescription.rcm,
-      esk,
-      amount: parametersOutputDescription.amount,
-    });
+    const ephemeralPrivateKey = await this.#saplingWrapper.randR();
+    const { commitmentValue, commitment, proof } =
+      await this.#saplingWrapper.preparePartialOutputDescription({
+        saplingContext: parametersOutputDescription.saplingContext,
+        address: parametersOutputDescription.address,
+        randomCommitmentTrapdoor: parametersOutputDescription.randomCommitmentTrapdoor,
+        ephemeralPrivateKey,
+        amount: parametersOutputDescription.amount,
+      });
 
     const diversifier = await this.#saplingWrapper.getDiversifiedFromRawPaymentAddress(
       parametersOutputDescription.address
     );
-    const epk = await this.#saplingWrapper.deriveEphemeralPublicKey(diversifier, esk);
-    const ock = parametersOutputDescription.ovk
+    const ephemeralPublicKey = await this.#saplingWrapper.deriveEphemeralPublicKey(
+      diversifier,
+      ephemeralPrivateKey
+    );
+    const outgoingCipherKey = parametersOutputDescription.outgoingViewingKey
       ? blake.blake2b(
-          Buffer.concat([cv, cm, epk, parametersOutputDescription.ovk]),
+          Buffer.concat([
+            commitmentValue,
+            commitment,
+            ephemeralPublicKey,
+            parametersOutputDescription.outgoingViewingKey,
+          ]),
           Buffer.from(OCK_KEY),
           32
         )
       : this.#saplingWrapper.getRandomBytes(32);
     const ciphertext = await this.encryptCiphertext({
       address: parametersOutputDescription.address,
-      esk,
+      ephemeralPrivateKey,
       diversifier,
-      ock,
+      outgoingCipherKey,
       amount: parametersOutputDescription.amount,
-      rcm: parametersOutputDescription.rcm,
+      randomCommitmentTrapdoor: parametersOutputDescription.randomCommitmentTrapdoor,
       memo: parametersOutputDescription.memo,
     });
 
     return {
-      cm,
+      commitment,
       proof,
       ciphertext: {
         ...ciphertext,
-        cv,
-        epk,
+        commitmentValue,
+        ephemeralPublicKey,
       },
     };
   }
 
   async prepareSaplingSpendDescription(saplingContext: number, inputsToSpend: Input[]) {
-    const ar = await this.#saplingWrapper.randR();
+    const publicKeyReRandomization = await this.#saplingWrapper.randR();
 
     let stateDiff: SaplingDiffResponse;
     if (this.#saplingId) {
@@ -256,10 +261,10 @@ export class SaplingTransactionBuilder {
 
       const unsignedSpendDescription = await this.#saplingWrapper.prepareSpendDescription({
         saplingContext,
-        sk: b58cdecode(this.#inMemorySpendingKey.getSpendingKey(), prefix[Prefix.SASK]),
+        spendingKey: b58cdecode(this.#inMemorySpendingKey.getSpendingKey(), prefix[Prefix.SASK]),
         address: inputsToSpend[i].paymentAddress,
-        rcm: inputsToSpend[i].rcm,
-        ar,
+        randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
+        publicKeyReRandomization,
         amount,
         root: stateDiff.root,
         witness,
@@ -269,8 +274,8 @@ export class SaplingTransactionBuilder {
         this.#saplingForger.forgeUnsignedTxInput(unsignedSpendDescription);
       const hash = blake.blake2b(unsignedSpendDescriptionBytes, await this.getAntiReplay(), 32);
       const spendDescription = await this.#saplingWrapper.signSpendDescription({
-        sk: b58cdecode(this.#inMemorySpendingKey.getSpendingKey(), prefix[Prefix.SASK]),
-        ar,
+        spendingKey: b58cdecode(this.#inMemorySpendingKey.getSpendingKey(), prefix[Prefix.SASK]),
+        publicKeyReRandomization: publicKeyReRandomization,
         unsignedSpendDescription,
         hash,
       });
@@ -287,17 +292,19 @@ export class SaplingTransactionBuilder {
   async encryptCiphertext(
     parametersCiphertext: ParametersCiphertext
   ): Promise<Pick<Ciphertext, 'payloadEnc' | 'nonceEnc' | 'payloadOut' | 'nonceOut'>> {
-    const pkd = await this.#saplingWrapper.getPkdFromRawPaymentAddress(
-      parametersCiphertext.address
+    const recipientDiversifiedTransmissionKey =
+      await this.#saplingWrapper.getPkdFromRawPaymentAddress(parametersCiphertext.address);
+    const keyAgreement = await this.#saplingWrapper.keyAgreement(
+      recipientDiversifiedTransmissionKey,
+      parametersCiphertext.ephemeralPrivateKey
     );
-    const keyAgreement = await this.#saplingWrapper.keyAgreement(pkd, parametersCiphertext.esk);
     const keyAgreementHash = blake.blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
     const nonceEnc = Buffer.from(this.#saplingWrapper.getRandomBytes(24));
 
     const transactionPlaintext = this.#saplingForger.forgeTransactionPlaintext({
       diversifier: parametersCiphertext.diversifier,
       amount: parametersCiphertext.amount,
-      rcm: parametersCiphertext.rcm,
+      randomCommitmentTrapdoor: parametersCiphertext.randomCommitmentTrapdoor,
       memoSize: this.#memoSize * 2,
       memo: parametersCiphertext.memo,
     });
@@ -305,7 +312,14 @@ export class SaplingTransactionBuilder {
     const nonceOut = Buffer.from(this.#saplingWrapper.getRandomBytes(24));
     const payloadEnc = Buffer.from(secretBox(keyAgreementHash, nonceEnc, transactionPlaintext));
     const payloadOut = Buffer.from(
-      secretBox(parametersCiphertext.ock, nonceOut, Buffer.concat([pkd, parametersCiphertext.esk]))
+      secretBox(
+        parametersCiphertext.outgoingCipherKey,
+        nonceOut,
+        Buffer.concat([
+          recipientDiversifiedTransmissionKey,
+          parametersCiphertext.ephemeralPrivateKey,
+        ])
+      )
     );
 
     return { payloadEnc, nonceEnc, payloadOut, nonceOut };
@@ -318,8 +332,8 @@ export class SaplingTransactionBuilder {
       address: params.address,
       amount: payBackAmount,
       memo: params.memo,
-      rcm: params.rcm,
-      ovk: params.ovk,
+      randomCommitmentTrapdoor: params.randomCommitmentTrapdoor,
+      outgoingViewingKey: params.outgoingViewingKey,
     });
 
     return { payBackOutput, payBackAmount };
