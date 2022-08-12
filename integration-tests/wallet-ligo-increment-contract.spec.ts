@@ -3,13 +3,13 @@ import { ligoSample } from "./data/ligo-simple-contract";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Simple ligo origination scenario using: ${rpc}`, () => {
+  describe(`Test contract origination with simple ligo origination scenario through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('for wallet api, originates michelson produced by ligo, and increments a counter in storage', async (done) => {
+    it('Verify wallet.originate for a contract in Michelson format produced by LIGO (also increments a counter in a stora', async (done) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: ligoSample,

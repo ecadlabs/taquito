@@ -35,15 +35,15 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract
         ],
         storage: { prim: 'Pair', args: [{ int: '7' }, { int: '60101' }] }
     }
-    describe(`Test extensions TezosToolkit: ${rpc}`, () => {
+    describe(`TTest extensions TezosToolkit through wallet api: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
 
-        it('configures a ContractsLibrary and a Tzip16Module on the TezosToolkit instance', async (done) => {
+        it('Verify configuration of a ContractsLibrary and a Tzip16Module on the TezosToolkit instance', async (done) => {
             const contractsLibrary = new ContractsLibrary();
-            
+
             // We intentionally load a script that does not match the knownBigMapContract script
             contractsLibrary.addContract({
                 [knownBigMapContract]: {
