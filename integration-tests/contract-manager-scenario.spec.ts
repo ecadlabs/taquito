@@ -1,16 +1,16 @@
 import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
-import { MANAGER_LAMBDA, Protocols, protocols } from "@taquito/taquito";
+import { MANAGER_LAMBDA } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
 
-  describe(`Manager TZ: ${rpc}`, () => {
+  describe(`Test TZ Manager through contract api: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('test manager transfers scenarios', async (done) => {
+    it('Verify contract.transfer from one Baker to another', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,
@@ -50,9 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => 
         await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
         fail('Should throw during transfer with amount higher than balance')
       } catch (ex: any) {
-        (protocol === Protocols.PtJakart2) ? 
-            expect(ex.message).toContain('contract.balance_too_low') :
-            expect(ex.message).toContain('tez.subtraction_underflow') 
+        expect(ex.message).toMatch('balance_too_low')
       }
       done();
     })

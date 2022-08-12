@@ -6,13 +6,13 @@ import { MANAGER_LAMBDA } from "@taquito/taquito";
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract that calls 2nd contract that FAILs: ${rpc}`, () => {
+  describe(`Test contract origination of a contract that calls 2nd contract that FAILs through contract api: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('Catches a Failwith from a contract called via a manager contract',  async (done) => {
+    test('Verify that the method call (called via a manager contract) for a contract with code FAILWITH that links to another contract will fail',  async (done: () => void) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: failwithContractCode,
