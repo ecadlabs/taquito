@@ -3,12 +3,12 @@ import { CONFIGS, SignerType } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
     const Tezos = lib;
-    describe(`Test contract.batch using: ${rpc}`, () => {
+    describe(`Test estimate.batch includes an estimation for a reveal operation when needed using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup(true);
             done();
         });
-        it('Batch estimate including reveal', async (done) => {
+        it('Verify that an estimate for a reveal operation is included in the response when using estimate.batch with an unrevealed signer', async (done) => {
             try {
                 const batchOpEstimate = await Tezos.estimate
                     .batch([
@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
             done();
         });
 
-        it('Batch estimate where reveal is not needed', async (done) => {
+        it('Verify the estimate.batch does not include an estimation of a reveal operation when the signer is already revealed.', async (done) => {
             const pkh = await Tezos.signer.publicKeyHash()
 
             try {
