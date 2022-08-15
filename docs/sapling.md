@@ -43,10 +43,12 @@ The constructor of the `SaplingToolkit` takes the following properties:
 Here is an example of how to instantiate a `SaplingToolkit`:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito';
+import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
 
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
@@ -54,7 +56,7 @@ const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONI
 const saplingToolkit = new SaplingToolkit(
     inMemorySpendingKey, 
     { contractAddress: saplingContract.address, memoSize: 8 }, 
-    tezos.getFactory(RpcReadAdapter)()
+    readProvider
 )
 ```
 
@@ -129,11 +131,13 @@ The `prepareShieldedTransaction` method returns the crafted Sapling transaction 
 Here is an example of how to prepare and inject a shielded transaction using Taquito:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito';
+import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
 
+const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
-// set up your signer on the TezosToolkit as usual
+// Note: you need to set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
@@ -141,7 +145,7 @@ const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONI
 const saplingToolkit = new SaplingToolkit(
     inMemorySpendingKey, 
     { contractAddress: saplingContract.address, memoSize: 8 }, 
-    tezos.getFactory(RpcReadAdapter)()
+    readProvider
 )
 
 // Fetch a payment address (zet)
@@ -181,10 +185,13 @@ A user should not use their own implicit account (tz1, tz2, tz3) to submit a Sap
 Here is an example of how to prepare and inject a Sapling transaction using Taquito:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito';
+import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
 
+const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+// Note: you need to set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
@@ -192,7 +199,7 @@ const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONI
 const saplingToolkit = new SaplingToolkit(
     inMemorySpendingKey, 
     { contractAddress: saplingContract.address, memoSize: 8 }, 
-    tezos.getFactory(RpcReadAdapter)()
+    readProvider
 )
 
 const shieldedTx = await saplingToolkit.prepareSaplingTransaction([{
@@ -220,10 +227,13 @@ The `prepareUnshieldedTransaction` method returns the crafted Sapling transactio
 Here is an example of how to prepare and inject an unshielded transaction using Taquito:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito';
+import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
 
+const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+// Note: you need to set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
@@ -231,7 +241,7 @@ const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONI
 const saplingToolkit = new SaplingToolkit(
     inMemorySpendingKey, 
     { contractAddress: saplingContract.address, memoSize: 8 }, 
-    tezos.getFactory(RpcReadAdapter)()
+    readProvider
 )
 
 const shieldedTx = await saplingToolkit.prepareUnshieldedTransaction({
@@ -257,10 +267,13 @@ The constructor of the `SaplingTransactionViewer` takes the following properties
 Here is an example of how to instantiate a `SaplingTransactionViewer`:
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito';
+import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { InMemoryViewingKey } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
 
+const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+// Note: you need to set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemoryViewingKey = new InMemoryViewingKey(
@@ -270,7 +283,7 @@ const inMemoryViewingKey = new InMemoryViewingKey(
 const saplingTransactionViewer = new SaplingTransactionViewer(
     inMemoryViewingKey, 
     { contractAddress: saplingContract.address }, 
-    tezos.getFactory(RpcReadAdapter)()
+    readProvider
 )
 ```
 

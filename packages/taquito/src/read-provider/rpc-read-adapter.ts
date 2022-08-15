@@ -2,18 +2,18 @@ import {
   BlockResponse,
   EntrypointsResponse,
   MichelsonV1Expression,
+  RpcClientInterface,
   SaplingDiffResponse,
   ScriptedContracts,
 } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
-import { Context } from '../context';
 import { BigMapQuery, BlockIdentifier, SaplingStateQuery, TzReadProvider } from './interface';
 
 /**
  * @description Converts calls from TzReadProvider into calls to the wrapped RpcClient in a format it can understand.
  */
 export class RpcReadAdapter implements TzReadProvider {
-  constructor(private context: Context) {}
+  constructor(private rpc: RpcClientInterface) {}
 
   /**
    * @description Access the balance of a contract.
@@ -22,7 +22,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @returns the balance in mutez
    */
   async getBalance(address: string, block: BlockIdentifier): Promise<BigNumber> {
-    return this.context.rpc.getBalance(address, { block: String(block) });
+    return this.rpc.getBalance(address, { block: String(block) });
   }
 
   /**
@@ -32,7 +32,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @returns the public key hash of the delegate or null if no delegate
    */
   async getDelegate(address: string, block: BlockIdentifier): Promise<string | null> {
-    return this.context.rpc.getDelegate(address, { block: String(block) });
+    return this.rpc.getDelegate(address, { block: String(block) });
   }
 
   /**
@@ -40,7 +40,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @param block from which we want to retrieve the next protocol hash
    */
   async getNextProtocol(block: BlockIdentifier): Promise<string> {
-    const protocols = await this.context.rpc.getProtocols({ block: String(block) });
+    const protocols = await this.rpc.getProtocols({ block: String(block) });
     return protocols.next_protocol;
   }
 
@@ -65,7 +65,7 @@ export class RpcReadAdapter implements TzReadProvider {
       hard_storage_limit_per_operation,
       cost_per_byte,
       tx_rollup_origination_size,
-    } = await this.context.rpc.getConstants({ block: String(block) });
+    } = await this.rpc.getConstants({ block: String(block) });
     return {
       time_between_blocks,
       minimal_block_delay,
@@ -84,7 +84,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @returns Note: The code must be in the JSON format and not contain global constant
    */
   async getScript(contract: string, block: BlockIdentifier): Promise<ScriptedContracts> {
-    const { script } = await this.context.rpc.getContract(contract, { block: String(block) });
+    const { script } = await this.rpc.getContract(contract, { block: String(block) });
     return script;
   }
 
@@ -94,14 +94,14 @@ export class RpcReadAdapter implements TzReadProvider {
    * @param block from which we want to retrieve the storage value
    */
   async getStorage(contract: string, block: BlockIdentifier): Promise<MichelsonV1Expression> {
-    return this.context.rpc.getStorage(contract, { block: String(block) });
+    return this.rpc.getStorage(contract, { block: String(block) });
   }
 
   /**
    * @description Access the block hash
    */
   async getBlockHash(block: BlockIdentifier): Promise<string> {
-    const { hash } = await this.context.rpc.getBlockHeader({ block: String(block) });
+    const { hash } = await this.rpc.getBlockHeader({ block: String(block) });
     return hash;
   }
 
@@ -109,7 +109,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @description Access the block level
    */
   async getBlockLevel(block: BlockIdentifier): Promise<number> {
-    const { level } = await this.context.rpc.getBlockHeader({ block: String(block) });
+    const { level } = await this.rpc.getBlockHeader({ block: String(block) });
     return level;
   }
 
@@ -119,7 +119,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @param block from which we want to retrieve the counter
    */
   async getCounter(pkh: string, block: BlockIdentifier): Promise<string> {
-    const { counter } = await this.context.rpc.getContract(pkh, { block: String(block) });
+    const { counter } = await this.rpc.getContract(pkh, { block: String(block) });
     return counter || '0';
   }
 
@@ -129,7 +129,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @returns date ISO format zero UTC offset ("2022-01-19T22:37:07Z")
    */
   async getBlockTimestamp(block: BlockIdentifier): Promise<string> {
-    const { timestamp } = await this.context.rpc.getBlockHeader({ block: String(block) });
+    const { timestamp } = await this.rpc.getBlockHeader({ block: String(block) });
     return timestamp;
   }
 
@@ -142,7 +142,7 @@ export class RpcReadAdapter implements TzReadProvider {
     bigMapQuery: BigMapQuery,
     block: BlockIdentifier
   ): Promise<MichelsonV1Expression> {
-    return this.context.rpc.getBigMapExpr(bigMapQuery.id, bigMapQuery.expr, {
+    return this.rpc.getBigMapExpr(bigMapQuery.id, bigMapQuery.expr, {
       block: String(block),
     });
   }
@@ -156,7 +156,7 @@ export class RpcReadAdapter implements TzReadProvider {
     saplingStateQuery: SaplingStateQuery,
     block: BlockIdentifier
   ): Promise<SaplingDiffResponse> {
-    return this.context.rpc.getSaplingDiffById(saplingStateQuery.id, { block: String(block) });
+    return this.rpc.getSaplingDiffById(saplingStateQuery.id, { block: String(block) });
   }
 
   /**
@@ -168,7 +168,7 @@ export class RpcReadAdapter implements TzReadProvider {
     contractAddress: string,
     block: BlockIdentifier
   ): Promise<SaplingDiffResponse> {
-    return this.context.rpc.getSaplingDiffByContract(contractAddress, { block: String(block) });
+    return this.rpc.getSaplingDiffByContract(contractAddress, { block: String(block) });
   }
 
   /**
@@ -176,14 +176,14 @@ export class RpcReadAdapter implements TzReadProvider {
    * @param contract address of the contract we want to get the entrypoints of
    */
   async getEntrypoints(contract: string): Promise<EntrypointsResponse> {
-    return this.context.rpc.getEntrypoints(contract);
+    return this.rpc.getEntrypoints(contract);
   }
 
   /**
    * @description Access the chain id
    */
   async getChainId(): Promise<string> {
-    return this.context.rpc.getChainId();
+    return this.rpc.getChainId();
   }
 
   /**
@@ -192,7 +192,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @param block from which we want to know if the account is revealed
    */
   async isAccountRevealed(publicKeyHash: string, block: BlockIdentifier): Promise<boolean> {
-    const manager = await this.context.rpc.getManagerKey(publicKeyHash, { block: String(block) });
+    const manager = await this.rpc.getManagerKey(publicKeyHash, { block: String(block) });
     const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
     return haveManager;
   }
@@ -202,7 +202,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * @param block from which we want to retrieve the information
    */
   async getBlock(block: BlockIdentifier): Promise<BlockResponse> {
-    return this.context.rpc.getBlock({ block: String(block) });
+    return this.rpc.getBlock({ block: String(block) });
   }
 
   /**
@@ -210,6 +210,6 @@ export class RpcReadAdapter implements TzReadProvider {
    * @param block from which we want to retrieve the information
    */
   getLiveBlocks(block: BlockIdentifier): Promise<string[]> {
-    return this.context.rpc.getLiveBlocks({ block: String(block) });
+    return this.rpc.getLiveBlocks({ block: String(block) });
   }
 }
