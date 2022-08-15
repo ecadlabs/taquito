@@ -3,12 +3,12 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     const Tezos = lib;
-    describe(`Test address register delegate through wallet api: ${rpc}`, () => {
+    describe(`Test delegate registration through wallet api: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup(true);
             done();
         });
-        it('As a User I want to verify that I can register the current address as delegate using wallet.registerDelegate', async (done) => {
+        it('Verify that the current address can be registered as a delegate using wallet.registerDelegate', async (done) => {
             try {
                 const pkh = await Tezos.wallet.pkh();
                 const op = await Tezos.wallet.registerDelegate().send();
