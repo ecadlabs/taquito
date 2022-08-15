@@ -1,6 +1,5 @@
 import { RpcReadAdapter } from '../../src/read-provider/rpc-read-adapter';
 import BigNumber from 'bignumber.js';
-import { Context } from '../../src/context';
 import { BlockIdentifier } from '../../src/read-provider/interface';
 import {
   bigmapValue,
@@ -14,6 +13,7 @@ import {
   liveBlocks,
   saplingState,
 } from './data';
+import { RpcClient } from '@taquito/rpc';
 
 describe('RpcReadAdapter test', () => {
   let readProvider: RpcReadAdapter;
@@ -55,10 +55,10 @@ describe('RpcReadAdapter test', () => {
       getBlock: jest.fn(),
       getLiveBlocks: jest.fn(),
     };
-    readProvider = new RpcReadAdapter(new Context(mockRpcClient as any));
+    readProvider = new RpcReadAdapter(mockRpcClient as any);
   });
   it('should instantiate RpcReadAdapter', () => {
-    expect(new RpcReadAdapter(new Context('url'))).toBeInstanceOf(RpcReadAdapter);
+    expect(new RpcReadAdapter(new RpcClient('url'))).toBeInstanceOf(RpcReadAdapter);
   });
 
   // block identifiers in the various formats accepted by the RPC

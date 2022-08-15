@@ -44,6 +44,17 @@ export { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
  * @param packer Optional. Allows packing data. Use the `MichelCodecPacker` by default.
  * @param saplingForger Optional. Allows serializing the sapling transactions. Use the `SaplingForger` by default.
  * @param saplingTxBuilder Optional. Allows to prepare the sapling transactions. Use the `SaplingTransactionBuilder` by default.
+ * @example
+ * ```
+ * const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
+ * const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'))
+ *
+ * const saplingToolkit = new SaplingToolkit(
+ *    inMemorySpendingKey,
+ *    { contractAddress: SAPLING_CONTRACT_ADDRESS, memoSize: 8 },
+ *    readProvider
+ * )
+ * ```
  */
 export class SaplingToolkit {
   #inMemorySpendingKey: InMemorySpendingKey;
