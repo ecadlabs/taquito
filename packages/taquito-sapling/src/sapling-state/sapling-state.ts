@@ -4,13 +4,13 @@
  *
  */
 
-import { MerkleTree, SaplingStateTree } from './interface';
 import { SaplingDiffResponse, SaplingTransactionCiphertext } from '@taquito/rpc';
 import { InvalidMerkleRootError, TreeConstructionFailure } from '../error';
 import { merkleHash } from '@airgap/sapling-wasm';
 import { Lazy, pairNodes, changeEndianness } from './utils';
 import { hex2Bytes, num2PaddedHex } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
+import { MerkleTree, SaplingStateTree } from '../types';
 
 /**
  * @description The SaplingState class's main purpose is to provide a Merkle path for the forger and the transaction builder, so that it may verify that the Sapling transaction is valid

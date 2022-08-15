@@ -28,8 +28,8 @@ export interface SaplingTransaction {
 }
 
 export interface Ciphertext {
-  cv: Buffer;
-  epk: Buffer;
+  commitmentValue: Buffer;
+  ephemeralPublicKey: Buffer;
   payloadEnc: Buffer;
   nonceEnc: Buffer;
   payloadOut: Buffer;
@@ -37,19 +37,19 @@ export interface Ciphertext {
 }
 
 export interface SaplingTransactionInput {
-  cv: Buffer;
-  nf: Buffer;
-  rk: Buffer;
+  commitmentValue: Buffer;
+  nullifier: Buffer;
+  randomizedPublicKey: Buffer;
   proof: Buffer;
   signature: Buffer;
 }
 
 export interface SaplingSpendDescription extends SaplingTransactionInput {
-  rt: Buffer;
+  rtAnchor: Buffer;
 }
 
 export interface SaplingTransactionOutput {
-  cm: Buffer;
+  commitment: Buffer;
   proof: Buffer;
   ciphertext: Ciphertext;
 }
@@ -65,18 +65,18 @@ export type ParametersUnshieldedTransaction = Omit<ParametersSaplingTransaction,
 
 export interface ParametersSpendProof {
   saplingContext: number;
-  sk: Uint8Array;
+  spendingKey: Uint8Array;
   address: Uint8Array;
-  rcm: Uint8Array;
-  ar: Buffer;
+  randomCommitmentTrapdoor: Uint8Array;
+  publicKeyReRandomization: Buffer;
   amount: string;
   root: string;
   witness: string;
 }
 
 export interface ParametersSpendSig {
-  sk: Uint8Array;
-  ar: Buffer;
+  spendingKey: Uint8Array;
+  publicKeyReRandomization: Buffer;
   unsignedSpendDescription: Omit<SaplingSpendDescription, 'signature'>;
   hash: Uint8Array;
 }
@@ -86,15 +86,15 @@ export interface ParametersOutputDescription {
   address: Uint8Array;
   amount: string;
   memo: string;
-  rcm: Buffer;
-  ovk?: Buffer;
+  randomCommitmentTrapdoor: Buffer;
+  outgoingViewingKey?: Buffer;
 }
 
 export interface ParametersOutputProof {
   saplingContext: number;
-  esk: Buffer;
+  ephemeralPrivateKey: Buffer;
   address: Uint8Array;
-  rcm: Uint8Array;
+  randomCommitmentTrapdoor: Uint8Array;
   amount: string;
 }
 
@@ -108,18 +108,18 @@ export interface ParametersBindingSig {
 
 export interface ParametersCiphertext {
   address: Uint8Array;
-  esk: Buffer;
+  ephemeralPrivateKey: Buffer;
   diversifier: Buffer;
-  ock: Uint8Array;
+  outgoingCipherKey: Uint8Array;
   amount: string;
-  rcm: Buffer;
+  randomCommitmentTrapdoor: Buffer;
   memo: string;
 }
 
 export interface SaplingTransactionPlaintext {
   diversifier: Buffer;
   amount: string;
-  rcm: Buffer;
+  randomCommitmentTrapdoor: Buffer;
   memoSize: number;
   memo: string;
 }
@@ -128,7 +128,7 @@ export interface Input {
   value: Uint8Array;
   memo: Uint8Array;
   paymentAddress: Uint8Array;
-  rcm: Uint8Array;
+  randomCommitmentTrapdoor: Uint8Array;
   position: number;
 }
 
@@ -149,12 +149,14 @@ export interface ChosenSpendableInputs {
 
 export interface SaplingTransactionParamsTxBuilder {
   root: string;
-  saplingTransactionParams: {
-    to: string;
-    amount: string;
-    memo: string;
-  }[];
+  saplingTransactionParams: SaplingTransactionParams[];
   boundData: Buffer;
+}
+
+export interface SaplingTransactionParams {
+  to: string;
+  amount: string;
+  memo: string;
 }
 
 export interface SaplingContractDetails {
@@ -162,3 +164,12 @@ export interface SaplingContractDetails {
   saplingId?: string;
   memoSize: number;
 }
+
+export interface SaplingStateTree {
+  height: number;
+  size: number;
+  root: string;
+  tree: MerkleTree;
+}
+
+export type MerkleTree = undefined | string | [string, MerkleTree, MerkleTree];

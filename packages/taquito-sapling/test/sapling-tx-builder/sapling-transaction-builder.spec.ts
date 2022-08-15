@@ -107,7 +107,7 @@ describe('Sapling transactions builder', () => {
       signature,
     });
 
-    const tx = await saplingTransactionBuilder.createShieldTx(
+    const tx = await saplingTransactionBuilder.createShieldedTx(
       [
         {
           to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',
@@ -158,7 +158,7 @@ describe('Sapling transactions builder', () => {
               'hex'
             ),
             position: 8,
-            rcm: Buffer.from(
+            randomCommitmentTrapdoor: Buffer.from(
               '3ba542ee94a3a26cf257f60cc0eceb85fe0e2a09bf9f7f375bc43d940b76bb08',
               'hex'
             ),
@@ -191,8 +191,14 @@ describe('Sapling transactions builder', () => {
       Buffer.from('f4a2b699ba09ffc666d2f1cc41e630ed5877ca4788ce081df97729bb10f3ee07', 'hex')
     );
     mockSaplingWrapper.preparePartialOutputDescription.mockResolvedValue({
-      cv: Buffer.from('9757e6cf8673bc5877388da2b4bb703ccef03a41b0a32f4dda583bfa8c74b9b6', 'hex'),
-      cm: Buffer.from('fb86682501d3602d68e69e611a5fd5c0363746c888f0099452baabb2f50cd446', 'hex'),
+      commitmentValue: Buffer.from(
+        '9757e6cf8673bc5877388da2b4bb703ccef03a41b0a32f4dda583bfa8c74b9b6',
+        'hex'
+      ),
+      commitment: Buffer.from(
+        'fb86682501d3602d68e69e611a5fd5c0363746c888f0099452baabb2f50cd446',
+        'hex'
+      ),
       proof: Buffer.from(
         '8fd5257f5762c32b7800edafbd0ebdeb360a77f6fda470c2e4c2d29d086dc56f3df629cd912cca7dfc0cac49c1d355eaaf86521510deef63ed3eebc0b758cb155007bd10385db2799ffa0da8114c16cf30694bbd2de40b9ded105f683087119c11310871c43e10cd3a85733929d4925b8ac75f40b352d51868d1da9d0459a6c74ba7cf02806995bfe2b72265edd14b6795a2ad122d153a7f08aa289e6620cc826b44b97aca77c56d8d7e5d6cd6e62e8fca7f55fb3c13ab72486392d35db43f8a',
         'hex'
@@ -224,13 +230,22 @@ describe('Sapling transactions builder', () => {
       ),
       amount: '6000000',
       memo: '',
-      ovk: Buffer.from('35c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba', 'hex'),
+      outgoingViewingKey: Buffer.from(
+        '35c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba',
+        'hex'
+      ),
       saplingContext: 1441800,
-      rcm: Buffer.from('35bee05c797ec066e40535c5b80c04526a3f91282a3a24e1a3459f18b176b906', 'hex'),
+      randomCommitmentTrapdoor: Buffer.from(
+        '35bee05c797ec066e40535c5b80c04526a3f91282a3a24e1a3459f18b176b906',
+        'hex'
+      ),
     });
 
     expect(outputDescription).toEqual({
-      cm: Buffer.from('fb86682501d3602d68e69e611a5fd5c0363746c888f0099452baabb2f50cd446', 'hex'),
+      commitment: Buffer.from(
+        'fb86682501d3602d68e69e611a5fd5c0363746c888f0099452baabb2f50cd446',
+        'hex'
+      ),
       proof: Buffer.from(
         '8fd5257f5762c32b7800edafbd0ebdeb360a77f6fda470c2e4c2d29d086dc56f3df629cd912cca7dfc0cac49c1d355eaaf86521510deef63ed3eebc0b758cb155007bd10385db2799ffa0da8114c16cf30694bbd2de40b9ded105f683087119c11310871c43e10cd3a85733929d4925b8ac75f40b352d51868d1da9d0459a6c74ba7cf02806995bfe2b72265edd14b6795a2ad122d153a7f08aa289e6620cc826b44b97aca77c56d8d7e5d6cd6e62e8fca7f55fb3c13ab72486392d35db43f8a',
         'hex'
@@ -246,8 +261,14 @@ describe('Sapling transactions builder', () => {
           '30e6653e54348a0722c7b0e8b95e3a1c0c6df693225b8c7b4c5a0d8ff289ced153a76b594d5af7a5cfc37ae068b67bf3b1e317fb61310850f848d33b5fb53808564f9860f15224848dc15a72aac8c853',
           'hex'
         ),
-        cv: Buffer.from('9757e6cf8673bc5877388da2b4bb703ccef03a41b0a32f4dda583bfa8c74b9b6', 'hex'),
-        epk: Buffer.from('e7a9a02a7bc8a1cf2a234dcc7f6a180440b5d99afb9f764393bbabfbd752906f', 'hex'),
+        commitmentValue: Buffer.from(
+          '9757e6cf8673bc5877388da2b4bb703ccef03a41b0a32f4dda583bfa8c74b9b6',
+          'hex'
+        ),
+        ephemeralPublicKey: Buffer.from(
+          'e7a9a02a7bc8a1cf2a234dcc7f6a180440b5d99afb9f764393bbabfbd752906f',
+          'hex'
+        ),
       },
     });
     done();
@@ -258,24 +279,48 @@ describe('Sapling transactions builder', () => {
       Buffer.from('b924bc77666de1189d3f904ab5a6332c371d9f3bd9aa188579e9da60ce270f0a', 'hex')
     );
     mockSaplingWrapper.prepareSpendDescription.mockResolvedValue({
-      cv: Buffer.from('4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89', 'hex'),
-      nf: Buffer.from('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab', 'hex'),
+      commitmentValue: Buffer.from(
+        '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89',
+        'hex'
+      ),
+      nullifier: Buffer.from(
+        'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
+        'hex'
+      ),
       proof: Buffer.from(
         '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
         'hex'
       ),
-      rk: Buffer.from('0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3', 'hex'),
-      rt: Buffer.from('5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27', 'hex'),
+      randomizedPublicKey: Buffer.from(
+        '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
+        'hex'
+      ),
+      rtAnchor: Buffer.from(
+        '5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27',
+        'hex'
+      ),
     });
     mockSaplingWrapper.signSpendDescription.mockResolvedValue({
-      cv: Buffer.from('4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89', 'hex'),
-      nf: Buffer.from('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab', 'hex'),
+      commitmentValue: Buffer.from(
+        '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89',
+        'hex'
+      ),
+      nullifier: Buffer.from(
+        'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
+        'hex'
+      ),
       proof: Buffer.from(
         '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
         'hex'
       ),
-      rk: Buffer.from('0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3', 'hex'),
-      rt: Buffer.from('5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27', 'hex'),
+      randomizedPublicKey: Buffer.from(
+        '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
+        'hex'
+      ),
+      rtAnchor: Buffer.from(
+        '5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27',
+        'hex'
+      ),
       signature: Buffer.from(
         'ae9a1078bfcbda6e789ad8268562ed3f600e1f3265759771f7e4c0eb586b1f400c561727e5a6daa6f85feea46725d3737a0f77ad5d703f057980048c45004c00',
         'hex'
@@ -292,7 +337,7 @@ describe('Sapling transactions builder', () => {
             'hex'
           ),
           position: 0,
-          rcm: Buffer.from(
+          randomCommitmentTrapdoor: Buffer.from(
             '35289e034251f3a673535eca3a795d8fe420801bbe4b97df5d96f0f654ffb608',
             'hex'
           ),
@@ -303,14 +348,26 @@ describe('Sapling transactions builder', () => {
 
     expect(spendDescription).toEqual([
       {
-        cv: Buffer.from('4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89', 'hex'),
-        nf: Buffer.from('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab', 'hex'),
+        commitmentValue: Buffer.from(
+          '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89',
+          'hex'
+        ),
+        nullifier: Buffer.from(
+          'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
+          'hex'
+        ),
         proof: Buffer.from(
           '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
           'hex'
         ),
-        rk: Buffer.from('0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3', 'hex'),
-        rt: Buffer.from('5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27', 'hex'),
+        randomizedPublicKey: Buffer.from(
+          '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
+          'hex'
+        ),
+        rtAnchor: Buffer.from(
+          '5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27',
+          'hex'
+        ),
         signature: Buffer.from(
           'ae9a1078bfcbda6e789ad8268562ed3f600e1f3265759771f7e4c0eb586b1f400c561727e5a6daa6f85feea46725d3737a0f77ad5d703f057980048c45004c00',
           'hex'
@@ -325,8 +382,14 @@ describe('Sapling transactions builder', () => {
       Buffer.from('ae2a0d1d3aa056c3171643544016d33de2e080c0681a7a30687bea6dfc53d00a', 'hex')
     );
     mockSaplingWrapper.preparePartialOutputDescription.mockResolvedValue({
-      cv: Buffer.from('d010b289a8c660ece898a18c2fe2e9b67d814a54616a2b51d5ccdd604d51ca4b', 'hex'),
-      cm: Buffer.from('9445481aaac3ff00ad9bab3a342d332f912e2689df338554a29154b49693a85a', 'hex'),
+      commitmentValue: Buffer.from(
+        'd010b289a8c660ece898a18c2fe2e9b67d814a54616a2b51d5ccdd604d51ca4b',
+        'hex'
+      ),
+      commitment: Buffer.from(
+        '9445481aaac3ff00ad9bab3a342d332f912e2689df338554a29154b49693a85a',
+        'hex'
+      ),
       proof: Buffer.from(
         '96eee6918b09a8373bd471cb6a1543e2a2e9e6b8815cc94898883a28e56a29c7669de1a5d365648468ee1ebd6024484e975a2b2d31409b1973b036b5521e2f272060785491c0e4c1e10a2eaa9c4b17457cfb40b4953db20479972ca3261ed615192676c00f85d32c30f284bb1d9597520b60d6266ba8265e239c903eb281ec3340b0d8f9ca3616b43c0be73a77a2a1a0af82d5fd4d31859fa504ca121346da15a48209fe33b8e307220b431b690ec88c6b8f30f9a05e796ba61a9794a9884ee1',
         'hex'
@@ -360,16 +423,25 @@ describe('Sapling transactions builder', () => {
         ),
         amount: '1000000',
         memo: '',
-        ovk: Buffer.from('35c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba', 'hex'),
+        outgoingViewingKey: Buffer.from(
+          '35c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba',
+          'hex'
+        ),
         saplingContext: 1441800,
-        rcm: Buffer.from('54bf28854ca47de2907d5e3b55e2cfc0f1fe6c95db1648dc4dfd5d3eec40a40d', 'hex'),
+        randomCommitmentTrapdoor: Buffer.from(
+          '54bf28854ca47de2907d5e3b55e2cfc0f1fe6c95db1648dc4dfd5d3eec40a40d',
+          'hex'
+        ),
       },
       new BigNumber(6000000)
     );
 
     expect(paybackOutput).toEqual({
       payBackOutput: {
-        cm: Buffer.from('9445481aaac3ff00ad9bab3a342d332f912e2689df338554a29154b49693a85a', 'hex'),
+        commitment: Buffer.from(
+          '9445481aaac3ff00ad9bab3a342d332f912e2689df338554a29154b49693a85a',
+          'hex'
+        ),
         proof: Buffer.from(
           '96eee6918b09a8373bd471cb6a1543e2a2e9e6b8815cc94898883a28e56a29c7669de1a5d365648468ee1ebd6024484e975a2b2d31409b1973b036b5521e2f272060785491c0e4c1e10a2eaa9c4b17457cfb40b4953db20479972ca3261ed615192676c00f85d32c30f284bb1d9597520b60d6266ba8265e239c903eb281ec3340b0d8f9ca3616b43c0be73a77a2a1a0af82d5fd4d31859fa504ca121346da15a48209fe33b8e307220b431b690ec88c6b8f30f9a05e796ba61a9794a9884ee1',
           'hex'
@@ -385,11 +457,11 @@ describe('Sapling transactions builder', () => {
             '2daaf5cd1df3c3d27335ff06e6599c9a09614b4d8f2e026f5efa69368ff2725286a0e4fda42fb3ecf7603240e776062a7fc84cfe3a2a71d99904d99d04f79a397a4d2832174e6476a178a66ef7df48fa',
             'hex'
           ),
-          cv: Buffer.from(
+          commitmentValue: Buffer.from(
             'd010b289a8c660ece898a18c2fe2e9b67d814a54616a2b51d5ccdd604d51ca4b',
             'hex'
           ),
-          epk: Buffer.from(
+          ephemeralPublicKey: Buffer.from(
             '7569a45a8f526d3231807356b643b82256b3e1a632d80762b096e136e00b2d67',
             'hex'
           ),
@@ -412,11 +484,11 @@ describe('Sapling transactions builder', () => {
       saplingContext: 72805504,
       inputs: [
         {
-          cv: Buffer.from(
+          commitmentValue: Buffer.from(
             'f39dd9eb0b7b1b4a4e70bd38d290d1c668043b9645353e5c316c090279651dd1',
             'hex'
           ),
-          nf: Buffer.from(
+          nullifier: Buffer.from(
             'c21f43a1fdd1dd68eca3877b9948e91523ae9f9afb0eb65285c628f4b3ccc1c0',
             'hex'
           ),
@@ -424,7 +496,7 @@ describe('Sapling transactions builder', () => {
             'b85be7fa63578a76a58e33985605927480f4f48cedaa207914208cc171d888a0af92ded1003baf7e4014785e0c0fdc39b207df180725030eb5b256a7e91fa78930e21b854d6ab51408d9cdf650644b0ccf6f9f5d517a12b101e41a4f0d94ffa406792b1adda3d601a80efd79020acbcce9a9277c4071de3122cd97aee7ca3097220306f9329f721353889cd284b6c717b78a3d5905c711962613914f8fc86eeb57bae32aa639f3c1f18c767a3d8d8da749df7d7f632b98f3a4ded8258724b2d5',
             'hex'
           ),
-          rk: Buffer.from(
+          randomizedPublicKey: Buffer.from(
             'b226faf64a351bed83c3c2d8fd8e1ec80ceac6a7aa1ba6546f879794e7e07915',
             'hex'
           ),
@@ -436,7 +508,7 @@ describe('Sapling transactions builder', () => {
       ],
       outputs: [
         {
-          cm: Buffer.from(
+          commitment: Buffer.from(
             '9ee2e031c51a7d38d27d71685aab6fe0f59f4960031bdf8605d28f638af9570b',
             'hex'
           ),
@@ -445,11 +517,11 @@ describe('Sapling transactions builder', () => {
             'hex'
           ),
           ciphertext: {
-            cv: Buffer.from(
+            commitmentValue: Buffer.from(
               'aeb0e0332d845a780be58f50f32cf1ba7a0c9731625754b2f6ef5ede7c41ed50',
               'hex'
             ),
-            epk: Buffer.from(
+            ephemeralPublicKey: Buffer.from(
               '9b18f05c3459028ef46c87e7ca171ae10e4395afb85bc6b268473f725d2776cd',
               'hex'
             ),

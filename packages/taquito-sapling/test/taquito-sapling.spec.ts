@@ -16,7 +16,7 @@ describe('SaplingToolkit', () => {
   );
 
   let mockSaplingTxBuilder: {
-    createShieldTx: jest.Mock<any, any>;
+    createShieldedTx: jest.Mock<any, any>;
     createSaplingTx: jest.Mock<any, any>;
   };
 
@@ -28,7 +28,7 @@ describe('SaplingToolkit', () => {
 
   beforeEach(() => {
     mockSaplingTxBuilder = {
-      createShieldTx: jest.fn(),
+      createShieldedTx: jest.fn(),
       createSaplingTx: jest.fn(),
     };
 
@@ -124,11 +124,11 @@ describe('SaplingToolkit', () => {
       commitments_and_ciphertexts: [],
       nullifiers: [],
     });
-    mockSaplingTxBuilder.createShieldTx.mockResolvedValue({
+    mockSaplingTxBuilder.createShieldedTx.mockResolvedValue({
       inputs: [],
       outputs: [
         {
-          cm: Buffer.from(
+          commitment: Buffer.from(
             '8ace2d8a13f1ffb0ea7c7a771046cb1995b0aa011edd17c5cb52318d0a5c8441',
             'hex'
           ),
@@ -137,11 +137,11 @@ describe('SaplingToolkit', () => {
             'hex'
           ),
           ciphertext: {
-            cv: Buffer.from(
+            commitmentValue: Buffer.from(
               'ffe358e458c6e96a40664859a9250ac22fa52049e4ab53da367b18db35e13ed1',
               'hex'
             ),
-            epk: Buffer.from(
+            ephemeralPublicKey: Buffer.from(
               '37303fc0babf06f52a23ebc3732b38c77cda346d74c67e3900680dbd0e6237da',
               'hex'
             ),
@@ -196,11 +196,11 @@ describe('SaplingToolkit', () => {
       commitments_and_ciphertexts: [],
       nullifiers: [],
     });
-    mockSaplingTxBuilder.createShieldTx.mockResolvedValue({
+    mockSaplingTxBuilder.createShieldedTx.mockResolvedValue({
       inputs: [],
       outputs: [
         {
-          cm: Buffer.from(
+          commitment: Buffer.from(
             '8ace2d8a13f1ffb0ea7c7a771046cb1995b0aa011edd17c5cb52318d0a5c8441',
             'hex'
           ),
@@ -209,11 +209,11 @@ describe('SaplingToolkit', () => {
             'hex'
           ),
           ciphertext: {
-            cv: Buffer.from(
+            commitmentValue: Buffer.from(
               'ffe358e458c6e96a40664859a9250ac22fa52049e4ab53da367b18db35e13ed1',
               'hex'
             ),
-            epk: Buffer.from(
+            ephemeralPublicKey: Buffer.from(
               '37303fc0babf06f52a23ebc3732b38c77cda346d74c67e3900680dbd0e6237da',
               'hex'
             ),
@@ -288,11 +288,11 @@ describe('SaplingToolkit', () => {
     mockSaplingTxBuilder.createSaplingTx.mockResolvedValue({
       inputs: [
         {
-          cv: Buffer.from(
+          commitmentValue: Buffer.from(
             'e8de599bc21ef0743160bfdb8242a267fd5b01269870d128c5d631510100fa8f',
             'hex'
           ),
-          nf: Buffer.from(
+          nullifier: Buffer.from(
             'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
             'hex'
           ),
@@ -300,7 +300,7 @@ describe('SaplingToolkit', () => {
             '8b4c7f168dc6775f1e74fff11b977261451655eb586d499487d95d56e750f4576f2ca3d28e60250dddbdc8e7442348feab1ad28b05a34861ec537595e047841d1181f90839bc5a13e3fbc7761e7daf4a2837893854f9d90a0368c9e616b20e5f17e78a9a8a8e0edf6325c78610e51315c14a36f2b2ec74ade40ab26819d98fa9fbd01bc7749c83dc76bd6e450693b1ffa91aa2dae3cb98cd6642e90b0b600ff69dbb44b9fbbfde8e31fffce88b05da332718e10f1b08c5fd53e826202b298d22',
             'hex'
           ),
-          rk: Buffer.from(
+          randomizedPublicKey: Buffer.from(
             'a2a5df5089012f50daaf9d5a1e37c9d6fa07b136c33c799dbfb685ba9632ba39',
             'hex'
           ),
@@ -312,7 +312,7 @@ describe('SaplingToolkit', () => {
       ],
       outputs: [
         {
-          cm: Buffer.from(
+          commitment: Buffer.from(
             '6e736b2db63006ab60c8242fd2adcbec8d6f261fa34eb31f6563c75a279f993b',
             'hex'
           ),
@@ -321,11 +321,11 @@ describe('SaplingToolkit', () => {
             'hex'
           ),
           ciphertext: {
-            cv: Buffer.from(
+            commitmentValue: Buffer.from(
               '18a4b140227e34c6aeeac26663f28cde5d816a24dd0791d807b9e40f9e9c544b',
               'hex'
             ),
-            epk: Buffer.from(
+            ephemeralPublicKey: Buffer.from(
               '17da9304490b1d4a29cd900c682ae6e47e39f24a4e3468de1998e9a56578016a',
               'hex'
             ),
@@ -363,11 +363,11 @@ describe('SaplingToolkit', () => {
     mockSaplingTxBuilder.createSaplingTx.mockResolvedValue({
       inputs: [
         {
-          cv: Buffer.from(
+          commitmentValue: Buffer.from(
             '47e7e8a1ff5627907aeb2b4948da09ff9a0aa2bad92f67acf18d0b05292fe397',
             'hex'
           ),
-          nf: Buffer.from(
+          nullifier: Buffer.from(
             'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
             'hex'
           ),
@@ -375,7 +375,7 @@ describe('SaplingToolkit', () => {
             '95a16310de04873148debfcf1b0c673f704646d1dc374d60dea4eebfef2bf6f8bec192f5159a79a06e1d482af2466536abb424b8f261325606040a91e828b4f2fe1d1a6f87dceb65e0adfe5f0c1ca9a1f2548a9c53fe95b04f1523233e8a215f0178ba36283f0729421c8d422a047961b343ec57ecc54f212bc74e33582258da748f48910919a1fe33fcedfd6a3f1ffcab0ca7f8f5133c02ee62264e359f30f649c9ef74512aa768f822ecbfa083e841003e8d705cccf0e776f4a9c7ca27ebb7',
             'hex'
           ),
-          rk: Buffer.from(
+          randomizedPublicKey: Buffer.from(
             'e262c46c3371de572b54fbd37d578df69cf9f299bea2d7ee94fc0435603559bb',
             'hex'
           ),
@@ -387,7 +387,7 @@ describe('SaplingToolkit', () => {
       ],
       outputs: [
         {
-          cm: Buffer.from(
+          commitment: Buffer.from(
             'cd349c80fe147ee38287b9f604d8f9e4da837ab099110a4d1c31d4192e584c44',
             'hex'
           ),
@@ -396,11 +396,11 @@ describe('SaplingToolkit', () => {
             'hex'
           ),
           ciphertext: {
-            cv: Buffer.from(
+            commitmentValue: Buffer.from(
               'b266f32ac9a6a653236cd40137f4cb931871d7afa2a87b602f2cbd91c8d986f3',
               'hex'
             ),
-            epk: Buffer.from(
+            ephemeralPublicKey: Buffer.from(
               '92aa60779083e9ba7d006f39357a0f92e46c3beecdb948c7486daaf7142a1eca',
               'hex'
             ),
@@ -438,11 +438,11 @@ describe('SaplingToolkit', () => {
     mockSaplingTxBuilder.createSaplingTx.mockResolvedValue({
       inputs: [
         {
-          cv: Buffer.from(
+          commitmentValue: Buffer.from(
             '615accadfd4e6422179bcc9c9cfad48d085306ae195bf8cf896734bdce7402a4',
             'hex'
           ),
-          nf: Buffer.from(
+          nullifier: Buffer.from(
             'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
             'hex'
           ),
@@ -450,7 +450,7 @@ describe('SaplingToolkit', () => {
             '832f43780d521fec8c39d7dc19ddc33ec1be89e357aece1a9c6414f352eeb79b920b66e373fb869b16acad8ff52ea4858d701f2bf0a2b0e6ee2ef29b54191a32c951c7b66e24f9ebb680c6d69a7098ecc892623f8c2d99bb5ee91b7225268c6e0e02bd671a0669770aca4b905aa33a3139cbb62e92a5a57ef4d11251b7ba09980e3e7ce384366d366296fc9e67581edaa638fe89c61ad92350a7141266533e73966c6c0760870c357f1a5227bf10e04d12e362d23d1d90ce3d6320ffabf991d2',
             'hex'
           ),
-          rk: Buffer.from(
+          randomizedPublicKey: Buffer.from(
             '9122255f466c87a4f33806b34ee182fc984f1016b577fe0264d2121daf8514af',
             'hex'
           ),
@@ -462,7 +462,7 @@ describe('SaplingToolkit', () => {
       ],
       outputs: [
         {
-          cm: Buffer.from(
+          commitment: Buffer.from(
             '216e7378ab96d2e9b810b0ac131a0b04cf438bd918e3112c0119baaf1078e572',
             'hex'
           ),
@@ -471,11 +471,11 @@ describe('SaplingToolkit', () => {
             'hex'
           ),
           ciphertext: {
-            cv: Buffer.from(
+            commitmentValue: Buffer.from(
               'd57c3cbf378e0344d7a601128651d0c7af1bec8919380fccb8274742d371a647',
               'hex'
             ),
-            epk: Buffer.from(
+            ephemeralPublicKey: Buffer.from(
               'fa1983343fcb3ee9bdbea29d4dee8fa6811926f250008e8e7fa4841fe58fd9d9',
               'hex'
             ),
@@ -529,7 +529,7 @@ describe('SaplingToolkit', () => {
         amount: 10,
       })
     ).rejects.toThrowError(
-      'The transaction would spend 10000000 mutez while the balance is only 8000000 mutez.'
+      'Unable to spend 10000000 mutez while the balance is only 8000000 mutez.'
     );
 
     done();
@@ -539,11 +539,11 @@ describe('SaplingToolkit', () => {
     mockSaplingTxBuilder.createSaplingTx.mockResolvedValue({
       inputs: [
         {
-          cv: Buffer.from(
+          commitmentValue: Buffer.from(
             '3d9e3d4ad3492be757f63e8eb9063ce8698d95b9caa419c54e53ff50b6a37683',
             'hex'
           ),
-          nf: Buffer.from(
+          nullifier: Buffer.from(
             'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
             'hex'
           ),
@@ -551,7 +551,7 @@ describe('SaplingToolkit', () => {
             '87201838d863e025e9f51ed5a93c633d87ab07d4b24661a66f8cb56e3ab890244c063f4c371a40297f79f903e014f68991a1341b33129a6a5058ea6babd12df993e6e5e9a43f284b1c6df95b1764648c69604ae09e1b3170e71d395097d6739311b942cecde7c95ff25f3cf5a35b0ba8e794cc4351d7bdb8c3b59412a8daa57ab24966cf572c60e3082bd0edcd54ce79ae7f54bb1502bad403e882f53a060d12baacd1bf08ef4f9a641a6c105cfb8c199c8a56186c6d5e2277b9f0a6dae67cf6',
             'hex'
           ),
-          rk: Buffer.from(
+          randomizedPublicKey: Buffer.from(
             '4e5013ab2f07f645fb098f21845da78b389328dd0e6554256c9dec0ac74da913',
             'hex'
           ),
@@ -563,7 +563,7 @@ describe('SaplingToolkit', () => {
       ],
       outputs: [
         {
-          cm: Buffer.from(
+          commitment: Buffer.from(
             '1bc42058e61847fce7bc37429fb86806087b2a85a4c84464f6c3c1c5f7821e1f',
             'hex'
           ),
@@ -572,11 +572,11 @@ describe('SaplingToolkit', () => {
             'hex'
           ),
           ciphertext: {
-            cv: Buffer.from(
+            commitmentValue: Buffer.from(
               '757863edb8f7d7e74416b48434c855dd1f3c4bd4b97df0da6bca54c50578b11c',
               'hex'
             ),
-            epk: Buffer.from(
+            ephemeralPublicKey: Buffer.from(
               '1319c8fd494c9b7a6b48c6934979677fd3faeb0b21ef3b1089c3703ba3600d5f',
               'hex'
             ),
@@ -593,7 +593,7 @@ describe('SaplingToolkit', () => {
           },
         },
         {
-          cm: Buffer.from(
+          commitment: Buffer.from(
             'b3434eeca0763e70cdb05a8f09f8577ec63904dc11301ed50507ffb618542e32',
             'hex'
           ),
@@ -602,11 +602,11 @@ describe('SaplingToolkit', () => {
             'hex'
           ),
           ciphertext: {
-            cv: Buffer.from(
+            commitmentValue: Buffer.from(
               'f2fa5879b0c9ad38fdf677dfd943dde2f2229657d7adef199799ea33a5067c2d',
               'hex'
             ),
-            epk: Buffer.from(
+            ephemeralPublicKey: Buffer.from(
               'b605665ad0913acc08fd70198a8cad886b158c0ded8b3637d650d0df9a237440',
               'hex'
             ),
@@ -683,7 +683,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      'The transaction would spend 10000000 mutez while the balance is only 8000000 mutez.'
+      'Unable to spend 10000000 mutez while the balance is only 8000000 mutez.'
     );
 
     done();

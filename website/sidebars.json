@@ -79,6 +79,11 @@
       "items": ["ledger_integration_test", "rpc_nodes_integration_test"]
     },
     {
+      "type": "category",
+      "label": "Native Mobile Development",
+      "items": ["mobile_bundle"]
+    },
+    {
       "Upgrading Guide": ["upgrading_guide"]
     },
     {

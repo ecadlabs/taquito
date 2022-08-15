@@ -4,16 +4,16 @@ import {
   ParametersOutputProof,
   ParametersSpendProof,
   ParametersSpendSig,
+  SaplingSpendDescription,
   SaplingTransactionInput,
 } from '../types';
 import * as path from 'path';
 import * as fs from 'fs';
 import axios, { AxiosResponse } from 'axios';
+import { OUTPUT_PARAMS_FILE_NAME, SPEND_PARAMS_FILE_NAME, ZCASH_DOWNLOAD_URL } from '../constants';
 
 const SAPLING_PARAMS_DIR = path.resolve(__dirname, 'sapling-params');
-const ZCASH_DOWNLOAD_URL = 'https://download.z.cash/downloads';
-const SPEND_PARAMS_FILE_NAME = 'sapling-spend.params';
-const OUTPUT_PARAMS_FILE_NAME = 'sapling-output.params';
+
 export class SaplingWrapper {
   async withProvingContext<T>(action: (context: number) => Promise<T>) {
     await this.initSaplingParameters();
@@ -33,26 +33,40 @@ export class SaplingWrapper {
   }
 
   async preparePartialOutputDescription(parametersOutputProof: ParametersOutputProof) {
-    return sapling.preparePartialOutputDescription(
+    const partialOutputDesc = await sapling.preparePartialOutputDescription(
       parametersOutputProof.saplingContext,
       parametersOutputProof.address,
-      parametersOutputProof.rcm,
-      parametersOutputProof.esk,
+      parametersOutputProof.randomCommitmentTrapdoor,
+      parametersOutputProof.ephemeralPrivateKey,
       parametersOutputProof.amount
     );
+    return {
+      commitmentValue: partialOutputDesc.cv,
+      commitment: partialOutputDesc.cm,
+      proof: partialOutputDesc.proof,
+    };
   }
 
-  async prepareSpendDescription(parametersSpendProof: ParametersSpendProof) {
-    return sapling.prepareSpendDescription(
+  async prepareSpendDescription(
+    parametersSpendProof: ParametersSpendProof
+  ): Promise<Omit<SaplingSpendDescription, 'signature'>> {
+    const spendDescription = await sapling.prepareSpendDescription(
       parametersSpendProof.saplingContext,
-      parametersSpendProof.sk,
+      parametersSpendProof.spendingKey,
       parametersSpendProof.address,
-      parametersSpendProof.rcm,
-      parametersSpendProof.ar,
+      parametersSpendProof.randomCommitmentTrapdoor,
+      parametersSpendProof.publicKeyReRandomization,
       parametersSpendProof.amount,
       parametersSpendProof.root,
       parametersSpendProof.witness
     );
+    return {
+      commitmentValue: spendDescription.cv,
+      nullifier: spendDescription.nf,
+      randomizedPublicKey: spendDescription.rk,
+      rtAnchor: spendDescription.rt,
+      proof: spendDescription.proof,
+    };
   }
 
   async getDiversifiedFromRawPaymentAddress(decodedDestination: Uint8Array) {
@@ -66,16 +80,24 @@ export class SaplingWrapper {
   async signSpendDescription(
     parametersSpendSig: ParametersSpendSig
   ): Promise<SaplingTransactionInput> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { rt, spendAuthSig, ...rest } = await sapling.signSpendDescription(
-      parametersSpendSig.unsignedSpendDescription,
-      parametersSpendSig.sk,
-      parametersSpendSig.ar,
+    const signedSpendDescription = await sapling.signSpendDescription(
+      {
+        cv: parametersSpendSig.unsignedSpendDescription.commitmentValue,
+        rt: parametersSpendSig.unsignedSpendDescription.rtAnchor,
+        nf: parametersSpendSig.unsignedSpendDescription.nullifier,
+        rk: parametersSpendSig.unsignedSpendDescription.randomizedPublicKey,
+        proof: parametersSpendSig.unsignedSpendDescription.proof,
+      },
+      parametersSpendSig.spendingKey,
+      parametersSpendSig.publicKeyReRandomization,
       parametersSpendSig.hash
     );
     return {
-      ...rest,
-      signature: spendAuthSig,
+      commitmentValue: signedSpendDescription.cv,
+      nullifier: signedSpendDescription.nf,
+      randomizedPublicKey: signedSpendDescription.rk,
+      proof: signedSpendDescription.proof,
+      signature: signedSpendDescription.spendAuthSig,
     };
   }
 

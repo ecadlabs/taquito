@@ -9,13 +9,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   let saplingContract: ContractAbstraction<ContractProvider>;
 
-  let inmemorySpendingKey1: InMemorySpendingKey;
+  let inMemorySpendingKey1: InMemorySpendingKey;
   let inMemoryViewingKey1: InMemoryViewingKey;
   let txViewer1: SaplingTransactionViewer;
   let saplingToolkit1: SaplingToolkit;
   let paymentAddress1Index0: string;
 
-  let inmemorySpendingKey2: InMemorySpendingKey;
+  let inMemorySpendingKey2: InMemorySpendingKey;
   let inMemoryViewingKey2: InMemoryViewingKey;
   let txViewer2: SaplingTransactionViewer;
   let saplingToolkit2: SaplingToolkit;
@@ -23,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   let paymentAddress2Index5: string;
   let paymentAddress2Index8: string;
 
-  let inmemorySpendingKey3: InMemorySpendingKey;
+  let inMemorySpendingKey3: InMemorySpendingKey;
   let inMemoryViewingKey3: InMemoryViewingKey;
   let txViewer3: SaplingTransactionViewer;
   let saplingToolkit3: SaplingToolkit;
@@ -46,24 +46,24 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       saplingContract = await saplingContractOrigination.contract();
 
       const mnemonic1: string = bip39.generateMnemonic();
-      inmemorySpendingKey1 = await InMemorySpendingKey.fromMnemonic(mnemonic1);
-      inMemoryViewingKey1 = await inmemorySpendingKey1.getInMemoryViewingKey();
-      saplingToolkit1 = new SaplingToolkit(inmemorySpendingKey1, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
+      inMemorySpendingKey1 = await InMemorySpendingKey.fromMnemonic(mnemonic1);
+      inMemoryViewingKey1 = await inMemorySpendingKey1.getInMemoryViewingKey();
+      saplingToolkit1 = new SaplingToolkit(inMemorySpendingKey1, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
       txViewer1 = await saplingToolkit1.getSaplingTransactionViewer();
       paymentAddress1Index0 = (await inMemoryViewingKey1.getAddress(0)).address;
 
       const mnemonic2: string = bip39.generateMnemonic();
-      inmemorySpendingKey2 = await InMemorySpendingKey.fromMnemonic(mnemonic2);
-      inMemoryViewingKey2 = await inmemorySpendingKey2.getInMemoryViewingKey();
-      saplingToolkit2 = new SaplingToolkit(inmemorySpendingKey2, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
+      inMemorySpendingKey2 = await InMemorySpendingKey.fromMnemonic(mnemonic2);
+      inMemoryViewingKey2 = await inMemorySpendingKey2.getInMemoryViewingKey();
+      saplingToolkit2 = new SaplingToolkit(inMemorySpendingKey2, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
       txViewer2 = await saplingToolkit2.getSaplingTransactionViewer();
       paymentAddress2Index0 = (await inMemoryViewingKey2.getAddress(0)).address;
       paymentAddress2Index5 = (await inMemoryViewingKey2.getAddress(5)).address;
       paymentAddress2Index8 = (await inMemoryViewingKey2.getAddress(8)).address;
 
-      inmemorySpendingKey3 = new InMemorySpendingKey('sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L')
-      inMemoryViewingKey3 = await inmemorySpendingKey3.getInMemoryViewingKey();
-      saplingToolkit3 = new SaplingToolkit(inmemorySpendingKey3, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
+      inMemorySpendingKey3 = new InMemorySpendingKey('sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L')
+      inMemoryViewingKey3 = await inMemorySpendingKey3.getInMemoryViewingKey();
+      saplingToolkit3 = new SaplingToolkit(inMemorySpendingKey3, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
       txViewer3 = await saplingToolkit3.getSaplingTransactionViewer();
       paymentAddress3Index0 = (await inMemoryViewingKey3.getAddress(0)).address;
       paymentAddress3Index5 = (await inMemoryViewingKey3.getAddress(5)).address;

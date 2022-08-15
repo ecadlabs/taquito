@@ -113,6 +113,14 @@ const sidebars = {
       items: ['ledger_integration_test', 'rpc_nodes_integration_test'],
     },
     {
+      type: 'category',
+      label: 'Native Mobile Development',
+      className: 'sidebarHeader',
+      collapsed: false,
+      collapsible: false,
+      items: ['mobile_bundle']
+    },
+    {
       'Upgrading Guide': ['upgrading_guide'],
     },
     {

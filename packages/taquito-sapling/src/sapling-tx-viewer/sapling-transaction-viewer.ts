@@ -49,7 +49,7 @@ export class SaplingTransactionViewer {
         const isSpent = await this.isSpent(
           decrypted.paymentAddress,
           valueBigNumber.toString(),
-          decrypted.rcm,
+          decrypted.randomCommitmentTrapdoor,
           i,
           nullifiers
         );
@@ -84,7 +84,7 @@ export class SaplingTransactionViewer {
         const isSpent = await this.isSpent(
           decryptedAsReceiver.paymentAddress,
           balance.toString(),
-          decryptedAsReceiver.rcm,
+          decryptedAsReceiver.randomCommitmentTrapdoor,
           i,
           nullifiers
         );
@@ -141,8 +141,8 @@ export class SaplingTransactionViewer {
     const commitment = commitmentsAndCiphertexts[0];
     const { epk, payload_enc, nonce_enc } = commitmentsAndCiphertexts[1];
 
-    const ivk = await this.#viewingKeyProvider.getIncomingViewingKey();
-    const keyAgreement = await sapling.keyAgreement(epk, ivk);
+    const incomingViewingKey = await this.#viewingKeyProvider.getIncomingViewingKey();
+    const keyAgreement = await sapling.keyAgreement(epk, incomingViewingKey);
     const keyAgreementHash = blake.blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
 
     const decrypted = await this.decryptCiphertext(
@@ -152,9 +152,14 @@ export class SaplingTransactionViewer {
     );
 
     if (decrypted) {
-      const { diversifier, value, rcm, memo } = this.extractTransactionProperties(decrypted);
+      const {
+        diversifier,
+        value,
+        randomCommitmentTrapdoor: rcm,
+        memo,
+      } = this.extractTransactionProperties(decrypted);
       const paymentAddress = bufToUint8Array(
-        await sapling.getRawPaymentAddressFromIncomingViewingKey(ivk, diversifier)
+        await sapling.getRawPaymentAddressFromIncomingViewingKey(incomingViewingKey, diversifier)
       );
 
       try {
@@ -165,7 +170,7 @@ export class SaplingTransactionViewer {
           rcm
         );
         if (valid) {
-          return { value, memo, paymentAddress, rcm };
+          return { value, memo, paymentAddress, randomCommitmentTrapdoor: rcm };
         }
       } catch (ex: any) {
         if (!/invalid value/.test(ex)) {
@@ -182,18 +187,19 @@ export class SaplingTransactionViewer {
     const { epk, payload_enc, nonce_enc, payload_out, nonce_out, cv } =
       commitmentsAndCiphertexts[1];
 
-    const ovk = await this.#viewingKeyProvider.getOutgoingViewingKey();
-    const concat = cv.concat(commitment, epk, ovk.toString('hex'));
-    const ock = blake.blake2b(Buffer.from(concat, 'hex'), Buffer.from(OCK_KEY), 32);
+    const outgoingViewingKey = await this.#viewingKeyProvider.getOutgoingViewingKey();
+    const concat = cv.concat(commitment, epk, outgoingViewingKey.toString('hex'));
+    const outgoingCipherKey = blake.blake2b(Buffer.from(concat, 'hex'), Buffer.from(OCK_KEY), 32);
 
     const decryptedOut = await this.decryptCiphertext(
-      ock,
+      outgoingCipherKey,
       hex2buf(nonce_out),
       hex2buf(payload_out)
     );
 
     if (decryptedOut) {
-      const { pkd, esk } = this.extractPkdAndEsk(decryptedOut);
+      const { recipientDiversifiedTransmissionKey: pkd, ephemeralPrivateKey: esk } =
+        this.extractPkdAndEsk(decryptedOut);
       const keyAgreement = await sapling.keyAgreement(pkd, esk);
       const keyAgreementHash = blake.blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
 
@@ -204,7 +210,12 @@ export class SaplingTransactionViewer {
       );
 
       if (decryptedEnc) {
-        const { diversifier, value, rcm, memo } = this.extractTransactionProperties(decryptedEnc);
+        const {
+          diversifier,
+          value,
+          randomCommitmentTrapdoor: rcm,
+          memo,
+        } = this.extractTransactionProperties(decryptedEnc);
         const paymentAddress = mergebuf(diversifier, pkd);
 
         try {
@@ -215,7 +226,7 @@ export class SaplingTransactionViewer {
             rcm
           );
           if (isValid) {
-            return { value, memo, paymentAddress, rcm };
+            return { value, memo, paymentAddress, randomCommitmentTrapdoor: rcm };
           }
         } catch (ex: any) {
           if (!/invalid value/.test(ex)) {
@@ -238,7 +249,7 @@ export class SaplingTransactionViewer {
     return {
       diversifier: decrypted.slice(0, 11),
       value: decrypted.slice(11, 19),
-      rcm: decrypted.slice(19, 51),
+      randomCommitmentTrapdoor: decrypted.slice(19, 51),
       memoSize: decrypted.slice(51, 55),
       memo: decrypted.slice(55),
     };
@@ -246,15 +257,15 @@ export class SaplingTransactionViewer {
 
   private extractPkdAndEsk(decrypted: Uint8Array) {
     return {
-      pkd: decrypted.slice(0, 32),
-      esk: decrypted.slice(32),
+      recipientDiversifiedTransmissionKey: decrypted.slice(0, 32),
+      ephemeralPrivateKey: decrypted.slice(32),
     };
   }
 
   private async isSpent(
     address: Uint8Array,
     value: string,
-    rcm: Uint8Array,
+    randomCommitmentTrapdoor: Uint8Array,
     position: number,
     nullifiers: string[]
   ) {
@@ -262,7 +273,7 @@ export class SaplingTransactionViewer {
       this.#viewingKeyProvider.getFullViewingKey(),
       address,
       value,
-      rcm,
+      randomCommitmentTrapdoor,
       position
     );
     return nullifiers.includes(computedNullifier.toString('hex'));

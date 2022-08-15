@@ -13,7 +13,7 @@ import * as bip39 from 'bip39';
  * with access to instantiate a InMemoryViewingKey
  */
 export class InMemorySpendingKey {
-  #skBuf: Buffer;
+  #spendingKeyBuf: Buffer;
   #saplingViewingKey: InMemoryViewingKey | undefined;
   /**
    *
@@ -41,15 +41,15 @@ export class InMemorySpendingKey {
         throw new InvalidSpendingKey(spendingKey, 'Encrypted Spending Key or Password Incorrect');
       }
 
-      this.#skBuf = toBuffer(decrypted);
+      this.#spendingKeyBuf = toBuffer(decrypted);
     } else {
-      this.#skBuf = toBuffer(keyArr);
+      this.#spendingKeyBuf = toBuffer(keyArr);
     }
   }
 
   /**
    *
-   * @param mnemonic strings of words
+   * @param mnemonic string of words
    * @param derivationPath tezos current standard 'm/'
    * @returns InMemorySpendingKey class instantiated
    */
@@ -81,10 +81,10 @@ export class InMemorySpendingKey {
    * @returns InMemoryViewingKey instantiated class
    */
   async getInMemoryViewingKey() {
-    let vk: Buffer;
+    let viewingKey: Buffer;
     if (!this.#saplingViewingKey) {
-      vk = await sapling.getExtendedFullViewingKeyFromSpendingKey(this.#skBuf);
-      this.#saplingViewingKey = new InMemoryViewingKey(vk.toString('hex'));
+      viewingKey = await sapling.getExtendedFullViewingKeyFromSpendingKey(this.#spendingKeyBuf);
+      this.#saplingViewingKey = new InMemoryViewingKey(viewingKey.toString('hex'));
     }
 
     return this.#saplingViewingKey;
@@ -95,6 +95,6 @@ export class InMemorySpendingKey {
    * @returns return spending key string
    */
   getSpendingKey() {
-    return b58cencode(this.#skBuf, prefix[Prefix.SASK]);
+    return b58cencode(this.#spendingKeyBuf, prefix[Prefix.SASK]);
   }
 }
