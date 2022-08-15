@@ -50,6 +50,7 @@
     "clipboard": "^2.0.11",
     "clsx": "^1.1.1",
     "docusaurus-plugin-sass": "^0.2.2",
+    "docusaurus2-dotenv": "^1.4.0",
     "dotenv": "^10.0.0",
     "file-loader": "^6.2.0",
     "firebase": "^9.9.2",
