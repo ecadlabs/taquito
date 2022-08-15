@@ -64,12 +64,13 @@
     ]
   },
   "dependencies": {
-    "@airgap/sapling-wasm": "^0.0.8-beta.1",
+    "@airgap/sapling-wasm": "^0.0.7",
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/nacl": "^1.0.3",
     "@taquito/rpc": "^13.0.1",
     "@taquito/taquito": "^13.0.1",
     "@taquito/utils": "^13.0.1",
+    "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",
     "bip39": "^3.0.4",
     "blakejs": "^1.2.1",

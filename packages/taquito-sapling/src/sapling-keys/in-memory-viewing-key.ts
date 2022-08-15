@@ -1,6 +1,6 @@
-import { b58cdecode, b58cencode, Prefix, prefix, validateSpendingKey } from '@taquito/utils';
+import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import * as sapling from '@airgap/sapling-wasm';
-import { InvalidSpendingKey } from '../error';
+import { InMemorySpendingKey } from './in-memory-spending-key';
 
 /**
  * @description Holds the viewing key
@@ -12,22 +12,19 @@ export class InMemoryViewingKey {
   }
 
   /**
-   * @description Allows to instantiate the InMemoryViewingKey from a Base58Check-encoded spending key
+   * @description Allows to instantiate the InMemoryViewingKey from an encrypted/unencrypted spending key
    *
    * @param spendingKey Base58Check-encoded spending key
+   * @param password Optional password to decrypt the spending key
    * @example
    * ```
    * await InMemoryViewingKey.fromSpendingKey('sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L')
    * ```
    *
    */
-  static async fromSpendingKey(spendingKey: string) {
-    if (validateSpendingKey(spendingKey) !== 3) {
-      throw new InvalidSpendingKey(spendingKey);
-    }
-    const decoded = b58cdecode(spendingKey, prefix[Prefix.SASK]);
-    const vk = await sapling.getExtendedFullViewingKeyFromSpendingKey(decoded);
-    return new InMemoryViewingKey(vk.toString('hex'));
+  static async fromSpendingKey(spendingKey: string, password?: string) {
+    const inMemorySpendingkey = new InMemorySpendingKey(spendingKey, password);
+    return inMemorySpendingkey.getInMemoryViewingKey();
   }
 
   /**

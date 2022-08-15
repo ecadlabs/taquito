@@ -13,7 +13,7 @@ import * as bip39 from 'bip39';
  * with access to instantiate a InMemoryViewingKey
  */
 export class InMemorySpendingKey {
-  #skBuf: Buffer;
+  #spendingKeyBuf: Buffer;
   #saplingViewingKey: InMemoryViewingKey | undefined;
   /**
    *
@@ -41,22 +41,22 @@ export class InMemorySpendingKey {
         throw new InvalidSpendingKey(spendingKey, 'Encrypted Spending Key or Password Incorrect');
       }
 
-      this.#skBuf = toBuffer(decrypted);
+      this.#spendingKeyBuf = toBuffer(decrypted);
     } else {
-      this.#skBuf = toBuffer(keyArr);
+      this.#spendingKeyBuf = toBuffer(keyArr);
     }
   }
 
   /**
    *
-   * @param mnemonic list of words
+   * @param mnemonic string of words
    * @param derivationPath tezos current standard 'm/'
    * @returns InMemorySpendingKey class instantiated
    */
 
-  static async fromMnemonic(mnemonic: string[], derivationPath = 'm/') {
+  static async fromMnemonic(mnemonic: string, derivationPath = 'm/') {
     // no password passed here. password provided only changes from sask -> MMXj
-    const fullSeed = await bip39.mnemonicToSeed(mnemonic.join(' '));
+    const fullSeed = await bip39.mnemonicToSeed(mnemonic);
 
     const first32: Buffer = fullSeed.slice(0, 32);
     const second32: Buffer = fullSeed.slice(32);
@@ -80,11 +80,11 @@ export class InMemorySpendingKey {
    *
    * @returns InMemoryViewingKey instantiated class
    */
-  async getSaplingViewer() {
-    let vk: Buffer;
+  async getInMemoryViewingKey() {
+    let viewingKey: Buffer;
     if (!this.#saplingViewingKey) {
-      vk = await sapling.getExtendedFullViewingKeyFromSpendingKey(this.#skBuf);
-      this.#saplingViewingKey = new InMemoryViewingKey(vk.toString('hex'));
+      viewingKey = await sapling.getExtendedFullViewingKeyFromSpendingKey(this.#spendingKeyBuf);
+      this.#saplingViewingKey = new InMemoryViewingKey(viewingKey.toString('hex'));
     }
 
     return this.#saplingViewingKey;
@@ -95,6 +95,6 @@ export class InMemorySpendingKey {
    * @returns return spending key string
    */
   getSpendingKey() {
-    return b58cencode(this.#skBuf, prefix[Prefix.SASK]);
+    return b58cencode(this.#spendingKeyBuf, prefix[Prefix.SASK]);
   }
 }
