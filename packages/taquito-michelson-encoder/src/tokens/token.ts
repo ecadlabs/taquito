@@ -103,7 +103,12 @@ export abstract class Token {
 
   public abstract EncodeObject(args: any, semantics?: SemanticEncoding): any;
 
-  public abstract TypecheckValue(arg: any): void;
+  /**
+   *
+   * @description checks the value of what is passed validating the same way as EncodeObject and throws error if necessary
+   * @param arg same as EncodeObject
+   */
+  public abstract TypecheckValue(arg: unknown): void;
 
   public ExtractSignature() {
     return [[this.ExtractSchema()]];
