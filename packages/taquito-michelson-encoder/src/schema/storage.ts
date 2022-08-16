@@ -3,7 +3,6 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
-import { TicketToken } from '../tokens/ticket';
 import {
   BigMapKeyType,
   Semantic,
