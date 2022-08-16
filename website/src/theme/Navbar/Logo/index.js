@@ -43,7 +43,7 @@ export default function NavbarLogo() {
         onMouseEnter={() => {
           return lottie.play('navbarLogo');
         }}
-        onMouseLeave={setInterval(() => {
+        onMouseLeave={() => setInterval(() => {
           if (isActive) {
             return lottie.stop('navbarLogo');
           }
