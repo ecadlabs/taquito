@@ -127,14 +127,14 @@ class AddFeedback extends React.Component<IProps, IState> {
                         type="radio"
                         id="productfeedback"
                         name="type"
-                        value="TaqueriaProductFeedback "
+                        value="TaquitoProductFeedback "
                         onClick={() =>
                           this.setState({
-                            section: "Taqueria Product Feedback",
+                            section: "Taquito Product Feedback",
                           })
                         }
                       />
-                      Taqueria Product Feedback
+                      Taquito Product Feedback
                     </label>
                   </div>
                   <div className="radio">
