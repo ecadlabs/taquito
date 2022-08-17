@@ -7,12 +7,8 @@ import {
   SaplingSpendDescription,
   SaplingTransactionInput,
 } from '../types';
-import * as path from 'path';
-import * as fs from 'fs';
-import axios, { AxiosResponse } from 'axios';
-import { OUTPUT_PARAMS_FILE_NAME, SPEND_PARAMS_FILE_NAME, ZCASH_DOWNLOAD_URL } from '../constants';
-
-const SAPLING_PARAMS_DIR = path.resolve(__dirname, 'sapling-params');
+import { saplingOutputParams } from '../../saplingOutputParams';
+import { saplingSpendParams } from '../../saplingSpendParams';
 
 export class SaplingWrapper {
   async withProvingContext<T>(action: (context: number) => Promise<T>) {
@@ -121,48 +117,10 @@ export class SaplingWrapper {
     return sapling.createBindingSignature(saplingContext, balance, transactionSigHash);
   }
 
-  async initSaplingParameters(): Promise<void> {
-    const [spendParams, outputParams] = await Promise.all([
-      this.prepareParams(SPEND_PARAMS_FILE_NAME),
-      this.prepareParams(OUTPUT_PARAMS_FILE_NAME),
-    ]);
+  async initSaplingParameters() {
+    const spendParams = Buffer.from(saplingSpendParams, 'base64');
+    const outputParams = Buffer.from(saplingOutputParams, 'base64');
 
     return sapling.initParameters(spendParams, outputParams);
-  }
-
-  private async prepareParams(name: string): Promise<Buffer> {
-    const paramsFilePath: string = path.resolve(SAPLING_PARAMS_DIR, name);
-
-    if (!fs.existsSync(paramsFilePath)) {
-      await this.fetchSaplingParams(name);
-    }
-
-    return fs.readFileSync(paramsFilePath);
-  }
-
-  private async fetchSaplingParams(name: string): Promise<void> {
-    const response: AxiosResponse = await axios.get(`${ZCASH_DOWNLOAD_URL}/${name}`, {
-      responseType: 'stream',
-    });
-
-    fs.mkdirSync(SAPLING_PARAMS_DIR, { recursive: true });
-    const writer: fs.WriteStream = fs.createWriteStream(path.resolve(SAPLING_PARAMS_DIR, name));
-
-    return new Promise((resolve, reject) => {
-      response.data.pipe(writer);
-      let error: Error | undefined = undefined;
-      writer.on('error', (err: Error) => {
-        error = err;
-        writer.close();
-      });
-
-      writer.on('close', () => {
-        if (error !== undefined) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
-    });
   }
 }

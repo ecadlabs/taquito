@@ -14,7 +14,10 @@ export default {
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
+  external: [
+    'typedarray-to-buffer',
+    'blakejs'
+  ],
   watch: {
     include: 'src/**',
   },
@@ -25,6 +28,6 @@ export default {
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
 
     // Resolve source maps to the original source
-    sourceMaps(),
+    sourceMaps()
   ],
 };

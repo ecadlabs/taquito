@@ -3,7 +3,7 @@
  * @module @taquito/sapling
  */
 
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
 import {
   b58cdecode,
