@@ -46,7 +46,7 @@ export class SaplingWrapper {
   async prepareSpendDescription(
     parametersSpendProof: ParametersSpendProof
   ): Promise<Omit<SaplingSpendDescription, 'signature'>> {
-    const spendDescription = await sapling.prepareSpendDescription(
+    const spendDescription = await sapling.prepareSpendDescriptionWithSpendingKey(
       parametersSpendProof.saplingContext,
       parametersSpendProof.spendingKey,
       parametersSpendProof.address,

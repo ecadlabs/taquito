@@ -30,3 +30,5 @@ packages/taquito-tezbridge-wallet/src/version.ts
 packages/taquito-tzip12/src/version.ts
 packages/taquito-tzip16/src/version.ts
 packages/taquito-utils/src/version.ts
+saplingOutputParams.ts
+saplingSpendParams.ts
