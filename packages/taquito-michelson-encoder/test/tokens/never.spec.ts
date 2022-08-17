@@ -25,6 +25,15 @@ describe('Never token', () => {
       expect(tokenNeverOption.EncodeObject(null)).toEqual({ prim: 'None' });
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(tokenNever.TypecheckValue('test')).toBeUndefined();
+      expect(tokenNeverPair.TypecheckValue({ 0: 4, 1: 'test' })).toBeUndefined();
+      expect(tokenNeverOption.TypecheckValue('test')).toBeUndefined();
+      expect(tokenNeverOption.TypecheckValue(null)).toBeUndefined();
+
+    });
+  });
 
   describe('Encode', () => {
     it('Should throw an error on Encode as there are no literal values of this type.', () => {

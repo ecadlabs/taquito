@@ -18,6 +18,15 @@ describe('Mutez token', () => {
       expect(() => token.EncodeObject({})).toThrowError(MutezValidationError);
     });
   });
+  describe('TypecheckValue', () => {
+    it('should be undefined', () => {
+      expect(token.TypecheckValue(0)).toBeUndefined();
+    });
+
+    it('Should throw a validation error when value is not a number', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(MutezValidationError);
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode number to string', () => {
@@ -44,7 +53,7 @@ describe('Mutez token', () => {
       expect(token.ToBigMapKey('10000000')).toEqual({
         key: { int: '10000000' },
         type: { prim: MutezToken.prim },
-      });    
+      });
     });
   });
 

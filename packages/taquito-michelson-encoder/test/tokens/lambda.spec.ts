@@ -88,4 +88,8 @@ describe('Lambda token', () => {
             ]
         ]);
     });
+    it('Typecheck should return undefined', () => {
+      const result = token1.TypecheckValue();
+      expect(result).toBeUndefined();
+    })
 });

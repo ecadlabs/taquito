@@ -1,4 +1,4 @@
-import { ListToken } from '../../src/tokens/list';
+import { ListToken, ListValidationError } from '../../src/tokens/list';
 import { createToken } from '../../src/tokens/createToken';
 
 describe('List token', () => {
@@ -17,6 +17,14 @@ describe('List token', () => {
         { int: '2' },
       ]);
     });
+  });
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(token.TypecheckValue([0, 1, 2, 30, 2])).toBeUndefined();
+    });
+    it('should throw error if not array', () => {
+      expect(() => token.TypecheckValue('')).toThrowError(ListValidationError)
+    })
   });
 
   describe('Encode', () => {

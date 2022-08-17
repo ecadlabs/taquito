@@ -31,6 +31,20 @@ describe('Bls12-381-g1 token', () => {
     });
   });
 
+  describe('TypecheckValue', () => {
+    it('should return undefined', () => {
+      expect(
+        token.TypecheckValue(
+          '0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28'
+        )
+      ).toBeUndefined();
+    })
+    it('should throw error', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(Bls12381g1ValidationError);
+
+    })
+  })
+
   describe('Encode', () => {
     it('Should encode bytes string to Michelson bytes format', () => {
       expect(

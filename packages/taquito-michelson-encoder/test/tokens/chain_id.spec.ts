@@ -16,6 +16,16 @@ describe('Chain ID token', () => {
       expect(() => token.EncodeObject({})).toThrowError(ChainIDValidationError);
     });
   });
+  describe('TypecheckValue', () => {
+    it('should be undefined ', () => {
+      expect(token.TypecheckValue('NetXpqTM3MbtXCx')).toBeUndefined();
+    });
+
+    it('Should throw a validation error when value is not a valid chain id', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(ChainIDValidationError);
+      expect(() => token.TypecheckValue({})).toThrowError(ChainIDValidationError);
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode chain id to string', () => {

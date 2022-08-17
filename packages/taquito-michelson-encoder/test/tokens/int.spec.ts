@@ -19,6 +19,15 @@ describe('Int token', () => {
       expect(() => token.EncodeObject({})).toThrowError(IntValidationError);
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(token.TypecheckValue(0)).toBeUndefined();
+    });
+
+    it('Should throw a validation error when value is not a number', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(IntValidationError);
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode number to string', () => {

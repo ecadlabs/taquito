@@ -13,6 +13,12 @@ describe('Unit token', () => {
     });
   });
 
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(token.TypecheckValue(UnitValue)).toBeUndefined();
+    });
+  });
+
   describe('Encode', () => {
     it('Should encode UnitValue to Unit', () => {
       expect(token.Encode([UnitValue])).toEqual({ prim: 'Unit' });

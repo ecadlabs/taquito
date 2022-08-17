@@ -22,6 +22,16 @@ describe('Sapling Transaction token', () => {
       expect(() => token.EncodeObject('1')).toThrowError(SaplingStateValidationError);
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should be undefined if valid value', () => {
+      expect(token.TypecheckValue(SaplingStateValue)).toBeUndefined();
+      expect(token.TypecheckValue({})).toBeUndefined();
+    });
+
+    it('Should throw a validation error when value is not a valid sapling state', () => {
+      expect(() => token.TypecheckValue('1')).toThrowError(SaplingStateValidationError);
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode sapling state into an empty array', () => {

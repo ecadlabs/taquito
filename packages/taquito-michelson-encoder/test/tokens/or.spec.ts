@@ -39,8 +39,13 @@ describe('Or token', () => {
             expect(tokenComplex.EncodeObject({ option2: { 2: 3, 3: 'test' } })).toEqual({ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }] }] });
             expect(tokenComplex.EncodeObject({ option3: { 3: 4, 4: 3, 5: "2019-09-06T15:08:29.000Z" } })).toEqual({ prim: 'Right', args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '4' }, { prim: 'Pair', args: [{ int: '3' }, { string: "2019-09-06T15:08:29.000Z" }] }] }] }] }] });
             expect(tokenComplex.EncodeObject({ option4: 4 })).toEqual({ prim: 'Right', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '4' }] }] }] });
-        
+
             expect(tokenOrWithOption.EncodeObject({ 3: { 1: 'test' } })).toEqual({ prim: 'Right', args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ prim: 'Some', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }] }] }] });
+        });
+    });
+    describe('TypecheckValue', () => {
+        it('Should return unsefined', () => {
+            expect(token.TypecheckValue({ intTest: 10 })).toBeUndefined();
         });
     });
 

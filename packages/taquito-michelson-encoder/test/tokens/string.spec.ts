@@ -11,6 +11,11 @@ describe('String token', () => {
       expect(token.EncodeObject('hello world')).toEqual({ string: 'hello world' });
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(token.TypecheckValue('hello world')).toBeUndefined();
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode string to string', () => {

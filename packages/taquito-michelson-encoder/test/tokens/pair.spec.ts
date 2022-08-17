@@ -311,4 +311,26 @@ describe('Complexe pair token', () => {
       ],
     });
   });
+  it('Should return undefined', () => {
+    expect(
+      complexPair.TypecheckValue({
+        simple: 132138771926046,
+        complex: {
+          1: 132138771926013,
+          2: 'Taquito',
+        },
+        optional: {
+          // or null
+          3: { int: 4 }, // or {string: 'aaa'}
+          4: { string: 'Tezos' }, // or {int: 5}
+        },
+        last_checked_sig: {
+          // or null
+          msg: '0554657a6f73205369676e6564204d6573736167653a20626561636f6e2d746573742d646170702e6e65746c6966792e6170702f20323032322d30332d30395431393a34313a31382e3035375a203130',
+          sender: 'tz1X1exK5QTHZgj44rVw8BgARdsURGpHa2BL',
+          sig_: 'sigfRR4eWYXHRAXafFY5muQoH6Hh43kSLBeDzcPjBsDH5TKQzRATyoMafMtcDp19Gs8BveGbFSm77hzEjioKq2UWKpTF1j6T',
+        },
+      })
+    ).toBeUndefined();
+  });
 });

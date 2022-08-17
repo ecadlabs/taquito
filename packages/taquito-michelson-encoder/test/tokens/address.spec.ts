@@ -20,6 +20,18 @@ describe('Address token', () => {
     });
   });
 
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(token.TypecheckValue('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toBeUndefined();
+    });
+
+    it('Should throw a validation error when address is not valid', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(AddressValidationError);
+      expect(() => token.TypecheckValue(0)).toThrowError(AddressValidationError);
+      expect(() => token.TypecheckValue([])).toThrowError(AddressValidationError);
+    });
+  });
+
   describe('Encode', () => {
     it('Should encode address to string', () => {
       expect(token.Encode(['tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'])).toEqual({
@@ -79,6 +91,19 @@ describe("Address Token with txr1", () => {
       expect(() => token.EncodeObject({})).toThrowError(AddressValidationError)
       expect(() => token.EncodeObject(1)).toThrowError(AddressValidationError)
       expect(() => token.EncodeObject('tz4QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toThrowError(AddressValidationError)
+    })
+  })
+  describe("TypecheckValue", () => {
+    it("should return undefined", () => {
+      expect(token.TypecheckValue('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL')).toBeUndefined();
+    });
+
+    it('should throw error with invalid args', () => {
+      expect(() => token.TypecheckValue('txr1')).toThrowError(AddressValidationError)
+      expect(() => token.TypecheckValue([])).toThrowError(AddressValidationError)
+      expect(() => token.TypecheckValue({})).toThrowError(AddressValidationError)
+      expect(() => token.TypecheckValue(1)).toThrowError(AddressValidationError)
+      expect(() => token.TypecheckValue('tz4QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toThrowError(AddressValidationError)
     })
   })
 

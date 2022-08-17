@@ -51,7 +51,7 @@ export class OptionToken extends ComparableToken {
     return { prim: 'Some', args: [this.schema().EncodeObject(value, semantic)] };
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(_val?: unknown) {
     return
   }
 

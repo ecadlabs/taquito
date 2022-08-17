@@ -57,7 +57,7 @@ export class GlobalConstantToken extends Token {
     );
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(_val?: unknown) {
     return
   }
 

@@ -45,7 +45,7 @@ export class TicketToken extends Token {
     throw new EncodeTicketError();
   }
 
-  public TypecheckValue(_arg: unknown) {
+  public TypecheckValue(_arg?: unknown) {
     return
   }
 

@@ -121,7 +121,7 @@ export class OrToken extends ComparableToken {
     }
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(_val?: unknown) {
     return
   }
 

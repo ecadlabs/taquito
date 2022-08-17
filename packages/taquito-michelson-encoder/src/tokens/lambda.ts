@@ -40,7 +40,7 @@ export class LambdaToken extends Token {
     return val;
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(_val?: unknown) {
     return
   }
 

@@ -28,7 +28,7 @@ export class OperationToken extends Token {
     return { string: val };
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(_val?: unknown) {
     return
   }
 

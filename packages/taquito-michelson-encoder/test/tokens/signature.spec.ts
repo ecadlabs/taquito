@@ -19,6 +19,16 @@ describe('Signature token', () => {
     });
   });
 
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(
+        token.TypecheckValue(
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd'
+        )
+      ).toBeUndefined();
+    });
+  });
+
   describe('Encode', () => {
     it('Should encode signature to string', () => {
       expect(

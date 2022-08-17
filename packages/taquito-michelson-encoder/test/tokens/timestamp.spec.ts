@@ -21,13 +21,18 @@ describe('Timestamp token', () => {
     it('Should return an error when value is not a valid Date or timestamp format', () => {
       expect(() => {
         token.Execute({ string: 'not valid' });
-      }).toThrowError(); 
+      }).toThrowError();
     });
   });
-  
+
   describe('EncodeObject', () => {
     it('Should encode timestamp to JSON Michelson format', () => {
       expect(token.EncodeObject('2021-12-03T21:21:10.000Z')).toEqual({ string: '2021-12-03T21:21:10.000Z' });
+    });
+  });
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(token.TypecheckValue('2021-12-03T21:21:10.000Z')).toBeUndefined();
     });
   });
 

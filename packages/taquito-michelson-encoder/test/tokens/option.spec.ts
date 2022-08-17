@@ -30,6 +30,15 @@ describe('Option token', () => {
       expect(unitToken.EncodeObject(undefined)).toEqual({ prim: 'None' });
     });
   });
+  describe('TypecheckValue', () => {
+    it('should return undefined', () => {
+      expect(token.TypecheckValue(0)).toBeUndefined();
+      expect(token.TypecheckValue(null)).toBeUndefined();
+      expect(token.TypecheckValue(undefined)).toBeUndefined();
+
+    });
+
+  });
 
   describe('Encode', () => {
     it('Should encode number to string', () => {

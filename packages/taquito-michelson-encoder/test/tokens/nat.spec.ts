@@ -23,6 +23,19 @@ describe('Nat token', () => {
       expect(() => token.EncodeObject({})).toThrowError(NatValidationError);
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should return undefinedg', () => {
+      expect(token.TypecheckValue(0)).toBeUndefined();
+    });
+
+    it('Should throw a validation error when value is less than 0', () => {
+      expect(() => token.TypecheckValue(-1)).toThrowError(NatValidationError);
+    });
+
+    it('Should throw a validation error when value is not a number', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(NatValidationError);
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode number to string', () => {
@@ -53,7 +66,7 @@ describe('Nat token', () => {
       expect(token.ToBigMapKey('10')).toEqual({
         key: { int: '10' },
         type: { prim: NatToken.prim },
-      });    
+      });
     });
   });
 

@@ -31,6 +31,16 @@ describe('Bls12-381-fr token', () => {
     });
   });
 
+  describe('TypecheckValue', () => {
+    it('should return undefined', () => {
+      expect(token.TypecheckValue('1234')).toBeUndefined();
+    })
+    it('should throw error if non-EncodeObject valid', () => {
+
+      expect(() => token.TypecheckValue('test')).toThrowError(Bls12381frValidationError);
+    })
+  })
+
   describe('Encode', () => {
     it('Should encode bytes string to Michelson bytes format', () => {
       expect(token.Encode(['cafe'])).toEqual({

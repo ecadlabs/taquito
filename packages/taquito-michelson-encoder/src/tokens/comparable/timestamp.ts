@@ -34,7 +34,7 @@ export class TimestampToken extends ComparableToken {
     return { string: val };
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(_val?: unknown) {
     return
   }
 

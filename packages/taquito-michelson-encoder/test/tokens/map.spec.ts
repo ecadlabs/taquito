@@ -716,6 +716,21 @@ describe('Map token with pair', () => {
       ]);
     });
   });
+  describe('TypecheckValue', () => {
+    it('TypecheckValue properly an empty map', () => {
+      const map = new MichelsonMap();
+      const result = token.TypecheckValue(map);
+      expect(result).toBeUndefined();
+    });
+
+    it('TypecheckValue properly a map with two value', () => {
+      const map = new MichelsonMap();
+      map.set({ 0: 'test', 1: '1test' }, 2);
+      map.set({ 0: 'test1', 1: 'test' }, 3);
+      const result = token.TypecheckValue(map);
+      expect(result).toBeUndefined();
+    });
+  });
 
   describe('Execute', () => {
     it('Execute properly on empty map storage', () => {
@@ -847,6 +862,21 @@ describe('Map token with annotated pair', () => {
           args: [{ prim: 'Pair', args: [{ string: 'test1' }, { string: 'test' }] }, { int: '3' }],
         },
       ]);
+    });
+  });
+  describe('TypecheckValue', () => {
+    it('shouldreturn undefined', () => {
+      const map = new MichelsonMap();
+      const result = token.TypecheckValue(map);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined', () => {
+      const map = new MichelsonMap();
+      map.set({ test: 'test', test2: '1test' }, 2);
+      map.set({ test: 'test1', test2: 'test' }, 3);
+      const result = token.TypecheckValue(map);
+      expect(result).toBeUndefined();
     });
   });
 

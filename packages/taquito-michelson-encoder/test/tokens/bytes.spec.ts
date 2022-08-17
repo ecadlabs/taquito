@@ -32,6 +32,16 @@ describe('Bytes token', () => {
     });
   });
 
+  describe('TypecheckValue', () => {
+    it('should return undefined', () => {
+      expect(token.TypecheckValue('1234')).toBeUndefined();
+    })
+
+    it('should throw error', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(BytesValidationError);
+    })
+  })
+
   describe('Encode', () => {
     it('Should encode address to bytes', () => {
       expect(token.Encode(['1234'])).toEqual({

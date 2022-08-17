@@ -67,9 +67,7 @@ export class SaplingStateToken extends Token {
   }
 
   public TypecheckValue(val: unknown) {
-    if (this.isValid(val)) {
-      return [];
-    } else {
+    if (!this.isValid(val)) {
       throw new SaplingStateValidationError(
         val,
         this,

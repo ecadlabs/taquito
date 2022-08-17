@@ -50,6 +50,34 @@ describe('Sapling Transaction token', () => {
     });
   });
 
+  describe('TypecheckValue', () => {
+    it('Should return undefined with valid values', () => {
+      expect(
+        token.TypecheckValue(
+          '0x000160cafa8127c423dc44a3acad6873ad9bd7ad7720eb8f999b35a4c2595ed0b891e6'
+        )
+      ).toBeUndefined();
+      expect(
+        token.TypecheckValue('000160cafa8127c423dc44a3acad6873ad9bd7ad7720eb8f999b35a4c2595ed0b891e6')
+      ).toBeUndefined();
+      expect(
+        token.TypecheckValue(
+          'd99afc56a64520a32c5839f7b3371a5e683cd53d794383041b6d0c7034c6c2b9df76070d3c8569ef072a013ca502c18be7c06bb043e6566cec87c062ee285fdf562b24dcf97dbde33557199090912c65'
+        )
+      ).toBeUndefined();
+    });
+
+    it('Should return undefined iwth valid Uint8Array', () => {
+      const uint8 = new Uint8Array([21, 31]);
+      expect(token.TypecheckValue(uint8)).toBeUndefined();
+    });
+
+    it('Should throw a validation error when value is not valid bytes', () => {
+      expect(() => token.TypecheckValue('1')).toThrowError(SaplingTransactionValidationError);
+      expect(() => token.TypecheckValue('test')).toThrowError(SaplingTransactionValidationError);
+    });
+  });
+
   describe('Encode', () => {
     it('Should encode hexadecimal string to michelson bytes format', () => {
       expect(

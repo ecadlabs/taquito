@@ -66,6 +66,11 @@ describe('Ticket token', () => {
       expect(() => tokenTicketUnit.EncodeObject('Unit')).toThrowError(EncodeTicketError);
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(tokenTicketNat.TypecheckValue('test')).toBeUndefined();
+    });
+  });
 
   describe('Encode', () => {
     it('Should always throw an encode error', () => {

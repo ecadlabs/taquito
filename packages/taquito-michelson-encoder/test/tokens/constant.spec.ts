@@ -120,6 +120,12 @@ describe('Global constant token', () => {
       }
     });
   });
+  describe('TypecheckValue', () => {
+    it('should be undefined', () => {
+      const result = token.TypecheckValue()
+      expect(result).toBeUndefined();
+    });
+  });
 
   describe('generateSchema', () => {
     it('Should generate the schema properly', () => {

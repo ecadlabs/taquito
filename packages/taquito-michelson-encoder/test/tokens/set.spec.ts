@@ -17,6 +17,11 @@ describe('Set token', () => {
       ]);
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(token.TypecheckValue([0, 1, 2, 30])).toBeUndefined();
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode set properly', () => {

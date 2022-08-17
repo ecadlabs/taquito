@@ -25,7 +25,7 @@ export class UnitToken extends ComparableToken {
     return { prim: 'Unit' };
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(_val?: unknown) {
     return
   }
 

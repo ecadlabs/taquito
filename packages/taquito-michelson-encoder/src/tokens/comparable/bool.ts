@@ -28,7 +28,7 @@ export class BoolToken extends ComparableToken {
     return { prim: val ? 'True' : 'False' };
   }
 
-  public TypecheckValue(_arg: unknown) {
+  public TypecheckValue(_arg?: unknown) {
     return
   }
 

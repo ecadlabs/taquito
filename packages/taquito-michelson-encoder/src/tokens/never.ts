@@ -28,7 +28,7 @@ export class NeverToken extends Token {
     throw new NeverTokenError(val, this, 'Assigning a value to the type never is forbidden.');
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(_val?: unknown) {
     return
   }
 

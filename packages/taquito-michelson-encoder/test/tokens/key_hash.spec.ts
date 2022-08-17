@@ -22,6 +22,18 @@ describe('KeyHash token', () => {
       expect(() => token.EncodeObject([])).toThrowError(KeyHashValidationError);
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should be undefined if valid', () => {
+      expect(token.TypecheckValue('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toBeUndefined();
+    });
+
+    it('Should throw a validation error when address is not valid', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(KeyHashValidationError);
+      expect(() => token.TypecheckValue('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D')).toThrowError(
+        'KeyHash is not valid: KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'
+      );
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode address to string', () => {

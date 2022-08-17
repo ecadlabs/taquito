@@ -22,6 +22,15 @@ describe('Key token', () => {
       expect(() => token.EncodeObject([])).toThrowError(KeyValidationError);
     });
   });
+  describe('TypecheckValue', () => {
+    it('Should return undefined', () => {
+      expect(token.TypecheckValue('edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g')).toBeUndefined();
+    });
+
+    it('Should throw a validation error when address is not valid', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(KeyValidationError);
+    });
+  });
 
   describe('Encode', () => {
     it('Should encode key to string', () => {

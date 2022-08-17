@@ -54,7 +54,8 @@ export class SaplingTransactionDeprecatedToken extends Token {
     return { bytes: String(val).toString() };
   }
 
-  public TypecheckValue(_val: unknown) {
+  public TypecheckValue(val: string | Uint8Array) {
+    this.validateBytes(this.convertUint8ArrayToHexString(val));
     return
   }
 

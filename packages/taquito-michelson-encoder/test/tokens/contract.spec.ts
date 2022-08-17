@@ -25,6 +25,17 @@ describe('Contract Token Tests', () => {
       expect(token.EncodeObject('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL', {contract: () => ({string: 'test'})}).string).toEqual('test')
     })
   });
+  describe('TypecheckValue', () => {
+    it('should return undefined', () => {
+      expect(token.TypecheckValue('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL')).toBeUndefined();
+    });
+
+    it('should throw error when given improper values', () => {
+      expect(() => token.TypecheckValue('test')).toThrowError(ContractValidationError);
+      expect(() => token.TypecheckValue(0)).toThrowError(ContractValidationError);
+      expect(() => token.TypecheckValue([])).toThrowError(ContractValidationError);
+    });
+  });
   describe('execute', () => {
     const decoded = b58decode('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL');
     it('should return contract address', () => {
@@ -51,7 +62,7 @@ describe('Contract Token Tests', () => {
       expect(() => token.Encode([])).toThrowError(ContractValidationError);
     });
   });
-  // TODO check
+
   describe('schema', () => {
     it('should generate schema', () => {
       expect(token.generateSchema()).toEqual({__michelsonType: 'contract', schema: { parameter: { __michelsonType: 'contract', schema: { parameter: {} }}}})

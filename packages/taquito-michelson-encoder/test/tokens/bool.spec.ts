@@ -33,4 +33,10 @@ describe('Bool token', () => {
       });
     });
   });
+
+  describe('TypecheckValue', () => {
+    it('should be undefined', () => {
+      expect(token.TypecheckValue(true)).toBeUndefined();
+    })
+  })
 });
