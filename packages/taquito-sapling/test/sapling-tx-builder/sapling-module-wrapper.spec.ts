@@ -1,4 +1,4 @@
-import { SaplingWrapper } from '../../src/sapling-tx-builder/sapling-module-wrapper';
+import { SaplingWrapper } from '../../src/sapling-module-wrapper';
 
 describe('SaplingWrapper', () => {
   const saplingWrapper = new SaplingWrapper();
