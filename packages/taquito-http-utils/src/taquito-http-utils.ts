@@ -49,7 +49,7 @@ export class HttpResponseError extends Error {
  *  @description Error that indicates a general failure in making the HTTP request
  */
 export class HttpRequestFailed extends Error {
-  public name = 'HttpRequesFailed';
+  public name = 'HttpRequestFailed';
 
   constructor(
     public message: string,

@@ -9,6 +9,7 @@ describe('HttpBackend request', () => {
               url: 'https://mainnet.api.tez.ie/chains/main/blocks/head/hash'
             });
         } catch (err: any) {
+            expect(err.message).toEqual('Error: timeout of 1ms exceeded')
             expect(err.url).toEqual('https://mainnet.api.tez.ie/chains/main/blocks/head/hash')
             expect(err.method).toEqual('GET')
         }
@@ -25,6 +26,7 @@ describe('HttpBackend request', () => {
               }
             });
         } catch (err: any) {
+            expect(err.message).toEqual('Error: timeout of 1ms exceeded')
             expect(err.url).toEqual('https://mainnet.api.tez.ie/chains/main/blocks/head/helpers/baking_rights?level=0')
             expect(err.method).toEqual('GET')
         }
