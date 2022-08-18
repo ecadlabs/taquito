@@ -142,13 +142,13 @@ Just like the other wallets, you have to import the Temple wallet class first:
 import { TempleWallet } from '@temple-wallet/dapp';
 ```
 
-Then, Temple requires an extra step to verify that the extension is installed and connected in the browser. Temple used to be called Thanos and some Taquito code still uses the name Thanos. The `Thanoswallet` class exposes a static property called `isAvailable` that just does that. You must use it before attempting to connect the wallet:
+Then, Temple requires an extra step to verify that the extension is installed and connected in the browser. Temple used to be called Thanos and some Taquito code still uses the name Thanos. The `TempleWallet` class exposes a static property called `isAvailable` that just does that. You must use it before attempting to connect the wallet:
 
 ```js
 try {
-  const available = await ThanosWallet.isAvailable();
+  const available = await TempleWallet.isAvailable();
   if (!available) {
-    throw new Error('Thanos Wallet not installed');
+    throw new Error('Temple Wallet not installed');
   }
 } catch (err) {
   console.log(err);
@@ -157,10 +157,10 @@ try {
 
 For this to work, you have to enable dapps in the Temple wallet. Under `Settings`, you will find a `DApps` section where the checkbox must be checked to allow interactions between the wallet and the dapps.
 
-Now that we are sure the extension is installed and running, we can continue connecting the wallet. We start by creating a new instance of the `ThanosWallet` class:
+Now that we are sure the extension is installed and running, we can continue connecting the wallet. We start by creating a new instance of the `TempleWallet` class:
 
 ```js
-const wallet = new ThanosWallet('MyAwesomeDapp');
+const wallet = new TempleWallet('MyAwesomeDapp');
 ```
 
 The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
@@ -173,10 +173,10 @@ await wallet.connect('mainnet' | 'jakartanet' | 'kathmandunet' | 'labnet' | 'san
 Once the wallet is connected, there are a couple of things you can get out of it:
 
 ```js
-const wallet = new ThanosWallet('MyAwesomeDapp');
-// the ThanosWallet can return an instance of the Tezos singleton
+const wallet = new TempleWallet('MyAwesomeDapp');
+// the TempleWallet can return an instance of the Tezos singleton
 const Tezos = await wallet.toTezos();
-// the ThanosWallet can return the user's address
+// the TempleWallet can return the user's address
 const userAddress = wallet.pkh || (await wallet.getPKH());
 ```
 
@@ -196,11 +196,11 @@ Tezos.setProvider({ wallet });
 
 Make sure you have the Temple browser extension installed first.
 
-```js live noInline wallet
-//import { ThanosWallet } from '@thanos-wallet/dapp';
-ThanosWallet.isAvailable()
+```js live noInline noConfig
+//import { TempleWallet } from '@temple-wallet/dapp';
+TempleWallet.isAvailable()
   .then(() => {
-    const mywallet = new ThanosWallet('MyAwesomeDapp');
+    const mywallet = new TempleWallet('MyAwesomeDapp');
     mywallet
       .connect('jakartanet')
       .then(() => {
