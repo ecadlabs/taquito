@@ -6,9 +6,11 @@ import {
   ParametersSpendSig,
   SaplingSpendDescription,
   SaplingTransactionInput,
-} from '../types';
-import { saplingOutputParams } from '../../saplingOutputParams';
-import { saplingSpendParams } from '../../saplingSpendParams';
+} from './types';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const saplingOutputParams = require('../saplingOutputParams');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const saplingSpendParams = require('../saplingSpendParams');
 
 export class SaplingWrapper {
   async withProvingContext<T>(action: (context: number) => Promise<T>) {
@@ -118,8 +120,8 @@ export class SaplingWrapper {
   }
 
   async initSaplingParameters() {
-    const spendParams = Buffer.from(saplingSpendParams, 'base64');
-    const outputParams = Buffer.from(saplingOutputParams, 'base64');
+    const spendParams = Buffer.from(saplingSpendParams.saplingSpendParams, 'base64');
+    const outputParams = Buffer.from(saplingOutputParams.saplingOutputParams, 'base64');
 
     return sapling.initParameters(spendParams, outputParams);
   }

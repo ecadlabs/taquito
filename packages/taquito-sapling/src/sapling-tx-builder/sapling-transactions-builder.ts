@@ -21,7 +21,7 @@ import { b58cdecode, Prefix, prefix } from '@taquito/utils';
 import { TzReadProvider } from '@taquito/taquito';
 import { convertValueToBigNumber } from '../sapling-tx-viewer/helpers';
 import { SaplingState } from '../sapling-state/sapling-state';
-import { SaplingWrapper } from './sapling-module-wrapper';
+import { SaplingWrapper } from '../sapling-module-wrapper';
 import { InMemorySpendingKey } from '../sapling-keys/in-memory-spending-key';
 
 export class SaplingTransactionBuilder {

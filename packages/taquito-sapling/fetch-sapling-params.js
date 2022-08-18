@@ -14,7 +14,24 @@ async function fetchSaplingParams(url, name) {
     responseType: 'arraybuffer',
   });
 
-  fs.writeFile(`${name}.ts`, `export const ${name} = "${response.data.toString('base64')}"`, (err) => {
+  fs.writeFile(`${name}.js`, `
+  (function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+    // AMD Module
+        define([], factory);
+    } else if (typeof module === 'object' && module.exports) {
+    // Node Module
+        module.exports = factory();
+    } else {
+    // Browser Global
+        root.returnExports = factory();
+  }
+}(this, function () {
+    return {
+      "${name}": "${response.data.toString('base64')}"
+    };
+}));
+    `, (err) => {
     if (err) return console.log(err);
     console.log(`The file ${name} has been saved!`);
   });

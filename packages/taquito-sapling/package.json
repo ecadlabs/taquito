@@ -11,7 +11,8 @@
   "typings": "dist/types/taquito-sapling.d.ts",
   "files": [
     "signature.json",
-    "dist"
+    "dist",
+    "fetch-sapling-params.js"
   ],
   "publishConfig": {
     "access": "public"
@@ -35,7 +36,7 @@
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
     "start": "rollup -c rollup.config.ts -w",
-    "postinstall": "node ./fetch-sapling-params.js"
+    "postinstall": "node fetch-sapling-params.js"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
