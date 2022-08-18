@@ -49,7 +49,7 @@ export class HttpResponseError extends Error {
  *  @description Error that indicates a general failure in making the HTTP request
  */
 export class HttpRequestFailed extends Error {
-  public name = 'HttpRequest';
+  public name = 'HttpRequesFailed';
 
   constructor(
     public message: string,
@@ -150,7 +150,7 @@ export class HttpBackend {
           url + this.serialize(query)
         );
       } else {
-        throw new HttpRequestFailed(err as string, url + this.serialize(query), method ?? 'GET');
+        throw new HttpRequestFailed(String(err), url + this.serialize(query), method ?? 'GET');
       }
     }
   }
