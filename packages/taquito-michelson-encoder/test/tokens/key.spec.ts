@@ -29,6 +29,8 @@ describe('Key token', () => {
 
     it('Should throw a validation error when address is not valid', () => {
       expect(() => token.TypecheckValue('test')).toThrowError(KeyValidationError);
+      expect(() => token.TypecheckValue('edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9')).toThrowError(KeyValidationError)
+
     });
   });
 

@@ -47,6 +47,8 @@ export class NatToken extends ComparableToken {
       return new NatValidationError(val, this, `Value is not a number: ${val}`);
     } else if (bigNumber.isNegative()) {
       return new NatValidationError(val, this, `Value cannot be negative: ${val}`);
+    } else if(bigNumber.decimalPlaces() !== 0) {
+      return new NatValidationError(val, this, `Value must not have a float: ${val}`)
     } else {
       return null;
     }

@@ -39,9 +39,9 @@ describe('Bls12-381-g1 token', () => {
         )
       ).toBeUndefined();
     })
+
     it('should throw error', () => {
       expect(() => token.TypecheckValue('test')).toThrowError(Bls12381g1ValidationError);
-
     })
   })
 

@@ -21,10 +21,14 @@ describe('Mutez token', () => {
   describe('TypecheckValue', () => {
     it('should be undefined', () => {
       expect(token.TypecheckValue(0)).toBeUndefined();
+      expect(token.TypecheckValue('4')).toBeUndefined();
+      expect(token.TypecheckValue("190847290834701923875098756123.1283746128374601287346023")).toBeUndefined();
     });
 
     it('Should throw a validation error when value is not a number', () => {
       expect(() => token.TypecheckValue('test')).toThrowError(MutezValidationError);
+      expect(() => token.TypecheckValue('')).toThrowError(MutezValidationError);
+
     });
   });
 

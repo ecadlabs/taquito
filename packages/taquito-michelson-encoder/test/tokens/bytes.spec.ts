@@ -35,9 +35,11 @@ describe('Bytes token', () => {
   describe('TypecheckValue', () => {
     it('should return undefined', () => {
       expect(token.TypecheckValue('1234')).toBeUndefined();
+      expect(token.TypecheckValue('1234bafe1823')).toBeUndefined();
     })
 
-    it('should throw error', () => {
+    it('should throw error malformed bytes', () => {
+      expect(() => token.TypecheckValue('1234bafe182')).toThrowError(BytesValidationError);
       expect(() => token.TypecheckValue('test')).toThrowError(BytesValidationError);
     })
   })

@@ -1,4 +1,5 @@
 import { NatToken, NatValidationError } from '../../src/tokens/comparable/nat';
+import BigNumber from "bignumber.js"
 
 describe('Nat token', () => {
   let token: NatToken;
@@ -24,16 +25,25 @@ describe('Nat token', () => {
     });
   });
   describe('TypecheckValue', () => {
-    it('Should return undefinedg', () => {
+    it('Should return undefined', () => {
       expect(token.TypecheckValue(0)).toBeUndefined();
+      expect(token.TypecheckValue('4')).toBeUndefined();
+      expect(token.TypecheckValue("1908472908347019238750987561231019283740918237409182734123908471092384701928374")).toBeUndefined();
     });
 
     it('Should throw a validation error when value is less than 0', () => {
       expect(() => token.TypecheckValue(-1)).toThrowError(NatValidationError);
     });
 
+    it('Should throw error if float not nat', () => {
+      // expect(() => token.TypecheckValue("19084729083470192387509875612310192837409.18237409182734123908471092384701928374")).toThrowError(NatValidationError);
+      const bigNumber = new BigNumber('1029380192830912.192837918273')
+      expect(() => token.TypecheckValue(bigNumber)).toThrowError(NatValidationError)
+
+    })
+
     it('Should throw a validation error when value is not a number', () => {
-      expect(() => token.TypecheckValue('test')).toThrowError(NatValidationError);
+      expect(() => token.TypecheckValue('')).toThrowError(NatValidationError);
     });
   });
 

@@ -147,7 +147,7 @@ export class Schema {
 
   Typecheck(val: any) {
     try {
-      this.root.TypecheckValue(val)
+      this.root.EncodeObject(val)
       return true;
     } catch (ex) {
       return false;

@@ -23,7 +23,8 @@ describe('Chain ID token', () => {
 
     it('Should throw a validation error when value is not a valid chain id', () => {
       expect(() => token.TypecheckValue('test')).toThrowError(ChainIDValidationError);
-      expect(() => token.TypecheckValue({})).toThrowError(ChainIDValidationError);
+      // type blocked
+      // expect(() => token.TypecheckValue({})).toThrowError(ChainIDValidationError);
     });
   });
 

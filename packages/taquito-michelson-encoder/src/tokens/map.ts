@@ -107,7 +107,7 @@ export class MapToken extends Token {
       });
   }
 
-  public TypecheckValue(val: MichelsonMap<keyof MichelsonMapKey, unknown>) {
+  public TypecheckValue(val: MichelsonMap<MichelsonMapKey, unknown>) {
     const err = this.isValid(val);
     if (err) {
       throw err;

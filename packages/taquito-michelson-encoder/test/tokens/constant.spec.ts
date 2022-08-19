@@ -122,8 +122,7 @@ describe('Global constant token', () => {
   });
   describe('TypecheckValue', () => {
     it('should be undefined', () => {
-      const result = token.TypecheckValue()
-      expect(result).toBeUndefined();
+      expect(token.TypecheckValue()).toBeUndefined();
     });
   });
 

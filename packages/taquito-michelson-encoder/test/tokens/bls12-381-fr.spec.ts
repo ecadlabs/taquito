@@ -35,8 +35,8 @@ describe('Bls12-381-fr token', () => {
     it('should return undefined', () => {
       expect(token.TypecheckValue('1234')).toBeUndefined();
     })
-    it('should throw error if non-EncodeObject valid', () => {
 
+    it('should throw error if non-EncodeObject valid', () => {
       expect(() => token.TypecheckValue('test')).toThrowError(Bls12381frValidationError);
     })
   })

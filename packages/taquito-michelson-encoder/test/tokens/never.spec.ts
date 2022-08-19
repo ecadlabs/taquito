@@ -27,12 +27,16 @@ describe('Never token', () => {
   });
   describe('TypecheckValue', () => {
     it('Should return undefined', () => {
-      expect(tokenNever.TypecheckValue('test')).toBeUndefined();
-      expect(tokenNeverPair.TypecheckValue({ 0: 4, 1: 'test' })).toBeUndefined();
-      expect(tokenNeverOption.TypecheckValue('test')).toBeUndefined();
       expect(tokenNeverOption.TypecheckValue(null)).toBeUndefined();
+      expect(() => tokenNeverPair.TypecheckValue([null, null])).toBeUndefined();
+      expect(() => tokenNeverOption.TypecheckValue('test')).toThrowError(NeverTokenError)
 
     });
+    it('should throw an error', () => {
+      expect(() => tokenNever.TypecheckValue('test')).toThrowError(NeverTokenError)
+      expect(() => tokenNeverPair.TypecheckValue([{ 0: 4, 1: 'test' }, 0])).toThrowError(NeverTokenError)
+      expect(() => tokenNeverOption.TypecheckValue('test')).toThrowError(NeverTokenError)
+    })
   });
 
   describe('Encode', () => {
