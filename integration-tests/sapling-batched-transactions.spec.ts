@@ -93,6 +93,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const op = await saplingContract.methods.default([shieldedTx]).send({ amount: 6 });
       await op.confirmation();
+      expect(op.status).toEqual('applied');
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       done();
     });
@@ -190,6 +193,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const op = await saplingContract.methods.default([tx]).send();
       await op.confirmation();
+      expect(op.status).toEqual('applied');
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       done();
     });

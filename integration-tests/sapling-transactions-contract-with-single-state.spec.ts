@@ -74,6 +74,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const op = await saplingContract.methods.default([shieldedTx]).send({ amount: amountToAlice });
       await op.confirmation();
 
+      expect(op.status).toEqual('applied');
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+
       done();
     });
 
@@ -116,6 +120,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Inject the sapling transaction using the ContractAbstraction by calling the default entrypoint
       const op = await saplingContract.methods.default([tx]).send();
       await op.confirmation();
+
+      expect(op.status).toEqual('applied');
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       done();
     });
@@ -195,6 +203,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Inject the sapling transaction using the ContractAbstraction by calling the default entrypoint
       const op = await saplingContract.methods.default([unshieldedTx]).send();
       await op.confirmation(2);
+
+      expect(op.status).toEqual('applied');
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const tezosUpdatedBalance = await Tezos.tz.getBalance(tezosAddress1);
       expect(tezosUpdatedBalance).toEqual(tezosInitialBalance.plus(new BigNumber(1000000)));
