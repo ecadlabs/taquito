@@ -1,3 +1,4 @@
+import { isValidHexDec } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -19,7 +20,7 @@ export class ChestKeyToken extends Token {
   }
 
   private isValid(val: any): ChestKeyValidationError | null {
-    if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+    if (isValidHexDec(val)) {
       return null;
     } else {
       return new ChestKeyValidationError(val, this, `Invalid bytes: ${val}`);
@@ -54,7 +55,8 @@ export class ChestKeyToken extends Token {
     return { bytes: val };
   }
 
-  public TypecheckValue(val: unknown) {
+  public TypecheckValue(val: string | Uint8Array,) {
+    val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;

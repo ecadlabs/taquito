@@ -2,6 +2,7 @@ import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from
 import { OrToken } from './or';
 import { PairTokenSchema } from '../schema/types';
 import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
+import { FixedLengthArray } from '@taquito/utils';
 
 /**
  *  @category Error
@@ -158,7 +159,7 @@ export class PairToken extends ComparableToken {
     };
   }
 
-  public TypecheckValue(_val?: unknown) {
+  public TypecheckValue(_val?: FixedLengthArray<unknown, 2>) {
     return
   }
 

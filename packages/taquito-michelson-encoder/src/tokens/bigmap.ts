@@ -122,6 +122,9 @@ export class BigMapToken extends Token {
   }
 
   public TypecheckValue(val: unknown) {
+    if (this instanceof BigMapToken && Number.isInteger(Number(val))) {
+      return true;
+    }
     const err = this.isValid(val);
     if (err) {
       throw err;

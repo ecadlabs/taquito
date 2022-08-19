@@ -1,3 +1,4 @@
+import { FixedLengthArray } from '@taquito/utils';
 import { OrTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 
@@ -121,7 +122,7 @@ export class OrToken extends ComparableToken {
     }
   }
 
-  public TypecheckValue(_val?: unknown) {
+  public TypecheckValue(_val?: FixedLengthArray<string, 2>) {
     return
   }
 

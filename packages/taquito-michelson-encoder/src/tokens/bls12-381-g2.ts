@@ -1,3 +1,4 @@
+import { isValidHexDec } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -21,7 +22,7 @@ export class Bls12381g2Token extends Token {
   }
 
   private isValid(val: any): Bls12381g2ValidationError | null {
-    if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+    if (isValidHexDec(val)) {
       return null;
     } else {
       return new Bls12381g2ValidationError(val, this, `Invalid bytes: ${val}`);
@@ -55,6 +56,7 @@ export class Bls12381g2Token extends Token {
   }
 
   public TypecheckValue(val: unknown) {
+    val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;

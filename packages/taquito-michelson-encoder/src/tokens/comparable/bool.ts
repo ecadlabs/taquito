@@ -1,6 +1,13 @@
 import { BaseTokenSchema } from '../../schema/types';
-import { Token, TokenFactory, ComparableToken, SemanticEncoding } from '../token';
+import { Token, TokenFactory, ComparableToken, SemanticEncoding, TokenValidationError } from '../token';
 
+
+export class BoolValidationError extends TokenValidationError {
+  name = "BoolValidationError";
+  constructor(public value: unknown, public token: BoolToken, message: string) {
+    super(value, token, message);
+  }
+}
 export class BoolToken extends ComparableToken {
   static prim: 'bool' = 'bool';
 
@@ -28,8 +35,10 @@ export class BoolToken extends ComparableToken {
     return { prim: val ? 'True' : 'False' };
   }
 
-  public TypecheckValue(_arg?: unknown) {
-    return
+  public TypecheckValue(val: boolean) {
+    if (typeof val !== 'boolean') {
+      throw new BoolValidationError(val, this, `${val} is not a Boolean`)
+    }
   }
 
   /**

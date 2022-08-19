@@ -78,7 +78,7 @@ export class IntToken extends ComparableToken {
     return { int: new BigNumber(val).toFixed() };
   }
 
-  public TypecheckValue(val: unknown) {
+  public TypecheckValue(val: BigNumber.Value) {
     const err = this.isValid(val);
     if (err) {
       throw err;

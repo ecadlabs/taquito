@@ -24,6 +24,7 @@ export { prefix, Prefix, prefixLength } from './constants';
 
 export { verifySignature, validatePkAndExtractPrefix } from './verify-signature';
 export * from './errors';
+export * from './universal-types'
 
 /**
  *
@@ -348,4 +349,8 @@ export function bytes2Char(hex: string): string {
  */
 export function stripHexPrefix(hex: string): string {
   return hex.startsWith('0x') ? hex.slice(2) : hex;
+}
+
+export function isValidHexDec(hex: unknown): boolean {
+  return typeof hex === 'string' && /^[0-9a-fA-F]*$/.test(hex) && hex.length % 2 === 0
 }

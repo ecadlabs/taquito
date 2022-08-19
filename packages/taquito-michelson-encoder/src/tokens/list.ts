@@ -75,7 +75,7 @@ export class ListToken extends Token {
     }, []);
   }
 
-  public TypecheckValue(val: unknown) {
+  public TypecheckValue(val: unknown[]) {
     const err = this.isValid(val);
     if (err) {
       throw err;

@@ -6,7 +6,7 @@ import {
   Token,
   SemanticEncoding,
 } from '../token';
-import { stripHexPrefix } from '@taquito/utils';
+import { isValidHexDec, stripHexPrefix } from '@taquito/utils';
 
 export class BytesValidationError extends TokenValidationError {
   name = 'BytesValidationError';
@@ -34,7 +34,7 @@ export class BytesToken extends ComparableToken {
   }
 
   private isValid(val: any): BytesValidationError | null {
-    if (typeof val === 'string' && /^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+    if (isValidHexDec(val)) {
       return null;
     } else {
       return new BytesValidationError(val, this, `Invalid bytes: ${val}`);
@@ -76,7 +76,7 @@ export class BytesToken extends ComparableToken {
     return { bytes: String(val).toString() };
   }
 
-  public TypecheckValue(val: unknown) {
+  public TypecheckValue(val: string) {
     const err = this.isValid(val);
     if (err) {
       throw err;

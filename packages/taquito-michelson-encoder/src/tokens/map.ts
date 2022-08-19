@@ -1,4 +1,4 @@
-import { MichelsonMap } from '../michelson-map';
+import { MichelsonMap, MichelsonMapKey } from '../michelson-map';
 import { MapTokenSchema } from '../schema/types';
 import {
   ComparableToken,
@@ -107,7 +107,7 @@ export class MapToken extends Token {
       });
   }
 
-  public TypecheckValue(val: unknown) {
+  public TypecheckValue(val: MichelsonMap<keyof MichelsonMapKey, unknown>) {
     const err = this.isValid(val);
     if (err) {
       throw err;

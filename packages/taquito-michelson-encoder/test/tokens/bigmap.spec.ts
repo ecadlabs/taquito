@@ -49,8 +49,9 @@ describe('BigMap', () => {
     const result = bigMap.TypecheckValue(map)
     expect(result).toBeUndefined();
   })
+
   it('Typecheck should throw error with incorrect value', () => {
-    expect(() => bigMap.TypecheckValue({} as MichelsonMap<Record<string, unknown>, unknown>)).toThrowError(BigMapValidationError)
+    expect(() => bigMap.TypecheckValue({something: "wrong"})).toThrowError(BigMapValidationError)
   })
 
 });

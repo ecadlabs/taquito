@@ -78,7 +78,7 @@ export class MutezToken extends ComparableToken {
     return { int: String(val).toString() };
   }
 
-  public TypecheckValue(val: unknown) {
+  public TypecheckValue(val: BigNumber.Value) {
     const err = this.isValid(val);
     if (err) {
       throw err;
