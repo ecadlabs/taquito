@@ -3,6 +3,7 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
+import { TicketToken } from '../tokens/ticket';
 import {
   BigMapKeyType,
   Semantic,
@@ -148,6 +149,14 @@ export class Schema {
   Typecheck(val: any) {
     if (this.root instanceof BigMapToken && Number.isInteger(Number(val))) {
       return true;
+    }
+    if (this.root instanceof TicketToken) {
+      const ticketer = this.root.createToken({ prim: 'contract' }, 0)
+      const value = this.root.valueToken;
+      const amount = this.root.createToken({ prim: 'int' }, 0)
+      if (ticketer && value && amount) {
+        return true
+      }
     }
     try {
       this.root.EncodeObject(val);
