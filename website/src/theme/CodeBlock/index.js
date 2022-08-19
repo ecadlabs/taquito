@@ -29,6 +29,8 @@ import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
+import { RpcClient } from '@taquito/rpc';
+import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 import { ThanosWallet } from '@thanos-wallet/dapp';
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
@@ -129,7 +131,10 @@ export default ({
           verifySignature,
           Parser, 
           packDataBytes, 
-          RpcReadAdapter
+          RpcReadAdapter,
+          SaplingToolkit,
+          RpcClient,
+          InMemorySpendingKey
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

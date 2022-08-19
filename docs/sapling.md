@@ -66,14 +66,36 @@ When calling the `getSaplingTransactionViewer` method of the `SaplingToolkit` cl
 
 For each entry in the shielded pool, the `SaplingTransactionViewer` class will try to decrypt them using the viewing key as if it were the receiver. If a ciphertext is successfully decrypted, the configured account was the receiver of the output. The `SaplingTransactionViewer` will find which inputs were not spent by computing their nullifier. If an input is spent, its nullifier will be in the Sapling state. If the nullifier is not present, the input has not been spent, and its value will be considered in the calculated balance.
 
+Note that the balance is represented in mutez.
+
 The balance can be retrieved as follows:
 
-```ts
-const txViewer = await saplingToolkit.getSaplingTransactionViewer();
-const initialBalance = await txViewer.getBalance();
-```
+```js live noInline
+import { RpcReadAdapter } from '@taquito/taquito';
+import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
 
-Note that the balance is represented in mutez.
+// Alice spending key
+const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L';
+
+const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
+
+const readProvider = new RpcReadAdapter(new RpcClient('https://jakartanet.ecadinfra.com/'));
+
+const saplingToolkit = new SaplingToolkit(
+    inMemorySpendingKey, 
+    { contractAddress: 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9', memoSize: 8 }, 
+    readProvider
+);
+
+saplingToolkit.getSaplingTransactionViewer()
+  .then((txViewer) => {
+    println(`Fetching Alice balance in the shielded pool...`);
+    return txViewer.getBalance();
+  })
+  .then((balance) => println(`Alice's balance is ${balance.toString()} mutez`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+```
 
 ## How to retrieve my transaction history?
 
@@ -81,39 +103,31 @@ The `SaplingTransactionViewer` class exposes a method called `getIncomingAndOutg
 
 Example:
 
-```ts
-const txViewer = await saplingToolkit.getSaplingTransactionViewer();
-const initialBalance = await txViewer.getIncomingAndOutgoingTransactions();
+```js live noInline
+import { RpcReadAdapter } from '@taquito/taquito';
+import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
 
-/* initialBalance :
-{
-    incoming: [
-    {
-        value: new BigNumber(3000000),
-        memo: 'First Tx',
-        paymentAddress: alicePaymentAddress,
-        isSpent: true
-    },
-    {
-        value: new BigNumber(1000000),
-        memo: '',
-        paymentAddress: alicePaymentAddress,
-        isSpent: false
-    }
-    ],
-    outgoing: [
-    {
-        value: new BigNumber(2000000),
-        memo: 'A gift',
-        paymentAddress: bobPaymentAddress
-    },
-    {
-        value: new BigNumber(1000000),
-        memo: '',
-        paymentAddress: alicePaymentAddress
-    }
-    ]
-} */
+// Alice spending key
+const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L';
+
+const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
+
+const readProvider = new RpcReadAdapter(new RpcClient('https://jakartanet.ecadinfra.com/'));
+
+const saplingToolkit = new SaplingToolkit(
+    inMemorySpendingKey, 
+    { contractAddress: 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9', memoSize: 8 }, 
+    readProvider
+);
+
+saplingToolkit.getSaplingTransactionViewer()
+  .then((txViewer) => {
+    println(`Fetching Alice's history of transactions in the shielded pool...`);
+    return txViewer.getIncomingAndOutgoingTransactions();
+  })
+  .then((history) => println(`Alice's transaction history is ${JSON.stringify(history, null, 2)}`))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## How to prepare a shielded transaction?
@@ -130,40 +144,58 @@ The `prepareShieldedTransaction` method returns the crafted Sapling transaction 
 
 Here is an example of how to prepare and inject a shielded transaction using Taquito:
 
-```ts
-import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
-import { SaplingToolkit } from '@taquito/sapling';
-import { RpcClient } from '@taquito/rpc';
+```js live noInline
+// import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
+// import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
+// import { RpcClient } from '@taquito/rpc';
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
-const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+const saplingContractAddress = 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9'
+const rpcUrl = 'https://jakartanet.ecadinfra.com/';
+const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
+// const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
-const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
-const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
+// Alice spending key
+const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L';
+
+const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
 const saplingToolkit = new SaplingToolkit(
     inMemorySpendingKey, 
-    { contractAddress: saplingContract.address, memoSize: 8 }, 
+    { contractAddress: saplingContractAddress, memoSize: 8 }, 
     readProvider
-)
+);
 
-// Fetch a payment address (zet)
-const inMemoryViewingKey = await inMemorySpendingKey.getInMemoryViewingKey();
-const paymentAddress = (await inMemoryViewingKey.getAddress()).address;
-
-// prepare the shielded transaction
-const shieldedTx = await saplingToolkit.prepareShieldedTransaction([{
-    to: paymentAddress,
-    amount: 3,
-    memo: 'test',
-    mutez: false // set to false by default
-}])
-
-// Inject the Sapling transaction using the ContractAbstraction
-// The amount MUST be specified in the send method to transfer the 3 tez to the shielded pool
-const op = await saplingContract.methods.default([shieldedTx]).send({ amount: 3 });
-await op.confirmation();
+inMemorySpendingKey.getInMemoryViewingKey()
+  .then((inMemoryViewingKey) => {
+    println(`Fetching a payment address for Alice (zet)...`);
+    return inMemoryViewingKey.getAddress();
+  })
+  .then((paymentAddress) => {
+    println(`Alice's payment address is: ${paymentAddress.address}`);
+    println(`Preparing the shielded transaction...`);
+    return saplingToolkit.prepareShieldedTransaction([{
+        to: paymentAddress.address,
+        amount: 3,
+        memo: 'test',
+        mutez: false // set to false by default
+    }]);
+  })
+  .then((shieldedTx) => {
+    println(`The sapling transaction parameter is: ${shieldedTx}`);
+    Tezos.contract.at(saplingContractAddress)
+    .then((saplingContract) => {
+        println(`Injecting the Sapling transaction using the ContractAbstraction...`);
+        // The amount MUST be specified in the send method to transfer the 3 tez to the shielded pool
+        return saplingContract.methods.default([shieldedTx]).send({ amount: 3 });
+    })
+    .then((op) => {
+        println(`Waiting for ${op.hash} to be confirmed...`);
+        return op.confirmation(1).then(() => op.hash);
+    })
+    .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+  })
+  .catch((error) => println(`Error: ${(error)}`));
 ```
 
 ## How to prepare a Sapling transaction?
@@ -184,33 +216,49 @@ A user should not use their own implicit account (tz1, tz2, tz3) to submit a Sap
 
 Here is an example of how to prepare and inject a Sapling transaction using Taquito:
 
-```ts
-import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
-import { SaplingToolkit } from '@taquito/sapling';
-import { RpcClient } from '@taquito/rpc';
+```js live noInline
+// import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
+// import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
+// import { RpcClient } from '@taquito/rpc';
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
-const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+const saplingContractAddress = 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9'
+const rpcUrl = 'https://jakartanet.ecadinfra.com/';
+const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
+// const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
-const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
-const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
+// Alice spending key
+const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L';
+
+const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
 const saplingToolkit = new SaplingToolkit(
     inMemorySpendingKey, 
-    { contractAddress: saplingContract.address, memoSize: 8 }, 
+    { contractAddress: saplingContractAddress, memoSize: 8 }, 
     readProvider
-)
+);
 
-const shieldedTx = await saplingToolkit.prepareSaplingTransaction([{
+println(`Preparing the sapling transaction...`);
+saplingToolkit.prepareSaplingTransaction([{
     to: 'zet14CMN2T4x1f8sgXeAGWQwczSf6SJ8bm8nyP2Tg7HJn2VmtPtB2nE2q7MMgdmMEwpGQ',
     amount: 3,
     memo: 'test',
     mutez: false // set to false by default
 }])
-
-const op = await saplingContract.methods.default([shieldedTx]).send();
-await op.confirmation();
+.then((saplingTx) => {
+    println(`The sapling transaction parameter is: ${saplingTx}`);
+    Tezos.contract.at(saplingContractAddress)
+    .then((saplingContract) => {
+        println(`Injecting the Sapling transaction using the ContractAbstraction...`);
+        return saplingContract.methods.default([saplingTx]).send();
+    })
+    .then((op) => {
+        println(`Waiting for ${op.hash} to be confirmed...`);
+        return op.confirmation(1).then(() => op.hash);
+    })
+    .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+})
+.catch((error) => println(`Error: ${(error)}`));
 ```
 
 ## How to prepare an unshielded transaction?
@@ -226,32 +274,48 @@ The `prepareUnshieldedTransaction` method returns the crafted Sapling transactio
 
 Here is an example of how to prepare and inject an unshielded transaction using Taquito:
 
-```ts
-import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
-import { SaplingToolkit } from '@taquito/sapling';
-import { RpcClient } from '@taquito/rpc';
+```js live noInline
+// import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
+// import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
+// import { RpcClient } from '@taquito/rpc';
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
-const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+const saplingContractAddress = 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9'
+const rpcUrl = 'https://jakartanet.ecadinfra.com/';
+const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
+// const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
-const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
-const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
+// Alice spending key
+const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L';
+
+const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
 const saplingToolkit = new SaplingToolkit(
     inMemorySpendingKey, 
-    { contractAddress: saplingContract.address, memoSize: 8 }, 
+    { contractAddress: saplingContractAddress, memoSize: 8 }, 
     readProvider
-)
+);
 
-const shieldedTx = await saplingToolkit.prepareUnshieldedTransaction({
+println(`Preparing the unshielded transaction...`);
+saplingToolkit.prepareUnshieldedTransaction({
     to: 'tz1hDFKpVkT7jzYncaLma4vxh4Gg6JNqvdtB',
-    amount: 3,
-    mutez: false // set to false by default
+    amount: 20,
+    mutez: true // set to false by default
 })
-
-const op = await saplingContract.methods.default([shieldedTx]).send();
-await op.confirmation();
+.then((unshieldedTx) => {
+    println(`The sapling transaction parameter is: ${unshieldedTx}`);
+    Tezos.contract.at(saplingContractAddress)
+    .then((saplingContract) => {
+        println(`Injecting the Sapling transaction using the ContractAbstraction...`);
+        return saplingContract.methods.default([unshieldedTx]).send();
+    })
+    .then((op) => {
+        println(`Waiting for ${op.hash} to be confirmed...`);
+        return op.confirmation(1).then(() => op.hash);
+    })
+    .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+})
+.catch((error) => println(`Error: ${(error)}`));
 ```
 
 # SaplingTransactionViewer
