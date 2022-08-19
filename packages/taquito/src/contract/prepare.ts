@@ -17,6 +17,8 @@ import {
   RPCTxRollupOriginationOperation,
   TxRollupBatchParams,
   RPCTxRollupBatchOperation,
+  TransferTicketParams,
+  RPCTransferTicketOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -205,3 +207,30 @@ export const createTxRollupBatchOperation = async ({
     rollup,
   } as RPCTxRollupBatchOperation;
 };
+
+export const createTransferTicketOperation = async ({
+  ticketContents,
+  ticketTy,
+  ticketTicketer,
+  ticketAmount,
+  destination,
+  entrypoint,
+  source,
+  fee,
+  gasLimit,
+  storageLimit
+}: TransferTicketParams) => {
+  return {
+    kind: OpKind.TRANSFER_TICKET,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    source,
+    ticket_contents: ticketContents,
+    ticket_ty: ticketTy,
+    ticket_ticketer: ticketTicketer,
+    ticket_amount: ticketAmount,
+    destination,
+    entrypoint
+  } as RPCTransferTicketOperation
+}

@@ -5,6 +5,9 @@ import {
   OperationResultRegisterGlobalConstant,
   OperationResultReveal,
   OperationResultTransaction,
+  OperationResultTransferTicket,
+  OperationResultTxRollupOrigination,
+  OperationResultTxRollupSubmitBatch,
   PreapplyResponse,
   TezosGenericOperationError,
 } from '@taquito/rpc';
@@ -64,13 +67,18 @@ export class TezosPreapplyFailureError extends Error {
   }
 }
 
-export type MergedOperationResult = OperationResultDelegation &
-  OperationResultOrigination &
+export type MergedOperationResult =
   OperationResultTransaction &
+  OperationResultOrigination &
+  OperationResultDelegation &
   OperationResultRegisterGlobalConstant &
+  OperationResultTxRollupOrigination &
+  OperationResultTxRollupSubmitBatch &
+  OperationResultTransferTicket &
   OperationResultReveal & {
     fee?: string;
   };
+
 
 // Flatten all operation content results and internal operation results into a single array
 // Some cases where we can have multiple operation results or internal operation results are:
