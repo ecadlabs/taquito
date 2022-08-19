@@ -57,7 +57,7 @@ export class SaplingForger {
     return Buffer.concat([
       desc.commitmentValue,
       desc.nullifier,
-      desc.randomizedPublicKey,
+      desc.publicKeyReRandomization,
       desc.proof,
       desc.signature,
     ]);
@@ -99,7 +99,7 @@ export class SaplingForger {
     return Buffer.concat([
       unsignedSpendDescription.commitmentValue,
       unsignedSpendDescription.nullifier,
-      unsignedSpendDescription.randomizedPublicKey,
+      unsignedSpendDescription.publicKeyReRandomization,
       unsignedSpendDescription.proof,
     ]);
   }

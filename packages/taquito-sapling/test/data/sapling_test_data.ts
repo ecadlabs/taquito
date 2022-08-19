@@ -194,7 +194,7 @@ export const spendDescription = [
       '208c4e296a95c34bf3886f62b3eaabc3c28feaf8067bf493030ae1f689fc4d85',
       'hex'
     ),
-    randomizedPublicKey: Buffer.from(
+    publicKeyReRandomization: Buffer.from(
       '2658565805aeb044d7a5c7cc1b65fe967e4b5fcd8f3ae42758bf014150c24c5e',
       'hex'
     ),

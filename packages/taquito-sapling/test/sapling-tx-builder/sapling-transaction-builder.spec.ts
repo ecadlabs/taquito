@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   outputsUnshieldedTx,
   outputsShieldedTx,
@@ -5,16 +6,28 @@ import {
   saplingState,
 } from './single-sapling-state-diff';
 import { SaplingTransactionBuilder } from '../../src/sapling-tx-builder/sapling-transactions-builder';
-import { InMemorySpendingKey } from '../../src/sapling-keys/in-memory-spending-key';
 import { SaplingForger } from '../../src/sapling-forger/sapling-forger';
 import BigNumber from 'bignumber.js';
 
 describe('Sapling transactions builder', () => {
   let saplingTransactionBuilder: SaplingTransactionBuilder;
 
-  const inMemorySpendingKey = new InMemorySpendingKey(
-    'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L'
-  );
+  let mockInMemorySpendingKey: {
+    prepareSpendDescription: jest.Mock<any, any>;
+    getSaplingViewingKeyProvider: jest.Mock<any, any>;
+    getSpendingKey: jest.Mock<any, any>;
+    signSpendDescription: jest.Mock<any, any>;
+  };
+
+  let mockInMemoryViewingKey: {
+    getFullViewingKey: jest.Mock<any, any>;
+    getOutgoingViewingKey: jest.Mock<any, any>;
+  };
+
+  let mockInMemoryProvingKey: {
+    prepareSpendDescription: jest.Mock<any, any>;
+  };
+
   const saplingForger = new SaplingForger();
   const saplingContract = {
     contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
@@ -28,10 +41,8 @@ describe('Sapling transactions builder', () => {
     randR: jest.Mock<any, any>;
     getOutgoingViewingKey: jest.Mock<any, any>;
     preparePartialOutputDescription: jest.Mock<any, any>;
-    prepareSpendDescription: jest.Mock<any, any>;
     getDiversifiedFromRawPaymentAddress: jest.Mock<any, any>;
     deriveEphemeralPublicKey: jest.Mock<any, any>;
-    signSpendDescription: jest.Mock<any, any>;
     getPkdFromRawPaymentAddress: jest.Mock<any, any>;
     keyAgreement: jest.Mock<any, any>;
     getPaymentAddressFromViewingKey: jest.Mock<any, any>;
@@ -45,16 +56,30 @@ describe('Sapling transactions builder', () => {
   };
 
   beforeEach(() => {
+    mockInMemorySpendingKey = {
+      prepareSpendDescription: jest.fn(),
+      getSaplingViewingKeyProvider: jest.fn(),
+      getSpendingKey: jest.fn(),
+      signSpendDescription: jest.fn(),
+    };
+
+    mockInMemoryViewingKey = {
+      getFullViewingKey: jest.fn(),
+      getOutgoingViewingKey: jest.fn(),
+    };
+
+    mockInMemoryProvingKey = {
+      prepareSpendDescription: jest.fn(),
+    };
+
     mockSaplingWrapper = {
       withProvingContext: jest.fn(),
       getRandomBytes: jest.fn(),
       randR: jest.fn(),
       getOutgoingViewingKey: jest.fn(),
       preparePartialOutputDescription: jest.fn(),
-      prepareSpendDescription: jest.fn(),
       getDiversifiedFromRawPaymentAddress: jest.fn(),
       deriveEphemeralPublicKey: jest.fn(),
-      signSpendDescription: jest.fn(),
       getPkdFromRawPaymentAddress: jest.fn(),
       keyAgreement: jest.fn(),
       getPaymentAddressFromViewingKey: jest.fn(),
@@ -67,11 +92,17 @@ describe('Sapling transactions builder', () => {
       getChainId: jest.fn(),
     };
 
+    mockInMemorySpendingKey.getSaplingViewingKeyProvider.mockResolvedValue(mockInMemoryViewingKey);
+    mockInMemorySpendingKey.getSpendingKey.mockReturnValue(
+      'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L'
+    );
+    mockInMemoryViewingKey.getFullViewingKey.mockResolvedValue('vk');
+    mockInMemoryViewingKey.getOutgoingViewingKey.mockResolvedValue('ovk');
     mockReadProvider.getSaplingDiffById.mockResolvedValue(saplingState);
     mockReadProvider.getChainId.mockResolvedValue('NetXLH1uAxK7CCh');
 
     saplingTransactionBuilder = new SaplingTransactionBuilder(
-      inMemorySpendingKey,
+      { saplingSigner: mockInMemorySpendingKey as any },
       saplingForger,
       saplingContract,
       mockReadProvider as any,
@@ -82,7 +113,7 @@ describe('Sapling transactions builder', () => {
   it('should be instantiable', async (done) => {
     expect(
       new SaplingTransactionBuilder(
-        inMemorySpendingKey,
+        { saplingSigner: mockInMemorySpendingKey as any },
         saplingForger,
         saplingContract,
         mockReadProvider as any,
@@ -274,11 +305,11 @@ describe('Sapling transactions builder', () => {
     done();
   });
 
-  it('prepareSaplingSpendDescription', async (done) => {
+  it('prepareSaplingSpendDescription with spending key', async (done) => {
     mockSaplingWrapper.randR.mockResolvedValue(
       Buffer.from('b924bc77666de1189d3f904ab5a6332c371d9f3bd9aa188579e9da60ce270f0a', 'hex')
     );
-    mockSaplingWrapper.prepareSpendDescription.mockResolvedValue({
+    mockInMemorySpendingKey.prepareSpendDescription.mockResolvedValue({
       commitmentValue: Buffer.from(
         '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89',
         'hex'
@@ -291,7 +322,7 @@ describe('Sapling transactions builder', () => {
         '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
         'hex'
       ),
-      randomizedPublicKey: Buffer.from(
+      publicKeyReRandomization: Buffer.from(
         '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
         'hex'
       ),
@@ -300,7 +331,7 @@ describe('Sapling transactions builder', () => {
         'hex'
       ),
     });
-    mockSaplingWrapper.signSpendDescription.mockResolvedValue({
+    mockInMemorySpendingKey.signSpendDescription.mockResolvedValue({
       commitmentValue: Buffer.from(
         '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89',
         'hex'
@@ -313,7 +344,7 @@ describe('Sapling transactions builder', () => {
         '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
         'hex'
       ),
-      randomizedPublicKey: Buffer.from(
+      publicKeyReRandomization: Buffer.from(
         '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
         'hex'
       ),
@@ -360,7 +391,121 @@ describe('Sapling transactions builder', () => {
           '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
           'hex'
         ),
-        randomizedPublicKey: Buffer.from(
+        publicKeyReRandomization: Buffer.from(
+          '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
+          'hex'
+        ),
+        rtAnchor: Buffer.from(
+          '5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27',
+          'hex'
+        ),
+        signature: Buffer.from(
+          'ae9a1078bfcbda6e789ad8268562ed3f600e1f3265759771f7e4c0eb586b1f400c561727e5a6daa6f85feea46725d3737a0f77ad5d703f057980048c45004c00',
+          'hex'
+        ),
+      },
+    ]);
+    done();
+  });
+
+  it('prepareSaplingSpendDescription with prooving key', async (done) => {
+    const saplingTransactionBuilder2 = new SaplingTransactionBuilder(
+      {
+        saplingSigner: mockInMemorySpendingKey as any,
+        saplingProver: mockInMemoryProvingKey as any,
+      },
+      saplingForger,
+      saplingContract,
+      mockReadProvider as any,
+      mockSaplingWrapper as any
+    );
+
+    mockSaplingWrapper.randR.mockResolvedValue(
+      Buffer.from('b924bc77666de1189d3f904ab5a6332c371d9f3bd9aa188579e9da60ce270f0a', 'hex')
+    );
+    mockInMemoryProvingKey.prepareSpendDescription.mockResolvedValue({
+      commitmentValue: Buffer.from(
+        '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89',
+        'hex'
+      ),
+      nullifier: Buffer.from(
+        'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
+        'hex'
+      ),
+      proof: Buffer.from(
+        '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
+        'hex'
+      ),
+      publicKeyReRandomization: Buffer.from(
+        '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
+        'hex'
+      ),
+      rtAnchor: Buffer.from(
+        '5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27',
+        'hex'
+      ),
+    });
+    mockInMemorySpendingKey.signSpendDescription.mockResolvedValue({
+      commitmentValue: Buffer.from(
+        '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89',
+        'hex'
+      ),
+      nullifier: Buffer.from(
+        'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
+        'hex'
+      ),
+      proof: Buffer.from(
+        '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
+        'hex'
+      ),
+      publicKeyReRandomization: Buffer.from(
+        '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
+        'hex'
+      ),
+      rtAnchor: Buffer.from(
+        '5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27',
+        'hex'
+      ),
+      signature: Buffer.from(
+        'ae9a1078bfcbda6e789ad8268562ed3f600e1f3265759771f7e4c0eb586b1f400c561727e5a6daa6f85feea46725d3737a0f77ad5d703f057980048c45004c00',
+        'hex'
+      ),
+    });
+
+    const spendDescription = await saplingTransactionBuilder2.prepareSaplingSpendDescription(
+      72805504,
+      [
+        {
+          memo: Buffer.from('5461717569746f00', 'hex'),
+          paymentAddress: Buffer.from(
+            '2c8e683029bd1c1ff25882bb0353379487fcf142bbaef37d2b21dc3836f929c6fa9181e2a0d7b72406c148',
+            'hex'
+          ),
+          position: 0,
+          randomCommitmentTrapdoor: Buffer.from(
+            '35289e034251f3a673535eca3a795d8fe420801bbe4b97df5d96f0f654ffb608',
+            'hex'
+          ),
+          value: Buffer.from('00000000007a1200', 'hex'),
+        },
+      ]
+    );
+
+    expect(spendDescription).toEqual([
+      {
+        commitmentValue: Buffer.from(
+          '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89',
+          'hex'
+        ),
+        nullifier: Buffer.from(
+          'e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab',
+          'hex'
+        ),
+        proof: Buffer.from(
+          '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7',
+          'hex'
+        ),
+        publicKeyReRandomization: Buffer.from(
           '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3',
           'hex'
         ),
@@ -496,7 +641,7 @@ describe('Sapling transactions builder', () => {
             'b85be7fa63578a76a58e33985605927480f4f48cedaa207914208cc171d888a0af92ded1003baf7e4014785e0c0fdc39b207df180725030eb5b256a7e91fa78930e21b854d6ab51408d9cdf650644b0ccf6f9f5d517a12b101e41a4f0d94ffa406792b1adda3d601a80efd79020acbcce9a9277c4071de3122cd97aee7ca3097220306f9329f721353889cd284b6c717b78a3d5905c711962613914f8fc86eeb57bae32aa639f3c1f18c767a3d8d8da749df7d7f632b98f3a4ded8258724b2d5',
             'hex'
           ),
-          randomizedPublicKey: Buffer.from(
+          publicKeyReRandomization: Buffer.from(
             'b226faf64a351bed83c3c2d8fd8e1ec80ceac6a7aa1ba6546f879794e7e07915',
             'hex'
           ),

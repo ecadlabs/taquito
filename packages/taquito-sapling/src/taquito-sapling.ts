@@ -30,15 +30,18 @@ import {
 } from './types';
 import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
 import { DEFAULT_BOUND_DATA, DEFAULT_MEMO } from './constants';
+import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
 
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';
 export { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
+export { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
 
 /**
  * @description Class that surfaces all of the sapling capability allowing to read from a sapling state and prepare transactions
  *
- * @param inMemorySpendingKey Holds the sapling spending key
+ * @param keys.saplingSigner Holds the sapling spending key
+ * @param keys.saplingProver Optional Allows to generate the proofs with the proving key rather than the spending key
  * @param saplingContractDetails Contains the address of the sapling contract, the memo size, and an optional sapling id that must be defined if the sapling contract contains more than one sapling state
  * @param readProvider Allows to read data from the blockchain
  * @param packer Optional. Allows packing data. Use the `MichelCodecPacker` by default.
@@ -50,7 +53,7 @@ export { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
  * const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'))
  *
  * const saplingToolkit = new SaplingToolkit(
- *    inMemorySpendingKey,
+ *    { saplingSigner: inMemorySpendingKey },
  *    { contractAddress: SAPLING_CONTRACT_ADDRESS, memoSize: 8 },
  *    readProvider
  * )
@@ -67,19 +70,22 @@ export class SaplingToolkit {
   #saplingTxBuilder: SaplingTransactionBuilder;
   #saplingTransactionViewer: SaplingTransactionViewer | undefined;
   constructor(
-    inMemorySpendingKey: InMemorySpendingKey,
+    keys: {
+      saplingSigner: InMemorySpendingKey;
+      saplingProver?: InMemoryProvingKey;
+    },
     saplingContractDetails: SaplingContractDetails,
     readProvider: TzReadProvider,
     packer = new MichelCodecPacker(),
     saplingForger = new SaplingForger(),
     saplingTxBuilder = new SaplingTransactionBuilder(
-      inMemorySpendingKey,
+      keys,
       saplingForger,
       saplingContractDetails,
       readProvider
     )
   ) {
-    this.#inMemorySpendingKey = inMemorySpendingKey;
+    this.#inMemorySpendingKey = keys.saplingSigner;
     this.#saplingId = saplingContractDetails.saplingId;
     this.#contractAddress = saplingContractDetails.contractAddress;
     this.#memoSize = saplingContractDetails.memoSize;
@@ -96,7 +102,7 @@ export class SaplingToolkit {
     let saplingTransactionViewer: SaplingTransactionViewer;
 
     if (!this.#saplingTransactionViewer) {
-      const saplingViewingKey = await this.#inMemorySpendingKey.getInMemoryViewingKey();
+      const saplingViewingKey = await this.#inMemorySpendingKey.getSaplingViewingKeyProvider();
       saplingTransactionViewer = new SaplingTransactionViewer(
         saplingViewingKey,
         this.getSaplingContractId(),
