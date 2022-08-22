@@ -52,9 +52,7 @@ export class HttpRequestFailed extends Error {
   public name = 'HttpRequestFailed';
 
   constructor(
-    public message: string,
-    public url: string,
-    public method: HttpRequestOptions['method']
+    public message: string
   ) {
     super(message);
   }
@@ -150,7 +148,7 @@ export class HttpBackend {
           url + this.serialize(query)
         );
       } else {
-        throw new HttpRequestFailed(String(err), url + this.serialize(query), method ?? 'GET');
+        throw new HttpRequestFailed(`${method} ${url + this.serialize(query)} ${String(err)}`);
       }
     }
   }
