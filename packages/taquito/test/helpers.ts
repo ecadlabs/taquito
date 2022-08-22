@@ -8,6 +8,7 @@ import {
   OperationContentsAndResultRegisterGlobalConstant,
   OperationContentsAndResultTxRollupOrigination,
   OperationContentsAndResultTxRollupSubmitBatch,
+  OperationContentsAndResultTransferTicket,
 } from '@taquito/rpc';
 
 const defaultTransferData = {
@@ -85,6 +86,21 @@ const defaultTxSubmitBatchData = {
   rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
   content: '626c6f62',
 };
+
+const defaultTransferTicketData = {
+  kind: OpKind.TRANSFER_TICKET as OpKind.TRANSFER_TICKET,
+  source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+  fee: '804',
+  gas_limit: '5009',
+  storage_limit: '130',
+  counter: '145',
+  ticket_contents: { "string": "foobar" },
+  ticket_ty: { "prim": "string" },
+  ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+  ticket_amount: '2',
+  destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+  entrypoint: 'default',
+}
 
 const defaultResult = {
   status: 'applied' as OperationResultStatusEnum,
@@ -285,5 +301,34 @@ export class TxRollupSubmitBatchOperationBuilder {
         operation_result: this.result,
       },
     };
+  }
+}
+
+export class TransferTicketOperationBuilder {
+  private result: OperationContentsAndResultTransferTicket['metadata']['operation_result'] =
+    defaultResult;
+  private data: Omit<OperationContentsAndResultTransferTicket, 'metadata'>;
+
+  constructor(
+    private _data: Partial<Omit<OperationContentsAndResultTransferTicket, 'metadata'>> = {}
+  ) {
+    this.data = { ...defaultTransferTicketData, ...this._data };
+  }
+
+  withResult(
+    result: Partial<OperationContentsAndResultTransferTicket['metadata']['operation_result']>
+  ) {
+    this.result = { ...defaultResult, ...result};
+    return this;
+  }
+
+  build(): OperationContentsAndResultTransferTicket {
+    return {
+      ...this.data,
+      metadata: {
+        balance_updates: [],
+        operation_result: this.result,
+      }
+    }
   }
 }

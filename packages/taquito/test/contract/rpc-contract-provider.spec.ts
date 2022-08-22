@@ -31,7 +31,7 @@ import {
 import { preapplyResultFrom } from './helper';
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { BigMapAbstraction } from '../../src/contract/big-map';
-import { OpKind, ParamsWithKind } from '../../src/operations/types';
+import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operations/types';
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
@@ -80,6 +80,7 @@ describe('RpcContractProvider test', () => {
     registerGlobalConstant: jest.Mock<any, any>;
     txRollupOriginate: jest.Mock<any, any>;
     txRollupSubmitBatch: jest.Mock<any, any>;
+    transferTicket: jest.Mock<any,any>;
   };
 
   const revealOp = (source: string) => ({
@@ -132,6 +133,7 @@ describe('RpcContractProvider test', () => {
       registerGlobalConstant: jest.fn(),
       txRollupOriginate: jest.fn(),
       txRollupSubmitBatch: jest.fn(),
+      transferTicket: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -1234,6 +1236,184 @@ describe('RpcContractProvider test', () => {
       done();
     });
   });
+
+  describe("transferTicket", () => {
+    it("validate that a reveal operation will be added when needed", async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue(null);
+
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { "string": "foobar" },
+        ticketTy: { "prim": "string" },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+        };
+      const result = await rpcContractProvider.transferTicket(params)
+
+      const expectedReveal = revealOp('test_pub_key_hash')
+
+      const expecteReturn = {
+        counter: "2",
+        destination: "KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg",
+        entrypoint: "default",
+        fee: "804",
+        gas_limit: "5009",
+        kind: "transfer_ticket",
+        source: "tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX",
+        storage_limit: "130",
+        ticket_amount: "2",
+        ticket_contents: {
+          string: "foobar",
+        },
+        ticket_ticketer: "KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb",
+        ticket_ty: {
+          prim: "string",
+        }
+      }
+      const actual = result.raw.opOb.contents ?? []
+      expect(actual[0]).toEqual(expectedReveal)
+      expect(actual[1]).toEqual(expecteReturn)
+      done()
+    })
+    it("validate that a reveal option wont be added when not needed", async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key');
+      mockEstimate.reveal.mockResolvedValue(undefined)
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { "string": "foobar" },
+        ticketTy: { "prim": "string" },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+        };
+      const result = await rpcContractProvider.transferTicket(params);
+      const expecteReturn = {
+        counter: "1",
+        destination: "KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg",
+        entrypoint: "default",
+        fee: "804",
+        gas_limit: "5009",
+        kind: "transfer_ticket",
+        source: "tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX",
+        storage_limit: "130",
+        ticket_amount: "2",
+        ticket_contents: {
+          string: "foobar",
+        },
+        ticket_ticketer: "KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb",
+        ticket_ty: {
+          prim: "string",
+        }
+      }
+      const actual = result.raw.opOb.contents ?? []
+
+      expect(actual[0]).toEqual(expecteReturn)
+      done()
+    })
+    it("validate that the user-specified fees will be taken into account when specified", async (done) => {
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { "string": "foobar" },
+        ticketTy: { "prim": "string" },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+        };
+      const result = await rpcContractProvider.transferTicket(params)
+      const expectedReveal = {
+        counter: 0,
+        opOb: {
+          branch: "test",
+          contents:  [
+            revealOp('test_pub_key_hash'),
+            {
+              counter: "2",
+              destination: "KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg",
+              entrypoint: "default",
+              fee: "804",
+              gas_limit: "5009",
+              kind: "transfer_ticket",
+              source: "tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX",
+              storage_limit: "130",
+              ticket_amount: "2",
+              ticket_contents: {
+                string: "foobar",
+              },
+              ticket_ticketer: "KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb",
+              ticket_ty: {
+                prim: "string",
+              },
+            },
+          ],
+          protocol: "test_proto",
+          signature: "test_sig",
+        },
+        opbytes: "test",
+      }
+      expect(result.raw).toEqual(expectedReveal)
+      done()
+    })
+    it("validate that the fees taken from the estimate will be taken when there is no user-specified fees", async (done) => {
+      const estimate = new Estimate(10000, 1000, 180, 1000);
+      mockEstimate.transferTicket.mockResolvedValue(estimate);
+
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        ticketContents: { "string": "foobar" },
+        ticketTy: { "prim": "string" },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+        };
+      const result = await rpcContractProvider.transferTicket(params)
+      const expected = {
+        counter: 0,
+        opOb: {
+          branch: "test",
+          contents:  [
+            revealOp('test_pub_key_hash'),
+            {
+              counter: "2",
+              destination: "KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg",
+              entrypoint: "default",
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              kind: "transfer_ticket",
+              source: "tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX",
+              storage_limit: estimate.storageLimit.toString(),
+              ticket_amount: "2",
+              ticket_contents: {
+                string: "foobar",
+              },
+              ticket_ticketer: "KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb",
+              ticket_ty: {
+                prim: "string",
+              },
+            },
+          ],
+          protocol: "test_proto",
+          signature: "test_sig",
+        },
+        opbytes: "test",
+      }
+      expect(result.raw).toEqual(expected)
+      done()
+    })
+  })
 
   describe('setDelegate', () => {
     it('should produce a reveal and delegation operation', async (done) => {
