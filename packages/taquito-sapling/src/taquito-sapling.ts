@@ -41,12 +41,12 @@ export { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
  * @description Class that surfaces all of the sapling capability allowing to read from a sapling state and prepare transactions
  *
  * @param keys.saplingSigner Holds the sapling spending key
- * @param keys.saplingProver Optional Allows to generate the proofs with the proving key rather than the spending key
+ * @param keys.saplingProver (Optional) Allows to generate the proofs with the proving key rather than the spending key
  * @param saplingContractDetails Contains the address of the sapling contract, the memo size, and an optional sapling id that must be defined if the sapling contract contains more than one sapling state
  * @param readProvider Allows to read data from the blockchain
- * @param packer Optional. Allows packing data. Use the `MichelCodecPacker` by default.
- * @param saplingForger Optional. Allows serializing the sapling transactions. Use the `SaplingForger` by default.
- * @param saplingTxBuilder Optional. Allows to prepare the sapling transactions. Use the `SaplingTransactionBuilder` by default.
+ * @param packer (Optional) Allows packing data. Use the `MichelCodecPacker` by default.
+ * @param saplingForger (Optional) Allows serializing the sapling transactions. Use the `SaplingForger` by default.
+ * @param saplingTxBuilder (Optional) Allows to prepare the sapling transactions. Use the `SaplingTransactionBuilder` by default.
  * @example
  * ```
  * const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
