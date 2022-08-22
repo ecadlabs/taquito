@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   let aliceInMemorySpendingKey: InMemorySpendingKey;
   let aliceInMemoryProvingKey: InMemoryProvingKey;
   let alicePaymentAddress: string;
-  const tezosAddress1 = 'tz1hDFKpVkT7jzYncaLma4vxh4Gg6JNqvdtB';
+  const tezosAddress = 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m';
   const memoSize = 8;
 
   describe(`Test producing proofs with a proving key rather than a spending key: ${rpc}`, () => {
@@ -198,10 +198,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         { contractAddress: saplingContract.address, memoSize }, 
         new RpcReadAdapter(Tezos.rpc)
       );
-      const tezosInitialBalance = await Tezos.tz.getBalance(tezosAddress1);
+      const tezosInitialBalance = await Tezos.tz.getBalance(tezosAddress);
 
       const unshieldedTx = await aliceSaplingToolkit.prepareUnshieldedTransaction({
-        to: tezosAddress1,
+        to: tezosAddress,
         amount
       })
 
@@ -213,7 +213,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
-      const tezosUpdatedBalance = await Tezos.tz.getBalance(tezosAddress1);
+      const tezosUpdatedBalance = await Tezos.tz.getBalance(tezosAddress);
       expect(tezosUpdatedBalance).toEqual(tezosInitialBalance.plus(new BigNumber(1000000)));
 
       done();
