@@ -1858,8 +1858,8 @@ describe('RpcContractProvider test', () => {
     });
   });
 
-  describe('Testing Bug #1762 mapTypecheckError', () => {
-    it('should have a defined response and storage of 3 should not throw an error', async (done) => {
+  describe('Storage', () => {
+    it('should have defined storage with TicketTokens without errors (#1762)', async (done) => {
       mockRpcClient.getEntrypoints.mockResolvedValue({
         entrypoints: {},
       })
