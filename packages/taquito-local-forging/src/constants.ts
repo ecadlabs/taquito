@@ -183,7 +183,7 @@ export const opMapping: { [key: string]: string } = {
   '81': 'bls12_381_g2',
   '82': 'bls12_381_fr',
   '83': 'sapling_state',
-  '84': 'sapling_transaction',
+  '84': 'sapling_transaction_deprecated',
   '85': 'SAPLING_EMPTY_STATE',
   '86': 'SAPLING_VERIFY_UPDATE',
   '87': 'ticket',
@@ -199,6 +199,9 @@ export const opMapping: { [key: string]: string } = {
   '91': 'view',
   '92': 'constant',
   '93': 'SUB_MUTEZ',
+  '94': 'tx_rollup_l2_address',
+  '95': 'MIN_BLOCK_TIME',
+  '96': 'sapling_transaction',
 };
 
 export const opMappingReverse = (() => {

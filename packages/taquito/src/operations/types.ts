@@ -17,7 +17,8 @@ export type ParamsWithKind =
   | withKind<ActivationParams, OpKind.ACTIVATION>
   | withKind<RegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>
   | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>
-  | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>;
+  | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>
+  | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
 
@@ -52,7 +53,8 @@ export type RPCOpWithFee =
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
   | RPCTxRollupOriginationOperation
-  | RPCTxRollupBatchOperation;
+  | RPCTxRollupBatchOperation
+  | RPCTransferTicketOperation;
 export type RPCOpWithSource =
   | RPCTransferOperation
   | RPCOriginationOperation
@@ -60,7 +62,8 @@ export type RPCOpWithSource =
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
   | RPCTxRollupOriginationOperation
-  | RPCTxRollupBatchOperation;
+  | RPCTxRollupBatchOperation
+  | RPCTransferTicketOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
@@ -74,6 +77,7 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'register_global_constant',
       'tx_rollup_origination',
       'tx_rollup_submit_batch',
+      'transfer_ticket',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -89,6 +93,7 @@ export const isOpRequireReveal = <T extends { kind: OpKind }>(
       'register_global_constant',
       'tx_rollup_origination',
       'tx_rollup_submit_batch',
+      'transfer_ticket',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -346,6 +351,39 @@ export interface RPCTxRollupBatchOperation {
 }
 
 /**
+ * @description Parameters for the transferTicket contract provider
+ */
+export interface TransferTicketParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  ticketContents: MichelsonV1Expression;
+  ticketTy: MichelsonV1Expression;
+  ticketTicketer: string;
+  ticketAmount: number;
+  destination: string;
+  entrypoint: string;
+}
+
+/**
+ * @description Rpc transfer-ticket operation
+ */
+export interface RPCTransferTicketOperation {
+  kind: OpKind.TRANSFER_TICKET;
+  source?: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  ticket_contents: MichelsonV1Expression;
+  ticket_ty: MichelsonV1Expression;
+  ticket_ticketer: string;
+  ticket_amount: number;
+  destination: string;
+  entrypoint: string;
+}
+
+/**
  * @description Parameters for the `txRollupSubmitBatch` method
  */
 export interface TxRollupBatchParams {
@@ -365,7 +403,8 @@ export type RPCOperation =
   | RPCActivateOperation
   | RPCRegisterGlobalConstantOperation
   | RPCTxRollupOriginationOperation
-  | RPCTxRollupBatchOperation;
+  | RPCTxRollupBatchOperation
+  | RPCTransferTicketOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];
