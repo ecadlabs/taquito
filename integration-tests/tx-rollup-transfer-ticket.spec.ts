@@ -26,16 +26,16 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
         destination: "tz1",
         entrypoint: "default"
       }
-      const estimate = Tezos.estimate.transferTicket(estimateParams)
+      const estimate = await Tezos.estimate.transferTicket(estimateParams)
 
       const params: TransferTicketParams = {
         ...estimateParams,
-        fee: (await estimate).burnFeeMutez,
-        gasLimit: (await estimate).gasLimit,
-        storageLimit: (await estimate).storageLimit
+        fee: estimate.burnFeeMutez,
+        gasLimit: estimate.gasLimit,
+        storageLimit: estimate.storageLimit
       }
 
-      Tezos.contract.transferTicket(params)
+      const result = await Tezos.contract.transferTicket(params)
     })
   })
 })
