@@ -144,7 +144,7 @@ export const multipleInternalOrigination = () => {
               change: '1420',
             },
           ],
-          operation_result: { status: 'applied', consumed_gas: '10000' },
+          operation_result: { status: 'applied', consumed_milligas: '10000000' },
         },
       },
       {
@@ -236,7 +236,7 @@ export const multipleInternalOrigination = () => {
           operation_result: {
             status: 'applied',
             storage: { bytes: '012ffebbf1560632ca767bc960ccdb84669d284c2c' },
-            consumed_gas: '17707',
+            consumed_milligas: '17707000',
             storage_size: '232',
           },
           internal_operation_results: [
@@ -287,7 +287,7 @@ export const multipleInternalOrigination = () => {
                   },
                 ],
                 originated_contracts: ['KT1D1AoSDxnmGk8UWFW7DcT9JP1VpLqUNh4F'],
-                consumed_gas: '11560',
+                consumed_milligas: '11560000',
                 storage_size: '60',
                 paid_storage_size_diff: '60',
               },
@@ -339,7 +339,7 @@ export const multipleInternalOrigination = () => {
                   },
                 ],
                 originated_contracts: ['KT1A5V7HHF7Z7QPn5n9dg4EjzTRJ4mnE21zE'],
-                consumed_gas: '11561',
+                consumed_milligas: '11561000',
                 storage_size: '60',
                 paid_storage_size_diff: '60',
               },
@@ -445,7 +445,7 @@ export const multipleInternalOriginationNoReveal = () => {
           operation_result: {
             status: 'applied',
             storage: { bytes: '012ffebbf1560632ca767bc960ccdb84669d284c2c' },
-            consumed_gas: '17707',
+            consumed_milligas: '17707000',
             storage_size: '232',
           },
           internal_operation_results: [
@@ -496,7 +496,7 @@ export const multipleInternalOriginationNoReveal = () => {
                   },
                 ],
                 originated_contracts: ['KT1D1AoSDxnmGk8UWFW7DcT9JP1VpLqUNh4F'],
-                consumed_gas: '11560',
+                consumed_milligas: '11560000',
                 storage_size: '60',
                 paid_storage_size_diff: '60',
               },
@@ -548,7 +548,7 @@ export const multipleInternalOriginationNoReveal = () => {
                   },
                 ],
                 originated_contracts: ['KT1A5V7HHF7Z7QPn5n9dg4EjzTRJ4mnE21zE'],
-                consumed_gas: '11561',
+                consumed_milligas: '11561000',
                 storage_size: '60',
                 paid_storage_size_diff: '60',
               },
@@ -584,7 +584,7 @@ export const multipleInternalTransfer = () => {
               change: '1420',
             },
           ],
-          operation_result: { status: 'applied', consumed_gas: '10000' },
+          operation_result: { status: 'applied', consumed_milligas: '10000000' },
         },
       },
       {
@@ -626,7 +626,7 @@ export const multipleInternalTransfer = () => {
           operation_result: {
             status: 'applied',
             storage: { bytes: '012ffebbf1560632ca767bc960ccdb84669d284c2c' },
-            consumed_gas: '16361',
+            consumed_milligas: '16361000',
             storage_size: '232',
           },
           internal_operation_results: [
@@ -655,7 +655,7 @@ export const multipleInternalTransfer = () => {
                     change: '-257000',
                   },
                 ],
-                consumed_gas: '10207',
+                consumed_milligas: '10207000',
                 allocated_destination_contract: true,
               },
             },
@@ -684,7 +684,7 @@ export const multipleInternalTransfer = () => {
                     change: '-257000',
                   },
                 ],
-                consumed_gas: '10207',
+                consumed_milligas: '10207000',
                 allocated_destination_contract: true,
               },
             },
@@ -719,7 +719,7 @@ export const internalTransfer = () => {
               change: '1420',
             },
           ],
-          operation_result: { status: 'applied', consumed_gas: '10000' },
+          operation_result: { status: 'applied', consumed_milligas: '10000000' },
         },
       },
       {
@@ -752,7 +752,7 @@ export const internalTransfer = () => {
           operation_result: {
             status: 'applied',
             storage: { bytes: '012ffebbf1560632ca767bc960ccdb84669d284c2c' },
-            consumed_gas: '15953',
+            consumed_milligas: '15953000',
             storage_size: '232',
           },
           internal_operation_results: [
@@ -776,7 +776,7 @@ export const internalTransfer = () => {
                     change: '50',
                   },
                 ],
-                consumed_gas: '10207',
+                consumed_milligas: '10207000',
               },
             },
           ],
@@ -810,7 +810,7 @@ export const delegate = () => {
               change: '1420',
             },
           ],
-          operation_result: { status: 'applied', consumed_gas: '10000' },
+          operation_result: { status: 'applied', consumed_milligas: '10000000' },
         },
       },
       {
@@ -823,7 +823,7 @@ export const delegate = () => {
         delegate: 'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
         metadata: {
           balance_updates: [],
-          operation_result: { status: 'applied', consumed_gas: '10000' },
+          operation_result: { status: 'applied', consumed_milligas: '10000000' },
         },
       },
     ],
@@ -854,7 +854,7 @@ export const origination = () => {
               change: '1420',
             },
           ],
-          operation_result: { status: 'applied', consumed_gas: '10000' },
+          operation_result: { status: 'applied', consumed_milligas: '10000000' },
         },
       },
       {
@@ -1006,7 +1006,7 @@ export const origination = () => {
               },
             ],
             originated_contracts: ['KT1SHzXbcUAiCSUn5QYca872gYcDACr6AuuC'],
-            consumed_gas: '17832',
+            consumed_milligas: '17832000',
             storage_size: '314',
             paid_storage_size_diff: '314',
           },
@@ -1040,7 +1040,7 @@ export const transferWithoutAllocation = () => {
               change: '1420',
             },
           ],
-          operation_result: { status: 'applied', consumed_gas: '10000' },
+          operation_result: { status: 'applied', consumed_milligas: '10000000' },
         },
       },
       {
@@ -1068,7 +1068,7 @@ export const transferWithoutAllocation = () => {
                 change: '1900000',
               },
             ],
-            consumed_gas: '10207',
+            consumed_milligas: '10207000',
           },
         },
       },
@@ -1100,7 +1100,7 @@ export const transferWithAllocation = () => {
               change: '1420',
             },
           ],
-          operation_result: { status: 'applied', consumed_gas: '10000' },
+          operation_result: { status: 'applied', consumed_milligas: '10000000' },
         },
       },
       {
@@ -1133,7 +1133,7 @@ export const transferWithAllocation = () => {
                 change: '-257000',
               },
             ],
-            consumed_gas: '10207',
+            consumed_milligas: '10207000',
             allocated_destination_contract: true,
           },
         },
@@ -1208,7 +1208,7 @@ export const registerGlobalConstantNoReveal = {
               origin: 'block',
             },
           ],
-          consumed_gas: '1230',
+          consumed_milligas: '1230000',
           storage_size: '73',
           global_address: 'exprui2KzJsukZATaHBgRCM3vZEZtwYMW3rdJwHm5pCX3KeXVC1Koc',
         },
@@ -1321,7 +1321,6 @@ export const txRollupOriginateNoReveal = {
               origin: 'block',
             },
           ],
-          consumed_gas: '1421',
           consumed_milligas: '1420108',
           originated_rollup: 'txr1WAEQXaXsM1n4R77G5BDfr8pwiFS5SEbBE',
         },
@@ -1443,7 +1442,6 @@ export const txRollupSubmitBatchNoReveal = {
         operation_result: {
           status: 'applied',
           balance_updates: [],
-          consumed_gas: '2769',
           consumed_milligas: '2768514',
           paid_storage_size_diff: '0',
         },
@@ -1525,7 +1523,7 @@ export const txRollupSubmitBatchWithReveal = {
 };
 
 export const TransferTicketNoReveal = {
-  contents:  [
+  contents: [
     {
       kind: 'transfer_ticket',
       source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
@@ -1533,8 +1531,8 @@ export const TransferTicketNoReveal = {
       gas_limit: '5009',
       storage_limit: '130',
       counter: '145',
-      ticket_contents: { "string": "foobar" },
-      ticket_ty: { "prim": "string" },
+      ticket_contents: { string: 'foobar' },
+      ticket_ty: { prim: 'string' },
       ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
       ticket_amount: '2',
       destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
@@ -1546,14 +1544,13 @@ export const TransferTicketNoReveal = {
             contract: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
             change: '-804',
             origin: 'block',
-
           },
           {
             kind: 'accumulator',
             category: 'block fees',
             change: '804',
             origin: 'block',
-          }
+          },
         ],
         operation_result: {
           status: 'applied',
@@ -1569,18 +1566,19 @@ export const TransferTicketNoReveal = {
               category: 'storage fees',
               change: '16500',
               origin: 'block',
-            }
+            },
           ],
           consumed_milligas: '2122881',
           paid_storage_size_diff: '66',
-        }
+        },
       },
-    }
+    },
   ],
-  signature: 'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG'
-}
+  signature:
+    'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG',
+};
 export const TransferTicketWithReveal = {
-  contents:  [
+  contents: [
     {
       kind: 'reveal',
       source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
@@ -1600,8 +1598,8 @@ export const TransferTicketWithReveal = {
       gas_limit: '5009',
       storage_limit: '130',
       counter: '145',
-      ticket_contents: { "string": "foobar" },
-      ticket_ty: { "prim": "string" },
+      ticket_contents: { string: 'foobar' },
+      ticket_ty: { prim: 'string' },
       ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
       ticket_amount: '2',
       destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
@@ -1613,14 +1611,13 @@ export const TransferTicketWithReveal = {
             contract: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
             change: '-804',
             origin: 'block',
-
           },
           {
             kind: 'accumulator',
             category: 'block fees',
             change: '804',
             origin: 'block',
-          }
+          },
         ],
         operation_result: {
           status: 'applied',
@@ -1636,13 +1633,14 @@ export const TransferTicketWithReveal = {
               category: 'storage fees',
               change: '16500',
               origin: 'block',
-            }
+            },
           ],
           consumed_milligas: '2122881',
           paid_storage_size_diff: '66',
-        }
+        },
       },
-    }
+    },
   ],
-  signature: 'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG'
-}
+  signature:
+    'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG',
+};

@@ -202,6 +202,7 @@ export const opMapping: { [key: string]: string } = {
   '94': 'tx_rollup_l2_address',
   '95': 'MIN_BLOCK_TIME',
   '96': 'sapling_transaction',
+  '97': 'EMIT',
 };
 
 export const opMappingReverse = (() => {
