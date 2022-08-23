@@ -1,6 +1,6 @@
-import { LocalForger, ProtocolsHash } from '../src/taquito-local-forging';
+import { LocalForger } from '../src/taquito-local-forging';
 import { ticketCode3, ticketStorage3 } from './data/code_with_ticket';
-import { commonCases, jakartaCases } from './allTestsCases';
+import { commonCases } from './allTestsCases';
 import {
   InvalidOperationSchemaError,
   InvalidBlockHashError,
@@ -13,25 +13,6 @@ describe('Forge and parse operations default protocol', () => {
   const localForger = new LocalForger();
   commonCases.forEach(({ name, operation, expected }) => {
     test(`Common test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-});
-
-describe('Forge and parse operations jakarta', () => {
-  const localForger = new LocalForger(ProtocolsHash.ProtoALpha);
-  commonCases.forEach(({ name, operation, expected }) => {
-    test(`Common test: ${name}`, async (done) => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-      done();
-    });
-  });
-
-  jakartaCases.forEach(({ name, operation, expected }) => {
-    test(`Jakarta test: ${name}`, async (done) => {
       const result = await localForger.forge(operation);
       expect(await localForger.parse(result)).toEqual(expected || operation);
       done();

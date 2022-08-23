@@ -20,6 +20,7 @@ import {
   RegisterGlobalConstantParams,
   TxRollupOriginateParams,
   TxRollupBatchParams,
+  TransferTicketParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -32,12 +33,15 @@ import {
   createRegisterGlobalConstantOperation,
   createTxRollupOriginationOperation,
   createTxRollupBatchOperation,
+  createTransferTicketOperation,
 } from '../contract/prepare';
 import {
   validateAddress,
   InvalidAddressError,
   ValidationResult,
   InvalidOperationKindError,
+  validateContractAddress,
+  InvalidContractAddressError,
 } from '@taquito/utils';
 import { RevealEstimateError } from './error';
 
@@ -294,6 +298,41 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
   /**
    *
+   * @description Estimate gasLimit, storageLimit and fees for a transferTicket operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param TransferTicketParams operation parameter
+   */
+  async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
+    if (validateContractAddress(rest.destination) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(rest.destination);
+    }
+    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source);
+    }
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createTransferTicketOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS)
+    })
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    )
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
    * @description Estimate gasLimit, storageLimit and fees for a delegate operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
@@ -399,6 +438,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             await createTxRollupBatchOperation({
               ...param,
               ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
+        case OpKind.TRANSFER_TICKET:
+          operations.push(
+            await createTransferTicketOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS)
             })
           );
           break;
