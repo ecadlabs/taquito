@@ -14,6 +14,10 @@ The spending key is used to spend tokens. It must be handled securely to prevent
 
 Taquito offers support for encrypted/unencrypted spending keys and mnemonics. Refer to the following link for more information: [InMemorySpendingKey](./sapling_in_memory_spending_key.md)
 
+**Proving key**
+
+The proving key can be used to generate proof without allowing tokens to be spent. Zero-knowledge proofs can be created with either the spending or the proving key. In cases where the device holding the spending key is computationally or memory-limited, such as a hardware wallet, proofs can be produced on a separate device using the proving key.
+
 **Viewing key**
 
 The viewing key is derived from the spending key. This key can be used to view all incoming and outgoing transactions. It must be handled securely to prevent a loss of privacy, as anyone accessing it can see the transaction history and the balance.
@@ -32,7 +36,9 @@ Here is an example on how to retrieve addresses: [InMemoryViewingKey](./sapling_
 The `@taquito/sapling` package provides a `SaplingToolkit` class that surfaces all of the Sapling capabilities, allowing it to read from a Sapling state and prepare transactions. 
 
 The constructor of the `SaplingToolkit` takes the following properties:
-- an instance of `InMemorySpendingKey` as the spending key is needed to prepare and sign transactions that spend tokens
+- the first parameter is an object containing:
+  - a `saplingSigner` property, an instance of `InMemorySpendingKey` as the spending key is needed to prepare and sign transactions that spend tokens.
+  - an optional `saplingProver` property which can be an instance of `InMemoryProvingKey` if you want to generate the proofs from a proving key rather than the spending key.
 - the second parameter is an object containing:
   - the address of the Sapling contract (string)
   - the size of the memo of the corresponding Sapling contract (number)
@@ -54,7 +60,7 @@ const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tE
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
 
 const saplingToolkit = new SaplingToolkit(
-    inMemorySpendingKey, 
+    { saplingSigner: inMemorySpendingKey }, 
     { contractAddress: saplingContract.address, memoSize: 8 }, 
     readProvider
 )
@@ -83,7 +89,7 @@ const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 const readProvider = new RpcReadAdapter(new RpcClient('https://jakartanet.ecadinfra.com/'));
 
 const saplingToolkit = new SaplingToolkit(
-    inMemorySpendingKey, 
+    { saplingSigner: inMemorySpendingKey }, 
     { contractAddress: 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9', memoSize: 8 }, 
     readProvider
 );
@@ -116,7 +122,7 @@ const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 const readProvider = new RpcReadAdapter(new RpcClient('https://jakartanet.ecadinfra.com/'));
 
 const saplingToolkit = new SaplingToolkit(
-    inMemorySpendingKey, 
+    { saplingSigner: inMemorySpendingKey }, 
     { contractAddress: 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9', memoSize: 8 }, 
     readProvider
 );
@@ -161,12 +167,12 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
 const saplingToolkit = new SaplingToolkit(
-    inMemorySpendingKey, 
+    { saplingSigner: inMemorySpendingKey }, 
     { contractAddress: saplingContractAddress, memoSize: 8 }, 
     readProvider
 );
 
-inMemorySpendingKey.getInMemoryViewingKey()
+inMemorySpendingKey.getSaplingViewingKeyProvider()
   .then((inMemoryViewingKey) => {
     println(`Fetching a payment address for Alice (zet)...`);
     return inMemoryViewingKey.getAddress();
@@ -233,7 +239,7 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
 const saplingToolkit = new SaplingToolkit(
-    inMemorySpendingKey, 
+    { saplingSigner: inMemorySpendingKey }, 
     { contractAddress: saplingContractAddress, memoSize: 8 }, 
     readProvider
 );
@@ -291,7 +297,7 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
 const saplingToolkit = new SaplingToolkit(
-    inMemorySpendingKey, 
+    { saplingSigner: inMemorySpendingKey }, 
     { contractAddress: saplingContractAddress, memoSize: 8 }, 
     readProvider
 );
@@ -337,7 +343,7 @@ import { RpcClient } from '@taquito/rpc';
 
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
-// Note: you need to set up your signer on the TezosToolkit as usual
+
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
 const inMemoryViewingKey = new InMemoryViewingKey(

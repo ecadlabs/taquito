@@ -1,12 +1,6 @@
 import * as sapling from '@airgap/sapling-wasm';
 import { randomBytes } from '@stablelib/random';
-import {
-  ParametersOutputProof,
-  ParametersSpendProof,
-  ParametersSpendSig,
-  SaplingSpendDescription,
-  SaplingTransactionInput,
-} from './types';
+import { ParametersOutputProof } from './types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const saplingOutputParams = require('../saplingOutputParams');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -45,28 +39,6 @@ export class SaplingWrapper {
     };
   }
 
-  async prepareSpendDescription(
-    parametersSpendProof: ParametersSpendProof
-  ): Promise<Omit<SaplingSpendDescription, 'signature'>> {
-    const spendDescription = await sapling.prepareSpendDescriptionWithSpendingKey(
-      parametersSpendProof.saplingContext,
-      parametersSpendProof.spendingKey,
-      parametersSpendProof.address,
-      parametersSpendProof.randomCommitmentTrapdoor,
-      parametersSpendProof.publicKeyReRandomization,
-      parametersSpendProof.amount,
-      parametersSpendProof.root,
-      parametersSpendProof.witness
-    );
-    return {
-      commitmentValue: spendDescription.cv,
-      nullifier: spendDescription.nf,
-      randomizedPublicKey: spendDescription.rk,
-      rtAnchor: spendDescription.rt,
-      proof: spendDescription.proof,
-    };
-  }
-
   async getDiversifiedFromRawPaymentAddress(decodedDestination: Uint8Array) {
     return sapling.getDiversifiedFromRawPaymentAddress(decodedDestination);
   }
@@ -75,40 +47,12 @@ export class SaplingWrapper {
     return sapling.deriveEphemeralPublicKey(diversifier, esk);
   }
 
-  async signSpendDescription(
-    parametersSpendSig: ParametersSpendSig
-  ): Promise<SaplingTransactionInput> {
-    const signedSpendDescription = await sapling.signSpendDescription(
-      {
-        cv: parametersSpendSig.unsignedSpendDescription.commitmentValue,
-        rt: parametersSpendSig.unsignedSpendDescription.rtAnchor,
-        nf: parametersSpendSig.unsignedSpendDescription.nullifier,
-        rk: parametersSpendSig.unsignedSpendDescription.randomizedPublicKey,
-        proof: parametersSpendSig.unsignedSpendDescription.proof,
-      },
-      parametersSpendSig.spendingKey,
-      parametersSpendSig.publicKeyReRandomization,
-      parametersSpendSig.hash
-    );
-    return {
-      commitmentValue: signedSpendDescription.cv,
-      nullifier: signedSpendDescription.nf,
-      randomizedPublicKey: signedSpendDescription.rk,
-      proof: signedSpendDescription.proof,
-      signature: signedSpendDescription.spendAuthSig,
-    };
-  }
-
   async getPkdFromRawPaymentAddress(destination: Uint8Array) {
     return sapling.getPkdFromRawPaymentAddress(destination);
   }
 
   async keyAgreement(p: Buffer, sk: Buffer) {
     return sapling.keyAgreement(p, sk);
-  }
-
-  async getPaymentAddressFromViewingKey(vk: Buffer) {
-    return (await sapling.getPaymentAddressFromViewingKey(vk)).raw;
   }
 
   async createBindingSignature(

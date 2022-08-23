@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MichelCodecPacker } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 import { SaplingForger } from '../src/sapling-forger/sapling-forger';
@@ -62,7 +63,7 @@ describe('SaplingToolkit', () => {
     });
 
     saplingToolkit = new SaplingToolkit(
-      inMemorySpendingKey,
+      { saplingSigner: inMemorySpendingKey },
       {
         contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
         saplingId: '0',
@@ -78,7 +79,7 @@ describe('SaplingToolkit', () => {
   it('should be instantiable', async (done) => {
     expect(
       new SaplingToolkit(
-        inMemorySpendingKey,
+        { saplingSigner: inMemorySpendingKey },
         {
           contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
           saplingId: '0',
@@ -102,7 +103,7 @@ describe('SaplingToolkit', () => {
 
   it('should return an instance of SaplingTransactionViewer based on contract address', async (done) => {
     const saplingToolkit2 = new SaplingToolkit(
-      inMemorySpendingKey,
+      { saplingSigner: inMemorySpendingKey },
       {
         contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
         memoSize: 8,
@@ -181,7 +182,7 @@ describe('SaplingToolkit', () => {
 
   it('Should prepare a valid shielded transaction based on contractAddress', async (done) => {
     const saplingToolkit2 = new SaplingToolkit(
-      inMemorySpendingKey,
+      { saplingSigner: inMemorySpendingKey },
       {
         contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
         memoSize: 8,
@@ -300,7 +301,7 @@ describe('SaplingToolkit', () => {
             '8b4c7f168dc6775f1e74fff11b977261451655eb586d499487d95d56e750f4576f2ca3d28e60250dddbdc8e7442348feab1ad28b05a34861ec537595e047841d1181f90839bc5a13e3fbc7761e7daf4a2837893854f9d90a0368c9e616b20e5f17e78a9a8a8e0edf6325c78610e51315c14a36f2b2ec74ade40ab26819d98fa9fbd01bc7749c83dc76bd6e450693b1ffa91aa2dae3cb98cd6642e90b0b600ff69dbb44b9fbbfde8e31fffce88b05da332718e10f1b08c5fd53e826202b298d22',
             'hex'
           ),
-          randomizedPublicKey: Buffer.from(
+          publicKeyReRandomization: Buffer.from(
             'a2a5df5089012f50daaf9d5a1e37c9d6fa07b136c33c799dbfb685ba9632ba39',
             'hex'
           ),
@@ -375,7 +376,7 @@ describe('SaplingToolkit', () => {
             '95a16310de04873148debfcf1b0c673f704646d1dc374d60dea4eebfef2bf6f8bec192f5159a79a06e1d482af2466536abb424b8f261325606040a91e828b4f2fe1d1a6f87dceb65e0adfe5f0c1ca9a1f2548a9c53fe95b04f1523233e8a215f0178ba36283f0729421c8d422a047961b343ec57ecc54f212bc74e33582258da748f48910919a1fe33fcedfd6a3f1ffcab0ca7f8f5133c02ee62264e359f30f649c9ef74512aa768f822ecbfa083e841003e8d705cccf0e776f4a9c7ca27ebb7',
             'hex'
           ),
-          randomizedPublicKey: Buffer.from(
+          publicKeyReRandomization: Buffer.from(
             'e262c46c3371de572b54fbd37d578df69cf9f299bea2d7ee94fc0435603559bb',
             'hex'
           ),
@@ -450,7 +451,7 @@ describe('SaplingToolkit', () => {
             '832f43780d521fec8c39d7dc19ddc33ec1be89e357aece1a9c6414f352eeb79b920b66e373fb869b16acad8ff52ea4858d701f2bf0a2b0e6ee2ef29b54191a32c951c7b66e24f9ebb680c6d69a7098ecc892623f8c2d99bb5ee91b7225268c6e0e02bd671a0669770aca4b905aa33a3139cbb62e92a5a57ef4d11251b7ba09980e3e7ce384366d366296fc9e67581edaa638fe89c61ad92350a7141266533e73966c6c0760870c357f1a5227bf10e04d12e362d23d1d90ce3d6320ffabf991d2',
             'hex'
           ),
-          randomizedPublicKey: Buffer.from(
+          publicKeyReRandomization: Buffer.from(
             '9122255f466c87a4f33806b34ee182fc984f1016b577fe0264d2121daf8514af',
             'hex'
           ),
@@ -551,7 +552,7 @@ describe('SaplingToolkit', () => {
             '87201838d863e025e9f51ed5a93c633d87ab07d4b24661a66f8cb56e3ab890244c063f4c371a40297f79f903e014f68991a1341b33129a6a5058ea6babd12df993e6e5e9a43f284b1c6df95b1764648c69604ae09e1b3170e71d395097d6739311b942cecde7c95ff25f3cf5a35b0ba8e794cc4351d7bdb8c3b59412a8daa57ab24966cf572c60e3082bd0edcd54ce79ae7f54bb1502bad403e882f53a060d12baacd1bf08ef4f9a641a6c105cfb8c199c8a56186c6d5e2277b9f0a6dae67cf6',
             'hex'
           ),
-          randomizedPublicKey: Buffer.from(
+          publicKeyReRandomization: Buffer.from(
             '4e5013ab2f07f645fb098f21845da78b389328dd0e6554256c9dec0ac74da913',
             'hex'
           ),

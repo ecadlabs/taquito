@@ -23,9 +23,11 @@ import { convertValueToBigNumber } from '../sapling-tx-viewer/helpers';
 import { SaplingState } from '../sapling-state/sapling-state';
 import { SaplingWrapper } from '../sapling-module-wrapper';
 import { InMemorySpendingKey } from '../sapling-keys/in-memory-spending-key';
+import { InMemoryProvingKey } from '../sapling-keys/in-memory-proving-key';
 
 export class SaplingTransactionBuilder {
   #inMemorySpendingKey: InMemorySpendingKey;
+  #inMemoryProvingKey: InMemoryProvingKey | undefined;
   #saplingForger: SaplingForger;
   #contractAddress: string;
   #saplingId: string | undefined;
@@ -36,7 +38,10 @@ export class SaplingTransactionBuilder {
   #saplingState: SaplingState;
 
   constructor(
-    inMemorySpendingKey: InMemorySpendingKey,
+    keys: {
+      saplingSigner: InMemorySpendingKey;
+      saplingProver?: InMemoryProvingKey;
+    },
     saplingForger: SaplingForger,
     saplingContractDetails: SaplingContractDetails,
     readProvider: TzReadProvider,
@@ -45,7 +50,8 @@ export class SaplingTransactionBuilder {
     this.#saplingForger = saplingForger;
     this.#contractAddress = saplingContractDetails.contractAddress;
     this.#memoSize = saplingContractDetails.memoSize;
-    this.#inMemorySpendingKey = inMemorySpendingKey;
+    this.#inMemorySpendingKey = keys.saplingSigner;
+    this.#inMemoryProvingKey = keys.saplingProver;
     this.#saplingState = new SaplingState(32);
     this.#saplingId = saplingContractDetails.saplingId;
     this.#saplingWrapper = saplingWrapper;
@@ -104,10 +110,8 @@ export class SaplingTransactionBuilder {
     chosenInputs: ChosenSpendableInputs
   ) {
     const randomCommitmentTrapdoor = await this.#saplingWrapper.randR();
-    const viewingKey = (
-      await this.#inMemorySpendingKey.getInMemoryViewingKey()
-    ).getFullViewingKey();
-    const outgoingViewingKey = await this.#saplingWrapper.getOutgoingViewingKey(viewingKey);
+    const saplingViewer = await this.#inMemorySpendingKey.getSaplingViewingKeyProvider();
+    const outgoingViewingKey = await saplingViewer.getOutgoingViewingKey();
 
     const { signature, balance, inputs, outputs } = await this.#saplingWrapper.withProvingContext(
       async (saplingContext: number) => {
@@ -136,13 +140,12 @@ export class SaplingTransactionBuilder {
         }
 
         if (chosenInputs.sumSelectedInputs.isGreaterThan(sumAmountOutput)) {
-          const payBackAddress = await this.#saplingWrapper.getPaymentAddressFromViewingKey(
-            viewingKey
-          );
+          const payBackAddress = (await saplingViewer.getAddress()).address;
+
           const { payBackOutput, payBackAmount } = await this.createPaybackOutput(
             {
               saplingContext,
-              address: payBackAddress,
+              address: b58cdecode(payBackAddress, prefix[Prefix.ZET1]),
               amount: txTotalAmount.toString(),
               memo: DEFAULT_MEMO,
               randomCommitmentTrapdoor: randomCommitmentTrapdoor,
@@ -259,23 +262,31 @@ export class SaplingTransactionBuilder {
         new BigNumber(inputsToSpend[i].position)
       );
 
-      const unsignedSpendDescription = await this.#saplingWrapper.prepareSpendDescription({
-        saplingContext,
-        spendingKey: b58cdecode(this.#inMemorySpendingKey.getSpendingKey(), prefix[Prefix.SASK]),
-        address: inputsToSpend[i].paymentAddress,
-        randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
-        publicKeyReRandomization,
-        amount,
-        root: stateDiff.root,
-        witness,
-      });
+      const unsignedSpendDescription = this.#inMemoryProvingKey
+        ? await this.#inMemoryProvingKey.prepareSpendDescription({
+            saplingContext,
+            address: inputsToSpend[i].paymentAddress,
+            randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
+            publicKeyReRandomization,
+            amount,
+            root: stateDiff.root,
+            witness,
+          })
+        : await this.#inMemorySpendingKey.prepareSpendDescription({
+            saplingContext,
+            address: inputsToSpend[i].paymentAddress,
+            randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
+            publicKeyReRandomization,
+            amount,
+            root: stateDiff.root,
+            witness,
+          });
 
       const unsignedSpendDescriptionBytes =
         this.#saplingForger.forgeUnsignedTxInput(unsignedSpendDescription);
       const hash = blake.blake2b(unsignedSpendDescriptionBytes, await this.getAntiReplay(), 32);
-      const spendDescription = await this.#saplingWrapper.signSpendDescription({
-        spendingKey: b58cdecode(this.#inMemorySpendingKey.getSpendingKey(), prefix[Prefix.SASK]),
-        publicKeyReRandomization: publicKeyReRandomization,
+      const spendDescription = await this.#inMemorySpendingKey.signSpendDescription({
+        publicKeyReRandomization,
         unsignedSpendDescription,
         hash,
       });

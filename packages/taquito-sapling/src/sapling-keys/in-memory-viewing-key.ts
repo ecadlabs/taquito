@@ -24,7 +24,7 @@ export class InMemoryViewingKey {
    */
   static async fromSpendingKey(spendingKey: string, password?: string) {
     const inMemorySpendingkey = new InMemorySpendingKey(spendingKey, password);
-    return inMemorySpendingkey.getInMemoryViewingKey();
+    return inMemorySpendingkey.getSaplingViewingKeyProvider();
   }
 
   /**

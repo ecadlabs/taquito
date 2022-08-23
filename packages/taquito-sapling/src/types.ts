@@ -39,7 +39,7 @@ export interface Ciphertext {
 export interface SaplingTransactionInput {
   commitmentValue: Buffer;
   nullifier: Buffer;
-  randomizedPublicKey: Buffer;
+  publicKeyReRandomization: Buffer;
   proof: Buffer;
   signature: Buffer;
 }
@@ -65,7 +65,6 @@ export type ParametersUnshieldedTransaction = Omit<ParametersSaplingTransaction,
 
 export interface ParametersSpendProof {
   saplingContext: number;
-  spendingKey: Uint8Array;
   address: Uint8Array;
   randomCommitmentTrapdoor: Uint8Array;
   publicKeyReRandomization: Buffer;
@@ -75,7 +74,6 @@ export interface ParametersSpendProof {
 }
 
 export interface ParametersSpendSig {
-  spendingKey: Uint8Array;
   publicKeyReRandomization: Buffer;
   unsignedSpendDescription: Omit<SaplingSpendDescription, 'signature'>;
   hash: Uint8Array;

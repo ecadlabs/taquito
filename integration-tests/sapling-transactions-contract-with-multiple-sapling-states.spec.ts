@@ -47,9 +47,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       // When a contract has multiple sapling states, the `saplingId` parameter in the constructor of the `SaplingToolkit` must be defined
       // The `saplingId` parameter indicates which sapling pool we want to interact with
-      const aliceSaplingToolkitLeft = new SaplingToolkit(aliceInmemorySpendingKey, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdLeft }, new RpcReadAdapter(Tezos.rpc));
-      const aliceSaplingToolkitRight = new SaplingToolkit(aliceInmemorySpendingKey, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdRight }, new RpcReadAdapter(Tezos.rpc));
-      const aliceInMemoryViewingKey = await aliceInmemorySpendingKey.getInMemoryViewingKey();
+      const aliceSaplingToolkitLeft = new SaplingToolkit({ saplingSigner: aliceInmemorySpendingKey }, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdLeft }, new RpcReadAdapter(Tezos.rpc));
+      const aliceSaplingToolkitRight = new SaplingToolkit({ saplingSigner: aliceInmemorySpendingKey }, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdRight }, new RpcReadAdapter(Tezos.rpc));
+      const aliceInMemoryViewingKey = await aliceInmemorySpendingKey.getSaplingViewingKeyProvider();
 
       // Fetch a payment address (zet) for Alice
       alicePaymentAddress = (await aliceInMemoryViewingKey.getAddress()).address;
@@ -72,18 +72,23 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // The amount MUST be specified in the send method in order to transfer the 6 tez to the shielded pool
       // In this contract, if the bool param is set to true, the "left" state is updated, if the bool is set to false, the "right" state is updated
       const op = await saplingContract.methodsObject.default({
-        0: true, 
+        0: true,
         left: shieldedTxLeft,
         right: shieldedTxRight
       }).send({ amount: 3 * 2 });
+      
       await op.confirmation();
+      
+      expect(op.status).toEqual('applied');
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       done();
     });
 
     it("Verify that Alice's balance in the 'left' pool updated after the shielded tx", async (done) => {
-      const aliceSaplingToolkitLeft = new SaplingToolkit(aliceInmemorySpendingKey, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdLeft }, new RpcReadAdapter(Tezos.rpc));
-      const aliceSaplingToolkitRight = new SaplingToolkit(aliceInmemorySpendingKey, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdRight }, new RpcReadAdapter(Tezos.rpc));
+      const aliceSaplingToolkitLeft = new SaplingToolkit({ saplingSigner: aliceInmemorySpendingKey }, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdLeft }, new RpcReadAdapter(Tezos.rpc));
+      const aliceSaplingToolkitRight = new SaplingToolkit({ saplingSigner: aliceInmemorySpendingKey }, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdRight }, new RpcReadAdapter(Tezos.rpc));
 
       const aliceTxViewerLeft = await aliceSaplingToolkitLeft.getSaplingTransactionViewer();
       const aliceBalanceLeft = await aliceTxViewerLeft.getBalance();
