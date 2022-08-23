@@ -3,7 +3,6 @@ import { tokenCode, tokenInit } from "./data/tokens";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
 
   describe(`Test contract origination of a token contract through wallet api using: ${rpc}`, () => {
 
@@ -11,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    test('Verify wallet.originate for a token contract and mints some tokens',2, async (done: () => void) => {
+    test('Verify wallet.originate for a token contract and mints some tokens', async (done) => {
       // TODO: Fails when using ephemeral keys
       const op = await Tezos.wallet.originate({
         balance: "1",

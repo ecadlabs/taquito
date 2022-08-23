@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => 
       await setup()
       done()
     })
-    test('Verify wallet.transfer from one Baker to another', async (done: () => void) => {
+    test('Verify wallet.transfer scenarios: implicit transfer to and from contracts, set and remove delegate, and transfer from a contract to a contract.', async (done: () => void) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: managerCode,
