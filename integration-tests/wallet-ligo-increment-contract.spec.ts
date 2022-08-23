@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    it('Verify wallet.originate for a contract in Michelson format produced by LIGO (also increments a counter in a stora', async (done) => {
+    it('Verify wallet.originate for a contract in Michelson format produced by LIGO (also increments a counter in a storage).', async (done) => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: ligoSample,
