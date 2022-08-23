@@ -1,6 +1,7 @@
+---
 title: Taquito Testing Strategies
+id: testing_strategies
 author: Michael Kernaghan
- 
 ---
  
 ### How Taquito is Tested
