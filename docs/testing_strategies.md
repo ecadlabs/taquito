@@ -16,7 +16,9 @@ Taquito is a library. It offers tools. To test that Taquito is suitable for use,
  
 We use the following Test Heuristics to achieve these assurance goals. Taquito uses several of these in the CI/CD pipeline.
  
-- Unit Tests are detailed tests of simple software components at the atomic level. Taquito includes unit tests in each of its packages. Here is an example:
+### Unit Tests
+
+Unit Tests are detailed tests of simple software components at the atomic level. Taquito includes unit tests in each of its packages. Here is an example:
  
   ```javascript
   it('Public key returned by ledger device should be compressed adequately for tz1 before b58 encoding', () => {
@@ -35,7 +37,8 @@ We use the following Test Heuristics to achieve these assurance goals. Taquito u
   Sometimes a Unit Test will use a Mock to simulate interactions between the software and some external component.
   We measure how comprehensive our unit test coverage is by running "test code coverage tools" that report on the lines of code that are not touched when running unit tests.
  
-- Integration Tests look to ensure that multiple software components are working together. These components might be created by different teams or run on separate machines. The integration of various components can make these tests susceptible to random failures, but they will be rerun until they pass. Taquito testing routinely runs hundreds of integration tests daily.
+### Integration Tests
+Integration Tests look to ensure that multiple software components are working together. These components might be created by different teams or run on separate machines. The integration of various components can make these tests susceptible to random failures, but they will be rerun until they pass. Taquito testing routinely runs hundreds of integration tests daily.
  
 Here is a simple example of an integration test. The test sends Taquito instructions to a live test node with the transactions processed on the blockchain. This test originates a contract on the chain with transfers and verifies that confirmation is received.
  
@@ -58,21 +61,41 @@ Here is a simple example of an integration test. The test sends Taquito instruct
     })
 ```
  
-- Code Reviews are performed whenever a developer seeks to merge code. Other team members review it for correctness, accuracy, conformance with Taquito design overall, and suitability. This process will rapidly find problems that testing would either miss or take wasteful cycles to resolve.  We will not merge code changes or new features unless they have been code reviewed and all requested changes are determined.
- 
-- Static Code Analysis is run during the CICD cycle to do syntactic checks for errors in the code. Often a line marking a merge conflict or a violation of a coding format will cause a static analyzer to complain.
- 
-- End-to-End - Taquito uses the Taquito Test Dapp and the Live Code examples in the documentation as end-to-end tests. The tests exercise the entire software stack between the blockchain node and the user-facing interface.  These tests show that all the components are working together.
- 
-- Mutation Tests
- 
-- Manual Tests
- 
-- Security Tests
- 
-- Performance Tests
- 
+### Code Reviews
 
-  Each time Tezos changes protocol, there is a new test net, and old ones are deprecated. Contracts originated in a more senior test net must be originated again on the new testnet. We have to update RPC content values and recreate Live Code Example contracts. So each protocol change requires an overhaul of some of the test assets to suit the new protocol.
+We do Code Reviews whenever a developer seeks to merge code. Other team members review it for correctness, accuracy, conformance with Taquito design overall, and suitability. This process will rapidly find problems that testing would either miss or take wasteful cycles to resolve.  We will not merge code changes or new features unless they have been code reviewed and all requested changes are determined.
+ 
+### Static Code Analysis
 
+Static Code Analysis is run during the CICD cycle to do syntactic checks for errors in the code. Often a line marking a merge conflict or a violation of a coding format will cause a static analyzer to complain.
+ 
+### End-to-End Tests
 
+Taquito uses the Taquito Test Dapp and the Live Code examples in the documentation as end-to-end tests. The tests exercise the entire software stack between the blockchain node and the user-facing interface.  These tests show that all the components are working together.
+ 
+### Mutation Tests
+ 
+ Mutation testing is a way to verify the effectiveness of unit tests. In addition to the code coverage unit tests, we can check that the tests are resilient against all sorts of code changes. Taquito has been using Stryker to identify test mutations and systematically remove them from the code base. For details on how mutation testing works, please see: https://stryker-mutator.io/docs/.
+ 
+### Manual Tests
+
+When a user raises an issue, Testers will verify the problem using manual methods. For Taquito, such testing could be:
+a quick Taquito script, 
+checking a result with tezos-client, 
+stepping through code with a debugger, 
+rerunning scripts with variations each time, 
+or other exploratory activities around the code base that are not fully scripted tests in the CICD. 
+ 
+### Security Tests
+
+Taquito has implemented some security tests in its integration test suite. These tests check for regressions in the Tezos code that could open known attack techniques. The tests verify that a particular attack is impossible and that appropriate error messaging and exceptions occur when the tests try some well-known attacks.
+ 
+### Performance 
+
+Ecad DevOps maintains an extensive performance tracking monitoring setup using Loki and Grafana, which generates alerts when specific performance parameters are out of band.
+ 
+## Managing Tezos Protocol Migrations with Test Nets
+
+Each time Tezos changes protocol, there is a new test net, and old ones are deprecated. Contracts originated in a more senior test net must be originated again on the new testnet. We have to update RPC content values and recreate Live Code Example contracts. So each protocol change requires an overhaul of some of the test assets to suit the new protocol.
+
+The Taquito test suite will run tests in CICD against the current test net and the next coming tets net. There is also testing of “Mondaynet,” which represents the bleeding edge of the available Tezos test code.
