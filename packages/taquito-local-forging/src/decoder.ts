@@ -3,7 +3,9 @@ import {
   ballotDecoder,
   blockPayloadHashDecoder,
   branchDecoder,
+  burnLimitDecoder,
   delegateDecoder,
+  entrypointNameDecoder,
   int16Decoder,
   int32Decoder,
   parametersDecoder,
@@ -11,6 +13,9 @@ import {
   proposalDecoder,
   proposalsDecoder,
   publicKeyDecoder,
+  txRollupBatchContentDecoder,
+  txRollupIdDecoder,
+  txRollupOriginationParamDecoder,
   tz1Decoder,
   valueParameterDecoder,
   zarithDecoder,
@@ -31,6 +36,9 @@ import {
   schemaDecoder,
   SeedNonceRevelationSchema,
   TransactionSchema,
+  TransferTicketSchema,
+  TxRollupOriginationSchema,
+  TxRollupSubmitBatchSchema,
 } from './schema/operation';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { toHexString } from './utils';
@@ -56,6 +64,11 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.VALUE]: valueParameterDecoder,
   [CODEC.INT16]: int16Decoder,
   [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashDecoder,
+  [CODEC.ENTRYPOINT]: entrypointNameDecoder,
+  [CODEC.TX_ROLLUP_ORIGINATION_PARAM]: txRollupOriginationParamDecoder,
+  [CODEC.TX_ROLLUP_ID]: txRollupIdDecoder,
+  [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentDecoder,
+  [CODEC.BURN_LIMIT]: burnLimitDecoder,
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);
@@ -77,4 +90,10 @@ decoders[CODEC.OP_PROPOSALS] = (val: Uint8ArrayConsumer) =>
 decoders[CODEC.OP_REVEAL] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(RevealSchema)(val);
 decoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(RegisterGlobalConstantSchema)(val);
+decoders[CODEC.OP_TRANSFER_TICKET] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(TransferTicketSchema)(val);
+decoders[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(TxRollupOriginationSchema)(val);
+decoders[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(TxRollupSubmitBatchSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);

@@ -10,6 +10,7 @@ import {
   RegisterGlobalConstantParams,
   TxRollupOriginateParams,
   TxRollupBatchParams,
+  TransferTicketParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 
@@ -33,6 +34,16 @@ export interface EstimationProvider {
    * @param Estimate
    */
   transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an transferTicket operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams): Promise<Estimate>;
 
   /**
    *

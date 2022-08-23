@@ -1523,3 +1523,126 @@ export const txRollupSubmitBatchWithReveal = {
   signature:
     'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG',
 };
+
+export const TransferTicketNoReveal = {
+  contents:  [
+    {
+      kind: 'transfer_ticket',
+      source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+      fee: '804',
+      gas_limit: '5009',
+      storage_limit: '130',
+      counter: '145',
+      ticket_contents: { "string": "foobar" },
+      ticket_ty: { "prim": "string" },
+      ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+      ticket_amount: '2',
+      destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+      entrypoint: 'default',
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+            change: '-804',
+            origin: 'block',
+
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '804',
+            origin: 'block',
+          }
+        ],
+        operation_result: {
+          status: 'applied',
+          balance_updates: [
+            {
+              kind: 'contract',
+              contract: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+              change: '-16500',
+              origin: 'block',
+            },
+            {
+              kind: 'burned',
+              category: 'storage fees',
+              change: '16500',
+              origin: 'block',
+            }
+          ],
+          consumed_milligas: '2122881',
+          paid_storage_size_diff: '66',
+        }
+      },
+    }
+  ],
+  signature: 'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG'
+}
+export const TransferTicketWithReveal = {
+  contents:  [
+    {
+      kind: 'reveal',
+      source: 'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+      fee: '1420',
+      counter: '294312',
+      gas_limit: '10600',
+      storage_limit: '0',
+      public_key: 'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH',
+      metadata: {
+        operation_result: { status: 'applied', consumed_gas: '1000' },
+      },
+    },
+    {
+      kind: 'transfer_ticket',
+      source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+      fee: '804',
+      gas_limit: '5009',
+      storage_limit: '130',
+      counter: '145',
+      ticket_contents: { "string": "foobar" },
+      ticket_ty: { "prim": "string" },
+      ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+      ticket_amount: '2',
+      destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+      entrypoint: 'default',
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+            change: '-804',
+            origin: 'block',
+
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '804',
+            origin: 'block',
+          }
+        ],
+        operation_result: {
+          status: 'applied',
+          balance_updates: [
+            {
+              kind: 'contract',
+              contract: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+              change: '-16500',
+              origin: 'block',
+            },
+            {
+              kind: 'burned',
+              category: 'storage fees',
+              change: '16500',
+              origin: 'block',
+            }
+          ],
+          consumed_milligas: '2122881',
+          paid_storage_size_diff: '66',
+        }
+      },
+    }
+  ],
+  signature: 'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG'
+}
