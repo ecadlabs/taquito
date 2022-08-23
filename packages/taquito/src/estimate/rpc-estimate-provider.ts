@@ -145,7 +145,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     tx_rollup_origination_size: number
   ): EstimateProperties {
     const operationResults = flattenOperationResult({ contents: [content] });
-    let totalGas = 0;
     let totalMilligas = 0;
     let totalStorage = 0;
     operationResults.forEach((result) => {
@@ -154,7 +153,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           ? result.originated_contracts.length * this.ORIGINATION_STORAGE
           : 0;
       totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
-      totalGas += Number(result.consumed_gas) || 0;
       totalMilligas += Number(result.consumed_milligas) || 0;
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
@@ -164,11 +162,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           : 0;
       totalStorage += 'originated_rollup' in result ? tx_rollup_origination_size : 0;
     });
-
-    if (totalGas !== 0 && totalMilligas === 0) {
-      // This will convert gas to milligas for Carthagenet where result does not contain consumed gas in milligas.
-      totalMilligas = totalGas * 1000;
-    }
 
     if (isOpWithFee(content)) {
       return {
@@ -316,15 +309,15 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createTransferTicketOperation({
       ...rest,
-      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS)
-    })
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
     const estimateProperties = await this.prepareEstimate(
       { operation: ops, source: pkh },
       protocolConstants,
       pkh
-    )
+    );
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
@@ -445,7 +438,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           operations.push(
             await createTransferTicketOperation({
               ...param,
-              ...mergeLimits(param, DEFAULT_PARAMS)
+              ...mergeLimits(param, DEFAULT_PARAMS),
             })
           );
           break;
