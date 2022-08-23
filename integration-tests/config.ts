@@ -24,10 +24,12 @@ interface Config {
   knownBaker: string;
   knownContract: string;
   knownBigMapContract: string;
-  knownTzip1216Contract: string; 
-  knownSaplingContract: string; 
+  knownTzip1216Contract: string;
+  knownSaplingContract: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
+  txRollupWithdrawContract: string;
+  txRollupDepositContract: string;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -73,6 +75,8 @@ const kathmandunetEphemeral = {
     keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
+  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
 };
 
 const jakartanetEphemeral = {
@@ -88,6 +92,8 @@ const jakartanetEphemeral = {
     keyUrl: 'https://api.tez.ie/keys/jakartanet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
+  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
 };
 
 const mondaynetEphemeral = {
@@ -103,6 +109,8 @@ const mondaynetEphemeral = {
     keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
+  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
 };
 
 const kathmandunetFaucet = {
@@ -140,6 +148,8 @@ const kathmandunetFaucet = {
       "secret": "7d414378d9071328313cca699d6922f1b59d076a"
     }
   },
+  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
 };
 
 const jakartanetFaucet = {
@@ -175,6 +185,8 @@ const jakartanetFaucet = {
       secret: '0f2e92c3d1473677317c852ab968646d4c4f57c0',
     },
   },
+  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
 };
 
 const providers: Config[] = [];
@@ -273,6 +285,8 @@ export const CONFIGS = () => {
         knownBigMapContract,
         knownTzip1216Contract,
         knownSaplingContract,
+        txRollupWithdrawContract,
+        txRollupDepositContract,
         signerConfig,
       }) => {
         const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
@@ -289,6 +303,8 @@ export const CONFIGS = () => {
           knownBigMapContract,
           knownTzip1216Contract,
           knownSaplingContract,
+          txRollupWithdrawContract,
+          txRollupDepositContract,
           signerConfig,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.FAUCET) {
