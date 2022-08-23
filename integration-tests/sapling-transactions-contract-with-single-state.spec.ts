@@ -32,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const mnemonic: string = bip39.generateMnemonic();
       bobInmemorySpendingKey = await InMemorySpendingKey.fromMnemonic(mnemonic);
 
-      // Instanciate an InMemorySpendingKey from a spending key for Alice
+      // Instantiate an InMemorySpendingKey from a spending key for Alice
       aliceInMemorySpendingKey = new InMemorySpendingKey('sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L')
 
       done();
