@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done()
     })
 
-    it('Verify wallet.contract for a contract having ticket with init', async (done) => {
+    it('Verify wallet.originate for a contract having ticket with init', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage
@@ -23,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify contract.originate having ticket with init in JSON', async (done) => {
+    it('Verify wallet.originate having ticket with init in JSON', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }

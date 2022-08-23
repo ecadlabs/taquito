@@ -198,4 +198,36 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
     });
-});
+
+        test('Batch multiple originations and get contract addresses info from getOriginatedContractAddresses member function', async (done) => {
+            const batch = Tezos.wallet
+              .batch()
+              .withOrigination({
+                balance: '1',
+                code: ligoSample,
+                storage: 0
+              })
+              .withOrigination({
+                balance: '1',
+                code: ligoSampleMichelson,
+                storage: 0
+              });
+
+          const op = await batch.send();
+          const confirmation = await op.confirmation()
+          const currentConfirmation = await op.getCurrentConfirmation()
+
+          expect(currentConfirmation).toEqual(1);
+          expect(confirmation).toEqual(
+              expect.objectContaining({
+                  expectedConfirmation: 1,
+                  currentConfirmation: 1,
+                  completed: true
+              })
+          );
+          expect(op.opHash).toBeDefined();
+          expect(await op.status()).toEqual('applied');
+          expect((await op.getOriginatedContractAddresses()).length).toEqual(2);
+          done();
+        });
+    });

@@ -3,7 +3,7 @@ import { ligoSample } from "./data/ligo-simple-contract";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract origination with simple ligo origination scenario through contract api using: ${rpc}`, () => {
+  describe(`Test contract origination with simple ligo origination scenario through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()

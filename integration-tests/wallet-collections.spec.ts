@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    it('Verify wallet.contract for a contract with set, list, map and then exercise all collections', async (done) => {
+    it('Verify wallet.originate for a contract with set, list, map and then exercise all collections', async (done) => {
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {

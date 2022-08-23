@@ -1,20 +1,18 @@
 import { CONFIGS } from "./config";
-import { tokenCode, tokenInit } from "./data/tokens";
 import { storageContract } from "./data/storage-contract";
 import { MichelsonMap } from "@taquito/taquito";
-import { storage } from '../packages/taquito-michelson-encoder/data/proto005/unit_contract';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination with initialized BigMap with variants of data through wallet api using: ${rpc}`, () => {
+  describe(`Test contract origination with initialized Map with variants of data through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
 
-    it('Verify wallet.originate with initialized BigMap with variants of data', async (done) => {
+    it('Verify wallet.originate with initialized Map with variants of data', async (done) => {
 
         const op = await Tezos.wallet.originate({
         balance: "1",

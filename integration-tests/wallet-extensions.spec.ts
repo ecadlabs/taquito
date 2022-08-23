@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract
         ],
         storage: { prim: 'Pair', args: [{ int: '7' }, { int: '60101' }] }
     }
-    describe(`TTest extensions TezosToolkit through wallet api: ${rpc}`, () => {
+    describe(`Test extensions TezosToolkit through wallet api: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
