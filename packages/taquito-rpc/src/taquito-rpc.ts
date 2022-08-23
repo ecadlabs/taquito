@@ -44,8 +44,10 @@ import {
   RPCRunCodeParam,
   RPCRunOperationParam,
   RPCRunViewParam,
+  RPCRunScriptViewParam,
   RunCodeResult,
   RunViewResult,
+  RunScriptViewResult,
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
@@ -821,6 +823,31 @@ export class RpcClient implements RpcClientInterface {
     );
 
     return response;
+  }
+
+  /**
+   * @param viewScriptParams Parameters of the script view to run
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate a call to a michelson view
+   *
+   */
+  async runScriptView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunScriptViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunScriptViewResult> {
+    return this.httpBackend.createRequest<any>(
+      {
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/helpers/scripts/run_script_view`
+        ),
+        method: 'POST',
+      },
+      {
+        unparsing_mode,
+        ...rest,
+      }
+    );
   }
 
   /**
