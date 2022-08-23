@@ -171,7 +171,6 @@ module.exports = {
         },
       ],
     },
-
     algolia: {
       apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
       indexName: 'taquito',
@@ -202,5 +201,17 @@ module.exports = {
       },
     ],
   ],
-  plugins: [require.resolve('./plugins/webpack5plugin/index.js'), 'docusaurus-plugin-sass'],
+  plugins: 
+    [
+      require.resolve('./plugins/webpack5plugin/index.js'), 
+      'docusaurus-plugin-sass',
+      [
+        'docusaurus2-dotenv',
+        {
+          path: "./.env",
+          systemvars: true
+        }
+      ]
+    ],
+  
 };
