@@ -1631,9 +1631,11 @@ export type RPCRunScriptViewParam = {
   chain_id: string;
   source?: string;
   payer?: string;
-  gas?: BigNumber;
+  gas?: string;
   unparsing_mode?: UnparsingModeEnum;
-  unlimited_gas: boolean;
+  unlimited_gas?: boolean;
+  now?: string;
+  level?: string;
 };
 
 export type RunScriptViewResult = {
