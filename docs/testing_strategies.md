@@ -99,4 +99,4 @@ Ecad DevOps maintains an extensive performance tracking monitoring setup using L
 
 Each time Tezos changes protocol, there is a new test net, and old ones are deprecated. Contracts originated in a more senior test net must be originated again on the new testnet. We have to update RPC content values and recreate Live Code Example contracts. So each protocol change requires an overhaul of some of the test assets to suit the new protocol.
 
-The Taquito test suite will run tests in CICD against the current test net and the next coming tets net. There is also testing of “Mondaynet,” which represents the bleeding edge of the available Tezos test code.
+The Taquito test suite will run tests in CICD against the current test net and the next coming test net. There is also testing of “Mondaynet,” which represents the bleeding edge of the available Tezos test code.
