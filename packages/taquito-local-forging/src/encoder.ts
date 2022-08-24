@@ -27,6 +27,7 @@ import {
   BallotSchema,
   DelegationSchema,
   EndorsementSchema,
+  IncreasePaidStorageSchema,
   ManagerOperationSchema,
   operationEncoder,
   OriginationSchema,
@@ -88,4 +89,6 @@ encoders[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: any) =>
   schemaEncoder(encoders)(TxRollupOriginationSchema)(val);
 encoders[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: any) =>
   schemaEncoder(encoders)(TxRollupSubmitBatchSchema)(val);
+encoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
+  schemaEncoder(encoders)(IncreasePaidStorageSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);

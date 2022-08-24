@@ -126,6 +126,16 @@ export const TxRollupSubmitBatchSchema = {
   burn_limit: CODEC.BURN_LIMIT,
 };
 
+export const IncreasePaidStorageSchema = {
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  amount: CODEC.ZARITH,
+  destination: CODEC.ADDRESS,
+};
+
 export const operationEncoder =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverse)) {
