@@ -26,6 +26,7 @@ interface Config {
   knownBigMapContract: string;
   knownTzip1216Contract: string;
   knownSaplingContract: string;
+  txRollupAddress: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
   txRollupWithdrawContract: string;
@@ -291,6 +292,7 @@ export const CONFIGS = () => {
         knownTzip1216Contract,
         knownSaplingContract,
         signerConfig,
+        txRollupAddress,
         txRollupDepositContract,
         txRollupWithdrawContract,
       }) => {
@@ -309,6 +311,7 @@ export const CONFIGS = () => {
           knownTzip1216Contract,
           knownSaplingContract,
           signerConfig,
+          txRollupAddress,
           txRollupDepositContract,
           txRollupWithdrawContract,
           setup: async (preferFreshKey: boolean = false) => {
