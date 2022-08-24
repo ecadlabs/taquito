@@ -15,6 +15,8 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
     })
     mondaynet("transfer tickets L2 to L1 final step in toru node rollup back to L1", async (done) => {
       // if (txRollupDepositContract && txRollupWithdrawContract) {
+        const signer = await InMemorySigner.fromSecretKey("edsk2vSxPjmjjvSGoXQUTgUiRw91Ws9FzFF9V63CZNgdF1a6UWDvWZ")
+        await Tezos.setProvider({signer})
         const estimateParams: TransferTicketParams = {
           ticketContents: { "string": "foobar" },
           ticketTy: { "prim": "string" },
@@ -36,17 +38,19 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
         const results = res.results
         const transferResult = results[0] as OperationContentsAndResultTransferTicket
 
-        expect(estimate.burnFeeMutez).toBeDefined()
-        expect(estimate.gasLimit).toBeDefined()
-        expect(estimate.storageLimit).toBeDefined()
+        expect(estimate.burnFeeMutez).toBeLessThan(Number.POSITIVE_INFINITY)
+        expect(estimate.gasLimit).toBeLessThan(Number.POSITIVE_INFINITY)
+        expect(estimate.storageLimit).toBeLessThan(Number.POSITIVE_INFINITY)
 
 
         expect(transferResult.kind).toEqual('transfer_ticket');
         expect(transferResult.destination).toEqual(txRollupWithdrawContract);
         expect(transferResult.ticket_ticketer).toEqual(txRollupDepositContract);
-        expect(transferResult.ticket_amount).toEqual(params.ticketAmount);
+        expect(transferResult.ticket_amount).toBeLessThan(Number.POSITIVE_INFINITY);
         expect(transferResult.ticket_ty).toEqual(params.ticketTy);
         expect(transferResult.entrypoint).toEqual('default');
+        expect(transferResult.metadata.operation_result.status).toEqual('applied')
+        expect(transferResult.metadata.operation_result.balance_updates).toEqual([])
         expect(transferResult.metadata).toBeDefined()
       // }
       done();
