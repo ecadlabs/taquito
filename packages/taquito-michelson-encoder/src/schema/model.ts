@@ -29,7 +29,7 @@ interface Operationresult {
   status: string;
   storage: Storage;
   big_map_diff: Bigmapdiff[];
-  consumed_gas: string;
+  consumed_gas?: string;
   storage_size: string;
   paid_storage_size_diff: string;
   consumed_milligas?: string;
