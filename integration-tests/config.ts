@@ -291,6 +291,8 @@ export const CONFIGS = () => {
         knownTzip1216Contract,
         knownSaplingContract,
         signerConfig,
+        txRollupDepositContract,
+        txRollupWithdrawContract,
       }) => {
         const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
         Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
@@ -307,6 +309,8 @@ export const CONFIGS = () => {
           knownTzip1216Contract,
           knownSaplingContract,
           signerConfig,
+          txRollupDepositContract,
+          txRollupWithdrawContract,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.FAUCET) {
               await setupWithFaucetKey(Tezos, signerConfig);
