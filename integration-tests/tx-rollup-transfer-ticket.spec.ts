@@ -36,6 +36,10 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
         const results = res.results
         const transferResult = results[0] as OperationContentsAndResultTransferTicket
 
+        expect(estimate.burnFeeMutez).toBeDefined()
+        expect(estimate.gasLimit).toBeDefined()
+        expect(estimate.storageLimit).toBeDefined()
+
 
         expect(transferResult.kind).toEqual('transfer_ticket');
         expect(transferResult.destination).toEqual(txRollupWithdrawContract);
