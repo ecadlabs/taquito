@@ -330,3 +330,46 @@ export const valueParameterDecoder = (val: Uint8ArrayConsumer) => {
 
 export const blockPayloadHashEncoder = prefixEncoder(Prefix.VH);
 export const blockPayloadHashDecoder = prefixDecoder(Prefix.VH);
+
+export const entrypointNameEncoder = (entrypoint: string) => {
+  const value = { string: entrypoint };
+  return `${valueEncoder(value).slice(2)}`;
+};
+
+export const entrypointNameDecoder = (val: Uint8ArrayConsumer) => {
+  const entry = extractRequiredLen(val);
+
+  return Buffer.from(entry).toString('utf8');
+};
+
+export const txRollupOriginationParamEncoder = (_value: string) => {
+  return '';
+};
+
+export const txRollupOriginationParamDecoder = (_val: Uint8ArrayConsumer) => {
+  return {};
+};
+
+export const txRollupIdEncoder = prefixEncoder(Prefix.TXR1);
+
+export const txRollupIdDecoder = prefixDecoder(Prefix.TXR1);
+
+export const txRollupBatchContentEncoder = (value: string) => {
+  return `${pad(value.length / 2)}${value}`;
+};
+
+export const txRollupBatchContentDecoder = (val: Uint8ArrayConsumer) => {
+  const value = extractRequiredLen(val);
+  return Buffer.from(value).toString('hex');
+};
+
+export const burnLimitEncoder = (val: string) => {
+  return !val ? '00' : `ff${zarithEncoder(val)}`;
+};
+
+export const burnLimitDecoder = (value: Uint8ArrayConsumer) => {
+  const prefix = value.consume(1);
+  if (Buffer.from(prefix).toString('hex') !== '00') {
+    return zarithDecoder(value);
+  }
+};

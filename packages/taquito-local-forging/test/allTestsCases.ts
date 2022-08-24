@@ -29,7 +29,6 @@ import {
   codeContractWithConstant,
 } from './data/contract_with_constant';
 import { codeViewsTopLevel, storageViewsTopLevel } from './data/contract_views_top_level';
-import { opMappingProto13 } from './../src/proto13-jakarta/constants-proto13';
 import { ForgeParams } from '../src/interface';
 import { MichelsonV1Expression, OpKind } from '@taquito/rpc';
 
@@ -806,7 +805,7 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-  ...extractOp(0, 147, opMapping).map((op): TestCase => {
+  ...extractOp(0, 150, opMapping).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -1286,32 +1285,6 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-];
-
-export const jakartaCases: TestCase[] = [
-  ...extractOp(132, 150, opMappingProto13).map((op): TestCase => {
-    return {
-      name: `Origination operation (${op})`,
-      operation: {
-        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-        contents: [
-          {
-            kind: OpKind.ORIGINATION,
-            counter: '1',
-            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-            fee: '10000',
-            gas_limit: '10',
-            storage_limit: '10',
-            balance: '0',
-            script: {
-              code: genericCode(op) as MichelsonV1Expression[],
-              storage: genericStorage,
-            },
-          },
-        ],
-      },
-    };
-  }),
   {
     name: `Transfer ticket`,
     operation: {

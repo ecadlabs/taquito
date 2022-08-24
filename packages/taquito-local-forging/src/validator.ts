@@ -1,11 +1,6 @@
 import { OpKind } from '@taquito/rpc';
 import { OperationContents } from '@taquito/rpc';
 import {
-  TransferTicketSchema,
-  TxRollupOriginationSchema,
-  TxRollupSubmitBatchSchema,
-} from './proto13-jakarta/schema/operation-proto13';
-import {
   ActivationSchema,
   DelegationSchema,
   TransactionSchema,
@@ -16,6 +11,9 @@ import {
   RevealSchema,
   RegisterGlobalConstantSchema,
   EndorsementSchema,
+  TransferTicketSchema,
+  TxRollupOriginationSchema,
+  TxRollupSubmitBatchSchema,
 } from './schema/operation';
 
 type OperationKind =
