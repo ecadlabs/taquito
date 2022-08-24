@@ -423,6 +423,17 @@ export interface OperationContentsTransferTicket {
   entrypoint: string;
 }
 
+export interface OperationContentsIncreasePaidStorage {
+  kind: OpKind.INCREASE_PAID_STORAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  amount: string;
+  destination: string;
+}
+
 export type OperationContents =
   | OperationContentsEndorsement
   | OperationContentsPreEndorsement
@@ -448,7 +459,8 @@ export type OperationContents =
   | OperationContentsTxRollupFinalizeCommitment
   | OperationContentsTxRollupRemoveCommitment
   | OperationContentsTxRollupRejection
-  | OperationContentsTransferTicket;
+  | OperationContentsTransferTicket
+  | OperationContentsIncreasePaidStorage;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -548,6 +560,12 @@ export interface OperationContentsAndResultMetadataTransferTicket {
 export interface OperationContentsAndResultMetadataTxRollupDispatchTickets {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultTxRollupDispatchTickets;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataIncreasePaidStorage {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultIncreasePaidStorage;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -804,6 +822,18 @@ export interface OperationContentsAndResultTxRollupDispatchTickets {
   metadata: OperationContentsAndResultMetadataTxRollupDispatchTickets;
 }
 
+export interface OperationContentsAndResultIncreasePaidStorage {
+  kind: OpKind.INCREASE_PAID_STORAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  amount: string;
+  destination: string;
+  metadata: OperationContentsAndResultMetadataIncreasePaidStorage;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -829,7 +859,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTxRollupFinalizeCommitment
   | OperationContentsAndResultTxRollupRemoveCommitment
   | OperationContentsAndResultTxRollupRejection
-  | OperationContentsAndResultTransferTicket;
+  | OperationContentsAndResultTransferTicket
+  | OperationContentsAndResultIncreasePaidStorage;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1149,6 +1180,15 @@ export interface OperationResultTransferTicket {
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
 }
+
+export interface OperationResultIncreasePaidStorage {
+  status: OperationResultStatusEnum;
+  balance_updates?: OperationBalanceUpdates;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
 export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
