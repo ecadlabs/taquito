@@ -1184,7 +1184,6 @@ export interface OperationResultTransferTicket {
 export interface OperationResultIncreasePaidStorage {
   status: OperationResultStatusEnum;
   balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
 }
