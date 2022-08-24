@@ -1,7 +1,7 @@
 import { HttpBackend } from '@taquito/http-utils';
 
 describe('HttpBackend request', () => {
-    it('will fail with http request url and request method', async (done) => {
+    it('will fail with method and url in error message', async (done) => {
         try {
             const http: HttpBackend = new HttpBackend(1);
             await http.createRequest<string>({
@@ -9,13 +9,14 @@ describe('HttpBackend request', () => {
               url: 'https://mainnet.api.tez.ie/chains/main/blocks/head/hash'
             });
         } catch (err: any) {
-            expect(err.message).toEqual('Error: timeout of 1ms exceeded')
-            expect(err.url).toEqual('https://mainnet.api.tez.ie/chains/main/blocks/head/hash')
-            expect(err.method).toEqual('GET')
+            expect(err.name).toEqual('HttpRequestFailed')
+            expect(err.message).toContain('GET')
+            expect(err.message).toContain('https://mainnet.api.tez.ie/chains/main/blocks/head/hash')
+            expect(err.message).toContain('Error: timeout of 1ms exceeded')
         }
         done()
       });
-      it('will fail with http request url + query and request method', async (done) => {
+      it('will fail with method, url and query in error message', async (done) => {
         try {
             const http: HttpBackend = new HttpBackend(1);
             await http.createRequest<string>({
@@ -26,9 +27,10 @@ describe('HttpBackend request', () => {
               }
             });
         } catch (err: any) {
-            expect(err.message).toEqual('Error: timeout of 1ms exceeded')
-            expect(err.url).toEqual('https://mainnet.api.tez.ie/chains/main/blocks/head/helpers/baking_rights?level=0')
-            expect(err.method).toEqual('GET')
+            expect(err.name).toEqual('HttpRequestFailed')
+            expect(err.message).toContain('GET')
+            expect(err.message).toContain('https://mainnet.api.tez.ie/chains/main/blocks/head/helpers/baking_rights')
+            expect(err.message).toContain('Error: timeout of 1ms exceeded')
         }
         done()
       });

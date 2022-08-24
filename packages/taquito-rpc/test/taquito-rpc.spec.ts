@@ -24,10 +24,12 @@ import {
   OperationContentsAndResultTxRollupRejection,
   Inode,
   OtherElts,
+  OperationContentsAndResultIncreasePaidStorage,
 } from '../src/types';
 import {
   blockIthacanetSample,
   blockJakartanetSample,
+  blockKathmandunetSample,
   delegatesIthacanetSample,
 } from './data/rpc-responses';
 
@@ -2799,6 +2801,42 @@ describe('RpcClient test', () => {
       expect(content.metadata.operation_result.consumed_gas).toEqual('11533');
       expect(content.metadata.operation_result.consumed_milligas).toEqual('11532006');
 
+      done();
+    });
+
+    it('should be able to access the properties of operation type increase_paid_storage, proto14', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultIncreasePaidStorage;
+
+      expect(content.kind).toEqual(OpKind.INCREASE_PAID_STORAGE);
+      expect(content.source).toEqual('tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG');
+      expect(content.fee).toEqual('349');
+      expect(content.counter).toEqual('108123');
+      expect(content.gas_limit).toEqual('1000');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.amount).toEqual('2');
+      expect(content.destination).toEqual('KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-349');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('349');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
       done();
     });
   });
