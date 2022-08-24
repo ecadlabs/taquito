@@ -45,12 +45,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   get status() {
-    const operationResults = this.operationResults;
-    if (operationResults) {
-      return operationResults.status;
-    } else {
-      return 'unknown';
-    }
+    return this.operationResults?.status ?? 'unknown';
   }
 
   get operationResults() {
@@ -87,8 +82,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   get consumedMilliGas() {
-    const consumedMilliGas = this.operationResults && this.operationResults.consumed_milligas;
-    return consumedMilliGas ? consumedMilliGas : undefined;
+    return this.operationResults?.consumed_milligas;
   }
 
   get storageDiff() {
@@ -102,7 +96,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return this.operationResults?.errors;
   }
 
   /**

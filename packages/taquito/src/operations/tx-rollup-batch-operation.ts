@@ -43,12 +43,7 @@ export class TxRollupBatchOperation
   }
 
   get status() {
-    const operationResults = this.operationResults;
-    if (operationResults) {
-      return operationResults.status;
-    } else {
-      return 'unknown';
-    }
+    return this.operationResults?.status ?? 'unknown';
   }
 
   get content() {
@@ -68,7 +63,7 @@ export class TxRollupBatchOperation
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return this.operationResults?.errors;
   }
 
   get consumedGas() {
@@ -79,7 +74,6 @@ export class TxRollupBatchOperation
   }
 
   get consumedMilliGas() {
-    const consumedMilliGas = this.operationResults && this.operationResults.consumed_milligas;
-    return consumedMilliGas ? consumedMilliGas : undefined;
+    return this.operationResults?.consumed_milligas;
   }
 }

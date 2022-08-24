@@ -51,12 +51,7 @@ export class RegisterGlobalConstantOperation
   }
 
   get status() {
-    const operationResults = this.operationResults;
-    if (operationResults) {
-      return operationResults.status;
-    } else {
-      return 'unknown';
-    }
+    return this.operationResults?.status ?? 'unknown';
   }
 
   get registeredExpression() {
@@ -76,7 +71,7 @@ export class RegisterGlobalConstantOperation
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return this.operationResults?.errors;
   }
 
   get consumedGas() {
@@ -87,7 +82,6 @@ export class RegisterGlobalConstantOperation
   }
 
   get consumedMilliGas() {
-    const consumedMilliGas = this.operationResults && this.operationResults.consumed_milligas;
-    return consumedMilliGas ? consumedMilliGas : undefined;
+    return this.operationResults?.consumed_milligas;
   }
 }

@@ -46,12 +46,7 @@ export class TransferTicketOperation
   }
 
   get status() {
-    const operationResults = this.operationResults;
-    if (operationResults) {
-      return operationResults.status;
-    } else {
-      return 'unknown';
-    }
+    return this.operationResults?.status ?? 'unknown';
   }
 
   get fee() {
@@ -74,7 +69,6 @@ export class TransferTicketOperation
   }
 
   get consumedMilliGas() {
-    const consumedMilliGas = this.operationResults && this.operationResults.consumed_milligas;
-    return consumedMilliGas ? consumedMilliGas : undefined;
+    return this.operationResults?.consumed_milligas;
   }
 }

@@ -256,6 +256,22 @@ describe('RegisterGlobalConstant operation', () => {
     expect(op.status).toEqual('backtracked');
   });
 
+  it('status should be unknown if no status', () => {
+    const revealBuilder = new RevealOperationBuilder();
+
+    const op = new RegisterGlobalConstantOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      [
+        revealBuilder.withResult({}).build(),
+      ],
+      fakeContext
+    );
+    expect(op.status).toEqual('unknown');
+  });
+
   it('revealStatus should be unknown when there is no reveal operation', () => {
     const txBuilder = new RegisterGlobalConstantOperationBuilder();
 
