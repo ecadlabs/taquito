@@ -81,7 +81,7 @@ const errorBuilder = (result: any) => {
       result[0].contents[0].metadata.operation_result = {
         status: 'backtracked',
         storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-        consumed_gas: '15953',
+        consumed_milligas: '15953000',
         storage_size: '232',
       };
       (result[0].contents[0].metadata as any).internal_operation_results = [
@@ -1240,7 +1240,7 @@ export const registerGlobalConstantWithReveal = {
             change: '1420',
           },
         ],
-        operation_result: { status: 'applied', consumed_gas: '10000' },
+        operation_result: { status: 'applied', consumed_milligas: '10000000' },
       },
     },
     registerGlobalConstantNoReveal.contents[0],
@@ -1358,7 +1358,6 @@ export const txRollupOriginateWithReveal = {
         ],
         operation_result: {
           status: 'applied',
-          consumed_gas: '1000',
           consumed_milligas: '1000000',
         },
       },
@@ -1402,7 +1401,6 @@ export const txRollupOriginateWithReveal = {
               origin: 'block',
             },
           ],
-          consumed_gas: '1421',
           consumed_milligas: '1420108',
           originated_rollup: 'txr1gJDqppanLyZJ5Yw9VCNqnHswtv9fQ9brL',
         },
@@ -1479,7 +1477,6 @@ export const txRollupSubmitBatchWithReveal = {
         ],
         operation_result: {
           status: 'applied',
-          consumed_gas: '1000',
           consumed_milligas: '1000000',
         },
       },
@@ -1511,7 +1508,6 @@ export const txRollupSubmitBatchWithReveal = {
         operation_result: {
           status: 'applied',
           balance_updates: [],
-          consumed_gas: '2769',
           consumed_milligas: '2768514',
           paid_storage_size_diff: '0',
         },
@@ -1588,7 +1584,7 @@ export const TransferTicketWithReveal = {
       storage_limit: '0',
       public_key: 'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH',
       metadata: {
-        operation_result: { status: 'applied', consumed_gas: '1000' },
+        operation_result: { status: 'applied', consumed_milligas: '1000000' },
       },
     },
     {

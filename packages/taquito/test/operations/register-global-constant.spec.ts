@@ -54,7 +54,7 @@ describe('RegisterGlobalConstant operation', () => {
               origin: 'block',
             },
           ],
-          consumed_gas: '1230',
+          consumed_milligas: '1230000',
           storage_size: '73',
           global_address: 'exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2',
         },
@@ -144,6 +144,31 @@ describe('RegisterGlobalConstant operation', () => {
     );
     expect(op.gasLimit).toEqual(450);
   });
+
+  it('should return the consumed gas', () => {
+    const op = new RegisterGlobalConstantOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+    expect(op.consumedGas).toEqual('1230');
+  });
+
+  it('should return the consumed milligas', () => {
+    const op = new RegisterGlobalConstantOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+    expect(op.consumedMilliGas).toEqual('1230000');
+  });
+
   it('should return the storageLimit', () => {
     const op = new RegisterGlobalConstantOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',

@@ -2,6 +2,7 @@ import {
   OperationContentsAndResult,
   OperationContentsAndResultTxRollupOrigination,
 } from '@taquito/rpc';
+import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { Operation } from './operations';
 import {
@@ -72,5 +73,17 @@ export class TxRollupOriginationOperation
 
   get errors() {
     return this.operationResults && this.operationResults.errors;
+  }
+
+  get consumedGas() {
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return this.consumedMilliGas
+      ? new BigNumber(this.consumedMilliGas).dividedBy(1000).toString()
+      : undefined;
+  }
+
+  get consumedMilliGas() {
+    const consumedMilliGas = this.operationResults && this.operationResults.consumed_milligas;
+    return consumedMilliGas ? consumedMilliGas : undefined;
   }
 }

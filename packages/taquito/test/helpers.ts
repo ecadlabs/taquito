@@ -94,17 +94,17 @@ const defaultTransferTicketData = {
   gas_limit: '5009',
   storage_limit: '130',
   counter: '145',
-  ticket_contents: { "string": "foobar" },
-  ticket_ty: { "prim": "string" },
+  ticket_contents: { string: 'foobar' },
+  ticket_ty: { prim: 'string' },
   ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
   ticket_amount: '2',
   destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
   entrypoint: 'default',
-}
+};
 
 const defaultResult = {
   status: 'applied' as OperationResultStatusEnum,
-  consumed_gas: '15953',
+  consumed_milligas: '15952999',
 };
 
 export class TransferOperationBuilder {
@@ -176,7 +176,12 @@ export class OriginationOperationBuilder {
   withResult(
     result: Partial<OperationContentsAndResultOrigination['metadata']['operation_result']>
   ) {
-    this.result = { ...defaultResult, ...result };
+    this.result = {
+      ...defaultResult,
+      ...result,
+      originated_contracts: ['KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX'],
+      storage_size: '62',
+    };
     return this;
   }
 
@@ -318,7 +323,7 @@ export class TransferTicketOperationBuilder {
   withResult(
     result: Partial<OperationContentsAndResultTransferTicket['metadata']['operation_result']>
   ) {
-    this.result = { ...defaultResult, ...result};
+    this.result = { ...defaultResult, ...result };
     return this;
   }
 
@@ -328,7 +333,7 @@ export class TransferTicketOperationBuilder {
       metadata: {
         balance_updates: [],
         operation_result: this.result,
-      }
-    }
+      },
+    };
   }
 }

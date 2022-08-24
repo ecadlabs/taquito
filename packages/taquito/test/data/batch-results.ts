@@ -21,7 +21,6 @@ export const resultOriginations = [
         status: 'applied',
         balance_updates: [],
         originated_contracts: ['KT1Wr1xjQAzb44AcPRV9F9oyPurkFz7y2otC'],
-        consumed_gas: '1470',
         consumed_milligas: '1469767',
         storage_size: '314',
         paid_storage_size_diff: '314',
@@ -48,7 +47,6 @@ export const resultOriginations = [
         status: 'applied',
         balance_updates: [],
         originated_contracts: ['KT1SG1LfkoMoEqR5srtiYeYcciaZfBTGzTgY'],
-        consumed_gas: '1470',
         consumed_milligas: '1469767',
         storage_size: '314',
         paid_storage_size_diff: '314',
@@ -93,7 +91,7 @@ export const successfulResult = [
             change: '1000000',
           },
         ],
-        consumed_gas: '15285',
+        consumed_milligas: '15285000',
         storage_size: '232',
       },
     },
@@ -137,7 +135,7 @@ export const successfulResult = [
       operation_result: {
         status: 'applied',
         storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-        consumed_gas: '15953',
+        consumed_milligas: '15953000',
         storage_size: '232',
       },
       internal_operation_results: [
@@ -161,7 +159,7 @@ export const successfulResult = [
                 change: '50',
               },
             ],
-            consumed_gas: '10207',
+            consumed_milligas: '10207000',
           },
         },
       ],
@@ -204,7 +202,7 @@ export const successfulResult = [
       operation_result: {
         status: 'applied',
         storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-        consumed_gas: '15794',
+        consumed_milligas: '15794000',
         storage_size: '232',
       },
       internal_operation_results: [
@@ -213,7 +211,7 @@ export const successfulResult = [
           source: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
           nonce: 1,
           delegate: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
-          result: { status: 'applied', consumed_gas: '10000' },
+          result: { status: 'applied', consumed_milligas: '10000000' },
         },
       ],
     },
@@ -251,7 +249,7 @@ export const successfulResult = [
       operation_result: {
         status: 'applied',
         storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-        consumed_gas: '15722',
+        consumed_milligas: '15722000',
         storage_size: '232',
       },
       internal_operation_results: [
@@ -259,7 +257,7 @@ export const successfulResult = [
           kind: 'delegation',
           source: 'KT1UMZuZRzgS9iZGC2LTQad6PHPaF3fmSo4p',
           nonce: 2,
-          result: { status: 'applied', consumed_gas: '10000' },
+          result: { status: 'applied', consumed_milligas: '10000000' },
         },
       ],
     },
@@ -283,7 +281,6 @@ export const resultWithoutOrigination = [
       operation_result: {
         status: 'applied',
         balance_updates: [],
-        consumed_gas: '1470',
         consumed_milligas: '1469767',
         storage_size: '314',
         paid_storage_size_diff: '314',
@@ -306,7 +303,6 @@ export const resultWithoutOrigination = [
       operation_result: {
         status: 'applied',
         balance_updates: [],
-        consumed_gas: '1470',
         consumed_milligas: '1469767',
         storage_size: '314',
         paid_storage_size_diff: '314',
@@ -330,7 +326,6 @@ export const resultSingleOrigination = [
       operation_result: {
         status: 'applied',
         balance_updates: [],
-        consumed_gas: '1451',
         consumed_milligas: '1450040',
       },
     },
@@ -349,7 +344,6 @@ export const resultSingleOrigination = [
       operation_result: {
         status: 'applied',
         balance_updates: [],
-        consumed_gas: '1451',
         consumed_milligas: '1450040',
       },
     },
@@ -368,7 +362,6 @@ export const resultSingleOrigination = [
       operation_result: {
         status: 'applied',
         balance_updates: [],
-        consumed_gas: '1451',
         consumed_milligas: '1450040',
       },
     },
@@ -393,7 +386,6 @@ export const resultSingleOrigination = [
         status: 'applied',
         balance_updates: [],
         originated_contracts: ['KT1Em8ALyerHtZd1s5s6quJDZrTRxnmdKcKd'],
-        consumed_gas: '1470',
         consumed_milligas: '1469767',
         storage_size: '314',
         paid_storage_size_diff: '314',

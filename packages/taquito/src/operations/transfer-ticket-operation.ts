@@ -1,7 +1,18 @@
-import { OperationContentsAndResult, OperationContentsAndResultTransferTicket, OpKind } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultTransferTicket,
+  OpKind,
+} from '@taquito/rpc';
+import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { Operation } from '../operations';
-import { GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation, ForgedBytes, RPCTransferTicketOperation } from './types';
+import {
+  GasConsumingOperation,
+  StorageConsumingOperation,
+  FeeConsumingOperation,
+  ForgedBytes,
+  RPCTransferTicketOperation,
+} from './types';
 
 /**
  *
@@ -11,46 +22,59 @@ import { GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
  */
 export class TransferTicketOperation
   extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
-    constructor(
-      hash: string,
-      private readonly params: RPCTransferTicketOperation,
-      private readonly source: string,
-      raw: ForgedBytes,
-      results: OperationContentsAndResult[],
-      context: Context,
-    ) {
-      super(hash, raw, results, context)
-    }
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
+{
+  constructor(
+    hash: string,
+    private readonly params: RPCTransferTicketOperation,
+    private readonly source: string,
+    raw: ForgedBytes,
+    results: OperationContentsAndResult[],
+    context: Context
+  ) {
+    super(hash, raw, results, context);
+  }
 
-    get operationResults() {
-      const transferOp =
-        Array.isArray(this.results) &&
-        this.results.find(
-          (op) => op.kind === OpKind.TRANSFER_TICKET
-        ) as OperationContentsAndResultTransferTicket
-      const result = transferOp && transferOp.metadata && transferOp.metadata.operation_result
-      return result ? result : undefined
-    }
+  get operationResults() {
+    const transferOp =
+      Array.isArray(this.results) &&
+      (this.results.find(
+        (op) => op.kind === OpKind.TRANSFER_TICKET
+      ) as OperationContentsAndResultTransferTicket);
+    const result = transferOp && transferOp.metadata && transferOp.metadata.operation_result;
+    return result ? result : undefined;
+  }
 
-    get status() {
-      const operationResults = this.operationResults;
-      if (operationResults) {
-        return operationResults.status
-      } else {
-        return 'unknown'
-      }
-    }
-
-    get fee() {
-      return this.params.fee
-    }
-
-    get gasLimit() {
-      return this.params.gas_limit
-    }
-
-    get storageLimit() {
-      return this.params.storage_limit
+  get status() {
+    const operationResults = this.operationResults;
+    if (operationResults) {
+      return operationResults.status;
+    } else {
+      return 'unknown';
     }
   }
+
+  get fee() {
+    return this.params.fee;
+  }
+
+  get gasLimit() {
+    return this.params.gas_limit;
+  }
+
+  get storageLimit() {
+    return this.params.storage_limit;
+  }
+
+  get consumedGas() {
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return this.consumedMilliGas
+      ? new BigNumber(this.consumedMilliGas).dividedBy(1000).toString()
+      : undefined;
+  }
+
+  get consumedMilliGas() {
+    const consumedMilliGas = this.operationResults && this.operationResults.consumed_milligas;
+    return consumedMilliGas ? consumedMilliGas : undefined;
+  }
+}
