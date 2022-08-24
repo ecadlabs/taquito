@@ -1,3 +1,4 @@
+import { OperationContentsAndResultTransferTicket } from "@taquito/rpc";
 import { Protocols } from "@taquito/taquito";
 import { TransferTicketParams } from "taquito/src/operations/types";
 import { CONFIGS } from "./config";
@@ -14,10 +15,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
     })
     mondaynet("transfer tickets L2 to L1 final step in toru node rollup back to L1", async (done) => {
       // if (txRollupDepositContract && txRollupWithdrawContract) {
-
         const estimateParams: TransferTicketParams = {
-          source: "tz1",
-
           ticketContents: { "string": "foobar" },
           ticketTy: { "prim": "string" },
           ticketTicketer: txRollupDepositContract || "KT1ENUSEPM5vEoLCB4FnNz5ndCTGFi1Qc314",
@@ -34,9 +32,18 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
           storageLimit: estimate.storageLimit
         };
 
-        const result = await Tezos.contract.transferTicket(params);
+        const res = await Tezos.contract.transferTicket(params);
+        const results = res.results
+        const transferResult = results[0] as OperationContentsAndResultTransferTicket
 
-        expect(result).toEqual({})
+
+        expect(transferResult.kind).toEqual('transfer_ticket');
+        expect(transferResult.destination).toEqual(txRollupWithdrawContract);
+        expect(transferResult.ticket_ticketer).toEqual(txRollupDepositContract);
+        expect(transferResult.ticket_amount).toEqual(params.ticketAmount);
+        expect(transferResult.ticket_ty).toEqual(params.ticketTy);
+        expect(transferResult.entrypoint).toEqual('default');
+        expect(transferResult.metadata).toBeDefined()
       // }
       done();
     })
