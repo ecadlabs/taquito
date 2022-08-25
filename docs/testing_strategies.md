@@ -6,12 +6,12 @@ author: Michael Kernaghan
  
 ### How Taquito is Tested
  
-- General Philosophy
+#### General Philosophy
  
 We write and maintain tests so that we may check that the software we create will do what we think it should do and alert us when it doesn’t.
 This link offers more detail on software testing philosophy in general: https://www.codesimplicity.com/post/the-philosophy-of-testing/.
  
-- Assumptions
+#### Assumptions
  
 Taquito is a library. It offers tools. To test that Taquito is suitable for use, we must ensure that each tool the library provides does what it is supposed to. We also need to check that changes to support new features have not broken old features.
  
@@ -101,6 +101,6 @@ Each time Tezos changes protocol, there is a new test net, and old ones are depr
 
 The Taquito test suite will run tests in CICD against the current test net and the next coming test net. There is also testing of “Mondaynet,” which represents the bleeding edge of the available Tezos test code.
 
-### Mondaynet
+### Mondaynet and Dailynet
 
-To keep up with the current changes proposed for the following Tezos protocol, we can run our integration test suite against the node called "Mondaynet." This node captures the current head of the Tezos development branch each Monday. By regression testing this node, we can ascertain changes Taquito may need to make early in the protocol development process.
+To keep up with the current changes proposed for the following Tezos protocol, we can run our integration test suite against the node called "Mondaynet." This node captures the head of the Tezos development branch each Monday. By regression testing this node, we can ascertain changes Taquito may need to make early in the protocol development process. There is also "Dailynet" which offers the current Tezos branch head each day.
