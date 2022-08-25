@@ -133,7 +133,7 @@ export const IncreasePaidStorageSchema = {
   gas_limit: CODEC.ZARITH,
   storage_limit: CODEC.ZARITH,
   amount: CODEC.ZARITH,
-  destination: CODEC.ADDRESS,
+  destination: CODEC.SMART_CONTRACT_ADDRESS,
 };
 
 export const operationEncoder =

@@ -25,6 +25,7 @@ export enum CODEC {
   INT16 = 'int16',
   PARAMETERS = 'parameters',
   ADDRESS = 'address',
+  SMART_CONTRACT_ADDRESS = 'smart_contract_address',
   VALUE = 'value',
   MANAGER = 'manager',
   BLOCK_PAYLOAD_HASH = 'blockPayloadHash',
