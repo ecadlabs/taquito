@@ -2,9 +2,12 @@ import { OperationContentsAndResult } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { flattenOperationResult } from '../operations/operation-errors';
 
+export const COST_PER_BYTE = 250;
+
 export interface Receipt {
   totalFee: BigNumber;
   totalGas: BigNumber;
+  totalMilliGas: BigNumber;
   totalStorage: BigNumber;
   totalAllocationBurn: BigNumber;
   totalOriginationBurn: BigNumber;
@@ -19,14 +22,15 @@ export const receiptFromOperation = (
     ORIGINATION_BURN: 257,
   }
 ): Receipt => {
+  BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
   const operationResults = flattenOperationResult({ contents: op });
-  let totalGas = new BigNumber(0);
+  let totalMilliGas = new BigNumber(0);
   let totalStorage = new BigNumber(0);
   let totalFee = new BigNumber(0);
   let totalOriginationBurn = new BigNumber(0);
   let totalAllocationBurn = new BigNumber(0);
   let totalPaidStorageDiff = new BigNumber(0);
-  operationResults.forEach(result => {
+  operationResults.forEach((result) => {
     totalFee = totalFee.plus(result.fee || 0);
     totalOriginationBurn = totalOriginationBurn.plus(
       Array.isArray(result.originated_contracts)
@@ -36,7 +40,7 @@ export const receiptFromOperation = (
     totalAllocationBurn = totalAllocationBurn.plus(
       'allocated_destination_contract' in result ? ALLOCATION_BURN : 0
     );
-    totalGas = totalGas.plus(result.consumed_gas || 0);
+    totalMilliGas = totalMilliGas.plus(result.consumed_milligas || 0);
     totalPaidStorageDiff = totalPaidStorageDiff.plus(
       'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0
     );
@@ -49,11 +53,12 @@ export const receiptFromOperation = (
 
   return {
     totalFee,
-    totalGas,
+    totalMilliGas,
+    totalGas: totalMilliGas.dividedBy(1000),
     totalStorage,
     totalAllocationBurn,
     totalOriginationBurn,
     totalPaidStorageDiff,
-    totalStorageBurn: new BigNumber(totalStorage.multipliedBy(1000)),
+    totalStorageBurn: new BigNumber(totalStorage.multipliedBy(COST_PER_BYTE)),
   };
 };
