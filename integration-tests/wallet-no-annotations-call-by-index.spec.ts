@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    test('Verify wallet.originate for a contract with no annotations for method', async (done) => {
+    test('Verify calls to the methods of the contract that have no annotations and must be referred to using indexes.', async (done) => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
       const BALANCE = '0';
