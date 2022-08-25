@@ -68,11 +68,11 @@ We do Code Reviews whenever a developer seeks to merge code. Other team members 
  
 ### Static Code Analysis
 
-Static Code Analysis is run during the CICD cycle to do syntactic checks for errors in the code. Often a line marking a merge conflict or a violation of a coding format will cause a static analyzer to complain.
+Static Code Analysis is run during the CICD cycle to do syntactic checks for errors in the code. Often a line marking a merge conflict or a violation of a coding format will cause a static analyzer to complain. During a CICD run a Pull Request will be examined by [CodeQL](https://codeql.github.com/) and [Snyk](https://snyk.io/).
  
 ### End-to-End Tests
 
-Taquito uses the Taquito Test Dapp and the Live Code examples in the documentation as end-to-end tests. The tests exercise the entire software stack between the blockchain node and the user-facing interface.  These tests show that all the components are working together.
+Taquito uses the Taquito Test Dapp and the Live Code examples in the documentation as end-to-end tests. The tests exercise the entire software stack between the blockchain node and the user-facing interface.  These tests show that all the components are working together. AT each Taquito release these tests are checked and the results included in the release.
  
 ### Mutation Tests
  
@@ -100,3 +100,7 @@ Ecad DevOps maintains an extensive performance tracking monitoring setup using L
 Each time Tezos changes protocol, there is a new test net, and old ones are deprecated. Contracts originated in a more senior test net must be originated again on the new testnet. We have to update RPC content values and recreate Live Code Example contracts. So each protocol change requires an overhaul of some of the test assets to suit the new protocol.
 
 The Taquito test suite will run tests in CICD against the current test net and the next coming test net. There is also testing of “Mondaynet,” which represents the bleeding edge of the available Tezos test code.
+
+### Mondaynet
+
+To keep up with the current changes proposed for the following Tezos protocol, we can run our integration test suite against the node called "Mondaynet." This node captures the current head of the Tezos development branch each Monday. By regression testing this node, we can ascertain changes Taquito may need to make early in the protocol development process.
