@@ -113,6 +113,7 @@ type MichelsonRegularInstructionID =
   | 'UPDATE'
   | 'CAST'
   | 'VIEW'
+  | 'EMIT'
   // legacy
   | 'CREATE_ACCOUNT'
   | 'STEPS_TO_QUOTA';
@@ -142,6 +143,7 @@ export type MichelsonInstruction =
   | InstrX<'LAMBDA', [MichelsonType, MichelsonType, InstructionList]>
   | InstrX<'DIP', [IntLiteral, InstructionList] | [InstructionList]>
   | InstrX<'VIEW', [StringLiteral, MichelsonType]>
+  | InstrX<'EMIT', [MichelsonContract]>
   | InstrPrim<'DROP' | 'PAIR' | 'UNPAIR' | 'DUP' | 'GET' | 'UPDATE', [IntLiteral]>;
 
 // Types

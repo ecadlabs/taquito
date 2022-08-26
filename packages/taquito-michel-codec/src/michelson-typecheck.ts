@@ -2004,8 +2004,18 @@ function functionTypeInternal(
         ensurePushableType(s[0]);
         return [annotateVar({ prim: 'option', args: [instruction.args[1]] }), ...stack.slice(2)];
       }
+
       case 'MIN_BLOCK_TIME':
         return [annotateVar({ prim: 'nat' }), ...stack];
+
+      case 'EMIT': {
+        if (instruction.args) {
+          const s = args(1, ['contract']);
+          ensureTypesEqual(s[0], s[0].args[0])
+          return [annotateVar({ prim: 'operation'}), ...stack.slice(1)]
+        }
+        return stack.slice(1)
+      }
 
       default:
         throw new MichelsonError(
