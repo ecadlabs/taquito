@@ -13,6 +13,7 @@ import {
   proposalDecoder,
   proposalsDecoder,
   publicKeyDecoder,
+  smartContractAddressDecoder,
   txRollupBatchContentDecoder,
   txRollupIdDecoder,
   txRollupOriginationParamDecoder,
@@ -27,6 +28,7 @@ import {
   BallotSchema,
   DelegationSchema,
   EndorsementSchema,
+  IncreasePaidStorageSchema,
   ManagerOperationSchema,
   operationDecoder,
   OriginationSchema,
@@ -61,6 +63,7 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.PROPOSAL_ARR]: proposalsDecoder,
   [CODEC.PARAMETERS]: parametersDecoder,
   [CODEC.ADDRESS]: addressDecoder,
+  [CODEC.SMART_CONTRACT_ADDRESS]: smartContractAddressDecoder,
   [CODEC.VALUE]: valueParameterDecoder,
   [CODEC.INT16]: int16Decoder,
   [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashDecoder,
@@ -96,4 +99,6 @@ decoders[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(TxRollupOriginationSchema)(val);
 decoders[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(TxRollupSubmitBatchSchema)(val);
+decoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(IncreasePaidStorageSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
