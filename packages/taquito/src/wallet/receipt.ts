@@ -1,8 +1,7 @@
 import { OperationContentsAndResult } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
+import { COST_PER_BYTE } from '../constants';
 import { flattenOperationResult } from '../operations/operation-errors';
-
-export const COST_PER_BYTE = 250;
 
 export interface Receipt {
   totalFee: BigNumber;
