@@ -106,6 +106,9 @@ export interface DelegatesResponse {
   deactivated: boolean;
   grace_period: number;
   voting_power?: BigNumber;
+  current_ballot?: OperationContentsBallotEnum;
+  current_proposals?: string[];
+  remaining_proposals?: number;
 }
 
 interface Frozenbalancebycycle {
@@ -1071,9 +1074,15 @@ export interface ScriptedContracts {
   storage: MichelsonV1Expression;
 }
 
-export interface BondId {
-  tx_rollup: string;
-}
+export type BondId =
+  | {
+      sc_rollup?: never;
+      tx_rollup: string;
+    }
+  | {
+      sc_rollup: string;
+      tx_rollup?: never;
+    };
 
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;

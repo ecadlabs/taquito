@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { OpKind, RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
@@ -25,12 +26,14 @@ import {
   Inode,
   OtherElts,
   OperationContentsAndResultIncreasePaidStorage,
+  OperationResultEvent,
 } from '../src/types';
 import {
   blockIthacanetSample,
   blockJakartanetSample,
   blockKathmandunetSample,
   delegatesIthacanetSample,
+  delegatesKathmandunetSample,
 } from './data/rpc-responses';
 
 /**
@@ -327,6 +330,26 @@ describe('RpcClient test', () => {
         deactivated: false,
         grace_period: 37,
         voting_power: new BigNumber(199),
+      });
+
+      done();
+    });
+
+    it('parse the response properly, proto14', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(delegatesKathmandunetSample);
+      const response = await client.getDelegates(contractAddress);
+
+      expect(response).toEqual({
+        full_balance: new BigNumber('965532868030'),
+        current_frozen_deposits: new BigNumber('96350095609'),
+        frozen_deposits: new BigNumber('96350095609'),
+        staking_balance: new BigNumber('970221941952'),
+        delegated_contracts: ['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'],
+        delegated_balance: new BigNumber('4689073922'),
+        deactivated: false,
+        grace_period: 42,
+        voting_power: new BigNumber(968128693450),
+        remaining_proposals: 20,
       });
 
       done();
@@ -3024,6 +3047,54 @@ describe('RpcClient test', () => {
       expect(content.metadata.operation_result.status).toEqual('applied');
       expect(content.metadata.operation_result.balance_updates).toBeDefined();
       expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
+      done();
+    });
+
+    it('should be able to access the properties of internal operation type event, proto14', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][1]
+        .contents[0] as OperationContentsAndResultTransaction;
+
+      expect(content.metadata.internal_operation_results).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].kind).toEqual(OpKind.EVENT);
+      expect(content.metadata.internal_operation_results![0].source).toEqual(
+        'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q'
+      );
+      expect(content.metadata.internal_operation_results![0].nonce).toEqual(0);
+
+      expect(content.metadata.internal_operation_results![0].amount).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].destination).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].parameters).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].public_key).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].balance).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].delegate).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].value).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].limit).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].script).toBeUndefined();
+
+      expect(content.metadata.internal_operation_results![0].type).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].type).toEqual({
+        prim: 'or',
+        args: [{ prim: 'nat' }, { prim: 'string' }],
+      });
+      expect(content.metadata.internal_operation_results![0].tag).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].tag).toEqual('event');
+      expect(content.metadata.internal_operation_results![0].payload).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].payload).toEqual({
+        prim: 'Left',
+        args: [{ int: '10' }],
+      });
+      expect(content.metadata.internal_operation_results![0].result).toBeDefined();
+
+      const internalResult = content.metadata.internal_operation_results![0]
+        .result as OperationResultEvent;
+      expect(internalResult.status).toEqual('applied');
+      expect(internalResult.consumed_milligas).toBeDefined();
+      expect(internalResult.consumed_milligas).toEqual('1000000');
+      expect(internalResult.errors).toBeUndefined();
+
       done();
     });
   });
