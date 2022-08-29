@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
 import { Protocols, ChainIds } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam } from '@taquito/rpc';
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -109,6 +109,24 @@ CONFIGS().forEach(
           const views = await Tezos.rpc.runView(params)
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "100" } });
+          done();
+        });
+
+        kathmandunet('Executes michelson view by calling runScriptView ', async (done) => {
+
+          const viewContract = 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM'
+          const params: RPCRunScriptViewParam = {
+            contract: viewContract,
+            view: 'add',
+            chain_id: ChainIds.KATHMANDUNET,
+            input: {
+              int: '0'
+            }
+          }
+
+          const views = await Tezos.rpc.runScriptView(params)
+          expect(views).toBeDefined();
+          expect(views).toEqual({ "data": { "int": "2" } });
           done();
         });
 
