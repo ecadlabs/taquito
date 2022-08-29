@@ -1,7 +1,6 @@
 name: Algolia indexing
 
 on:
-  push:
   schedule:
     - cron: '0 0 * * *'
 
