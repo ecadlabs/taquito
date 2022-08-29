@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract origination of a simple contract through contract api using: ${rpc}`, () => {
+  describe(`Test origination of a simple contract through the wallet API using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
