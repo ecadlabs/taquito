@@ -86,6 +86,8 @@ checking a result with tezos-client,
 stepping through code with a debugger,
 rerunning scripts with variations each time,
 or other exploratory activities around the code base that are not fully scripted tests in the CICD.
+
+Ledger Devices require manual testing as they have buttons that an operator must press to authorize signatures and transactions. There are emulators for Ledger Devices, but Taquito testing of ledger devices combines manual and scripted exploratory testing.
  
 ### Security Tests
  
