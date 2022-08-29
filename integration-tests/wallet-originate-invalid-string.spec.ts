@@ -3,13 +3,13 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  describe(`Test invalid data for origination using: ${rpc}`, () => {
+  describe(`Test contract origination with invalid data through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    it('wallet contract fails because non-ascii in init data', async (done) => {
+    it('Verify that wallet.originate for a contract with non-ascii (invalid string) in the init data will fail', async (done) => {
       expect.assertions(1);
       try {
         await Tezos.wallet.originate({
