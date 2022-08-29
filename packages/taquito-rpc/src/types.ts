@@ -14,7 +14,7 @@ export type OperationHash = string;
 interface INodeExtender {
   length: string;
   segment: string;
-  proof: string | InodeTree;
+  proof: string;
 }
 
 type OtherEltsInner =
@@ -47,14 +47,6 @@ export interface Inode {
 }
 
 type TxRollupProofContextHash =
-  | {
-      value: string;
-    }
-  | {
-      node: string;
-    };
-
-type ScRollupProofContextHash =
   | {
       value: string;
     }
@@ -196,28 +188,6 @@ export interface OperationContentsPreEndorsement {
   level: number;
   round: number;
   block_payload_hash: string;
-}
-
-export interface OperationContentsDalSlotAvailability {
-  kind: OpKind.DAL_SLOT_AVAILABILITY;
-  endorser: string;
-  endorsement: string;
-}
-
-export interface DalSlot {
-  level: number;
-  index: number;
-  header: number;
-}
-
-export interface OperationContentsDalPublishSlotHeader {
-  kind: OpKind.DAL_PUBLISH_SLOT_HEADER;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  slot: DalSlot;
 }
 
 export interface OperationContentsDoublePreEndorsement {
@@ -469,122 +439,9 @@ export interface OperationContentsIncreasePaidStorage {
   destination: string;
 }
 
-export interface OperationContentsScRollupOriginate {
-  kind: OpKind.SC_ROLLUP_ORIGINATE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  boot_sector: string;
-  parameters_ty: MichelsonV1Expression;
-}
-
-export interface OperationContentsScRollupAddMessage {
-  kind: OpKind.SC_ROLLUP_ADD_MESSAGE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  message: string; // verify if array
-}
-
-export interface OperationContentsScRollupCement {
-  kind: OpKind.SC_ROLLUP_CEMENT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: string;
-}
-
-export interface ScRollupCommitment {
-  compressed_state: string;
-  inbox_level: number;
-  predecessor: string;
-  number_of_messages: number;
-  number_of_ticks: number;
-}
-export interface OperationContentsScRollupPublish {
-  kind: OpKind.SC_ROLLUP_PUBLISH;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: ScRollupCommitment;
-}
-
-export interface OperationContentsScRollupRefute {
-  kind: OpKind.SC_ROLLUP_REFUTE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  opponent: string;
-  refutation: ScRollupRefutation;
-  is_opening_move: boolean;
-}
-
-export interface OperationContentsScRollupTimeout {
-  kind: OpKind.SC_ROLLUP_TIMEOUT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  stakers: Stakers;
-}
-
-export interface OperationContentsScRollupExecuteOutboxMessage {
-  kind: OpKind.SC_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  cemented_commitment: string;
-  outbox_level: number;
-  message_index: number;
-  inclusion_proof: string; // Verify "inclusion proof"?
-  message: string;
-}
-
-export interface OperationContentsScRollupRecoverBond {
-  kind: OpKind.SC_ROLLUP_RECOVER_BOND;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-}
-
-export interface OperationContentsScRollupDalSlotSubscribe {
-  kind: OpKind.SC_ROLLUP_DAL_SLOT_SUBSCRIBE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  slot_index: number;
-}
-
 export type OperationContents =
   | OperationContentsEndorsement
   | OperationContentsPreEndorsement
-  | OperationContentsDalSlotAvailability
-  | OperationContentsDalPublishSlotHeader
   | OperationContentsDoublePreEndorsement
   | OperationContentsRevelation
   | OperationContentsVdfRevelation
@@ -609,16 +466,7 @@ export type OperationContents =
   | OperationContentsTxRollupRemoveCommitment
   | OperationContentsTxRollupRejection
   | OperationContentsTransferTicket
-  | OperationContentsIncreasePaidStorage
-  | OperationContentsScRollupOriginate
-  | OperationContentsScRollupAddMessage
-  | OperationContentsScRollupCement
-  | OperationContentsScRollupPublish
-  | OperationContentsScRollupRefute
-  | OperationContentsScRollupTimeout
-  | OperationContentsScRollupExecuteOutboxMessage
-  | OperationContentsScRollupRecoverBond
-  | OperationContentsScRollupDalSlotSubscribe;
+  | OperationContentsIncreasePaidStorage;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -724,70 +572,6 @@ export interface OperationContentsAndResultMetadataTxRollupDispatchTickets {
 export interface OperationContentsAndResultMetadataIncreasePaidStorage {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultIncreasePaidStorage;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataDalSlotAvailability {
-  delagate: string;
-}
-
-export interface OperationContentsAndResultMetadataDalPublishHeader {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultDalPublishHeader;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupOriginate {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupOriginate;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupAddMessage {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupAddMessage;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupCement {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupCement;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupPublish {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupPublish;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupRefute {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupRefute;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupTimeout {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupTimeout;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupExecuteOutboxMessage {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupExecuteOutboxMessage;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupRecoverBond {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupRecoverBond;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataScRollupDalSlotSubscribe {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultScRollupDalSlotSubscribe;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -1062,137 +846,6 @@ export interface OperationContentsAndResultVdfRevelation {
   metadata: OperationContentsAndResultMetadata;
 }
 
-export interface OperationContentsAndResultDalSlotAvailability {
-  kind: OpKind.DAL_SLOT_AVAILABILITY;
-  endorser: string;
-  endorsement: string;
-  metadata: OperationContentsAndResultMetadataDalSlotAvailability;
-}
-
-export interface OperationContentsAndResultDalPublishSlotHeader {
-  kind: OpKind.DAL_PUBLISH_SLOT_HEADER;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  slot: DalSlot;
-  metadata: OperationContentsAndResultMetadataDalPublishHeader;
-}
-
-export interface OperationContentsAndResultScRollupOriginate {
-  kind: OpKind.SC_ROLLUP_ORIGINATE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  boot_sector: string;
-  parameters_ty: MichelsonV1Expression;
-  metadata: OperationContentsAndResultMetadataScRollupOriginate;
-}
-
-export interface OperationContentsAndResultScRollupAddMessage {
-  kind: OpKind.SC_ROLLUP_ADD_MESSAGE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  message: string[];
-  metadata: OperationContentsAndResultMetadataScRollupAddMessage;
-}
-
-export interface OperationContentsAndResultScRollupCement {
-  kind: OpKind.SC_ROLLUP_CEMENT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: string;
-  metadata: OperationContentsAndResultMetadataScRollupCement;
-}
-
-export interface OperationContentsAndResultScRollupPublish {
-  kind: OpKind.SC_ROLLUP_PUBLISH;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: ScRollupCommitment;
-  metadata: OperationContentsAndResultMetadataScRollupPublish;
-}
-
-export interface OperationContentsAndResultScRollupRefute {
-  kind: OpKind.SC_ROLLUP_REFUTE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  opponent: string;
-  refutation: ScRollupRefutation;
-  is_opening_move: boolean;
-  metadata: OperationContentsAndResultMetadataScRollupRefute;
-}
-
-export interface OperationContentsAndResultScRollupTimeout {
-  kind: OpKind.SC_ROLLUP_TIMEOUT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  stakers: Stakers;
-  metadata: OperationContentsAndResultMetadataScRollupTimeout;
-}
-
-export interface OperationContentsAndResultScRollupExecuteOutboxMessage {
-  kind: OpKind.SC_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  cemented_commitment: string;
-  outbox_level: number;
-  message_index: number;
-  inclusion_proof: string; // Verify "inclusion proof"?
-  message: string;
-  metadata: OperationContentsAndResultMetadataScRollupExecuteOutboxMessage;
-}
-
-export interface OperationContentsAndResultScRollupRecoverBond {
-  kind: OpKind.SC_ROLLUP_RECOVER_BOND;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  metadata: OperationContentsAndResultMetadataScRollupRecoverBond;
-}
-
-export interface OperationContentsAndResultScRollupDalSlotSubscribe {
-  kind: OpKind.SC_ROLLUP_DAL_SLOT_SUBSCRIBE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  slot_index: number;
-  metadata: OperationContentsAndResultMetadataScRollupDalSlotSubscribe;
-}
-
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -1220,18 +873,7 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTxRollupRejection
   | OperationContentsAndResultTransferTicket
   | OperationContentsAndResultIncreasePaidStorage
-  | OperationContentsAndResultVdfRevelation
-  | OperationContentsAndResultDalSlotAvailability
-  | OperationContentsAndResultDalPublishSlotHeader
-  | OperationContentsAndResultScRollupOriginate
-  | OperationContentsAndResultScRollupAddMessage
-  | OperationContentsAndResultScRollupCement
-  | OperationContentsAndResultScRollupPublish
-  | OperationContentsAndResultScRollupRefute
-  | OperationContentsAndResultScRollupTimeout
-  | OperationContentsAndResultScRollupExecuteOutboxMessage
-  | OperationContentsAndResultScRollupRecoverBond
-  | OperationContentsAndResultScRollupDalSlotSubscribe;
+  | OperationContentsAndResultVdfRevelation;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1461,7 +1103,7 @@ export type InternalOperationResultKindEnum =
   | OpKind.TRANSACTION
   | OpKind.ORIGINATION
   | OpKind.DELEGATION
-  | 'EVENT';
+  | OpKind.EVENT;
 
 export type SuccessfulManagerOperationResultKindEnum =
   | OpKind.REVEAL
@@ -1561,80 +1203,6 @@ export interface OperationResultIncreasePaidStorage {
   errors?: TezosGenericOperationError[];
 }
 
-export interface OperationResultDalPublishHeader {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupOriginate {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  address?: string;
-  consumed_milligas?: string;
-  size?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupAddMessage {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  inbox_after?: InboxAfter;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupCement {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupPublish {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  staked_hash?: string;
-  published_at_level?: number;
-  balance_updates?: OperationBalanceUpdates;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupRefute {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  balance_updates?: OperationBalanceUpdates;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupTimeout {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  balance_updates?: OperationBalanceUpdates;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupExecuteOutboxMessage {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  balance_updates?: OperationBalanceUpdates;
-  paid_storage_size_diff?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupRecoverBond {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  balance_updates?: OperationBalanceUpdates;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultScRollupDalSlotSubscribe {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  slot_index?: number;
-  level?: number;
-  errors?: TezosGenericOperationError[];
-}
-
 export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
@@ -1678,22 +1246,6 @@ export interface TezosGenericOperationError {
   id: string;
 }
 
-export interface OldLevelsMessages {
-  index: number;
-  content: string;
-  back_pointers: string[];
-}
-export interface InboxAfter {
-  rollup: string;
-  message_counter: string;
-  nb_available_messages: string;
-  nb_messages_in_commitment_period: string;
-  starting_level_of_current_commitment_period: number;
-  level: number;
-  current_messages_hash: string;
-  old_levels_messages: OldLevelsMessages;
-}
-
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
   storage?: MichelsonV1Expression;
@@ -1708,7 +1260,6 @@ export interface OperationResultTransaction {
   consumed_milligas?: string;
   lazy_storage_diff?: LazyStorageDiff[];
   ticket_hash?: string;
-  inbox_after?: InboxAfter;
 }
 
 export interface OperationResultReveal {
@@ -2248,100 +1799,4 @@ export interface TxRollupInboxResponse {
   inbox_length: number;
   cumulated_size: number;
   merkle_root: string;
-}
-
-export type InodeProofs =
-  | {
-      sparse_proof: (number | InodeTree)[][];
-    }
-  | {
-      dense_proof: InodeTree[];
-    };
-
-export interface TreeEncodingInode {
-  length: string;
-  proofs: InodeProofs;
-}
-
-export interface TreeEncodingExtender {
-  length: string;
-  segment: string;
-  proof: InodeTree;
-}
-
-export type InodeTree =
-  | null
-  | {
-      blinded_inode: string;
-    }
-  | {
-      inode_values: (string | TreeEncoding)[][];
-    }
-  | {
-      inode_tree: TreeEncodingInode;
-    }
-  | {
-      inode_extender: INodeExtender;
-    };
-
-export type TreeEncoding =
-  | null
-  | {
-      value: string;
-    }
-  | {
-      blinded_value: string;
-    }
-  | {
-      node: (string | TreeEncoding)[][];
-    }
-  | {
-      blinded_node: string;
-    }
-  | {
-      inode: TreeEncodingInode;
-    }
-  | {
-      extender: TreeEncodingExtender;
-    };
-
-export interface TreeProof {
-  version: number;
-  before: ScRollupProofContextHash;
-  after: ScRollupProofContextHash;
-  state: TreeEncoding;
-}
-
-export interface Given {
-  inbox_level: number;
-  message_counter: string;
-  payload: string;
-}
-
-export type Requested = { no_input_required: object } | { initial: object } | (string | number)[];
-
-export interface PvmStep {
-  tree_proof: TreeProof;
-  given?: Given;
-  requested: Requested;
-}
-
-export interface Inbox {
-  skips: (InboxAfter | [OldLevelsMessages])[][];
-  level: InboxAfter;
-  inc: OldLevelsMessages[];
-  message_proof: TreeProof;
-}
-export interface ScRollupRefutationProof {
-  pvm_step: PvmStep;
-  inbox?: Inbox;
-}
-export interface ScRollupRefutation {
-  choice: string;
-  step: (string | null)[][] | ScRollupRefutationProof;
-}
-
-export interface Stakers {
-  alice: string;
-  bob: string;
 }
