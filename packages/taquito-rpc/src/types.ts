@@ -1628,12 +1628,12 @@ export type RPCRunScriptViewParam = {
   contract: string;
   view: string;
   input: MichelsonV1Expression;
+  unlimited_gas?: boolean;
   chain_id: string;
   source?: string;
   payer?: string;
   gas?: string;
   unparsing_mode?: UnparsingModeEnum;
-  unlimited_gas?: boolean;
   now?: string;
   level?: string;
 };
