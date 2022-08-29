@@ -29,13 +29,5 @@ export enum OpKind {
   DAL_SLOT_AVAILABILITY = 'dal_slot_availability',
   DAL_PUBLISH_SLOT_HEADER = 'dal_publish_slot_header',
   VDF_REVELATION = 'vdf_revelation',
-  SC_ROLLUP_ORIGINATE = 'sc_rollup_originate',
-  SC_ROLLUP_ADD_MESSAGE = 'sc_rollup_add_messages',
-  SC_ROLLUP_CEMENT = 'sc_rollup_cement',
-  SC_ROLLUP_PUBLISH = 'sc_rollup_publish',
-  SC_ROLLUP_REFUTE = 'sc_rollup_refute',
-  SC_ROLLUP_TIMEOUT = 'sc_rollup_timeout',
-  SC_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'sc_rollup_execute_outbox_message',
-  SC_ROLLUP_RECOVER_BOND = 'sc_rollup_recover_bond',
-  SC_ROLLUP_DAL_SLOT_SUBSCRIBE = 'sc_rollup_dal_slot_subscribe',
+  EVENT = 'event'
 }
