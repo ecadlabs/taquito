@@ -3,7 +3,7 @@ import {
   MichelsonV1Expression,
   MichelsonV1ExpressionExtended,
   RpcClientInterface,
-  RPCRunCodeParam,
+  RPCRunScriptViewParam,
 } from '@taquito/rpc';
 import { validateAddress, ValidationResult } from '@taquito/utils';
 import { TzReadProvider } from '../../read-provider/interface';
@@ -13,44 +13,6 @@ import {
   ViewSimulationError,
   validateAndExtractFailwith,
 } from '../errors';
-
-const runCodeHelper = (
-  viewArgsType: MichelsonV1ExpressionExtended,
-  viewReturnType: MichelsonV1ExpressionExtended,
-  contractStorageType: MichelsonV1Expression,
-  viewInstructions: MichelsonV1ExpressionExtended[],
-  viewArgs: MichelsonV1Expression,
-  contractStorageValue: MichelsonV1Expression,
-  balance: string,
-  chain_id: string,
-  source?: string,
-  amount = '0'
-): RPCRunCodeParam => {
-  return {
-    script: [
-      { prim: 'parameter', args: [{ prim: 'pair', args: [viewArgsType, contractStorageType] }] },
-      { prim: 'storage', args: [{ prim: 'option', args: [viewReturnType] }] },
-      {
-        prim: 'code',
-        args: [
-          [
-            { prim: 'CAR' },
-            viewInstructions,
-            { prim: 'SOME' },
-            { prim: 'NIL', args: [{ prim: 'operation' }] },
-            { prim: 'PAIR' },
-          ],
-        ],
-      },
-    ],
-    storage: { prim: 'None' },
-    input: { prim: 'Pair', args: [viewArgs, contractStorageValue] },
-    amount,
-    balance,
-    chain_id,
-    source,
-  };
-};
 
 export interface ExecutionContextParams {
   source?: string;
@@ -84,26 +46,15 @@ export class OnChainView {
    */
   async executeView(executionContext: ExecutionContextParams) {
     this.verifyContextExecution(executionContext);
-    const balance = (await this._readProvider.getBalance(this._contractAddress, 'head')).toString();
     const chainId = await this._readProvider.getChainId();
     const storage = await this._readProvider.getStorage(this._contractAddress, 'head');
-    return this.executeViewAndDecodeResult(
-      runCodeHelper(
-        this._smartContractViewSchema.viewArgsType,
-        this._smartContractViewSchema.viewReturnType,
-        this._contractStorageType,
-        this.adaptViewCodeToContext(
-          this._smartContractViewSchema.instructions,
-          executionContext.viewCaller,
-          balance
-        ),
-        this.transformArgsToMichelson(),
-        storage,
-        balance,
-        chainId,
-        executionContext.source
-      )
-    );
+    const viewArgs = this.transformArgsToMichelson();
+    return this.executeViewAndDecodeResult({
+      contract: this._contractAddress,
+      view: this._smartContractViewSchema.viewName,
+      input: { prim: 'Pair', args: [viewArgs, storage] },
+      chain_id: chainId,
+    });
   }
 
   private verifyContextExecution(executionContext: ExecutionContextParams) {
@@ -174,10 +125,10 @@ export class OnChainView {
     return instructions;
   }
 
-  private async executeViewAndDecodeResult(viewScript: RPCRunCodeParam) {
+  private async executeViewAndDecodeResult(viewScript: RPCRunScriptViewParam) {
     let storage: MichelsonV1ExpressionExtended;
     try {
-      storage = (await this._rpc.runCode(viewScript)).storage as MichelsonV1ExpressionExtended;
+      storage = (await this._rpc.runScriptView(viewScript)).data as MichelsonV1ExpressionExtended;
     } catch (error: any) {
       const failWith = validateAndExtractFailwith(error);
       throw failWith
@@ -191,12 +142,6 @@ export class OnChainView {
           )
         : error;
     }
-    if (!storage.args) {
-      throw new ViewSimulationError(
-        `View simulation failed with an invalid result: ${storage}`,
-        this._smartContractViewSchema.viewName
-      );
-    }
-    return this._smartContractViewSchema.decodeViewResult(storage.args[0]);
+    return this._smartContractViewSchema.decodeViewResult(storage);
   }
 }

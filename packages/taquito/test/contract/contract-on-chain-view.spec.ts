@@ -14,23 +14,20 @@ describe('OnChainView test', () => {
   let view: OnChainView;
   let mockRpcClient: {
     getChainId: jest.Mock<any, any>;
-    getBalance: jest.Mock<any, any>;
-    runCode: jest.Mock<any, any>;
+    runScriptView: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
   };
   let mockReadProvider: any;
   beforeEach(() => {
     mockRpcClient = {
       getChainId: jest.fn(),
-      getBalance: jest.fn(),
-      runCode: jest.fn(),
+      runScriptView: jest.fn(),
       getStorage: jest.fn(),
     };
     mockRpcClient.getChainId.mockResolvedValue('test_chain_id');
-    mockRpcClient.getBalance.mockResolvedValue(new BigNumber(5000000));
-    mockRpcClient.runCode.mockResolvedValue({
-      storage: { prim: 'Some', args: [{ int: '23' }] },
-      operations: [],
+
+    mockRpcClient.runScriptView.mockResolvedValue({
+      data: { int: '23' },
     });
     mockRpcClient.getStorage.mockResolvedValue({ int: '3' });
 
@@ -70,28 +67,10 @@ describe('OnChainView test', () => {
       })
     ).toEqual(new BigNumber(23));
 
-    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress', { block: 'head' });
-    expect(mockRpcClient.runCode).toHaveBeenCalledWith({
-      script: [
-        { prim: 'parameter', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'nat' }] }] },
-        { prim: 'storage', args: [{ prim: 'option', args: [{ prim: 'nat' }] }] },
-        {
-          prim: 'code',
-          args: [
-            [
-              { prim: 'CAR' },
-              [{ prim: 'UNPAIR' }, { prim: 'ADD' }],
-              { prim: 'SOME' },
-              { prim: 'NIL', args: [{ prim: 'operation' }] },
-              { prim: 'PAIR' },
-            ],
-          ],
-        },
-      ],
-      storage: { prim: 'None' },
+    expect(mockRpcClient.runScriptView).toHaveBeenCalledWith({
+      contract: 'contractAddress',
+      view: 'add',
       input: { prim: 'Pair', args: [{ int: '20' }, { int: '3' }] },
-      amount: '0',
-      balance: '5000000',
       chain_id: 'test_chain_id',
     });
 
@@ -115,39 +94,10 @@ describe('OnChainView test', () => {
     await view.executeView({
       viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
-
-    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress', { block: 'head' });
-    expect(mockRpcClient.runCode).toHaveBeenCalledWith({
-      script: [
-        { prim: 'parameter', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'nat' }] }] },
-        { prim: 'storage', args: [{ prim: 'option', args: [{ prim: 'nat' }] }] },
-        {
-          prim: 'code',
-          args: [
-            [
-              { prim: 'CAR' },
-              [
-                [
-                  {
-                    prim: 'PUSH',
-                    args: [{ prim: 'address' }, { string: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH' }],
-                  },
-                ],
-                [{ prim: 'PUSH', args: [{ prim: 'address' }, { string: 'contractAddress' }] }],
-                [{ prim: 'PUSH', args: [{ prim: 'mutez' }, { int: '5000000' }] }],
-                [{ prim: 'PUSH', args: [{ prim: 'mutez' }, { int: '0' }] }],
-              ],
-              { prim: 'SOME' },
-              { prim: 'NIL', args: [{ prim: 'operation' }] },
-              { prim: 'PAIR' },
-            ],
-          ],
-        },
-      ],
-      storage: { prim: 'None' },
+    expect(mockRpcClient.runScriptView).toHaveBeenCalledWith({
+      contract: 'contractAddress',
+      view: 'viewName',
       input: { prim: 'Pair', args: [{ int: '20' }, { int: '3' }] },
-      amount: '0',
-      balance: '5000000',
       chain_id: 'test_chain_id',
     });
 
@@ -234,99 +184,10 @@ describe('OnChainView test', () => {
       viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
-    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('contractAddress', { block: 'head' });
-    expect(mockRpcClient.runCode).toHaveBeenCalledWith({
-      script: [
-        { prim: 'parameter', args: [{ prim: 'pair', args: [{ prim: 'nat' }, { prim: 'nat' }] }] },
-        { prim: 'storage', args: [{ prim: 'option', args: [{ prim: 'nat' }] }] },
-        {
-          prim: 'code',
-          args: [
-            [
-              { prim: 'CAR' },
-              [
-                { prim: 'CAR' },
-                { prim: 'DUP' },
-                { prim: 'PUSH', args: [{ prim: 'nat' }, { int: '0' }] },
-                { prim: 'COMPARE' },
-                { prim: 'EQ' },
-                {
-                  prim: 'IF',
-                  args: [
-                    [],
-                    [
-                      { prim: 'DUP' },
-                      { prim: 'PUSH', args: [{ prim: 'nat' }, { int: '1' }] },
-                      { prim: 'COMPARE' },
-                      { prim: 'EQ' },
-                      {
-                        prim: 'IF',
-                        args: [
-                          [],
-                          [
-                            { prim: 'DUP' },
-                            { prim: 'PUSH', args: [{ prim: 'nat' }, { int: '1' }] },
-                            { prim: 'SWAP' },
-                            { prim: 'SUB' },
-                            { prim: 'ABS' },
-                            [
-                              {
-                                prim: 'PUSH',
-                                args: [{ prim: 'address' }, { string: 'contractAddress' }],
-                              },
-                            ],
-                            { prim: 'SWAP' },
-                            { prim: 'VIEW', args: [{ string: 'fib' }, { prim: 'nat' }] },
-                            [
-                              {
-                                prim: 'IF_NONE',
-                                args: [
-                                  [[{ prim: 'UNIT' }, { prim: 'FAILWITH' }]],
-                                  [
-                                    { prim: 'SWAP' },
-                                    { prim: 'PUSH', args: [{ prim: 'nat' }, { int: '2' }] },
-                                    { prim: 'SWAP' },
-                                    { prim: 'SUB' },
-                                    { prim: 'ABS' },
-                                    [
-                                      {
-                                        prim: 'PUSH',
-                                        args: [{ prim: 'address' }, { string: 'contractAddress' }],
-                                      },
-                                    ],
-                                    { prim: 'SWAP' },
-                                    { prim: 'VIEW', args: [{ string: 'fib' }, { prim: 'nat' }] },
-                                    [
-                                      {
-                                        prim: 'IF_NONE',
-                                        args: [
-                                          [[{ prim: 'UNIT' }, { prim: 'FAILWITH' }]],
-                                          [{ prim: 'ADD' }],
-                                        ],
-                                      },
-                                    ],
-                                  ],
-                                ],
-                              },
-                            ],
-                          ],
-                        ],
-                      },
-                    ],
-                  ],
-                },
-              ],
-              { prim: 'SOME' },
-              { prim: 'NIL', args: [{ prim: 'operation' }] },
-              { prim: 'PAIR' },
-            ],
-          ],
-        },
-      ],
-      storage: { prim: 'None' },
+    expect(mockRpcClient.runScriptView).toHaveBeenCalledWith({
+      contract: 'contractAddress',
+      view: 'viewName',
       input: { prim: 'Pair', args: [{ int: '20' }, { int: '3' }] },
-      amount: '0',
-      balance: '5000000',
       chain_id: 'test_chain_id',
     });
 
@@ -356,18 +217,6 @@ describe('OnChainView test', () => {
     done();
   });
 
-  it('should throw an error if the view response is invalid', async (done) => {
-    mockRpcClient.runCode.mockResolvedValue({ storage: {}, operations: [] });
-    try {
-      await view.executeView({
-        viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
-      });
-    } catch (error) {
-      expect(error).toBeInstanceOf(ViewSimulationError);
-    }
-    done();
-  });
-
   it('should throw the original error when it does not contain a "with" property', async (done) => {
     const httpError = new HttpResponseError(
       'fail',
@@ -376,7 +225,7 @@ describe('OnChainView test', () => {
       'test',
       'https://test.com'
     );
-    mockRpcClient.runCode.mockRejectedValue(httpError);
+    mockRpcClient.runScriptView.mockRejectedValue(httpError);
 
     try {
       await view.executeView({
@@ -397,7 +246,7 @@ describe('OnChainView test', () => {
       '[{},{"kind":"temporary","with":{"prim":"Unit"}}]',
       'https://test.com'
     );
-    mockRpcClient.runCode.mockRejectedValue(httpError);
+    mockRpcClient.runScriptView.mockRejectedValue(httpError);
 
     try {
       await view.executeView({
