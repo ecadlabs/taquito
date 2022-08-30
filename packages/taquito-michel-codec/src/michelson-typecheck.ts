@@ -661,7 +661,7 @@ function functionTypeInternal(
   function rethrow<T extends unknown[], U>(fn: (...args: T) => U) {
     return (...args: T): U => {
       try {
-        return fn(...args);
+         return fn(...args);
       } catch (err) {
         if (err instanceof MichelsonError) {
           throw new MichelsonInstructionError(instruction, stack, err.message);
@@ -2009,12 +2009,12 @@ function functionTypeInternal(
         return [annotateVar({ prim: 'nat' }), ...stack];
 
       case 'EMIT': {
+        // const ia = instructionAnn({ f: 1 }, { specialVar: true });
         if (instruction.args) {
+          // const ty = instruction.args[0]
           const s = args(1, ['or']);
-          const ty = instruction.args[0]
-          // const ia = instructionAnn({ f: 2, v: 2 }, { specialVar: true });
-          ensureTypesEqual(s[0], ty)
-          return [annotateVar({ prim: 'operation' }), s, ...stack.slice(1)]
+          ensureTypesEqual(s[0], instruction.args[0])
+          return [annotateVar({ prim: 'operation' }), ...stack]
           // return [annotate({ prim: 'operation', args: ty}, {f: ia.f}), ...stack.slice(1)]
         }
         return stack
