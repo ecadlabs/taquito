@@ -2009,15 +2009,15 @@ function functionTypeInternal(
         return [annotateVar({ prim: 'nat' }), ...stack];
 
       case 'EMIT': {
-        // const ia = instructionAnn({ f: 1 }, { specialVar: true });
+        const ia = instructionAnn({ f: 1 }, { specialVar: true });
         if (instruction.args) {
           // const ty = instruction.args[0]
           const s = args(1, ['or']);
           ensureTypesEqual(s[0], instruction.args[0])
-          return [annotateVar({ prim: 'operation' }), ...stack]
+          return [annotate({ prim: 'operation' }, ia), ...stack.slice(2)]
           // return [annotate({ prim: 'operation', args: ty}, {f: ia.f}), ...stack.slice(1)]
         }
-        return stack
+          return stack
       }
 
       default:
