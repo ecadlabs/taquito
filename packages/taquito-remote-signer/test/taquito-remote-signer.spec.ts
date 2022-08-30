@@ -1,3 +1,9 @@
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import {
+  BadSigningDataError,
+  KeyNotFoundError,
+  OperationNotAuthorizedError,
+} from '../src/errors';
 import { RemoteSigner } from '../src/taquito-remote-signer';
 
 /**
@@ -134,18 +140,11 @@ describe('RemoteSigner test', () => {
 
     it('Should fail if pkh is invalid', async (done) => {
       try {
-        const signer = new RemoteSigner(
+        new RemoteSigner(
           'tz9iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
           'http://127.0.0.1:6732',
           {},
           httpBackend as any
-        );
-        await expect(
-          signer.sign(
-            '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000'
-          )
-        ).rejects.toThrowError(
-          /Signature failed verification against public key/
         );
       } catch (error: any) {
         expect(error.message).toContain('is invalid');
@@ -202,7 +201,7 @@ describe('RemoteSigner test', () => {
       done();
     });
 
-    it('Verify error messages for HttpResponse failures', async (done) => {
+    it('Verify error message for signer.publicKey HttpResponse failure with STATUS_CODE.NOT_FOUND', async (done) => {
       const signer = new RemoteSigner(
         'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
         'http://127.0.0.1:6732',
@@ -210,12 +209,77 @@ describe('RemoteSigner test', () => {
         httpBackend as any
       );
 
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.NOT_FOUND,
+        'err',
+        'test',
+        'https://test.com'
+      );
+
+      httpBackend.createRequest.mockRejectedValue(expectedError);
+
       try {
         await signer.publicKey();
       } catch (error: any) {
-        expect(error.message).toContain('Cannot destructure property');
+        expect(error).toBeInstanceOf(KeyNotFoundError);
       }
+      done();
+    });
 
+    it('Verify error messages for signer.sign HttpResponse failure with STATUS_CODE.FORBIDDEN', async (done) => {
+      const signer = new RemoteSigner(
+        'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
+        'http://127.0.0.1:6732',
+        {},
+        httpBackend as any
+      );
+
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.FORBIDDEN,
+        'err',
+        'test',
+        'https://test.com'
+      );
+
+      httpBackend.createRequest.mockRejectedValue(expectedError);
+
+      try {
+        await signer.sign(
+          '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000'
+        );
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(OperationNotAuthorizedError);
+      }
+      done();
+    });
+
+    it('Verify error messages for HttpResponse failure with STATUS_CODE.BAD_REQUEST', async (done) => {
+      const signer = new RemoteSigner(
+        'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
+        'http://127.0.0.1:6732',
+        {},
+        httpBackend as any
+      );
+
+      const expectedError = new HttpResponseError(
+        'fail',
+        STATUS_CODE.BAD_REQUEST,
+        'err',
+        'test',
+        'https://test.com'
+      );
+
+      httpBackend.createRequest.mockRejectedValue(expectedError);
+
+      try {
+        await signer.sign(
+          '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000'
+        );
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(BadSigningDataError);
+      }
       done();
     });
   });
