@@ -63,8 +63,7 @@ describe('MichelsonStorageView test', () => {
 
   it('Should succesfully execute a view that get the balance of the contrat', async (done) => {
     mockRpcClient.runScriptView.mockResolvedValue({
-      storage: { prim: 'Some', args: [{ int: '0' }] },
-      operations: [],
+      data: { int: '0' },
     });
 
     const michelsonStorageView = new MichelsonStorageView(
@@ -300,8 +299,7 @@ describe('MichelsonStorageView test', () => {
 
   it('Should be valid when code of the view contains the instruction SELF followed by an instruction ADDRESS', async (done) => {
     mockRpcClient.runScriptView.mockResolvedValue({
-      storage: { prim: 'Some', args: [{ int: '0' }] },
-      operations: [],
+      data: { int: '0' },
     });
     const viewCode = [
       { prim: 'CAR', args: [], annots: [] },

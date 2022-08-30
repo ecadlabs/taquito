@@ -174,6 +174,6 @@ export class MichelsonStorageView implements View {
     }
 
     const viewResultSchema = new ParameterSchema(this.returnType);
-    return viewResultSchema.Execute(result.storage.args[0]);
+    return viewResultSchema.Execute(result.data);
   }
 }
