@@ -134,7 +134,7 @@ export interface BlockFullHeader {
   context: string;
   payload_hash?: string;
   payload_round?: number;
-  priority: number;
+  priority?: number;
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
   liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
@@ -423,6 +423,17 @@ export interface OperationContentsTransferTicket {
   entrypoint: string;
 }
 
+export interface OperationContentsIncreasePaidStorage {
+  kind: OpKind.INCREASE_PAID_STORAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  amount: string;
+  destination: string;
+}
+
 export type OperationContents =
   | OperationContentsEndorsement
   | OperationContentsPreEndorsement
@@ -448,7 +459,8 @@ export type OperationContents =
   | OperationContentsTxRollupFinalizeCommitment
   | OperationContentsTxRollupRemoveCommitment
   | OperationContentsTxRollupRejection
-  | OperationContentsTransferTicket;
+  | OperationContentsTransferTicket
+  | OperationContentsIncreasePaidStorage;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -548,6 +560,12 @@ export interface OperationContentsAndResultMetadataTransferTicket {
 export interface OperationContentsAndResultMetadataTxRollupDispatchTickets {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultTxRollupDispatchTickets;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataIncreasePaidStorage {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultIncreasePaidStorage;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -804,6 +822,18 @@ export interface OperationContentsAndResultTxRollupDispatchTickets {
   metadata: OperationContentsAndResultMetadataTxRollupDispatchTickets;
 }
 
+export interface OperationContentsAndResultIncreasePaidStorage {
+  kind: OpKind.INCREASE_PAID_STORAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  amount: string;
+  destination: string;
+  metadata: OperationContentsAndResultMetadataIncreasePaidStorage;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -829,7 +859,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTxRollupFinalizeCommitment
   | OperationContentsAndResultTxRollupRemoveCommitment
   | OperationContentsAndResultTxRollupRejection
-  | OperationContentsAndResultTransferTicket;
+  | OperationContentsAndResultTransferTicket
+  | OperationContentsAndResultIncreasePaidStorage;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1149,6 +1180,14 @@ export interface OperationResultTransferTicket {
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
 }
+
+export interface OperationResultIncreasePaidStorage {
+  status: OperationResultStatusEnum;
+  balance_updates?: OperationBalanceUpdates;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
 export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
@@ -1380,6 +1419,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto014 &
   ConstantsResponseProto013 &
   ConstantsResponseProto012 &
   ConstantsResponseProto011 &
@@ -1418,6 +1458,27 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface DalParametric {
+  feature_enable: boolean;
+  number_of_slots: number;
+  number_of_shards: number;
+  endorsement_lag: number;
+  availability_threshold: number;
+}
+
+export interface ConstantsResponseProto014 extends ConstantsResponseProto013 {
+  max_wrapped_proof_binary_size?: number;
+  nonce_revelation_threshold?: number;
+  vdf_difficulty?: BigNumber;
+  testnet_dictator?: string;
+  dal_parametric?: DalParametric;
+  sc_rollup_stake_amount?: BigNumber;
+  sc_rollup_commitment_period_in_blocks?: number;
+  sc_rollup_max_lookahead_in_blocks?: number;
+  sc_rollup_max_active_outbox_levels?: number;
+  sc_rollup_max_outbox_messages_per_level?: number;
+}
 
 export interface ConstantsResponseProto013
   extends Omit<
@@ -1545,7 +1606,11 @@ export interface ContractResponse {
 }
 
 export interface TestChainStatus {
-  status: string;
+  status: 'not_running' | 'forking' | 'running';
+  protocol?: string;
+  expiration?: TimeStampMixed;
+  chain_id?: string;
+  genesis?: string;
 }
 
 export interface MaxOperationListLength {

@@ -1414,4 +1414,22 @@ export const kathmanduCases: TestCase[] = [
       ],
     },
   },
+  {
+    name: `Increase Paid Storage operation`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.INCREASE_PAID_STORAGE,
+          counter: '1',
+          source: 'tz2WH1zahKo2KiS1gcHBhNFTURPfW1Vk7qpE',
+          fee: '100',
+          gas_limit: '10000',
+          storage_limit: '10',
+          amount: '2',
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+        },
+      ],
+    },
+  },
 ];

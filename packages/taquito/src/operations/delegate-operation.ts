@@ -1,4 +1,5 @@
 import { OperationContentsAndResult, OperationContentsAndResultDelegation } from '@taquito/rpc';
+import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { Operation } from './operations';
 import {
@@ -14,8 +15,10 @@ import {
  *
  * @warn Currently support only one delegation per operation
  */
-export class DelegateOperation extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
+export class DelegateOperation
+  extends Operation
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
+{
   constructor(
     hash: string,
     private readonly params: RPCDelegateOperation,
@@ -30,22 +33,17 @@ export class DelegateOperation extends Operation
   get operationResults() {
     const delegationOp =
       Array.isArray(this.results) &&
-      (this.results.find(op => op.kind === 'delegation') as OperationContentsAndResultDelegation);
+      (this.results.find((op) => op.kind === 'delegation') as OperationContentsAndResultDelegation);
     const result = delegationOp && delegationOp.metadata && delegationOp.metadata.operation_result;
     return result ? result : undefined;
   }
 
   get status() {
-    const operationResults = this.operationResults;
-    if (operationResults) {
-      return operationResults.status;
-    } else {
-      return 'unknown';
-    }
+    return this.operationResults?.status ?? 'unknown';
   }
 
-  get delegate(): string {
-    return this.delegate;
+  get delegate(): string | undefined {
+    return this.params.delegate;
   }
 
   get isRegisterOperation(): boolean {
@@ -65,11 +63,17 @@ export class DelegateOperation extends Operation
   }
 
   get consumedGas() {
-    const consumedGas = this.operationResults && this.operationResults.consumed_gas;
-    return consumedGas ? consumedGas : undefined;
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return this.consumedMilliGas
+      ? new BigNumber(this.consumedMilliGas).dividedBy(1000).toString()
+      : undefined;
+  }
+
+  get consumedMilliGas() {
+    return this.operationResults?.consumed_milligas;
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return this.operationResults?.errors;
   }
 }
