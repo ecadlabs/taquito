@@ -143,7 +143,7 @@ export type MichelsonInstruction =
   | InstrX<'LAMBDA', [MichelsonType, MichelsonType, InstructionList]>
   | InstrX<'DIP', [IntLiteral, InstructionList] | [InstructionList]>
   | InstrX<'VIEW', [StringLiteral, MichelsonType]>
-  | InstrX<'EMIT', [MichelsonContract]>
+  | InstrX<'EMIT', [MichelsonType]>
   | InstrPrim<'DROP' | 'PAIR' | 'UNPAIR' | 'DUP' | 'GET' | 'UPDATE', [IntLiteral]>;
 
 // Types

@@ -2010,11 +2010,14 @@ function functionTypeInternal(
 
       case 'EMIT': {
         if (instruction.args) {
-          const s = args(1, ['contract']);
-          ensureTypesEqual(s[0], s[0].args[0])
-          return [annotateVar({ prim: 'operation'}), ...stack.slice(1)]
+          const s = args(1, ['or']);
+          const ty = instruction.args[0]
+          // const ia = instructionAnn({ f: 2, v: 2 }, { specialVar: true });
+          ensureTypesEqual(s[0], ty)
+          return [annotateVar({ prim: 'operation' }), s, ...stack.slice(1)]
+          // return [annotate({ prim: 'operation', args: ty}, {f: ia.f}), ...stack.slice(1)]
         }
-        return stack.slice(1)
+        return stack
       }
 
       default:
