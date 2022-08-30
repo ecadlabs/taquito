@@ -4,13 +4,22 @@ import { collection_code } from "./data/collection_contract";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
+<<<<<<< Updated upstream
   describe(`Collection contract tests using: ${rpc}`, () => {
+=======
+  describe(`Test the correct ordering by Taquito of elements in set, list and map: ${rpc}`, () => {
+>>>>>>> Stashed changes
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
+<<<<<<< Updated upstream
     it('Originate a contract with set,list,map and exercise all collections', async (done) => {
+=======
+    
+    it('Verify originate.contract for a contract with set, list, map and then exercise all collections', async (done) => {
+>>>>>>> Stashed changes
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {

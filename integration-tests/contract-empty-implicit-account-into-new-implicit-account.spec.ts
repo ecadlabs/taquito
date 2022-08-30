@@ -13,8 +13,16 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
             done()
         })
 
+<<<<<<< Updated upstream
         jakartanet('on J protocol, reveals the sender account, creates an unrevealed implicit account, empties the sender account into the created one', async (done) => {
             const receiver = await createAddress();
+=======
+        it('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async (done) => {
+         /** The new unrevealed implicit account is not created by the sender account. 
+         *  We create the new unrevealed implicit account with the createAddress function, which generates a random private key. 
+         * */
+         const receiver = await createAddress();
+>>>>>>> Stashed changes
             const receiver_pkh = await receiver.signer.publicKeyHash();
 
             // create and fund the account we want to empty
@@ -38,8 +46,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
             // // Emptying the account
             const totalFees = estimate.suggestedFeeMutez + estimate.burnFeeMutez;
             const maxAmount = balance.minus(totalFees).toNumber();
+<<<<<<< Updated upstream
             // // Temporary fix, see https://gitlab.com/tezos/tezos/-/issues/1754
             // // we need to increase the gasLimit and fee returned by the estimation
+=======
+
+            // Temporary fix, see https://gitlab.com/tezos/tezos/-/issues/1754
+            // we need to increase the gasLimit and fee returned by the estimation
+>>>>>>> Stashed changes
             const gasBuffer = 500;
             const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
             const increasedFee = (gasBuffer: number, opSize: number) => {
@@ -47,6 +61,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
              }
 
             const opTransfer = await sender.contract.transfer({
+<<<<<<< Updated upstream
                  to: receiver_pkh,
                  mutez: true,
                  amount: maxAmount - increasedFee(gasBuffer, Number(estimate.opSize)),
@@ -97,6 +112,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
                  gasLimit: estimate.gasLimit, 
                  storageLimit: estimate.storageLimit 
              });
+=======
+                to: receiver_pkh,
+                mutez: true,
+                amount: maxAmount - increasedFee(gasBuffer, Number(estimate.opSize)),
+                fee: estimate.suggestedFeeMutez + increasedFee(gasBuffer, Number(estimate.opSize)), // baker fees
+                gasLimit: estimate.gasLimit + gasBuffer,
+                storageLimit: estimate.storageLimit
+            });
+>>>>>>> Stashed changes
 
              await opTransfer.confirmation();
              const finalBalance = await Tezos.tz.getBalance(sender_pkh);

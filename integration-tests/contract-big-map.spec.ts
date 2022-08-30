@@ -7,12 +7,26 @@ import BigNumber from 'bignumber.js';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;
+<<<<<<< Updated upstream
   describe(`Test contract with multiple bigmap variations using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     });
     it('originates a contract and initializes bigmaps with variants of data', async (done) => {
+=======
+
+  describe(`Test contract origination with initialized Maps with variants of data through contract api using: ${rpc}`, () => {
+     /** The purpose of the test is to make sure that the keys in the map are properly ordered by Taquito before injection of the operation, 
+     *   If the keys are not ordered, the node will reject the operation. */
+    
+    beforeEach(async (done) => {
+      await setup()
+      done()
+    })
+
+    it('Verify contract.originate with initialized Map with variants of data', async (done) => {
+>>>>>>> Stashed changes
       const op = await Tezos.contract.originate({
         balance: '1',
         code: storageContract,

@@ -198,6 +198,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
             done();
         });
     });
+<<<<<<< Updated upstream
 
         test('Batch multiple originations and get contract addresses info from getOriginatedContractAddresses member function', async (done) => {
             const batch = Tezos.wallet
@@ -231,3 +232,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
           done();
         });
     });
+=======
+});
+>>>>>>> Stashed changes

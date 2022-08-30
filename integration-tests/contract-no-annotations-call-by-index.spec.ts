@@ -3,7 +3,11 @@ import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
+<<<<<<< Updated upstream
   describe(`Test contract with no annotations calling methods by index using: ${rpc}`, () => {
+=======
+  describe(`Test call to an entrypoint with no annotations calling methods by index through contract api using: ${rpc}`, () => {
+>>>>>>> Stashed changes
 
     beforeEach(async (done) => {
       await setup()

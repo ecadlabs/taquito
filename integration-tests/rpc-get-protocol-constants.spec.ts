@@ -458,7 +458,11 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     describe(`Fetch constants for testnet`, () => {
 
+<<<<<<< Updated upstream
         jakartanet(`successfully fetches all constants for jakartanet using ${rpc}`, async (done) => {
+=======
+        ithacanet(`successfully fetches all constants for ithacanet using ${rpc}`, async (done) => {
+>>>>>>> Stashed changes
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto013 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 

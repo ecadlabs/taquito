@@ -9,7 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
+<<<<<<< Updated upstream
     it('captures a FAILWITH and throws an error', async (done) => {
+=======
+    it('Verify contract.originate a contract with FAILWITH instruction and verify an error is thrown when calling the contract entrypoint', async (done) => {
+>>>>>>> Stashed changes
       const op = await Tezos.contract.originate({
         balance: "1",
         code: failwithContractCode,
@@ -27,7 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }
 
       try {
-        // Bypass estimation by specifyint fee & limits
+        // Bypass estimation by specify int fee & limits
         await contract.methods.default(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
       } catch (ex: any) {
         expect(ex.message).toMatch('test')

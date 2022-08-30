@@ -12,7 +12,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
+<<<<<<< Updated upstream
         test('Batch transfer and register global constant operations', async (done) => {
+=======
+        test('Verify the contract.batch transfer and register global constant operations', async (done) => {
+>>>>>>> Stashed changes
             const batchOp = await Tezos.contract
                 .batch([
                     { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },

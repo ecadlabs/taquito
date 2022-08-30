@@ -23,7 +23,36 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
+<<<<<<< Updated upstream
     test('Originates a Sapling Double contract', async (done) => {
+=======
+    ithacanet('Originates a Sapling Double contract', async (done) => {
+      const op = await Tezos.contract.originate({
+        code: saplingContractDouble,
+        init: `(Pair {} {})`,
+      });
+      await op.confirmation();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      const contract = await op.contract();
+
+      Tezos.contract.at(contract.address).then((contract) => {
+        const objects = Object.keys(contract.methodsObject);
+        expect(objects).toContain('default');
+      });
+
+      const storage: StorageType = await contract.storage();
+      const saplingStateLedger1 = await storage.left.getSaplingDiff();
+
+      expect(saplingStateLedger1.root).toBeDefined();
+      expect(saplingStateLedger1.nullifiers.length).toEqual(0);
+      expect(saplingStateLedger1.commitments_and_ciphertexts.length).toEqual(0);
+
+      done();
+    });
+
+    jakartanetAndMondaynet('Originates a Sapling Double contract on Mondaynet', async (done) => {
+>>>>>>> Stashed changes
       const op = await Tezos.contract.originate({
         code: saplingContractDoubleJProto,
         init: `(Pair {} {})`,

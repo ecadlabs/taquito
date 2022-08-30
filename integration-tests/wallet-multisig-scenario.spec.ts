@@ -10,7 +10,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup()
       done()
     })
+<<<<<<< Updated upstream
     test('Verify contract.originate, contract interaction, and transfer to an implicit account for a contract with multiple signatures', async (done) => {
+=======
+    test('Verify contract.originate for a contract with multiple signatures', async (done: () => void) => {
+>>>>>>> Stashed changes
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();

@@ -36,7 +36,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
+<<<<<<< Updated upstream
     test('mints some tokens using the `methodObjects` method', 2, async (done: () => void) => {
+=======
+    test('Verify a token contract mints some tokens using the `methodObjects` method', 2, async (done: () => void) => {
+>>>>>>> Stashed changes
       const opMethod = await contract.methodsObject.mint({
         to: await Tezos.signer.publicKeyHash(), 
         value: 100

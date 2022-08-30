@@ -28,7 +28,16 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       done();
     })
 
+<<<<<<< Updated upstream
     it('Simple transfers with origination using with', async (done) => {
+=======
+    it('Verify a batch of transfers and origination operations using a combination of the two notations (array of operation with kind mixed with withTransfer method)', async (done) => {
+      /** Tests the usage of a mix of the 2 possible notations for batched operations
+       *  See for details on the 2 notations: 
+       *  https://tezostaquito.io/docs/batch_API#--the-array-of-transactions-method 
+       *  https://tezostaquito.io/docs/batch_API#--the-withtransfer-method
+       */
+>>>>>>> Stashed changes
       const op = await Tezos.batch([
         {
           kind: OpKind.TRANSACTION,
@@ -72,7 +81,11 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       done();
     })
 
+<<<<<<< Updated upstream
     it('Test batch from account with low balance', async (done) => {
+=======
+    it('Verify batch transfer and origination from an account with a low balance', async (done) => {
+>>>>>>> Stashed changes
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();

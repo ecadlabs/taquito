@@ -78,7 +78,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   Tezos.setPackerProvider(new MichelCodecPacker());
 
+<<<<<<< Updated upstream
   describe(`Test of contracts having a permit for tzip-17: ${rpc}`, () => {
+=======
+  describe(`Test contract origination having a permit for tzip-17 through contract api: ${rpc}`, () => {
+>>>>>>> Stashed changes
     beforeEach(async (done) => {
       await setup(true);
       done();

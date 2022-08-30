@@ -76,7 +76,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         done();
       })
 
+<<<<<<< Updated upstream
     test('originate contract and init storage with pair as key in map', 2, async (done: () => void) => {
+=======
+    test('Verify contract.originate for a contract with pair as a key in map ', 2, async (done: () => void) => {
+      /** The init property is used in this test instead of the storage property as in the previous test. */
+>>>>>>> Stashed changes
         const op = await Tezos.contract.originate({
           balance: "0",
           code: mapWithPairAsKeyCode,
