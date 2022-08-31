@@ -58,7 +58,7 @@ jobs:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.22.2
     - run: |
-        echo TX_ROLLUP_HASH=$(ssh ecad-mondaynet-archive jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups >> $GITHUB_ENV
+        echo "TX_ROLLUP_HASH=$(ssh ecad-mondaynet-archive jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups)" >> $GITHUB_ENV
     - run: echo "Test env variables ${TX_ROLLUP_HASH}"
     
     # - uses: actions/checkout@v3
