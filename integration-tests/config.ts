@@ -115,6 +115,7 @@ const mondaynetEphemeral = {
   },
   txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
   txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  txRollupHash: process.env['TX_ROLLUP_HASH'] || '',
 };
 
 const kathmandunetFaucet = {
