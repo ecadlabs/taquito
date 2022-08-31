@@ -8,6 +8,7 @@ import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
+import { TicketToken } from '../tokens/ticket';
 import {
   BigMapKeyType,
   Semantic,
@@ -156,6 +157,9 @@ export class Schema {
   Typecheck(val: any) {
     if (this.root instanceof BigMapToken && Number.isInteger(Number(val))) {
       return true;
+    }
+    if (this.root instanceof TicketToken && val.ticketer && val.value && val.amount) {
+      return true
     }
     try {
       this.root.EncodeObject(val);
