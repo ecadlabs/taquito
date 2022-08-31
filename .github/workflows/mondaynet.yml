@@ -57,9 +57,8 @@ jobs:
       with:
         SSHKEY: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
         USER: ${{ secrets.MONDAYNET_TORU_SSH_USER }}
-        ORIGIN: ecad-mondaynet-archive
-    - run: |
-        echo "TX_ROLLUP_HASH=$(ssh ecad-mondaynet-archive jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups)" >> $GITHUB_ENV
+        ORIGIN: mondaynet.ecadinfra.com
+    - run: ssh mondaynet.ecadinfra.com jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups
     - run: echo "Test env variables ${TX_ROLLUP_HASH}"
     
     # - uses: actions/checkout@v3
