@@ -15,6 +15,7 @@ CONFIGS().forEach(
     knownContract,
     knownBigMapContract,
     knownSaplingContract,
+    knownViewContract,
   }) => {
     const Tezos = lib;
     const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
@@ -113,10 +114,8 @@ CONFIGS().forEach(
         });
 
         kathmandunet('Executes michelson view by calling runScriptView ', async (done) => {
-
-          const viewContract = 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM'
           const params: RPCRunScriptViewParam = {
-            contract: viewContract,
+            contract: knownViewContract!,
             view: 'add',
             chain_id: ChainIds.KATHMANDUNET,
             input: {
