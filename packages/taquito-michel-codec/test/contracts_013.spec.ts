@@ -251,7 +251,6 @@ const contracts: {
     'dup-n.tz',
     'ediv.tz',
     'ediv_mutez.tz',
-    'emit_instruction.tz',
     'empty_map.tz',
     'exec_concat.tz',
     'first.tz',

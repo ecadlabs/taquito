@@ -2011,10 +2011,8 @@ function functionTypeInternal(
       case 'EMIT': {
         const ia = instructionAnn({ f: 1, t: 1}, { specialVar: true });
         if (instruction.args) {
-          const ty = instruction.args[0]
-          const p = ty as Prim
-          const s = args(0, [p.prim as MichelsonTypeID]);
-          ensureTypesEqual(s[0], ty)
+          const s = args(0, null);
+          ensureTypesEqual(s[0], instruction.args[0])
           return [annotate({ prim: 'operation' }, ia), ...stack.slice(1)]
         }
           return [annotate({ prim: 'operation'}, ia), ...stack.slice(1)]
