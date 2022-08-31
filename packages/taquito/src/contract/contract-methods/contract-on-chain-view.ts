@@ -48,16 +48,17 @@ export class OnChainView {
     this.verifyContextExecution(executionContext);
     const chainId = await this._readProvider.getChainId();
     const viewArgs = this.transformArgsToMichelson();
-    const scriptView = {
+    const scriptView: RPCRunScriptViewParam = {
       contract: this._contractAddress,
       view: this._smartContractViewSchema.viewName,
       input: viewArgs,
       chain_id: chainId,
-      payer: executionContext.viewCaller,
+      source: executionContext.viewCaller,
     };
-    return executionContext.source
-      ? this.executeViewAndDecodeResult({ ...scriptView, source: executionContext.source })
-      : this.executeViewAndDecodeResult(scriptView);
+    if (executionContext.source) {
+      scriptView.payer = executionContext.source;
+    }
+    return this.executeViewAndDecodeResult(scriptView);
   }
 
   private verifyContextExecution(executionContext: ExecutionContextParams) {

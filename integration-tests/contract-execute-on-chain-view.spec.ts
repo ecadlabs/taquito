@@ -1,19 +1,20 @@
 import { codeViewsTopLevel } from "../packages/taquito-local-forging/test/data/contract_views_top_level";
 import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
-import { Protocols } from "@taquito/taquito";
-import { HttpResponseError } from "@taquito/http-utils";
+import { Protocols, ViewSimulationError } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, protocol, rpc, setup }) => {
   const Tezos = lib;
- 
+  const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
+  const kathmandunet = protocol === Protocols.PtKathman ? test: test.skip;
+
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)
       done()
     })
-    test(`As a user I want to originate a smart contract having top level views and simulate the views execution`, async (done) => {
+    kathmandunet(`As a user I want to originate a smart contract having top level views and simulate the views execution`, async (done) => {
       // Contract origination
       const op = await Tezos.contract.originate({
         code: codeViewsTopLevel,
@@ -74,7 +75,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         // view that always fails
         await contract.contractViews.test_failwith(3).executeView({ viewCaller: contract.address });
       } catch (error: any) {
-        expect(error).toBeInstanceOf(HttpResponseError)
+        expect(error).toBeInstanceOf(ViewSimulationError)
       }
 
       const viewSuccResult = await contract.contractViews.succ({ 0: 16, 1: contract.address }).executeView({ source, viewCaller: contract.address });

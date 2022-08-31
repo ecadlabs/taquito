@@ -72,7 +72,7 @@ describe('OnChainView test', () => {
       view: 'add',
       input: { int: '20' },
       chain_id: 'test_chain_id',
-      payer: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
+      source: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
     done();
@@ -100,7 +100,7 @@ describe('OnChainView test', () => {
       view: 'viewName',
       input: { int: '20' },
       chain_id: 'test_chain_id',
-      payer: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
+      source: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
     done();
@@ -191,7 +191,7 @@ describe('OnChainView test', () => {
       view: 'viewName',
       input: { int: '20' },
       chain_id: 'test_chain_id',
-      payer: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
+      source: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
     done();

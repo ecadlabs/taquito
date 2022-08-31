@@ -158,6 +158,7 @@ export class MichelsonStorageView implements View {
     const blockTimestamp = await this.readProvider.getBlockTimestamp('head');
 
     const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
+
     if (!this.viewParameterType) {
       code.unshift({ prim: 'CDR' });
     }
