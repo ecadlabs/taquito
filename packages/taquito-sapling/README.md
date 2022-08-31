@@ -21,8 +21,8 @@ npm install @taquito/sapling
 The returned balance is in mutez.
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito';
-import { SaplingToolkit } from '@taquito/sapling';
+import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
+import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
 
@@ -30,10 +30,12 @@ const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tE
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
 
+const readProvider = new RpcReadAdapter(tezos.rpc);
+
 const saplingToolkit = new SaplingToolkit(
-    inMemorySpendingKey, 
+    { saplingSigner: inMemorySpendingKey }, 
     { contractAddress: saplingContract.address, memoSize: 8 }, 
-    tezos.getFactory(RpcReadAdapter)()
+    readProvider
 )
 
 const txViewer = await saplingToolkit.getSaplingTransactionViewer();
@@ -45,8 +47,8 @@ const initialBalance = await txViewer.getBalance();
 A shielded transaction allows sending tokens from a Tezos account (tz1, tz2, tz3) to a Sapling address (zet).
 
 ```ts
-import { TezosToolkit } from '@taquito/taquito';
-import { SaplingToolkit } from '@taquito/sapling';
+import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
+import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 
 const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
 // set up your signer on the TezosToolkit as usual
@@ -54,14 +56,16 @@ const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tE
 
 const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic('YOUR_MNEMONIC');
 
+const readProvider = new RpcReadAdapter(tezos.rpc);
+
 const saplingToolkit = new SaplingToolkit(
-    inMemorySpendingKey, 
+    { saplingSigner: inMemorySpendingKey }, 
     { contractAddress: saplingContract.address, memoSize: 8 }, 
-    tezos.getFactory(RpcReadAdapter)()
+    readProvider
 )
 
 // Fetch a payment address (zet)
-const inMemoryViewingKey = await inMemorySpendingKey.getInMemoryViewingKey();
+const inMemoryViewingKey = await inMemorySpendingKey.getSaplingViewingKeyProvider();
 const paymentAddress = (await inMemoryViewingKey.getAddress()).address;
 
 // prepare the shielded transaction
