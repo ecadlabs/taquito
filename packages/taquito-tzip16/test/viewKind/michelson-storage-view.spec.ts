@@ -12,7 +12,7 @@ describe('MichelsonStorageView test', () => {
       getBlock: jest.fn(),
       getBalance: jest.fn(),
       getChainId: jest.fn(),
-      runScriptView: jest.fn(),
+      runCode: jest.fn(),
       getStorage: jest.fn(),
       getBlockHeader: jest.fn(),
     };
@@ -62,8 +62,9 @@ describe('MichelsonStorageView test', () => {
   });
 
   it('Should succesfully execute a view that get the balance of the contrat', async (done) => {
-    mockRpcClient.runScriptView.mockResolvedValue({
-      data: { int: '0' },
+    mockRpcClient.runCode.mockResolvedValue({
+      storage: { prim: 'Some', args: [{ int: '0' }] },
+      operations: [],
     });
 
     const michelsonStorageView = new MichelsonStorageView(
@@ -298,8 +299,9 @@ describe('MichelsonStorageView test', () => {
   });
 
   it('Should be valid when code of the view contains the instruction SELF followed by an instruction ADDRESS', async (done) => {
-    mockRpcClient.runScriptView.mockResolvedValue({
-      data: { int: '0' },
+    mockRpcClient.runCode.mockResolvedValue({
+      storage: { prim: 'Some', args: [{ int: '0' }] },
+      operations: [],
     });
     const viewCode = [
       { prim: 'CAR', args: [], annots: [] },

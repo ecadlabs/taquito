@@ -3,7 +3,6 @@ import {
   RpcClientInterface,
   MichelsonV1Expression,
   MichelsonV1ExpressionExtended,
-  RPCRunScriptViewParam,
 } from '@taquito/rpc';
 import {
   ContractAbstraction,
@@ -145,22 +144,51 @@ export class MichelsonStorageView implements View {
     this.findForbiddenInstructionInViewCode(this.code);
     this.illegalUseOfSelfInstruction(this.code);
 
-    const { arg } = this.formatArgsAndParameter(args);
+    const { arg, viewParameterType } = this.formatArgsAndParameter(args);
+
+    const storageType: any = this.contract.script.code.find((x: any) => x.prim === 'storage');
+    const storageArgs = storageType.args[0];
 
     // currentContext
     const storageValue: any = await this.readProvider.getStorage(this.contract.address, 'head');
     const chainId = await this.readProvider.getChainId();
+    const contractBalance = (
+      await this.readProvider.getBalance(this.contract.address, 'head')
+    ).toString();
+    const blockTimestamp = await this.readProvider.getBlockTimestamp('head');
 
-    const viewParam = {
-      contract: this.contract.address,
-      view: this.viewName,
+    const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
+    if (!this.viewParameterType) {
+      code.unshift({ prim: 'CDR' });
+    }
+
+    const viewScript = {
+      script: [
+        { prim: 'parameter', args: [{ prim: 'pair', args: [viewParameterType, storageArgs] }] },
+        { prim: 'storage', args: [{ prim: 'option', args: [this.returnType] }] },
+        {
+          prim: 'code',
+          args: [
+            [
+              { prim: 'CAR' },
+              code,
+              { prim: 'SOME' },
+              { prim: 'NIL', args: [{ prim: 'operation' }] },
+              { prim: 'PAIR' },
+            ],
+          ],
+        },
+      ],
+      storage: { prim: 'None' },
       input: { prim: 'Pair', args: [arg, storageValue] },
+      amount: '0',
       chain_id: chainId,
+      balance: '0',
     };
 
     let result: any;
     try {
-      result = await this.rpc.runScriptView(viewParam as RPCRunScriptViewParam);
+      result = await this.rpc.runCode(viewScript as any);
     } catch (error: any) {
       const failWith = validateAndExtractFailwith(error);
       throw failWith
@@ -174,6 +202,6 @@ export class MichelsonStorageView implements View {
     }
 
     const viewResultSchema = new ParameterSchema(this.returnType);
-    return viewResultSchema.Execute(result.data);
+    return viewResultSchema.Execute(result.storage.args[0]);
   }
 }
