@@ -70,8 +70,9 @@ describe('OnChainView test', () => {
     expect(mockRpcClient.runScriptView).toHaveBeenCalledWith({
       contract: 'contractAddress',
       view: 'add',
-      input: { prim: 'Pair', args: [{ int: '20' }, { int: '3' }] },
+      input: { int: '20' },
       chain_id: 'test_chain_id',
+      payer: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
     done();
@@ -97,8 +98,9 @@ describe('OnChainView test', () => {
     expect(mockRpcClient.runScriptView).toHaveBeenCalledWith({
       contract: 'contractAddress',
       view: 'viewName',
-      input: { prim: 'Pair', args: [{ int: '20' }, { int: '3' }] },
+      input: { int: '20' },
       chain_id: 'test_chain_id',
+      payer: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
     done();
@@ -187,8 +189,9 @@ describe('OnChainView test', () => {
     expect(mockRpcClient.runScriptView).toHaveBeenCalledWith({
       contract: 'contractAddress',
       view: 'viewName',
-      input: { prim: 'Pair', args: [{ int: '20' }, { int: '3' }] },
+      input: { int: '20' },
       chain_id: 'test_chain_id',
+      payer: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
 
     done();

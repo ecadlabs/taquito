@@ -47,14 +47,17 @@ export class OnChainView {
   async executeView(executionContext: ExecutionContextParams) {
     this.verifyContextExecution(executionContext);
     const chainId = await this._readProvider.getChainId();
-    const storage = await this._readProvider.getStorage(this._contractAddress, 'head');
     const viewArgs = this.transformArgsToMichelson();
-    return this.executeViewAndDecodeResult({
+    const scriptView = {
       contract: this._contractAddress,
       view: this._smartContractViewSchema.viewName,
-      input: { prim: 'Pair', args: [viewArgs, storage] },
+      input: viewArgs,
       chain_id: chainId,
-    });
+      payer: executionContext.viewCaller,
+    };
+    return executionContext.source
+      ? this.executeViewAndDecodeResult({ ...scriptView, source: executionContext.source })
+      : this.executeViewAndDecodeResult(scriptView);
   }
 
   private verifyContextExecution(executionContext: ExecutionContextParams) {
