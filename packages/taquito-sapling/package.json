@@ -66,7 +66,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/sapling-wasm": "0.0.9-beta.0",
+    "@airgap/sapling-wasm": "0.0.9",
     "@stablelib/nacl": "^1.0.3",
     "@stablelib/random": "^1.0.1",
     "@taquito/rpc": "^13.0.1",
