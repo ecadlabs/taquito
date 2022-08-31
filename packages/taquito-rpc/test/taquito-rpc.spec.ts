@@ -95,7 +95,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBalance', () => {
-    it('query the right url and return a string', async (done) => {
+    it('should query the right url and return a string', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
       const balance = await client.getBalance(contractAddress);
 
@@ -111,7 +111,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getStorage', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getStorage(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -124,7 +124,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getScript', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -137,7 +137,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getNormalizedScript', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getNormalizedScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -151,7 +151,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getContract', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ balance: '10000' });
       const response = await client.getContract(contractAddress);
 
@@ -168,7 +168,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getManagerKey', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getManagerKey(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -181,7 +181,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getDelegate', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getDelegate(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -194,7 +194,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockHash', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getBlockHash();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -224,7 +224,7 @@ describe('RpcClient test', () => {
       grace_period: 146,
     };
 
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
       await client.getDelegates(contractAddress);
 
@@ -236,7 +236,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('parse the response properly', async (done) => {
+    it('should parse the response properly', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
       const response = await client.getDelegates(contractAddress);
 
@@ -270,7 +270,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('parse the response properly, proto10', async (done) => {
+    it('should parse the response properly, proto10', async (done) => {
       // deposit replaced by deposits
       httpBackend.createRequest.mockResolvedValue({
         balance: '5976016544884',
@@ -316,7 +316,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('parse the response properly, proto12', async (done) => {
+    it('should parse the response properly, proto12', async (done) => {
       httpBackend.createRequest.mockResolvedValue(delegatesIthacanetSample);
       const response = await client.getDelegates(contractAddress);
 
@@ -335,7 +335,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('parse the response properly, proto14', async (done) => {
+    it('should parse the response properly, proto14', async (done) => {
       httpBackend.createRequest.mockResolvedValue(delegatesKathmandunetSample);
       const response = await client.getDelegates(contractAddress);
 
@@ -357,7 +357,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBigMapKey', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getBigMapKey(contractAddress, { key: 'test', type: 'string' } as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -371,7 +371,7 @@ describe('RpcClient test', () => {
   });
 
   describe('forgeOperation', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.forgeOperations({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -385,7 +385,7 @@ describe('RpcClient test', () => {
   });
 
   describe('injectOperations', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.injectOperation({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -399,7 +399,7 @@ describe('RpcClient test', () => {
   });
 
   describe('preapplyOperations', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({});
       await client.preapplyOperations({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -414,7 +414,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockHeader', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       const sampleResponse = {
         protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
         chain_id: 'NetXdQprcVkpaWU',
@@ -463,7 +463,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockMetadata', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       const sampleResponse = {
         protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
         next_protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
@@ -588,7 +588,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto014', () => {
-    it('query the right url and casts relevant properties to BigNumber', async (done) => {
+    it('should query the right url and casts relevant properties to BigNumber', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
         proof_of_work_nonce_size: 8,
         nonce_length: 32,
@@ -775,7 +775,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto012', () => {
-    it('query the right url and casts property to BigNumber', async (done) => {
+    it('should query the right url and casts property to BigNumber', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -883,7 +883,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto007', () => {
-    it('query the right url and casts property to BigNumber', async (done) => {
+    it('should query the right url and casts property to BigNumber', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -958,7 +958,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto006', () => {
-    it('properties return by the RPC are accessible and the ones that do not belong to proto6 are undefined', async (done) => {
+    it('should properties return by the RPC are accessible and the ones that do not belong to proto6 are undefined', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -1014,7 +1014,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto005', () => {
-    it('properties return by the RPC are accessible and the ones that do not belong to proto5 are undefined', async (done) => {
+    it('should properties return by the RPC are accessible and the ones that do not belong to proto5 are undefined', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -1080,7 +1080,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlock', () => {
-    it('query the right url and property for endorsement', async (done) => {
+    it('should query the right url and property for endorsement', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
@@ -1221,7 +1221,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlock', () => {
-    it('query the right url and property for operation', async (done) => {
+    it('should query the right url and property for operation', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
@@ -1464,7 +1464,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and property for operation, proto 9, endorsement_with_slot', async (done) => {
+    it('should query the right url and property for operation, proto 9, endorsement_with_slot', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
@@ -1552,7 +1552,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and properties (big_map_diff and lazy_storage_diff) in transaction operation result, proto 9', async (done) => {
+    it('should query the right url and properties (big_map_diff and lazy_storage_diff) in transaction operation result, proto 9', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
@@ -2154,7 +2154,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and properties (lazy_storage_diff of kind sapling_state) in transaction operation result, proto 8', async (done) => {
+    it('should query the right url and properties (lazy_storage_diff of kind sapling_state) in transaction operation result, proto 8', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
@@ -2266,7 +2266,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('Access new properties "liquidity_baking_escape_ema", "implicit_operations_results" and "subsidy" in block metadata, proto 10', async (done) => {
+    it('should access new properties "liquidity_baking_escape_ema", "implicit_operations_results" and "subsidy" in block metadata, proto 10', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
@@ -2391,7 +2391,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('fetches a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async (done) => {
+    it('should fetch a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r',
@@ -3180,7 +3180,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBallotList', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           {
@@ -3222,7 +3222,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBallots', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve({ yay: 5943, nay: 0, pass: 0 }));
       const response = await client.getBallots();
 
@@ -3237,7 +3237,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getCurrentProposal', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve('PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU')
       );
@@ -3254,7 +3254,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getCurrentQuorum', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(7291));
       const response = await client.getCurrentQuorum();
 
@@ -3269,7 +3269,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getVotesListings', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           {
@@ -3330,7 +3330,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getProposals', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           ['PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU', 2832],
@@ -3350,7 +3350,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getEntrypoints', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue({ entrypoints: {} });
       const response = await client.getEntrypoints(contractAddress);
 
@@ -3364,7 +3364,7 @@ describe('RpcClient test', () => {
   });
 
   describe('runOperation', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const testData = {};
 
       httpBackend.createRequest.mockResolvedValue({ content: {} });
@@ -3424,7 +3424,7 @@ describe('RpcClient test', () => {
   });
 
   describe('runView', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const testData: RPCRunViewParam = {
         contract: 'test',
         entrypoint: 'test',
@@ -3452,7 +3452,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and data with unparsing_mode overriden', async (done) => {
+    it('should query the right url and data with unparsing_mode overriden', async (done) => {
       const testData: RPCRunViewParam = {
         contract: 'test',
         entrypoint: 'test',
@@ -3475,7 +3475,7 @@ describe('RpcClient test', () => {
   });
 
   describe('packData', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: 'unaccounted' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -3491,7 +3491,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('return a big number for gas when it is a big number', async (done) => {
+    it('should return a big number for gas when it is a big number', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: '2' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -3503,7 +3503,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('return undefined for gas when it is missing', async (done) => {
+    it('should return undefined for gas when it is missing', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -3516,7 +3516,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBigMapExpr', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       await client.getBigMapExpr('1', '2');
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -3528,7 +3528,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getRpcUrl', () => {
-    it('return the RPC Url', () => {
+    it('should return the RPC Url', () => {
       const url = 'https://mainnet.api.tez.ie/';
       const rpcUrlMainnet = new RpcClient(url).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://mainnet.api.tez.ie/');
@@ -3538,7 +3538,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getCurrentPeriod', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const mockedResponse = {
         voting_period: {
           index: 87,
@@ -3562,7 +3562,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSuccessorPeriod', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const mockedResponse = {
         voting_period: {
           index: 87,
@@ -3586,7 +3586,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSaplingDiffById', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
         root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
         commitments_and_ciphertexts: [],
@@ -3610,7 +3610,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSaplingDiffByContract', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
         root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
         commitments_and_ciphertexts: [],
@@ -3636,7 +3636,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getProtocols', () => {
-    it('query the right url and return a ProtocolsResponse', async (done) => {
+    it('should query the right url and return a ProtocolsResponse', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
