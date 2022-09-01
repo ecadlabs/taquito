@@ -52,12 +52,26 @@ jobs:
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.30.0
-    - 
-      uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
-      with:
-        SSHKEY: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
-        USER: ${{ secrets.MONDAYNET_TORU_SSH_USER }}
-        ORIGIN: 100.65.170.39
+
+    - name: Configure SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/id.key
+        chmod 600 ~/.ssh/id.key
+        cat >>~/.ssh/config <<END
+        Host mondaynet
+          HostName $SSH_HOST
+          User $SSH_USER
+          IdentityFile ~/.ssh/id.key
+          StrictHostKeyChecking no
+        END
+      env:
+        SSH_USER: ${{ secrets.MONDAYNET_TORU_SSH_USER }}
+        SSH_KEY: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
+        SSH_HOST: ecad-mondaynet-archive
+
+    - run: ssh mondaynet 'echo works'
+    
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
       with:
