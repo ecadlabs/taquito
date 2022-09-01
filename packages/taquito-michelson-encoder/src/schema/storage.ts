@@ -1,4 +1,9 @@
-import { MichelsonV1Expression, MichelsonV1ExpressionBase, MichelsonV1ExpressionExtended, ScriptResponse } from '@taquito/rpc';
+import {
+  MichelsonV1Expression,
+  MichelsonV1ExpressionBase,
+  MichelsonV1ExpressionExtended,
+  ScriptResponse,
+} from '@taquito/rpc';
 import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
@@ -25,7 +30,10 @@ import { Falsy, TokenSchema } from './types';
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
 
 // collapse comb pair
-function collapse(val: Token['val'] | MichelsonV1Expression, prim: string = PairToken.prim): Token['val'] {
+function collapse(
+  val: Token['val'] | MichelsonV1Expression,
+  prim: string = PairToken.prim
+): Token['val'] {
   if (Array.isArray(val)) {
     return collapse(
       {
@@ -35,7 +43,7 @@ function collapse(val: Token['val'] | MichelsonV1Expression, prim: string = Pair
       prim
     );
   }
-  const extended = val as MichelsonV1ExpressionExtended
+  const extended = val as MichelsonV1ExpressionExtended;
   if (extended.prim === prim && extended.args && extended.args.length > 2) {
     return {
       ...extended,
@@ -93,13 +101,13 @@ export class Schema {
         if (!Array.isArray(x)) {
           const checkExtended = x as MichelsonV1ExpressionExtended;
           if (checkExtended.prim) {
-            return checkExtended.prim === 'storage'
+            return checkExtended.prim === 'storage';
           } else {
-            return false
+            return false;
           }
         } else {
           // storage passed along as original storage value
-          this.fromRPCResponse({script: {code: x, storage: val.script.storage}})
+          this.fromRPCResponse({ script: { code: x, storage: val.script.storage } });
         }
       }) as MichelsonV1ExpressionExtended);
 
@@ -253,12 +261,16 @@ export class Schema {
    * @param valueType type of value to look for
    *
    */
-   FindFirstInTopLevelPair<T extends MichelsonV1Expression>(storage: any, valueType: any) {
+  FindFirstInTopLevelPair<T extends MichelsonV1Expression>(storage: any, valueType: any) {
     return this.findValue(this.root['val'], storage, valueType) as T | undefined;
   }
 
   // TODO check these type casts
-  private findValue(schema: MichelsonV1Expression, storage: any, valueToFind: any): MichelsonV1ExpressionBase | undefined {
+  private findValue(
+    schema: MichelsonV1Expression,
+    storage: any,
+    valueToFind: any
+  ): MichelsonV1ExpressionBase | undefined {
     if (deepEqual(valueToFind, schema)) {
       return storage;
     }
@@ -269,11 +281,11 @@ export class Schema {
         throw new MissingArgumentError('Tokens have no arguments'); // unlikely
       }
       if (sch.args[0])
-      return (
-        // unsafe
-        this.findValue(sch.args[0] as MichelsonV1ExpressionExtended, strg.args[0], valueToFind) ||
-        this.findValue(sch.args[1] as MichelsonV1ExpressionExtended, strg.args[1], valueToFind)
-      );
+        return (
+          // unsafe
+          this.findValue(sch.args[0] as MichelsonV1ExpressionExtended, strg.args[0], valueToFind) ||
+          this.findValue(sch.args[1] as MichelsonV1ExpressionExtended, strg.args[1], valueToFind)
+        );
     }
   }
   /**

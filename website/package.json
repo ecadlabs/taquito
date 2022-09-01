@@ -41,6 +41,7 @@
     "@taquito/tzip12": "^13.0.1",
     "@taquito/tzip16": "^13.0.1",
     "@taquito/utils": "^13.0.1",
+    "@taquito/sapling": "^13.0.1",
     "@temple-wallet/dapp": "^7.0.0",
     "abort-controller": "^3.0.0",
     "algoliasearch": "^4.12.2",

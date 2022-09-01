@@ -159,6 +159,59 @@ A different timeout value can be configured when creating an instance of RpcClie
 new RpcClient('url', 'chain', new HttpBackend(50000));
 ```
 
+# Taquito v12.1.0-beta
+
+## Summary
+### Jakarta initial support
+- Compatibility with the Jakarta protocol
+
+### Improvements
+- `@taquito/taquito` - Avoid doing POST call to fetch contract script with the RPC #1532
+- Review and improve Error classes in Taquito #1472
+- `@taquito/http-utils` - Make HttpBackend.defaultTimeout configurable #751
+- `@taquito/local-forging` - Reject Invalid Inputs When Forging #483
+
+### Documentation
+- How to capture failwith errors: https://tezostaquito.io/docs/next/failwith_errors
+
+
+
+## Compatibility with the Jakarta protocol
+We addressed the Jakarta protocol's breaking changes, making this version of Taquito compatible with the Jakarta protocol. This early integration has been possible by using the Mondaynet testnet. 
+
+The Jakarta protocol addresses the [malleability issue](https://tezos.gitlab.io/alpha/sapling.html#preventing-malleability) discovered in Sapling. It introduces changes around the sapling related types and instructions that are now supported in Taquito:
+- The encoding of `sapling_transaction` has changed; we added support for it in the `@taquito/local-forging` package and support for `sapling_transaction_deprecated`. 
+
+- The optional type returned by the `SAPLING_VERIFY_UPDATE` instruction contains an additional property named `bound_data`. We added support for it in the `@taquito/michel-codec` package.
+
+This release introduces some breaking changes in the `@taquito/rpc` package:
+- The type of the proposal response items returned by the `getProposals` methods has changed from `[string, number]` to `[string, BigNumber]`.
+- The type of the properties in the response of the `getBallots` methods have changed from `number` to `BigNumber`.
+- In the response of `getVotesListings`, the field `rolls` is now optional as it has been replaced by `voting_power`, which type is a `BigNumber`.
+- In the response of `getDelegates`, the type of the `voting_power` property has changed from `number` to `BigNumber`.
+
+Note that support for new features brought by the Jakarta protocol is not part of the current release.
+
+## `@taquito/taquito` - Avoid doing POST call to fetch contract script with the RPC
+
+In the latest versions, the RPC `context/contracts/{contractAddress}/script/normalized` endpoint was used to fetch the script when building the contract abstraction. This endpoint which is a POST call has been replaced with `context/contracts/{contractAddress}`, which is a GET call instead. The reason for changing the endpoints is that it is more convenient to avoid POST calls when reading from the chain, as this prevents caching using standard HTTP caches. Also, both endpoints return expanded global constants for all protocols so far.
+
+## Review and improve Error classes in Taquito
+
+Many error classes in Taquito returned a regular `Error` class. We adjusted them to use custom errors to provide a better error handling experience for our users. The errors are now available on the typedoc documentation in an `Error Classes` section for the different packages.
+
+Note that this improvement results in a potential breaking change for users who were catching the regular Error.
+
+## `@taquito/http-utils` - Make HttpBackend.defaultTimeout configurable
+
+The timeout has been added to the construction of the HttpBackend class with a default value of 30000 milliseconds.
+
+A different timeout value can be configured when creating an instance of RpcClient as follows:
+
+```javascript=
+new RpcClient('url', 'chain', new HttpBackend(50000));
+```
+
 # Taquito v12.0.1-beta
 
 `@taquito-rpc` - Added support for missing properties related to Ithaca protocol in `OperationBalanceUpdatesItem` interface: `participation`, `revelation`, `committer`.

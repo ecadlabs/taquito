@@ -55,7 +55,9 @@ export abstract class Token {
       return val;
     };
 
-    const handleMichelsonExtended = (val: MichelsonV1ExpressionExtended): Omit<MichelsonV1ExpressionExtended, 'annots'> => {
+    const handleMichelsonExtended = (
+      val: MichelsonV1ExpressionExtended
+    ): Omit<MichelsonV1ExpressionExtended, 'annots'> => {
       if (val.args) {
         return {
           prim: val.prim,

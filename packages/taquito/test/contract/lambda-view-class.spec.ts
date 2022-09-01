@@ -18,8 +18,7 @@ describe('LambdaView test', () => {
     mockRpcClientView.getContract.mockResolvedValue({ script });
     mockRpcClientView.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
 
-    toolkitView = new TezosToolkit('url');
-    toolkitView['_context'].rpc = mockRpcClientView;
+    toolkitView = new TezosToolkit(mockRpcClientView);
 
     mockRpcClientLambda = {
       getContract: jest.fn(),
@@ -57,8 +56,7 @@ describe('LambdaView test', () => {
     mockRpcClientLambda.getChainId.mockResolvedValue('NetXjD3HPJJjmcd');
     mockRpcClientLambda.getEntrypoints.mockResolvedValue({ entrypoints: {} });
 
-    toolkitLambda = new TezosToolkit('url');
-    toolkitLambda['_context'].rpc = mockRpcClientLambda;
+    toolkitLambda = new TezosToolkit(mockRpcClientLambda);
   });
 
   it('LambdaView is instantiable with parameters', async (done) => {

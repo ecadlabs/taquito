@@ -1308,7 +1308,7 @@ export const commonCases: TestCase[] = [
           entrypoint: 'default',
         },
       ],
-    } as any,
+    },
   },
   {
     name: `Tx rollup origination`,
@@ -1324,7 +1324,7 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           tx_rollup_origination: {},
         },
-      ] as any,
+      ],
     },
   },
   {
@@ -1343,7 +1343,7 @@ export const commonCases: TestCase[] = [
           content: 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd',
           burn_limit: '1000000',
         },
-      ] as any,
+      ],
     },
   },
   {
@@ -1361,7 +1361,7 @@ export const commonCases: TestCase[] = [
           rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
           content: '1234',
         },
-      ] as any,
+      ],
     },
   },
 ];
