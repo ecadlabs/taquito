@@ -69,4 +69,12 @@ export class IncreasePaidStorageOperation
   get consumedMilliGas() {
     return this.operationResults?.consumed_milligas;
   }
+
+  get amount() {
+    return this.params.amount;
+  }
+
+  get destination() {
+    return this.params.destination;
+  }
 }

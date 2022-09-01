@@ -2,6 +2,7 @@ import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { IncreasePaidStorageOperation } from '../../src/operations/increase-paid-storage-operation';
 import { defaultConfigConfirmation } from '../../src/context';
+import { IncreasePaidStorageOperationBuilder } from '../helpers';
 
 describe('IncreasePaidStorage operation', () => {
   let fakeContext: any;
@@ -80,7 +81,122 @@ describe('IncreasePaidStorage operation', () => {
       fakeContext
     );
 
-    console.log('operation: ', op);
     expect(op.status).toEqual('applied');
+  });
+
+  it('should return the consumedMilligas', () => {
+    const op = new IncreasePaidStorageOperation(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+
+    expect(op.consumedMilliGas).toEqual('1000000');
+  });
+
+  it('should return the fee', () => {
+    const op = new IncreasePaidStorageOperation(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+      { fee: 400 } as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+
+    expect(op.fee).toEqual(400);
+  });
+
+  it('should return the error if there is one', () => {
+    const tx = new IncreasePaidStorageOperationBuilder();
+    const op = new IncreasePaidStorageOperation(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      [
+        tx
+          .withResult({
+            status: 'backtracked',
+            errors: [{ kind: 'temporary', id: 'proto.014-PtKathma.tez.subtraction_underflow' }],
+          })
+          .build(),
+      ],
+      fakeContext
+    );
+
+    expect(op.errors).toBeDefined();
+    expect(op.errors?.[0]).toEqual({
+      kind: 'temporary',
+      id: 'proto.014-PtKathma.tez.subtraction_underflow',
+    });
+  });
+
+  it('should return the gasLimit', () => {
+    const op = new IncreasePaidStorageOperation(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+      { gas_limit: 450 } as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+
+    expect(op.gasLimit).toEqual(450);
+  });
+
+  it('should return the storageLimit', () => {
+    const op = new IncreasePaidStorageOperation(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+      { storage_limit: 450 } as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+
+    expect(op.storageLimit).toEqual(450);
+  });
+
+  it('error property should be undefined when no error occurs', () => {
+    const op = new IncreasePaidStorageOperation(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+
+    expect(op.errors).toBeUndefined();
+  });
+
+  it('should return amount of increased bytes', () => {
+    const op = new IncreasePaidStorageOperation(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+      { amount: 1 } as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+
+    expect(op.amount).toEqual(1);
+  });
+
+  it('should return destination', () => {
+    const op = new IncreasePaidStorageOperation(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+      { destination: 'testDestination' } as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+
+    expect(op.destination).toEqual('testDestination');
   });
 });

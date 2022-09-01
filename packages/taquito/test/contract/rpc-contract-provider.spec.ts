@@ -1259,7 +1259,7 @@ describe('RpcContractProvider test', () => {
 
       const expectedReveal = revealOp('test_pub_key_hash');
 
-      const expecteReturn = {
+      const expectedReturn = {
         counter: '2',
         destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
         entrypoint: 'default',
@@ -1279,9 +1279,10 @@ describe('RpcContractProvider test', () => {
       };
       const actual = result.raw.opOb.contents ?? [];
       expect(actual[0]).toEqual(expectedReveal);
-      expect(actual[1]).toEqual(expecteReturn);
+      expect(actual[1]).toEqual(expectedReturn);
       done();
     });
+
     it('validate that a reveal option wont be added when not needed', async (done) => {
       mockRpcClient.getManagerKey.mockReturnValue('test_pub_key');
       mockEstimate.reveal.mockResolvedValue(undefined);
@@ -1298,7 +1299,7 @@ describe('RpcContractProvider test', () => {
         entrypoint: 'default',
       };
       const result = await rpcContractProvider.transferTicket(params);
-      const expecteReturn = {
+      const expectedReturn = {
         counter: '1',
         destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
         entrypoint: 'default',
@@ -1318,9 +1319,10 @@ describe('RpcContractProvider test', () => {
       };
       const actual = result.raw.opOb.contents ?? [];
 
-      expect(actual[0]).toEqual(expecteReturn);
+      expect(actual[0]).toEqual(expectedReturn);
       done();
     });
+
     it('validate that the user-specified fees will be taken into account when specified', async (done) => {
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
@@ -1368,6 +1370,7 @@ describe('RpcContractProvider test', () => {
       expect(result.raw).toEqual(expectedReveal);
       done();
     });
+
     it('validate that the fees taken from the estimate will be taken when there is no user-specified fees', async (done) => {
       const estimate = new Estimate(10000, 1000, 180, 1000);
       mockEstimate.transferTicket.mockResolvedValue(estimate);
@@ -1562,13 +1565,45 @@ describe('RpcContractProvider test', () => {
 
   describe('increasePaidStorage', () => {
     it('should produce an increasePaidStorage operation', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
       const result = await rpcContractProvider.increasePaidStorage({
         amount: 1,
         destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
       });
-      console.log(JSON.stringify(result.raw));
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'increase_paid_storage',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              amount: '1',
+              destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
+
+    it('should produce a reveal and an increasePaidStorage operation', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.increasePaidStorage({
+        amount: 1,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+      });
       expect(result.raw).toEqual({
         opbytes: 'test',
         opOb: {

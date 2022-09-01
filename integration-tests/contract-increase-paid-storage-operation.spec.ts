@@ -1,7 +1,8 @@
 import { CONFIGS } from './config';
-import { Protocols } from '@taquito/taquito';
+import { OpKind, Protocols } from '@taquito/taquito';
+import { ligoSample } from './data/ligo-simple-contract';
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
   const kathmandunet = (protocol === Protocols.PtKathman) ? it : it.skip;
   const Tezos = lib;
 
@@ -14,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     kathmandunet('should be able to increase the paid storage of a contract successfully', async (done) => {
       const op = await Tezos.contract.increasePaidStorage({
         amount: 1,
-        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W'
+        destination: knownContract
       });
 
       await op.confirmation();
@@ -40,13 +41,43 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         })
         .withIncreasePaidStorage({
           amount: 1,
-          destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W'
+          destination: knownContract
         })
         .send();
       await op.confirmation();
       expect(op.status).toEqual('applied');
       done();
-    })
+    });
 
+    kathmandunet('should be able to include increasePaidStorage operation in a batch (different batch syntax)', async (done) => {
+      const op = await Tezos.contract.batch([
+        {
+          kind: OpKind.ORIGINATION, 
+          balance: '1', 
+          code: ligoSample, 
+          storage: 0 
+        },
+        { 
+          kind: OpKind.INCREASE_PAID_STORAGE,
+          amount: 1, 
+          destination: knownContract 
+        } 
+      ])
+      .send();
+
+      await op.confirmation();
+      expect(op.status).toEqual('applied');
+      done();
+    });
+
+    kathmandunet('should return error when destination contract address is invalid', async (done) => {
+      expect(async () => {
+        const op = await Tezos.contract.increasePaidStorage({
+          amount: 1,
+          destination: 'invalid_address'
+        });
+      }).rejects.toThrow();
+      done();
+    });
   });
-})
+});
