@@ -106,6 +106,9 @@ export interface DelegatesResponse {
   deactivated: boolean;
   grace_period: number;
   voting_power?: BigNumber;
+  current_ballot?: OperationContentsBallotEnum;
+  current_proposals?: string[];
+  remaining_proposals?: number;
 }
 
 interface Frozenbalancebycycle {
@@ -221,6 +224,11 @@ export interface OperationContentsRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
   nonce: string;
+}
+
+export interface OperationContentsVdfRevelation {
+  kind: OpKind.VDF_REVELATION;
+  solution: string[];
 }
 
 export interface OperationContentsDoubleEndorsement {
@@ -439,6 +447,7 @@ export type OperationContents =
   | OperationContentsPreEndorsement
   | OperationContentsDoublePreEndorsement
   | OperationContentsRevelation
+  | OperationContentsVdfRevelation
   | OperationContentsDoubleEndorsement
   | OperationContentsDoubleBaking
   | OperationContentsActivateAccount
@@ -834,6 +843,12 @@ export interface OperationContentsAndResultIncreasePaidStorage {
   metadata: OperationContentsAndResultMetadataIncreasePaidStorage;
 }
 
+export interface OperationContentsAndResultVdfRevelation {
+  kind: OpKind.VDF_REVELATION;
+  solution: string[];
+  metadata: OperationContentsAndResultMetadata;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -860,7 +875,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTxRollupRemoveCommitment
   | OperationContentsAndResultTxRollupRejection
   | OperationContentsAndResultTransferTicket
-  | OperationContentsAndResultIncreasePaidStorage;
+  | OperationContentsAndResultIncreasePaidStorage
+  | OperationContentsAndResultVdfRevelation;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1058,9 +1074,15 @@ export interface ScriptedContracts {
   storage: MichelsonV1Expression;
 }
 
-export interface BondId {
-  tx_rollup: string;
-}
+export type BondId =
+  | {
+      sc_rollup?: never;
+      tx_rollup: string;
+    }
+  | {
+      sc_rollup: string;
+      tx_rollup?: never;
+    };
 
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
@@ -1089,7 +1111,8 @@ export type InternalOperationResultKindEnum =
   | OpKind.REVEAL
   | OpKind.TRANSACTION
   | OpKind.ORIGINATION
-  | OpKind.DELEGATION;
+  | OpKind.DELEGATION
+  | OpKind.EVENT;
 
 export type SuccessfulManagerOperationResultKindEnum =
   | OpKind.REVEAL
@@ -1101,7 +1124,8 @@ export type InternalOperationResultEnum =
   | OperationResultReveal
   | OperationResultTransaction
   | OperationResultDelegation
-  | OperationResultOrigination;
+  | OperationResultOrigination
+  | OperationResultEvent;
 
 export interface OperationResultTxRollupOrigination {
   status: OperationResultStatusEnum;
@@ -1273,6 +1297,9 @@ export interface InternalOperationResult {
   value?: MichelsonV1Expression;
   limit?: string;
   result: InternalOperationResultEnum;
+  type?: MichelsonV1Expression;
+  tag?: string;
+  payload?: MichelsonV1Expression;
 }
 
 export interface SuccessfulManagerOperationResult {
@@ -1410,6 +1437,12 @@ export interface OperationResultOrigination {
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
   lazy_storage_diff?: LazyStorageDiff[];
+}
+
+export interface OperationResultEvent {
+  status: OperationResultStatusEnum;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface OperationContentsAndResultMetadataOrigination {

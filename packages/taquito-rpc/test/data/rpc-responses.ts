@@ -2497,6 +2497,19 @@ export const delegatesIthacanetSample = {
   voting_power: 199,
 };
 
+export const delegatesKathmandunetSample = {
+  full_balance: '965532868030',
+  current_frozen_deposits: '96350095609',
+  frozen_deposits: '96350095609',
+  staking_balance: '970221941952',
+  delegated_contracts: ['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'],
+  delegated_balance: '4689073922',
+  deactivated: false,
+  grace_period: 42,
+  voting_power: '968128693450',
+  remaining_proposals: 20,
+};
+
 export const blockIthacanetSample = {
   protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   chain_id: 'NetXnHfVqm9iesp',
@@ -4653,6 +4666,112 @@ export const blockKathmandunetSample = {
         ],
         signature:
           'sigdUXgzV3FcbhV7qUAYGCbV86xZEpcBq1S3Acng974GvG8rULLnoNkXn1dvKvfbfvz3zChYCpjcDmR8f1shjAg1uSksceRp',
+      },
+      {
+        protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+        chain_id: 'NetXi2ZagzEsXbZ',
+        hash: 'oorMQ4cCHReHtUdyEqpWBjyAgu59AWYMzSP5bSwi2gSGGHBSLF5',
+        branch: 'BKuq9qvyUfiZH64z7J7nxKAt7HGA1m2rgiR24XrCsAEgBh2JJd1',
+        contents: [
+          {
+            kind: 'transaction',
+            source: 'tz1ejWMc4oNPuYJcs2UBFALuzQy3jKcZxEwL',
+            fee: '673',
+            counter: '84777',
+            gas_limit: '4224',
+            storage_limit: '0',
+            amount: '0',
+            destination: 'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1ejWMc4oNPuYJcs2UBFALuzQy3jKcZxEwL',
+                  change: '-673',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '673',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                storage: {
+                  prim: 'Unit',
+                },
+                consumed_milligas: '2123011',
+                storage_size: '133',
+              },
+              internal_operation_results: [
+                {
+                  kind: 'event',
+                  source: 'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q',
+                  nonce: 0,
+                  type: {
+                    prim: 'or',
+                    args: [
+                      {
+                        prim: 'nat',
+                      },
+                      {
+                        prim: 'string',
+                      },
+                    ],
+                  },
+                  tag: 'event',
+                  payload: {
+                    prim: 'Left',
+                    args: [
+                      {
+                        int: '10',
+                      },
+                    ],
+                  },
+                  result: {
+                    status: 'applied',
+                    consumed_milligas: '1000000',
+                  },
+                },
+                {
+                  kind: 'event',
+                  source: 'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q',
+                  nonce: 1,
+                  type: {
+                    prim: 'or',
+                    args: [
+                      {
+                        prim: 'nat',
+                        annots: ['%number'],
+                      },
+                      {
+                        prim: 'string',
+                        annots: ['%words'],
+                      },
+                    ],
+                  },
+                  tag: 'event',
+                  payload: {
+                    prim: 'Right',
+                    args: [
+                      {
+                        string: 'lorem ipsum',
+                      },
+                    ],
+                  },
+                  result: {
+                    status: 'applied',
+                    consumed_milligas: '1000000',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+        signature:
+          'sigfSTrupvjTWBW4NNXJHLyNEd6gUuD3Jzm9YZzSrH82X3somYZPpgCayRTkzmk1NwxGQCKJHLGsv7xxhVNKsgtxTqF8FEqe',
       },
     ],
   ],

@@ -26,4 +26,6 @@ export enum OpKind {
   TX_ROLLUP_DISPATCH_TICKETS = 'tx_rollup_dispatch_tickets',
   TRANSFER_TICKET = 'transfer_ticket',
   INCREASE_PAID_STORAGE = 'increase_paid_storage',
+  VDF_REVELATION = 'vdf_revelation',
+  EVENT = 'event',
 }
