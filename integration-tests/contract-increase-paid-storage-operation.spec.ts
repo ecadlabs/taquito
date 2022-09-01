@@ -19,7 +19,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       });
 
       await op.confirmation();
-
       expect(op.hash).toBeDefined();
       expect(op.status).toEqual('applied');
       done();

@@ -11,6 +11,7 @@ For more information on this change, refer to this [MR](https://gitlab.com/tezos
 ## Examples
 Similar to other operations, the Increase Paid Storage operation will be available in the Contract API (and later, the wallet API).
 
+### Simple Usage
 ```js
 const op = await Tezos.contract.increasePaidStorage({
   amount: 2,
@@ -22,7 +23,9 @@ await op.confirmation();
 - `amount` is the the number of `bytes` you want to increase the paid storage by
 - `destination` is the `KT1` address of the smart contract which storage you would like to increase
 
-The operation is also **batchable** as such:
+After waiting for the operation confirmation, you will also have access to various getters of the operation such as `status`, `amount`, `destination`, `fee`, `gasLimit`, `errors`, `storageLimit`, `consumedMilligas`.
+
+### Usage in Batches
 ```js
 const op = await Tezos.contract
     .batch()
