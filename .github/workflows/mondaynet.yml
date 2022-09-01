@@ -51,15 +51,18 @@ jobs:
       uses: tailscale/github-action@v1
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-        version: 1.22.2
-    - name: ls -a via ssh
-      uses: garygrossgarten/github-action-ssh@release
+        version: 1.30.0
+    - 
+      uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
       with:
-        command: ls -a
-        host: ecad-mondaynet-archive
-        username: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
-        privateKey: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
-    # - run: ssh mondaynet.ecadinfra.com jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups
+        SSHKEY: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
+        USER: ${{ secrets.MONDAYNET_TORU_SSH_USER }}
+        ORIGIN: 100.65.170.39
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: true
+    # - run: ssh ${{ secrets.MONDAYNET_TORU_SSH_USER }}@100.65.170.39 jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups
     # - run: echo "Test env variables ${TX_ROLLUP_HASH}"
     
     # - uses: actions/checkout@v3
