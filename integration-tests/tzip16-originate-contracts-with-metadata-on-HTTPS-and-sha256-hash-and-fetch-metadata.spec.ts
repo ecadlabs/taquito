@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     const test = require('jest-retries');
 
-    describe(`Test contract origination having having a sha256 hash in URI through contract api using: ${rpc}`, () => {
+    describe(`Test contract origination having a sha256 hash in URI through contract api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()

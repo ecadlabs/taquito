@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     let contractAddress: string;
 
-    describe(`Test contract origination having metadata stored at HTTPS URL through contract api using: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored at IPFS URL through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();

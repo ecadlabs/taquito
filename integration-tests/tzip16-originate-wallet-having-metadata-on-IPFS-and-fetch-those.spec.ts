@@ -5,7 +5,6 @@ import { char2Bytes, tzip16, Tzip16Module, IpfsHttpHandler, Handler, MetadataPro
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
-    const test = require('jest-retries')
 
     const customHandler = new Map<string, Handler>([
         ['ipfs', new IpfsHttpHandler('cloudflare-ipfs.com')]
@@ -17,13 +16,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     let contractAddress: string;
 
-    describe(`Test contract origination having metadata stored at HTTPS URL through wallet api using: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored at IPFS URL through wallet api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
 
-        test('Verify wallet.originate for a contract having metadata stored on IPFS', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract having metadata stored on IPFS', async (done) => {
 
             // location of the contract metadata
             const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
@@ -50,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-    test('Verify that the metadata for the contract having metadata stored on IPFS can be fetched', 2, async (done: () => void) => {
+    test('Verify that the metadata for the contract having metadata stored on IPFS can be fetched', async (done) => {
 
             const contract = await Tezos.wallet.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
