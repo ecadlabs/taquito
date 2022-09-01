@@ -6,6 +6,8 @@ author: Davis Sawali
 Increase Paid Storage is a new operation available for use starting from Protocol 14 (Kathmandu). It is a new operation that enables a payer to increase the paid storage of a smart contract by a certain byte amount.
 
 This helps resolve an issue where several operations on the same contract would fail when they are added at the same level due to the storage limit being lower than the `paid_storage_size_diff`.
+
+For more information on this change, refer to this [MR](https://gitlab.com/tezos/tezos/-/merge_requests/5605) in the Tezos codebase.
 ## Examples
 Similar to other operations, the Increase Paid Storage operation will be available in the Contract API (and later, the wallet API).
 
