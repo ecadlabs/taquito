@@ -52,14 +52,15 @@ jobs:
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.22.2
-    - 
-      uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
+    - name: ls -a via ssh
+      uses: garygrossgarten/github-action-ssh@release
       with:
-        SSHKEY: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
-        USER: ${{ secrets.MONDAYNET_TORU_SSH_USER }}
-        ORIGIN: mondaynet.ecadinfra.com
-    - run: ssh mondaynet.ecadinfra.com jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups
-    - run: echo "Test env variables ${TX_ROLLUP_HASH}"
+        command: ls -a
+        host: ecad-mondaynet-archive
+        username: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
+        privateKey: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
+    # - run: ssh mondaynet.ecadinfra.com jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups
+    # - run: echo "Test env variables ${TX_ROLLUP_HASH}"
     
     # - uses: actions/checkout@v3
     # - uses: actions/setup-node@v3
