@@ -32,7 +32,7 @@ describe('PtKathmandu', () => {
       for (const contract of list) {
         it(contract, () => {
           const options: ContractOptions = {
-            protocol: Protocol.PtJakarta,
+            protocol: Protocol.PtKathman,
           };
 
           const filename = path.resolve(__dirname, 'contracts_014', group, contract);
