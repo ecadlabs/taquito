@@ -71,7 +71,7 @@ jobs:
         SSH_HOST: ecad-mondaynet-archive
 
     - run: ssh mondaynet "echo TX_ROLLUP_HASH=$(jq '.[] | select(.name=="toru_node") | .value' /srv/tezos/mondaynet_client/tx_rollups)" >> $GITHUB_ENV
-    - run: echo "Test env variables ${GITHUB_ENV}"
+    - run: echo "Test env variables ${{ env.TX_ROLLUP_HASH }}"
 
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
