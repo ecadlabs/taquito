@@ -114,7 +114,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Verify that the metadata for the contract which contains emoji of the contract can be fetched', async (done) => {
+        it('Verify that the metadata for the contract which contains emoji can be fetched', async (done) => {
 
             const contract = await Tezos.wallet.at(contractAddressEmoji, tzip16);
             const metadata = await contract.tzip16().getMetadata();
