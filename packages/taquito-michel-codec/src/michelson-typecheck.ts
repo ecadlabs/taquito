@@ -2009,7 +2009,7 @@ function functionTypeInternal(
         return [annotateVar({ prim: 'nat' }), ...stack];
 
       case 'EMIT': {
-        const ia = instructionAnn({ f: 1, t: 1}, { specialVar: true });
+        const ia = instructionAnn({ f: 1, t: 1});
         if (instruction.args) {
           const s = args(0, null);
           ensureTypesEqual(s[0], instruction.args[0]);
