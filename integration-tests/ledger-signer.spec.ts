@@ -142,7 +142,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
 
     describe('Test an ability to use Ledger with contract api', () => {
       jest.setTimeout(240000)
-      it('As a User I want to verify that I can originate contract with Ledger', async (done) => {
+      it('Verify that a contract can be originated with Ledger', async (done) => {
 
         const fundAccountFirst = await tezos.contract.transfer({ to: 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY', amount: 9 });
         await fundAccountFirst.confirmation();
