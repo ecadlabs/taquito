@@ -1628,6 +1628,39 @@ describe('RpcContractProvider test', () => {
       });
       done();
     });
+
+    it('should produce a reveal and increasePaidStorageOperation with fees specified', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.increasePaidStorage({
+        amount: 1,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        fee: 500,
+      });
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              kind: 'increase_paid_storage',
+              source: 'test_pub_key_hash',
+              fee: '500',
+              gas_limit: '1330',
+              storage_limit: '93',
+              amount: '1',
+              destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
   });
 
   describe('txRollupOriginate', () => {
