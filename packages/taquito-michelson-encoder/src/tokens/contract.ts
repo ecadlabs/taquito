@@ -35,7 +35,7 @@ export class ContractToken extends Token {
       return val.string;
     }
     if (!val.bytes) {
-      throw new ContractValidationError(val, this, 'must contain bytes or string')
+      throw new ContractValidationError(val, this, 'must contain bytes or string');
     }
 
     return encodePubKey(val.bytes);
@@ -74,7 +74,7 @@ export class ContractToken extends Token {
     return {
       __michelsonType: ContractToken.prim,
       schema: {
-        parameter: this.val.args[0] ? valueSchema.generateSchema() : {} as TokenSchema,
+        parameter: this.val.args[0] ? valueSchema.generateSchema() : ({} as TokenSchema),
       },
     };
   }

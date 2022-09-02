@@ -70,7 +70,8 @@
     "bs58check": "^2.1.2",
     "buffer": "^6.0.3",
     "elliptic": "^6.5.4",
-    "typedarray-to-buffer": "^4.0.0"
+    "typedarray-to-buffer": "^4.0.0",
+    "bignumber.js": "^9.0.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",

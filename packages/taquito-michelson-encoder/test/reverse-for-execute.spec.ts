@@ -108,7 +108,8 @@ describe('Exact reverse for Schema.Execute', () => {
         data: { bytes: '0022c45a24cb37da97be334c0f70865f946cb6902d' },
       },
       {
-        ignoreMessage: 'This test is suspended, as it involves a larger problem.\
+        ignoreMessage:
+          'This test is suspended, as it involves a larger problem.\
          The execute method creates an object where the keys are the annots.\
          However, in this case, the annots `owner` are present 2 times in the code, so their values are overridden: \
          Instead of having an object with 3 properties, the object only contains 2 properties.',
@@ -135,7 +136,8 @@ describe('Exact reverse for Schema.Execute', () => {
         },
       },
       {
-        ignoreMessage: 'This test is suspended, as it involves a larger problem.\
+        ignoreMessage:
+          'This test is suspended, as it involves a larger problem.\
          The execute method creates an object where the keys are the annots.\
          However, in this case, the annots `fa2_address` and `token_id` are present 2 times in the code, so their values are overridden: \
          Instead of having an object with 4 properties, the object only contains 2 properties.',
@@ -177,7 +179,8 @@ describe('Exact reverse for Schema.Execute', () => {
         },
       },
       {
-        ignoreMessage: "The data doesn't seem valid. According to the type, it should be { prim: 'Pair', args: [contain of the array] }\
+        ignoreMessage:
+          "The data doesn't seem valid. According to the type, it should be { prim: 'Pair', args: [contain of the array] }\
         However, even with fixing the data, the value returned by Encode doesn't match the intial data:\
         The difference is that the Michelson Encoder reconstructs the pairs with 2 arguments instead of returning comb pairs.",
         name: 'When input data is an array',

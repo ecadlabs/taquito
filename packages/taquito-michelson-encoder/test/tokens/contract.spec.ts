@@ -3,9 +3,13 @@ import { ContractToken, ContractValidationError } from './../../src/tokens/contr
 
 describe('Contract Token Tests', () => {
   let token: ContractToken;
-  const testFunction = (val: any, idx: number) => new ContractToken(val, idx, testFunction)
+  const testFunction = (val: any, idx: number) => new ContractToken(val, idx, testFunction);
   beforeEach(() => {
-    token = new ContractToken({ prim: 'contract', args: [{prim: 'contract', args: [], annots: []}], annots: [] }, 0, testFunction);
+    token = new ContractToken(
+      { prim: 'contract', args: [{ prim: 'contract', args: [], annots: [] }], annots: [] },
+      0,
+      testFunction
+    );
   });
 
   describe('EncodeObject', () => {
@@ -22,8 +26,12 @@ describe('Contract Token Tests', () => {
     });
 
     it('should handle semantics', () => {
-      expect(token.EncodeObject('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL', {contract: () => ({string: 'test'})}).string).toEqual('test')
-    })
+      expect(
+        token.EncodeObject('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL', {
+          contract: () => ({ string: 'test' }),
+        }).string
+      ).toEqual('test');
+    });
   });
   describe('execute', () => {
     const decoded = b58decode('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL');
@@ -54,16 +62,19 @@ describe('Contract Token Tests', () => {
   // TODO check
   describe('schema', () => {
     it('should generate schema', () => {
-      expect(token.generateSchema()).toEqual({__michelsonType: 'contract', schema: { parameter: { __michelsonType: 'contract', schema: { parameter: {} }}}})
-    })
+      expect(token.generateSchema()).toEqual({
+        __michelsonType: 'contract',
+        schema: { parameter: { __michelsonType: 'contract', schema: { parameter: {} } } },
+      });
+    });
     it('should return prim', () => {
-      expect(token.ExtractSchema()).toEqual('contract')
-    })
-  })
+      expect(token.ExtractSchema()).toEqual('contract');
+    });
+  });
   describe('find and return token', () => {
     it('should find this token or return without', () => {
-      expect(token.findAndReturnTokens('contract', [])).toEqual([token])
-      expect(token.findAndReturnTokens('missing', [])).toEqual([])
-    })
-  })
+      expect(token.findAndReturnTokens('contract', [])).toEqual([token]);
+      expect(token.findAndReturnTokens('missing', [])).toEqual([]);
+    });
+  });
 });

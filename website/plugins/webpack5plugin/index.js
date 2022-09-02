@@ -1,8 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const webpack = require('webpack');
-module.exports = function (context, options) {
+module.exports = function () {
   return {
     name: 'webpack5-plugin',
-    configureWebpack(config, isServer, utils) {
+    configureWebpack() {
       return {
         node: {
           __dirname: true

@@ -44,8 +44,8 @@ export class DelegateOperation extends Operation
     }
   }
 
-  get delegate(): string {
-    return this.delegate;
+  get delegate() {
+    return this.params.delegate;
   }
 
   get isRegisterOperation(): boolean {

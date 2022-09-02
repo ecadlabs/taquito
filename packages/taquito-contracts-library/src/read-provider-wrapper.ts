@@ -73,6 +73,12 @@ export class ReadWrapperContractsLibrary implements TzReadProvider {
   ): Promise<SaplingDiffResponse> {
     return this.readProvider.getSaplingDiffById(saplingStateQuery, block);
   }
+  getSaplingDiffByContract(
+    contractAddress: string,
+    block: BlockIdentifier
+  ): Promise<SaplingDiffResponse> {
+    return this.readProvider.getSaplingDiffByContract(contractAddress, block);
+  }
   getChainId(): Promise<string> {
     return this.readProvider.getChainId();
   }
