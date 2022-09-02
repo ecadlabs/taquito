@@ -21,7 +21,8 @@ CONFIGS().forEach(({ lib, setup }) => {
         });
 
         describe('Test to verify that user can decline all prompts on the ledger device', () => {
-            it('As a User I want to verify that Ledger will throw an error when I declined to provide public key', async (done) => {
+            
+            it('Verify that Ledger will throw an error when public key is declined', async (done) => {
                 const signer = new LedgerSigner(
                     transport,
                     "44'/1729'/0'/0'",
@@ -37,7 +38,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                 done();
             });
 
-            it('As a User I want to verify that Ledger will throw an error when I declined to sign', async (done) => {
+            it('Verify that Ledger will throw an error when when signing is declined', async (done) => {
                 const signer = new LedgerSigner(
                     transport,
                     "44'/1729'/0'/0'",
@@ -56,8 +57,10 @@ CONFIGS().forEach(({ lib, setup }) => {
             });
 
             describe('Test that Ledger can be used with wallet API', () => {
+                
                 jest.setTimeout(60000)
-                it('SAs a User I want to verify that Ledger will throw an error when I declined to originate contract with Ledger\n', async (done) => {
+
+                it('Verify that Ledger will throw an error when contract origination is declined', async (done) => {
                     const signer = new LedgerSigner(
                         transport,
                         "44'/1729'/0'/0'",
@@ -76,7 +79,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                 });
             });
 
-            describe('Should be abble to use Ledger with contract API', () => {
+            describe('Should be able to use Ledger with contract API', () => {
                 jest.setTimeout(60000)
                 it('Should throw error when user declines to originate contract with Ledger', async (done) => {
                     const signer = new LedgerSigner(

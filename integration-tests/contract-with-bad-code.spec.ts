@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    it('Verify that contract.originate for a contract with 400 in code will return 400 RPC in response', async (done) => {
+    it('Verify that contract.originate for a contract with a missing instruction (FAILWITH_TYPO) in code will return 400 RPC in response', async (done) => {
       await expect(Tezos.contract.originate({
         balance: "1",
         code: badCode,

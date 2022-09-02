@@ -44,7 +44,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       ).toBeInstanceOf(LedgerSigner);
     });
 
-    it('As a User I want to verify that LedgerSigner is instantiable with parameters', () => {
+    it('Verify that LedgerSigner is instantiable with parameters', () => {
       expect(
         new LedgerSigner(
           transport,
@@ -56,7 +56,8 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     });
 
     describe('Test retrieving the public key from the Ledger', () => {
-      it('As a User I want to verify that Ledger will provide correct public key and public key hash for tz1 curve and default path', async (done) => {
+      
+      it('Verify that Ledger will provide correct public key and public key hash for tz1 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -74,7 +75,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         done();
       });
 
-      it('As a User I want to verify that Ledger will provide correct public key and public key hash for tz2 curve and default path', async (done) => {
+      it('Verify that Ledger will provide correct public key and public key hash for tz2 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -92,7 +93,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         done();
       });
 
-      it('As I User I want to verify that that Ledger will provide correct public key and public key hash for tz3 curve and path having 1 as account value', async (done) => {
+      it('Verify that that Ledger will provide correct public key and public key hash for tz3 curve and path having 1 as account value', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/1'/0'",
@@ -112,8 +113,10 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     });
 
     describe('Test sign operation with Ledger', () => {
+      
       jest.setTimeout(30000);
-      it('As a User I want to verify that Ledger returns the correct signature with the Ledger', async (done) => {
+
+      it('Verify that Ledger returns the correct signature', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
