@@ -1722,6 +1722,24 @@ export type RunCodeResult = {
   lazy_storage_diff?: LazyStorageDiff;
 };
 
+export type RPCRunScriptViewParam = {
+  contract: string;
+  view: string;
+  input: MichelsonV1Expression;
+  unlimited_gas?: boolean;
+  chain_id: string;
+  source?: string;
+  payer?: string;
+  gas?: string;
+  unparsing_mode?: UnparsingModeEnum;
+  now?: string;
+  level?: string;
+};
+
+export type RunScriptViewResult = {
+  data: MichelsonV1Expression;
+};
+
 export type RPCRunViewParam = {
   contract: string;
   entrypoint: string;

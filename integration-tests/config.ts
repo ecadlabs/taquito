@@ -26,6 +26,7 @@ interface Config {
   knownBigMapContract: string;
   knownTzip1216Contract: string; 
   knownSaplingContract: string; 
+  knownViewContract?: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
@@ -67,6 +68,7 @@ const kathmandunetEphemeral = {
   knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
   knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
   knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+  knownViewContract: 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -112,6 +114,7 @@ const kathmandunetFaucet = {
   knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
   knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
   knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+  knownViewContract: 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -273,6 +276,7 @@ export const CONFIGS = () => {
         knownBigMapContract,
         knownTzip1216Contract,
         knownSaplingContract,
+        knownViewContract,
         signerConfig,
       }) => {
         const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
@@ -289,6 +293,7 @@ export const CONFIGS = () => {
           knownBigMapContract,
           knownTzip1216Contract,
           knownSaplingContract,
+          knownViewContract,
           signerConfig,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.FAUCET) {

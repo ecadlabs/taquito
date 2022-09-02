@@ -12,6 +12,7 @@ import {
   LazyStorageDiffSaplingState,
   OperationContentsAndResultRegisterGlobalConstant,
   RPCRunViewParam,
+  RPCRunScriptViewParam,
   OperationContentsAndResultSetDepositsLimit,
   METADATA_BALANCE_UPDATES_CATEGORY,
   OperationContentsAndResultTxRollupOrigination,
@@ -3419,6 +3420,52 @@ describe('RpcClient test', () => {
         METADATA_BALANCE_UPDATES_CATEGORY.LEGACY_REWARDS
       );
 
+      done();
+    });
+  });
+
+  describe('runScriptView', () => {
+    it('query the right url and data', async (done) => {
+      const testData: RPCRunScriptViewParam = {
+        contract: 'test',
+        view: 'test',
+        chain_id: 'test',
+        input: {
+          int: '0',
+        },
+      };
+
+      await client.runScriptView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_script_view',
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({
+        ...testData,
+        unparsing_mode: 'Readable',
+      });
+      done();
+    });
+
+    it('query the right url and data with unparsing_mode overriden', async (done) => {
+      const testData: RPCRunScriptViewParam = {
+        contract: 'test',
+        view: 'test',
+        chain_id: 'test',
+        input: {
+          int: '0',
+        },
+        unparsing_mode: 'Optimized',
+      };
+
+      await client.runScriptView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_script_view',
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
       done();
     });
   });
