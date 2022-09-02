@@ -22,8 +22,7 @@ await op2.confirmation();
 /*
  * Error Message returned by the node (since Kathmandu):
  * Error while applying operation opHash: 
- * Only one manager operation per manager per block allowed (found opHash2 with Xtez fee. 
- * You may want to use --replace to provide adequate fee and replace it).
+ * Only one manager operation per manager per block allowed (found opHash2 with Xtez fee).
  * 
  * Error Message that was returned by the node (before Kathmandu):
  * "Error while applying operation opWH2nEcmmzUwK4T6agHg3bn9GDR7fW1ynqWL58AVRAb7aZFciD:
