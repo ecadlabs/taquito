@@ -80,7 +80,8 @@ describe('RpcContractProvider test', () => {
     registerGlobalConstant: jest.Mock<any, any>;
     txRollupOriginate: jest.Mock<any, any>;
     txRollupSubmitBatch: jest.Mock<any, any>;
-    transferTicket: jest.Mock<any,any>;
+    transferTicket: jest.Mock<any, any>;
+    increasePaidStorage: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -134,6 +135,7 @@ describe('RpcContractProvider test', () => {
       txRollupOriginate: jest.fn(),
       txRollupSubmitBatch: jest.fn(),
       transferTicket: jest.fn(),
+      increasePaidStorage: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -1237,8 +1239,8 @@ describe('RpcContractProvider test', () => {
     });
   });
 
-  describe("transferTicket", () => {
-    it("validate that a reveal operation will be added when needed", async (done) => {
+  describe('transferTicket', () => {
+    it('validate that a reveal operation will be added when needed', async (done) => {
       mockRpcClient.getManagerKey.mockReturnValue(null);
 
       const params: TransferTicketParams = {
@@ -1246,174 +1248,177 @@ describe('RpcContractProvider test', () => {
         fee: 804,
         gasLimit: 5009,
         storageLimit: 130,
-        ticketContents: { "string": "foobar" },
-        ticketTy: { "prim": "string" },
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
         ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
         ticketAmount: 2,
         destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
         entrypoint: 'default',
-        };
-      const result = await rpcContractProvider.transferTicket(params)
-
-      const expectedReveal = revealOp('test_pub_key_hash')
-
-      const expecteReturn = {
-        counter: "2",
-        destination: "KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg",
-        entrypoint: "default",
-        fee: "804",
-        gas_limit: "5009",
-        kind: "transfer_ticket",
-        source: "tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX",
-        storage_limit: "130",
-        ticket_amount: "2",
-        ticket_contents: {
-          string: "foobar",
-        },
-        ticket_ticketer: "KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb",
-        ticket_ty: {
-          prim: "string",
-        }
-      }
-      const actual = result.raw.opOb.contents ?? []
-      expect(actual[0]).toEqual(expectedReveal)
-      expect(actual[1]).toEqual(expecteReturn)
-      done()
-    })
-    it("validate that a reveal option wont be added when not needed", async (done) => {
-      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key');
-      mockEstimate.reveal.mockResolvedValue(undefined)
-      const params: TransferTicketParams = {
-        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-        fee: 804,
-        gasLimit: 5009,
-        storageLimit: 130,
-        ticketContents: { "string": "foobar" },
-        ticketTy: { "prim": "string" },
-        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-        ticketAmount: 2,
-        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-        entrypoint: 'default',
-        };
+      };
       const result = await rpcContractProvider.transferTicket(params);
-      const expecteReturn = {
-        counter: "1",
-        destination: "KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg",
-        entrypoint: "default",
-        fee: "804",
-        gas_limit: "5009",
-        kind: "transfer_ticket",
-        source: "tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX",
-        storage_limit: "130",
-        ticket_amount: "2",
-        ticket_contents: {
-          string: "foobar",
-        },
-        ticket_ticketer: "KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb",
-        ticket_ty: {
-          prim: "string",
-        }
-      }
-      const actual = result.raw.opOb.contents ?? []
 
-      expect(actual[0]).toEqual(expecteReturn)
-      done()
-    })
-    it("validate that the user-specified fees will be taken into account when specified", async (done) => {
+      const expectedReveal = revealOp('test_pub_key_hash');
+
+      const expectedReturn = {
+        counter: '2',
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+        fee: '804',
+        gas_limit: '5009',
+        kind: 'transfer_ticket',
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        storage_limit: '130',
+        ticket_amount: '2',
+        ticket_contents: {
+          string: 'foobar',
+        },
+        ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticket_ty: {
+          prim: 'string',
+        },
+      };
+      const actual = result.raw.opOb.contents ?? [];
+      expect(actual[0]).toEqual(expectedReveal);
+      expect(actual[1]).toEqual(expectedReturn);
+      done();
+    });
+
+    it('validate that a reveal option wont be added when not needed', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key');
+      mockEstimate.reveal.mockResolvedValue(undefined);
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
         fee: 804,
         gasLimit: 5009,
         storageLimit: 130,
-        ticketContents: { "string": "foobar" },
-        ticketTy: { "prim": "string" },
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
         ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
         ticketAmount: 2,
         destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
         entrypoint: 'default',
-        };
-      const result = await rpcContractProvider.transferTicket(params)
+      };
+      const result = await rpcContractProvider.transferTicket(params);
+      const expectedReturn = {
+        counter: '1',
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+        fee: '804',
+        gas_limit: '5009',
+        kind: 'transfer_ticket',
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        storage_limit: '130',
+        ticket_amount: '2',
+        ticket_contents: {
+          string: 'foobar',
+        },
+        ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticket_ty: {
+          prim: 'string',
+        },
+      };
+      const actual = result.raw.opOb.contents ?? [];
+
+      expect(actual[0]).toEqual(expectedReturn);
+      done();
+    });
+
+    it('validate that the user-specified fees will be taken into account when specified', async (done) => {
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+      };
+      const result = await rpcContractProvider.transferTicket(params);
       const expectedReveal = {
         counter: 0,
         opOb: {
-          branch: "test",
-          contents:  [
+          branch: 'test',
+          contents: [
             revealOp('test_pub_key_hash'),
             {
-              counter: "2",
-              destination: "KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg",
-              entrypoint: "default",
-              fee: "804",
-              gas_limit: "5009",
-              kind: "transfer_ticket",
-              source: "tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX",
-              storage_limit: "130",
-              ticket_amount: "2",
+              counter: '2',
+              destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+              entrypoint: 'default',
+              fee: '804',
+              gas_limit: '5009',
+              kind: 'transfer_ticket',
+              source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+              storage_limit: '130',
+              ticket_amount: '2',
               ticket_contents: {
-                string: "foobar",
+                string: 'foobar',
               },
-              ticket_ticketer: "KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb",
+              ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
               ticket_ty: {
-                prim: "string",
+                prim: 'string',
               },
             },
           ],
-          protocol: "test_proto",
-          signature: "test_sig",
+          protocol: 'test_proto',
+          signature: 'test_sig',
         },
-        opbytes: "test",
-      }
-      expect(result.raw).toEqual(expectedReveal)
-      done()
-    })
-    it("validate that the fees taken from the estimate will be taken when there is no user-specified fees", async (done) => {
+        opbytes: 'test',
+      };
+      expect(result.raw).toEqual(expectedReveal);
+      done();
+    });
+
+    it('validate that the fees taken from the estimate will be taken when there is no user-specified fees', async (done) => {
       const estimate = new Estimate(10000, 1000, 180, 1000);
       mockEstimate.transferTicket.mockResolvedValue(estimate);
 
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-        ticketContents: { "string": "foobar" },
-        ticketTy: { "prim": "string" },
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
         ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
         ticketAmount: 2,
         destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
         entrypoint: 'default',
-        };
-      const result = await rpcContractProvider.transferTicket(params)
+      };
+      const result = await rpcContractProvider.transferTicket(params);
       const expected = {
         counter: 0,
         opOb: {
-          branch: "test",
-          contents:  [
+          branch: 'test',
+          contents: [
             revealOp('test_pub_key_hash'),
             {
-              counter: "2",
-              destination: "KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg",
-              entrypoint: "default",
+              counter: '2',
+              destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+              entrypoint: 'default',
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
-              kind: "transfer_ticket",
-              source: "tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX",
+              kind: 'transfer_ticket',
+              source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
               storage_limit: estimate.storageLimit.toString(),
-              ticket_amount: "2",
+              ticket_amount: '2',
               ticket_contents: {
-                string: "foobar",
+                string: 'foobar',
               },
-              ticket_ticketer: "KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb",
+              ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
               ticket_ty: {
-                prim: "string",
+                prim: 'string',
               },
             },
           ],
-          protocol: "test_proto",
-          signature: "test_sig",
+          protocol: 'test_proto',
+          signature: 'test_sig',
         },
-        opbytes: "test",
-      }
-      expect(result.raw).toEqual(expected)
-      done()
-    })
-  })
+        opbytes: 'test',
+      };
+      expect(result.raw).toEqual(expected);
+      done();
+    });
+  });
 
   describe('setDelegate', () => {
     it('should produce a reveal and delegation operation', async (done) => {
@@ -1553,6 +1558,106 @@ describe('RpcContractProvider test', () => {
           signature: 'test_sig',
         },
         opbytes: 'test',
+      });
+      done();
+    });
+  });
+
+  describe('increasePaidStorage', () => {
+    it('should produce an increasePaidStorage operation', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockEstimate.reveal.mockResolvedValue(undefined);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.increasePaidStorage({
+        amount: 1,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+      });
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'increase_paid_storage',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              amount: '1',
+              destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
+
+    it('should produce a reveal and an increasePaidStorage operation', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.increasePaidStorage({
+        amount: 1,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+      });
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              kind: 'increase_paid_storage',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              amount: '1',
+              destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
+
+    it('should produce a reveal and increasePaidStorageOperation with fees specified', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.increasePaidStorage({
+        amount: 1,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        fee: 500,
+      });
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              kind: 'increase_paid_storage',
+              source: 'test_pub_key_hash',
+              fee: '500',
+              gas_limit: '1330',
+              storage_limit: '93',
+              amount: '1',
+              destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
       });
       done();
     });

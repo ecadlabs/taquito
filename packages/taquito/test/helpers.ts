@@ -9,6 +9,7 @@ import {
   OperationContentsAndResultTxRollupOrigination,
   OperationContentsAndResultTxRollupSubmitBatch,
   OperationContentsAndResultTransferTicket,
+  OperationContentsAndResultIncreasePaidStorage,
 } from '@taquito/rpc';
 
 const defaultTransferData = {
@@ -100,6 +101,17 @@ const defaultTransferTicketData = {
   ticket_amount: '2',
   destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
   entrypoint: 'default',
+};
+
+const defaultIncreasePaidStorageData = {
+  kind: OpKind.INCREASE_PAID_STORAGE as OpKind.INCREASE_PAID_STORAGE,
+  source: 'tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG',
+  fee: '349',
+  counter: '108123',
+  gas_limit: '1000',
+  storage_limit: '0',
+  amount: '2',
+  destination: 'KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh',
 };
 
 const defaultResult = {
@@ -241,6 +253,35 @@ export class RegisterGlobalConstantOperationBuilder {
   }
 
   build(): OperationContentsAndResultRegisterGlobalConstant {
+    return {
+      ...this.data,
+      metadata: {
+        balance_updates: [],
+        operation_result: this.result,
+      },
+    };
+  }
+}
+
+export class IncreasePaidStorageOperationBuilder {
+  private result: OperationContentsAndResultIncreasePaidStorage['metadata']['operation_result'] =
+    defaultResult;
+  private data: Omit<OperationContentsAndResultIncreasePaidStorage, 'metadata'>;
+
+  constructor(
+    private _data: Partial<Omit<OperationContentsAndResultIncreasePaidStorage, 'metadata'>> = {}
+  ) {
+    this.data = { ...defaultIncreasePaidStorageData, ...this._data };
+  }
+
+  withResult(
+    result: Partial<OperationContentsAndResultIncreasePaidStorage['metadata']['operation_result']>
+  ) {
+    this.result = { ...defaultResult, ...result };
+    return this;
+  }
+
+  build(): OperationContentsAndResultIncreasePaidStorage {
     return {
       ...this.data,
       metadata: {
