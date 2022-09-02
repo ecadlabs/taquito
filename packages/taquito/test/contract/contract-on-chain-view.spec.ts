@@ -36,8 +36,7 @@ describe('OnChainView test on K protocol', () => {
     });
     mockRpcClient.getStorage.mockResolvedValue({ int: '3' });
 
-    const context = new Context(mockRpcClient as any);
-    mockReadProvider = new RpcReadAdapter(context);
+    mockReadProvider = new RpcReadAdapter(mockRpcClient as any);
 
     view = new OnChainView(
       mockRpcClient as any,
