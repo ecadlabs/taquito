@@ -4,7 +4,7 @@
 ///   and top them up if needed. The script will then originate each contract needed for Live Code
 ///   examples in Taquito Docs and produce a JSON file with each Contract Identifier and its PKH.
 ///   Use the testpad script Docs Live Code Contract Origination (in https://ecadlabs.ontestpad.com/project/18/)
-///   with the desired chain (e.g. jakarta) to match the originated scripts with their locations in the Docs.
+///   with the desired chain (e.g. kathmandu) to match the originated scripts with their locations in the Docs.
 ///   The script will also print to console a json file of contracts to use in the code examples in taquito/examples
 ///   Execute this script with
 ///     node -r ts-node/register deploy-docs-live-code-contracts.ts

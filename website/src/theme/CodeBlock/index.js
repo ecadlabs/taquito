@@ -91,7 +91,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+    const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
 
     return (
       <Playground

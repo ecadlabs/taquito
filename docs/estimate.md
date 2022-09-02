@@ -37,7 +37,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -62,7 +62,7 @@ Tezos.estimate
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://jakartanet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://kathmandunet.api.tez.ie');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -100,10 +100,10 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2')
+  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
   .then((contract) => {
     const i = 7;
     return contract.methods.increment(i).toTransferParams({});
@@ -130,10 +130,10 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://jakartanet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://kathmandunet.api.tez.ie');
 
 Tezos.wallet
-  .at('KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2')
+  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
   .then((contract) => {
     const i = 7;
     return contract.methods.increment(i).toTransferParams({});
@@ -172,7 +172,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
 
 println(`Estimating the contract origination : `);
 Tezos.estimate
@@ -202,7 +202,7 @@ Tezos.estimate
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://jakartanet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://kathmandunet.api.tez.ie');
 
 println(`Estimating the contract origination : `);
 Tezos.estimate
