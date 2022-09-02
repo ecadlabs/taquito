@@ -7,7 +7,6 @@ import {
   ViewSimulationError,
 } from '../../src/contract';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
-import { Context } from '../../src/context';
 import { RpcReadAdapter } from '../../src/read-provider/rpc-read-adapter';
 import { Protocols } from '../../src/constants';
 
@@ -207,8 +206,7 @@ describe('OnChainView test on J protocol', () => {
     });
     mockRpcClient.getStorage.mockResolvedValue({ int: '3' });
 
-    const context = new Context(mockRpcClient as any);
-    mockReadProvider = new RpcReadAdapter(context);
+    mockReadProvider = new RpcReadAdapter(mockRpcClient as any);
 
     view = new OnChainView(
       mockRpcClient as any,

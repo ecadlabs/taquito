@@ -42,7 +42,7 @@ export class DelegateOperation
     return this.operationResults?.status ?? 'unknown';
   }
 
-  get delegate(): string | undefined {
+  get delegate() {
     return this.params.delegate;
   }
 

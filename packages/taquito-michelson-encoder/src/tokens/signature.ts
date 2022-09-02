@@ -1,4 +1,10 @@
-import { ComparableToken, SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
+import {
+  ComparableToken,
+  SemanticEncoding,
+  Token,
+  TokenFactory,
+  TokenValidationError,
+} from './token';
 import { validateSignature, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
@@ -56,7 +62,7 @@ export class SignatureToken extends ComparableToken {
     if (semantic && semantic[SignatureToken.prim]) {
       return semantic[SignatureToken.prim](val);
     }
-    
+
     return { string: val };
   }
 

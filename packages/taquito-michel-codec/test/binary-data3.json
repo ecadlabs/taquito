@@ -1,0 +1,248 @@
+[
+    {
+        "data": {
+            "prim": "Pair",
+            "args": [
+                {
+                    "prim": "Pair",
+                    "args": [
+                        {
+                            "prim": "Pair",
+                            "args": [
+                                {
+                                    "int": "80"
+                                },
+                                {
+                                    "prim": "True"
+                                }
+                            ]
+                        },
+                        {
+                            "prim": "Pair",
+                            "args": [
+                                {
+                                    "bytes": "697066733a2f2f516d633644774e7959503665797955635a5872706146614b6e6256547842507a7a79583155487070486471636d6f"
+                                },
+                                {
+                                    "prim": "Pair",
+                                    "args": [
+                                        {
+                                            "bytes": "050707030600a09a0c"
+                                        },
+                                        {
+                                            "int": "0"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "prim": "Pair",
+                    "args": [
+                        {
+                            "prim": "Pair",
+                            "args": [
+                                [
+                                    {
+                                        "prim": "Pair",
+                                        "args": [
+                                            {
+                                                "string": "tz1gbxFTPotmdLwCJ766md8XHVT9csB8Rzuz"
+                                            },
+                                            {
+                                                "int": "500"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "prim": "Pair",
+                                        "args": [
+                                            {
+                                                "string": "tz1gbxFTPotmdLwCJ766md8XHVT9csB8Rzuz"
+                                            },
+                                            {
+                                                "int": "500"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                []
+                            ]
+                        },
+                        [
+                            {
+                                "prim": "Pair",
+                                "args": [
+                                    {
+                                        "string": "tz1gbxFTPotmdLwCJ766md8XHVT9csB8Rzuz"
+                                    },
+                                    {
+                                        "int": "500"
+                                    }
+                                ]
+                            },
+                            {
+                                "prim": "Pair",
+                                "args": [
+                                    {
+                                        "string": "tz1gbxFTPotmdLwCJ766md8XHVT9csB8Rzuz"
+                                    },
+                                    {
+                                        "int": "500"
+                                    }
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            ]
+        },
+        "type": {
+            "prim": "pair",
+            "args": [
+                {
+                    "prim": "pair",
+                    "args": [
+                        {
+                            "prim": "pair",
+                            "args": [
+                                {
+                                    "prim": "nat",
+                                    "annots": [
+                                        "%amount"
+                                    ]
+                                },
+                                {
+                                    "prim": "bool",
+                                    "annots": [
+                                        "%enabled"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "prim": "bytes",
+                            "annots": [
+                                "%metadata"
+                            ]
+                        },
+                        {
+                            "prim": "pair",
+                            "args": [
+                                {
+                                    "prim": "bytes",
+                                    "annots": [
+                                        "%details"
+                                    ]
+                                },
+                                {
+                                    "prim": "nat",
+                                    "annots": [
+                                        "%pricing_id"
+                                    ]
+                                }
+                            ],
+                            "annots": [
+                                "%pricing"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "prim": "pair",
+                    "args": [
+                        {
+                            "prim": "pair",
+                            "args": [
+                                {
+                                    "prim": "list",
+                                    "args": [
+                                        {
+                                            "prim": "pair",
+                                            "args": [
+                                                {
+                                                    "prim": "address",
+                                                    "annots": [
+                                                        "%address"
+                                                    ]
+                                                },
+                                                {
+                                                    "prim": "nat",
+                                                    "annots": [
+                                                        "%pct"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "annots": [
+                                        "%primary_split"
+                                    ]
+                                },
+                                {
+                                    "prim": "list",
+                                    "args": [
+                                        {
+                                            "prim": "pair",
+                                            "args": [
+                                                {
+                                                    "prim": "nat",
+                                                    "annots": [
+                                                        "%amount"
+                                                    ]
+                                                },
+                                                {
+                                                    "prim": "bytes",
+                                                    "annots": [
+                                                        "%data"
+                                                    ]
+                                                },
+                                                {
+                                                    "prim": "nat",
+                                                    "annots": [
+                                                        "%method_id"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "annots": [
+                                        "%reserves"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "prim": "list",
+                            "args": [
+                                {
+                                    "prim": "pair",
+                                    "args": [
+                                        {
+                                            "prim": "address",
+                                            "annots": [
+                                                "%address"
+                                            ]
+                                        },
+                                        {
+                                            "prim": "nat",
+                                            "annots": [
+                                                "%pct"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "annots": [
+                                "%royalties_split"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "packed": "05070707070707009001030a07070a00000035697066733a2f2f516d633644774e7959503665797955635a5872706146614b6e6256547842507a7a79583155487070486471636d6f07070a00000009050707030600a09a0c000007070707020000004007070a000000160000e5f619e4d08068eede87a246060f475edb82136800b40707070a000000160000e5f619e4d08068eede87a246060f475edb82136800b4070200000000020000004007070a000000160000e5f619e4d08068eede87a246060f475edb82136800b40707070a000000160000e5f619e4d08068eede87a246060f475edb82136800b407"
+    }
+]

@@ -16,6 +16,7 @@ CONFIGS().forEach(
     knownBigMapContract,
     knownSaplingContract,
     knownViewContract,
+    txRollupAddress, 
   }) => {
     const Tezos = lib;
     const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
@@ -408,25 +409,25 @@ CONFIGS().forEach(
         });
 
         jakartanet('getTxRollupInbox', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
+          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
         jakartanet('getTxRollupState', async (done) => {
-           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+           const state = await rpcClient.getTxRollupState(txRollupAddress);
            expect(state).toBeDefined();
            done();
          });
          
         kathmandunet('getTxRollupInbox', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ', '0');
+          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
         kathmandunet('getTxRollupState', async (done) => {
-           const state = await rpcClient.getTxRollupState('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ');
+           const state = await rpcClient.getTxRollupState(txRollupAddress);
            expect(state).toBeDefined();
            done();
          });

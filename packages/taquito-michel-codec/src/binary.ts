@@ -1079,14 +1079,14 @@ export function packDataBytes(d: MichelsonData, t?: MichelsonType): BytesLiteral
 
 const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
   if (isPairType(t)) {
-    const args = Array.isArray(t) ? t : t.args;
     return [
       (d: Expr) => {
         if (!isPairData(d)) {
           throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
         }
+        const tc = unpackComb('pair', t);
         return (function* () {
-          for (const a of args) {
+          for (const a of tc.args) {
             yield getReadTransformFuncs(a);
           }
         })();
