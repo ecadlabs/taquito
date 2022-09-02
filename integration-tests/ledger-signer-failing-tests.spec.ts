@@ -60,7 +60,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                 
                 jest.setTimeout(60000)
 
-                it('Verify that Ledger will throw an error when contract origination is declined', async (done) => {
+                it('Verify that Ledger will throw an error when a transaction is declined', async (done) => {
                     const signer = new LedgerSigner(
                         transport,
                         "44'/1729'/0'/0'",
