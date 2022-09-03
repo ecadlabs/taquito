@@ -1,7 +1,7 @@
 import { OperationContentsAndResult, OperationContentsAndResultTransaction } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { Context } from '../context';
-import { flattenErrors, flattenOperationResult } from './operation-errors';
+import { flattenErrors, flattenOperationResult, MergedOperationResult } from './operation-errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -66,7 +66,8 @@ export class TransactionOperation extends Operation
     return this.params.storage_limit;
   }
 
-  private sumProp(arr: any[], prop: string) {
+
+  private sumProp(arr: MergedOperationResult[], prop: keyof MergedOperationResult) {
     return arr.reduce((prev, current) => {
       return prop in current ? Number(current[prop]) + prev : prev;
     }, 0);

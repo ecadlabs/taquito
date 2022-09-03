@@ -193,7 +193,7 @@ const minTokensBought = xtzToTokenTokenOutput({
 
 const op = await lbContract.methods.xtzToToken(
     USER_ADDRESS, minTokensBought, deadline
-)
+).send();
 await op.confirmation();
 ```
 

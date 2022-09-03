@@ -90,7 +90,7 @@ export class Context {
     this._globalConstantsProvider = globalConstantsProvider
       ? globalConstantsProvider
       : new NoopGlobalConstantsProvider();
-    this._readProvider = readProvider ? readProvider : new RpcReadAdapter(this);
+    this._readProvider = readProvider ? readProvider : new RpcReadAdapter(this._rpcClient);
     this._stream = stream ? stream : new PollingSubscribeProvider(this);
   }
 

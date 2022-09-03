@@ -19,8 +19,11 @@ import {
   txRollupOriginateWithReveal,
   txRollupSubmitBatchNoReveal,
   txRollupSubmitBatchWithReveal,
+  TransferTicketNoReveal,
+  TransferTicketWithReveal,
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
+import { TransferTicketParams } from '../../src/operations/types';
 
 /**
  * RPCEstimateProvider test
@@ -495,6 +498,74 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
   });
+
+  describe('transferTicket', () => {
+    it('should return the correct estimation for a transfer Ticket Operation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(TransferTicketNoReveal)
+
+
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { "string": "foobar" },
+        ticketTy: { "prim": "string" },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+        };
+
+      const estimate = await estimateProvider.transferTicket(params);
+
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '804',
+                gas_limit: '5009',
+                storage_limit: '130',
+              })
+            ])
+          })
+        })
+      )
+      expect(estimate).toMatchObject({
+        gasLimit: 2223,
+        storageLimit: 66,
+      })
+      done();
+    })
+    it('should return estimation with reveal for transfer ticket operation', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue(null);
+      mockForger.forge.mockReturnValue(new Array(224).fill('aa').join(''));
+      mockRpcClient.runOperation.mockReturnValue(TransferTicketWithReveal)
+
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { "string": "foobar" },
+        ticketTy: { "prim": "string" },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+        };
+
+      const estimate = await estimateProvider.transferTicket(params)
+
+      expect(estimate).toMatchObject({
+        gasLimit: 2223,
+        storageLimit: 66,
+      })
+
+      done()
+    })
+  })
 
   describe('batch', () => {
     it('should produce a batch operation, no reveal', async (done) => {
