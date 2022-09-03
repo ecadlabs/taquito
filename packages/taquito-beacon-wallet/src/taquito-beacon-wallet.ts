@@ -174,7 +174,7 @@ export class BeaconWallet implements WalletProvider {
   /**
    *
    * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable.
-   * You will have to instanciate a new BeaconWallet.
+   * You will have to instantiate a new BeaconWallet.
    */
   async disconnect() {
     await this.client.destroy();

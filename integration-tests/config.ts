@@ -26,6 +26,7 @@ interface Config {
   knownBigMapContract: string;
   knownTzip1216Contract: string; 
   knownSaplingContract: string; 
+  txRollupAddress: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
 }
@@ -67,6 +68,7 @@ const kathmandunetEphemeral = {
   knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
   knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
   knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+  txRollupAddress: 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -76,12 +78,13 @@ const kathmandunetEphemeral = {
 };
 
 const jakartanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'http://ecad-jakartanet-archive.i.tez.ie:8732',
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
   knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
   knownTzip1216Contract: 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
   knownSaplingContract: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+  txRollupAddress: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
   protocol: Protocols.PtJakart2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -97,6 +100,7 @@ const mondaynetEphemeral = {
   knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || '',
   knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || '',
   knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || '',
+  txRollupAddress: process.env['TEZOS_MONDAYNET_TXROLLUP_ADDRESS'] || '',
   protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -112,6 +116,7 @@ const kathmandunetFaucet = {
   knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
   knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
   knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+  txRollupAddress: 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -149,6 +154,7 @@ const jakartanetFaucet = {
   knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
   knownTzip1216Contract: 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
   knownSaplingContract: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+  txRollupAddress: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
   protocol: Protocols.PtJakart2,
   signerConfig: {
     type: SignerType.FAUCET as SignerType.FAUCET,
@@ -273,6 +279,7 @@ export const CONFIGS = () => {
         knownBigMapContract,
         knownTzip1216Contract,
         knownSaplingContract,
+        txRollupAddress,
         signerConfig,
       }) => {
         const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
@@ -289,6 +296,7 @@ export const CONFIGS = () => {
           knownBigMapContract,
           knownTzip1216Contract,
           knownSaplingContract,
+          txRollupAddress,
           signerConfig,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.FAUCET) {

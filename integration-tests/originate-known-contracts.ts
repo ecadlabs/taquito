@@ -116,7 +116,7 @@ CONFIGS().forEach(({ lib, setup }) => {
 
     // KnownSaplingContract
     await originateKnownContract('SaplingContract', tezos, {
-      code: singleSaplingStateContractJProtocol,
+      code: singleSaplingStateContractJProtocol(),
       init: '{}'
     });
 

@@ -1,4 +1,3 @@
-
 export const genericStorage = {
   prim: 'Unit',
 };

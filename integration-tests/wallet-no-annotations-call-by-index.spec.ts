@@ -3,13 +3,13 @@ import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract made with wallet API with no annotations calling methods by index using: ${rpc}`, () => {
+  describe(`Test calling methods by index through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('Test contract made with wallet API with no annotations for methods', async (done) => {
+    test('Verify calls to the methods of the contract that have no annotations and must be referred to using indexes.', async (done) => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
       const BALANCE = '0';
