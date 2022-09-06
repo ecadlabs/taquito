@@ -78,7 +78,7 @@ const kathmandunetEphemeral = {
 };
 
 const jakartanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'http://ecad-jakartanet-archive.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
   knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
