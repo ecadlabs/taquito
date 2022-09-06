@@ -349,7 +349,6 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
         label: 'EEEE',
         owner: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
         parent: 'FFFF',
-        ttl: '10',
       })
       .send();
   })
