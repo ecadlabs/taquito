@@ -344,10 +344,10 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
   .then((contract) => {
     return contract.methodsObject
       .set_child_record({
-        address: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
+        address: 'tz2PEc59TDZH6hAou8J9LZrpqr5r8F2k9ZMx',
         data: new MichelsonMap(),
         label: 'EEEE',
-        owner: 'tz2PEc59TDZH6hAou8J9LZrpqr5r8F2k9ZMx',
+        owner: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
         parent: 'FFFF',
         ttl: '10',
       })
