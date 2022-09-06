@@ -290,10 +290,10 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
   .then((contract) => {
     return contract.methods
       .set_child_record(
-        'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address(optional)
+        'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', //address(optional)
         new MichelsonMap(), //data
         'EEEE', //label
-        'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //owner
+        'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', //owner
         'FFFF', //parent
         '10' //ttl(optional)
       )
@@ -344,10 +344,10 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
   .then((contract) => {
     return contract.methodsObject
       .set_child_record({
-        address: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+        address: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
         data: new MichelsonMap(),
         label: 'EEEE',
-        owner: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+        owner: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
         parent: 'FFFF',
         ttl: '10',
       })
