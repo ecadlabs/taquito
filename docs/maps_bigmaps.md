@@ -413,14 +413,14 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1GxyekBtoEKMkah9s7frN7RiXNWBNZsRxw')
+  .at('KT1LxxKhCWH2BijfeT8R3MgPcwMF79reGSmR')
   .then((myContract) => {
     return myContract.storage();
   })
   .then((myStorage) => {
     const value = myStorage['theMap'].get({
       0: '2', //nat
-      1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
+      1: 'tz2PEc59TDZH6hAou8J9LZrpqr5r8F2k9ZMx', //address
     });
     println(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
     ${value[Object.keys(value)[1]]}`);
@@ -433,14 +433,14 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1GxyekBtoEKMkah9s7frN7RiXNWBNZsRxw')
+  .at('KT1LxxKhCWH2BijfeT8R3MgPcwMF79reGSmR')
   .then((myContract) => {
     return myContract.storage();
   })
   .then((myStorage) => {
     const value = myStorage['theMap'].get({
       0: '2', //nat
-      1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
+      1: 'tz2PEc59TDZH6hAou8J9LZrpqr5r8F2k9ZMx', //address
     });
     println(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
     ${value[Object.keys(value)[1]]}`);
@@ -609,9 +609,9 @@ Tezos.contract
       3: 'cafe', // bytes
       4: '10', // mutez
       5: true, // bool
-      6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // key_hash
+      6: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', // key_hash
       7: '2019-09-06T15:08:29.000Z', // timestamp
-      8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
+      8: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', // address
     });
     println(`The value associated to this key is ${value}.`);
   })
@@ -635,9 +635,9 @@ Tezos.wallet
       3: 'cafe', // bytes
       4: '10', // mutez
       5: true, // bool
-      6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // key_hash
+      6: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', // key_hash
       7: '2019-09-06T15:08:29.000Z', // timestamp
-      8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
+      8: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', // address
     });
     println(`The value associated to this key is ${value}.`);
   })

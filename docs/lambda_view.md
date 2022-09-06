@@ -69,9 +69,9 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1DHncbfkjsFPby35TZAuCe2CiYGkMFdvVJ')
+  .at('KT1RbcBD53tswHUeZpevtMcrW1ootZDkz8R4')
   .then((contract) => {
-    return contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read();
+    return contract.views.getBalance('tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5').read();
   })
   .then((response) => {
     println(response);
@@ -99,7 +99,7 @@ Tezos.contract
 Tezos.contract
   .at('KT1Ddh75kHmKBQDSXUJZX9JWiE558R1vw6Sy')
   .then((contract) => {
-    return contract.views.getBalance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq').read();
+    return contract.views.getBalance('tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5').read();
   })
   .then((response) => {
     println(JSON.stringify(response, null, 2));
