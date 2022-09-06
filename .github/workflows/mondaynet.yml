@@ -71,7 +71,7 @@ jobs:
         SSH_HOST: ecad-mondaynet-archive
 
     - id: toru-addresses
-      run: echo "::set-output name=tx-rollup-hash::$(ssh mondaynet \"jq '.[] | select(.name==\"toru_node\") | .value' /srv/tezos/mondaynet_client/tx_rollups\")"
+      run: echo ::set-output name=tx-rollup-hash::$(ssh mondaynet "jq '.[] | select(.name==\"toru_node\") | .value' /srv/tezos/mondaynet_client/tx_rollups")
 
     - run: |
         echo "Test env variables ${{ steps.toru-addresses.outputs.tx-rollup-hash }}"
