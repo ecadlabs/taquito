@@ -92,7 +92,7 @@
     "replace-in-file": "^6.3.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.6",
-    "rollup-plugin-json": "^4.0.0",
+    "@rollup/plugin-json": "^4.1.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.32.1",
     "shelljs": "^0.8.5",
