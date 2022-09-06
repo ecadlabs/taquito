@@ -83,7 +83,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1EsGSPkSD7NdaUsz8Gx5QthurctFnyRuVs')
+  .at('KT1Ddh75kHmKBQDSXUJZX9JWiE558R1vw6Sy')
   .then((contract) => {
     return contract.views
       .balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }])
@@ -97,7 +97,7 @@ Tezos.contract
 
 ```js live noInline
 Tezos.contract
-  .at('KT1Ddh75kHmKBQDSXUJZX9JWiE558R1vw6Sy')
+  .at('KT1EsGSPkSD7NdaUsz8Gx5QthurctFnyRuVs')
   .then((contract) => {
     return contract.views.getBalance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq').read();
   })

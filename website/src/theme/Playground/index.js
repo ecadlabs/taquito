@@ -49,7 +49,7 @@ class SemiLiveProvider extends LiveProvider {
       } else if (this.props.noConfig) {
         return this.code
       } else {
-        return `fetch('https://api.tez.ie/keys/kathmandunet', {
+        return `fetch('http://key-gen-1.i.tez.ie:3000/kathmandunet', {
           method: 'POST',
           headers: { Authorization: 'Bearer taquito-example' },
         })
