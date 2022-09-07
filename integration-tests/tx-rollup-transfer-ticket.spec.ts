@@ -20,7 +20,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
       try {
       // if (txRollupDepositContract && txRollupWithdrawContract) {
         // secret key will need to be the person the tickets were withdrawn to
-        const signer = await InMemorySigner.fromSecretKey(process.env['TX_ROLLUP_TICKETS_OWNER_SECRET'])
+        const signer = await InMemorySigner.fromSecretKey(process.env['TX_ROLLUP_TICKETS_OWNER_SECRET'] || '')
         await Tezos.setProvider({signer})
         const estimateParams: TransferTicketParams = {
           ticketContents: { "string": "foobar" },
