@@ -911,9 +911,9 @@ Tezos.contract
     println('Fetching the big map values...\n');
     return storage['0'].getMultipleValues([
       'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
-      'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+      'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
+      'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+      'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
     ]);
   })
   .then((values) => {
@@ -941,9 +941,9 @@ Tezos.wallet
     println('Fetching the big map values...\n');
     return storage['0'].getMultipleValues([
       'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
-      'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+      'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
+      'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+      'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
     ]);
   })
   .then((values) => {
