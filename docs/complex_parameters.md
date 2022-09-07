@@ -8,8 +8,6 @@ This section shows how Taquito can be used to :
 - Call a contract function with a complex object as a parameter
 - Pass null value to some optional arguments
 
-The source code of the contract used in the following examples is available [here](https://better-call.dev/carthagenet/KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH/code).
-
 ## Origination of a contract with complex storage
 
 Here we have the storage of the contract defined in Michelson.
