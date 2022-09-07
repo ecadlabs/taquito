@@ -20,14 +20,14 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
       try {
       // if (txRollupDepositContract && txRollupWithdrawContract) {
         // secret key will need to be the person the tickets were withdrawn to
-        const signer = await InMemorySigner.fromSecretKey("edsk2vSxPjmjjvSGoXQUTgUiRw91Ws9FzFF9V63CZNgdF1a6UWDvWZ")
+        const signer = await InMemorySigner.fromSecretKey(process.env['TX_ROLLUP_TICKETS_OWNER_SECRET'])
         await Tezos.setProvider({signer})
         const estimateParams: TransferTicketParams = {
           ticketContents: { "string": "foobar" },
           ticketTy: { "prim": "string" },
-          ticketTicketer: txRollupDepositContract || "KT1ENUSEPM5vEoLCB4FnNz5ndCTGFi1Qc314",
+          ticketTicketer: txRollupDepositContract,
           ticketAmount: 1,
-          destination: txRollupWithdrawContract || "KT1VwmpwP1CjxB5oyBv3WRQctpKF4S5DQw8v",
+          destination: txRollupWithdrawContract,
           entrypoint: "default"
         };
         const estimate = await Tezos.estimate.transferTicket(estimateParams);
@@ -48,8 +48,8 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
         expect(estimate.storageLimit).toBeLessThan(Number.POSITIVE_INFINITY)
 
         expect(transferResult.kind).toEqual('transfer_ticket');
-        const expectedDest = txRollupWithdrawContract ? txRollupWithdrawContract : "KT1VwmpwP1CjxB5oyBv3WRQctpKF4S5DQw8v"
-        const expectedTicketer = txRollupDepositContract ? txRollupDepositContract : "KT1ENUSEPM5vEoLCB4FnNz5ndCTGFi1Qc314"
+        const expectedDest = txRollupWithdrawContract
+        const expectedTicketer = txRollupDepositContract
         expect(transferResult.destination).toEqual(expectedDest);
         expect(transferResult.ticket_ticketer).toEqual(expectedTicketer);
         expect(transferResult.ticket_amount).toEqual('1');

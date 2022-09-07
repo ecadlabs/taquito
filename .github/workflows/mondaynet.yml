@@ -51,7 +51,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: '16.13.2'
+        node-version: '16.13.1'
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
@@ -72,4 +72,5 @@ jobs:
         TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
         TX_ROLLUP_WITHDRAW_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-withdraw-contract }}
         TX_ROLLUP_DEPOSIT_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-deposit-contract }}
-      run: npm run test:mondaynet -- --maxWorkers=2
+        TX_ROLLUP_TICKETS_OWNER_SECRET: ${{ secrets.TX_ROLLUP_TICKETS_OWNER_SECRET }}
+      run: npm run test:mondaynet -- integration-tests/tx-rollup-transfer-ticket.spec.ts --maxWorkers=2
