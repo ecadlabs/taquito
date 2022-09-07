@@ -499,7 +499,7 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-// import { TezosToolkit } from '@taquito/taquito';
+// import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
@@ -512,7 +512,7 @@ Tezos.contract
       'test', // view name
       contract, // contract abstraction
       Tezos.rpc, // rpc
-      Tezos.getFactory(RpcReadAdapter)(), // readProvider
+      new RpcReadAdapter(Tezos.rpc), // readProvider
       { prim: 'nat' }, // returnType
       [
         { prim: 'DUP' },
@@ -536,7 +536,7 @@ Tezos.contract
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-// import { TezosToolkit } from '@taquito/taquito';
+// import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
@@ -549,7 +549,7 @@ Tezos.wallet
       'test', // view name
       wallet, // contract abstraction
       Tezos.rpc, // rpc,
-      Tezos.getFactory(RpcReadAdapter)(), // readProvider
+      new RpcReadAdapter(Tezos.rpc), // readProvider
       { prim: 'nat' }, // returnType
       [
         { prim: 'DUP' },
