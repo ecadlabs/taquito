@@ -42,12 +42,6 @@ jobs:
         echo ::set-output name=tx-rollup-hash::$(ssh mondaynet "jq '.[] | select(.name==\"toru_node\") | .value' /srv/tezos/mondaynet_client/tx_rollups | tr -d \\\" ")
         echo ::set-output name=tx-rollup-withdraw-contract::$(ssh mondaynet "jq '.[] | select(.name==\"tx_rollup_withdraw_contract\") | .value' /srv/tezos/mondaynet_client/contracts | tr -d \\\" ")
         echo ::set-output name=tx-rollup-deposit-contract::$(ssh mondaynet "jq '.[] | select(.name==\"tx_rollup_deposit_contract\") | .value' /srv/tezos/mondaynet_client/contracts | tr -d \\\" ")
-
-    # TODO: Remove step before merging
-    - run: |
-        echo "Test env variables ${{ steps.toru-addresses.outputs.tx-rollup-hash }}"
-        echo "Test env variables ${{ steps.toru-addresses.outputs.tx-rollup-withdraw-contract }}"
-        echo "Test env variables ${{ steps.toru-addresses.outputs.tx-rollup-deposit-contract }}"
   
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -74,5 +68,4 @@ jobs:
         TX_ROLLUP_WITHDRAW_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-withdraw-contract }}
         TX_ROLLUP_DEPOSIT_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-deposit-contract }}
         TX_ROLLUP_TICKETS_OWNER_SECRET: ${{ secrets.TX_ROLLUP_TICKETS_OWNER_SECRET }}
-      # TODO remove file selection before merging
-      run: npm run test:mondaynet -- integration-tests/tx-rollup-transfer-ticket.spec.ts --maxWorkers=2
+      run: npm run test:mondaynet -- --maxWorkers=2
