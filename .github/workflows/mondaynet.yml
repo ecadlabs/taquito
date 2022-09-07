@@ -73,4 +73,5 @@ jobs:
         TX_ROLLUP_WITHDRAW_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-withdraw-contract }}
         TX_ROLLUP_DEPOSIT_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-deposit-contract }}
         TX_ROLLUP_TICKETS_OWNER_SECRET: ${{ secrets.TX_ROLLUP_TICKETS_OWNER_SECRET }}
+      # TODO remove file selection before merging
       run: npm run test:mondaynet -- integration-tests/tx-rollup-transfer-ticket.spec.ts --maxWorkers=2
