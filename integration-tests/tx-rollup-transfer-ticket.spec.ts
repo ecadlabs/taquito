@@ -52,8 +52,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             expect(estimate.burnFeeMutez).toBeLessThan(Number.POSITIVE_INFINITY)
             expect(estimate.gasLimit).toBeLessThan(Number.POSITIVE_INFINITY)
             expect(estimate.storageLimit).toBeLessThan(Number.POSITIVE_INFINITY)
-            // break test transfer_ticket
-            expect(transferResult.kind).toEqual('');
+            expect(transferResult.kind).toEqual('transfer_ticket');
             const expectedDest = txRollupWithdrawContract
             const expectedTicketer = txRollupDepositContract
             expect(transferResult.destination).toEqual(expectedDest);
