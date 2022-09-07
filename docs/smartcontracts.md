@@ -262,7 +262,7 @@ In the following example, a contract's `set_child_record` method will be called 
 // const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ')
+  .at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
     println(
@@ -285,15 +285,15 @@ The preceding example returns an array which contains the different possible sig
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
   .then((signer) => {
-    return Tezos.contract.at('KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ');
+    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz');
   })
   .then((contract) => {
     return contract.methods
       .set_child_record(
-        'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address(optional)
+        'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
         new MichelsonMap(), //data
         'EEEE', //label
-        'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //owner
+        'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //owner
         'FFFF', //parent
         '10' //ttl(optional)
       )
@@ -316,7 +316,7 @@ In the following example, a contract's `set_child_record` method will be called 
 // const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ')
+  .at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
     println(
@@ -339,15 +339,15 @@ The preceding example returns an object giving indication on how to structure th
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
   .then((signer) => {
-    return Tezos.contract.at('KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ');
+    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz');
   })
   .then((contract) => {
     return contract.methodsObject
       .set_child_record({
-        address: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+        address: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
         data: new MichelsonMap(),
         label: 'EEEE',
-        owner: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+        owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
         parent: 'FFFF',
       })
       .send();
