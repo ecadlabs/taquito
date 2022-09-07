@@ -136,7 +136,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ')
+    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -154,7 +154,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ')
+    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -171,7 +171,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/kathmandunet/KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ/operations`);
+    println(`Operation injected: https://better-call.dev/kathmandunet/KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -185,7 +185,7 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 .then(signer => {
-    return Tezos.contract.at('KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ')
+    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { nat : '3' })
@@ -202,6 +202,6 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/jakartanet/KT1GhkZzKSBjMxY4kKURNhhYiSVuTyBaGspe/operations`);
+    println(`Operation injected: https://better-call.dev/kathmandunet/KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

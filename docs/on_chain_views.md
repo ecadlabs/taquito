@@ -123,8 +123,8 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-const contractTopLevelViews = 'KT1W6GAqoUeX1GqjZ3eduB6YRWFGxhjT6Zer';
-const contractCallFib = 'KT1CpgZcWr45Arc2p6q4axM2f23N3Aujyv1D';
+const contractTopLevelViews = 'KT1RiR97sqVNrsDysRgtoQjVjF5t2W4WoDkc';
+const contractCallFib = 'KT1QJXh95yWaQfpbWd4d3tLcQbKuAXaGxzUE';
 
 Tezos.contract.at(contractCallFib)
   .then((contract) => {
@@ -152,8 +152,8 @@ Tezos.contract.at(contractCallFib)
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-const contractTopLevelViews = 'KT1W6GAqoUeX1GqjZ3eduB6YRWFGxhjT6Zer';
-const contractCallFib = 'KT1CpgZcWr45Arc2p6q4axM2f23N3Aujyv1D';
+const contractTopLevelViews = 'KT1RiR97sqVNrsDysRgtoQjVjF5t2W4WoDkc';
+const contractCallFib = 'KT1QJXh95yWaQfpbWd4d3tLcQbKuAXaGxzUE';
 
 Tezos.wallet.at(contractCallFib)
   .then((contract) => {
@@ -207,8 +207,8 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-const contractTopLevelViews = 'KT1W6GAqoUeX1GqjZ3eduB6YRWFGxhjT6Zer';
-const contractCallFib = 'KT1CpgZcWr45Arc2p6q4axM2f23N3Aujyv1D';
+const contractTopLevelViews = 'KT1RiR97sqVNrsDysRgtoQjVjF5t2W4WoDkc';
+const contractCallFib = 'KT1QJXh95yWaQfpbWd4d3tLcQbKuAXaGxzUE';
 const fibPosition = 7;
 
 Tezos.contract.at(contractTopLevelViews)
@@ -225,8 +225,8 @@ Tezos.contract.at(contractTopLevelViews)
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-const contractTopLevelViews = 'KT1W6GAqoUeX1GqjZ3eduB6YRWFGxhjT6Zer';
-const contractCallFib = 'KT1CpgZcWr45Arc2p6q4axM2f23N3Aujyv1D';
+const contractTopLevelViews = 'KT1RiR97sqVNrsDysRgtoQjVjF5t2W4WoDkc';
+const contractCallFib = 'KT1QJXh95yWaQfpbWd4d3tLcQbKuAXaGxzUE';
 const fibPosition = 7;
 
 Tezos.wallet.at(contractTopLevelViews)
