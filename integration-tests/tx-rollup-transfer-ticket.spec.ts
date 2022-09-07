@@ -19,11 +19,12 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
     })
     mondaynet("transfer tickets L2 to L1 final step in toru node rollup back to L1", async (done) => {
       try {
-
         const backend = new HttpBackend
-        const req = await backend.createRequest<{metadata: {finalized: boolean}}>({ url: 'http://mondaynet.ecadinfra.com:9999/block/head', method: 'GET'})
-        expect(typeof req.metadata.finalized).toEqual('boolean')
         const checkFinalized = async () => {
+          // check L2 finalization
+          const req = await backend.createRequest<{metadata: {finalized: boolean}}>({ url: 'http://mondaynet.ecadinfra.com:9999/block/head', method: 'GET'})
+          expect(typeof req.metadata.finalized).toEqual('boolean')
+
           if (req.metadata.finalized) {
             const signer = await InMemorySigner.fromSecretKey(process.env['TX_ROLLUP_TICKETS_OWNER_SECRET'] || '')
             await Tezos.setProvider({signer})
@@ -51,8 +52,8 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             expect(estimate.burnFeeMutez).toBeLessThan(Number.POSITIVE_INFINITY)
             expect(estimate.gasLimit).toBeLessThan(Number.POSITIVE_INFINITY)
             expect(estimate.storageLimit).toBeLessThan(Number.POSITIVE_INFINITY)
-
-            expect(transferResult.kind).toEqual('transfer_ticket');
+            // break test transfer_ticket
+            expect(transferResult.kind).toEqual('');
             const expectedDest = txRollupWithdrawContract
             const expectedTicketer = txRollupDepositContract
             expect(transferResult.destination).toEqual(expectedDest);
@@ -67,7 +68,6 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
           return setTimeout(() => checkFinalized, 60000)
         }
         await checkFinalized()
-        // secret key will need to be the person the tickets were withdrawn to
 
       } catch (err) {
         throw err;
