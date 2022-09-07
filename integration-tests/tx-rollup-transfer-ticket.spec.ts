@@ -3,6 +3,8 @@ import { Protocols } from "@taquito/taquito";
 import { TransferTicketParams } from "taquito/src/operations/types";
 import { CONFIGS } from "./config";
 import { InMemorySigner } from "@taquito/signer"
+import { ticketsWithdrawal } from "./data/tickets_withdrawal_contract";
+import { ticketsDeposit } from "./data/tickets_deposit_contract";
 
 
 CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWithdrawContract }) => {
@@ -16,7 +18,6 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
     })
     mondaynet("transfer tickets L2 to L1 final step in toru node rollup back to L1", async (done) => {
       try {
-
       // if (txRollupDepositContract && txRollupWithdrawContract) {
         // secret key will need to be the person the tickets were withdrawn to
         const signer = await InMemorySigner.fromSecretKey("edsk2vSxPjmjjvSGoXQUTgUiRw91Ws9FzFF9V63CZNgdF1a6UWDvWZ")
