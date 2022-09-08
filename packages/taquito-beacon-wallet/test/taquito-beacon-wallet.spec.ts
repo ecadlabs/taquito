@@ -13,9 +13,9 @@ describe('Beacon Wallet tests', () => {
 
   beforeEach(() => {
     sinon.restore()
-    ;(windowRef as any).beaconCreatedClientInstance = false
+      ; (windowRef as any).beaconCreatedClientInstance = false
   })
-  
+
   it('Verify that BeaconWallet is instantiable', () => {
     expect(new BeaconWallet({ name: 'testWallet' })).toBeInstanceOf(
       BeaconWallet
@@ -108,5 +108,4 @@ describe('Beacon Wallet tests', () => {
     expect(typeof (await wallet.clearActiveAccount)).toEqual('function')
     expect((await wallet.clearActiveAccount)).toBeDefined
   })
-
 })
