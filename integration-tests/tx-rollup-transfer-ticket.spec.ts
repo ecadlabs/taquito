@@ -18,8 +18,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
       done();
     })
     mondaynet("transfer tickets L2 to L1 final step in toru node rollup back to L1", async (done) => {
-      try {
-        const backend = new HttpBackend
+        const backend = new HttpBackend()
         const checkFinalized = async () => {
           // check L2 finalization
           const req = await backend.createRequest<{metadata: {finalized: boolean}}>({ url: 'http://mondaynet.ecadinfra.com:9999/block/head', method: 'GET'})
@@ -45,8 +44,9 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
               storageLimit: estimate.storageLimit
             };
 
-            const res = await Tezos.contract.transferTicket(params);
-            const results = res.results
+            const op = await Tezos.contract.transferTicket(params);
+            await op.confirmation()
+            const results = op.results
             const transferResult = results[0] as OperationContentsAndResultTransferTicket
 
             expect(estimate.burnFeeMutez).toBeLessThan(Number.POSITIVE_INFINITY)
@@ -63,14 +63,12 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             expect(transferResult.metadata.operation_result.status).toEqual('applied')
             expect(transferResult.metadata.operation_result.balance_updates).toEqual([])
             expect(transferResult.metadata).toBeDefined()
+            expect(op.status).toEqual('applied')
           }
           return setTimeout(() => checkFinalized, 60000)
         }
         await checkFinalized()
 
-      } catch (err) {
-        throw err;
-      }
       done();
     })
   })
