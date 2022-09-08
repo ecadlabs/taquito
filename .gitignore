@@ -17,3 +17,5 @@ website/*.bak
 integration-tests/jest-stare
 **/saplingOutputParams*
 **/saplingSpendParams*
+apps/**/node_modules
+apps/**/package-lock.json

@@ -3,6 +3,7 @@
   "packages": [
     "example",
     "integration-tests",
+    "app/taquito-test-dapp",
     "packages/*",
     "packages/taquito-michel-codec/pack-test-tool",
     "website"
