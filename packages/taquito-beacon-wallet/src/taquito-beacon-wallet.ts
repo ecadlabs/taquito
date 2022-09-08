@@ -8,6 +8,7 @@ import {
   DAppClientOptions,
   RequestPermissionInput,
   PermissionScope,
+  getDAppClientInstance,
 } from '@airgap/beacon-dapp';
 
 import {
@@ -50,7 +51,7 @@ export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
 
   constructor(options: DAppClientOptions) {
-    this.client = new DAppClient(options);
+    this.client = getDAppClientInstance(options);
   }
 
   private validateRequiredScopesOrFail(

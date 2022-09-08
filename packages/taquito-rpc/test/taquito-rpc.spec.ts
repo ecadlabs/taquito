@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { OpKind, RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
@@ -11,6 +12,7 @@ import {
   LazyStorageDiffSaplingState,
   OperationContentsAndResultRegisterGlobalConstant,
   RPCRunViewParam,
+  RPCRunScriptViewParam,
   OperationContentsAndResultSetDepositsLimit,
   METADATA_BALANCE_UPDATES_CATEGORY,
   OperationContentsAndResultTxRollupOrigination,
@@ -24,11 +26,15 @@ import {
   OperationContentsAndResultTxRollupRejection,
   Inode,
   OtherElts,
+  OperationContentsAndResultIncreasePaidStorage,
+  OperationResultEvent,
 } from '../src/types';
 import {
   blockIthacanetSample,
   blockJakartanetSample,
+  blockKathmandunetSample,
   delegatesIthacanetSample,
+  delegatesKathmandunetSample,
 } from './data/rpc-responses';
 
 /**
@@ -90,7 +96,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBalance', () => {
-    it('query the right url and return a string', async (done) => {
+    it('should query the right url and return a string', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
       const balance = await client.getBalance(contractAddress);
 
@@ -106,7 +112,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getStorage', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getStorage(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -119,7 +125,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getScript', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -132,7 +138,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getNormalizedScript', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getNormalizedScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -146,7 +152,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getContract', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ balance: '10000' });
       const response = await client.getContract(contractAddress);
 
@@ -163,7 +169,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getManagerKey', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getManagerKey(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -176,7 +182,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getDelegate', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getDelegate(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -189,7 +195,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockHash', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getBlockHash();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -219,7 +225,7 @@ describe('RpcClient test', () => {
       grace_period: 146,
     };
 
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
       await client.getDelegates(contractAddress);
 
@@ -231,7 +237,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('parse the response properly', async (done) => {
+    it('should parse the response properly', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
       const response = await client.getDelegates(contractAddress);
 
@@ -265,7 +271,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('parse the response properly, proto10', async (done) => {
+    it('should parse the response properly, proto10', async (done) => {
       // deposit replaced by deposits
       httpBackend.createRequest.mockResolvedValue({
         balance: '5976016544884',
@@ -311,7 +317,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('parse the response properly, proto12', async (done) => {
+    it('should parse the response properly, proto12', async (done) => {
       httpBackend.createRequest.mockResolvedValue(delegatesIthacanetSample);
       const response = await client.getDelegates(contractAddress);
 
@@ -329,10 +335,30 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('should parse the response properly, proto14', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(delegatesKathmandunetSample);
+      const response = await client.getDelegates(contractAddress);
+
+      expect(response).toEqual({
+        full_balance: new BigNumber('965532868030'),
+        current_frozen_deposits: new BigNumber('96350095609'),
+        frozen_deposits: new BigNumber('96350095609'),
+        staking_balance: new BigNumber('970221941952'),
+        delegated_contracts: ['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'],
+        delegated_balance: new BigNumber('4689073922'),
+        deactivated: false,
+        grace_period: 42,
+        voting_power: new BigNumber(968128693450),
+        remaining_proposals: 20,
+      });
+
+      done();
+    });
   });
 
   describe('getBigMapKey', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getBigMapKey(contractAddress, { key: 'test', type: 'string' } as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -346,7 +372,7 @@ describe('RpcClient test', () => {
   });
 
   describe('forgeOperation', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.forgeOperations({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -360,7 +386,7 @@ describe('RpcClient test', () => {
   });
 
   describe('injectOperations', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.injectOperation({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -374,7 +400,7 @@ describe('RpcClient test', () => {
   });
 
   describe('preapplyOperations', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({});
       await client.preapplyOperations({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -389,7 +415,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockHeader', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       const sampleResponse = {
         protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
         chain_id: 'NetXdQprcVkpaWU',
@@ -438,7 +464,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockMetadata', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       const sampleResponse = {
         protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
         next_protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
@@ -562,8 +588,195 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getConstants Proto014', () => {
+    it('should query the right url and casts relevant properties to BigNumber', async (done) => {
+      httpBackend.createRequest.mockResolvedValue({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        max_micheline_node_count: 50000,
+        max_micheline_bytes_limit: 50000,
+        max_allowed_global_constants_depth: 10000,
+        cache_layout_size: 3,
+        michelson_maximum_type_size: 2001,
+        max_wrapped_proof_binary_size: 30000,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        nonce_revelation_threshold: 256,
+        blocks_per_stake_snapshot: 256,
+        cycles_per_voting_period: 1,
+        hard_gas_limit_per_operation: '1040000',
+        hard_gas_limit_per_block: '5200000',
+        proof_of_work_threshold: '-1',
+        tokens_per_roll: '6000000000',
+        vdf_difficulty: '8000000000',
+        seed_nonce_revelation_tip: '125000',
+        origination_size: 257,
+        baking_reward_fixed_portion: '10000000',
+        baking_reward_bonus_per_slot: '4286',
+        endorsing_reward_per_slot: '2857',
+        cost_per_byte: '250',
+        hard_storage_limit_per_operation: '60000',
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: '2500000',
+        liquidity_baking_sunset_level: 10000000,
+        liquidity_baking_toggle_ema_threshold: 1000000000,
+        max_operations_time_to_live: 120,
+        minimal_block_delay: '15',
+        delay_increment_per_round: '15',
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          numerator: 2,
+          denominator: 3,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: '640000000',
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          numerator: 1,
+          denominator: 2,
+        },
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cache_sampler_state_cycles: 8,
+        tx_rollup_enable: true,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_commitment_bond: '10000000000',
+        tx_rollup_finality_period: 40000,
+        tx_rollup_withdraw_period: 40000,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        dal_parametric: {
+          feature_enable: false,
+          number_of_slots: 256,
+          number_of_shards: 2048,
+          endorsement_lag: 1,
+          availability_threshold: 50,
+        },
+        sc_rollup_enable: false,
+        sc_rollup_origination_size: 6314,
+        sc_rollup_challenge_window_in_blocks: 20160,
+        sc_rollup_max_available_messages: 1000000,
+        sc_rollup_stake_amount: '32000000',
+        sc_rollup_commitment_period_in_blocks: 30,
+        sc_rollup_max_lookahead_in_blocks: 30000,
+        sc_rollup_max_active_outbox_levels: 20160,
+        sc_rollup_max_outbox_messages_per_level: 100,
+      });
+
+      const response = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response).toEqual({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        max_micheline_node_count: 50000,
+        max_micheline_bytes_limit: 50000,
+        max_allowed_global_constants_depth: 10000,
+        cache_layout_size: 3,
+        michelson_maximum_type_size: 2001,
+        max_wrapped_proof_binary_size: 30000,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        nonce_revelation_threshold: 256,
+        blocks_per_stake_snapshot: 256,
+        cycles_per_voting_period: 1,
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        proof_of_work_threshold: new BigNumber(-1),
+        tokens_per_roll: new BigNumber(6000000000),
+        vdf_difficulty: new BigNumber(8000000000),
+        seed_nonce_revelation_tip: new BigNumber(125000),
+        origination_size: 257,
+        baking_reward_fixed_portion: new BigNumber(10000000),
+        baking_reward_bonus_per_slot: new BigNumber(4286),
+        endorsing_reward_per_slot: new BigNumber(2857),
+        cost_per_byte: new BigNumber(250),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: new BigNumber(2500000),
+        liquidity_baking_sunset_level: 10000000,
+        liquidity_baking_toggle_ema_threshold: 1000000000,
+        max_operations_time_to_live: 120,
+        minimal_block_delay: new BigNumber(15),
+        delay_increment_per_round: new BigNumber(15),
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          numerator: 2,
+          denominator: 3,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: new BigNumber(640000000),
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          numerator: 1,
+          denominator: 2,
+        },
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cache_sampler_state_cycles: 8,
+        tx_rollup_enable: true,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_commitment_bond: new BigNumber(10000000000),
+        tx_rollup_finality_period: 40000,
+        tx_rollup_withdraw_period: 40000,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        dal_parametric: {
+          feature_enable: false,
+          number_of_slots: 256,
+          number_of_shards: 2048,
+          endorsement_lag: 1,
+          availability_threshold: 50,
+        },
+        sc_rollup_enable: false,
+        sc_rollup_origination_size: 6314,
+        sc_rollup_challenge_window_in_blocks: 20160,
+        sc_rollup_max_available_messages: 1000000,
+        sc_rollup_stake_amount: new BigNumber(32000000),
+        sc_rollup_commitment_period_in_blocks: 30,
+        sc_rollup_max_lookahead_in_blocks: 30000,
+        sc_rollup_max_active_outbox_levels: 20160,
+        sc_rollup_max_outbox_messages_per_level: 100,
+      });
+      done();
+    });
+  });
+
   describe('getConstants Proto012', () => {
-    it('query the right url and casts property to BigNumber', async (done) => {
+    it('should query the right url and casts property to BigNumber', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -671,7 +884,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto007', () => {
-    it('query the right url and casts property to BigNumber', async (done) => {
+    it('should query the right url and casts property to BigNumber', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -746,7 +959,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto006', () => {
-    it('properties return by the RPC are accessible and the ones that do not belong to proto6 are undefined', async (done) => {
+    it('should properties return by the RPC are accessible and the ones that do not belong to proto6 are undefined', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -802,7 +1015,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto005', () => {
-    it('properties return by the RPC are accessible and the ones that do not belong to proto5 are undefined', async (done) => {
+    it('should properties return by the RPC are accessible and the ones that do not belong to proto5 are undefined', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -868,7 +1081,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlock', () => {
-    it('query the right url and property for endorsement', async (done) => {
+    it('should query the right url and property for endorsement', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
@@ -1009,7 +1222,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlock', () => {
-    it('query the right url and property for operation', async (done) => {
+    it('should query the right url and property for operation', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
@@ -1252,7 +1465,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and property for operation, proto 9, endorsement_with_slot', async (done) => {
+    it('should query the right url and property for operation, proto 9, endorsement_with_slot', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
@@ -1340,7 +1553,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and properties (big_map_diff and lazy_storage_diff) in transaction operation result, proto 9', async (done) => {
+    it('should query the right url and properties (big_map_diff and lazy_storage_diff) in transaction operation result, proto 9', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
@@ -1942,7 +2155,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and properties (lazy_storage_diff of kind sapling_state) in transaction operation result, proto 8', async (done) => {
+    it('should query the right url and properties (lazy_storage_diff of kind sapling_state) in transaction operation result, proto 8', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
@@ -2054,7 +2267,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('Access new properties "liquidity_baking_escape_ema", "implicit_operations_results" and "subsidy" in block metadata, proto 10', async (done) => {
+    it('should access new properties "liquidity_baking_escape_ema", "implicit_operations_results" and "subsidy" in block metadata, proto 10', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
@@ -2179,7 +2392,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('fetches a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async (done) => {
+    it('should fetch a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r',
@@ -2801,6 +3014,90 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('should be able to access the properties of operation type increase_paid_storage, proto14', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultIncreasePaidStorage;
+
+      expect(content.kind).toEqual(OpKind.INCREASE_PAID_STORAGE);
+      expect(content.source).toEqual('tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG');
+      expect(content.fee).toEqual('349');
+      expect(content.counter).toEqual('108123');
+      expect(content.gas_limit).toEqual('1000');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.amount).toEqual('2');
+      expect(content.destination).toEqual('KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-349');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('349');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
+      done();
+    });
+
+    it('should be able to access the properties of internal operation type event, proto14', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][1]
+        .contents[0] as OperationContentsAndResultTransaction;
+
+      expect(content.metadata.internal_operation_results).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].kind).toEqual(OpKind.EVENT);
+      expect(content.metadata.internal_operation_results![0].source).toEqual(
+        'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q'
+      );
+      expect(content.metadata.internal_operation_results![0].nonce).toEqual(0);
+
+      expect(content.metadata.internal_operation_results![0].amount).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].destination).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].parameters).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].public_key).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].balance).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].delegate).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].value).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].limit).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].script).toBeUndefined();
+
+      expect(content.metadata.internal_operation_results![0].type).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].type).toEqual({
+        prim: 'or',
+        args: [{ prim: 'nat' }, { prim: 'string' }],
+      });
+      expect(content.metadata.internal_operation_results![0].tag).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].tag).toEqual('event');
+      expect(content.metadata.internal_operation_results![0].payload).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].payload).toEqual({
+        prim: 'Left',
+        args: [{ int: '10' }],
+      });
+      expect(content.metadata.internal_operation_results![0].result).toBeDefined();
+
+      const internalResult = content.metadata.internal_operation_results![0]
+        .result as OperationResultEvent;
+      expect(internalResult.status).toEqual('applied');
+      expect(internalResult.consumed_milligas).toBeDefined();
+      expect(internalResult.consumed_milligas).toEqual('1000000');
+      expect(internalResult.errors).toBeUndefined();
+
+      done();
+    });
   });
 
   describe('getBakingRights', () => {
@@ -2884,7 +3181,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBallotList', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           {
@@ -2926,7 +3223,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBallots', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve({ yay: 5943, nay: 0, pass: 0 }));
       const response = await client.getBallots();
 
@@ -2941,7 +3238,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getCurrentProposal', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve('PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU')
       );
@@ -2958,7 +3255,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getCurrentQuorum', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(7291));
       const response = await client.getCurrentQuorum();
 
@@ -2973,7 +3270,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getVotesListings', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           {
@@ -3034,7 +3331,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getProposals', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           ['PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU', 2832],
@@ -3054,7 +3351,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getEntrypoints', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue({ entrypoints: {} });
       const response = await client.getEntrypoints(contractAddress);
 
@@ -3068,7 +3365,7 @@ describe('RpcClient test', () => {
   });
 
   describe('runOperation', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const testData = {};
 
       httpBackend.createRequest.mockResolvedValue({ content: {} });
@@ -3127,8 +3424,54 @@ describe('RpcClient test', () => {
     });
   });
 
-  describe('runView', () => {
+  describe('runScriptView', () => {
     it('query the right url and data', async (done) => {
+      const testData: RPCRunScriptViewParam = {
+        contract: 'test',
+        view: 'test',
+        chain_id: 'test',
+        input: {
+          int: '0',
+        },
+      };
+
+      await client.runScriptView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_script_view',
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({
+        ...testData,
+        unparsing_mode: 'Readable',
+      });
+      done();
+    });
+
+    it('query the right url and data with unparsing_mode overriden', async (done) => {
+      const testData: RPCRunScriptViewParam = {
+        contract: 'test',
+        view: 'test',
+        chain_id: 'test',
+        input: {
+          int: '0',
+        },
+        unparsing_mode: 'Optimized',
+      };
+
+      await client.runScriptView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_script_view',
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
+      done();
+    });
+  });
+
+  describe('runView', () => {
+    it('should query the right url and data', async (done) => {
       const testData: RPCRunViewParam = {
         contract: 'test',
         entrypoint: 'test',
@@ -3156,7 +3499,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and data with unparsing_mode overriden', async (done) => {
+    it('should query the right url and data with unparsing_mode overriden', async (done) => {
       const testData: RPCRunViewParam = {
         contract: 'test',
         entrypoint: 'test',
@@ -3179,7 +3522,7 @@ describe('RpcClient test', () => {
   });
 
   describe('packData', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: 'unaccounted' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -3195,7 +3538,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('return a big number for gas when it is a big number', async (done) => {
+    it('should return a big number for gas when it is a big number', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: '2' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -3207,7 +3550,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('return undefined for gas when it is missing', async (done) => {
+    it('should return undefined for gas when it is missing', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -3220,7 +3563,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBigMapExpr', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       await client.getBigMapExpr('1', '2');
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -3232,7 +3575,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getRpcUrl', () => {
-    it('return the RPC Url', () => {
+    it('should return the RPC Url', () => {
       const url = 'https://mainnet.api.tez.ie/';
       const rpcUrlMainnet = new RpcClient(url).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://mainnet.api.tez.ie/');
@@ -3242,7 +3585,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getCurrentPeriod', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const mockedResponse = {
         voting_period: {
           index: 87,
@@ -3266,7 +3609,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSuccessorPeriod', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const mockedResponse = {
         voting_period: {
           index: 87,
@@ -3290,7 +3633,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSaplingDiffById', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
         root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
         commitments_and_ciphertexts: [],
@@ -3314,7 +3657,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSaplingDiffByContract', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
         root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
         commitments_and_ciphertexts: [],
@@ -3340,7 +3683,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getProtocols', () => {
-    it('query the right url and return a ProtocolsResponse', async (done) => {
+    it('should query the right url and return a ProtocolsResponse', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',

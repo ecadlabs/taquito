@@ -4,6 +4,7 @@ import {
   MichelsonV1ExpressionExtended,
   RpcClientInterface,
   RPCRunCodeParam,
+  RPCRunScriptViewParam,
 } from '@taquito/rpc';
 import { validateAddress, ValidationResult } from '@taquito/utils';
 import { TzReadProvider } from '../../read-provider/interface';
@@ -13,6 +14,7 @@ import {
   ViewSimulationError,
   validateAndExtractFailwith,
 } from '../errors';
+import { Protocols } from '../../constants';
 
 const runCodeHelper = (
   viewArgsType: MichelsonV1ExpressionExtended,
@@ -83,27 +85,48 @@ export class OnChainView {
    * @param executionContext.viewCaller the contract address which is the caller of view.
    */
   async executeView(executionContext: ExecutionContextParams) {
-    this.verifyContextExecution(executionContext);
-    const balance = (await this._readProvider.getBalance(this._contractAddress, 'head')).toString();
-    const chainId = await this._readProvider.getChainId();
-    const storage = await this._readProvider.getStorage(this._contractAddress, 'head');
-    return this.executeViewAndDecodeResult(
-      runCodeHelper(
-        this._smartContractViewSchema.viewArgsType,
-        this._smartContractViewSchema.viewReturnType,
-        this._contractStorageType,
-        this.adaptViewCodeToContext(
-          this._smartContractViewSchema.instructions,
-          executionContext.viewCaller,
-          balance
+    const protocol = (await this._rpc.getProtocols()).protocol;
+    if (protocol === Protocols.PtKathman) {
+      this.verifyContextExecution(executionContext);
+      const chainId = await this._readProvider.getChainId();
+      const viewArgs = this.transformArgsToMichelson();
+      const scriptView: RPCRunScriptViewParam = {
+        contract: this._contractAddress,
+        view: this._smartContractViewSchema.viewName,
+        input: viewArgs,
+        chain_id: chainId,
+        source: executionContext.viewCaller,
+      };
+      if (executionContext.source) {
+        scriptView.payer = executionContext.source;
+      }
+      return this.executeViewAndDecodeResult(scriptView, protocol);
+    } else {
+      this.verifyContextExecution(executionContext);
+      const balance = (
+        await this._readProvider.getBalance(this._contractAddress, 'head')
+      ).toString();
+      const chainId = await this._readProvider.getChainId();
+      const storage = await this._readProvider.getStorage(this._contractAddress, 'head');
+      return this.executeViewAndDecodeResult(
+        runCodeHelper(
+          this._smartContractViewSchema.viewArgsType,
+          this._smartContractViewSchema.viewReturnType,
+          this._contractStorageType,
+          this.adaptViewCodeToContext(
+            this._smartContractViewSchema.instructions,
+            executionContext.viewCaller,
+            balance
+          ),
+          this.transformArgsToMichelson(),
+          storage,
+          balance,
+          chainId,
+          executionContext.source
         ),
-        this.transformArgsToMichelson(),
-        storage,
-        balance,
-        chainId,
-        executionContext.source
-      )
-    );
+        protocol
+      );
+    }
   }
 
   private verifyContextExecution(executionContext: ExecutionContextParams) {
@@ -174,29 +197,54 @@ export class OnChainView {
     return instructions;
   }
 
-  private async executeViewAndDecodeResult(viewScript: RPCRunCodeParam) {
-    let storage: MichelsonV1ExpressionExtended;
-    try {
-      storage = (await this._rpc.runCode(viewScript)).storage as MichelsonV1ExpressionExtended;
-    } catch (error: any) {
-      const failWith = validateAndExtractFailwith(error);
-      throw failWith
-        ? new ViewSimulationError(
-            `The simulation of the on-chain view named ${
-              this._smartContractViewSchema.viewName
-            } failed with: ${JSON.stringify(failWith)}`,
-            this._smartContractViewSchema.viewName,
-            failWith,
-            error
-          )
-        : error;
+  private async executeViewAndDecodeResult(
+    viewScript: RPCRunScriptViewParam | RPCRunCodeParam,
+    protocol: string
+  ) {
+    if (protocol === Protocols.PtKathman) {
+      let storage: MichelsonV1ExpressionExtended;
+      try {
+        storage = (await this._rpc.runScriptView(viewScript as RPCRunScriptViewParam))
+          .data as MichelsonV1ExpressionExtended;
+      } catch (error: any) {
+        const failWith = validateAndExtractFailwith(error);
+        throw failWith
+          ? new ViewSimulationError(
+              `The simulation of the on-chain view named ${
+                this._smartContractViewSchema.viewName
+              } failed with: ${JSON.stringify(failWith)}`,
+              this._smartContractViewSchema.viewName,
+              failWith,
+              error
+            )
+          : error;
+      }
+      return this._smartContractViewSchema.decodeViewResult(storage);
+    } else {
+      let storage: MichelsonV1ExpressionExtended;
+      try {
+        storage = (await this._rpc.runCode(viewScript as RPCRunCodeParam))
+          .storage as MichelsonV1ExpressionExtended;
+      } catch (error: any) {
+        const failWith = validateAndExtractFailwith(error);
+        throw failWith
+          ? new ViewSimulationError(
+              `The simulation of the on-chain view named ${
+                this._smartContractViewSchema.viewName
+              } failed with: ${JSON.stringify(failWith)}`,
+              this._smartContractViewSchema.viewName,
+              failWith,
+              error
+            )
+          : error;
+      }
+      if (!storage.args) {
+        throw new ViewSimulationError(
+          `View simulation failed with an invalid result: ${storage}`,
+          this._smartContractViewSchema.viewName
+        );
+      }
+      return this._smartContractViewSchema.decodeViewResult(storage.args[0]);
     }
-    if (!storage.args) {
-      throw new ViewSimulationError(
-        `View simulation failed with an invalid result: ${storage}`,
-        this._smartContractViewSchema.viewName
-      );
-    }
-    return this._smartContractViewSchema.decodeViewResult(storage.args[0]);
   }
 }

@@ -36,7 +36,6 @@ describe('TxRollupBatchOperation', () => {
         operation_result: {
           status: 'applied',
           balance_updates: [],
-          consumed_gas: '2769',
           consumed_milligas: '2768514',
           paid_storage_size_diff: '0',
         },
@@ -94,6 +93,30 @@ describe('TxRollupBatchOperation', () => {
       fakeContext
     );
     expect(op.gasLimit).toEqual(450);
+  });
+
+  it('should return the consumed gas', () => {
+    const op = new TxRollupBatchOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+    expect(op.consumedGas).toEqual('2769');
+  });
+
+  it('should return the consumed milligas', () => {
+    const op = new TxRollupBatchOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+    expect(op.consumedMilliGas).toEqual('2768514');
   });
   it('should return the storageLimit', () => {
     const op = new TxRollupBatchOperation(
