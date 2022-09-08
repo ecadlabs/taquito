@@ -32,10 +32,13 @@
     { value: "custom", label: "Custom" },
   ];
   let networkError = false;
+  let showCustomNetworkInput = false;
+  let customNetworkInput = "https://";
   const groupBy = (item) => item.group;
 
   const changeNetwork = (event) => {
     networkError = false;
+    showCustomNetworkInput = false;
     switch (event.detail.value.toLocaleLowerCase()) {
       case "mainnet":
         store.updateTezos(new TezosToolkit(rpcUrl.mainnet));
@@ -59,7 +62,10 @@
         break;
       case "custom":
         //TODO: input custom RPC URL
-        store.updateNetworkType(NetworkType.CUSTOM);
+        showCustomNetworkInput = true;
+        setTimeout(() => {
+          document.getElementById("custom-network-input").focus();
+        }, 100);
         break;
       default:
         console.error("Unhandled network:", event.detail.value);
@@ -149,6 +155,10 @@
         gap: 40px;
       }
 
+      input[type="text"] {
+        width: 100%;
+      }
+
       @supports not (backdrop-filter: blur(4px)) {
         background: rgba(4, 189, 228, 0.8);
       }
@@ -206,6 +216,19 @@
               on:select={changeNetwork}
             />
           </label>
+          {#if showCustomNetworkInput}
+            <input
+              id="custom-network-input"
+              type="text"
+              bind:value={customNetworkInput}
+              placeholder="Custom network URL"
+              on:keyup={(e) => {
+                if (e.key === "Enter") {
+                  store.updateNetworkType(NetworkType.CUSTOM, customNetworkInput);
+                }
+              }}
+            />
+          {/if}
           <label for="matrix-node-select" class="custom-select">
             <span class="select-title">Matrix node:</span>
             <Select
