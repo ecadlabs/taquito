@@ -64,6 +64,7 @@
     "@types/estree": "^1.0.0",
     "@types/jest": "^26.0.23",
     "@types/node": "^17.0.0",
+    "@types/sinon": "^10.0.13",
     "@types/typedarray-to-buffer": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
@@ -79,6 +80,8 @@
     "husky": "^8.0.1",
     "jest": "^26.6.3",
     "jest-config": "^26.6.3",
+    "jsdom": "20.0.0",
+    "jsdom-global": "3.0.2",
     "lerna": "^5.1.2",
     "lint-staged": "^13.0.1",
     "lodash.camelcase": "^4.3.0",
@@ -106,5 +109,8 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "dependencies": {
+    "sinon": "^14.0.0"
   }
 }
