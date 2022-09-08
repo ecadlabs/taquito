@@ -6,7 +6,7 @@ export const rpcUrl = {
   ghostnet: "https://ghostnet.ecadinfra.com/",
   ithacanet: "https://ithacanet.ecadinfra.com/",
   mainnet: "https://mainnet.api.tez.ie", //"https://mainnet-tezos.giganode.io"
-  custom: "https://hangzhounet.api.tez.ie"
+  custom: "https://ghostnet.ecadinfra.com/"
 };
 
 export const defaultMatrixNode = "beacon-node-1.sky.papers.tech";

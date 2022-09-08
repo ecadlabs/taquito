@@ -14,6 +14,7 @@
     "@tsconfig/svelte": "^2.0.1",
     "events": "^3.3.0",
     "libsodium-wrappers": "^0.7.10",
+    "prettier-plugin-svelte": "^2.7.0",
     "sass": "^1.51.0",
     "svelte": "^3.44.0",
     "svelte-check": "^2.2.7",
@@ -28,12 +29,16 @@
     "@taquito/beacon-wallet": "^14.0.0-beta-RC.0",
     "@taquito/taquito": "^14.0.0-beta-RC.0",
     "@taquito/utils": "^14.0.0-beta-RC.0",
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "svelte-select": "^4.4.7"
   },
   "alias": {
     "@airgap/beacon-sdk": "./node_modules/@airgap/beacon-sdk/dist/esm/index.js",
     "@taquito/beacon-wallet": "./node_modules/@taquito/beacon-wallet/dist/taquito-beacon-wallet.es5.js",
     "@taquito/signer": "./node_modules/@taquito/signer/dist/taquito-signer.es5.js",
     "@taquito/taquito": "./node_modules/@taquito/taquito/dist/taquito.es5.js"
+  },
+  "prettier": {
+    "svelteSortOrder" : "options-scripts-styles-markup"
   }
 }

@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { TezosToolkit } from "@taquito/taquito";
   import { NetworkType } from "@airgap/beacon-sdk";
+  import Select from "svelte-select";
   import { rpcUrl } from "./config";
   import store from "./store";
   import Layout from "./Layout.svelte";
@@ -15,9 +16,27 @@
   // https://better-call.dev/kathmandunet/KT1BQuSVXWz23iGeXQCrAGR6GcVcqKeE1F7T/operations
 
   let browser = "";
+  let availableNetworks = [
+    { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
+    { value: "kathmandunet", label: "Kathmandunet", group: "current testnets" },
+    { value: "mainnet", label: "Mainnet", group: "mainnet" },
+    { value: "dailynet", label: "Dailynet", group: "other testnets" },
+    { value: "hangzhounet", label: "Hangzhounet", group: "other testnets" },
+    { value: "jakartanet", label: "Jakartanet", group: "other testnets" },
+    { value: "mondaynet", label: "Mondaynet", group: "other testnets" },
+    { value: "custom", label: "Custom", group: "custom network" },
+  ];
+  let availableMatrixNodes = [
+    { value: "default", label: "Default" },
+    { value: "taquito", label: "Taquito" },
+    { value: "custom", label: "Custom" },
+  ];
+  let networkError = false;
+  const groupBy = (item) => item.group;
 
-  const changeNetwork = event => {
-    switch (event.target.value) {
+  const changeNetwork = (event) => {
+    networkError = false;
+    switch (event.detail.value.toLocaleLowerCase()) {
       case "mainnet":
         store.updateTezos(new TezosToolkit(rpcUrl.mainnet));
         store.updateNetworkType(NetworkType.MAINNET);
@@ -42,11 +61,14 @@
         //TODO: input custom RPC URL
         store.updateNetworkType(NetworkType.CUSTOM);
         break;
+      default:
+        console.error("Unhandled network:", event.detail.value);
+        networkError = true;
     }
   };
 
-  const changeMatrixNode = event => {
-    switch (event.target.value) {
+  const changeMatrixNode = (event) => {
+    switch (event.detail.value.toLocaleLowerCase()) {
       case "default":
         store.updateMatrixNode("beacon-node-1.sky.papers.tech");
         break;
@@ -120,10 +142,28 @@
         }
       }
 
+      label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+      }
+
       @supports not (backdrop-filter: blur(4px)) {
         background: rgba(4, 189, 228, 0.8);
       }
     }
+  }
+
+  .custom-select {
+    --border: 2px solid white;
+    --borderRadius: 0.4rem;
+    --background: transparent;
+    --inputColor: white;
+    --itemColor: rgba(2, 83, 185, 1);
+    --itemHoverColor: rgba(2, 83, 185, 1);
+    --errorBorder: 2px solid red;
+    --errorBackground: transparent;
   }
 </style>
 
@@ -144,40 +184,37 @@
               wallet.click();
             }}
           >
-            <span class="material-icons-outlined">
-              account_balance_wallet
-            </span>
+            <span class="material-icons-outlined"> account_balance_wallet </span>
             &nbsp; Connect your wallet
           </button>
           <button>
             <span class="material-icons-outlined"> usb </span>
             &nbsp; Connect your Nano ledger
           </button>
-          <label for="rpc-node-select">
+          <label for="rpc-node-select" class="custom-select">
             <span class="select-title">RPC node:</span>
-            <select
+            <Select
               id="rpc-node-select"
-              value={$store.networkType}
-              on:change={changeNetwork}
-              on:blur={changeNetwork}
-            >
-              {#each Object.keys(NetworkType) as network}
-                <option
-                  value={network.toLowerCase()}
-                  selected={$store.networkType === network.toLowerCase()}
-                >
-                  {network[0].toUpperCase() + network.toLowerCase().slice(1)}
-                </option>
-              {/each}
-            </select>
+              containerStyles="width:200px"
+              items={availableNetworks}
+              value={$store.networkType
+                .split("")
+                .map((char, i) => (i === 0 ? char.toUpperCase() : char))
+                .join("")}
+              hasError={networkError}
+              {groupBy}
+              on:select={changeNetwork}
+            />
           </label>
-          <label>
+          <label for="matrix-node-select" class="custom-select">
             <span class="select-title">Matrix node:</span>
-            <select on:change={changeMatrixNode} on:blur={changeMatrixNode}>
-              <option value="default">Default</option>
-              <option value="taquito">Taquito</option>
-              <option value="custom">Custom</option>
-            </select>
+            <Select
+              id="matrix-node-select"
+              containerStyles="width:200px"
+              items={availableMatrixNodes}
+              value={$store.matrixNode}
+              on:select={changeMatrixNode}
+            />
           </label>
           <label>
             <span class="select-title">Disable default events:</span>

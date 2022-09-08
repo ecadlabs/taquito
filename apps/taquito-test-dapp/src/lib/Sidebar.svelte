@@ -7,9 +7,7 @@
 
   afterUpdate(async () => {
     if ($store.Tezos && $store.wallet && $store.tests.length === 0) {
-      const contract = await $store.Tezos.wallet.at(
-        contractAddress[$store.networkType]
-      );
+      const contract = await $store.Tezos.wallet.at(contractAddress[$store.networkType]);
       const tests = init($store.Tezos, contract, $store.wallet);
       store.updateTests(tests);
     }
@@ -104,12 +102,9 @@
         <li
           id={test.id}
           style={$store.userAddress ? "cursor:pointer" : "cursor:not-allowed"}
-          class:success={test.lastResult.option === "some" &&
-            test.lastResult.val}
-          class:error={test.lastResult.option === "some" &&
-            !test.lastResult.val}
-          class:selected={$store.selectedTest === test.id &&
-            test.lastResult.option === "none"}
+          class:success={test.lastResult.option === "some" && test.lastResult.val}
+          class:error={test.lastResult.option === "some" && !test.lastResult.val}
+          class:selected={$store.selectedTest === test.id && test.lastResult.option === "none"}
           on:click={() => store.updateSelectedTest(test.id)}
         >
           <span>{test.name}</span>

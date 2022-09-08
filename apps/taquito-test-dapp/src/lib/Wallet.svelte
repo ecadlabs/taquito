@@ -116,7 +116,7 @@
   });
 </script>
 
-<style lang="scss">
+<style lang="scss">  
   #wallet-button {
     background: rgba(80, 227, 194, 0.25);
     backdrop-filter: blur(4px);
