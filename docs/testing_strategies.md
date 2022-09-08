@@ -72,7 +72,7 @@ Static Code Analysis is run during the CICD cycle to do syntactic checks for err
  
 ### End-to-End Tests
  
-Taquito uses the Taquito Test Dapp and the Live Code examples in the documentation as end-to-end tests. The tests exercise the entire software stack between the blockchain node and the user-facing interface.  These tests show that all the components are working together. AT each Taquito release, these tests are checked, and the results are included in the release.
+Taquito uses the Taquito Test Dapp and the Live Code examples in the documentation as end-to-end tests. The tests exercise the entire software stack between the blockchain node and the user-facing interface.  These tests show that all the components are working together. At each Taquito release, these tests are checked, and the results are included in the release.
  
 ### Mutation Tests
  
