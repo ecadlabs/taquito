@@ -13,6 +13,7 @@ import {
   proposalEncoder,
   proposalsEncoder,
   publicKeyEncoder,
+  smartContractAddressEncoder,
   txRollupBatchContentEncoder,
   txRollupIdEncoder,
   txRollupOriginationParamEncoder,
@@ -27,6 +28,7 @@ import {
   BallotSchema,
   DelegationSchema,
   EndorsementSchema,
+  IncreasePaidStorageSchema,
   ManagerOperationSchema,
   operationEncoder,
   OriginationSchema,
@@ -59,6 +61,7 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.INT32]: int32Encoder,
   [CODEC.PARAMETERS]: parametersEncoder,
   [CODEC.ADDRESS]: addressEncoder,
+  [CODEC.SMART_CONTRACT_ADDRESS]: smartContractAddressEncoder,
   [CODEC.VALUE]: valueParameterEncoder,
   [CODEC.INT16]: int16Encoder,
   [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashEncoder,
@@ -88,4 +91,6 @@ encoders[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: any) =>
   schemaEncoder(encoders)(TxRollupOriginationSchema)(val);
 encoders[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: any) =>
   schemaEncoder(encoders)(TxRollupSubmitBatchSchema)(val);
+encoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
+  schemaEncoder(encoders)(IncreasePaidStorageSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);

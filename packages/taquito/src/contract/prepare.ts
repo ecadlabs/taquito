@@ -19,6 +19,8 @@ import {
   RPCTxRollupBatchOperation,
   TransferTicketParams,
   RPCTransferTicketOperation,
+  IncreasePaidStorageParams,
+  RPCIncreasePaidStorageOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -218,7 +220,7 @@ export const createTransferTicketOperation = async ({
   source,
   fee,
   gasLimit,
-  storageLimit
+  storageLimit,
 }: TransferTicketParams) => {
   return {
     kind: OpKind.TRANSFER_TICKET,
@@ -231,6 +233,25 @@ export const createTransferTicketOperation = async ({
     ticket_ticketer: ticketTicketer,
     ticket_amount: ticketAmount,
     destination,
-    entrypoint
-  } as RPCTransferTicketOperation
-}
+    entrypoint,
+  } as RPCTransferTicketOperation;
+};
+
+export const createIncreasePaidStorageOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  amount,
+  destination,
+}: IncreasePaidStorageParams) => {
+  return {
+    kind: OpKind.INCREASE_PAID_STORAGE,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    amount,
+    destination,
+  } as RPCIncreasePaidStorageOperation;
+};
