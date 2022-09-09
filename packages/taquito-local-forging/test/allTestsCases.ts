@@ -31,6 +31,7 @@ import {
 import { codeViewsTopLevel, storageViewsTopLevel } from './data/contract_views_top_level';
 import { ForgeParams } from '../src/interface';
 import { MichelsonV1Expression, OpKind } from '@taquito/rpc';
+import { emitCode } from './data/code_with_emit';
 
 function extractOp(
   startIndex: number,
@@ -1308,7 +1309,7 @@ export const commonCases: TestCase[] = [
           entrypoint: 'default',
         },
       ],
-    } as any,
+    },
   },
   {
     name: `Tx rollup origination`,
@@ -1324,7 +1325,7 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           tx_rollup_origination: {},
         },
-      ] as any,
+      ],
     },
   },
   {
@@ -1343,7 +1344,7 @@ export const commonCases: TestCase[] = [
           content: 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd',
           burn_limit: '1000000',
         },
-      ] as any,
+      ],
     },
   },
   {
@@ -1361,7 +1362,74 @@ export const commonCases: TestCase[] = [
           rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
           content: '1234',
         },
-      ] as any,
+      ],
+    },
+  },
+];
+
+export const kathmanduCases: TestCase[] = [
+  ...extractOp(150, 151, opMapping).map((op): TestCase => {
+    return {
+      name: `Origination operation (${op})`,
+      operation: {
+        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+        contents: [
+          {
+            kind: OpKind.ORIGINATION,
+            counter: '1',
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+            balance: '0',
+            script: {
+              code: genericCode(op) as MichelsonV1Expression[],
+              storage: genericStorage,
+            },
+          },
+        ],
+      },
+    };
+  }),
+  {
+    name: `Origination of a contract that contains the instructions EMIT`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '94141',
+          source: 'tz2WH1zahKo2KiS1gcHBhNFTURPfW1Vk7qpE',
+          fee: '603',
+          gas_limit: '1526',
+          storage_limit: '377',
+          balance: '0',
+          script: {
+            code: emitCode,
+            storage: {
+              prim: 'Unit',
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: `Increase Paid Storage operation`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.INCREASE_PAID_STORAGE,
+          counter: '1',
+          source: 'tz2WH1zahKo2KiS1gcHBhNFTURPfW1Vk7qpE',
+          fee: '100',
+          gas_limit: '10000',
+          storage_limit: '10',
+          amount: '2',
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+        },
+      ],
     },
   },
 ];

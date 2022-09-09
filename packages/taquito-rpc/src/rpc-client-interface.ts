@@ -30,8 +30,10 @@ import {
   ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
+  RunScriptViewResult,
   RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
@@ -91,6 +93,10 @@ export interface RpcClientInterface {
   getEntrypoints(contract: string, options?: RPCOptions): Promise<EntrypointsResponse>;
   runOperation(op: RPCRunOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   runCode(code: RPCRunCodeParam, options?: RPCOptions): Promise<RunCodeResult>;
+  runScriptView(
+    viewScriptParams: RPCRunScriptViewParam,
+    options?: RPCOptions
+  ): Promise<RunScriptViewResult>;
   runView(viewParams: RPCRunViewParam, options?: RPCOptions): Promise<RunViewResult>;
   getChainId(): Promise<string>;
   packData(

@@ -8,6 +8,7 @@ import {
   InvalidKeyHashError,
   InvalidPublicKeyError,
   InvalidAddressError,
+  InvalidContractAddressError,
 } from '@taquito/utils';
 import { OversizedEntryPointError, InvalidBallotValueError, DecodeBallotValueError } from './error';
 import BigNumber from 'bignumber.js';
@@ -194,6 +195,15 @@ export const addressEncoder = (val: string): string => {
   }
 };
 
+export const smartContractAddressEncoder = (val: string): string => {
+  const prefix = val.substring(0, 3);
+
+  if (prefix === Prefix.KT1) {
+    return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
+  }
+  throw new InvalidContractAddressError(val);
+};
+
 export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   switch (preamble[0]) {
@@ -221,6 +231,16 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
     default:
       throw new InvalidAddressError(val.toString());
   }
+};
+
+export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
+  const preamble = val.consume(1);
+  if (preamble[0] === 0x01) {
+    const scAddress = prefixDecoder(Prefix.KT1)(val);
+    val.consume(1);
+    return scAddress;
+  }
+  throw new InvalidContractAddressError(val.toString());
 };
 
 export const zarithEncoder = (n: string): string => {

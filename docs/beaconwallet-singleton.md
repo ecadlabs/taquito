@@ -3,6 +3,10 @@ title: BeaconWallet singleton
 author: Claude Barde
 ---
 
+:::caution Outdated documentation
+Since version 14, Taquito uses the beacon-dapp's `getDAppClientInstance` method instead of the `new DAppClient`. This new method ensures that only one instance is created. The same cached instance is returned if called multiple times.
+:::
+
 # How to use a single instance of the BeaconWallet?
 
 > TL;DR: in order to avoid unexpected problems with the Beacon wallet instance, there should be only one __new BeaconWallet(options)__ in your whole app.

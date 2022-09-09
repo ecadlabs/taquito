@@ -58,9 +58,10 @@
     padding:5px;
 }
 .btn {
-    background-color: var(--ifm-button-background-color);
-    border: var(--ifm-button-border-width) solid var(--ifm-button-border-color);
-    border-radius: var(--ifm-button-border-radius);
+    background-color: var(--ifm-color-secondary);
+    border: var(--ifm-button-border-width);
+    border-radius: 20px;
+    color: var(--ifm-color-text-secondary) !important;
     cursor: pointer;
     font-size: calc(.875rem*var(--ifm-button-size-multiplier));
     font-weight: var(--ifm-button-font-weight);
@@ -74,6 +75,13 @@
     -ms-user-select: none;
     user-select: none;
     white-space: nowrap;
+}
+
+.alert--primary{
+    border: var(--ifm-alert-border-width) solid var(--ifm-color-secondary);;
+    border-left-width: var(--ifm-alert-border-left-width);
+    color: var(--brown);
+    background-color: rgba(211,131,43,.2);
 }
 
 textarea{

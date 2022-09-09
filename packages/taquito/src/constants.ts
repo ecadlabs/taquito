@@ -17,6 +17,8 @@ export enum DEFAULT_STORAGE_LIMIT {
   REVEAL = 0,
 }
 
+export const COST_PER_BYTE = 250;
+
 export enum Protocols {
   Pt24m4xi = 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
   PsBABY5H = 'PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU',

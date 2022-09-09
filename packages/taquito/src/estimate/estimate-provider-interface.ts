@@ -11,6 +11,7 @@ import {
   TxRollupOriginateParams,
   TxRollupBatchParams,
   TransferTicketParams,
+  IncreasePaidStorageParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 
@@ -81,11 +82,21 @@ export interface EstimationProvider {
    *
    * @description Estimate gasLimit, storageLimit and fees for registering an expression (registerGlobalConstant operation)
    *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
    * @param params registerGlobalConstant operation parameter
    */
   registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an increase paid storage operation
+   *
+   * @returns An estimation of gasLimit, storageLimit, and fees for the operation
+   *
+   * @param Estimate
+   */
+  increasePaidStorage(params: IncreasePaidStorageParams): Promise<Estimate>;
 
   /**
    *

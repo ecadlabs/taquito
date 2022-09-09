@@ -1,4 +1,5 @@
 import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
+import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
@@ -44,12 +45,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   get status() {
-    const operationResults = this.operationResults;
-    if (operationResults) {
-      return operationResults.status;
-    } else {
-      return 'unknown';
-    }
+    return this.operationResults?.status ?? 'unknown';
   }
 
   get operationResults() {
@@ -79,8 +75,14 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   get consumedGas() {
-    const consumedGas = this.operationResults && this.operationResults.consumed_gas;
-    return consumedGas ? consumedGas : undefined;
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return this.consumedMilliGas
+      ? new BigNumber(this.consumedMilliGas).dividedBy(1000).toString()
+      : undefined;
+  }
+
+  get consumedMilliGas() {
+    return this.operationResults?.consumed_milligas;
   }
 
   get storageDiff() {
@@ -94,7 +96,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return this.operationResults?.errors;
   }
 
   /**
