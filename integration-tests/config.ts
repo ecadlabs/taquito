@@ -26,6 +26,7 @@ interface Config {
   knownBigMapContract: string;
   knownTzip1216Contract: string; 
   knownSaplingContract: string; 
+  knownViewContract?: string;
   txRollupAddress: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | FaucetConfig;
@@ -68,6 +69,7 @@ const kathmandunetEphemeral = {
   knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
   knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
   knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+  knownViewContract: 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
   txRollupAddress: 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
   protocol: Protocols.PtKathman,
   signerConfig: {
@@ -116,6 +118,7 @@ const kathmandunetFaucet = {
   knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
   knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
   knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+  knownViewContract: 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
   txRollupAddress: 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
   protocol: Protocols.PtKathman,
   signerConfig: {
@@ -279,6 +282,7 @@ export const CONFIGS = () => {
         knownBigMapContract,
         knownTzip1216Contract,
         knownSaplingContract,
+        knownViewContract,
         txRollupAddress,
         signerConfig,
       }) => {
@@ -296,6 +300,7 @@ export const CONFIGS = () => {
           knownBigMapContract,
           knownTzip1216Contract,
           knownSaplingContract,
+          knownViewContract,
           txRollupAddress,
           signerConfig,
           setup: async (preferFreshKey: boolean = false) => {

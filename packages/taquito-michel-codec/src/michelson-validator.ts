@@ -99,6 +99,7 @@ export const instructionIDs: Record<MichelsonInstruction['prim'], true> = Object
     DROP: true,
     DUG: true,
     DUP: true,
+    EMIT: true,
     EMPTY_BIG_MAP: true,
     EMPTY_MAP: true,
     EMPTY_SET: true,
@@ -418,6 +419,15 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
           }
         }
         break;
+
+      case 'EMIT':
+        if (ex.args && ex.args.length > 0) {
+          assertArgs(ex, 1);
+        } else {
+          assertArgs(ex, 0)
+        }
+        break;
+
 
       default:
         throw new MichelsonValidationError(ex, 'instruction expected');
