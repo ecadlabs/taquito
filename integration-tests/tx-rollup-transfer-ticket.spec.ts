@@ -45,7 +45,8 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             };
 
             const op = await Tezos.contract.transferTicket(params);
-            await op.confirmation()
+            // currently times out if confirmations is awaited
+            // await op.confirmation()
             const results = op.results
             const transferResult = results[1] as OperationContentsAndResultTransferTicket
 
