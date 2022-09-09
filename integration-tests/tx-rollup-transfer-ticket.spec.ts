@@ -45,6 +45,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             };
 
             const op = await Tezos.contract.transferTicket(params);
+            // confirmation currently times out
             await op.confirmation()
             const results = op.results
             const transferResult = results[0] as OperationContentsAndResultTransferTicket
@@ -53,10 +54,8 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             expect(estimate.gasLimit).toBeLessThan(Number.POSITIVE_INFINITY)
             expect(estimate.storageLimit).toBeLessThan(Number.POSITIVE_INFINITY)
             expect(transferResult.kind).toEqual('transfer_ticket');
-            const expectedDest = txRollupWithdrawContract
-            const expectedTicketer = txRollupDepositContract
-            expect(transferResult.destination).toEqual(expectedDest);
-            expect(transferResult.ticket_ticketer).toEqual(expectedTicketer);
+            expect(transferResult.destination).toEqual(txRollupWithdrawContract);
+            expect(transferResult.ticket_ticketer).toEqual(txRollupDepositContract);
             expect(transferResult.ticket_amount).toEqual('1');
             expect(transferResult.ticket_ty).toEqual(params.ticketTy);
             expect(transferResult.entrypoint).toEqual('default');
@@ -64,8 +63,9 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             expect(transferResult.metadata.operation_result.balance_updates).toEqual([])
             expect(transferResult.metadata).toBeDefined()
             expect(op.status).toEqual('applied')
+          } else {
+            await setTimeout(() => checkFinalized, 60000)
           }
-          return setTimeout(() => checkFinalized, 60000)
         }
         await checkFinalized()
 
