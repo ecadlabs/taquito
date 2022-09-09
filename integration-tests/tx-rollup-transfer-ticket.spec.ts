@@ -45,10 +45,9 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             };
 
             const op = await Tezos.contract.transferTicket(params);
-            // confirmation currently times out
             await op.confirmation()
             const results = op.results
-            const transferResult = results[0] as OperationContentsAndResultTransferTicket
+            const transferResult = results[1] as OperationContentsAndResultTransferTicket
 
             expect(estimate.burnFeeMutez).toBeLessThan(Number.POSITIVE_INFINITY)
             expect(estimate.gasLimit).toBeLessThan(Number.POSITIVE_INFINITY)
