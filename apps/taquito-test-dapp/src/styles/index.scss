@@ -1,0 +1,87 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+$std-border-radius: 0.4rem;
+
+html,
+body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  color: #333;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background-image: radial-gradient(
+    circle farthest-corner at 22.4% 21.7%,
+    rgba(4, 189, 228, 1) 0%,
+    rgba(2, 83, 185, 1) 100.2%
+  );
+}
+
+main {
+  position: relative;
+  display: grid;
+  grid-template-columns: 25% 75%;
+  height: 100vh;
+  z-index: 10;
+}
+
+span.material-icons-outlined {
+  vertical-align: middle;
+}
+
+button {
+  padding: 10px;
+  font-size: 1rem;
+  border: solid 2px white;
+  border-radius: $std-border-radius;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+
+  &:hover {
+    background-color: rgba(4, 189, 228, 1);
+    border-color: rgba(4, 189, 228, 1);
+  }
+
+  &.wallet {
+    width: 100%;
+  }
+}
+select {
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: $std-border-radius;
+  background-color: transparent;
+  border: solid 2px white;
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+textarea {
+  outline: none;
+  resize: none;
+  border: none;
+  padding: 5px;
+  border-radius: $std-border-radius;
+}
+
+input {
+  outline: none;
+  resize: none;
+  border: solid 2px transparent;
+  padding: 5px;
+  border-radius: $std-border-radius;
+}

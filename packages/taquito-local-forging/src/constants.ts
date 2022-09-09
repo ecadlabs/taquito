@@ -25,6 +25,7 @@ export enum CODEC {
   INT16 = 'int16',
   PARAMETERS = 'parameters',
   ADDRESS = 'address',
+  SMART_CONTRACT_ADDRESS = 'smart_contract_address',
   VALUE = 'value',
   MANAGER = 'manager',
   BLOCK_PAYLOAD_HASH = 'blockPayloadHash',
@@ -47,6 +48,7 @@ export enum CODEC {
   TX_ROLLUP_ORIGINATION_PARAM = 'tx_rollup_origination_param',
   TX_ROLLUP_ID = 'tx_rollup_id',
   TX_ROLLUP_BATCH_CONTENT = 'tx_rollup_batch_content',
+  OP_INCREASE_PAID_STORAGE = 'increase_paid_storage',
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
@@ -202,6 +204,7 @@ export const opMapping: { [key: string]: string } = {
   '94': 'tx_rollup_l2_address',
   '95': 'MIN_BLOCK_TIME',
   '96': 'sapling_transaction',
+  '97': 'EMIT',
 };
 
 export const opMappingReverse = (() => {
@@ -227,6 +230,7 @@ export const kindMapping: { [key: number]: string } = {
   0x96: 'tx_rollup_origination',
   0x97: 'tx_rollup_submit_batch',
   0x9e: 'transfer_ticket',
+  0x71: 'increase_paid_storage',
 };
 
 export const kindMappingReverse = (() => {

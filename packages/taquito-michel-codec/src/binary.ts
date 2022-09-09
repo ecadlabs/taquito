@@ -185,6 +185,7 @@ const primitives: PrimID[] = [
   'view',
   'constant',
   'SUB_MUTEZ',
+  'EMIT',
 ];
 
 const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =

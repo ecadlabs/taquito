@@ -21,8 +21,16 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         })
         await op.confirmation()
         expect(op.hash).toBeDefined();
-        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-
+        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        expect(Number(op.consumedGas)).toBeGreaterThan(0);
+        expect(op.delegate).toEqual(delegate);
+        expect(op.fee).toEqual(DEFAULT_FEE.DELEGATION);
+        expect(op.gasLimit).toEqual(DEFAULT_GAS_LIMIT.DELEGATION);
+        expect(op.storageLimit).toEqual(0);
+        expect(op.isRegisterOperation).toBeFalsy();
+        expect(op.source).toEqual(pkh);
+        expect(op.status).toEqual('applied');
+        
         const account = await Tezos.rpc.getDelegate(pkh)
         expect(account).toEqual(delegate)
       } catch (ex: any) {

@@ -661,7 +661,7 @@ function functionTypeInternal(
   function rethrow<T extends unknown[], U>(fn: (...args: T) => U) {
     return (...args: T): U => {
       try {
-        return fn(...args);
+         return fn(...args);
       } catch (err) {
         if (err instanceof MichelsonError) {
           throw new MichelsonInstructionError(instruction, stack, err.message);
@@ -2004,8 +2004,19 @@ function functionTypeInternal(
         ensurePushableType(s[0]);
         return [annotateVar({ prim: 'option', args: [instruction.args[1]] }), ...stack.slice(2)];
       }
+
       case 'MIN_BLOCK_TIME':
         return [annotateVar({ prim: 'nat' }), ...stack];
+
+      case 'EMIT': {
+        const ia = instructionAnn({ f: 1, t: 1});
+        if (instruction.args) {
+          const s = args(0, null);
+          ensureTypesEqual(s[0], instruction.args[0]);
+          return [annotate({ prim: 'operation' }, ia), ...stack.slice(1)];
+        }
+          return [annotate({ prim: 'operation'}, ia), ...stack.slice(1)];
+      }
 
       default:
         throw new MichelsonError(
