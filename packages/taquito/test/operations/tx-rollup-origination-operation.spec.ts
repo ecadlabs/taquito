@@ -48,7 +48,6 @@ describe('TxRollupOriginationOperation', () => {
               origin: 'block',
             },
           ],
-          consumed_gas: '1421',
           consumed_milligas: '1420108',
           originated_rollup: 'txr1WAEQXaXsM1n4R77G5BDfr8pwiFS5SEbBE',
         },
@@ -126,6 +125,31 @@ describe('TxRollupOriginationOperation', () => {
     );
     expect(op.gasLimit).toEqual(450);
   });
+
+  it('should return the consumed gas', () => {
+    const op = new TxRollupOriginationOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+    expect(op.consumedGas).toEqual('1421');
+  });
+
+  it('should return the consumed milligas', () => {
+    const op = new TxRollupOriginationOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {} as any,
+      '',
+      fakeForgedBytes,
+      successfulResult,
+      fakeContext
+    );
+    expect(op.consumedMilliGas).toEqual('1420108');
+  });
+
   it('should return the storageLimit', () => {
     const op = new TxRollupOriginationOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',

@@ -37,6 +37,7 @@ const sidebars = {
         'maps_bigmaps',
         'michelsonmap',
         'originate',
+        'increase_paid_storage',
         'global_constant',
         'rpc_nodes',
         'rpc_package',
