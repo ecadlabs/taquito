@@ -92,6 +92,15 @@
   };
 
   onMount(() => {
+    // cleans up the local storage
+    if (window && window.localStorage) {
+      // finds the Beacon keys
+      const beaconKeys = Object.keys(window.localStorage).filter((key) =>
+        key.toLowerCase().includes("beacon")
+      );
+      // deletes the keys
+      beaconKeys.forEach((key) => delete window.localStorage[key]);
+    }
     // detects the browser
     let userAgent = navigator.userAgent;
     if (userAgent.match(/chrome|chromium|crios/i)) {
@@ -178,7 +187,7 @@
 </style>
 
 <Layout>
-  {#if $store.userAddress}
+  {#if $store.userAddress && $store.wallet}
     <TestContainer />
   {:else}
     <div class="connect-container">

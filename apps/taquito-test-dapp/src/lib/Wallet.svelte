@@ -19,7 +19,7 @@
         ? {
             name: "Taquito Test Dapp",
             matrixNodes: [defaultMatrixNode] as any,
-            preferredNetwork: $store.networkType
+            preferredNetwork: $store.networkType,
             // disableDefaultEvents: true // Disable all events / UI. This also disables the pairing alert.
             // eventHandlers: {
             //   // To keep the pairing alert, we have to add the following default event handlers back
@@ -34,7 +34,7 @@
         : {
             name: "Taquito Test Dapp",
             matrixNodes: [defaultMatrixNode] as any,
-            preferredNetwork: $store.networkType
+            preferredNetwork: $store.networkType,
           }
     );
   };
@@ -52,8 +52,8 @@
       await wallet.requestPermissions({
         network: {
           type: $store.networkType,
-          rpcUrl: rpcUrl[$store.networkType]
-        }
+          rpcUrl: rpcUrl[$store.networkType],
+        },
       });
 
       const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
@@ -82,6 +82,7 @@
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
+    store.updateSelectedTest(undefined);
   };
 
   onMount(async () => {
@@ -110,13 +111,15 @@
       const activeAccount = await $store.wallet.client.getActiveAccount();
       if (activeAccount) {
         const peers = await $store.wallet.client.getPeers();
-        connectedWallet = peers[0].name;
+        if (peers && Array.isArray(peers) && peers.length > 0) {
+          connectedWallet = peers[0].name;
+        }
       }
     }
   });
 </script>
 
-<style lang="scss">  
+<style lang="scss">
   #wallet-button {
     background: rgba(80, 227, 194, 0.25);
     backdrop-filter: blur(4px);
@@ -231,9 +234,7 @@
         </div>
         <div class="wallet-menu__actions">
           <button class="transparent full" on:click={disconnectWallet}>
-            <span class="material-icons-outlined">
-              account_balance_wallet
-            </span>
+            <span class="material-icons-outlined"> account_balance_wallet </span>
             &nbsp; Disconnect
           </button>
         </div>
