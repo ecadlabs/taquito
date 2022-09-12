@@ -3,3 +3,4 @@ paths-ignore:
   - "example"
   - "integration-tests"
   - "packages/**/test"
+  - "packages/**/data"
