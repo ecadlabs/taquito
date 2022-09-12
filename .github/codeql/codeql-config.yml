@@ -1,0 +1,5 @@
+---
+paths-ignore:
+  - "example"
+  - "integration-tests"
+  - "packages/**/test"
