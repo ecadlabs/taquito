@@ -517,7 +517,7 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
   return { success: false, opHash: "" };
 };
 
-const sapling = async (
+const saplingShielded = async (
   contract: ContractAbstraction<Wallet>
 ): Promise<TestResult> => {
   return { success: false, opHash: "" };
@@ -705,10 +705,10 @@ export const init = (
     lastResult: { option: "none", val: false }
   },
   {
-    id: "sapling",
-    name: "Sapling transactions",
-    description: "This test sends a sapling transaction",
-    run: () => sapling(contract as ContractAbstraction<Wallet>),
+    id: "sapling-shielded",
+    name: "Sapling shielded transaction",
+    description: "This test prepares and sends a shielded transaction to a Sapling pool",
+    run: () => saplingShielded(contract as ContractAbstraction<Wallet>),
     showExecutionTime: false,
     inputRequired: true,
     inputType: "sapling",

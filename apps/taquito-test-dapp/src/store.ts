@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import type { NetworkType } from "@airgap/beacon-sdk";
 import type { TezosToolkit } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
-import { defaultMatrixNode } from "./config";
+import { defaultMatrixNode, defaultNetworkType } from "./config";
 import type { TestSettings } from "./types";
 
 interface State {
@@ -12,6 +12,7 @@ interface State {
   wallet: BeaconWallet;
   disableDefaultEvents: boolean;
   networkType: NetworkType;
+  customNetworkUrl: string;
   matrixNode: string;
   confirmationObservableTest: { level: number; currentConfirmation: number }[];
   selectedTest: string;
@@ -25,7 +26,8 @@ const initialState: State = {
   wallet: undefined,
   matrixNode: defaultMatrixNode,
   disableDefaultEvents: false,
-  networkType: undefined,
+  networkType: defaultNetworkType,
+  customNetworkUrl: undefined,
   confirmationObservableTest: undefined,
   selectedTest: undefined,
   tests: []
@@ -65,10 +67,11 @@ const state = {
       ...store,
       disableDefaultEvents: !store.disableDefaultEvents
     })),
-  updateNetworkType: (networkType: NetworkType) =>
+  updateNetworkType: (networkType: NetworkType, url?: string) =>
     store.update(store => ({
       ...store,
-      networkType
+      networkType,
+      customNetworkUrl: url
     })),
   updateConfirmationObservableTest: (conf: any) =>
     store.update(store => ({
