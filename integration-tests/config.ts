@@ -70,7 +70,7 @@ const defaultSecretKey: SecretKeyConfig = {
 }
 
 const kathmandunetEphemeral = {
-  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: process.env['TEZOS_KATHMANDUET_CONTRACT_ADDRESS'] || 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
   knownBigMapContract: process.env['TEZOS_KATHMANDUET_BIGMAPCONTRACT_ADDRESS'] || 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
@@ -89,7 +89,7 @@ const kathmandunetEphemeral = {
 };
 
 const jakartanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: process.env['TEZOS_JAKARTANET_CONTRACT_ADDRESS'] || 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
   knownBigMapContract: process.env['TEZOS_JAKARTANET_BIGMAPCONTRACT_ADDRESS'] || 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
@@ -127,7 +127,7 @@ const mondaynetEphemeral = {
 };
 
 const kathmandunetSecretKey = {
-  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: process.env['TEZOS_KATHMANDUET_CONTRACT_ADDRESS'] || 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
   knownBigMapContract: process.env['TEZOS_KATHMANDUET_BIGMAPCONTRACT_ADDRESS'] || 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
@@ -142,7 +142,7 @@ const kathmandunetSecretKey = {
 };
 
 const jakartanetSecretKey = {
-  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: process.env['TEZOS_JAKARTANET_CONTRACT_ADDRESS'] || 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
   knownBigMapContract: process.env['TEZOS_JAKARTANET_BIGMAPCONTRACT_ADDRESS'] || 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
