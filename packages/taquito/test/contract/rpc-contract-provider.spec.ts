@@ -35,7 +35,7 @@ import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operatio
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
-import { ticketTokenTestMock } from '../helpers';
+import { anotherMapTypecheckError, smallerTypeCheckError, ticketTokenTestMock } from '../helpers';
 
 /**
  * RPCContractProvider test
@@ -2203,4 +2203,20 @@ describe('RpcContractProvider test', () => {
       done();
     });
   });
-});
+  describe('map typecheck error', () => {
+
+    it('should have defined storage with TicketTokens without errors (#1762)', async (done) => {
+      mockRpcClient.getEntrypoints.mockResolvedValue({
+        entrypoints: {},
+      })
+      mockRpcClient.getContract.mockResolvedValue(smallerTypeCheckError)
+      const rpcContract = await rpcContractProvider.at('KT1SpsNu3hGHN5T5Vt9g9GKUggzvBpxaLxq7');
+      expect(rpcContract).toBeDefined();
+      const storage = await rpcContract.storage() as any;
+
+      const keyList = storage.keyMap;
+      expect(keyList.size).toEqual(3);
+      done();
+    })
+  })
+})
