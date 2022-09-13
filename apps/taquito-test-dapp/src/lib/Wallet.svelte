@@ -89,7 +89,6 @@
     store.updateNetworkType(defaultNetworkType);
 
     const wallet = createNewWallet();
-    store.updateWallet(wallet);
     const activeAccount = await wallet.client.getActiveAccount();
     if (activeAccount) {
       const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
