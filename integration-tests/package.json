@@ -26,7 +26,7 @@
     "@taquito/tzip12": "^14.0.0",
     "@taquito/tzip16": "^14.0.0",
     "@taquito/utils": "^14.0.0",
-    "bignumber.js": "^9.0.2",
+    "bignumber.js": "^9.1.0",
     "bip39": "^3.0.4",
     "blakejs": "^1.2.1"
   },
