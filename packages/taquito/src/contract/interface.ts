@@ -18,9 +18,13 @@ import {
   RegisterGlobalConstantParams,
   TxRollupOriginateParams,
   TxRollupBatchParams,
+  IncreasePaidStorageParams,
+  TransferTicketParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
+import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
+import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -142,6 +146,8 @@ export interface ContractProvider extends StorageProvider {
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
 
+
+  transferTicket(params: TransferTicketParams): Promise<TransferTicketOperation>;
   /**
    *
    * @description Reveal the current address. Will throw an error if the address is already revealed.
@@ -179,6 +185,16 @@ export interface ContractProvider extends StorageProvider {
   registerGlobalConstant(
     params: RegisterGlobalConstantParams
   ): Promise<RegisterGlobalConstantOperation>;
+
+  /**
+   *
+   * @description Increase the amount of bytes in a smart contract storage by paying a fee
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params IncreasePaidStorage operation parameter
+   */
+  increasePaidStorage(params: IncreasePaidStorageParams): Promise<IncreasePaidStorageOperation>;
 
   /**
    *

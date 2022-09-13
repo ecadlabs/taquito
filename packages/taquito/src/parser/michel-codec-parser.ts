@@ -105,14 +105,13 @@ export class MichelCodecParser implements ParserProvider {
       for (const token of globalConstantTokens) {
         const tokenArgs = token.tokenVal.args;
         if (tokenArgs) {
-          const expression = tokenArgs[0] as MichelsonV1ExpressionBase
+          const expression = tokenArgs[0] as MichelsonV1ExpressionBase;
           if (expression.string) {
-            const hash: string = expression.string
-            const michelineValue = await this.context.globalConstantsProvider.getGlobalConstantByHash(
-              hash
-              );
-              Object.assign(globalConstantsHashAndValue, {
-                [hash]: michelineValue,
+            const hash: string = expression.string;
+            const michelineValue =
+              await this.context.globalConstantsProvider.getGlobalConstantByHash(hash);
+            Object.assign(globalConstantsHashAndValue, {
+              [hash]: michelineValue,
             });
           }
         }

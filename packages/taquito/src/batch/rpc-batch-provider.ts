@@ -11,6 +11,7 @@ import {
   createTransferOperation,
   createTxRollupBatchOperation,
   createTransferTicketOperation,
+  createIncreasePaidStorageOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -28,6 +29,7 @@ import {
   TxRollupOriginateParams,
   TxRollupBatchParams,
   TransferTicketParams,
+  IncreasePaidStorageParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -87,7 +89,7 @@ export class OperationBatch extends OperationEmitter {
       throw new InvalidContractAddressError(params.destination);
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
-    return this
+    return this;
   }
 
   /**
@@ -159,6 +161,17 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
+   * @description Add an operation to increase paid storage to the batch
+   *
+   * @param params IncreasePaidStorage operation parameter
+   */
+  withIncreasePaidStorage(params: IncreasePaidStorageParams) {
+    this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
+    return this;
+  }
+
+  /**
+   *
    * @description Add an operation to originate a rollup to the batch
    *
    * @param params Rollup origination operation parameter
@@ -203,6 +216,10 @@ export class OperationBatch extends OperationEmitter {
         return createRegisterGlobalConstantOperation({
           ...param,
         });
+      case OpKind.INCREASE_PAID_STORAGE:
+        return createIncreasePaidStorageOperation({
+          ...param,
+        });
       case OpKind.TX_ROLLUP_ORIGINATION:
         return createTxRollupOriginationOperation({
           ...param,
@@ -213,8 +230,8 @@ export class OperationBatch extends OperationEmitter {
         });
       case OpKind.TRANSFER_TICKET:
         return createTransferTicketOperation({
-          ...param
-        })
+          ...param,
+        });
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }
@@ -243,6 +260,9 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.REGISTER_GLOBAL_CONSTANT:
           this.withRegisterGlobalConstant(param);
+          break;
+        case OpKind.INCREASE_PAID_STORAGE:
+          this.withIncreasePaidStorage(param);
           break;
         case OpKind.TX_ROLLUP_ORIGINATION:
           this.withTxRollupOrigination(param);
