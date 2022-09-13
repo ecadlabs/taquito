@@ -1,6 +1,6 @@
 {
   "name": "@taquito/sapling",
-  "version": "14.0.0-beta-RC.0",
+  "version": "14.0.0",
   "description": "Allows reading and preparing sapling transactions",
   "keywords": [
     "tezos",
@@ -69,9 +69,9 @@
     "@airgap/sapling-wasm": "0.0.9",
     "@stablelib/nacl": "^1.0.3",
     "@stablelib/random": "^1.0.1",
-    "@taquito/rpc": "^14.0.0-beta-RC.0",
-    "@taquito/taquito": "^14.0.0-beta-RC.0",
-    "@taquito/utils": "^14.0.0-beta-RC.0",
+    "@taquito/rpc": "^14.0.0",
+    "@taquito/taquito": "^14.0.0",
+    "@taquito/utils": "^14.0.0",
     "bignumber.js": "^9.0.2",
     "bip39": "^3.0.4",
     "blakejs": "^1.2.1",
@@ -80,7 +80,6 @@
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
-    "@taquito/rpc": "^13.0.1",
     "@types/jest": "^26.0.23",
     "@types/node": "^17.0.0",
     "@types/pbkdf2": "^3.1.0",
