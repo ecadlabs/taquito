@@ -74,7 +74,7 @@ const kathmandunetEphemeral = {
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/jakartanet',
+    keyUrl: 'https://api.tez.ie/keys/kathmandunet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };

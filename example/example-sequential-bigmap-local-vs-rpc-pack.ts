@@ -10,7 +10,7 @@ async function example() {
     try {
         const tezos = new TezosToolkit(rpc);
 
-        const contractAddress = 'KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ';
+        const contractAddress = 'KT1VqHMv2j61NSNKBPumRNjh8dDksTmnbGjs';
         const contract = await tezos.contract.at(contractAddress);
 
         interface StorageType {

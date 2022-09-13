@@ -202,7 +202,7 @@ Tezos.estimate
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
 
 println(`Estimating the contract origination : `);
 Tezos.estimate
