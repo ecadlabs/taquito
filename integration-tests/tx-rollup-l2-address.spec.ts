@@ -1,6 +1,6 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
-import { UnitValue } from '../packages/taquito-michelson-encoder/src/taquito-michelson-encoder';
+import { UnitValue } from '@taquito/michelson-encoder';
 
 CONFIGS().forEach(({lib, setup, protocol}) => {
   const tezos = lib;

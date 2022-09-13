@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { commonCases, kathmanduCases } from '../packages/taquito-local-forging/test/allTestsCases';
+import { commonCases, kathmanduCases } from './data/allTestsCases';
 import { LocalForger, ProtocolsHash } from '@taquito/local-forging'
 import { Protocols, TezosToolkit } from "@taquito/taquito";
 
