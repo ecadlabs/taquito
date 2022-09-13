@@ -2001,25 +2001,18 @@
   "resolved" "file:packages/taquito-beacon-wallet"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@airgap/beacon-dapp" "^3.1.3"
-    "@taquito/taquito" "^13.0.1"
+    "@airgap/beacon-dapp" "^3.1.4"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
     "libsodium-wrappers" "0.7.9"
 
 "@taquito/contracts-library@file:/home/mike/taquito/packages/taquito-contracts-library":
   "resolved" "file:packages/taquito-contracts-library"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/rpc" "^13.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/rpc" "^14.0.0-beta-RC.0"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
-
-"@taquito/http-utils@^12.1.1":
-  "integrity" "sha512-Zlp/eTRVjFs0XEIiAhgxkh6s9npF4dO+e/Sm2XWsDmNPoGI2jdXNH0L+NiKJIOkYcu0CXlcgriTeEaYnbeTvcA=="
-  "resolved" "https://registry.npmjs.org/@taquito/http-utils/-/http-utils-12.1.1.tgz"
-  "version" "12.1.1"
-  dependencies:
-    "axios" "^0.26.0"
 
 "@taquito/http-utils@^13.0.1":
   "integrity" "sha512-eHzd0HSL3qX6bOOSaQClm+0XmpbSNcJP69uzaBJwfXo7ntQR1bUfGLn6+1Hgsk/lJ0JxakD2PDA4aaeajHvyPw=="
@@ -2028,39 +2021,46 @@
   dependencies:
     "axios" "^0.26.0"
 
-"@taquito/http-utils@^14.0.0-beta-RC.0", "@taquito/http-utils@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-http-utils":
+"@taquito/http-utils@^14.0.0-beta-RC.0", "@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
   "resolved" "file:packages/taquito-http-utils"
   "version" "14.0.0-beta-RC.0"
   dependencies:
     "axios" "^0.26.0"
 
-"@taquito/ledger-signer@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-ledger-signer":
+"@taquito/http-utils@^14.0.0":
+  "integrity" "sha512-ZWZzod/+/OEE26b9CnDRjHGfUKBJft3aXv/e/A9bTHAtvRNJqGIhofHcDg/jTaolBMarCF2b3XBYw35aOOSk4A=="
+  "resolved" "https://registry.npmjs.org/@taquito/http-utils/-/http-utils-14.0.0.tgz"
+  "version" "14.0.0"
+  dependencies:
+    "axios" "^0.26.0"
+
+"@taquito/ledger-signer@file:/home/mike/taquito/packages/taquito-ledger-signer":
   "resolved" "file:packages/taquito-ledger-signer"
   "version" "14.0.0-beta-RC.0"
   dependencies:
     "@ledgerhq/hw-transport" "^6.20.0"
     "@stablelib/blake2b" "^1.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "buffer" "^6.0.3"
 
-"@taquito/local-forging@^14.0.0-beta-RC.0", "@taquito/local-forging@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-local-forging":
+"@taquito/local-forging@^14.0.0-beta-RC.0", "@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/utils" "^13.0.1"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/michel-codec@^14.0.0-beta-RC.0", "@taquito/michel-codec@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-michel-codec":
+"@taquito/michel-codec@^14.0.0-beta-RC.0", "@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
   "version" "14.0.0-beta-RC.0"
 
-"@taquito/michelson-encoder@^14.0.0-beta-RC.0", "@taquito/michelson-encoder@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-michelson-encoder":
+"@taquito/michelson-encoder@^14.0.0-beta-RC.0", "@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/rpc" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/rpc" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
@@ -2070,19 +2070,10 @@
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
-    "@taquito/http-utils" "^13.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/http-utils" "^14.0.0-beta-RC.0"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "typedarray-to-buffer" "^4.0.0"
-
-"@taquito/rpc@^12.1.1":
-  "integrity" "sha512-CgAF9kdmKLa/UbmiqApDtncCQGiG7kEOIYis8IIa0JUT9JD1H8WBbSNF/oNh4e0soWUK9BL2qU369RFnxIW+iA=="
-  "resolved" "https://registry.npmjs.org/@taquito/rpc/-/rpc-12.1.1.tgz"
-  "version" "12.1.1"
-  dependencies:
-    "@taquito/http-utils" "^12.1.1"
-    "@taquito/utils" "^12.1.1"
-    "bignumber.js" "^9.0.2"
 
 "@taquito/rpc@^13.0.1":
   "integrity" "sha512-f2Z0qzHB1ERLU5kewmXh3rAD84qIYthSjmAo04sWFbuaMgGW1HxMJKJ/EtL4s4VgoDUwahSwfATmVzmKg57BSw=="
@@ -2093,24 +2084,24 @@
     "@taquito/utils" "^13.0.1"
     "bignumber.js" "^9.0.2"
 
-"@taquito/rpc@^14.0.0-beta-RC.0", "@taquito/rpc@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-rpc":
+"@taquito/rpc@^14.0.0-beta-RC.0", "@taquito/rpc@file:/home/mike/taquito/packages/taquito-rpc":
   "resolved" "file:packages/taquito-rpc"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/http-utils" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/http-utils" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/sapling@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-sapling":
+"@taquito/sapling@file:/home/mike/taquito/packages/taquito-sapling":
   "resolved" "file:packages/taquito-sapling"
   "version" "14.0.0-beta-RC.0"
   dependencies:
     "@airgap/sapling-wasm" "0.0.9"
     "@stablelib/nacl" "^1.0.3"
     "@stablelib/random" "^1.0.1"
-    "@taquito/rpc" "^13.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/rpc" "^14.0.0-beta-RC.0"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
     "bip39" "^3.0.4"
     "blakejs" "^1.2.1"
@@ -2124,22 +2115,22 @@
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
     "@stablelib/nacl" "^1.0.3"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "elliptic" "^6.5.4"
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/taquito@^14.0.0-beta-RC.0", "@taquito/taquito@file:/home/roxane/src/ecadLabs/taquito/packages/taquito":
+"@taquito/taquito@^14.0.0-beta-RC.0", "@taquito/taquito@file:/home/mike/taquito/packages/taquito":
   "resolved" "file:packages/taquito"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/http-utils" "^13.0.1"
-    "@taquito/local-forging" "^13.0.1"
-    "@taquito/michel-codec" "^13.0.1"
-    "@taquito/michelson-encoder" "^13.0.1"
-    "@taquito/rpc" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/http-utils" "^14.0.0-beta-RC.0"
+    "@taquito/local-forging" "^14.0.0-beta-RC.0"
+    "@taquito/michel-codec" "^14.0.0-beta-RC.0"
+    "@taquito/michelson-encoder" "^14.0.0-beta-RC.0"
+    "@taquito/rpc" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
@@ -2147,48 +2138,34 @@
   "resolved" "file:packages/taquito-tezbridge-signer"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/utils" "^13.0.1"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/tezbridge-wallet@file:/home/mike/taquito/packages/taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/taquito" "^13.0.1"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
 
 "@taquito/tzip12@file:/home/mike/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/michelson-encoder" "^13.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/tzip16" "^13.0.1"
+    "@taquito/michelson-encoder" "^14.0.0-beta-RC.0"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/tzip16" "^14.0.0-beta-RC.0"
 
-"@taquito/tzip16@^14.0.0-beta-RC.0", "@taquito/tzip16@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-tzip16":
+"@taquito/tzip16@^14.0.0-beta-RC.0", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "14.0.0-beta-RC.0"
   dependencies:
-    "@taquito/http-utils" "^13.0.1"
-    "@taquito/michelson-encoder" "^13.0.1"
-    "@taquito/rpc" "^13.0.1"
-    "@taquito/taquito" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
+    "@taquito/http-utils" "^14.0.0-beta-RC.0"
+    "@taquito/michelson-encoder" "^14.0.0-beta-RC.0"
+    "@taquito/rpc" "^14.0.0-beta-RC.0"
+    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
-
-"@taquito/utils@^12.1.1":
-  "integrity" "sha512-GxNSBrA02vwhy56ayWB49VZficB+j2oyhPdlsRb2CguephmyEYnlUaNV27ILa6dPDW+zv6+QWQj6GyqLBRpIlA=="
-  "resolved" "https://registry.npmjs.org/@taquito/utils/-/utils-12.1.1.tgz"
-  "version" "12.1.1"
-  dependencies:
-    "@stablelib/blake2b" "^1.0.1"
-    "@stablelib/ed25519" "^1.0.2"
-    "@types/bs58check" "^2.1.0"
-    "blakejs" "^1.1.1"
-    "bs58check" "^2.1.2"
-    "buffer" "^6.0.3"
-    "elliptic" "^6.5.4"
-    "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/utils@^13.0.1":
   "integrity" "sha512-uRtsl4EATlVJ1UnNUiAEoibFFyexGLDLz02CBHoBrcWjqrZdj3AxA+TO63E2kWn/JmT2FM0Sqaqbm555lj4tow=="
@@ -2204,9 +2181,24 @@
     "elliptic" "^6.5.4"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/utils@^14.0.0-beta-RC.0", "@taquito/utils@file:/home/roxane/src/ecadLabs/taquito/packages/taquito-utils":
+"@taquito/utils@^14.0.0-beta-RC.0", "@taquito/utils@file:/home/mike/taquito/packages/taquito-utils":
   "resolved" "file:packages/taquito-utils"
   "version" "14.0.0-beta-RC.0"
+  dependencies:
+    "@stablelib/blake2b" "^1.0.1"
+    "@stablelib/ed25519" "^1.0.2"
+    "@types/bs58check" "^2.1.0"
+    "bignumber.js" "^9.0.2"
+    "blakejs" "^1.2.1"
+    "bs58check" "^2.1.2"
+    "buffer" "^6.0.3"
+    "elliptic" "^6.5.4"
+    "typedarray-to-buffer" "^4.0.0"
+
+"@taquito/utils@^14.0.0":
+  "integrity" "sha512-0RSHn/CzbcbMdldJJIlXyxOvAajwmL6iPKJ6NaRyYJqqLM2CxYjG72KpXVv716pCMV1MbIWsOAr9FKbxW73PsA=="
+  "resolved" "https://registry.npmjs.org/@taquito/utils/-/utils-14.0.0.tgz"
+  "version" "14.0.0"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -3439,7 +3431,7 @@
     "inherits" "^2.0.4"
     "readable-stream" "^3.4.0"
 
-"blakejs@^1.1.1", "blakejs@^1.2.1":
+"blakejs@^1.2.1":
   "integrity" "sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ=="
   "resolved" "https://registry.npmjs.org/blakejs/-/blakejs-1.2.1.tgz"
   "version" "1.2.1"
@@ -10810,7 +10802,7 @@
     "shiki" "^0.9.3"
     "typedoc-default-themes" "^0.12.10"
 
-"typescript@*", "typescript@~4.1.5":
+"typescript@*", "typescript@>=2.4.0", "typescript@>=2.7", "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta", "typescript@>=3.8 <5.0", "typescript@~4.1.5", "typescript@3.9.x || 4.0.x || 4.1.x || 4.2.x":
   "integrity" "sha512-pxnwLxeb/Z5SP80JDRzVjh58KsM6jZHRAOtTpS7sXLS4ogXNKC9ANxHHZqLLeVHZN35jCtI4JdmLLbLiC1kBow=="
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.1.6.tgz"
   "version" "4.1.6"
@@ -10819,11 +10811,6 @@
   "integrity" "sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw=="
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.8.2.tgz"
   "version" "4.8.2"
-
-"typescript@>=2.4.0", "typescript@>=2.7", "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta", "typescript@>=3.8 <5.0", "typescript@3.9.x || 4.0.x || 4.1.x || 4.2.x", "typescript@4.2":
-  "integrity" "sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg=="
-  "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.2.4.tgz"
-  "version" "4.2.4"
 
 "uglify-js@^3.1.4":
   "integrity" "sha512-uVbFqx9vvLhQg0iBaau9Z75AxWJ8tqM9AV890dIZCLApF4rTcyHwmAvLeEdYRs+BzYWu8Iw81F79ah0EfTXbaw=="
