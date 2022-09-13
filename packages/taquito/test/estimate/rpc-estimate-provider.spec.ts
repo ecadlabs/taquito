@@ -566,7 +566,7 @@ describe('RPCEstimateProvider test signer', () => {
 
       done()
     })
-    it('should throw an error with malformed source', async (done) => {
+    it('should throw an error with invalid source', async (done) => {
 
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHG',
@@ -585,7 +585,7 @@ describe('RPCEstimateProvider test signer', () => {
 
       done()
     })
-    it('should throw an error with malformed destination', async (done) => {
+    it('should throw an error with invalid destination', async (done) => {
 
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
