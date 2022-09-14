@@ -300,11 +300,11 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param TransferTicketParams operation parameter
    */
   async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
-    if (validateContractAddress(rest.destination) !== ValidationResult.VALID) {
+    if ( validateContractAddress(rest.destination) !== ValidationResult.VALID) {
       throw new InvalidContractAddressError(rest.destination);
     }
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source);
+      throw new InvalidAddressError(rest.source ?? '');
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
