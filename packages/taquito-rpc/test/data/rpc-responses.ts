@@ -4777,6 +4777,454 @@ export const blockKathmandunetSample = {
   ],
 };
 
+export const blockMondaynetSample = {
+  "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+  "chain_id": "NetXrxsLyu6hTHx",
+  "hash": "BLxSQZzbnjL8yWqo8fJDE6cy2ATPmqQSaLKtheFBzAz4QVTcm5h",
+  "header": {
+    "level": 8215,
+    "proto": 2,
+    "predecessor": "BL9zTL6ejYpVwLLDNvZayft5PADYZMit3GPV3u3huQtYLgfnHFb",
+    "timestamp": "2022-09-14T21:08:52Z",
+    "validation_pass": 4,
+    "operations_hash": "LLob52r9i4cfn4uarsAfQhMAQrHrTgho8snr4kAaiP3tjMptaQ5Vg",
+    "fitness": [
+      "02",
+      "00002017",
+      "",
+      "ffffffff",
+      "00000000"
+    ],
+    "context": "CoWA7xHEpEUv7eLhNHQ7eq6kYQU2J87e9CiMDxHimZ7g9J8aTNCh",
+    "payload_hash": "vh2abve8bjZpFr1FEEH4ySWtXV4svNb7vZ7spty8RGEAQuAPzowv",
+    "payload_round": 0,
+    "proof_of_work_nonce": "d84ec51000000000",
+    "liquidity_baking_toggle_vote": "pass",
+    "signature": "sigYFwK4Y6br6JKypqywernuthHE8oJmVBno7c9n2aM4VN5buviZFu7ABU84C3Lo2bBtrhh563k9Licq2WGoGLgqnpR7vYku"
+  },
+  "metadata": {
+    "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+    "next_protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+    "test_chain_status": {
+      "status": "not_running"
+    },
+    "max_operations_ttl": 120,
+    "max_operation_data_length": 32768,
+    "max_block_header_length": 289,
+    "max_operation_list_length": [
+      {
+        "max_size": 4194304,
+        "max_op": 2048
+      },
+      {
+        "max_size": 32768
+      },
+      {
+        "max_size": 135168,
+        "max_op": 132
+      },
+      {
+        "max_size": 524288
+      }
+    ],
+    "proposer": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+    "baker": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+    "level_info": {
+      "level": 8215,
+      "level_position": 8214,
+      "cycle": 64,
+      "cycle_position": 22,
+      "expected_commitment": false
+    },
+    "voting_period_info": {
+      "voting_period": {
+        "index": 64,
+        "kind": "proposal",
+        "start_position": 8192
+      },
+      "position": 22,
+      "remaining": 105
+    },
+    "nonce_hash": null,
+    "deactivated": [],
+    "balance_updates": [
+      {
+        "kind": "accumulator",
+        "category": "block fees",
+        "change": "-1066",
+        "origin": "block"
+      },
+      {
+        "kind": "minted",
+        "category": "baking rewards",
+        "change": "-10000000",
+        "origin": "block"
+      },
+      {
+        "kind": "contract",
+        "contract": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+        "change": "10001066",
+        "origin": "block"
+      },
+      {
+        "kind": "minted",
+        "category": "baking bonuses",
+        "change": "-9999238",
+        "origin": "block"
+      },
+      {
+        "kind": "contract",
+        "contract": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+        "change": "9999238",
+        "origin": "block"
+      }
+    ],
+    "liquidity_baking_toggle_ema": 0,
+    "implicit_operations_results": [
+      {
+        "kind": "transaction",
+        "storage": [
+          {
+            "int": "1"
+          },
+          {
+            "int": "20535000100"
+          },
+          {
+            "int": "100"
+          },
+          {
+            "bytes": "01e927f00ef734dfc85919635e9afc9166c83ef9fc00"
+          },
+          {
+            "bytes": "0115eb0104481a6d7921160bc982c5e0a561cd8a3a00"
+          }
+        ],
+        "balance_updates": [
+          {
+            "kind": "minted",
+            "category": "subsidy",
+            "change": "-2500000",
+            "origin": "subsidy"
+          },
+          {
+            "kind": "contract",
+            "contract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+            "change": "2500000",
+            "origin": "subsidy"
+          }
+        ],
+        "consumed_milligas": "204995",
+        "storage_size": "4632"
+      }
+    ],
+    "proposer_consensus_key": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+    "baker_consensus_key": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+    "consumed_milligas": "6009000"
+  },
+  "operations": [
+    [
+      {
+        "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+        "chain_id": "NetXrxsLyu6hTHx",
+        "hash": "opaqnqpHek5n2dT5cPo6232Bh1eUb9r5YY7HTJrfhssvTpCNzqa",
+        "branch": "BLMgWxe48wsD5fMQ8ceQfmDe1EtXH1KN65Vqxzd4FrF2smLXMjF",
+        "contents": [
+          {
+            "kind": "endorsement",
+            "slot": 0,
+            "level": 8214,
+            "round": 0,
+            "block_payload_hash": "vh25TajqAxFhQ9EG3QYxE3zvDJtBqtPxwJTVFShCrfWNUjVgjtuV",
+            "metadata": {
+              "delegate": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+              "endorsement_power": 5419,
+              "consensus_key": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE"
+            }
+          }
+        ],
+        "signature": "sigdkcihkN6V5ZdDUTxwGjgWCXhiTuDm2o2UtPoo4K6j3E8X1cuCDtZyJdE2V41UDA6SwHMKtfvJVYQdVrYE9hqJ3eXb9wdc"
+      },
+      {
+        "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+        "chain_id": "NetXrxsLyu6hTHx",
+        "hash": "ongFE8QSyJ3HzpRP1KV6fH6U1Hu7jCJQR8MDq24gCnefEnCCnsL",
+        "branch": "BLMgWxe48wsD5fMQ8ceQfmDe1EtXH1KN65Vqxzd4FrF2smLXMjF",
+        "contents": [
+          {
+            "kind": "endorsement",
+            "slot": 3,
+            "level": 8214,
+            "round": 0,
+            "block_payload_hash": "vh25TajqAxFhQ9EG3QYxE3zvDJtBqtPxwJTVFShCrfWNUjVgjtuV",
+            "metadata": {
+              "delegate": "tz1NDNCdR2REutVDQXRD791Yv8BQAt2NCMZD",
+              "endorsement_power": 350,
+              "consensus_key": "tz1NDNCdR2REutVDQXRD791Yv8BQAt2NCMZD"
+            }
+          }
+        ],
+        "signature": "sighfz1tPzV25r3eoyWhz5RXq9Wd4b68aRsnd6u8V8j2Qj6fcezW4asPDQMaTEHpM84oeWrLY3UJEZy5jaAhqpm2j6kZv8rt"
+      },
+      {
+        "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+        "chain_id": "NetXrxsLyu6hTHx",
+        "hash": "onv8dfB4RfvasySd1yaWLH2Ve6P96o9ZanENb8uaJKcmsVq3mVa",
+        "branch": "BLMgWxe48wsD5fMQ8ceQfmDe1EtXH1KN65Vqxzd4FrF2smLXMjF",
+        "contents": [
+          {
+            "kind": "endorsement",
+            "slot": 5,
+            "level": 8214,
+            "round": 0,
+            "block_payload_hash": "vh25TajqAxFhQ9EG3QYxE3zvDJtBqtPxwJTVFShCrfWNUjVgjtuV",
+            "metadata": {
+              "delegate": "tz1SSe3hejo6tUX3jLvTEEy4VCdxYukqBdkT",
+              "endorsement_power": 379,
+              "consensus_key": "tz1SSe3hejo6tUX3jLvTEEy4VCdxYukqBdkT"
+            }
+          }
+        ],
+        "signature": "sigbeGRwSDLq9G3kWHLSJKzAhsafXG57mKnG1hAeW5YqWbRqVwUjhpuXSsuqABuj4kaoLAwsnhSXg9bCguyw67tBh6JiXQGE"
+      },
+      {
+        "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+        "chain_id": "NetXrxsLyu6hTHx",
+        "hash": "opSP36eZvXynNSFBiknn3X2DGNaCm8hR2NuRZUhJ6xuKj8ULxrd",
+        "branch": "BLMgWxe48wsD5fMQ8ceQfmDe1EtXH1KN65Vqxzd4FrF2smLXMjF",
+        "contents": [
+          {
+            "kind": "endorsement",
+            "slot": 6,
+            "level": 8214,
+            "round": 0,
+            "block_payload_hash": "vh25TajqAxFhQ9EG3QYxE3zvDJtBqtPxwJTVFShCrfWNUjVgjtuV",
+            "metadata": {
+              "delegate": "tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH",
+              "endorsement_power": 265,
+              "consensus_key": "tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH"
+            }
+          }
+        ],
+        "signature": "sigsyhVtHnEKvViZVKKeKF1JJ5WhoYGoxadZRYk9XNWYkxz2JqR1815YrFBSQ6TzK96usgguCYe4L663cBNSEmyxQ1dSqRHt"
+      },
+      {
+        "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+        "chain_id": "NetXrxsLyu6hTHx",
+        "hash": "oo2ASGaeT2dR4PJi7jj53xaKMX4QffMBUiFdg6zKkLX5JRayneK",
+        "branch": "BLMgWxe48wsD5fMQ8ceQfmDe1EtXH1KN65Vqxzd4FrF2smLXMjF",
+        "contents": [
+          {
+            "kind": "endorsement",
+            "slot": 8,
+            "level": 8214,
+            "round": 0,
+            "block_payload_hash": "vh25TajqAxFhQ9EG3QYxE3zvDJtBqtPxwJTVFShCrfWNUjVgjtuV",
+            "metadata": {
+              "delegate": "tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb",
+              "endorsement_power": 214,
+              "consensus_key": "tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb"
+            }
+          }
+        ],
+        "signature": "sigaCWVhNUfF1WEaQEa9GDdSARTrdUxPq4GdLnY3VF1vUaV1j75VMscHnzmJaaViEfogmoe7TF3fBTD9aVJf7eFSj2BVuPYf"
+      },
+      {
+        "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+        "chain_id": "NetXrxsLyu6hTHx",
+        "hash": "oo8aZSeVroqSPHTxK9TZvVxnzEfrk1Z5nXtqLaEFQNsvTooz4U1",
+        "branch": "BLMgWxe48wsD5fMQ8ceQfmDe1EtXH1KN65Vqxzd4FrF2smLXMjF",
+        "contents": [
+          {
+            "kind": "endorsement",
+            "slot": 53,
+            "level": 8214,
+            "round": 0,
+            "block_payload_hash": "vh25TajqAxFhQ9EG3QYxE3zvDJtBqtPxwJTVFShCrfWNUjVgjtuV",
+            "metadata": {
+              "delegate": "tz1WLNVBKmPWEMdXD5c3NrpnUsTtb97Fdevg",
+              "endorsement_power": 373,
+              "consensus_key": "tz1WLNVBKmPWEMdXD5c3NrpnUsTtb97Fdevg"
+            }
+          }
+        ],
+        "signature": "sigTM2d4dEuT44cW9dVtdEhJPs5FnhQCcj5UB294tga19sDJkXMbCoi6MF8jvff4sgtWVdfGM7D6n99mZxjmkCf9HBNshtMp"
+      }
+    ],
+    [],
+    [],
+    [
+      {
+        "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+        "chain_id": "NetXrxsLyu6hTHx",
+        "hash": "oohBkdej63Xf68KKAi9KfBUKzzX9NDQ6uqUa99bgWUCjL5JBAF1",
+        "branch": "BMHnqNtChbedSiBp9XPMmsMHKDmFVkHN64CP1ohyeA2imwLc3W9",
+        "contents": [
+          {
+            "kind": "reveal",
+            "source": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+            "fee": "358",
+            "counter": "1825",
+            "gas_limit": "1000",
+            "storage_limit": "0",
+            "public_key": "edpkuyMNjhh4w8S7iwuKh6bJgE4cjfSEvRRAXC9qHQUE1u9avfZykW",
+            "metadata": {
+              "balance_updates": [
+                {
+                  "kind": "contract",
+                  "contract": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                  "change": "-358",
+                  "origin": "block"
+                },
+                {
+                  "kind": "accumulator",
+                  "category": "block fees",
+                  "change": "358",
+                  "origin": "block"
+                }
+              ],
+              "operation_result": {
+                "status": "applied",
+                "consumed_milligas": "1000000"
+              }
+            }
+          },
+          {
+            "kind": "transfer_ticket",
+            "source": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+            "fee": "708",
+            "counter": "1826",
+            "gas_limit": "5009",
+            "storage_limit": "130",
+            "ticket_contents": {
+              "string": "foobar"
+            },
+            "ticket_ty": {
+              "prim": "string"
+            },
+            "ticket_ticketer": "KT1P57aaa5RgxqMdgoUoerWg8HVwXjbP2vxS",
+            "ticket_amount": "2",
+            "destination": "KT1BnDCAv62hqTQ3kDnMxWGKVpEgdQgX3TPm",
+            "entrypoint": "default",
+            "metadata": {
+              "balance_updates": [
+                {
+                  "kind": "contract",
+                  "contract": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                  "change": "-708",
+                  "origin": "block"
+                },
+                {
+                  "kind": "accumulator",
+                  "category": "block fees",
+                  "change": "708",
+                  "origin": "block"
+                }
+              ],
+              "operation_result": {
+                "status": "applied",
+                "balance_updates": [
+                  {
+                    "kind": "contract",
+                    "contract": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                    "change": "-16500",
+                    "origin": "block"
+                  },
+                  {
+                    "kind": "burned",
+                    "category": "storage fees",
+                    "change": "16500",
+                    "origin": "block"
+                  }
+                ],
+                "consumed_milligas": "2122881",
+                "paid_storage_size_diff": "66"
+              },
+              "internal_operation_results": [
+                {
+                  "kind": "transaction",
+                  "source": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                  "nonce": 0,
+                  "amount": "0",
+                  "destination": "KT1BnDCAv62hqTQ3kDnMxWGKVpEgdQgX3TPm",
+                  "parameters": {
+                    "entrypoint": "default",
+                    "value": {
+                      "prim": "Pair",
+                      "args": [
+                        {
+                          "bytes": "019eee1d62435cc1a5248d89bade87b9760bd7644300"
+                        },
+                        {
+                          "prim": "Pair",
+                          "args": [
+                            {
+                              "string": "foobar"
+                            },
+                            {
+                              "int": "2"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "result": {
+                    "status": "applied",
+                    "storage": {
+                      "prim": "Some",
+                      "args": [
+                        {
+                          "prim": "Pair",
+                          "args": [
+                            {
+                              "bytes": "019eee1d62435cc1a5248d89bade87b9760bd7644300"
+                            },
+                            {
+                              "prim": "Pair",
+                              "args": [
+                                {
+                                  "string": "foobar"
+                                },
+                                {
+                                  "int": "2"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "balance_updates": [
+                      {
+                        "kind": "contract",
+                        "contract": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                        "change": "-11000",
+                        "origin": "block"
+                      },
+                      {
+                        "kind": "burned",
+                        "category": "storage fees",
+                        "change": "11000",
+                        "origin": "block"
+                      }
+                    ],
+                    "consumed_milligas": "2785855",
+                    "storage_size": "90",
+                    "paid_storage_size_diff": "44"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "signature": "sigcwwEnrdbzVXzm2hiiU8KoDK8rxgDzU5GaDj4YGounA53n2kNKQYunVeV5jfqo5hVdzcjskKW8P5WzQLPpDeAJNKB2wHmh"
+      }
+    ]
+  ]
+}
+
+
 export const txRollupState = {
   last_removed_commitment_hashes: null,
   finalized_commitments: {

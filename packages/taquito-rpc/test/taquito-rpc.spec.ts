@@ -28,11 +28,13 @@ import {
   OtherElts,
   OperationContentsAndResultIncreasePaidStorage,
   OperationResultEvent,
+  OperationContentsAndResultTransferTicket,
 } from '../src/types';
 import {
   blockIthacanetSample,
   blockJakartanetSample,
   blockKathmandunetSample,
+  blockMondaynetSample,
   delegatesIthacanetSample,
   delegatesKathmandunetSample,
 } from './data/rpc-responses';
@@ -3016,7 +3018,38 @@ describe('RpcClient test', () => {
     });
 
     it('should be able to access the properties of operation type transfer_ticket, proto14', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockMondaynetSample));
+      const response = await client.getBlock();
+      const content = response.operations[3][0].contents[1] as OperationContentsAndResultTransferTicket
 
+      expect(content.kind).toEqual(OpKind.TRANSFER_TICKET);
+      expect(content.source).toEqual('tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa');
+      expect(content.fee).toEqual('708');
+      expect(content.counter).toEqual('1826');
+      expect(content.gas_limit).toEqual('5009');
+      expect(content.storage_limit).toEqual('130');
+      expect(content.ticket_amount).toEqual('2');
+      expect(content.destination).toEqual('KT1BnDCAv62hqTQ3kDnMxWGKVpEgdQgX3TPm');
+      expect(content.entrypoint).toEqual('default');
+      expect(content.ticket_contents).toEqual( {"string": "foobar"});
+      expect(content.ticket_ty).toEqual( {"prim": "string"});
+      expect(content.ticket_ticketer).toEqual('KT1P57aaa5RgxqMdgoUoerWg8HVwXjbP2vxS');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual('tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa');
+      expect(content.metadata.balance_updates![0].change).toEqual('-708');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('708');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('2122881');
+      expect(content.metadata.operation_result.paid_storage_size_diff).toEqual('66')
       done();
     })
 
