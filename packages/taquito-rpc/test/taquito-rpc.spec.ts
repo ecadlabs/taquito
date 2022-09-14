@@ -3015,6 +3015,11 @@ describe('RpcClient test', () => {
       done();
     });
 
+    it('should be able to access the properties of operation type transfer_ticket, proto14', async (done) => {
+
+      done();
+    })
+
     it('should be able to access the properties of operation type increase_paid_storage, proto14', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
 
