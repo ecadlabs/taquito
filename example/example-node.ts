@@ -21,7 +21,7 @@ async function example() {
     });
 
     console.log('Getting big map key...');
-    await tezos.contract.at('KT1VBn1rTZ4FLz43hC9xugn56K9mSM2DQQXJ').then(async contract => {
+    await tezos.contract.at('KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi').then(async contract => {
       const contractStorage = await contract.storage();
       const bigMapKey = await (contractStorage as any).ledger.get('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP')
       console.log(bigMapKey)
