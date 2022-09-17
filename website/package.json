@@ -44,7 +44,7 @@
     "@taquito/utils": "^14.0.0",
     "@temple-wallet/dapp": "^7.0.0",
     "abort-controller": "^3.0.0",
-    "algoliasearch": "^4.12.2",
+    "algoliasearch": "^4.14.2",
     "axios": "^0.26.0",
     "buffer": "^6.0.3",
     "classnames": "^2.3.1",
