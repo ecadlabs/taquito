@@ -5,7 +5,7 @@ import Faucet from './faucet-interface';
 // always use a new faucet to run this file. each faucet only usable once
 // update Faucet below if failed to activate
 // Match Provider eco system
-// https://teztnets.xyz/jakartanet-faucet
+// https://teztnets.xyz/kathmandunet-faucet
 const { activation_code, pkh } = JSON.parse(`{
 	"pkh": "tz1MUCsnsGUV6uS5xFiWXsUhJxQjB5bCkP7a",
 	"mnemonic": [
@@ -32,7 +32,7 @@ const { activation_code, pkh } = JSON.parse(`{
 }`) as Faucet
 
 async function example() {
-    const provider = 'https://jakartanet.ecadinfra.com/'
+    const provider = 'https://kathmandunet.ecadinfra.com/'
     const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
     const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider( signer );

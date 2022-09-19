@@ -76,7 +76,7 @@ const kathmandunetEphemeral = {
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
+    keyUrl: 'https://api.tez.ie/keys/kathmandunet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
   txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',

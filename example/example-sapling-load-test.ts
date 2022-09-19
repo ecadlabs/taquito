@@ -1,7 +1,7 @@
 import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
 import { InMemorySpendingKey, SaplingToolkit } from '@taquito/sapling';
-//import { singleSaplingStateContractJProtocol } from '../integration-tests/data/single_sapling_state_contract_jakarta_michelson';
+//import { singleSaplingStateContractJProtocol } from '../integration-tests/data/single_sapling_state_contract_kathmandu_michelson';
 
 const provider = 'https://kathmandunet.ecadinfra.com/';
 const numberOfSaplingTx = 1000;
