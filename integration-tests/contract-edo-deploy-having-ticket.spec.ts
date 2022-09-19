@@ -1,7 +1,5 @@
 import { CONFIGS } from "./config";
-import { ticketCode, ticketStorage } from '../packages/taquito-local-forging/test/data/code_with_ticket';
-
-const test = require('jest-retries');
+import { ticketCode, ticketStorage } from './data/code_with_ticket';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -12,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup();
       done()
     })
-    test('Originates a contract having ticket with init and the wallet api', 2, async (done: () => void) => {
+    test('Originates a contract having ticket with init and the wallet api', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage
@@ -24,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Originates a contract having ticket with init and the contract api', 2, async (done: () => void) => {
+    test('Originates a contract having ticket with init and the contract api', async (done) => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
         init: `(Pair None None)`
@@ -37,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Originates a contract having ticket with init in JSON and the contract api', 2, async (done: () => void) => {
+    test('Originates a contract having ticket with init in JSON and the contract api', async (done) => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
         init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }
@@ -50,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Originates a contract having ticket with storage and the contract api', 2, async (done: () => void) => {
+    test('Originates a contract having ticket with storage and the contract api', async (done) => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
         storage: {

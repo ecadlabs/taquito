@@ -1,10 +1,7 @@
-import { OperationContentsAndResultTransferTicket, RpcClient } from "@taquito/rpc";
+import { OperationContentsAndResultTransferTicket } from "@taquito/rpc";
 import { Protocols } from "@taquito/taquito";
-import { TransferTicketParams } from "taquito/src/operations/types";
 import { CONFIGS } from "./config";
 import { InMemorySigner } from "@taquito/signer"
-import { ticketsWithdrawal } from "./data/tickets_withdrawal_contract";
-import { ticketsDeposit } from "./data/tickets_deposit_contract";
 import { HttpBackend } from "@taquito/http-utils";
 
 
@@ -27,7 +24,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
           if (req.metadata.finalized) {
             const signer = await InMemorySigner.fromSecretKey(process.env['TX_ROLLUP_TICKETS_OWNER_SECRET'] || '')
             await Tezos.setProvider({signer})
-            const estimateParams: TransferTicketParams = {
+            const estimateParams = {
               ticketContents: { "string": "foobar" },
               ticketTy: { "prim": "string" },
               ticketTicketer: txRollupDepositContract,
@@ -37,7 +34,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWith
             };
             const estimate = await Tezos.estimate.transferTicket(estimateParams);
 
-            const params: TransferTicketParams = {
+            const params = {
               ...estimateParams,
               fee: estimate.burnFeeMutez,
               gasLimit: estimate.gasLimit,

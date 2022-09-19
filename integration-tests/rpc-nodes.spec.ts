@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
-    const kathmandunet = protocol === Protocols.PtKathman ? test: test.skip;
+    const kathmandunetAndMondaynet = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test: test.skip;
 
     beforeAll(async (done) => {
         await setup()
@@ -114,7 +114,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunet('Executes michelson view by calling runScriptView ', async (done) => {
+        kathmandunetAndMondaynet('Executes michelson view by calling runScriptView ', async (done) => {
           const params: RPCRunScriptViewParam = {
             contract: knownViewContract!,
             view: 'add',
@@ -420,13 +420,13 @@ CONFIGS().forEach(
            done();
          });
          
-        kathmandunet('getTxRollupInbox', async (done) => {
+        kathmandunetAndMondaynet('getTxRollupInbox', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        kathmandunet('getTxRollupState', async (done) => {
+        kathmandunetAndMondaynet('getTxRollupState', async (done) => {
            const state = await rpcClient.getTxRollupState(txRollupAddress);
            expect(state).toBeDefined();
            done();
