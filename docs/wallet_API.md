@@ -250,15 +250,6 @@ Tezos.setWalletProvider(wallet);
 const userAddress = await wallet.getPKH();
 ```
 
-#### Try the TezBridge wallet! (deprecated v13)
-
-```js live noInline wallet
-//import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
-const wallet = new TezBridgeWallet();
-Tezos.setWalletProvider(wallet);
-wallet.getPKH().then((userAddress) => println(`Your address: ${userAddress}`));
-```
-
 ## Making transfers
 
 Although it is possible to transfer tokens directly from the wallets, Taquito offers to send tokens programmatically. This method could be a better solution if you want to do calculations before sending the tokens or if the amount of tokens to send is based on a variable value. This could also be preferable to avoid manual inputs that can often be a source of errors. Using Taquito to send tokens only requires to sign a transaction, sit back and relax :)
