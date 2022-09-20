@@ -2,6 +2,7 @@ import {
   OperationContentsAndResult,
   OperationContentsAndResultTxRollupSubmitBatch,
 } from '@taquito/rpc';
+import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { Operation } from './operations';
 import {
@@ -42,12 +43,7 @@ export class TxRollupBatchOperation
   }
 
   get status() {
-    const operationResults = this.operationResults;
-    if (operationResults) {
-      return operationResults.status;
-    } else {
-      return 'unknown';
-    }
+    return this.operationResults?.status ?? 'unknown';
   }
 
   get content() {
@@ -67,6 +63,17 @@ export class TxRollupBatchOperation
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return this.operationResults?.errors;
+  }
+
+  get consumedGas() {
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return this.consumedMilliGas
+      ? new BigNumber(this.consumedMilliGas).dividedBy(1000).toString()
+      : undefined;
+  }
+
+  get consumedMilliGas() {
+    return this.operationResults?.consumed_milligas;
   }
 }

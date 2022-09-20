@@ -59,7 +59,7 @@ describe('Origination operation', () => {
             },
           ],
           originated_contracts: ['KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD'],
-          consumed_gas: '11684',
+          consumed_milligas: '11684000',
           storage_size: '62',
           paid_storage_size_diff: '62',
         },
@@ -121,7 +121,7 @@ describe('Origination operation', () => {
       expect(op.contractAddress).toEqual('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD');
     });
 
-    it('contract address is undefined given an wrong result', () => {
+    it('contract address is undefined given a wrong result', () => {
       const fakeContractProvider: any = {};
       const wrongResults: any[] = [
         {},
@@ -203,5 +203,42 @@ describe('Origination operation', () => {
       );
       done();
     });
+  });
+
+  it('should successfully retrieve all members of OriginationOperation', () => {
+    const originationBuilder = new OriginationOperationBuilder();
+    const fakeContractProvider: any = {};
+    const op = new OriginationOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {
+        fee: '2991',
+        gas_limit: '26260',
+        storage_limit: '257',
+      } as any,
+      fakeForgedBytes,
+      [originationBuilder.withResult({ status: 'applied' }).build()],
+      fakeContext,
+      fakeContractProvider
+    );
+
+    expect(op.revealStatus).toEqual('unknown');
+    expect(op.status).toEqual('applied');
+    expect(op.consumedGas).toEqual('15953');
+    expect(op.consumedMilliGas).toEqual('15952999');
+    expect(op.contractAddress).toEqual('KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX');
+    expect(op.errors).toBeUndefined();
+    expect(op.fee).toEqual('2991');
+    expect(op.gasLimit).toEqual('26260');
+    expect(op.hash).toEqual('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj');
+    expect(op.storageDiff).toBeFalsy();
+    expect(op.operationResults).toEqual({
+      consumed_milligas: '15952999',
+      status: 'applied',
+      originated_contracts: ['KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX'],
+      storage_size: '62',
+    });
+    expect(op.revealOperation).toBeUndefined();
+    expect(op.storageSize).toEqual('62');
+    expect(op.storageLimit).toEqual('257');
   });
 });

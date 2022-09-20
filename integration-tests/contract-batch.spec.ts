@@ -26,6 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             const op = await batch.send();
             await op.confirmation();
             expect(op.status).toEqual('applied');
+            expect(Number(op.consumedGas)).toBeGreaterThan(0);
             done();
         });
 

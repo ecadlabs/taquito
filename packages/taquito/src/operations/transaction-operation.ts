@@ -1,7 +1,7 @@
 import { OperationContentsAndResult, OperationContentsAndResultTransaction } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { Context } from '../context';
-import { flattenErrors, flattenOperationResult } from './operation-errors';
+import { flattenErrors, flattenOperationResult, MergedOperationResult } from './operation-errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -16,8 +16,10 @@ import {
  *
  * @warn Currently supports one transaction per operation
  */
-export class TransactionOperation extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
+export class TransactionOperation
+  extends Operation
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
+{
   constructor(
     hash: string,
     private readonly params: RPCTransferOperation,
@@ -32,7 +34,9 @@ export class TransactionOperation extends Operation
   get operationResults() {
     const transactionOp =
       Array.isArray(this.results) &&
-      (this.results.find(op => op.kind === 'transaction') as OperationContentsAndResultTransaction);
+      (this.results.find(
+        (op) => op.kind === 'transaction'
+      ) as OperationContentsAndResultTransaction);
     return transactionOp ? [transactionOp] : [];
   }
 
@@ -66,15 +70,20 @@ export class TransactionOperation extends Operation
     return this.params.storage_limit;
   }
 
-  private sumProp(arr: any[], prop: string) {
+  private sumProp(arr: MergedOperationResult[], prop: keyof MergedOperationResult) {
     return arr.reduce((prev, current) => {
       return prop in current ? Number(current[prop]) + prev : prev;
     }, 0);
   }
 
   get consumedGas() {
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return new BigNumber(this.consumedMilliGas).dividedBy(1000).toString();
+  }
+
+  get consumedMilliGas() {
     return String(
-      this.sumProp(flattenOperationResult({ contents: this.operationResults }), 'consumed_gas')
+      this.sumProp(flattenOperationResult({ contents: this.operationResults }), 'consumed_milligas')
     );
   }
 

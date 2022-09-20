@@ -20,6 +20,8 @@ import {
   RegisterGlobalConstantParams,
   TxRollupOriginateParams,
   TxRollupBatchParams,
+  TransferTicketParams,
+  IncreasePaidStorageParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -32,12 +34,16 @@ import {
   createRegisterGlobalConstantOperation,
   createTxRollupOriginationOperation,
   createTxRollupBatchOperation,
+  createTransferTicketOperation,
+  createIncreasePaidStorageOperation,
 } from '../contract/prepare';
 import {
   validateAddress,
   InvalidAddressError,
   ValidationResult,
   InvalidOperationKindError,
+  validateContractAddress,
+  InvalidContractAddressError,
 } from '@taquito/utils';
 import { RevealEstimateError } from './error';
 
@@ -141,7 +147,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     tx_rollup_origination_size: number
   ): EstimateProperties {
     const operationResults = flattenOperationResult({ contents: [content] });
-    let totalGas = 0;
     let totalMilligas = 0;
     let totalStorage = 0;
     operationResults.forEach((result) => {
@@ -150,7 +155,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           ? result.originated_contracts.length * this.ORIGINATION_STORAGE
           : 0;
       totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
-      totalGas += Number(result.consumed_gas) || 0;
       totalMilligas += Number(result.consumed_milligas) || 0;
       totalStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
@@ -160,11 +164,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           : 0;
       totalStorage += 'originated_rollup' in result ? tx_rollup_origination_size : 0;
     });
-
-    if (totalGas !== 0 && totalMilligas === 0) {
-      // This will convert gas to milligas for Carthagenet where result does not contain consumed gas in milligas.
-      totalMilligas = totalGas * 1000;
-    }
 
     if (isOpWithFee(content)) {
       return {
@@ -294,6 +293,41 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
   /**
    *
+   * @description Estimate gasLimit, storageLimit and fees for a transferTicket operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param TransferTicketParams operation parameter
+   */
+  async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
+    if ( validateContractAddress(rest.destination) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(rest.destination);
+    }
+    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source ?? '');
+    }
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createTransferTicketOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
    * @description Estimate gasLimit, storageLimit and fees for a delegate operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
@@ -402,6 +436,22 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             })
           );
           break;
+        case OpKind.TRANSFER_TICKET:
+          operations.push(
+            await createTransferTicketOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
+        case OpKind.INCREASE_PAID_STORAGE:
+          operations.push(
+            await createIncreasePaidStorageOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
         default:
           throw new InvalidOperationKindError((params as any).kind);
       }
@@ -494,6 +544,37 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createRegisterGlobalConstantOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit, and fees for an increasePaidStorage operation
+   *
+   * @returns An estimation of gasLimit, storageLimit, and fees for the operation
+   *
+   * @param params increasePaidStorage operation parameters
+   */
+  async increasePaidStorage(params: IncreasePaidStorageParams) {
+    const { fee, storageLimit, gasLimit, ...rest } = params;
+    const pkh = (await this.getKeys()).publicKeyHash;
+
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createIncreasePaidStorageOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });

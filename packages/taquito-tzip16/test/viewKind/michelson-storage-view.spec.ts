@@ -1,4 +1,4 @@
-import { Context, RpcReadAdapter } from '@taquito/taquito';
+import { RpcReadAdapter } from '@taquito/taquito';
 import { ForbiddenInstructionInViewCode, NoParameterExpectedError } from '../../src/tzip16-errors';
 import { MichelsonStorageView } from '../../src/viewKind/michelson-storage-view';
 
@@ -57,8 +57,7 @@ describe('MichelsonStorageView test', () => {
       args: [{ int: '7' }, { int: '38671' }],
     });
 
-    const context = new Context(mockRpcClient as any);
-    mockReadProvider = new RpcReadAdapter(context);
+    mockReadProvider = new RpcReadAdapter(mockRpcClient as any);
   });
 
   it('Should succesfully execute a view that get the balance of the contrat', async (done) => {

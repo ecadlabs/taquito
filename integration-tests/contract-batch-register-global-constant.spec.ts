@@ -1,10 +1,9 @@
 import { CONFIGS } from './config';
-import { OpKind, Protocols } from '@taquito/taquito';
+import { OpKind } from '@taquito/taquito';
 const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
-
     describe(`Test contract.batch to register global constant using: ${rpc}`, () => {
         const randomAnnots = () => crypto.randomBytes(3).toString('hex');
         beforeEach(async (done) => {
@@ -12,7 +11,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
+<<<<<<< HEAD
         test('Verify the contract.batch transfer and register global constant operations', async (done) => {
+=======
+        test('Batch transfer and register global constant operations', async (done) => {
+            const isAccountRevealed = await Tezos.rpc.getManagerKey(await Tezos.signer.publicKeyHash());
+
+>>>>>>> master
             const batchOp = await Tezos.contract
                 .batch([
                     { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
@@ -54,13 +59,23 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             await batchOp.confirmation();
 
             expect(batchOp.status).toEqual('applied');
-            expect(batchOp.results.length).toEqual(6);
-            expect(batchOp.results[0].kind).toEqual(OpKind.REVEAL);
-            expect(batchOp.results[1].kind).toEqual(OpKind.TRANSACTION);
-            expect(batchOp.results[2].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
-            expect(batchOp.results[3].kind).toEqual(OpKind.TRANSACTION);
-            expect(batchOp.results[4].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
-            expect(batchOp.results[5].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
+
+            if (!isAccountRevealed) {
+                expect(batchOp.results.length).toEqual(6);
+                expect(batchOp.results[0].kind).toEqual(OpKind.REVEAL);
+                expect(batchOp.results[1].kind).toEqual(OpKind.TRANSACTION);
+                expect(batchOp.results[2].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
+                expect(batchOp.results[3].kind).toEqual(OpKind.TRANSACTION);
+                expect(batchOp.results[4].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
+                expect(batchOp.results[5].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
+            } else {
+                expect(batchOp.results[0].kind).toEqual(OpKind.TRANSACTION);
+                expect(batchOp.results[1].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
+                expect(batchOp.results[2].kind).toEqual(OpKind.TRANSACTION);
+                expect(batchOp.results[3].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
+                expect(batchOp.results[4].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
+            }
+
             done();
         });
     });

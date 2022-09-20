@@ -85,7 +85,7 @@ async function example() {
 
     console.log('Deploying the Sapling State Contract...');
     const opknownSaplingContract = await tezos.contract.originate({
-      code: singleSaplingStateContractJProtocol,
+      code: singleSaplingStateContractJProtocol(),
       init: '{}',
     });
     await opknownSaplingContract.confirmation();

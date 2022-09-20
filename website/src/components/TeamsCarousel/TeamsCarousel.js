@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useRef } from 'react';
-import clsx from 'clsx';
 import styles from './TeamsCarousel.module.scss';
 import Slider from 'react-slick';
 import '../../../static/slick/slick.css';

@@ -40,6 +40,9 @@ export enum Prefix {
 
   VH = 'vh', // block_payload_hash
 
+  SASK = 'sask', // sapling_spending_key
+  ZET1 = 'zet1', // sapling_address
+
   //rollups
   TXR1 = 'txr1',
   TXI = 'txi',
@@ -48,7 +51,6 @@ export enum Prefix {
   TXMR = 'txmr',
   TXRL = 'txM',
   TXW = 'txw',
-
 }
 
 export const prefix = {
@@ -93,6 +95,8 @@ export const prefix = {
   [Prefix.TZ]: new Uint8Array([2, 90, 121]),
 
   [Prefix.VH]: new Uint8Array([1, 106, 242]),
+  [Prefix.SASK]: new Uint8Array([11, 237, 20, 92]),
+  [Prefix.ZET1]: new Uint8Array([18, 71, 40, 223]),
 
   [Prefix.TXR1]: new Uint8Array([1, 128, 120, 31]),
   [Prefix.TXI]: new Uint8Array([79, 148, 196]),
@@ -101,7 +105,6 @@ export const prefix = {
   [Prefix.TXMR]: new Uint8Array([18, 7, 206, 87]),
   [Prefix.TXRL]: new Uint8Array([79, 146, 82]),
   [Prefix.TXW]: new Uint8Array([79, 150, 72]),
-
 };
 
 export const prefixLength: { [key: string]: number } = {
@@ -127,6 +130,8 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.P]: 32,
   [Prefix.O]: 32,
   [Prefix.VH]: 32,
+  [Prefix.SASK]: 169,
+  [Prefix.ZET1]: 43,
   [Prefix.TXR1]: 20,
   [Prefix.TXI]: 32,
   [Prefix.TXM]: 32,
@@ -134,5 +139,4 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.TXMR]: 32,
   [Prefix.TXRL]: 32,
   [Prefix.TXW]: 32,
-
 };
