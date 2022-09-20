@@ -99,7 +99,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1UCrgZ3xpuMQaHGgZv5FmYVL1ST6sACSsa';
+const contractAddress = 'KT1LQcFehodj7fxpCMPwFMen7ugXwx81vLzU';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -123,7 +123,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1UCrgZ3xpuMQaHGgZv5FmYVL1ST6sACSsa';
+const contractAddress = 'KT1LQcFehodj7fxpCMPwFMen7ugXwx81vLzU';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -157,7 +157,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1C1EJh8zizUjEyRJ1BunqL58w2u4Zwv6o7';
+const contractAddress = 'KT1TdGzTSqJ2mDGqLP9NeuDLNmitKcGSTAty';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -180,7 +180,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1C1EJh8zizUjEyRJ1BunqL58w2u4Zwv6o7';
+const contractAddress = 'KT1TdGzTSqJ2mDGqLP9NeuDLNmitKcGSTAty';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -213,7 +213,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1TUufULv5wbZeTRxEzdR7eBzGu6kXBMinS';
+const contractAddress = 'KT1HooFxbBvmcq3udLYPqiU1M8Dv2zTjdYow';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -237,7 +237,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1TUufULv5wbZeTRxEzdR7eBzGu6kXBMinS';
+const contractAddress = 'KT1HooFxbBvmcq3udLYPqiU1M8Dv2zTjdYow';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -271,7 +271,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1BJLSSAzTBMVWKbTnGE3UYWMopW2VZ8Mb3';
+const contractAddress = 'KT1CdToapM8spJvcTZbGCoVr2kTGiKwkBGzZ';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -295,7 +295,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1BJLSSAzTBMVWKbTnGE3UYWMopW2VZ8Mb3';
+const contractAddress = 'KT1CdToapM8spJvcTZbGCoVr2kTGiKwkBGzZ';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -361,7 +361,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1JJm8dr4JzCMZRN31ccoWL2K49q1oQAd1Q';
+const contractAddress = 'KT1PFduZTH3S6peQsrURPVLdEH9XTGKDCTpG';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -390,7 +390,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1JJm8dr4JzCMZRN31ccoWL2K49q1oQAd1Q';
+const contractAddress = 'KT1PFduZTH3S6peQsrURPVLdEH9XTGKDCTpG';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -431,7 +431,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR';
+const contractAddress = 'KT1T6CJKWF9Kx5oUyFoos7b4gXMTLUnHadQ6';
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -462,7 +462,7 @@ Tezos.contract
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR';
+const contractAddress = 'KT1T6CJKWF9Kx5oUyFoos7b4gXMTLUnHadQ6';
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -499,11 +499,11 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-// import { TezosToolkit } from '@taquito/taquito';
+// import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
-const contractAddress = 'KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR';
+const contractAddress = 'KT1T6CJKWF9Kx5oUyFoos7b4gXMTLUnHadQ6';
 
 Tezos.contract
   .at(contractAddress)
@@ -512,7 +512,7 @@ Tezos.contract
       'test', // view name
       contract, // contract abstraction
       Tezos.rpc, // rpc
-      Tezos.getFactory(RpcReadAdapter)(), // readProvider
+      new RpcReadAdapter(Tezos.rpc), // readProvider
       { prim: 'nat' }, // returnType
       [
         { prim: 'DUP' },
@@ -536,11 +536,11 @@ Tezos.contract
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-// import { TezosToolkit } from '@taquito/taquito';
+// import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
-const contractAddress = 'KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR';
+const contractAddress = 'KT1T6CJKWF9Kx5oUyFoos7b4gXMTLUnHadQ6';
 
 Tezos.wallet
   .at(contractAddress)
@@ -549,7 +549,7 @@ Tezos.wallet
       'test', // view name
       wallet, // contract abstraction
       Tezos.rpc, // rpc,
-      Tezos.getFactory(RpcReadAdapter)(), // readProvider
+      new RpcReadAdapter(Tezos.rpc), // readProvider
       { prim: 'nat' }, // returnType
       [
         { prim: 'DUP' },

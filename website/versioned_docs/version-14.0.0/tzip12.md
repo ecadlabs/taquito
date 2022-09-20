@@ -92,7 +92,7 @@ values={[
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1MPzoNmHvDfGpUupVyKVhPkz5iasdT7tZA";
+const contractAddress = "KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe";
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
@@ -116,7 +116,7 @@ Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1MPzoNmHvDfGpUupVyKVhPkz5iasdT7tZA";
+const contractAddress = "KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe";
 const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, compose(tzip12, tzip16))
@@ -149,7 +149,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1MPzoNmHvDfGpUupVyKVhPkz5iasdT7tZA";
+const contractAddress = "KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe";
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip16)
@@ -178,7 +178,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1MPzoNmHvDfGpUupVyKVhPkz5iasdT7tZA";
+const contractAddress = "KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe";
 const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, tzip16)
@@ -201,6 +201,7 @@ Tezos.wallet.at(contractAddress, tzip16)
 </Tabs>
 
 *Note that an off-chain view `all-tokens` should also be present in the contract metadata allowing the user to know with which token ID the `token_metadata` can be called.*
+
 ### Example where the token metadata are found in the big map `%token_metadata`
 
 :::note
@@ -256,7 +257,7 @@ values={[
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1MPzoNmHvDfGpUupVyKVhPkz5iasdT7tZA";
+const contractAddress = "KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe";
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip12)
@@ -279,7 +280,7 @@ Tezos.contract.at(contractAddress, tzip12)
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1MPzoNmHvDfGpUupVyKVhPkz5iasdT7tZA";
+const contractAddress = "KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe";
 const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, tzip12)
