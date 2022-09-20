@@ -4,17 +4,11 @@ import {
   MissingRequiredScopes,
 } from '../src/taquito-beacon-wallet';
 import LocalStorageMock from './mock-local-storage';
-import { PermissionScope, LocalStorage, windowRef } from '@airgap/beacon-dapp';
-import sinon from 'sinon';
+import { PermissionScope, LocalStorage } from '@airgap/beacon-dapp';
 
 global.localStorage = new LocalStorageMock();
 
 describe('Beacon Wallet tests', () => {
-
-  beforeEach(() => {
-    sinon.restore()
-      ; (windowRef as any).beaconCreatedClientInstance = false
-  })
 
   it('Verify that BeaconWallet is instantiable', () => {
     expect(new BeaconWallet({ name: 'testWallet' })).toBeInstanceOf(
@@ -49,16 +43,10 @@ describe('Beacon Wallet tests', () => {
     expect((await wallet.client.beaconId)).toBeDefined
   })
 
-  it(`Verify requestPermissions`, async () => {
-    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() })
-    expect(typeof (await wallet.requestPermissions)).toEqual('function')
-    expect((await wallet.requestPermissions)).toBeDefined
-  })
-
   it(`Verify that an error is thrown if BeaconWallet is initialized with an empty object`, async () => {
     try {
       const wallet = new BeaconWallet({} as any)
-      expect(wallet).toBeDefined
+      expect(wallet).toBeDefined()
     } catch (e) {
       expect((e as any).message).toEqual('Name not set')
     }
@@ -66,46 +54,19 @@ describe('Beacon Wallet tests', () => {
 
   it(`Verify formatParameters for fees`, async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() })
-    expect(typeof (await wallet.formatParameters('fee'))).toEqual('string')
-    const formattedParam = await wallet.formatParameters('fee')
-    expect(formattedParam === 'params.fee.toString()')
+    const formattedParam = await wallet.formatParameters({'fee': 10})
+    expect(formattedParam.fee).toEqual('10')
   })
 
   it(`Verify formatParameters for storageLimit`, async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() })
-    expect(typeof (await wallet.formatParameters('storageLimit'))).toEqual('string')
-    const formattedParam = await wallet.formatParameters('storageLimit')
-    expect(formattedParam === 'params.storageLimit.toString()')
+    const formattedParam = await wallet.formatParameters({'storageLimit': 2000})
+    expect(formattedParam.storageLimit).toEqual('2000')
   })
 
   it(`Verify formatParameters for gasLimit`, async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() })
-    expect(typeof (await wallet.formatParameters('gasLimit'))).toEqual('string')
-    const formattedParam = await wallet.formatParameters('gasLimit')
-    expect(formattedParam === 'params.gasLimit.toString()')
-  })
-
-  it(`Verify mapDelegateParamsToWalletParams`, async () => {
-    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() })
-    expect(typeof (await wallet.mapDelegateParamsToWalletParams)).toEqual('function')
-    expect((await wallet.mapDelegateParamsToWalletParams)).toBeDefined
-  })
-
-  it(`Verify removeDefaultParams`, async () => {
-    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() })
-    expect(typeof (await wallet.removeDefaultParams)).toEqual('function')
-    expect((await wallet.removeDefaultParams)).toBeDefined
-  })
-
-  it(`Verify disconnect`, async () => {
-    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() })
-    expect(typeof (await wallet.disconnect)).toEqual('function')
-    expect((await wallet.disconnect)).toBeDefined
-  })
-
-  it(`Verify clearActiveAccount`, async () => {
-    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() })
-    expect(typeof (await wallet.clearActiveAccount)).toEqual('function')
-    expect((await wallet.clearActiveAccount)).toBeDefined
+    const formattedParam = await wallet.formatParameters({'gasLimit': 40})
+    expect(formattedParam.gasLimit).toEqual('40')
   })
 })
