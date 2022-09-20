@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
   const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
   const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
 
-  describe(`Test estimate scenarios through contract api using: ${rpc}`, () => {
+  describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
     let contract: Contract;
     const amt = 2000000 + DEFAULT_FEE.REVEAL;
