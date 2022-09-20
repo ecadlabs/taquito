@@ -78,13 +78,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   Tezos.setPackerProvider(new MichelCodecPacker());
 
-  describe(`Test contract origination having a permit for tzip-17 through contract api: ${rpc}`, () => {
+  describe(`Verify contract origination, transfer, and minting with a permit for tzip-17 through contract api: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup(true);
       done();
     });
 
-    test('Verify contract.originate for a permit contract', async (done) => {
+    test('Verify a Permit can be submitted and set', async (done) => {
       const op = await Tezos.contract.originate({
         code: permit_admin_42_set,
         storage: {
@@ -247,13 +247,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done();
     });
 
-    describe(`Test contract having a permit for tzip-17: ${rpc}`, () => {
+    describe(`Verify contract having a permit for tzip-17: ${rpc}`, () => {
       beforeEach(async (done) => {
         await setup(true);
         done();
       });
 
-      test('As a User I want to verify that I can submit the permit hash to use an entrypoint\n', async (done) => {
+      test('Verify that the permit hash can be submitted to an entrypoint\n', async (done) => {
         //following https://github.com/EGuenz/smartpy-permits
 
         const LocalTez1 = await createAddress();

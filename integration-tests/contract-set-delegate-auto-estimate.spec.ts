@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       await setup(true)
       done()
     })
-    it('As a User I want to verify that I can delegate account to known baker with automatic estimate', async (done) => {
+    it('Verify that an account can be delegated to known baker with automatic estimate', async (done) => {
       const delegate = knownBaker
       const pkh = await Tezos.signer.publicKeyHash();
       try {
@@ -34,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       done();
     });
 
-    it('As a User I want to verify that I can withdraw delegate with automatic estimate', async (done) => {
+    it('Verify that delegate can be withdrawn with automatic estimate', async (done) => {
       const pkh = await Tezos.signer.publicKeyHash();
       try {
         const op = await Tezos.contract.setDelegate({

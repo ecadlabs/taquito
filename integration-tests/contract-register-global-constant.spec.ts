@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     test(
-      'Verify contract.registerGlobalConstant to register a global constant and deploy a contract with the constant with auto-estimation of the fee, storage limit and gas limit',
+      'Verify contract.registerGlobalConstant to register a global constant with auto-estimation of the fee, storage limit and gas limit',
       async (done) => {
         const op = await Tezos.contract.registerGlobalConstant({
           value: {
