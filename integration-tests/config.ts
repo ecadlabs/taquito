@@ -26,19 +26,19 @@ interface Config {
   knownBigMapContract: string;
   knownTzip1216Contract: string;
   knownSaplingContract: string;
-  knownViewContract?: string;
-  txRollupAddress: string;
-  protocol: Protocols;
-  signerConfig: EphemeralConfig | FaucetConfig;
+  knownViewContract: string;
   txRollupWithdrawContract: string;
   txRollupDepositContract: string;
+  txRollupAddress: string;
+  protocol: Protocols;
+  signerConfig: EphemeralConfig | SecretKeyConfig;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
  */
 export enum SignerType {
-  FAUCET,
   EPHEMERAL_KEY,
+  SECRET_KEY
 }
 
 interface ConfigWithSetup extends Config {
@@ -56,49 +56,55 @@ interface EphemeralConfig {
   requestHeaders: { [key: string]: string };
 }
 
-/**
- * FaucetConfig contains a JSON faucet key that can be used on Tezos test-nets or sandboxes. Faucet keys for public testnets are available from [https://faucet.tzalpha.net/](https://faucet.tzalpha.net/)
- */
-interface FaucetConfig {
-  type: SignerType.FAUCET;
-  faucetKey: {};
+interface SecretKeyConfig {
+  type: SignerType.SECRET_KEY,
+  secret_key: string,
+  password?: string
+}
+
+const defaultSecretKey: SecretKeyConfig = {
+  // pkh is tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD
+  type: SignerType.SECRET_KEY,
+    secret_key: process.env['SECRET_KEY'] || 'spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN',
+    password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
 const kathmandunetEphemeral = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-  knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
-  knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
-  knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
-  knownViewContract: 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
-  txRollupAddress: 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
+  knownContract: process.env['TEZOS_KATHMANDUET_CONTRACT_ADDRESS'] || 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+  knownBigMapContract: process.env['TEZOS_KATHMANDUET_BIGMAPCONTRACT_ADDRESS'] || 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
+  knownTzip1216Contract: process.env['TEZOS_KATHMANDUET_TZIP1216CONTRACT_ADDRESS'] || 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
+  knownSaplingContract: process.env['TEZOS_KATHMANDUET_SAPLINGCONTRACT_ADDRESS'] || 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+  txRollupWithdrawContract: process.env['TEZOS_KATHMANDUET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_KATHMANDUET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_KATHMANDUET_ON_CHAIN_VIEW_CONTRACT'] || 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
+  txRollupAddress: process.env['TEZOS_KATHMANDUET_TXROLLUP_ADDRESS'] || 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
+    keyUrl: 'https://api.tez.ie/keys/kathmandunet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
-  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  }
 };
 
 const jakartanetEphemeral = {
   rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
-  knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
-  knownTzip1216Contract: 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
-  knownSaplingContract: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
-  txRollupAddress: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+  knownContract: process.env['TEZOS_JAKARTANET_CONTRACT_ADDRESS'] || 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
+  knownBigMapContract: process.env['TEZOS_JAKARTANET_BIGMAPCONTRACT_ADDRESS'] || 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
+  knownTzip1216Contract: process.env['TEZOS_JAKARTANET_TZIP1216CONTRACT_ADDRESS'] || 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
+  knownSaplingContract: process.env['TEZOS_JAKARTANET_SAPLINGCONTRACT_ADDRESS'] || 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+  txRollupWithdrawContract: process.env['TEZOS_JAKARTANET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_JAKARTANET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: '',
+  txRollupAddress: process.env['TEZOS_JAKARTANET_TXROLLUP_ADDRESS'] || 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
   protocol: Protocols.PtJakart2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/jakartanet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
-  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
-  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
 };
 
 const mondaynetEphemeral = {
@@ -108,6 +114,9 @@ const mondaynetEphemeral = {
   knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || '',
   knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || '',
   knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || '',
+  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || '',
   txRollupAddress: process.env['TEZOS_MONDAYNET_TXROLLUP_ADDRESS'] || '',
   protocol: Protocols.ProtoALpha,
   signerConfig: {
@@ -115,97 +124,63 @@ const mondaynetEphemeral = {
     keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
-  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
-  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
 };
 
-const kathmandunetFaucet = {
-  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
+const kathmandunetSecretKey = {
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-  knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
-  knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
-  knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
-  knownViewContract: 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
-  txRollupAddress: 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
+  knownContract: process.env['TEZOS_KATHMANDUET_CONTRACT_ADDRESS'] || 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+  knownBigMapContract: process.env['TEZOS_KATHMANDUET_BIGMAPCONTRACT_ADDRESS'] || 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
+  knownTzip1216Contract: process.env['TEZOS_KATHMANDUET_TZIP1216CONTRACT_ADDRESS'] || 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
+  knownSaplingContract: process.env['TEZOS_KATHMANDUET_SAPLINGCONTRACT_ADDRESS'] || 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
+  txRollupWithdrawContract: process.env['TEZOS_KATHMANDUET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_KATHMANDUET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_KATHMANDUET_ON_CHAIN_VIEW_CONTRACT'] || 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
+  txRollupAddress: process.env['TEZOS_KATHMANDUET_TXROLLUP_ADDRESS'] || 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
   protocol: Protocols.PtKathman,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: {
-      "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
-      "mnemonic": [
-        "escape",
-        "camera",
-        "credit",
-        "endorse",
-        "auto",
-        "lamp",
-        "advance",
-        "orange",
-        "fluid",
-        "virus",
-        "argue",
-        "knee",
-        "pluck",
-        "remove",
-        "scheme"
-      ],
-      "email": "noriqgjl.gtsyulgy@teztnets.xyz",
-      "password": "st3sZBRLWF",
-      "amount": "118887604096",
-      "secret": "7d414378d9071328313cca699d6922f1b59d076a"
-    }
-  },
-  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
-  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  signerConfig: defaultSecretKey,
 };
 
-const jakartanetFaucet = {
-  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com',
+const jakartanetSecretKey = {
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
-  knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
-  knownTzip1216Contract: 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
-  knownSaplingContract: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
-  txRollupAddress: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+  knownContract: process.env['TEZOS_JAKARTANET_CONTRACT_ADDRESS'] || 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
+  knownBigMapContract: process.env['TEZOS_JAKARTANET_BIGMAPCONTRACT_ADDRESS'] || 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
+  knownTzip1216Contract: process.env['TEZOS_JAKARTANET_TZIP1216CONTRACT_ADDRESS'] || 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
+  knownSaplingContract: process.env['TEZOS_JAKARTANET_SAPLINGCONTRACT_ADDRESS'] || 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+  txRollupWithdrawContract: process.env['TEZOS_JAKARTANET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_JAKARTANET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: '',
+  txRollupAddress: process.env['TEZOS_JAKARTANET_TXROLLUP_ADDRESS'] || 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
   protocol: Protocols.PtJakart2,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: {
-      mnemonic: [
-        "business",
-        "rare",
-        "bridge",
-        "arrange",
-        "lab",
-        "finger",
-        "then",
-        "cube",
-        "clown",
-        "wife",
-        "arrest",
-        "lumber",
-        "wide",
-        "enroll",
-        "earn"
-      ],
-      email: "bmdrmigx.ciakevmr@teztnets.xyz",
-      password: 'VeeA6X8fZT',
-      secret: '0f2e92c3d1473677317c852ab968646d4c4f57c0',
-    },
-  },
+  signerConfig: defaultSecretKey
+};
+
+const mondaynetSecretKey = {
+  rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
+  knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
+  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || '',
+  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || '',
+  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || '',
+  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || '',
   txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
   txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || '',
+  txRollupAddress: process.env['TEZOS_MONDAYNET_TXROLLUP_ADDRESS'] || '',
+  protocol: Protocols.ProtoALpha,
+  signerConfig: defaultSecretKey
 };
 
 const providers: Config[] = [];
 
-if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(jakartanetFaucet, kathmandunetFaucet);
-} else if (process.env['RUN_JAKARTANET_WITH_FAUCET']) {
-  providers.push(jakartanetFaucet);
-} else if (process.env['RUN_KATHMANDUNET_WITH_FAUCET']) {
-  providers.push(kathmandunetFaucet);
+if (process.env['RUN_WITH_SECRET_KEY']) {
+  providers.push(jakartanetSecretKey, kathmandunetSecretKey);
+} else if (process.env['RUN_JAKARTANET_WITH_SECRET_KEY']) {
+  providers.push(jakartanetSecretKey);
+} else if (process.env['RUN_KATHMANDUNET_WITH_SECRET_KEY']) {
+  providers.push(kathmandunetSecretKey);
+} else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
+  providers.push(mondaynetSecretKey);
 } else if (process.env['JAKARTANET']) {
   providers.push(jakartanetEphemeral);
 } else if (process.env['KATHMANDUNET']) {
@@ -215,8 +190,6 @@ if (process.env['RUN_WITH_FAUCET']) {
 } else {
   providers.push(jakartanetEphemeral, kathmandunetEphemeral);
 }
-
-const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
@@ -272,15 +245,8 @@ const setupSignerWithEphemeralKey = async (
   }
 };
 
-const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfig) => {
-  const faucetKey: any = faucetKeyFile || signerConfig.faucetKey;
-  await importKey(
-    Tezos,
-    faucetKey.email,
-    faucetKey.password,
-    faucetKey.mnemonic.join(' '),
-    faucetKey.secret
-  );
+const setupWithSecretKey = async (Tezos: TezosToolkit, signerConfig: SecretKeyConfig) => {
+  Tezos.setSignerProvider(new InMemorySigner(signerConfig.secret_key, signerConfig.password));
 };
 
 export const CONFIGS = () => {
@@ -320,8 +286,8 @@ export const CONFIGS = () => {
           txRollupDepositContract,
           txRollupWithdrawContract,
           setup: async (preferFreshKey: boolean = false) => {
-            if (signerConfig.type === SignerType.FAUCET) {
-              await setupWithFaucetKey(Tezos, signerConfig);
+            if (signerConfig.type === SignerType.SECRET_KEY) {
+              setupWithSecretKey(Tezos, signerConfig);
             } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
               if (preferFreshKey) {
                 await setupSignerWithFreshKey(Tezos, signerConfig);

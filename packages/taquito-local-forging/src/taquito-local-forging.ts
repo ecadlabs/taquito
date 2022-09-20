@@ -13,7 +13,7 @@ import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash } from './protocols';
 
-export { CODEC } from './constants';
+export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
 export * from './encoder';
 export * from './uint8array-consumer';

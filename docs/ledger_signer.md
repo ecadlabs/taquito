@@ -190,10 +190,10 @@ https://github.com/MyCryptoHQ/MyCrypto/issues/2070
 
 https://medium.com/mycrypto/wtf-is-a-derivation-path-c3493ca2eb52
 
-## Live example that iterate from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'`
+## Live example that iterates from the path `44'/1729'/0'/0'` to `44'/1729'/9'/0'`
 
 Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'` to get public key hashes and the balance for revealed accounts. Confirmations will be asked on your Ledger to send the public keys.  
-_Note that this example is not intended to be a complete example of paths scanning but only a rough outline of what is possible to do._
+_Note that this example is not intended to be a complete example of paths scanning but only a rough outline of what it is possible to do._
 
 ```js live noInline
 //import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';

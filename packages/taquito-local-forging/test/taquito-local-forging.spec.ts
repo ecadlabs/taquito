@@ -1,6 +1,6 @@
 import { LocalForger } from '../src/taquito-local-forging';
-import { ticketCode3, ticketStorage3 } from './data/code_with_ticket';
-import { commonCases, kathmanduCases } from './allTestsCases';
+import { ticketCode3, ticketStorage3 } from '../../../integration-tests/data/code_with_ticket';
+import { commonCases, kathmanduCases } from '../../../integration-tests/data/allTestsCases';
 import {
   InvalidOperationSchemaError,
   InvalidBlockHashError,

@@ -1,4 +1,4 @@
-import { codeViewsTopLevel } from "../packages/taquito-local-forging/test/data/contract_views_top_level";
+import { codeViewsTopLevel } from "./data/contract_views_top_level";
 import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
 import { Protocols, ViewSimulationError } from "@taquito/taquito";
