@@ -153,7 +153,7 @@ export interface FeeConsumingOperation {
 }
 
 export type OriginateParamsBase = {
-  balance?: string;
+  balance?: string | number;
   code: string | object[];
   delegate?: string;
   fee?: number;

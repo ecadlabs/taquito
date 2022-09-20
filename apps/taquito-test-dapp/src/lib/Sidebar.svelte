@@ -7,9 +7,7 @@
 
   afterUpdate(async () => {
     if ($store.Tezos && $store.wallet && $store.tests.length === 0) {
-      const contract = await $store.Tezos.wallet.at(
-        contractAddress[$store.networkType]
-      );
+      const contract = await $store.Tezos.wallet.at(contractAddress[$store.networkType]);
       const tests = init($store.Tezos, contract, $store.wallet);
       store.updateTests(tests);
     }
@@ -58,7 +56,7 @@
         -webkit-backdrop-filter: blur(4px);
         border-radius: 10px;
         border: 1px solid rgba(255, 255, 255, 0.18);
-        list-style-image: url(description_white_24dp.svg);
+        list-style-image: url(../assets/icons/description_white_24dp.svg);
 
         padding: 10px;
         margin: 10px 0px;
@@ -70,13 +68,13 @@
         }
 
         &.selected {
-          list-style-image: url(description_blue_24dp.svg);
+          list-style-image: url(../assets/icons/description_blue_24dp.svg);
         }
         &.success {
-          list-style-image: url(description_green_24dp.svg);
+          list-style-image: url(../assets/icons/description_green_24dp.svg);
         }
         &.error {
-          list-style-image: url(description_red_24dp.svg);
+          list-style-image: url(../assets/icons/description_red_24dp.svg);
         }
 
         @supports not (backdrop-filter: blur(4px)) {
@@ -104,12 +102,9 @@
         <li
           id={test.id}
           style={$store.userAddress ? "cursor:pointer" : "cursor:not-allowed"}
-          class:success={test.lastResult.option === "some" &&
-            test.lastResult.val}
-          class:error={test.lastResult.option === "some" &&
-            !test.lastResult.val}
-          class:selected={$store.selectedTest === test.id &&
-            test.lastResult.option === "none"}
+          class:success={test.lastResult.option === "some" && test.lastResult.val}
+          class:error={test.lastResult.option === "some" && !test.lastResult.val}
+          class:selected={$store.selectedTest === test.id && test.lastResult.option === "none"}
           on:click={() => store.updateSelectedTest(test.id)}
         >
           <span>{test.name}</span>

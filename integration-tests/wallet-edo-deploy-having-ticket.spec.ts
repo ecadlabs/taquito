@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { ticketCode, ticketStorage } from '../packages/taquito-local-forging/test/data/code_with_ticket';
+import { ticketCode, ticketStorage } from './data/code_with_ticket';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;

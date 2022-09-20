@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 $std-border-radius: 0.4rem;
+$font-color: #333;
 
 html,
 body {
@@ -11,7 +12,7 @@ body {
 }
 
 body {
-  color: #333;
+  color: $font-color;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -58,16 +59,18 @@ button {
     width: 100%;
   }
 }
-select {
+
+.select {
   border: none;
   padding: 10px;
   font-size: 1rem;
   border-radius: $std-border-radius;
   background-color: transparent;
   border: solid 2px white;
-  color: white;
+  color: rgba(2, 83, 185, 1);
   cursor: pointer;
   outline: none;
+  width: 200px;
 }
 
 textarea {
