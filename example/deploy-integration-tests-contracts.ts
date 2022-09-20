@@ -1,19 +1,18 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
+import { InMemorySigner } from '@taquito/signer';
 import { knownContract } from './data/knownContract';
 import { knownBigMapContract } from './data/knownBigMapContract';
 import { singleSaplingStateContractJProtocol } from '../integration-tests/data/single_sapling_state_contract_jakarta_michelson';
-import Faucet from './faucet-interface';
 import { char2Bytes } from '@taquito/utils';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 
-const { email, password, mnemonic, activation_code } =
-  require('./faucet-default-values.json') as Faucet;
-
 const provider = 'https://kathmandunet.ecadinfra.com/';
+// The pkh of the signer is tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys
+const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
 
 async function example() {
   const tezos = new TezosToolkit(provider);
+  tezos.setSignerProvider(signer)
 
   const users: Array<string> = [
     'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
@@ -25,8 +24,6 @@ async function example() {
   user_addresses.set('TestFunder', users[0]);
   user_addresses.set('Eddy', users[1]);
   user_addresses.set('Glen', users[2]);
-
-  await importKey(tezos, email, password, mnemonic.join(' '), activation_code);
 
   try {
     console.log('Deploying the knownContract...');
