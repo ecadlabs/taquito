@@ -27,6 +27,7 @@ export enum DerivationType {
   ED25519 = 0x00, // tz1
   SECP256K1 = 0x01, // tz2
   P256 = 0x02, // tz3
+  BIP32_ED25519 = 0x03, // tz1 BIP32 Curve
 }
 
 /**
@@ -37,7 +38,7 @@ export class InvalidDerivationTypeError extends Error {
   public name = 'InvalidDerivationTypeError';
   constructor(public derivationType: string) {
     super(
-      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.P256`
+      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1, DerivationType.P256 or DerivationType.BIP32_ED25519`
     );
   }
 }
@@ -216,7 +217,7 @@ export class LedgerSigner implements Signer {
   }
 
   private getPrefixes() {
-    if (this.derivationType === DerivationType.ED25519) {
+    if (this.derivationType === DerivationType.ED25519 || this.derivationType === DerivationType.BIP32_ED25519) {
       return {
         prefPk: prefix[Prefix.EDPK],
         prefPkh: prefix[Prefix.TZ1],
