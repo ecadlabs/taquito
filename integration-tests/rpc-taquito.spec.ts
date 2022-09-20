@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
+import { RpcClient } from '@taquito/rpc';
 
 
 CONFIGS().forEach(({ rpc }) => {

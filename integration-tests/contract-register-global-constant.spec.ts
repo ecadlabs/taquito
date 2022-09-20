@@ -33,6 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.gasLimit).toEqual(1400);
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(op.status).toEqual('applied');
+      expect(Number(op.consumedGas)).toBeGreaterThan(0);
 
       done();
     });

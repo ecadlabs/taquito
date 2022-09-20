@@ -7,7 +7,7 @@ const {email, password, mnemonic, activation_code} = require("./faucet-default-v
 
 
 async function example() {
-    const provider = 'https://jakartanet.ecadinfra.com/';
+    const provider = 'https://kathmandunet.ecadinfra.com/';
     const signer: any = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
     const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider( signer );
@@ -24,7 +24,7 @@ async function example() {
     try {
         console.log("signer pkh:");
         console.log(await signer.publicKeyHash());
-        const contract = await tezos.contract.at('KT1AhKTHfwKvEQeJ13X9M1TSF6pGJnZZCCau');
+        const contract = await tezos.contract.at('KT1TGyPi379tUQtJtc2TqcQFFhJJoUCwnw5c');
         console.log("Printing contract methods...");
         console.log(contract.methods);
         console.log("Showing initial storage...");

@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
 import { Protocols, ChainIds } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam } from '@taquito/rpc';
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -15,10 +15,12 @@ CONFIGS().forEach(
     knownContract,
     knownBigMapContract,
     knownSaplingContract,
+    knownViewContract,
+    txRollupAddress, 
   }) => {
     const Tezos = lib;
     const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
-    const kathmandunet = protocol === Protocols.PtKathman ? test: test.skip;
+    const kathmandunetAndMondaynet = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test: test.skip;
 
     beforeAll(async (done) => {
         await setup()
@@ -109,6 +111,22 @@ CONFIGS().forEach(
           const views = await Tezos.rpc.runView(params)
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "100" } });
+          done();
+        });
+
+        kathmandunetAndMondaynet('Executes michelson view by calling runScriptView ', async (done) => {
+          const params: RPCRunScriptViewParam = {
+            contract: knownViewContract!,
+            view: 'add',
+            chain_id: ChainIds.KATHMANDUNET,
+            input: {
+              int: '0'
+            }
+          }
+
+          const views = await Tezos.rpc.runScriptView(params)
+          expect(views).toBeDefined();
+          expect(views).toEqual({ "data": { "int": "2" } });
           done();
         });
 
@@ -391,25 +409,25 @@ CONFIGS().forEach(
         });
 
         jakartanet('getTxRollupInbox', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
+          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
         jakartanet('getTxRollupState', async (done) => {
-           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+           const state = await rpcClient.getTxRollupState(txRollupAddress);
            expect(state).toBeDefined();
            done();
          });
          
-        kathmandunet('getTxRollupInbox', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ', '0');
+        kathmandunetAndMondaynet('getTxRollupInbox', async (done) => {
+          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        kathmandunet('getTxRollupState', async (done) => {
-           const state = await rpcClient.getTxRollupState('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ');
+        kathmandunetAndMondaynet('getTxRollupState', async (done) => {
+           const state = await rpcClient.getTxRollupState(txRollupAddress);
            expect(state).toBeDefined();
            done();
          });
