@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => 
       await setup()
       done()
     })
-    it('Verify contract.transfer from one Baker to another', async (done) => {
+    it('Verify contract.transfer scenarios: implicit transfer to and from contracts, set and remove delegate, and transfer from a contract to a contract', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,

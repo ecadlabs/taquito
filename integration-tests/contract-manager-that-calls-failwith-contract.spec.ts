@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    test('Verify that the method call (called via a manager contract) for a contract with code FAILWITH that links to another contract will fail',  async (done: () => void) => {
+    test('Verify that transferring token from the manager contract to a contract having a FAILWITH instruction will fail',  async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: failwithContractCode,
