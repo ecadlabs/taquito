@@ -5668,6 +5668,13 @@
   "resolved" "https://registry.npmjs.org/get-value/-/get-value-2.0.6.tgz"
   "version" "2.0.6"
 
+"get-value@^3.0.0":
+  "integrity" "sha512-mKZj9JLQrwMBtj5wxi6MH8Z5eSKaERpAwjg43dPtlGI1ZVEgH/qC7T8/6R2OBSUA+zzHBZgICsVJaEIV2tKTDA=="
+  "resolved" "https://registry.npmjs.org/get-value/-/get-value-3.0.1.tgz"
+  "version" "3.0.1"
+  dependencies:
+    "isobject" "^3.0.1"
+
 "getpass@^0.1.1":
   "integrity" "sha512-0fzj9JxOLfJ+XGLhR8ze3unN0KZCgZwiSSDz168VERjK8Wl8kVSdcu2kspd4s4wtAa1y/qrVRiAA0WclVsu0ng=="
   "resolved" "https://registry.npmjs.org/getpass/-/getpass-0.1.7.tgz"
@@ -5759,7 +5766,7 @@
   dependencies:
     "is-glob" "^4.0.1"
 
-"glob-parent@^6.0.1":
+"glob-parent@^6.0.1", "glob-parent@^6.0.2":
   "integrity" "sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A=="
   "resolved" "https://registry.npmjs.org/glob-parent/-/glob-parent-6.0.2.tgz"
   "version" "6.0.2"
@@ -5964,6 +5971,14 @@
     "has-values" "^1.0.0"
     "isobject" "^3.0.0"
 
+"has-value@^2.0.2":
+  "integrity" "sha512-ybKOlcRsK2MqrM3Hmz/lQxXHZ6ejzSPzpNabKB45jb5qDgJvKPa3SdapTsTLwEb9WltgWpOmNax7i+DzNOk4TA=="
+  "resolved" "https://registry.npmjs.org/has-value/-/has-value-2.0.2.tgz"
+  "version" "2.0.2"
+  dependencies:
+    "get-value" "^3.0.0"
+    "has-values" "^2.0.1"
+
 "has-values@^0.1.4":
   "integrity" "sha512-J8S0cEdWuQbqD9//tlZxiMuMNmxB8PlEwvYwuxsTmR1G5RXUePEX/SJn7aD0GMLieuZYSwNH0cQuJGwnYunXRQ=="
   "resolved" "https://registry.npmjs.org/has-values/-/has-values-0.1.4.tgz"
@@ -5976,6 +5991,13 @@
   dependencies:
     "is-number" "^3.0.0"
     "kind-of" "^4.0.0"
+
+"has-values@^2.0.1":
+  "integrity" "sha512-+QdH3jOmq9P8GfdjFg0eJudqx1FqU62NQJ4P16rOEHeRdl7ckgwn6uqQjzYE0ZoHVV/e5E2esuJ5Gl5+HUW19w=="
+  "resolved" "https://registry.npmjs.org/has-values/-/has-values-2.0.1.tgz"
+  "version" "2.0.1"
+  dependencies:
+    "kind-of" "^6.0.2"
 
 "has@^1.0.3":
   "integrity" "sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw=="
@@ -6584,6 +6606,11 @@
   "resolved" "https://registry.npmjs.org/isobject/-/isobject-3.0.1.tgz"
   "version" "3.0.1"
 
+"isobject@^4.0.0":
+  "integrity" "sha512-S/2fF5wH8SJA/kmwr6HYhK/RI/OkhD84k8ntalo0iJjZikgq1XFvR5M8NPT1x5F7fBwCG3qHfnzeP/Vh/ZxCUA=="
+  "resolved" "https://registry.npmjs.org/isobject/-/isobject-4.0.0.tgz"
+  "version" "4.0.0"
+
 "isstream@~0.1.2", "isstream@0.1.x":
   "integrity" "sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g=="
   "resolved" "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz"
@@ -6633,7 +6660,7 @@
     "istanbul-lib-coverage" "^3.0.0"
     "source-map" "^0.6.1"
 
-"istanbul-reports@^3.0.2":
+"istanbul-reports@^3.0.2", "istanbul-reports@^3.1.5":
   "integrity" "sha512-nUsEMa9pBt/NOHqbcbeJEgqIlY/K7rVWUX6Lql2orY5e9roQOthbR3vtY4zzf2orPELg80fnxxk9zUyPlgwD1w=="
   "resolved" "https://registry.npmjs.org/istanbul-reports/-/istanbul-reports-3.1.5.tgz"
   "version" "3.1.5"
@@ -8306,10 +8333,10 @@
     "gauge" "^4.0.3"
     "set-blocking" "^2.0.0"
 
-"nwsapi@^2.2.0":
-  "integrity" "sha512-JYOWTeFoS0Z93587vRJgASD5Ut11fYl5NyihP3KrYBvMe1FRRs6RN7m20SA/16GM4P6hTnZjT+UmDOt38UeXNg=="
-  "resolved" "https://registry.npmjs.org/nwsapi/-/nwsapi-2.2.1.tgz"
-  "version" "2.2.1"
+"nwsapi@^2.2.0", "nwsapi@^2.2.2":
+  "integrity" "sha512-90yv+6538zuvUMnN+zCr8LuV6bPFdq50304114vJYJ8RDyK8D5O9Phpbd6SZWgI7PwzmmfN1upeOJlvybDSgCw=="
+  "resolved" "https://registry.npmjs.org/nwsapi/-/nwsapi-2.2.2.tgz"
+  "version" "2.2.2"
 
 "nx@>=14.4.3 < 16":
   "integrity" "sha512-I6KWVMR5Ksj/HgderkcmJmyaqHdWblQeFUeVq9to263Wr3QCIRigbvdDI3rq3ZQCBMyhUSOVP9MFXROoRVtJXQ=="
@@ -10882,6 +10909,14 @@
   dependencies:
     "has-value" "^0.3.1"
     "isobject" "^3.0.0"
+
+"unset-value@^2.0.1":
+  "integrity" "sha512-2hvrBfjUE00PkqN+q0XP6yRAOGrR06uSiUoIQGZkc7GxvQ9H7v8quUPNtZjMg4uux69i8HWpIjLPUKwCuRGyNg=="
+  "resolved" "https://registry.npmjs.org/unset-value/-/unset-value-2.0.1.tgz"
+  "version" "2.0.1"
+  dependencies:
+    "has-value" "^2.0.2"
+    "isobject" "^4.0.0"
 
 "upath@^1.1.1":
   "integrity" "sha512-aZwGpamFO61g3OlfT7OQCHqhGnW43ieH9WZeP7QxN/G/jS4jfqUkZxoryvJgVPEcrl5NL/ggHsSmLMHuH64Lhg=="

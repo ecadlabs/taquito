@@ -108,6 +108,10 @@
     ]
   },
   "dependencies": {
-    "sinon": "^14.0.0"
+    "glob-parent": "^6.0.2",
+    "istanbul-reports": "^3.1.5",
+    "nwsapi": "^2.2.2",
+    "sinon": "^14.0.0",
+    "unset-value": "^2.0.1"
   }
 }
