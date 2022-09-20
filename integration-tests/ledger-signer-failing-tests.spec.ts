@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                 done();
             });
 
-            it('Verify that Ledger will throw an error when when signing is declined', async (done) => {
+            it('Verify that Ledger will throw an error when signing is declined', async (done) => {
                 const signer = new LedgerSigner(
                     transport,
                     "44'/1729'/0'/0'",

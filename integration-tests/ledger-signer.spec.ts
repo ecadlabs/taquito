@@ -27,7 +27,7 @@ import { TezosToolkit } from '@taquito/taquito';
 CONFIGS().forEach(({ lib, setup, rpc }) => {
   const tezos = lib;
 
-  describe('Test LedgerSigner', () => {
+  describe('Verify LedgerSigner', () => {
     let transport: LedgerTransport;
 
     beforeEach(async (done) => {
@@ -36,7 +36,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       done();
     });
 
-    it('As a User I want to verify that LedgerSigner is instantiable with default parameters', () => {
+    it('Verify that LedgerSigner is instantiable with default parameters', () => {
       expect(
         new LedgerSigner(
           transport
@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       ).toBeInstanceOf(LedgerSigner);
     });
 
-    describe('Test retrieving the public key from the Ledger', () => {
+    describe('Verify retrieving the public key from the Ledger', () => {
       
       it('Verify that Ledger will provide correct public key and public key hash for tz1 curve and default path', async (done) => {
         const signer = new LedgerSigner(
@@ -112,7 +112,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     });
 
-    describe('Test sign operation with Ledger', () => {
+    describe('Verify signing operation with Ledger Device', () => {
       
       jest.setTimeout(30000);
 
@@ -140,7 +140,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-    describe('Test an ability to use Ledger with contract api', () => {
+    describe('Verify the use of a Ledger Device with contract api', () => {
       jest.setTimeout(240000)
       it('Verify that a contract can be originated with Ledger', async (done) => {
 
@@ -167,10 +167,10 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-    describe('Test an ability to use Ledger with wallet api', () => {
+    describe('Verify the use of a Ledger Device with wallet api', () => {
       jest.setTimeout(120000)
 
-      it('As a User I should be able to sign and inject transaction with Ledger', async (done) => {
+      it('Verify signing and injecting a transaction with Ledger', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
