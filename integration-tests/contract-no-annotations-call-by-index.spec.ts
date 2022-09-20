@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
       done()
     })
-    it('Verify contract.originate for a contract with no annotations for method', async (done) => {
+    it('Verify contract.originate for a contract without annotation and call entry points', async (done) => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
       const BALANCE = '0';
