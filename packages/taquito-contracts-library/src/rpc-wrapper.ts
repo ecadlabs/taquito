@@ -31,8 +31,10 @@ import {
   RPCOptions,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
+  RunScriptViewResult,
   RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
@@ -216,6 +218,18 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<RunCodeResult> {
     return this.rpc.runCode(code, { block });
+  }
+  async runScriptView(
+    { unparsing_mode = 'Readable', ...rest }: RPCRunScriptViewParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<RunScriptViewResult> {
+    return this.rpc.runScriptView(
+      {
+        unparsing_mode,
+        ...rest,
+      },
+      { block }
+    );
   }
   async runView(
     { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,

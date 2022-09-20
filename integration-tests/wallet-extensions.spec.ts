@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
-import { ContractsLibrary } from '../packages/taquito-contracts-library/src/taquito-contracts-library';
-import { entrypoints } from '../packages/taquito-contracts-library/test/data/contract-entrypoints';
+import { ContractsLibrary } from '@taquito/contracts-library';
+import { entrypoints } from './data/contract-entrypoints';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { compose } from '@taquito/taquito';
 import { tzip12 } from '@taquito/tzip12';

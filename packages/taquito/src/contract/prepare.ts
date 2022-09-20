@@ -19,10 +19,12 @@ import {
   RPCTxRollupBatchOperation,
   TransferTicketParams,
   RPCTransferTicketOperation,
+  IncreasePaidStorageParams,
+  RPCIncreasePaidStorageOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
-import { InvalidCodeParameter, InvalidInitParameter, OriginationParameterError } from './errors';
+import { InvalidCodeParameter, InvalidInitParameter, OriginationParameterError, IntegerError } from './errors';
 
 export const createOriginationOperation = async ({
   code,
@@ -65,6 +67,10 @@ export const createOriginationOperation = async ({
     code,
     storage: contractStorage,
   };
+
+  if (isNaN(Number(balance))) {
+    throw new IntegerError(`Unexpected Invalid Integer ${balance}`)
+  }
 
   const operation: RPCOriginationOperation = {
     kind: OpKind.ORIGINATION,
@@ -218,7 +224,7 @@ export const createTransferTicketOperation = async ({
   source,
   fee,
   gasLimit,
-  storageLimit
+  storageLimit,
 }: TransferTicketParams) => {
   return {
     kind: OpKind.TRANSFER_TICKET,
@@ -231,6 +237,25 @@ export const createTransferTicketOperation = async ({
     ticket_ticketer: ticketTicketer,
     ticket_amount: ticketAmount,
     destination,
-    entrypoint
-  } as RPCTransferTicketOperation
-}
+    entrypoint,
+  } as RPCTransferTicketOperation;
+};
+
+export const createIncreasePaidStorageOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  amount,
+  destination,
+}: IncreasePaidStorageParams) => {
+  return {
+    kind: OpKind.INCREASE_PAID_STORAGE,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    amount,
+    destination,
+  } as RPCIncreasePaidStorageOperation;
+};

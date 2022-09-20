@@ -1,6 +1,6 @@
 import { LocalForger } from '../src/taquito-local-forging';
-import { ticketCode3, ticketStorage3 } from './data/code_with_ticket';
-import { commonCases } from './allTestsCases';
+import { ticketCode3, ticketStorage3 } from '../../../integration-tests/data/code_with_ticket';
+import { commonCases, kathmanduCases } from '../../../integration-tests/data/allTestsCases';
 import {
   InvalidOperationSchemaError,
   InvalidBlockHashError,
@@ -12,6 +12,17 @@ import { InvalidOperationKindError } from '@taquito/utils';
 describe('Forge and parse operations default protocol', () => {
   const localForger = new LocalForger();
   commonCases.forEach(({ name, operation, expected }) => {
+    test(`Common test: ${name}`, async (done) => {
+      const result = await localForger.forge(operation);
+      expect(await localForger.parse(result)).toEqual(expected || operation);
+      done();
+    });
+  });
+});
+
+describe('Forge and parse operations kathmandu protocol', () => {
+  const localForger = new LocalForger();
+  kathmanduCases.forEach(({ name, operation, expected }) => {
     test(`Common test: ${name}`, async (done) => {
       const result = await localForger.forge(operation);
       expect(await localForger.parse(result)).toEqual(expected || operation);

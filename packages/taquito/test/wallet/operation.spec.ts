@@ -2,6 +2,7 @@ import { BlockResponse } from '@taquito/rpc';
 import { rxSandbox } from 'rx-sandbox';
 import { Context } from '../../src/context';
 import { WalletOperation } from '../../src/wallet';
+import { blockResponse } from './data';
 describe('WalletOperation', () => {
   const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
 
@@ -143,10 +144,40 @@ describe('WalletOperation', () => {
         totalAllocationBurn: '0',
         totalFee: '0',
         totalGas: '0',
+        totalMilliGas: '0',
         totalOriginationBurn: '0',
         totalPaidStorageDiff: '0',
         totalStorage: '0',
         totalStorageBurn: '0',
+      });
+
+      done();
+    });
+
+    it('should return a receipt from actual case values ​​after including the operation in a block', async (done) => {
+      const { cold, flush } = rxSandbox.create();
+      const blockObs = cold<BlockResponse>('--a', {
+        a: blockResponse as unknown as BlockResponse,
+      });
+
+      const op = new WalletOperation(
+        'oot9JqetdfF5KtZS7VoepGvB18aQENcQVzJ3G7WsQnCfQo3wmms',
+        new Context('url'),
+        blockObs
+      );
+
+      flush();
+      const receipt = await op.receipt();
+
+      expect(toJSON(receipt)).toEqual({
+        totalFee: '6317',
+        totalGas: '4056',
+        totalMilliGas: '4055338',
+        totalOriginationBurn: '257',
+        totalPaidStorageDiff: '5334',
+        totalStorage: '5591',
+        totalStorageBurn: '1397750',
+        totalAllocationBurn: '0',
       });
 
       done();

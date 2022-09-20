@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { LedgerSigner, LedgerTransport, DerivationType } from '../packages/taquito-ledger-signer/src/taquito-ledger-signer';
+import { LedgerSigner, LedgerTransport, DerivationType } from '@taquito/ledger-signer';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { TezosToolkit } from '@taquito/taquito';

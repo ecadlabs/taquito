@@ -1,4 +1,5 @@
 import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
+import BigNumber from 'bignumber.js';
 import { BATCH_KINDS } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult } from './operation-errors';
@@ -75,7 +76,14 @@ export class BatchOperation
   }
 
   get consumedGas() {
-    return String(this.sumProp(flattenOperationResult({ contents: this.results }), 'consumed_gas'));
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return new BigNumber(this.consumedMilliGas).dividedBy(1000).toString();
+  }
+
+  get consumedMilliGas() {
+    return String(
+      this.sumProp(flattenOperationResult({ contents: this.results }), 'consumed_milligas')
+    );
   }
 
   get storageDiff() {
