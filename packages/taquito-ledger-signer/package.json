@@ -28,7 +28,8 @@
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "rollup -c rollup.config.ts -w"
+    "start": "rollup -c rollup.config.ts -w",
+    "test": "jest --coverage"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
