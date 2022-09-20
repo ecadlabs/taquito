@@ -843,7 +843,7 @@
   "resolved" "https://registry.npmjs.org/@ledgerhq/errors/-/errors-6.10.1.tgz"
   "version" "6.10.1"
 
-"@ledgerhq/hw-transport@^6.20.0":
+"@ledgerhq/hw-transport@^6.27.2":
   "integrity" "sha512-GF4pmK78rEKhZfbmunwQ131c+0MGa6L5IoYlwgFcg6CaFpUjjPiTCKUFsm4flsE0Z0Ltn9QuKoe+xEHULo7rGA=="
   "resolved" "https://registry.npmjs.org/@ledgerhq/hw-transport/-/hw-transport-6.27.2.tgz"
   "version" "6.27.2"
@@ -1863,19 +1863,40 @@
     "estree-walker" "^2.0.1"
     "picomatch" "^2.2.2"
 
-"@sinonjs/commons@^1.7.0":
+"@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.3":
   "integrity" "sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ=="
   "resolved" "https://registry.npmjs.org/@sinonjs/commons/-/commons-1.8.3.tgz"
   "version" "1.8.3"
   dependencies:
     "type-detect" "4.0.8"
 
-"@sinonjs/fake-timers@^6.0.1":
+"@sinonjs/fake-timers@^6.0.1", "@sinonjs/fake-timers@>=5":
   "integrity" "sha512-MZPUxrmFubI36XS1DI3qmI0YdN1gks62JtFZvxR67ljjSNCeK6U08Zx4msEWOXuofgqUt6zPHSi1H9fbjR/NRA=="
   "resolved" "https://registry.npmjs.org/@sinonjs/fake-timers/-/fake-timers-6.0.1.tgz"
   "version" "6.0.1"
   dependencies:
     "@sinonjs/commons" "^1.7.0"
+
+"@sinonjs/fake-timers@^9.1.2":
+  "integrity" "sha512-BPS4ynJW/o92PUR4wgriz2Ud5gpST5vz6GQfMixEDK0Z8ZCUv2M7SkBLykH56T++Xs+8ln9zTGbOvNGIe02/jw=="
+  "resolved" "https://registry.npmjs.org/@sinonjs/fake-timers/-/fake-timers-9.1.2.tgz"
+  "version" "9.1.2"
+  dependencies:
+    "@sinonjs/commons" "^1.7.0"
+
+"@sinonjs/samsam@^6.1.1":
+  "integrity" "sha512-cZ7rKJTLiE7u7Wi/v9Hc2fs3Ucc3jrWeMgPHbbTCeVAB2S0wOBbYlkJVeNSL04i7fdhT8wIbDq1zhC/PXTD2SA=="
+  "resolved" "https://registry.npmjs.org/@sinonjs/samsam/-/samsam-6.1.1.tgz"
+  "version" "6.1.1"
+  dependencies:
+    "@sinonjs/commons" "^1.6.0"
+    "lodash.get" "^4.4.2"
+    "type-detect" "^4.0.8"
+
+"@sinonjs/text-encoding@^0.7.1":
+  "integrity" "sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ=="
+  "resolved" "https://registry.npmjs.org/@sinonjs/text-encoding/-/text-encoding-0.7.2.tgz"
+  "version" "0.7.2"
 
 "@stablelib/binary@^1.0.1":
   "integrity" "sha512-ClJWvmL6UBM/wjkvv/7m5VP3GMr9t0osr4yVgLZsLCOz4hGN9gIAFEqnJ0TsSMAN+n840nf2cHZnA5/KFqHC7Q=="
@@ -1903,7 +1924,7 @@
   "resolved" "https://registry.npmjs.org/@stablelib/constant-time/-/constant-time-1.0.1.tgz"
   "version" "1.0.1"
 
-"@stablelib/ed25519@^1.0.2":
+"@stablelib/ed25519@^1.0.2", "@stablelib/ed25519@^1.0.3":
   "integrity" "sha512-puIMWaX9QlRsbhxfDc5i+mNPMY+0TmQEskunY1rZEBPi1acBCVQAhnsk/1Hk50DGPtVsZtAWQg4NHGlVaO9Hqg=="
   "resolved" "https://registry.npmjs.org/@stablelib/ed25519/-/ed25519-1.0.3.tgz"
   "version" "1.0.3"
@@ -1929,7 +1950,7 @@
   dependencies:
     "@stablelib/bytes" "^1.0.1"
 
-"@stablelib/nacl@^1.0.3":
+"@stablelib/nacl@^1.0.3", "@stablelib/nacl@^1.0.4":
   "integrity" "sha512-PJ2U/MrkXSKUM8C4qFs87WeCNxri7KQwR8Cdwm9q2sweGuAtTvOJGuW0F3N+zn+ySLPJA98SYWSSpogMJ1gCmw=="
   "resolved" "https://registry.npmjs.org/@stablelib/nacl/-/nacl-1.0.4.tgz"
   "version" "1.0.4"
@@ -1999,7 +2020,7 @@
 
 "@taquito/beacon-wallet@file:/home/mike/taquito/packages/taquito-beacon-wallet":
   "resolved" "file:packages/taquito-beacon-wallet"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@airgap/beacon-dapp" "^3.1.4"
     "@taquito/taquito" "^14.0.0-beta-RC.0"
@@ -2007,36 +2028,22 @@
 
 "@taquito/contracts-library@file:/home/mike/taquito/packages/taquito-contracts-library":
   "resolved" "file:packages/taquito-contracts-library"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@taquito/rpc" "^14.0.0-beta-RC.0"
     "@taquito/taquito" "^14.0.0-beta-RC.0"
     "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/http-utils@^13.0.1":
-  "integrity" "sha512-eHzd0HSL3qX6bOOSaQClm+0XmpbSNcJP69uzaBJwfXo7ntQR1bUfGLn6+1Hgsk/lJ0JxakD2PDA4aaeajHvyPw=="
-  "resolved" "https://registry.npmjs.org/@taquito/http-utils/-/http-utils-13.0.1.tgz"
-  "version" "13.0.1"
-  dependencies:
-    "axios" "^0.26.0"
-
-"@taquito/http-utils@^14.0.0-beta-RC.0", "@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
+"@taquito/http-utils@^14.0.0", "@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
   "resolved" "file:packages/taquito-http-utils"
-  "version" "14.0.0-beta-RC.0"
-  dependencies:
-    "axios" "^0.26.0"
-
-"@taquito/http-utils@^14.0.0":
-  "integrity" "sha512-ZWZzod/+/OEE26b9CnDRjHGfUKBJft3aXv/e/A9bTHAtvRNJqGIhofHcDg/jTaolBMarCF2b3XBYw35aOOSk4A=="
-  "resolved" "https://registry.npmjs.org/@taquito/http-utils/-/http-utils-14.0.0.tgz"
   "version" "14.0.0"
   dependencies:
     "axios" "^0.26.0"
 
 "@taquito/ledger-signer@file:/home/mike/taquito/packages/taquito-ledger-signer":
   "resolved" "file:packages/taquito-ledger-signer"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@ledgerhq/hw-transport" "^6.20.0"
     "@stablelib/blake2b" "^1.0.1"
@@ -2044,20 +2051,20 @@
     "@taquito/utils" "^14.0.0-beta-RC.0"
     "buffer" "^6.0.3"
 
-"@taquito/local-forging@^14.0.0-beta-RC.0", "@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
+"@taquito/local-forging@^14.0.0", "@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@taquito/utils" "^14.0.0-beta-RC.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/michel-codec@^14.0.0-beta-RC.0", "@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
+"@taquito/michel-codec@^14.0.0", "@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
 
-"@taquito/michelson-encoder@^14.0.0-beta-RC.0", "@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
+"@taquito/michelson-encoder@^14.0.0", "@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@taquito/rpc" "^14.0.0-beta-RC.0"
     "@taquito/utils" "^14.0.0-beta-RC.0"
@@ -2066,7 +2073,7 @@
 
 "@taquito/remote-signer@file:/home/mike/taquito/packages/taquito-remote-signer":
   "resolved" "file:packages/taquito-remote-signer"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -2075,26 +2082,17 @@
     "@taquito/utils" "^14.0.0-beta-RC.0"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/rpc@^13.0.1":
-  "integrity" "sha512-f2Z0qzHB1ERLU5kewmXh3rAD84qIYthSjmAo04sWFbuaMgGW1HxMJKJ/EtL4s4VgoDUwahSwfATmVzmKg57BSw=="
-  "resolved" "https://registry.npmjs.org/@taquito/rpc/-/rpc-13.0.1.tgz"
-  "version" "13.0.1"
-  dependencies:
-    "@taquito/http-utils" "^13.0.1"
-    "@taquito/utils" "^13.0.1"
-    "bignumber.js" "^9.0.2"
-
-"@taquito/rpc@^14.0.0-beta-RC.0", "@taquito/rpc@file:/home/mike/taquito/packages/taquito-rpc":
+"@taquito/rpc@^14.0.0", "@taquito/rpc@^14.0.0-beta-RC.0", "@taquito/rpc@file:/home/mike/taquito/packages/taquito-rpc":
   "resolved" "file:packages/taquito-rpc"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
-    "@taquito/http-utils" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/http-utils" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.0.2"
 
 "@taquito/sapling@file:/home/mike/taquito/packages/taquito-sapling":
   "resolved" "file:packages/taquito-sapling"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@airgap/sapling-wasm" "0.0.9"
     "@stablelib/nacl" "^1.0.3"
@@ -2110,7 +2108,7 @@
 
 "@taquito/signer@file:/home/mike/taquito/packages/taquito-signer":
   "resolved" "file:packages/taquito-signer"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -2121,87 +2119,58 @@
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/taquito@^14.0.0-beta-RC.0", "@taquito/taquito@file:/home/mike/taquito/packages/taquito":
+"@taquito/taquito@^14.0.0", "@taquito/taquito@file:/home/mike/taquito/packages/taquito":
   "resolved" "file:packages/taquito"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
-    "@taquito/http-utils" "^14.0.0-beta-RC.0"
-    "@taquito/local-forging" "^14.0.0-beta-RC.0"
-    "@taquito/michel-codec" "^14.0.0-beta-RC.0"
-    "@taquito/michelson-encoder" "^14.0.0-beta-RC.0"
-    "@taquito/rpc" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/http-utils" "^14.0.0"
+    "@taquito/local-forging" "^14.0.0"
+    "@taquito/michel-codec" "^14.0.0"
+    "@taquito/michelson-encoder" "^14.0.0"
+    "@taquito/rpc" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.0.2"
     "rxjs" "^6.6.3"
 
 "@taquito/tezbridge-signer@file:/home/mike/taquito/packages/taquito-tezbridge-signer":
   "resolved" "file:packages/taquito-tezbridge-signer"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@taquito/utils" "^14.0.0-beta-RC.0"
     "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/tezbridge-wallet@file:/home/mike/taquito/packages/taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@taquito/taquito" "^14.0.0-beta-RC.0"
 
 "@taquito/tzip12@file:/home/mike/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
     "@taquito/michelson-encoder" "^14.0.0-beta-RC.0"
     "@taquito/taquito" "^14.0.0-beta-RC.0"
     "@taquito/tzip16" "^14.0.0-beta-RC.0"
 
-"@taquito/tzip16@^14.0.0-beta-RC.0", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
+"@taquito/tzip16@^14.0.0", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
-  "version" "14.0.0-beta-RC.0"
+  "version" "14.0.0"
   dependencies:
-    "@taquito/http-utils" "^14.0.0-beta-RC.0"
-    "@taquito/michelson-encoder" "^14.0.0-beta-RC.0"
-    "@taquito/rpc" "^14.0.0-beta-RC.0"
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/http-utils" "^14.0.0"
+    "@taquito/michelson-encoder" "^14.0.0"
+    "@taquito/rpc" "^14.0.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.0.2"
     "crypto-js" "^4.1.1"
 
-"@taquito/utils@^13.0.1":
-  "integrity" "sha512-uRtsl4EATlVJ1UnNUiAEoibFFyexGLDLz02CBHoBrcWjqrZdj3AxA+TO63E2kWn/JmT2FM0Sqaqbm555lj4tow=="
-  "resolved" "https://registry.npmjs.org/@taquito/utils/-/utils-13.0.1.tgz"
-  "version" "13.0.1"
-  dependencies:
-    "@stablelib/blake2b" "^1.0.1"
-    "@stablelib/ed25519" "^1.0.2"
-    "@types/bs58check" "^2.1.0"
-    "blakejs" "^1.2.1"
-    "bs58check" "^2.1.2"
-    "buffer" "^6.0.3"
-    "elliptic" "^6.5.4"
-    "typedarray-to-buffer" "^4.0.0"
-
-"@taquito/utils@^14.0.0-beta-RC.0", "@taquito/utils@file:/home/mike/taquito/packages/taquito-utils":
+"@taquito/utils@^14.0.0", "@taquito/utils@file:/home/mike/taquito/packages/taquito-utils":
   "resolved" "file:packages/taquito-utils"
-  "version" "14.0.0-beta-RC.0"
-  dependencies:
-    "@stablelib/blake2b" "^1.0.1"
-    "@stablelib/ed25519" "^1.0.2"
-    "@types/bs58check" "^2.1.0"
-    "bignumber.js" "^9.0.2"
-    "blakejs" "^1.2.1"
-    "bs58check" "^2.1.2"
-    "buffer" "^6.0.3"
-    "elliptic" "^6.5.4"
-    "typedarray-to-buffer" "^4.0.0"
-
-"@taquito/utils@^14.0.0":
-  "integrity" "sha512-0RSHn/CzbcbMdldJJIlXyxOvAajwmL6iPKJ6NaRyYJqqLM2CxYjG72KpXVv716pCMV1MbIWsOAr9FKbxW73PsA=="
-  "resolved" "https://registry.npmjs.org/@taquito/utils/-/utils-14.0.0.tgz"
   "version" "14.0.0"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
-    "@stablelib/ed25519" "^1.0.2"
+    "@stablelib/ed25519" "^1.0.3"
     "@types/bs58check" "^2.1.0"
     "bignumber.js" "^9.0.2"
     "blakejs" "^1.2.1"
@@ -4697,6 +4666,11 @@
   "resolved" "https://registry.npmjs.org/diff/-/diff-4.0.2.tgz"
   "version" "4.0.2"
 
+"diff@^5.0.0":
+  "integrity" "sha512-D+mk+qE8VC/PAUrlAU34N+VfXev0ghe5ywmpqrawphmVZc1bEfn56uo9qpyGp1p4xpzOHkSW4ztBd6L7Xx4ACw=="
+  "resolved" "https://registry.npmjs.org/diff/-/diff-5.1.0.tgz"
+  "version" "5.1.0"
+
 "diffie-hellman@^5.0.0":
   "integrity" "sha512-kqag/Nl+f3GwyK25fhUMYj81BUOrZ9IuJsjIcDE5icNM9FJHAVm3VcUDxdLPoQtTuUylWm6ZIknYJwwaPxsUzg=="
   "resolved" "https://registry.npmjs.org/diffie-hellman/-/diffie-hellman-5.0.3.tgz"
@@ -6588,6 +6562,11 @@
   "resolved" "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
   "version" "1.0.0"
 
+"isarray@0.0.1":
+  "integrity" "sha512-D2S+3GLxWH+uhrNEcoh/fnmYeP8E8/zHl644d/jdA0g2uyXvy3sb0qxotE+ne0LtccHknQzWwZEzhak7oJ0COQ=="
+  "resolved" "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+  "version" "0.0.1"
+
 "isexe@^2.0.0":
   "integrity" "sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw=="
   "resolved" "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz"
@@ -7255,6 +7234,11 @@
   "resolved" "https://registry.npmjs.org/just-diff/-/just-diff-5.0.3.tgz"
   "version" "5.0.3"
 
+"just-extend@^4.0.2":
+  "integrity" "sha512-g3UB796vUFIY90VIv/WX3L2c8CS2MdWUww3CNrYmqza1Fg0DURc2K/O4YrnklBdQarSJ/y8JnJYDGc+1iumQjg=="
+  "resolved" "https://registry.npmjs.org/just-extend/-/just-extend-4.2.1.tgz"
+  "version" "4.2.1"
+
 "kind-of@^3.0.2", "kind-of@^3.0.3":
   "integrity" "sha512-NOW9QQXMoZGg/oqnVNoNTTIFEIid1627WCffUBJEdMxYApq7mNE7CpzucIPc+ZQg25Phej7IJSmX3hO+oblOtQ=="
   "resolved" "https://registry.npmjs.org/kind-of/-/kind-of-3.2.2.tgz"
@@ -7512,7 +7496,7 @@
   "resolved" "https://registry.npmjs.org/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz"
   "version" "4.3.0"
 
-"lodash.get@^4.0":
+"lodash.get@^4.0", "lodash.get@^4.4.2":
   "integrity" "sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ=="
   "resolved" "https://registry.npmjs.org/lodash.get/-/lodash.get-4.4.2.tgz"
   "version" "4.4.2"
@@ -8050,6 +8034,17 @@
   "integrity" "sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ=="
   "resolved" "https://registry.npmjs.org/nice-try/-/nice-try-1.0.5.tgz"
   "version" "1.0.5"
+
+"nise@^5.1.1":
+  "integrity" "sha512-yr5kW2THW1AkxVmCnKEh4nbYkJdB3I7LUkiUgOvEkOp414mc2UMaHMA7pjq1nYowhdoJZGwEKGaQVbxfpWj10A=="
+  "resolved" "https://registry.npmjs.org/nise/-/nise-5.1.1.tgz"
+  "version" "5.1.1"
+  dependencies:
+    "@sinonjs/commons" "^1.8.3"
+    "@sinonjs/fake-timers" ">=5"
+    "@sinonjs/text-encoding" "^0.7.1"
+    "just-extend" "^4.0.2"
+    "path-to-regexp" "^1.7.0"
 
 "node-addon-api@^3.2.1":
   "integrity" "sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A=="
@@ -8808,6 +8803,13 @@
   "version" "1.0.13"
   dependencies:
     "tslib" "^2"
+
+"path-to-regexp@^1.7.0":
+  "integrity" "sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA=="
+  "resolved" "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-1.8.0.tgz"
+  "version" "1.8.0"
+  dependencies:
+    "isarray" "0.0.1"
 
 "path-type@^3.0.0":
   "integrity" "sha512-T2ZUsdZFHgA3u4e5PfPbjd7HDDpxPnQb5jN0SrDsjNSuVXHJqtwTnWqG0B1jZrgmJ/7lj1EmVIByWt1gxGkWvg=="
@@ -9852,6 +9854,18 @@
   "resolved" "https://registry.npmjs.org/signal-exit/-/signal-exit-3.0.7.tgz"
   "version" "3.0.7"
 
+"sinon@^14.0.0":
+  "integrity" "sha512-ugA6BFmE+WrJdh0owRZHToLd32Uw3Lxq6E6LtNRU+xTVBefx632h03Q7apXWRsRdZAJ41LB8aUfn2+O4jsDNMw=="
+  "resolved" "https://registry.npmjs.org/sinon/-/sinon-14.0.0.tgz"
+  "version" "14.0.0"
+  dependencies:
+    "@sinonjs/commons" "^1.8.3"
+    "@sinonjs/fake-timers" "^9.1.2"
+    "@sinonjs/samsam" "^6.1.1"
+    "diff" "^5.0.0"
+    "nise" "^5.1.1"
+    "supports-color" "^7.2.0"
+
 "sisteransi@^1.0.5":
   "integrity" "sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg=="
   "resolved" "https://registry.npmjs.org/sisteransi/-/sisteransi-1.0.5.tgz"
@@ -10314,7 +10328,7 @@
   dependencies:
     "has-flag" "^3.0.0"
 
-"supports-color@^6.1.0", "supports-color@^7.0.0", "supports-color@^7.1.0":
+"supports-color@^6.1.0", "supports-color@^7.0.0", "supports-color@^7.1.0", "supports-color@^7.2.0":
   "integrity" "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="
   "resolved" "https://registry.npmjs.org/supports-color/-/supports-color-7.2.0.tgz"
   "version" "7.2.0"
@@ -10728,7 +10742,7 @@
   dependencies:
     "prelude-ls" "~1.1.2"
 
-"type-detect@4.0.8":
+"type-detect@^4.0.8", "type-detect@4.0.8":
   "integrity" "sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g=="
   "resolved" "https://registry.npmjs.org/type-detect/-/type-detect-4.0.8.tgz"
   "version" "4.0.8"
