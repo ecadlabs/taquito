@@ -62,7 +62,9 @@ export class Contract {
     if (expr === null) {
       throw new InvalidTypeExpressionError('empty type expression');
     }
-    if (assertMichelsonType(expr) && assertTypeAnnotationsValid(expr)) {
+    // remove assertTypeAnnotationsValid from if block because: () => void || throw error
+    if (assertMichelsonType(expr)) {
+      assertTypeAnnotationsValid(expr);
       return expr;
     }
     throw undefined;

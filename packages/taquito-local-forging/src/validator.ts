@@ -1,11 +1,6 @@
 import { OpKind } from '@taquito/rpc';
 import { OperationContents } from '@taquito/rpc';
 import {
-  TransferTicketSchema,
-  TxRollupOriginationSchema,
-  TxRollupSubmitBatchSchema,
-} from './proto13-jakarta/schema/operation-proto13';
-import {
   ActivationSchema,
   DelegationSchema,
   TransactionSchema,
@@ -16,6 +11,10 @@ import {
   RevealSchema,
   RegisterGlobalConstantSchema,
   EndorsementSchema,
+  TransferTicketSchema,
+  TxRollupOriginationSchema,
+  TxRollupSubmitBatchSchema,
+  IncreasePaidStorageSchema,
 } from './schema/operation';
 
 type OperationKind =
@@ -31,7 +30,8 @@ type OperationKind =
   | OpKind.REGISTER_GLOBAL_CONSTANT
   | OpKind.TRANSFER_TICKET
   | OpKind.TX_ROLLUP_ORIGINATION
-  | OpKind.TX_ROLLUP_SUBMIT_BATCH;
+  | OpKind.TX_ROLLUP_SUBMIT_BATCH
+  | OpKind.INCREASE_PAID_STORAGE;
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
@@ -47,6 +47,7 @@ const OperationKindMapping = {
   transfer_ticket: TransferTicketSchema,
   tx_rollup_origination: TxRollupOriginationSchema,
   tx_rollup_submit_batch: TxRollupSubmitBatchSchema,
+  increase_paid_storage: IncreasePaidStorageSchema,
 };
 
 // Asymmetric difference: only account for things in arr2 that are not present in arr1, not vice versa

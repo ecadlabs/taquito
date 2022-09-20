@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
+import { RpcClient } from '@taquito/rpc';
 
 
 CONFIGS().forEach(({ rpc }) => {
@@ -21,7 +21,7 @@ CONFIGS().forEach(({ rpc }) => {
                 expect(block.header.predecessor).toEqual(blockHeader.predecessor);
                 done();
             })
-            it('Verify that client client.getBlock({ block: `${block.hash}~1` }) returns a block using hash and tilde syntax', async (done) => {
+            it('Verify that client.getBlock({ block: `${block.hash}~1` }) returns a block using hash and tilde syntax', async (done) => {
                 const block = await client.getBlock();
                 const predecessorBlock = await client.getBlock({ block: `${block.hash}~1` })
 

@@ -16,7 +16,7 @@ const argv = yargs(process.argv.slice(2)).options({
 }).argv;
 
 const client = new rpc.RpcClient(argv.url, 'main');
-const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'data.json')).toString());
+const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../../integration-tests/data/pack-test-tool-data.json')).toString());
 
 async function packData(data) {
   const ret = [];

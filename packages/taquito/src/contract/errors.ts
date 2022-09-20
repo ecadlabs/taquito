@@ -142,3 +142,10 @@ export class OriginationParameterError extends Error {
     super(message);
   }
 }
+
+export class IntegerError extends Error {
+  public name = 'IntegerError';
+  constructor(public message: string) {
+    super(message);
+  }
+}

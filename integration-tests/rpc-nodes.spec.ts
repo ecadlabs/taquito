@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
-import { Protocols, ChainIds } from '@taquito/taquito';
-import { RpcClientCache, RpcClient, RPCRunViewParam } from '@taquito/rpc';
+import { Protocols, ChainIds } from "@taquito/taquito";
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -8,18 +8,20 @@ import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 CONFIGS().forEach(
   ({
     lib,
+    protocol,
+    rpc,
+    setup,
     knownBaker,
     knownContract,
     knownBigMapContract,
     knownSaplingContract,
-    setup,
-    protocol,
-    rpc,
+    knownViewContract,
+    txRollupAddress, 
   }) => {
     const Tezos = lib;
 
     const jakartanet = protocol === Protocols.PtJakart2 ? test: test.skip;
-    const kathmandunet = protocol === Protocols.PtKathman ? test: test.skip;
+    const kathmandunetAndMondaynet = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test: test.skip;
 
     beforeAll(async (done) => {
       await setup();
@@ -70,7 +72,7 @@ CONFIGS().forEach(
                 done();
             });
 
-            it(`Verify that pcClient.getContract returns an access the complete status of a contract`, async (done) => {
+            it(`Verify that rpcClient.getContract returns an access the complete status of a contract`, async (done) => {
                 const contract = await rpcClient.getContract(knownContract);
                 expect(contract).toBeDefined();
                 done();
@@ -148,7 +150,7 @@ CONFIGS().forEach(
                 done();
             });
 
-            it('Verify that pcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async (done) => {
+            it('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async (done) => {
                 const bakingRights = await rpcClient.getBakingRights();
                 expect(bakingRights).toBeDefined();
                 done();
@@ -268,7 +270,7 @@ CONFIGS().forEach(
                 done();
             });
 
-            it('erify that rpcClient.getEntrypoints for known contract returns list of entrypoints of the contract', async (done) => {
+            it('Verify that rpcClient.getEntrypoints for known contract returns list of entrypoints of the contract', async (done) => {
                 const entrypoints = await rpcClient.getEntrypoints(knownContract);
                 expect(entrypoints).toBeDefined();
                 done();
@@ -310,12 +312,6 @@ CONFIGS().forEach(
                 } catch (ex: any) {
                     expect(ex.message).toMatch('contract.counter_in_the_past');
                 }
-                done();
-            });
-
-            it('getSuccessorPeriod', async (done) => {
-                const successorPeriod = await rpcClient.getSuccessorPeriod();
-                expect(successorPeriod).toBeDefined();
                 done();
             });
         });
@@ -389,6 +385,22 @@ CONFIGS().forEach(
           const views = await Tezos.rpc.runView(params)
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "100" } });
+          done();
+        });
+
+        kathmandunetAndMondaynet('Executes michelson view by calling runScriptView ', async (done) => {
+          const params: RPCRunScriptViewParam = {
+            contract: knownViewContract!,
+            view: 'add',
+            chain_id: ChainIds.KATHMANDUNET,
+            input: {
+              int: '0'
+            }
+          }
+
+          const views = await Tezos.rpc.runScriptView(params)
+          expect(views).toBeDefined();
+          expect(views).toEqual({ "data": { "int": "2" } });
           done();
         });
 
@@ -670,25 +682,25 @@ CONFIGS().forEach(
         });
 
         jakartanet('getTxRollupInbox', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', '0');
+          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
         jakartanet('getTxRollupState', async (done) => {
-           const state = await rpcClient.getTxRollupState('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+           const state = await rpcClient.getTxRollupState(txRollupAddress);
            expect(state).toBeDefined();
            done();
          });
          
-        kathmandunet('getTxRollupInbox', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ', '0');
+        kathmandunetAndMondaynet('getTxRollupInbox', async (done) => {
+          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        kathmandunet('getTxRollupState', async (done) => {
-           const state = await rpcClient.getTxRollupState('txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ');
+        kathmandunetAndMondaynet('getTxRollupState', async (done) => {
+           const state = await rpcClient.getTxRollupState(txRollupAddress);
            expect(state).toBeDefined();
            done();
          });

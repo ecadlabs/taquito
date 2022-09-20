@@ -17,10 +17,19 @@ import {
   RPCTxRollupOriginationOperation,
   TxRollupBatchParams,
   RPCTxRollupBatchOperation,
+  TransferTicketParams,
+  RPCTransferTicketOperation,
+  IncreasePaidStorageParams,
+  RPCIncreasePaidStorageOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { format } from '../format';
-import { InvalidCodeParameter, InvalidInitParameter, OriginationParameterError } from './errors';
+import { format } from '@taquito/utils';
+import {
+  InvalidCodeParameter,
+  InvalidInitParameter,
+  OriginationParameterError,
+  IntegerError,
+} from './errors';
 
 export const createOriginationOperation = async ({
   code,
@@ -63,6 +72,10 @@ export const createOriginationOperation = async ({
     code,
     storage: contractStorage,
   };
+
+  if (isNaN(Number(balance))) {
+    throw new IntegerError(`Unexpected Invalid Integer ${balance}`);
+  }
 
   const operation: RPCOriginationOperation = {
     kind: OpKind.ORIGINATION,
@@ -204,4 +217,50 @@ export const createTxRollupBatchOperation = async ({
     content,
     rollup,
   } as RPCTxRollupBatchOperation;
+};
+
+export const createTransferTicketOperation = async ({
+  ticketContents,
+  ticketTy,
+  ticketTicketer,
+  ticketAmount,
+  destination,
+  entrypoint,
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+}: TransferTicketParams) => {
+  return {
+    kind: OpKind.TRANSFER_TICKET,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    source,
+    ticket_contents: ticketContents,
+    ticket_ty: ticketTy,
+    ticket_ticketer: ticketTicketer,
+    ticket_amount: ticketAmount,
+    destination,
+    entrypoint,
+  } as RPCTransferTicketOperation;
+};
+
+export const createIncreasePaidStorageOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  amount,
+  destination,
+}: IncreasePaidStorageParams) => {
+  return {
+    kind: OpKind.INCREASE_PAID_STORAGE,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    amount,
+    destination,
+  } as RPCIncreasePaidStorageOperation;
 };

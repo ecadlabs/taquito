@@ -5,6 +5,9 @@ import {
   OperationResultRegisterGlobalConstant,
   OperationResultReveal,
   OperationResultTransaction,
+  OperationResultTransferTicket,
+  OperationResultTxRollupOrigination,
+  OperationResultTxRollupSubmitBatch,
   PreapplyResponse,
   TezosGenericOperationError,
 } from '@taquito/rpc';
@@ -64,10 +67,13 @@ export class TezosPreapplyFailureError extends Error {
   }
 }
 
-export type MergedOperationResult = OperationResultDelegation &
+export type MergedOperationResult = OperationResultTransaction &
   OperationResultOrigination &
-  OperationResultTransaction &
+  OperationResultDelegation &
   OperationResultRegisterGlobalConstant &
+  OperationResultTxRollupOrigination &
+  OperationResultTxRollupSubmitBatch &
+  OperationResultTransferTicket &
   OperationResultReveal & {
     fee?: string;
   };

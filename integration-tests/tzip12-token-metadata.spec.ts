@@ -1,9 +1,7 @@
 import { CONFIGS } from './config';
 import { compose, MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
-import { tzip12 } from '../packages/taquito-tzip12/src/composer';
-import { Tzip12Module } from '../packages/taquito-tzip12/src/tzip12-extension';
-import { TokenIdNotFound, InvalidTokenMetadata } from '../packages/taquito-tzip12/src/tzip12-errors';
+import { tzip12, Tzip12Module, TokenIdNotFound, InvalidTokenMetadata } from '@taquito/tzip12';
 import { fa2TokenFactory } from './data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 
