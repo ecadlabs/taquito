@@ -111,8 +111,5 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "optionalDependencies": {
-    "fsevents": "^2.3.2"
   }
 }
