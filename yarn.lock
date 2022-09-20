@@ -2023,16 +2023,16 @@
   "version" "14.0.0"
   dependencies:
     "@airgap/beacon-dapp" "^3.1.4"
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/taquito" "^14.0.0"
     "libsodium-wrappers" "0.7.9"
 
 "@taquito/contracts-library@file:/home/mike/taquito/packages/taquito-contracts-library":
   "resolved" "file:packages/taquito-contracts-library"
   "version" "14.0.0"
   dependencies:
-    "@taquito/rpc" "^14.0.0-beta-RC.0"
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/rpc" "^14.0.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.0.2"
 
 "@taquito/http-utils@^14.0.0", "@taquito/http-utils@file:/home/mike/taquito/packages/taquito-http-utils":
@@ -2045,17 +2045,17 @@
   "resolved" "file:packages/taquito-ledger-signer"
   "version" "14.0.0"
   dependencies:
-    "@ledgerhq/hw-transport" "^6.20.0"
+    "@ledgerhq/hw-transport" "^6.27.2"
     "@stablelib/blake2b" "^1.0.1"
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "buffer" "^6.0.3"
 
 "@taquito/local-forging@^14.0.0", "@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
   "version" "14.0.0"
   dependencies:
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.0.2"
 
 "@taquito/michel-codec@^14.0.0", "@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
@@ -2066,8 +2066,8 @@
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "14.0.0"
   dependencies:
-    "@taquito/rpc" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/rpc" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.0.2"
     "fast-json-stable-stringify" "^2.1.0"
 
@@ -2077,9 +2077,9 @@
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
     "@stablelib/ed25519" "^1.0.2"
-    "@taquito/http-utils" "^14.0.0-beta-RC.0"
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/http-utils" "^14.0.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/rpc@^14.0.0", "@taquito/rpc@^14.0.0-beta-RC.0", "@taquito/rpc@file:/home/mike/taquito/packages/taquito-rpc":
@@ -2097,9 +2097,9 @@
     "@airgap/sapling-wasm" "0.0.9"
     "@stablelib/nacl" "^1.0.3"
     "@stablelib/random" "^1.0.1"
-    "@taquito/rpc" "^14.0.0-beta-RC.0"
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/rpc" "^14.0.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.0.2"
     "bip39" "^3.0.4"
     "blakejs" "^1.2.1"
@@ -2111,10 +2111,10 @@
   "version" "14.0.0"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
-    "@stablelib/ed25519" "^1.0.2"
-    "@stablelib/nacl" "^1.0.3"
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@stablelib/ed25519" "^1.0.3"
+    "@stablelib/nacl" "^1.0.4"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "elliptic" "^6.5.4"
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
@@ -2136,22 +2136,22 @@
   "resolved" "file:packages/taquito-tezbridge-signer"
   "version" "14.0.0"
   dependencies:
-    "@taquito/utils" "^14.0.0-beta-RC.0"
+    "@taquito/utils" "^14.0.0"
     "typedarray-to-buffer" "^4.0.0"
 
 "@taquito/tezbridge-wallet@file:/home/mike/taquito/packages/taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
   "version" "14.0.0"
   dependencies:
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
+    "@taquito/taquito" "^14.0.0"
 
 "@taquito/tzip12@file:/home/mike/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "14.0.0"
   dependencies:
-    "@taquito/michelson-encoder" "^14.0.0-beta-RC.0"
-    "@taquito/taquito" "^14.0.0-beta-RC.0"
-    "@taquito/tzip16" "^14.0.0-beta-RC.0"
+    "@taquito/michelson-encoder" "^14.0.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/tzip16" "^14.0.0"
 
 "@taquito/tzip16@^14.0.0", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
