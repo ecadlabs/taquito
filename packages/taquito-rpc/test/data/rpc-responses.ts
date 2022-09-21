@@ -2497,6 +2497,19 @@ export const delegatesIthacanetSample = {
   voting_power: 199,
 };
 
+export const delegatesKathmandunetSample = {
+  full_balance: '965532868030',
+  current_frozen_deposits: '96350095609',
+  frozen_deposits: '96350095609',
+  staking_balance: '970221941952',
+  delegated_contracts: ['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'],
+  delegated_balance: '4689073922',
+  deactivated: false,
+  grace_period: 42,
+  voting_power: '968128693450',
+  remaining_proposals: 20,
+};
+
 export const blockIthacanetSample = {
   protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   chain_id: 'NetXnHfVqm9iesp',
@@ -4199,17 +4212,18 @@ export const blockJakartanetSample = {
             rollup: 'txr1V16e1hXyVKndP4aE8cujRfryoHTiHK9fG',
             level: 11,
             message: {
-              batch: '01b2530bd9f4d594ee6116286cbb045a972305e38e6365b396f49d153815fbdd15c8974b7fdc50aee4bc3f8195e95075ab0fca5d31927917ede7a408fe70c61cd4a0525b2836eca0e797cdf9ae9b3bf58735fd62a7bf21775d46940ae9bd83a8d501130187e8c631aba41d88a67da49cf5f4db947fdf5a76084f1d4b6c14531f6582b239db26dd0375ca7172cdbecd8b6f080ffa58c748f83cc7a2afce164c1bcc53712ff5a9e50c39fb0172acda0a'
+              batch:
+                '01b2530bd9f4d594ee6116286cbb045a972305e38e6365b396f49d153815fbdd15c8974b7fdc50aee4bc3f8195e95075ab0fca5d31927917ede7a408fe70c61cd4a0525b2836eca0e797cdf9ae9b3bf58735fd62a7bf21775d46940ae9bd83a8d501130187e8c631aba41d88a67da49cf5f4db947fdf5a76084f1d4b6c14531f6582b239db26dd0375ca7172cdbecd8b6f080ffa58c748f83cc7a2afce164c1bcc53712ff5a9e50c39fb0172acda0a',
             },
             message_position: '0',
-            message_path: [ 'txi1WZKF1fkUWfKbmaHbb5b8gn68rKSyUy4k7NnSVY4p79BKYz5RB' ],
+            message_path: ['txi1WZKF1fkUWfKbmaHbb5b8gn68rKSyUy4k7NnSVY4p79BKYz5RB'],
             message_result_hash: 'txmr344vtdPzvWsfnoSd3mJ3MCFA5ehKLQs1pK9WGcX4FEACg1rVgC',
-            message_result_path: [ 'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB' ],
+            message_result_path: ['txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB'],
             previous_message_result: {
               context_hash: 'CoVUv68XdJts8f6Ysaoxm4jnt4JKXfqx8WYVFnkj2UFfgKHJUrLs',
-              withdraw_list_hash: 'txw1sFoLju3ySMAdY6v1dcHUMqJ4Zxc1kcynC8xkYgCmH6bpNSDhV'
+              withdraw_list_hash: 'txw1sFoLju3ySMAdY6v1dcHUMqJ4Zxc1kcynC8xkYgCmH6bpNSDhV',
             },
-            previous_message_result_path: [ 'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB' ],
+            previous_message_result_path: ['txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB'],
             proof: {
               version: 3,
               before: { node: 'CoVUv68XdJts8f6Ysaoxm4jnt4JKXfqx8WYVFnkj2UFfgKHJUrLs' },
@@ -4217,165 +4231,164 @@ export const blockJakartanetSample = {
               state: [
                 {
                   inode: {
-                    length: "14",
+                    length: '14',
                     proofs: [
-                      "CoVbQczQE6uDug4tWErtLgszzZBRDJKEGHgcQp8jGYSEfBLnsMXH",
-                      "CoWZ31tY65qh38Sfgm64Ny8kDTLQQMr5xuRDkDkz1JopiBnPDu11"
-                    ]
-                  }
-                },
-                {
-                  inode: {
-                    length: "6",
-                    proofs: [
-                      "CoVecMq8ageb8fsmr6MPdNDH583cEpfCjVu8dQJpBP4J5GxM4Fex",
-                      "CoUh6FXy5xrEqSswAJ8MmAWcJMUiLyCq53RQiEHoHdovYxzXLHVE"
-                    ]
-                  }
-                },
-                {
-                  inode: {
-                    length: "3",
-                    proofs: [
-                      null,
-                      "CoVPGhaCkq2yV5JJs8Bxq1idndEhBn3SCJe3rSH5eYvr9BnRnv8i"
-                    ]
-                  }
-                },
-                {
-                  inode: {
-                    length: "3",
-                    proofs: [
-                      "CoWawEsrigKz7nfmXdCE84Rj6sJzzSj3RdeyuySjaxzhFZ17EFjb",
-                      "CoVWwp2qJWcRXvNA4adk9nUHRvKT22qY8QEoaAYK2Fz5tviyCaBw"
-                    ]
-                  }
-                },
-                {
-                  other_elts: {
-                  node: [
-                    [
-                      "0287e8c631aba41d88a67da49cf5f4db947fdf5a76",
-                      { "value": "CoW4fTVfN6WBZ6XqT38EqLzn5raQUYkjSL4Ce7J2KsGKcFPjgUJy" }
+                      'CoVbQczQE6uDug4tWErtLgszzZBRDJKEGHgcQp8jGYSEfBLnsMXH',
+                      'CoWZ31tY65qh38Sfgm64Ny8kDTLQQMr5xuRDkDkz1JopiBnPDu11',
                     ],
-                    [
-                      "050000000100000002",
-                      { "value": "CoWQdcsnqDRRNEb1F4dRSPffKXfAnBXhhdpwo5mMyQibrXx5BKmF" }
-                    ]
-                  ]}
-                },
-                {
-                  other_elts: {
-                    other_elts: { value: "00000000" }
-                  }
+                  },
                 },
                 {
                   inode: {
-                    length: "3",
+                    length: '6',
                     proofs: [
-                          "CoW1wvLQ8e7wwDXM431GKDFZ5FJMTu9aGtHCY6NE9jmcH2rBn3UU",
-                          "CoWVAyWNj6anjKBcoGmpEKpcURyTSvjPBJiHs8TcWruhVwNKzbiv"
-                    ]
-                  }
+                      'CoVecMq8ageb8fsmr6MPdNDH583cEpfCjVu8dQJpBP4J5GxM4Fex',
+                      'CoUh6FXy5xrEqSswAJ8MmAWcJMUiLyCq53RQiEHoHdovYxzXLHVE',
+                    ],
+                  },
+                },
+                {
+                  inode: {
+                    length: '3',
+                    proofs: [null, 'CoVPGhaCkq2yV5JJs8Bxq1idndEhBn3SCJe3rSH5eYvr9BnRnv8i'],
+                  },
+                },
+                {
+                  inode: {
+                    length: '3',
+                    proofs: [
+                      'CoWawEsrigKz7nfmXdCE84Rj6sJzzSj3RdeyuySjaxzhFZ17EFjb',
+                      'CoVWwp2qJWcRXvNA4adk9nUHRvKT22qY8QEoaAYK2Fz5tviyCaBw',
+                    ],
+                  },
                 },
                 {
                   other_elts: {
                     node: [
                       [
-                        "0000000000",
-                        { "value": "CoWXftiVdu561NbMwSyvQ8aJ5mPNCdCiyL3e9MP5fpb12nhEa6BQ" }
+                        '0287e8c631aba41d88a67da49cf5f4db947fdf5a76',
+                        { value: 'CoW4fTVfN6WBZ6XqT38EqLzn5raQUYkjSL4Ce7J2KsGKcFPjgUJy' },
                       ],
                       [
-                        "0000000001",
-                        { "value": "CoVjtgM389FfgNSs91E4J7mVWwvtAVkPCV8UrGR8onjUmbvAYFz1" }
-                      ]
-                    ]
-                  }
+                        '050000000100000002',
+                        { value: 'CoWQdcsnqDRRNEb1F4dRSPffKXfAnBXhhdpwo5mMyQibrXx5BKmF' },
+                      ],
+                    ],
+                  },
+                },
+                {
+                  other_elts: {
+                    other_elts: { value: '00000000' },
+                  },
+                },
+                {
+                  inode: {
+                    length: '3',
+                    proofs: [
+                      'CoW1wvLQ8e7wwDXM431GKDFZ5FJMTu9aGtHCY6NE9jmcH2rBn3UU',
+                      'CoWVAyWNj6anjKBcoGmpEKpcURyTSvjPBJiHs8TcWruhVwNKzbiv',
+                    ],
+                  },
+                },
+                {
+                  other_elts: {
+                    node: [
+                      [
+                        '0000000000',
+                        { value: 'CoWXftiVdu561NbMwSyvQ8aJ5mPNCdCiyL3e9MP5fpb12nhEa6BQ' },
+                      ],
+                      [
+                        '0000000001',
+                        { value: 'CoVjtgM389FfgNSs91E4J7mVWwvtAVkPCV8UrGR8onjUmbvAYFz1' },
+                      ],
+                    ],
+                  },
                 },
                 {
                   other_elts: {
                     other_elts: {
-                      "value": "00000000000000070000003087bdec4b6745183b7ea589128f836e037e92a8e7fbad7818c0e371840b78aca9cceb24d627c59ace2962c9b801606016"
-                    }
-                  }
+                      value:
+                        '00000000000000070000003087bdec4b6745183b7ea589128f836e037e92a8e7fbad7818c0e371840b78aca9cceb24d627c59ace2962c9b801606016',
+                    },
+                  },
                 },
                 {
                   other_elts: {
                     node: [
                       [
-                        "021d4b6c14531f6582b239db26dd0375ca7172cdbe",
-                        { value: "CoWG69nMHdez4s8SahwsB2m5ZPCLqPre7Qmi5uwdJ9nhFsEX7RdN" }
-                      ]
-                    ]
-                  }
+                        '021d4b6c14531f6582b239db26dd0375ca7172cdbe',
+                        { value: 'CoWG69nMHdez4s8SahwsB2m5ZPCLqPre7Qmi5uwdJ9nhFsEX7RdN' },
+                      ],
+                    ],
+                  },
                 },
                 {
-                other_elts: {
-                  other_elts: { value: "00000001" }
-                  }
+                  other_elts: {
+                    other_elts: { value: '00000001' },
+                  },
                 },
                 {
-                inode: {
-                  length: "8",
-                  proofs: [
-                      "CoV8yd9SQTRz1ic9WyiMNAfyTq3Q9Jq9iUwNPtT3Tuxm999F2GnY",
-                      "CoW6PzNAZdnTY1NB1AXS5gx23BGpm66FvBW2yahScM4d8LEa3csN"
-                    ]
-                  }
+                  inode: {
+                    length: '8',
+                    proofs: [
+                      'CoV8yd9SQTRz1ic9WyiMNAfyTq3Q9Jq9iUwNPtT3Tuxm999F2GnY',
+                      'CoW6PzNAZdnTY1NB1AXS5gx23BGpm66FvBW2yahScM4d8LEa3csN',
+                    ],
+                  },
                 },
                 {
-                inode: {
-                  length: "4",
-                  proofs: [
-                      "CoWKdEp4XjM5dYvDJoYzsa9ofVRrqKrwbryd9TmKD9uTT1pVHTfb",
-                      "CoUzXw8c38PwQdyMUo7ZatPL5xWRfLuAuCQFvtMJJu3T5jt9qDLq"
-                    ]
-                  }
+                  inode: {
+                    length: '4',
+                    proofs: [
+                      'CoWKdEp4XjM5dYvDJoYzsa9ofVRrqKrwbryd9TmKD9uTT1pVHTfb',
+                      'CoUzXw8c38PwQdyMUo7ZatPL5xWRfLuAuCQFvtMJJu3T5jt9qDLq',
+                    ],
+                  },
                 },
                 {
-                inode: {
-                  length: "3",
-                  proofs: [
-                      "CoWFsG1gkdG17aE9emaKrhEJEhc41VMpmG4mmTmjt6wPkdjfJmhj",
-                      "CoV4P6w3UKpWRmbFJVL1x46YHaxCBVNqJKBYhT29W9pjK2Vum5a2"
-                    ]
-                  }
+                  inode: {
+                    length: '3',
+                    proofs: [
+                      'CoWFsG1gkdG17aE9emaKrhEJEhc41VMpmG4mmTmjt6wPkdjfJmhj',
+                      'CoV4P6w3UKpWRmbFJVL1x46YHaxCBVNqJKBYhT29W9pjK2Vum5a2',
+                    ],
+                  },
                 },
                 {
                   other_elts: {
                     node: [
                       [
-                        "04cd8b6f080ffa58c748f83cc7a2afce164c1bcc53712ff5a9e50c39fb0172acda",
-                        { value: "CoW4fTVfN6WBZ6XqT38EqLzn5raQUYkjSL4Ce7J2KsGKcFPjgUJy" }
+                        '04cd8b6f080ffa58c748f83cc7a2afce164c1bcc53712ff5a9e50c39fb0172acda',
+                        { value: 'CoW4fTVfN6WBZ6XqT38EqLzn5raQUYkjSL4Ce7J2KsGKcFPjgUJy' },
                       ],
                       [
-                        "050000000000000000",
-                        { value: "CoVd2R5Mf2KMjBgCDpPYEmgQVbg7fXCcv6hmfFKUPyiNotbkKqkf" }
-                      ]
-                    ]
-                  }
+                        '050000000000000000',
+                        { value: 'CoVd2R5Mf2KMjBgCDpPYEmgQVbg7fXCcv6hmfFKUPyiNotbkKqkf' },
+                      ],
+                    ],
+                  },
                 },
                 {
                   other_elts: {
-                    other_elts: { value: "0032" }
-                  }
+                    other_elts: { value: '0032' },
+                  },
                 },
                 {
                   other_elts: {
                     node: [
                       [
-                        "050000000000000001",
-                        { value: "CoVZMPkooCZg5EDUd7PqvowuM7pknwEbcjGSaKzeCrsJUynoWKvR" }
-                      ]
-                    ]
-                  }
+                        '050000000000000001',
+                        { value: 'CoVZMPkooCZg5EDUd7PqvowuM7pknwEbcjGSaKzeCrsJUynoWKvR' },
+                      ],
+                    ],
+                  },
                 },
                 {
                   other_elts: {
-                    other_elts: { value: "0028" }
-                  }
-                }
-              ]
+                    other_elts: { value: '0028' },
+                  },
+                },
+              ],
             },
             metadata: {
               balance_updates: [
@@ -4383,14 +4396,14 @@ export const blockJakartanetSample = {
                   kind: 'contract',
                   contract: 'tz1MDU45gNc9Ko1Q9obcz6hQkKSMiQRib6GZ',
                   change: '-2837',
-                  origin: 'block'
+                  origin: 'block',
                 },
                 {
                   kind: 'accumulator',
                   category: 'block fees',
                   change: '2837',
-                  origin: 'block'
-                }
+                  origin: 'block',
+                },
               ],
               operation_result: {
                 status: 'applied',
@@ -4401,31 +4414,31 @@ export const blockJakartanetSample = {
                     contract: 'tz1Lg9iLTS8Hk6kLfTN6rrrL9gYPfsTQ9z75',
                     bond_id: { tx_rollup: 'txr1V16e1hXyVKndP4aE8cujRfryoHTiHK9fG' },
                     change: '-10000000000',
-                    origin: 'block'
+                    origin: 'block',
                   },
                   {
                     kind: 'burned',
                     category: 'tx_rollup_rejection_punishments',
                     change: '10000000000',
-                    origin: 'block'
+                    origin: 'block',
                   },
                   {
                     kind: 'minted',
                     category: 'tx_rollup_rejection_rewards',
                     change: '-5000000000',
-                    origin: 'block'
+                    origin: 'block',
                   },
                   {
                     kind: 'contract',
                     contract: 'tz1MDU45gNc9Ko1Q9obcz6hQkKSMiQRib6GZ',
                     change: '5000000000',
-                    origin: 'block'
-                  }
+                    origin: 'block',
+                  },
                 ],
                 consumed_gas: '11533',
-                consumed_milligas: '11532006'
-              }
-            }
+                consumed_milligas: '11532006',
+              },
+            },
           },
         ],
         signature:
@@ -4434,6 +4447,656 @@ export const blockJakartanetSample = {
     ],
   ],
 };
+
+export const blockKathmandunetSample = {
+  protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+  chain_id: 'NetXi2ZagzEsXbZ',
+  hash: 'BLHBkJLRFwRhs1Nvrbrf8gVnVgSxx5515iTdizVnagm97baSXNF',
+  header: {
+    level: 133163,
+    proto: 2,
+    predecessor: 'BMD5idn9K4pGGAk9EbXBgUicYzTeDJLhY2a75Xfq6WNfahiRWZy',
+    timestamp: '2022-08-24T17:48:35Z',
+    validation_pass: 4,
+    operations_hash: 'LLobDJY3zxBWiCiHUryckHzkGSDknfKDwbALteiURoPcfkRmEfoxr',
+    fitness: ['02', '0002082b', '', 'ffffffff', '00000001'],
+    context: 'CoWDgrLLcSaBXq2sbZ5jwcoNkAuLmMHUurE8GTVd5SfPpRdP9MgF',
+    payload_hash: 'vh3LQUfufR7Z1soGCLdFymvHyW1aHokiEzN8eov9rcgQ4zvWeCuN',
+    payload_round: 1,
+    proof_of_work_nonce: 'ae384fb900000000',
+    liquidity_baking_toggle_vote: 'pass',
+    signature:
+      'signuyFG2mYvJh4WZSzVrSTBTUe7wvS9NYbFqUUqrAEp9ktwjYi8PSwEoTo2Z6cvmZAzPo9ZaSrnehuejvKpYpdXVnazSiHR',
+  },
+  metadata: {
+    protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+    next_protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+    test_chain_status: {
+      status: 'not_running',
+    },
+    max_operations_ttl: 120,
+    max_operation_data_length: 32768,
+    max_block_header_length: 289,
+    max_operation_list_length: [
+      {
+        max_size: 4194304,
+        max_op: 2048,
+      },
+      {
+        max_size: 32768,
+      },
+      {
+        max_size: 135168,
+        max_op: 132,
+      },
+      {
+        max_size: 524288,
+      },
+    ],
+    proposer: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+    baker: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+    level_info: {
+      level: 133163,
+      level_position: 133162,
+      cycle: 32,
+      cycle_position: 2090,
+      expected_commitment: false,
+    },
+    voting_period_info: {
+      voting_period: {
+        index: 32,
+        kind: 'proposal',
+        start_position: 131072,
+      },
+      position: 2090,
+      remaining: 2005,
+    },
+    nonce_hash: null,
+    deactivated: [],
+    balance_updates: [
+      {
+        kind: 'accumulator',
+        category: 'block fees',
+        change: '-16643',
+        origin: 'block',
+      },
+      {
+        kind: 'minted',
+        category: 'baking rewards',
+        change: '-10000000',
+        origin: 'block',
+      },
+      {
+        kind: 'contract',
+        contract: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+        change: '10016643',
+        origin: 'block',
+      },
+      {
+        kind: 'minted',
+        category: 'baking bonuses',
+        change: '-8700580',
+        origin: 'block',
+      },
+      {
+        kind: 'contract',
+        contract: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+        change: '8700580',
+        origin: 'block',
+      },
+    ],
+    liquidity_baking_toggle_ema: 0,
+    implicit_operations_results: [
+      {
+        kind: 'transaction',
+        storage: [
+          {
+            int: '1',
+          },
+          {
+            int: '332905000100',
+          },
+          {
+            int: '100',
+          },
+          {
+            bytes: '01e927f00ef734dfc85919635e9afc9166c83ef9fc00',
+          },
+          {
+            bytes: '0115eb0104481a6d7921160bc982c5e0a561cd8a3a00',
+          },
+        ],
+        balance_updates: [
+          {
+            kind: 'minted',
+            category: 'subsidy',
+            change: '-2500000',
+            origin: 'subsidy',
+          },
+          {
+            kind: 'contract',
+            contract: 'KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5',
+            change: '2500000',
+            origin: 'subsidy',
+          },
+        ],
+        consumed_milligas: '205035',
+        storage_size: '4632',
+      },
+    ],
+    consumed_milligas: '24380000',
+  },
+  operations: [
+    [
+      {
+        protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+        chain_id: 'NetXi2ZagzEsXbZ',
+        hash: 'onyJZz2gwEmspLbZaCd2P7Ws5RF7od6j2685VYrTPDaEZhpDbvx',
+        branch: 'BLeoVyx5LNjQ4ZvnpvdrgFszvSn9KPJVcqmApLaa6bn6VS1vNig',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 2696,
+            level: 133162,
+            round: 0,
+            block_payload_hash: 'vh2vcfabPoDQuNw6HQkZtWEzZkHe1uAmhF2sxta7varX3vriHPKD',
+            metadata: {
+              delegate: 'tz1ehn3nZ8PhiJ2ygtLM3Z5hVtSzU4ZKgqLZ',
+              endorsement_power: 6,
+            },
+          },
+        ],
+        signature:
+          'sigUqaWrk8u6zckJvLfivskoC5mkK62swsfNFq2eAuhFaghLC9LfahFMaEVag3pLjz4WjouVnYa4gekqs85kgH1s7p2hHyP3',
+      },
+    ],
+    [],
+    [],
+    [
+      {
+        protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+        chain_id: 'NetXi2ZagzEsXbZ',
+        hash: 'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+        branch: 'BMNHgXcGnPQo2daGRvXnFV5DX7QfqCwpssPtaL4NWkUhuhYWwdS',
+        contents: [
+          {
+            kind: 'increase_paid_storage',
+            source: 'tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG',
+            fee: '349',
+            counter: '108123',
+            gas_limit: '1000',
+            storage_limit: '0',
+            amount: '2',
+            destination: 'KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG',
+                  change: '-349',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '349',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                balance_updates: [
+                  {
+                    kind: 'contract',
+                    contract: 'tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG',
+                    change: '-500',
+                    origin: 'block',
+                  },
+                  {
+                    kind: 'burned',
+                    category: 'storage fees',
+                    change: '500',
+                    origin: 'block',
+                  },
+                ],
+                consumed_milligas: '1000000',
+              },
+            },
+          },
+        ],
+        signature:
+          'sigdUXgzV3FcbhV7qUAYGCbV86xZEpcBq1S3Acng974GvG8rULLnoNkXn1dvKvfbfvz3zChYCpjcDmR8f1shjAg1uSksceRp',
+      },
+      {
+        protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+        chain_id: 'NetXi2ZagzEsXbZ',
+        hash: 'oorMQ4cCHReHtUdyEqpWBjyAgu59AWYMzSP5bSwi2gSGGHBSLF5',
+        branch: 'BKuq9qvyUfiZH64z7J7nxKAt7HGA1m2rgiR24XrCsAEgBh2JJd1',
+        contents: [
+          {
+            kind: 'transaction',
+            source: 'tz1ejWMc4oNPuYJcs2UBFALuzQy3jKcZxEwL',
+            fee: '673',
+            counter: '84777',
+            gas_limit: '4224',
+            storage_limit: '0',
+            amount: '0',
+            destination: 'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1ejWMc4oNPuYJcs2UBFALuzQy3jKcZxEwL',
+                  change: '-673',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '673',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                storage: {
+                  prim: 'Unit',
+                },
+                consumed_milligas: '2123011',
+                storage_size: '133',
+              },
+              internal_operation_results: [
+                {
+                  kind: 'event',
+                  source: 'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q',
+                  nonce: 0,
+                  type: {
+                    prim: 'or',
+                    args: [
+                      {
+                        prim: 'nat',
+                      },
+                      {
+                        prim: 'string',
+                      },
+                    ],
+                  },
+                  tag: 'event',
+                  payload: {
+                    prim: 'Left',
+                    args: [
+                      {
+                        int: '10',
+                      },
+                    ],
+                  },
+                  result: {
+                    status: 'applied',
+                    consumed_milligas: '1000000',
+                  },
+                },
+                {
+                  kind: 'event',
+                  source: 'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q',
+                  nonce: 1,
+                  type: {
+                    prim: 'or',
+                    args: [
+                      {
+                        prim: 'nat',
+                        annots: ['%number'],
+                      },
+                      {
+                        prim: 'string',
+                        annots: ['%words'],
+                      },
+                    ],
+                  },
+                  tag: 'event',
+                  payload: {
+                    prim: 'Right',
+                    args: [
+                      {
+                        string: 'lorem ipsum',
+                      },
+                    ],
+                  },
+                  result: {
+                    status: 'applied',
+                    consumed_milligas: '1000000',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+        signature:
+          'sigfSTrupvjTWBW4NNXJHLyNEd6gUuD3Jzm9YZzSrH82X3somYZPpgCayRTkzmk1NwxGQCKJHLGsv7xxhVNKsgtxTqF8FEqe',
+      },
+    ],
+  ],
+};
+
+export const blockMondaynetSample = {
+  "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+  "chain_id": "NetXrxsLyu6hTHx",
+  "hash": "BLxSQZzbnjL8yWqo8fJDE6cy2ATPmqQSaLKtheFBzAz4QVTcm5h",
+  "header": {
+    "level": 8215,
+    "proto": 2,
+    "predecessor": "BL9zTL6ejYpVwLLDNvZayft5PADYZMit3GPV3u3huQtYLgfnHFb",
+    "timestamp": "2022-09-14T21:08:52Z",
+    "validation_pass": 4,
+    "operations_hash": "LLob52r9i4cfn4uarsAfQhMAQrHrTgho8snr4kAaiP3tjMptaQ5Vg",
+    "fitness": [
+      "02",
+      "00002017",
+      "",
+      "ffffffff",
+      "00000000"
+    ],
+    "context": "CoWA7xHEpEUv7eLhNHQ7eq6kYQU2J87e9CiMDxHimZ7g9J8aTNCh",
+    "payload_hash": "vh2abve8bjZpFr1FEEH4ySWtXV4svNb7vZ7spty8RGEAQuAPzowv",
+    "payload_round": 0,
+    "proof_of_work_nonce": "d84ec51000000000",
+    "liquidity_baking_toggle_vote": "pass",
+    "signature": "sigYFwK4Y6br6JKypqywernuthHE8oJmVBno7c9n2aM4VN5buviZFu7ABU84C3Lo2bBtrhh563k9Licq2WGoGLgqnpR7vYku"
+  },
+  "metadata": {
+    "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+    "next_protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+    "test_chain_status": {
+      "status": "not_running"
+    },
+    "max_operations_ttl": 120,
+    "max_operation_data_length": 32768,
+    "max_block_header_length": 289,
+    "max_operation_list_length": [
+      {
+        "max_size": 4194304,
+        "max_op": 2048
+      },
+      {
+        "max_size": 32768
+      },
+      {
+        "max_size": 135168,
+        "max_op": 132
+      },
+      {
+        "max_size": 524288
+      }
+    ],
+    "proposer": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+    "baker": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+    "level_info": {
+      "level": 8215,
+      "level_position": 8214,
+      "cycle": 64,
+      "cycle_position": 22,
+      "expected_commitment": false
+    },
+    "voting_period_info": {
+      "voting_period": {
+        "index": 64,
+        "kind": "proposal",
+        "start_position": 8192
+      },
+      "position": 22,
+      "remaining": 105
+    },
+    "nonce_hash": null,
+    "deactivated": [],
+    "balance_updates": [
+      {
+        "kind": "accumulator",
+        "category": "block fees",
+        "change": "-1066",
+        "origin": "block"
+      },
+      {
+        "kind": "minted",
+        "category": "baking rewards",
+        "change": "-10000000",
+        "origin": "block"
+      },
+      {
+        "kind": "contract",
+        "contract": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+        "change": "10001066",
+        "origin": "block"
+      },
+      {
+        "kind": "minted",
+        "category": "baking bonuses",
+        "change": "-9999238",
+        "origin": "block"
+      },
+      {
+        "kind": "contract",
+        "contract": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+        "change": "9999238",
+        "origin": "block"
+      }
+    ],
+    "liquidity_baking_toggle_ema": 0,
+    "implicit_operations_results": [
+      {
+        "kind": "transaction",
+        "storage": [
+          {
+            "int": "1"
+          },
+          {
+            "int": "20535000100"
+          },
+          {
+            "int": "100"
+          },
+          {
+            "bytes": "01e927f00ef734dfc85919635e9afc9166c83ef9fc00"
+          },
+          {
+            "bytes": "0115eb0104481a6d7921160bc982c5e0a561cd8a3a00"
+          }
+        ],
+        "balance_updates": [
+          {
+            "kind": "minted",
+            "category": "subsidy",
+            "change": "-2500000",
+            "origin": "subsidy"
+          },
+          {
+            "kind": "contract",
+            "contract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+            "change": "2500000",
+            "origin": "subsidy"
+          }
+        ],
+        "consumed_milligas": "204995",
+        "storage_size": "4632"
+      }
+    ],
+    "proposer_consensus_key": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+    "baker_consensus_key": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
+    "consumed_milligas": "6009000"
+  },
+  "operations": [
+    [],
+    [],
+    [],
+    [
+      {
+        "protocol": "ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK",
+        "chain_id": "NetXrxsLyu6hTHx",
+        "hash": "oohBkdej63Xf68KKAi9KfBUKzzX9NDQ6uqUa99bgWUCjL5JBAF1",
+        "branch": "BMHnqNtChbedSiBp9XPMmsMHKDmFVkHN64CP1ohyeA2imwLc3W9",
+        "contents": [
+          {
+            "kind": "reveal",
+            "source": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+            "fee": "358",
+            "counter": "1825",
+            "gas_limit": "1000",
+            "storage_limit": "0",
+            "public_key": "edpkuyMNjhh4w8S7iwuKh6bJgE4cjfSEvRRAXC9qHQUE1u9avfZykW",
+            "metadata": {
+              "balance_updates": [
+                {
+                  "kind": "contract",
+                  "contract": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                  "change": "-358",
+                  "origin": "block"
+                },
+                {
+                  "kind": "accumulator",
+                  "category": "block fees",
+                  "change": "358",
+                  "origin": "block"
+                }
+              ],
+              "operation_result": {
+                "status": "applied",
+                "consumed_milligas": "1000000"
+              }
+            }
+          },
+          {
+            "kind": "transfer_ticket",
+            "source": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+            "fee": "708",
+            "counter": "1826",
+            "gas_limit": "5009",
+            "storage_limit": "130",
+            "ticket_contents": {
+              "string": "foobar"
+            },
+            "ticket_ty": {
+              "prim": "string"
+            },
+            "ticket_ticketer": "KT1P57aaa5RgxqMdgoUoerWg8HVwXjbP2vxS",
+            "ticket_amount": "2",
+            "destination": "KT1BnDCAv62hqTQ3kDnMxWGKVpEgdQgX3TPm",
+            "entrypoint": "default",
+            "metadata": {
+              "balance_updates": [
+                {
+                  "kind": "contract",
+                  "contract": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                  "change": "-708",
+                  "origin": "block"
+                },
+                {
+                  "kind": "accumulator",
+                  "category": "block fees",
+                  "change": "708",
+                  "origin": "block"
+                }
+              ],
+              "operation_result": {
+                "status": "applied",
+                "balance_updates": [
+                  {
+                    "kind": "contract",
+                    "contract": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                    "change": "-16500",
+                    "origin": "block"
+                  },
+                  {
+                    "kind": "burned",
+                    "category": "storage fees",
+                    "change": "16500",
+                    "origin": "block"
+                  }
+                ],
+                "consumed_milligas": "2122881",
+                "paid_storage_size_diff": "66"
+              },
+              "internal_operation_results": [
+                {
+                  "kind": "transaction",
+                  "source": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                  "nonce": 0,
+                  "amount": "0",
+                  "destination": "KT1BnDCAv62hqTQ3kDnMxWGKVpEgdQgX3TPm",
+                  "parameters": {
+                    "entrypoint": "default",
+                    "value": {
+                      "prim": "Pair",
+                      "args": [
+                        {
+                          "bytes": "019eee1d62435cc1a5248d89bade87b9760bd7644300"
+                        },
+                        {
+                          "prim": "Pair",
+                          "args": [
+                            {
+                              "string": "foobar"
+                            },
+                            {
+                              "int": "2"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "result": {
+                    "status": "applied",
+                    "storage": {
+                      "prim": "Some",
+                      "args": [
+                        {
+                          "prim": "Pair",
+                          "args": [
+                            {
+                              "bytes": "019eee1d62435cc1a5248d89bade87b9760bd7644300"
+                            },
+                            {
+                              "prim": "Pair",
+                              "args": [
+                                {
+                                  "string": "foobar"
+                                },
+                                {
+                                  "int": "2"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "balance_updates": [
+                      {
+                        "kind": "contract",
+                        "contract": "tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa",
+                        "change": "-11000",
+                        "origin": "block"
+                      },
+                      {
+                        "kind": "burned",
+                        "category": "storage fees",
+                        "change": "11000",
+                        "origin": "block"
+                      }
+                    ],
+                    "consumed_milligas": "2785855",
+                    "storage_size": "90",
+                    "paid_storage_size_diff": "44"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "signature": "sigcwwEnrdbzVXzm2hiiU8KoDK8rxgDzU5GaDj4YGounA53n2kNKQYunVeV5jfqo5hVdzcjskKW8P5WzQLPpDeAJNKB2wHmh"
+      }
+    ]
+  ]
+}
+
 
 export const txRollupState = {
   last_removed_commitment_hashes: null,

@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     ithacanet('Originates a contract with a single sapling state in its storage for Ithaca', async (done) => {
        const op = await Tezos.contract.originate({
-        code: singleSaplingStateContract,
+       code: singleSaplingStateContract,
          init: '{}'
        });
        await op.confirmation();

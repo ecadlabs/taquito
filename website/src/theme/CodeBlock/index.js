@@ -24,12 +24,13 @@ import {
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { InMemorySigner, importKey } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
-import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
-import { ThanosWallet } from '@thanos-wallet/dapp';
+import { RpcClient } from '@taquito/rpc';
+import { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } from '@taquito/sapling';
+import { TempleWallet } from '@temple-wallet/dapp';
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
@@ -89,7 +90,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+    const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com/');
 
     return (
       <Playground
@@ -118,8 +119,7 @@ export default ({
           MichelsonStorageView,
           Tzip12Module, 
           tzip12,
-          TezBridgeWallet,
-          ThanosWallet, 
+          TempleWallet, 
           DerivationType, 
           TransportWebHID,
           compose,
@@ -129,7 +129,11 @@ export default ({
           verifySignature,
           Parser, 
           packDataBytes, 
-          RpcReadAdapter
+          RpcReadAdapter,
+          SaplingToolkit,
+          RpcClient,
+          InMemorySpendingKey,
+          InMemoryViewingKey
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

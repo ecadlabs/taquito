@@ -22,6 +22,8 @@
     },
     "ignorePatterns": [
         "**/dist/**",
-        "**/rollup*.ts"
+        "**/rollup*.ts",
+        "**/saplingOutputParams.js",
+        "**/saplingSpendParams.js"
     ]
 }

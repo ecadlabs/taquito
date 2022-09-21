@@ -1,10 +1,10 @@
-import { ContractAbstraction, ContractProvider } from "taquito/src/contract";
+import { ContractAbstraction, ContractProvider } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { tokenCode, tokenInit } from "./data/tokens";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
+
   let contract: ContractAbstraction<ContractProvider>;
 
   describe(`Test contract origination of a token contract through contract api using: ${rpc}`, () => {
