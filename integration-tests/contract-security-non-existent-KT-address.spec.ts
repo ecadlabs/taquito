@@ -1,15 +1,14 @@
 import { CONFIGS } from './config';
-import { RpcClient } from '@taquito/rpc';
-import { Protocols, TezosToolkit } from '@taquito/taquito';
+import { Protocols } from '@taquito/taquito';
 
 // TC001 - non-existing KT addresses can not be prefunded
 
 // KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn is the tzBTC contract on mainnet
 
-const Tezos = new TezosToolkit(new RpcClient(' https://mondaynet.ecadinfra.com:8732'));
 const testContractAddress = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
 
-CONFIGS().forEach(({ rpc, setup, protocol }) => {
+CONFIGS().forEach(({ rpc, setup, protocol, lib }) => {
+  const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {

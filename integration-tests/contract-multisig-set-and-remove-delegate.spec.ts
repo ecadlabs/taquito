@@ -11,18 +11,26 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done()
     })
     test('test manager transfers set delegate scenarios', async () => {
+      // create a new account that won't already be registered as a delegate
+      const testAccount = await createAddress();
+      const pkh = await testAccount.signer.publicKeyHash();
+      // fund testAccount
+      const fundOp = await Tezos.contract.transfer({
+        to: pkh,
+        amount: 5
+      })
+      await fundOp.confirmation();
+
+      const op = await testAccount.contract.registerDelegate({});
+      await op.confirmation()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
 
-      const pkh = await Tezos.signer.publicKeyHash();
-      const op = await Tezos.contract.registerDelegate({});
-      await op.confirmation()
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-
-      const op2 = await Tezos.contract.originate({
+      const op2 = await testAccount.contract.originate({
         balance: "1",
         code: genericMultisig,
         storage: {
@@ -34,7 +42,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const contract = await op2.contract();
       expect(op2.status).toEqual('applied')
 
-      const delegate = await Tezos.rpc.getDelegate(contract.address)
+      const delegate = await testAccount.rpc.getDelegate(contract.address)
       expect(delegate).toEqual(null)  
 
       const pair = ({ data, type }: any, value: any) => {
@@ -50,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       }
 
-      const packed = await Tezos.rpc.packData(pair({
+      const packed = await testAccount.rpc.packData(pair({
         data: {
           prim: 'Pair',
           args: [
@@ -121,10 +129,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       ).send()
       await op3.confirmation();
 
-      const check_the_delegate = await Tezos.rpc.getDelegate(contract.address)
+      const check_the_delegate = await testAccount.rpc.getDelegate(contract.address)
       expect(check_the_delegate).toEqual(pkh)  
 
-      const packed2 = await Tezos.rpc.packData(pair({
+      const packed2 = await testAccount.rpc.packData(pair({
         data: {
           prim: 'Pair',
           args: [
@@ -195,7 +203,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       ).send()
 
       await op4.confirmation();
-      const check_the_delegate_again = await Tezos.rpc.getDelegate(contract.address)
+      const check_the_delegate_again = await testAccount.rpc.getDelegate(contract.address)
       expect(check_the_delegate_again).toEqual(null)  
 
     })

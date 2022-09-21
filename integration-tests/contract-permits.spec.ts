@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { MichelsonMap, MichelCodecPacker, TezosToolkit } from '@taquito/taquito';
+import { MichelsonMap, MichelCodecPacker, TezosToolkit, ContractAbstraction, ContractProvider } from '@taquito/taquito';
 import { permit_admin_42_expiry } from './data/permit_admin_42_expiry';
 import { permit_admin_42_set } from './data/permit_admin_42_set';
 import { permit_fa12_smartpy } from './data/permit_fa12_smartpy';
@@ -10,11 +10,10 @@ import { packDataBytes } from "@taquito/michel-codec"
 const blake = require('blakejs');
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
 
-const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string, methodHash: string) => {
+const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAbs: ContractAbstraction<ContractProvider>, methodHash: string) => {
   const chainId = await Tezos.rpc.getChainId();
 
-  const contract = await Tezos.contract.at(contractAddress)
-  const contractStorage: any = await contract.storage();
+  const contractStorage: any = await contractAbs.storage();
   let counter = 0;
   if (contractStorage.hasOwnProperty("counter")) {
     counter = contractStorage.counter.toNumber();
@@ -31,7 +30,7 @@ const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string
             string: chainId
           },
           {
-            string: contractAddress
+            string: contractAbs.address
           }
         ]
       },
@@ -93,11 +92,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
           2: bob_address,
         },
       });
-      await op.confirmation();
+      const permit_contract = await op.contract();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      const permit_contract = await op.contract();
-
       expect(op.status).toEqual('applied');
 
       const signer_key = await Tezos.signer.publicKey();
@@ -111,7 +108,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const packed_param = raw_packed.packed;
       const param_hash = buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
 
-      const param_sig = await create_bytes_to_sign(Tezos, permit_contract.address, param_hash)
+      const param_sig = await create_bytes_to_sign(Tezos, permit_contract, param_hash)
 
       const permitMethodCall = await permit_contract.methods
         .permit(signer_key, param_sig, param_hash)
@@ -134,10 +131,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
           4: bob_address,
         },
       });
-      await op.confirmation();
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const expiry_contract = await op.contract();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       expect(op.status).toEqual('applied');
 
       const setExpiryMethodCall = await expiry_contract.methods
@@ -165,10 +161,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
           4: await Tezos.signer.publicKeyHash(),
         },
       });
-      await op.confirmation();
+      const defaultExpiry_contract = await op.contract();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      const defaultExpiry_contract = await op.contract();
       expect(op.status).toEqual('applied');
 
       const defaultExpiryMethodCall = await defaultExpiry_contract.methods
@@ -206,10 +201,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         },
       });
 
-      await op.confirmation();
+      const fa12_contract = await op.contract();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      const fa12_contract = await op.contract();
       const contractAddress = fa12_contract.address;
       expect(op.status).toEqual('applied');
 
@@ -246,140 +240,140 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       done();
     });
+  });
 
-    describe(`Test of contracts having a permit for tzip-17: ${rpc}`, () => {
-      beforeEach(async (done) => {
-        await setup(true);
-        done();
+  describe(`Test of contracts having a permit for tzip-17: ${rpc}`, () => {
+    beforeEach(async (done) => {
+      await setup(true);
+      done();
+    });
+
+    test('Show that any user can submit the permit hash to use an entrypoint', async (done) => {
+      //following https://github.com/EGuenz/smartpy-permits
+
+      const LocalTez1 = await createAddress();
+      const bootstrap1_address = await LocalTez1.signer.publicKeyHash();
+      const funding_op1 = await Tezos.contract.transfer({
+        to: bootstrap1_address,
+        amount: 0.1,
+      });
+      await funding_op1.confirmation();
+
+      const LocalTez2 = await createAddress();
+      const bootstrap2_address = await LocalTez2.signer.publicKeyHash();
+      const funding_op2 = await Tezos.contract.transfer({
+        to: bootstrap2_address,
+        amount: 0.1,
+      });
+      await funding_op2.confirmation();
+
+      const LocalTez3 = await createAddress();
+      const bootstrap3_address = await LocalTez3.signer.publicKeyHash();
+      const funding_op3 = await Tezos.contract.transfer({
+        to: bootstrap3_address,
+        amount: 0.1,
+      });
+      await funding_op3.confirmation();
+
+      const LocalTez4 = await createAddress();
+      const bootstrap4_address = await LocalTez4.signer.publicKeyHash();
+      const funding_op4 = await Tezos.contract.transfer({
+        to: bootstrap4_address,
+        amount: 0.1,
+      });
+      await funding_op4.confirmation();
+
+      //Originate permit-fa1.2 contract with bootstrap1_address as administrator
+      const url = 'https://storage.googleapis.com/tzip-16/permit_metadata.json';
+      const bytesUrl = char2Bytes(url);
+      const metadata = new MichelsonMap();
+      metadata.set('', bytesUrl);
+
+      const op = await Tezos.contract.originate({
+        code: permit_fa12_smartpy,
+        storage: {
+          administrator: await LocalTez1.signer.publicKeyHash(),
+          balances: new MichelsonMap(),
+          counter: '0',
+          default_expiry: '50000',
+          max_expiry: '2628000',
+          metadata: metadata,
+          paused: false,
+          permit_expiries: new MichelsonMap(),
+          permits: new MichelsonMap(),
+          totalSupply: '100',
+          user_expiries: new MichelsonMap(),
+        },
       });
 
-      test('Show that any user can submit the permit hash to use an entrypoint', async (done) => {
-        //following https://github.com/EGuenz/smartpy-permits
+      const fa12_contract = await op.contract();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      expect(op.status).toEqual('applied');
 
-        const LocalTez1 = await createAddress();
-        const bootstrap1_address = await LocalTez1.signer.publicKeyHash();
-        const funding_op1 = await Tezos.contract.transfer({
-          to: bootstrap1_address,
-          amount: 0.1,
-        });
-        await funding_op1.confirmation();
+      //Mint 10 tokens to bootstrap 2
+      const mint_contract = await LocalTez1.contract.at(fa12_contract.address);
+      const mint = await mint_contract.methods.mint(bootstrap2_address, 10).send();
+      await mint.confirmation();
+      expect(mint.hash).toBeDefined();
+      expect(mint.status).toEqual('applied');
 
-        const LocalTez2 = await createAddress();
-        const bootstrap2_address = await LocalTez2.signer.publicKeyHash();
-        const funding_op2 = await Tezos.contract.transfer({
-          to: bootstrap2_address,
-          amount: 0.1,
-        });
-        await funding_op2.confirmation();
 
-        const LocalTez3 = await createAddress();
-        const bootstrap3_address = await LocalTez3.signer.publicKeyHash();
-        const funding_op3 = await Tezos.contract.transfer({
-          to: bootstrap3_address,
-          amount: 0.1,
-        });
-        await funding_op3.confirmation();
+      //Observe transfer by non bootstrap2 sender fails
+      const fail_contract = await LocalTez4.contract.at(fa12_contract.address);
+      try {
+        await fail_contract.methods.transfer(bootstrap3_address, bootstrap4_address, 1).send();
+      } catch (errors) {
+        let jsonStr: string = JSON.stringify(errors);
+        let jsonObj = JSON.parse(jsonStr);
+        let error_code = JSON.stringify(jsonObj.errors[1].with.int);
+        expect((error_code = '26'));
+      }
 
-        const LocalTez4 = await createAddress();
-        const bootstrap4_address = await LocalTez4.signer.publicKeyHash();
-        const funding_op4 = await Tezos.contract.transfer({
-          to: bootstrap4_address,
-          amount: 0.1,
-        });
-        await funding_op4.confirmation();
+      //Define a fake permit parameter to get the expected unsigned bytes
+      const transfer_param: any = fa12_contract.methods['transfer'](
+        bootstrap2_address,
+        bootstrap3_address,
+        1
+      ).toTransferParams().parameter?.value;
+      const type = fa12_contract.entrypoints.entrypoints['transfer'];
+      const TRANSFER_PARAM_PACKED = await Tezos.rpc.packData({
+        data: transfer_param,
+        type: type,
+      });
 
-        //Originate permit-fa1.2 contract with bootstrap1_address as administrator
-        const url = 'https://storage.googleapis.com/tzip-16/permit_metadata.json';
-        const bytesUrl = char2Bytes(url);
-        const metadata = new MichelsonMap();
-        metadata.set('', bytesUrl);
+      //Get the BLAKE2B of TRANSFER_PARAM_PACKED
+      const packed_param = TRANSFER_PARAM_PACKED.packed;
+      const TRANSFER_PARAM_HASHED = buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
 
-        const op = await Tezos.contract.originate({
-          code: permit_fa12_smartpy,
-          storage: {
-            administrator: await LocalTez1.signer.publicKeyHash(),
-            balances: new MichelsonMap(),
-            counter: '0',
-            default_expiry: '50000',
-            max_expiry: '2628000',
-            metadata: metadata,
-            paused: false,
-            permit_expiries: new MichelsonMap(),
-            permits: new MichelsonMap(),
-            totalSupply: '100',
-            user_expiries: new MichelsonMap(),
+      //Get Bootstrap2's public_key and capture it
+      const PUB_KEY = await LocalTez2.signer.publicKey();
+      const SIGNATURE = await create_bytes_to_sign(LocalTez2, fa12_contract, TRANSFER_PARAM_HASHED)
+
+      //Anyone can submit permit start
+      const signed_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
+      const permit_contract = await signed_permit_contract.methods
+        .permit([
+          {
+            0: PUB_KEY, //key,
+            1: SIGNATURE, //signature
+            2: TRANSFER_PARAM_HASHED, //bytes
           },
-        });
+        ])
+        .send();
+      await permit_contract.confirmation();
+      expect(permit_contract.hash).toBeDefined();
+      expect(permit_contract.status).toEqual('applied');
 
-        await op.confirmation();
-        expect(op.hash).toBeDefined();
-        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-        const fa12_contract = await op.contract();
-        expect(op.status).toEqual('applied');
+      // Successfully execute transfer away from bootstrap2 by calling transfer endpoint from any account
+      const successful_transfer = await signed_permit_contract.methods
+        .transfer(bootstrap2_address, bootstrap3_address, 1)
+        .send();
+      await successful_transfer.confirmation();
+      expect(successful_transfer.hash).toBeDefined();
+      expect(successful_transfer.status).toEqual('applied');
 
-        //Mint 10 tokens to bootstrap 2
-        const mint_contract = await LocalTez1.contract.at(fa12_contract.address);
-        const mint = await mint_contract.methods.mint(bootstrap2_address, 10).send();
-        expect(mint.hash).toBeDefined();
-        expect(mint.status).toEqual('applied');
-        await mint.confirmation();
-
-        //Observe transfer by non bootstrap2 sender fails
-        const fail_contract = await LocalTez4.contract.at(fa12_contract.address);
-        try {
-          await fail_contract.methods.transfer(bootstrap3_address, bootstrap4_address, 1).send();
-        } catch (errors) {
-          let jsonStr: string = JSON.stringify(errors);
-          let jsonObj = JSON.parse(jsonStr);
-          let error_code = JSON.stringify(jsonObj.errors[1].with.int);
-          expect((error_code = '26'));
-        }
-
-        //Define a fake permit parameter to get the expected unsigned bytes
-        const transfer_param: any = fa12_contract.methods['transfer'](
-          bootstrap2_address,
-          bootstrap3_address,
-          1
-        ).toTransferParams().parameter?.value;
-        const type = fa12_contract.entrypoints.entrypoints['transfer'];
-        const TRANSFER_PARAM_PACKED = await Tezos.rpc.packData({
-          data: transfer_param,
-          type: type,
-        });
-
-        //Get the BLAKE2B of TRANSFER_PARAM_PACKED
-        const packed_param = TRANSFER_PARAM_PACKED.packed;
-        const TRANSFER_PARAM_HASHED = buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
-
-        //Get Bootstrap2's public_key and capture it
-        const PUB_KEY = await LocalTez2.signer.publicKey();
-        const SIGNATURE = await create_bytes_to_sign(LocalTez2, fa12_contract.address, TRANSFER_PARAM_HASHED)
-
-        //Anyone can submit permit start
-        const signed_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
-        const permit_contract = await signed_permit_contract.methods
-          .permit([
-            {
-              0: PUB_KEY, //key,
-              1: SIGNATURE, //signature
-              2: TRANSFER_PARAM_HASHED, //bytes
-            },
-          ])
-          .send();
-        await permit_contract.confirmation();
-        expect(permit_contract.hash).toBeDefined();
-        expect(permit_contract.status).toEqual('applied');
-
-        //Successfully execute transfer away from bootstrap2  by calling transfer endpoint from any account
-        const successful_transfer = await signed_permit_contract.methods
-          .transfer(bootstrap2_address, bootstrap3_address, 1)
-          .send();
-        await successful_transfer.confirmation();
-        expect(successful_transfer.hash).toBeDefined();
-        expect(successful_transfer.status).toEqual('applied');
-
-        done();
-      });
+      done();
     });
   });
 });
