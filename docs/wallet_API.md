@@ -69,7 +69,7 @@ Then, you can start initializing the wallet:
 const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://tezostaquito.io/img/favicon.svg',
-  preferredNetwork: 'jakartanet',
+  preferredNetwork: 'kathmandunet',
   eventHandlers: {
     PERMISSION_REQUEST_SUCCESS: {
       handler: async (data) => {
@@ -81,9 +81,9 @@ const options = {
 const wallet = new BeaconWallet(options);
 ```
 
-The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/src/events.ts).
+The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
 
-> Note: if you want to use the Kukai wallet for testing on jakartanet, you must use the optional property `preferredNetwork` and set it to `jakartanet`, otherwise the mainnet version of the Kukai wallet will open.
+> Note: if you want to use the Kukai wallet for testing on kathmandunet, you must use the optional property `preferredNetwork` and set it to `kathmandunet`, otherwise the mainnet version of the Kukai wallet will open.
 
 The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
 
@@ -123,7 +123,7 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 // const wallet = new BeaconWallet(options);
 
 wallet
-  .requestPermissions({ network: { type: 'jakartanet' } })
+  .requestPermissions({ network: { type: 'kathmandunet' } })
   .then((_) => wallet.getPKH())
   .then((address) => println(`Your address: ${address}`));
 
@@ -202,7 +202,7 @@ TempleWallet.isAvailable()
   .then(() => {
     const mywallet = new TempleWallet('MyAwesomeDapp');
     mywallet
-      .connect('jakartanet')
+      .connect('kathmandunet')
       .then(() => {
         Tezos.setWalletProvider(mywallet);
         return mywallet.getPKH();
@@ -250,15 +250,6 @@ Tezos.setWalletProvider(wallet);
 const userAddress = await wallet.getPKH();
 ```
 
-#### Try the TezBridge wallet! (deprecated v13)
-
-```js live noInline wallet
-//import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
-const wallet = new TezBridgeWallet();
-Tezos.setWalletProvider(wallet);
-wallet.getPKH().then((userAddress) => println(`Your address: ${userAddress}`));
-```
-
 ## Making transfers
 
 Although it is possible to transfer tokens directly from the wallets, Taquito offers to send tokens programmatically. This method could be a better solution if you want to do calculations before sending the tokens or if the amount of tokens to send is based on a variable value. This could also be preferable to avoid manual inputs that can often be a source of errors. Using Taquito to send tokens only requires to sign a transaction, sit back and relax :)
@@ -291,7 +282,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ```js live noInline wallet
 Tezos.wallet
-  .transfer({ to: 'KT1T1KsEcVvsVGoHYrzjCzuJjviUDM3uyGmh', amount: 0.2 })
+  .transfer({ to: 'KT1PCnEwqaNrWHzkrmqqcEzH253rFKE49EYn', amount: 0.2 })
   .send()
   .then((op) => {
     println(`Waiting for ${op.opHash} to be confirmed...`);
@@ -325,7 +316,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1C9Vjt3p3whEst9h1ykmNMFiQ36QfkYdDW')
+  .at('KT1HNgQQEUb7mDmnmLKy4xcq1xdPw3ieoKzv')
   .then((contract) => contract.methods.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -348,7 +339,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1C9Vjt3p3whEst9h1ykmNMFiQ36QfkYdDW')
+  .at('KT1HNgQQEUb7mDmnmLKy4xcq1xdPw3ieoKzv')
   .then((contract) =>
     contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
   )
@@ -673,7 +664,7 @@ The Tezos singleton object exposes a _wallet_ property in the same fashion it ex
 We have already seen the `at` method of the Wallet instance earlier in order to create the contract abstraction:
 
 ```js
-const contract = await Tezos.wallet.at('KT1XW9MAxDqF4LwVps86meQ5ihEXyAepmZDm');
+const contract = await Tezos.wallet.at('KT1HNgQQEUb7mDmnmLKy4xcq1xdPw3ieoKzv');
 ```
 
 The method is a promise that expects the contract's address for which you want to create the abstraction.

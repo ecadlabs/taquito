@@ -5,13 +5,13 @@ import { contractWithNever } from './data/contract-with-never-in-param';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 	const Tezos = lib;
-	describe(`Originate a voting contract using: ${rpc}`, () => {
+	describe(`Test contract origination with type never through contract api using: ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
 			done();
 		});
 
-		it('originates a contract and tries to call its %admin entry-point of type never, expect the method call to fail', async (done) => {
+		it('Verify contract.originate for a contract and then try to call its %admin entry-point of type never, expect the method call to fail', async (done) => {
 			const op = await Tezos.contract.originate({
 				code: contractWithNever,
 				storage: {
@@ -40,7 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 
 
-		it('originates a contract having the type never in a set in its storage', async (done) => {
+		it('Verify contract.originate for a contract having the type never in a set in its storage', async (done) => {
 			const code = [
 				{ prim: 'parameter', args: [{ prim: 'unit' }] },
 				{ prim: 'storage', args: [{ prim: 'set', args: [{ prim: 'never' }] }] },
