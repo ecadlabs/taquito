@@ -25,7 +25,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@ledgerhq/hw-transport-webhid": "^6.27.2",
+    "@ledgerhq/hw-transport-webhid": "^6.27.3",
     "@mdx-js/react": "^1.6.21",
     "@svgr/webpack": "^6.3.1",
     "@taquito/beacon-wallet": "^14.0.0",
