@@ -7,7 +7,6 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
     const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
-    const ithacanet = (protocol === Protocols.Psithaca2) ? test : test.skip;
     const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
     describe('Test fetching constants for all protocols on Mainnet', () => {
@@ -591,64 +590,6 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
     })
 
     describe(`Fetch constants for testnet`, () => {
-
-        ithacanet(`successfully fetches all constants for ithacanet using ${rpc}`, async (done) => {
-            Tezos.setRpcProvider(rpc);
-            const constants: ConstantsResponseProto012 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
-
-            expect(constants).toEqual({
-                proof_of_work_nonce_size: 8,
-                nonce_length: 32,
-                max_anon_ops_per_block: 132,
-                max_operation_data_length: 32768,
-                max_proposals_per_delegate: 20,
-                preserved_cycles: 3,
-                blocks_per_cycle: 4096,
-                blocks_per_commitment: 32,
-                blocks_per_voting_period: 20480,
-                hard_gas_limit_per_operation: new BigNumber(1040000),
-                hard_gas_limit_per_block: new BigNumber(5200000),
-                proof_of_work_threshold: new BigNumber(70368744177663),
-                tokens_per_roll: new BigNumber(6000000000),
-                seed_nonce_revelation_tip: new BigNumber(125000),
-                origination_size: 257,
-                cost_per_byte: new BigNumber(250),
-                hard_storage_limit_per_operation: new BigNumber(60000),
-                quorum_min: 2000,
-                quorum_max: 7000,
-                min_proposal_quorum: 500,
-                liquidity_baking_subsidy: new BigNumber(2500000),
-                liquidity_baking_sunset_level: 10000000,
-                liquidity_baking_escape_ema_threshold: 666667,
-                max_allowed_global_constants_depth: 10000,
-                max_micheline_bytes_limit: 50000,
-                max_micheline_node_count: 50000,
-                michelson_maximum_type_size: 2001,
-                cache_layout: [new BigNumber(100000000), new BigNumber(240000), new BigNumber(2560)],
-                blocks_per_stake_snapshot: 256,
-                baking_reward_fixed_portion: new BigNumber(5000000),
-                baking_reward_bonus_per_slot: new BigNumber(2143),
-                endorsing_reward_per_slot: new BigNumber(1428),
-                max_operations_time_to_live: 120,
-                consensus_committee_size: 7000,
-                consensus_threshold: 4667,
-                minimal_participation_ratio: {
-                    denominator: 3,
-                    numerator: 2,
-                },
-                max_slashing_period: 2,
-                frozen_deposits_percentage: 10,
-                double_baking_punishment: new BigNumber(640000000),
-                ratio_of_frozen_deposits_slashed_per_double_endorsement: {
-                    denominator: 2,
-                    numerator: 1,
-                },
-                minimal_block_delay: new BigNumber(15),
-                delay_increment_per_round: new BigNumber(5)
-            });
-
-            done();
-        })
 
         jakartanet(`successfully fetches all constants for jakartanet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
