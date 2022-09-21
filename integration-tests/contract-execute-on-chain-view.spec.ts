@@ -56,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         '1': new BigNumber(2000000), // BALANCE is the balance of the contract where the view is
         '2': contract.address, // SELF_ADDRESS is the address of the contract where the view is
         '3': contract.address, // SENDER
-        '4': await Tezos.wallet.pkh() // SOURCE
+        '4': source // SOURCE
       });
 
       // return parameter of the view and storage value
@@ -75,10 +75,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await contract.contractViews.test_failwith(3).executeView({ viewCaller: contract.address });
       } catch (error: any) {
         const protocol = (await Tezos.rpc.getProtocols()).protocol
-        if(protocol === Protocols.PtKathman) {
-          expect(error).toBeInstanceOf(ViewSimulationError)
-        } else {
+        if(protocol === Protocols.PtJakart2) {
           expect(error).toBeInstanceOf(HttpResponseError)
+        } else {
+          expect(error).toBeInstanceOf(ViewSimulationError)
         }
       }
 
