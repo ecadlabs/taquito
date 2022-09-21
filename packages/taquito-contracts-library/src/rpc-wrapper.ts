@@ -16,6 +16,7 @@ import {
   defaultRPCOptions,
   DelegateResponse,
   DelegatesResponse,
+  VotingInfoResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -139,6 +140,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<DelegatesResponse> {
     return this.rpc.getDelegates(address, { block });
+  }
+  async getVotingInfo(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<VotingInfoResponse> {
+    return this.rpc.getVotingInfo(address, { block });
   }
   async getConstants({ block }: RPCOptions = defaultRPCOptions): Promise<ConstantsResponse> {
     return this.rpc.getConstants({ block });

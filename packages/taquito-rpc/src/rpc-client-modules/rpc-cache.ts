@@ -19,6 +19,7 @@ import {
   CurrentQuorumResponse,
   DelegateResponse,
   DelegatesResponse,
+  VotingInfoResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -465,6 +466,34 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getDelegates(address, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   *
+   * @param address delegate address which we want to retrieve
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Returns the delegate info (e.g. voting power) found in the listings of the current voting period.
+   *
+   * @see https://tezos.gitlab.io/kathmandu/rpc.html#get-block-id-context-delegates-pkh-voting-info
+   */
+
+  async getVotingInfo(
+    address: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<VotingInfoResponse> {
+    this.validateAddress(address);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_VOTING_INFO, [
+      block,
+      address,
+    ]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getVotingInfo(address, { block });
       this.put(key, response);
       return response;
     }
