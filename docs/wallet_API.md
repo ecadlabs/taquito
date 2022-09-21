@@ -81,7 +81,7 @@ const options = {
 const wallet = new BeaconWallet(options);
 ```
 
-The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/src/events.ts).
+The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
 
 > Note: if you want to use the Kukai wallet for testing on kathmandunet, you must use the optional property `preferredNetwork` and set it to `kathmandunet`, otherwise the mainnet version of the Kukai wallet will open.
 
