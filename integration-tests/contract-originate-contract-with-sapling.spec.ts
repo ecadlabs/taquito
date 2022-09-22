@@ -1,10 +1,15 @@
 import { CONFIGS } from './config';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Protocols } from '@taquito/taquito';
 import { SaplingStateAbstraction } from 'taquito/src/contract/sapling-state-abstraction';
 =======
 import { SaplingStateAbstraction } from '@taquito/taquito';
 >>>>>>> master
+=======
+import { Protocols } from '@taquito/taquito';
+import { SaplingStateAbstraction } from 'taquito/src/contract/sapling-state-abstraction';
+>>>>>>> ed79c150dade9bdc55e907e7f374ca3cf349f71e
 import {
   saplingContractDouble,
   saplingContractDrop,
