@@ -1,22 +1,8 @@
 import { CONFIGS } from './config';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { Protocols } from '@taquito/taquito';
-import { SaplingStateAbstraction } from 'taquito/src/contract/sapling-state-abstraction';
-=======
 import { SaplingStateAbstraction } from '@taquito/taquito';
->>>>>>> master
-=======
-import { Protocols } from '@taquito/taquito';
-import { SaplingStateAbstraction } from 'taquito/src/contract/sapling-state-abstraction';
->>>>>>> ed79c150dade9bdc55e907e7f374ca3cf349f71e
 import {
-  saplingContractDouble,
-  saplingContractDrop,
-  saplingContractSend,
   saplingContractStateAsArg,
   saplingContractPushSaplingState,
-  saplingContractUseExistingState,
   saplingContractDoubleJProto,
   saplingContractDropJProto,
   saplingContractSendJProto,
@@ -31,13 +17,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     right: SaplingStateAbstraction;
   }
 
-  describe(`Test contract origination with sapling through contract api using: ${rpc}`, () => {
+  describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     });
 
-      test('Originates a Sapling Double contract on Mondaynet', async (done) => {
+    test('Originates a Sapling Double contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractDoubleJProto,
         init: `(Pair {} {})`,
@@ -60,7 +46,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(saplingStateLedger1.commitments_and_ciphertexts.length).toEqual(0);
 
       done();
-    }); 
+    });
 
     test('Originates a Sapling Drop contract', async (done) => {
       const op = await Tezos.contract.originate({
@@ -123,7 +109,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Originates a Use Existing State Sapling contract on Mondaynet', async (done) => {
+    test('Originates a Use Existing State Sapling contract', async (done) => {
       const op = await Tezos.contract.originate({
         code: saplingContractUseExistingStateJProto,
         init: `{}`,
@@ -146,5 +132,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(saplingDiff.commitments_and_ciphertexts.length).toEqual(0);
       done();
     });
-  });
+
+    });
 });
