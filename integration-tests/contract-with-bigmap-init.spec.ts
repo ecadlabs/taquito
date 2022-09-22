@@ -6,13 +6,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
-  describe(`Token with big map and with initial data using: ${rpc}`, () => {
+  describe(`Test token contract origination with big map and with initial data through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('Originate token contract with big map and with initialize storage/bigmaps',2, async (done: () => void) => {
+    test('Verify contract.originate for a token contract with BigMap and with initialized Storage/BigMap',2, async (done: () => void) => {
       const addr = await Tezos.signer.publicKeyHash();
       const initialStorage = {
         owner: addr,

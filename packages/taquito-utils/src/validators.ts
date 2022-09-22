@@ -27,7 +27,6 @@ export function isValidPrefix(value: unknown): value is Prefix {
  * @param prefixes prefix the value should have
  */
 function validatePrefixedValue(value: string, prefixes: Prefix[]) {
-
   const match = new RegExp(`^(${prefixes.join('|')})`).exec(value);
   if (!match || match.length === 0) {
     return ValidationResult.NO_PREFIX_MATCHED;
@@ -65,7 +64,7 @@ const signaturePrefix = [Prefix.EDSIG, Prefix.P2SIG, Prefix.SPSIG, Prefix.SIG];
 const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK, Prefix.BLPK];
 const operationPrefix = [Prefix.O];
 const protocolPrefix = [Prefix.P];
-const blockPrefix = [Prefix.B]
+const blockPrefix = [Prefix.B];
 
 /**
  * @description Used to check if an address or a contract address is valid.
@@ -236,4 +235,13 @@ export function validateProtocol(value: string): ValidationResult {
  */
 export function validateBlock(value: string): ValidationResult {
   return validatePrefixedValue(value, blockPrefix);
+}
+
+/**
+ * @description Used to check if a spending key is valid.
+ * @returns 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ *
+ */
+export function validateSpendingKey(value: any): ValidationResult {
+  return validatePrefixedValue(value, [Prefix.SASK]);
 }

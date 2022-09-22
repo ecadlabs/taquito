@@ -153,6 +153,21 @@ export abstract class OperationEmitter {
               ...getSource(op),
               ...getFee(op),
             };
+          case OpKind.TRANSFER_TICKET:
+            return {
+              ...op,
+              ticket_amount: `${op.ticket_amount}`,
+              ...getSource(op),
+              ...getFee(op),
+            };
+          case OpKind.INCREASE_PAID_STORAGE:
+            return {
+              ...op,
+              amount: `${op.amount}`,
+              ...getSource(op),
+              ...getFee(op),
+            };
+
           default:
             throw new InvalidOperationKindError((op as any).kind);
         }

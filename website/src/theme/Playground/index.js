@@ -36,6 +36,33 @@ class SemiLiveProvider extends LiveProvider {
   run() {
     const { scope, transformCode, noInline } = this.props;
 
+    const template = () => {
+      if (this.props.wallet) {
+        return `const network = {type:"kathmandunet"};
+        wallet.requestPermissions({network})
+        .then(permission => {
+          return Tezos.setWalletProvider(wallet);
+        })
+        .then(() => {
+          ${this.code}
+        });`
+      } else if (this.props.noConfig) {
+        return this.code
+      } else {
+        return `fetch('https://api.tez.ie/keys/kathmandunet', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer taquito-example' },
+        })
+        .then(response => response.text())
+        .then(privateKey => {
+          return importKey(Tezos, privateKey);
+         })
+        .then(() => {
+          ${this.code}
+         });`
+      }
+    }
+
     // The following piece of code provides additional functionality to the user code such as prinln function and key import
     const code = `
 let _printlnBuffer = "";
@@ -46,26 +73,7 @@ function println(value) {
   render(_printlnBuffer);
 }
 
-${this.props.wallet ?
-  `const network = {type:"jakartanet"};
-  wallet.requestPermissions({network})
-  .then(permission => {
-    return Tezos.setWalletProvider(wallet);
-  })
-  .then(() => {
-    ${this.code}
-  });`:
-  `fetch('https://api.tez.ie/keys/jakartanet', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer taquito-example' },
-  })
-  .then(response => response.text())
-  .then(privateKey => {
-    return importKey(Tezos, privateKey);
-   })
-  .then(() => {
-    ${this.code}
-   });`}
+${template()}
 
 //contract used in example "estimate a contract origination"
 const genericMultisigJSONfile =
