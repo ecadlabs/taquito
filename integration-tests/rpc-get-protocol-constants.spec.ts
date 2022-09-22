@@ -5,12 +5,11 @@ import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponsePr
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
     const Tezos = lib;
-
     const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
-    const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
+    const alpha = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
-    describe('Fetch constants for all protocols on Mainnet', () => {
+    describe('Test fetching constants for all protocols on Mainnet', () => {
 
         const rpcUrl = 'https://mainnet-archive.api.tez.ie/';
         Tezos.setRpcProvider(rpcUrl)
@@ -24,7 +23,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto1 constants at level 1', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto1 constants at level 1', async (done) => {
             // Get constants for protocol
             const constants = await Tezos.rpc.getConstants({ block: "1" });
             expect(Object.keys(constants)).toHaveLength(24)
@@ -55,7 +54,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto1 constants at level 2', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto1 constants at level 2', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "2" });
             expect(Object.keys(constants)).toHaveLength(24)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -86,7 +85,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
 
-        it('successfully fetches Proto2 constants at level 100000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto2 constants at level 100000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "100000" });
             expect(Object.keys(constants)).toHaveLength(24)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -116,7 +115,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto3 constants at level 300000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto3 constants at level 300000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "300000" });
             expect(Object.keys(constants)).toHaveLength(25)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -148,7 +147,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
 
-        it('successfully fetches Proto4 constants at level 600000', async (done) => {
+          it('Verify that rpc.getConstants successfully fetches Proto4 constants at level 600000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "600000" });
             expect(Object.keys(constants)).toHaveLength(26)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -181,7 +180,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
 
-        it('successfully fetches Proto5 constants at level 700000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto5 constants at level 700000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "700000" });
             expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -218,7 +217,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto6 constants at level 900000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto6 constants at level 900000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "900000" });
             expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -255,7 +254,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto7 constants at level 1212416', async (done) => {
+          it('Verify that rpc.getConstants successfully fetches Proto7 constants at level 1212416', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "1212416" });
             expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -292,7 +291,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         })
 
 
-        it('successfully fetches Proto8 constants at level 1350000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto8 constants at level 1350000', async (done) => {
             const constants = await Tezos.rpc.getConstants({ block: "1350000" });
             expect(Object.keys(constants)).toHaveLength(31)
             expect(constants).toHaveProperty("proof_of_work_nonce_size", 8);
@@ -328,7 +327,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto9 constants at level 1480000', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto9 constants at level 1480000', async (done) => {
             const constants: ConstantsResponseProto009 & ConstantsResponseCommon = await Tezos.rpc.getConstants({ block: "1480000" });
 
             expect(constants).toEqual({
@@ -367,7 +366,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        it('successfully fetches Proto10 constants at level 1589492', async (done) => {
+        it('Verify that rpc.getConstants successfully fetches Proto10 constants at level 1589492', async (done) => {
             const constants: ConstantsResponseProto010 & ConstantsResponseCommon = await Tezos.rpc.getConstants({ block: "1589492" });
 
             expect(constants).toEqual({
@@ -766,14 +765,14 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
             done();
         })
 
-        mondaynet(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
+        alpha(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
             Tezos.setRpcProvider(rpc);
             const constants: ConstantsResponseProto014 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 
             expect(constants).toEqual({
                 proof_of_work_nonce_size: 8,
                 nonce_length: 32,
-                nonce_revelation_threshold: 32,
+                nonce_revelation_threshold: 16,
                 max_anon_ops_per_block: 132,
                 max_operation_data_length: 32768,
                 max_proposals_per_delegate: 20,
@@ -793,7 +792,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 min_proposal_quorum: 500,
                 liquidity_baking_subsidy: new BigNumber(2500000),
                 liquidity_baking_sunset_level: 10000000,
-                liquidity_baking_toggle_ema_threshold: 1000000000,
+                liquidity_baking_toggle_ema_threshold: 100000,
                 max_allowed_global_constants_depth: 10000,
                 max_micheline_bytes_limit: 50000,
                 max_micheline_node_count: 50000,
@@ -832,29 +831,31 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 cycles_per_voting_period: 1,
                 sc_max_wrapped_proof_binary_size: 30000,
                 sc_rollup_challenge_window_in_blocks: 20160,
-                sc_rollup_commitment_period_in_blocks: 30,
                 sc_rollup_enable: false,
-                sc_rollup_max_active_outbox_levels: 20160,
                 sc_rollup_max_available_messages: 1000000,
+                sc_rollup_origination_size: 6314,
+                sc_rollup_commitment_period_in_blocks: 30,
+                sc_rollup_max_active_outbox_levels: 20160,
+                sc_rollup_message_size_limit: 4096,
                 sc_rollup_max_lookahead_in_blocks: 30000,
                 sc_rollup_max_outbox_messages_per_level: 100,
-                sc_rollup_origination_size: 6314,
                 sc_rollup_stake_amount: "32000000",
                 tx_rollup_commitment_bond: new BigNumber(10000000000),
                 tx_rollup_cost_per_byte_ema_factor: 120,
                 tx_rollup_enable: true,
-                tx_rollup_finality_period: 40000,
+                tx_rollup_finality_period: 10,
                 tx_rollup_hard_size_limit_per_inbox: 500000,
                 tx_rollup_hard_size_limit_per_message: 5000,
-                tx_rollup_max_commitments_count: 80100,
-                tx_rollup_max_inboxes_count: 40100,
+                tx_rollup_max_commitments_count: 30,
+                tx_rollup_max_inboxes_count: 15,
                 tx_rollup_max_messages_per_inbox: 1010,
                 tx_rollup_max_ticket_payload_size: 2048,
                 tx_rollup_max_withdrawals_per_batch: 15,
                 tx_rollup_origination_size: 4000,
                 tx_rollup_rejection_max_proof_size: 30000,
-                tx_rollup_sunset_level: 10000000,
-                tx_rollup_withdraw_period: 40000,
+                tx_rollup_sunset_level: 17280,
+                tx_rollup_withdraw_period: 10,
+                vdf_difficulty: "50000",
             });
 
             done();

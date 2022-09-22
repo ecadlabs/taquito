@@ -159,7 +159,7 @@ export class Schema {
       return true;
     }
     if (this.root instanceof TicketToken && val.ticketer && val.value && val.amount) {
-      return true
+      return true;
     }
     try {
       this.root.EncodeObject(val);
