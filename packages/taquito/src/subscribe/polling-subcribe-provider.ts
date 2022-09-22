@@ -1,4 +1,8 @@
-import { BlockResponse } from '@taquito/rpc';
+import {
+  BlockResponse,
+  InternalOperationResult,
+  OperationContentsAndResultTransaction,
+} from '@taquito/rpc';
 import { BehaviorSubject, from, Observable, ObservableInput, OperatorFunction, timer } from 'rxjs';
 import {
   concatMap,
@@ -11,8 +15,15 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import { Context } from '../context';
-import { evaluateFilter } from './filters';
-import { Filter, SubscribeProvider, Subscription, OperationContent } from './interface';
+import { evaluateFilter, eventFilter } from './filters';
+import {
+  Filter,
+  EventFilter,
+  SubscribeProvider,
+  Subscription,
+  OperationContent,
+  EventSubscription,
+} from './interface';
 import { ObservableSubscription } from './observable-subscription';
 import BigNumber from 'bignumber.js';
 
@@ -39,6 +50,33 @@ const applyFilter = (filter: Filter) =>
           for (const content of op.contents) {
             if (evaluateFilter({ hash: op.hash, ...content }, filter)) {
               sub.next({ hash: op.hash, ...content });
+            }
+          }
+        }
+      }
+      sub.complete();
+    });
+  });
+
+const applyEventFilter = (filter: EventFilter) =>
+  concatMap<BlockResponse, ObservableInput<EventSubscription>>((block) => {
+    return new Observable<EventSubscription>((sub) => {
+      for (const ops of block.operations) {
+        for (const op of ops) {
+          for (const content of op.contents) {
+            const tx = content as OperationContentsAndResultTransaction;
+            const internalOpResults = tx.metadata.internal_operation_results;
+            if (internalOpResults) {
+              for (const event of internalOpResults) {
+                if (eventFilter(event, filter.address, filter.tag)) {
+                  sub.next({
+                    opHash: op.hash,
+                    blockHash: block.hash,
+                    level: block.header.level,
+                    ...event,
+                  });
+                }
+              }
             }
           }
         }
@@ -128,6 +166,14 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   subscribeOperation(filter: Filter): Subscription<OperationContent> {
     return new ObservableSubscription(
       this.newBlock$.pipe(applyFilter(filter)),
+      this.config.shouldObservableSubscriptionRetry,
+      this.config.observableSubscriptionRetryFunction
+    );
+  }
+
+  subscribeEvent(eventFilter: EventFilter): Subscription<InternalOperationResult> {
+    return new ObservableSubscription(
+      this.newBlock$.pipe(applyEventFilter(eventFilter)),
       this.config.shouldObservableSubscriptionRetry,
       this.config.observableSubscriptionRetryFunction
     );
