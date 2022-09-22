@@ -14,7 +14,7 @@ enum ResponseType {
   JSON = 'json',
 }
 // Z TODO change any type >.>
-type ObjectType = Record<string, any>
+type ObjectType = Record<string, any>;
 
 export interface HttpRequestOptions {
   url: string;
@@ -51,8 +51,8 @@ export class HttpResponseError extends Error {
 export class HttpRequestFailed extends Error {
   public name = 'HttpRequestFailed';
 
-  constructor(public errorDetail: string) {
-    super(errorDetail);
+  constructor(public message: string) {
+    super(message);
   }
 }
 
@@ -146,7 +146,7 @@ export class HttpBackend {
           url + this.serialize(query)
         );
       } else {
-        throw new HttpRequestFailed(err as string);
+        throw new HttpRequestFailed(`${method} ${url + this.serialize(query)} ${String(err)}`);
       }
     }
   }

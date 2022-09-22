@@ -38,8 +38,7 @@ describe('Contract abstraction composer test', () => {
     });
     mockRpcClient.getChainId.mockResolvedValue('test');
 
-    toolkit = new TezosToolkit('url');
-    toolkit['_context'].rpc = mockRpcClient;
+    toolkit = new TezosToolkit(mockRpcClient);
   });
 
   it('Should add a helloWorld method on the contract abstraction', async (done) => {

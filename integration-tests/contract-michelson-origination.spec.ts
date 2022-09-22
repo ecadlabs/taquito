@@ -1,3 +1,4 @@
+import { IntegerError } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { idMichelsonCode, idInitData } from "./data/id-contract"
 
@@ -18,6 +19,25 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      done();
+    });
+    it('Origination should pass with balance as number', async (done) => {
+      const op = await Tezos.contract.originate({
+        balance: 0,
+        code: idMichelsonCode,
+        init: idInitData
+      })
+      await op.confirmation()
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      done();
+    });
+    it('Origination should thow error if given NaN for balance', async (done) => {
+      expect(() => Tezos.contract.originate({
+        balance: "asdf",
+        code: idMichelsonCode,
+        init: idInitData
+      })).rejects.toThrowError(IntegerError)
       done();
     });
   });

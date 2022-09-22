@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { OpKind, Protocols, TezosToolkit } from "@taquito/taquito";
+import { OpKind, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
@@ -20,6 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        expect(op.content).toEqual('626c6f62');
        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
        expect(op.status).toBe('applied');
+       expect(Number(op.consumedGas)).toBeGreaterThan(0);
 
        done();
      });

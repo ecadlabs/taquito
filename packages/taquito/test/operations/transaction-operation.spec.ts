@@ -48,7 +48,7 @@ describe('Transfer operation', () => {
         operation_result: {
           status: 'applied',
           storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-          consumed_gas: '15953',
+          consumed_milligas: '15953000',
           storage_size: '232',
         },
         internal_operation_results: [
@@ -72,7 +72,7 @@ describe('Transfer operation', () => {
                   change: '50',
                 },
               ],
-              consumed_gas: '10207',
+              consumed_milligas: '10207000',
             },
           },
         ],
