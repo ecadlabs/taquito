@@ -166,7 +166,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunet(`Fetches voting information about a delegate from RPC`, async (done) => {
+        kathmandunetAndMondaynet(`Fetches voting information about a delegate from RPC`, async (done) => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
           done();
