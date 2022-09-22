@@ -1,22 +1,28 @@
 import { CONFIGS } from './config';
 import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito/taquito';
-import { knownContract } from '../example/data/knownContract';
-import { knownBigMapContract } from '../example/data/knownBigMapContract';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { char2Bytes } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { codeViewsTopLevel } from './data/contract_views_top_level';
+import { knownBigMapContract } from './data/knownBigMapContract';
+import { knownContract } from './data/knownContract';
+const fs = require('fs');
 
 const MUTEZ_UNIT = new BigNumber(1000000);
 
-CONFIGS().forEach(({ lib, setup }) => {
+CONFIGS().forEach(({ lib, setup, protocol }) => {
   const tezos = lib;
   let keyPkh: string = "";
   let keyInitialBalance: BigNumber = new BigNumber(0);
 
   (async () => {
     await setup(true);
+    fs.writeFile(`known-contracts-${protocol.substring(0,9)}.ts`, '', (err: any) => {
+      if (err) {
+        console.error(err);
+      }
+    });
 
     keyPkh = await tezos.signer.publicKeyHash();
     keyInitialBalance = await tezos.tz.getBalance(keyPkh);
@@ -144,6 +150,11 @@ Total XTZ Spent : ${keyInitialBalance.minus(await tezos.tz.getBalance(keyPkh)).d
       const contract = await operation.contract();
       console.log(`known${contractName} address:  ${contract.address}`);
       console.log(`::set-output name=known${contractName}Address::${contract.address}\n`);
+      fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const known${contractName}${protocol.substring(0,9)} = "${contract.address}";\n`, (err: any) => {
+        if (err) {
+          console.error(err);
+        }
+      });
     } catch (e: any) {
       console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
 
