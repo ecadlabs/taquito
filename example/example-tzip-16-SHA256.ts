@@ -1,23 +1,14 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { char2Bytes } from '@taquito/utils';
-import Faucet from './faucet-interface';
-
-const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
-
-const provider = 'https://kathmandunet.ecadinfra.com/'
+import { InMemorySigner } from '@taquito/signer';
 
 async function example() {
-  const tezos = new TezosToolkit(provider)
-  await importKey(
-     tezos,
-     email,
-     password,
-     mnemonic.join(' '),
-     activation_code
-   );
-  
+  const provider = 'https://ghostnet.ecadinfra.com';
+  const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+  const tezos = new TezosToolkit(provider);
+  tezos.setSignerProvider(signer);
+
   try {
     console.log('Deploying Tzip16SHA256 contract...');
     // location of the contract metadata
@@ -36,16 +27,16 @@ async function example() {
     tacoShopStorageMap.set("1", { current_stock: "10000", max_price: "50" });
 
     const op = await tezos.contract.originate({
-        code: tacoContractTzip16,
-        storage: {
-            metadata: metadataBigMap,
-            taco_shop_storage: tacoShopStorageMap
-        },
+      code: tacoContractTzip16,
+      storage: {
+        metadata: metadataBigMap,
+        taco_shop_storage: tacoShopStorageMap
+      },
     });
 
     console.log('Awaiting confirmation...');
     const contract = await op.contract();
-    console.log('Tzip16SHA256 Contract address',contract.address)
+    console.log('Tzip16SHA256 Contract address', contract.address)
     console.log('Gas Used', op.consumedGas);
     console.log('Storage Paid', op.storageDiff);
     console.log('Storage Size', op.storageSize);

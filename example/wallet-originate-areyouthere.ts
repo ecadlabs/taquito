@@ -1,38 +1,16 @@
+import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
-
-const provider = 'https://kathmandunet.ecadinfra.com/'
 
 async function example() {
+  const provider = 'https://ghostnet.ecadinfra.com';
+  const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
   const tezos = new TezosToolkit(provider);
-  await importKey(
-    tezos,
-    'peqjckge.qkrrajzs@tezos.example.org',
-    'y4BX7qS1UE',
-    [
-      'skate',
-      'damp',
-      'faculty',
-      'morning',
-      'bring',
-      'ridge',
-      'traffic',
-      'initial',
-      'piece',
-      'annual',
-      'give',
-      'say',
-      'wrestle',
-      'rare',
-      'ability',
-    ].join(' '),
-    '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
-  );
+  tezos.setSignerProvider(signer);
 
   try {
     console.log('Deploying Wallet Test contract...');
     const op = await tezos.wallet.originate({
-        code: `parameter (or
+      code: `parameter (or
         (or (or (pair %addName address string) (bool %areYouThere))
             (or (string %changeMessage) (int %decrement)))
         (int %increment));
@@ -208,7 +186,7 @@ code { DUP ;
    PAIR ;
    DIP { DROP 3 } }
             `,
-        init: `(Pair (Pair True 0)
+      init: `(Pair (Pair True 0)
       (Pair ""
             { Elt 0x00006b82198cb179e8306c1bedd08f12dc863f328886 "Alice" ;
               Elt 0x0000b2e19a9e74440d86c59f13dab8a18ff873e889ea "HEllo!" }))`,
