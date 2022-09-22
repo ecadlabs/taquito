@@ -380,174 +380,174 @@ export class TransferTicketOperationBuilder {
 }
 
 export const ticketTokenTestMock = {
-  "balance": "0",
-  "script": {
-    "code": [
+  balance: '0',
+  script: {
+    code: [
       {
-        "prim": "parameter",
-        "args": [
+        prim: 'parameter',
+        args: [
           {
-            "prim": "pair",
-            "args": [
+            prim: 'pair',
+            args: [
               {
-                "prim": "ticket",
-                "args": [
+                prim: 'ticket',
+                args: [
                   {
-                    "prim": "bytes"
-                  }
-                ]
+                    prim: 'bytes',
+                  },
+                ],
               },
               {
-                "prim": "address"
-              }
-            ]
-          }
-        ]
+                prim: 'address',
+              },
+            ],
+          },
+        ],
       },
       {
-        "prim": "storage",
-        "args": [
+        prim: 'storage',
+        args: [
           {
-            "prim": "map",
-            "args": [
+            prim: 'map',
+            args: [
               {
-                "prim": "address"
+                prim: 'address',
               },
               {
-                "prim": "ticket",
-                "args": [
+                prim: 'ticket',
+                args: [
                   {
-                    "prim": "bytes"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+                    prim: 'bytes',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
       {
-        "prim": "code",
-        "args": [
+        prim: 'code',
+        args: [
           [
             {
-              "prim": "UNPAIR"
+              prim: 'UNPAIR',
             },
             {
-              "prim": "UNPAIR"
+              prim: 'UNPAIR',
             },
             {
-              "prim": "READ_TICKET"
+              prim: 'READ_TICKET',
             },
             {
-              "prim": "DROP"
+              prim: 'DROP',
             },
             {
-              "prim": "DIG",
-              "args": [
+              prim: 'DIG',
+              args: [
                 {
-                  "int": "2"
-                }
-              ]
+                  int: '2',
+                },
+              ],
             },
             {
-              "prim": "SWAP"
+              prim: 'SWAP',
             },
             {
-              "prim": "SOME"
+              prim: 'SOME',
             },
             {
-              "prim": "DIG",
-              "args": [
+              prim: 'DIG',
+              args: [
                 {
-                  "int": "2"
-                }
-              ]
+                  int: '2',
+                },
+              ],
             },
             {
-              "prim": "UPDATE"
+              prim: 'UPDATE',
             },
             {
-              "prim": "NIL",
-              "args": [
+              prim: 'NIL',
+              args: [
                 {
-                  "prim": "operation"
-                }
-              ]
+                  prim: 'operation',
+                },
+              ],
             },
             {
-              "prim": "PAIR"
-            }
-          ]
-        ]
-      }
+              prim: 'PAIR',
+            },
+          ],
+        ],
+      },
     ],
-    "storage": [
+    storage: [
       {
-        "prim": "Elt",
-        "args": [
+        prim: 'Elt',
+        args: [
           {
-            "string": "tz1QYD1zbK2gTUu1YWX8m7hPcKNkuXoxPo73"
+            string: 'tz1QYD1zbK2gTUu1YWX8m7hPcKNkuXoxPo73',
           },
           {
-            "prim": "Pair",
-            "args": [
+            prim: 'Pair',
+            args: [
               {
-                "string": "KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq"
+                string: 'KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq',
               },
               {
-                "bytes": "0505080a0000001601f37d4eddfff4e08fb1f19895ac9c83bc12d2b36800"
+                bytes: '0505080a0000001601f37d4eddfff4e08fb1f19895ac9c83bc12d2b36800',
               },
               {
-                "int": "2"
-              }
-            ]
-          }
-        ]
+                int: '2',
+              },
+            ],
+          },
+        ],
       },
       {
-        "prim": "Elt",
-        "args": [
+        prim: 'Elt',
+        args: [
           {
-            "string": "tz1cor8JEddCMvLFpWBK1EcNFDU3QgaSwvc1"
+            string: 'tz1cor8JEddCMvLFpWBK1EcNFDU3QgaSwvc1',
           },
           {
-            "prim": "Pair",
-            "args": [
+            prim: 'Pair',
+            args: [
               {
-                "string": "KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq"
+                string: 'KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq',
               },
               {
-                "bytes": "0505080a0000001601f37d4eddfff4e08fb1f19895ac9c83bc12d2b36800"
+                bytes: '0505080a0000001601f37d4eddfff4e08fb1f19895ac9c83bc12d2b36800',
               },
               {
-                "int": "10000"
-              }
-            ]
-          }
-        ]
+                int: '10000',
+              },
+            ],
+          },
+        ],
       },
       {
-        "prim": "Elt",
-        "args": [
+        prim: 'Elt',
+        args: [
           {
-            "string": "tz1h5GajcQWq4ybaWuwSiYrR5PvmUxndm8T8"
+            string: 'tz1h5GajcQWq4ybaWuwSiYrR5PvmUxndm8T8',
           },
           {
-            "prim": "Pair",
-            "args": [
+            prim: 'Pair',
+            args: [
               {
-                "string": "KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq"
+                string: 'KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq',
               },
               {
-                "bytes": "050505030b"
+                bytes: '050505030b',
               },
               {
-                "int": "1000000"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-}
+                int: '1000000',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+};

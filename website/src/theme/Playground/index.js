@@ -38,7 +38,7 @@ class SemiLiveProvider extends LiveProvider {
 
     const template = () => {
       if (this.props.wallet) {
-        return `const network = {type:"jakartanet"};
+        return `const network = {type:"kathmandunet"};
         wallet.requestPermissions({network})
         .then(permission => {
           return Tezos.setWalletProvider(wallet);
@@ -49,7 +49,7 @@ class SemiLiveProvider extends LiveProvider {
       } else if (this.props.noConfig) {
         return this.code
       } else {
-        return `fetch('https://api.tez.ie/keys/jakartanet', {
+        return `fetch('https://api.tez.ie/keys/kathmandunet', {
           method: 'POST',
           headers: { Authorization: 'Bearer taquito-example' },
         })

@@ -304,7 +304,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       throw new InvalidContractAddressError(rest.destination);
     }
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source);
+      throw new InvalidAddressError(rest.source ?? '');
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');

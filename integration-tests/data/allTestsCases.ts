@@ -1,4 +1,4 @@
-import { opMapping } from '../src/constants';
+import { opMapping, ForgeParams } from '@taquito/local-forging';
 import {
   rpcContractResponse,
   rpcContractResponse2,
@@ -7,7 +7,7 @@ import {
   rpcContractResponse7,
   example9,
   example10,
-} from './data/code_with_sapling';
+} from './code_with_sapling';
 import {
   ticketCode,
   ticketCode2,
@@ -17,21 +17,20 @@ import {
   ticketStorage2,
   ticketStorage3,
   ticketStorage4,
-} from './data/code_with_ticket';
-import { genericCode, genericStorage } from './data/generic_contract';
-import { tokenBigmapCode, tokenBigmapStorage } from './data/token_big_map';
-import { noAnnotCode, noAnnotInit } from './data/token_without_annotations';
-import { voteInitSample, voteSample } from './data/vote_contract';
-import { chestCode, chestStorage } from './data/contract_with_chest';
-import { submutezCode, submutezStorage } from './data/contract_with_sub_mutez';
+} from './code_with_ticket';
+import { genericCode, genericStorage } from './generic_contract';
+import { tokenBigmapCode, tokenBigmapStorage } from './token_bigmap';
+import { noAnnotCode, noAnnotInit } from './token_without_annotation';
+import { voteInitSample, voteSample } from './vote-contract';
+import { chestCode, chestStorage } from './contract_with_chest';
+import { submutezCode, submutezStorage } from './contract_with_sub_mutez';
 import {
   storageContractWithConstant,
   codeContractWithConstant,
-} from './data/contract_with_constant';
-import { codeViewsTopLevel, storageViewsTopLevel } from './data/contract_views_top_level';
-import { ForgeParams } from '../src/interface';
+} from './contract_with_constant';
+import { codeViewsTopLevel, storageViewsTopLevel } from './contract_views_top_level';
 import { MichelsonV1Expression, OpKind } from '@taquito/rpc';
-import { emitCode } from './data/code_with_emit';
+import { emitCode } from './code_with_emit';
 
 function extractOp(
   startIndex: number,

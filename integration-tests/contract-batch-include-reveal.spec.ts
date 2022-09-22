@@ -18,8 +18,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
 
                 expect(batchOpEstimate.length).toEqual(3);
             } catch (ex: any) {
-                // When running tests more than one time with the same faucet key, the account is already delegated to the given delegate
-                if (signerConfig.type === SignerType.FAUCET) {
+                // When running tests more than one time with the same key, the account is already delegated to the given delegate
+                if (signerConfig.type === SignerType.SECRET_KEY) {
                     expect(ex.message).toMatch('delegate.no_deletion');
                 } else {
                     throw ex
@@ -46,8 +46,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
                 expect(batchOpEstimate.length).toEqual(2);
 
             } catch (ex: any) {
-                if (signerConfig.type === SignerType.FAUCET) {
-                    // When running the test multiple times with the same faucet, can not reveal an already revealed contract.
+                if (signerConfig.type === SignerType.SECRET_KEY) {
+                    // When running the test multiple times with the same key, can not reveal an already revealed contract.
                     expect(ex.message).toMatch(`The publicKeyHash '${pkh}' has already been revealed.`)
                 } else {
                     throw ex

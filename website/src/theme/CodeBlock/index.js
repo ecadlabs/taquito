@@ -24,7 +24,6 @@ import {
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { InMemorySigner, importKey } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
-import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
@@ -91,7 +90,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+    const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com/');
 
     return (
       <Playground
@@ -120,7 +119,6 @@ export default ({
           MichelsonStorageView,
           Tzip12Module, 
           tzip12,
-          TezBridgeWallet,
           TempleWallet, 
           DerivationType, 
           TransportWebHID,

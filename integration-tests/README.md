@@ -34,7 +34,7 @@ npm run test # This runs all tests against all pre-configured testnets
 Depending on where we are in the Tezos protocol proposal upgrade cycle, there could be more than one testnet network configured in the Taquito integration-tests. Targeting a specific testnet can be done using environment variables. The testnet environment variables are found in `taquito/integration-tests/config.ts` (See Configuration section below)  
 
 ```
-jakartaNET=true npm run test
+JAKARTANET=true npm run test
 ```
 
 To target a specific test within the suite, use the jest `--testNamePattern=<regex>` parameter, or `-t` for short.
@@ -72,10 +72,17 @@ npm run test:jakartanet -- -t "Originate FA1.2 contract and fetch data from view
 To run tests against a node that is not preconfigured in Taquito you can use 
 `export TEZOS_RPC_JAKARTANET='http://localhost:8732'`. 
 
-## How to use a faucet instead of the keygen api
+## How to use a secret key instead of the keygen api
 
-By default, the integration tests will use an ephemeral key handled by the Keygen API. To use a faucet instead you can use the cli option <testnet>-faucet, like this:
+By default, the integration tests will use an ephemeral key handled by the Keygen API. To use a secret key instead you can use the cli option <testnet>-secret-key, like this:
 
 ```
-npm run test:hangzhounet-faucet "manager-wallet-scenario.spec.ts"
+npm run test:kathmandunet-secret-key manager-wallet-scenario.spec.ts
 ```
+
+You can set your own secret key (and password) or the `defaultSecretKey` from `config.ts` will be used:
+```
+export SECRET_KEY='edsk...'
+```
+
+If running the test from a configured secret key, make sure that the balance of the account is not 0.

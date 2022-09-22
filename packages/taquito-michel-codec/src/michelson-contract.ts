@@ -64,7 +64,7 @@ export class Contract {
     }
     // remove assertTypeAnnotationsValid from if block because: () => void || throw error
     if (assertMichelsonType(expr)) {
-      assertTypeAnnotationsValid(expr)
+      assertTypeAnnotationsValid(expr);
       return expr;
     }
     throw undefined;

@@ -6,6 +6,7 @@ import { singleSaplingStateContractJProtocol } from './data/single_sapling_state
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { char2Bytes } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
+import { codeViewsTopLevel } from './data/contract_views_top_level';
 
 const MUTEZ_UNIT = new BigNumber(1000000);
 
@@ -118,6 +119,12 @@ CONFIGS().forEach(({ lib, setup }) => {
     await originateKnownContract('SaplingContract', tezos, {
       code: singleSaplingStateContractJProtocol(),
       init: '{}'
+    });
+
+    // knownOnChainViewContract
+    await originateKnownContract('OnChainViewContractAddress', tezos, {
+      code: codeViewsTopLevel,
+      storage: 2
     });
 
     console.log(`

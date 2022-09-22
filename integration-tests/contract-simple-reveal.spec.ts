@@ -1,14 +1,17 @@
-import { CONFIGS } from "./config";
+import { CONFIGS, SignerType } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, signerConfig }) => {
     const Tezos = lib;
     describe(`Test reveal of account through contract API using: ${rpc}`, () => {
+
+        const testWithKeyGen = signerConfig.type === SignerType.SECRET_KEY? test.skip: test;
 
         beforeEach(async (done) => {
             await setup(true)
             done()
         })
-        it('verify that contract.reveal reveals the current account', async (done) => {
+        
+        testWithKeyGen('verify that contract.reveal reveals the current account', async (done) => {
 
             const pkh = await Tezos.signer.publicKeyHash()
             const pk = await Tezos.signer.publicKey()
