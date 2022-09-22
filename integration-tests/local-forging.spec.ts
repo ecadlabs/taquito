@@ -5,7 +5,7 @@ import { Protocols, TezosToolkit } from "@taquito/taquito";
 
 CONFIGS().forEach(({ rpc, protocol }) => {
     const Tezos = new TezosToolkit(rpc);
-    const kathmandunetAndMondaynet = protocol === Protocols.ProtoALpha || protocol === Protocols.PtKathman ? test: test.skip;
+    const kathmandunetAndAlpha = protocol === Protocols.ProtoALpha || protocol === Protocols.PtKathman ? test: test.skip;
 
     describe(`Test local forger: ${rpc}`, () => {
 
@@ -26,7 +26,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
 
         kathmanduCases.forEach(({ name, operation, expected }) => {
 
-            kathmandunetAndMondaynet(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
+            kathmandunetAndAlpha(`Should give the same result as when forging with the rpc: ${name} (${rpc})`, async done => {
                 const localForger = new LocalForger(protocol as unknown as ProtocolsHash);
 
                 const result = await localForger.forge(operation);

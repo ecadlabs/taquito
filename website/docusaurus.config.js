@@ -14,11 +14,7 @@ module.exports = {
     {
       src: 'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js',
       async: true,
-    },
-    {
-      src: 'https://www.tezbridge.com/plugin.js',
-      async: true,
-    },
+    }
   ],
   stylesheets: [
     'https://fonts.googleapis.com/css?family=Baloo+Tammudu|Open+Sans:400,600,800&display=swap',

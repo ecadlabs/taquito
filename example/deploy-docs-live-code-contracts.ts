@@ -10,7 +10,7 @@
 ///     node -r ts-node/register deploy-docs-live-code-contracts.ts
 
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner} from '@taquito/signer';
+import { InMemorySigner } from '@taquito/signer';
 import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 import { contractMapPairKey } from './data/contractMapPairKey';
 import { contractIncrementing } from './data/contractIncrementing';
@@ -28,13 +28,9 @@ import {
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
-import Faucet from './faucet-interface';
-
-
-const {email, password, mnemonic, activation_code, pkh} = require("./faucet-default-values.json") as Faucet
 
 const provider = 'https://kathmandunet.ecadinfra.com/';
-export const signer: any = new InMemorySigner(
+export const signer = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
 export const tezos = new TezosToolkit(provider);
@@ -241,40 +237,40 @@ async function originateLambda2() {
   tezos.setSignerProvider(signer);
   try {
     const bigMapLedger = new MichelsonMap();
-      bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
-        allowances: ['tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'],
-        balance: '50'
-      });
-      bigMapLedger.set('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', {
-        allowances: ['tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE'],
-        balance: '50',
-      });
+    bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
+      allowances: ['tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'],
+      balance: '50'
+    });
+    bigMapLedger.set('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', {
+      allowances: ['tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE'],
+      balance: '50',
+    });
 
-      const tokenMetadataBigMap = new MichelsonMap();
-      tokenMetadataBigMap.set('0', {
-        token_id: '0',
-        symbol: 'hello',
-        name: 'test',
-        decimals: '0',
-        extras: new MichelsonMap()
-      });
-      tokenMetadataBigMap.set('1', {
-        token_id: '1',
-        symbol: 'world',
-        name: 'test2',
-        decimals: '0',
-        extras: new MichelsonMap()
-      });
+    const tokenMetadataBigMap = new MichelsonMap();
+    tokenMetadataBigMap.set('0', {
+      token_id: '0',
+      symbol: 'hello',
+      name: 'test',
+      decimals: '0',
+      extras: new MichelsonMap()
+    });
+    tokenMetadataBigMap.set('1', {
+      token_id: '1',
+      symbol: 'world',
+      name: 'test2',
+      decimals: '0',
+      extras: new MichelsonMap()
+    });
 
-      const op = await tezos.contract.originate({
-        balance: "1",
-        code: fa2Contract,
-        storage: {
-          ledger: bigMapLedger,
-          token_metadata: tokenMetadataBigMap,
-          total_supply: '100'
-        },
-      })
+    const op = await tezos.contract.originate({
+      balance: "1",
+      code: fa2Contract,
+      storage: {
+        ledger: bigMapLedger,
+        token_metadata: tokenMetadataBigMap,
+        total_supply: '100'
+      },
+    })
 
     await op.confirmation();
     const lambda2_contract = await op.contract();
