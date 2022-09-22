@@ -564,47 +564,49 @@ describe('RPCEstimateProvider test signer', () => {
         storageLimit: 66,
       });
 
-      done()
-    })
+      done();
+    });
     it('should throw an error with invalid source', async (done) => {
-
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHG',
         fee: 804,
         gasLimit: 5009,
         storageLimit: 130,
-        ticketContents: { "string": "foobar" },
-        ticketTy: { "prim": "string" },
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
         ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
         ticketAmount: 2,
         destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
         entrypoint: 'default',
-        };
+      };
 
-      expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(InvalidAddressError)
+      expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
+        InvalidAddressError
+      );
 
-      done()
-    })
+      done();
+    });
     it('should throw an error with invalid destination', async (done) => {
-
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
         fee: 804,
         gasLimit: 5009,
         storageLimit: 130,
-        ticketContents: { "string": "foobar" },
-        ticketTy: { "prim": "string" },
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
         ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
         ticketAmount: 2,
         destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26F',
         entrypoint: 'default',
-        };
+      };
 
-      expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(InvalidContractAddressError)
+      expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
+        InvalidContractAddressError
+      );
 
-      done()
-    })
-  })
+      done();
+    });
+  });
 
   describe('batch', () => {
     it('should produce a batch operation, no reveal', async (done) => {

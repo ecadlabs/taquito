@@ -424,10 +424,9 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
         if (ex.args && ex.args.length > 0) {
           assertArgs(ex, 1);
         } else {
-          assertArgs(ex, 0)
+          assertArgs(ex, 0);
         }
         break;
-
 
       default:
         throw new MichelsonValidationError(ex, 'instruction expected');
