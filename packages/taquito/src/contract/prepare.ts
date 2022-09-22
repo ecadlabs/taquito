@@ -24,7 +24,12 @@ import {
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
-import { InvalidCodeParameter, InvalidInitParameter, OriginationParameterError, IntegerError } from './errors';
+import {
+  InvalidCodeParameter,
+  InvalidInitParameter,
+  OriginationParameterError,
+  IntegerError,
+} from './errors';
 
 export const createOriginationOperation = async ({
   code,
@@ -69,7 +74,7 @@ export const createOriginationOperation = async ({
   };
 
   if (isNaN(Number(balance))) {
-    throw new IntegerError(`Unexpected Invalid Integer ${balance}`)
+    throw new IntegerError(`Unexpected Invalid Integer ${balance}`);
   }
 
   const operation: RPCOriginationOperation = {
