@@ -53,7 +53,7 @@
     "docusaurus2-dotenv": "^1.4.0",
     "dotenv": "^10.0.0",
     "file-loader": "^6.2.0",
-    "firebase": "^9.9.3",
+    "firebase": "^9.9.4",
     "html-react-parser": "^1.4.13",
     "lerna": "^5.1.2",
     "lottie-web": "^5.9.2",
