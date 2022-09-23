@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 import { codeViewsTopLevel } from './data/contract_views_top_level';
 import { knownBigMapContract } from './data/knownBigMapContract';
 import { knownContract } from './data/knownContract';
-const fs = require('fs');
+import * as fs from 'fs';
 
 const MUTEZ_UNIT = new BigNumber(1000000);
 

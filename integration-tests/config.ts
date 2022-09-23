@@ -24,6 +24,8 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 interface Config {
   rpc: string;
+  pollingIntervalMilliseconds?: string;
+  rpcCacheMilliseconds: string;
   knownBaker: string;
   knownContract: string;
   knownBigMapContract: string;
@@ -48,7 +50,6 @@ interface ConfigWithSetup extends Config {
   lib: TezosToolkit;
   setup: (preferFreshKey?: boolean) => Promise<void>;
   createAddress: () => Promise<TezosToolkit>;
-  protocol: Protocols;
 }
 /**
  * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -68,12 +69,14 @@ interface SecretKeyConfig {
 const defaultSecretKey: SecretKeyConfig = {
   // pkh is tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD
   type: SignerType.SECRET_KEY,
-    secret_key: process.env['SECRET_KEY'] || 'spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN',
-    password: process.env['PASSWORD_SECRET_KEY'] || undefined,
+  secret_key: process.env['SECRET_KEY'] || 'spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN',
+  password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
 const kathmandunetEphemeral = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: process.env['TEZOS_KATHMANDUET_CONTRACT_ADDRESS'] || knownContractPtKathman,
   knownBigMapContract: process.env['TEZOS_KATHMANDUET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtKathman,
@@ -93,6 +96,8 @@ const kathmandunetEphemeral = {
 
 const jakartanetEphemeral = {
   rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: process.env['TEZOS_JAKARTANET_CONTRACT_ADDRESS'] || knownContractPtJakart2,
   knownBigMapContract: process.env['TEZOS_JAKARTANET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtJakart2,
@@ -112,6 +117,8 @@ const jakartanetEphemeral = {
 
 const mondaynetEphemeral = {
   rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
   knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractProtoALph,
   knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractProtoALph,
@@ -131,6 +138,8 @@ const mondaynetEphemeral = {
 
 const kathmandunetSecretKey = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: process.env['TEZOS_KATHMANDUET_CONTRACT_ADDRESS'] || knownContractPtKathman,
   knownBigMapContract: process.env['TEZOS_KATHMANDUET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtKathman,
@@ -146,6 +155,8 @@ const kathmandunetSecretKey = {
 
 const jakartanetSecretKey = {
   rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
   knownContract: process.env['TEZOS_JAKARTANET_CONTRACT_ADDRESS'] || knownContractPtJakart2,
   knownBigMapContract: process.env['TEZOS_JAKARTANET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtJakart2,
@@ -255,13 +266,13 @@ const setupWithSecretKey = async (Tezos: TezosToolkit, signerConfig: SecretKeyCo
 };
 
 const configurePollingInterval = (Tezos: TezosToolkit, pollingIntervalMilliseconds: string | undefined) => {
-  if (pollingIntervalMilliseconds) {
+  if(pollingIntervalMilliseconds) {
     Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: Number(pollingIntervalMilliseconds) }));
   }
 }
 
 const configureRpcCache = (rpc: string, rpcCacheMilliseconds: string) => {
-  if (rpcCacheMilliseconds === '0') {
+  if(rpcCacheMilliseconds === '0') {
     return new TezosToolkit(rpc);
   } else {
     return new TezosToolkit(new RpcClientCache(new RpcClient(rpc), Number(rpcCacheMilliseconds)));
@@ -273,6 +284,8 @@ export const CONFIGS = () => {
     const configs = providers.map(
       ({
         rpc,
+        pollingIntervalMilliseconds,
+        rpcCacheMilliseconds,
         knownBaker,
         knownContract,
         protocol,
@@ -285,13 +298,17 @@ export const CONFIGS = () => {
         txRollupDepositContract,
         txRollupWithdrawContract,
       }) => {
-        const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+        const Tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
+
         Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
 
         setupForger(Tezos, forger);
 
+        configurePollingInterval(Tezos, pollingIntervalMilliseconds);
+
         return {
           rpc,
+          rpcCacheMilliseconds,
           knownBaker,
           knownContract,
           protocol,
@@ -316,7 +333,9 @@ export const CONFIGS = () => {
             }
           },
           createAddress: async () => {
-            const tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+            const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
+            setupForger(tezos, forger);
+            configurePollingInterval(tezos, pollingIntervalMilliseconds);
 
             const keyBytes = Buffer.alloc(32);
             nodeCrypto.randomFillSync(keyBytes);

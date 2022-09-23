@@ -86,3 +86,17 @@ export SECRET_KEY='edsk...'
 ```
 
 If running the test from a configured secret key, make sure that the balance of the account is not 0.
+
+## How to configure a different polling interval
+
+Taquito does polling on the head block to confirm that an operation is included in the blockchain using a configurable polling interval. Setting a custom polling interval can be helpful, especially when running the integration tests against a sandbox with low time between blocks. You can configure the polling interval as follows:
+```
+export POLLING_INTERVAL_MILLISECONDS=100
+```
+
+## How to configure a different RPC cache ttl
+
+Responses from GET requests to RPC are cached with a default time of 1000 milliseconds when running integration tests. Caching can be disabled as follows:
+```
+export RPC_CACHE_MILLISECONDS=0
+```
