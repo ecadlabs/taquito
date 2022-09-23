@@ -12,11 +12,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   let bobPaymentAddress: string
   let aliceInMemorySpendingKey: InMemorySpendingKey;
   let alicePaymentAddress: string;
-  const tezosAddress1 = 'tz1hDFKpVkT7jzYncaLma4vxh4Gg6JNqvdtB';
   const memoSize = 8;
 
-  describe(`Test interaction with sapling contract having a single sapling state using: ${rpc}`, () => {
-
+  describe(`Test interaction with sapling contract having a single sapling state using: ${rpc}`, async () => {
+    
+    const tezosAddress1 = await Tezos.signer.publicKeyHash()
+    
     beforeAll(async (done) => {
       await setup();
 
