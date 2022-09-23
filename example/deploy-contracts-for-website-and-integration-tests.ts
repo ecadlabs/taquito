@@ -136,12 +136,15 @@ async function checkBalances(users: string | any[]) {
 async function originateTheContracts() {
   await checkBalances(users);
 
-  console.log('originating...')
+  //Contracts used in integration tests. Use these in ~/taquito/integration-tests/config.ts
+  console.log('Originating contracts used in integration tests...')
   contract_catalogue.set('KnownContract', await originateKnownContract());
   contract_catalogue.set('knownBigMapContract', await originateknownBigMapContract());
   contract_catalogue.set('SaplingStateContract', await originateSaplingStateContract());
   contract_catalogue.set('Tzip12BigMapOffChain', await originateTzip12BigMapOffChain());
 
+  //Contracts used in live code examples in the Taquito Docs Website
+  console.log('Originating contracts used in the Taquito docs Website...')
   contract_catalogue.set('IncrementContract', await originateIncrementContract());
   contract_catalogue.set('MichelsonMapContract', await originateMichelsonMap());
   contract_catalogue.set('LambdaViewContract', await originateLambda1());
