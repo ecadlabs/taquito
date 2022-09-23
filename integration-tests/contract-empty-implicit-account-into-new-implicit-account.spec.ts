@@ -4,7 +4,7 @@ import { CONFIGS } from "./config";
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
     const Tezos = lib;
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
-    const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
+    const kathmandunetAndAlpha = (protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha) ? test : test.skip;
 
     describe(`Test emptying a revealed implicit account into a new implicit account using: ${rpc}`, () => {
 
@@ -63,7 +63,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
             done();
         });
 
-        kathmandunet('on K protocol, reveals the sender account, creates an unrevealed implicit account, empties the sender account into the created one', async (done) => {
+        kathmandunetAndAlpha('on K protocol, reveals the sender account, creates an unrevealed implicit account, empties the sender account into the created one', async (done) => {
             const receiver = await createAddress();
             const receiver_pkh = await receiver.signer.publicKeyHash();
 

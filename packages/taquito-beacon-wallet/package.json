@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "13.0.1",
+  "version": "14.0.0",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -27,6 +27,9 @@
     "node": ">=6.0.0"
   },
   "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch",
+    "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
@@ -52,6 +55,12 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
+      "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts",
+      "^@taquito/taquito-utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^@taquito/taquito-http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
@@ -61,8 +70,8 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^3.1.3",
-    "@taquito/taquito": "^13.0.1",
+    "@airgap/beacon-dapp": "^3.1.4",
+    "@taquito/taquito": "^14.0.0",
     "libsodium-wrappers": "0.7.9"
   },
   "devDependencies": {

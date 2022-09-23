@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context } from '../../src/context';
 import { RPCEstimateProvider } from '../../src/estimate/rpc-estimate-provider';
 import { miStr, ligoSample } from '../contract/data';
@@ -19,8 +20,12 @@ import {
   txRollupOriginateWithReveal,
   txRollupSubmitBatchNoReveal,
   txRollupSubmitBatchWithReveal,
+  TransferTicketNoReveal,
+  TransferTicketWithReveal,
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
+import { TransferTicketParams } from '../../src/operations/types';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/utils';
 
 /**
  * RPCEstimateProvider test
@@ -122,7 +127,7 @@ describe('RPCEstimateProvider test signer', () => {
             kind: 'origination',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
@@ -285,7 +290,7 @@ describe('RPCEstimateProvider test signer', () => {
             kind: 'transaction',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
@@ -496,6 +501,113 @@ describe('RPCEstimateProvider test signer', () => {
     });
   });
 
+  describe('transferTicket', () => {
+    it('should return the correct estimation for a transfer Ticket Operation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(TransferTicketNoReveal);
+
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+      };
+
+      const estimate = await estimateProvider.transferTicket(params);
+
+      expect(mockRpcClient.runOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                fee: '804',
+                gas_limit: '5009',
+                storage_limit: '130',
+              }),
+            ]),
+          }),
+        })
+      );
+      expect(estimate).toMatchObject({
+        gasLimit: 2223,
+        storageLimit: 66,
+      });
+      done();
+    });
+    it('should return estimation with reveal for transfer ticket operation', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue(null);
+      mockForger.forge.mockReturnValue(new Array(224).fill('aa').join(''));
+      mockRpcClient.runOperation.mockReturnValue(TransferTicketWithReveal);
+
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+      };
+
+      const estimate = await estimateProvider.transferTicket(params);
+
+      expect(estimate).toMatchObject({
+        gasLimit: 2223,
+        storageLimit: 66,
+      });
+
+      done();
+    });
+    it('should throw an error with invalid source', async (done) => {
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHG',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+      };
+
+      expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
+        InvalidAddressError
+      );
+
+      done();
+    });
+    it('should throw an error with invalid destination', async (done) => {
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26F',
+        entrypoint: 'default',
+      };
+
+      expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
+        InvalidContractAddressError
+      );
+
+      done();
+    });
+  });
+
   describe('batch', () => {
     it('should produce a batch operation, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue({
@@ -511,7 +623,7 @@ describe('RPCEstimateProvider test signer', () => {
             destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
@@ -526,7 +638,7 @@ describe('RPCEstimateProvider test signer', () => {
             destination: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
@@ -565,7 +677,7 @@ describe('RPCEstimateProvider test signer', () => {
             storage_limit: '0',
             public_key: 'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH',
             metadata: {
-              operation_result: { status: 'applied', consumed_gas: '1000' },
+              operation_result: { status: 'applied', consumed_milligas: '1000000' },
             },
           },
           registerGlobalConstantNoReveal.contents[0],
@@ -580,7 +692,7 @@ describe('RPCEstimateProvider test signer', () => {
             destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
@@ -595,7 +707,7 @@ describe('RPCEstimateProvider test signer', () => {
             destination: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
@@ -645,7 +757,7 @@ describe('RPCEstimateProvider test signer', () => {
         kind: 'transaction',
         metadata: {
           operation_result: {
-            consumed_gas: 1000,
+            consumed_milligas: 1000000,
           },
         },
       };
@@ -690,7 +802,7 @@ describe('RPCEstimateProvider test signer', () => {
         kind: 'transaction',
         metadata: {
           operation_result: {
-            consumed_gas: 1000,
+            consumed_milligas: 1000000,
           },
         },
       };
@@ -1236,7 +1348,7 @@ describe('RPCEstimateProvider test wallet', () => {
             kind: 'origination',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
@@ -1311,7 +1423,7 @@ describe('RPCEstimateProvider test wallet', () => {
           {
             kind: 'delegation',
             metadata: {
-              operation_result: { status: 'applied', consumed_gas: '10000' },
+              operation_result: { status: 'applied', consumed_milligas: '10000000' },
             },
           },
         ],
@@ -1353,7 +1465,7 @@ describe('RPCEstimateProvider test wallet', () => {
           {
             kind: 'delegation',
             metadata: {
-              operation_result: { status: 'applied', consumed_gas: '10000' },
+              operation_result: { status: 'applied', consumed_milligas: '10000000' },
             },
           },
         ],
@@ -1397,7 +1509,7 @@ describe('RPCEstimateProvider test wallet', () => {
             destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
@@ -1412,7 +1524,7 @@ describe('RPCEstimateProvider test wallet', () => {
             destination: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp',
             metadata: {
               operation_result: {
-                consumed_gas: 1000,
+                consumed_milligas: 1000000,
               },
             },
           },
