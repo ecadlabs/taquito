@@ -1,9 +1,9 @@
-import { ballotDecoder, ballotEncoder } from '../src/codec';
-import { DecodeBallotValueError, InvalidBallotValueError, InvalidHexStringError } from '../src/error';
+import { ballotDecoder, ballotEncoder, entrypointDecoder } from '../src/codec';
+import { DecodeBallotValueError, InvalidBallotValueError, InvalidHexStringError, OversizedEntryPointError } from '../src/error';
 import { bytesEncoder } from '../src/michelson/codec';
 import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
 
-describe('Tests for errors thrown when forging fails', () => {
+describe('Tests for errors thrown when various functions used in forging fail', () => {
 
     test('Verify that ballotEncoder functions correctly and returns InvalidBallotValueError on unknown case ', () => {
         expect(ballotEncoder('yay')).toEqual('00')
@@ -36,6 +36,16 @@ describe('Tests for errors thrown when forging fails', () => {
         } catch (e: any) {
             expect(e).toBeInstanceOf(InvalidHexStringError);
             expect(e.message).toEqual(`The hex string 'H05c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9' is invalid`)
+        }
+    });
+
+    test('Verify that entrypointDecoder returns OversizedEntryPointError for entrypoint longer than max length', () => {
+        try {
+            entrypointDecoder(Uint8ArrayConsumer.fromHexString('055c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'))
+        } catch (e: any) {
+            expect(e).toBeInstanceOf(OversizedEntryPointError);
+            expect(e.name).toEqual('OversizedEntryPointError');
+            expect(e.message).toContain('The maximum length of entrypoint is 31');
         }
     });
 });

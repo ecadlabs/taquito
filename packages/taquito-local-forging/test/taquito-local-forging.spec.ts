@@ -1,4 +1,4 @@
-import { LocalForger } from '../src/taquito-local-forging';
+import { CODEC, decoders, getCodec, LocalForger, ProtocolsHash, Uint8ArrayConsumer } from '../src/taquito-local-forging';
 import { ticketCode3, ticketStorage3 } from '../../../integration-tests/data/code_with_ticket';
 import { commonCases, kathmanduCases } from '../../../integration-tests/data/allTestsCases';
 import {
@@ -8,6 +8,7 @@ import {
 } from '../src/error';
 
 import { InvalidOperationKindError } from '@taquito/utils';
+import { ActivationSchema, schemaDecoder, SeedNonceRevelationSchema } from '../src/schema/operation';
 
 describe('Forge and parse operations default protocol', () => {
   const localForger = new LocalForger();
@@ -32,6 +33,9 @@ describe('Forge and parse operations kathmandu protocol', () => {
 });
 
 describe('Forge should validate parameters against the schema', () => {
+
+  const hexToParse = `0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28`
+
   const localForger = new LocalForger();
   test('Should throw error when operation kind is invalid', async () => {
   try{
@@ -49,12 +53,11 @@ describe('Forge should validate parameters against the schema', () => {
         },
       ],
     };
-    expect(() => {
       localForger.forge(operation);
-    }).toThrow(InvalidOperationKindError);
   } catch (e: any) {
     expect(e).toBeInstanceOf(InvalidOperationKindError);
     expect(e.name).toEqual('InvalidOperationKindError');
+    expect(e.message).toEqual("The operation kind 'invalid' is unsupported")
   }
   });
 
@@ -73,12 +76,11 @@ describe('Forge should validate parameters against the schema', () => {
         },
       ],
     };
-    expect(() => {
-      localForger.forge(operation);
-    }).toThrow(InvalidOperationSchemaError);
+        localForger.forge(operation);
   } catch (e: any) {
     expect(e).toBeInstanceOf(InvalidOperationSchemaError);
     expect(e.name).toEqual('InvalidOperationSchemaError');
+    expect(e.message).toEqual('Missing properties: source')
   }
   });
 
@@ -98,12 +100,13 @@ describe('Forge should validate parameters against the schema', () => {
           },
         ],
       };
-      expect(() => {
-        localForger.forge(operation);
-      }).toThrow(InvalidBlockHashError);
+      // expect(() => {
+         localForger.forge(operation);
+       //}).toThrow(InvalidBlockHashError);
     } catch (e: any) {
       expect(e).toBeInstanceOf(InvalidBlockHashError);
       expect(e.name).toEqual('InvalidBlockHashError');
+      expect(e.message).toEqual('The block hash Invalid_Block_Hash is invalid')
     }
   });
 
@@ -164,8 +167,91 @@ describe('Forge should validate parameters against the schema', () => {
       localForger.parse(invalidForged);
     } catch (e: any) {
       expect(e).toBeInstanceOf(UnsupportedOperationError);
-      expect(e.message).toEqual(`The operation '76' is unsupported`);
       expect(e.name).toEqual('UnsupportedOperationError');
+      expect(e.message).toEqual(`The operation '76' is unsupported`);
     }
+  });
+
+  test(`Verify getCodec for CODEC.SECRET`, async (done) => {
+    const codec = CODEC.SECRET
+    const myGetCodec = getCodec(codec, ProtocolsHash.PtKathman)
+    const consumer = myGetCodec.decoder(hexToParse)
+    expect(consumer).toBeDefined
+    expect(consumer).toEqual('0572cbea904d67468808c8eb50a9450c9721db30')
+    done();
+  });
+
+  test(`Verify getCodec for CODEC.RAW`, async (done) => {
+    const codec = CODEC.RAW
+    const myGetCodec = getCodec(codec, ProtocolsHash.PtKathman)
+    const consumer = myGetCodec.decoder(hexToParse)
+    expect(consumer).toBeDefined
+    expect(consumer).toEqual('0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a')
+    done();
+  });
+
+  test(`Verify getCodec for CODEC.OP_DELEGATION`, async (done) => {
+    const codec = CODEC.OP_DELEGATION
+    const myGetCodec = getCodec(codec, ProtocolsHash.PtKathman)
+    const consumer = myGetCodec.decoder(hexToParse)
+    expect(consumer).toEqual({ "counter": "161756491", "fee": "114", "gas_limit": "103", "storage_limit": "70" })
+    done();
+  });
+
+  test(`Verify Arrow Function for CODEC.OP_SEED_NONCE_REVELATION`, async (done) => {
+    const codec = CODEC.OP_SEED_NONCE_REVELATION
+    const myGetCodec = getCodec(codec, ProtocolsHash.PtKathman)
+    const gotCodec = myGetCodec.decoder(hexToParse)
+    expect(gotCodec).toStrictEqual({ "level": 91409386, "nonce": "904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb"})
+
+    const consumer = Uint8ArrayConsumer.fromHexString(hexToParse)
+    expect(decoders[codec](consumer)).toStrictEqual(gotCodec)
+    expect((schemaDecoder(decoders)(SeedNonceRevelationSchema)(consumer))).toBeDefined
+    done();
+  });
+
+  test(`Verify Arrow Functions for CODEC.SECRET is toHexString(val.consume(20))`, async (done) => {
+    const codec = CODEC.SECRET
+    const myGetCodec = getCodec(codec, ProtocolsHash.PtKathman)
+    const encodeCodec = myGetCodec.encoder('0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a')
+    expect(encodeCodec).toEqual("0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a")
+    const decodeCodec = myGetCodec.decoder('0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a')
+    expect(decodeCodec).toEqual("0572cbea904d67468808c8eb50a9450c9721db30")
+    done();
+  });
+
+  test(`Verify Arrow Function for CODEC.RAW is toHexString(val.consume(32)),`, async (done) => {
+    const codec = CODEC.RAW
+    const myGetCodec = getCodec(codec, ProtocolsHash.PtKathman)
+    const encodeCodec = myGetCodec.encoder('0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a')
+    expect(encodeCodec).toEqual("0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a")
+    const decodeCodec = myGetCodec.decoder('0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a')
+    expect(decodeCodec).toEqual("0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a")
+    done();
+  });
+
+  test(`Verify Arrow Function for CODEC.OP_ACTIVATE_ACCOUNT`, async (done) => {
+    const codec = CODEC.OP_ACTIVATE_ACCOUNT
+    const myGetCodec = getCodec(codec, ProtocolsHash.PtKathman)
+    const gotCodec = myGetCodec.decoder('0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62a')
+    expect(gotCodec).toEqual({"pkh": "tz1L8qbHKzqFmLiZqxaJdMEWrCwmmrSw2wj4", "secret": "9128012543902d0ac358a62a"})
+
+    const consumer = Uint8ArrayConsumer.fromHexString(hexToParse)
+    expect(decoders[codec](consumer)).toStrictEqual({"pkh": "tz1L8qbHKzqFmLiZqxaJdMEWrCwmmrSw2wj4", "secret": "9128012543902d0ac358a62ae28f75bb8f1c7c42"})
+    expect((schemaDecoder(decoders)(ActivationSchema)(consumer))).toBeDefined
+    expect((schemaDecoder(decoders)(ActivationSchema)(consumer))).toStrictEqual({ "pkh": "8wkhLGYvWfaqQXYRo5yCvSe4mVr314j", "secret": ""})
+    done();
+  });
+
+  test(`test getCodec to verify codec Manager sent to decoders is defined`, async (done) => {
+    const myGetCodec = getCodec(CODEC.MANAGER, ProtocolsHash.PtKathman).decoder('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d')
+    expect(myGetCodec).toEqual({ "branch": "BLf7wKNryZRXibjzM4TjNBSMgNN4qJVhxRRuxo3uu3SegsFqkUd", "contents": [] })
+    done();
+  });
+
+  test(`test getCodec to verify codec secret sent to decoders is defined`, async (done) => {
+    const myGetCodec = getCodec(CODEC.SECRET, ProtocolsHash.PtKathman).decoder('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d')
+    expect(myGetCodec).toEqual('7c842c15c8b0c8fd228e6cb5302a50201f41642d')
+    done();
   });
 });
