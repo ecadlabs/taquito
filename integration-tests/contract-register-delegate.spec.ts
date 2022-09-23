@@ -3,7 +3,7 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  describe(`Test address register delegate through contract api: ${rpc}`, () => {
+  describe(`Test register delegate through contract api: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)

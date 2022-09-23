@@ -253,7 +253,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         done();
       });
 
-      test('Verify that the permit hash can be submitted to an entrypoint\n', async (done) => {
+      test('Verify that the permit hash can be submitted to an entrypoint', async (done) => {
         //following https://github.com/EGuenz/smartpy-permits
 
         const LocalTez1 = await createAddress();
