@@ -1,9 +1,7 @@
 import { CONFIGS } from './config';
 import { compose, MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
-import { tzip12 } from '../packages/taquito-tzip12/src/composer';
-import { Tzip12Module } from '../packages/taquito-tzip12/src/tzip12-extension';
-import { TokenIdNotFound, InvalidTokenMetadata } from '../packages/taquito-tzip12/src/tzip12-errors';
+import { tzip12, Tzip12Module, TokenIdNotFound, InvalidTokenMetadata } from '@taquito/tzip12';
 import { fa2TokenFactory } from './data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 
@@ -12,13 +10,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 	let contractAddress: string;
 	let contractAddress2: string;
 
- 	 describe(`Deploy a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata): ${rpc}`, () => {
+ 	 describe(`Test contract origination for a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata) through contract api using: ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
 			done();
 		});
 
-		it('Should deploy a Fa2 contract having metadata on HTTPS and token metadata inside a bigmap %token_metadata', async (done) => {
+		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and token metadata inside a bigmap %token_metadata', async (done) => {
 			const LocalTez1 = await createAddress();
 			const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
 			const LocalTez2 = await createAddress();
@@ -103,8 +101,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			done();
 		});
 
-		it('Should test contractAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
-			
+		it('Verify contractAbstraction composition, fetch contract and token metadata of the a Fa2 contract having metadata on HTTPS and token metadata inside a bigmap %token_metadata', async (done) => {
+
 			Tezos.addExtension(new Tzip12Module());
 			// Tezos.addExtension(new Tzip16Module())... one extension is sufficient as they use the same MetadataProvider
 
@@ -158,15 +156,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			}
 			done();
 		});
-	});  
+	});
 
- 	describe(`Deploy a Fa2 contract and fetch metadata (token metadata are obtained from a view %token_metadata): ${rpc}`, () => {
+ 	describe(`Test originating a Fa2 contract and fetch metadata (token metadata are obtained from a view %token_metadata) through contract api using: ${rpc}`, () => {
 		beforeEach(async (done) => {
 			await setup();
 			done();
 		});
 
- 		it('Should deploy a Fa2 contract having metadata on HTTPS and a view %token_metadata', async (done) => {
+ 		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and a view %token_metadata', async (done) => {
 			const LocalTez1 = await createAddress();
 			const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
 			const LocalTez2 = await createAddress();
@@ -239,10 +237,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			expect(op.hash).toBeDefined();
 			expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-			done(); 
-		});    
+			done();
+		});
 
-		it('Should test contractAbstraction composition, fetch contract and token metadata of the Fa2 contract', async (done) => {
+		it('Verify contractAbstraction composition, fetch contract and token metadata of the Fa2 contract having metadata on HTTPS and a view %token_metadata', async (done) => {
 			Tezos.addExtension(new Tzip16Module());
 
 			// Use the compose function
@@ -290,5 +288,5 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			}
 			done();
 		});
-	}); 
+	});
 });

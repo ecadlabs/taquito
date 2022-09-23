@@ -23,6 +23,8 @@ import {
   TransferParams,
   withKind,
   TxRollupBatchParams,
+  TransferTicketParams,
+  IncreasePaidStorageParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -36,6 +38,8 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
   createTxRollupBatchOperation,
+  createTransferTicketOperation,
+  createIncreasePaidStorageOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -48,6 +52,9 @@ import {
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
+import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
+import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
+
 export class RpcContractProvider
   extends OperationEmitter
   implements ContractProvider, StorageProvider
@@ -107,7 +114,7 @@ export class RpcContractProvider
 
     let contractSchema: Schema;
     if (Schema.isSchema(schema as Schema)) {
-      contractSchema = schema as Schema
+      contractSchema = schema as Schema;
     } else {
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
     }
@@ -363,6 +370,7 @@ export class RpcContractProvider
    *
    * @param Transfer operation parameter
    */
+
   async transfer(params: TransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.to);
@@ -383,6 +391,39 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new TransactionOperation(hash, operation, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Transfer Tickets to a smart contract address
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TransferTicketParams operation parameter
+   */
+  async transferTicket(params: TransferTicketParams) {
+    if (validateContractAddress(params.destination) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(params.destination);
+    }
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.transferTicket.bind(this.estimator)
+    );
+    const operation = await createTransferTicketOperation({
+      ...params,
+      ...estimate,
+    });
+    const source = params.source ?? publicKeyHash;
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransferTicketOperation(hash, operation, source, forgedBytes, opResponse, context);
   }
 
   /**
@@ -442,6 +483,38 @@ export class RpcContractProvider
       hash,
       operation,
       publickKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   *
+   * @description Increase the paid storage of a smart contract
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params increasePaidStorage operation parameter
+   */
+  async increasePaidStorage(params: IncreasePaidStorageParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.increasePaidStorage.bind(this.estimator)
+    );
+    const operation = await createIncreasePaidStorageOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: publicKeyHash });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new IncreasePaidStorageOperation(
+      hash,
+      operation,
+      publicKeyHash,
       forgedBytes,
       opResponse,
       context

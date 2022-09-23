@@ -1,4 +1,5 @@
 import { OperationContentsAndResult, OperationContentsAndResultReveal } from '@taquito/rpc';
+import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult } from './operation-errors';
 import { Operation } from './operations';
@@ -13,8 +14,10 @@ import {
 /**
  * @description Reveal operation provides utility functions to fetch a newly issued revelation
  */
-export class RevealOperation extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
+export class RevealOperation
+  extends Operation
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
+{
   constructor(
     hash: string,
     private readonly params: RPCRevealOperation,
@@ -29,7 +32,7 @@ export class RevealOperation extends Operation
   get operationResults() {
     const revealOp =
       Array.isArray(this.results) &&
-      (this.results.find(op => op.kind === 'reveal') as OperationContentsAndResultReveal);
+      (this.results.find((op) => op.kind === 'reveal') as OperationContentsAndResultReveal);
     return revealOp ? [revealOp] : [];
   }
 
@@ -66,8 +69,13 @@ export class RevealOperation extends Operation
   }
 
   get consumedGas() {
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return new BigNumber(this.consumedMilliGas).dividedBy(1000).toString();
+  }
+
+  get consumedMilliGas() {
     return String(
-      this.sumProp(flattenOperationResult({ contents: this.operationResults }), 'consumed_gas')
+      this.sumProp(flattenOperationResult({ contents: this.operationResults }), 'consumed_milligas')
     );
   }
 

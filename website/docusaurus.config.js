@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 module.exports = {
@@ -13,11 +14,7 @@ module.exports = {
     {
       src: 'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js',
       async: true,
-    },
-    {
-      src: 'https://www.tezbridge.com/plugin.js',
-      async: true,
-    },
+    }
   ],
   stylesheets: [
     'https://fonts.googleapis.com/css?family=Baloo+Tammudu|Open+Sans:400,600,800&display=swap',
@@ -171,7 +168,6 @@ module.exports = {
         },
       ],
     },
-
     algolia: {
       apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
       indexName: 'taquito',
@@ -202,5 +198,17 @@ module.exports = {
       },
     ],
   ],
-  plugins: [require.resolve('./plugins/webpack5plugin/index.js'), 'docusaurus-plugin-sass'],
+  plugins: 
+    [
+      require.resolve('./plugins/webpack5plugin/index.js'), 
+      'docusaurus-plugin-sass',
+      [
+        'docusaurus2-dotenv',
+        {
+          path: "./.env",
+          systemvars: true
+        }
+      ]
+    ],
+  
 };

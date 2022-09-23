@@ -1,10 +1,10 @@
-import { ContractAbstraction, ContractProvider } from "taquito/src/contract";
+import { ContractAbstraction, ContractProvider } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { tokenCode, tokenInit } from "./data/tokens";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
+
   let contract: ContractAbstraction<ContractProvider>;
 
   describe(`Test origination of a token contract using: ${rpc}`, () => {
@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done()
     })
 
-    test('originates a token contract and mints some tokens', 2, async (done: () => void) => {
+    test('originates a token contract and mints some tokens', async (done) => {
       // TODO: Fails when using ephemeral keys
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -36,7 +36,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('mints some tokens using the `methodObjects` method', 2, async (done: () => void) => {
+    test('mints some tokens using the `methodObjects` method', async (done) => {
       const opMethod = await contract.methodsObject.mint({
         to: await Tezos.signer.publicKeyHash(), 
         value: 100

@@ -11,11 +11,9 @@ import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
 import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
-import { ProtocolsHash, ProtoInferiorTo } from './protocols';
-import { encodersProto13 } from './proto13-jakarta/encoder-proto13';
-import { decodersProto13 } from './proto13-jakarta/decoder-proto13';
+import { ProtocolsHash } from './protocols';
 
-export { CODEC } from './constants';
+export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
 export * from './encoder';
 export * from './uint8array-consumer';
@@ -25,24 +23,14 @@ export { ProtocolsHash } from './protocols';
 
 const PROTOCOL_CURRENT = ProtocolsHash.Psithaca2;
 
-export function getCodec(codec: CODEC, proto: ProtocolsHash) {
-  if (proto === ProtocolsHash.Psithaca2 || ProtoInferiorTo(proto, ProtocolsHash.Psithaca2)) {
-    return {
-      encoder: encoders[codec],
-      decoder: (hex: string) => {
-        const consumer = Uint8ArrayConsumer.fromHexString(hex);
-        return decoders[codec](consumer) as any;
-      },
-    };
-  } else {
-    return {
-      encoder: encodersProto13[codec],
-      decoder: (hex: string) => {
-        const consumer = Uint8ArrayConsumer.fromHexString(hex);
-        return decodersProto13[codec](consumer) as any;
-      },
-    };
-  }
+export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
+  return {
+    encoder: encoders[codec],
+    decoder: (hex: string) => {
+      const consumer = Uint8ArrayConsumer.fromHexString(hex);
+      return decoders[codec](consumer) as any;
+    },
+  };
 }
 
 export class LocalForger implements Forger {

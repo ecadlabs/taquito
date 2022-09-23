@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
 import styles from './Hero.module.scss';
 import Slider from 'react-slick';

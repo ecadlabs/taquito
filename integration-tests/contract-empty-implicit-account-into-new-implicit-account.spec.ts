@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
     
     const Tezos = lib;
     const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
-    const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
+    const kathmandunetAndAlpha = (protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha) ? test : test.skip;
 
     describe(`Test emptying a revealed implicit account into a new implicit account through contract api using: ${rpc}`, () => {
 
@@ -65,7 +65,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
           done();
       });
 
-      kathmandunet('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async (done) => {
+      kathmandunetAndAlpha('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async (done) => {
         const receiver = await createAddress();
             const receiver_pkh = await receiver.signer.publicKeyHash();
 

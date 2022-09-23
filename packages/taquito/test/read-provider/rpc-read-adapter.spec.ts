@@ -1,6 +1,5 @@
 import { RpcReadAdapter } from '../../src/read-provider/rpc-read-adapter';
 import BigNumber from 'bignumber.js';
-import { Context } from '../../src/context';
 import { BlockIdentifier } from '../../src/read-provider/interface';
 import {
   bigmapValue,
@@ -14,6 +13,7 @@ import {
   liveBlocks,
   saplingState,
 } from './data';
+import { RpcClient } from '@taquito/rpc';
 
 describe('RpcReadAdapter test', () => {
   let readProvider: RpcReadAdapter;
@@ -28,6 +28,7 @@ describe('RpcReadAdapter test', () => {
     getContract: jest.Mock<any, any>;
     getBigMapExpr: jest.Mock<any, any>;
     getSaplingDiffById: jest.Mock<any, any>;
+    getSaplingDiffByContract: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
@@ -47,16 +48,17 @@ describe('RpcReadAdapter test', () => {
       getContract: jest.fn(),
       getBigMapExpr: jest.fn(),
       getSaplingDiffById: jest.fn(),
+      getSaplingDiffByContract: jest.fn(),
       getEntrypoints: jest.fn(),
       getChainId: jest.fn(),
       getManagerKey: jest.fn(),
       getBlock: jest.fn(),
       getLiveBlocks: jest.fn(),
     };
-    readProvider = new RpcReadAdapter(new Context(mockRpcClient as any));
+    readProvider = new RpcReadAdapter(mockRpcClient as any);
   });
   it('should instantiate RpcReadAdapter', () => {
-    expect(new RpcReadAdapter(new Context('url'))).toBeInstanceOf(RpcReadAdapter);
+    expect(new RpcReadAdapter(new RpcClient('url'))).toBeInstanceOf(RpcReadAdapter);
   });
 
   // block identifiers in the various formats accepted by the RPC
@@ -199,7 +201,7 @@ describe('RpcReadAdapter test', () => {
       done();
     });
 
-    it(`should get sappling state based on its id at block: ${block}`, async (done) => {
+    it(`should get sapling state based on its id at block: ${block}`, async (done) => {
       mockRpcClient.getSaplingDiffById.mockResolvedValue(saplingState);
 
       const result = await readProvider.getSaplingDiffById(
@@ -211,6 +213,23 @@ describe('RpcReadAdapter test', () => {
       expect(result).toEqual(saplingState);
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('2437');
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toEqual({ block: `${block}` });
+      done();
+    });
+
+    it(`should get sapling state based on a contract address at block: ${block}`, async (done) => {
+      mockRpcClient.getSaplingDiffByContract.mockResolvedValue(saplingState);
+
+      const result = await readProvider.getSaplingDiffByContract(
+        'KT1PCtKMerNZtjHLrjj1EsCWkqoWoEHwFsgK',
+        block
+      );
+      expect(result).toEqual(saplingState);
+      expect(mockRpcClient.getSaplingDiffByContract.mock.calls[0][0]).toEqual(
+        'KT1PCtKMerNZtjHLrjj1EsCWkqoWoEHwFsgK'
+      );
+      expect(mockRpcClient.getSaplingDiffByContract.mock.calls[0][1]).toEqual({
+        block: `${block}`,
+      });
       done();
     });
 
