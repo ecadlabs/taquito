@@ -1,9 +1,10 @@
 import { ballotDecoder, ballotEncoder, entrypointDecoder } from '../src/codec';
-import { DecodeBallotValueError, InvalidBallotValueError, InvalidHexStringError, OversizedEntryPointError } from '../src/error';
+import { DecodeBallotValueError, InvalidBallotValueError, InvalidHexStringError, OversizedEntryPointError} from '../src/error';
 import { bytesEncoder } from '../src/michelson/codec';
 import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
 
-describe('Tests for errors thrown when various functions used in forging fail', () => {
+
+describe('Tests for errors thrown when forging fails', () => {
 
     test('Verify that ballotEncoder functions correctly and returns InvalidBallotValueError on unknown case ', () => {
         expect(ballotEncoder('yay')).toEqual('00')
@@ -13,7 +14,8 @@ describe('Tests for errors thrown when various functions used in forging fail', 
             ballotEncoder('foobar')
         } catch (e: any) {
             expect(e).toBeInstanceOf(InvalidBallotValueError);
-            expect(e.message).toEqual(`The ballot value 'foobar' is invalid`);
+            expect(e.name).toEqual('InvalidBallotValueError');
+            expect(e.message).toEqual("The ballot value 'foobar' is invalid");
         }
     });
 
@@ -25,8 +27,8 @@ describe('Tests for errors thrown when various functions used in forging fail', 
             ballotDecoder(Uint8ArrayConsumer.fromHexString('03038f711262480454088fe0d31254211e04cb785affcc9280ce719e3f7e763f974d'))
         } catch (e: any) {
             expect(e).toBeInstanceOf(DecodeBallotValueError);
-            expect(e.message).toEqual(`Failed to decode ballot value 3`);
-            console.log(e.message)
+            expect(e.name).toEqual('DecodeBallotValueError');
+            expect(e.message).toEqual("Failed to decode ballot value 3");
         }
     });
 
