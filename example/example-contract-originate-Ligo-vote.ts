@@ -1,21 +1,12 @@
 import { TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
+import { InMemorySigner } from '@taquito/signer';
 import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
-import Faucet from './faucet-interface';
-
-const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
-
-const provider = 'https://kathmandunet.ecadinfra.com/'
 
 async function example() {
-  const tezos = new TezosToolkit(provider);
-  await importKey(
-     tezos,
-     email,
-     password,
-     mnemonic.join(' '),
-     activation_code
-   );
+  const provider = 'https://ghostnet.ecadinfra.com';
+    const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+    const tezos = new TezosToolkit(provider);
+    tezos.setSignerProvider(signer);
 
   try {
     console.log('Deploying Ligo Vote contract...');
