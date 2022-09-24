@@ -8,22 +8,12 @@ import { MichelsonError } from '../src/utils';
 const contracts: {
   [group: string]: string[];
 } = {
-  entrypoints: [
-
-  ],
-  ill_typed: [
-    'emit_instruction_error_contract.tz',
-  ],
-  lib_protocol: [
-  ],
-  macros: [
-  ],
-  mini_scenarios: [
-  ],
-  opcodes: [
-    'emit_instruction.tz',
-    'emit_instruction_event.tz',
-  ]
+  entrypoints: [],
+  ill_typed: ['emit_instruction_error_contract.tz'],
+  lib_protocol: [],
+  macros: [],
+  mini_scenarios: [],
+  opcodes: ['emit_instruction.tz', 'emit_instruction_event.tz'],
 };
 
 describe('PtKathmandu', () => {

@@ -86,22 +86,8 @@ export class OnChainView {
    */
   async executeView(executionContext: ExecutionContextParams) {
     const protocol = (await this._rpc.getProtocols()).protocol;
-    if (protocol === Protocols.PtKathman) {
-      this.verifyContextExecution(executionContext);
-      const chainId = await this._readProvider.getChainId();
-      const viewArgs = this.transformArgsToMichelson();
-      const scriptView: RPCRunScriptViewParam = {
-        contract: this._contractAddress,
-        view: this._smartContractViewSchema.viewName,
-        input: viewArgs,
-        chain_id: chainId,
-        source: executionContext.viewCaller,
-      };
-      if (executionContext.source) {
-        scriptView.payer = executionContext.source;
-      }
-      return this.executeViewAndDecodeResult(scriptView, protocol);
-    } else {
+    // TODO: remove if/else when support for Jakartanet is removed
+    if (protocol === Protocols.PtJakart2) {
       this.verifyContextExecution(executionContext);
       const balance = (
         await this._readProvider.getBalance(this._contractAddress, 'head')
@@ -126,6 +112,21 @@ export class OnChainView {
         ),
         protocol
       );
+    } else {
+      this.verifyContextExecution(executionContext);
+      const chainId = await this._readProvider.getChainId();
+      const viewArgs = this.transformArgsToMichelson();
+      const scriptView: RPCRunScriptViewParam = {
+        contract: this._contractAddress,
+        view: this._smartContractViewSchema.viewName,
+        input: viewArgs,
+        chain_id: chainId,
+        source: executionContext.viewCaller,
+      };
+      if (executionContext.source) {
+        scriptView.payer = executionContext.source;
+      }
+      return this.executeViewAndDecodeResult(scriptView, protocol);
     }
   }
 
@@ -201,26 +202,8 @@ export class OnChainView {
     viewScript: RPCRunScriptViewParam | RPCRunCodeParam,
     protocol: string
   ) {
-    if (protocol === Protocols.PtKathman) {
-      let storage: MichelsonV1ExpressionExtended;
-      try {
-        storage = (await this._rpc.runScriptView(viewScript as RPCRunScriptViewParam))
-          .data as MichelsonV1ExpressionExtended;
-      } catch (error: any) {
-        const failWith = validateAndExtractFailwith(error);
-        throw failWith
-          ? new ViewSimulationError(
-              `The simulation of the on-chain view named ${
-                this._smartContractViewSchema.viewName
-              } failed with: ${JSON.stringify(failWith)}`,
-              this._smartContractViewSchema.viewName,
-              failWith,
-              error
-            )
-          : error;
-      }
-      return this._smartContractViewSchema.decodeViewResult(storage);
-    } else {
+    // TODO: remove if/else when support for Jakartanet is removed
+    if (protocol === Protocols.PtJakart2) {
       let storage: MichelsonV1ExpressionExtended;
       try {
         storage = (await this._rpc.runCode(viewScript as RPCRunCodeParam))
@@ -245,6 +228,25 @@ export class OnChainView {
         );
       }
       return this._smartContractViewSchema.decodeViewResult(storage.args[0]);
+    } else {
+      let storage: MichelsonV1ExpressionExtended;
+      try {
+        storage = (await this._rpc.runScriptView(viewScript as RPCRunScriptViewParam))
+          .data as MichelsonV1ExpressionExtended;
+      } catch (error: any) {
+        const failWith = validateAndExtractFailwith(error);
+        throw failWith
+          ? new ViewSimulationError(
+              `The simulation of the on-chain view named ${
+                this._smartContractViewSchema.viewName
+              } failed with: ${JSON.stringify(failWith)}`,
+              this._smartContractViewSchema.viewName,
+              failWith,
+              error
+            )
+          : error;
+      }
+      return this._smartContractViewSchema.decodeViewResult(storage);
     }
   }
 }

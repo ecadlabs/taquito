@@ -67,8 +67,7 @@ export class TezosPreapplyFailureError extends Error {
   }
 }
 
-export type MergedOperationResult =
-  OperationResultTransaction &
+export type MergedOperationResult = OperationResultTransaction &
   OperationResultOrigination &
   OperationResultDelegation &
   OperationResultRegisterGlobalConstant &
@@ -78,7 +77,6 @@ export type MergedOperationResult =
   OperationResultReveal & {
     fee?: string;
   };
-
 
 // Flatten all operation content results and internal operation results into a single array
 // Some cases where we can have multiple operation results or internal operation results are:

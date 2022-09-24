@@ -3,7 +3,7 @@ import { OpKind, Protocols } from '@taquito/taquito';
 import { ligoSample } from './data/ligo-simple-contract';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
-  const kathmandunet = (protocol === Protocols.PtKathman) ? it : it.skip;
+  const kathmandunetAndAlpha = (protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha) ? test : test.skip;
   const Tezos = lib;
 
   describe(`Test Increase Paid Storage using: ${rpc}`, () => {
@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       done();
     });
 
-    kathmandunet('should be able to increase the paid storage of a contract successfully', async (done) => {
+    kathmandunetAndAlpha('should be able to increase the paid storage of a contract successfully', async (done) => {
       const op = await Tezos.contract.increasePaidStorage({
         amount: 1,
         destination: knownContract
@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       done();
     });
 
-    kathmandunet('should be able to include increasePaidStorage operation in a batch', async (done) => {
+    kathmandunetAndAlpha('should be able to include increasePaidStorage operation in a batch', async (done) => {
       const op = await Tezos.contract
         .batch()
         .withOrigination({
@@ -48,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       done();
     });
 
-    kathmandunet('should be able to include increasePaidStorage operation in a batch (different batch syntax)', async (done) => {
+    kathmandunetAndAlpha('should be able to include increasePaidStorage operation in a batch (different batch syntax)', async (done) => {
       const op = await Tezos.contract.batch([
         {
           kind: OpKind.ORIGINATION, 
@@ -69,7 +69,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       done();
     });
 
-    kathmandunet('should return error when destination contract address is invalid', async (done) => {
+    kathmandunetAndAlpha('should return error when destination contract address is invalid', async (done) => {
       expect(async () => {
         const op = await Tezos.contract.increasePaidStorage({
           amount: 1,

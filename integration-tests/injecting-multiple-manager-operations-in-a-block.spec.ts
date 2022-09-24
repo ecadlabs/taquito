@@ -3,7 +3,7 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     const Tezos = lib;
-    const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
+    const kathmandunetAndAlpha = (protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha) ? test : test.skip;
     describe(`Test injecting more than one manager operation in a block: ${rpc}`, () => {
 
         beforeEach(async (done) => {
@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
             done()
         })
 
-        kathmandunet('Verify that doing transfers without awaiting the confirmation after each will fail', async (done) => {
+        kathmandunetAndAlpha('Verify that doing transfers without awaiting the confirmation after each will fail', async (done) => {
             try {
                 const op1 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 1 });
                 const op2 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 });
