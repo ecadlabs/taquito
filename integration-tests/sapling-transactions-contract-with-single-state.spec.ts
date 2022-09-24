@@ -190,16 +190,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     it('Verify that Alice can unshield tokens', async (done) => {
 
-      const LocalTez = await createAddress();
-      const opToFundNewAddress = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
+      const newAddress = await createAddress();
+      const opToFundNewAddress = await Tezos.contract.transfer({ to: await newAddress.signer.publicKeyHash(), amount: 2 });
       await opToFundNewAddress.confirmation();
-			const tezosAddress1 = await LocalTez.signer.publicKeyHash();
-      console.log(tezosAddress1)
+			const tezosAddress1 = await newAddress.signer.publicKeyHash();
 
       const amount = 1;
       const aliceSaplingToolkit = new SaplingToolkit({ saplingSigner: aliceInMemorySpendingKey }, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
       const tezosInitialBalance = await Tezos.tz.getBalance(tezosAddress1);
-      console.log(tezosInitialBalance)
       const unshieldedTx = await aliceSaplingToolkit.prepareUnshieldedTransaction({
         to: tezosAddress1,
         amount
