@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import * as bip39 from 'bip39';
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   let saplingContract: ContractAbstraction<ContractProvider>;
   let bobInmemorySpendingKey: InMemorySpendingKey;
@@ -15,9 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const memoSize = 8;
 
   describe(`Test interaction with sapling contract having a single sapling state using: ${rpc}`, async () => {
-    
-    const tezosAddress1 = await Tezos.signer.publicKeyHash()
-    
+        
     beforeAll(async (done) => {
       await setup();
 
@@ -192,10 +190,16 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it('Verify that Alice can unshield tokens', async (done) => {
 
+      const LocalTez = await createAddress();
+      const opToFundNewAddress = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
+      await opToFundNewAddress.confirmation();
+			const tezosAddress1 = await LocalTez.signer.publicKeyHash();
+      console.log(tezosAddress1)
+
       const amount = 1;
       const aliceSaplingToolkit = new SaplingToolkit({ saplingSigner: aliceInMemorySpendingKey }, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
       const tezosInitialBalance = await Tezos.tz.getBalance(tezosAddress1);
-
+      console.log(tezosInitialBalance)
       const unshieldedTx = await aliceSaplingToolkit.prepareUnshieldedTransaction({
         to: tezosAddress1,
         amount
@@ -215,7 +219,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it("Verify that Alice's balance in the sapling pool updated after the unshielded tx", async (done) => {
+    it("Verify that Alice's balance in the sapling pool is updated after the unshielded tx", async (done) => {
       const aliceSaplingToolkit = new SaplingToolkit({ saplingSigner: aliceInMemorySpendingKey }, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc))
       const aliceTxViewer = await aliceSaplingToolkit.getSaplingTransactionViewer();
       const aliceBalance = await aliceTxViewer.getBalance();
