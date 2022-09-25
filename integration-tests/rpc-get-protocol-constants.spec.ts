@@ -823,26 +823,13 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                     feature_enable: false,
                     number_of_shards: 2048,
                     number_of_slots: 256,
-<<<<<<< HEAD
-                    redundancy_factor: 16,
-                    segment_size: 4096,
-                    slot_size: 1048576,
-                    },
-=======
                 },
->>>>>>> master
                 cache_layout_size: 3,
                 cache_sampler_state_cycles: 8,
                 cache_script_size: 100000000,
                 cache_stake_distribution_cycles: 8,
                 cycles_per_voting_period: 1,
                 sc_max_wrapped_proof_binary_size: 30000,
-<<<<<<< HEAD
-                sc_rollup_challenge_window_in_blocks: 40,
-                sc_rollup_commitment_period_in_blocks: 20,
-                sc_rollup_enable: true,
-                sc_rollup_max_active_outbox_levels: 20160,
-=======
                 sc_rollup_challenge_window_in_blocks: 20160,
                 sc_rollup_enable: false,
                 sc_rollup_max_available_messages: 1000000,
@@ -850,19 +837,10 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
                 sc_rollup_commitment_period_in_blocks: 30,
                 sc_rollup_max_active_outbox_levels: 20160,
                 sc_rollup_message_size_limit: 4096,
->>>>>>> master
                 sc_rollup_max_lookahead_in_blocks: 30000,
                 sc_rollup_max_number_of_messages_per_commitment_period: 32765,
                 sc_rollup_max_outbox_messages_per_level: 100,
-<<<<<<< HEAD
-                sc_rollup_message_size_limit: 4096,
-                sc_rollup_number_of_sections_in_dissection: 32,
-                sc_rollup_origination_size: 6314,
-                sc_rollup_stake_amount: "10000000000",
-                sc_rollup_timeout_period_in_blocks: 20160,
-=======
                 sc_rollup_stake_amount: "32000000",
->>>>>>> master
                 tx_rollup_commitment_bond: new BigNumber(10000000000),
                 tx_rollup_cost_per_byte_ema_factor: 120,
                 tx_rollup_enable: true,

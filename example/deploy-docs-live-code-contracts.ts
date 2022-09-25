@@ -29,7 +29,7 @@ import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
 
-const provider = 'https://kathmandunet.ecadinfra.com/';
+const provider = 'http://mondaynet.ecadinfra.com:8732';
 export const signer = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
