@@ -20,7 +20,7 @@
     "@docusaurus/core": "2.0.0-beta.19",
     "@docusaurus/plugin-google-gtag": "2.0.0-beta.19",
     "@docusaurus/preset-classic": "2.0.0-beta.19",
-    "@docusaurus/theme-live-codeblock": "2.0.0-beta.19",
+    "@docusaurus/theme-live-codeblock": "2.1.0",
     "@docusaurus/theme-search-algolia": "2.0.0-beta.19",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
