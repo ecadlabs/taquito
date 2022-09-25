@@ -5,12 +5,13 @@ import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }) => {
     const Tezos = lib;
-    describe(`Test contract.batch using: ${rpc}`, () => {
+
+    describe(`Test contract.batch through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
-        test('Simple transfers with origination (where the code in JSON Michelson format)', async (done) => {
+        test('Verify contract.batch simple transfers with origination code in JSON Michelson format',  async (done) => {
             const batch = Tezos.contract
                 .batch()
                 .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -29,7 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             done();
         });
 
-        test('Simple transfers with origination (where the code in Michelson format)', async (done) => {
+        test('Verify contract.batch simple transfers with origination code in Michelson format',  async (done) => {
             const batch = Tezos.contract
                 .batch()
                 .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -47,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             done();
         });
 
-        test('Simple transfers with origination using with', async (done) => {
+        test('Verify batch of transfers and origination operation using a combination of the two notations (array of operation with kind mixed with withTransfer method)',  async (done) => {
             const op = await Tezos.contract.batch([
                 {
                     kind: OpKind.TRANSACTION,
@@ -69,7 +70,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             done();
         })
 
-        test('Simple transfers with bad origination', async (done) => {
+        test('Verify handling of contract.batch simple transfers with bad origination',  async (done) => {
             expect.assertions(1);
             try {
                 await Tezos.contract
@@ -94,7 +95,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             done();
         });
 
-        test('Test batch from account with low balance', async (done) => {
+        test('Verify transfer and origination for contract.batch simple transfers from an account with low balance',  async (done) => {
             const LocalTez = await createAddress();
             const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
             await op.confirmation();
@@ -121,7 +122,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             done();
         });
 
-        test('Chain contract calls', async (done) => {
+        test('Verify contract.batch simple transfers with chained contract calls',  async (done) => {
             const op = await Tezos.contract.originate({
                 balance: '1',
                 code: managerCode,
@@ -148,7 +149,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             done();
         });
 
-        test('Batch transfers and method call', async (done) => {
+        test('Verify contract.batch of simple transfers and a contract entrypoint call using the array notation with kind',  async (done) => {
             const contract = await Tezos.contract.at(knownContract);
             const batchOp = await Tezos.contract
                 .batch([
@@ -164,28 +165,27 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             done();
         });
 
-        test('Batch multiple originations and get contract address info from getOriginatedContractAddresses member function', async (done) => {
-          const batch = Tezos.contract
-              .batch()
-              .withOrigination({
-                balance: '1',
-                code: ligoSample,
-                storage: 0
-              })
-              .withOrigination({
-                balance: '1',
-                code: ligoSampleMichelson,
-                storage: 0
-              })
-              
-          const op = await batch.send();
-          await op.confirmation();
-          
-          const addresses = op.getOriginatedContractAddresses();
-          expect(op.status).toEqual('applied');
-          expect(addresses.length).toEqual(2);
-          done();
-        })
-
+        test('Verify that with a batch of multiple originations contract address info can be got from the getOriginatedContractAddresses member function', async (done) => {
+            const batch = Tezos.contract
+                .batch()
+                .withOrigination({
+                  balance: '1',
+                  code: ligoSample,
+                  storage: 0
+                })
+                .withOrigination({
+                  balance: '1',
+                  code: ligoSampleMichelson,
+                  storage: 0
+                })
+                
+            const op = await batch.send();
+            await op.confirmation();
+            
+            const addresses = op.getOriginatedContractAddresses();
+            expect(op.status).toEqual('applied');
+            expect(addresses.length).toEqual(2);
+            done();
+          })
     });
 });

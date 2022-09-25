@@ -6,7 +6,8 @@
     "test:jakartanet-secret-key": "RUN_JAKARTANET_WITH_SECRET_KEY=true jest --runInBand",
     "test:kathmandunet": "KATHMANDUNET=true jest",
     "test:kathmandunet-secret-key": "RUN_KATHMANDUNET_WITH_SECRET_KEY=true jest --runInBand",
-    "test:originate-known-contracts": "MONDAYNET=true node -r ts-node/register originate-known-contracts.ts",
+    "test:originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
+    "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest",
     "test:mondaynet": "MONDAYNET=true jest",
     "test:mondaynet-secret-key": "RUN_MONDAYNET_WITH_SECRET_KEY=true jest --runInBand",
     "test": "jest"

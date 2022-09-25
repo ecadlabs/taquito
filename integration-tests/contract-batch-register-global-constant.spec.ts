@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Batch transfer and register global constant operations', async (done) => {
+        test('Verify the contract.batch transfer and register global constant operations', async (done) => {
             const isAccountRevealed = await Tezos.rpc.getManagerKey(await Tezos.signer.publicKeyHash());
 
             const batchOp = await Tezos.contract

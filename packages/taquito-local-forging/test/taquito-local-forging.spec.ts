@@ -1,4 +1,4 @@
-import { LocalForger } from '../src/taquito-local-forging';
+import { LocalForger, ProtocolsHash } from '../src/taquito-local-forging';
 import { ticketCode3, ticketStorage3 } from '../../../integration-tests/data/code_with_ticket';
 import { commonCases, kathmanduCases } from '../../../integration-tests/data/allTestsCases';
 import {
@@ -8,6 +8,7 @@ import {
 } from '../src/error';
 
 import { InvalidOperationKindError } from '@taquito/utils';
+import { ProtoInferiorTo } from '../src/protocols';
 
 describe('Forge and parse operations default protocol', () => {
   const localForger = new LocalForger();
@@ -151,5 +152,21 @@ describe('Forge should validate parameters against the schema', () => {
       expect(e).toBeInstanceOf(UnsupportedOperationError);
       expect(e.message).toEqual(`The operation '76' is unsupported`);
     }
+  });
+
+  describe('Verify the ProtoInferiorTo function in protocols.ts', () => {
+
+    const a = ProtocolsHash.Pt24m4xi
+    const b = ProtocolsHash.PtKathman
+
+    test('Verify protocol Babylon is inferior to protocol Kathmandu', () => {
+      const trueProtoInferiorTo = ProtoInferiorTo(a, b);
+      expect(trueProtoInferiorTo).toEqual(true)
+    });
+
+    test('Verify protocol Kathmandu is not inferior to protocol Babylon', () => {
+      const falseProtoInferiorTo = ProtoInferiorTo(b, a);
+      expect(falseProtoInferiorTo).toEqual(false)
+    });
   });
 });
