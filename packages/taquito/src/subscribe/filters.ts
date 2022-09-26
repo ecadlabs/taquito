@@ -54,18 +54,14 @@ const destinationFilter = (x: OperationContent, filter: DestinationFilter) => {
 
 export const eventFilter = (result: InternalOperationResult, address?: string, tag?: string) => {
   if (result.kind === 'event') {
-    if (address) {
-      if (tag) {
-        return result.source === address && result.tag === tag;
-      } else if (!tag) {
-        return result.source === address;
-      }
-    } else if (!address) {
-      if (tag) {
-        return result.tag === tag;
-      } else if (!tag) {
-        return true;
-      }
+    if (address && tag) {
+      return result.source === address && result.tag === tag;
+    } else if (address && !tag) {
+      return result.source === address;
+    } else if (tag) {
+      return result.tag === tag;
+    } else {
+      return true;
     }
   } else {
     return false;

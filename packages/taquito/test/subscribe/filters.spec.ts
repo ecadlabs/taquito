@@ -31,6 +31,17 @@ const mockInternalOperationResult = {
   },
 };
 
+const mockNonEventInternalOperationResult = {
+  kind: 'transaction',
+  source: 'KT1TzvwJxn8dNHc8M2FLvTiUg6LwjUfC4X94',
+  nonce: 2,
+  type: {},
+  result: {
+    status: 'applied',
+    consumed_milligas: '1000000',
+  },
+};
+
 describe('Evaluate OpFilter', () => {
   it('should return true if match hash filter', () => {
     const result = evaluateOpFilter({ hash: 'test' } as any, { opHash: 'test' });
@@ -116,6 +127,15 @@ describe('Event filter', () => {
       mockInternalOperationResult as InternalOperationResult,
       'invalid',
       'invalid'
+    );
+    expect(result).toBeFalsy();
+  });
+
+  it('should return false when internal_operation_result kind is not event', () => {
+    const result = eventFilter(
+      mockNonEventInternalOperationResult as InternalOperationResult,
+      'tag',
+      'test'
     );
     expect(result).toBeFalsy();
   });

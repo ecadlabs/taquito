@@ -44,7 +44,7 @@ export interface SubscribeProvider {
   subscribe(filter: 'head'): Subscription<string>;
   subscribeBlock(filter: 'head'): Subscription<BlockResponse>;
   subscribeOperation(filter: Filter): Subscription<OperationContent>;
-  subscribeEvent(filter: EventFilter): Subscription<InternalOperationResult>;
+  subscribeEvent(filter?: EventFilter): Subscription<InternalOperationResult>;
 }
 export interface Subscription<T> {
   on(type: 'error', cb: (error: Error) => void): void;

@@ -58,7 +58,7 @@ const applyFilter = (filter: Filter) =>
     });
   });
 
-const applyEventFilter = (filter: EventFilter) =>
+const applyEventFilter = (filter?: EventFilter) =>
   concatMap<BlockResponse, ObservableInput<EventSubscription>>((block) => {
     return new Observable<EventSubscription>((sub) => {
       for (const ops of block.operations) {
@@ -68,7 +68,7 @@ const applyEventFilter = (filter: EventFilter) =>
             const internalOpResults = tx.metadata.internal_operation_results;
             if (internalOpResults) {
               for (const event of internalOpResults) {
-                if (eventFilter(event, filter.address, filter.tag)) {
+                if (eventFilter(event, filter?.address, filter?.tag)) {
                   sub.next({
                     opHash: op.hash,
                     blockHash: block.hash,
@@ -171,7 +171,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
     );
   }
 
-  subscribeEvent(eventFilter: EventFilter): Subscription<InternalOperationResult> {
+  subscribeEvent(eventFilter?: EventFilter): Subscription<InternalOperationResult> {
     return new ObservableSubscription(
       this.newBlock$.pipe(applyEventFilter(eventFilter)),
       this.config.shouldObservableSubscriptionRetry,
