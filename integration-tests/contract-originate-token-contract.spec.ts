@@ -7,14 +7,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   let contract: ContractAbstraction<ContractProvider>;
 
-  describe(`Test origination of a token contract using: ${rpc}`, () => {
+  describe(`Test contract origination of a token contract through contract api using: ${rpc}`, () => {
 
     beforeAll(async (done) => {
       await setup()
       done()
     })
 
-    test('originates a token contract and mints some tokens', async (done) => {
+    test('Verify contract.originate for a token contract and mints some tokens', async (done) => {
       // TODO: Fails when using ephemeral keys
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -36,9 +36,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('mints some tokens using the `methodObjects` method', async (done) => {
+
+    test('Verify a token contract mints some tokens using the `methodObjects` method', async (done) => {
+
+
       const opMethod = await contract.methodsObject.mint({
-        to: await Tezos.signer.publicKeyHash(), 
+        to: await Tezos.signer.publicKeyHash(),
         value: 100
       }).send();
 

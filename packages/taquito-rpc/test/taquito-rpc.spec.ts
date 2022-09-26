@@ -37,6 +37,7 @@ import {
   blockMondaynetSample,
   delegatesIthacanetSample,
   delegatesKathmandunetSample,
+  votingInfoKathmandunetSample,
 } from './data/rpc-responses';
 
 /**
@@ -352,6 +353,32 @@ describe('RpcClient test', () => {
         deactivated: false,
         grace_period: 42,
         voting_power: new BigNumber(968128693450),
+        remaining_proposals: 20,
+      });
+
+      done();
+    });
+  });
+
+  describe('getVotingInfo', () => {
+    it('should query the right url', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetSample);
+      await client.getVotingInfo(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/delegates/${contractAddress}/voting_info`,
+      });
+
+      done();
+    });
+
+    it('should parse the response properly', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetSample);
+      const response = await client.getVotingInfo(contractAddress);
+
+      expect(response).toEqual({
+        voting_power: '1054404383333',
         remaining_proposals: 20,
       });
 

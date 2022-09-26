@@ -2313,6 +2313,10 @@ export const delegates = {
   grace_period: 131,
   voting_power: 747,
 };
+export const votingInfo = {
+  voting_power: '1005169895965',
+  remaining_proposals: 20,
+};
 export const constants = {
   proof_of_work_nonce_size: 8,
   nonce_length: 32,
@@ -2507,6 +2511,11 @@ export const delegatesKathmandunetSample = {
   deactivated: false,
   grace_period: 42,
   voting_power: '968128693450',
+  remaining_proposals: 20,
+};
+
+export const votingInfoKathmandunetSample = {
+  voting_power: '1054404383333',
   remaining_proposals: 20,
 };
 
