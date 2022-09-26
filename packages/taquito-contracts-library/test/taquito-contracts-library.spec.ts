@@ -2,10 +2,21 @@ import { InvalidAddressError, InvalidScriptFormatError } from '../src/errors';
 import { ContractsLibrary } from '../src/taquito-contracts-library';
 import { entrypoints, entrypoints2 } from './data/contract-entrypoints';
 import { script, script2 } from './data/contract-script';
+import { TezosToolkit } from "@taquito/taquito";
+import { Tzip16Module } from '@taquito/tzip16';
+import { VERSION } from '../src/version';
+import { validateAddress } from '@taquito/utils';
 
 describe('ContractsLibrary tests', () => {
   it('ContractsLibrary is instantiable', () => {
     expect(new ContractsLibrary()).toBeInstanceOf(ContractsLibrary);
+  });
+  
+  it('get VERSION for ContractsLibrary', () => {
+    const version = VERSION
+    expect(version).toBeDefined
+    expect(version.commitHash).toHaveLength(40)
+    expect(version.version).toHaveLength(6)
   });
 
   it('adds one contract to the library', () => {
@@ -90,18 +101,35 @@ describe('ContractsLibrary tests', () => {
           script,
           entrypoints,
         },
+    
       });
     } catch (e: any) {
+      expect
+      expect(validateAddress(contractAddress)).toEqual(0)
       expect(e).toBeInstanceOf(InvalidAddressError);
       expect(e.message).toEqual(`Address is invalid: ${contractAddress}`);
       expect(e).toBeInstanceOf(Error);
     }
   });
 
+  it('do not throw an InvalidAddress error if the contract address is valid', () => {
+    const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
+    const contractLib = new ContractsLibrary();
+
+    contractLib.addContract({
+      [contractAddress]: {
+        script,
+        entrypoints,
+      },
+    });
+  });
+
   it('throw an InvalidScriptFormatError error if the script format is invalid', () => {
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const contractLib = new ContractsLibrary();
     const script: any = 'invalid';
+
+    !expect(script.code);
 
     try {
       contractLib.addContract({
@@ -117,5 +145,24 @@ describe('ContractsLibrary tests', () => {
       );
       expect(e).toBeInstanceOf(Error);
     }
+  });
+
+  it('Test the configure context function', () => {
+    const rpcUrl = 'https://jakartanet.ecadinfra.com/';
+    const Tezos = new TezosToolkit(rpcUrl);
+    const contractsLibrary = new ContractsLibrary();
+    const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
+    contractsLibrary.addContract({
+      [contractAddress]: {
+        script,
+        entrypoints,
+      },
+    });
+    const contractData = contractsLibrary.getContract(contractAddress);
+
+    expect(contractData.entrypoints).toEqual(entrypoints);
+    expect(contractData.script).toEqual(script);
+    expect(Tezos.addExtension([contractsLibrary, new Tzip16Module()])).toBeDefined
+
   });
 });
