@@ -5,7 +5,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const kathmandunetAndMondaynet = protocol === Protocols.PtKathman || Protocols.ProtoALpha ? test: test.skip;
+  const kathmandunetAndMondaynet = (protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha) ? test: test.skip;
   let eventContractAddress: string;
   
   describe(`Polling Subscribe Provider using ${rpc}`, () => {
