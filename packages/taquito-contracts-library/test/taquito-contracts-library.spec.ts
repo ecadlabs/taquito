@@ -2,7 +2,7 @@ import { InvalidAddressError, InvalidScriptFormatError } from '../src/errors';
 import { ContractsLibrary } from '../src/taquito-contracts-library';
 import { entrypoints, entrypoints2 } from './data/contract-entrypoints';
 import { script, script2 } from './data/contract-script';
-import { TezosToolkit } from "@taquito/taquito";
+import { TezosToolkit } from '@taquito/taquito';
 import { Tzip16Module } from '@taquito/tzip16';
 import { VERSION } from '../src/version';
 import { validateAddress } from '@taquito/utils';
@@ -148,8 +148,7 @@ describe('ContractsLibrary tests', () => {
   });
 
   it('Test the configure context function', () => {
-    const rpcUrl = 'https://jakartanet.ecadinfra.com/';
-    const Tezos = new TezosToolkit(rpcUrl);
+    const Tezos = new TezosToolkit('fake');
     const contractsLibrary = new ContractsLibrary();
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     contractsLibrary.addContract({
@@ -159,10 +158,8 @@ describe('ContractsLibrary tests', () => {
       },
     });
     const contractData = contractsLibrary.getContract(contractAddress);
-
     expect(contractData.entrypoints).toEqual(entrypoints);
     expect(contractData.script).toEqual(script);
     expect(Tezos.addExtension([contractsLibrary, new Tzip16Module()])).toBeDefined
-
   });
 });
