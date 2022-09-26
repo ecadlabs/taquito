@@ -58,5 +58,5 @@ describe('RpcWrapperContractsLibrary tests', () => {
     expect(await readWrapper.getScript(contractAddress, 'head')).toEqual(script);
     expect(await readWrapper.getEntrypoints(contractAddress)).toEqual(entrypoints);
     done();
-  });
+   });   
 });
