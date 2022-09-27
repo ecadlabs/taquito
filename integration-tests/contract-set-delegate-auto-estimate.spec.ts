@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
           // Forbidden delegate deletion
           expect(ex.message).toMatch('delegate.no_deletion')
         } else {
-          // When running tests more than one time with the same faucet key, the account is already delegated to the given delegate
+          // When running tests more than one time with the same key, the account is already delegated to the given delegate
           expect(ex.message).toMatch('delegate.unchanged')
         }
       }

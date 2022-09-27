@@ -45,51 +45,7 @@ Tezos.setProvider({
 });
 ```
 
-### Using a testnet faucet key
-
-To load a faucet key (available from https://teztnets.xyz/) for working with a public testnet, use the `importKey` function.
-
-```js
-import { TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
-
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_TESTNET_RPC_URL');
-
-// A key faucet, similar to what is available from https://teztnets.xyz/
-const FAUCET_KEY = {
-  mnemonic: [
-    'cart',
-    'will',
-    'page',
-    'bench',
-    'notice',
-    'leisure',
-    'penalty',
-    'medal',
-    'define',
-    'odor',
-    'ride',
-    'devote',
-    'cannon',
-    'setup',
-    'rescue',
-  ],
-  secret: '35f266fbf0fca752da1342fdfc745a9c608e7b20',
-  amount: '4219352756',
-  pkh: 'tz1YBMFg1nLAPxBE6djnCPbMRH5PLXQWt8Mg',
-  password: 'Fa26j580dQ',
-  email: 'jxmjvauo.guddusns@tezos.example.org',
-};
-
-importKey(
-  Tezos,
-  FAUCET_KEY.email,
-  FAUCET_KEY.password,
-  FAUCET_KEY.mnemonic.join(' '),
-  FAUCET_KEY.secret
-);
-// Your Tezos instance is now operably configured for signing with the faucet key.
-```
+The following link can be used to fund an address on the different testnets: https://teztnets.xyz/.
 
 ## Additional info
 
