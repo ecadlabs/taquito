@@ -22,7 +22,7 @@ const Tezos = new TezosToolkit(RPC_URL);
 Tezos.setStreamProvider(
   Tezos.getFactory(PollingSubscribeProvider)({
     shouldObservableSubscriptionRetry: true, 
-    pollingIntervalMilliseconds: 15000 
+    pollingIntervalMilliseconds: 1500 
   })
 );
 
