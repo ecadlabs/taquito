@@ -3,13 +3,13 @@ import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
-  describe(`Test delegation off account using: ${rpc}`, () => {
+  describe(`Test delegation of account through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)
       done()
     })
-    it('succeeds in delegating its account to a known baker', async (done) => {
+    it('Verify that account can be delegated to a known baker using contract.setDelegate', async (done) => {
       const delegate = knownBaker
       const pkh = await Tezos.signer.publicKeyHash()
       try {
