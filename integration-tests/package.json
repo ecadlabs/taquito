@@ -15,7 +15,8 @@
   "version": "14.0.0",
   "dependencies": {
     "@ledgerhq/hw-transport": "^6.27.2",
-    "@ledgerhq/hw-transport-node-hid": "^6.27.3",
+    "@ledgerhq/hw-transport-node-hid": "^6.20.0",
+    "@taquito/contracts-library": "^14.0.0",
     "@taquito/http-utils": "^14.0.0",
     "@taquito/local-forging": "^14.0.0",
     "@taquito/michel-codec": "^14.0.0",
@@ -28,7 +29,6 @@
     "@taquito/tzip12": "^14.0.0",
     "@taquito/tzip16": "^14.0.0",
     "@taquito/utils": "^14.0.0",
-    "@taquito/contracts-library": "^14.0.0",
     "bignumber.js": "^9.1.0",
     "bip39": "^3.0.4",
     "blakejs": "^1.2.1"
@@ -50,7 +50,7 @@
       "/test/"
     ],
     "testPathIgnorePatterns": [
-
+      "./ledger-signer.spec.ts",
       "./ledger-signer-failing-tests.spec.ts"
     ],
     "reporters": [
