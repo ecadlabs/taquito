@@ -5,10 +5,8 @@ import { packDataBytes } from '../src/binary';
 import { InvalidContractError, InvalidDataExpressionError, InvalidTypeExpressionError } from '../src/error';
 import { Parser } from '../src/micheline-parser';
 import { Contract, ContractOptions } from '../src/michelson-contract';
-import { MichelsonReturnType, Protocol } from '../src/michelson-types';
-import { MichelsonError, MichelsonTypeError } from '../src/utils';
-import { formatStack, traceDumpFunc, formatError } from '../src/formatters';
-import { assertTypeAnnotationsValid } from '../src/michelson-typecheck';
+import { Protocol } from '../src/michelson-types';
+import { MichelsonError} from '../src/utils';
 import { MichelsonValidationError } from '../src/michelson-validator';
 
 const contracts: {
