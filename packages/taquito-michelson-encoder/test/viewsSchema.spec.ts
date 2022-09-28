@@ -1,8 +1,11 @@
 import BigNumber from 'bignumber.js';
 import { script } from '../data/contract_with_views';
-import { rpcContractResponse } from '../data/sample20';
-import { InvalidScriptError, ViewEncodingError } from '../src/schema/error';
+import { bigMapDiff } from '../data/sample1';
+import { rpcContractResponse, storage } from '../data/sample20';
+import { InvalidBigMapDiff, InvalidBigMapSchema, InvalidRpcResponseError, InvalidScriptError, ParameterEncodingError, ViewEncodingError } from '../src/schema/error';
 import { ViewSchema } from '../src/schema/view-schema';
+import { MichelsonMap, ParameterSchema, Schema } from '../src/taquito-michelson-encoder';
+import { expectMichelsonMap } from './utils';
 
 describe('ViewSchema test', () => {
     const viewIsTwenty = [
@@ -103,7 +106,7 @@ describe('ViewSchema.fromRPCResponse test', () => {
         expect(viewSchemas.length).toEqual(0);
     });
 
-    it('Should throw if view does not have the right length of elements', () => {
+    it('Should throw InvalidScriptError if view does not have the right length of elements', () => {
         expect(() =>
             ViewSchema.fromRPCResponse({
                 script: {
@@ -113,5 +116,34 @@ describe('ViewSchema.fromRPCResponse test', () => {
                     }], storage: {}
                 }
             })).toThrowError(InvalidScriptError);
+    });
+
+    it('Should throw InvalidRpcResponseError if storage is not an array', () => {
+        expect(() =>
+            Schema.fromRPCResponse({
+                script: {
+                    code: [{
+                        prim: 'view',
+                        args: [{ string: 'add' }, { prim: 'nat' }, { prim: 'nat' }]
+                    }], storage: []
+                }
+            })).toThrowError(InvalidRpcResponseError);
+    });
+
+    it('Should throw InvalidBigMapSchema if big map schema is invalid', () => {
+        const schema = new Schema(storage);
+        const bigMap = [
+            {
+                key_hash: 'expruBGgmdtDn1qJCVYrfyAoyXboENZqaysqPQmYmSEcEaAu8Zd2R9',
+                key: { bytes: '000041145574571df6030acad578fdc8d41c4979f0df' },
+                value: {}
+            }
+        ];
+        try {
+            schema.ExecuteOnBigMapDiff(bigMap)
+        } catch (error: any) {
+            expect(error).toBeInstanceOf(InvalidBigMapSchema);
+            expect(error.message).toContain('Big map schema is undefined');
+        }
     });
 });
