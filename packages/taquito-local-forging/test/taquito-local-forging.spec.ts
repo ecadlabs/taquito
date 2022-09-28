@@ -37,7 +37,8 @@ describe('Forge and parse operations default protocol', () => {
     const hexToParse = `0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28`
 
     const localForger = new LocalForger();
-    test('Should throw error when operation kind is invalid', async () => {
+    
+    test('Should throw an error when operation kind is invalid', async () => {
       try {
         const operation: any = {
           branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
