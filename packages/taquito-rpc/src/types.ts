@@ -111,6 +111,13 @@ export interface DelegatesResponse {
   remaining_proposals?: number;
 }
 
+export type VotingInfoResponse = {
+  voting_power?: string;
+  current_ballot?: BallotListResponseEnum;
+  current_proposals?: string[];
+  remaining_proposals?: number;
+};
+
 interface Frozenbalancebycycle {
   cycle: number;
   deposit?: BigNumber;

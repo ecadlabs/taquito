@@ -126,6 +126,12 @@ CONFIGS().forEach(
           done();
         });
 
+        kathmandunetAndAlpha(`Fetches voting information about a delegate from RPC`, async (done) => {
+          const votinInfo = await rpcClient.getVotingInfo(knownBaker);
+          expect(votinInfo).toBeDefined();
+          done();
+        });
+
         it('Verify that rpcClient.getConstants returns all constants from RPC', async (done) => {
           const constants = await rpcClient.getConstants();
           expect(constants).toBeDefined();
