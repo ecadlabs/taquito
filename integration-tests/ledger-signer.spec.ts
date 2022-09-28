@@ -186,43 +186,42 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-      describe('Verify that use of a ledger device works with bip32', () => {
-        jest.setTimeout(60000);
-        it('Verify that the pk is correct', async (done) => {
-          const signer = new LedgerSigner(
-            transport,
-            "44'/1729'/1'/0'",
-            false,
-            DerivationType.BIP32_ED25519
-          )
-          const Tezos = new TezosToolkit(rpc);
-          Tezos.setSignerProvider(signer);
-          const pk = await Tezos.signer.publicKey();
-          expect(pk).toEqual('edpkujVjFVJtb9Z1D7jpSpPMrKzdTRZSRT8E3L26T42vvA6VSv7jND');
-          done();
-        })
+    describe('Verify that use of a ledger device works with bip32', () => {
+      jest.setTimeout(60000);
+      it('Verify that the pk is correct', async (done) => {
+        const signer = new LedgerSigner(
+          transport,
+          "44'/1729'/1'/0'",
+          false,
+          DerivationType.BIP32_ED25519
+        )
+        const Tezos = new TezosToolkit(rpc);
+        Tezos.setSignerProvider(signer);
+        const pk = await Tezos.signer.publicKey();
+        expect(pk).toEqual('edpkujVjFVJtb9Z1D7jpSpPMrKzdTRZSRT8E3L26T42vvA6VSv7jND');
+        done();
       })
-      describe('Verify that use of a ledger device works with bip32', () => {
-        jest.setTimeout(60000);
-        it('Verify that the pk and pkh is correct', async (done) => {
-          const signer = new LedgerSigner(
-            transport,
-            "44'/1729'/1'/0'",
-            false,
-            DerivationType.BIP32_ED25519
-          )
-          const Tezos = new TezosToolkit(rpc);
-          Tezos.setSignerProvider(signer);
+    })
+    describe('Verify that use of a ledger device works with bip32', () => {
+      jest.setTimeout(60000);
+      it('Verify that the pk and pkh is correct', async (done) => {
+        const signer = new LedgerSigner(
+          transport,
+          "44'/1729'/1'/0'",
+          false,
+          DerivationType.BIP32_ED25519
+        )
+        const Tezos = new TezosToolkit(rpc);
+        Tezos.setSignerProvider(signer);
 
-          const pk = await Tezos.signer.publicKey();
-          const pkh = await Tezos.signer.publicKeyHash();
+        const pk = await Tezos.signer.publicKey();
+        const pkh = await Tezos.signer.publicKeyHash();
 
-          expect(pk).toEqual('edpkujVjFVJtb9Z1D7jpSpPMrKzdTRZSRT8E3L26T42vvA6VSv7jND');
-          expect(pkh).toEqual('tz1UpizQ6AGjMeCZCLpuyuL4BSzoUC4XD1QE');
+        expect(pk).toEqual('edpkujVjFVJtb9Z1D7jpSpPMrKzdTRZSRT8E3L26T42vvA6VSv7jND');
+        expect(pkh).toEqual('tz1UpizQ6AGjMeCZCLpuyuL4BSzoUC4XD1QE');
 
-          done();
-        })
+        done();
       })
-    });
-  })
+    })
+  });
 })
