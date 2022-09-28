@@ -83,7 +83,7 @@ const validatorsMap = new MichelsonMap();
 //key is a nat, value is an address
 validatorsMap.set('1', 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP')
 
-importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, secretKey)
 .then(() => {
   return Tezos.contract.originate({
     code : contractJson,
@@ -132,7 +132,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 // const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
-importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, secretKey)
 .then(signer => {
     return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
 }).then(myContract => {
@@ -150,7 +150,7 @@ importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
 // const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
-importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, secretKey)
 .then(signer => {
     return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
 }).then(myContract => {
@@ -181,7 +181,7 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 // const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
-importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, secretKey)
 .then(signer => {
     return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
 }).then(myContract => {
