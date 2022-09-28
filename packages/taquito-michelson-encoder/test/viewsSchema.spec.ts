@@ -1,11 +1,9 @@
 import BigNumber from 'bignumber.js';
 import { script } from '../data/contract_with_views';
-import { bigMapDiff } from '../data/sample1';
 import { rpcContractResponse, storage } from '../data/sample20';
-import { InvalidBigMapDiff, InvalidBigMapSchema, InvalidRpcResponseError, InvalidScriptError, ParameterEncodingError, ViewEncodingError } from '../src/schema/error';
+import { InvalidBigMapSchema, InvalidRpcResponseError, InvalidScriptError, ParameterEncodingError, ViewEncodingError } from '../src/schema/error';
 import { ViewSchema } from '../src/schema/view-schema';
-import { MichelsonMap, ParameterSchema, Schema } from '../src/taquito-michelson-encoder';
-import { expectMichelsonMap } from './utils';
+import { Schema } from '../src/taquito-michelson-encoder';
 
 describe('ViewSchema test', () => {
     const viewIsTwenty = [
