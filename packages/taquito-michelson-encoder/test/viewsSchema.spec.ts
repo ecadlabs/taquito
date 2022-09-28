@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { script } from '../data/contract_with_views';
 import { rpcContractResponse, storage } from '../data/sample20';
-import { InvalidBigMapSchema, InvalidRpcResponseError, InvalidScriptError, ParameterEncodingError, ViewEncodingError } from '../src/schema/error';
+import { InvalidBigMapSchema, InvalidRpcResponseError, InvalidScriptError, ViewEncodingError } from '../src/schema/error';
 import { ViewSchema } from '../src/schema/view-schema';
 import { Schema } from '../src/taquito-michelson-encoder';
 
