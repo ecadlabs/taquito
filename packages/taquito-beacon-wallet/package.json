@@ -27,6 +27,9 @@
     "node": ">=6.0.0"
   },
   "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch",
+    "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
@@ -52,6 +55,9 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
@@ -61,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^3.1.4",
+    "@airgap/beacon-dapp": "^3.2.0",
     "@taquito/taquito": "^14.0.0",
     "libsodium-wrappers": "0.7.9"
   },

@@ -9,13 +9,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddress: string;
     let contractMetadataInAnotherContract: string;
 
-    describe(`Originating wallet api contracts having metadata stored on chain: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored on chain through wallet api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-        it('Deploy a wallet api contract having metadata inside its own storage', async (done) => {
+        it('Verify wallet.originate for a contract having metadata inside its own storage', async (done) => {
 
             const metadataJSON = {
                 "name": "test",
@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Fetch the metadata in the wallet api contract itself', async (done) => {
+        it('Verify the metadata for a contract having metadata inside its own storage can be fetched', async (done) => {
 
             const contract = await Tezos.wallet.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -71,7 +71,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Deploy a wallet api contract having metadata inside another contract same network', async (done) => {
+        it('Verify wallet.originate for a contract having metadata inside another contract same network', async (done) => {
 
             const metadataBigMAp = new MichelsonMap();
             metadataBigMAp.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
@@ -91,7 +91,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Fetch the metadata in the storage of the other wallet api contract', async (done) => {
+        it('Verify that metadata for contract having metadata inside another contract on the same network can be fetched', async (done) => {
 
             const contract = await Tezos.wallet.at(contractMetadataInAnotherContract, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -111,6 +111,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
               });
             done();
         });
-        
+
     });
 })

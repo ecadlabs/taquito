@@ -25,6 +25,7 @@ import {
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/utils';
 
 /**
  * RPCEstimateProvider test
@@ -562,6 +563,46 @@ describe('RPCEstimateProvider test signer', () => {
         gasLimit: 2223,
         storageLimit: 66,
       });
+
+      done();
+    });
+    it('should throw an error with invalid source', async (done) => {
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHG',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+      };
+
+      expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
+        InvalidAddressError
+      );
+
+      done();
+    });
+    it('should throw an error with invalid destination', async (done) => {
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        fee: 804,
+        gasLimit: 5009,
+        storageLimit: 130,
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26F',
+        entrypoint: 'default',
+      };
+
+      expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
+        InvalidContractAddressError
+      );
 
       done();
     });

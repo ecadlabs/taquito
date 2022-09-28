@@ -55,7 +55,7 @@ Tezos.setProvider({
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
 
 Tezos.tz
   .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')
@@ -84,49 +84,7 @@ Tezos.setProvider({
 });
 ```
 
-#### Importing a Faucet Key
-
-"Faucet Keys" allows you to get Tezos tokens on the various Tezos "testnets." You can download a faucet key for the current and upcoming protocols at https://teztnets.xyz/. The key is a JSON file, which you can use with Taquito as follows:
-
-```js
-import { TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
-
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
-
-const FAUCET_KEY = {
-  mnemonic: [
-    'cart',
-    'will',
-    'page',
-    'bench',
-    'notice',
-    'leisure',
-    'penalty',
-    'medal',
-    'define',
-    'odor',
-    'ride',
-    'devote',
-    'cannon',
-    'setup',
-    'rescue',
-  ],
-  activation_code: '35f266fbf0fca752da1342fdfc745a9c608e7b20',
-  amount: '4219352756',
-  pkh: 'tz1YBMFg1nLAPxBE6djnCPbMRH5PLXQWt8Mg',
-  password: 'Fa26j580dQ',
-  email: 'jxmjvauo.guddusns@tezos.example.org',
-};
-
-importKey(
-  Tezos,
-  FAUCET_KEY.email,
-  FAUCET_KEY.password,
-  FAUCET_KEY.mnemonic.join(' '),
-  FAUCET_KEY.activation_code
-).catch((e) => console.error(e));
-```
+The following link can be used to fund an address on the different testnets: https://teztnets.xyz/.
 
 ### Transfer
 
@@ -151,7 +109,7 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -170,7 +128,7 @@ Tezos.wallet
     println(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(1).then(() => op.opHash);
   })
-  .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -179,7 +137,7 @@ Tezos.wallet
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer; in this example we will use a faucet key. The Ligo source code for the smart contract [KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer. The Ligo source code for the smart contract [KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 <Tabs
 defaultValue="contractAPI"
@@ -191,7 +149,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2')
+  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
   .then((contract) => {
     const i = 7;
 
@@ -202,7 +160,7 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -211,7 +169,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2')
+  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
   .then((wallet) => {
     const i = 7;
 
@@ -222,7 +180,7 @@ Tezos.wallet
     println(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(1).then(() => op.opHash);
   })
-  .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -232,4 +190,4 @@ Tezos.wallet
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/2sVshnZ_Aat5pIuUypIBsQ
-[smart_contract_on_better_call_dev]: https://better-call.dev/jakartanet/KT1A3dyvS4pWd9b9yLLMBKLxc6S6G5b58BsK/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/kathmandunet/KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP/operations

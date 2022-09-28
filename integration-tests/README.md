@@ -34,7 +34,7 @@ npm run test # This runs all tests against all pre-configured testnets
 Depending on where we are in the Tezos protocol proposal upgrade cycle, there could be more than one testnet network configured in the Taquito integration-tests. Targeting a specific testnet can be done using environment variables. The testnet environment variables are found in `taquito/integration-tests/config.ts` (See Configuration section below)  
 
 ```
-jakartaNET=true npm run test
+JAKARTANET=true npm run test
 ```
 
 To target a specific test within the suite, use the jest `--testNamePattern=<regex>` parameter, or `-t` for short.
@@ -72,10 +72,31 @@ npm run test:jakartanet -- -t "Originate FA1.2 contract and fetch data from view
 To run tests against a node that is not preconfigured in Taquito you can use 
 `export TEZOS_RPC_JAKARTANET='http://localhost:8732'`. 
 
-## How to use a faucet instead of the keygen api
+## How to use a secret key instead of the keygen api
 
-By default, the integration tests will use an ephemeral key handled by the Keygen API. To use a faucet instead you can use the cli option <testnet>-faucet, like this:
+By default, the integration tests will use an ephemeral key handled by the Keygen API. To use a secret key instead you can use the cli option <testnet>-secret-key, like this:
 
 ```
-npm run test:hangzhounet-faucet "manager-wallet-scenario.spec.ts"
+npm run test:kathmandunet-secret-key manager-wallet-scenario.spec.ts
+```
+
+You can set your own secret key (and password) or the `defaultSecretKey` from `config.ts` will be used:
+```
+export SECRET_KEY='edsk...'
+```
+
+If running the test from a configured secret key, make sure that the balance of the account is not 0.
+
+## How to configure a different polling interval
+
+Taquito does polling on the head block to confirm that an operation is included in the blockchain using a configurable polling interval. Setting a custom polling interval can be helpful, especially when running the integration tests against a sandbox with low time between blocks. You can configure the polling interval as follows:
+```
+export POLLING_INTERVAL_MILLISECONDS=100
+```
+
+## How to configure a different RPC cache ttl
+
+Responses from GET requests to RPC are cached with a default time of 1000 milliseconds when running integration tests. Caching can be disabled as follows:
+```
+export RPC_CACHE_MILLISECONDS=0
 ```

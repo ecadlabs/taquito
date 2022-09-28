@@ -146,7 +146,6 @@ export interface ContractProvider extends StorageProvider {
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
 
-
   transferTicket(params: TransferTicketParams): Promise<TransferTicketOperation>;
   /**
    *

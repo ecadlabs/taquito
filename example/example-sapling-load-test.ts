@@ -1,25 +1,23 @@
 import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
 import { InMemorySpendingKey, SaplingToolkit } from '@taquito/sapling';
-//import { singleSaplingStateContractJProtocol } from '../integration-tests/data/single_sapling_state_contract_jakarta_michelson';
-
-const provider = 'https://kathmandunet.ecadinfra.com/';
-const numberOfSaplingTx = 1000;
+import { singleSaplingStateContractJProtocol } from '../integration-tests/data/single_sapling_state_contract_jakarta_michelson';
+const numberOfSaplingTx = 100;
 let totalTime = 0;
 
 async function example() {
     try {
+        const provider = 'https://ghostnet.ecadinfra.com';
+        const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
         const tezos = new TezosToolkit(provider);
-        tezos.setSignerProvider(new InMemorySigner('spsk1m4s7kPegWrAHVVJQ8H64UvtojtopmmAfkr64UYyAMDHD4pGDA'))
-        console.log(await tezos.signer.publicKeyHash())
+        tezos.setSignerProvider(signer);
 
-        /* const saplingContractOrigination = await tezos.contract.originate({
-          code: singleSaplingStateContractJProtocol(),
-          init: '{}'
-        }); */
+        const saplingContractOrigination = await tezos.contract.originate({
+            code: singleSaplingStateContractJProtocol(),
+            init: '{}'
+        });
 
-        //const saplingContract = await saplingContractOrigination.contract();
-        const saplingContract = await tezos.contract.at('KT1SmRBZvitJKeW6G491FUyGKHvdUrQtZ5CS');
+        const saplingContract = await saplingContractOrigination.contract();
         console.log(saplingContract.address);
 
         const aliceInMemorySpendingKey = new InMemorySpendingKey('sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L');

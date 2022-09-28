@@ -28,6 +28,7 @@ import {
   CurrentQuorumResponse,
   DelegateResponse,
   DelegatesResponse,
+  VotingInfoResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -422,6 +423,29 @@ export class RpcClient implements RpcClientInterface {
           })
         : undefined,
     };
+  }
+
+  /**
+   *
+   * @param address delegate address which we want to retrieve
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Returns the delegate info (e.g. voting power) found in the listings of the current voting period.
+   *
+   * @see https://tezos.gitlab.io/kathmandu/rpc.html#get-block-id-context-delegates-pkh-voting-info
+   */
+
+  async getVotingInfo(
+    address: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<VotingInfoResponse> {
+    this.validateAddress(address);
+    return await this.httpBackend.createRequest<VotingInfoResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/delegates/${address}/voting_info`
+      ),
+      method: 'GET',
+    });
   }
 
   /**

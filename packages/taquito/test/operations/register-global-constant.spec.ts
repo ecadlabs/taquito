@@ -264,9 +264,7 @@ describe('RegisterGlobalConstant operation', () => {
       {} as any,
       '',
       fakeForgedBytes,
-      [
-        revealBuilder.withResult({}).build(),
-      ],
+      [revealBuilder.withResult({}).build()],
       fakeContext
     );
     expect(op.status).toEqual('unknown');

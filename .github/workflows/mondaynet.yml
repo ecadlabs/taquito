@@ -39,9 +39,11 @@ jobs:
     - name: get required TORU contract addresses
       id: toru-addresses
       run: |
+        echo '::echo::on'
         echo ::set-output name=tx-rollup-hash::$(ssh mondaynet "jq '.[] | select(.name==\"toru_node\") | .value' /srv/tezos/mondaynet_client/tx_rollups | tr -d \\\" ")
         echo ::set-output name=tx-rollup-withdraw-contract::$(ssh mondaynet "jq '.[] | select(.name==\"tx_rollup_withdraw_contract\") | .value' /srv/tezos/mondaynet_client/contracts | tr -d \\\" ")
         echo ::set-output name=tx-rollup-deposit-contract::$(ssh mondaynet "jq '.[] | select(.name==\"tx_rollup_deposit_contract\") | .value' /srv/tezos/mondaynet_client/contracts | tr -d \\\" ")
+        echo '::echo::off'
   
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -65,6 +67,7 @@ jobs:
         TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownBigMapContractAddress }}
         TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }}
         TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
+        TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT: ${{ steps.originate-contracts-mondaynet.outputs.knownOnChainViewContractAddress }}
         TX_ROLLUP_WITHDRAW_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-withdraw-contract }}
         TX_ROLLUP_DEPOSIT_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-deposit-contract }}
         TX_ROLLUP_TICKETS_OWNER_SECRET: ${{ secrets.TX_ROLLUP_TICKETS_OWNER_SECRET }}
