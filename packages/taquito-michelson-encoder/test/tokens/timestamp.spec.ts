@@ -15,25 +15,37 @@ describe('Timestamp token', () => {
 
     it('Should return the RFC3339 time format when type is string and value is UNIX timestamp', () => {
       const result = token.Execute({ string: '1638555790' });
-      expect(result).toEqual('2021-12-03T18:23:10.000Z')
+      expect(result).toEqual('2021-12-03T18:23:10.000Z');
     });
 
     it('Should return an error when value is not a valid Date or timestamp format', () => {
       expect(() => {
         token.Execute({ string: 'not valid' });
-      }).toThrowError(); 
+      }).toThrowError();
     });
   });
-  
+
   describe('EncodeObject', () => {
     it('Should encode timestamp to JSON Michelson format', () => {
-      expect(token.EncodeObject('2021-12-03T21:21:10.000Z')).toEqual({ string: '2021-12-03T21:21:10.000Z' });
+      expect(token.EncodeObject('2021-12-03T21:21:10.000Z')).toEqual({
+        string: '2021-12-03T21:21:10.000Z',
+      });
+    });
+
+    it('should encode UNIX timestamp number to JSON Michelson format', () => {
+      expect(token.EncodeObject(1638555790)).toEqual({ string: '1638555790' });
     });
   });
 
   describe('Encode', () => {
     it('Should encode timestamp array into JSON Michelson format', () => {
-      expect(token.Encode(['2021-12-03T21:21:10.000Z'])).toEqual({ string: '2021-12-03T21:21:10.000Z' });
+      expect(token.Encode(['2021-12-03T21:21:10.000Z'])).toEqual({
+        string: '2021-12-03T21:21:10.000Z',
+      });
+    });
+
+    it('should encode UNIX timestamp number to JSON Michelson format', () => {
+      expect(token.Encode([1638555790])).toEqual({ string: '1638555790' });
     });
   });
 
@@ -41,7 +53,7 @@ describe('Timestamp token', () => {
     it('Should generate the schema properly', () => {
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'timestamp',
-        schema: 'timestamp'
+        schema: 'timestamp',
       });
     });
   });
