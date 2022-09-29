@@ -27,7 +27,7 @@ export enum DerivationType {
   ED25519 = 0x00, // tz1
   SECP256K1 = 0x01, // tz2
   P256 = 0x02, // tz3
-  BIP32_ED25519 = 0x03, // tz1 BIP32 Curve
+  BIP32_ED25519 = 0x03, // tz1 BIP32
 }
 
 /**
@@ -82,13 +82,7 @@ export { VERSION } from './version';
  * ```
  * import TransportU2F from "@ledgerhq/hw-transport-u2f";
  * const transport = await TransportU2F.create();
- * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.SECP256K1);
- * @example
- * ```
- * import TransportU2F from "@ledgerhq/hw-transport-u2f";
- * const transport = await TransportU2F.create();
- * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.BIP32_ED25519);
- * ```
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.SECP256K1);``
  */
 export class LedgerSigner implements Signer {
   // constants for APDU requests (https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md)
