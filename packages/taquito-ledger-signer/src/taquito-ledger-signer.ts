@@ -69,7 +69,7 @@ export { VERSION } from './version';
  * @param transport A transport instance from LedgerJS libraries depending on the platform used (e.g. Web, Node)
  * @param path The ledger derivation path (default is "44'/1729'/0'/0'")
  * @param prompt Whether to prompt the ledger for public key (default is true)
- * @param derivationType The value which defines the curve to use (DerivationType.ED25519(default), DerivationType.SECP256K1, DerivationType.P256)
+ * @param derivationType The value which defines the curve to use (DerivationType.ED25519(default), DerivationType.SECP256K1, DerivationType.P256, DerivationType.BIP32_ED25519)
  *
  * @example
  * ```
@@ -83,6 +83,11 @@ export { VERSION } from './version';
  * import TransportU2F from "@ledgerhq/hw-transport-u2f";
  * const transport = await TransportU2F.create();
  * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.SECP256K1);
+ * @example
+ * ```
+ * import TransportU2F from "@ledgerhq/hw-transport-u2f";
+ * const transport = await TransportU2F.create();
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.BIP32_ED25519);
  * ```
  */
 export class LedgerSigner implements Signer {
