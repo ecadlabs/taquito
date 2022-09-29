@@ -1,12 +1,15 @@
 import fs from 'fs';
 import path from 'path';
-import { inspect } from 'util';
 import { packDataBytes } from '../src/binary';
-import { InvalidContractError, InvalidDataExpressionError, InvalidTypeExpressionError } from '../src/error';
+import {
+  InvalidContractError,
+  InvalidDataExpressionError,
+  InvalidTypeExpressionError,
+} from '../src/error';
 import { Parser } from '../src/micheline-parser';
 import { Contract, ContractOptions } from '../src/michelson-contract';
 import { Protocol } from '../src/michelson-types';
-import { MichelsonError} from '../src/utils';
+import { MichelsonError } from '../src/utils';
 import { MichelsonValidationError } from '../src/michelson-validator';
 
 const contracts: {
@@ -20,7 +23,7 @@ const contracts: {
   opcodes: ['emit_instruction.tz', 'emit_instruction_event.tz'],
 };
 
-const protocol = Protocol.PtKathman
+const protocol = Protocol.PtKathman;
 
 describe('PtKathmandu', () => {
   for (const [group, list] of Object.entries(contracts)) {
@@ -37,15 +40,6 @@ describe('PtKathmandu', () => {
             expect(() => Contract.parse(src, options)).toThrow();
             return;
           }
-
-          try {
-            Contract.parse(src, options);
-          } catch (err) {
-            if (err instanceof MichelsonError) {
-              console.log(inspect(err, false, null));
-            }
-            throw err;
-          }
         });
 
         it('parseTypeExpression', () => {
@@ -56,13 +50,17 @@ describe('PtKathmandu', () => {
           const filename = path.resolve(__dirname, 'contracts_014', group, contract);
           const src = fs.readFileSync(filename).toString();
 
-          try {
-            Contract.parseTypeExpression(src, options);
-          }
-          catch (e: any) {
-            expect(e).toBeInstanceOf(MichelsonError);
-            expect(e.message).toEqual(`empty contract`);
-          }
+          // try {
+          //   Contract.parseTypeExpression(src, options);
+          // }
+          // catch (e: any) {
+          //   expect(e).toBeInstanceOf(MichelsonError);
+          //   expect(e.message).toEqual(`empty contract`);
+          // }
+          expect(() => Contract.parseTypeExpression(src, options)).toThrow(MichelsonError);
+          expect.objectContaining({
+            message: expect.stringContaining('empty contract.'),
+          });
         });
 
         it('parseDataExpression', () => {
@@ -82,42 +80,34 @@ describe('PtKathmandu', () => {
             dataJSON, // as MichelsonData
             typeJSON // as MichelsonType
           );
-
-          try {
-            Contract.parseDataExpression(packed, options);
-          }
-          catch (e: any) {
-            expect(e).toBeInstanceOf(MichelsonError);
-            expect(e.message).toEqual(`empty contract`);
-          }
+          expect(() => Contract.parseDataExpression(packed, options)).toThrow(MichelsonError);
+          expect.objectContaining({
+            message: expect.stringContaining('empty contract.'),
+          });
         });
 
         it('parse check null case', () => {
           const options: ContractOptions = {
             protocol: protocol,
           };
-          const src = ''
-          try {
-            Contract.parse(src, options);
-          }
-          catch (e: any) {
-            expect(e).toBeInstanceOf(InvalidContractError)
-            expect(e.message).toEqual(`empty contract`);
-          }
+          const src = '';
+          expect(() => Contract.parse(src, options)).toThrow(InvalidContractError);
+          expect.objectContaining({
+            message: expect.stringContaining('empty contract.'),
+          });
         });
 
         it('parseTypeExpression null case', () => {
           const options: ContractOptions = {
             protocol: protocol,
           };
-          const src = ''
-          try {
-            Contract.parseTypeExpression(src, options);
-          }
-          catch (e: any) {
-            expect(e).toBeInstanceOf(InvalidTypeExpressionError)
-            expect(e.message).toEqual(`empty type expression`);
-          }
+          const src = '';
+          expect(() => Contract.parseTypeExpression(src, options)).toThrow(
+            InvalidTypeExpressionError
+          );
+          expect.objectContaining({
+            message: expect.stringContaining('empty type expression'),
+          });
         });
 
         it('parse error case', () => {
@@ -139,30 +129,25 @@ describe('PtKathmandu', () => {
                    CONS ;
                    SWAP ;
                    CONS ;
-                   PAIR } }`
-          try {
-            Contract.parse(contract, options);
-          }
-          catch (e: any) {
-            expect(e).toBeInstanceOf(MichelsonValidationError)
-            expect(e.message).toEqual(`unexpected contract section: unit`);
-          }
+                   PAIR } }`;
+          expect(() => Contract.parse(contract, options)).toThrow(MichelsonValidationError);
+          expect.objectContaining({
+            message: expect.stringContaining('unexpected contract section: unit'),
+          });
         });
 
         it('parseDataExpression check null case', () => {
           const options: ContractOptions = {
             protocol: protocol,
           };
-
-          try {
-            Contract.parseDataExpression('', options);
-          }
-          catch (e: any) {
-            expect(e).toBeInstanceOf(InvalidDataExpressionError);
-            expect(e.message).toEqual(`empty data expression`);
-          }
+          expect(() => Contract.parseDataExpression('', options)).toThrow(
+            InvalidDataExpressionError
+          );
+          expect.objectContaining({
+            message: expect.stringContaining('empty data expression'),
+          });
         });
       }
-    })
+    });
   }
-})
+});
