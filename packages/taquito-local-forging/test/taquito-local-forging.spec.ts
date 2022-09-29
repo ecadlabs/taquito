@@ -45,76 +45,104 @@ describe('Forge and parse operations default protocol', () => {
     const localForger = new LocalForger();
 
     test('Should throw an error when operation kind is invalid', async () => {
-      try {
-        const operation: any = {
-          branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-          contents: [
-            {
-              kind: 'invalid',
-              counter: '1',
-              source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-              public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
-              fee: '10000',
-              gas_limit: '10',
-              storage_limit: '10',
-            },
-          ],
-        };
+      const operation: any = {
+        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+        contents: [
+          {
+            kind: 'invalid',
+            counter: '1',
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+          },
+        ],
+      };
+      expect(() => {
         localForger.forge(operation);
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(InvalidOperationKindError);
-        expect(e.name).toEqual('InvalidOperationKindError');
-        expect(e.message).toEqual("The operation kind 'invalid' is unsupported");
-      }
+      }).toThrow(InvalidOperationKindError);
+      expect(() => {
+        localForger.forge(operation);
+      }).toThrow(
+        expect.objectContaining({
+          message: expect.stringContaining("The operation kind 'invalid' is unsupported"),
+        })
+      );
+      expect(() => {
+        localForger.forge(operation);
+      }).toThrow(
+        expect.objectContaining({
+          name: expect.stringContaining('InvalidOperationKindError'),
+        })
+      );
     });
 
     test('Should throw error when parameters are missing', async () => {
-      try {
-        const operation: any = {
-          branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-          contents: [
-            {
-              kind: 'reveal',
-              counter: '1',
-              public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
-              fee: '10000',
-              gas_limit: '10',
-              storage_limit: '10',
-            },
-          ],
-        };
+      const operation: any = {
+        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+        contents: [
+          {
+            kind: 'reveal',
+            counter: '1',
+            public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+          },
+        ],
+      };
+      expect(() => {
         localForger.forge(operation);
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(InvalidOperationSchemaError);
-        expect(e.name).toEqual('InvalidOperationSchemaError');
-        expect(e.message).toEqual('Missing properties: source');
-      }
+      }).toThrow(InvalidOperationSchemaError);
+      expect(() => {
+        localForger.forge(operation);
+      }).toThrow(
+        expect.objectContaining({
+          message: expect.stringContaining('Missing properties: source'),
+        })
+      );
+      expect(() => {
+        localForger.forge(operation);
+      }).toThrow(
+        expect.objectContaining({
+          name: expect.stringContaining('InvalidOperationSchemaError'),
+        })
+      );
     });
 
-    test('Should throw error when branch param has invalid block hash', async () => {
-      try {
-        const operation: any = {
-          branch: 'Invalid_Block_Hash',
-          contents: [
-            {
-              kind: 'reveal',
-              counter: '1',
-              source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-              public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
-              fee: '10000',
-              gas_limit: '10',
-              storage_limit: '10',
-            },
-          ],
-        };
-        // expect(() => {
+    test('Should throw error when branch parameter has invalid block hash', async () => {
+      const operation: any = {
+        branch: 'Invalid_Block_Hash',
+        contents: [
+          {
+            kind: 'reveal',
+            counter: '1',
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            public_key: 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+          },
+        ],
+      };
+      expect(() => {
         localForger.forge(operation);
-        //}).toThrow(InvalidBlockHashError);
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(InvalidBlockHashError);
-        expect(e.name).toEqual('InvalidBlockHashError');
-        expect(e.message).toEqual('The block hash Invalid_Block_Hash is invalid');
-      }
+      }).toThrow(InvalidBlockHashError);
+      expect(() => {
+        localForger.forge(operation);
+      }).toThrow(
+        expect.objectContaining({
+          message: expect.stringContaining('The block hash Invalid_Block_Hash is invalid'),
+        })
+      );
+      expect(() => {
+        localForger.forge(operation);
+      }).toThrow(
+        expect.objectContaining({
+          name: expect.stringContaining('InvalidBlockHashError'),
+        })
+      );
     });
 
     test('Should not throw error when origination and delegation does not have a "delegate" property', async () => {
@@ -169,14 +197,23 @@ describe('Forge and parse operations default protocol', () => {
     test('Should throw an error when parsing a forged byte with an invalid operation kind', async () => {
       const invalidForged =
         'a99b946c97ada0f42c1bdeae0383db7893351232a832d00d0cd716eb6f66e5614c0035e993d8c7aaa42b5e3ccd86a33390ececc73abd904e010a0ae807000035e993d8c7aaa42b5e3ccd86a33390ececc73abd00';
-
-      try {
+      expect(() => {
         localForger.parse(invalidForged);
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(UnsupportedOperationError);
-        expect(e.name).toEqual('UnsupportedOperationError');
-        expect(e.message).toEqual(`The operation '76' is unsupported`);
-      }
+      }).toThrow(UnsupportedOperationError);
+      expect(() => {
+        localForger.parse(invalidForged);
+      }).toThrow(
+        expect.objectContaining({
+          message: expect.stringContaining("The operation '76' is unsupported"),
+        })
+      );
+      expect(() => {
+        localForger.parse(invalidForged);
+      }).toThrow(
+        expect.objectContaining({
+          name: expect.stringContaining('UnsupportedOperationError'),
+        })
+      );
     });
 
     test(`Verify getCodec for CODEC.SECRET`, async (done) => {
