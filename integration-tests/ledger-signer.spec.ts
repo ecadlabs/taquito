@@ -4,6 +4,8 @@ import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { TezosToolkit } from '@taquito/taquito';
 
+// PLEASE NOTE MAY NEED TO TEST ONE TEST AT A TIME
+
 /**
  * LedgerSigner test
  *
@@ -202,6 +204,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         done();
       })
     })
+
     describe('Verify that use of a ledger device works with bip32', () => {
       jest.setTimeout(60000);
       it('Verify that the pk and pkh is correct', async (done) => {

@@ -2,73 +2,74 @@
 # yarn lockfile v1
 
 
-"@airgap/beacon-core@^3.1.4":
-  "integrity" "sha512-GpSFjQL+larOigCRKtdEE4Dhl3cWOl0GP3tjVI6WSCExEAVKGE8EW37NDIgRDJwANFPAHt427wVcrk6slXqmbQ=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-core/-/beacon-core-3.1.4.tgz"
-  "version" "3.1.4"
+"@airgap/beacon-core@^3.2.0":
+  "integrity" "sha512-gdyEPzjegPPgAQHXrYtpnqV075p+3YBVNijtUNxrSEsLSPHO6EahIlr067bKzHUkz7S325838nPH7WKWP5BxuQ=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-core/-/beacon-core-3.2.0.tgz"
+  "version" "3.2.0"
   dependencies:
-    "@airgap/beacon-types" "^3.1.4"
-    "@airgap/beacon-utils" "^3.1.4"
-    "@types/libsodium-wrappers" "0.7.9"
+    "@airgap/beacon-types" "^3.2.0"
+    "@airgap/beacon-utils" "^3.2.0"
+    "@stablelib/ed25519" "^1.0.3"
+    "@stablelib/nacl" "^1.0.4"
+    "@stablelib/utf8" "^1.0.1"
+    "@stablelib/x25519-session" "^1.0.4"
     "bs58check" "2.1.2"
-    "libsodium-wrappers" "0.7.9"
 
-"@airgap/beacon-dapp@^3.1.4":
-  "integrity" "sha512-/7OXrejWlI92pvZXOPqs6eLtC9XBXga0CIz60Uieif43kjRpwhiwm7qVOyjmDi9rRx19ZMP92YWJQX+nuovzbg=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-dapp/-/beacon-dapp-3.1.4.tgz"
-  "version" "3.1.4"
+"@airgap/beacon-dapp@^3.2.0":
+  "integrity" "sha512-AqxjalyBdBteHFMmIo+wfweZKbGq10zl/700GtMLthcIRBMJlNQtvLyVxus8e2d8vGSuMHFzUxRbaROD3xv8eA=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-dapp/-/beacon-dapp-3.2.0.tgz"
+  "version" "3.2.0"
   dependencies:
-    "@airgap/beacon-core" "^3.1.4"
-    "@airgap/beacon-transport-matrix" "^3.1.4"
-    "@airgap/beacon-transport-postmessage" "^3.1.4"
-    "@airgap/beacon-ui" "^3.1.4"
+    "@airgap/beacon-core" "^3.2.0"
+    "@airgap/beacon-transport-matrix" "^3.2.0"
+    "@airgap/beacon-transport-postmessage" "^3.2.0"
+    "@airgap/beacon-ui" "^3.2.0"
     "qrcode-generator" "1.4.4"
 
-"@airgap/beacon-transport-matrix@^3.1.4":
-  "integrity" "sha512-IvZnylEqjXyB9JWvpgnSRMom9C5thK5JB88joL2/q24JI73MXTzBh50/GVNfwAat6Ct+ftbn36j17Kh5O/y4wg=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-transport-matrix/-/beacon-transport-matrix-3.1.4.tgz"
-  "version" "3.1.4"
+"@airgap/beacon-transport-matrix@^3.2.0":
+  "integrity" "sha512-YROvZKlLDcUtuyozi8wNadVtrqHTXNy0wsQofgDDILYTAotT60AsdhwjS0nGkhe8K3KEtJEnFeJ4pOlL6iyFSg=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-transport-matrix/-/beacon-transport-matrix-3.2.0.tgz"
+  "version" "3.2.0"
   dependencies:
-    "@airgap/beacon-core" "^3.1.4"
-    "@airgap/beacon-utils" "^3.1.4"
+    "@airgap/beacon-core" "^3.2.0"
+    "@airgap/beacon-utils" "^3.2.0"
     "axios" "0.24.0"
 
-"@airgap/beacon-transport-postmessage@^3.1.4":
-  "integrity" "sha512-uEPtTZ7n5C03rNzpjgx1T1bS74DfVs39WEBHACKPhbX0RM5DGDveU/+T/iCJLpF3HTp3v65oomLIRXcL24JY/g=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-transport-postmessage/-/beacon-transport-postmessage-3.1.4.tgz"
-  "version" "3.1.4"
+"@airgap/beacon-transport-postmessage@^3.2.0":
+  "integrity" "sha512-X6c+g+I6HXFtwyWslQVSareBwzmKYxUH39xyncEKhOXqKY0b0W2byW4iKJBZitxarPEfBQn6bEXcEsD/MOXGYA=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-transport-postmessage/-/beacon-transport-postmessage-3.2.0.tgz"
+  "version" "3.2.0"
   dependencies:
-    "@airgap/beacon-core" "^3.1.4"
-    "@airgap/beacon-types" "^3.1.4"
-    "@airgap/beacon-utils" "^3.1.4"
-    "@types/libsodium-wrappers" "0.7.9"
-    "libsodium-wrappers" "0.7.9"
+    "@airgap/beacon-core" "^3.2.0"
+    "@airgap/beacon-types" "^3.2.0"
+    "@airgap/beacon-utils" "^3.2.0"
 
-"@airgap/beacon-types@^3.1.4":
-  "integrity" "sha512-x3HM0YKe4gA31lqopAOpP2YF5hfAiu2TQ0Pv/8pPLM/VHLJoJd19XF3WZyIL958tkLOmvNb3IUan1XPT1ENsqA=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-types/-/beacon-types-3.1.4.tgz"
-  "version" "3.1.4"
+"@airgap/beacon-types@^3.2.0":
+  "integrity" "sha512-qM+FmtIOrwZ5Fj5eIkE7Y8o7Va5fsBeYPzeTfzPF4ulJZQ5wTiNEK2HVUAzui+bMej9tPtcF9I6kF6wrOtK27A=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-types/-/beacon-types-3.2.0.tgz"
+  "version" "3.2.0"
   dependencies:
     "@types/chrome" "0.0.163"
 
-"@airgap/beacon-ui@^3.1.4":
-  "integrity" "sha512-g/iiF53wfNAQ62htF2fbING6bwHiE1s/q0LJlxfUQx/OINmp9Gt1HrIdp92Af0QBi9db0hda6PlN4T4j4OKjaQ=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-ui/-/beacon-ui-3.1.4.tgz"
-  "version" "3.1.4"
+"@airgap/beacon-ui@^3.2.0":
+  "integrity" "sha512-UFi4bxXwGVSt/uUvod+dAAgnX1IuUUtqjI+1BFDuAJ1H8dkkcWYstiDqssPsVkMTeGBbE5ExyCV0QaKFKjnKEg=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-ui/-/beacon-ui-3.2.0.tgz"
+  "version" "3.2.0"
   dependencies:
-    "@airgap/beacon-core" "^3.1.4"
-    "@airgap/beacon-transport-postmessage" "^3.1.4"
-    "@airgap/beacon-types" "^3.1.4"
-    "@airgap/beacon-utils" "^3.1.4"
+    "@airgap/beacon-core" "^3.2.0"
+    "@airgap/beacon-transport-postmessage" "^3.2.0"
+    "@airgap/beacon-types" "^3.2.0"
+    "@airgap/beacon-utils" "^3.2.0"
 
-"@airgap/beacon-utils@^3.1.4":
-  "integrity" "sha512-hDDRgG7pU4h8hOLlgScBetjFTPHH3gTWEeKiFkVq/3LzqIe1c84JBaCDqMNpnxd9jenFo+/Q0jRj1zhvW6Bg6w=="
-  "resolved" "https://registry.npmjs.org/@airgap/beacon-utils/-/beacon-utils-3.1.4.tgz"
-  "version" "3.1.4"
+"@airgap/beacon-utils@^3.2.0":
+  "integrity" "sha512-0oqAjyJ78up/Tz6JxKHleqjScG7FjLOxGEKz46CE8h05vsdSw1fRtzyzhoVzTNaxFtHbTX6kgGBbowhW49uemw=="
+  "resolved" "https://registry.npmjs.org/@airgap/beacon-utils/-/beacon-utils-3.2.0.tgz"
+  "version" "3.2.0"
   dependencies:
-    "@types/libsodium-wrappers" "0.7.9"
+    "@stablelib/nacl" "^1.0.3"
+    "@stablelib/random" "^1.0.2"
+    "@stablelib/utf8" "^1.0.1"
     "bs58check" "2.1.2"
-    "libsodium-wrappers" "0.7.9"
 
 "@airgap/sapling-wasm@0.0.9":
   "integrity" "sha512-rJjV7JIDxoardnZMgk4Uor5Z6OVsAE4I5uDlkGAb0tQ5NN0gmz9Bu2LKMPSCv7UqDpZowDX4BbMDuSqdO/IsbQ=="
@@ -828,28 +829,28 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@ledgerhq/devices@^7.0.0":
-  "integrity" "sha512-vq4B33WdU0dRAJIRFWZMj6w1W1yw1i4mekCmhk7N9wPaFrtGWZ2iI9WDihsNOBooCWKQe8Jsb9eD8RVThbSlFQ=="
-  "resolved" "https://registry.npmjs.org/@ledgerhq/devices/-/devices-7.0.0.tgz"
-  "version" "7.0.0"
+"@ledgerhq/devices@^7.0.1":
+  "integrity" "sha512-LlAyDU5+GH0w+J1wscLU+Ga4z5a5ACKmMGQKILj5XscCtp63NjbtVdVt4oc/xrmoUdRqVehIw2Ui+e9nIF52yA=="
+  "resolved" "https://registry.npmjs.org/@ledgerhq/devices/-/devices-7.0.1.tgz"
+  "version" "7.0.1"
   dependencies:
-    "@ledgerhq/errors" "^6.10.1"
+    "@ledgerhq/errors" "^6.10.2"
     "@ledgerhq/logs" "^6.10.0"
     "rxjs" "6"
     "semver" "^7.3.5"
 
-"@ledgerhq/errors@^6.10.1":
-  "integrity" "sha512-92d1zRQleR1AQ4CAXgWgDtKUms+8EwShLVUcajI+BLWvgJ1Vclmq6PsBIDEQbsm+riVu/Ji3LcHdmgFgmi0VGw=="
-  "resolved" "https://registry.npmjs.org/@ledgerhq/errors/-/errors-6.10.1.tgz"
-  "version" "6.10.1"
+"@ledgerhq/errors@^6.10.2":
+  "integrity" "sha512-iMfEJPWaan8QaZw87WMUnFFRJqveE3FpU2ObTE0ydTJLPJNOUJjjurGBklqdWM/j5BIQvpi3byGKFChfNg8CaQ=="
+  "resolved" "https://registry.npmjs.org/@ledgerhq/errors/-/errors-6.10.2.tgz"
+  "version" "6.10.2"
 
-"@ledgerhq/hw-transport@^6.20.0":
-  "integrity" "sha512-GF4pmK78rEKhZfbmunwQ131c+0MGa6L5IoYlwgFcg6CaFpUjjPiTCKUFsm4flsE0Z0Ltn9QuKoe+xEHULo7rGA=="
-  "resolved" "https://registry.npmjs.org/@ledgerhq/hw-transport/-/hw-transport-6.27.2.tgz"
-  "version" "6.27.2"
+"@ledgerhq/hw-transport@^6.27.3":
+  "integrity" "sha512-i3RYKfSIZ7PHM2sFljAU443qOYMTlghx8l5AZqsNKsXbawHkuOr7EtISW3zqbC0Wh3uws7u63qQ/50TLmylr7g=="
+  "resolved" "https://registry.npmjs.org/@ledgerhq/hw-transport/-/hw-transport-6.27.4.tgz"
+  "version" "6.27.4"
   dependencies:
-    "@ledgerhq/devices" "^7.0.0"
-    "@ledgerhq/errors" "^6.10.1"
+    "@ledgerhq/devices" "^7.0.1"
+    "@ledgerhq/errors" "^6.10.2"
     "events" "^3.3.0"
 
 "@ledgerhq/logs@^6.10.0":
@@ -1903,7 +1904,7 @@
   "resolved" "https://registry.npmjs.org/@stablelib/constant-time/-/constant-time-1.0.1.tgz"
   "version" "1.0.1"
 
-"@stablelib/ed25519@^1.0.2":
+"@stablelib/ed25519@^1.0.2", "@stablelib/ed25519@^1.0.3":
   "integrity" "sha512-puIMWaX9QlRsbhxfDc5i+mNPMY+0TmQEskunY1rZEBPi1acBCVQAhnsk/1Hk50DGPtVsZtAWQg4NHGlVaO9Hqg=="
   "resolved" "https://registry.npmjs.org/@stablelib/ed25519/-/ed25519-1.0.3.tgz"
   "version" "1.0.3"
@@ -1929,7 +1930,7 @@
   dependencies:
     "@stablelib/bytes" "^1.0.1"
 
-"@stablelib/nacl@^1.0.3":
+"@stablelib/nacl@^1.0.3", "@stablelib/nacl@^1.0.4":
   "integrity" "sha512-PJ2U/MrkXSKUM8C4qFs87WeCNxri7KQwR8Cdwm9q2sweGuAtTvOJGuW0F3N+zn+ySLPJA98SYWSSpogMJ1gCmw=="
   "resolved" "https://registry.npmjs.org/@stablelib/nacl/-/nacl-1.0.4.tgz"
   "version" "1.0.4"
@@ -1974,10 +1975,26 @@
     "@stablelib/hash" "^1.0.1"
     "@stablelib/wipe" "^1.0.1"
 
+"@stablelib/utf8@^1.0.1":
+  "integrity" "sha512-FrYD1xadah/TtAP6VJ04lDD5h9rdDj/d8wH/jMYTtHqZBv9z2btdvEU8vTxdjdkFmo1b/BH+t3R1wi/mYhCCNg=="
+  "resolved" "https://registry.npmjs.org/@stablelib/utf8/-/utf8-1.0.1.tgz"
+  "version" "1.0.1"
+
 "@stablelib/wipe@^1.0.1":
   "integrity" "sha512-WfqfX/eXGiAd3RJe4VU2snh/ZPwtSjLG4ynQ/vYzvghTh7dHFcI1wl+nrkWG6lGhukOxOsUHfv8dUXr58D0ayg=="
   "resolved" "https://registry.npmjs.org/@stablelib/wipe/-/wipe-1.0.1.tgz"
   "version" "1.0.1"
+
+"@stablelib/x25519-session@^1.0.4":
+  "integrity" "sha512-UZw67EJWSNTaou7Qp086fzGek7crrCQl2K7MoqEzslXxrm6vybySfcdsqaZ0ZpKq19IHWK8G0wAlFBy70srm3w=="
+  "resolved" "https://registry.npmjs.org/@stablelib/x25519-session/-/x25519-session-1.0.4.tgz"
+  "version" "1.0.4"
+  dependencies:
+    "@stablelib/blake2b" "^1.0.1"
+    "@stablelib/keyagreement" "^1.0.1"
+    "@stablelib/random" "^1.0.2"
+    "@stablelib/wipe" "^1.0.1"
+    "@stablelib/x25519" "^1.0.3"
 
 "@stablelib/x25519@^1.0.3":
   "integrity" "sha512-KnTbKmUhPhHavzobclVJQG5kuivH+qDLpe84iRqX3CLrKp881cF160JvXJ+hjn1aMyCwYOKeIZefIH/P5cJoRw=="
@@ -1997,79 +2014,88 @@
     "@stablelib/salsa20" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
-"@taquito/beacon-wallet@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-beacon-wallet":
+"@taquito/beacon-wallet@file:/Users/zainensuzuki/code/taquito/packages/taquito-beacon-wallet":
   "resolved" "file:packages/taquito-beacon-wallet"
   "version" "14.0.0"
   dependencies:
-    "@airgap/beacon-dapp" "^3.1.4"
+    "@airgap/beacon-dapp" "^3.2.0"
     "@taquito/taquito" "^14.0.0"
     "libsodium-wrappers" "0.7.9"
 
-"@taquito/contracts-library@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-contracts-library":
+"@taquito/contracts-library@file:/Users/zainensuzuki/code/taquito/packages/taquito-contracts-library":
   "resolved" "file:packages/taquito-contracts-library"
   "version" "14.0.0"
   dependencies:
     "@taquito/rpc" "^14.0.0"
     "@taquito/taquito" "^14.0.0"
     "@taquito/utils" "^14.0.0"
-    "bignumber.js" "^9.0.2"
+    "bignumber.js" "^9.1.0"
 
-"@taquito/http-utils@^14.0.0", "@taquito/http-utils@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-http-utils":
+"@taquito/http-utils@^14.0.0", "@taquito/http-utils@file:/Users/zainensuzuki/code/taquito/packages/taquito-http-utils":
   "resolved" "file:packages/taquito-http-utils"
   "version" "14.0.0"
   dependencies:
     "axios" "^0.26.0"
 
-"@taquito/ledger-signer@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-ledger-signer":
+"@taquito/ledger-signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-ledger-signer":
   "resolved" "file:packages/taquito-ledger-signer"
   "version" "14.0.0"
   dependencies:
-    "@ledgerhq/hw-transport" "^6.20.0"
+    "@ledgerhq/hw-transport" "^6.27.3"
     "@stablelib/blake2b" "^1.0.1"
     "@taquito/taquito" "^14.0.0"
     "@taquito/utils" "^14.0.0"
     "buffer" "^6.0.3"
 
-"@taquito/local-forging@^14.0.0", "@taquito/local-forging@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-local-forging":
+"@taquito/local-forging@^14.0.0", "@taquito/local-forging@file:/Users/zainensuzuki/code/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
   "version" "14.0.0"
   dependencies:
     "@taquito/utils" "^14.0.0"
-    "bignumber.js" "^9.0.2"
+    "bignumber.js" "^9.1.0"
 
-"@taquito/michel-codec@^14.0.0", "@taquito/michel-codec@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-michel-codec":
+"@taquito/michel-codec@^14.0.0", "@taquito/michel-codec@file:/Users/zainensuzuki/code/taquito/packages/taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
   "version" "14.0.0"
 
-"@taquito/michelson-encoder@^14.0.0", "@taquito/michelson-encoder@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-michelson-encoder":
+"@taquito/michelson-encoder@^14.0.0", "@taquito/michelson-encoder@file:/Users/zainensuzuki/code/taquito/packages/taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "14.0.0"
   dependencies:
     "@taquito/rpc" "^14.0.0"
     "@taquito/utils" "^14.0.0"
-    "bignumber.js" "^9.0.2"
+    "bignumber.js" "^9.1.0"
     "fast-json-stable-stringify" "^2.1.0"
 
-"@taquito/remote-signer@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-remote-signer":
+"@taquito/remote-signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-remote-signer":
   "resolved" "file:packages/taquito-remote-signer"
   "version" "14.0.0"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
-    "@stablelib/ed25519" "^1.0.2"
+    "@stablelib/ed25519" "^1.0.3"
     "@taquito/http-utils" "^14.0.0"
     "@taquito/taquito" "^14.0.0"
     "@taquito/utils" "^14.0.0"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/rpc@^14.0.0", "@taquito/rpc@^14.0.0-beta-RC.0", "@taquito/rpc@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-rpc":
-  "resolved" "file:packages/taquito-rpc"
+"@taquito/rpc@^14.0.0-beta-RC.0":
+  "integrity" "sha512-FMfb80sA+VJwNx8OTNN07boDAt2roISqLLCUgmOIwy/cFDqhII7gdS4aYWJWqlKbdPKCPqh3a3ZQD1X/jyQHOA=="
+  "resolved" "https://registry.npmjs.org/@taquito/rpc/-/rpc-14.0.0.tgz"
   "version" "14.0.0"
   dependencies:
     "@taquito/http-utils" "^14.0.0"
     "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.0.2"
 
-"@taquito/sapling@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-sapling":
+"@taquito/rpc@^14.0.0", "@taquito/rpc@file:/Users/zainensuzuki/code/taquito/packages/taquito-rpc":
+  "resolved" "file:packages/taquito-rpc"
+  "version" "14.0.0"
+  dependencies:
+    "@taquito/http-utils" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
+    "bignumber.js" "^9.1.0"
+
+"@taquito/sapling@file:/Users/zainensuzuki/code/taquito/packages/taquito-sapling":
   "resolved" "file:packages/taquito-sapling"
   "version" "14.0.0"
   dependencies:
@@ -2079,26 +2105,26 @@
     "@taquito/rpc" "^14.0.0"
     "@taquito/taquito" "^14.0.0"
     "@taquito/utils" "^14.0.0"
-    "bignumber.js" "^9.0.2"
+    "bignumber.js" "^9.1.0"
     "bip39" "^3.0.4"
     "blakejs" "^1.2.1"
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/signer@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-signer":
+"@taquito/signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-signer":
   "resolved" "file:packages/taquito-signer"
   "version" "14.0.0"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
-    "@stablelib/ed25519" "^1.0.2"
-    "@stablelib/nacl" "^1.0.3"
+    "@stablelib/ed25519" "^1.0.3"
+    "@stablelib/nacl" "^1.0.4"
     "@taquito/taquito" "^14.0.0"
     "@taquito/utils" "^14.0.0"
     "elliptic" "^6.5.4"
     "pbkdf2" "^3.1.2"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/taquito@^14.0.0", "@taquito/taquito@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito":
+"@taquito/taquito@^14.0.0", "@taquito/taquito@file:/Users/zainensuzuki/code/taquito/packages/taquito":
   "resolved" "file:packages/taquito"
   "version" "14.0.0"
   dependencies:
@@ -2108,23 +2134,23 @@
     "@taquito/michelson-encoder" "^14.0.0"
     "@taquito/rpc" "^14.0.0"
     "@taquito/utils" "^14.0.0"
-    "bignumber.js" "^9.0.2"
+    "bignumber.js" "^9.1.0"
     "rxjs" "^6.6.3"
 
-"@taquito/tezbridge-signer@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-tezbridge-signer":
+"@taquito/tezbridge-signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-tezbridge-signer":
   "resolved" "file:packages/taquito-tezbridge-signer"
   "version" "14.0.0"
   dependencies:
     "@taquito/utils" "^14.0.0"
     "typedarray-to-buffer" "^4.0.0"
 
-"@taquito/tezbridge-wallet@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-tezbridge-wallet":
+"@taquito/tezbridge-wallet@file:/Users/zainensuzuki/code/taquito/packages/taquito-tezbridge-wallet":
   "resolved" "file:packages/taquito-tezbridge-wallet"
   "version" "14.0.0"
   dependencies:
     "@taquito/taquito" "^14.0.0"
 
-"@taquito/tzip12@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-tzip12":
+"@taquito/tzip12@file:/Users/zainensuzuki/code/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "14.0.0"
   dependencies:
@@ -2132,7 +2158,7 @@
     "@taquito/taquito" "^14.0.0"
     "@taquito/tzip16" "^14.0.0"
 
-"@taquito/tzip16@^14.0.0", "@taquito/tzip16@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-tzip16":
+"@taquito/tzip16@^14.0.0", "@taquito/tzip16@file:/Users/zainensuzuki/code/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "14.0.0"
   dependencies:
@@ -2141,17 +2167,17 @@
     "@taquito/rpc" "^14.0.0"
     "@taquito/taquito" "^14.0.0"
     "@taquito/utils" "^14.0.0"
-    "bignumber.js" "^9.0.2"
+    "bignumber.js" "^9.1.0"
     "crypto-js" "^4.1.1"
 
-"@taquito/utils@^14.0.0", "@taquito/utils@file:/Users/dsawali/Desktop/ecadlabs/taquito/packages/taquito-utils":
+"@taquito/utils@^14.0.0", "@taquito/utils@file:/Users/zainensuzuki/code/taquito/packages/taquito-utils":
   "resolved" "file:packages/taquito-utils"
   "version" "14.0.0"
   dependencies:
     "@stablelib/blake2b" "^1.0.1"
-    "@stablelib/ed25519" "^1.0.2"
+    "@stablelib/ed25519" "^1.0.3"
     "@types/bs58check" "^2.1.0"
-    "bignumber.js" "^9.0.2"
+    "bignumber.js" "^9.1.0"
     "blakejs" "^1.2.1"
     "bs58check" "^2.1.2"
     "buffer" "^6.0.3"
@@ -2861,12 +2887,17 @@
   "resolved" "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.3.2.tgz"
   "version" "5.3.2"
 
-"acorn-walk@^7.1.1", "acorn-walk@^8.1.1":
+"acorn-walk@^7.1.1":
   "integrity" "sha512-OPdCF6GsMIP+Az+aWfAAOEt2/+iVDKE7oy6lJ098aoe59oAmK76qV6Gw60SbZ8jHuG2wH058GF4pLFbYamYrVA=="
   "resolved" "https://registry.npmjs.org/acorn-walk/-/acorn-walk-7.2.0.tgz"
   "version" "7.2.0"
 
-"acorn@^6.0.0 || ^7.0.0 || ^8.0.0", "acorn@^8", "acorn@^8.2.4", "acorn@^8.5.0", "acorn@^8.7.1", "acorn@^8.8.0":
+"acorn-walk@^8.1.1":
+  "integrity" "sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA=="
+  "resolved" "https://registry.npmjs.org/acorn-walk/-/acorn-walk-8.2.0.tgz"
+  "version" "8.2.0"
+
+"acorn@^6.0.0 || ^7.0.0 || ^8.0.0", "acorn@^8", "acorn@^8.2.4", "acorn@^8.4.1", "acorn@^8.5.0", "acorn@^8.7.1", "acorn@^8.8.0":
   "integrity" "sha512-QOxyigPVrpZ2GXT+PFyZTl6TtOFc5egxHIP9IlQ+RbupQuX4RkT/Bee4/kQuC02Xkzg84JcT7oLYtDIQxp+v7w=="
   "resolved" "https://registry.npmjs.org/acorn/-/acorn-8.8.0.tgz"
   "version" "8.8.0"
@@ -2880,11 +2911,6 @@
   "integrity" "sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A=="
   "resolved" "https://registry.npmjs.org/acorn/-/acorn-7.4.1.tgz"
   "version" "7.4.1"
-
-"acorn@^8.4.1":
-  "integrity" "sha512-XtGIhXwF8YM8bJhGxG5kXgjkEuNGLTkoYqVE+KMR+aspr4KGYmKYg7yUe3KghyQ9yheNwLnjmzh/7+gfDBmHCQ=="
-  "resolved" "https://registry.npmjs.org/acorn/-/acorn-6.4.2.tgz"
-  "version" "6.4.2"
 
 "add-stream@^1.0.0":
   "integrity" "sha512-qQLMr+8o0WC4FZGQTcJiKBVC59JylcPSrTtk6usvmIDFUOCKegapy1VHQwRbFMOFyb/inzUVqHs+eMYKDM1YeQ=="
@@ -3333,7 +3359,7 @@
   "resolved" "https://registry.npmjs.org/big.js/-/big.js-5.2.2.tgz"
   "version" "5.2.2"
 
-"bignumber.js@^9.0.2":
+"bignumber.js@^9.0.2", "bignumber.js@^9.1.0":
   "integrity" "sha512-4LwHK4nfDOraBCtst+wOWIHbu1vhvAPJK8g8nROd4iuc3PSEjWif/qwbkh8jwCJz6yDBvtU4KPynETgrfh7y3A=="
   "resolved" "https://registry.npmjs.org/bignumber.js/-/bignumber.js-9.1.0.tgz"
   "version" "9.1.0"
@@ -4614,7 +4640,12 @@
   "resolved" "https://registry.npmjs.org/detect-file/-/detect-file-1.0.0.tgz"
   "version" "1.0.0"
 
-"detect-indent@^5.0.0", "detect-indent@^6.0.0", "detect-indent@6.0.0":
+"detect-indent@^5.0.0":
+  "integrity" "sha512-rlpvsxUtM0PQvy9iZe640/IWwWYyBsTApREbA1pHOpmOUIl9MkP/U4z7vTtg4Oaojvqhxt7sdufnT0EzGaR31g=="
+  "resolved" "https://registry.npmjs.org/detect-indent/-/detect-indent-5.0.0.tgz"
+  "version" "5.0.0"
+
+"detect-indent@^6.0.0", "detect-indent@6.0.0":
   "integrity" "sha512-oSyFlqaTHCItVRGK5RmrmjB+CmaMOW7IaNA/kdxqhoa6d17j/5ce9O9eWXmV/KEdRwqpQA+Vqe8a8Bsybu4YnA=="
   "resolved" "https://registry.npmjs.org/detect-indent/-/detect-indent-6.0.0.tgz"
   "version" "6.0.0"
@@ -6456,7 +6487,7 @@
   "resolved" "https://registry.npmjs.org/is-obj/-/is-obj-2.0.0.tgz"
   "version" "2.0.0"
 
-"is-plain-obj@^1.1.0":
+"is-plain-obj@^1.0.0", "is-plain-obj@^1.1.0":
   "integrity" "sha512-yvkRyxmFKEOQ4pNXCmJG5AEQNlXJS5LaONXo5/cLdTZdWvsZ1ioJEonLGAosKlMWE8lwUy/bJzMjcw8az73+Fg=="
   "resolved" "https://registry.npmjs.org/is-plain-obj/-/is-plain-obj-1.1.0.tgz"
   "version" "1.1.0"
@@ -7570,7 +7601,15 @@
     "pify" "^4.0.1"
     "semver" "^5.6.0"
 
-"make-dir@^2.1.0", "make-dir@^3.0.0", "make-dir@^3.0.2":
+"make-dir@^2.1.0":
+  "integrity" "sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA=="
+  "resolved" "https://registry.npmjs.org/make-dir/-/make-dir-2.1.0.tgz"
+  "version" "2.1.0"
+  dependencies:
+    "pify" "^4.0.1"
+    "semver" "^5.6.0"
+
+"make-dir@^3.0.0", "make-dir@^3.0.2":
   "integrity" "sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw=="
   "resolved" "https://registry.npmjs.org/make-dir/-/make-dir-3.1.0.tgz"
   "version" "3.1.0"
@@ -8837,7 +8876,12 @@
   "resolved" "https://registry.npmjs.org/pify/-/pify-3.0.0.tgz"
   "version" "3.0.0"
 
-"pify@^4.0.1", "pify@^5.0.0":
+"pify@^4.0.1":
+  "integrity" "sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g=="
+  "resolved" "https://registry.npmjs.org/pify/-/pify-4.0.1.tgz"
+  "version" "4.0.1"
+
+"pify@^5.0.0":
   "integrity" "sha512-eW/gHNMlxdSP6dmG6uJip6FXN0EQBwm2clYYd8Wul42Cwu/DK8HEftzsapcNdYe2MfLiIwZqsDk2RDEsTE79hA=="
   "resolved" "https://registry.npmjs.org/pify/-/pify-5.0.0.tgz"
   "version" "5.0.0"
@@ -9900,7 +9944,14 @@
     "ip" "^2.0.0"
     "smart-buffer" "^4.2.0"
 
-"sort-keys@^2.0.0", "sort-keys@^4.0.0":
+"sort-keys@^2.0.0":
+  "integrity" "sha512-/dPCrG1s3ePpWm6yBbxZq5Be1dXGLyLn9Z791chDC3NFrpkVbWGzkBwPN1knaciexFXgRJ7hzdnwZ4stHSDmjg=="
+  "resolved" "https://registry.npmjs.org/sort-keys/-/sort-keys-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "is-plain-obj" "^1.0.0"
+
+"sort-keys@^4.0.0":
   "integrity" "sha512-aUYIEU/UviqPgc8mHR6IW1EGxkAXpeRETYcrzg8cLAvUPZcpAlleSXHV2mY7G12GphSH6Gzv+4MMVSSkbdteHg=="
   "resolved" "https://registry.npmjs.org/sort-keys/-/sort-keys-4.2.0.tgz"
   "version" "4.2.0"
@@ -10761,9 +10812,9 @@
   "version" "4.1.6"
 
 "typescript@^4.6.4", "typescript@>=3":
-  "integrity" "sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ=="
-  "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.7.4.tgz"
-  "version" "4.7.4"
+  "integrity" "sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw=="
+  "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.8.2.tgz"
+  "version" "4.8.2"
 
 "uglify-js@^3.1.4":
   "integrity" "sha512-uVbFqx9vvLhQg0iBaau9Z75AxWJ8tqM9AV890dIZCLApF4rTcyHwmAvLeEdYRs+BzYWu8Iw81F79ah0EfTXbaw=="
@@ -11282,7 +11333,16 @@
   "resolved" "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz"
   "version" "1.0.2"
 
-"write-file-atomic@^2.4.2", "write-file-atomic@^3.0.0":
+"write-file-atomic@^2.4.2":
+  "integrity" "sha512-GaETH5wwsX+GcnzhPgKcKjJ6M2Cq3/iZp1WyY/X1CSqrW+jVNM9Y7D8EC2sM4ZG/V8wZlSniJnCKWPmBYAucRQ=="
+  "resolved" "https://registry.npmjs.org/write-file-atomic/-/write-file-atomic-2.4.3.tgz"
+  "version" "2.4.3"
+  dependencies:
+    "graceful-fs" "^4.1.11"
+    "imurmurhash" "^0.1.4"
+    "signal-exit" "^3.0.2"
+
+"write-file-atomic@^3.0.0":
   "integrity" "sha512-AvHcyZ5JnSfq3ioSyjrBkH9yW4m7Ayk8/9My/DD9onKeu/94fwrMocemO2QAJFAlnnDN+ZDS+ZjAR5ua1/PV/Q=="
   "resolved" "https://registry.npmjs.org/write-file-atomic/-/write-file-atomic-3.0.3.tgz"
   "version" "3.0.3"
@@ -11399,10 +11459,15 @@
     "camelcase" "^5.0.0"
     "decamelize" "^1.2.0"
 
-"yargs-parser@^20.2.2", "yargs-parser@^20.2.3", "yargs-parser@^21.0.0", "yargs-parser@20.2.4", "yargs-parser@20.x":
+"yargs-parser@^20.2.2", "yargs-parser@^20.2.3", "yargs-parser@20.2.4", "yargs-parser@20.x":
   "integrity" "sha512-WOkpgNhPTlE73h4VFAFsOnomJVaovO8VqLDzy5saChRBFQFBoMYirowyW+Q9HB4HFF4Z7VZTiG3iSzJJA29yRA=="
   "resolved" "https://registry.npmjs.org/yargs-parser/-/yargs-parser-20.2.4.tgz"
   "version" "20.2.4"
+
+"yargs-parser@^21.0.0":
+  "integrity" "sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw=="
+  "resolved" "https://registry.npmjs.org/yargs-parser/-/yargs-parser-21.1.1.tgz"
+  "version" "21.1.1"
 
 "yargs-parser@21.0.1":
   "integrity" "sha512-9BK1jFpLzJROCI5TzwZL/TU4gqjK5xiHV/RfWLOahrjAko/e4DJkRDZQXfvqAsiZzzYhgAzbgz6lg48jcm4GLg=="
