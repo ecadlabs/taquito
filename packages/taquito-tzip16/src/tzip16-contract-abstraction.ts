@@ -85,49 +85,49 @@ export class Tzip16ContractAbstraction {
     return this._metadataEnvelope;
   }
 
-  async getName() {
+  async metadataName() {
     if (!this._metadataEnvelope) {
       await this.getMetadata();
     }
     return this._metadataEnvelope!.metadata.name;
   }
 
-  async getDescription() {
+  async metadataDescription() {
     if (!this._metadataEnvelope) await this.getMetadata();
     return this._metadataEnvelope!.metadata.description;
   }
 
-  async getVersion() {
+  async metadataVersion() {
     if (!this._metadataEnvelope) await this.getMetadata();
     return this._metadataEnvelope!.metadata.version;
   }
 
-  async getLicense() {
+  async metadataLicense() {
     if (!this._metadataEnvelope) await this.getMetadata();
     return this._metadataEnvelope!.metadata.license;
   }
 
-  async getAuthors() {
+  async metadataAuthors() {
     if (!this._metadataEnvelope) await this.getMetadata();
     return this._metadataEnvelope!.metadata.authors;
   }
 
-  async getHomepage() {
+  async metadataHomepage() {
     if (!this._metadataEnvelope) await this.getMetadata();
     return this._metadataEnvelope!.metadata.homepage;
   }
 
-  async getSource() {
+  async metadataSource() {
     if (!this._metadataEnvelope) await this.getMetadata();
     return this._metadataEnvelope!.metadata.source;
   }
 
-  async getInterfaces() {
+  async metadataInterfaces() {
     if (!this._metadataEnvelope) await this.getMetadata();
     return this._metadataEnvelope!.metadata.interfaces;
   }
 
-  async getErrors() {
+  async metadataErrors() {
     if (!this._metadataEnvelope) await this.getMetadata();
     return this._metadataEnvelope!.metadata.errors;
   }
