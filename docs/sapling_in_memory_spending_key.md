@@ -24,12 +24,8 @@ Returns:
 
 
 ```js
-  const SaplingKeyProvider = await InMemorySpendingKey.fromMnemonic([
-    'leopard', 'crouch', 'simple', 'blind', 'castle', 'they', 
-    'elder', 'enact', 'slow', 'rate', 'mad', 'blanket', 
-    'saddle', 'tail', 'silk', 'fury', 'quarter', 'obscure', 
-    'interest', 'exact', 'veteran', 'volcano', 'fabric', 'cherry'
-    `],
+  const SaplingKeyProvider = await InMemorySpendingKey.fromMnemonic(
+    'leopard crouch simple blind castle they elder enact slow rate mad blanket saddle tail silk fury quarter obscure interest exact veteran volcano fabric cherry',
     'm/'
   ) // derivationPath by current standard is 'm/'
 
