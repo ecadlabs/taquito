@@ -89,7 +89,7 @@ describe('PtKathmandu', () => {
           });
         });
 
-        it('parseDataExpression check null case', () => {
+        it('parseDataExpression check the null case', () => {
           const options: ContractOptions = {
             protocol: protocol,
           };
