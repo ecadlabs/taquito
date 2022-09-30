@@ -1,15 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import { packDataBytes } from '../src/binary';
 import {
   InvalidContractError,
   InvalidDataExpressionError,
   InvalidTypeExpressionError,
 } from '../src/error';
-import { Parser } from '../src/micheline-parser';
 import { Contract, ContractOptions } from '../src/michelson-contract';
 import { Protocol } from '../src/michelson-types';
-import { MichelsonError } from '../src/utils';
 import { MichelsonValidationError } from '../src/michelson-validator';
 
 const contracts: {
@@ -40,50 +37,6 @@ describe('PtKathmandu', () => {
             expect(() => Contract.parse(src, options)).toThrow();
             return;
           }
-        });
-
-        it('parseTypeExpression', () => {
-          const options: ContractOptions = {
-            protocol: protocol,
-          };
-
-          const filename = path.resolve(__dirname, 'contracts_014', group, contract);
-          const src = fs.readFileSync(filename).toString();
-
-          // try {
-          //   Contract.parseTypeExpression(src, options);
-          // }
-          // catch (e: any) {
-          //   expect(e).toBeInstanceOf(MichelsonError);
-          //   expect(e.message).toEqual(`empty contract`);
-          // }
-          expect(() => Contract.parseTypeExpression(src, options)).toThrow(MichelsonError);
-          expect.objectContaining({
-            message: expect.stringContaining('empty contract.'),
-          });
-        });
-
-        it('parseDataExpression', () => {
-          const options: ContractOptions = {
-            protocol: protocol,
-          };
-          const data = `(Pair (Pair { Elt 1
-            (Pair (Pair "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN" "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx")
-                  0x0501000000026869) }
-                  10000000)
-                  (Pair 2 333))`;
-          const type = `(pair (pair (map int (pair (pair address address) bytes)) int) (pair int int))`;
-          const p = new Parser();
-          const dataJSON: any = p.parseMichelineExpression(data);
-          const typeJSON: any = p.parseMichelineExpression(type);
-          const packed = packDataBytes(
-            dataJSON, // as MichelsonData
-            typeJSON // as MichelsonType
-          );
-          expect(() => Contract.parseDataExpression(packed, options)).toThrow(MichelsonError);
-          expect.objectContaining({
-            message: expect.stringContaining('empty contract.'),
-          });
         });
 
         it('parse check null case', () => {
