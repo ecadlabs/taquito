@@ -11,6 +11,7 @@ export * from './michelson-typecheck';
 export * from './michelson-contract';
 export * from './formatters';
 export * from './binary';
-export { MichelsonError, isMichelsonError, MichelsonTypeError } from './utils';
+export * from './base58';
+export { MichelsonError, isMichelsonError, MichelsonTypeError, checkDecodeTezosID, encodeTezosID, TezosIDType } from './utils';
 export { MacroError } from './macros';
 export { VERSION } from './version';
