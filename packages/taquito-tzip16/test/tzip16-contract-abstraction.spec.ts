@@ -88,15 +88,15 @@ describe('Tzip16 contract abstraction test', () => {
 
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
 
-    expect(await tzip16Abs.getName()).toEqual('Taquito test');
-    expect(await tzip16Abs.getDescription()).toEqual('A metadata test');
-    expect(await tzip16Abs.getVersion()).toEqual('0.1');
-    expect(await tzip16Abs.getLicense()).toEqual('MIT');
-    expect(await tzip16Abs.getAuthors()).toEqual(['Test <https://test/>']);
-    expect(await tzip16Abs.getHomepage()).toEqual('https://test/');
-    expect(await tzip16Abs.getSource()).toEqual(undefined);
-    expect(await tzip16Abs.getInterfaces()).toEqual(undefined);
-    expect(await tzip16Abs.getErrors()).toEqual(undefined);
+    expect(await tzip16Abs.metadataName()).toEqual('Taquito test');
+    expect(await tzip16Abs.metadataDescription()).toEqual('A metadata test');
+    expect(await tzip16Abs.metadataVersion()).toEqual('0.1');
+    expect(await tzip16Abs.metadataLicense()).toEqual('MIT');
+    expect(await tzip16Abs.metadataAuthors()).toEqual(['Test <https://test/>']);
+    expect(await tzip16Abs.metadataHomepage()).toEqual('https://test/');
+    expect(await tzip16Abs.metadataSource()).toEqual(undefined);
+    expect(await tzip16Abs.metadataInterfaces()).toEqual(undefined);
+    expect(await tzip16Abs.metadataErrors()).toEqual(undefined);
     done();
   });
 
