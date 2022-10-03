@@ -42,6 +42,7 @@ import {
   TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
+  VotingInfoResponse,
   VotingPeriodBlockResult,
 } from './types';
 
@@ -69,6 +70,7 @@ export interface RpcClientInterface {
   getBigMapKey(address: string, key: BigMapKey, options?: RPCOptions): Promise<BigMapGetResponse>;
   getBigMapExpr(id: string, expr: string, options?: RPCOptions): Promise<BigMapResponse>;
   getDelegates(address: string, options?: RPCOptions): Promise<DelegatesResponse>;
+  getVotingInfo(address: string, options?: RPCOptions): Promise<VotingInfoResponse>;
   getConstants(options?: RPCOptions): Promise<ConstantsResponse>;
   getBlock(options?: RPCOptions): Promise<BlockResponse>;
   getBlockHeader(options?: RPCOptions): Promise<BlockHeaderResponse>;
@@ -136,6 +138,7 @@ export enum RPCMethodName {
   GET_CURRENT_QUORUM = 'getCurrentQuorum',
   GET_DELEGATE = 'getDelegate',
   GET_DELEGATES = 'getDelegates',
+  GET_VOTING_INFO = 'getVotingInfo',
   GET_ENDORSING_RIGHTS = 'getEndorsingRights',
   GET_ENTRYPOINTS = 'getEntrypoints',
   GET_LIVE_BLOCKS = 'getLiveBlocks',
