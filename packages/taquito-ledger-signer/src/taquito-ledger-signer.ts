@@ -170,7 +170,7 @@ export class LedgerSigner implements Signer {
     messageToSend = chunkOperation(messageToSend, watermarkedBytes2buff);
     const ledgerResponse = await this.signWithLedger(messageToSend);
     let signature;
-    if (this.derivationType === DerivationType.ED25519) {
+    if (this.derivationType === DerivationType.ED25519 || this.derivationType === DerivationType.BIP32_ED25519) {
       signature = ledgerResponse.slice(0, ledgerResponse.length - 2).toString('hex');
     } else {
       if (!validateResponse(ledgerResponse)) {
