@@ -24,7 +24,7 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
         await Tezos.contract.at(testContractAddress);
       } catch (error: any) {
         // Contract Address cannot be prefunded because it cannot be loaded into Taquito
-        expect(error.message).toContain('Client network socket disconnected before secure TLS connection was established');
+        expect(error.message).toContain('Http error response: (404)');
       }
     });
   });
