@@ -12,6 +12,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tsconfig/svelte": "^2.0.1",
+    "buffer": "^6.0.3",
     "events": "^3.3.0",
     "libsodium-wrappers": "^0.7.10",
     "prettier-plugin-svelte": "^2.7.0",
@@ -25,11 +26,11 @@
     "vite-compatible-readable-stream": "^3.6.1"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^3.1.4",
-    "@taquito/beacon-wallet": "^14.0.0-beta-RC.0",
-    "@taquito/taquito": "^14.0.0-beta-RC.0",
-    "@taquito/utils": "^14.0.0-beta-RC.0",
-    "buffer": "^6.0.3",
+    "@airgap/beacon-sdk": "^3.2.0",
+    "@taquito/beacon-wallet": "^14.0.0-a84e2bd0--1972",
+    "@taquito/sapling": "^14.0.0",
+    "@taquito/taquito": "^14.0.0",
+    "@taquito/utils": "^14.0.0",
     "svelte-select": "^4.4.7"
   },
   "alias": {
@@ -39,6 +40,6 @@
     "@taquito/taquito": "./node_modules/@taquito/taquito/dist/taquito.es5.js"
   },
   "prettier": {
-    "svelteSortOrder" : "options-scripts-styles-markup"
+    "svelteSortOrder": "options-scripts-styles-markup"
   }
 }

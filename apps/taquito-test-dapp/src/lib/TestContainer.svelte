@@ -172,6 +172,15 @@
         }
       }
 
+      .sapling-account-warning {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 20px;
+      }
+
       @supports not (backdrop-filter: blur(4px)) {
         background: rgba(4, 189, 228, 0.8);
       }
@@ -270,7 +279,7 @@
             </div>
           </div>
         {:else}
-          <div style="margin-bottom:20px">
+          <div class="sapling-account-warning">
             <span>You must be connected with Alice's account to run Sapling tests</span>
             <button on:click={switchAccount}>Switch account</button>
           </div>
@@ -324,14 +333,6 @@
               {#if $store.networkType === NetworkType.ITHACANET}
                 <a
                   href={`https://better-call.dev/ithacanet/opg/${opHash}/contents`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {shortenHash(opHash)}
-                </a>
-              {:else if $store.networkType === NetworkType.HANGZHOUNET}
-                <a
-                  href={`https://better-call.dev/hangzhounet/opg/${opHash}/contents`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

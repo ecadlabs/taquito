@@ -43,10 +43,6 @@
         store.updateTezos(new TezosToolkit(rpcUrl.mainnet));
         store.updateNetworkType(NetworkType.MAINNET);
         break;
-      case "hangzhounet":
-        store.updateTezos(new TezosToolkit(rpcUrl.hangzhounet));
-        store.updateNetworkType(NetworkType.HANGZHOUNET);
-        break;
       case "ithacanet":
         store.updateTezos(new TezosToolkit(rpcUrl.ithacanet));
         store.updateNetworkType(NetworkType.ITHACANET);

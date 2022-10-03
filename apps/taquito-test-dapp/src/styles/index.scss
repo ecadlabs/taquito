@@ -52,7 +52,7 @@ button {
 
   &:hover {
     background-color: rgba(4, 189, 228, 1);
-    border-color: rgba(4, 189, 228, 1);
+    border-color: darken(rgba(4, 189, 228, 1), 8);
   }
 
   &.wallet {

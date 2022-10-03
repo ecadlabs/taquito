@@ -3,11 +3,14 @@ import {
   ContractAbstraction,
   Wallet,
   MichelsonMap,
-  OpKind
+  OpKind,
+  RpcReadAdapter
 } from "@taquito/taquito";
 import type { ContractProvider } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { char2Bytes, verifySignature } from "@taquito/utils";
+import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
 import type { RequestSignPayloadInput } from "@airgap/beacon-sdk";
 import { SigningType } from "./types";
 import { get } from "svelte/store";
@@ -15,6 +18,7 @@ import type { TestSettings, TestResult } from "./types";
 import store from "./store";
 import contractToOriginate from "./contractToOriginate";
 import localStore from "./store";
+import {alice} from "./config";
 
 const preparePayloadToSign = (
   input: string,
@@ -517,10 +521,38 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
   return { success: false, opHash: "" };
 };
 
-const saplingShielded = async (
-  contract: ContractAbstraction<Wallet>
+const saplingBalance = async (
+  contract: ContractAbstraction<Wallet>,
+  Tezos: TezosToolkit
 ): Promise<TestResult> => {
-  return { success: false, opHash: "" };
+  try {
+    const inMemorySpendingKey = await InMemorySpendingKey.fromMnemonic(alice.mnemonic);
+    const readProvider = new RpcReadAdapter(Tezos.rpc);
+
+    const saplingToolkit = new SaplingToolkit(
+        { saplingSigner: inMemorySpendingKey }, 
+        { contractAddress: contract.address, memoSize: 8 }, 
+        readProvider
+    );
+
+    const txViewer = await saplingToolkit.getSaplingTransactionViewer();
+    const balance = await txViewer.getBalance();
+
+    return { success: true, opHash: null, output: balance.toString() };
+  } catch (error) {
+    console.error(error)
+    return { success: false, opHash: null, output: JSON.stringify(error) };
+  }
+
+}
+
+const saplingShielded = async (
+  contract: ContractAbstraction<Wallet>,
+  Tezos: TezosToolkit
+): Promise<TestResult> => {
+  //const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
+
+  return { success: false, opHash: null };
 };
 
 export const list = [
@@ -539,7 +571,8 @@ export const list = [
   "Set the transaction limits",
   "Subscribe to confirmations",
   "Permit contract",
-  "Sapling"
+  "Sapling balance",
+  //"Sapling shielded transaction"
 ];
 
 export const init = (
@@ -705,15 +738,25 @@ export const init = (
     lastResult: { option: "none", val: false }
   },
   {
-    id: "sapling-shielded",
-    name: "Sapling shielded transaction",
-    description: "This test prepares and sends a shielded transaction to a Sapling pool",
-    run: () => saplingShielded(contract as ContractAbstraction<Wallet>),
+    id: "sapling-balance",
+    name: "Sapling balance",
+    description: "This test retrieves Alice's balance from the Sapling pool",
+    run: async () => await saplingBalance(contract as ContractAbstraction<Wallet>, Tezos),
     showExecutionTime: false,
-    inputRequired: true,
+    inputRequired: false,
     inputType: "sapling",
     lastResult: { option: "none", val: false }
-  }
+  },
+  // {
+  //   id: "sapling-shielded",
+  //   name: "Sapling shielded transaction",
+  //   description: "This test prepares and sends a shielded transaction to a Sapling pool",
+  //   run: () => saplingShielded(contract as ContractAbstraction<Wallet>, Tezos),
+  //   showExecutionTime: false,
+  //   inputRequired: false,
+  //   inputType: "sapling",
+  //   lastResult: { option: "none", val: false }
+  // }
   /*{
         id: "originate-fail",
         name: "Originate smart contract that fails",

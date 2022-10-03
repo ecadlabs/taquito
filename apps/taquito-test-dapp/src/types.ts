@@ -1,6 +1,6 @@
 export interface TestResult {
   success: boolean;
-  opHash: string;
+  opHash: string | null;
   output?: string;
   sigDetails?: { input: string; formattedInput: string; bytes: string };
   confirmationObsOutput?: { level: number; currentConfirmation: number }[];
