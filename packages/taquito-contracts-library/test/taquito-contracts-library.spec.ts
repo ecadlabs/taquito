@@ -91,9 +91,18 @@ describe('ContractsLibrary tests', () => {
         },
       })
     ).toThrow(InvalidAddressError);
-    expect.objectContaining({
-      message: expect.stringContaining('Address is invalid: ${contractAddress}'),
-    });
+    expect(() =>
+      contractLib.addContract({
+        [contractAddress]: {
+          script,
+          entrypoints,
+        },
+      })
+    ).toThrow(
+      expect.objectContaining({
+        message: expect.stringContaining('Address is invalid: KTinvalid'),
+      })
+    );
   });
 
   it('throw an InvalidScriptFormatError error if the script format is invalid', () => {
@@ -108,10 +117,19 @@ describe('ContractsLibrary tests', () => {
         },
       })
     ).toThrow(InvalidScriptFormatError);
-    expect.objectContaining({
-      message: expect.stringContaining(
-        'An invalid script property has been provided for ${contractAddress}. The script property can be retrieved from TezosToolkit.rpc.getNormalizedScript(${contractAddress}). Invalid script: ${script}'
-      ),
-    });
+    expect(() =>
+      contractLib.addContract({
+        [contractAddress]: {
+          script,
+          entrypoints,
+        },
+      })
+    ).toThrow(
+      expect.objectContaining({
+        message: expect.stringContaining(
+          'An invalid script property has been provided for KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY. The script property can be retrieved from TezosToolkit.rpc.getNormalizedScript(KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY). Invalid script: invalid'
+        ),
+      })
+    );
   });
 });
