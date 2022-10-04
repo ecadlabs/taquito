@@ -4,11 +4,47 @@ import {
   MissingRequiredScopes,
 } from '../src/taquito-beacon-wallet';
 import LocalStorageMock from './mock-local-storage';
-import { PermissionScope, LocalStorage } from '@airgap/beacon-dapp';
+import { PermissionScope, LocalStorage, NetworkType } from '@airgap/beacon-dapp';
 
 global.localStorage = new LocalStorageMock();
 
 describe('Beacon Wallet tests', () => {
+  let mockBeacon: {
+    getPKH: jest.Mock<any>,
+    requestPermissions: jest.Mock<any>,
+  };
+  const testPKH = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+
+    mockBeacon = {
+      getPKH: jest.fn(),
+      requestPermissions: jest.fn()
+    };
+
+    mockBeacon.getPKH.mockResolvedValue(testPKH)
+    mockBeacon.requestPermissions.mockResolvedValue({
+      network: {
+        type: 'custom' as NetworkType,
+      }
+    })
+  })
+
+
+  it(`Verify getPKH`, async () => {
+    // const client = getDAppClientInstance({ name: 'My Sample DApp' })
+    // const perms = client.requestPermissions(mockBeacon.requestPermissions())  
+
+    // console.log(perms)   
+    // expect(await client.getActiveAccount()).toEqual(testPKH);
+    //  const pkh = await current.getPKH();
+    //  expect(pkh).toEqual(testPKH);
+    expect(
+      mockBeacon.requestPermissions()
+    ).toBeCalled
+  });
+
   it('Verify that BeaconWallet is instantiable', () => {
     expect(new BeaconWallet({ name: 'testWallet' })).toBeInstanceOf(BeaconWallet);
   });
@@ -64,4 +100,6 @@ describe('Beacon Wallet tests', () => {
     const formattedParam = await wallet.formatParameters({ gasLimit: 40 });
     expect(formattedParam.gasLimit).toEqual('40');
   });
+
+
 });
