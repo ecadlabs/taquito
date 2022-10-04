@@ -82,7 +82,15 @@ export { VERSION } from './version';
  * ```
  * import TransportU2F from "@ledgerhq/hw-transport-u2f";
  * const transport = await TransportU2F.create();
- * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.SECP256K1);``
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.SECP256K1);
+ * ```
+ *
+ * @example
+ * ```
+ * import TransportU2F from "@ledgerhq/hw-transport-u2f";
+ * const transport = await TransportU2F.create();
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/6'/0'", true, DerivationType.BIP32_ED25519);
+ * ```
  */
 export class LedgerSigner implements Signer {
   // constants for APDU requests (https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md)
