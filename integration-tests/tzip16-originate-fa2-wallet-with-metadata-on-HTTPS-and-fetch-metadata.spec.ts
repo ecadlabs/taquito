@@ -408,6 +408,181 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
                }
             ]
          });
+
+         expect(await (await contract.tzip16()).metadataName()).toEqual('FA2 having metadata')
+         expect(await (await contract.tzip16()).metadataDescription()).toEqual('This is a test for Taquito integration tests of a Fa2 contract having metadata stored on an HTTPS URL')
+         expect(await (await contract.tzip16()).metadataVersion()).toBeUndefined()
+         expect(await (await contract.tzip16()).metadataLicense()).toEqual({
+            "name": "MIT"
+         })
+         expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined()
+         expect(await (await contract.tzip16()).metadataHomepage()).toBeUndefined()
+         expect(await (await contract.tzip16()).metadataSource()).toEqual({
+            "tools": [
+               "stablecoin 1.4.0"
+            ],
+            "location": "https://github.com/tqtezos/stablecoin/"
+         })
+         expect(await (await contract.tzip16()).metadataInterfaces()).toEqual([
+            "TZIP-12",
+            "TZIP-17"
+         ])
+         expect(await (await contract.tzip16()).metadataErrors()).toEqual([
+            {
+               "error": {
+                  "string": "FA2_TOKEN_UNDEFINED"
+               },
+               "expansion": {
+                  "string": "All `token_id`s must be 0"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "FA2_INSUFFICIENT_BALANCE"
+               },
+               "expansion": {
+                  "string": "Cannot debit from a wallet because of insufficient amount of tokens"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "FA2_NOT_OPERATOR"
+               },
+               "expansion": {
+                  "string": "You're neither the owner or a permitted operator of one or more wallets from which tokens will be transferred"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "XTZ_RECEIVED"
+               },
+               "expansion": {
+                  "string": "Contract received a non-zero amount of tokens"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "NOT_CONTRACT_OWNER"
+               },
+               "expansion": {
+                  "string": "Operation can only be performed by the contract's owner"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "NOT_PENDING_OWNER"
+               },
+               "expansion": {
+                  "string": "Operation can only be performed by the current contract's pending owner"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "NO_PENDING_OWNER_SET"
+               },
+               "expansion": {
+                  "string": "There's no pending transfer of ownership"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "NOT_PAUSER"
+               },
+               "expansion": {
+                  "string": "Operation can only be performed by the contract's pauser"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "NOT_MASTER_MINTER"
+               },
+               "expansion": {
+                  "string": "Operation can only be performed by the contract's master minter"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "NOT_MINTER"
+               },
+               "expansion": {
+                  "string": "Operation can only be performed by registered minters"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "CONTRACT_PAUSED"
+               },
+               "expansion": {
+                  "string": "Operation cannot be performed while the contract is paused"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "CONTRACT_NOT_PAUSED"
+               },
+               "expansion": {
+                  "string": "Operation cannot be performed while the contract is not paused"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "NOT_TOKEN_OWNER"
+               },
+               "expansion": {
+                  "string": "You cannot configure another user's operators"
+               },
+               "languages": [
+                  "en"
+               ]
+            },
+            {
+               "error": {
+                  "string": "CURRENT_ALLOWANCE_REQUIRED"
+               },
+               "expansion": {
+                  "string": "The given address is already a minter, you must specify its current minting allowance"
+               },
+               "languages": [
+                  "en"
+               ]
+            }
+         ])
          done();
       });
 

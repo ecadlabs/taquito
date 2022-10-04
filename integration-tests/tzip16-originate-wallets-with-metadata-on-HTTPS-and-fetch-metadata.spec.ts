@@ -139,6 +139,25 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                     "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
                 }
             });
+
+            expect(await (await contract.tzip16()).metadataName()).toBe('Taquito test with valid metadata containing emoji 😀 🤩')
+            expect(await (await contract.tzip16()).metadataDescription()).toBe('👋 This is metadata test for Taquito integration tests 🧐 with the Ligo Taco shop contract modified to include metadata URI in the storage')
+            expect(await (await contract.tzip16()).metadataVersion()).toBe('7.1.0-beta.0')
+            expect(await (await contract.tzip16()).metadataLicense()).toEqual({
+                "name": "MIT",
+                "details": "The MIT License"
+            })
+            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataHomepage()).toBe('https://github.com/ecadlabs/taquito')
+            expect(await (await contract.tzip16()).metadataSource()).toEqual({
+                "tools": [
+                    "Ligo",
+                    "https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A"
+                ],
+                "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
+            })
+            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
             done();
         });
 
