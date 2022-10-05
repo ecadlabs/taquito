@@ -62,7 +62,7 @@ describe('Beacon Wallet tests', () => {
     const network = { type: NetworkType.JAKARTANET };
     const permissions = mockBeacon.requestPermissions({ network });
     expect(permissions).toBeDefined
-    console.log(permissions)
+    console.log()
   });
 
   it('Verify that permissions must be called before getPKH', async () => {
