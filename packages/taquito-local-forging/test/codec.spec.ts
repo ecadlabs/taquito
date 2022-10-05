@@ -64,7 +64,6 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
         ),
       })
     );
-
     done();
   });
 
