@@ -61,7 +61,6 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     });
 
     describe('Verify retrieving the public key from the Ledger', () => {
-
       it('Verify that Ledger will provide correct public key and public key hash for tz1 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
@@ -118,7 +117,6 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     });
 
     describe('Verify signing operation with Ledger Device', () => {
-
       jest.setTimeout(30000);
 
       it('Verify that Ledger returns the correct signature', async (done) => {
@@ -228,7 +226,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
 
 
         done();
-      // })
+      })
 
     })
     describe('Verify bip32 signature', () => {
@@ -274,4 +272,4 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
 
   });
 })
-})
+
