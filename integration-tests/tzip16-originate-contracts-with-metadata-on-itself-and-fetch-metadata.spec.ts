@@ -79,6 +79,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(await (await contract.tzip16()).metadataSource()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
+
             done();
         });
 
@@ -131,6 +133,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(await (await contract.tzip16()).metadataSource()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
+
             done();
         });
 

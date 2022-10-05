@@ -81,15 +81,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 name: 'MIT',
                 details: 'The MIT License'
             });
-            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined;
+            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined();
             expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://github.com/ecadlabs/taquito');
             expect(await (await contract.tzip16()).metadataSource()).toEqual({
                 tools: ['Ligo', 'https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A'],
                 location: 'https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout'
             });
-            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined;
-            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined;
-            expect(await (await contract.tzip16()).metadataViews()).toBeUndefined;
+            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined();
+            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined();
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
             done();
         });
     });

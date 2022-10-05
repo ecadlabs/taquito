@@ -94,9 +94,11 @@ describe('Tzip16 contract abstraction test', () => {
     expect(await tzip16Abs.metadataLicense()).toEqual('MIT');
     expect(await tzip16Abs.metadataAuthors()).toEqual(['Test <https://test/>']);
     expect(await tzip16Abs.metadataHomepage()).toEqual('https://test/');
-    expect(await tzip16Abs.metadataSource()).toEqual(undefined);
-    expect(await tzip16Abs.metadataInterfaces()).toEqual(undefined);
-    expect(await tzip16Abs.metadataErrors()).toEqual(undefined);
+    expect(await tzip16Abs.metadataSource()).toBeUndefined();
+    expect(await tzip16Abs.metadataInterfaces()).toBeUndefined();
+    expect(await tzip16Abs.metadataErrors()).toBeUndefined();
+    expect(await tzip16Abs.metadataViews()).toEqual({});
+
     done();
   });
 

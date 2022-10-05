@@ -82,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 "name": "MIT",
                 "details": "The MIT License"
             })
-            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined
+            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://github.com/ecadlabs/taquito')
             expect(await (await contract.tzip16()).metadataSource()).toEqual({
                 "tools": [
@@ -93,6 +93,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             })
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
 
             done();
         });
@@ -161,7 +162,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 "name": "MIT",
                 "details": "The MIT License"
             })
-            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined
+            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://github.com/ecadlabs/taquito')
             expect(await (await contract.tzip16()).metadataSource()).toEqual({
                 "tools": [
@@ -172,6 +173,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             })
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
 
             done();
         });
