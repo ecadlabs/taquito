@@ -1,12 +1,17 @@
 import { Context } from '../context';
+import { ContractStorageType, DefaultContractType } from '../contract/contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
-import { EstimationProvider, ContractProvider } from '../contract/interface';
+import { ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
   createRegisterGlobalConstantOperation,
   createRevealOperation,
+  createTxRollupOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  createTxRollupBatchOperation,
+  createTransferTicketOperation,
+  createIncreasePaidStorageOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -21,9 +26,24 @@ import {
   withKind,
   RevealParams,
   RegisterGlobalConstantParams,
+  TxRollupOriginateParams,
+  TxRollupBatchParams,
+  TransferTicketParams,
+  IncreasePaidStorageParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
+import {
+  validateAddress,
+  validateKeyHash,
+  InvalidAddressError,
+  InvalidKeyHashError,
+  ValidationResult,
+  InvalidOperationKindError,
+  validateContractAddress,
+  InvalidContractAddressError,
+} from '@taquito/utils';
+import { EstimationProvider } from '../estimate/estimate-provider-interface';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -51,7 +71,24 @@ export class OperationBatch extends OperationEmitter {
    * @param params Transfer operation parameter
    */
   withTransfer(params: TransferParams) {
+    if (validateAddress(params.to) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to);
+    }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Transfer tickets from a Tezos address (tz1,tz2 or tz3) to a smart contract address( KT1)
+   *
+   * @param params Transfer operation parameter
+   */
+  withTransferTicket(params: TransferTicketParams) {
+    if (validateContractAddress(params.destination) !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(params.destination);
+    }
+    this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
   }
 
@@ -61,7 +98,9 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Transfer operation parameter
    */
-  withContractCall(params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>) {
+  withContractCall(
+    params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+  ) {
     return this.withTransfer(params.toTransferParams());
   }
 
@@ -72,6 +111,12 @@ export class OperationBatch extends OperationEmitter {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.delegate);
+    }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
   }
@@ -83,6 +128,9 @@ export class OperationBatch extends OperationEmitter {
    * @param params Activation operation parameter
    */
   withActivation({ pkh, secret }: ActivationParams) {
+    if (validateKeyHash(pkh) !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(pkh);
+    }
     this.operations.push({ kind: OpKind.ACTIVATION, pkh, secret });
     return this;
   }
@@ -93,7 +141,9 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Origination operation parameter
    */
-  withOrigination(params: OriginateParams) {
+  withOrigination<TContract extends DefaultContractType = DefaultContractType>(
+    params: OriginateParams<ContractStorageType<TContract>>
+  ) {
     this.operations.push({ kind: OpKind.ORIGINATION, ...params });
     return this;
   }
@@ -104,8 +154,41 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params RegisterGlobalConstant operation parameter
    */
-   withRegisterGlobalConstant(params: RegisterGlobalConstantParams) {
+  withRegisterGlobalConstant(params: RegisterGlobalConstantParams) {
     this.operations.push({ kind: OpKind.REGISTER_GLOBAL_CONSTANT, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Add an operation to increase paid storage to the batch
+   *
+   * @param params IncreasePaidStorage operation parameter
+   */
+  withIncreasePaidStorage(params: IncreasePaidStorageParams) {
+    this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Add an operation to originate a rollup to the batch
+   *
+   * @param params Rollup origination operation parameter
+   */
+  withTxRollupOrigination(params?: TxRollupOriginateParams) {
+    this.operations.push({ kind: OpKind.TX_ROLLUP_ORIGINATION, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Add an operation to submit a tx rollup batch to the batch
+   *
+   * @param params Tx rollup batch operation parameter
+   */
+  withTxRollupSubmitBatch(params: TxRollupBatchParams) {
+    this.operations.push({ kind: OpKind.TX_ROLLUP_SUBMIT_BATCH, ...params });
     return this;
   }
 
@@ -118,8 +201,9 @@ export class OperationBatch extends OperationEmitter {
       case OpKind.ORIGINATION:
         return createOriginationOperation(
           await this.context.parser.prepareCodeOrigination({
-          ...param,
-        }));
+            ...param,
+          })
+        );
       case OpKind.DELEGATION:
         return createSetDelegateOperation({
           ...param,
@@ -132,8 +216,24 @@ export class OperationBatch extends OperationEmitter {
         return createRegisterGlobalConstantOperation({
           ...param,
         });
+      case OpKind.INCREASE_PAID_STORAGE:
+        return createIncreasePaidStorageOperation({
+          ...param,
+        });
+      case OpKind.TX_ROLLUP_ORIGINATION:
+        return createTxRollupOriginationOperation({
+          ...param,
+        });
+      case OpKind.TX_ROLLUP_SUBMIT_BATCH:
+        return createTxRollupBatchOperation({
+          ...param,
+        });
+      case OpKind.TRANSFER_TICKET:
+        return createTransferTicketOperation({
+          ...param,
+        });
       default:
-        throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+        throw new InvalidOperationKindError((param as any).kind);
     }
   }
 
@@ -161,8 +261,20 @@ export class OperationBatch extends OperationEmitter {
         case OpKind.REGISTER_GLOBAL_CONSTANT:
           this.withRegisterGlobalConstant(param);
           break;
+        case OpKind.INCREASE_PAID_STORAGE:
+          this.withIncreasePaidStorage(param);
+          break;
+        case OpKind.TX_ROLLUP_ORIGINATION:
+          this.withTxRollupOrigination(param);
+          break;
+        case OpKind.TX_ROLLUP_SUBMIT_BATCH:
+          this.withTxRollupSubmitBatch(param);
+          break;
+        case OpKind.TRANSFER_TICKET:
+          this.withTransferTicket(param);
+          break;
         default:
-          throw new Error(`Unsupported operation kind: ${(param as any).kind}`);
+          throw new InvalidOperationKindError((param as any).kind);
       }
     }
 
@@ -194,9 +306,9 @@ export class OperationBatch extends OperationEmitter {
       i++;
     }
     if (revealNeeded) {
-      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL }
+      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
       const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
-      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey))
+      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
     }
 
     const source = (params && params.source) || publicKeyHash;
@@ -211,7 +323,7 @@ export class OperationBatch extends OperationEmitter {
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) { }
+  constructor(private context: Context, private estimator: EstimationProvider) {}
 
   /***
    *

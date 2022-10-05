@@ -1,13 +1,14 @@
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { BaseTokenSchema } from '../schema/types';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class ChestValidationError extends TokenValidationError {
-  name: string = 'ChestValidationError';
+  name = 'ChestValidationError';
   constructor(public value: any, public token: ChestToken, message: string) {
     super(value, token, message);
   }
 }
 export class ChestToken extends Token {
-  static prim = 'chest';
+  static prim: 'chest' = 'chest';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -39,12 +40,17 @@ export class ChestToken extends Token {
     return { bytes: val };
   }
 
-  EncodeObject(val: string | Uint8Array) {
+  EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
+
+    if (semantic && semantic[ChestToken.prim]) {
+      return semantic[ChestToken.prim](val);
+    }
+
     return { bytes: val };
   }
 
@@ -52,8 +58,19 @@ export class ChestToken extends Token {
     return val.bytes;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return ChestToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: ChestToken.prim,
+      schema: ChestToken.prim,
+    };
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -61,6 +78,5 @@ export class ChestToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

@@ -1,0 +1,5 @@
+parameter (list int);
+storage int;
+code { CAR; PUSH int 1; SWAP;
+       ITER { MUL };
+       NIL operation; PAIR}

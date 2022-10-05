@@ -22,8 +22,14 @@ export enum CODEC {
   PROPOSAL = 'proposal',
   PROPOSAL_ARR = 'proposalArr',
   INT32 = 'int32',
+  INT16 = 'int16',
   PARAMETERS = 'parameters',
   ADDRESS = 'address',
+  SMART_CONTRACT_ADDRESS = 'smart_contract_address',
+  VALUE = 'value',
+  MANAGER = 'manager',
+  BLOCK_PAYLOAD_HASH = 'blockPayloadHash',
+  ENTRYPOINT = 'entrypoint',
   OPERATION = 'operation',
   OP_ACTIVATE_ACCOUNT = 'activate_account',
   OP_DELEGATION = 'delegation',
@@ -35,8 +41,14 @@ export enum CODEC {
   OP_REVEAL = 'reveal',
   OP_PROPOSALS = 'proposals',
   OP_REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
-  VALUE = 'value',
-  MANAGER = 'manager',
+  OP_TRANSFER_TICKET = 'transfer_ticket',
+  OP_TX_ROLLUP_ORIGINATION = 'tx_rollup_origination',
+  OP_TX_ROLLUP_SUBMIT_BATCH = 'tx_rollup_submit_batch',
+  BURN_LIMIT = 'burn_limit',
+  TX_ROLLUP_ORIGINATION_PARAM = 'tx_rollup_origination_param',
+  TX_ROLLUP_ID = 'tx_rollup_id',
+  TX_ROLLUP_BATCH_CONTENT = 'tx_rollup_batch_content',
+  OP_INCREASE_PAID_STORAGE = 'increase_paid_storage',
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
@@ -173,7 +185,7 @@ export const opMapping: { [key: string]: string } = {
   '81': 'bls12_381_g2',
   '82': 'bls12_381_fr',
   '83': 'sapling_state',
-  '84': 'sapling_transaction',
+  '84': 'sapling_transaction_deprecated',
   '85': 'SAPLING_EMPTY_STATE',
   '86': 'SAPLING_VERIFY_UPDATE',
   '87': 'ticket',
@@ -187,7 +199,12 @@ export const opMapping: { [key: string]: string } = {
   '8f': 'OPEN_CHEST',
   '90': 'VIEW',
   '91': 'view',
-  '92': 'constant'
+  '92': 'constant',
+  '93': 'SUB_MUTEZ',
+  '94': 'tx_rollup_l2_address',
+  '95': 'MIN_BLOCK_TIME',
+  '96': 'sapling_transaction',
+  '97': 'EMIT',
 };
 
 export const opMappingReverse = (() => {
@@ -206,10 +223,14 @@ export const kindMapping: { [key: number]: string } = {
   0x6c: 'transaction',
   0x6d: 'origination',
   0x06: 'ballot',
-  0x00: 'endorsement',
+  0x15: 'endorsement',
   0x01: 'seed_nonce_revelation',
   0x05: 'proposals',
-  0x6f: 'register_global_constant'
+  0x6f: 'register_global_constant',
+  0x96: 'tx_rollup_origination',
+  0x97: 'tx_rollup_submit_batch',
+  0x9e: 'transfer_ticket',
+  0x71: 'increase_paid_storage',
 };
 
 export const kindMappingReverse = (() => {

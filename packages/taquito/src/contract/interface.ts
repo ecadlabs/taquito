@@ -6,6 +6,7 @@ import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { RegisterGlobalConstantOperation } from '../operations/register-global-constant-operation';
 import { RevealOperation } from '../operations/reveal-operation';
+import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
@@ -15,75 +16,17 @@ import {
   ParamsWithKind,
   RevealParams,
   RegisterGlobalConstantParams,
+  TxRollupOriginateParams,
+  TxRollupBatchParams,
+  IncreasePaidStorageParams,
+  TransferTicketParams,
 } from '../operations/types';
-import { ContractAbstraction } from './contract';
-import { Estimate } from './estimate';
+import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
+import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
+import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
+import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 
 export type ContractSchema = Schema | unknown;
-
-export interface EstimationProvider {
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for an origination operation
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation
-   *
-   * @param Estimate
-   */
-  originate(params: OriginateParams): Promise<Estimate>;
-
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for an transfer operation
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation
-   *
-   * @param Estimate
-   */
-  transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams): Promise<Estimate>;
-
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for a delegate operation
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation
-   *
-   * @param Estimate
-   */
-  setDelegate(params: DelegateParams): Promise<Estimate>;
-
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for a delegate operation
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation
-   *
-   * @param Estimate
-   */
-  registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
-
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for a reveal operation
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
-   *
-   * @param Estimate
-   */
-  reveal(params?: RevealParams): Promise<Estimate | undefined> ;
-
-  batch(params: ParamsWithKind[]): Promise<Estimate[]>;
-
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for registering an expression (registerGlobalConstant operation) 
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
-   *
-   * @param params registerGlobalConstant operation parameter
-   */
-  registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<Estimate>;
-}
 
 export interface StorageProvider {
   /**
@@ -122,7 +65,12 @@ export interface StorageProvider {
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
-  getBigMapKeyByID<T>(id: string, keyToEncode: BigMapKeyType, schema: Schema, block?: number): Promise<T>;
+  getBigMapKeyByID<T>(
+    id: string,
+    keyToEncode: BigMapKeyType,
+    schema: Schema,
+    block?: number
+  ): Promise<T>;
 
   /**
    *
@@ -136,7 +84,13 @@ export interface StorageProvider {
    * @returns An object containing the keys queried in the big map and their value in a well-formatted JSON object format
    *
    */
-   getBigMapKeysByID<T>(id: string, keysToEncode: Array<BigMapKeyType>, schema: Schema, block?: number, batchSize?: number): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
+  getBigMapKeysByID<T>(
+    id: string,
+    keysToEncode: Array<BigMapKeyType>,
+    schema: Schema,
+    block?: number,
+    batchSize?: number
+  ): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
 
   /**
    *
@@ -146,7 +100,7 @@ export interface StorageProvider {
    * @param block optional block level to fetch the value from
    *
    */
-   getSaplingDiffByID(id: string, block?: number): Promise<SaplingDiffResponse>;
+  getSaplingDiffByID(id: string, block?: number): Promise<SaplingDiffResponse>;
 }
 
 export interface ContractProvider extends StorageProvider {
@@ -158,7 +112,9 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param OriginationOperation Originate operation parameter
    */
-  originate(contract: OriginateParams): Promise<OriginationOperation>;
+  originate<TContract extends DefaultContractType = DefaultContractType>(
+    contract: OriginateParams<ContractStorageType<TContract>>
+  ): Promise<OriginationOperation<TContract>>;
 
   /**
    *
@@ -190,6 +146,7 @@ export interface ContractProvider extends StorageProvider {
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
 
+  transferTicket(params: TransferTicketParams): Promise<TransferTicketOperation>;
   /**
    *
    * @description Reveal the current address. Will throw an error if the address is already revealed.
@@ -200,7 +157,13 @@ export interface ContractProvider extends StorageProvider {
    */
   reveal(params: RevealParams): Promise<RevealOperation>;
 
-  at<T extends ContractAbstraction<ContractProvider>>(address: string, contractAbstractionComposer?: (abs: ContractAbstraction<ContractProvider>, context: Context) => T): Promise<T>;
+  at<T extends ContractAbstraction<ContractProvider>>(
+    address: string,
+    contractAbstractionComposer?: (
+      abs: ContractAbstraction<ContractProvider>,
+      context: Context
+    ) => T
+  ): Promise<T>;
 
   /**
    *
@@ -208,7 +171,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param params List of operation to batch together
    */
-  batch(params?: ParamsWithKind[]): OperationBatch ;
+  batch(params?: ParamsWithKind[]): OperationBatch;
 
   /**
    *
@@ -218,5 +181,37 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param params registerGlobalConstant operation parameter
    */
-  registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<RegisterGlobalConstantOperation>;
+  registerGlobalConstant(
+    params: RegisterGlobalConstantParams
+  ): Promise<RegisterGlobalConstantOperation>;
+
+  /**
+   *
+   * @description Increase the amount of bytes in a smart contract storage by paying a fee
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params IncreasePaidStorage operation parameter
+   */
+  increasePaidStorage(params: IncreasePaidStorageParams): Promise<IncreasePaidStorageOperation>;
+
+  /**
+   *
+   * @description Originate a new tx rollup. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TxRollupOriginateParams Originate rollup operation parameter
+   */
+  txRollupOriginate(params?: TxRollupOriginateParams): Promise<TxRollupOriginationOperation>;
+
+  /**
+   *
+   * @description Submit a tx rollup batch. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TxRollupBatchParams Batch tx rollup operation parameter
+   */
+  txRollupSubmitBatch(params: TxRollupBatchParams): Promise<TxRollupBatchOperation>;
 }

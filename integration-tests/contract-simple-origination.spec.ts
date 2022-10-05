@@ -2,15 +2,14 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
 
-  describe(`Originating a contract api using: ${rpc}`, () => {
+  describe(`Test contract origination of a simple contract through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('Simple origination scenario', 2, async (done: () => void) => {
+    test('Verify contract.originate for a simple contract', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: `parameter string;
@@ -24,7 +23,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       })
       await op.confirmation()
       expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      expect(Number(op.consumedGas)).toBeGreaterThan(0);
+      expect(op.contractAddress).toBeDefined();
+      expect(op.status).toEqual('applied');
+      expect(op.storageDiff).toEqual('62');
+
       done();
     });
   });

@@ -1,34 +1,12 @@
 import { TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
+import { InMemorySigner } from '@taquito/signer';
 import { voteInitSample, voteSample } from '../integration-tests/data/vote-contract';
 
-const provider = 'https://hangzhounet.api.tez.ie';
-
 async function example() {
-  const tezos = new TezosToolkit(provider);
-  await importKey(
-    tezos,
-    'peqjckge.qkrrajzs@tezos.example.org',
-    'y4BX7qS1UE',
-    [
-      'skate',
-      'damp',
-      'faculty',
-      'morning',
-      'bring',
-      'ridge',
-      'traffic',
-      'initial',
-      'piece',
-      'annual',
-      'give',
-      'say',
-      'wrestle',
-      'rare',
-      'ability',
-    ].join(' '),
-    '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
-  );
+  const provider = 'https://ghostnet.ecadinfra.com';
+    const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+    const tezos = new TezosToolkit(provider);
+    tezos.setSignerProvider(signer);
 
   try {
     console.log('Deploying Ligo Vote contract...');
@@ -54,5 +32,4 @@ async function example() {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

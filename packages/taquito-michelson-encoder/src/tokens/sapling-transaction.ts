@@ -1,14 +1,15 @@
-import { Token, TokenFactory, TokenValidationError } from './token';
+import { SaplingTransactionTokenSchema } from '../schema/types';
+import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 export class SaplingTransactionValidationError extends TokenValidationError {
-  name: string = 'SaplingTransactionValidationError';
+  name = 'SaplingTransactionValidationError';
   constructor(public value: any, public token: SaplingTransactionToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class SaplingTransactionToken extends Token {
-  static prim = 'sapling_transaction';
+  static prim: 'sapling_transaction' = 'sapling_transaction';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -19,7 +20,11 @@ export class SaplingTransactionToken extends Token {
   }
 
   Execute(_val: any) {
-    throw new Error('There is no literal value for the sapling_transaction type.');
+    throw new SaplingTransactionValidationError(
+      _val,
+      this,
+      'There is no literal value for the sapling_transaction type.'
+    );
   }
 
   private validateBytes(val: any) {
@@ -41,15 +46,31 @@ export class SaplingTransactionToken extends Token {
     return { bytes: String(val).toString() };
   }
 
-  EncodeObject(val: string | Uint8Array) {
+  EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.validateBytes(this.convertUint8ArrayToHexString(val));
+    if (semantic && semantic[SaplingTransactionToken.prim]) {
+      return semantic[SaplingTransactionToken.prim](val);
+    }
     return { bytes: String(val).toString() };
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   ExtractSchema() {
     return {
       [SaplingTransactionToken.prim]: {
         'memo-size': Number(this.val.args[0]['int']),
+      },
+    };
+  }
+
+  generateSchema(): SaplingTransactionTokenSchema {
+    return {
+      __michelsonType: SaplingTransactionToken.prim,
+      schema: {
+        memoSize: this.val.args[0]['int'],
       },
     };
   }
@@ -59,6 +80,5 @@ export class SaplingTransactionToken extends Token {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

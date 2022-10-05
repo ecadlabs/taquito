@@ -26,5 +26,4 @@ const example = async () => {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

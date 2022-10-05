@@ -1,6 +1,6 @@
 {
   "name": "@taquito/faucet",
-  "version": "10.1.2",
+  "version": "14.0.0",
   "description": "",
   "keywords": [
     "tezos"
@@ -60,11 +60,11 @@
   },
   "dependencies": {
     "axios": "^0.21.4",
-    "@taquito/signer": "^10.1.2",
-    "@taquito/remote-signer": "^10.1.2"
+    "@taquito/signer": "^14.0.0",
+    "@taquito/remote-signer": "^14.0.0"
   },
   "devDependencies": {
-    "@taquito/taquito": "^10.1.2",
+    "@taquito/taquito": "^14.0.0",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.2",
     "@types/superagent": "^4.1.11",

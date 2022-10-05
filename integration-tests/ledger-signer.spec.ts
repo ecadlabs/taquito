@@ -1,33 +1,33 @@
 import { CONFIGS } from './config';
-import { LedgerSigner, LedgerTransport, DerivationType } from '../packages/taquito-ledger-signer/src/taquito-ledger-signer';
+import { LedgerSigner, LedgerTransport, DerivationType } from '@taquito/ledger-signer';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { TezosToolkit } from '@taquito/taquito';
 
 /**
  * LedgerSigner test
- * 
+ *
  * remove "testPathIgnorePatterns": ["./ledger-signer.spec.ts"] from package.json.
- * 
- * Set up your Ledger device with this mnemonic to run this test file and 
- * 1-prefer 
- * 2-wait 
- * 3-flock 
- * 4-brown 
- * 5-volume 
- * 6-recycle 
- * 7-scrub 
- * 8-elder 
- * 9-rate 
- * 10-pair 
- * 11-twenty 
- * 12-giant 
+ *
+ * Set up your Ledger device with this mnemonic to run this test file and
+ * 1-prefer
+ * 2-wait
+ * 3-flock
+ * 4-brown
+ * 5-volume
+ * 6-recycle
+ * 7-scrub
+ * 8-elder
+ * 9-rate
+ * 10-pair
+ * 11-twenty
+ * 12-giant
  */
 
 CONFIGS().forEach(({ lib, setup, rpc }) => {
   const tezos = lib;
 
-  describe('LedgerSigner test', () => {
+  describe('Verify LedgerSigner', () => {
     let transport: LedgerTransport;
 
     beforeEach(async (done) => {
@@ -36,7 +36,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       done();
     });
 
-    it('LedgerSigner is instantiable with default parameters', () => {
+    it('Verify that LedgerSigner is instantiable with default parameters', () => {
       expect(
         new LedgerSigner(
           transport
@@ -44,7 +44,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       ).toBeInstanceOf(LedgerSigner);
     });
 
-    it('LedgerSigner is instantiable with parameters', () => {
+    it('Verify that LedgerSigner is instantiable with parameters', () => {
       expect(
         new LedgerSigner(
           transport,
@@ -55,8 +55,9 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       ).toBeInstanceOf(LedgerSigner);
     });
 
-    describe('Get the public key', () => {
-      it('Should get the correct public key and public key hash of the Ledger for tz1 curve and default path', async (done) => {
+    describe('Verify retrieving the public key from the Ledger', () => {
+      
+      it('Verify that Ledger will provide correct public key and public key hash for tz1 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -74,7 +75,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         done();
       });
 
-      it('Should get the correct public key and public key hash of the Ledger for tz2 curve and default path', async (done) => {
+      it('Verify that Ledger will provide correct public key and public key hash for tz2 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -92,7 +93,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         done();
       });
 
-      it('Should get the correct public key and public key hash of the Ledger for tz3 curve and path having 1 as account value', async (done) => {
+      it('Verify that that Ledger will provide correct public key and public key hash for tz3 curve and path having 1 as account value', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/1'/0'",
@@ -111,9 +112,11 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     });
 
-    describe('Should sign operation with Ledger', () => {
+    describe('Verify signing operation with Ledger Device', () => {
+      
       jest.setTimeout(30000);
-      it('Should return the correct signature with the Ledger', async (done) => {
+
+      it('Verify that Ledger returns the correct signature', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -137,9 +140,9 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-    describe('Should be able to use Ledger with contract API', () => {
+    describe('Verify the use of a Ledger Device with contract api', () => {
       jest.setTimeout(240000)
-      it('Should originate contract with Ledger', async (done) => {
+      it('Verify that a contract can be originated with Ledger', async (done) => {
 
         const fundAccountFirst = await tezos.contract.transfer({ to: 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY', amount: 9 });
         await fundAccountFirst.confirmation();
@@ -164,10 +167,10 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
       });
     })
 
-    describe('Should be able to used Ledger with wallet API', () => {
+    describe('Verify the use of a Ledger Device with wallet api', () => {
       jest.setTimeout(120000)
 
-      it('Should sign and inject transaction with Ledger', async (done) => {
+      it('Verify signing and injecting a transaction with Ledger', async (done) => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",

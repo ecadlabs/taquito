@@ -1,6 +1,9 @@
 import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
+import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
+import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
+import { OriginationOperationError } from './operation-errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -16,9 +19,10 @@ import {
  *
  * @warn Currently support only one origination per operation
  */
-export class OriginationOperation
+export class OriginationOperation<TContract extends DefaultContractType = DefaultContractType>
   extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation {
+  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
+{
   /**
    * @description Contract address of the newly originated contract
    */
@@ -41,12 +45,7 @@ export class OriginationOperation
   }
 
   get status() {
-    const operationResults = this.operationResults;
-    if (operationResults) {
-      return operationResults.status;
-    } else {
-      return 'unknown';
-    }
+    return this.operationResults?.status ?? 'unknown';
   }
 
   get operationResults() {
@@ -76,8 +75,14 @@ export class OriginationOperation
   }
 
   get consumedGas() {
-    const consumedGas = this.operationResults && this.operationResults.consumed_gas;
-    return consumedGas ? consumedGas : undefined;
+    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
+    return this.consumedMilliGas
+      ? new BigNumber(this.consumedMilliGas).dividedBy(1000).toString()
+      : undefined;
+  }
+
+  get consumedMilliGas() {
+    return this.operationResults?.consumed_milligas;
   }
 
   get storageDiff() {
@@ -91,18 +96,18 @@ export class OriginationOperation
   }
 
   get errors() {
-    return this.operationResults && this.operationResults.errors;
+    return this.operationResults?.errors;
   }
 
   /**
    * @description Provide the contract abstract of the newly originated contract
    */
-  async contract(confirmations?: number, interval?: number, timeout?: number) {
+  async contract(confirmations?: number, timeout?: number) {
     if (!this.contractAddress) {
-      throw new Error('No contract was originated in this operation');
+      throw new OriginationOperationError('No contract was originated in this operation');
     }
 
-    await this.confirmation(confirmations, interval, timeout);
-    return this.contractProvider.at(this.contractAddress);
+    await this.confirmation(confirmations, timeout);
+    return this.contractProvider.at<TContract>(this.contractAddress);
   }
 }

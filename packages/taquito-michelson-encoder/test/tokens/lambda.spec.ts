@@ -26,8 +26,25 @@ describe('Lambda token', () => {
             lambda: {
                 parameters: 'unit',
                 returns: {
-                            list: "operation",
-                         }
+                    list: "operation",
+                }
+            }
+        });
+
+        expect(schema.generateSchema()).toEqual({
+            __michelsonType: 'lambda',
+            schema: {
+                parameters: {
+                    __michelsonType: 'unit',
+                    schema: 'unit'
+                },
+                returns: {
+                    __michelsonType: 'list',
+                    schema: {
+                        __michelsonType: 'operation',
+                        schema: 'operation'
+                    }
+                }
             }
         });
     });

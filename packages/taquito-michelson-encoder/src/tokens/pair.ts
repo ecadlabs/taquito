@@ -1,37 +1,76 @@
-import { Token, TokenFactory, Semantic, ComparableToken } from './token';
+import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 import { OrToken } from './or';
+import { PairTokenSchema } from '../schema/types';
+import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
+
+/**
+ *  @category Error
+ *  @description Error that indicates in invalid token argument being passed
+ */
+export class TokenArgumentValidationError extends Error {
+  public name = 'TokenArgumentValidationError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates a failure occurring when doing a comparison of tokens
+ */
+export class TokenComparisonError extends Error {
+  public name = 'TokenComparisonError';
+  constructor(public val1: string, public val2: string) {
+    super(`Tokens ${val1} and ${val2} are not comparable`);
+  }
+}
 
 // collapse comb pair
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
   if (Array.isArray(val)) {
-    return collapse({
-      prim: prim,
-      args: val,
-    }, prim);
+    return collapse(
+      {
+        prim: prim,
+        args: val,
+      },
+      prim
+    );
   }
   if (val.args === undefined) {
-    throw new Error('Token has no arguments');
+    throw new TokenArgumentValidationError(
+      'Encountered an invalid PairToken with no arguments, a pair must have two or more arguments'
+    );
   }
   if (val.args.length > 2) {
-    return [val.args[0], {
-      prim: prim,
-      args: val.args.slice(1),
-    }];
+    return [
+      val.args[0],
+      {
+        prim: prim,
+        args: val.args.slice(1),
+      },
+    ];
   }
   return [val.args[0], val.args[1]];
 }
 export class PairToken extends ComparableToken {
-  static prim = 'pair';
+  static prim: 'pair' = 'pair';
 
-  constructor(
-    val: { prim: string; args: any[]; annots: any[] } | any[],
-    idx: number,
-    fac: TokenFactory
-  ) {
-    super(Array.isArray(val) ? {
-      prim: PairToken.prim,
-      args: val,
-    } : val, idx, fac);
+  constructor(val: MichelsonV1Expression, idx: number, fac: TokenFactory) {
+    super(
+      Array.isArray(val)
+        ? {
+            prim: PairToken.prim,
+            args: val,
+          }
+        : (val as MichelsonV1ExpressionExtended).prim
+        ? (val as MichelsonV1ExpressionExtended)
+        : ({
+            prim: PairToken.prim,
+            args: val,
+          } as MichelsonV1ExpressionExtended),
+      idx,
+      fac
+    );
   }
 
   private args(): [any, any] {
@@ -41,7 +80,7 @@ export class PairToken extends ComparableToken {
 
   private tokens(): [Token, Token] {
     let cnt = 0;
-    return this.args().map(a => {
+    return this.args().map((a) => {
       const tok = this.createToken(a, this.idx + cnt);
       if (tok instanceof PairToken) {
         cnt += Object.keys(tok.ExtractSchema()).length;
@@ -55,7 +94,7 @@ export class PairToken extends ComparableToken {
   public Encode(args: any[]): any {
     return {
       prim: 'Pair',
-      args: this.tokens().map(t => t.Encode(args)),
+      args: this.tokens().map((t) => t.Encode(args)),
     };
   }
 
@@ -91,7 +130,7 @@ export class PairToken extends ComparableToken {
     return this.Execute(val);
   }
 
-  public EncodeObject(args: any): any {
+  public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const [leftToken, rightToken] = this.tokens();
 
     let leftValue;
@@ -110,7 +149,10 @@ export class PairToken extends ComparableToken {
 
     return {
       prim: 'Pair',
-      args: [leftToken.EncodeObject(leftValue), rightToken.EncodeObject(rightValue)],
+      args: [
+        leftToken.EncodeObject(leftValue, semantic),
+        rightToken.EncodeObject(rightValue, semantic),
+      ],
     };
   }
 
@@ -120,9 +162,11 @@ export class PairToken extends ComparableToken {
     const leftToken = this.createToken(args[0], this.idx);
     let keyCount = 1;
     let leftValue;
+    if (leftToken instanceof PairToken) {
+      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+    }
     if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
       leftValue = getLeftValue(leftToken);
-      keyCount = Object.keys(leftToken.ExtractSchema()).length;
     } else {
       leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
     }
@@ -146,16 +190,42 @@ export class PairToken extends ComparableToken {
   public Execute(val: any, semantics?: Semantic): { [key: string]: any } {
     const args = collapse(val, 'Pair');
     return this.traversal(
-      leftToken => leftToken.Execute(args[0], semantics),
-      rightToken => rightToken.Execute(args[1], semantics)
+      (leftToken) => leftToken.Execute(args[0], semantics),
+      (rightToken) => rightToken.Execute(args[1], semantics)
     );
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema(): any {
     return this.traversal(
-      leftToken => leftToken.ExtractSchema(),
-      rightToken => rightToken.ExtractSchema()
+      (leftToken) => leftToken.ExtractSchema(),
+      (rightToken) => rightToken.ExtractSchema()
     );
+  }
+
+  generateSchema(): PairTokenSchema {
+    return {
+      __michelsonType: PairToken.prim,
+      schema: this.traversal(
+        (leftToken) => {
+          if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
+            return leftToken.generateSchema().schema;
+          } else {
+            return leftToken.generateSchema();
+          }
+        },
+        (rightToken) => {
+          if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
+            return rightToken.generateSchema().schema;
+          } else {
+            return rightToken.generateSchema();
+          }
+        }
+      ),
+    };
   }
 
   public compare(val1: any, val2: any) {
@@ -182,15 +252,14 @@ export class PairToken extends ComparableToken {
       return result;
     }
 
-    throw new Error('Not a comparable pair');
+    throw new TokenComparisonError(val1, val2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
     if (PairToken.prim === tokenToFind) {
       tokens.push(this);
     }
-    this.tokens().map(t => t.findAndReturnTokens(tokenToFind, tokens))
+    this.tokens().map((t) => t.findAndReturnTokens(tokenToFind, tokens));
     return tokens;
-  };
-
+  }
 }

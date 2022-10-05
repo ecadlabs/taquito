@@ -1,46 +1,24 @@
+import { InMemorySigner } from '@taquito/signer';
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
 import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 
-const provider = 'https://hangzhounet.api.tez.ie';
-
 async function example() {
-  const tezos = new TezosToolkit(provider)
-  await importKey(
-    tezos,
-    'peqjckge.qkrrajzs@tezos.example.org',
-    'y4BX7qS1UE',
-    [
-      'skate',
-      'damp',
-      'faculty',
-      'morning',
-      'bring',
-      'ridge',
-      'traffic',
-      'initial',
-      'piece',
-      'annual',
-      'give',
-      'say',
-      'wrestle',
-      'rare',
-      'ability',
-    ].join(' '),
-    '7d4c8c3796fdbf4869edb5703758f0e5831f5081'
-  );
-  
+  const provider = 'https://ghostnet.ecadinfra.com';
+    const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+    const tezos = new TezosToolkit(provider);
+    tezos.setSignerProvider(signer);
+
   try {
     console.log('Deploying LambdaOne contract...');
-    
+
     const mapAccount1 = new MichelsonMap();
     mapAccount1.set('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', '25');
     mapAccount1.set('tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE', '25');
-  
+
     const mapAccount2 = new MichelsonMap();
     mapAccount2.set('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', '25');
     mapAccount2.set('tz1bmyy6QX9HVf7EnBJ6avmWZJbPYGAgXhbH', '25');
-  
+
     const bigMapLedger = new MichelsonMap();
     bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
       balance: '50',
@@ -52,7 +30,7 @@ async function example() {
     });
 
     const the_owner = await tezos.signer.publicKeyHash()
-    
+
     const op = await tezos.contract.originate({
       balance: "1",
       code: tzip7Contract,
@@ -76,5 +54,4 @@ async function example() {
   }
 }
 
-// tslint:disable-next-line: no-floating-promises
 example();

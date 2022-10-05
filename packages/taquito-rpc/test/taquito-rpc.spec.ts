@@ -1,15 +1,44 @@
-import { RpcClient } from '../src/taquito-rpc';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { OpKind, RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
-import { 
-  LazyStorageDiffBigMap, 
-  OperationContentsAndResultEndorsement, 
-  OperationContentsAndResultEndorsementWithSlot, 
-  OperationContentsAndResultOrigination, 
-  OperationResultTransaction, 
-  OperationContentsAndResultTransaction, 
+import {
+  LazyStorageDiffBigMap,
+  OperationContentsAndResultEndorsement,
+  OperationContentsAndResultEndorsementWithSlot,
+  OperationContentsAndResultOrigination,
+  OperationResultTransaction,
+  OperationContentsAndResultTransaction,
   LazyStorageDiffSaplingState,
-  OperationContentsAndResultRegisterGlobalConstant
+  OperationContentsAndResultRegisterGlobalConstant,
+  RPCRunViewParam,
+  RPCRunScriptViewParam,
+  OperationContentsAndResultSetDepositsLimit,
+  METADATA_BALANCE_UPDATES_CATEGORY,
+  OperationContentsAndResultTxRollupOrigination,
+  OperationContentsAndResultTxRollupSubmitBatch,
+  OperationContentsAndResultTxRollupCommit,
+  OperationContentsAndResultTxRollupFinalizeCommitment,
+  OperationContentsAndResultTxRollupDispatchTickets,
+  MichelsonV1ExpressionBase,
+  MichelsonV1ExpressionExtended,
+  OperationContentsAndResultTxRollupRemoveCommitment,
+  OperationContentsAndResultTxRollupRejection,
+  Inode,
+  OtherElts,
+  OperationContentsAndResultIncreasePaidStorage,
+  OperationResultEvent,
+  OperationContentsAndResultTransferTicket,
 } from '../src/types';
+import {
+  blockIthacanetSample,
+  blockJakartanetSample,
+  blockKathmandunetSample,
+  blockMondaynetSample,
+  delegatesIthacanetSample,
+  delegatesKathmandunetSample,
+  votingInfoKathmandunetSample,
+} from './data/rpc-responses';
 
 /**
  * RpcClient test
@@ -20,6 +49,8 @@ describe('RpcClient test', () => {
     createRequest: jest.Mock<any, any>;
   };
 
+  const contractAddress = 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D';
+
   beforeEach(() => {
     httpBackend = {
       createRequest: jest.fn(),
@@ -28,7 +59,7 @@ describe('RpcClient test', () => {
   });
 
   it('RpcClient is instantiable', () => {
-    const rpcUrl: string = 'test';
+    const rpcUrl = 'test';
     expect(new RpcClient(rpcUrl)).toBeInstanceOf(RpcClient);
   });
 
@@ -36,10 +67,10 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given multiple trailing slashes', async (done) => {
       const client = new RpcClient('root.com/test///', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
@@ -47,10 +78,10 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given one trailing slash', async (done) => {
       const client = new RpcClient('root.com/test/', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
@@ -58,23 +89,23 @@ describe('RpcClient test', () => {
     it('Should prevent double slashes given no trailing slash', async (done) => {
       const client = new RpcClient('root.com/test', 'test', httpBackend as any);
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      await client.getBalance('address');
+      await client.getBalance(contractAddress);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root.com/test/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root.com/test/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       done();
     });
   });
 
   describe('getBalance', () => {
-    it('query the right url and return a string', async (done) => {
+    it('should query the right url and return a string', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
-      const balance = await client.getBalance('address');
+      const balance = await client.getBalance(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/balance',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
       });
       expect(balance).toBeInstanceOf(BigNumber);
       expect(balance.toString()).toEqual('10000');
@@ -84,12 +115,12 @@ describe('RpcClient test', () => {
   });
 
   describe('getStorage', () => {
-    it('query the right url', async (done) => {
-      await client.getStorage('address');
+    it('should query the right url', async (done) => {
+      await client.getStorage(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/storage',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/storage`,
       });
 
       done();
@@ -97,12 +128,12 @@ describe('RpcClient test', () => {
   });
 
   describe('getScript', () => {
-    it('query the right url', async (done) => {
-      await client.getScript('address');
+    it('should query the right url', async (done) => {
+      await client.getScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/script',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/script`,
       });
 
       done();
@@ -110,12 +141,12 @@ describe('RpcClient test', () => {
   });
 
   describe('getNormalizedScript', () => {
-    it('query the right url', async (done) => {
-      await client.getNormalizedScript('address');
+    it('should query the right url', async (done) => {
+      await client.getNormalizedScript(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
-        url: 'root/chains/test/blocks/head/context/contracts/address/script/normalized',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/script/normalized`,
       });
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ unparsing_mode: 'Readable' });
 
@@ -124,13 +155,13 @@ describe('RpcClient test', () => {
   });
 
   describe('getContract', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ balance: '10000' });
-      const response = await client.getContract('address');
+      const response = await client.getContract(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}`,
       });
 
       expect(response.balance).toBeInstanceOf(BigNumber);
@@ -141,12 +172,12 @@ describe('RpcClient test', () => {
   });
 
   describe('getManagerKey', () => {
-    it('query the right url', async (done) => {
-      await client.getManagerKey('address');
+    it('should query the right url', async (done) => {
+      await client.getManagerKey(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/manager_key',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/manager_key`,
       });
 
       done();
@@ -154,12 +185,12 @@ describe('RpcClient test', () => {
   });
 
   describe('getDelegate', () => {
-    it('query the right url', async (done) => {
-      await client.getDelegate('address');
+    it('should query the right url', async (done) => {
+      await client.getDelegate(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/address/delegate',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/delegate`,
       });
 
       done();
@@ -167,7 +198,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockHash', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.getBlockHash();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -197,21 +228,21 @@ describe('RpcClient test', () => {
       grace_period: 146,
     };
 
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
-      await client.getDelegates('address');
+      await client.getDelegates(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/delegates/address',
+        url: `root/chains/test/blocks/head/context/delegates/${contractAddress}`,
       });
 
       done();
     });
 
-    it('parse the response properly', async (done) => {
+    it('should parse the response properly', async (done) => {
       httpBackend.createRequest.mockResolvedValue(sampleResponse);
-      const response = await client.getDelegates('address');
+      const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
         balance: new BigNumber('5092341810457'),
@@ -243,7 +274,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('parse the response properly, proto10', async (done) => {
+    it('should parse the response properly, proto10', async (done) => {
       // deposit replaced by deposits
       httpBackend.createRequest.mockResolvedValue({
         balance: '5976016544884',
@@ -259,7 +290,7 @@ describe('RpcClient test', () => {
         grace_period: 59,
         voting_power: 729,
       });
-      const response = await client.getDelegates('address');
+      const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
         balance: new BigNumber('5976016544884'),
@@ -283,7 +314,72 @@ describe('RpcClient test', () => {
         delegated_balance: new BigNumber('0'),
         deactivated: false,
         grace_period: 59,
-        voting_power: 729,
+        voting_power: new BigNumber(729),
+      });
+
+      done();
+    });
+
+    it('should parse the response properly, proto12', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(delegatesIthacanetSample);
+      const response = await client.getDelegates(contractAddress);
+
+      expect(response).toEqual({
+        full_balance: new BigNumber('1198951292321'),
+        current_frozen_deposits: new BigNumber('120167343864'),
+        frozen_deposits: new BigNumber('120167343864'),
+        staking_balance: new BigNumber('1203308804406'),
+        delegated_contracts: ['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'],
+        delegated_balance: new BigNumber('4357512085'),
+        deactivated: false,
+        grace_period: 37,
+        voting_power: new BigNumber(199),
+      });
+
+      done();
+    });
+
+    it('should parse the response properly, proto14', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(delegatesKathmandunetSample);
+      const response = await client.getDelegates(contractAddress);
+
+      expect(response).toEqual({
+        full_balance: new BigNumber('965532868030'),
+        current_frozen_deposits: new BigNumber('96350095609'),
+        frozen_deposits: new BigNumber('96350095609'),
+        staking_balance: new BigNumber('970221941952'),
+        delegated_contracts: ['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'],
+        delegated_balance: new BigNumber('4689073922'),
+        deactivated: false,
+        grace_period: 42,
+        voting_power: new BigNumber(968128693450),
+        remaining_proposals: 20,
+      });
+
+      done();
+    });
+  });
+
+  describe('getVotingInfo', () => {
+    it('should query the right url', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetSample);
+      await client.getVotingInfo(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/delegates/${contractAddress}/voting_info`,
+      });
+
+      done();
+    });
+
+    it('should parse the response properly', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetSample);
+      const response = await client.getVotingInfo(contractAddress);
+
+      expect(response).toEqual({
+        voting_power: '1054404383333',
+        remaining_proposals: 20,
       });
 
       done();
@@ -291,12 +387,11 @@ describe('RpcClient test', () => {
   });
 
   describe('getBigMapKey', () => {
-    it('query the right url', async (done) => {
-      // tslint:disable-next-line: deprecation
-      await client.getBigMapKey('address', { key: 'test', type: 'string' } as any);
+    it('should query the right url', async (done) => {
+      await client.getBigMapKey(contractAddress, { key: 'test', type: 'string' } as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
-        url: 'root/chains/test/blocks/head/context/contracts/address/big_map_get',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/big_map_get`,
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ key: 'test', type: 'string' });
@@ -306,7 +401,7 @@ describe('RpcClient test', () => {
   });
 
   describe('forgeOperation', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.forgeOperations({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -320,7 +415,7 @@ describe('RpcClient test', () => {
   });
 
   describe('injectOperations', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       await client.injectOperation({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
@@ -334,7 +429,7 @@ describe('RpcClient test', () => {
   });
 
   describe('preapplyOperations', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({});
       await client.preapplyOperations({} as any);
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -349,7 +444,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockHeader', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       const sampleResponse = {
         protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
         chain_id: 'NetXdQprcVkpaWU',
@@ -398,7 +493,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlockMetadata', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       const sampleResponse = {
         protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
         next_protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
@@ -522,8 +617,303 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getConstants Proto014', () => {
+    it('should query the right url and casts relevant properties to BigNumber', async (done) => {
+      httpBackend.createRequest.mockResolvedValue({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        max_micheline_node_count: 50000,
+        max_micheline_bytes_limit: 50000,
+        max_allowed_global_constants_depth: 10000,
+        cache_layout_size: 3,
+        michelson_maximum_type_size: 2001,
+        max_wrapped_proof_binary_size: 30000,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        nonce_revelation_threshold: 256,
+        blocks_per_stake_snapshot: 256,
+        cycles_per_voting_period: 1,
+        hard_gas_limit_per_operation: '1040000',
+        hard_gas_limit_per_block: '5200000',
+        proof_of_work_threshold: '-1',
+        tokens_per_roll: '6000000000',
+        vdf_difficulty: '8000000000',
+        seed_nonce_revelation_tip: '125000',
+        origination_size: 257,
+        baking_reward_fixed_portion: '10000000',
+        baking_reward_bonus_per_slot: '4286',
+        endorsing_reward_per_slot: '2857',
+        cost_per_byte: '250',
+        hard_storage_limit_per_operation: '60000',
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: '2500000',
+        liquidity_baking_sunset_level: 10000000,
+        liquidity_baking_toggle_ema_threshold: 1000000000,
+        max_operations_time_to_live: 120,
+        minimal_block_delay: '15',
+        delay_increment_per_round: '15',
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          numerator: 2,
+          denominator: 3,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: '640000000',
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          numerator: 1,
+          denominator: 2,
+        },
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cache_sampler_state_cycles: 8,
+        tx_rollup_enable: true,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_commitment_bond: '10000000000',
+        tx_rollup_finality_period: 40000,
+        tx_rollup_withdraw_period: 40000,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        dal_parametric: {
+          feature_enable: false,
+          number_of_slots: 256,
+          number_of_shards: 2048,
+          endorsement_lag: 1,
+          availability_threshold: 50,
+        },
+        sc_rollup_enable: false,
+        sc_rollup_origination_size: 6314,
+        sc_rollup_challenge_window_in_blocks: 20160,
+        sc_rollup_max_available_messages: 1000000,
+        sc_rollup_stake_amount: '32000000',
+        sc_rollup_commitment_period_in_blocks: 30,
+        sc_rollup_max_lookahead_in_blocks: 30000,
+        sc_rollup_max_active_outbox_levels: 20160,
+        sc_rollup_max_outbox_messages_per_level: 100,
+      });
+
+      const response = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response).toEqual({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        max_micheline_node_count: 50000,
+        max_micheline_bytes_limit: 50000,
+        max_allowed_global_constants_depth: 10000,
+        cache_layout_size: 3,
+        michelson_maximum_type_size: 2001,
+        max_wrapped_proof_binary_size: 30000,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        nonce_revelation_threshold: 256,
+        blocks_per_stake_snapshot: 256,
+        cycles_per_voting_period: 1,
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        proof_of_work_threshold: new BigNumber(-1),
+        tokens_per_roll: new BigNumber(6000000000),
+        vdf_difficulty: new BigNumber(8000000000),
+        seed_nonce_revelation_tip: new BigNumber(125000),
+        origination_size: 257,
+        baking_reward_fixed_portion: new BigNumber(10000000),
+        baking_reward_bonus_per_slot: new BigNumber(4286),
+        endorsing_reward_per_slot: new BigNumber(2857),
+        cost_per_byte: new BigNumber(250),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: new BigNumber(2500000),
+        liquidity_baking_sunset_level: 10000000,
+        liquidity_baking_toggle_ema_threshold: 1000000000,
+        max_operations_time_to_live: 120,
+        minimal_block_delay: new BigNumber(15),
+        delay_increment_per_round: new BigNumber(15),
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          numerator: 2,
+          denominator: 3,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: new BigNumber(640000000),
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          numerator: 1,
+          denominator: 2,
+        },
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cache_sampler_state_cycles: 8,
+        tx_rollup_enable: true,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_commitment_bond: new BigNumber(10000000000),
+        tx_rollup_finality_period: 40000,
+        tx_rollup_withdraw_period: 40000,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        dal_parametric: {
+          feature_enable: false,
+          number_of_slots: 256,
+          number_of_shards: 2048,
+          endorsement_lag: 1,
+          availability_threshold: 50,
+        },
+        sc_rollup_enable: false,
+        sc_rollup_origination_size: 6314,
+        sc_rollup_challenge_window_in_blocks: 20160,
+        sc_rollup_max_available_messages: 1000000,
+        sc_rollup_stake_amount: new BigNumber(32000000),
+        sc_rollup_commitment_period_in_blocks: 30,
+        sc_rollup_max_lookahead_in_blocks: 30000,
+        sc_rollup_max_active_outbox_levels: 20160,
+        sc_rollup_max_outbox_messages_per_level: 100,
+      });
+      done();
+    });
+  });
+
+  describe('getConstants Proto012', () => {
+    it('should query the right url and casts property to BigNumber', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          proof_of_work_nonce_size: 8,
+          nonce_length: 32,
+          max_anon_ops_per_block: 132,
+          max_operation_data_length: 32768,
+          max_proposals_per_delegate: 20,
+          max_micheline_node_count: 50000,
+          max_micheline_bytes_limit: 50000,
+          max_allowed_global_constants_depth: 10000,
+          cache_layout: ['100000000', '240000', '2560'],
+          michelson_maximum_type_size: 2001,
+          preserved_cycles: 3,
+          blocks_per_cycle: 4096,
+          blocks_per_commitment: 32,
+          blocks_per_stake_snapshot: 256,
+          blocks_per_voting_period: 20480,
+          hard_gas_limit_per_operation: '1040000',
+          hard_gas_limit_per_block: '5200000',
+          proof_of_work_threshold: '70368744177663',
+          tokens_per_roll: '6000000000',
+          seed_nonce_revelation_tip: '125000',
+          origination_size: 257,
+          baking_reward_fixed_portion: '5000000',
+          baking_reward_bonus_per_slot: '2143',
+          endorsing_reward_per_slot: '1428',
+          cost_per_byte: '250',
+          hard_storage_limit_per_operation: '60000',
+          quorum_min: 2000,
+          quorum_max: 7000,
+          min_proposal_quorum: 500,
+          liquidity_baking_subsidy: '2500000',
+          liquidity_baking_sunset_level: 10000000,
+          liquidity_baking_escape_ema_threshold: 666667,
+          max_operations_time_to_live: 120,
+          minimal_block_delay: '15',
+          delay_increment_per_round: '5',
+          consensus_committee_size: 7000,
+          consensus_threshold: 4667,
+          minimal_participation_ratio: { numerator: 2, denominator: 3 },
+          max_slashing_period: 2,
+          frozen_deposits_percentage: 10,
+          double_baking_punishment: '640000000',
+          ratio_of_frozen_deposits_slashed_per_double_endorsement: { numerator: 1, denominator: 2 },
+        })
+      );
+      const response = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response).toEqual({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        blocks_per_voting_period: 20480,
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        proof_of_work_threshold: new BigNumber(70368744177663),
+        tokens_per_roll: new BigNumber(6000000000),
+        seed_nonce_revelation_tip: new BigNumber(125000),
+        origination_size: 257,
+        cost_per_byte: new BigNumber(250),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: new BigNumber(2500000),
+        liquidity_baking_sunset_level: 10000000,
+        liquidity_baking_escape_ema_threshold: 666667,
+        max_allowed_global_constants_depth: 10000,
+        max_micheline_bytes_limit: 50000,
+        max_micheline_node_count: 50000,
+        michelson_maximum_type_size: 2001,
+        cache_layout: [new BigNumber(100000000), new BigNumber(240000), new BigNumber(2560)],
+        blocks_per_stake_snapshot: 256,
+        baking_reward_fixed_portion: new BigNumber(5000000),
+        baking_reward_bonus_per_slot: new BigNumber(2143),
+        endorsing_reward_per_slot: new BigNumber(1428),
+        max_operations_time_to_live: 120,
+        minimal_block_delay: new BigNumber(15),
+        delay_increment_per_round: new BigNumber(5),
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          denominator: 3,
+          numerator: 2,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: new BigNumber(640000000),
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          denominator: 2,
+          numerator: 1,
+        },
+      });
+      done();
+    });
+  });
+
   describe('getConstants Proto007', () => {
-    it('query the right url and casts property to BigNumber', async (done) => {
+    it('should query the right url and casts property to BigNumber', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -598,7 +988,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto006', () => {
-    it('properties return by the RPC are accessible and the ones that do not belong to proto6 are undefined', async (done) => {
+    it('should properties return by the RPC are accessible and the ones that do not belong to proto6 are undefined', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -654,7 +1044,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getConstants Proto005', () => {
-    it('properties return by the RPC are accessible and the ones that do not belong to proto5 are undefined', async (done) => {
+    it('should properties return by the RPC are accessible and the ones that do not belong to proto5 are undefined', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           proof_of_work_nonce_size: 8,
@@ -720,7 +1110,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBlock', () => {
-    it('query the right url and property for endorsement', async (done) => {
+    it('should query the right url and property for endorsement', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd',
@@ -854,14 +1244,14 @@ describe('RpcClient test', () => {
       });
       const endorsement = response.operations[0][0]
         .contents[0] as OperationContentsAndResultEndorsement;
-      expect(endorsement.metadata.balance_updates[0].kind).toEqual('contract');
+      expect(endorsement.metadata.balance_updates![0].kind).toEqual('contract');
 
       done();
     });
   });
 
   describe('getBlock', () => {
-    it('query the right url and property for operation', async (done) => {
+    it('should query the right url and property for operation', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
@@ -1097,14 +1487,14 @@ describe('RpcClient test', () => {
       });
       const transaction = response.operations[0][0]
         .contents[0] as OperationContentsAndResultTransaction;
-      expect(transaction.metadata.balance_updates[0].kind).toEqual('contract');
-      expect(transaction.metadata.balance_updates[0].change).toEqual('-2820');
+      expect(transaction.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(transaction.metadata.balance_updates![0].change).toEqual('-2820');
       expect(transaction.metadata.operation_result.status).toEqual('applied');
       expect(transaction.metadata.operation_result.consumed_gas).toEqual('24660');
       done();
     });
 
-    it('query the right url and property for operation, proto 9, endorsement_with_slot', async (done) => {
+    it('should query the right url and property for operation, proto 9, endorsement_with_slot', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
@@ -1192,7 +1582,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and properties (big_map_diff and lazy_storage_diff) in transaction operation result, proto 9', async (done) => {
+    it('should query the right url and properties (big_map_diff and lazy_storage_diff) in transaction operation result, proto 9', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
@@ -1794,7 +2184,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and properties (lazy_storage_diff of kind sapling_state) in transaction operation result, proto 8', async (done) => {
+    it('should query the right url and properties (lazy_storage_diff of kind sapling_state) in transaction operation result, proto 8', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA',
@@ -1906,7 +2296,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('Access new properties "liquidity_baking_escape_ema", "implicit_operations_results" and "subsidy" in block metadata, proto 10', async (done) => {
+    it('should access new properties "liquidity_baking_escape_ema", "implicit_operations_results" and "subsidy" in block metadata, proto 10', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
           protocol: 'PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV',
@@ -2031,121 +2421,125 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('fetches a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async done => {
+    it('should fetch a block having a RegisterGlobalConstant operation and it validates its properties, proto 11', async (done) => {
       httpBackend.createRequest.mockReturnValue(
-        Promise.resolve(
-          {
-            "protocol": "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r",
-            "chain_id": "NetXuXoGoLxNK6o",
-            "hash": "BLGJTp5epczxcqaKkDdpPSKStBQ9FbLDR8qjprW1LE5SbkzmyCJ",
-            "header": {},
-            "metadata": {},
-            "operations": [
-              [],
-              [],
-              [],
-              [
-                {
-                  "protocol": "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r",
-                  "chain_id": "NetXuXoGoLxNK6o",
-                  "hash": "ooG5DTHDKCeJTSaJhmQqxc2K4CVt5qYJaCXCupaMxAMAabcAJkc",
-                  "branch": "BLU4Led8FWFT9WiYgSLbFb9AJ6eTi4LxfwshHpvZwsupuKzLeLN",
-                  "contents": [
-                    {
-                      "kind": "register_global_constant",
-                      "source": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
-                      "fee": "372",
-                      "counter": "7423375",
-                      "gas_limit": "1330",
-                      "storage_limit": "93",
-                      "value": {
-                        "prim": "Pair",
-                        "args": [
+        Promise.resolve({
+          protocol: 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r',
+          chain_id: 'NetXuXoGoLxNK6o',
+          hash: 'BLGJTp5epczxcqaKkDdpPSKStBQ9FbLDR8qjprW1LE5SbkzmyCJ',
+          header: {},
+          metadata: {},
+          operations: [
+            [],
+            [],
+            [],
+            [
+              {
+                protocol: 'PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r',
+                chain_id: 'NetXuXoGoLxNK6o',
+                hash: 'ooG5DTHDKCeJTSaJhmQqxc2K4CVt5qYJaCXCupaMxAMAabcAJkc',
+                branch: 'BLU4Led8FWFT9WiYgSLbFb9AJ6eTi4LxfwshHpvZwsupuKzLeLN',
+                contents: [
+                  {
+                    kind: 'register_global_constant',
+                    source: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+                    fee: '372',
+                    counter: '7423375',
+                    gas_limit: '1330',
+                    storage_limit: '93',
+                    value: {
+                      prim: 'Pair',
+                      args: [
+                        {
+                          int: '999',
+                        },
+                        {
+                          int: '999',
+                        },
+                      ],
+                    },
+                    metadata: {
+                      balance_updates: [
+                        {
+                          kind: 'contract',
+                          contract: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+                          change: '-372',
+                          origin: 'block',
+                        },
+                        {
+                          kind: 'freezer',
+                          category: 'fees',
+                          delegate: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+                          cycle: 17,
+                          change: '372',
+                          origin: 'block',
+                        },
+                      ],
+                      operation_result: {
+                        status: 'applied',
+                        balance_updates: [
                           {
-                            "int": "999"
+                            kind: 'contract',
+                            contract: 'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D',
+                            change: '-18250',
+                            origin: 'block',
                           },
-                          {
-                            "int": "999"
-                          }
-                        ]
-                      },
-                      "metadata": {
-                        "balance_updates": [
-                          {
-                            "kind": "contract",
-                            "contract": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
-                            "change": "-372",
-                            "origin": "block"
-                          },
-                          {
-                            "kind": "freezer",
-                            "category": "fees",
-                            "delegate": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
-                            "cycle": 17,
-                            "change": "372",
-                            "origin": "block"
-                          }
                         ],
-                        "operation_result": {
-                          "status": "applied",
-                          "balance_updates": [
-                            {
-                              "kind": "contract",
-                              "contract": "tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D",
-                              "change": "-18250",
-                              "origin": "block"
-                            }
-                          ],
-                          "consumed_gas": "1230",
-                          "storage_size": "73",
-                          "global_address": "exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2"
-                        }
-                      }
-                    }
-                  ],
-                  "signature": "sigVW23SZBAnGLYQSDxN8y4YvMLUkZ13bBRHSoQSBpLASZvKgXZWWmp1q1iaqqV4hr3xRN9neYong8jHqxak2Y5vRYK8LaBY"
-                }
-              ]
-            ]
-          }
-        )
+                        consumed_gas: '1230',
+                        storage_size: '73',
+                        global_address: 'exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2',
+                      },
+                    },
+                  },
+                ],
+                signature:
+                  'sigVW23SZBAnGLYQSDxN8y4YvMLUkZ13bBRHSoQSBpLASZvKgXZWWmp1q1iaqqV4hr3xRN9neYong8jHqxak2Y5vRYK8LaBY',
+              },
+            ],
+          ],
+        })
       );
 
       const response = await client.getBlock();
 
       expect(response.operations[3][0].contents[0].kind).toEqual('register_global_constant');
-      const content = response.operations[3][0].contents[0] as OperationContentsAndResultRegisterGlobalConstant;
-      expect(content.source).toEqual("tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D");
-      expect(content.fee).toEqual("372");
-      expect(content.counter).toEqual("7423375");
-      expect(content.gas_limit).toEqual("1330");
-      expect(content.storage_limit).toEqual("93");
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultRegisterGlobalConstant;
+      expect(content.source).toEqual('tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D');
+      expect(content.fee).toEqual('372');
+      expect(content.counter).toEqual('7423375');
+      expect(content.gas_limit).toEqual('1330');
+      expect(content.storage_limit).toEqual('93');
       expect(content.value).toEqual({
-        "prim": "Pair",
-        "args": [
+        prim: 'Pair',
+        args: [
           {
-            "int": "999"
+            int: '999',
           },
           {
-            "int": "999"
-          }
-        ]
+            int: '999',
+          },
+        ],
       });
-      expect(content.metadata.balance_updates[0].kind).toEqual("contract");
-      expect(content.metadata.balance_updates[0].contract).toBeDefined();
-      expect(content.metadata.balance_updates[0].contract).toEqual('tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D');
-      expect(content.metadata.balance_updates[0].change).toBeDefined();
-      expect(content.metadata.balance_updates[0].change).toEqual('-372');
-      expect(content.metadata.balance_updates[0].origin).toBeDefined();
-      expect(content.metadata.balance_updates[0].origin).toEqual('block');
-      expect(content.metadata.balance_updates[0].category).toBeUndefined();
-      expect(content.metadata.balance_updates[0].delegate).toBeUndefined();
-      expect(content.metadata.balance_updates[0].cycle).toBeUndefined();
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toBeDefined();
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1TJGsZxvr6aBGUqfQVxufesTtA7QGi696D'
+      );
+      expect(content.metadata.balance_updates![0].change).toBeDefined();
+      expect(content.metadata.balance_updates![0].change).toEqual('-372');
+      expect(content.metadata.balance_updates![0].origin).toBeDefined();
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+      expect(content.metadata.balance_updates![0].category).toBeUndefined();
+      expect(content.metadata.balance_updates![0].delegate).toBeUndefined();
+      expect(content.metadata.balance_updates![0].cycle).toBeUndefined();
 
       expect(content.metadata.operation_result.global_address).toBeDefined();
       expect(content.metadata.operation_result.status).toEqual('applied');
       expect(content.metadata.operation_result.balance_updates).toBeDefined();
-      expect(content.metadata.operation_result.global_address).toEqual("exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2");
+      expect(content.metadata.operation_result.global_address).toEqual(
+        'exprvNeeFGy8M7xhmaq7bkQcd3RsXc7ogv2HwL1dciubXdgPHEMRH2'
+      );
       expect(content.metadata.operation_result.consumed_gas).toBeDefined();
       expect(content.metadata.operation_result.storage_size).toBeDefined();
       expect(content.metadata.operation_result.errors).toBeUndefined();
@@ -2155,6 +2549,623 @@ describe('RpcClient test', () => {
       done();
     });
 
+    it('should use enum to represent property category in balance_updates, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      // To avoid dealing with the space in the property name returned by the RPC
+      expect(response.metadata.balance_updates![0].category).toBeDefined();
+      expect(response.metadata.balance_updates![0].category).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES
+      );
+      expect(response.metadata.balance_updates![1].category).toBeDefined();
+      expect(response.metadata.balance_updates![1].category).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.BAKING_REWARDS
+      );
+      expect(response.metadata.balance_updates![3].category).toBeDefined();
+      expect(response.metadata.balance_updates![3].category).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.BAKING_BONUSES
+      );
+
+      done();
+    });
+
+    it('should fetch a block and access new properties in header, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      expect(response.header.payload_hash).toBeDefined();
+      expect(response.header.payload_hash).toEqual(
+        'vh28CE8X2KKMvt5S4aGzPdMq5FpcfVRSoeyU3D3TUdVyk9zucR31'
+      );
+      expect(response.header.payload_round).toBeDefined();
+      expect(response.header.payload_round).toEqual(0);
+      expect(response.header.liquidity_baking_escape_vote).toBeDefined();
+      expect(response.header.liquidity_baking_escape_vote).toBeFalsy();
+
+      done();
+    });
+
+    it('should fetch a block and access new properties in metadata, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      expect(response.metadata.proposer).toBeDefined();
+      expect(response.metadata.proposer).toEqual('tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9');
+      expect(response.metadata.balance_updates![0].category).toBeDefined();
+
+      done();
+    });
+
+    it('should access new properties of the operation type endorsement, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      expect(response.operations[0][0].contents[0].kind).toEqual(OpKind.ENDORSEMENT);
+      const contentEndorsement = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultEndorsement;
+      expect(contentEndorsement.slot).toBeDefined();
+      expect(contentEndorsement.slot).toEqual(0);
+      expect(contentEndorsement.round).toBeDefined();
+      expect(contentEndorsement.round).toEqual(0);
+      expect(contentEndorsement.block_payload_hash).toBeDefined();
+      expect(contentEndorsement.block_payload_hash).toEqual(
+        'vh2SkkaBZp19oyMUmTTXy5Q33hKKWZSAzXa7Tz2F6mtyeAgXsHC6'
+      );
+
+      expect(contentEndorsement.metadata.balance_updates).toEqual([]);
+      expect(contentEndorsement.metadata.endorsement_power).toBeDefined();
+      expect(contentEndorsement.metadata.endorsement_power).toEqual(206);
+
+      done();
+    });
+
+    it('should access new properties of the operation type set_deposits_limit, proto 12', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+
+      const response = await client.getBlock();
+
+      expect(response.operations[3][0].contents[0].kind).toEqual(OpKind.SET_DEPOSITS_LIMIT);
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultSetDepositsLimit;
+      expect(content.source).toEqual('tz2FViF6XzJ4PqD5TTuaAtZScmiwpJBGBpSh');
+      expect(content.fee).toEqual('1500');
+      expect(content.counter).toEqual('146662');
+      expect(content.gas_limit).toEqual('1000');
+      expect(content.storage_limit).toEqual('10000');
+      expect(content.limit).toBeDefined();
+      expect(content.limit).toEqual('3');
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toBeDefined();
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz2FViF6XzJ4PqD5TTuaAtZScmiwpJBGBpSh'
+      );
+      expect(content.metadata.balance_updates![0].change).toBeDefined();
+      expect(content.metadata.balance_updates![0].change).toEqual('-1500');
+      expect(content.metadata.balance_updates![0].origin).toBeDefined();
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+      expect(content.metadata.balance_updates![0].category).toBeUndefined();
+      expect(content.metadata.balance_updates![0].delegate).toBeUndefined();
+      expect(content.metadata.balance_updates![0].cycle).toBeUndefined();
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.consumed_gas).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('1000');
+      expect(content.metadata.operation_result.consumed_milligas).toBeDefined();
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
+
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_origination, proto 13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultTxRollupOrigination;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_ORIGINATION);
+      expect(content.source).toEqual('tz1QWLc8oL7Bo7BMa6CKfFioeJ4XdmCFf2xZ');
+      expect(content.fee).toEqual('380');
+      expect(content.counter).toEqual('173977');
+      expect(content.gas_limit).toEqual('1521');
+      expect(content.storage_limit).toEqual('4020');
+      expect(content.tx_rollup_origination).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1QWLc8oL7Bo7BMa6CKfFioeJ4XdmCFf2xZ'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-380');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('380');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.consumed_gas).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('1421');
+      expect(content.metadata.operation_result.consumed_milligas).toBeDefined();
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('1420108');
+      expect(content.metadata.operation_result.originated_rollup).toEqual(
+        'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w'
+      );
+
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.operation_result.balance_updates![0].contract).toEqual(
+        'tz1QWLc8oL7Bo7BMa6CKfFioeJ4XdmCFf2xZ'
+      );
+      expect(content.metadata.operation_result.balance_updates![0].change).toEqual('-1000000');
+      expect(content.metadata.operation_result.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.balance_updates![1].kind).toEqual('burned');
+      expect(content.metadata.operation_result.balance_updates![1].category).toEqual(
+        'storage fees'
+      );
+      expect(content.metadata.operation_result.balance_updates![1].change).toEqual('1000000');
+      expect(content.metadata.operation_result.balance_updates![1].origin).toEqual('block');
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_submit_batch, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[1] as OperationContentsAndResultTxRollupSubmitBatch;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_SUBMIT_BATCH);
+      expect(content.source).toEqual('tz1QWLc8oL7Bo7BMa6CKfFioeJ4XdmCFf2xZ');
+      expect(content.fee).toEqual('476');
+      expect(content.counter).toEqual('173978');
+      expect(content.gas_limit).toEqual('2209');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w');
+      expect(content.content).toEqual('626c6f62');
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1QWLc8oL7Bo7BMa6CKfFioeJ4XdmCFf2xZ'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-476');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('476');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('2109');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('2108268');
+      expect(content.metadata.operation_result.paid_storage_size_diff).toEqual('0');
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_commit, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[2] as OperationContentsAndResultTxRollupCommit;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_COMMIT);
+      expect(content.source).toEqual('tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY');
+      expect(content.fee).toEqual('735');
+      expect(content.counter).toEqual('182217');
+      expect(content.gas_limit).toEqual('3838');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1Nbn66mC1yYHBkfD3ink45XVJso6QJZeHe');
+
+      expect(content.commitment).toBeDefined();
+      expect(content.commitment.level).toEqual(1);
+      expect(content.commitment.messages[0]).toEqual(
+        'txmr344vtdPzvWsfnoSd3mJ3MCFA5ehKLQs1pK9WGcX4FEACg1rVgC'
+      );
+      expect(content.commitment.predecessor).toEqual(
+        'txc3PQbuB4fmpXMq2NqXGpCnu8EDotTWeHf5w3jJRpyQHSNKRug3U'
+      );
+      expect(content.commitment.inbox_merkle_root).toEqual(
+        'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
+      );
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-735');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('735');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('3738');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('3737532');
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_finalize_commitment, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[3] as OperationContentsAndResultTxRollupFinalizeCommitment;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_FINALIZE_COMMITMENT);
+      expect(content.source).toEqual('tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY');
+      expect(content.fee).toEqual('507');
+      expect(content.counter).toEqual('182232');
+      expect(content.gas_limit).toEqual('2602');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1gqDrJYH8rTkdG3gCLTtRA1d7UZDjYFNRY'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-507');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('507');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('2502');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('2501420');
+      expect(content.metadata.operation_result.level).toEqual(0);
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_dispatch_tickets, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[4] as OperationContentsAndResultTxRollupDispatchTickets;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_DISPATCH_TICKETS);
+      expect(content.source).toEqual('tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM');
+      expect(content.fee).toEqual('835');
+      expect(content.counter).toEqual('252405');
+      expect(content.gas_limit).toEqual('4354');
+      expect(content.storage_limit).toEqual('86');
+      expect(content.tx_rollup).toEqual('txr1YMZxstAHqQ9V313sYjLBCHBXsvSmDZuTs');
+      expect(content.level).toEqual(4);
+      expect(content.context_hash).toEqual('CoV7iqRirVx7sZa5TAK9ymoEJBrW6z4hwwrzMhz6YLeHYXrQwRWG');
+      expect(content.message_index).toEqual(0);
+      expect(content.message_result_path).toBeDefined();
+      expect(content.message_result_path[0]).toEqual(
+        'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB'
+      );
+
+      expect(content.tickets_info).toBeDefined();
+
+      expect((content.tickets_info[0].contents as MichelsonV1ExpressionBase).string).toEqual(
+        'third-deposit'
+      );
+      expect((content.tickets_info[0].ty as MichelsonV1ExpressionExtended).prim).toEqual('string');
+      expect(content.tickets_info[0].ticketer).toEqual('KT1EMQxfYVvhTJTqMiVs2ho2dqjbYfYKk6BY');
+      expect(content.tickets_info[0].amount).toEqual('2');
+      expect(content.tickets_info[0].claimer).toEqual('tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM');
+
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_remove_commitment, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[5] as OperationContentsAndResultTxRollupRemoveCommitment;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_REMOVE_COMMITMENT);
+      expect(content.source).toEqual('tz1M1PXyMAhAsXroc6DtuWUUeHvb79ZzCnCp');
+      expect(content.fee).toEqual('574');
+      expect(content.counter).toEqual('252310');
+      expect(content.gas_limit).toEqual('3272');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1YMZxstAHqQ9V313sYjLBCHBXsvSmDZuTs');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1M1PXyMAhAsXroc6DtuWUUeHvb79ZzCnCp'
+      );
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('574');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_gas).toEqual('3172');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('3171088');
+      expect(content.metadata.operation_result.level).toEqual(0);
+      done();
+    });
+
+    it('should access the properties of the operation type tx_rollup_rejection, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[6] as OperationContentsAndResultTxRollupRejection;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_REJECTION);
+      expect(content.source).toEqual('tz1MDU45gNc9Ko1Q9obcz6hQkKSMiQRib6GZ');
+      expect(content.fee).toEqual('2837');
+      expect(content.counter).toEqual('266515');
+      expect(content.gas_limit).toEqual('11633');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1V16e1hXyVKndP4aE8cujRfryoHTiHK9fG');
+      expect(content.level).toEqual(11);
+
+      expect(content.message.batch).toBeDefined();
+      expect(content.message.batch).toEqual(
+        '01b2530bd9f4d594ee6116286cbb045a972305e38e6365b396f49d153815fbdd15c8974b7fdc50aee4bc3f8195e95075ab0fca5d31927917ede7a408fe70c61cd4a0525b2836eca0e797cdf9ae9b3bf58735fd62a7bf21775d46940ae9bd83a8d501130187e8c631aba41d88a67da49cf5f4db947fdf5a76084f1d4b6c14531f6582b239db26dd0375ca7172cdbecd8b6f080ffa58c748f83cc7a2afce164c1bcc53712ff5a9e50c39fb0172acda0a'
+      );
+      expect(content.message_position).toEqual('0');
+      expect(content.message_path[0]).toEqual(
+        'txi1WZKF1fkUWfKbmaHbb5b8gn68rKSyUy4k7NnSVY4p79BKYz5RB'
+      );
+      expect(content.message_result_hash).toEqual(
+        'txmr344vtdPzvWsfnoSd3mJ3MCFA5ehKLQs1pK9WGcX4FEACg1rVgC'
+      );
+      expect(content.message_result_path[0]).toEqual(
+        'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB'
+      );
+
+      expect(content.previous_message_result).toBeDefined();
+      expect(content.previous_message_result.context_hash).toEqual(
+        'CoVUv68XdJts8f6Ysaoxm4jnt4JKXfqx8WYVFnkj2UFfgKHJUrLs'
+      );
+      expect(content.previous_message_result.withdraw_list_hash).toEqual(
+        'txw1sFoLju3ySMAdY6v1dcHUMqJ4Zxc1kcynC8xkYgCmH6bpNSDhV'
+      );
+      expect(content.previous_message_result_path[0]).toEqual(
+        'txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB'
+      );
+
+      expect(content.proof).toBeDefined();
+      expect(content.proof.version).toEqual(3);
+      expect((content.proof.before as { node: string }).node).toEqual(
+        'CoVUv68XdJts8f6Ysaoxm4jnt4JKXfqx8WYVFnkj2UFfgKHJUrLs'
+      );
+      expect((content.proof.after as { node: string }).node).toEqual(
+        'CoUn3twa3TmvNby5VAGeN2jHvzbfpmJAXcyDHJuLLAuuLiaZZnzC'
+      );
+
+      expect(content.proof.state).toBeDefined();
+
+      const inodeState1 = (content.proof.state[0] as { inode: Inode }).inode;
+      expect(inodeState1.length).toEqual('14');
+      expect(inodeState1.proofs).toEqual([
+        'CoVbQczQE6uDug4tWErtLgszzZBRDJKEGHgcQp8jGYSEfBLnsMXH',
+        'CoWZ31tY65qh38Sfgm64Ny8kDTLQQMr5xuRDkDkz1JopiBnPDu11',
+      ]);
+
+      const inodeState2 = (content.proof.state[2] as { inode: Inode }).inode;
+      expect(inodeState2.length).toEqual('3');
+      expect(inodeState2.proofs).toEqual([
+        null,
+        'CoVPGhaCkq2yV5JJs8Bxq1idndEhBn3SCJe3rSH5eYvr9BnRnv8i',
+      ]);
+
+      const otherEltsNode = (
+        (content.proof.state[4] as { other_elts: OtherElts }).other_elts as {
+          node: [string, { value: string }][];
+        }
+      ).node;
+      expect(otherEltsNode[0]).toEqual([
+        '0287e8c631aba41d88a67da49cf5f4db947fdf5a76',
+        { value: 'CoW4fTVfN6WBZ6XqT38EqLzn5raQUYkjSL4Ce7J2KsGKcFPjgUJy' },
+      ]);
+
+      const otherEltsOtherElts = (
+        (content.proof.state[5] as { other_elts: OtherElts }).other_elts as {
+          other_elts: { value: any };
+        }
+      ).other_elts;
+      expect(otherEltsOtherElts).toEqual({ value: '00000000' });
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1MDU45gNc9Ko1Q9obcz6hQkKSMiQRib6GZ'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-2837');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('2837');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.balance_updates![0].kind).toEqual('freezer');
+      expect(content.metadata.operation_result.balance_updates![0].category!).toEqual('bonds');
+      expect(content.metadata.operation_result.balance_updates![0].contract!).toEqual(
+        'tz1Lg9iLTS8Hk6kLfTN6rrrL9gYPfsTQ9z75'
+      );
+      expect(content.metadata.operation_result.balance_updates![0].bond_id!.tx_rollup).toEqual(
+        'txr1V16e1hXyVKndP4aE8cujRfryoHTiHK9fG'
+      );
+      expect(content.metadata.operation_result.balance_updates![0].change).toEqual('-10000000000');
+      expect(content.metadata.operation_result.balance_updates![0].origin!).toEqual('block');
+
+      expect(content.metadata.operation_result.balance_updates![1].kind).toEqual('burned');
+      expect(content.metadata.operation_result.balance_updates![1].category!).toEqual(
+        'tx_rollup_rejection_punishments'
+      );
+      expect(content.metadata.operation_result.balance_updates![1].change).toEqual('10000000000');
+      expect(content.metadata.operation_result.balance_updates![1].origin!).toEqual('block');
+
+      expect(content.metadata.operation_result.balance_updates![2].kind).toEqual('minted');
+      expect(content.metadata.operation_result.balance_updates![2].category!).toEqual(
+        'tx_rollup_rejection_rewards'
+      );
+      expect(content.metadata.operation_result.balance_updates![2].change).toEqual('-5000000000');
+      expect(content.metadata.operation_result.balance_updates![2].origin!).toEqual('block');
+
+      expect(content.metadata.operation_result.balance_updates![3].kind).toEqual('contract');
+      expect(content.metadata.operation_result.balance_updates![3].contract!).toEqual(
+        'tz1MDU45gNc9Ko1Q9obcz6hQkKSMiQRib6GZ'
+      );
+      expect(content.metadata.operation_result.balance_updates![3].change).toEqual('5000000000');
+      expect(content.metadata.operation_result.balance_updates![3].origin!).toEqual('block');
+
+      expect(content.metadata.operation_result.consumed_gas).toEqual('11533');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('11532006');
+
+      done();
+    });
+
+    it('should be able to access the properties of operation type transfer_ticket, proto14', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockMondaynetSample));
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[1] as OperationContentsAndResultTransferTicket;
+
+      expect(content.kind).toEqual(OpKind.TRANSFER_TICKET);
+      expect(content.source).toEqual('tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa');
+      expect(content.fee).toEqual('708');
+      expect(content.counter).toEqual('1826');
+      expect(content.gas_limit).toEqual('5009');
+      expect(content.storage_limit).toEqual('130');
+      expect(content.ticket_amount).toEqual('2');
+      expect(content.destination).toEqual('KT1BnDCAv62hqTQ3kDnMxWGKVpEgdQgX3TPm');
+      expect(content.entrypoint).toEqual('default');
+      expect(content.ticket_contents).toEqual({ string: 'foobar' });
+      expect(content.ticket_ty).toEqual({ prim: 'string' });
+      expect(content.ticket_ticketer).toEqual('KT1P57aaa5RgxqMdgoUoerWg8HVwXjbP2vxS');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1TNiFHBzrJjVkXXzigJLxGaNrcgREe7Hwa'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-708');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('708');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('2122881');
+      expect(content.metadata.operation_result.paid_storage_size_diff).toEqual('66');
+      done();
+    });
+
+    it('should be able to access the properties of operation type increase_paid_storage, proto14', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultIncreasePaidStorage;
+
+      expect(content.kind).toEqual(OpKind.INCREASE_PAID_STORAGE);
+      expect(content.source).toEqual('tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG');
+      expect(content.fee).toEqual('349');
+      expect(content.counter).toEqual('108123');
+      expect(content.gas_limit).toEqual('1000');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.amount).toEqual('2');
+      expect(content.destination).toEqual('KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz2RVendfy3AQGEBwrhXF4kwyRiJUpa7qLnG'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-349');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('349');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates).toBeDefined();
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
+      done();
+    });
+
+    it('should be able to access the properties of internal operation type event, proto14', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][1]
+        .contents[0] as OperationContentsAndResultTransaction;
+
+      expect(content.metadata.internal_operation_results).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].kind).toEqual(OpKind.EVENT);
+      expect(content.metadata.internal_operation_results![0].source).toEqual(
+        'KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q'
+      );
+      expect(content.metadata.internal_operation_results![0].nonce).toEqual(0);
+
+      expect(content.metadata.internal_operation_results![0].amount).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].destination).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].parameters).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].public_key).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].balance).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].delegate).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].value).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].limit).toBeUndefined();
+      expect(content.metadata.internal_operation_results![0].script).toBeUndefined();
+
+      expect(content.metadata.internal_operation_results![0].type).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].type).toEqual({
+        prim: 'or',
+        args: [{ prim: 'nat' }, { prim: 'string' }],
+      });
+      expect(content.metadata.internal_operation_results![0].tag).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].tag).toEqual('event');
+      expect(content.metadata.internal_operation_results![0].payload).toBeDefined();
+      expect(content.metadata.internal_operation_results![0].payload).toEqual({
+        prim: 'Left',
+        args: [{ int: '10' }],
+      });
+      expect(content.metadata.internal_operation_results![0].result).toBeDefined();
+
+      const internalResult = content.metadata.internal_operation_results![0]
+        .result as OperationResultEvent;
+      expect(internalResult.status).toEqual('applied');
+      expect(internalResult.consumed_milligas).toBeDefined();
+      expect(internalResult.consumed_milligas).toEqual('1000000');
+      expect(internalResult.errors).toBeUndefined();
+
+      done();
+    });
   });
 
   describe('getBakingRights', () => {
@@ -2232,13 +3243,13 @@ describe('RpcClient test', () => {
 
       expect(result[1].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
       expect(result[1].estimated_time).toEqual('2019-08-02T09:42:56Z');
-      expect(result[1].slots.length).toEqual(3);
+      expect(result[1].slots!.length).toEqual(3);
       done();
     });
   });
 
   describe('getBallotList', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           {
@@ -2280,7 +3291,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBallots', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve({ yay: 5943, nay: 0, pass: 0 }));
       const response = await client.getBallots();
 
@@ -2288,29 +3299,14 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head/votes/ballots',
       });
-      expect(response.yay).toEqual(5943);
-
-      done();
-    });
-  });
-
-  describe('getCurrentPeriodKind', () => {
-    it('query the right url and data', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve('testing_vote'));
-      const response = await client.getCurrentPeriodKind();
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        url: 'root/chains/test/blocks/head/votes/current_period_kind',
-      });
-      expect(response).toEqual('testing_vote');
+      expect(response.yay).toEqual(new BigNumber(5943));
 
       done();
     });
   });
 
   describe('getCurrentProposal', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve('PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU')
       );
@@ -2327,7 +3323,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getCurrentQuorum', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(7291));
       const response = await client.getCurrentQuorum();
 
@@ -2342,12 +3338,12 @@ describe('RpcClient test', () => {
   });
 
   describe('getVotesListings', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           {
             pkh: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m',
-            rolls: 3726,
+            voting_power: 3726,
           },
           {
             pkh: 'tz2Q7Km98GPzV1JLNpkrQrSo5YUhPfDp6LmA',
@@ -2393,14 +3389,17 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head/votes/listings',
       });
+      expect(response[0].voting_power).toEqual(new BigNumber(3726));
+      expect(response[0].rolls).toBeUndefined();
       expect(response[4].pkh).toEqual('tz2JMPu9yVKuX2Au8UUbp7YrKBZJSdYhgwwu');
+      expect(response[4].voting_power).toBeUndefined();
 
       done();
     });
   });
 
   describe('getProposals', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve([
           ['PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU', 2832],
@@ -2413,29 +3412,31 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head/votes/proposals',
       });
-      expect(response[0][1]).toEqual(2832);
+      expect(response[0][1]).toEqual(new BigNumber(2832));
 
       done();
     });
   });
 
   describe('getEntrypoints', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockReturnValue({ entrypoints: {} });
-      const response = await client.getEntrypoints('test');
+      const response = await client.getEntrypoints(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
-        url: 'root/chains/test/blocks/head/context/contracts/test/entrypoints',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/entrypoints`,
       });
       expect(response).toEqual({ entrypoints: {} });
       done();
     });
   });
+
   describe('runOperation', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const testData = {};
 
+      httpBackend.createRequest.mockResolvedValue({ content: {} });
       await client.runOperation(testData as any);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -2447,10 +3448,149 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('should use enum for property category to avoid space in name', async (done) => {
+      const testData = {};
+
+      httpBackend.createRequest.mockResolvedValue({
+        contents: [
+          {
+            metadata: {
+              balance_updates: [
+                {
+                  category: 'storage fees',
+                  kind: 'burned',
+                  origin: 'block',
+                },
+                {
+                  category: 'block fees',
+                  change: '374',
+                  kind: 'accumulator',
+                  origin: 'block',
+                },
+                {
+                  category: 'legacy_rewards',
+                },
+              ],
+            },
+          },
+        ],
+      });
+      const response = await client.runOperation(testData as any);
+
+      const balanceUpdate =
+        'metadata' in response.contents[0]
+          ? response.contents[0]['metadata']['balance_updates']
+          : [];
+      expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
+      expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
+      expect(balanceUpdate![2]['category']).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.LEGACY_REWARDS
+      );
+
+      done();
+    });
+  });
+
+  describe('runScriptView', () => {
+    it('query the right url and data', async (done) => {
+      const testData: RPCRunScriptViewParam = {
+        contract: 'test',
+        view: 'test',
+        chain_id: 'test',
+        input: {
+          int: '0',
+        },
+      };
+
+      await client.runScriptView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_script_view',
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({
+        ...testData,
+        unparsing_mode: 'Readable',
+      });
+      done();
+    });
+
+    it('query the right url and data with unparsing_mode overriden', async (done) => {
+      const testData: RPCRunScriptViewParam = {
+        contract: 'test',
+        view: 'test',
+        chain_id: 'test',
+        input: {
+          int: '0',
+        },
+        unparsing_mode: 'Optimized',
+      };
+
+      await client.runScriptView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_script_view',
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
+      done();
+    });
+  });
+
+  describe('runView', () => {
+    it('should query the right url and data', async (done) => {
+      const testData: RPCRunViewParam = {
+        contract: 'test',
+        entrypoint: 'test',
+        chain_id: 'test',
+        input: {
+          string: 'test',
+        },
+      };
+
+      await client.runView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_view',
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({
+        contract: 'test',
+        entrypoint: 'test',
+        chain_id: 'test',
+        input: {
+          string: 'test',
+        },
+        unparsing_mode: 'Readable',
+      });
+      done();
+    });
+
+    it('should query the right url and data with unparsing_mode overriden', async (done) => {
+      const testData: RPCRunViewParam = {
+        contract: 'test',
+        entrypoint: 'test',
+        chain_id: 'test',
+        input: {
+          string: 'test',
+        },
+        unparsing_mode: 'Optimized',
+      };
+
+      await client.runView(testData);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/run_view',
+      });
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
+      done();
+    });
   });
 
   describe('packData', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: 'unaccounted' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -2466,7 +3606,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('return a big number for gas when it is a big number', async (done) => {
+    it('should return a big number for gas when it is a big number', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe', gas: '2' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -2478,7 +3618,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('return undefined for gas when it is missing', async (done) => {
+    it('should return undefined for gas when it is missing', async (done) => {
       httpBackend.createRequest.mockResolvedValue({ packed: 'cafe' });
       const response = await client.packData({
         data: { string: 'test' },
@@ -2491,7 +3631,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getBigMapExpr', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       await client.getBigMapExpr('1', '2');
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -2503,8 +3643,8 @@ describe('RpcClient test', () => {
   });
 
   describe('getRpcUrl', () => {
-    it('return the RPC Url', () => {
-      const url: string = 'https://mainnet.api.tez.ie/';
+    it('should return the RPC Url', () => {
+      const url = 'https://mainnet.api.tez.ie/';
       const rpcUrlMainnet = new RpcClient(url).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://mainnet.api.tez.ie/');
       const rpcUrlCarthagenet = new RpcClient('https://api.tez.ie/rpc/carthagenet').getRpcUrl();
@@ -2513,7 +3653,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getCurrentPeriod', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const mockedResponse = {
         voting_period: {
           index: 87,
@@ -2537,7 +3677,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSuccessorPeriod', () => {
-    it('query the right url and data', async (done) => {
+    it('should query the right url and data', async (done) => {
       const mockedResponse = {
         voting_period: {
           index: 87,
@@ -2561,7 +3701,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSaplingDiffById', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
         root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
         commitments_and_ciphertexts: [],
@@ -2585,7 +3725,7 @@ describe('RpcClient test', () => {
   });
 
   describe('getSaplingDiffByContract', () => {
-    it('query the right url', async (done) => {
+    it('should query the right url', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
         root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
         commitments_and_ciphertexts: [],
@@ -2605,6 +3745,96 @@ describe('RpcClient test', () => {
       );
       expect(response.commitments_and_ciphertexts).toEqual([]);
       expect(response.nullifiers).toEqual([]);
+
+      done();
+    });
+  });
+
+  describe('getProtocols', () => {
+    it('should query the right url and return a ProtocolsResponse', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
+          next_protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
+        })
+      );
+      const protocols = await client.getProtocols();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/protocols`,
+      });
+      expect(protocols.next_protocol).toEqual(
+        'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
+      );
+      expect(protocols.protocol).toEqual('PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx');
+
+      done();
+    });
+  });
+
+  describe('getTxRollupState', () => {
+    it('should query the correct url and return a rollup state response', async (done) => {
+      const mockResponse = {
+        last_removed_commitment_hashes: null,
+        finalized_commitments: {
+          next: 0,
+        },
+        unfinalized_commitments: {
+          next: 0,
+        },
+        uncommitted_inboxes: {
+          newest: 0,
+          oldest: 0,
+        },
+        commitment_newest_hash: null,
+        tezos_head_level: 63691,
+        burn_per_byte: '0',
+        allocated_storage: '4000',
+        occupied_storage: '40',
+        inbox_ema: 0,
+        commitments_watermark: null,
+      };
+
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockResponse));
+
+      const txRollupState = await client.getTxRollupState('txrID');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/state`,
+      });
+
+      expect(txRollupState).toBeDefined();
+      expect(txRollupState).toEqual(mockResponse);
+
+      done();
+    });
+  });
+
+  describe('getTxRollupInbox', () => {
+    it('should query the correct url and return a rollup inbox response', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          inbox_length: 1,
+          cumulated_size: 4,
+          merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
+        })
+      );
+
+      const txRollupInbox = await client.getTxRollupInbox('txrID', '0');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/inbox/0`,
+      });
+
+      expect(txRollupInbox).toBeDefined();
+      expect(txRollupInbox!.inbox_length).toEqual(1);
+      expect(txRollupInbox!.cumulated_size).toEqual(4);
+      expect(txRollupInbox!.merkle_root).toEqual(
+        'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
+      );
 
       done();
     });

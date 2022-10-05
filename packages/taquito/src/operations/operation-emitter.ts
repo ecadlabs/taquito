@@ -1,5 +1,4 @@
 import {
-  BlockHeaderResponse,
   OperationContents,
   OperationContentsAndResult,
   OpKind,
@@ -8,8 +7,9 @@ import {
 } from '@taquito/rpc';
 import { Protocols } from '../constants';
 import { Context } from '../context';
-import { Estimate } from '../contract/estimate';
+import { Estimate } from '../estimate/estimate';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
+import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import {
   ForgedBytes,
   isOpRequireReveal,
@@ -17,7 +17,7 @@ import {
   PrepareOperationParams,
   RPCOperation,
   RPCOpWithFee,
-  RPCOpWithSource
+  RPCOpWithSource,
 } from './types';
 
 export interface PreparedOperation {
@@ -41,13 +41,13 @@ export abstract class OperationEmitter {
   constructor(protected context: Context) {}
 
   protected async isRevealOpNeeded(op: RPCOperation[] | ParamsWithKind[], pkh: string) {
-    return (!await this.isAccountRevealRequired(pkh) || !this.isRevealRequiredForOpType(op)) ? false : true;
+    return !(await this.isAccountRevealRequired(pkh)) || !this.isRevealRequiredForOpType(op)
+      ? false
+      : true;
   }
 
   protected async isAccountRevealRequired(publicKeyHash: string) {
-    const manager = await this.rpc.getManagerKey(publicKeyHash);
-      const haveManager = manager && typeof manager === 'object' ? !!manager.key : !!manager;
-      return !haveManager;
+    return !(await this.context.readProvider.isAccountRevealed(publicKeyHash, 'head'));
   }
 
   protected isRevealRequiredForOpType(op: RPCOperation[] | ParamsWithKind[]) {
@@ -58,20 +58,18 @@ export abstract class OperationEmitter {
       }
     }
     return opRequireReveal;
-  };
+  }
 
   // Originally from sotez (Copyright (c) 2018 Andrew Kishino)
-  protected async prepareOperation({
-    operation,
-    source,
-  }: PrepareOperationParams): Promise<PreparedOperation> {
-    let counter;
+  protected async prepareOperation(
+    { operation, source }: PrepareOperationParams,
+    pkh?: string
+  ): Promise<PreparedOperation> {
     const counters: { [key: string]: number } = {};
     let ops: RPCOperation[] = [];
-    let head: BlockHeaderResponse;
 
-    const blockHeaderPromise = this.rpc.getBlockHeader();
-    const blockMetaPromise = this.rpc.getBlockMetadata();
+    const blockHashPromise = this.context.readProvider.getBlockHash('head~2');
+    const blockProtoPromise = this.context.readProvider.getNextProtocol('head');
 
     if (Array.isArray(operation)) {
       ops = [...operation];
@@ -80,34 +78,23 @@ export abstract class OperationEmitter {
     }
 
     // Implicit account who emit the operation
-    const publicKeyHash = await this.signer.publicKeyHash();
+    const publicKeyHash = pkh ? pkh : await this.signer.publicKeyHash();
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
 
     for (let i = 0; i < ops.length; i++) {
       if (isOpRequireReveal(ops[i]) || ops[i].kind === 'reveal') {
-        const { counter } = await this.rpc.getContract(publicKeyHash);
-        counterPromise = Promise.resolve(counter);
+        counterPromise = this.context.readProvider.getCounter(publicKeyHash, 'head');
         break;
       }
     }
 
-    const [header, metadata, headCounter] = await Promise.all([
-      blockHeaderPromise,
-      blockMetaPromise,
-      counterPromise
+    const [hash, protocol, headCounter] = await Promise.all([
+      blockHashPromise,
+      blockProtoPromise,
+      counterPromise,
     ]);
 
-    if (!header) {
-      throw new Error('Unable to fetch latest block header');
-    }
-
-    if (!metadata) {
-      throw new Error('Unable to fetch latest metadata');
-    }
-
-    head = header;
-
-    counter = parseInt(headCounter || '0', 10);
+    const counter = parseInt(headCounter || '0', 10);
     if (!counters[publicKeyHash] || counters[publicKeyHash] < counter) {
       counters[publicKeyHash] = counter;
     }
@@ -116,11 +103,8 @@ export abstract class OperationEmitter {
       const opCounter = ++counters[publicKeyHash];
       return {
         counter: `${opCounter}`,
-        // tslint:disable-next-line: strict-type-predicates
         fee: typeof op.fee === 'undefined' ? '0' : `${op.fee}`,
-        // tslint:disable-next-line: strict-type-predicates
         gas_limit: typeof op.gas_limit === 'undefined' ? '0' : `${op.gas_limit}`,
-        // tslint:disable-next-line: strict-type-predicates
         storage_limit: typeof op.storage_limit === 'undefined' ? '0' : `${op.storage_limit}`,
       };
     };
@@ -132,18 +116,11 @@ export abstract class OperationEmitter {
     };
 
     const constructOps = (cOps: RPCOperation[]): OperationContents[] =>
-      // tslint:disable strict-type-predicates
       cOps.map((op: RPCOperation) => {
         switch (op.kind) {
           case OpKind.ACTIVATION:
             return {
               ...op,
-            };
-          case OpKind.REVEAL:
-            return {
-              ...op,
-              ...getSource(op),
-              ...getFee(op),
             };
           case OpKind.ORIGINATION:
             return {
@@ -152,7 +129,7 @@ export abstract class OperationEmitter {
               ...getSource(op),
               ...getFee(op),
             };
-          case OpKind.TRANSACTION:
+          case OpKind.TRANSACTION: {
             const cops = {
               ...op,
               amount: typeof op.amount !== 'undefined' ? `${op.amount}` : '0',
@@ -160,35 +137,47 @@ export abstract class OperationEmitter {
               ...getFee(op),
             };
             if (cops.source.toLowerCase().startsWith('kt1')) {
-              throw new Error(
+              throw new DeprecationError(
                 `KT1 addresses are not supported as source since ${Protocols.PsBabyM1}`
               );
             }
             return cops;
+          }
+          case OpKind.REVEAL:
           case OpKind.DELEGATION:
+          case OpKind.REGISTER_GLOBAL_CONSTANT:
+          case OpKind.TX_ROLLUP_ORIGINATION:
+          case OpKind.TX_ROLLUP_SUBMIT_BATCH:
             return {
               ...op,
               ...getSource(op),
               ...getFee(op),
             };
-          case OpKind.REGISTER_GLOBAL_CONSTANT:
+          case OpKind.TRANSFER_TICKET:
             return {
               ...op,
+              ticket_amount: `${op.ticket_amount}`,
               ...getSource(op),
               ...getFee(op),
-            }
+            };
+          case OpKind.INCREASE_PAID_STORAGE:
+            return {
+              ...op,
+              amount: `${op.amount}`,
+              ...getSource(op),
+              ...getFee(op),
+            };
+
           default:
-            throw new Error('Unsupported operation');
+            throw new InvalidOperationKindError((op as any).kind);
         }
       });
 
-    const branch = head.hash;
     const contents = constructOps(ops);
-    const protocol = metadata.next_protocol;
 
     return {
       opOb: {
-        branch,
+        branch: hash,
         contents,
         protocol,
       },
@@ -197,7 +186,7 @@ export abstract class OperationEmitter {
   }
 
   protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {
-    let forgedBytes = await this.context.forger.forge({ branch, contents });
+    const forgedBytes = await this.context.forger.forge({ branch, contents });
 
     return {
       opbytes: forgedBytes,
@@ -243,9 +232,9 @@ export abstract class OperationEmitter {
     }
 
     return {
-      fee: calculatedFee!,
-      gasLimit: calculatedGas!,
-      storageLimit: calculatedStorage!,
+      fee: calculatedFee,
+      gasLimit: calculatedGas,
+      storageLimit: calculatedStorage,
     };
   }
 
@@ -270,8 +259,10 @@ export abstract class OperationEmitter {
     const errors = flattenErrors(results);
 
     if (errors.length) {
-      // @ts-ignore
-      throw new TezosOperationError(errors);
+      throw new TezosOperationError(
+        errors,
+        'Error occurred during validation simulation of operation'
+      );
     }
 
     return {

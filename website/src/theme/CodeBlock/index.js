@@ -5,8 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
+import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE, RpcReadAdapter } from '@taquito/taquito';
 import { verifySignature } from '@taquito/utils';
 import { 
   validateAddress, 
@@ -14,21 +13,25 @@ import {
   validateKeyHash, 
   validateContractAddress, 
   validatePublicKey, 
-  validateSignature, 
+  validateSignature,
+  validateBlock,
+  validateProtocol,
+  validateOperation, 
   b58cencode, 
   prefix, 
   Prefix 
 } from '@taquito/utils';
-import {  BeaconWallet } from '@taquito/beacon-wallet';
-import { InMemorySigner } from '@taquito/signer';
+import { BeaconWallet } from '@taquito/beacon-wallet';
+import { InMemorySigner, importKey } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
-import { TezBridgeWallet } from '@taquito/tezbridge-wallet';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
-import { Parser, packDataBytes, MichelsonData, MichelsonType } from '@taquito/michel-codec';
-import { ThanosWallet } from '@thanos-wallet/dapp';
-import TransportU2F from "@ledgerhq/hw-transport-u2f";
+import { Parser, packDataBytes } from '@taquito/michel-codec';
+import { RpcClient } from '@taquito/rpc';
+import { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } from '@taquito/sapling';
+import { TempleWallet } from '@temple-wallet/dapp';
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -36,11 +39,16 @@ import rangeParser from 'parse-numeric-range';
 import Highlight, { defaultProps } from 'prism-react-renderer';
 import defaultTheme from 'prism-react-renderer/themes/palenight';
 import React, { useEffect, useRef, useState } from 'react';
-import { CancellableRpcClient } from './customHttpBackendAndRpcClient';
 
 import styles from './styles.module.css';
 
-const wallet = new BeaconWallet({name:"exampleWallet"});
+let wallet; 
+if (typeof window !== 'undefined') {
+  // solve localStorage is not defined Error when building server
+  // can use localStorage on the browser, not on the server
+  wallet = new BeaconWallet({ name:"exampleWallet" });
+} 
+
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
 export default ({
@@ -82,8 +90,7 @@ export default ({
   }, [button.current, target.current]);
 
   if (live) {
-    const customRpcClient = new CancellableRpcClient('https://hangzhounet.api.tez.ie') 
-    const Tezos = new TezosToolkit(customRpcClient);
+    const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com/');
 
     return (
       <Playground
@@ -96,12 +103,14 @@ export default ({
           validateKeyHash, 
           validateContractAddress, 
           validatePublicKey, 
-          validateSignature, 
+          validateSignature,
+          validateBlock,
+          validateOperation,
+          validateProtocol,
           b58cencode, 
           prefix, 
           Prefix, 
           MichelsonMap, 
-          BeaconWallet, 
           InMemorySigner, 
           LedgerSigner,
           Tzip16Module,
@@ -110,10 +119,9 @@ export default ({
           MichelsonStorageView,
           Tzip12Module, 
           tzip12,
-          TezBridgeWallet,
-          ThanosWallet, 
+          TempleWallet, 
           DerivationType, 
-          TransportU2F,
+          TransportWebHID,
           compose,
           Schema,
           ParameterSchema,
@@ -121,8 +129,11 @@ export default ({
           verifySignature,
           Parser, 
           packDataBytes, 
-          MichelsonData, 
-          MichelsonType
+          RpcReadAdapter,
+          SaplingToolkit,
+          RpcClient,
+          InMemorySpendingKey,
+          InMemoryViewingKey
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

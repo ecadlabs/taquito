@@ -4,7 +4,7 @@ export type WalletDefinedFields = 'source';
 
 export type WalletTransferParams = Omit<TransferParams, WalletDefinedFields>;
 
-export type WalletOriginateParams = Omit<OriginateParams, WalletDefinedFields>;
+export type WalletOriginateParams<TStorage = any> = Omit<OriginateParams<TStorage>, WalletDefinedFields>;
 
 export type WalletDelegateParams = Omit<DelegateParams, WalletDefinedFields>;
 

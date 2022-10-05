@@ -1,14 +1,14 @@
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { TransactionOperation } from '../../src/operations/transaction-operation';
-import { defaultConfigConfirmation, defaultConfigStreamer } from '../../src/context';
+import { defaultConfigConfirmation } from '../../src/context';
 import { TransferOperationBuilder, RevealOperationBuilder } from '../helpers';
 
 describe('Transfer operation', () => {
   let fakeContext: any;
-  let fakeForgedBytes = {} as ForgedBytes;
+  const fakeForgedBytes = {} as ForgedBytes;
 
-  const successfulResult = ([
+  const successfulResult = [
     {
       kind: 'transaction',
       source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
@@ -48,7 +48,7 @@ describe('Transfer operation', () => {
         operation_result: {
           status: 'applied',
           storage: { bytes: '00b2e19a9e74440d86c59f13dab8a18ff873e889ea' },
-          consumed_gas: '15953',
+          consumed_milligas: '15953000',
           storage_size: '232',
         },
         internal_operation_results: [
@@ -72,24 +72,24 @@ describe('Transfer operation', () => {
                   change: '50',
                 },
               ],
-              consumed_gas: '10207',
+              consumed_milligas: '10207000',
             },
           },
         ],
       },
     },
-  ] as unknown) as OperationContentsAndResult[];
+  ] as unknown as OperationContentsAndResult[];
 
   beforeEach(() => {
     fakeContext = {
       rpc: {
         getBlock: jest.fn(),
       },
-      config: { ...defaultConfigConfirmation, ...defaultConfigStreamer },
+      config: { ...defaultConfigConfirmation },
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
-      operations: [[{ hash: 'test_hash' }], [], [], []],
+      operations: [[{ hash: 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj' }], [], [], []],
       header: {
         level: 200,
       },
@@ -97,7 +97,7 @@ describe('Transfer operation', () => {
   });
   it('should contains compute the consummed gas, storage diff and storage size properly', () => {
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -114,7 +114,7 @@ describe('Transfer operation', () => {
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -133,7 +133,7 @@ describe('Transfer operation', () => {
     const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,
@@ -149,10 +149,9 @@ describe('Transfer operation', () => {
 
   it('revealStatus should be unknown when there is no reveal operation', () => {
     const txBuilder = new TransferOperationBuilder();
-    const revealBuilder = new RevealOperationBuilder();
 
     const op = new TransactionOperation(
-      'test_hash',
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,
       '',
       fakeForgedBytes,

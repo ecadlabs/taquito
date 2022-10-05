@@ -1,0 +1,3 @@
+parameter (pair (pair (pair (pair nat nat) nat) nat) nat);
+storage nat;
+code {CAR; UNPAIR ; UNPAIR ; UNPAIR ; UNPAIR ; DUG 4 ; DROP ; DROP ; DROP ; DROP ; NIL operation; PAIR};

@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "target": "es5",
+    "target": "es6",
     "module": "es2015",
     "lib": [
-      "es2015",
-      "es2016",
-      "es2017",
+      "es2020",
       "dom"
     ],
     "strict": true,
@@ -45,6 +43,18 @@
       ],
       "@taquito/contracts-library": [
         "taquito-contracts-library/src/taquito-contracts-library.ts"
+      ],
+      "@taquito/tzip12": [
+        "taquito-tzip12/src/taquito-tzip12.ts"
+      ],
+      "@taquito/tzip16": [
+        "taquito-tzip16/src/taquito-tzip16.ts"
+      ],
+      "@taquito/sapling": [
+        "taquito-sapling/src/taquito-sapling.ts"
+      ],
+      "@taquito/faucet": [
+        "taquito-faucet/src/taquito-faucet.ts"
       ]
     }
   }

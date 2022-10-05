@@ -1,43 +1,48 @@
-# Taquito Tzip-12 package
+# Taquito TZIP-012 package
+*Documentation can be found [here](https://tezostaquito.io/docs/tzip12)*  
+*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_tzip12.html)*
 
-`@taquito/tzip12` is an npm package that provides developers with Tzip-12 functionality for Taquito. The package allows retrieving metadata associated with tokens of FA2 contracts. You can find more information about the TZIP-12 standard [here](https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-12/tzip-12.md). 
-## How to use the tzip12 package
+`@taquito/tzip12` is an npm package that provides developers with TZIP-12 functionality for Taquito. The package allows retrieving metadata associated with tokens of FA2 contracts.
 
-The package can act as an extension to the well-known Taquito contract abstraction. 
+## General Information
 
-1. **We first need to create an instance of `Tzip12Module` and add it as an extension to our `TezosToolkit`**
+There are two scenarios to obtain the metadata of a token:
+1. The metadata can be obtained from executing an off-chain view named `token_metadata` present in the contract metadata
+2. or from a big map named `token_metadata` in the contract storage. 
 
-The constructor of the `Tzip12Module` takes an optional `MetadataProvider` as a parameter. When none is passed, the default `MetadataProvider` of Taquito is instantiated, and the default handlers (`HttpHandler,` `IpfsHandler,` and `TezosStorageHandler`) are used.
+The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class will find the token metadata with precedence for the off-chain view, if there is one, as specified in the standard. Please refer to the following link for complete documentation on [TZIP-012#Token Metadata](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md#token-metadata).
+
+## Install
+
+The package can be used to extend the well-known Taquito contract abstraction. The `@taquito/tzip12` and the `@taquito/taquito` packages need to be installed as follows:
+```
+npm i --save @taquito/tzip12
+npm i --save @taquito/taquito
+```
+
+## Usage
+
+**Create an instance of the `Tzip12Module` and add it as an extension to the `TezosToolkit`**
+
+The constructor of the `Tzip12Module` takes an optional `MetadataProvider` as a parameter. When none is passed, the default `MetadataProvider` of Taquito is instantiated, and the default handlers (`HttpHandler,` `IpfsHandler,` and `TezosStorageHandler`) are used. The `MetadataProvider` can be customized by the user if needed.
+
+**Use the `tzip12` function to extend a contract abstraction**
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
 import { Tzip12Module } from '@taquito/tzip12';
+import { tzip12 } from '@taquito/tzip12';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.addExtension(new Tzip12Module());
-```
-
-2. **Use the `tzip12` function to extend a contract abstraction**
-
-```js
-import { tzip12 } from '@taquito/tzip12';
 
 const contract = await Tezos.contract.at("contractAddress", tzip12)
-```
 
-3. **Get the token metadata**
-
-```ts
+// get the token metadata
 await contract.tzip12().getTokenMetadata(1);
 ```
 
-There are two scenarios to obtain the metadata of a token:
-1. They can be obtained from executing an off-chain view named `token_metadata` present in the contract metadata
-2. or from a big map named `token_metadata` in the contract storage. 
-
-The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class will find the token metadata with precedence for the off-chain view, if there is one, as specified in the standard.
-
-The `getTokenMetadata` method returns an object matching this interface :
+The `getTokenMetadata` method takes a number as a parameter that represents the token_id and returns an object matching this interface:
 ```
 interface TokenMetadata {
     token_id: number,
@@ -47,12 +52,9 @@ interface TokenMetadata {
 }
 ```
 
+## Additional info
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
-
-## API Documentation
-
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_tzip12.html)
 
 ## Disclaimer
 

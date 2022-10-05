@@ -1,15 +1,22 @@
-import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
+import {
+  Token,
+  TokenFactory,
+  ComparableToken,
+  TokenValidationError,
+  SemanticEncoding,
+} from '../token';
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class AddressValidationError extends TokenValidationError {
-  name: string = 'AddressValidationError';
+  name = 'AddressValidationError';
   constructor(public value: any, public token: AddressToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class AddressToken extends ComparableToken {
-  static prim = 'address';
+  static prim: 'address' = 'address';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -46,51 +53,76 @@ export class AddressToken extends ComparableToken {
     return { string: val };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
     }
 
+    if (semantic && semantic[AddressToken.prim]) {
+      return semantic[AddressToken.prim](val);
+    }
+
     return { string: val };
   }
 
-  // tslint:disable-next-line: variable-name
   public Execute(val: { bytes: string; string: string }): string {
     if (val.string) {
       return val.string;
+    }
+    if (!val.bytes) {
+      throw new AddressValidationError(
+        val,
+        this,
+        `cannot be missing both string and bytes: ${val}`
+      );
     }
 
     return encodePubKey(val.bytes);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return AddressToken.prim;
   }
 
-  // tslint:disable-next-line: variable-name
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: AddressToken.prim,
+      schema: AddressToken.prim,
+    };
+  }
+
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;
     }
+    if (!bytes) {
+      throw new AddressValidationError(
+        { bytes, string },
+        this,
+        `cannot be missing both string and bytes ${{ string, bytes }}`
+      );
+    }
 
     return encodePubKey(bytes);
   }
-
   compare(address1: string, address2: string) {
     const isImplicit = (address: string) => {
       return address.startsWith('tz');
     };
+    const implicit1 = isImplicit(address1);
+    const implicit2 = isImplicit(address2);
 
-    if (isImplicit(address1) && isImplicit(address2)) {
-      return super.compare(address1, address2);
-    } else if (isImplicit(address1)) {
+    if (implicit1 && !implicit2) {
       return -1;
-    } else if (isImplicit(address2)) {
+    } else if (implicit2 && !implicit1) {
       return 1;
-    } else {
-      return super.compare(address1, address2);
     }
+    return super.compare(address1, address2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
@@ -98,6 +130,5 @@ export class AddressToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

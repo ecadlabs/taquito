@@ -7,7 +7,7 @@ import { EntrypointsResponse, ScriptedContracts } from '@taquito/rpc';
 import { Extension, Context } from '@taquito/taquito';
 import { validateAddress, ValidationResult } from '@taquito/utils';
 import { InvalidAddressError, InvalidScriptFormatError } from './errors';
-import { RpcWrapperContractsLibrary } from './rpc-wrapper';
+import { ReadWrapperContractsLibrary } from './read-provider-wrapper';
 
 interface ContractsData {
   [contractAddress: string]: { script: ScriptedContracts; entrypoints: EntrypointsResponse };
@@ -26,7 +26,7 @@ interface ContractsData {
  *
  * contractsLibrary.addContract({
  *      ['contractAddress1']: {
- *          script: script1, // obtained from Tezos.rpc.getNormalizedScript('contractAddress1')
+ *          script: script1, // obtained from Tezos.rpc.getContract('contractAddress1').script
  *          entrypoints: entrypoints1 // obtained from Tezos.rpc.getEntrypoints('contractAddress1')
  *      },
  *      // load more contracts
@@ -44,11 +44,11 @@ export class ContractsLibrary implements Extension {
    *
    * @param contract is an object where the key is a contract address and the value is an object having a script and an entrypoints properties.
    * Note: the expected format for the script and entrypoints properties are the same as the one respectivlely returned by
-   * `TezosToolkit.rpc.getNormalizedScript` and `TezosToolkit.rpc.getEntrypoints`
+   * `TezosToolkit.rpc.getContract('contractAddress').script` and `TezosToolkit.rpc.getEntrypoints`
    *
    */
   addContract(contract: ContractsData) {
-    for (let contractAddress in contract) {
+    for (const contractAddress in contract) {
       this.validateContractAddress(contractAddress);
       this.validateContractScriptFormat(contract[contractAddress].script, contractAddress);
       Object.assign(this._contractsLibrary, {
@@ -63,7 +63,7 @@ export class ContractsLibrary implements Extension {
 
   configureContext(context: Context) {
     context.registerProviderDecorator((context: Context) => {
-      context.rpc = new RpcWrapperContractsLibrary(context.rpc, this);
+      context.readProvider = new ReadWrapperContractsLibrary(context.readProvider, this);
       return context;
     });
   }

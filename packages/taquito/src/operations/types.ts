@@ -15,11 +15,13 @@ export type ParamsWithKind =
   | withKind<DelegateParams, OpKind.DELEGATION>
   | withKind<TransferParams, OpKind.TRANSACTION>
   | withKind<ActivationParams, OpKind.ACTIVATION>
-  | withKind<RegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>;
+  | withKind<RegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>
+  | withKind<IncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
+  | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>
+  | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>
+  | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>;
 
-export type ParamsWithKindExtended =
-  | ParamsWithKind
-  | withKind<RevealParams, OpKind.REVEAL>
+export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
 
 export const attachKind = <T, K extends OpKind>(op: T, kind: K) => {
   return { ...op, kind } as withKind<T, K>;
@@ -30,7 +32,7 @@ export const findWithKind = <T extends { kind: OpKind }, K extends OpKind>(
   kind: K
 ): (T & { kind: K }) | undefined => {
   if (Array.isArray(arr)) {
-    const found = arr.find(op => op.kind === kind);
+    const found = arr.find((op) => op.kind === kind);
 
     if (found && isKind(found, kind)) {
       return found;
@@ -50,24 +52,55 @@ export type RPCOpWithFee =
   | RPCOriginationOperation
   | RPCDelegateOperation
   | RPCRevealOperation
-  | RPCRegisterGlobalConstantOperation;
+  | RPCRegisterGlobalConstantOperation
+  | RPCIncreasePaidStorageOperation
+  | RPCTxRollupOriginationOperation
+  | RPCTxRollupBatchOperation
+  | RPCTransferTicketOperation;
 export type RPCOpWithSource =
   | RPCTransferOperation
   | RPCOriginationOperation
   | RPCDelegateOperation
   | RPCRevealOperation
-  | RPCRegisterGlobalConstantOperation;
+  | RPCRegisterGlobalConstantOperation
+  | RPCIncreasePaidStorageOperation
+  | RPCTxRollupOriginationOperation
+  | RPCTxRollupBatchOperation
+  | RPCTransferTicketOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
-): op is withKind<T, InternalOperationResultKindEnum> => {
-  return ['transaction', 'delegation', 'origination', 'reveal', 'register_global_constant'].indexOf(op.kind) !== -1;
+): op is withKind<T, Exclude<OpKind, OpKind.ACTIVATION>> => {
+  return (
+    [
+      'transaction',
+      'delegation',
+      'origination',
+      'reveal',
+      'register_global_constant',
+      'increase_paid_storage',
+      'tx_rollup_origination',
+      'tx_rollup_submit_batch',
+      'transfer_ticket',
+    ].indexOf(op.kind) !== -1
+  );
 };
 
 export const isOpRequireReveal = <T extends { kind: OpKind }>(
   op: T
 ): op is withKind<T, Exclude<InternalOperationResultKindEnum, OpKind.REVEAL>> => {
-  return ['transaction', 'delegation', 'origination', 'register_global_constant'].indexOf(op.kind) !== -1;
+  return (
+    [
+      'transaction',
+      'delegation',
+      'origination',
+      'register_global_constant',
+      'increase_paid_storage',
+      'tx_rollup_origination',
+      'tx_rollup_submit_batch',
+      'transfer_ticket',
+    ].indexOf(op.kind) !== -1
+  );
 };
 
 export type SourceKinds = InternalOperationResultKindEnum;
@@ -120,7 +153,7 @@ export interface FeeConsumingOperation {
 }
 
 export type OriginateParamsBase = {
-  balance?: string;
+  balance?: string | number;
   code: string | object[];
   delegate?: string;
   fee?: number;
@@ -132,18 +165,18 @@ export type OriginateParamsBase = {
 /**
  * @description Parameters for originate method
  */
-export type OriginateParams = OriginateParamsBase &
+export type OriginateParams<TStorage = any> = OriginateParamsBase &
   (
     | {
-      init?: never;
-      /** JS representation of a storage object */
-      storage: any;
-    }
+        init?: never;
+        /** JS representation of a storage object */
+        storage: TStorage;
+      }
     | {
-      /** Initial storage object value. Either Micheline or JSON encoded */
-      init: string | object;
-      storage?: never;
-    }
+        /** Initial storage object value. Either Micheline or JSON encoded */
+        init: string | object;
+        storage?: never;
+      }
   );
 
 export interface ActivationParams {
@@ -185,7 +218,6 @@ export interface RevealParams {
   gasLimit?: number;
   storageLimit?: number;
 }
-
 
 /**
  * @description Result of a forge operation contains the operation plus its encoded version
@@ -245,7 +277,7 @@ export interface TransferParams {
 /**
  * @description RPC register global constant operation
  */
- export interface RPCRegisterGlobalConstantOperation {
+export interface RPCRegisterGlobalConstantOperation {
   kind: OpKind.REGISTER_GLOBAL_CONSTANT;
   fee: number;
   gas_limit: number;
@@ -288,13 +320,122 @@ export interface RPCActivateOperation {
   secret: string;
 }
 
+/**
+ * @description RPC tx rollup origination operation
+ */
+export interface RPCTxRollupOriginationOperation {
+  kind: OpKind.TX_ROLLUP_ORIGINATION;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  source: string;
+  tx_rollup_origination: object;
+}
+
+/**
+ * @description Parameters for the `txRollupOriginate` method
+ */
+export interface TxRollupOriginateParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+}
+
+/**
+ * @description Parameters for the `txRollupSubmitBatch` method
+ */
+export interface TxRollupBatchParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  rollup: string;
+  content: string;
+}
+
+/**
+ * @description RPC tx rollup batch operation
+ */
+export interface RPCTxRollupBatchOperation {
+  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  source: string;
+  rollup: string;
+  content: string;
+}
+
+/**
+ * @description Parameters for the transferTicket contract provider
+ */
+export interface TransferTicketParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  ticketContents: MichelsonV1Expression;
+  ticketTy: MichelsonV1Expression;
+  ticketTicketer: string;
+  ticketAmount: number;
+  destination: string;
+  entrypoint: string;
+}
+
+/**
+ * @description Rpc transfer-ticket operation
+ */
+export interface RPCTransferTicketOperation {
+  kind: OpKind.TRANSFER_TICKET;
+  source?: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  ticket_contents: MichelsonV1Expression;
+  ticket_ty: MichelsonV1Expression;
+  ticket_ticketer: string;
+  ticket_amount: number;
+  destination: string;
+  entrypoint: string;
+}
+
+/**
+ * @description Parameters for the increasePaidStorage method
+ */
+export interface IncreasePaidStorageParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  amount: number;
+  destination: string;
+}
+
+/**
+ * @description RPC IncreasePaidStorage operation
+ */
+export interface RPCIncreasePaidStorageOperation {
+  kind: OpKind.INCREASE_PAID_STORAGE;
+  source: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  amount: number;
+  destination: string;
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
   | RPCDelegateOperation
   | RPCRevealOperation
   | RPCActivateOperation
-  | RPCRegisterGlobalConstantOperation;
+  | RPCRegisterGlobalConstantOperation
+  | RPCTxRollupOriginationOperation
+  | RPCTxRollupBatchOperation
+  | RPCTransferTicketOperation
+  | RPCIncreasePaidStorageOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

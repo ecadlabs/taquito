@@ -1,6 +1,7 @@
 /**
  * @packageDocumentation
  * @module @taquito/tezbridge-wallet
+ * @deprecated
  */
 import {
   createOriginationOperation,
@@ -12,11 +13,18 @@ import {
   WalletTransferParams,
 } from '@taquito/taquito';
 
+// eslint-disable-next-line no-var
 declare var tezbridge: any;
 
-export class TezBridgeNotDetectedError implements Error {
-  name: string = 'TezBridgeNotDetectedError';
-  message: string = 'tezbridge plugin could not be detected in your browser';
+/**
+ *  @category Error
+ *  @description Error that indicates the tezbridge plugin not being detected on the browser
+ */
+export class TezBridgeNotDetectedError extends Error {
+  name = 'TezBridgeNotDetectedError';
+  constructor() {
+    super('tezbridge plugin could not be detected in your browser');
+  }
 }
 
 export { VERSION } from './version';
@@ -70,7 +78,7 @@ export class TezBridgeWallet implements WalletProvider {
   }
 
   private removeFeeAndLimit<T extends { gas_limit: any; storage_limit: any; fee: any }>(op: T) {
-    const { fee, gas_limit, storage_limit, ...rest } = op;
+    const { fee: _fee, gas_limit: _gas_limit, storage_limit: _storage_limit, ...rest } = op;
     return rest;
   }
 }

@@ -1,14 +1,22 @@
 import {
   addressEncoder,
   ballotEncoder,
+  blockPayloadHashEncoder,
   branchEncoder,
+  burnLimitEncoder,
   delegateEncoder,
+  entrypointNameEncoder,
+  int16Encoder,
   int32Encoder,
   parametersEncoder,
   pkhEncoder,
   proposalEncoder,
   proposalsEncoder,
   publicKeyEncoder,
+  smartContractAddressEncoder,
+  txRollupBatchContentEncoder,
+  txRollupIdEncoder,
+  txRollupOriginationParamEncoder,
   tz1Encoder,
   valueParameterEncoder,
   zarithEncoder,
@@ -20,6 +28,7 @@ import {
   BallotSchema,
   DelegationSchema,
   EndorsementSchema,
+  IncreasePaidStorageSchema,
   ManagerOperationSchema,
   operationEncoder,
   OriginationSchema,
@@ -29,6 +38,9 @@ import {
   schemaEncoder,
   SeedNonceRevelationSchema,
   TransactionSchema,
+  TransferTicketSchema,
+  TxRollupOriginationSchema,
+  TxRollupSubmitBatchSchema,
 } from './schema/operation';
 
 export type Encoder<T> = (val: T) => string;
@@ -49,7 +61,15 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.INT32]: int32Encoder,
   [CODEC.PARAMETERS]: parametersEncoder,
   [CODEC.ADDRESS]: addressEncoder,
-  [CODEC.VALUE]: valueParameterEncoder
+  [CODEC.SMART_CONTRACT_ADDRESS]: smartContractAddressEncoder,
+  [CODEC.VALUE]: valueParameterEncoder,
+  [CODEC.INT16]: int16Encoder,
+  [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashEncoder,
+  [CODEC.ENTRYPOINT]: entrypointNameEncoder,
+  [CODEC.TX_ROLLUP_ORIGINATION_PARAM]: txRollupOriginationParamEncoder,
+  [CODEC.TX_ROLLUP_ID]: txRollupIdEncoder,
+  [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentEncoder,
+  [CODEC.BURN_LIMIT]: burnLimitEncoder,
 };
 
 encoders[CODEC.OPERATION] = operationEncoder(encoders);
@@ -63,5 +83,14 @@ encoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: any) =>
   schemaEncoder(encoders)(SeedNonceRevelationSchema)(val);
 encoders[CODEC.OP_PROPOSALS] = (val: any) => schemaEncoder(encoders)(ProposalsSchema)(val);
 encoders[CODEC.OP_REVEAL] = (val: any) => schemaEncoder(encoders)(RevealSchema)(val);
-encoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: any) => schemaEncoder(encoders)(RegisterGlobalConstantSchema)(val);
+encoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: any) =>
+  schemaEncoder(encoders)(RegisterGlobalConstantSchema)(val);
+encoders[CODEC.OP_TRANSFER_TICKET] = (val: any) =>
+  schemaEncoder(encoders)(TransferTicketSchema)(val);
+encoders[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: any) =>
+  schemaEncoder(encoders)(TxRollupOriginationSchema)(val);
+encoders[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: any) =>
+  schemaEncoder(encoders)(TxRollupSubmitBatchSchema)(val);
+encoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
+  schemaEncoder(encoders)(IncreasePaidStorageSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);

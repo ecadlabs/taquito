@@ -6,13 +6,13 @@ const crypto = require('crypto');
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
-    describe(`Test contract.batch containing a high number of operations using: ${rpc}`, () => {
+    describe(`Test contract.batch containing a high number of operations through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
 
-        it('Test batch with 150 operations', async (done) => {
+        it('Verify contract.batch with 150 operations', async (done) => {
             const dests: { key: string, pkh: string }[] = [];
             const batchSize = 150;
 

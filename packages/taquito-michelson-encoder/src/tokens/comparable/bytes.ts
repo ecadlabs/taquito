@@ -1,14 +1,22 @@
-import { TokenFactory, ComparableToken, TokenValidationError, Token } from '../token';
+import { BaseTokenSchema } from '../../schema/types';
+import {
+  TokenFactory,
+  ComparableToken,
+  TokenValidationError,
+  Token,
+  SemanticEncoding,
+} from '../token';
+import { stripHexPrefix } from '@taquito/utils';
 
 export class BytesValidationError extends TokenValidationError {
-  name: string = 'BytesValidationError';
+  name = 'BytesValidationError';
   constructor(public value: any, public token: BytesToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class BytesToken extends ComparableToken {
-  static prim = 'bytes';
+  static prim: 'bytes' = 'bytes';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -39,8 +47,8 @@ export class BytesToken extends ComparableToken {
 
   public Encode(args: any[]): any {
     let val = args.pop();
+    val = stripHexPrefix(this.convertUint8ArrayToHexString(val));
 
-    val = this.convertUint8ArrayToHexString(val);
     const err = this.isValid(val);
     if (err) {
       throw err;
@@ -49,11 +57,20 @@ export class BytesToken extends ComparableToken {
     return { bytes: String(val).toString() };
   }
 
-  public EncodeObject(val: string | Uint8Array) {
+  public EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
+
+    if (typeof val === 'string') {
+      val = stripHexPrefix(val);
+    }
+
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[BytesToken.prim]) {
+      return semantic[BytesToken.prim](val);
     }
 
     return { bytes: String(val).toString() };
@@ -63,11 +80,21 @@ export class BytesToken extends ComparableToken {
     return val.bytes;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return BytesToken.prim;
   }
 
-  // tslint:disable-next-line: variable-name
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: BytesToken.prim,
+      schema: BytesToken.prim,
+    };
+  }
+
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;
@@ -81,6 +108,5 @@ export class BytesToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

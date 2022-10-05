@@ -5,6 +5,13 @@ import { Operation } from '../operations/operations';
 import { RPCActivateOperation } from '../operations/types';
 import { TzProvider } from './interface';
 import { OpKind } from '@taquito/rpc';
+import {
+  validateAddress,
+  ValidationResult,
+  validateKeyHash,
+  InvalidAddressError,
+  InvalidKeyHashError,
+} from '@taquito/utils';
 
 export class RpcTzProvider extends OperationEmitter implements TzProvider {
   constructor(context: Context) {
@@ -12,14 +19,23 @@ export class RpcTzProvider extends OperationEmitter implements TzProvider {
   }
 
   async getBalance(address: string): Promise<BigNumber> {
-    return this.rpc.getBalance(address);
+    if (validateAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address);
+    }
+    return this.context.readProvider.getBalance(address, 'head');
   }
 
   async getDelegate(address: string): Promise<string | null> {
-    return this.rpc.getDelegate(address);
+    if (validateAddress(address) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address);
+    }
+    return this.context.readProvider.getDelegate(address, 'head');
   }
 
   async activate(pkh: string, secret: string) {
+    if (validateKeyHash(pkh) !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(pkh);
+    }
     const operation: RPCActivateOperation = {
       kind: OpKind.ACTIVATION,
       pkh,

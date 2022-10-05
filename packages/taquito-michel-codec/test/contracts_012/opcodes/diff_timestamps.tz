@@ -1,0 +1,3 @@
+parameter (pair timestamp timestamp);
+storage int;
+code { CAR; DUP; CAR; DIP{CDR}; SUB; NIL operation; PAIR }

@@ -1,17 +1,15 @@
-import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
 
-  describe(`Test invalid data for origination using: ${rpc}`, () => {
+  describe(`Test contract origination with invalid data through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup()
       done()
     })
-    test('fails because there is non-ascii in the init data', 2, async (done: () => void) => {
+    test('Verify that contract.originate for a contract with non-ascii (invalid string) in the init data will fail', async (done) => {
       expect.assertions(1);
       try {
         await Tezos.contract.originate({
@@ -26,11 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           init: `"Copyright ©"`
         })
       } catch (ex) {
-        if (protocol === Protocols.PsFLorena || protocol === Protocols.PtGRANADs) {
-          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('invalid_syntactic_constant') }))
-        } else {
-          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('non_printable_character') }))
-        }
+        expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('non_printable_character') }))
       }
       done();
     });

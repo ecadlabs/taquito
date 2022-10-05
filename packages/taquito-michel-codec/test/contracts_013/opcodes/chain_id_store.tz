@@ -1,0 +1,3 @@
+parameter unit;
+storage (option chain_id);
+code { DROP; CHAIN_ID; SOME; NIL operation; PAIR }

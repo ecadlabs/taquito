@@ -1,0 +1,3 @@
+parameter unit;
+storage (sapling_state 8);
+code { DROP; SAPLING_EMPTY_STATE 8; NIL operation; PAIR; };

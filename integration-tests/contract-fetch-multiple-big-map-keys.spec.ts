@@ -5,15 +5,17 @@ import BigNumber from 'bignumber.js';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
-    const test = require('jest-retries');
 
-    describe(`Test accessing big map abstraction by index using: ${rpc}`, () => {
+    describe(`Test contract origination with multiple BigMap variations through contract api using: ${rpc}`, () => {
+        /**  The contract code doesn't have annotations, so the keys of the storage and of the bigmap are indexes. */
+
         beforeEach(async (done) => {
             await setup();
             done();
         });
-        test('originates a contract with empty bigmap and fetches the storage/bigmap', 2, async (done: () => void) => {
-            
+
+        test('Verify contract.originate for a contract with a BigMap with multiple values to be indexed (also fetching the Storage/BigMap)', async (done) => {
+
             const signer = await Tezos.signer.publicKeyHash();
 
             const bigMapInit = new MichelsonMap();
@@ -32,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 }
             });
             const contract = await op.contract();
-            
+
             interface StorageType {
                 0: BigMapAbstraction,
                 1: string,

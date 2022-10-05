@@ -16,7 +16,8 @@ module.exports = {
     './packages/taquito-tzip12/src/taquito-tzip12.ts',
     './packages/taquito-tzip16/src/taquito-tzip16.ts',
     './packages/taquito-utils/src/taquito-utils.ts',
-    './packages/taquito-utils/src/taquito-contracts-library.ts'
+    './packages/taquito-contracts-library/src/taquito-contracts-library.ts',
+    './packages/taquito-sapling/src/taquito-sapling.ts',
   ],
   exclude: [
     '**/*.spec.ts',
@@ -28,5 +29,5 @@ module.exports = {
     '/coverage/**',
   ],
   name: 'Taquito',
-  excludePrivate: true
+  excludePrivate: true,
 };

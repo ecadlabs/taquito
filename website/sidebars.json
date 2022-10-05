@@ -5,14 +5,17 @@
       "label": "General",
       "items": [
         "quick_start",
-        "boilerplate",        
+        "boilerplate",
         "batch_API",
+        "beaconwallet-singleton",
+        "failwith_errors",
         "confirmation_event_stream",
         "set_delegate",
         "dapp_prelaunch",
         "estimate",
         "fa2_parameters",
         "lambda_view",
+        "liquidity_baking",
         "maps_bigmaps",
         "michelsonmap",
         "originate",
@@ -25,13 +28,16 @@
         "tickets",
         "transaction_limits",
         "making_transfers",
+        "on_chain_views",
         "tutorial_links",
         "tzip12",
         "metadata-tzip16",
         "validators",
         "wallet_API",
         "wallets",
-        "web3js_taquito"
+        "web3js_taquito",
+        "contracts_collection",
+        "subscribe_event"
       ]
     },
     {
@@ -42,7 +48,21 @@
     {
       "type": "category",
       "label": "Packages",
-      "items": ["michelson_encoder", "contracts-library"]
+      "items": [
+        "michelson_encoder", 
+        "contracts-library", 
+        "taquito_utils",
+        {
+          "type": "category",
+          "label": "Sapling",
+          "collapsed": true,
+          "collapsible": true,
+          "items": [
+            "sapling", 
+            "sapling_in_memory_spending_key", 
+            "sapling_in_memory_viewing_key"
+          ]
+        }]
     },
     {
       "type": "category",
@@ -51,13 +71,23 @@
     },
     {
       "type": "category",
+      "label": "Optimistic Rollups",
+      "items": ["tx_rollups"]
+    },
+    {
+      "type": "category",
       "label": "Modules customization",
-      "items": ["rpc-cache", "cancel_http_requests"]
+      "items": ["forger", "rpc-cache", "cancel_http_requests"]
     },
     {
       "type": "category",
       "label": "Running integration tests",
       "items": ["ledger_integration_test", "rpc_nodes_integration_test"]
+    },
+    {
+      "type": "category",
+      "label": "Native Mobile Development",
+      "items": ["mobile_bundle"]
     },
     {
       "Upgrading Guide": ["upgrading_guide"]

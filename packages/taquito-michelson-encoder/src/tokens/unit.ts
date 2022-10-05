@@ -1,8 +1,9 @@
-import { ComparableToken, Token, TokenFactory } from './token';
+import { ComparableToken, SemanticEncoding, Token, TokenFactory } from './token';
+import { BaseTokenSchema } from '../schema/types';
 import { UnitValue } from '../taquito-michelson-encoder';
 
 export class UnitToken extends ComparableToken {
-  static prim = 'unit';
+  static prim: 'unit' = 'unit';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -17,7 +18,10 @@ export class UnitToken extends ComparableToken {
     return { prim: 'Unit' };
   }
 
-  public EncodeObject(_val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
+    if (semantic && semantic[UnitToken.prim]) {
+      return semantic[UnitToken.prim](val);
+    }
     return { prim: 'Unit' };
   }
 
@@ -25,8 +29,19 @@ export class UnitToken extends ComparableToken {
     return UnitValue;
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return UnitToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: UnitToken.prim,
+      schema: UnitToken.prim,
+    };
   }
 
   compare(_val1: any, _val2: any) {
@@ -49,6 +64,5 @@ export class UnitToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

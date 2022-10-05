@@ -3,10 +3,11 @@ import { OriginationOperation } from '../../src/operations/origination-operation
 import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { OriginationOperationBuilder, RevealOperationBuilder } from '../helpers';
+import { PollingSubscribeProvider } from '../../src/subscribe/polling-subcribe-provider';
 
 describe('Origination operation', () => {
   let fakeContext: any;
-  let fakeForgedBytes = {} as ForgedBytes;
+  const fakeForgedBytes = {} as ForgedBytes;
 
   const successfulResult = [
     {
@@ -58,7 +59,7 @@ describe('Origination operation', () => {
             },
           ],
           originated_contracts: ['KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD'],
-          consumed_gas: '11684',
+          consumed_milligas: '11684000',
           storage_size: '62',
           paid_storage_size_diff: '62',
         },
@@ -68,15 +69,16 @@ describe('Origination operation', () => {
 
   beforeEach(() => {
     fakeContext = {
+      stream: new PollingSubscribeProvider(fakeContext),
       rpc: {
         getBlock: jest.fn(),
       },
       config: { ...defaultConfigConfirmation },
-      getConfirmationPollingInterval: jest.fn()
+      getConfirmationPollingInterval: jest.fn(),
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
-      operations: [[{ hash: 'test_hash' }], [], [], []],
+      operations: [[{ hash: 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj' }], [], [], []],
       header: {
         level: 200,
       },
@@ -90,7 +92,7 @@ describe('Origination operation', () => {
       const revealBuilder = new RevealOperationBuilder();
       const fakeContractProvider: any = {};
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         fakeForgedBytes,
         [
@@ -109,7 +111,7 @@ describe('Origination operation', () => {
     it('should contains the originated contract address given a successful result', () => {
       const fakeContractProvider: any = {};
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         fakeForgedBytes,
         successfulResult,
@@ -119,7 +121,7 @@ describe('Origination operation', () => {
       expect(op.contractAddress).toEqual('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD');
     });
 
-    it('contract address is undefined given an wrong result', () => {
+    it('contract address is undefined given a wrong result', () => {
       const fakeContractProvider: any = {};
       const wrongResults: any[] = [
         {},
@@ -127,9 +129,9 @@ describe('Origination operation', () => {
         [{ kind: 'origination', metadata: {} }],
       ];
 
-      wrongResults.forEach(result => {
+      wrongResults.forEach((result) => {
         const op = new OriginationOperation(
-          'test_hash',
+          'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
           {} as any,
           fakeForgedBytes,
           result,
@@ -142,14 +144,14 @@ describe('Origination operation', () => {
   });
 
   describe('Contract', () => {
-    it('should return proper confirmation head', async done => {
+    it('should return proper confirmation head', async (done) => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };
 
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         {} as any,
         successfulResult,
@@ -161,14 +163,14 @@ describe('Origination operation', () => {
       done();
     });
 
-    it('should create a contract given a successful result', async done => {
+    it('should create a contract given a successful result', async (done) => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };
 
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         fakeForgedBytes,
         successfulResult,
@@ -181,14 +183,14 @@ describe('Origination operation', () => {
       done();
     });
 
-    it('should throw an error if no contract is available', async done => {
+    it('should throw an error if no contract is available', async (done) => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };
 
       fakeContractProvider.at.mockResolvedValue('contract');
       const op = new OriginationOperation(
-        'test_hash',
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,
         fakeForgedBytes,
         'wrong_result' as any,
@@ -201,5 +203,42 @@ describe('Origination operation', () => {
       );
       done();
     });
+  });
+
+  it('should successfully retrieve all members of OriginationOperation', () => {
+    const originationBuilder = new OriginationOperationBuilder();
+    const fakeContractProvider: any = {};
+    const op = new OriginationOperation(
+      'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+      {
+        fee: '2991',
+        gas_limit: '26260',
+        storage_limit: '257',
+      } as any,
+      fakeForgedBytes,
+      [originationBuilder.withResult({ status: 'applied' }).build()],
+      fakeContext,
+      fakeContractProvider
+    );
+
+    expect(op.revealStatus).toEqual('unknown');
+    expect(op.status).toEqual('applied');
+    expect(op.consumedGas).toEqual('15953');
+    expect(op.consumedMilliGas).toEqual('15952999');
+    expect(op.contractAddress).toEqual('KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX');
+    expect(op.errors).toBeUndefined();
+    expect(op.fee).toEqual('2991');
+    expect(op.gasLimit).toEqual('26260');
+    expect(op.hash).toEqual('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj');
+    expect(op.storageDiff).toBeFalsy();
+    expect(op.operationResults).toEqual({
+      consumed_milligas: '15952999',
+      status: 'applied',
+      originated_contracts: ['KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX'],
+      storage_size: '62',
+    });
+    expect(op.revealOperation).toBeUndefined();
+    expect(op.storageSize).toEqual('62');
+    expect(op.storageLimit).toEqual('257');
   });
 });

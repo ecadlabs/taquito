@@ -5,6 +5,7 @@ import { TezosToolkit } from '@taquito/taquito';
  *
  * @description Import a key to sign operation with the side-effect of setting the Tezos instance to use the InMemorySigner provider
  *
+ * @warn The JSON faucets are no longer available on https://teztnets.xyz/
  * @param toolkit The toolkit instance to attach a signer
  * @param privateKeyOrEmail Key to load in memory
  * @param passphrase If the key is encrypted passphrase to decrypt it
@@ -25,7 +26,7 @@ export async function importKey(
     let op;
     try {
       op = await toolkit.tz.activate(pkh, secret);
-    } catch (ex) {
+    } catch (ex: any) {
       const isInvalidActivationError = ex && ex.body && /Invalid activation/.test(ex.body);
       if (!isInvalidActivationError) {
         throw ex;

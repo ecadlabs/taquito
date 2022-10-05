@@ -1,15 +1,22 @@
-import { Token, TokenFactory, ComparableToken, TokenValidationError } from '../token';
+import {
+  Token,
+  TokenFactory,
+  ComparableToken,
+  TokenValidationError,
+  SemanticEncoding,
+} from '../token';
 import BigNumber from 'bignumber.js';
+import { BaseTokenSchema } from '../../schema/types';
 
 export class IntValidationError extends TokenValidationError {
-  name: string = 'IntValidationError';
+  name = 'IntValidationError';
   constructor(public value: any, public token: IntToken, message: string) {
     super(value, token, message);
   }
 }
 
 export class IntToken extends ComparableToken {
-  static prim = 'int';
+  static prim: 'int' = 'int';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
@@ -23,8 +30,19 @@ export class IntToken extends ComparableToken {
     return new BigNumber(val[Object.keys(val)[0]]);
   }
 
+  /**
+   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
+   *
+   */
   public ExtractSchema() {
     return IntToken.prim;
+  }
+
+  generateSchema(): BaseTokenSchema {
+    return {
+      __michelsonType: IntToken.prim,
+      schema: IntToken.prim,
+    };
   }
 
   private isValid(val: any): IntValidationError | null {
@@ -47,10 +65,14 @@ export class IntToken extends ComparableToken {
     return { int: new BigNumber(val).toFixed() };
   }
 
-  public EncodeObject(val: any): any {
+  public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     const err = this.isValid(val);
     if (err) {
       throw err;
+    }
+
+    if (semantic && semantic[IntToken.prim]) {
+      return semantic[IntToken.prim](val);
     }
 
     return { int: new BigNumber(val).toFixed() };
@@ -82,6 +104,5 @@ export class IntToken extends ComparableToken {
       tokens.push(this);
     }
     return tokens;
-  };
-
+  }
 }

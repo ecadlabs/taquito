@@ -1,4 +1,4 @@
-import { OperationEntry } from '@taquito/rpc';
+import { BlockResponse, InternalOperationResult, OperationEntry } from '@taquito/rpc';
 
 export type FilterExpression = {
   or?: ExpressionOrOpFilter[];
@@ -21,19 +21,31 @@ export interface DestinationFilter {
   destination: string;
 }
 
-export type OpFilter = OpHashFilter | SourceFilter | KindFilter | DestinationFilter;
+export interface EventFilter {
+  address?: string;
+  tag?: string;
+}
 
-export type ExpressionOrOpFilter = OpFilter | FilterExpression
+export interface EventSubscription extends InternalOperationResult {
+  opHash: string;
+  blockHash: string;
+  level: number;
+}
+
+export type OpFilter = OpHashFilter | SourceFilter | KindFilter | DestinationFilter | EventFilter;
+
+export type ExpressionOrOpFilter = OpFilter | FilterExpression;
 
 export type Filter = ExpressionOrOpFilter | ExpressionOrOpFilter[];
 
-export type OperationContent = OperationEntry['contents'][0] & {hash: string};
+export type OperationContent = OperationEntry['contents'][0] & { hash: string };
 
 export interface SubscribeProvider {
   subscribe(filter: 'head'): Subscription<string>;
+  subscribeBlock(filter: 'head'): Subscription<BlockResponse>;
   subscribeOperation(filter: Filter): Subscription<OperationContent>;
+  subscribeEvent(filter?: EventFilter): Subscription<InternalOperationResult>;
 }
-
 export interface Subscription<T> {
   on(type: 'error', cb: (error: Error) => void): void;
   on(type: 'data', cb: (data: T) => void): void;
