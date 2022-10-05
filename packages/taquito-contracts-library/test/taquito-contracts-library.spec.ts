@@ -2,21 +2,18 @@ import { InvalidAddressError, InvalidScriptFormatError } from '../src/errors';
 import { ContractsLibrary } from '../src/taquito-contracts-library';
 import { entrypoints, entrypoints2 } from './data/contract-entrypoints';
 import { script, script2 } from './data/contract-script';
-import { TezosToolkit } from '@taquito/taquito';
-
 import { VERSION } from '../src/version';
-import { validateAddress } from '@taquito/utils';
 
 describe('ContractsLibrary tests', () => {
   it('ContractsLibrary is instantiable', () => {
     expect(new ContractsLibrary()).toBeInstanceOf(ContractsLibrary);
   });
-  
+
   it('get VERSION for ContractsLibrary', () => {
-    const version = VERSION
-    expect(version).toBeDefined
-    expect(version.commitHash).toHaveLength(40)
-    expect(version.version).toHaveLength(6)
+    const version = VERSION;
+    expect(version).toBeDefined;
+    expect(version.commitHash).toHaveLength(40);
+    expect(version.version).toHaveLength(6);
   });
 
   it('adds one contract to the library', () => {
@@ -101,11 +98,8 @@ describe('ContractsLibrary tests', () => {
           script,
           entrypoints,
         },
-    
       });
     } catch (e: any) {
-      expect
-      expect(validateAddress(contractAddress)).toEqual(0)
       expect(e).toBeInstanceOf(InvalidAddressError);
       expect(e.message).toEqual(`Address is invalid: ${contractAddress}`);
       expect(e).toBeInstanceOf(Error);
@@ -122,6 +116,9 @@ describe('ContractsLibrary tests', () => {
         entrypoints,
       },
     });
+    const contractData = contractLib.getContract(contractAddress);
+    expect(contractData.entrypoints).toEqual(entrypoints);
+    expect(contractData.script).toEqual(script);
   });
 
   it('throw an InvalidScriptFormatError error if the script format is invalid', () => {
@@ -145,21 +142,5 @@ describe('ContractsLibrary tests', () => {
       );
       expect(e).toBeInstanceOf(Error);
     }
-  });
-
-  it('Test the configure context function through use of Tezos.addExtension', () => {
-    const Tezos = new TezosToolkit('fake');
-    const contractsLibrary = new ContractsLibrary();
-    const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
-    contractsLibrary.addContract({
-      [contractAddress]: {
-        script,
-        entrypoints,
-      },
-    });
-    const contractData = contractsLibrary.getContract(contractAddress);
-    expect(contractData.entrypoints).toEqual(entrypoints);
-    expect(contractData.script).toEqual(script);
-    expect(Tezos.addExtension(contractsLibrary)).toBeDefined
   });
 });
