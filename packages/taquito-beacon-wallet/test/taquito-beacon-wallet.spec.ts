@@ -4,45 +4,11 @@ import {
   MissingRequiredScopes,
 } from '../src/taquito-beacon-wallet';
 import LocalStorageMock from './mock-local-storage';
-import { PermissionScope, LocalStorage, NetworkType } from '@airgap/beacon-dapp';
+import { PermissionScope, LocalStorage } from '@airgap/beacon-dapp';
 
 global.localStorage = new LocalStorageMock();
 
 describe('Beacon Wallet tests', () => {
-  let mockBeacon: {
-    getPKH: jest.Mock<any>,
-    requestPermissions: jest.Mock<any>,
-  };
-  let mockClient: {
-    getActiveAccount: jest.Mock<any>,
-    setActiveAccount: jest.Mock<any>
-    requestPermissions: jest.Mock<any>
-  };
-  const testPKH = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'
-
-  beforeEach(() => {
-    jest.resetAllMocks()
-
-    mockClient = {
-      getActiveAccount: jest.fn(),
-      setActiveAccount: jest.fn(),
-      requestPermissions: jest.fn()
-    }
-
-    mockBeacon = {
-      getPKH: jest.fn(),
-      requestPermissions: jest.fn(),
-    };
-
-    mockClient.setActiveAccount.mockResolvedValue(testPKH)
-    mockClient.requestPermissions.mockResolvedValue({
-      network: {
-        type: 'custom' as NetworkType,
-      }
-    })
-    mockBeacon.getPKH.mockResolvedValue(testPKH)
-  })
-
   it('Verify that BeaconWallet is instantiable', () => {
     expect(new BeaconWallet({ name: 'testWallet' })).toBeInstanceOf(BeaconWallet);
   });
@@ -56,13 +22,9 @@ describe('Beacon Wallet tests', () => {
   });
 
   it('Verify that requestPermissions is a function', async () => {
-    const wallet = new BeaconWallet({ name: 'testWallet' })
-    expect(typeof (await wallet.requestPermissions)).toEqual('function')
-    expect((await wallet.requestPermissions)).toBeDefined
-    const network = { type: NetworkType.JAKARTANET };
-    const permissions = mockBeacon.requestPermissions({ network });
-    expect(permissions).toBeDefined
-    console.log()
+    const wallet = new BeaconWallet({ name: 'testWallet' });
+    expect(typeof (await wallet.requestPermissions)).toEqual('function');
+    expect(await wallet.requestPermissions).toBeDefined;
   });
 
   it('Verify that permissions must be called before getPKH', async () => {
@@ -117,7 +79,10 @@ describe('Beacon Wallet tests', () => {
 
   it(`Verify removeDefaultParameters for storageLimit`, async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const formattedParam = await wallet.removeDefaultParams({ storageLimit: 2000 }, { storageLimit: 165 });
+    const formattedParam = await wallet.removeDefaultParams(
+      { storageLimit: 2000 },
+      { storageLimit: 165 }
+    );
     expect(formattedParam.storageLimit).toEqual(165);
   });
 
@@ -135,16 +100,7 @@ describe('Beacon Wallet tests', () => {
 
   it(`Verify clearActiveAccount`, async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const cleared = await wallet.clearActiveAccount()
+    const cleared = await wallet.clearActiveAccount();
     expect(cleared).toBeTruthy;
   });
-
-  // it(`Verify validateRequiredScopesOrFail`, async () => {
-  //   const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-  //   const mapped = await wallet.validateRequiredScopesOrFail('sign', 'sign')
-  //   expect(mapped).toBeTruthy;
-  //   console.log(mapped)
-  // });
-
-
 });
