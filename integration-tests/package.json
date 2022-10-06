@@ -15,7 +15,7 @@
   "version": "14.0.0",
   "dependencies": {
     "@ledgerhq/hw-transport": "^6.27.2",
-    "@ledgerhq/hw-transport-node-hid": "^6.27.3",
+    "@ledgerhq/hw-transport-node-hid": "^6.27.4",
     "@taquito/http-utils": "^14.0.0",
     "@taquito/local-forging": "^14.0.0",
     "@taquito/michel-codec": "^14.0.0",
