@@ -368,10 +368,13 @@
             Running
             <span class="material-icons-outlined" id="running-icon"> directions_run </span>
           {:else}
-            Run the test
+            Run test
           {/if}
         </button>
       </div>
+      <p style="font-style: italic;">
+        <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
+      </p>
     {/if}
   </div>
 </div>
