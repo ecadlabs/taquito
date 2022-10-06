@@ -275,9 +275,6 @@
             <div class="learn-more">
                 <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
             </div>
-            <p style="font-style: italic;">
-              <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
-            </p>
           </div>
         {:else}
           <div style="margin-bottom:20px">
