@@ -69,6 +69,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 ],
                 "homepage": "https://tezostaquito.io/"
               });
+
+            expect(await (await contract.tzip16()).metadataName()).toEqual('test')
+            expect(await (await contract.tzip16()).metadataDescription()).toEqual('A metadata test')
+            expect(await (await contract.tzip16()).metadataVersion()).toEqual('0.1')
+            expect(await (await contract.tzip16()).metadataLicense()).toEqual('MIT')
+            expect(await (await contract.tzip16()).metadataAuthors()).toEqual(["Taquito <https://tezostaquito.io/>"])
+            expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://tezostaquito.io/')
+            expect(await (await contract.tzip16()).metadataSource()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
+
             done();
         });
 
@@ -111,6 +123,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 ],
                 "homepage": "https://tezostaquito.io/"
               });
+
+            expect(await (await contract.tzip16()).metadataName()).toEqual('test')
+            expect(await (await contract.tzip16()).metadataDescription()).toEqual('A metadata test')
+            expect(await (await contract.tzip16()).metadataVersion()).toEqual('0.1')
+            expect(await (await contract.tzip16()).metadataLicense()).toEqual('MIT')
+            expect(await (await contract.tzip16()).metadataAuthors()).toEqual(["Taquito <https://tezostaquito.io/>"])
+            expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://tezostaquito.io/')
+            expect(await (await contract.tzip16()).metadataSource()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
+
             done();
         });
 
