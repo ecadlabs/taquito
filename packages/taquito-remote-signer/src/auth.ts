@@ -22,26 +22,26 @@ function computeDigest(msg: Uint8Array, pkh: [TezosIDType, number[]]): Uint8Arra
     return blake2b.hash(buf, 32);
 }
 
-export function authenticateRequest(msg: Uint8Array, pk: string, pkh: string): string {
-    const tmp = checkDecodeTezosID(pk, 'ED25519Seed', 'P256SecretKey', 'SECP256K1SecretKey');
+export function authenticateRequest(msg: Uint8Array, secretKey: string, pkh: string): string {
+    const tmp = checkDecodeTezosID(secretKey, 'ED25519Seed', 'P256SecretKey', 'SECP256K1SecretKey');
     if (tmp == null) {
         throw new Error('invalid private key format');
     }
-    const [t, priv] = tmp;
+    const [t, secret] = tmp;
     const pubHash = checkDecodeTezosID(pkh, 'ED25519PublicKeyHash', 'P256PublicKeyHash', 'SECP256K1PublicKeyHash');
     if (pubHash == null) {
         throw new Error('invalid public key hash format');
     }
-    const sec = new Uint8Array(priv);
+    const secData = new Uint8Array(secret);
     const digest = computeDigest(msg, pubHash);
     let signature: Uint8Array;
     let sigType: TezosIDType;
     if (t == 'ED25519Seed') {
-        const kp = ed25519.generateKeyPairFromSeed(sec);
+        const kp = ed25519.generateKeyPairFromSeed(secData);
         signature = ed25519.sign(kp.secretKey, digest);
         sigType = 'ED25519Signature';
     } else {
-        const kp = new elliptic.ec(t == 'SECP256K1SecretKey' ? 'secp256k1' : 'p256').keyFromPrivate(sec);
+        const kp = new elliptic.ec(t == 'SECP256K1SecretKey' ? 'secp256k1' : 'p256').keyFromPrivate(secData);
         const sig = kp.sign(digest);
         const r = sig.r.toArray();
         const s = sig.s.toArray();

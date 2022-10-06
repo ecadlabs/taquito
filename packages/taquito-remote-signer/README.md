@@ -36,9 +36,9 @@ The constructor of the `RemoteSigner` class requires the public key hash and the
 `RemoteSigner` can use an authenticated protocol. All you need is to pass a secret key in the Tezos Base58 format as `RemoteSignerOptions` property:
 
 ```ts
-const authPrivateKey = 'edsk39CjLvKZhJ1NEaCTE6A1cgHjt5mK2mFdCqqMr1P54qLnwmiCAr';
+const authSecretKey = 'edsk39CjLvKZhJ1NEaCTE6A1cgHjt5mK2mFdCqqMr1P54qLnwmiCAr';
 // ...
-const signer = new RemoteSigner(pkh, rootUrl, { authPrivateKey });
+const signer = new RemoteSigner(pkh, rootUrl, { authSecretKey });
 // next steps as above
 ```
 
