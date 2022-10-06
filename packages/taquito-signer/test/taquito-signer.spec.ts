@@ -1,4 +1,10 @@
+import { mnemonicToSeedSync } from '../src/mnemonicToSeedSync';
 import { InMemorySigner } from '../src/taquito-signer';
+import { derivePath,  } from "ed25519-hd-key"
+import { b58cencode, prefix } from '@taquito/utils';
+import * as bip39 from 'bip39'
+import {BIP32Interface, fromSeed} from "bip32"
+import { fromNode } from 'bluebird';
 
 describe('inmemory-signer', () => {
   it('fromFundraiser', async (done) => {
@@ -183,4 +189,10 @@ describe('inmemory-signer', () => {
     );
     done();
   });
+  it('bip32', async (done) => {
+    const words = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant'
+    const _seed = bip39.mnemonicToSeedSync(words)
+
+    done();
+  })
 });

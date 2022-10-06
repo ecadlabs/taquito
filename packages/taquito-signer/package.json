@@ -72,6 +72,8 @@
     "@stablelib/nacl": "^1.0.4",
     "@taquito/taquito": "^14.0.0",
     "@taquito/utils": "^14.0.0",
+    "bip32": "^2.0.4",
+    "ed25519-hd-key": "1.1.2",
     "elliptic": "^6.5.4",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
