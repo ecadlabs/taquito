@@ -144,6 +144,10 @@
         }
       }
 
+      .learn-more {
+        font-style: italic;
+      }
+
       .test-result {
         padding: 20px;
 
@@ -264,10 +268,16 @@
                   Running
                   <span class="material-icons-outlined" id="running-icon"> directions_run </span>
                 {:else}
-                  Run the test
+                  Run test
                 {/if}
               </button>
             </div>
+            <div class="learn-more">
+                <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
+            </div>
+            <p style="font-style: italic;">
+              <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
+            </p>
           </div>
         {:else}
           <div style="margin-bottom:20px">
@@ -372,9 +382,9 @@
           {/if}
         </button>
       </div>
-      <p style="font-style: italic;">
-        <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
-      </p>
+      <div class="learn-more">
+          <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
+      </div>
     {/if}
   </div>
 </div>
