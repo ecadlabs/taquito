@@ -61,7 +61,7 @@ interface SignResponse {
 
 export interface RemoteSignerOptions {
   headers?: { [key: string]: string };
-  authPrivateKey?: string;
+  authSecretKey?: string;
 }
 
 export { VERSION } from './version';
@@ -123,8 +123,8 @@ export class RemoteSigner implements Signer {
         bb = mergebuf(watermark, bb);
       }
       const watermarkedBytes = buf2hex(toBuffer(bb));
-      const auth = this.options.authPrivateKey !== undefined ?
-        authenticateRequest(bb, this.options.authPrivateKey, this.pkh) :
+      const auth = this.options.authSecretKey !== undefined ?
+        authenticateRequest(bb, this.options.authSecretKey, this.pkh) :
         null;
       const { signature } = await this.http.createRequest<SignResponse>(
         {
