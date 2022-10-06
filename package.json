@@ -106,9 +106,5 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "dependencies": {
-    "jsdom": "^20.0.1",
-    "sinon": "^14.0.1"
   }
 }
