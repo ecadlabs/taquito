@@ -75,7 +75,6 @@
     "@types/bluebird": "^3.5.36",
     "@types/chrome": "0.0.171",
     "@types/jest": "^26.0.23",
-    "@types/jsdom": "^20.0.0",
     "@types/libsodium-wrappers": "0.7.9",
     "@types/node": "^17.0.0",
     "@types/sinon": "^10.0.13",
