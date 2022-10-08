@@ -272,9 +272,11 @@
                 {/if}
               </button>
             </div>
-            <div class="learn-more">
-                <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
-            </div>
+            {#if test.documentation}
+              <div class="learn-more">
+                <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+              </div>
+            {/if}
           </div>
         {:else}
           <div style="margin-bottom:20px">
@@ -379,9 +381,11 @@
           {/if}
         </button>
       </div>
-      <div class="learn-more">
-          <a href={test.documentation}>Learn more about <b>{test.keyword}</b> with Taquito</a>
-      </div>
+      {#if test.documentation}
+        <div class="learn-more">
+          <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+        </div>
+      {/if}
     {/if}
   </div>
 </div>
