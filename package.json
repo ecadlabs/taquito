@@ -1,10 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "version-stamp": "lerna run version-stamp",
+    "bootstrap": "lerna bootstrap --force-local",
     "build": "lerna run build --no-private",
     "build:all": "lerna run build",
-    "bootstrap": "lerna bootstrap",
+    "postinstall": "npm run bootstrap",
     "test": "jest --collectCoverage",
     "lint": "lerna run lint",
     "clean": "lerna clean --yes",
