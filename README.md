@@ -157,8 +157,8 @@ The Tezos Taquito [website][4] is built using [Docusaurus][5] To run the Taquito
 
 ```sh
 cd website
-yarn
-yarn start
+npm install
+npm start
 ```
 
 ---
