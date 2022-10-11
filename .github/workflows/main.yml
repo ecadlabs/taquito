@@ -3,8 +3,6 @@ name: Node.js CI
 on:
   pull_request:
   push:
-    branches:
-      - master
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
