@@ -103,36 +103,58 @@ Alternatively, get started with the [Taquito boilerplate project](https://github
 | ---------------- | --- |
 | v12              | ✅  |
 | v14              | ✅  |
-| v16              | ✅  |
-| v17              | ❌  |
+| v16.13.1         | ✅  |
+| v16.13.2         | ❌  |
+| v17.3.x          | ✅  |
+| v17.5.x          | ❌  |
 
 ## Contributors Getting Started
 
-### Setup and build the Taquito project 
+### Install Required Packages
 
-__Make sure you have a version of Node.js supported by Taquito__
+First, *install or update* `nvm` via their install script; see [installing nvm](https://github.com/nvm-sh/nvm#installing-and-updating) for more.
 
-* Install lerna globally `npm install -g lerna`
-* Run `npm install`
-* Run `lerna bootstrap --force-local`
+Next, use it to install/use a suitable version of **Node.js** as listed above, for example:
+
+    `nvm use v17.3.0`
+
+*Ensure that you use a supported version of Node.js as listed above!*
+
+* Install `lerna` globally via `npm`:
+
+    `npm install -g lerna`
+
+*Taquito uses `lerna` internally to simplify the build configuration.*
+
+* Install `libudev-dev` if you are developing on Linux:
+
+    `sudo apt-get install libudev-dev`
+
+*This package contains files needed to develop against `libudev`.*
+
+### Setup and build the Taquito project
+
+* Run `npm run rebuild`
+
+Under the covers, this will invoke serially the following commands:
+
+* Run `npm run clean`
+* Run `npm clean-install`
 * Run `npm run build`
 
----
-**NOTE**
-If you are getting the following error on a fresh install: `fatal error: libudev.h: No such file or directory`;
-try installing the package libudev-dev.
-Example for Ubuntu: `sudo apt-get install libudev-dev`
+The `clean-install` (or just, `ci`) command ensures a clean install of all depenencies, and respects `package-lock.json`, to ensure a deterministic and repeatable build. It is also some 2x to 10x faster than `npm install`.
 
----
+Note that `ci` is an npm *built-in*, so the invocation is not prepended with `run`.
 
-### Useful npm command targets
+### Useful npm command targets/scripts
 
-See the top-level `package.json` file. Some common targets are:
+See the top-level `package.json` "scripts" section. Some common targets are:
 
-* `npm run test`: Run all unit tests
-* `npm run build`: Generate bundles and typings, create docs for all packages
-* `npm run lint`: Lints code
-* `npm run example`: Run an example node js app that does a tour of all the functionality
+* `npm run clean`: Recursively delete all build artifacts
+* `npm run test`: Run the unit tests
+* `npm run build`: Generate bundles, typings, and create TypeDocs for all packages
+* `npm run lint`: Run the code linter
+* `npm run example`: Run an example Node.js app that demonstrates all functionality
 
 ### Running Integration Tests
 
@@ -140,8 +162,7 @@ The Taquito integration tests are located in the `/integration-tests/` directory
 
 To run the integration tests run `npm run test`. The integration test suite runs all tests against the current tezos protocol testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
 
-There are many integration tests, and as they interact with real testnets, they can be slow, and occasionally tests may fail due to extrinsic reasons related to public testnets.
-
+There are many integration tests, and as they interact with real testnets, they can be slow; furthermore, occasionally tests may fail due to extrinsic reasons related to public testnets.
 
 #### Modifying Taquito source
 
@@ -153,7 +174,9 @@ After making a change to Taquito, linting and running the unit test suite should
 
 ### Running the website locally
 
-The Tezos Taquito [website][4] is built using [Docusaurus][5] To run the Taquito website in development mode locally, run the following commands:
+The Tezos Taquito [website][4] is built using [Docusaurus][5].
+
+To run the Taquito website in development mode locally, run the following commands:
 
 ```sh
 cd website
