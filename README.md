@@ -126,6 +126,12 @@ Next, use it to install/use a suitable version of **Node.js** as listed above, f
 
 *Taquito uses `lerna` internally to simplify the build configuration.*
 
+* Install Nx
+
+    `npm install -g nx`
+
+[nx](https://nx.dev/) is used to speed up the build, test and overall DX.
+
 * Install `libudev-dev` if you are developing on Linux:
 
     `sudo apt-get install libudev-dev`
