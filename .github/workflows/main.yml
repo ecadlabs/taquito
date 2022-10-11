@@ -12,6 +12,7 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node:
           - '12.x' 
@@ -24,6 +25,8 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
+    - run: npm run bootstrap -- --force-local
+    - run: npm run build
     - run: npm run lint
     - run: npm run build-docs
     - run: npm run test -- --runInBand
