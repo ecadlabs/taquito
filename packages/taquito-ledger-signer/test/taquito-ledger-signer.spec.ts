@@ -195,7 +195,7 @@ describe('LedgerSigner test', () => {
     const path = "44'/1729'/1'/0'";
     const buff = transformPathToBuffer(path);
     expect(mockTransport.send).toHaveBeenCalledTimes(2);
-    expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x03, buff) // TODO ZS check this one
+    expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x03, buff)
     expect(signature).toEqual({
       bytes:
         '367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000',
