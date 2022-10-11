@@ -25,7 +25,7 @@ export class TimestampToken extends ComparableToken {
   public Encode(args: any[]): any {
     const val = args.pop();
     if (typeof val === 'number') {
-      return { string: String(val) };
+      return { int: String(val) };
     } else {
       return { string: val };
     }
@@ -37,7 +37,7 @@ export class TimestampToken extends ComparableToken {
     }
 
     if (typeof val === 'number') {
-      return { string: String(val) };
+      return { int: String(val) };
     } else {
       return { string: val };
     }

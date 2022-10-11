@@ -33,7 +33,7 @@ describe('Timestamp token', () => {
     });
 
     it('should encode UNIX timestamp number to JSON Michelson format', () => {
-      expect(token.EncodeObject(1638555790)).toEqual({ string: '1638555790' });
+      expect(token.EncodeObject(1638555790)).toEqual({ int: '1638555790' });
     });
   });
 
@@ -45,7 +45,7 @@ describe('Timestamp token', () => {
     });
 
     it('should encode UNIX timestamp number to JSON Michelson format', () => {
-      expect(token.Encode([1638555790])).toEqual({ string: '1638555790' });
+      expect(token.Encode([1638555790])).toEqual({ int: '1638555790' });
     });
   });
 
