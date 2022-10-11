@@ -3,6 +3,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --force-local",
     "build": "lerna run build",
+    "rebuild": "npm run clean && npm clean-install && npm run build",
     "postinstall": "npm run bootstrap",
     "test": "jest --collectCoverage",
     "lint": "lerna run lint",
