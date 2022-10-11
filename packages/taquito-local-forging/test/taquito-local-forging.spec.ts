@@ -155,18 +155,17 @@ describe('Forge should validate parameters against the schema', () => {
   });
 
   describe('Verify the ProtoInferiorTo function in protocols.ts', () => {
-
-    const a = ProtocolsHash.Pt24m4xi
-    const b = ProtocolsHash.PtKathman
+    const a = ProtocolsHash.Pt24m4xi;
+    const b = ProtocolsHash.PtKathman;
 
     test('Verify protocol Babylon is inferior to protocol Kathmandu', () => {
       const trueProtoInferiorTo = ProtoInferiorTo(a, b);
-      expect(trueProtoInferiorTo).toEqual(true)
+      expect(trueProtoInferiorTo).toEqual(true);
     });
 
     test('Verify protocol Kathmandu is not inferior to protocol Babylon', () => {
       const falseProtoInferiorTo = ProtoInferiorTo(b, a);
-      expect(falseProtoInferiorTo).toEqual(false)
+      expect(falseProtoInferiorTo).toEqual(false);
     });
   });
 });

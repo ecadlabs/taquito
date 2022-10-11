@@ -133,6 +133,20 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
       storage: 2
     });
 
+    // originate tx rollup
+    try {
+    const op = await tezos.contract.txRollupOriginate({});
+    await op.confirmation();
+    console.log(`txRollupAddress:  ${op.originatedRollup}`);
+      fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const txRollupAddress${protocol.substring(0,9)} = "${op.originatedRollup}";\n`, (err: any) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    } catch (e: any) {
+      console.error(`Failed to originate tx rollup | Error: ${e.stack}`);
+    }
+
     console.log(`
 ################################################################################
 Public Key Hash : ${keyPkh}

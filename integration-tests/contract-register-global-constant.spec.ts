@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Register a Micheline expression to the global table of constants', async (done) => {
+    test('Verify contract.registerGlobalConstant to register a Micheline expression to the global table of constants', async (done) => {
       // We use a randomized annots in the Micheline expression because an expression can only be registered once.
       const op = await Tezos.contract.registerGlobalConstant({
         value: {
@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     test(
-      'Register a Micheline expression to the global table of constants with auto-estimation of the fee, storage limit and gas limit',
+      'Verify contract.registerGlobalConstant to register a global constant with auto-estimation of the fee, storage limit and gas limit',
       async (done) => {
         const op = await Tezos.contract.registerGlobalConstant({
           value: {

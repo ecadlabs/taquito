@@ -9,6 +9,8 @@ import {
   OperationContent,
 } from './interface';
 
+import { InternalOperationResult } from '@taquito/rpc';
+
 import { InvalidFilterExpressionError } from '../error';
 
 const opHashFilter = (op: OperationContent, filter: OpHashFilter) => op.hash === filter.opHash;
@@ -50,6 +52,22 @@ const destinationFilter = (x: OperationContent, filter: DestinationFilter) => {
   }
 };
 
+export const eventFilter = (result: InternalOperationResult, address?: string, tag?: string) => {
+  if (result.kind === 'event') {
+    if (address && tag) {
+      return result.source === address && result.tag === tag;
+    } else if (address && !tag) {
+      return result.source === address;
+    } else if (tag) {
+      return result.tag === tag;
+    } else {
+      return true;
+    }
+  } else {
+    return false;
+  }
+};
+
 export const evaluateOpFilter = (op: OperationContent, filter: OpFilter) => {
   if ('opHash' in filter) {
     return opHashFilter(op, filter);
@@ -60,7 +78,6 @@ export const evaluateOpFilter = (op: OperationContent, filter: OpFilter) => {
   } else if ('destination' in filter) {
     return destinationFilter(op, filter);
   }
-
   return false;
 };
 

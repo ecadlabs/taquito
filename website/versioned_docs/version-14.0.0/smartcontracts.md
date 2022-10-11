@@ -283,7 +283,7 @@ The preceding example returns an array which contains the different possible sig
 // const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
-importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, secretKey)
   .then((signer) => {
     return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz');
   })
@@ -337,7 +337,7 @@ The preceding example returns an object giving indication on how to structure th
 // const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
-importKey(Tezos, emailExample, passwordExample, mnemonicExample, secretExample)
+importKey(Tezos, secretKey)
   .then((signer) => {
     return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz');
   })

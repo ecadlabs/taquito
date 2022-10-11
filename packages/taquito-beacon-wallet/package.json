@@ -56,10 +56,7 @@
       "js"
     ],
     "moduleNameMapper": {
-      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
-      "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts",
-      "^@taquito/taquito-utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
-      "^@taquito/taquito-http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
+      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -70,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^3.1.4",
+    "@airgap/beacon-dapp": "^3.2.0",
     "@taquito/taquito": "^14.0.0",
     "libsodium-wrappers": "0.7.9"
   },
