@@ -101,8 +101,8 @@ Alternatively, get started with the [Taquito boilerplate project](https://github
 
 | Node.js version  |     |
 | ---------------- | --- |
-| v12              | ✅  |
-| v14              | ✅  |
+| v12              | ❌  |
+| v14              | ❌  |
 | v16.13.1         | ✅  |
 | v16.13.2         | ❌  |
 | v17.3.x          | ✅  |
