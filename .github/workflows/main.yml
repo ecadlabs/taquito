@@ -74,7 +74,7 @@ jobs:
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.22.2
-    - run: cd integration-tests && npm run test:originate-known-contracts && npm run test:kathmandunet-secret-key
+    - run: cd integration-tests && npm run test:originate-known-contracts && npm run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
         RUN_KATHMANDUNET_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt
