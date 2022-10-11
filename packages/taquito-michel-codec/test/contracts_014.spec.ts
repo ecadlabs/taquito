@@ -1,13 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import {
-  InvalidContractError,
-  InvalidDataExpressionError,
-  InvalidTypeExpressionError,
-} from '../src/error';
+import { inspect } from 'util';
+import { InvalidDataExpressionError, InvalidTypeExpressionError } from '../src/error';
 import { Contract, ContractOptions } from '../src/michelson-contract';
 import { Protocol } from '../src/michelson-types';
 import { MichelsonValidationError } from '../src/michelson-validator';
+import { MichelsonError } from '../src/utils';
 
 const contracts: {
   [group: string]: string[];
@@ -26,9 +24,9 @@ describe('PtKathmandu', () => {
   for (const [group, list] of Object.entries(contracts)) {
     describe(group, () => {
       for (const contract of list) {
-        it('parse', () => {
+        it(contract, () => {
           const options: ContractOptions = {
-            protocol: protocol,
+            protocol: Protocol.PtKathman,
           };
 
           const filename = path.resolve(__dirname, 'contracts_014', group, contract);
@@ -37,6 +35,15 @@ describe('PtKathmandu', () => {
             expect(() => Contract.parse(src, options)).toThrow();
             return;
           }
+
+          try {
+            Contract.parse(src, options);
+          } catch (err) {
+            if (err instanceof MichelsonError) {
+              console.log(inspect(err, false, null));
+            }
+            throw err;
+          }
         });
 
         it('parse check null case', () => {
@@ -44,10 +51,17 @@ describe('PtKathmandu', () => {
             protocol: protocol,
           };
           const src = '';
-          expect(() => Contract.parse(src, options)).toThrow(InvalidContractError);
-          expect.objectContaining({
-            message: expect.stringContaining('empty contract.'),
-          });
+          expect(() => Contract.parse(src, options)).toThrow('empty contract');
+          expect(() => Contract.parse(src, options)).toThrow(
+            expect.objectContaining({
+              name: expect.stringContaining('InvalidContractError'),
+            })
+          );
+          expect(() => Contract.parse(src, options)).toThrow(
+            expect.objectContaining({
+              message: expect.stringContaining('empty contract'),
+            })
+          );
         });
 
         it('parseTypeExpression null case', () => {
@@ -58,9 +72,11 @@ describe('PtKathmandu', () => {
           expect(() => Contract.parseTypeExpression(src, options)).toThrow(
             InvalidTypeExpressionError
           );
-          expect.objectContaining({
-            message: expect.stringContaining('empty type expression'),
-          });
+          expect(() => Contract.parseTypeExpression(src, options)).toThrow(
+            expect.objectContaining({
+              message: expect.stringContaining('empty type expression'),
+            })
+          );
         });
 
         it('parse error case', () => {
@@ -84,9 +100,11 @@ describe('PtKathmandu', () => {
                    CONS ;
                    PAIR } }`;
           expect(() => Contract.parse(contract, options)).toThrow(MichelsonValidationError);
-          expect.objectContaining({
-            message: expect.stringContaining('unexpected contract section: unit'),
-          });
+          expect(() => Contract.parse(contract, options)).toThrow(
+            expect.objectContaining({
+              message: expect.stringContaining('unexpected contract section: unit'),
+            })
+          );
         });
 
         it('parseDataExpression check the null case', () => {
@@ -96,9 +114,11 @@ describe('PtKathmandu', () => {
           expect(() => Contract.parseDataExpression('', options)).toThrow(
             InvalidDataExpressionError
           );
-          expect.objectContaining({
-            message: expect.stringContaining('empty data expression'),
-          });
+          expect(() => Contract.parseDataExpression('', options)).toThrow(
+            expect.objectContaining({
+              message: expect.stringContaining('empty data expression'),
+            })
+          );
         });
       }
     });
