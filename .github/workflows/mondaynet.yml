@@ -50,8 +50,6 @@ jobs:
       with:
         node-version: '16.13.1'
     - run: npm ci
-    - run: npm run lerna -- bootstrap
-    - run: npm run build
     -
       id: originate-contracts-mondaynet
       working-directory: ./integration-tests
