@@ -16,7 +16,7 @@ export class KeyHashValidationError extends TokenValidationError {
 }
 
 export class KeyHashToken extends ComparableToken {
-  static prim: 'key_hash' = 'key_hash';
+  static prim: 'key_hash' = 'key_hash' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

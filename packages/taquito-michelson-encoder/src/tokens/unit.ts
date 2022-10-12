@@ -3,7 +3,7 @@ import { BaseTokenSchema } from '../schema/types';
 import { UnitValue } from '../taquito-michelson-encoder';
 
 export class UnitToken extends ComparableToken {
-  static prim: 'unit' = 'unit';
+  static prim: 'unit' = 'unit' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

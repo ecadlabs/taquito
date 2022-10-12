@@ -53,7 +53,7 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [an
   return [val.args[0], val.args[1]];
 }
 export class PairToken extends ComparableToken {
-  static prim: 'pair' = 'pair';
+  static prim: 'pair' = 'pair' as const;
 
   constructor(val: MichelsonV1Expression, idx: number, fac: TokenFactory) {
     super(
