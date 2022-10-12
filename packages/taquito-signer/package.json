@@ -69,10 +69,11 @@
   "dependencies": {
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.3",
+    "@stablelib/hmac": "^1.0.1",
     "@stablelib/nacl": "^1.0.4",
+    "@stablelib/sha512": "^1.0.1",
     "@taquito/taquito": "^14.0.0",
     "@taquito/utils": "^14.0.0",
-    "bip32": "^2.0.4",
     "ed25519-hd-key": "1.1.2",
     "elliptic": "^6.5.4",
     "pbkdf2": "^3.1.2",
