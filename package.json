@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build": "nx run-many --target=build",
+    "build": "nx run-many --target=build --no-private",
+    "bootstrap": "lerna bootstrap --force-local",
     "rebuild": "npm run clean && npm clean-install && npm run build",
     "test": "nx test @taquito/taquito --collectCoverage",
     "bootstrap": "lerna bootstrap --force-local",
