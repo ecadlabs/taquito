@@ -51,9 +51,7 @@ export class HttpResponseError extends Error {
 export class HttpRequestFailed extends Error {
   public name = 'HttpRequestFailed';
 
-  constructor(
-    public message: string
-  ) {
+  constructor(public message: string) {
     super(message);
   }
 }

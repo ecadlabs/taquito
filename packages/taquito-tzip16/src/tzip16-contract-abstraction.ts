@@ -85,6 +85,53 @@ export class Tzip16ContractAbstraction {
     return this._metadataEnvelope;
   }
 
+  async metadataName() {
+    if (!this._metadataEnvelope) {
+      await this.getMetadata();
+    }
+    return this._metadataEnvelope!.metadata.name;
+  }
+
+  async metadataDescription() {
+    if (!this._metadataEnvelope) await this.getMetadata();
+    return this._metadataEnvelope!.metadata.description;
+  }
+
+  async metadataVersion() {
+    if (!this._metadataEnvelope) await this.getMetadata();
+    return this._metadataEnvelope!.metadata.version;
+  }
+
+  async metadataLicense() {
+    if (!this._metadataEnvelope) await this.getMetadata();
+    return this._metadataEnvelope!.metadata.license;
+  }
+
+  async metadataAuthors() {
+    if (!this._metadataEnvelope) await this.getMetadata();
+    return this._metadataEnvelope!.metadata.authors;
+  }
+
+  async metadataHomepage() {
+    if (!this._metadataEnvelope) await this.getMetadata();
+    return this._metadataEnvelope!.metadata.homepage;
+  }
+
+  async metadataSource() {
+    if (!this._metadataEnvelope) await this.getMetadata();
+    return this._metadataEnvelope!.metadata.source;
+  }
+
+  async metadataInterfaces() {
+    if (!this._metadataEnvelope) await this.getMetadata();
+    return this._metadataEnvelope!.metadata.interfaces;
+  }
+
+  async metadataErrors() {
+    if (!this._metadataEnvelope) await this.getMetadata();
+    return this._metadataEnvelope!.metadata.errors;
+  }
+
   async metadataViews() {
     if (Object.keys(this._metadataViewsObject).length === 0) {
       await this.initializeMetadataViewsList();

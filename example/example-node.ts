@@ -1,8 +1,10 @@
-import { TezosToolkit } from '../packages/taquito/src/taquito';
+import { BigMapAbstraction, TezosToolkit } from '../packages/taquito/src/taquito';
 import { RpcClient } from '../packages/taquito-rpc/src/taquito-rpc';
 import { castToString } from '../packages/taquito-rpc/src/utils/utils';
+import BigNumber from 'bignumber.js';
 
-const provider = 'https://jakartanet.ecadinfra.com/'
+const provider = 'https://ghostnet.ecadinfra.com';
+
 const client = new RpcClient(provider);
 
 async function example() {
@@ -10,22 +12,26 @@ async function example() {
     const tezos = new TezosToolkit(provider);
 
     console.log('Getting storage...');
-    await tezos.contract.at('KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9').then(async contract => { // knownBigMapContract used in integration tests
-      const storage = await contract.storage()
-      console.log(storage)
-    });
+    const contract = await tezos.contract.at('KT1LRBZUde7PbmKEELT829Ts3HjownyYmW2F') // knownBigMapContract used in integration tests
+    const storage = await contract.storage();
+    console.log(storage);
 
     console.log('Getting balance...');
-    await tezos.tz.getBalance('tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw').then(balance => {
-      console.log(`${balance.toNumber() / 1000000} ꜩ`)
-    });
+    const balance = await tezos.tz.getBalance('tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys');
+    console.log(`${balance.toNumber() / 1000000} ꜩ`)
 
     console.log('Getting big map key...');
-    await tezos.contract.at('KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9').then(async contract => {
-      const contractStorage = await contract.storage();
-      const bigMapKey = await (contractStorage as any).ledger.get('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP')
-      console.log(bigMapKey)
-    });
+
+      const contractStorage: {
+        ledger: BigMapAbstraction;
+        owner: string;
+        paused:boolean;
+        totalSupply: BigNumber;
+      } = await contract.storage();
+
+      const bigMapKey = await contractStorage.ledger.get('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP');
+      console.log(bigMapKey);
+
 
   } catch (ex) {
     console.error(ex);

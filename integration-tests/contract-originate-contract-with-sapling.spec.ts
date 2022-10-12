@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { SaplingStateAbstraction } from 'taquito/src/contract/sapling-state-abstraction';
+import { SaplingStateAbstraction } from '@taquito/taquito';
 import {
   saplingContractStateAsArg,
   saplingContractPushSaplingState,

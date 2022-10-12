@@ -1,13 +1,11 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { importKey } from '@taquito/signer';
+import { importKey, InMemorySigner } from '@taquito/signer';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { b58cencode, char2Bytes, Prefix, prefix } from '@taquito/utils';
-import Faucet from './faucet-interface';
-import nodeCrypto from 'crypto';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const nodeCrypto = require('crypto');
 
-const {email, password, mnemonic, activation_code} = require("./faucet-default-values.json") as Faucet
-
-const provider = 'https://kathmandunet.ecadinfra.com';
+const provider = 'https://ghostnet.ecadinfra.com';
 
 async function createAddress() {
   const tezos = new TezosToolkit(provider)
@@ -23,13 +21,8 @@ async function createAddress() {
 
 async function example() {
   const tezos = new TezosToolkit(provider)
-  await importKey(
-     tezos,
-     email,
-     password,
-     mnemonic.join(' '),
-     activation_code
-   );
+  const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
+  tezos.setSignerProvider(signer);
   
   try {
     console.log('Deploying Tzip12BigMapsOffChain contract...');

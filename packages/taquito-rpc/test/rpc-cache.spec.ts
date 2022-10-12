@@ -11,6 +11,7 @@ import {
   delegate,
   bigmapValue,
   delegates,
+  votingInfo,
   blockHeader,
   blockMetadata,
   bakingRights,
@@ -60,6 +61,7 @@ describe('RpcClientCache test', () => {
       getDelegate: jest.fn(),
       getBigMapExpr: jest.fn(),
       getDelegates: jest.fn(),
+      getVotingInfo: jest.fn(),
       getConstants: jest.fn(),
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
@@ -95,6 +97,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getDelegate.mockReturnValue(delegate);
     mockRpcClient.getBigMapExpr.mockReturnValue(bigmapValue);
     mockRpcClient.getDelegates.mockReturnValue(delegates);
+    mockRpcClient.getVotingInfo.mockReturnValue(votingInfo);
     mockRpcClient.getConstants.mockReturnValue(constants);
     mockRpcClient.getBlockHeader.mockReturnValue(blockHeader);
     mockRpcClient.getBlockMetadata.mockReturnValue(blockMetadata);
@@ -136,6 +139,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getDelegate(address);
     await rpcCache.getBigMapExpr('72', 'expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp');
     await rpcCache.getDelegates(address);
+    await rpcCache.getVotingInfo(address);
     await rpcCache.getConstants();
     await rpcCache.getBlockHeader();
     await rpcCache.getBlockMetadata();
@@ -192,6 +196,9 @@ describe('RpcClientCache test', () => {
     ).toEqual(bigmapValue);
     expect(rpcCache.getAllCachedData()[`rpcTest/getDelegates/head/${address}/`].response).toEqual(
       delegates
+    );
+    expect(rpcCache.getAllCachedData()[`rpcTest/getVotingInfo/head/${address}/`].response).toEqual(
+      votingInfo
     );
     expect(rpcCache.getAllCachedData()['rpcTest/getConstants/head/'].response).toEqual(constants);
     expect(rpcCache.getAllCachedData()['rpcTest/getBlockHeader/head/'].response).toEqual(
@@ -260,6 +267,7 @@ describe('RpcClientCache test', () => {
       block
     );
     await rpcCache.getDelegates(address, block);
+    await rpcCache.getVotingInfo(address, block);
     await rpcCache.getConstants(block);
     await rpcCache.getBlockHeader(block);
     await rpcCache.getBlockMetadata(block);
@@ -324,6 +332,9 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getDelegates/${block.block}/${address}/`].response
     ).toEqual(delegates);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getVotingInfo/${block.block}/${address}/`].response
+    ).toEqual(votingInfo);
     expect(rpcCache.getAllCachedData()[`rpcTest/getConstants/${block.block}/`].response).toEqual(
       constants
     );
@@ -398,6 +409,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getDelegate(address);
     await rpcCache.getBigMapExpr('72', 'expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp');
     await rpcCache.getDelegates(address);
+    await rpcCache.getVotingInfo(address);
     await rpcCache.getConstants();
     await rpcCache.getBlockHeader();
     await rpcCache.getBlockMetadata();

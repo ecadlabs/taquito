@@ -103,8 +103,8 @@ Alternatively, get started with the [Taquito boilerplate project](https://github
 | ---------------- | --- |
 | v12              | ✅  |
 | v14              | ✅  |
-| v16              | ✅  |
-| v17              | ❌  |
+| v16.13.1         | ✅  |
+| >v16.13.1        | ❌  |
 
 ## Contributors Getting Started
 

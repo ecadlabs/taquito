@@ -1,9 +1,12 @@
-import { CompositeForger, RpcForger, TezosToolkit, Protocols, TaquitoLocalForger } from '@taquito/taquito';
+import { CompositeForger, RpcForger, TezosToolkit, Protocols, TaquitoLocalForger, PollingSubscribeProvider } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
+import { knownBigMapContractProtoALph, knownContractProtoALph, knownOnChainViewContractAddressProtoALph, knownSaplingContractProtoALph, knownTzip12BigMapOffChainContractProtoALph, txRollupAddressProtoALph } from './known-contracts-ProtoALph';
+import { knownContractPtKathman, knownBigMapContractPtKathman, knownTzip12BigMapOffChainContractPtKathman, knownSaplingContractPtKathman, knownOnChainViewContractAddressPtKathman, txRollupAddressPtKathman } from './known-contracts-PtKathman';
+import { knownContractPtJakart2, knownBigMapContractPtJakart2, knownTzip12BigMapOffChainContractPtJakart2, knownSaplingContractPtJakart2, knownOnChainViewContractAddressPtJakart2, txRollupAddressPtJakart2 } from './known-contracts-PtJakart2';
 
 const nodeCrypto = require('crypto');
 
@@ -21,29 +24,32 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 interface Config {
   rpc: string;
+  pollingIntervalMilliseconds?: string;
+  rpcCacheMilliseconds: string;
   knownBaker: string;
   knownContract: string;
   knownBigMapContract: string;
-  knownTzip1216Contract: string; 
-  knownSaplingContract: string; 
-  knownViewContract?: string;
+  knownTzip1216Contract: string;
+  knownSaplingContract: string;
+  knownViewContract: string;
+  txRollupWithdrawContract: string;
+  txRollupDepositContract: string;
   txRollupAddress: string;
   protocol: Protocols;
-  signerConfig: EphemeralConfig | FaucetConfig;
+  signerConfig: EphemeralConfig | SecretKeyConfig;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
  */
 export enum SignerType {
-  FAUCET,
   EPHEMERAL_KEY,
+  SECRET_KEY
 }
 
 interface ConfigWithSetup extends Config {
   lib: TezosToolkit;
   setup: (preferFreshKey?: boolean) => Promise<void>;
   createAddress: () => Promise<TezosToolkit>;
-  protocol: Protocols;
 }
 /**
  * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -54,39 +60,53 @@ interface EphemeralConfig {
   requestHeaders: { [key: string]: string };
 }
 
-/**
- * FaucetConfig contains a JSON faucet key that can be used on Tezos test-nets or sandboxes. Faucet keys for public testnets are available from [https://faucet.tzalpha.net/](https://faucet.tzalpha.net/)
- */
-interface FaucetConfig {
-  type: SignerType.FAUCET;
-  faucetKey: {};
+interface SecretKeyConfig {
+  type: SignerType.SECRET_KEY,
+  secret_key: string,
+  password?: string
+}
+
+const defaultSecretKey: SecretKeyConfig = {
+  // pkh is tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD
+  type: SignerType.SECRET_KEY,
+  secret_key: process.env['SECRET_KEY'] || 'spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN',
+  password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
 const kathmandunetEphemeral = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-  knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
-  knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
-  knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
-  knownViewContract: 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
-  txRollupAddress: 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
+  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: process.env['TEZOS_KATHMANDUET_CONTRACT_ADDRESS'] || knownContractPtKathman,
+  knownBigMapContract: process.env['TEZOS_KATHMANDUET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtKathman,
+  knownTzip1216Contract: process.env['TEZOS_KATHMANDUET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtKathman,
+  knownSaplingContract: process.env['TEZOS_KATHMANDUET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtKathman,
+  txRollupWithdrawContract: process.env['TEZOS_KATHMANDUET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_KATHMANDUET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_KATHMANDUET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtKathman,
+  txRollupAddress: process.env['TEZOS_KATHMANDUET_TXROLLUP_ADDRESS'] || txRollupAddressPtKathman,
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
+    keyUrl: 'https://api.tez.ie/keys/kathmandunet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
+  }
 };
 
 const jakartanetEphemeral = {
   rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
-  knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
-  knownTzip1216Contract: 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
-  knownSaplingContract: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
-  txRollupAddress: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
+  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: process.env['TEZOS_JAKARTANET_CONTRACT_ADDRESS'] || knownContractPtJakart2,
+  knownBigMapContract: process.env['TEZOS_JAKARTANET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtJakart2,
+  knownTzip1216Contract: process.env['TEZOS_JAKARTANET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtJakart2,
+  knownSaplingContract: process.env['TEZOS_JAKARTANET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtJakart2,
+  txRollupWithdrawContract: process.env['TEZOS_JAKARTANET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_JAKARTANET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_JAKARTANET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtJakart2,
+  txRollupAddress: process.env['TEZOS_JAKARTANET_TXROLLUP_ADDRESS'] || txRollupAddressPtJakart2,
   protocol: Protocols.PtJakart2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -97,12 +117,17 @@ const jakartanetEphemeral = {
 
 const mondaynetEphemeral = {
   rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
-  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || '',
-  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || '',
-  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || '',
-  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || '',
-  txRollupAddress: process.env['TEZOS_MONDAYNET_TXROLLUP_ADDRESS'] || '',
+  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractProtoALph,
+  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractProtoALph,
+  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractProtoALph,
+  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractProtoALph,
+  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressProtoALph,
+  txRollupAddress: process.env['TEZOS_MONDAYNET_TXROLLUP_ADDRESS'] || txRollupAddressProtoALph,
   protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -111,89 +136,67 @@ const mondaynetEphemeral = {
   },
 };
 
-const kathmandunetFaucet = {
-  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'https://kathmandunet.ecadinfra.com/',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-  knownBigMapContract: 'KT1AwUJp6ozYtzhpf5wVXZPQSFxb64JFcVvi',
-  knownTzip1216Contract: 'KT1VjJDRHPWngmzvjdg9HNq4cbLq1R8A6nfe',
-  knownSaplingContract: 'KT1W8U1Svr9ZK68SJT871DRuwDk8VjTuXkgd',
-  knownViewContract: 'KT1JzyH4mfJhGjKpU7E2YEiPQqBPbdDgrfeM',
-  txRollupAddress: 'txr1ebHhewaVykePYWRH5g8vZchXdX9ebwYZQ',
+const kathmandunetSecretKey = {
+  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
+  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: process.env['TEZOS_KATHMANDUET_CONTRACT_ADDRESS'] || knownContractPtKathman,
+  knownBigMapContract: process.env['TEZOS_KATHMANDUET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtKathman,
+  knownTzip1216Contract: process.env['TEZOS_KATHMANDUET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtKathman,
+  knownSaplingContract: process.env['TEZOS_KATHMANDUET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtKathman,
+  txRollupWithdrawContract: process.env['TEZOS_KATHMANDUET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_KATHMANDUET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_KATHMANDUET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtKathman,
+  txRollupAddress: process.env['TEZOS_KATHMANDUET_TXROLLUP_ADDRESS'] || txRollupAddressPtKathman,
   protocol: Protocols.PtKathman,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: {
-      "pkh": "tz1LJLhMszojav8EfN9hMZAPBSH21ocamx7n",
-      "mnemonic": [
-        "escape",
-        "camera",
-        "credit",
-        "endorse",
-        "auto",
-        "lamp",
-        "advance",
-        "orange",
-        "fluid",
-        "virus",
-        "argue",
-        "knee",
-        "pluck",
-        "remove",
-        "scheme"
-      ],
-      "email": "noriqgjl.gtsyulgy@teztnets.xyz",
-      "password": "st3sZBRLWF",
-      "amount": "118887604096",
-      "secret": "7d414378d9071328313cca699d6922f1b59d076a"
-    }
-  },
+  signerConfig: defaultSecretKey,
 };
 
-const jakartanetFaucet = {
-  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet.ecadinfra.com',
-  knownBaker: 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: 'KT1SHtH6qWcWWnQ5gZThCD5EnrErKHxyqxca',
-  knownBigMapContract: 'KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9',
-  knownTzip1216Contract: 'KT1GmRf51jFNMQBFDo2mYKnC8Pjm1d7yDwVj',
-  knownSaplingContract: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
-  txRollupAddress: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+const jakartanetSecretKey = {
+  rpc: process.env['TEZOS_RPC_JAKARTANET'] || 'https://jakartanet-archive.ecadinfra.com',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
+  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: process.env['TEZOS_JAKARTANET_CONTRACT_ADDRESS'] || knownContractPtJakart2,
+  knownBigMapContract: process.env['TEZOS_JAKARTANET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtJakart2,
+  knownTzip1216Contract: process.env['TEZOS_JAKARTANET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtJakart2,
+  knownSaplingContract: process.env['TEZOS_JAKARTANET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtJakart2,
+  txRollupWithdrawContract: process.env['TEZOS_JAKARTANET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_JAKARTANET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_JAKARTANET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtJakart2,
+  txRollupAddress: process.env['TEZOS_JAKARTANET_TXROLLUP_ADDRESS'] || txRollupAddressPtJakart2,
   protocol: Protocols.PtJakart2,
-  signerConfig: {
-    type: SignerType.FAUCET as SignerType.FAUCET,
-    faucetKey: {
-      mnemonic: [
-        "business",
-        "rare",
-        "bridge",
-        "arrange",
-        "lab",
-        "finger",
-        "then",
-        "cube",
-        "clown",
-        "wife",
-        "arrest",
-        "lumber",
-        "wide",
-        "enroll",
-        "earn"
-      ],
-      email: "bmdrmigx.ciakevmr@teztnets.xyz",
-      password: 'VeeA6X8fZT',
-      secret: '0f2e92c3d1473677317c852ab968646d4c4f57c0',
-    },
-  },
+  signerConfig: defaultSecretKey
+};
+
+const mondaynetSecretKey = {
+  rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
+  knownBaker: process.env['TEZOS_MONDAYNET_BAKER'] || 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
+  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractProtoALph,
+  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractProtoALph,
+  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractProtoALph,
+  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractProtoALph,
+  txRollupWithdrawContract: process.env['TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressProtoALph,
+  txRollupAddress: process.env['TEZOS_MONDAYNET_TXROLLUP_ADDRESS'] || txRollupAddressProtoALph,
+  protocol: Protocols.ProtoALpha,
+  signerConfig: defaultSecretKey
 };
 
 const providers: Config[] = [];
 
-if (process.env['RUN_WITH_FAUCET']) {
-  providers.push(jakartanetFaucet, kathmandunetFaucet);
-} else if (process.env['RUN_JAKARTANET_WITH_FAUCET']) {
-  providers.push(jakartanetFaucet);
-} else if (process.env['RUN_KATHMANDUNET_WITH_FAUCET']) {
-  providers.push(kathmandunetFaucet);
+if (process.env['RUN_WITH_SECRET_KEY']) {
+  providers.push(jakartanetSecretKey, kathmandunetSecretKey);
+} else if (process.env['RUN_JAKARTANET_WITH_SECRET_KEY']) {
+  providers.push(jakartanetSecretKey);
+} else if (process.env['RUN_KATHMANDUNET_WITH_SECRET_KEY']) {
+  providers.push(kathmandunetSecretKey);
+} else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
+  providers.push(mondaynetSecretKey);
 } else if (process.env['JAKARTANET']) {
   providers.push(jakartanetEphemeral);
 } else if (process.env['KATHMANDUNET']) {
@@ -203,8 +206,6 @@ if (process.env['RUN_WITH_FAUCET']) {
 } else {
   providers.push(jakartanetEphemeral, kathmandunetEphemeral);
 }
-
-const faucetKeyFile = process.env['TEZOS_FAUCET_KEY_FILE'];
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
   if (forger === ForgerType.LOCAL) {
@@ -260,22 +261,31 @@ const setupSignerWithEphemeralKey = async (
   }
 };
 
-const setupWithFaucetKey = async (Tezos: TezosToolkit, signerConfig: FaucetConfig) => {
-  const faucetKey: any = faucetKeyFile || signerConfig.faucetKey;
-  await importKey(
-    Tezos,
-    faucetKey.email,
-    faucetKey.password,
-    faucetKey.mnemonic.join(' '),
-    faucetKey.secret
-  );
+const setupWithSecretKey = async (Tezos: TezosToolkit, signerConfig: SecretKeyConfig) => {
+  Tezos.setSignerProvider(new InMemorySigner(signerConfig.secret_key, signerConfig.password));
 };
+
+const configurePollingInterval = (Tezos: TezosToolkit, pollingIntervalMilliseconds: string | undefined) => {
+  if(pollingIntervalMilliseconds) {
+    Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: Number(pollingIntervalMilliseconds) }));
+  }
+}
+
+const configureRpcCache = (rpc: string, rpcCacheMilliseconds: string) => {
+  if(rpcCacheMilliseconds === '0') {
+    return new TezosToolkit(rpc);
+  } else {
+    return new TezosToolkit(new RpcClientCache(new RpcClient(rpc), Number(rpcCacheMilliseconds)));
+  }
+}
 
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(
       ({
         rpc,
+        pollingIntervalMilliseconds,
+        rpcCacheMilliseconds,
         knownBaker,
         knownContract,
         protocol,
@@ -285,14 +295,20 @@ export const CONFIGS = () => {
         knownViewContract,
         txRollupAddress,
         signerConfig,
+        txRollupDepositContract,
+        txRollupWithdrawContract,
       }) => {
-        const Tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+        const Tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
+
         Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
 
         setupForger(Tezos, forger);
 
+        configurePollingInterval(Tezos, pollingIntervalMilliseconds);
+
         return {
           rpc,
+          rpcCacheMilliseconds,
           knownBaker,
           knownContract,
           protocol,
@@ -303,9 +319,11 @@ export const CONFIGS = () => {
           knownViewContract,
           txRollupAddress,
           signerConfig,
+          txRollupDepositContract,
+          txRollupWithdrawContract,
           setup: async (preferFreshKey: boolean = false) => {
-            if (signerConfig.type === SignerType.FAUCET) {
-              await setupWithFaucetKey(Tezos, signerConfig);
+            if (signerConfig.type === SignerType.SECRET_KEY) {
+              setupWithSecretKey(Tezos, signerConfig);
             } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
               if (preferFreshKey) {
                 await setupSignerWithFreshKey(Tezos, signerConfig);
@@ -315,7 +333,9 @@ export const CONFIGS = () => {
             }
           },
           createAddress: async () => {
-            const tezos = new TezosToolkit(new RpcClientCache(new RpcClient(rpc)));
+            const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
+            setupForger(tezos, forger);
+            configurePollingInterval(tezos, pollingIntervalMilliseconds);
 
             const keyBytes = Buffer.alloc(32);
             nodeCrypto.randomFillSync(keyBytes);

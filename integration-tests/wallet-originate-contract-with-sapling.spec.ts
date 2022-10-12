@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { SaplingStateValue } from '../packages/taquito-michelson-encoder/src/taquito-michelson-encoder';
+import { SaplingStateValue } from '@taquito/michelson-encoder';
 import { saplingContractDoubleJProto } from "./data/sapling_test_contracts";
 
 CONFIGS().forEach(({ lib, rpc, setup, }) => {

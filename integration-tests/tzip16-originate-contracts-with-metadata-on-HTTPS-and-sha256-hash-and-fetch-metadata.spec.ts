@@ -11,14 +11,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     const test = require('jest-retries');
 
-    describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
+    describe(`Test contract origination having a sha256 hash in URI through contract api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
 
-        test('Deploy a contract having a sha256 hash in URI', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract having a sha256 hash in URI', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
@@ -49,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Fetch metadata of the contract having a sha256 hash in URI', 2, async (done: () => void) => {
+        test('Verify that the metadata for the contract having a sha256 hash in URI can be fetched', 2, async (done: () => void) => {
 
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -74,10 +74,31 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                     "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
                 }
             });
+
+            expect(await (await contract.tzip16()).metadataName()).toEqual('Taquito test with valid metadata')
+            expect(await (await contract.tzip16()).metadataDescription()).toEqual('This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage')
+            expect(await (await contract.tzip16()).metadataVersion()).toEqual('7.1.0-beta.0')
+            expect(await (await contract.tzip16()).metadataLicense()).toEqual({
+                "name": "MIT",
+                "details": "The MIT License"
+            })
+            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://github.com/ecadlabs/taquito')
+            expect(await (await contract.tzip16()).metadataSource()).toEqual({
+                "tools": [
+                    "Ligo",
+                    "https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A"
+                ],
+                "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
+            })
+            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
+
             done();
         });
 
-        test('Deploy a contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
 
             // location of the contract metadata
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
@@ -108,7 +129,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Fetch metadata of the contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
+        test('Verify that the metadata for the contract having an invalid sha256 hash in URI can be fetched', 2, async (done: () => void) => {
 
             const contract = await Tezos.contract.at(contractAddressInvalidHash, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -133,6 +154,27 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                     "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
                 }
             });
+
+            expect(await (await contract.tzip16()).metadataName()).toEqual('Taquito test with valid metadata')
+            expect(await (await contract.tzip16()).metadataDescription()).toEqual('This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage')
+            expect(await (await contract.tzip16()).metadataVersion()).toEqual('7.1.0-beta.0')
+            expect(await (await contract.tzip16()).metadataLicense()).toEqual({
+                "name": "MIT",
+                "details": "The MIT License"
+            })
+            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://github.com/ecadlabs/taquito')
+            expect(await (await contract.tzip16()).metadataSource()).toEqual({
+                "tools": [
+                    "Ligo",
+                    "https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A"
+                ],
+                "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
+            })
+            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
+
             done();
         });
     });

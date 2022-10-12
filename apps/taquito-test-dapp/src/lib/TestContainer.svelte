@@ -52,14 +52,14 @@
               input: result.sigDetails.input,
               "formatted input": result.sigDetails.formattedInput,
               bytes: result.sigDetails.bytes,
-              output: result.output
-            }
+              output: result.output,
+            },
           };
         } else if (test.id === "confirmation-observable") {
           testResult = {
             id: test.id,
             title: "Confirmations through observable",
-            body: result.confirmationObsOutput
+            body: result.confirmationObsOutput,
           };
         }
       } else {
@@ -74,12 +74,21 @@
     }
   };
 
+  const switchAccount = async () => {
+    await $store.wallet.clearActiveAccount();
+    store.updateUserAddress(undefined);
+    store.updateUserBalance(undefined);
+    store.updateWallet(undefined);
+    store.updateSelectedTest(undefined);
+    setTimeout(() => {
+      const walletButton = document.getElementById("wallet-button");
+      walletButton.click();
+    }, 200);
+  };
+
   afterUpdate(() => {
-    if (
-      $store.selectedTest &&
-      (test === undefined || test.id !== $store.selectedTest)
-    ) {
-      test = $store.tests.find(test => test.id === $store.selectedTest);
+    if ($store.selectedTest && (test === undefined || test.id !== $store.selectedTest)) {
+      test = $store.tests.find((test) => test.id === $store.selectedTest);
       success = undefined;
       loading = false;
       executionTime = 0;
@@ -129,10 +138,9 @@
         margin: 0px;
 
         #running-icon {
-          -webkit-animation: shake-horizontal 2s
-            cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite both;
-          animation: shake-horizontal 2s cubic-bezier(0.455, 0.03, 0.515, 0.955)
-            infinite both;
+          -webkit-animation: shake-horizontal 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite
+            both;
+          animation: shake-horizontal 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite both;
         }
       }
 
@@ -244,7 +252,31 @@
   <div class="testbox">
     {#if !$store.selectedTest}
       Please select a test to run in the left sidebar to start
-    {:else if test}
+    {:else if test && test.inputType === "sapling"}
+      <h3 class="test-title">{test.name}</h3>
+      {#await $store.wallet.getPKH() then pkh}
+        {#if pkh === "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"}
+          <div class="test-description">{test.description}</div>
+          <div class="input-sapling">
+            <div class="test-run">
+              <button on:click={run} disabled={loading}>
+                {#if loading}
+                  Running
+                  <span class="material-icons-outlined" id="running-icon"> directions_run </span>
+                {:else}
+                  Run the test
+                {/if}
+              </button>
+            </div>
+          </div>
+        {:else}
+          <div style="margin-bottom:20px">
+            <span>You must be connected with Alice's account to run Sapling tests</span>
+            <button on:click={switchAccount}>Switch account</button>
+          </div>
+        {/if}
+      {/await}
+    {:else if test && test.inputType !== "sapling"}
       <h3 class="test-title">{test.name}</h3>
       <div class="test-description">{test.description}</div>
       {#if test.inputRequired && test.inputType === "string"}
@@ -264,51 +296,18 @@
           </label>
           <label for="set-limit-storage">
             <span>Storage</span>
-            <input
-              type="number"
-              id="set-limit-storage"
-              bind:value={input.storageLimit}
-            />
+            <input type="number" id="set-limit-storage" bind:value={input.storageLimit} />
           </label>
           <label for="set-limit-gas">
             <span>Gas</span>
-            <input
-              type="number"
-              id="set-limit-gas"
-              bind:value={input.gasLimit}
-            />
-          </label>
-        </div>
-      {:else if test.inputRequired && test.inputType === "sapling"}
-        <div class="input-sapling">
-          <label for="sapling-mnemonic">
-            <span>Your menmonic:</span>
-            <textarea
-              id="spaling-mnemonic"
-              rows="3"
-              placeholder="Your mnemonic here..."
-            />
+            <input type="number" id="set-limit-gas" bind:value={input.gasLimit} />
           </label>
         </div>
       {/if}
-      <div class="test-run">
-        <button on:click={run} disabled={loading}>
-          {#if loading}
-            Running
-            <span class="material-icons-outlined" id="running-icon">
-              directions_run
-            </span>
-          {:else}
-            Run the test
-          {/if}
-        </button>
-      </div>
       {#if success}
         <div class="test-result">
           <h4>
-            Test successful! <span class="material-icons-outlined">
-              sentiment_satisfied
-            </span>
+            Test successful! <span class="material-icons-outlined"> sentiment_satisfied </span>
           </h4>
           <div>Test run in {executionTime.toLocaleString("en-US")} s</div>
           {#if testResult}
@@ -347,11 +346,7 @@
                   {shortenHash(opHash)}
                 </a>
               {:else if $store.networkType === NetworkType.MAINNET}
-                <a
-                  href={`https://tzkt.io/${opHash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={`https://tzkt.io/${opHash}`} target="_blank" rel="noopener noreferrer">
                   {shortenHash(opHash)}
                 </a>
               {:else}
@@ -363,12 +358,20 @@
       {:else if success === false}
         <div class="test-result">
           <h4>
-            Test failed <span class="material-icons-outlined">
-              sentiment_very_dissatisfied
-            </span>
+            Test failed <span class="material-icons-outlined"> sentiment_very_dissatisfied </span>
           </h4>
         </div>
       {/if}
+      <div class="test-run">
+        <button on:click={run} disabled={loading}>
+          {#if loading}
+            Running
+            <span class="material-icons-outlined" id="running-icon"> directions_run </span>
+          {:else}
+            Run the test
+          {/if}
+        </button>
+      </div>
     {/if}
   </div>
 </div>

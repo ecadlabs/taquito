@@ -16,13 +16,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     let contractAddress: string;
 
-    describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored at IPFS URL through contract api using: ${rpc}`, () => {
         beforeEach(async (done) => {
             await setup();
             done();
         });
 
-        it('Deploy a contract having metadata stored at on IPFS', async (done) => {
+        it('Verify contract.originate for a contract having metadata stored on IPFS', async (done) => {
 
             // location of the contract metadata
             const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        it('Should fetch metadata of the contract on IPFS', async (done) => {
+        it('Verify that the metadata for the contract having metadata stored on IPFS can be fetched', async (done) => {
 
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -74,6 +74,22 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 }
             });
 
+            expect(await (await contract.tzip16()).metadataName()).toEqual('Taquito test with valid metadata');
+            expect(await (await contract.tzip16()).metadataDescription()).toEqual('This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage');
+            expect(await (await contract.tzip16()).metadataVersion()).toEqual('7.1.0-beta.0');
+            expect(await (await contract.tzip16()).metadataLicense()).toEqual({
+                name: 'MIT',
+                details: 'The MIT License'
+            });
+            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined();
+            expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://github.com/ecadlabs/taquito');
+            expect(await (await contract.tzip16()).metadataSource()).toEqual({
+                tools: ['Ligo', 'https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A'],
+                location: 'https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout'
+            });
+            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined();
+            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined();
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
             done();
         });
     });

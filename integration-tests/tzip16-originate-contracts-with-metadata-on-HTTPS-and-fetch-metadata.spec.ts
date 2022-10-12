@@ -11,15 +11,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddressEmoji: string;
     let contractAddressInvalidMetadata: string;
 
-    const test = require('jest-retries');
-
-    describe(`Originating contracts having metadata stored at HTTPS URL using: ${rpc}`, () => {
+    describe(`Test contract origination having metadata stored at HTTPS URL through contract api using: ${rpc}`, () => {
 
         beforeEach(async (done) => {
             await setup()
             done()
         })
-         test('Deploy a contract having empty metadata stored at an HTTPS URL', 2, async (done: () => void) => {
+         test('Verify contract.originate for a contract having empty metadata stored at an HTTPS URL', async (done) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/empty-metadata.json';
@@ -48,9 +46,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
             done();
-        }); 
+        });
 
-        test('Fetch the empty metadata of the contract', 2, async (done: () => void) => {
+        test('Verify that the metadata for the contract having empty metadata stored at an HTTPS URL can be fetched', async (done) => {
 
             const contract = await Tezos.contract.at(contractAddressEmptyMetadata, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -62,7 +60,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-         test('Deploy a contract having valid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
+         test('Verify contract.originate for a contract having valid metadata stored at an HTTPS URL', async (done) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
@@ -90,7 +88,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Deploy a contract having valid metadata which contains emoji stored at an HTTPS URL', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract having valid metadata which contains emoji stored at an HTTPS URL', async (done) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/emoji-in-metadata.json';
@@ -119,7 +117,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Fetch the metadata which contains emoji of the contract', 2, async (done: () => void) => {
+        test('Verify that the metadata for the contract which contains emoji can be fetched', async (done) => {
 
             const contract = await Tezos.contract.at(contractAddressEmoji, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -144,10 +142,30 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                     "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
                 }
             });
+
+            expect(await (await contract.tzip16()).metadataName()).toBe('Taquito test with valid metadata containing emoji 😀 🤩')
+            expect(await (await contract.tzip16()).metadataDescription()).toBe('👋 This is metadata test for Taquito integration tests 🧐 with the Ligo Taco shop contract modified to include metadata URI in the storage')
+            expect(await (await contract.tzip16()).metadataVersion()).toBe('7.1.0-beta.0')
+            expect(await (await contract.tzip16()).metadataLicense()).toEqual({
+                "name": "MIT",
+                "details": "The MIT License"
+            })
+            expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataHomepage()).toBe('https://github.com/ecadlabs/taquito')
+            expect(await (await contract.tzip16()).metadataSource()).toEqual({
+                "tools": [
+                    "Ligo",
+                    "https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A"
+                ],
+                "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
+            })
+            expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
+            expect(await (await contract.tzip16()).metadataViews()).toEqual({});
             done();
         });
 
-        test('Deploy a contract having invalid metadata stored at an HTTPS URL', 2, async (done: () => void) => {
+        test('Verify contract.originate for a contract having invalid metadata stored at an HTTPS URL', async (done) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/invalid.json';
@@ -176,7 +194,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             done();
         });
 
-        test('Should fail to fetch invalid metadata of the contract', 2, async (done: () => void) => {
+        test('Verify that the invalid metadata of the contract failed to fetch', async (done) => {
 
             const contract = await Tezos.contract.at(contractAddressInvalidMetadata, tzip16);
             try {
@@ -186,6 +204,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             }
 
             done();
-        }); 
+        });
     });
 })
