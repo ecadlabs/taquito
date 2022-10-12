@@ -25,6 +25,7 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
+    - run: npm run build
     - run: npm run lint
     - run: npm run build-docs
     - run: npm run test -- --runInBand
@@ -50,6 +51,7 @@ jobs:
       with:
         node-version: 16.13.1
     - run: npm ci
+    - run: npm run build
     - name: Tailscale
       uses: tailscale/github-action@v1
       with:
