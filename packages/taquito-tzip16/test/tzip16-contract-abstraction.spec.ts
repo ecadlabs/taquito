@@ -38,7 +38,14 @@ describe('Tzip16 contract abstraction test', () => {
 
     mockMetadataProvider.provideMetadata.mockResolvedValue({
       uri: 'https://test',
-      metadata: { name: 'Taquito test' },
+      metadata: {
+        name: 'Taquito test',
+        description: 'A metadata test',
+        version: '0.1',
+        license: 'MIT',
+        authors: ['Test <https://test/>'],
+        homepage: 'https://test/',
+      },
     });
 
     mockContext['metadataProvider'] = mockMetadataProvider;
@@ -64,7 +71,34 @@ describe('Tzip16 contract abstraction test', () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     const metadata = await tzip16Abs.getMetadata();
 
-    expect(metadata.metadata).toEqual({ name: 'Taquito test' });
+    expect(metadata.metadata).toEqual({
+      name: 'Taquito test',
+      description: 'A metadata test',
+      version: '0.1',
+      license: 'MIT',
+      authors: ['Test <https://test/>'],
+      homepage: 'https://test/',
+    });
+    done();
+  });
+
+  it('Should get metadata by each property', async (done) => {
+    mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
+    mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('cafe');
+
+    const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
+
+    expect(await tzip16Abs.metadataName()).toEqual('Taquito test');
+    expect(await tzip16Abs.metadataDescription()).toEqual('A metadata test');
+    expect(await tzip16Abs.metadataVersion()).toEqual('0.1');
+    expect(await tzip16Abs.metadataLicense()).toEqual('MIT');
+    expect(await tzip16Abs.metadataAuthors()).toEqual(['Test <https://test/>']);
+    expect(await tzip16Abs.metadataHomepage()).toEqual('https://test/');
+    expect(await tzip16Abs.metadataSource()).toBeUndefined();
+    expect(await tzip16Abs.metadataInterfaces()).toBeUndefined();
+    expect(await tzip16Abs.metadataErrors()).toBeUndefined();
+    expect(await tzip16Abs.metadataViews()).toEqual({});
+
     done();
   });
 
