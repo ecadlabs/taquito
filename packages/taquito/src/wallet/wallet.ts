@@ -1,5 +1,10 @@
 import { Context } from '../context';
-import { ContractAbstraction, ContractStorageType, DefaultWalletType } from '../contract';
+import {
+  ContractAbstraction,
+  ContractStorageType,
+  DefaultWalletType,
+  SendParams,
+} from '../contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
@@ -52,10 +57,14 @@ export class WalletOperationBatch {
    *
    * @description Add a transaction operation to the batch
    *
-   * @param params Transfer operation parameter
+   * @param params Contract method call
+   * @param options Generic operation parameters
    */
-  withContractCall(params: ContractMethod<Wallet> | ContractMethodObject<Wallet>) {
-    return this.withTransfer(params.toTransferParams());
+  withContractCall(
+    params: ContractMethod<Wallet> | ContractMethodObject<Wallet>,
+    options: Partial<SendParams> = {}
+  ) {
+    return this.withTransfer(params.toTransferParams(options));
   }
 
   /**

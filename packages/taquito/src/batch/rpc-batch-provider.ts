@@ -1,6 +1,7 @@
 import { Context } from '../context';
 import { ContractStorageType, DefaultContractType } from '../contract/contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
+import { SendParams } from '../contract/contract-methods/contract-method-interface';
 import { ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
@@ -96,12 +97,14 @@ export class OperationBatch extends OperationEmitter {
    *
    * @description Add a transaction operation to the batch
    *
-   * @param params Transfer operation parameter
+   * @param params Contract method call
+   * @param options Generic operation parameters
    */
   withContractCall(
-    params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+    params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>,
+    options: Partial<SendParams> = {}
   ) {
-    return this.withTransfer(params.toTransferParams());
+    return this.withTransfer(params.toTransferParams(options));
   }
 
   /**
