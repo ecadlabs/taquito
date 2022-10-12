@@ -65,10 +65,10 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: 12.x
+    - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
     - run: cd integration-tests && npm run test:originate-known-contracts && npm run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
         RUN_KATHMANDUNET_WITH_SECRET_KEY: true
