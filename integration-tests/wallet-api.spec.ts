@@ -3,16 +3,14 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
 
   beforeEach(async (done) => {
     await setup();
-    Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: 6000 }));
     done();
   })
 
   describe(`Test wallet api using: ${rpc}`, () => {
-    test('Test simple origination and wait for confirmation using promise',  2, async (done: () => void) => {
+    test('Test simple origination and wait for confirmation using promise',  async (done) => {
       const walletOp = await Tezos.wallet.originate({
         balance: "1",
         code: `parameter string;
@@ -55,7 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done()
     })
 
-    test('Test simple origination and wait for confirmation using observable',  2, async (done: () => void) => {
+    test('Test simple origination and wait for confirmation using observable', async (done) => {
       const walletOp = await Tezos.wallet.originate({
         balance: "1",
         code: `parameter string;

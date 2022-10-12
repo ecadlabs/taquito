@@ -3,13 +3,13 @@ import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
-  describe(`Test delegation off account using: ${rpc}`, () => {
+  describe(`Test delegation of account through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)
       done()
     })
-    it('succeeds in delegating its account to a known baker', async (done) => {
+    it('Verify that account can be delegated to a known baker using contract.setDelegate', async (done) => {
       const delegate = knownBaker
       const pkh = await Tezos.signer.publicKeyHash()
       try {
@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
           // Forbidden delegate deletion
           expect(ex.message).toMatch('delegate.no_deletion')
         } else {
-          // When running tests more than one time with the same faucet key, the account is already delegated to the given delegate
+          // When running tests more than one time with the same key, the account is already delegated to the given delegate
           expect(ex.message).toMatch('delegate.unchanged')
         }
       }

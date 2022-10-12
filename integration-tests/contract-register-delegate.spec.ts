@@ -3,13 +3,13 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  describe(`Test  register delegate: ${rpc}`, () => {
+  describe(`Test register delegate through contract api: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)
       done()
     })
-    it('registers the current address as delegate', async (done) => {
+    it('As a User I want to verify that I can register the current address as delegate using contract.registerDelegate', async (done) => {
       try {
         const pkh = await Tezos.signer.publicKeyHash();
         const op = await Tezos.contract.registerDelegate({});
@@ -23,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         if (protocol === Protocols.PsFLorena) {
           expect(ex.message).toMatch('delegate.unchanged')
         } else {
-          // When running tests more than one time with the same faucet key, the account is already delegated to the given delegate
+          // When running tests more than one time with the same key, the account is already delegated to the given delegate
           expect(ex.message).toMatch('delegate.already_active')
         }
       }
