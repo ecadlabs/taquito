@@ -175,6 +175,27 @@ InMemorySigner.fromSecretKey(
   .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
+
+### Loading a mnemonic
+
+The `fromMnemonic` method takes the mnemonic, password, derivationPath, and curve as parameters. her is an example of an instantiation of an `InMemorySigner.fromMnemonic`
+
+```js live noInline
+  // import { TezosToolkit } from '@taquito/taquito
+  // import { InMemorySigner } from '@taquito/signer'
+  // const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+
+    const words =
+      'prefer wait flock brown volume recycle some test mnemnoic to be used';
+
+    const theSigner = InMemorySigner.fromMnemonic(words);
+    Tezos.setProvider({ signer: theSigner})
+    Tezos.signer.publicKeyHas()
+      .then((publicKeyHash) => {
+        console.log(`The public key has associated is: ${publicKeyHash})
+      })
+```
+
 ### Using a testnet faucet key
 
 ~~To load a faucet key (available from https://faucet.tzalpha.net/) for working a public testnet use the `importKey` function.~~

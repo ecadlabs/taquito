@@ -10,6 +10,9 @@ import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import { mnemonicToSeedSync } from './mnemonicToSeedSync';
+import * as Bip39 from 'bip39'
+import { generateSecretKeyEDSK } from './helpers';
+import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from './errors';
 
 export * from './import-key';
 export { VERSION } from './version';
@@ -44,6 +47,39 @@ export class InMemorySigner {
     return new InMemorySigner(key, passphrase);
   }
 
+  /**
+   *
+   * @description Instatiation of a InMemorySigner instance from a mnemonic
+   * @param mnemonic 12-24 word mnemonic
+   * @param password password used to encrypt the mnemonic to seed value
+   * @param derivationPath
+   * @param curve currently only supported for tz1 addresses ed25519. soon secp256k1, p256, bip25519
+   * @returns InMemorySigner
+   */
+  static fromMnemonic(mnemonic: string, password?: string, derivationPath = "44'/'1729'/0'/0'", curve = 'ed25519') {
+    if (!Bip39.validateMnemonic(mnemonic)) {
+      // avoiding exposing mnemonic again in case of mistake making invalid
+      throw new InvalidMnemonicError('Mnemonic provided is invalid')
+    }
+    const seed = Bip39.mnemonicToSeedSync(mnemonic, password)
+
+    switch (curve) {
+      case 'ed25519': {
+        const sk = generateSecretKeyEDSK(seed, derivationPath)
+        return new InMemorySigner(sk)
+      }
+      case 'secp256k1': {
+        // TODO
+        throw new ToBeImplemented()
+      }
+      case 'p256': {
+        // TODO
+        throw new ToBeImplemented()
+      }
+    default:
+      throw new InvalidCurveError(curve)
+    }
+  }
   /**
    *
    * @param key Encoded private key
