@@ -193,78 +193,114 @@ describe('inmemory-signer', () => {
   it('bip32', async (done) => {
     const derivationPath = "m/44'/1729'/0'/0'";
     const words = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
-    interface Node {
-      privateKey: Uint8Array;
-      chainCode: Uint8Array;
-    }
+    const seed = await bip39.mnemonicToSeed(words, '');
 
-    const deriveNode = (message: Uint8Array, key: Buffer): Node => {
-      const derived = hmac(SHA512, key, message);
+    // interface Node {
+    //   privateKey: Uint8Array;
+    //   chainCode: Uint8Array;
+    // }
+
+    // const deriveNode = (message: Uint8Array, key: Buffer): Node => {
+    //   const derived = hmac(SHA512, key, message);
+    //   return {
+    //     privateKey: derived.slice(0, 32),
+    //     chainCode: derived.slice(32),
+    //   };
+    // };
+
+    // const deriveRootNode = (seed: Uint8Array): Node => {
+    //   if (seed.length !== 64) {
+    //     throw new Error('Invalid seed size');
+    //   }
+    //   const domainSeparator = Buffer.from('ed25519 seed');
+    //   return deriveNode(seed, domainSeparator);
+    // };
+
+    // const deriveChildNode = (node: Node, index: number): Node => {
+    //   const indexBuf: Buffer = Buffer.allocUnsafe(4);
+    //   indexBuf.writeUInt32BE(index, 0);
+    //   const message: Buffer = Buffer.concat([
+    //     Buffer.alloc(1, 0),
+    //     Buffer.from(node.privateKey),
+    //     indexBuf,
+    //   ]);
+    //   return deriveNode(message, Buffer.from(node.chainCode));
+    // };
+
+    // const derivationPathToArray = (derivationPath: string): number[] => {
+    //   derivationPath = derivationPath.replace('m/', '').replace(/'/g, 'h');
+    //   if (!derivationPath.match(/^44h\/1(729)?(h\/[0-9]+)+h$/g)) {
+    //     throw new Error(
+    //       'Invalid derivation path. Only hardened derivation paths on Tezos domain space is supported.',
+    //     );
+    //   }
+    //   return derivationPath.split('/').map((level: string) => {
+    //     console.log(level)
+    //     level = level.slice(0, -1);
+    //     if (Number(level) >= Number('0x80000000')) {
+    //       throw new Error('Invalid derivation path. Out of bound.');
+    //     }
+    //     return Number(level) + Number('0x80000000');
+    //   });
+    // };
+
+    // let seed = await bip39.mnemonicToSeed(words, '');
+
+    // const newPath = derivationPath.replace('m/', '').replace(/'/g, 'h');
+
+    // const pathArray = derivationPathToArray(newPath);
+
+
+    // let node = deriveRootNode(seed)
+    // for (const i of pathArray) {
+    //   node = deriveChildNode(node, i);
+    // }
+    // const childKp = derivePath(derivationPath, seed.toString('hex'))
+
+    // seed = Buffer.from(node.privateKey);
+    // const kp = generateKeyPairFromSeed(seed.slice(0, 32));
+    // const pkh = b58cencode(hash(kp.publicKey, 20), prefix.tz1)
+    // // expect(pkh).toEqual('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY')
+
+    // const newpk = generateKeyPairFromSeed(childKp.key.slice(0, 32))
+    // const newPKH = b58cencode(hash(newpk.publicKey, 20), prefix.tz1)
+    // expect(newPKH).toEqual('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY')
+
+
+    const makeNode = (seed: Uint8Array, key: Uint8Array) => {
+
+      const master = hmac(SHA512, key, seed);
       return {
-        privateKey: derived.slice(0, 32),
-        chainCode: derived.slice(32),
-      };
-    };
-
-    const deriveRootNode = (seed: Uint8Array): Node => {
-      if (seed.length !== 64) {
-        throw new Error('Invalid seed size');
+        private: master.slice(0, 32),
+        chainCode: master.slice(32)
       }
-      const domainSeparator = Buffer.from('ed25519 seed');
-      return deriveNode(seed, domainSeparator);
-    };
-
-    const deriveChildNode = (node: Node, index: number): Node => {
-      const indexBuf: Buffer = Buffer.allocUnsafe(4);
-      indexBuf.writeUInt32BE(index, 0);
-      const message: Buffer = Buffer.concat([
-        Buffer.alloc(1, 0),
-        Buffer.from(node.privateKey),
-        indexBuf,
-      ]);
-      return deriveNode(message, Buffer.from(node.chainCode));
-    };
-
-    const derivationPathToArray = (derivationPath: string): number[] => {
-      derivationPath = derivationPath.replace('m/', '').replace(/'/g, 'h');
-      if (!derivationPath.match(/^44h\/1(729)?(h\/[0-9]+)+h$/g)) {
-        throw new Error(
-          'Invalid derivation path. Only hardened derivation paths on Tezos domain space is supported.',
-        );
-      }
-      return derivationPath.split('/').map((level: string) => {
-        level = level.slice(0, -1);
-        if (Number(level) >= Number('0x80000000')) {
-          throw new Error('Invalid derivation path. Out of bound.');
-        }
-        return Number(level) + Number('0x80000000');
-      });
-    };
-
-    let seed = await bip39.mnemonicToSeed(words, '');
-
-    const newPath = derivationPath.replace('m/', '').replace(/'/g, 'h');
-
-    const pathArray = derivationPathToArray(newPath);
-
-
-    let node = deriveRootNode(seed)
-    for (const i of pathArray) {
-      node = deriveChildNode(node, i);
     }
-    const childKp = derivePath(derivationPath, seed.toString('hex'))
+    const makeMaster = makeNode(seed, new Uint8Array(Buffer.from('ed25519 seed')));
 
-    seed = Buffer.from(node.privateKey);
-    const kp = generateKeyPairFromSeed(seed.slice(0, 32));
+    const makeChildNode = (node: typeof makeMaster, index: number) => {
+      const indexBuf = Buffer.allocUnsafe(4);
+      indexBuf.writeUInt32BE(index, 0);
+      const newSeed = Buffer.concat([
+        Buffer.alloc(1, 0),
+        Buffer.from(node.private),
+        indexBuf
+      ])
+      return makeNode(newSeed, new Uint8Array(Buffer.from(node.chainCode)))
+    }
+
+    const arr = ['44', '1729', '0', '0']
+    const makeArr = arr.map(num=> {
+      return Number(num) + Number('0x80000000')
+    })
+    let node = makeMaster;
+    for (const item of makeArr) {
+      node = makeChildNode(node, item)
+    }
+    const kp = generateKeyPairFromSeed(node.private.slice(0, 32))
     const pkh = b58cencode(hash(kp.publicKey, 20), prefix.tz1)
     expect(pkh).toEqual('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY')
 
-    const newpk = generateKeyPairFromSeed(childKp.key.slice(0, 32))
-    const newPKH = b58cencode(hash(newpk.publicKey, 20), prefix.tz1)
-    expect(newPKH).toEqual('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY')
-
-
-    // expect().toEqual('tz1UpizQ6AGjMeCZCLpuyuL4BSzoUC4XD1QE')
+    // expect(pkh).toEqual('tz1UpizQ6AGjMeCZCLpuyuL4BSzoUC4XD1QE')
 
 
 
