@@ -66,6 +66,10 @@ jobs:
         TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownBigMapContractAddress }}
         TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }}
         TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
+        TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT: ${{ steps.originate-contracts-mondaynet.outputs.knownOnChainViewContractAddress }}
+        TX_ROLLUP_WITHDRAW_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-withdraw-contract }}
+        TX_ROLLUP_DEPOSIT_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-deposit-contract }}
+        TX_ROLLUP_TICKETS_OWNER_SECRET: ${{ secrets.TX_ROLLUP_TICKETS_OWNER_SECRET }}
       run: npm run test:mondaynet -- --maxWorkers=2
     - 
       name: Slack Notification
@@ -77,12 +81,4 @@ jobs:
         notification_title: "Taquito Mondaynet Integration Tests ${{job.status}}"
         message_format: "{emoji} *{workflow}* {status_message} on <{commit_url}|{commit_sha}> | <{run_url}|View Run>"
       env:
-        TEZOS_MONDAYNET_CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownContractAddress }}
-        TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownBigMapContractAddress }}
-        TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }}
-        TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
-        TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT: ${{ steps.originate-contracts-mondaynet.outputs.knownOnChainViewContractAddress }}
-        TX_ROLLUP_WITHDRAW_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-withdraw-contract }}
-        TX_ROLLUP_DEPOSIT_CONTRACT: ${{ steps.toru-addresses.outputs.tx-rollup-deposit-contract }}
-        TX_ROLLUP_TICKETS_OWNER_SECRET: ${{ secrets.TX_ROLLUP_TICKETS_OWNER_SECRET }}
-      run: npm run test:mondaynet -- --maxWorkers=2
+        SLACK_WEBHOOK_URL: ${{ secrets.INTEGRATION_TESTS_SLACK_WEBHOOK }}
