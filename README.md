@@ -1,51 +1,70 @@
 ![Taquito Logo](/img/Taquito.png)
 
-
-A TypeScript library suite for development on the Tezos blockchain
-
 ![Node.js CI](https://github.com/ecadlabs/taquito/workflows/Node.js%20CI/badge.svg)
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3204/badge)](https://bestpractices.coreinfrastructure.org/projects/3204)
 [![npm version](https://badge.fury.io/js/%40taquito%2Ftaquito.svg)](https://badge.fury.io/js/%40taquito%2Ftaquito)
 
+Welcome, Web3 developer!
+
+## What is Taquito?
+
+Taquito is a fast and lightweight [TypeScript](https://www.typescriptlang.org/) library to accelerate DApp development on the [Tezos](https://tezos.com/developers) blockchain. With it, you can easily interact with Smart Contracts deployed to Tezos. It is distributed as a suite of GPG-signed `npm` packages, to reduce bloat and improve application startup times.
+
+## But What about Smart Contract Development?
+
+Oh! You are a current or aspiring "full-stack" blockchain developer? Be sure to check out Taquito's sister project [Taqueria](https://taqueria.io), which provides *rich support* for Smart Contract development on Tezos, and uses a modular, plugin-based architecture.
+
+## What is Included in Taquito?
+
+Taquito is primarily targeted at Front-End Web3 developers, so it comes with batteries included, such as a suite of [React Components](https://www.npmjs.com/package/@taquito/react-components), an extensible framework, and many helpful utilities. It can be used in *many* execution contexts, including Node.js, Deno, and Electron, to name a few, and has minimal dependencies.
+
+## Who uses Taquito?
+
+Taquito is used by **over 80% of DApps** in the Tezos ecosystem. It is easy to use, [proven secure](https://bestpractices.coreinfrastructure.org/en/projects/3204#security) and [tested continuously](https://bestpractices.coreinfrastructure.org/en/projects/3204#quality) against current versions of Tezos (both Mainnet *and* Testnet).
+
+## Why should I use Taquito?
+
+Taquito provides convenient abstractions for a multitude of common operations, including wallet interactions (with [WalletConnect2](https://docs.walletconnect.com/2.0) in the works), batching operations, calling into contracts, querying the blockchain, and more. Taquito will isolate your code from subtle - and some not-so-subtle - changes made to the underlying Tezos protocol.
+
+...Not to mention our thriving, helpful, and welcoming community!
+
+## Ok, I'm Ready!
+
+To get started with Taquito quickly, visit the [Taquito QuickStart](https://tezostaquito.io/docs/quick_start).
+
+If you prefer to start with a skeleton project, check out our [Taquito boilerplate project](https://github.com/ecadlabs/taquito-boilerplate#getting-started).
+
+## Supported versions of Node
+
+Taquito currently supports the following versions of Node.js®:
+
+| Version          |         |
+| ---------------- | ------- |
+| < 16.13.1        |    ❌   |
+| 16.13.1          |    ✅   |
+| > 16.13.1        |    ❌   |
+| 17.3.0           |    ✅   |
+| > 17.3.0         |    ❌   |
+
+While other versions often work, the above are what we officially support. YMMV!
+
 ## Community support channels
+
+We are active and enthusiastic participants of the following community channels:
 
 - [TezosTaquito Telegram Community Channel][telegram]
 - [Tezos StackExchange][stackexchange]
 
-## What is Taquito
-
-Taquito is a TypeScript library suite made available as a set of npm packages aiming to make building on top of Tezos easier and more enjoyable.
-
-## Benefits
-
-### Easy to Use
-
-Get up and running using and contributing to the library quickly: Taquito is written in an idiomatic TypeScript style and includes a set of ready-made React components.
-
-### Portable
-
-Usable in any JavaScript project on the front- or back-end with minimal dependencies, Taquito has no reliance on any stack by default (except the canonical Tezos RPC node).
-
-### Well-Supported
-
-Taquito comes complete with:
-
-* a well-documented API using TypeDoc
-* nightly and continuous integration tests against the Tezos node
-* versioned releases published to npmjs.org
-
----
-
 ## Project Organization
 
-`taquito` is organized as a mono repository from which several npm packages are built and published. Packages are in the `packages/` directory, each one with a README file.
+`taquito` is organized as a [mono repo](https://en.wikipedia.org/wiki/Monorepo) and includes several npm packages which are GPG-signed and published to npmjs.org under the `@taquito` handle. 
 
-We publish gpg signed packages to npmjs.org under the `@taquito` handle.
+Each package has an entry in the `packages/` directory, and includes its own README.
 
 | High Level Packages                                            | Responsibility                                               |
 | -------------------------------------------------------------- | ------------------------------------------------------------ |
-| [@taquito/taquito](packages/taquito)                           | Regroup every other library and provide higher level utility |
+| [@taquito/taquito](packages/taquito)                           | Regroup every other library and provide hig    her level utility |
 
 | Low Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -64,7 +83,7 @@ We publish gpg signed packages to npmjs.org under the `@taquito` handle.
 
 ## API Documentation
 
-The TypeDoc style API documentation is available [here](https://tezostaquito.io/typedoc)
+TypeDoc API documentation is available [here](https://tezostaquito.io/typedoc)
 
 ## Versioning Strategy
 
@@ -91,22 +110,6 @@ Releases are "rolled" by the project maintainers outside of CI infrastructure an
 We hope to reduce the attack surface for software supply chain attacks by doing releases from outside of the CI processes. We reduce some attack surfaces for software supply chain attacks by making releases from outside of the CI infrastructure.
 
 Releases will be (git tags and npm packages) will be signed either by [keybase/jevonearth][2] or [keybase/simrob][3]. Releases not signed or signed by other keys should not be expected.
-
-## Taquito Users Getting Started
-
-To start using Taquito in your application, please visit [Taquito QuickStart](https://tezostaquito.io/docs/quick_start).
-Alternatively, get started with the [Taquito boilerplate project](https://github.com/ecadlabs/taquito-boilerplate#getting-started) 
-
-## Supported versions of Node.js®
-
-| Node.js version  |     |
-| ---------------- | --- |
-| v12              | ❌  |
-| v14              | ❌  |
-| v16.13.1         | ✅  |
-| v16.13.2         | ❌  |
-| v17.3.x          | ✅  |
-| v17.5.x          | ❌  |
 
 ## Contributors Getting Started
 
