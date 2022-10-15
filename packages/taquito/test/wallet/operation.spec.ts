@@ -3,6 +3,7 @@ import { rxSandbox } from 'rx-sandbox';
 import { Context } from '../../src/context';
 import { WalletOperation } from '../../src/wallet';
 import { blockResponse } from './data';
+
 describe('WalletOperation', () => {
   const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
 
@@ -23,7 +24,7 @@ describe('WalletOperation', () => {
   };
 
   describe('confirmationObservable', () => {
-    it('Should emit confirmation after receiving seeing operation in block', async (done) => {
+    it('Should emit confirmation after seeing operation in block', async (done) => {
       const { cold, flush, getMessages, e, s } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
         a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -119,6 +120,122 @@ describe('WalletOperation', () => {
 
       expect(messages).toEqual(expected);
       expect(blockObs.subscriptions).toEqual([s('^----!')]);
+
+      done();
+    });
+  });
+
+  describe('confirmation handles skipped blocks', () => {
+    let mockRpcClient: {
+      getBlock: jest.Mock<any, any>;
+    };
+
+    beforeEach(() => {
+      mockRpcClient = {
+        getBlock: jest.fn(),
+      };
+    });
+
+    it('Should find operation in the missed block when 1 block was skipped', async (done) => {
+      mockRpcClient.getBlock.mockResolvedValue(
+        createFakeBlock(2, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
+      );
+
+      const { cold, flush } = rxSandbox.create();
+      const blockObs = cold<BlockResponse>('--a--c', {
+        a: createFakeBlock(1),
+        c: createFakeBlock(3),
+      });
+
+      const op = new WalletOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        new Context(mockRpcClient as any),
+        blockObs
+      );
+
+      flush();
+
+      expect(await op.confirmation()).toEqual(
+        expect.objectContaining({
+          block: createFakeBlock(2, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
+          expectedConfirmation: 1,
+          currentConfirmation: 1,
+          completed: true,
+        })
+      );
+
+      expect(mockRpcClient.getBlock).toHaveBeenCalledTimes(1);
+      expect(mockRpcClient.getBlock).toHaveBeenCalledWith({ block: '2' });
+
+      done();
+    });
+
+    it('Should find operation in the first missed block when 2 blocks were skipped', async (done) => {
+      mockRpcClient.getBlock.mockResolvedValueOnce(
+        createFakeBlock(2, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
+      );
+
+      const { cold, flush } = rxSandbox.create();
+      const blockObs = cold<BlockResponse>('--a--d', {
+        a: createFakeBlock(1),
+        d: createFakeBlock(4),
+      });
+
+      const op = new WalletOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        new Context(mockRpcClient as any),
+        blockObs
+      );
+
+      flush();
+
+      expect(await op.confirmation()).toEqual(
+        expect.objectContaining({
+          block: createFakeBlock(2, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
+          expectedConfirmation: 1,
+          currentConfirmation: 1,
+          completed: true,
+        })
+      );
+
+      expect(mockRpcClient.getBlock).toHaveBeenCalledTimes(1);
+      expect(mockRpcClient.getBlock).toHaveBeenCalledWith({ block: '2' });
+
+      done();
+    });
+
+    it('Should find operation in the second missed block when 2 blocks were skipped', async (done) => {
+      mockRpcClient.getBlock.mockResolvedValueOnce(createFakeBlock(2));
+      mockRpcClient.getBlock.mockResolvedValueOnce(
+        createFakeBlock(3, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
+      );
+
+      const { cold, flush } = rxSandbox.create();
+      const blockObs = cold<BlockResponse>('--a--d', {
+        a: createFakeBlock(1),
+        d: createFakeBlock(4),
+      });
+
+      const op = new WalletOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        new Context(mockRpcClient as any),
+        blockObs
+      );
+
+      flush();
+
+      expect(await op.confirmation()).toEqual(
+        expect.objectContaining({
+          block: createFakeBlock(3, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
+          expectedConfirmation: 1,
+          currentConfirmation: 1,
+          completed: true,
+        })
+      );
+
+      expect(mockRpcClient.getBlock).toHaveBeenCalledTimes(2);
+      expect(mockRpcClient.getBlock).toHaveBeenCalledWith({ block: '2' });
+      expect(mockRpcClient.getBlock).toHaveBeenLastCalledWith({ block: '3' });
 
       done();
     });

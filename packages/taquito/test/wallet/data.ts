@@ -2,7 +2,9 @@ export const blockResponse = {
   protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
   chain_id: 'NetXi2ZagzEsXbZ',
   hash: 'BM6NRnbjdWqknmErSjMmkh49NjaVqq64TNmKTsdQRaWke5iqHpz',
-  header: {},
+  header: {
+    level: 111,
+  },
   metadata: {},
   operations: [
     [],
