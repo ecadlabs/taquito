@@ -59,7 +59,8 @@
     ]
   },
   "dependencies": {
-    "axios": "^0.26.0"
+    "axios": "^0.26.0",
+    "@vespaiach/axios-fetch-adapter": "^0.3.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",

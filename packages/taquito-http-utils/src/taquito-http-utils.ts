@@ -3,6 +3,8 @@
  * @module @taquito/http-utils
  */
 
+import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+
 import { STATUS_CODE } from './status_code';
 import axios from 'axios';
 
@@ -125,6 +127,7 @@ export class HttpBackend {
         transformResponse,
         timeout: timeout,
         data: data,
+        adapter: fetchAdapter,
       });
 
       return response.data;
