@@ -2093,6 +2093,9 @@
     "@airgap/sapling-wasm" "0.0.9"
     "@stablelib/nacl" "^1.0.3"
     "@stablelib/random" "^1.0.1"
+    "@taquito/rpc" "^14.0.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.1.0"
     "bip39" "^3.0.4"
     "blakejs" "^1.2.1"
@@ -2116,6 +2119,12 @@
   "resolved" "file:packages/taquito"
   "version" "14.0.0"
   dependencies:
+    "@taquito/http-utils" "^14.0.0"
+    "@taquito/local-forging" "^14.0.0"
+    "@taquito/michel-codec" "^14.0.0"
+    "@taquito/michelson-encoder" "^14.0.0"
+    "@taquito/rpc" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.1.0"
     "rxjs" "^6.6.3"
 
@@ -2135,11 +2144,20 @@
 "@taquito/tzip12@file:/home/mike/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "14.0.0"
+  dependencies:
+    "@taquito/michelson-encoder" "^14.0.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/tzip16" "^14.0.0"
 
 "@taquito/tzip16@^14.0.0", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "14.0.0"
   dependencies:
+    "@taquito/http-utils" "^14.0.0"
+    "@taquito/michelson-encoder" "^14.0.0"
+    "@taquito/rpc" "^14.0.0"
+    "@taquito/taquito" "^14.0.0"
+    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.1.0"
     "crypto-js" "^4.1.1"
 
@@ -4420,6 +4438,11 @@
   "integrity" "sha512-NJGVKPS81XejHcLhaLJS7plab0fK3slPh11mESeeDq2W4ZI5kUKK/LRRdVDvjJseojbPB7ZwjnyOybg3Igea/A=="
   "resolved" "https://registry.npmjs.org/cyclist/-/cyclist-1.0.1.tgz"
   "version" "1.0.1"
+
+"cypress-wait-until@^1.7.2":
+  "integrity" "sha512-uZ+M8/MqRcpf+FII/UZrU7g1qYZ4aVlHcgyVopnladyoBrpoaMJ4PKZDrdOJ05H5RHbr7s9Tid635X3E+ZLU/Q=="
+  "resolved" "https://registry.npmjs.org/cypress-wait-until/-/cypress-wait-until-1.7.2.tgz"
+  "version" "1.7.2"
 
 "cz-conventional-changelog@^3.3.0":
   "integrity" "sha512-U466fIzU5U22eES5lTNiNbZ+d8dfcHcssH4o7QsdWaCcRs/feIPCxKYSWkYBNs5mny7MvEfwpTLWjvbm94hecw=="

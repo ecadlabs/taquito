@@ -1,0 +1,74 @@
+/// <reference types='cypress' />
+import 'cypress-wait-until';
+import { base_url, disclaimer, runButton } from './base'
+
+describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views  - wallet', () => {
+
+  Cypress.config('defaultCommandTimeout', 30000);
+  const page_under_test = base_url + 'metadata-tzip16'
+
+  describe('Get the metadata - contract', () => {
+
+    it('Tezos-storage example  - wallet', () => {
+      cy.visit(page_under_test).contains(disclaimer)
+      cy.get(runButton).eq(1).click({ force: true })
+      cy.window().then(function (p) {
+        cy.stub(p, "prompt").returns("Beacon");
+      });
+    })
+
+    it('HTTPS example - wallet', () => {
+      cy.visit(page_under_test).contains(disclaimer)
+      cy.get(runButton).eq(3).click({ force: true })
+      cy.window().then(function (p) {
+        cy.stub(p, "prompt").returns("Beacon");
+      });
+    })
+
+    it('Example having a SHA256 hash - wallet', () => {
+      cy.visit(page_under_test).contains(disclaimer)
+      cy.get(runButton).eq(5).click({ force: true })
+      cy.window().then(function (p) {
+        cy.stub(p, "prompt").returns("Beacon");
+      });
+    })
+
+    it('IPFS example - wallet', () => {
+      cy.visit(page_under_test).contains(disclaimer)
+      cy.get(runButton).eq(7).click({ force: true })
+      cy.window().then(function (p) {
+        cy.stub(p, "prompt").returns("Beacon");
+      });
+    })
+  })
+
+  describe('Execute off-chain views - contract', () => {
+
+    it('Run a view named someJson - wallet', () => {
+      cy.visit(page_under_test).contains(disclaimer)
+      cy.get(runButton).eq(9).click({ force: true })
+      cy.window().then(function (p) {
+        cy.stub(p, "prompt").returns("Beacon");
+      });
+    })
+
+    it('Run a view named multiply-the-nat-in-storage - wallet', () => {
+      cy.visit(page_under_test).contains(disclaimer)
+      cy.get(runButton).eq(11).click({ force: true })
+      cy.window().then(function (p) {
+        cy.stub(p, "prompt").returns("Beacon");
+      });
+    })
+  })
+
+  describe('Execute a custom view - contract', () => {
+
+    it('Execute the view multiply-the-nat-in-storage in a custom way - wallet', () => {
+      cy.visit(page_under_test).contains(disclaimer)
+      cy.get(runButton).eq(13).click({ force: true })
+      cy.window().then(function (p) {
+        cy.stub(p, "prompt").returns("Beacon");
+      });
+    })
+  })
+})
