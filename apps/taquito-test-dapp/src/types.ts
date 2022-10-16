@@ -10,6 +10,8 @@ export interface TestSettings {
   id: string;
   name: string;
   description: string;
+  documentation?: string;
+  keyword: string;
   run: (input?: any) => Promise<TestResult>;
   showExecutionTime: boolean;
   inputRequired: boolean;
