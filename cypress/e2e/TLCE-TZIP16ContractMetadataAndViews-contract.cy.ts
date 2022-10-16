@@ -12,25 +12,25 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views - con
     it('Tezos-storage example - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(0).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(0).contains('AliceToken'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(0).contains('A metadata test'))
     })
 
     it('HTTPS example - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(2).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(2).contains('AliceToken'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(2).contains('Taquito test with valid metadata'))
     })
 
     it('Example having a SHA256 hash - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(4).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(4).contains('token_id'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(4).contains('This is metadata test for Taquito integration tests'))
     })
 
     it('IPFS example - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(6).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(6).contains('token_id'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(6).contains('The MIT License'))
     })
   })
 
@@ -39,13 +39,13 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views - con
     it('Run a view named someJson - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(8).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(8).contains('token_id'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(8).contains('1000RandomCharacters'))
     })
 
     it('Run a view named multiply-the-nat-in-storage - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(10).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(10).contains('token_id'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(10).contains('multiply-negative-number-or-call-failwith'))
     })
   })
 
@@ -54,7 +54,7 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views - con
     it('Execute the view multiply-the-nat-in-storage in a custom way - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(12).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(12).contains('token_id'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(12).contains('Result of the custom view'))
     })
   })
 })

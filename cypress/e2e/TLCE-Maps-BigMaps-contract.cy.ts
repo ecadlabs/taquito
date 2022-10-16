@@ -4,7 +4,7 @@ import { base_url, disclaimer, runButton, playgroundPreview } from './base'
 
 describe('Taquito Live Code Examples - maps and Bigmaps - contract', () => {
 
-  Cypress.config('defaultCommandTimeout', 30000);
+  Cypress.config('defaultCommandTimeout', 50000);
   const page_under_test = base_url+"/maps_bigmaps"
 
   describe('Maps - contract', () => {

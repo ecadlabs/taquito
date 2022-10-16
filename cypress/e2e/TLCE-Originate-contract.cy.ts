@@ -22,6 +22,6 @@ describe('Taquito Live Code Examples - Originate - contract', () => {
   it('c. Initializing storage using a JSON encoded Michelson Expression for initial storage - contract', () => {
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(4).click()
-    cy.waitUntil(() => cy.get(playgroundPreview).eq(4).contains('Operation completed.'))
+    cy.waitUntil(() => cy.get(playgroundPreview).eq(4).contains('Origination completed.'))
   })
 })

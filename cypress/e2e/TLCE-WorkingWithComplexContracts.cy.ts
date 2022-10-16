@@ -4,7 +4,7 @@ import { base_url, disclaimer, runButton, playgroundPreview } from './base'
 
 describe('Taquito Live Code Examples - Working with contracts having complex storage/parameters', () => {
 
-  Cypress.config('defaultCommandTimeout', 30000);
+  Cypress.config('defaultCommandTimeout', 50000);
   const page_under_test = base_url + 'complex_parameters'
 
   describe('Working with contracts having complex storage/parameters', () => {
@@ -30,7 +30,7 @@ describe('Taquito Live Code Examples - Working with contracts having complex sto
     it('Call the set_child_record function when optional arguments are null', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(3).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(3).contains('returns 3'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(3).contains('Operation injected'))
     })
   })
 })

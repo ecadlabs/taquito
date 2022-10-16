@@ -4,7 +4,7 @@ import { base_url, disclaimer, runButton } from './base'
 
 describe('Taquito Live Code Examples - Storage with/without annotations - wallet', () => {
 
-  Cypress.config('defaultCommandTimeout', 20000);
+  Cypress.config('defaultCommandTimeout', 50000);
   const page_under_test = base_url + 'storage_annotations'
 
   describe('When all the properties are annotated', () => {
@@ -22,7 +22,7 @@ describe('Taquito Live Code Examples - Storage with/without annotations - wallet
 
     it('All properties in storage are accessible by the index corresponding to the order that the storage is defined - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
-      cy.get(runButton).eq(3).click()
+      cy.get(runButton).eq(3).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
       });

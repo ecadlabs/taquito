@@ -4,7 +4,7 @@ import { base_url, disclaimer, runButton, playgroundPreview } from './base'
 
 describe('Taquito Live Code Examples - Making Transfers', () => {
 
-  Cypress.config('defaultCommandTimeout', 30000);
+  Cypress.config('defaultCommandTimeout', 50000);
   const page_under_test = base_url + "making_transfers"
 
   it('Transfer from an implicit tz1 address to a tz1 address', () => {

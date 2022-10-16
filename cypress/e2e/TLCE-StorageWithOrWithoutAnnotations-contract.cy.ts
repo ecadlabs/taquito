@@ -4,7 +4,7 @@ import { base_url, disclaimer, runButton, playgroundPreview } from './base'
 
 describe('Taquito Live Code Examples - Storage with/without annotations - contract', () => {
 
-  Cypress.config('defaultCommandTimeout', 30000);
+  Cypress.config('defaultCommandTimeout', 50000);
   const page_under_test = base_url + 'storage_annotations'
 
   describe('When all the properties are annotated', () => {
@@ -30,7 +30,7 @@ describe('Taquito Live Code Examples - Storage with/without annotations - contra
     it('The elements in positions 2 and 3 have an annotation. Access these elements with their annotated name and the others with corresponding indexes - contract', () => {
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(4).click()
-      cy.waitUntil(() => cy.get(playgroundPreview).eq(3).contains('Origination completed'))
+      cy.waitUntil(() => cy.get(playgroundPreview).eq(4).contains('Origination completed'))
     })
   })
 })
