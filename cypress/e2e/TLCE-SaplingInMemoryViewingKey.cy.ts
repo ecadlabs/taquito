@@ -5,7 +5,7 @@ import { base_url, disclaimer, runButton, playgroundPreview } from './base'
 describe('Taquito Live Code Examples - Sapling In Memory Viewing Key', () => {
 
   Cypress.config('defaultCommandTimeout', 60000);
-  const page_under_test = base_url + 'sapling'
+  const page_under_test = base_url + 'sapling_in_memory_viewing_key'
 
   describe('Sapling InMemoryViewingKey', () => {
 
