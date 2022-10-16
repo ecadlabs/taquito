@@ -4,7 +4,7 @@ import { base_url, disclaimer, runButton, playgroundPreview } from './base'
 
 describe('Taquito Live Code Examples - Originate - contract', () => {
 
-  Cypress.config('defaultCommandTimeout', 30000);
+  Cypress.config('defaultCommandTimeout', 60000);
   const page_under_test = base_url + "originate"
 
   it('a. Initializing storage using a Plain Old JavaScript Object - contract', () => {
