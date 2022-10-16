@@ -24,14 +24,23 @@ export class TimestampToken extends ComparableToken {
 
   public Encode(args: any[]): any {
     const val = args.pop();
-    return { string: val };
+    if (typeof val === 'number') {
+      return { int: String(val) };
+    } else {
+      return { string: val };
+    }
   }
 
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     if (semantic && semantic[TimestampToken.prim]) {
       return semantic[TimestampToken.prim](val);
     }
-    return { string: val };
+
+    if (typeof val === 'number') {
+      return { int: String(val) };
+    } else {
+      return { string: val };
+    }
   }
 
   /**
