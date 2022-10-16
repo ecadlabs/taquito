@@ -26,6 +26,7 @@ describe('Taquito Live Code Examples - maps and Bigmaps - wallet', () => {
     })
 
     it('Accessing the values of the map - wallet', () => { 
+      // requires Contract " MapWithSingleMapForStorage" 
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(5).click({force : true})
       cy.window().then(function (p) {
@@ -42,6 +43,7 @@ describe('Taquito Live Code Examples - maps and Bigmaps - wallet', () => {
     })
 
     it('Accessing Map values using Pairs - wallet', () => { 
+      // requires Contract " MapWithPairasMapContract"
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(9).click({force : true})
       cy.window().then(function (p) {
@@ -58,6 +60,7 @@ describe('Taquito Live Code Examples - maps and Bigmaps - wallet', () => {
     })
 
     it('Accessing Map values with complex keys - wallet', () => { 
+      // requires Contract "MapWithComplexKeysContract" 
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(13).click({force : true})
       cy.window().then(function (p) {
@@ -76,7 +79,8 @@ describe('Taquito Live Code Examples - maps and Bigmaps - wallet', () => {
       });
     })
 
-    it('Accessing the values of the map and the bigMap- wallet', () => { 
+    it('Accessing the values of the map and the bigMap- wallet', () => {
+      // requires Contract "MapWithInitialStorageContract"  
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(17).click({force : true})
       cy.window().then(function (p) {
@@ -85,6 +89,7 @@ describe('Taquito Live Code Examples - maps and Bigmaps - wallet', () => {
     })
 
     it('Fetch multiple big map values at once - wallet', () => { 
+      // requires Contract "BigMapsMultipleValuesContract"
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(19).click({force : true})
       cy.window().then(function (p) {

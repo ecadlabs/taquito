@@ -14,6 +14,7 @@ describe('Taquito Live Code Examples', () => {
   })
 
   it('Estimate a smart contract call - contract', () => {
+     // requires Contract "IncrementContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get("[class='button_G4Yn runButton_oaHB']").eq(2).click()
     cy.waitUntil(() => cy.get("[class='playgroundPreview_bb8I']").eq(2).contains('usingBaseFeeMutez'))

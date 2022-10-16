@@ -8,6 +8,7 @@ describe('Taquito Live Code Examples - Tzip12 Token Metadata  - wallet', () => {
   const page_under_test = base_url + 'tzip12'
 
   it('The token metadata are obtained from an off-chain view token_metadata - wallet', () => {
+    // requires Contract "Tzip12BigMapOffChainContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(1).click({ force: true })
     cy.window().then(function (p) {
@@ -16,6 +17,7 @@ describe('Taquito Live Code Examples - Tzip12 Token Metadata  - wallet', () => {
   })
 
   it('Calling the off-chain view token_metadata using the taquito-tzip16 package - wallet', () => {
+    // requires Contract "Tzip12BigMapOffChainContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(3).click({ force: true })
     cy.window().then(function (p) {
@@ -24,6 +26,7 @@ describe('Taquito Live Code Examples - Tzip12 Token Metadata  - wallet', () => {
   })
 
   it('The token metadata are found in the big map %token_metadata - wallet', () => {
+    // requires Contract "Tzip12BigMapOffChainContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(3).click({ force: true })
     cy.window().then(function (p) {

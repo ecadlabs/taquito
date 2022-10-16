@@ -37,6 +37,7 @@ describe('Taquito Live Code Examples - Wallet API', () => {
     })
 
     it('Transfer to smart contracts', () => {
+      // requires Contract "WalletContract"      
       cy.get(runButton).eq(3).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
@@ -47,6 +48,7 @@ describe('Taquito Live Code Examples - Wallet API', () => {
   describe('Calling a smart contract', () => {
 
     it('Contract entrypoint argument', () => {
+      // requires Contract "WalletAreYouThereContract" 
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(4).click({ force: true })
       cy.window().then(function (p) {
@@ -55,6 +57,7 @@ describe('Taquito Live Code Examples - Wallet API', () => {
     })
 
     it('Contract entrypoint multiple arguments', () => {
+      // requires Contract "WalletAreYouThereContract" 
       cy.get(runButton).eq(5).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");

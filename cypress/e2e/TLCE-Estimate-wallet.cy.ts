@@ -16,6 +16,7 @@ describe('Taquito Live Code Examples - Estimate Page', () => {
   })
 
   it('Estimate a smart contract call - wallet', () => {
+     // requires Contract "IncrementContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(3).click({ force: true })
     cy.window().then(function (p) {

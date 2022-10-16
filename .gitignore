@@ -19,3 +19,5 @@ integration-tests/jest-stare
 **/saplingSpendParams*
 apps/**/node_modules
 apps/**/package-lock.json
+cypress/screenshots/
+cypress/videos/

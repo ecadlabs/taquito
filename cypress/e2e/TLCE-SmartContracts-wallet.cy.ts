@@ -8,6 +8,7 @@ describe('Taquito Live Code Examples - Smart Contract Interaction  - wallet', ()
   const page_under_test = base_url + 'smartcontracts'
 
   it('Loading the contract in Taquito - wallet', () => {
+    // requires Contract "IncrementContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(1).click({ force: true })
     cy.window().then(function (p) {
@@ -16,6 +17,7 @@ describe('Taquito Live Code Examples - Smart Contract Interaction  - wallet', ()
   })
 
   it('Calling the Increment function - wallet', () => {
+    // requires Contract "IncrementContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(3).click({ force: true })
     cy.window().then(function (p) {
@@ -24,6 +26,7 @@ describe('Taquito Live Code Examples - Smart Contract Interaction  - wallet', ()
   })
 
   it('Inspect the transfer params produced by Taquito using the toTransferParams() method - wallet', () => {
+    // requires Contract "IncrementContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(3).click({ force: true })
     cy.window().then(function (p) {

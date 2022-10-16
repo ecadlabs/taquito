@@ -22,6 +22,7 @@ describe('Taquito Live Code Examples - maps and Bigmaps - contract', () => {
     })
 
     it('Accessing the values of the map - contract', () => { 
+      // requires Contract " MapWithSingleMapForStorage" 
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(4).click()
       cy.waitUntil(() => cy.get(playgroundPreview).eq(4).contains('Operation injected.'))
@@ -34,6 +35,7 @@ describe('Taquito Live Code Examples - maps and Bigmaps - contract', () => {
     })
 
     it('Accessing Map values using Pairs - contract', () => { 
+      // requires Contract " MapWithPairasMapContract" 
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(8).click()
       cy.waitUntil(() => cy.get(playgroundPreview).eq(8).contains('quantity'))
@@ -46,6 +48,7 @@ describe('Taquito Live Code Examples - maps and Bigmaps - contract', () => {
     })
 
     it('Accessing Map values with complex keys - contract', () => { 
+      // requires Contract "MapWithComplexKeysContract" 
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(12).click()
       cy.waitUntil(() => cy.get(playgroundPreview).eq(12).contains('The value associated to this key is 100'))
@@ -61,12 +64,14 @@ describe('Taquito Live Code Examples - maps and Bigmaps - contract', () => {
     })
 
     it('Accessing the values of the map and the bigMap- contract', () => { 
+      // requires Contract "MapWithInitialStorageContract" 
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(16).click()
       cy.waitUntil(() => cy.get(playgroundPreview).eq(16).contains('The value associated with the specified key of the bigMap is 100.'))
     })
 
     it('Fetch multiple big map values at once - contract', () => { 
+      // requires Contract "BigMapsMultipleValuesContract" 
       cy.visit(page_under_test).contains(disclaimer)
       cy.get(runButton).eq(18).click()
       cy.waitUntil(() => cy.get(playgroundPreview).eq(18).contains('The value of the key'))

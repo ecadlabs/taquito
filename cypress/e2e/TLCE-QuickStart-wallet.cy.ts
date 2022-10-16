@@ -15,7 +15,8 @@ describe('Taquito Live Code Examples', () => {
     });
   })
 
-  it('Interact with a smart contract - wallet', () => {  /// Taquito Test Contract "IncrementContract" at example/deploy-docs-live-code-contracts.ts
+  it('Interact with a smart contract - wallet', () => {
+    // requires Contract "IncrementContract"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(4).click({ force: true })
     cy.window().then(function (p) {

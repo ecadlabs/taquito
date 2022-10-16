@@ -20,6 +20,7 @@ describe('Taquito Live Code Examples', () => {
   })
 
   it('Interact with a smart contract - contract', () => {
+    // requires contract: IncrementContract
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(3).click()
     cy.waitUntil(() => cy.get(playgroundPreview).eq(3).contains('Operation injected'))

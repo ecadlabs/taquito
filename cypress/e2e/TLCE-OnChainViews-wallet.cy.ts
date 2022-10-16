@@ -8,6 +8,8 @@ describe('Taquito Live Code Examples - On-chain views  - wallet', () => {
   const page_under_test = base_url + 'on_chain_views'
 
   it('Calling a contract entrypoint that makes a call to a view  - wallet', () => {
+    // requires Contract "ContractCallFib"
+    // requires Contract "ContractOnChainViews"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(1).click({ force: true })
     cy.window().then(function (p) {
@@ -16,6 +18,8 @@ describe('Taquito Live Code Examples - On-chain views  - wallet', () => {
   })
 
   it('Simulate a view execution - wallet', () => {
+    // requires Contract "ContractCallFib"
+    // requires Contract "ContractOnChainViews"
     cy.visit(page_under_test).contains(disclaimer)
     cy.get(runButton).eq(3).click({ force: true })
     cy.window().then(function (p) {
