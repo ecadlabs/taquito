@@ -8,7 +8,8 @@ import {
   filter,
   first,
   map,
-  shareReplay,
+  publishReplay,
+  refCount,
   switchMap,
   takeWhile,
   tap,
@@ -41,7 +42,8 @@ export class WalletOperation {
       );
     }),
     tap((newHead) => (this.lastHead = newHead)),
-    shareReplay({ bufferSize: 1, refCount: true })
+    publishReplay(1),
+    refCount()
   );
 
   // Observable that emit once operation is seen in a block
@@ -64,7 +66,8 @@ export class WalletOperation {
       return typeof x !== 'undefined';
     }),
     first(),
-    shareReplay({ bufferSize: 1, refCount: true })
+    publishReplay(1),
+    refCount()
   );
 
   async operationResults() {
