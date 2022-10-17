@@ -5,10 +5,9 @@ import { base_url, disclaimer, runButton, playgroundPreview } from './base'
 describe('Taquito Live Code Examples - Sapling Toolkit', () => {
 
   Cypress.config('defaultCommandTimeout', 120000);
-  const page_under_test = base_url + 'sapling'
 
   beforeEach(() => {
-    cy.visit(page_under_test).contains(disclaimer)
+    cy.visit(base_url + 'sapling').contains(disclaimer)
   })
 
   describe('Sapling Toolkit', () => {
