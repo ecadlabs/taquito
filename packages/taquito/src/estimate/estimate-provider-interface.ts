@@ -12,6 +12,7 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  BallotParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 
@@ -117,4 +118,14 @@ export interface EstimationProvider {
    * @param Estimate
    */
   txRollupSubmitBatch(params: TxRollupBatchParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  ballot(params: BallotParams): Promise<Estimate>;
 }

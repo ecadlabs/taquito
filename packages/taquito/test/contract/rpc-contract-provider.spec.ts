@@ -83,6 +83,7 @@ describe('RpcContractProvider test', () => {
     txRollupSubmitBatch: jest.Mock<any, any>;
     transferTicket: jest.Mock<any, any>;
     increasePaidStorage: jest.Mock<any, any>;
+    ballot: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -137,6 +138,7 @@ describe('RpcContractProvider test', () => {
       txRollupSubmitBatch: jest.fn(),
       transferTicket: jest.fn(),
       increasePaidStorage: jest.fn(),
+      ballot: jest.fn(),
     };
 
     // Required for operations confirmation polling

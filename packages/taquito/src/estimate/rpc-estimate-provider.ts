@@ -22,6 +22,7 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  BallotParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -36,6 +37,7 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createBallotOperation,
 } from '../contract/prepare';
 import {
   validateAddress,
@@ -639,6 +641,23 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  async ballot(params: BallotParams) {
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const op = await createBallotOperation(params);
     const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
     const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
     const estimateProperties = await this.prepareEstimate(
