@@ -1,5 +1,5 @@
 ---
-title: Event Subscription in Taquito
+title: Event subscription
 id: subscribe_event
 author: Davis Sawali
 ---
