@@ -33,7 +33,7 @@ The constructor of the `LedgerSigner` class takes three other optional parameter
 - `prompt`: **default is true**  
   If true, you will be asked on your Ledger device to send your public key for validation. **_Note that confirmation is required when using `@ledgerhq/hw-transport-webhid`, so you should not set this parameter to false if you are using this transport._**
 - `derivationType`: **default is DerivationType.ED25519**  
-  It can be DerivationType.ED25519 (tz1), DerivationType.SECP256K1 (tz2) or DerivationType.P256 (tz3).
+  It can be DerivationType.ED25519 | DerivationType.BIP32_ED25519 (tz1), DerivationType.SECP256K1 (tz2) or DerivationType.P256 (tz3).
 
 ```ts
 import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';

@@ -19,7 +19,7 @@ describe('RpcWrapperContractsLibrary tests', () => {
     ).toBeInstanceOf(ReadWrapperContractsLibrary);
   });
 
-  it('get script from RPC when contract is not in the library', async (done) => {
+  it('get a script from RPC when contract is not in the library', async (done) => {
     mockReadProvider.getScript.mockResolvedValue('script-from-rpc');
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const readWrapper = new ReadWrapperContractsLibrary(
