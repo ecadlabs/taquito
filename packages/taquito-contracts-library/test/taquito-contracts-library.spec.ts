@@ -91,19 +91,26 @@ describe('ContractsLibrary tests', () => {
   it('throw an InvalidAddress error if the contract address is invalid', () => {
     const contractAddress = 'KTinvalid';
     const contractLib = new ContractsLibrary();
-
-    try {
+    expect(() =>
       contractLib.addContract({
         [contractAddress]: {
           script,
           entrypoints,
         },
-      });
-    } catch (e: any) {
-      expect(e).toBeInstanceOf(InvalidAddressError);
-      expect(e.message).toEqual(`Address is invalid: ${contractAddress}`);
-      expect(e).toBeInstanceOf(Error);
-    }
+      })
+    ).toThrow(InvalidAddressError);
+    expect(() =>
+      contractLib.addContract({
+        [contractAddress]: {
+          script,
+          entrypoints,
+        },
+      })
+    ).toThrow(
+      expect.objectContaining({
+        message: expect.stringContaining('Address is invalid: KTinvalid'),
+      })
+    );
   });
 
   it('do not throw an InvalidAddress error if the contract address is valid', () => {
@@ -134,13 +141,13 @@ describe('ContractsLibrary tests', () => {
           script,
           entrypoints,
         },
-      });
-    } catch (e: any) {
-      expect(e).toBeInstanceOf(InvalidScriptFormatError);
-      expect(e.message).toEqual(
-        `An invalid script property has been provided for ${contractAddress}. The script property can be retrieved from TezosToolkit.rpc.getNormalizedScript(${contractAddress}). Invalid script: ${script}`
-      );
-      expect(e).toBeInstanceOf(Error);
-    }
+      })
+    ).toThrow(
+      expect.objectContaining({
+        message: expect.stringContaining(
+          'An invalid script property has been provided for KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY. The script property can be retrieved from TezosToolkit.rpc.getNormalizedScript(KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY). Invalid script: invalid'
+        ),
+      })
+    );
   });
 });
