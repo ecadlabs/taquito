@@ -4,7 +4,18 @@
  */
 
 import { STATUS_CODE } from './status_code';
-import axios from 'axios';
+import axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
+
+const isNode =
+  typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+
+let adapter: ((config: AxiosRequestConfig<any>) => AxiosPromise<any>) | undefined;
+
+if (!isNode) {
+  import('@vespaiach/axios-fetch-adapter').then((fetchAdapter) => {
+    adapter = fetchAdapter.default;
+  });
+}
 
 export * from './status_code';
 export { VERSION } from './version';
@@ -13,7 +24,7 @@ enum ResponseType {
   TEXT = 'text',
   JSON = 'json',
 }
-// Z TODO change any type >.>
+
 type ObjectType = Record<string, any>;
 
 export interface HttpRequestOptions {
@@ -125,6 +136,7 @@ export class HttpBackend {
         transformResponse,
         timeout: timeout,
         data: data,
+        adapter,
       });
 
       return response.data;
