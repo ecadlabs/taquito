@@ -2,7 +2,13 @@ import { CONFIGS } from './config';
 import { LedgerSigner, LedgerTransport, DerivationType } from '@taquito/ledger-signer';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { ligoSample } from "./data/ligo-simple-contract";
-import { TezosToolkit } from '@taquito/taquito';
+import { OriginateParams, TezosToolkit } from '@taquito/taquito';
+import { localForger } from '@taquito/local-forging';
+import { contractOriginationParams, rpcToForge } from './data/contract_origination';
+import { MichelsonV1Expression } from '@taquito/rpc';
+
+// PLEASE NOTE MAY NEED TO TEST ONE TEST AT A TIME
+  // as the ledger will fail if requested multiple times at once
 
 /**
  * LedgerSigner test
@@ -56,7 +62,6 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     });
 
     describe('Verify retrieving the public key from the Ledger', () => {
-      
       it('Verify that Ledger will provide correct public key and public key hash for tz1 curve and default path', async (done) => {
         const signer = new LedgerSigner(
           transport,
@@ -113,7 +118,6 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     });
 
     describe('Verify signing operation with Ledger Device', () => {
-      
       jest.setTimeout(30000);
 
       it('Verify that Ledger returns the correct signature', async (done) => {
@@ -185,5 +189,69 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         done();
       });
     })
+
+    describe('Verify that use of a ledger device works with bip32_ed25519', () => {
+      jest.setTimeout(60000);
+      it('Verify that the pk and pkh is correct', async (done) => {
+        const signer = new LedgerSigner(
+          transport,
+          "44'/1729'/1'/0'",
+          false,
+          DerivationType.BIP32_ED25519
+        )
+        const Tezos = new TezosToolkit(rpc);
+        Tezos.setSignerProvider(signer);
+
+        const pk = await Tezos.signer.publicKey();
+        const pkh = await Tezos.signer.publicKeyHash();
+
+        expect(pk).toEqual('edpkujVjFVJtb9Z1D7jpSpPMrKzdTRZSRT8E3L26T42vvA6VSv7jND');
+        expect(pkh).toEqual('tz1UpizQ6AGjMeCZCLpuyuL4BSzoUC4XD1QE');
+
+        done();
+      })
+    })
+
+    describe('Verify bip32 signature', () => {
+      jest.setTimeout(60000);
+      it('Verify that the signature is correctly prefixed with originated contract', async (done) => {
+        const signer = new LedgerSigner(
+          transport,
+          "44'/1729'/1'/0'",
+          false,
+          DerivationType.BIP32_ED25519
+        )
+        const Tezos = new TezosToolkit(rpc);
+        Tezos.setSignerProvider(signer);
+
+        const contractCode = rpcToForge.contents[0].script!
+        const contract = await Tezos.contract.originate(contractCode)
+
+        await contract.confirmation();
+        expect(contract.status).toEqual('applied')
+
+        expect(contract.raw.opOb.signature?.slice(0, 5)).toEqual('edsig')
+        done();
+      })
+
+      jest.setTimeout(60000);
+      it('Verify that the signature is correct with set forged payload', async (done) => {
+        const signer = new LedgerSigner(
+          transport,
+          "44'/1729'/1'/0'",
+          false,
+          DerivationType.BIP32_ED25519
+        )
+        const Tezos = new TezosToolkit(rpc);
+
+        const forge = await localForger.forge(rpcToForge)
+        const sig = await signer.sign(forge, new Uint8Array([3]))
+
+        expect(sig.prefixSig).toEqual('edsigtfJQi7mj7Lxbt4pt9U8LG6YU9pCCjxqR6qWyhGGorZ1iWJBCd9Wvhg8mFJKZfqhRSEnKoTEAbxNXaUvMAUeXdNYDp2PC5K')
+        expect(sig.bytes).toEqual('5a64ae05e0014c3a7936c2b09a51517116a1b1e47063319affade059baa45a7e6d0064beee4178338ea816d4e6e41eb7df5285b5fd318304b1e214fd0b990300000000007a02000000750500096500000008036803620394036e000000000501036c050202000000560316057a000403880342034c0655076505870368039400000008256465706f7369740200000015072f02000000090200000004034f03270200000000034c0743036a0000034c034d034f053d036d05700002031b034200000002030b')
+        done();
+      })
+    })
   });
-});
+})
+
