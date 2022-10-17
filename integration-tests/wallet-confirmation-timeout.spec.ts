@@ -3,6 +3,7 @@ import { CONFIGS } from "./config";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   let timeBetweenBlocks: BigNumber;

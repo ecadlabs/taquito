@@ -10,6 +10,8 @@ import { knownContractPtJakart2, knownBigMapContractPtJakart2, knownTzip12BigMap
 
 const nodeCrypto = require('crypto');
 
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 if (typeof jest !== 'undefined') {
   jest.setTimeout(60000 * 10);
 }
