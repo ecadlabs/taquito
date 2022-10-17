@@ -4,18 +4,14 @@
  */
 
 import { STATUS_CODE } from './status_code';
-import axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
 
-let adapter: ((config: AxiosRequestConfig<any>) => AxiosPromise<any>) | undefined;
-
-if (!isNode) {
-  import('@vespaiach/axios-fetch-adapter').then((fetchAdapter) => {
-    adapter = fetchAdapter.default;
-  });
-}
+const adapterPromise = isNode
+  ? undefined
+  : import('@vespaiach/axios-fetch-adapter').then((mod) => mod.default).catch(() => undefined);
 
 export * from './status_code';
 export { VERSION } from './version';
@@ -128,6 +124,7 @@ export class HttpBackend {
     }
 
     try {
+      const adapter = adapterPromise && (await adapterPromise);
       const response = await axios.request<T>({
         url: url + this.serialize(query),
         method: method ?? 'GET',
