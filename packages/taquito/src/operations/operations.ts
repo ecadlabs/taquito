@@ -3,7 +3,7 @@ import {
   OperationContentsAndResult,
   OperationContentsAndResultReveal,
 } from '@taquito/rpc';
-import { defer, EMPTY, of, range, ReplaySubject, throwError } from 'rxjs';
+import { BehaviorSubject, defer, EMPTY, of, range, ReplaySubject, throwError } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -36,6 +36,11 @@ export class Operation {
 
   private currentHead$ = this._pollingConfig$.pipe(
     switchMap((config) => {
+      return new BehaviorSubject(config).pipe(
+        timeoutWith(config.timeout * 1000, throwError(new Error('Confirmation polling timed out')))
+      );
+    }),
+    switchMap(() => {
       return defer(() =>
         createObservableFromSubscription(this.context.stream.subscribeBlock('head'))
       ).pipe(
@@ -46,8 +51,7 @@ export class Operation {
             endWith(newHead)
           );
         }),
-        tap((newHead) => (this.lastHead = newHead)),
-        timeoutWith(config.timeout * 1000, throwError(new Error('Confirmation polling timed out')))
+        tap((newHead) => (this.lastHead = newHead))
       );
     }),
     shareReplay({ refCount: true })
