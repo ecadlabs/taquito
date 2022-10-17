@@ -1,5 +1,4 @@
 import BigNumber from "bignumber.js";
-import { CONFIGS } from "./config";
 import { CONFIGS, sleep } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
