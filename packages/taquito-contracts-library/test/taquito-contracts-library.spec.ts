@@ -135,7 +135,15 @@ describe('ContractsLibrary tests', () => {
 
     !expect(script.code);
 
-    try {
+    expect(() =>
+      contractLib.addContract({
+        [contractAddress]: {
+          script,
+          entrypoints,
+        },
+      })
+    ).toThrow(InvalidScriptFormatError);
+    expect(() =>
       contractLib.addContract({
         [contractAddress]: {
           script,
@@ -144,9 +152,7 @@ describe('ContractsLibrary tests', () => {
       })
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining(
-          'An invalid script property has been provided for KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY. The script property can be retrieved from TezosToolkit.rpc.getNormalizedScript(KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY). Invalid script: invalid'
-        ),
+        message: expect.stringContaining('An invalid script property has been provided for'),
       })
     );
   });
