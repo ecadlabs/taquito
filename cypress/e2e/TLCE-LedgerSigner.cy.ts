@@ -7,8 +7,12 @@ describe('Taquito Live Code Examples - Ledger Signer', () => {
   Cypress.config('defaultCommandTimeout', 30000);
   const page_under_test = base_url + "ledger_signer"
 
-  it("Live example that iterates from the path 44'/1729'/0'/0' to 44'/1729'/9'/0'", () => {
+  beforeEach(() => {
     cy.visit(page_under_test).contains(disclaimer)
+  })
+
+  it("Live example that iterates from the path 44'/1729'/0'/0' to 44'/1729'/9'/0'", () => {
+    
     cy.on('uncaught:exception', (err, runnable) => {
       console.log("err :" + err)
       console.log("runnable :" + runnable)

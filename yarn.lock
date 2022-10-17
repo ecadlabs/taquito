@@ -196,7 +196,7 @@
   dependencies:
     "@babel/types" "^7.16.7"
 
-"@babel/helper-validator-identifier@^7.15.7", "@babel/helper-validator-identifier@^7.16.7":
+"@babel/helper-validator-identifier@^7.16.7":
   "integrity" "sha512-hsEnFemeiW4D08A5gUAZxLBTXpZ39P+a+DGDsHw1yxqyQ/jzFEnxf5uTEGp+3bzAbNOxU1paTgYS4ECU/IgfDw=="
   "resolved" "https://registry.npmjs.org/@babel/helper-validator-identifier/-/helper-validator-identifier-7.16.7.tgz"
   "version" "7.16.7"
@@ -338,20 +338,12 @@
     "debug" "^4.1.0"
     "globals" "^11.1.0"
 
-"@babel/types@^7.0.0", "@babel/types@^7.16.7", "@babel/types@^7.17.0", "@babel/types@^7.18.0", "@babel/types@^7.18.2", "@babel/types@^7.3.0", "@babel/types@^7.3.3":
+"@babel/types@^7.0.0", "@babel/types@^7.16.7", "@babel/types@^7.17.0", "@babel/types@^7.18.0", "@babel/types@^7.18.2", "@babel/types@^7.3.0", "@babel/types@^7.3.3", "@babel/types@7.16.0":
   "integrity" "sha512-0On6B8A4/+mFUto5WERt3EEuG1NznDirvwca1O8UwXQHVY8g3R7OzYgxXdOfMwLO08UrpUD/2+3Bclyq+/C94Q=="
   "resolved" "https://registry.npmjs.org/@babel/types/-/types-7.18.2.tgz"
   "version" "7.18.2"
   dependencies:
     "@babel/helper-validator-identifier" "^7.16.7"
-    "to-fast-properties" "^2.0.0"
-
-"@babel/types@7.16.0":
-  "integrity" "sha512-PJgg/k3SdLsGb3hhisFvtLOw5ts113klrpLuIPtCJIU+BB24fqq6lf8RWqKJEjzqXR9AEH1rIb5XTqwBHB+kQg=="
-  "resolved" "https://registry.npmjs.org/@babel/types/-/types-7.16.0.tgz"
-  "version" "7.16.0"
-  dependencies:
-    "@babel/helper-validator-identifier" "^7.15.7"
     "to-fast-properties" "^2.0.0"
 
 "@bcoe/v8-coverage@^0.2.3":
@@ -2047,18 +2039,18 @@
     "@taquito/utils" "^14.0.0"
     "buffer" "^6.0.3"
 
-"@taquito/local-forging@^14.0.0", "@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
+"@taquito/local-forging@file:/home/mike/taquito/packages/taquito-local-forging":
   "resolved" "file:packages/taquito-local-forging"
   "version" "14.0.0"
   dependencies:
     "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.1.0"
 
-"@taquito/michel-codec@^14.0.0", "@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
+"@taquito/michel-codec@file:/home/mike/taquito/packages/taquito-michel-codec":
   "resolved" "file:packages/taquito-michel-codec"
   "version" "14.0.0"
 
-"@taquito/michelson-encoder@^14.0.0", "@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
+"@taquito/michelson-encoder@file:/home/mike/taquito/packages/taquito-michelson-encoder":
   "resolved" "file:packages/taquito-michelson-encoder"
   "version" "14.0.0"
   dependencies:
@@ -2119,12 +2111,6 @@
   "resolved" "file:packages/taquito"
   "version" "14.0.0"
   dependencies:
-    "@taquito/http-utils" "^14.0.0"
-    "@taquito/local-forging" "^14.0.0"
-    "@taquito/michel-codec" "^14.0.0"
-    "@taquito/michelson-encoder" "^14.0.0"
-    "@taquito/rpc" "^14.0.0"
-    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.1.0"
     "rxjs" "^6.6.3"
 
@@ -2144,20 +2130,11 @@
 "@taquito/tzip12@file:/home/mike/taquito/packages/taquito-tzip12":
   "resolved" "file:packages/taquito-tzip12"
   "version" "14.0.0"
-  dependencies:
-    "@taquito/michelson-encoder" "^14.0.0"
-    "@taquito/taquito" "^14.0.0"
-    "@taquito/tzip16" "^14.0.0"
 
-"@taquito/tzip16@^14.0.0", "@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
+"@taquito/tzip16@file:/home/mike/taquito/packages/taquito-tzip16":
   "resolved" "file:packages/taquito-tzip16"
   "version" "14.0.0"
   dependencies:
-    "@taquito/http-utils" "^14.0.0"
-    "@taquito/michelson-encoder" "^14.0.0"
-    "@taquito/rpc" "^14.0.0"
-    "@taquito/taquito" "^14.0.0"
-    "@taquito/utils" "^14.0.0"
     "bignumber.js" "^9.1.0"
     "crypto-js" "^4.1.1"
 
@@ -2301,15 +2278,10 @@
     "@types/estree" "*"
     "@types/json-schema" "*"
 
-"@types/estree@*", "@types/estree@^1.0.0":
+"@types/estree@*", "@types/estree@^0.0.50", "@types/estree@^1.0.0":
   "integrity" "sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ=="
   "resolved" "https://registry.npmjs.org/@types/estree/-/estree-1.0.0.tgz"
   "version" "1.0.0"
-
-"@types/estree@^0.0.50":
-  "integrity" "sha512-C6N5s2ZFtuZRj54k2/zyRhNDjJwwcViAM3Nbm8zjBpbqAdZ00mr0CFxvSKeO8Y/e03WVFLpQMdHYVfUd6SB+Hw=="
-  "resolved" "https://registry.npmjs.org/@types/estree/-/estree-0.0.50.tgz"
-  "version" "0.0.50"
 
 "@types/estree@^0.0.51":
   "integrity" "sha512-CuPgU6f3eT/XgKKPqKd/gLZV1Xmvf1a2R5POBOGQa6uv82xpls89HU5zKeVoyR8XzHd1RGNOlQlvUe3CFkjWNQ=="
@@ -4443,6 +4415,11 @@
   "integrity" "sha512-uZ+M8/MqRcpf+FII/UZrU7g1qYZ4aVlHcgyVopnladyoBrpoaMJ4PKZDrdOJ05H5RHbr7s9Tid635X3E+ZLU/Q=="
   "resolved" "https://registry.npmjs.org/cypress-wait-until/-/cypress-wait-until-1.7.2.tgz"
   "version" "1.7.2"
+
+"cypress-xpath@^2.0.1":
+  "integrity" "sha512-qMagjvinBppNJdMAkucWESP9aP4rDTs7c96m0vwMuZTVx3NqP2E3z/hkoRf8Ea9soL8yTvUuuyF1cg/Sb1Yhbg=="
+  "resolved" "https://registry.npmjs.org/cypress-xpath/-/cypress-xpath-2.0.1.tgz"
+  "version" "2.0.1"
 
 "cz-conventional-changelog@^3.3.0":
   "integrity" "sha512-U466fIzU5U22eES5lTNiNbZ+d8dfcHcssH4o7QsdWaCcRs/feIPCxKYSWkYBNs5mny7MvEfwpTLWjvbm94hecw=="
@@ -10733,17 +10710,12 @@
   "resolved" "https://registry.npmjs.org/type-fest/-/type-fest-0.8.1.tgz"
   "version" "0.8.1"
 
-"typedarray-to-buffer@^3.1.5":
+"typedarray-to-buffer@^3.1.5", "typedarray-to-buffer@^4.0.0":
   "integrity" "sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q=="
   "resolved" "https://registry.npmjs.org/typedarray-to-buffer/-/typedarray-to-buffer-3.1.5.tgz"
   "version" "3.1.5"
   dependencies:
     "is-typedarray" "^1.0.0"
-
-"typedarray-to-buffer@^4.0.0":
-  "integrity" "sha512-6dOYeZfS3O9RtRD1caom0sMxgK59b27+IwoNy8RDPsmslSGOyU+mpTamlaIW7aNKi90ZQZ9DFaZL3YRoiSCULQ=="
-  "resolved" "https://registry.npmjs.org/typedarray-to-buffer/-/typedarray-to-buffer-4.0.0.tgz"
-  "version" "4.0.0"
 
 "typedarray@^0.0.6":
   "integrity" "sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA=="
