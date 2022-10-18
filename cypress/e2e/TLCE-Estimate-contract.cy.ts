@@ -5,11 +5,7 @@ import { base_url, disclaimer } from './base'
 describe('Taquito Live Code Examples', () => {
 
   Cypress.config('defaultCommandTimeout', 30000);
-  const page_under_test = base_url + 'estimate'
-
-  beforeEach(() => {
-    cy.visit(page_under_test).contains(disclaimer)
-  })
+  beforeEach(() => { cy.visit(base_url + 'estimate').contains(disclaimer) })
 
   it('Estimate a transfer operation - contract', () => {
     cy.get("[class='button_G4Yn runButton_oaHB']").eq(0).click()
