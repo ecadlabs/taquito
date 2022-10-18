@@ -1,12 +1,19 @@
-import { OperationContentsAndResult, OperationContentsAndResultReveal } from '@taquito/rpc';
-import { defer, EMPTY, of, ReplaySubject, throwError } from 'rxjs';
+import {
+  BlockResponse,
+  OperationContentsAndResult,
+  OperationContentsAndResultReveal,
+} from '@taquito/rpc';
+import { BehaviorSubject, defer, EMPTY, of, range, ReplaySubject, throwError } from 'rxjs';
 import {
   catchError,
+  concatMap,
+  endWith,
   filter,
   first,
   map,
   shareReplay,
   switchMap,
+  tap,
   timeoutWith,
 } from 'rxjs/operators';
 import { Context } from '../context';
@@ -25,13 +32,26 @@ interface PollingConfig {
  */
 export class Operation {
   private _pollingConfig$ = new ReplaySubject<PollingConfig>(1);
+  private lastHead: BlockResponse | undefined;
 
   private currentHead$ = this._pollingConfig$.pipe(
     switchMap((config) => {
+      return new BehaviorSubject(config).pipe(
+        timeoutWith(config.timeout * 1000, throwError(new Error('Confirmation polling timed out')))
+      );
+    }),
+    switchMap(() => {
       return defer(() =>
         createObservableFromSubscription(this.context.stream.subscribeBlock('head'))
       ).pipe(
-        timeoutWith(config.timeout * 1000, throwError(new Error('Confirmation polling timed out')))
+        switchMap((newHead) => {
+          const prevHead = this.lastHead?.header.level ?? newHead.header.level - 1;
+          return range(prevHead + 1, newHead.header.level - prevHead - 1).pipe(
+            concatMap((level) => this.context.readProvider.getBlock(level)),
+            endWith(newHead)
+          );
+        }),
+        tap((newHead) => (this.lastHead = newHead))
       );
     }),
     shareReplay({ refCount: true })

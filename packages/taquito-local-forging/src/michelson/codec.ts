@@ -66,7 +66,7 @@ export const valueEncoder: Encoder<MichelsonValue> = (value: MichelsonValue) => 
     return intEncoder(value);
   }
 
-  throw new UnexpectedMichelsonValueError(value);
+  throw new UnexpectedMichelsonValueError(JSON.stringify(value));
 };
 
 export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {

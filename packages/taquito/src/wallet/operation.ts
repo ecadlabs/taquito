@@ -1,12 +1,16 @@
 import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
-import { combineLatest, from, Observable, of, ReplaySubject } from 'rxjs';
+import { combineLatest, from, Observable, of, range, ReplaySubject } from 'rxjs';
 import {
   catchError,
+  concatMap,
   distinctUntilChanged,
+  endWith,
   filter,
   first,
   map,
-  shareReplay,
+  publishReplay,
+  refCount,
+  switchMap,
   takeWhile,
   tap,
 } from 'rxjs/operators';
@@ -17,20 +21,6 @@ import { BlockIdentifier } from '../read-provider/interface';
 import { InvalidConfirmationCountError, ConfirmationUndefinedError } from '../error';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
-
-/**
- *  @category Error
- *  @description Error that indicates a missed block when polling to retrieve new head block. This may happen when the polling interval is greater than the time between blocks.
- */
-export class MissedBlockDuringConfirmationError extends Error {
-  name = 'MissedBlockDuringConfirmationError';
-
-  constructor() {
-    super(
-      'Taquito missed a block while waiting for operation confirmation and was not able to find the operation'
-    );
-  }
-}
 
 const MAX_BRANCH_ANCESTORS = 60;
 
@@ -44,18 +34,16 @@ export class WalletOperation {
 
   private lastHead: BlockResponse | undefined;
   protected newHead$: Observable<BlockResponse> = this._newHead$.pipe(
-    tap((newHead) => {
-      if (
-        !this._included &&
-        this.lastHead &&
-        newHead.header.level - this.lastHead.header.level > 1
-      ) {
-        throw new MissedBlockDuringConfirmationError();
-      }
-
-      this.lastHead = newHead;
+    switchMap((newHead) => {
+      const prevHead = this.lastHead?.header.level ?? newHead.header.level - 1;
+      return range(prevHead + 1, newHead.header.level - prevHead - 1).pipe(
+        concatMap((level) => this.context.readProvider.getBlock(level)),
+        endWith(newHead)
+      );
     }),
-    shareReplay({ bufferSize: 1, refCount: true })
+    tap((newHead) => (this.lastHead = newHead)),
+    publishReplay(1),
+    refCount()
   );
 
   // Observable that emit once operation is seen in a block
@@ -78,7 +66,8 @@ export class WalletOperation {
       return typeof x !== 'undefined';
     }),
     first(),
-    shareReplay({ bufferSize: 1, refCount: true })
+    publishReplay(1),
+    refCount()
   );
 
   async operationResults() {

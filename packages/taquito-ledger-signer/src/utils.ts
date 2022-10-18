@@ -40,7 +40,7 @@ export function transformPathToBuffer(path: string): Buffer {
  * @description Converts uncompressed ledger key to standard tezos binary representation
  */
 export function compressPublicKey(publicKey: Buffer, curve: DerivationType) {
-  if (curve === 0x00) {
+  if (curve === 0x00 || curve === 0x03) {
     publicKey = publicKey.slice(1);
   } else {
     publicKey[0] = 0x02 + (publicKey[64] & 0x01);

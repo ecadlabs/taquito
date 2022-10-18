@@ -1,0 +1,41 @@
+import BigNumber from "bignumber.js";
+
+import { CONFIGS } from "./config";
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+CONFIGS().forEach(({ lib, rpc, setup }) => {
+  const Tezos = lib;
+  let timeBetweenBlocks: BigNumber;
+  describe(`Test confirmationPollingTimeoutSecond with contract API using: ${rpc}`, () => {
+
+    beforeEach(async (done) => {
+      await setup();
+      timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
+      done()
+    })
+
+    it('Verify a timeout error is thrown when an operation is never confirmed', async (done) => {
+      const timeout = Number(timeBetweenBlocks.multipliedBy(2));
+      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: timeout } })
+      expect(async () => {
+        const op = await Tezos.contract.originate({
+          code: `parameter string;
+          storage string;
+          code {CAR;
+                PUSH string "Hello ";
+                CONCAT;
+                NIL operation; PAIR};
+          `,
+          init: `"test"`,
+          gasLimit: 600000 // gas limit too high, the operation won't be included in a block
+        })
+        await op.confirmation()
+      }).rejects.toThrow('Confirmation polling timed out');
+
+      await sleep(timeout * 2000);
+
+      done();
+    })
+  });
+})
