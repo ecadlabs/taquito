@@ -5,29 +5,22 @@ import { base_url, disclaimer, runButton, playgroundPreview } from './base'
 describe('Taquito Live Code Examples - Tzip12 Token Metadata - contract', () => {
 
   Cypress.config('defaultCommandTimeout', 60000);
-  const page_under_test = base_url + "tzip12"
-
-  beforeEach(() => {
-    cy.visit(page_under_test).contains(disclaimer)
-  })
+  beforeEach(() => { cy.visit(base_url + 'tzip12').contains(disclaimer) })
 
   it('The token metadata are obtained from an off-chain view token_metadata - contract', () => {
-    // requires Contract "Tzip12BigMapOffChainContract"
-    
+    // requires Contract "Tzip12BigMapOffChainContract"    
     cy.get(runButton).eq(0).click()
     cy.waitUntil(() => cy.get(playgroundPreview).eq(0).contains('AliceToken'))
-    })
+  })
 
   it('Calling the off-chain view token_metadata using the taquito-tzip16 package - contract', () => {
-    // requires Contract "Tzip12BigMapOffChainContract"
-    
+    // requires Contract "Tzip12BigMapOffChainContract"    
     cy.get(runButton).eq(2).click()
     cy.waitUntil(() => cy.get(playgroundPreview).eq(2).contains('AliceToken'))
   })
 
   it('The token metadata are found in the big map %token_metadata - contract', () => {
-    // requires Contract "Tzip12BigMapOffChainContract"
-    
+    // requires Contract "Tzip12BigMapOffChainContract"    
     cy.get(runButton).eq(4).click()
     cy.waitUntil(() => cy.get(playgroundPreview).eq(4).contains('token_id'))
   })

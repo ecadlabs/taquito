@@ -5,14 +5,9 @@ import { base_url, disclaimer, runButton } from './base'
 describe('Taquito Live Code Examples', () => {
 
   Cypress.config('defaultCommandTimeout', 20000);
-  const page_under_test = base_url + 'quick_start/'
-
-  beforeEach(() => {
-    cy.visit(page_under_test).contains(disclaimer)
-  })
+  beforeEach(() => { cy.visit(base_url + 'quick_start').contains(disclaimer) })
 
   it('Transfer - wallet', () => {
-    
     cy.get(runButton).eq(2).click({ force: true })
     cy.window().then(function (p) {
       cy.stub(p, "prompt").returns("Beacon");
@@ -20,8 +15,7 @@ describe('Taquito Live Code Examples', () => {
   })
 
   it('Interact with a smart contract - wallet', () => {
-    // requires Contract "IncrementContract"
-    
+    // requires Contract "IncrementContract"    
     cy.get(runButton).eq(4).click({ force: true })
     cy.window().then(function (p) {
       cy.stub(p, "prompt").returns("Beacon");

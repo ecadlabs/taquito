@@ -5,17 +5,12 @@ import { base_url, disclaimer, runButton } from './base'
 describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views  - wallet', () => {
 
   Cypress.config('defaultCommandTimeout', 30000);
-  const page_under_test = base_url + 'metadata-tzip16'
-
-  beforeEach(() => {
-    cy.visit(page_under_test).contains(disclaimer)
-  })
+  beforeEach(() => { cy.visit(base_url + "metadata-tzip16").contains(disclaimer) })
 
   describe('Get the metadata - contract', () => {
 
     it('Tezos-storage example  - wallet', () => {
-      // requires Contract "Tzip16StorageContract"
-      
+      // requires Contract "Tzip16StorageContract"      
       cy.get(runButton).eq(1).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
@@ -23,8 +18,7 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views  - wa
     })
 
     it('HTTPS example - wallet', () => {
-      // requires Contract " Tzip16HTTPSContract"
-      
+      // requires Contract " Tzip16HTTPSContract"      
       cy.get(runButton).eq(3).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
@@ -32,8 +26,7 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views  - wa
     })
 
     it('Example having a SHA256 hash - wallet', () => {
-      // requires Contract "Tzip16SHA256Contract"
-      
+      // requires Contract "Tzip16SHA256Contract"      
       cy.get(runButton).eq(5).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
@@ -41,8 +34,7 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views  - wa
     })
 
     it('IPFS example - wallet', () => {
-      // requires Contract "Tzip16IPFSContract"
-      
+      // requires Contract "Tzip16IPFSContract"      
       cy.get(runButton).eq(7).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
@@ -53,8 +45,7 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views  - wa
   describe('Execute off-chain views - contract', () => {
 
     it('Run a view named someJson - wallet', () => {
-      // requires Contract "Tzip16OnChainContractJSON"
-      
+      // requires Contract "Tzip16OnChainContractJSON"      
       cy.get(runButton).eq(9).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
@@ -62,8 +53,7 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views  - wa
     })
 
     it('Run a view named multiply-the-nat-in-storage - wallet', () => {
-      // requires Contract "Tzip16OnChainContractMultiply"
-      
+      // requires Contract "Tzip16OnChainContractMultiply"      
       cy.get(runButton).eq(11).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
@@ -74,8 +64,7 @@ describe('Taquito Live Code Examples - TZIP-16 Contract Metadata and Views  - wa
   describe('Execute a custom view - contract', () => {
 
     it('Execute the view multiply-the-nat-in-storage in a custom way - wallet', () => {
-      // requires Contract "Tzip16OnChainContractMultiply"
-      
+      // requires Contract "Tzip16OnChainContractMultiply"      
       cy.get(runButton).eq(13).click({ force: true })
       cy.window().then(function (p) {
         cy.stub(p, "prompt").returns("Beacon");
