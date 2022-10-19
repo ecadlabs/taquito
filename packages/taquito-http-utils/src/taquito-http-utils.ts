@@ -6,6 +6,13 @@
 import { STATUS_CODE } from './status_code';
 import axios from 'axios';
 
+const isNode =
+  typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+
+const adapterPromise = isNode
+  ? undefined
+  : import('@vespaiach/axios-fetch-adapter').then((mod) => mod.default).catch(() => undefined);
+
 export * from './status_code';
 export { VERSION } from './version';
 
@@ -13,7 +20,7 @@ enum ResponseType {
   TEXT = 'text',
   JSON = 'json',
 }
-// Z TODO change any type >.>
+
 type ObjectType = Record<string, any>;
 
 export interface HttpRequestOptions {
@@ -117,6 +124,7 @@ export class HttpBackend {
     }
 
     try {
+      const adapter = adapterPromise && (await adapterPromise);
       const response = await axios.request<T>({
         url: url + this.serialize(query),
         method: method ?? 'GET',
@@ -125,6 +133,7 @@ export class HttpBackend {
         transformResponse,
         timeout: timeout,
         data: data,
+        adapter,
       });
 
       return response.data;
