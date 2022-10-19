@@ -4,7 +4,7 @@
     "build": "nx run-many --target=build --no-private",
     "bootstrap": "lerna bootstrap --force-local",
     "rebuild": "npm run clean && npm clean-install && npm run build",
-    "test": "nx test @taquito/taquito --collectCoverage",
+    "test": "nx run-many --target=test --collectCoverage",
     "postinstall": "npm run bootstrap",
     "lint": "lerna run lint",
     "clean": "lerna clean --yes",
