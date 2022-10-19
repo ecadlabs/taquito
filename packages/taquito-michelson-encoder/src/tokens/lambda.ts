@@ -2,7 +2,7 @@ import { LambdaTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory } from './token';
 
 export class LambdaToken extends Token {
-  static prim: 'lambda' = 'lambda' as const;
+  static prim: 'lambda' = 'lambda';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

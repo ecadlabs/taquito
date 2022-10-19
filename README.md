@@ -101,66 +101,38 @@ Alternatively, get started with the [Taquito boilerplate project](https://github
 
 | Node.js version  |     |
 | ---------------- | --- |
-| v12              | ❌  |
-| v14              | ❌  |
+| v12              | ✅  |
+| v14              | ✅  |
 | v16.13.1         | ✅  |
-| v16.13.2         | ❌  |
-| v17.3.x          | ✅  |
-| v17.5.x          | ❌  |
+| >v16.13.1        | ❌  |
 
 ## Contributors Getting Started
 
-### Install Required Packages
+### Setup and build the Taquito project 
 
-First, *install or update* `nvm` via their install script; see [installing nvm](https://github.com/nvm-sh/nvm#installing-and-updating) for more.
+__Make sure you have a version of Node.js supported by Taquito__
 
-Next, use it to install/use a suitable version of **Node.js** as listed above, for example:
-
-    `nvm use v17.3.0`
-
-*Ensure that you use a supported version of Node.js as listed above!*
-
-* Install `lerna` globally via `npm`:
-
-    `npm install -g lerna`
-
-*Taquito uses `lerna` internally to simplify the build configuration.*
-
-* Install Nx:
-
-    `npm install -g nx`
-
-[nx](https://nx.dev/) is used to speed up the build, test and overall DX.
-
-* Install `libudev-dev` if you are developing on Linux:
-
-    `sudo apt-get install libudev-dev`
-
-*This package contains files needed to develop against `libudev`.*
-
-### Setup and build the Taquito project
-
-* Run `npm run rebuild`
-
-Under the covers, this will invoke serially the following commands:
-
-* Run `npm run clean`
-* Run `npm clean-install`
+* Install lerna globally `npm install -g lerna`
+* Run `npm install`
+* Run `lerna bootstrap --force-local`
 * Run `npm run build`
 
-The `clean-install` (or just, `ci`) command ensures a clean install of all depenencies, and respects `package-lock.json`, to ensure a deterministic and repeatable build. It is also some 2x to 10x faster than `npm install`.
+---
+**NOTE**
+If you are getting the following error on a fresh install: `fatal error: libudev.h: No such file or directory`;
+try installing the package libudev-dev.
+Example for Ubuntu: `sudo apt-get install libudev-dev`
 
-Note that `ci` is an npm *built-in*, so the invocation is not prepended with `run`.
+---
 
-### Useful npm command targets/scripts
+### Useful npm command targets
 
-See the top-level `package.json` "scripts" section. Some common targets are:
+See the top-level `package.json` file. Some common targets are:
 
-* `npm run clean`: Recursively delete all build artifacts
-* `npm run test`: Run the unit tests
-* `npm run build`: Generate bundles, typings, and create TypeDocs for all packages
-* `npm run lint`: Run the code linter (`eslint`)
-* `npm run example`: Run an example Node.js app that demonstrates all functionality
+* `npm run test`: Run all unit tests
+* `npm run build`: Generate bundles and typings, create docs for all packages
+* `npm run lint`: Lints code
+* `npm run example`: Run an example node js app that does a tour of all the functionality
 
 ### Running Integration Tests
 
@@ -168,7 +140,8 @@ The Taquito integration tests are located in the `/integration-tests/` directory
 
 To run the integration tests run `npm run test`. The integration test suite runs all tests against the current tezos protocol testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
 
-There are many integration tests, and as they interact with real testnets, they can be slow; furthermore, occasionally tests may fail due to extrinsic reasons related to public testnets.
+There are many integration tests, and as they interact with real testnets, they can be slow, and occasionally tests may fail due to extrinsic reasons related to public testnets.
+
 
 #### Modifying Taquito source
 
@@ -180,14 +153,12 @@ After making a change to Taquito, linting and running the unit test suite should
 
 ### Running the website locally
 
-The Tezos Taquito [website][4] is built using [Docusaurus][5].
-
-To run the Taquito website in development mode locally, run the following commands:
+The Tezos Taquito [website][4] is built using [Docusaurus][5] To run the Taquito website in development mode locally, run the following commands:
 
 ```sh
 cd website
-npm install
-npm start
+yarn
+yarn start
 ```
 
 ---
@@ -228,5 +199,3 @@ Special thanks to these libraries, which have been excellent references for deve
 
 - https://github.com/AndrewKishino/sotez
 - https://github.com/TezTech/eztz
-
-

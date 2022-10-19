@@ -13,7 +13,7 @@ export class OrTokenDecodingError extends Error {
 }
 
 export class OrToken extends ComparableToken {
-  static prim: 'or' = 'or' as const;
+  static prim: 'or' = 'or';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

@@ -16,7 +16,7 @@ export class ChainIDValidationError extends TokenValidationError {
 }
 
 export class ChainIDToken extends ComparableToken {
-  static prim: 'chain_id' = 'chain_id' as const;
+  static prim: 'chain_id' = 'chain_id';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

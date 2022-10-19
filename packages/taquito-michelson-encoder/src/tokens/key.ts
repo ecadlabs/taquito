@@ -25,7 +25,7 @@ export class KeyValidationError extends TokenValidationError {
 }
 
 export class KeyToken extends ComparableToken {
-  static prim: 'key' = 'key' as const;
+  static prim: 'key' = 'key';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

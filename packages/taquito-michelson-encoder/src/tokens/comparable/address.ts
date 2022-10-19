@@ -16,7 +16,7 @@ export class AddressValidationError extends TokenValidationError {
 }
 
 export class AddressToken extends ComparableToken {
-  static prim: 'address' = 'address' as const;
+  static prim: 'address' = 'address';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

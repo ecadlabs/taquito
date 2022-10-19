@@ -21,7 +21,7 @@ export class TxRollupL2AddressValidationError extends TokenValidationError {
 }
 
 export class TxRollupL2AddressToken extends ComparableToken {
-  static prim: 'tx_rollup_l2_address' = 'tx_rollup_l2_address' as const;
+  static prim: 'tx_rollup_l2_address' = 'tx_rollup_l2_address';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

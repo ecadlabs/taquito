@@ -21,7 +21,7 @@ export class BigMapValidationError extends TokenValidationError {
 }
 
 export class BigMapToken extends Token {
-  static prim: 'big_map' = 'big_map' as const;
+  static prim: 'big_map' = 'big_map';
   constructor(
     protected val: { prim: string; args: any[]; annots?: any[] },
     protected idx: number,

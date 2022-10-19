@@ -18,7 +18,8 @@ jobs:
       with:
         node-version: 16.13.2
     - run: npm ci
-    - run: npm run build
+    - run: npm run lerna -- bootstrap
+    - run: npm run lerna run build
       env:
         ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
         ALGOLIA_SEARCH_API_KEY: ${{ secrets.ALGOLIA_SEARCH_API_KEY }}

@@ -8,7 +8,7 @@ export class ChestKeyValidationError extends TokenValidationError {
   }
 }
 export class ChestKeyToken extends Token {
-  static prim: 'chest_key' = 'chest_key' as const;
+  static prim: 'chest_key' = 'chest_key';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

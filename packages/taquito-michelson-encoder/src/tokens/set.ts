@@ -16,7 +16,7 @@ export class SetValidationError extends TokenValidationError {
 }
 
 export class SetToken extends Token {
-  static prim: 'set' = 'set' as const;
+  static prim: 'set' = 'set';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

@@ -9,7 +9,7 @@ export class SaplingTransactionDeprecatedValidationError extends TokenValidation
 }
 
 export class SaplingTransactionDeprecatedToken extends Token {
-  static prim: 'sapling_transaction_deprecated' = 'sapling_transaction_deprecated' as const;
+  static prim: 'sapling_transaction_deprecated' = 'sapling_transaction_deprecated';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
