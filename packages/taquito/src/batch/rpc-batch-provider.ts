@@ -95,7 +95,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add a coantract call to the batch
+   * @description Add a contract call to the batch
    *
    * @param params Call a contract method
    * @param options Generic operation parameters
