@@ -27,6 +27,7 @@ export enum DerivationType {
   ED25519 = 0x00, // tz1
   SECP256K1 = 0x01, // tz2
   P256 = 0x02, // tz3
+  BIP32_ED25519 = 0x03, // tz1 BIP32
 }
 
 /**
@@ -37,7 +38,7 @@ export class InvalidDerivationTypeError extends Error {
   public name = 'InvalidDerivationTypeError';
   constructor(public derivationType: string) {
     super(
-      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1 or DerivationType.P256`
+      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1, DerivationType.P256 or DerivationType.BIP32_ED25519`
     );
   }
 }
@@ -68,7 +69,7 @@ export { VERSION } from './version';
  * @param transport A transport instance from LedgerJS libraries depending on the platform used (e.g. Web, Node)
  * @param path The ledger derivation path (default is "44'/1729'/0'/0'")
  * @param prompt Whether to prompt the ledger for public key (default is true)
- * @param derivationType The value which defines the curve to use (DerivationType.ED25519(default), DerivationType.SECP256K1, DerivationType.P256)
+ * @param derivationType The value which defines the curve to use (DerivationType.ED25519(default), DerivationType.SECP256K1, DerivationType.P256, DerivationType.BIP32_ED25519)
  *
  * @example
  * ```
@@ -82,6 +83,13 @@ export { VERSION } from './version';
  * import TransportU2F from "@ledgerhq/hw-transport-u2f";
  * const transport = await TransportU2F.create();
  * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/0'/0'", true, DerivationType.SECP256K1);
+ * ```
+ *
+ * @example
+ * ```
+ * import TransportU2F from "@ledgerhq/hw-transport-u2f";
+ * const transport = await TransportU2F.create();
+ * const ledgerSigner = new LedgerSigner(transport, "44'/1729'/6'/0'", true, DerivationType.BIP32_ED25519);
  * ```
  */
 export class LedgerSigner implements Signer {
@@ -170,7 +178,7 @@ export class LedgerSigner implements Signer {
     messageToSend = chunkOperation(messageToSend, watermarkedBytes2buff);
     const ledgerResponse = await this.signWithLedger(messageToSend);
     let signature;
-    if (this.derivationType === DerivationType.ED25519) {
+    if (this.derivationType === DerivationType.ED25519 || this.derivationType === DerivationType.BIP32_ED25519) {
       signature = ledgerResponse.slice(0, ledgerResponse.length - 2).toString('hex');
     } else {
       if (!validateResponse(ledgerResponse)) {
@@ -216,7 +224,7 @@ export class LedgerSigner implements Signer {
   }
 
   private getPrefixes() {
-    if (this.derivationType === DerivationType.ED25519) {
+    if (this.derivationType === DerivationType.ED25519 || this.derivationType === DerivationType.BIP32_ED25519) {
       return {
         prefPk: prefix[Prefix.EDPK],
         prefPkh: prefix[Prefix.TZ1],

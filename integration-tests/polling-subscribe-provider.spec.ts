@@ -1,7 +1,5 @@
-import { CONFIGS } from "./config";
+import { CONFIGS, sleep } from "./config";
 import { Protocols, PollingSubscribeProvider } from "@taquito/taquito";
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;

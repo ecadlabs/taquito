@@ -14,15 +14,17 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node: [12.x]
+        node: 
+          - '16.13.1'
+          - '17.3.x'
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
-    - run: npm run lerna -- bootstrap
     - run: npm run build
     - run: npm run lint
     - run: npm run build-docs
@@ -35,21 +37,19 @@ jobs:
         CI: true
         RUN_INTEGRATION: true
 
-  integration-tests:
+  integration-tests-testnet:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
       matrix:
         protocol:
-          - jakartanet
           - kathmandunet
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
-        node-version: 12.x
+        node-version: 16.13.1
     - run: npm ci
-    - run: npm run lerna -- bootstrap
     - run: npm run build
     - name: Tailscale
       uses: tailscale/github-action@v1
@@ -57,3 +57,25 @@ jobs:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.22.2
     - run: cd integration-tests && npm run test:${{ matrix.protocol }} -- --maxWorkers=8
+
+  integration-tests-flextesa:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 16.13.1
+    - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
+    - run: npm ci
+    - run: npm run lerna -- bootstrap
+    - run: npm run build
+    - run: cd integration-tests && npm run test:originate-known-contracts && npm run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
+      env:
+        RUN_KATHMANDUNET_WITH_SECRET_KEY: true
+        SECRET_KEY: edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt
+        TEZOS_RPC_KATHMANDUNET: http://0.0.0.0:20000
+        POLLING_INTERVAL_MILLISECONDS: 100
+        RPC_CACHE_MILLISECONDS: 0
+        TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
+    - run: docker kill my-sandbox

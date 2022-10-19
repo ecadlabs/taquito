@@ -63,7 +63,7 @@ The constructor of the `LedgerSigner` class can take three other parameters. If 
 - prompt: **default is true**  
   If true, you will be asked on your Ledger device to send your public key for validation.
 - derivationType: **default is DerivationType.ED25519**  
-  It can be DerivationType.ED25519 (tz1), DerivationType.SECP256K1 (tz2) or DerivationType.P256 (tz3).
+  It can be DerivationType.ED25519 | DerivationType.BIP32_ED25519 (tz1), DerivationType.SECP256K1 (tz2) or DerivationType.P256 (tz3).
 
 ```js
 import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
