@@ -1,7 +1,5 @@
 import BigNumber from "bignumber.js";
-import { CONFIGS } from "./config";
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+import { CONFIGS, sleep } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
