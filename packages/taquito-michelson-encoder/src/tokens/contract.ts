@@ -11,7 +11,7 @@ export class ContractValidationError extends TokenValidationError {
 }
 
 export class ContractToken extends Token {
-  static prim: 'contract' = 'contract';
+  static prim: 'contract' = 'contract' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
