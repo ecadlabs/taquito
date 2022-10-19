@@ -1,0 +1,20 @@
+{
+  "extends": "nx/presets/npm.json",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "example", "test", "lint", "docusaurus"],
+        "accessToken": "NWY1YmQ1MDctYzQ0Ny00OTAzLTgzYWUtZWQwZmY2ODRlZWFlfHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    }
+  },
+  "affected": {
+    "defaultBase": "master"
+  }
+}

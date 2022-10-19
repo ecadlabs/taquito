@@ -16,7 +16,7 @@ export class SignatureValidationError extends TokenValidationError {
 }
 
 export class SignatureToken extends ComparableToken {
-  static prim: 'signature' = 'signature';
+  static prim: 'signature' = 'signature' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
