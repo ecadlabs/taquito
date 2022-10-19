@@ -2,10 +2,18 @@ import { InvalidAddressError, InvalidScriptFormatError } from '../src/errors';
 import { ContractsLibrary } from '../src/taquito-contracts-library';
 import { entrypoints, entrypoints2 } from './data/contract-entrypoints';
 import { script, script2 } from './data/contract-script';
+import { VERSION } from '../src/version';
 
 describe('ContractsLibrary tests', () => {
   it('ContractsLibrary is instantiable', () => {
     expect(new ContractsLibrary()).toBeInstanceOf(ContractsLibrary);
+  });
+
+  it('get VERSION for ContractsLibrary', () => {
+    const version = VERSION;
+    expect(version).toBeDefined;
+    expect(version.commitHash).toHaveLength(40);
+    expect(version.version).toHaveLength(6);
   });
 
   it('adds one contract to the library', () => {
@@ -105,10 +113,28 @@ describe('ContractsLibrary tests', () => {
     );
   });
 
+  it('do not throw an InvalidAddress error if the contract address is valid', () => {
+    const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
+    const contractLib = new ContractsLibrary();
+
+    contractLib.addContract({
+      [contractAddress]: {
+        script,
+        entrypoints,
+      },
+    });
+    const contractData = contractLib.getContract(contractAddress);
+    expect(contractData.entrypoints).toEqual(entrypoints);
+    expect(contractData.script).toEqual(script);
+  });
+
   it('throw an InvalidScriptFormatError error if the script format is invalid', () => {
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const contractLib = new ContractsLibrary();
     const script: any = 'invalid';
+
+    !expect(script.code);
+
     expect(() =>
       contractLib.addContract({
         [contractAddress]: {
@@ -126,9 +152,7 @@ describe('ContractsLibrary tests', () => {
       })
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining(
-          'An invalid script property has been provided for KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY. The script property can be retrieved from TezosToolkit.rpc.getNormalizedScript(KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY). Invalid script: invalid'
-        ),
+        message: expect.stringContaining('An invalid script property has been provided for'),
       })
     );
   });
