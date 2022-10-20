@@ -34,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
        *  https://tezostaquito.io/docs/batch_API#--the-array-of-transactions-method 
        *  https://tezostaquito.io/docs/batch_API#--the-withtransfer-method
        */
-      const op = await Tezos.contract.batch([
+      const op = await Tezos.batch([
         {
           kind: OpKind.TRANSACTION,
           to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
@@ -82,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();
 
-      const batchOp = await LocalTez.contract.batch([
+      const batchOp = await LocalTez.batch([
         {
           kind: OpKind.TRANSACTION,
           to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
