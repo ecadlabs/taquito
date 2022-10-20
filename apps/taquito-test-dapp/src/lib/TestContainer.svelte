@@ -144,6 +144,10 @@
         }
       }
 
+      .learn-more {
+        font-style: italic;
+      }
+
       .test-result {
         padding: 20px;
 
@@ -264,10 +268,15 @@
                   Running
                   <span class="material-icons-outlined" id="running-icon"> directions_run </span>
                 {:else}
-                  Run the test
+                  Run test
                 {/if}
               </button>
             </div>
+            {#if test.documentation}
+              <div class="learn-more">
+                <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+              </div>
+            {/if}
           </div>
         {:else}
           <div style="margin-bottom:20px">
@@ -368,10 +377,15 @@
             Running
             <span class="material-icons-outlined" id="running-icon"> directions_run </span>
           {:else}
-            Run the test
+            Run test
           {/if}
         </button>
       </div>
+      {#if test.documentation}
+        <div class="learn-more">
+          <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+        </div>
+      {/if}
     {/if}
   </div>
 </div>
