@@ -20,6 +20,7 @@ jobs:
         node-version: 16.13.2
     - run: npm ci
     - run: npm run build
+    - run: npm run build
       working-directory: website
       env:
         ALGOLIA_APPLICATION_ID: "example"
