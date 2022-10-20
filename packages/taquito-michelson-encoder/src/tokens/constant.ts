@@ -16,7 +16,7 @@ export class GlobalConstantDecodingError extends TokenValidationError {
 }
 
 export class GlobalConstantToken extends Token {
-  static prim: 'constant' = 'constant' as const;
+  static prim: 'constant' = 'constant';
 
   constructor(
     protected val: { prim: string; args: any[]; annots?: any[] },

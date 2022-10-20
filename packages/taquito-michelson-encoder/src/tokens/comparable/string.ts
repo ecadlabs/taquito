@@ -2,7 +2,7 @@ import { BaseTokenSchema } from '../../schema/types';
 import { Token, TokenFactory, ComparableToken, SemanticEncoding } from '../token';
 
 export class StringToken extends ComparableToken {
-  static prim: 'string' = 'string' as const;
+  static prim: 'string' = 'string';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

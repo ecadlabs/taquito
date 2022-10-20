@@ -19,7 +19,7 @@ const ticketerType = { prim: 'contract' };
 const amountType = { prim: 'int' };
 
 export class TicketToken extends Token {
-  static prim: 'ticket' = 'ticket' as const;
+  static prim: 'ticket' = 'ticket';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

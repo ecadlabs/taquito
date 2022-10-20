@@ -17,7 +17,7 @@ export class MapValidationError extends TokenValidationError {
 }
 
 export class MapToken extends Token {
-  static prim: 'map' = 'map' as const;
+  static prim: 'map' = 'map';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

@@ -16,7 +16,7 @@ export class NatValidationError extends TokenValidationError {
 }
 
 export class NatToken extends ComparableToken {
-  static prim: 'nat' = 'nat' as const;
+  static prim: 'nat' = 'nat';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

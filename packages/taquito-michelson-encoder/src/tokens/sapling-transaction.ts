@@ -9,7 +9,7 @@ export class SaplingTransactionValidationError extends TokenValidationError {
 }
 
 export class SaplingTransactionToken extends Token {
-  static prim: 'sapling_transaction' = 'sapling_transaction' as const;
+  static prim: 'sapling_transaction' = 'sapling_transaction';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

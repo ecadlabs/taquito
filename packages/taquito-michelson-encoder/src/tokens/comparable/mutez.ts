@@ -16,7 +16,7 @@ export class MutezValidationError extends TokenValidationError {
 }
 
 export class MutezToken extends ComparableToken {
-  static prim: 'mutez' = 'mutez' as const;
+  static prim: 'mutez' = 'mutez';
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
