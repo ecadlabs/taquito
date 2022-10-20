@@ -19,6 +19,7 @@ jobs:
         node-version: 16.13.2
     - run: npm ci
     - run: npm run build
+      working-directory: website
       env:
         ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
         ALGOLIA_SEARCH_API_KEY: ${{ secrets.ALGOLIA_SEARCH_API_KEY }}
@@ -32,8 +33,8 @@ jobs:
         FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID_PROD }}
     - run: npm run build-docs
     - run: npm run netlify:publish
+      working-directory: website
       env:
-        CI: true
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
     - name: Slack Notification
