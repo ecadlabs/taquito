@@ -51,7 +51,14 @@ const lambda = `{
 }`;
 ```  
 
-First, we write the Michelson lambda that will be executed to transfer the tez, where `RECIPIENT_ADDRESS` is the public key of the recipient of the tez and `AMOUNT` is the amount of tez to be sent.  
+First, we write the Michelson lambda that will be executed to transfer the tez, where `RECIPIENT_ADDRESS` is the public key of the recipient of the tez and `AMOUNT` is the amount of tez to be sent.
+
+The lambda for this particular use case is already offered by Taquito, so you don't have to write it every time, you can just import it:
+```typescript
+import { MANAGER_LAMBDA } from "@taquito/taquito";
+
+const lambda = MANAGER_LAMBDA.transferImplicit(RECIPIENT_ADDRESS, AMOUNT);
+``` 
 
 Next, we will use the lambda to create the required payload for this action:
 ```typescript
