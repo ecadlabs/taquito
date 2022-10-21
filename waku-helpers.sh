@@ -47,6 +47,7 @@ alias swn=start_waku_node
 _call_json_rpc() {
     (($# != 1)) && _err 'Usage: _call_json_rpc <payload>' && return 1
     payload=$1
+    _debugging && echo $payload
     # TODO Validate that localhost:8545 is an active TCP connection
     curl -d $payload --silent --header "Content-Type: application/json" http://localhost:8545
 }
@@ -75,10 +76,10 @@ alias gwd2=get_waku_debug_info2
 subscribe_to_topics() {
     (($# != 1)) && _err 'Usage: subscribe_to_topic '\''"t1","t2"'\''' && return 1
     payload=$(_make_payload 'post_waku_v2_relay_v1_subscriptions' "[$@]")
-    _debugging && echo $payload
     _call_json_rpc $payload
 }
 alias stt=subscribe_to_topics
+# eg subscribe_to_topics t3 and t4: `stt '"t3","t4"`
 
 # Publish a message to the given topic; `message` must be '{"payload:"0x...", "timestamp":1666373627}'
 # The "timestamp" param is seconds since epoch, get it with `date_to_unix $(date)`
@@ -89,7 +90,16 @@ publish_to_topic() {
     # TODO Validate that message is enclosed {within curlies}
     message=$2
     payload=$(_make_payload 'post_waku_v2_relay_v1_message' \"$topic\"\, $message)
-    _debugging && echo $payload
     _call_json_rpc $payload
 }
 alias ptt=publish_to_topic
+# eg `ptt t3 '{"payload":"0x01", "timestamp":12345}'; ptt t3 '{"payload":"0x02", "timestamp":12346}'`
+
+get_new_messages_for_topic() {
+    (($# != 1)) && _err 'Usage: get_new_messages_for_topic <topic>' && return 1
+    topic=$1
+    payload=$(_make_payload 'get_waku_v2_relay_v1_messages' \"$topic\")
+    _call_json_rpc $payload | jq -c '.result[]|{payload: .payload, timestamp: .timestamp}'
+}
+alias gnm=get_new_messages_for_topic
+# eg `gnm t3`
