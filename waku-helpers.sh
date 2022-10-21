@@ -20,23 +20,25 @@ _read_dot_env_file() {
     export $(grep -v '^#' .env | xargs)
 }
 
-_DEBUG=0  # 0=on, !0=off
+_DEBUG=1  # 0=on, !0=off
 _debugging() { (($_DEBUG == 0)); }
+
 # Conveniently refresh current shell with changes made to this file
 _reload_waku_helpers() { source waku-helpers.sh; }
 alias rwh=_reload_waku_helpers
 
-# Start a local nwaku node that connects to two known peers on localhost, 
-# enabling rest, rest-admin and rest-private.
+# Start nwaku locally, connect to two known peers on localhost, enable rest{,-admin,-private}.
 # See: https://github.com/status-im/nwaku/blob/master/docs/operators/how-to/connect.md
 start_waku_node() {
     _read_dot_env_file
     (($+NWAKU_DIR)) || { _err 'NWAKU_DIR variable not set in .env' && return 2 }
     binary_not_found='build/wakunode2 not found (did you build?)' # Build it: https://is.gd/NXeAnv
     [[ ! -f $NWAKU_DIR/build/wakunode2 ]] && _err "${NWAKU_DIR}/${binary_not_found}" && return 3
+    node1='/ip4/0.0.0.0/tcp/60002/p2p/16Uiu2HAkzjwwgEAXfeGNMKFPSpc6vGBRqCdTLG5q3Gmk2v4pQw7H'
+    node2='/ip4/0.0.0.0/tcp/60003/p2p/16Uiu2HAmFBA7LGtwY5WVVikdmXVo3cKLqkmvVtuDu63fe8safeQJ'
     $NWAKU_DIR/build/wakunode2 \
-        --staticnode:/ip4/0.0.0.0/tcp/60002/p2p/16Uiu2HAkzjwwgEAXfeGNMKFPSpc6vGBRqCdTLG5q3Gmk2v4pQw7H \
-        --staticnode:/ip4/0.0.0.0/tcp/60003/p2p/16Uiu2HAmFBA7LGtwY5WVVikdmXVo3cKLqkmvVtuDu63fe8safeQJ \
+        --staticnode:$node1 \
+        --staticnode:$node2 \
         --rest=true --rest-admin=true --rest-private=true
 }
 alias swn=start_waku_node
@@ -49,7 +51,13 @@ _call_json_rpc() {
     curl -d $payload --silent --header "Content-Type: application/json" http://localhost:8545
 }
 
-_make_payload() { echo "{ \"jsonrpc\":\"2.0\",\"id\":\"id\",\"method\":\"$1\", \"params\":[$2] }"; }
+# Timestamps figure prominently within the waku api, here are some helpers
+date_to_unix() { date -d "$1" +%s ; }  # `$ dtu "$(date)"` -> 1666373627
+alias dtu=date_to_unix
+unix_to_date() { date -d @$1; }  # `$ utd 1666373627`  # -> 2Fri Oct 21 10:33:47 AM PDT 2022
+alias utd=unix_to_date
+
+_make_payload() { echo "{ \"jsonrpc\":\"2.0\",\"id\":\"id\",\"method\":\"$1\", \"params\":[${@:2}] }"; }
 
 get_waku_debug_info() {
     payload=$(_make_payload 'get_waku_v2_debug_v1_info')
@@ -71,3 +79,17 @@ subscribe_to_topics() {
     _call_json_rpc $payload
 }
 alias stt=subscribe_to_topics
+
+# Publish a message to the given topic; `message` must be '{"payload:"0x...", "timestamp":1666373627}'
+# The "timestamp" param is seconds since epoch, get it with `date_to_unix $(date)`
+publish_to_topic() {
+    (($# != 2)) && _err 'Usage: publish_to_topic <topic> <payload>' && return 1
+    # TODO Validate the topic exists
+    topic=$1
+    # TODO Validate that message is enclosed {within curlies}
+    message=$2
+    payload=$(_make_payload 'post_waku_v2_relay_v1_message' \"$topic\"\, $message)
+    _debugging && echo $payload
+    _call_json_rpc $payload
+}
+alias ptt=publish_to_topic
