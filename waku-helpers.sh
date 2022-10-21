@@ -23,7 +23,7 @@ _read_dot_env_file() {
 _DEBUG=1  # 0=on, !0=off  # nb DEBUG printing sometimes causes a superfluous error to surface (in `gnm`)
 _debugging() { (($_DEBUG == 0)); }
 
-# Conveniently refresh current shell with changes made to this file
+# Conveniently refresh current shell with any changes made to this file
 _reload_waku_helpers() { source waku-helpers.sh; }
 alias rwh=_reload_waku_helpers
 
@@ -79,7 +79,7 @@ subscribe_to_topics() {
     _call_json_rpc $payload
 }
 alias stt=subscribe_to_topics
-# eg subscribe_to_topics t3 and t4: `stt '"t3","t4"`  # note the escaping
+# eg subscribe_to_topics t3 and t4: `stt '"t3","t4"`  # note the escaping!
 
 # Publish a message to the given topic; `message` must be '{"payload:"0x...", "timestamp":1666373627}'
 # The "timestamp" param is seconds since epoch, get it with `date_to_unix $(date)`
@@ -100,9 +100,10 @@ get_new_messages_for_topic() {
     (($# != 1)) && _err 'Usage: get_new_messages_for_topic <topic>' && return 1
     topic=$1
     payload=$(_make_payload 'get_waku_v2_relay_v1_messages' \"$topic\")
+    result=$(_call_json_rpc $payload)
     # TODO Format the error that comes back if not subscribed to the given topic
     # TODO Fish for 'error' and print out the value if emitted
-    _call_json_rpc $payload | jq -c '.result[]|{payload: .payload, timestamp: .timestamp}'
+    echo $result | jq -c '.result[]|{payload: .payload, timestamp: .timestamp}'
 }
 alias gnm=get_new_messages_for_topic
 # eg `gnm t3`
@@ -115,4 +116,4 @@ unsubscribe_from_topics() {
     _call_json_rpc $payload
 }
 alias uft=unsubscribe_from_topics
-# eg `uft '"t3"'  # note the escaping
+# eg `uft '"t3"'  # note the escaping!
