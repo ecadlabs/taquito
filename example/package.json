@@ -40,7 +40,7 @@
     "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts"
   },
   "dependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^6.27.3",
+    "@ledgerhq/hw-transport-node-hid": "^6.27.6",
     "@taquito/ledger-signer": "^14.0.0",
     "@taquito/local-forging": "^14.0.0",
     "@taquito/michel-codec": "^14.0.0",
