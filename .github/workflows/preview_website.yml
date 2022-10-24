@@ -1,6 +1,7 @@
 name: Netlify Preview Deploy
 
 on:
+  push:
   pull_request:
     branches: [master]
 
@@ -19,6 +20,8 @@ jobs:
         node-version: 16.13.2
     - run: npm ci
     - run: npm run build
+    - run: npm run build
+      working-directory: website
       env:
         ALGOLIA_APPLICATION_ID: "example"
         ALGOLIA_SEARCH_API_KEY: "example"
@@ -31,10 +34,9 @@ jobs:
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
     - run: npm run build-docs
-    - run: echo "short_sha=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
     - run: npm run netlify:preview
+      working-directory: website
       env:
-        CI: true
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
