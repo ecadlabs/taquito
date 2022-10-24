@@ -167,6 +167,10 @@ export abstract class OperationEmitter {
               ...getSource(op),
               ...getFee(op),
             };
+          case OpKind.BALLOT:
+            return {
+              ...op,
+            };
 
           default:
             throw new InvalidOperationKindError((op as any).kind);

@@ -26,6 +26,7 @@ const sidebars = {
         'quick_start',
         'boilerplate',
         'batch_API',
+        'ballot',
         'beaconwallet-singleton',
         'confirmation_event_stream',
         'set_delegate',

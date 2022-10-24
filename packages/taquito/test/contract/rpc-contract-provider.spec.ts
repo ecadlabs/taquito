@@ -1666,6 +1666,37 @@ describe('RpcContractProvider test', () => {
     });
   });
 
+  describe('ballot', () => {
+    it('should produce a ballot operation', async (done) => {
+      const result = await rpcContractProvider.ballot({
+        period: 2,
+        proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+        ballot: 'yay',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              source: 'test_pub_key_hash',
+              kind: 'ballot',
+              period: 2,
+              proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+              ballot: 'yay',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+
+      done();
+    });
+  });
+
   describe('txRollupOriginate', () => {
     it('should produce a reveal and txRollupOriginate operation', async (done) => {
       const result = await rpcContractProvider.txRollupOriginate({

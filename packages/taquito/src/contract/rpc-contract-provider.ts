@@ -590,8 +590,14 @@ export class RpcContractProvider
 
   async ballot(params: BallotParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
+
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+    const source = params.source ?? publicKeyHash;
     const operation = await createBallotOperation({
       ...params,
+      source: source,
     });
     const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
     const prepared = await this.prepareOperation({ operation: ops, source: publicKeyHash });

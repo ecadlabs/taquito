@@ -23,6 +23,7 @@ export {
   RPCOperation,
   PrepareOperationParams,
   BallotParams,
+  RPCBallotOperation,
 } from './types';
 export {
   TezosOperationError,

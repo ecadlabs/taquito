@@ -31,14 +31,14 @@ export class BallotOperation extends Operation {
   }
 
   get period() {
-    return this.operationResults?.period;
+    return this.params.period;
   }
 
   get proposal() {
-    return this.operationResults?.proposal;
+    return this.params.proposal;
   }
 
   get ballot() {
-    return this.operationResults?.ballot;
+    return this.params.ballot;
   }
 }
