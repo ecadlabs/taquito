@@ -15,7 +15,6 @@ describe('Ballot operation', () => {
       period: 1,
       proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
       ballot: 'yay',
-      metadata: {}, // metadata is always empty for this op
     },
   ] as OperationContentsAndResult[];
 

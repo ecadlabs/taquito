@@ -658,7 +658,6 @@ export interface OperationContentsAndResultBallot {
   period: number;
   proposal: string;
   ballot: OperationContentsBallotEnum;
-  metadata: object;
 }
 
 export interface OperationContentsAndResultReveal {
