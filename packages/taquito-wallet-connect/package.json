@@ -67,9 +67,10 @@
     ]
   },
   "dependencies": {
+    "@taquito/taquito": "^14.0.0",
+    "@walletconnect/qrcode-modal": "^1.8.0",
     "@walletconnect/sign-client": "^2.0.0-rc.4",
-    "@walletconnect/types": "^2.0.0-rc.4",
-    "@walletconnect/qrcode-modal": "^1.8.0"
+    "@walletconnect/types": "^2.0.0-rc.4"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
