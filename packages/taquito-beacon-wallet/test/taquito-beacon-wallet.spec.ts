@@ -21,12 +21,6 @@ describe('Beacon Wallet tests', () => {
     expect(new MissingRequiredScopes([PermissionScope.OPERATION_REQUEST])).toBeInstanceOf(Error);
   });
 
-  it('Verify that requestPermissions is a function', async () => {
-    const wallet = new BeaconWallet({ name: 'testWallet' });
-    expect(typeof (await wallet.requestPermissions)).toEqual('function');
-    expect(await wallet.requestPermissions).toBeDefined;
-  });
-
   it('Verify that permissions must be called before getPKH', async () => {
     try {
       const wallet = new BeaconWallet({ name: 'testWallet' });
@@ -90,17 +84,5 @@ describe('Beacon Wallet tests', () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
     const formattedParam = await wallet.removeDefaultParams({ gasLimit: 40 }, { gasLimit: 80 });
     expect(formattedParam.gasLimit).toEqual(80);
-  });
-
-  it(`Verify disconnect`, async () => {
-    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const disconnected = await wallet.disconnect();
-    expect(disconnected).toBeTruthy;
-  });
-
-  it(`Verify clearActiveAccount`, async () => {
-    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const cleared = await wallet.clearActiveAccount();
-    expect(cleared).toBeTruthy;
   });
 });
