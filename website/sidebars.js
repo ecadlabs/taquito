@@ -53,6 +53,7 @@ const sidebars = {
         'metadata-tzip16',
         'validators',
         'wallet_API',
+        'wallet-connect-2',
         'wallets',
         'web3js_taquito',
         'contracts_collection',
