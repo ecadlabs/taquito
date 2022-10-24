@@ -183,4 +183,34 @@ describe('LedgerSigner test', () => {
       sig: 'sigNkJcdMAWmsqeBM7ARbQ3Gm74NQ5xfc8kyt5gKRQRdWQpZPXW2bT2cxAKBBrCn6ddmqKfkc31q62kWujT8AEEZgeAquYy5',
     });
   });
+
+  it('Should sign Operation for tz1 bip32', async () => {
+    const signer = new LedgerSigner(
+      mockTransport,
+      "44'/1729'/1'/0'",
+      true,
+      DerivationType.BIP32_ED25519
+    );
+    const mocksig = Buffer.from(
+      '35c1f3340121965a1350af2082af3c83d4338c23c254591ec7a12fef5d4e9fc2a63f7051508cc41255894fe511cfd11af827e8f8e6c3730c3dd0775aff33dc029000',
+      'hex'
+    );
+    mockTransport.send.mockResolvedValue(mocksig);
+    const signature = await signer.sign(
+      '367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000'
+    );
+    const path = "44'/1729'/1'/0'";
+    const buff = transformPathToBuffer(path);
+    expect(mockTransport.send).toHaveBeenCalledTimes(2);
+    expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x03, buff);
+    expect(signature).toEqual({
+      bytes:
+        '367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000',
+      prefixSig:
+        'edsigteqgHGYbzsxxFmQjGSf9eeNjTML4g6GBqryKvy7uy6y2XczT6C3ehhfzCBgQBdAMy9NLoD6MZVzCUbtSUoSC1iWAgPXGdW',
+      sbytes:
+        '367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a00035c1f3340121965a1350af2082af3c83d4338c23c254591ec7a12fef5d4e9fc2a63f7051508cc41255894fe511cfd11af827e8f8e6c3730c3dd0775aff33dc02',
+      sig: 'sigV2DADKhiwmvCaRS8QoxhM6DgXF8hTPbUBDbCd7vxkx5Do3rbJ8ZceS59b4c69z1XbtishJzit2RjorEpf6DpfS4paStBK',
+    });
+  });
 });

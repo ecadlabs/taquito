@@ -1,6 +1,24 @@
 import { BlockResponse } from '@taquito/rpc';
-import { concat, defer, from, Observable, of, range, SchedulerLike, throwError } from 'rxjs';
-import { concatMap, shareReplay, startWith, switchMap, timeoutWith } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  concat,
+  defer,
+  from,
+  Observable,
+  of,
+  range,
+  SchedulerLike,
+  throwError,
+} from 'rxjs';
+import {
+  concatMap,
+  mergeMap,
+  publishReplay,
+  refCount,
+  startWith,
+  switchMap,
+  timeoutWith,
+} from 'rxjs/operators';
 import { Context } from '../context';
 import { BlockIdentifier } from '../read-provider/interface';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
@@ -10,21 +28,24 @@ import { WalletOperation } from './operation';
 import { OriginationWalletOperation } from './origination-operation';
 import { TransactionWalletOperation } from './transaction-operation';
 
+export function timeoutAfter<T>(timeoutMillisec: number): (source: Observable<T>) => Observable<T> {
+  return function inner(source: Observable<T>): Observable<T> {
+    return new BehaviorSubject(null).pipe(
+      timeoutWith(timeoutMillisec, throwError(new Error('Confirmation polling timed out'))),
+      mergeMap(() => source)
+    );
+  };
+}
+
 export const createNewPollingBasedHeadObservable = (
   sharedHeadOb: Observable<BlockResponse>,
   context: Context,
-  scheduler?: SchedulerLike
+  _scheduler?: SchedulerLike
 ): Observable<BlockResponse> => {
   return sharedHeadOb.pipe(
-    timeoutWith(
-      context.config.confirmationPollingTimeoutSecond * 1000,
-      throwError(new Error('Confirmation polling timed out')),
-      scheduler
-    ),
-    shareReplay({
-      refCount: true,
-      scheduler,
-    })
+    timeoutAfter(context.config.confirmationPollingTimeoutSecond * 1000),
+    publishReplay(1),
+    refCount()
   );
 };
 
