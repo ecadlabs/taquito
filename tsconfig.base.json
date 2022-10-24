@@ -55,6 +55,9 @@
       ],
       "@taquito/ledger-signer": [
         "taquito-ledger-signer/src/taquito-ledger-signer.ts"
+      ],
+      "@taquito/wallet-connect": [
+        "taquito-wallet-connect/src/taquito-wallet-connect.ts"
       ]
     }
   }
