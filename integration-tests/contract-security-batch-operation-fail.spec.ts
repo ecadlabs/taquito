@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(op.status).toEqual('applied');
 
       try {
-        const batch = Tezos.batch()
+        const batch = Tezos.contract.batch()
           .withContractCall(contract.methods.add(2))
           .withContractCall(contract.methods.sub(4))
           .withContractCall(contract.methods.add(3));
