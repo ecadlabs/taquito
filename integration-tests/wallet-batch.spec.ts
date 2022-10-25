@@ -2,6 +2,7 @@ import { CONFIGS } from './config';
 import { ligoSample, ligoSampleMichelson } from './data/ligo-simple-contract';
 import { managerCode } from './data/manager_code';
 import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
+import { OperationContentsAndResultTransaction } from '@taquito/rpc'
 
 CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }) => {
     const Tezos = lib;
@@ -230,4 +231,48 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
           expect((await op.getOriginatedContractAddresses()).length).toEqual(2);
           done();
         });
+
+        test('Verify batch contract calls can specify amount, fee, gasLimit and storageLimit', async (done) => {
+            const op = await Tezos.wallet
+            .originate({
+                balance: '1',
+                code: managerCode,
+                init: { string: await Tezos.signer.publicKeyHash() }
+            })
+            .send();
+            const contract = await op.contract();
+
+            const estimateOp = await Tezos.estimate.batch([
+                { ...(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)).toTransferParams()), kind: OpKind.TRANSACTION },
+                { ...(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)).toTransferParams()), kind: OpKind.TRANSACTION },
+                { ...(contract.methods.do(MANAGER_LAMBDA.removeDelegate()).toTransferParams()), kind: OpKind.TRANSACTION },
+
+            ])
+
+            const batch = Tezos.wallet
+                .batch()
+                .withContractCall(
+                    contract.methods.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5), { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit })
+                )
+                .withContractCall(
+                    contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker), { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit })
+                )
+                .withContractCall(
+                    contract.methods.do(MANAGER_LAMBDA.removeDelegate(), { fee: estimateOp[2].suggestedFeeMutez, gasLimit: estimateOp[2].gasLimit, storageLimit: estimateOp[2].storageLimit })
+                )
+
+            const batchOp = await batch.send();
+            await batchOp.confirmation();
+            const opResults = await batchOp.operationResults() as OperationContentsAndResultTransaction[]
+            expect(Number(opResults[0].fee)).toEqual(estimateOp[0].suggestedFeeMutez)
+            expect(Number(opResults[0].gas_limit)).toEqual(estimateOp[0].gasLimit)
+            expect(Number(opResults[0].storage_limit)).toEqual(estimateOp[0].storageLimit)
+            expect(Number(opResults[1].fee)).toEqual(estimateOp[1].suggestedFeeMutez)
+            expect(Number(opResults[1].gas_limit)).toEqual(estimateOp[1].gasLimit)
+            expect(Number(opResults[1].storage_limit)).toEqual(estimateOp[1].storageLimit)
+            expect(Number(opResults[2].fee)).toEqual(estimateOp[2].suggestedFeeMutez)
+            expect(Number(opResults[2].gas_limit)).toEqual(estimateOp[2].gasLimit)
+            expect(Number(opResults[2].storage_limit)).toEqual(estimateOp[2].storageLimit)
+            done()
+        })
     });

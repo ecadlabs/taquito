@@ -16,7 +16,7 @@ export class IntValidationError extends TokenValidationError {
 }
 
 export class IntToken extends ComparableToken {
-  static prim: 'int' = 'int';
+  static prim: 'int' = 'int' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

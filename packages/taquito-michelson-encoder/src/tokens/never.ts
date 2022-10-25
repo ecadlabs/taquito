@@ -9,7 +9,7 @@ export class NeverTokenError extends TokenValidationError {
 }
 
 export class NeverToken extends Token {
-  static prim: 'never' = 'never';
+  static prim: 'never' = 'never' as const;
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
     protected idx: number,
