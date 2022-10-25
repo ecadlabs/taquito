@@ -2037,7 +2037,7 @@
   dependencies:
     "axios" "^0.26.0"
 
-@taquito/ledger-signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-ledger-signer":
+"@taquito/ledger-signer@file:/Users/zainensuzuki/code/taquito/packages/taquito-ledger-signer":
   "resolved" "file:packages/taquito-ledger-signer"
   "version" "14.0.0"
   dependencies:
