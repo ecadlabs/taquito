@@ -23,7 +23,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
         await op.confirmation()
       } catch (error: any) {
-        console.log(error.name, error.message)
         expect(error).toBeInstanceOf(InvalidCodeParameter);
         expect(error.message).toEqual('Wrong code parameter type, expected an array');
       }
