@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   let alicePaymentAddress: string;
   const memoSize = 8;
 
-  describe(`Test interaction with sapling contract having a single sapling state using: ${rpc}`, async () => {
+  describe(`Test interaction with sapling contract having a single sapling state using: ${rpc}`, () => {
         
     beforeAll(async (done) => {
       await setup();

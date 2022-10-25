@@ -29,6 +29,7 @@ import {
   OperationContentsAndResultIncreasePaidStorage,
   OperationResultEvent,
   OperationContentsAndResultTransferTicket,
+  OperationContentsAndResultTxRollupReturnBond,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -3040,6 +3041,50 @@ describe('RpcClient test', () => {
 
       expect(content.metadata.operation_result.consumed_gas).toEqual('11533');
       expect(content.metadata.operation_result.consumed_milligas).toEqual('11532006');
+
+      done();
+    });
+
+    it('should access the properties of operation type tx_rollup_return_bond, proto13', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[7] as OperationContentsAndResultTxRollupReturnBond;
+
+      expect(content.kind).toEqual(OpKind.TX_ROLLUP_RETURN_BOND);
+      expect(content.source).toEqual('tz2Q3efwpRvKL2Tvta8h6N5niV54Rw8iSEes');
+      expect(content.fee).toEqual('512');
+      expect(content.counter).toEqual('36');
+      expect(content.gas_limit).toEqual('2676');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('txr1TeZQiQrjaEop11Lh8fpsTdyJgQvr5igST');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz2Q3efwpRvKL2Tvta8h6N5niV54Rw8iSEes'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-512');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('512');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.balance_updates![0].kind).toEqual('freezer');
+      expect(content.metadata.operation_result.balance_updates![0].category).toEqual('bonds');
+      expect(content.metadata.operation_result.balance_updates![0].contract).toEqual(
+        'tz2Q3efwpRvKL2Tvta8h6N5niV54Rw8iSEes'
+      );
+      expect(content.metadata.operation_result.balance_updates![0].bond_id!.tx_rollup).toEqual(
+        'txr1TeZQiQrjaEop11Lh8fpsTdyJgQvr5igST'
+      );
+      expect(content.metadata.operation_result.balance_updates![0].change).toEqual('-10000000000');
+      expect(content.metadata.operation_result.balance_updates![0].origin).toEqual('block');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('2575028');
 
       done();
     });
