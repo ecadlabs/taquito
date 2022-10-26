@@ -186,6 +186,7 @@ const primitives: PrimID[] = [
   'constant',
   'SUB_MUTEZ',
   'EMIT',
+  'LAMBDA_REC',
 ];
 
 const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =

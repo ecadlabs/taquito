@@ -110,6 +110,7 @@ export const instructionIDs: Record<MichelsonInstruction['prim'], true> = Object
     IF_NONE: true,
     ITER: true,
     LAMBDA: true,
+    LAMBDA_REC: true,
     LEFT: true,
     LOOP: true,
     LOOP_LEFT: true,
@@ -396,6 +397,7 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
         }
         break;
 
+      case 'LAMBDA_REC':
       case 'LAMBDA':
         /* istanbul ignore else */
         if (assertArgs(ex, 3)) {
@@ -743,8 +745,8 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
 export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
   /* istanbul ignore else */
   if (assertSeq(ex)) {
-    const toplevelSec: { [sec: string]: boolean } = {};
-    const views: { [name: string]: boolean } = {};
+    const toplevelSec: { [sec: string]: boolean; } = {};
+    const views: { [name: string]: boolean; } = {};
     for (const sec of ex) {
       if (assertPrim(sec)) {
         if (sec.prim !== 'view') {
