@@ -588,6 +588,14 @@ export class RpcContractProvider
     );
   }
 
+  /**
+   *
+   * @description Submit a ballot vote to a specified proposal
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param BallotParams Ballot operation parameter
+   */
   async ballot(params: BallotParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
 
@@ -599,8 +607,7 @@ export class RpcContractProvider
       ...params,
       source: source,
     });
-    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
-    const prepared = await this.prepareOperation({ operation: ops, source: publicKeyHash });
+    const prepared = await this.prepareOperation({ operation, source: publicKeyHash });
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new BallotOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);

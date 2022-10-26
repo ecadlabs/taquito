@@ -267,11 +267,10 @@ export const createIncreasePaidStorageOperation = async ({
   } as RPCIncreasePaidStorageOperation;
 };
 
-export const createBallotOperation = async ({ source, period, proposal, ballot }: BallotParams) => {
+export const createBallotOperation = async ({ source, proposal, ballot }: BallotParams) => {
   return {
     kind: OpKind.BALLOT,
     source,
-    period,
     proposal,
     ballot,
   } as RPCBallotOperation;

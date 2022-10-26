@@ -12,7 +12,7 @@ describe('Ballot operation', () => {
     {
       kind: 'ballot',
       source: 'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
-      period: 1,
+      period: 3,
       proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
       ballot: 'yay',
     },
@@ -34,7 +34,7 @@ describe('Ballot operation', () => {
     });
   });
 
-  it('should return ballot of Ballot operation', () => {
+  it('should return source of Ballot operation', () => {
     const op = new BallotOperation(
       'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
       {} as any,
@@ -50,14 +50,14 @@ describe('Ballot operation', () => {
   it('should return period of Ballot operation', () => {
     const op = new BallotOperation(
       'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
-      { period: 1 } as any,
+      {} as any,
       'tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU',
       fakeForgedBytes,
       successfulResult,
       fakeContext
     );
 
-    expect(op.period).toEqual(1);
+    expect(op.period).toEqual(3);
   });
 
   it('should return proposal hash of Ballot operation', () => {

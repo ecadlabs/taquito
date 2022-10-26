@@ -4,7 +4,7 @@ import {
   OpKind,
   TransactionOperationParameter,
   MichelsonV1Expression,
-  OperationContentsBallotEnum,
+  BallotEnum,
 } from '@taquito/rpc';
 
 export { OpKind } from '@taquito/rpc';
@@ -431,9 +431,9 @@ export interface RPCIncreasePaidStorageOperation {
  */
 export interface BallotParams {
   source?: string;
-  period: number;
+  // period: number;
   proposal: string;
-  ballot: OperationContentsBallotEnum;
+  ballot: BallotEnum;
 }
 
 export interface RPCBallotOperation {
@@ -441,7 +441,7 @@ export interface RPCBallotOperation {
   source: string;
   period: number;
   proposal: string;
-  ballot: OperationContentsBallotEnum;
+  ballot: BallotEnum;
 }
 
 export type RPCOperation =

@@ -8,6 +8,7 @@ import {
 import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../estimate/estimate';
+import { RPCResponseError } from '../error';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import {
@@ -80,6 +81,28 @@ export abstract class OperationEmitter {
     // Implicit account who emit the operation
     const publicKeyHash = pkh ? pkh : await this.signer.publicKeyHash();
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
+
+    // initializes a currentVotingPeriod if the operation is a ballot op
+    let currentVotingPeriod: number;
+    // ops.map(async (op) => {
+    //   if (op.kind === 'ballot') {
+    //     const period = await this.rpc.getCurrentPeriod();
+    //     currentVotingPeriod = period.voting_period.index;
+    //   }
+    // });
+
+    ops.find(async (op) => {
+      if (op.kind === 'ballot') {
+        try {
+          const period = await this.rpc.getCurrentPeriod();
+          currentVotingPeriod = period.voting_period.index;
+        } catch (e) {
+          throw new RPCResponseError(
+            `Failed to get the current voting period index: ${JSON.stringify(e)}`
+          );
+        }
+      }
+    });
 
     for (let i = 0; i < ops.length; i++) {
       if (isOpRequireReveal(ops[i]) || ops[i].kind === 'reveal') {
@@ -170,6 +193,7 @@ export abstract class OperationEmitter {
           case OpKind.BALLOT:
             return {
               ...op,
+              period: currentVotingPeriod,
             };
 
           default:
