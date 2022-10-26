@@ -15,6 +15,7 @@ import type { TestSettings, TestResult } from "./types";
 import store from "./store";
 import contractToOriginate from "./contractToOriginate";
 import localStore from "./store";
+import type { WalletConnect2 } from "@taquito/wallet-connect";
 
 const preparePayloadToSign = (
   input: string,
@@ -545,7 +546,7 @@ export const list = [
 export const init = (
   Tezos: TezosToolkit,
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>,
-  wallet: BeaconWallet | undefined
+  wallet: BeaconWallet | WalletConnect2 | undefined
 ): TestSettings[] => [
   {
     id: "send-tez",

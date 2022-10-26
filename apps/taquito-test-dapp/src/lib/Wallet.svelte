@@ -3,17 +3,16 @@
   import { fly } from "svelte/transition";
   import { TezosToolkit } from "@taquito/taquito";
   import { BeaconWallet } from "@taquito/beacon-wallet";
-  // import { BeaconEvent, defaultEventCallbacks } from "@airgap/beacon-sdk";
-  import { NetworkType } from "@airgap/beacon-sdk";
-  import store from "../store";
+  import store, { SDK } from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
   import { defaultMatrixNode, rpcUrl, defaultNetworkType } from "../config";
   import type { TezosAccountAddress } from "../types";
+  import { WalletConnect2 } from "@taquito/wallet-connect";
 
   let showDialog = false;
   let connectedWallet = "";
 
-  const createNewWallet = () => {
+  const createNewBeaconWallet = () => {
     return new BeaconWallet(
       $store.disableDefaultEvents
         ? {
@@ -39,23 +38,59 @@
     );
   };
 
+  const createNewWalletConnect2 = async () => {
+    return WalletConnect2.init({
+      logger: "debug",
+      relayUrl: "wss://relay.walletconnect.com",
+      projectId: "861613623da99d7285aaad8279a87ee9", // Your Project ID gives you access to WalletConnect Cloud.
+      metadata: {
+        name: "Taquito Test Dapp",
+        description: "Test Taquito with WalletConnect2",
+        icons: [],
+        url: "",
+      },
+    });
+  };
+
   const connectWallet = async () => {
-    const wallet = (() => {
-      if (!$store.wallet) {
-        return createNewWallet();
-      } else {
-        return $store.wallet;
+    if (!$store.wallet) {
+      if ($store.sdk === SDK.BEACON) {
+        console.log("create BeaconWallet");
+        const newWallet = createNewBeaconWallet();
+        await newWallet.requestPermissions({
+          network: {
+            type: $store.networkType,
+            rpcUrl: rpcUrl[$store.networkType],
+          },
+        });
+
+        const peers = await newWallet.client.getPeers();
+        connectedWallet = peers[0].name;
+        await updateStore(newWallet);
+        return newWallet;
+      } else if ($store.sdk === SDK.WC2) {
+        console.log("create walletConnect2");
+        const newWallet = await createNewWalletConnect2();
+        await newWallet.requestPermissions({
+          requiredNamespaces: {
+            tezos: {
+              chains: [`tezos:${$store.networkType}`],
+              events: [],
+              methods: ["tezos_sendOperations"],
+            },
+          },
+        });
+        await updateStore(newWallet);
+        return newWallet;
       }
-    })();
+    } else {
+      return $store.wallet;
+    }
+  };
 
+  const updateStore = async (wallet: BeaconWallet | WalletConnect2) => {
     try {
-      await wallet.requestPermissions({
-        network: {
-          type: $store.networkType,
-          rpcUrl: rpcUrl[$store.networkType],
-        },
-      });
-
+      store.updateWallet(wallet);
       const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
       store.updateUserAddress(userAddress);
 
@@ -67,18 +102,16 @@
       if (balance) {
         store.updateUserBalance(balance.toNumber());
       }
-
-      store.updateWallet(wallet);
-
-      const peers = await wallet.client.getPeers();
-      connectedWallet = peers[0].name;
     } catch (err) {
       console.error(err);
     }
   };
 
   const disconnectWallet = async () => {
-    await $store.wallet.clearActiveAccount();
+    if ($store.wallet instanceof BeaconWallet) { 
+      await $store.wallet.clearActiveAccount();
+    }
+    // TODO disconnect wc2
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
@@ -86,28 +119,11 @@
   };
 
   onMount(async () => {
-    store.updateNetworkType(defaultNetworkType);
-
-    const wallet = createNewWallet();
-    store.updateWallet(wallet);
-    const activeAccount = await wallet.client.getActiveAccount();
-    if (activeAccount) {
-      const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
-      store.updateUserAddress(userAddress);
-
-      const Tezos = new TezosToolkit(rpcUrl[$store.networkType]);
-      Tezos.setWalletProvider(wallet);
-      store.updateTezos(Tezos);
-
-      const balance = await Tezos.tz.getBalance(userAddress);
-      if (balance) {
-        store.updateUserBalance(balance.toNumber());
-      }
-    }
+    await connectWallet();
   });
 
   afterUpdate(async () => {
-    if ($store.wallet) {
+    if ($store.wallet instanceof BeaconWallet) {
       const activeAccount = await $store.wallet.client.getActiveAccount();
       if (activeAccount) {
         const peers = await $store.wallet.client.getPeers();
@@ -115,6 +131,9 @@
           connectedWallet = peers[0].name;
         }
       }
+    } else if ($store.wallet instanceof WalletConnect2) {
+      // TODO wc2
+      connectedWallet = ''
     }
   });
 </script>
@@ -225,9 +244,11 @@
           <div>
             Connected to: {$store.networkType}
           </div>
+          {#if $store.wallet instanceof BeaconWallet}
           <div>
             Matrix node: {$store.matrixNode}
           </div>
+          {/if}
           <div>
             Wallet: {connectedWallet}
           </div>

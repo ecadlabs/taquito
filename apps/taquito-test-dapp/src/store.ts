@@ -4,12 +4,19 @@ import type { TezosToolkit } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { defaultMatrixNode, defaultNetworkType } from "./config";
 import type { TestSettings } from "./types";
+import type { WalletConnect2 } from "@taquito/wallet-connect";
+
+export enum SDK {
+  BEACON,
+  WC2
+}
 
 interface State {
+  sdk: SDK;
   Tezos: TezosToolkit;
   userAddress: string;
   userBalance: number;
-  wallet: BeaconWallet;
+  wallet: BeaconWallet | WalletConnect2;
   disableDefaultEvents: boolean;
   networkType: NetworkType;
   customNetworkUrl: string;
@@ -20,6 +27,7 @@ interface State {
 }
 
 const initialState: State = {
+  sdk: undefined,
   Tezos: undefined,
   userAddress: undefined,
   userBalance: undefined,
@@ -37,6 +45,11 @@ const store = writable(initialState);
 
 const state = {
   subscribe: store.subscribe,
+  updateSdk: (sdk: SDK) =>
+    store.update(store => ({
+      ...store,
+      sdk
+    })),
   updateUserAddress: (address: string) =>
     store.update(store => ({
       ...store,
@@ -52,7 +65,7 @@ const state = {
       ...store,
       Tezos
     })),
-  updateWallet: (wallet: BeaconWallet) =>
+  updateWallet: (wallet: BeaconWallet | WalletConnect2) =>
     store.update(store => ({
       ...store,
       wallet

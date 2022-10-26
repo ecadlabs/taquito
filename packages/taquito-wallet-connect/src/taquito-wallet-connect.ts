@@ -6,7 +6,7 @@
 import Client from '@walletconnect/sign-client';
 import { SignClientTypes, ProposalTypes, SessionTypes } from '@walletconnect/types';
 import QRCodeModal from '@walletconnect/qrcode-modal';
-import { createTransferOperation, WalletDelegateParams, WalletOriginateParams, WalletProvider, WalletTransferParams } from '@taquito/taquito';
+import { createOriginationOperation, createSetDelegateOperation, createTransferOperation, WalletDelegateParams, WalletOriginateParams, WalletProvider, WalletTransferParams } from '@taquito/taquito';
 
 export class WalletConnect2 implements WalletProvider {
     public client: Client;
@@ -68,13 +68,22 @@ export class WalletConnect2 implements WalletProvider {
         );
     }
 
-    async mapOriginateParamsToWalletParams(_params: () => Promise<WalletOriginateParams>) {
-        return {}
-    }
+    async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
+        const walletParams: WalletOriginateParams = await params();
+        return this.removeDefaultParams(
+          walletParams,
+          await createOriginationOperation(this.formatParameters(walletParams))
+        );
+      }
 
-    async mapDelegateParamsToWalletParams(_params: () => Promise<WalletDelegateParams>) {
-        return {}
-    }
+      async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
+        const walletParams: WalletDelegateParams = await params();
+
+        return this.removeDefaultParams(
+          walletParams,
+          await createSetDelegateOperation(this.formatParameters(walletParams))
+        );
+      }
 
     formatParameters(params: any) {
         if (params.fee) {
