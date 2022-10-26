@@ -28,4 +28,5 @@ export enum OpKind {
   INCREASE_PAID_STORAGE = 'increase_paid_storage',
   VDF_REVELATION = 'vdf_revelation',
   EVENT = 'event',
+  TICKET_UPDATES = 'ticket_updates',
 }

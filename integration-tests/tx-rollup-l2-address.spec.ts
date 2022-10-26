@@ -6,7 +6,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
   const tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`jakarta contract originations and method calls to test the type of tx_rollup_l2_address`, () => {
+  describe(`lima contract originations and method calls to test the type of tx_rollup_l2_address`, () => {
     beforeEach(async (done) => {
       await setup();
       done();

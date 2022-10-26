@@ -1,7 +1,7 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponseProto010, ConstantsResponseProto011, ConstantsResponseProto012, ConstantsResponseProto013, ConstantsResponseProto014 } from "@taquito/rpc";
+import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponseProto010, ConstantsResponseProto011, ConstantsResponseProto012, ConstantsResponseProto013, ConstantsResponseProto014, ConstantsResponseProto015 } from "@taquito/rpc";
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
   const Tezos = lib;
@@ -346,7 +346,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(10400000),
         proof_of_work_threshold: new BigNumber(70368744177663),
-        tokens_per_roll: new BigNumber(8000000000),
+        tokens_per_roll: '8000000000',
         michelson_maximum_type_size: 1000,
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
@@ -385,7 +385,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(70368744177663),
-        tokens_per_roll: new BigNumber(8000000000),
+        tokens_per_roll: '8000000000',
         michelson_maximum_type_size: 1000,
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
@@ -432,7 +432,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(70368744177663),
-        tokens_per_roll: new BigNumber(8000000000),
+        tokens_per_roll: '8000000000',
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
         block_security_deposit: new BigNumber(640000000),
@@ -475,7 +475,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(70368744177663),
-        tokens_per_roll: new BigNumber(6000000000),
+        tokens_per_roll: '6000000000',
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
         cost_per_byte: new BigNumber(250),
@@ -525,7 +525,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(70368744177663),
-        tokens_per_roll: new BigNumber(6000000000),
+        tokens_per_roll: '6000000000',
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
         cost_per_byte: new BigNumber(250),
@@ -593,7 +593,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     limanet(`successfully fetches all constants for limanet using ${rpc}`, async (done) => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto013 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto015 & ConstantsResponseCommon = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
@@ -617,7 +617,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(-1),
-        minimal_stake: "6000000000",
+        minimal_stake: new BigNumber(6000000000),
         vdf_difficulty: new BigNumber(2000000000),
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
@@ -712,7 +712,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(-1),
-        tokens_per_roll: new BigNumber(6000000000),
+        tokens_per_roll: '6000000000',
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
         cost_per_byte: new BigNumber(250),
@@ -807,7 +807,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(-1),
-        tokens_per_roll: new BigNumber(8000000000),
+        tokens_per_roll: '8000000000',
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
         cost_per_byte: new BigNumber(250),

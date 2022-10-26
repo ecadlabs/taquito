@@ -39,6 +39,7 @@ import {
   delegatesIthacanetSample,
   delegatesKathmandunetSample,
   votingInfoKathmandunetSample,
+  ticketUpdatesSample,
 } from './data/rpc-responses';
 
 /**
@@ -622,6 +623,212 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getConstants Proto015', () => {
+    it('should query the right url and casts relevant properties to BigNumber', async (done) => {
+      httpBackend.createRequest.mockResolvedValue({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        max_micheline_node_count: 50000,
+        max_micheline_bytes_limit: 50000,
+        max_allowed_global_constants_depth: 10000,
+        cache_layout_size: 3,
+        michelson_maximum_type_size: 2001,
+        sc_max_wrapped_proof_binary_size: 30000,
+        sc_rollup_message_size_limit: 4096,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        nonce_revelation_threshold: 256,
+        blocks_per_stake_snapshot: 256,
+        cycles_per_voting_period: 1,
+        hard_gas_limit_per_operation: "1040000",
+        hard_gas_limit_per_block: "5200000",
+        proof_of_work_threshold: "-1",
+        minimal_stake: "6000000000",
+        vdf_difficulty: "2000000000",
+        seed_nonce_revelation_tip: "125000",
+        origination_size: 257,
+        baking_reward_fixed_portion: "10000000",
+        baking_reward_bonus_per_slot: "4286",
+        endorsing_reward_per_slot: "2857",
+        cost_per_byte: "250",
+        hard_storage_limit_per_operation: "60000",
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: "2500000",
+        liquidity_baking_toggle_ema_threshold: 1000000000,
+        max_operations_time_to_live: 120,
+        minimal_block_delay: "15",
+        delay_increment_per_round: "5",
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          numerator: 2,
+          denominator: 3
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: "640000000",
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          numerator: 1,
+          denominator: 2
+        },
+        testnet_dictator: "tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8",
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cache_sampler_state_cycles: 8,
+        tx_rollup_enable: true,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_commitment_bond: "10000000000",
+        tx_rollup_finality_period: 40000,
+        tx_rollup_withdraw_period: 40000,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        dal_parametric: {
+          feature_enable: false,
+          number_of_slots: 256,
+          number_of_shards: 2048,
+          endorsement_lag: 1,
+          availability_threshold: 50,
+          slot_size: 1048576,
+          redundancy_factor: 16,
+          page_size: 4096
+        },
+        sc_rollup_enable: false,
+        sc_rollup_origination_size: 6314,
+        sc_rollup_challenge_window_in_blocks: 20160,
+        sc_rollup_max_number_of_messages_per_commitment_period: 300000000,
+        sc_rollup_stake_amount: "10000000000",
+        sc_rollup_commitment_period_in_blocks: 30,
+        sc_rollup_max_lookahead_in_blocks: 30000,
+        sc_rollup_max_active_outbox_levels: 20160,
+        sc_rollup_max_outbox_messages_per_level: 100,
+        sc_rollup_number_of_sections_in_dissection: 32,
+        sc_rollup_timeout_period_in_blocks: 20160,
+        sc_rollup_max_number_of_cemented_commitments: 5,
+        zk_rollup_enable: false,
+        zk_rollup_origination_size: 4000,
+        zk_rollup_min_pending_to_process: 10
+      });
+
+      const response = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response).toEqual({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        max_micheline_node_count: 50000,
+        max_micheline_bytes_limit: 50000,
+        max_allowed_global_constants_depth: 10000,
+        cache_layout_size: 3,
+        michelson_maximum_type_size: 2001,
+        sc_max_wrapped_proof_binary_size: 30000,
+        sc_rollup_message_size_limit: 4096,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        nonce_revelation_threshold: 256,
+        blocks_per_stake_snapshot: 256,
+        cycles_per_voting_period: 1,
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        proof_of_work_threshold: new BigNumber(-1),
+        minimal_stake: "6000000000",
+        vdf_difficulty: new BigNumber(2000000000),
+        seed_nonce_revelation_tip: new BigNumber(125000),
+        origination_size: 257,
+        baking_reward_fixed_portion: new BigNumber(10000000),
+        baking_reward_bonus_per_slot: new BigNumber(4286),
+        endorsing_reward_per_slot: new BigNumber(2857),
+        cost_per_byte: new BigNumber(250),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: new BigNumber(2500000),
+        liquidity_baking_toggle_ema_threshold: 1000000000,
+        max_operations_time_to_live: 120,
+        minimal_block_delay: new BigNumber(15),
+        delay_increment_per_round: new BigNumber(5),
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          numerator: 2,
+          denominator: 3
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: new BigNumber(640000000),
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          numerator: 1,
+          denominator: 2
+        },
+        testnet_dictator: "tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8",
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cache_sampler_state_cycles: 8,
+        tx_rollup_enable: true,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_commitment_bond: new BigNumber(10000000000),
+        tx_rollup_finality_period: 40000,
+        tx_rollup_withdraw_period: 40000,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        dal_parametric: {
+          feature_enable: false,
+          number_of_slots: 256,
+          number_of_shards: 2048,
+          endorsement_lag: 1,
+          availability_threshold: 50,
+          slot_size: 1048576,
+          redundancy_factor: 16,
+          page_size: 4096
+        },
+        sc_rollup_enable: false,
+        sc_rollup_origination_size: 6314,
+        sc_rollup_challenge_window_in_blocks: 20160,
+        sc_rollup_max_number_of_messages_per_commitment_period: 300000000,
+        sc_rollup_stake_amount: new BigNumber(10000000000),
+        sc_rollup_commitment_period_in_blocks: 30,
+        sc_rollup_max_lookahead_in_blocks: 30000,
+        sc_rollup_max_active_outbox_levels: 20160,
+        sc_rollup_max_outbox_messages_per_level: 100,
+        sc_rollup_number_of_sections_in_dissection: 32,
+        sc_rollup_timeout_period_in_blocks: 20160,
+        sc_rollup_max_number_of_cemented_commitments: 5,
+        zk_rollup_enable: false,
+        zk_rollup_origination_size: 4000,
+        zk_rollup_min_pending_to_process: 10
+      });
+      done();
+    });
+  });
   describe('getConstants Proto014', () => {
     it('should query the right url and casts relevant properties to BigNumber', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
@@ -1480,6 +1687,7 @@ describe('RpcClient test', () => {
                   'sigmCS2nZquXi3vXX8p7iwc6TVYC87FsGYkxSgEMiQESbM5dnnP4SGe4YHLRFXuRwcs1VaNLsiFWzVQVnpbNDfAhYhPgRnCG',
               },
             ],
+
           ],
         })
       );
@@ -2954,23 +3162,23 @@ describe('RpcClient test', () => {
 
       expect(content.proof).toBeDefined();
       expect(content.proof.version).toEqual(3);
-      expect((content.proof.before as { node: string }).node).toEqual(
+      expect((content.proof.before as { node: string; }).node).toEqual(
         'CoVUv68XdJts8f6Ysaoxm4jnt4JKXfqx8WYVFnkj2UFfgKHJUrLs'
       );
-      expect((content.proof.after as { node: string }).node).toEqual(
+      expect((content.proof.after as { node: string; }).node).toEqual(
         'CoUn3twa3TmvNby5VAGeN2jHvzbfpmJAXcyDHJuLLAuuLiaZZnzC'
       );
 
       expect(content.proof.state).toBeDefined();
 
-      const inodeState1 = (content.proof.state[0] as { inode: Inode }).inode;
+      const inodeState1 = (content.proof.state[0] as { inode: Inode; }).inode;
       expect(inodeState1.length).toEqual('14');
       expect(inodeState1.proofs).toEqual([
         'CoVbQczQE6uDug4tWErtLgszzZBRDJKEGHgcQp8jGYSEfBLnsMXH',
         'CoWZ31tY65qh38Sfgm64Ny8kDTLQQMr5xuRDkDkz1JopiBnPDu11',
       ]);
 
-      const inodeState2 = (content.proof.state[2] as { inode: Inode }).inode;
+      const inodeState2 = (content.proof.state[2] as { inode: Inode; }).inode;
       expect(inodeState2.length).toEqual('3');
       expect(inodeState2.proofs).toEqual([
         null,
@@ -2978,8 +3186,8 @@ describe('RpcClient test', () => {
       ]);
 
       const otherEltsNode = (
-        (content.proof.state[4] as { other_elts: OtherElts }).other_elts as {
-          node: [string, { value: string }][];
+        (content.proof.state[4] as { other_elts: OtherElts; }).other_elts as {
+          node: [string, { value: string; }][];
         }
       ).node;
       expect(otherEltsNode[0]).toEqual([
@@ -2988,8 +3196,8 @@ describe('RpcClient test', () => {
       ]);
 
       const otherEltsOtherElts = (
-        (content.proof.state[5] as { other_elts: OtherElts }).other_elts as {
-          other_elts: { value: any };
+        (content.proof.state[5] as { other_elts: OtherElts; }).other_elts as {
+          other_elts: { value: any; };
         }
       ).other_elts;
       expect(otherEltsOtherElts).toEqual({ value: '00000000' });
@@ -3214,6 +3422,19 @@ describe('RpcClient test', () => {
       expect(internalResult.errors).toBeUndefined();
 
       done();
+    });
+    it('should contain update_tickets for transactions updating ticket storage', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketUpdatesSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[0][0].contents[0] as OperationContentsAndResultTransaction
+      const ticketUpdates = content.metadata.operation_result.ticket_updates && content.metadata.operation_result.ticket_updates[0]
+
+      expect(ticketUpdates).toBeDefined();
+      expect(ticketUpdates?.ticket_token.ticketer).toEqual('KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH')
+      expect(ticketUpdates?.updates[0].account).toEqual('KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj')
+      expect(ticketUpdates?.updates[0].amount).toEqual('-2')
+      done()
     });
   });
 
