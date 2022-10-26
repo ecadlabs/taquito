@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: 
+        node:
           - '16.13.1'
           - '17.3.x'
     steps:
@@ -44,6 +44,7 @@ jobs:
       matrix:
         protocol:
           - kathmandunet
+          - limanet
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2

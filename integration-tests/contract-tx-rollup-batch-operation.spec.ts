@@ -3,14 +3,14 @@ import { OpKind, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const jakartanet = (protocol === Protocols.PtJakart2) ? it : it.skip;
+  const limanet = (protocol === Protocols.PtLimaPtL) ? it : it.skip;
   describe(`Test tx rollup batch using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup(true)
       done()
     })
-      jakartanet('should succeed to submit a tx rollup batch with auto-estimate of the fees', async (done) => {
+      limanet('should succeed to submit a tx rollup batch with auto-estimate of the fees', async (done) => {
         const op = await Tezos.contract.txRollupSubmitBatch({
          content: '626c6f62',
          rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w'
@@ -24,8 +24,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
        done();
      });
- 
-     jakartanet('should succeed to submit a tx rollup batch with defined fees', async (done) => {
+
+     limanet('should succeed to submit a tx rollup batch with defined fees', async (done) => {
       const op = await Tezos.contract.txRollupSubmitBatch({
          content: '626c6f62',
          rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
@@ -42,7 +42,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
        done();
      });
 
-     jakartanet('should succeed to include a tx rollup batch operation in a batch', async (done) => {
+     limanet('should succeed to include a tx rollup batch operation in a batch', async (done) => {
       const op = await Tezos.contract.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
         { kind: OpKind.TX_ROLLUP_SUBMIT_BATCH, content: '626c6f62', rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', }
@@ -53,9 +53,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(op.status).toBe('applied');
 
       done();
-    }); 
- 
-    jakartanet('should succeed to include a tx rollup batch operation in a batch using `with` method', async (done) => {
+    });
+
+    limanet('should succeed to include a tx rollup batch operation in a batch using `with` method', async (done) => {
       const op = await Tezos.contract.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTxRollupSubmitBatch({ content: '626c6f62', rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w' })

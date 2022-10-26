@@ -6,7 +6,7 @@ import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({lib, setup, protocol}) => {
   const Tezos = lib;
-  const jakartanet = Protocols.PtJakart2 === protocol ? test : test.skip
+  const limanet = Protocols.PtLimaPtL === protocol ? test : test.skip
 
   beforeEach(async (done) => {
     await setup();
@@ -15,7 +15,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
   describe('test', () => {
     type Storage = { addressSet: string[], addressMap: MichelsonMap<string, number>; }
 
-    jakartanet('should pass with tz addresses', async (done) => {
+    limanet('should pass with tz addresses', async (done) => {
 
       const initialStorage: Storage = {
         addressSet: [
@@ -79,7 +79,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       expect(newMapStorage.addressMap.get('txr1bZx7qro4xNsxLhmpXfmzQojHkg8XqrUvL')).toBeUndefined();
       done();
     })
-    jakartanet('should pass with KT1', async (done) => {
+    limanet('should pass with KT1', async (done) => {
 
       const initialStorage: Storage = {
         addressSet: [
