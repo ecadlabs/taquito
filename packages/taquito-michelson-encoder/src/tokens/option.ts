@@ -2,7 +2,7 @@ import { OptionTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 
 export class OptionToken extends ComparableToken {
-  static prim: 'option' = 'option';
+  static prim: 'option' = 'option' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

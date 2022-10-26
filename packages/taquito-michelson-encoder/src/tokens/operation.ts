@@ -2,7 +2,7 @@ import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory } from './token';
 
 export class OperationToken extends Token {
-  static prim: 'operation' = 'operation';
+  static prim: 'operation' = 'operation' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
