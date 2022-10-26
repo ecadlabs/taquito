@@ -1,6 +1,6 @@
 ![Taquito Logo](/img/Taquito.png)
 
-![Node.js CI](https://github.com/ecadlabs/taquito/workflows/Node.js%20CI/badge.svg)
+[![Node.js CI](https://github.com/ecadlabs/taquito/workflows/Node.js%20CI/badge.svg)](https://github.com/ecadlabs/taquito/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/ecadlabs/taquito/branch/master/graph/badge.svg)](https://codecov.io/gh/ecadlabs/taquito)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3204/badge)](https://bestpractices.coreinfrastructure.org/projects/3204)
 [![npm version](https://badge.fury.io/js/%40taquito%2Ftaquito.svg)](https://badge.fury.io/js/%40taquito%2Ftaquito)
@@ -9,19 +9,19 @@ Welcome, Web3 developer!
 
 ## What is Taquito?
 
-Taquito is a fast and lightweight [TypeScript](https://www.typescriptlang.org/) library to accelerate DApp development on the [Tezos](https://tezos.com/developers) blockchain. With it, you can easily interact with Smart Contracts deployed to Tezos. It is distributed as a suite of GPG-signed `npm` packages, to reduce bloat and improve application startup times.
+Taquito is a fast and lightweight [TypeScript](https://www.typescriptlang.org/) library to accelerate DApp development on the [Tezos](https://tezos.com/developers) blockchain. With it, you can easily interact with Smart Contracts deployed to Tezos. It is distributed as a suite of individual `npm` packages, to reduce bloat and improve application startup times.
 
 ## What about Smart Contract Development?
 
-Are you are a current, or aspiring, "full-stack" blockchain developer? Be sure to check out Taquito's sister project [Taqueria](https://taqueria.io), which provides *rich support* for Smart Contract development on Tezos.
+If you are a current or aspiring "full-stack" blockchain developer, be sure to check out Taquito's sister project [Taqueria](https://taqueria.io). Taqueria is a Developer Tool Suite with *rich support* for Smart Contract development and orchestration on Tezos, and fully compliments Taquito.
 
 ## What is Included in Taquito?
 
-Taquito is primarily targeted at Front-End Web3 developers, so it comes with batteries included, such as a suite of [React Components](https://www.npmjs.com/package/@taquito/react-components), an extensible framework, and many helpful utilities. It can be used in *several* execution contexts, including Node.js, Deno, and Electron, to name a few, and has minimal dependencies.
+Taquito is primarily targeted at Front-End Web3 developers, so it comes with batteries included, such as a [React Template Project](https://github.com/ecadlabs/taquito-react-template), an extensible framework, and many helpful utilities. It can be used in *many* execution contexts, including Serverless, Node.js, Deno, and Electron (to name a few) and has minimal dependencies.
 
 ## Who uses Taquito?
 
-Taquito is used by **over 80% of DApps** in the Tezos ecosystem. It is easy to use, [proven secure](https://bestpractices.coreinfrastructure.org/en/projects/3204#security) and [tested continuously](https://bestpractices.coreinfrastructure.org/en/projects/3204#quality) against current versions of Tezos (both Mainnet *and* Testnet).
+Taquito is used by **over 80% of DApps** in the Tezos ecosystem. It is easy to use, [proven secure](https://bestpractices.coreinfrastructure.org/en/projects/3204#security) and [tested continuously](https://github.com/ecadlabs/taquito/actions/workflows/main.yml) against current versions of Tezos (both Mainnet *and* Testnets).
 
 ## Why should I use Taquito?
 
@@ -33,7 +33,7 @@ Taquito provides convenient abstractions for a multitude of common operations, i
 
 To get started with Taquito quickly, visit the [Taquito QuickStart](https://tezostaquito.io/docs/quick_start).
 
-If you prefer to start with a skeleton project, check out our [Taquito boilerplate project](https://github.com/ecadlabs/taquito-boilerplate#getting-started).
+If you prefer to start with a skeleton project, check out our [Taquito React Template](https://github.com/ecadlabs/taquito-react-template).
 
 Do you wish to make a contribution to Taquito? See below, [Contributing to Taquito](#contributors-getting-started).
 
@@ -41,13 +41,14 @@ Do you wish to make a contribution to Taquito? See below, [Contributing to Taqui
 
 Taquito currently supports the following versions of Node.js®:
 
-| Version          |         |
-| ---------------- | ------- |
-| < 16.13.1        |    ❌   |
-| 16.13.1          |    ✅   |
-| > 16.13.1        |    ❌   |
-| 17.3.0           |    ✅   |
-| > 17.3.0         |    ❌   |
+| Version          | Supported? |
+| ---------------- | ---------- |
+| v12              |    ❌      |
+| v14              |    ❌      |
+| v16.13.1         |    ✅      |
+| v16.13.2         |    ❌      |
+| 17.3.x           |    ✅      |
+| v17.5.x          |    ❌      |
 
 While other versions often work, the above are what we officially support. YMMV!
 
@@ -60,30 +61,28 @@ We are active and enthusiastic participants of the following community support c
 
 ## Project Organization
 
-`taquito` is organized as a [mono repo](https://en.wikipedia.org/wiki/Monorepo) and includes several npm packages which are GPG-signed and published to npmjs.org under the `@taquito` handle. Each package has its own README and ccan be found in the `packages/` directory
+`taquito` is organized as a [mono repo](https://en.wikipedia.org/wiki/Monorepo), and includes several npm packages published to npmjs.org under the `@taquito` handle. Each package has its own README and can be found in the `packages/` directory
 
 | High-Level Packages                                            | Responsibility                                               |
 | -------------------------------------------------------------- | ------------------------------------------------------------ |
-| [@taquito/taquito](packages/taquito)                           | Facade class to lower-level, package-specific functionality  |
+| [@taquito/taquito](packages/taquito)                           | [Facade](https://en.wikipedia.org/wiki/Facade_pattern) to lower-level, package-specific functionality  |
 
 | Low-Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
 | [@taquito/local-forging](packages/taquito-local-forging)         | Local "forging" of Tezos operations                           |
 | [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Creates a JS abstraction for Smart Contracts                  |
 | [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms and expands Macros           |
-| [@taquito/remote-signer](packages/taquito-remote-signer)         | Provide necessary function to sign using remote signer API    |
+| [@taquito/remote-signer](packages/taquito-remote-signer)         | Provides the facility to use a remote signer, such as https://signatory.io    |
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library: every rpc endpoint has its own method     |
 | [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
-| [@taquito/tezbridge-signer](packages/taquito-tezbridge-signer)   | Provide necessary function to sign using TezBridge            |
 | [@taquito/utils](packages/taquito-utils)                         | Provide different encoding and decoding utilities             |
-| [@taquito/tezbridge-wallet](packages/taquito-tezbridge-wallet)   | Tezbridge implementation for the Wallet API                   |
 | [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 Implementation for Taquito                            |
 | [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 Implementation for Taquito                            |
 | [@taquito/beacon-wallet](packages/taquito-beacon-wallet)         | TZIP-10 Wallet Interaction implementation for the Wallet API  |
 
 ## API Documentation
 
-TypeDoc API documentation is available [here](https://tezostaquito.io/typedoc)
+TypeDoc API documentation for Taquito [is available here](https://tezostaquito.io/typedoc).
 
 ## Versioning Strategy
 
@@ -97,7 +96,7 @@ For example, in a past release the protocol was at `004-...`, and `005-...` was 
 
 When it becomes clear that the next protocol proposal will be promoted, AND we have implemented and tested interoperability with the new protocol, we release the next version (`v5.0.0-beta.1` in this example) BEFORE the chain transitions to the new protocol.
 
-It is essential that packages to support the new protocol get released before the protocol changes so that Taquito developers have time to update and test their projects.
+It is essential for updated packages to be released before the protocol changes, so that Taquito developers have time to update and test their projects.
 
 During "Major" version updates, breaking changes in the Taquito public APIs MAY include breaking changes; we endeavor to make this clear, and document it in our release notes.
 
@@ -117,10 +116,8 @@ You would like to make a contribution to Taquito? Wonderful! Please read on.
 
 ### Setup and build the Taquito project 
 
-__Make sure you have a version of Node.js supported by Taquito__ (as listed above).
-
-Next, use a suitable version of **Node.js**, for example:
-
+Install/use a suitable version of **Node.js** (_as listed above_), for example:
+    
     `nvm use v17.3.0`
 
 * Install `lerna` globally:
@@ -129,31 +126,23 @@ Next, use a suitable version of **Node.js**, for example:
 
 *Taquito uses `lerna` internally to simplify the build configuration.*
 
-* Install Nx:
-
-    `npm install -g nx`
-
-[nx](https://nx.dev/) is used to speed up the build, test and overall DX.
-
-* Install `libudev-dev` if you are developing on Linux:
+* Install `libudev-dev`, if developing on GNU/Linux:
 
     `sudo apt-get install libudev-dev`
 
-*This package contains files needed to develop against `libudev`.*
+*This package contains low-level files required to compile against `libudev-*`.*
 
-### Setup and build the Taquito project
+### Setup and build Taquito
 
 * Run `npm run rebuild`
 
-Under the covers, this will invoke serially the following commands:
+That command invokes serially the following commands:
 
 * Run `npm run clean`
-* Run `npm clean-install`
+* Run `npm clean-install`  *# n.b. no `run`: `clean-install` is an npm __built-in__*
 * Run `npm run build`
 
-The `clean-install` (or just, `ci`) command ensures a clean install of all depenencies, and respects `package-lock.json`, to ensure a deterministic and repeatable build (it is also some 2x to 10x faster than `npm install`).
-
-(Note that `clean-install` is an npm *built-in*, so the invocation is not prepended with `run`).
+The `clean-install` (or just `ci`) command ensures a clean install of all depenencies, and respects `package-lock.json`, to ensure a deterministic and repeatable build (it is also some 2x to 10x faster than `npm install`). It will not adjust `package.json`: hooray!
 
 ### Useful npm command targets/scripts
 
@@ -179,7 +168,9 @@ After making a change to Taquito, linting and running the unit test suite should
 
 * Run `npm run lint`
 * Run `npm run test`
-* To commit, please use `npm run commit`
+* Run `npm run commit`
+
+Please use `npm run commit` for your last commit before you push, as this will automagically formulate the correct commit format.
 
 ### Running the website locally
 
@@ -187,44 +178,38 @@ The Tezos Taquito [website][4] is built using [Docusaurus][5].
 
 To run the Taquito website in development mode locally, run the following commands:
 
-```sh
+```
 cd website
 npm install
 npm start
 ```
 
----
-
 ## Contributions / Reporting Issues
 
 ### Security Issues
 
-To report a security issue, please contact security@ecadlabs.com or via [keybase/jevonearth][2] on keybase.io.
-
-Reports may be encrypted using keys published on keybase.io using [keybase/jevonearth][2].
+To report a security issue, please contact security@ecadlabs.com or via [keybase/jevonearth][2] on keybase.io. You can also _encrypt_ your bug report using the [keybase/jevonearth][2] key.
 
 ### Bug or Feature Requests
 
-Please use the [GitHub issue tracker](https://github.com/ecadlabs/taquito/issues) to report bugs or request features.
+Please use our [GitHub Issue Tracker](https://github.com/ecadlabs/taquito/issues) to report bugs or request new features.
 
 To contribute, please check the issue tracker to see if an existing issue exists for your planned contribution. If there's no issue, please create one first and then submit a pull request with your contribution.
 
-For a contribution to be merged, it is required to have complete documentation, come with unit tests, and integration tests where appropriate. Submitting a "work in progress" pull request for review/feedback is always welcome!
-
----
-
-## Credits
-
-We would like to give a special thank you to these projects, which were invaluable during the initial development of Taquito:
-
-- https://github.com/AndrewKishino/sotez
-- https://github.com/TezTech/eztz
+For a contribution to be merged, it is required to have complete documentation, unit tests, and integration tests as appropriate. Submitting a "work in progress" pull request for review/feedback is always welcome!
 
 ---
 
 ## Disclaimer
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, **ANY** IMPLIED WARRANTIES OF MERCHANTABILITY, **NONINFRINGEMENT** OR FITNESS FOR A PARTICULAR PURPOSE ARE **ENTIRELY** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS **OR ANY AFFILIATED PARTIES OR ENTITIES** BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **PERSONS USING THIS SOFTWARE DO SO ENTIRELY AT THEIR OWN RISK.**
+
+## Credits
+
+Special thanks to these libraries, which have been excellent references for developing Taquito
+
+- https://github.com/AndrewKishino/sotez
+- https://github.com/TezTech/eztz
 
 [0]: https://github.com/ecadlabs/tezos-indexer-api
 [2]: https://keybase.io/jevonearth
@@ -233,10 +218,3 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [5]: https://docusaurus.io/
 [telegram]: https://t.me/tezostaquito
 [stackexchange]: https://tezos.stackexchange.com/questions/tagged/taquito
-
-## Credits
-
-Special thanks to these libraries, which have been excellent references for developing Taquito
-
-- https://github.com/AndrewKishino/sotez
-- https://github.com/TezTech/eztz
