@@ -1712,7 +1712,6 @@ describe('RpcClient test', () => {
                   'sigmCS2nZquXi3vXX8p7iwc6TVYC87FsGYkxSgEMiQESbM5dnnP4SGe4YHLRFXuRwcs1VaNLsiFWzVQVnpbNDfAhYhPgRnCG',
               },
             ],
-
           ],
         })
       );

@@ -76,7 +76,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       expect(newMapStorage.addressMap.get('txr1bZx7qro4xNsxLhmpXfmzQojHkg8XqrUvL')).toBeUndefined();
       done();
     })
-    test('should pass with KT1', async (done) => {
+    it('should pass with KT1', async (done) => {
 
       const initialStorage: Storage = {
         addressSet: [
