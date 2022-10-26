@@ -1,12 +1,10 @@
 import { CONFIGS } from "./config";
 import { MichelsonMap } from "@taquito/taquito";
 import { contractWithTxr1Address } from "./data/contract-txr1-address";
-import { Protocols } from "@taquito/taquito";
 
 
 CONFIGS().forEach(({ lib, setup }) => {
   const Tezos = lib;
-
   beforeEach(async (done) => {
     await setup();
     done();
