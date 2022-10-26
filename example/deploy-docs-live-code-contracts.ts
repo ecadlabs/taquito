@@ -25,9 +25,11 @@ import {
   metadataViewsExample1,
   metadataViewsExample2,
 } from '../integration-tests/data/metadataViews';
+import { saplingLiveCodeContract } from './data/sapling_live_code_contract';
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
+
 
 const provider = 'https://kathmandunet.ecadinfra.com/';
 export const signer = new InMemorySigner(
@@ -133,6 +135,7 @@ async function originateTheContracts() {
   await checkBalances(users);
 
   console.log('originating...');
+  contract_catalogue.set('SaplingLiveCodeContract', await originateSaplingLiveCodeContract());
   contract_catalogue.set('IncrementContract', await originateIncrementContract());
   contract_catalogue.set('MichelsonMapContract', await originateMichelsonMap());
   contract_catalogue.set('LambdaViewContract', await originateLambda1());
@@ -164,6 +167,7 @@ async function originateTheContracts() {
   contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
   contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
+ 
 
   json_contract_catalogue();
 
@@ -175,6 +179,21 @@ async function originateTheContracts() {
       jsonObject[key] = value;
     });
     console.log(JSON.stringify(jsonObject));
+  }
+}
+
+async function originateSaplingLiveCodeContract() {
+  tezos.setSignerProvider(signer);
+  try {
+    const op = await tezos.contract.originate({
+      code: saplingLiveCodeContract,
+      init: `{}`,
+    });
+    const sapling_live_code_contract = await op.contract();
+    console.log('SaplingLiveCodeContract : ' + sapling_live_code_contract.address);
+    return sapling_live_code_contract.address;
+  } catch (ex) {
+    console.error(ex);
   }
 }
 

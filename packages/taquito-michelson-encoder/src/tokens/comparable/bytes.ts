@@ -16,7 +16,7 @@ export class BytesValidationError extends TokenValidationError {
 }
 
 export class BytesToken extends ComparableToken {
-  static prim: 'bytes' = 'bytes';
+  static prim: 'bytes' = 'bytes' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

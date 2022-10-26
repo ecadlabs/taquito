@@ -9,7 +9,7 @@ export class ListValidationError extends TokenValidationError {
 }
 
 export class ListToken extends Token {
-  static prim: 'list' = 'list';
+  static prim: 'list' = 'list' as const;
 
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },

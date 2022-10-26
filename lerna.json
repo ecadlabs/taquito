@@ -8,5 +8,6 @@
     "packages/taquito-michel-codec/pack-test-tool",
     "website"
   ],
+  "useNx": true,
   "version": "14.0.0"
 }
