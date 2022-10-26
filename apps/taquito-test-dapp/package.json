@@ -21,7 +21,7 @@
     "svelte-preprocess": "^4.9.8",
     "tslib": "^2.3.1",
     "typescript": "^4.5.4",
-    "vite": "^2.9.7",
+    "vite": "^3.1.8",
     "vite-compatible-readable-stream": "^3.6.1"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "@taquito/beacon-wallet": "^14.0.0",
     "@taquito/taquito": "^14.0.0",
     "@taquito/utils": "^14.0.0",
+    "@taquito/wallet-connect": "^14.0.0",
     "buffer": "^6.0.3",
     "svelte-select": "^4.4.7"
   },

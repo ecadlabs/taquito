@@ -4,7 +4,7 @@
   import { NetworkType } from "@airgap/beacon-sdk";
   import Select from "svelte-select";
   import { rpcUrl } from "./config";
-  import store from "./store";
+  import store, { SDK } from "./store";
   import Layout from "./Layout.svelte";
   import TestContainer from "./lib/TestContainer.svelte";
 
@@ -42,14 +42,6 @@
       case "mainnet":
         store.updateTezos(new TezosToolkit(rpcUrl.mainnet));
         store.updateNetworkType(NetworkType.MAINNET);
-        break;
-      case "hangzhounet":
-        store.updateTezos(new TezosToolkit(rpcUrl.hangzhounet));
-        store.updateNetworkType(NetworkType.HANGZHOUNET);
-        break;
-      case "ithacanet":
-        store.updateTezos(new TezosToolkit(rpcUrl.ithacanet));
-        store.updateNetworkType(NetworkType.ITHACANET);
         break;
       case "ghostnet":
         store.updateTezos(new TezosToolkit(rpcUrl.ghostnet));
@@ -150,10 +142,22 @@
           margin: 10px 0px;
         }
 
-        button {
+        .sdk {
+          border: 1px solid;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 20px;
+          grid-row-gap: 10px;
+          align-items: center;
           width: 100%;
-          justify-content: center;
-        }
+      }
+
+      button {
+                width: 100%;
+                justify-content: center;
+              }
       }
 
       label {
@@ -196,15 +200,50 @@
           <div>(use Chrome for a better experience)</div>
         {/if}
         <div class="options">
-          <button
+          <div class="sdk">
+            <span><strong>Connect using beacon sdk</strong></span>
+            <button
             on:click={() => {
               const wallet = document.getElementById("wallet-button");
+              store.updateSdk(SDK.BEACON)
               wallet.click();
             }}
           >
             <span class="material-icons-outlined"> account_balance_wallet </span>
             &nbsp; Connect your wallet
           </button>
+          <label for="matrix-node-select" class="custom-select">
+            <span class="select-title">Matrix node:</span>
+            <Select
+              id="matrix-node-select"
+              containerStyles="width:200px"
+              items={availableMatrixNodes}
+              value={$store.matrixNode}
+              on:select={changeMatrixNode}
+            />
+          </label>
+          <label>
+            <span class="select-title">Disable default events:</span>
+            <input
+              type="checkbox"
+              checked={$store.disableDefaultEvents}
+              on:change={() => store.updateDefaultEvents()}
+            />
+          </label>
+          </div>
+          <div class="sdk">
+            <span><strong>Connect using Wallet Connect 2</strong></span>
+            <button
+            on:click={() => {
+              const walletConnect2 = document.getElementById("wallet-button");
+              store.updateSdk(SDK.WC2)
+              walletConnect2.click();
+            }}
+          >
+            <span class="material-icons-outlined"> account_balance_wallet </span>
+            &nbsp; Connect your wallet
+          </button>
+          </div>
           <button>
             <span class="material-icons-outlined"> usb </span>
             &nbsp; Connect your Nano ledger
@@ -237,24 +276,6 @@
               }}
             />
           {/if}
-          <label for="matrix-node-select" class="custom-select">
-            <span class="select-title">Matrix node:</span>
-            <Select
-              id="matrix-node-select"
-              containerStyles="width:200px"
-              items={availableMatrixNodes}
-              value={$store.matrixNode}
-              on:select={changeMatrixNode}
-            />
-          </label>
-          <label>
-            <span class="select-title">Disable default events:</span>
-            <input
-              type="checkbox"
-              checked={$store.disableDefaultEvents}
-              on:change={() => store.updateDefaultEvents()}
-            />
-          </label>
         </div>
       </div>
     </div>
