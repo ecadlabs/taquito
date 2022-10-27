@@ -24,7 +24,7 @@ const sidebars = {
       collapsible: false,
       items: [
         'quick_start',
-        'boilerplate',
+        'react-template',
         'batch_API',
         'beaconwallet-singleton',
         'confirmation_event_stream',
