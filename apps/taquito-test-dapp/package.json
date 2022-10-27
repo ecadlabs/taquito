@@ -37,7 +37,8 @@
     "@airgap/beacon-sdk": "./node_modules/@airgap/beacon-sdk/dist/esm/index.js",
     "@taquito/beacon-wallet": "./node_modules/@taquito/beacon-wallet/dist/taquito-beacon-wallet.es5.js",
     "@taquito/signer": "./node_modules/@taquito/signer/dist/taquito-signer.es5.js",
-    "@taquito/taquito": "./node_modules/@taquito/taquito/dist/taquito.es5.js"
+    "@taquito/taquito": "./node_modules/@taquito/taquito/dist/taquito.es5.js",
+    "@taquito/taquito-wallet-connect": "./node_modules/@taquito/wallet-connect/dist/taquito-wallet-connect.es5.js"
   },
   "prettier": {
     "svelteSortOrder" : "options-scripts-styles-markup"

@@ -4,10 +4,16 @@
  */
 
 import Client from '@walletconnect/sign-client';
-import { SignClientTypes, ProposalTypes, SessionTypes } from '@walletconnect/types';
+import { SignClientTypes, ProposalTypes, SessionTypes, RelayerTypes } from '@walletconnect/types';
 import QRCodeModal from '@walletconnect/qrcode-modal';
 import { createOriginationOperation, createSetDelegateOperation, createTransferOperation, WalletDelegateParams, WalletOriginateParams, WalletProvider, WalletTransferParams } from '@taquito/taquito';
+import { getSdkError } from "@walletconnect/utils";
 
+export declare enum SigningType {
+    RAW = "raw",
+    OPERATION = "operation",
+    MICHELINE = "micheline"
+}
 export class WalletConnect2 implements WalletProvider {
     public client: Client;
     private session: SessionTypes.Struct | undefined;
@@ -21,15 +27,38 @@ export class WalletConnect2 implements WalletProvider {
         return new WalletConnect2(client);
     }
 
+    getAllActivePairing() {
+        return this.client.pairing.getAll({ active: true });
+    }
+
+    getAllExistingSessionKeys() {
+        return this.client.session.keys;
+    }
+
+    /**
+     * @description Configure the Client with an existing session
+     */
+    configureWithExistingSessionKey(key: string) {
+        const sessions = this.getAllExistingSessionKeys();
+        if (!sessions.includes(key)) {
+            throw new Error(`Invalid session key ${key}`)
+        }
+        this.session = this.client.session.get(key);
+    }
+
+    /**
+     * @description Configure the Client with a new session
+     */
     async requestPermissions(scope: {
-        pairingTopic?: string;
         requiredNamespaces: ProposalTypes.RequiredNamespaces;
+        pairingTopic?: string;
+        relays?: RelayerTypes.ProtocolOptions[];
     }) {
         try {
-            console.log('Requesting permission...');
             const { uri, approval } = await this.client.connect(scope);
 
             if (uri) {
+                // Open QRCode modal if a URI was returned (i.e. we're not connecting an existing pairing).
                 QRCodeModal.open(uri, () => {
                     console.log('EVENT', 'QR Code Modal closed');
                 });
@@ -43,20 +72,20 @@ export class WalletConnect2 implements WalletProvider {
         }
     }
 
-    async signPayload(payload: string) {
-        const topic = this.session?.topic ?? '';
-        const response = await this.client.request<string>({
-            topic,
-            chainId: this.session?.requiredNamespaces['tezos'].chains[0] ?? '',
-            request: {
-                method: 'tezos_signMessage',
-                params: {
-                    address: await this.getPKH(),
-                    expression: payload,
-                },
-            },
-        });
-        return response;
+    async disconnect() {
+        if (this.session) {
+            await this.client.disconnect({
+                topic: this.session.topic,
+                reason: getSdkError("USER_DISCONNECTED"),
+            });
+        }
+    }
+
+    getPeerMetadata() {
+        if (!this.session) {
+            throw new Error('Not connected')
+        }
+        return this.session.peer.metadata;
     }
 
     async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
@@ -71,19 +100,19 @@ export class WalletConnect2 implements WalletProvider {
     async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
         const walletParams: WalletOriginateParams = await params();
         return this.removeDefaultParams(
-          walletParams,
-          await createOriginationOperation(this.formatParameters(walletParams))
+            walletParams,
+            await createOriginationOperation(this.formatParameters(walletParams))
         );
-      }
+    }
 
-      async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
+    async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
         const walletParams: WalletDelegateParams = await params();
 
         return this.removeDefaultParams(
-          walletParams,
-          await createSetDelegateOperation(this.formatParameters(walletParams))
+            walletParams,
+            await createSetDelegateOperation(this.formatParameters(walletParams))
         );
-      }
+    }
 
     formatParameters(params: any) {
         if (params.fee) {
@@ -118,10 +147,12 @@ export class WalletConnect2 implements WalletProvider {
     }
 
     async sendOperations(params: any[]) {
-        const topic = this.session?.topic ?? '';
-        const response = await this.client.request<string>({
-            topic,
-            chainId: this.session?.requiredNamespaces['tezos'].chains[0] ?? '',
+        if (!this.session) {
+            throw new Error('Not connected')
+        }
+        const hash = await this.client.request<string>({
+            topic: this.session.topic,
+            chainId: this.session.requiredNamespaces['tezos'].chains[0],
             request: {
                 method: 'tezos_sendOperations',
                 params: {
@@ -130,10 +161,36 @@ export class WalletConnect2 implements WalletProvider {
                 },
             },
         });
-        return response;
+        return hash;
+    }
+
+    async signPayload(params: {
+        signingType?: SigningType;
+        payload: string;
+        sourceAddress?: string;
+    }) {
+        if (!this.session) {
+            throw new Error('Not connected')
+        }
+        const signature = await this.client.request<string>({
+            topic: this.session.topic,
+            chainId: this.session.requiredNamespaces['tezos'].chains[0],
+            request: {
+                method: 'tezos_signExpression',
+                params: {
+                    account: params.sourceAddress ?? await this.getPKH(),
+                    expression: params.payload,
+                    signingType: params.signingType
+                },
+            },
+        });
+        return signature;
     }
 
     async getPKH() {
-        return this.session?.namespaces['tezos'].accounts[0].split(':')[2] ?? '';
+        if (!this.session) {
+            throw new Error('Not connected')
+        }
+        return this.session.namespaces['tezos'].accounts[0].split(':')[2];
     }
 }

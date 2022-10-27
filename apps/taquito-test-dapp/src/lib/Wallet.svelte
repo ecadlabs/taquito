@@ -71,15 +71,21 @@
       } else if ($store.sdk === SDK.WC2) {
         console.log("create walletConnect2");
         const newWallet = await createNewWalletConnect2();
-        await newWallet.requestPermissions({
-          requiredNamespaces: {
-            tezos: {
-              chains: [`tezos:${$store.networkType}`],
-              events: [],
-              methods: ["tezos_sendOperations"],
+        const sessions = newWallet.getAllExistingSessionKeys();
+        if (sessions.length > 0) {
+          // take the last active session
+          newWallet.configureWithExistingSessionKey(sessions[sessions.length - 1]);
+        } else {
+          await newWallet.requestPermissions({
+            requiredNamespaces: {
+              tezos: {
+                chains: [`tezos:${$store.networkType}`],
+                events: [],
+                methods: ["tezos_sendOperations", "tezos_signExpression"],
+              },
             },
-          },
-        });
+          });
+        }
         await updateStore(newWallet);
         return newWallet;
       }
@@ -108,10 +114,11 @@
   };
 
   const disconnectWallet = async () => {
-    if ($store.wallet instanceof BeaconWallet) { 
+    if ($store.wallet instanceof BeaconWallet) {
       await $store.wallet.clearActiveAccount();
+    } else if ($store.wallet instanceof WalletConnect2) {
+      await $store.wallet.disconnect();
     }
-    // TODO disconnect wc2
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
@@ -132,8 +139,7 @@
         }
       }
     } else if ($store.wallet instanceof WalletConnect2) {
-      // TODO wc2
-      connectedWallet = ''
+      connectedWallet = $store.wallet.getPeerMetadata().name;
     }
   });
 </script>
@@ -245,9 +251,9 @@
             Connected to: {$store.networkType}
           </div>
           {#if $store.wallet instanceof BeaconWallet}
-          <div>
-            Matrix node: {$store.matrixNode}
-          </div>
+            <div>
+              Matrix node: {$store.matrixNode}
+            </div>
           {/if}
           <div>
             Wallet: {connectedWallet}
