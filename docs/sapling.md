@@ -53,7 +53,7 @@ import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
 
-const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+const tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com/');
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
@@ -86,11 +86,11 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://jakartanet.ecadinfra.com/'));
+const readProvider = new RpcReadAdapter(new RpcClient('https://kathmandunet.ecadinfra.com/'));
 
 const saplingToolkit = new SaplingToolkit(
     { saplingSigner: inMemorySpendingKey }, 
-    { contractAddress: 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9', memoSize: 8 }, 
+    { contractAddress: 'KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd', memoSize: 8 }, 
     readProvider
 );
 
@@ -119,11 +119,11 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://jakartanet.ecadinfra.com/'));
+const readProvider = new RpcReadAdapter(new RpcClient('https://kathmandunet.ecadinfra.com/'));
 
 const saplingToolkit = new SaplingToolkit(
     { saplingSigner: inMemorySpendingKey }, 
-    { contractAddress: 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9', memoSize: 8 }, 
+    { contractAddress: 'KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd', memoSize: 8 }, 
     readProvider
 );
 
@@ -155,8 +155,8 @@ Here is an example of how to prepare and inject a shielded transaction using Taq
 // import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 // import { RpcClient } from '@taquito/rpc';
 
-const saplingContractAddress = 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9'
-const rpcUrl = 'https://jakartanet.ecadinfra.com/';
+const saplingContractAddress = 'KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd'
+const rpcUrl = 'https://kathmandunet.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -199,7 +199,7 @@ inMemorySpendingKey.getSaplingViewingKeyProvider()
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
   })
   .catch((error) => println(`Error: ${(error)}`));
 ```
@@ -227,8 +227,8 @@ Here is an example of how to prepare and inject a Sapling transaction using Taqu
 // import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 // import { RpcClient } from '@taquito/rpc';
 
-const saplingContractAddress = 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9'
-const rpcUrl = 'https://jakartanet.ecadinfra.com/';
+const saplingContractAddress = 'KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd'
+const rpcUrl = 'https://kathmandunet.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -262,7 +262,7 @@ saplingToolkit.prepareSaplingTransaction([{
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
 })
 .catch((error) => println(`Error: ${(error)}`));
 ```
@@ -285,8 +285,8 @@ Here is an example of how to prepare and inject an unshielded transaction using 
 // import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 // import { RpcClient } from '@taquito/rpc';
 
-const saplingContractAddress = 'KT1PMzy26CoN8B66ZQyAfVMgtcMR3ZuHnvJ9'
-const rpcUrl = 'https://jakartanet.ecadinfra.com/';
+const saplingContractAddress = 'KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd'
+const rpcUrl = 'https://kathmandunet.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -319,7 +319,7 @@ saplingToolkit.prepareUnshieldedTransaction({
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://jakarta.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
 })
 .catch((error) => println(`Error: ${(error)}`));
 ```
@@ -342,9 +342,9 @@ import { InMemoryViewingKey } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
 
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
-const tezos = new TezosToolkit('https://jakartanet.ecadinfra.com/');
+const tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com/');
 
-const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
+const saplingContract = await tezos.contract.at('KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd');
 
 const inMemoryViewingKey = new InMemoryViewingKey(
     '000000000000000000977d725fc96387e8ec1e603e7ae60c6e63529fb84e36e126770e9db9899d7f2344259fd700dc80120d3c9ca65d698f6064043b048b079caa4f198aed96271740b1d6fd523d71b15cd0b3d75644afbe9abfedb6883e299165665ab692c14ca5c835c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba837583145a5f338b1a7af8a5f9bec4783054f9d063d365f2352f72cbced95e0a'

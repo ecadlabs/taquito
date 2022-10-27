@@ -1,6 +1,5 @@
 import { MichelsonMap } from '@taquito/michelson-encoder';
 import { CONFIGS } from './config';
-import { miStr, miObject } from './data/contractWithUnpair';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -62,8 +61,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      const contract = await op.contract();
 
       done();
     });

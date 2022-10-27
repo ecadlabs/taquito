@@ -4449,6 +4449,53 @@ export const blockJakartanetSample = {
               },
             },
           },
+          {
+            kind: 'tx_rollup_return_bond',
+            source: 'tz2Q3efwpRvKL2Tvta8h6N5niV54Rw8iSEes',
+            fee: '512',
+            counter: '36',
+            gas_limit: '2676',
+            storage_limit: '0',
+            rollup: 'txr1TeZQiQrjaEop11Lh8fpsTdyJgQvr5igST',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz2Q3efwpRvKL2Tvta8h6N5niV54Rw8iSEes',
+                  change: '-512',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '512',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                balance_updates: [
+                  {
+                    kind: 'freezer',
+                    category: 'bonds',
+                    contract: 'tz2Q3efwpRvKL2Tvta8h6N5niV54Rw8iSEes',
+                    bond_id: {
+                      tx_rollup: 'txr1TeZQiQrjaEop11Lh8fpsTdyJgQvr5igST',
+                    },
+                    change: '-10000000000',
+                    origin: 'block',
+                  },
+                  {
+                    kind: 'contract',
+                    contract: 'tz2Q3efwpRvKL2Tvta8h6N5niV54Rw8iSEes',
+                    change: '10000000000',
+                    origin: 'block',
+                  },
+                ],
+                consumed_milligas: '2575028',
+              },
+            },
+          },
         ],
         signature:
           'sigmpiJiuk1wbno2KAvxFufUkZ4JnrTuuxmVWmGVP3bPKNft8Nv8LZwkKAKtvUeBSiBEMxa5vAxcKc5FddwZvhjuZyydZeKD',
