@@ -187,5 +187,32 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
             expect(addresses.length).toEqual(2);
             done();
           })
+        
+        test('Verify batch contract calls can specify amount, fee, gasLimit and storageLimit', async (done) => {
+            const op = await Tezos.contract.originate({
+                balance: "1",
+                code: managerCode,
+                init: { "string": await Tezos.signer.publicKeyHash() },
+            })
+            const contract = await op.contract();
+    
+            const estimateOp = await Tezos.estimate.batch([
+                { ...(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)).toTransferParams()), kind: OpKind.TRANSACTION },
+                { ...(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)).toTransferParams()), kind: OpKind.TRANSACTION },
+                { ...(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()).toTransferParams()), kind: OpKind.TRANSACTION },
+            ])
+    
+            const batch = Tezos.contract.batch()
+                .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)), { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit })
+                .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)), { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit })
+                .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()), { fee: estimateOp[2].suggestedFeeMutez, gasLimit: estimateOp[2].gasLimit, storageLimit: estimateOp[2].storageLimit })
+            const batchOp = await batch.send();
+            await batchOp.confirmation();
+
+            expect(batchOp.fee).toEqual(estimateOp[0].suggestedFeeMutez + estimateOp[1].suggestedFeeMutez + estimateOp[2].suggestedFeeMutez)
+            expect(batchOp.gasLimit).toEqual(estimateOp[0].gasLimit + estimateOp[1].gasLimit + estimateOp[2].gasLimit)
+            expect(batchOp.storageLimit).toEqual(estimateOp[0].storageLimit + estimateOp[1].storageLimit + estimateOp[2].storageLimit)
+            done()
+        })
     });
 });

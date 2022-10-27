@@ -14,15 +14,17 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node: [12.x]
+        node: 
+          - '16.13.1'
+          - '17.3.x'
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
-    - run: npm run lerna -- bootstrap
     - run: npm run build
     - run: npm run lint
     - run: npm run build-docs
@@ -46,9 +48,8 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
-        node-version: 12.x
+        node-version: 16.13.1
     - run: npm ci
-    - run: npm run lerna -- bootstrap
     - run: npm run build
     - name: Tailscale
       uses: tailscale/github-action@v1
@@ -64,7 +65,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
-        node-version: 12.x
+        node-version: 16.13.1
     - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
     - run: npm ci
     - run: npm run lerna -- bootstrap
