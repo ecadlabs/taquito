@@ -431,7 +431,6 @@ export interface RPCIncreasePaidStorageOperation {
  */
 export interface BallotParams {
   source?: string;
-  // period: number;
   proposal: string;
   ballot: BallotEnum;
 }

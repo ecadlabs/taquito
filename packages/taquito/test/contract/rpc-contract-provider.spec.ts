@@ -1691,7 +1691,7 @@ describe('RpcContractProvider test', () => {
             {
               source: 'test_pub_key_hash',
               kind: 'ballot',
-              period: undefined, // value is derived from an rpc call through a protected member function in RpcContractProvider
+              period: 1,
               proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
               ballot: 'yay',
             },

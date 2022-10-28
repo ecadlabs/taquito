@@ -4,6 +4,7 @@ import {
   OpKind,
   RpcClientInterface,
   RPCRunOperationParam,
+  VotingPeriodBlockResult,
 } from '@taquito/rpc';
 import { Protocols } from '../constants';
 import { Context } from '../context';
@@ -83,19 +84,12 @@ export abstract class OperationEmitter {
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
 
     // initializes a currentVotingPeriod if the operation is a ballot op
-    let currentVotingPeriod: number;
-    // ops.map(async (op) => {
-    //   if (op.kind === 'ballot') {
-    //     const period = await this.rpc.getCurrentPeriod();
-    //     currentVotingPeriod = period.voting_period.index;
-    //   }
-    // });
-
+    let currentVotingPeriodPromise: Promise<VotingPeriodBlockResult | undefined> =
+      Promise.resolve(undefined);
     ops.find(async (op) => {
       if (op.kind === 'ballot') {
         try {
-          const period = await this.rpc.getCurrentPeriod();
-          currentVotingPeriod = period.voting_period.index;
+          currentVotingPeriodPromise = this.rpc.getCurrentPeriod();
         } catch (e) {
           throw new RPCResponseError(
             `Failed to get the current voting period index: ${JSON.stringify(e)}`
@@ -111,10 +105,11 @@ export abstract class OperationEmitter {
       }
     }
 
-    const [hash, protocol, headCounter] = await Promise.all([
+    const [hash, protocol, headCounter, currentVotingPeriod] = await Promise.all([
       blockHashPromise,
       blockProtoPromise,
       counterPromise,
+      currentVotingPeriodPromise,
     ]);
 
     const counter = parseInt(headCounter || '0', 10);
@@ -191,9 +186,12 @@ export abstract class OperationEmitter {
               ...getFee(op),
             };
           case OpKind.BALLOT:
+            if (currentVotingPeriod === undefined) {
+              throw new RPCResponseError(`Failed to get the current voting period index`);
+            }
             return {
               ...op,
-              period: currentVotingPeriod,
+              period: currentVotingPeriod?.voting_period.index,
             };
 
           default:
