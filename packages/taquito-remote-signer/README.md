@@ -32,6 +32,16 @@ await Tezos.contract.transfer({ to: publicKeyHash, amount: 2 });
 
 The constructor of the `RemoteSigner` class requires the public key hash and the URL of the remote signer as parameters. It also takes optional headers (i.e., Authorization) and an optional `HttpBackend` to override the default one if needed.
 
+### Authenticated requests
+`RemoteSigner` can use an authenticated protocol. All you need is to pass a secret key in the Tezos Base58 format as `RemoteSignerOptions` property:
+
+```ts
+const authSecretKey = 'edsk39CjLvKZhJ1NEaCTE6A1cgHjt5mK2mFdCqqMr1P54qLnwmiCAr';
+// ...
+const signer = new RemoteSigner(pkh, rootUrl, { authSecretKey });
+// next steps as above
+```
+
 ## Additional info
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing, and versioning.

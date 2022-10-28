@@ -26,6 +26,7 @@ import {
   OperationNotAuthorizedError,
   PublicKeyMismatch,
 } from './errors';
+import { authenticateRequest } from './auth';
 import { Signer } from '@taquito/taquito';
 
 /**
@@ -59,6 +60,7 @@ type curves = 'ed' | 'p2' | 'sp';
 
 export interface RemoteSignerOptions {
   headers?: { [key: string]: string };
+  authSecretKey?: string;
 }
 
 export { VERSION } from './version';
@@ -134,11 +136,15 @@ export class RemoteSigner implements Signer {
         bb = mergebuf(watermark, bb);
       }
       const watermarkedBytes = buf2hex(toBuffer(bb));
+      const auth = this.options.authSecretKey !== undefined ?
+        authenticateRequest(bb, this.options.authSecretKey, this.pkh) :
+        null;
       const { signature } = await this.http.createRequest<SignResponse>(
         {
           url: this.createURL(`/keys/${this.pkh}`),
           method: 'POST',
           headers: this.options.headers,
+          ...(auth !== null ? { query: { authentication: auth } } : undefined)
         },
         watermarkedBytes
       );
