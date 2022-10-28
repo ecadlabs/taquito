@@ -43,8 +43,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('no parser configures will use MichelCodecParser by default to originate Michelson code and succeeds', async (done) => {
-      // No parserProvider configured will use MichelCodecParser by dafault (the Michelson will be parsed to JSONMichelson)
+    it('no parser configured will use MichelCodecParser by default to originate Michelson code and succeeds', async (done) => {
+      // No parserProvider configured will use MichelCodecParser by default (the Michelson will be parsed to JSONMichelson)
       const op = await Tezos.contract.originate({
         balance: "0",
         code: idMichelsonCode,
