@@ -1,5 +1,5 @@
 ---
-title: Taquito Smart Contract Collection
+title: Smart contract collection
 id: contracts_collection
 author: Michael Kernaghan
 ---

@@ -18,12 +18,14 @@
         "liquidity_baking",
         "maps_bigmaps",
         "michelsonmap",
+        "multisig_doc",
         "originate",
         "global_constant",
         "rpc_nodes",
         "rpc_package",
         "signing",
         "smartcontracts",
+        "contracts_collection",
         "tezos_domains",
         "tickets",
         "transaction_limits",
@@ -36,7 +38,6 @@
         "wallet_API",
         "wallets",
         "web3js_taquito",
-        "contracts_collection",
         "subscribe_event"
       ]
     },
