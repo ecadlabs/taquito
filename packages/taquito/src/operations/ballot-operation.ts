@@ -8,7 +8,6 @@ import { ForgedBytes, RPCBallotOperation } from './types';
  * @description BallotOperation provides utility functions to fetch a new operation of kind ballot
  *
  */
-
 export class BallotOperation extends Operation {
   constructor(
     hash: string,
