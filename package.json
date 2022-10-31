@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "build": "nx run-many --target=build --no-private",
+    "build-test-dapp": "lerna run build --scope=taquito-test-dapp-vite",
     "bootstrap": "lerna bootstrap --force-local",
     "rebuild": "npm run clean && npm clean-install && npm run build",
     "test": "nx run-many --target=test --collectCoverage",
@@ -17,9 +18,6 @@
     "gh-pages": "gh-pages",
     "version-stamp": "lerna run version-stamp"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "jest": {
     "transform": {
       ".(ts|tsx)": "ts-jest"
