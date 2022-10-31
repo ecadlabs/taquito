@@ -11,7 +11,7 @@ export default ({ command }) => {
       global: {}
     },
     build: {
-      target: "esnext",
+      target: "es6",
       commonjsOptions: {
         transformMixedEsModules: true
       }
@@ -34,7 +34,8 @@ export default ({ command }) => {
         // polyfills
         "readable-stream": "vite-compatible-readable-stream",
         stream: "vite-compatible-readable-stream"
-      }
+      },
+      preserveSymlinks: true
     }
   });
 };
