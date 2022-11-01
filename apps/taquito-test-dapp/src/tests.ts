@@ -48,7 +48,7 @@ const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -58,12 +58,12 @@ const sendInt = async (
   let opHash = "";
   try {
     const op = await contract.methods.simple_param(5).send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = Object.prototype.hasOwnProperty.call(op, "opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -72,16 +72,15 @@ const sendComplexParam = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    // const op = await contract.methods.complex_param(5, "Taquito").send();
     const op = await contract.methodsObject
       .complex_param({ 0: 5, 1: "Taquito" })
       .send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = Object.prototype.hasOwnProperty.call(op, "opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -91,22 +90,22 @@ const callFail = async (
   let opHash = "";
   try {
     const op = await contract.methods.fail([["unit"]]).send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = Object.prototype.hasOwnProperty.call(op, "opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
     console.log(error);
     if (
-      error.hasOwnProperty("data") &&
+      Object.prototype.hasOwnProperty.call(error, "data") &&
       Array.isArray(error.data) &&
       error.data.length === 2 &&
-      error.data[1].hasOwnProperty("with") &&
-      error.data[1].with.hasOwnProperty("string") &&
+      Object.prototype.hasOwnProperty.call(error.data[1], "with") &&
+      Object.prototype.hasOwnProperty.call(error.data[1].with, "string") &&
       error.data[1].with.string === "Fail entrypoint"
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -117,22 +116,22 @@ const callFaiWithInt = async (
   let opHash = "";
   try {
     const op = await contract.methods.fail_with_int([["unit"]]).send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = Object.prototype.hasOwnProperty.call(op, "opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
     console.log(error);
     if (
-      error.hasOwnProperty("data") &&
+      Object.prototype.hasOwnProperty.call(error, "data") &&
       Array.isArray(error.data) &&
       error.data.length === 2 &&
-      error.data[1].hasOwnProperty("with") &&
-      error.data[1].with.hasOwnProperty("int") &&
+      Object.prototype.hasOwnProperty.call(error.data[1], "with") &&
+      Object.prototype.hasOwnProperty.call(error.data[1].with, "int") &&
       error.data[1].with.int == 5
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -143,29 +142,29 @@ const callFaiWithPair = async (
   let opHash = "";
   try {
     const op = await contract.methods.fail_with_pair([["unit"]]).send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = Object.prototype.hasOwnProperty.call(op, "opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
     console.log(error);
     if (
-      error.hasOwnProperty("data") &&
+      Object.prototype.hasOwnProperty.call(error, "data") &&
       Array.isArray(error.data) &&
       error.data.length === 2 &&
-      error.data[1].hasOwnProperty("with") &&
-      error.data[1].with.hasOwnProperty("prim") &&
+      Object.prototype.hasOwnProperty.call(error.data[1], "with") &&
+      Object.prototype.hasOwnProperty.call(error.data[1].with, "prim") &&
       error.data[1].with.prim === "Pair" &&
-      error.data[1].with.hasOwnProperty("args") &&
+      Object.prototype.hasOwnProperty.call(error.data[1].with, "args") &&
       Array.isArray(error.data[1].with.args) &&
       error.data[1].with.args.length === 2 &&
-      error.data[1].with.args[0].hasOwnProperty("int") &&
+      Object.prototype.hasOwnProperty.call(error.data[1].with.args[0], "int") &&
       error.data[1].with.args[0].int == 6 &&
-      error.data[1].with.args[1].hasOwnProperty("string") &&
+      Object.prototype.hasOwnProperty.call(error.data[1].with.args[1], "string") &&
       error.data[1].with.args[1].string === "taquito"
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -183,7 +182,7 @@ const originateSuccess = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -217,7 +216,7 @@ const batchApiTest = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -263,7 +262,7 @@ const batchApiContractCallsTest = async (
     }
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -289,7 +288,7 @@ const signPayload = async (
     };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "", output: JSON.stringify(error) };
+    return { success: false, opHash: "", output: JSON.stringify(error), error };
   }
 };
 
@@ -312,8 +311,12 @@ const signPayloadAndSend = async (
       const activeAccount = await wallet.client.getActiveAccount();
       publicKey = activeAccount.publicKey;
     } else if (wallet instanceof WalletConnect2) {
+      const store = get(localStore);
       signature = await wallet.signPayload(payload);
-      publicKey = (await Tezos.rpc.getManagerKey(await wallet.getPKH())) as string;
+      publicKey = (await Tezos.rpc.getManagerKey(store.userAddress)) as string;
+      if(!publicKey){
+        throw new Error(`Unable to retrieve the public key. Make sure that ${store.userAddress} is revealed.`)
+      }
     }
 
     // sends transaction to contract
@@ -323,12 +326,12 @@ const signPayloadAndSend = async (
     await op.confirmation();
     return {
       success: true,
-      opHash: op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"],
+      opHash: Object.prototype.hasOwnProperty.call(op, "opHash") ? op["opHash"] : op["hash"],
       output: signature,
       sigDetails: { input, formattedInput, bytes: payload.payload }
     };
   } catch (error) {
-    return { success: false, opHash: "", output: JSON.stringify(error) };
+    return { success: false, opHash: "", output: JSON.stringify(error), error };
   }
 };
 
@@ -372,7 +375,7 @@ const verifySignatureWithTaquito = async (
       throw "Forged signature is incorrect";
     }
   } catch (error) {
-    return { success: false, opHash: "", output: JSON.stringify(error) };
+    return { success: false, opHash: "", output: JSON.stringify(error), error };
   }
 };
 
@@ -396,20 +399,20 @@ const setTransactionLimits = async (
       });
     }
 
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = Object.prototype.hasOwnProperty.call(op, "opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     console.log("Operation successful with op hash:", opHash);
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
 const tryConfirmationObservable = async (
   contract: ContractAbstraction<Wallet>
 ): Promise<TestResult> => {
-  let opHash = "";
+  const opHash = "";
   try {
     /*const op = await Tezos.wallet
         .transfer({ to: "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb", amount: 1 })
@@ -442,14 +445,14 @@ const tryConfirmationObservable = async (
     return { success: true, opHash, confirmationObsOutput: entries as any };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
-const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
+const permit = async (Tezos: TezosToolkit, _wallet: BeaconWallet | WalletConnect2) => {
   const store = get(localStore);
 
-  const expectedBytes =
+  const _expectedBytes =
     "05070707070a00000004f5f466ab0a0000001601c6ac120153e9a6f3daa3ecdfbf0bb13f529f832500070700000a0000002105a6a36a686b864c75b0cf59816d24c8649f6f6fb0ea10c4beaed8988d1d55edef";
 
   try {
@@ -543,7 +546,7 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
 };
 
 const saplingShielded = async (
-  contract: ContractAbstraction<Wallet>
+  _contract: ContractAbstraction<Wallet>
 ): Promise<TestResult> => {
   return { success: false, opHash: "" };
 };

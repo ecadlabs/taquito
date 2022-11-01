@@ -12,6 +12,7 @@
   let opHash = "";
   let input = { text: "", fee: 400, storageLimit: 400, gasLimit: 4000 };
   let testResult: { id: string; title: string; body: any };
+  let error: Error | undefined;
 
   const run = async () => {
     success = undefined;
@@ -63,7 +64,8 @@
           };
         }
       } else {
-        throw "Error";
+        error = result.error;
+        throw result.error;
       }
     } catch (error) {
       console.log(error);
@@ -274,7 +276,9 @@
             </div>
             {#if test.documentation}
               <div class="learn-more">
-                <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+                <a href={test.documentation} target="_blank" rel="noopener noreferrer"
+                  >Learn more about <b>{test.keyword}</b> with Taquito</a
+                >
               </div>
             {/if}
           </div>
@@ -369,6 +373,15 @@
           <h4>
             Test failed <span class="material-icons-outlined"> sentiment_very_dissatisfied </span>
           </h4>
+          {#if error}
+            <div style="word-break:break-word; color:#b92a2a">
+              {#if error instanceof Error}
+                {error}
+              {:else}
+                {JSON.stringify(error)}
+              {/if}
+            </div>
+          {/if}
         </div>
       {/if}
       <div class="test-run">
@@ -383,7 +396,9 @@
       </div>
       {#if test.documentation}
         <div class="learn-more">
-          <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+          <a href={test.documentation} target="_blank" rel="noopener noreferrer"
+            >Learn more about <b>{test.keyword}</b> with Taquito</a
+          >
         </div>
       {/if}
     {/if}
