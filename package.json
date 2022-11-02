@@ -19,9 +19,6 @@
     "gh-pages": "gh-pages",
     "version-stamp": "lerna run version-stamp"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "jest": {
     "transform": {
       ".(ts|tsx)": "ts-jest"
