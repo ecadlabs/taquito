@@ -17,6 +17,7 @@ export declare enum SigningType {
 export class WalletConnect2 implements WalletProvider {
     public client: Client;
     private session: SessionTypes.Struct | undefined;
+    private activeAccount: string | undefined;
 
     constructor(client: Client) {
         this.client = client;
@@ -27,7 +28,7 @@ export class WalletConnect2 implements WalletProvider {
         return new WalletConnect2(client);
     }
 
-    getAllActivePairing() {
+    getAvailablePairing() {
         return this.client.pairing.getAll({ active: true });
     }
 
@@ -44,6 +45,10 @@ export class WalletConnect2 implements WalletProvider {
             throw new Error(`Invalid session key ${key}`)
         }
         this.session = this.client.session.get(key);
+        const activeAccount = this.getAccounts();
+            if(activeAccount.length === 1){
+                this.activeAccount = activeAccount[0];
+            }
     }
 
     /**
@@ -65,6 +70,10 @@ export class WalletConnect2 implements WalletProvider {
             }
             this.session = await approval();
             console.log('Established session:', this.session);
+            const activeAccount = this.getAccounts();
+            if(activeAccount.length === 1){
+                this.activeAccount = activeAccount[0];
+            }
         } catch (e) {
             console.log(e);
         } finally {
@@ -78,14 +87,17 @@ export class WalletConnect2 implements WalletProvider {
                 topic: this.session.topic,
                 reason: getSdkError("USER_DISCONNECTED"),
             });
+            this.deleteAll();
         }
     }
 
+    private deleteAll(){
+        this.session = undefined;
+        this.activeAccount = undefined;
+    }
+
     getPeerMetadata() {
-        if (!this.session) {
-            throw new Error('Not connected')
-        }
-        return this.session.peer.metadata;
+        return this.getSession().peer.metadata;
     }
 
     async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
@@ -147,12 +159,10 @@ export class WalletConnect2 implements WalletProvider {
     }
 
     async sendOperations(params: any[]) {
-        if (!this.session) {
-            throw new Error('Not connected')
-        }
+        const session = this.getSession()
         const hash = await this.client.request<string>({
-            topic: this.session.topic,
-            chainId: this.session.requiredNamespaces['tezos'].chains[0],
+            topic: session.topic,
+            chainId: session.requiredNamespaces['tezos'].chains[0],
             request: {
                 method: 'tezos_sendOperations',
                 params: {
@@ -169,12 +179,10 @@ export class WalletConnect2 implements WalletProvider {
         payload: string;
         sourceAddress?: string;
     }) {
-        if (!this.session) {
-            throw new Error('Not connected')
-        }
+        const session = this.getSession()
         const signature = await this.client.request<string>({
-            topic: this.session.topic,
-            chainId: this.session.requiredNamespaces['tezos'].chains[0],
+            topic: session.topic,
+            chainId: session.requiredNamespaces['tezos'].chains[0],
             request: {
                 method: 'tezos_signExpression',
                 params: {
@@ -188,9 +196,36 @@ export class WalletConnect2 implements WalletProvider {
     }
 
     async getPKH() {
+        if(!this.activeAccount){
+            throw new Error('Please specify the active account using the "setActiveAccount" method.')
+        }
+        return this.activeAccount;
+    }
+
+    /**
+     * @description Must be called by the dapp every time the user select or switch account
+     * @param pkh public key hash of the selected account
+     * @error if the pkh is not part of the active account in the session
+     */
+    setActiveAccount(pkh: string) {
+        if(!this.getAccounts().includes(pkh)){
+            throw new Error('Invalid account');
+        }
+        this.activeAccount = pkh;
+    }
+
+    /**
+     * @description Return all connected accounts from the active session
+     * @error if no active session
+     */
+    getAccounts(){
+        return this.getSession().namespaces['tezos'].accounts.map(account => account.split(':')[2]);
+    }
+
+    private getSession(){
         if (!this.session) {
             throw new Error('Not connected')
         }
-        return this.session.namespaces['tezos'].accounts[0].split(':')[2];
+        return this.session;
     }
 }

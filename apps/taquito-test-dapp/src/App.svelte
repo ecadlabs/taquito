@@ -152,12 +152,12 @@
           grid-row-gap: 10px;
           align-items: center;
           width: 100%;
-      }
+        }
 
-      button {
-                width: 100%;
-                justify-content: center;
-              }
+        button {
+          width: 100%;
+          justify-content: center;
+        }
       }
 
       label {
@@ -203,46 +203,46 @@
           <div class="sdk">
             <span><strong>Connect using beacon sdk</strong></span>
             <button
-            on:click={() => {
-              const wallet = document.getElementById("wallet-button");
-              store.updateSdk(SDK.BEACON)
-              wallet.click();
-            }}
-          >
-            <span class="material-icons-outlined"> account_balance_wallet </span>
-            &nbsp; Connect your wallet
-          </button>
-          <label for="matrix-node-select" class="custom-select">
-            <span class="select-title">Matrix node:</span>
-            <Select
-              id="matrix-node-select"
-              containerStyles="width:200px"
-              items={availableMatrixNodes}
-              value={$store.matrixNode}
-              on:select={changeMatrixNode}
-            />
-          </label>
-          <label>
-            <span class="select-title">Disable default events:</span>
-            <input
-              type="checkbox"
-              checked={$store.disableDefaultEvents}
-              on:change={() => store.updateDefaultEvents()}
-            />
-          </label>
+              on:click={() => {
+                const wallet = document.getElementById("wallet-button");
+                store.updateSdk(SDK.BEACON);
+                wallet.click();
+              }}
+            >
+              <span class="material-icons-outlined"> account_balance_wallet </span>
+              &nbsp; Connect your wallet
+            </button>
+            <label for="matrix-node-select" class="custom-select">
+              <span class="select-title">Matrix node:</span>
+              <Select
+                id="matrix-node-select"
+                containerStyles="width:200px"
+                items={availableMatrixNodes}
+                value={$store.matrixNode}
+                on:select={changeMatrixNode}
+              />
+            </label>
+            <label>
+              <span class="select-title">Disable default events:</span>
+              <input
+                type="checkbox"
+                checked={$store.disableDefaultEvents}
+                on:change={() => store.updateDefaultEvents()}
+              />
+            </label>
           </div>
           <div class="sdk">
             <span><strong>Connect using Wallet Connect 2</strong></span>
             <button
-            on:click={() => {
-              const walletConnect2 = document.getElementById("wallet-button");
-              store.updateSdk(SDK.WC2)
-              walletConnect2.click();
-            }}
-          >
-            <span class="material-icons-outlined"> account_balance_wallet </span>
-            &nbsp; Connect your wallet
-          </button>
+              on:click={() => {
+                const walletConnect2 = document.getElementById("wallet-button");
+                store.updateSdk(SDK.WC2);
+                walletConnect2.click();
+              }}
+            >
+              <span class="material-icons-outlined"> account_balance_wallet </span>
+              &nbsp; Connect your wallet
+            </button>
           </div>
           <button>
             <span class="material-icons-outlined"> usb </span>

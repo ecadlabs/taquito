@@ -15,6 +15,7 @@ interface State {
   sdk: SDK;
   Tezos: TezosToolkit;
   userAddress: string;
+  availableAccounts: string[];
   userBalance: number;
   wallet: BeaconWallet | WalletConnect2;
   disableDefaultEvents: boolean;
@@ -30,6 +31,7 @@ const initialState: State = {
   sdk: undefined,
   Tezos: undefined,
   userAddress: undefined,
+  availableAccounts: undefined,
   userBalance: undefined,
   wallet: undefined,
   matrixNode: defaultMatrixNode,
@@ -54,6 +56,11 @@ const state = {
     store.update(store => ({
       ...store,
       userAddress: address
+    })),
+  updateAvailableAccounts: (addresses: string[]) =>
+    store.update(store => ({
+      ...store,
+      availableAccounts: addresses
     })),
   updateUserBalance: (balance: number) =>
     store.update(store => ({
@@ -91,7 +98,7 @@ const state = {
       ...store,
       confirmationObservableTest:
         store.confirmationObservableTest &&
-        Array.isArray(store.confirmationObservableTest)
+          Array.isArray(store.confirmationObservableTest)
           ? [...store.confirmationObservableTest, conf]
           : [conf]
     })),
