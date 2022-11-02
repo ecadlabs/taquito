@@ -175,6 +175,7 @@
       }
     } else if ($store.wallet instanceof WalletConnect2) {
       connectedWallet = $store.wallet.getPeerMetadata().name;
+      $store.wallet.setActiveAccount($store.userAddress);
     }
   });
 </script>
