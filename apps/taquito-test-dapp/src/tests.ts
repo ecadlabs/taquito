@@ -15,7 +15,7 @@ import type { TestSettings, TestResult } from "./types";
 import store from "./store";
 import contractToOriginate from "./contractToOriginate";
 import localStore from "./store";
-import { WalletConnect2 } from "@taquito/wallet-connect";
+import { WalletConnect2 } from "@taquito/wallet-connect-2";
 
 const preparePayloadToSign = (
   input: string,

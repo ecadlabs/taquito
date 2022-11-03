@@ -4,7 +4,7 @@ import type { TezosToolkit } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { defaultMatrixNode, defaultNetworkType } from "./config";
 import type { TestSettings } from "./types";
-import type { WalletConnect2 } from "@taquito/wallet-connect";
+import type { WalletConnect2 } from "@taquito/wallet-connect-2";
 
 export enum SDK {
   BEACON,

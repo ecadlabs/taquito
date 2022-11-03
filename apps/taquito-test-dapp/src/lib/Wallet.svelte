@@ -7,7 +7,7 @@
   import { formatTokenAmount, shortenHash } from "../utils";
   import { defaultMatrixNode, rpcUrl } from "../config";
   import type { TezosAccountAddress } from "../types";
-  import { WalletConnect2 } from "@taquito/wallet-connect";
+  import { WalletConnect2, PermissionScopeMethods } from "@taquito/wallet-connect-2";
   import { Modals, closeModal, openModal } from "svelte-modals";
   import ModalActivePairing from "./ModalActivePairing.svelte";
 
@@ -56,16 +56,14 @@
   };
 
   const requestPermissionWc2 = async (wallet: WalletConnect2, pairingTopic?: string) => {
-    await wallet.requestPermissions({
-      pairingTopic,
-      requiredNamespaces: {
-        tezos: {
-          chains: [`tezos:${$store.networkType}`],
-          events: [],
-          methods: ["tezos_sendOperations", "tezos_signExpression"],
-        },
+    await wallet.requestPermissions(
+      {
+        networks: [$store.networkType],
+        events: [],
+        methods: [PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN],
       },
-    });
+      pairingTopic
+    );
     const allAccounts = wallet.getAccounts();
     await updateStore(wallet, allAccounts);
   };
@@ -120,6 +118,9 @@
         userAddress = (await wallet.getPKH()) as TezosAccountAddress;
       }
       store.updateUserAddress(userAddress);
+      if (wallet instanceof WalletConnect2) {
+        wallet.setActiveAccount(userAddress);
+      }
 
       const Tezos = new TezosToolkit(rpcUrl[$store.networkType]);
       Tezos.setWalletProvider(wallet);
@@ -141,6 +142,7 @@
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
     store.updateSelectedTest(undefined);
+    store.updateTests([]);
     store.updateAvailableAccounts(undefined);
   };
 
@@ -175,7 +177,6 @@
       }
     } else if ($store.wallet instanceof WalletConnect2) {
       connectedWallet = $store.wallet.getPeerMetadata().name;
-      $store.wallet.setActiveAccount($store.userAddress);
     }
   });
 </script>

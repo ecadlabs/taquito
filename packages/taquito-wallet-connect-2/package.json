@@ -1,5 +1,5 @@
 {
-  "name": "@taquito/wallet-connect",
+  "name": "@taquito/wallet-connect-2",
   "version": "14.0.0",
   "description": "Wallet connect 2 provider",
   "keywords": [
@@ -7,9 +7,9 @@
     "blockchain",
     "websocket"
   ],
-  "main": "dist/taquito-wallet-connect.umd.js",
-  "module": "dist/taquito-wallet-connect.es6.js",
-  "typings": "dist/types/taquito-wallet-connect.d.ts",
+  "main": "dist/taquito-wallet-connect-2.umd.js",
+  "module": "dist/taquito-wallet-connect-2.es6.js",
+  "typings": "dist/types/taquito-wallet-connect-2.d.ts",
   "files": [
     "signature.json",
     "dist"

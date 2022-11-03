@@ -17,13 +17,9 @@ WalletConnect2.init({
   },
 }).then(walletConnect => {
  walletConnect.requestPermissions({
-   requiredNamespaces: {
-     tezos: {
-       chains: ['tezos:ghostnet'],
-       events: [],
-       methods: ['tezos_sendOperations']
-     }
-   }
+    networks: ['ghostnet'],
+    events: [],
+    methods: [PermissionScopeMethods.OPERATION_REQUEST]
  }).then(() => {
   walletConnect.sendOperations([
     {
@@ -51,13 +47,9 @@ WalletConnect2.init({
   },
 }).then(walletConnect => {
  walletConnect.requestPermissions({
-   requiredNamespaces: {
-     tezos: {
-       chains: ['tezos:ghostnet'],
-       events: [],
-       methods: ['tezos_sendOperations']
-     }
-   }
+    networks: ['ghostnet'],
+    events: [],
+    methods: [PermissionScopeMethods.OPERATION_REQUEST]
  }).then(() => {
      Tezos.setWalletProvider(walletConnect);
      Tezos.wallet.transfer({ to: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', amount: 1 }).send()

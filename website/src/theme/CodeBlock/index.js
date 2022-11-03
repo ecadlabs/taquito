@@ -30,7 +30,7 @@ import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
 import { RpcClient } from '@taquito/rpc';
 import { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } from '@taquito/sapling';
-// import { WalletConnect2 } from '@taquito/wallet-connect';
+// import { WalletConnect2 } from '@taquito/wallet-connect-2';
 import { TempleWallet } from '@temple-wallet/dapp';
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';

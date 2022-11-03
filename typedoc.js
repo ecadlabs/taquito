@@ -18,6 +18,7 @@ module.exports = {
     './packages/taquito-utils/src/taquito-utils.ts',
     './packages/taquito-contracts-library/src/taquito-contracts-library.ts',
     './packages/taquito-sapling/src/taquito-sapling.ts',
+    './packages/taquito-wallet-connect-2/src/taquito-wallet-connect-2.ts',
   ],
   exclude: [
     '**/*.spec.ts',
