@@ -528,6 +528,8 @@ describe('RpcClient test', () => {
         nonce_hash: null,
         consumed_gas: '10200',
         deactivated: [],
+        proposer_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+        baker_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
         balance_updates: [
           {
             kind: 'contract',
@@ -591,6 +593,8 @@ describe('RpcClient test', () => {
         nonce_hash: null,
         consumed_gas: '10200',
         deactivated: [],
+        proposer_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+        baker_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
         balance_updates: [
           {
             kind: 'contract',
@@ -3258,24 +3262,28 @@ describe('RpcClient test', () => {
           delegate: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
           slots: [27],
           estimated_time: '2019-08-02T09:42:56Z',
+          consensus_key: 'tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6',
         },
         {
           level: 547386,
           delegate: 'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
           slots: [23, 12, 0],
           estimated_time: '2019-08-02T09:42:56Z',
+          consensus_key: 'tz1bZrtE5uzv1XdsMK3LNSH3M9qD6GS6RpNP',
         },
         {
           level: 547386,
           delegate: 'tz3RB4aoyjov4KEVRbuhvQ1CKJgBJMWhaeB8',
           slots: [31, 17, 13],
           estimated_time: '2019-08-02T09:42:56Z',
+          consensus_key: '',
         },
         {
           level: 547386,
           delegate: 'tz3NExpXn9aPNZPorRE4SdjJ2RGrfbJgMAaV',
           slots: [24, 9, 1],
           estimated_time: '2019-08-02T09:42:56Z',
+          consensus_key: '',
         },
       ]);
       const result = await client.getEndorsingRights();
