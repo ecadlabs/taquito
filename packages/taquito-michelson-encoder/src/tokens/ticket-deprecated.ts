@@ -7,11 +7,11 @@ import { Token, TokenFactory, Semantic, SemanticEncoding } from './token';
  *  @category Error
  *  @description Error that indicates a failure when encoding and sending a ticket to the blockchain
  */
-export class EncodeTicketError extends Error {
-  name = 'TicketEncodeError';
+export class EncodeTicketDeprecatedError extends Error {
+  name = 'TicketDeprecatedEncodeError';
 
   constructor() {
-    super('Tickets cannot be sent to the blockchain; they are created on-chain');
+    super('Ticket_deprecated cannot be sent to the blockchain; they are created on-chain');
   }
 }
 
@@ -34,14 +34,14 @@ export class TicketDeprecatedToken extends Token {
   }
 
   public Encode(_args: any[]): any {
-    throw new EncodeTicketError();
+    throw new EncodeTicketDeprecatedError();
   }
 
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     if (semantic && semantic[TicketDeprecatedToken.prim]) {
       return semantic[TicketDeprecatedToken.prim](args, this.val);
     }
-    throw new EncodeTicketError();
+    throw new EncodeTicketDeprecatedError();
   }
 
   public Execute(val: any, semantics?: Semantic) {
