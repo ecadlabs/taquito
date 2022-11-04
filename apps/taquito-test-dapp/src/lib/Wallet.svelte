@@ -44,7 +44,7 @@
   const createNewWalletConnect2 = async () => {
     return WalletConnect2.init({
       logger: "debug",
-      relayUrl: "wss://relay.walletconnect.com",
+      relayUrl: "wss://waku.ecadinfra.com",
       projectId: "861613623da99d7285aaad8279a87ee9", // Your Project ID gives you access to WalletConnect Cloud.
       metadata: {
         name: "Taquito Test Dapp",
