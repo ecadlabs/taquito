@@ -4833,6 +4833,125 @@ export const blockKathmandunetSample = {
   ],
 };
 
+export const blockLimanetSample = {
+  protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+  chain_id: 'NetXizpkH94bocH',
+  hash: 'BM5sGpbt1rEiNmfbbo8jcQHJaUZQYwKUXe4MK6B8hcxHDeEfuJx',
+  header: {
+    level: 104428,
+    proto: 2,
+    predecessor: 'BLoSHvgQ6i64fxa2cWV2PW77FB2apjFpuMgGT9CN9YTCkLHYUEu',
+    timestamp: '2022-11-02T02:02:55Z',
+    validation_pass: 4,
+    operations_hash: 'LLob51uyaK2Kn61U7LPTwPDGe7bEsAifAGjHaAXb5QvfwWv1nBwCC',
+    fitness: ['02', '000197ec', '', 'ffffffff', '00000000'],
+    context: 'CoVH2RtM1HHzLZmdbM86EkfwLEg42hmcdr4UGVmUezUDjyUEqYyj',
+    payload_hash: 'vh2keAERJ5aCT7EagCysfCYcxshQiDKmX1nVPw5mMxB1C6QVZ4eP',
+    payload_round: 0,
+    proof_of_work_nonce: 'e45ea3f000000000',
+    liquidity_baking_toggle_vote: 'off',
+    signature:
+      'sigPXDyg4aUDxaCQKFvsX1Bttek8M9LxSinKCfNnoFEKYBKRL2V7of9vRJUPVckdaA8GYaTcW5W3MXpvASNQX4PeHEkMSrM3',
+  },
+  metadata: {
+    protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+    next_protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+    test_chain_status: { status: 'not_running' },
+    max_operations_ttl: 120,
+    max_operation_data_length: 32768,
+    max_block_header_length: 289,
+    max_operation_list_length: [[Object], [Object], [Object], [Object]],
+    proposer: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+    baker: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+    level_info: {
+      level: 104428,
+      level_position: 104427,
+      cycle: 25,
+      cycle_position: 2027,
+      expected_commitment: false,
+    },
+    voting_period_info: { voting_period: [Object], position: 2027, remaining: 2068 },
+    nonce_hash: null,
+    deactivated: [],
+    balance_updates: [[Object], [Object], [Object], [Object], [Object]],
+    liquidity_baking_toggle_ema: 583905253,
+    implicit_operations_results: [[Object]],
+    proposer_consensus_key: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+    baker_consensus_key: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+    consumed_milligas: '1100000',
+  },
+  operations: [
+    [
+      {
+        protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+        chain_id: 'NetXizpkH94bocH',
+        hash: 'opT8tdDhEafJu7qrzsdtwSqP1LcD9rKCNG7DoVT59vQV1JdxUu3',
+        branch: 'BKtKnh7dkSaZyRbAhRL8vF4ZT1SDKRvXptBQ4pKEh6pbmKE7yf4',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 0,
+            level: 104427,
+            round: 0,
+            block_payload_hash: 'vh2zfP3jrzMXxabzESqDmMvSf6iStm9gW6TwsQHscCa423YbrULT',
+            metadata: {
+              delegate: 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc',
+              endorsement_power: 316,
+              consensus_key: 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc',
+            },
+          },
+        ],
+        signature:
+          'sigRk4JF7pC3BcfqqPYqdPvv3yAuxJBfUkTMqnx6oDDm6WZZggH7DLkyJMFennY1AaXtprhHBgFtnVptfxPYGRLYLYutqggG',
+      },
+    ],
+    [],
+    [],
+    [
+      {
+        protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+        chain_id: 'NetXizpkH94bocH',
+        hash: 'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
+        branch: 'BM6qkBbRP17B4UeQAFJBzWyPuy2bxEbKHGbUiP97xihMeeRywzW',
+        contents: [
+          {
+            kind: 'update_consensus_key',
+            source: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+            fee: '369',
+            counter: '19043',
+            gas_limit: '1100',
+            storage_limit: '0',
+            pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+                  change: '-369',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '369',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                consumed_gas: '1000',
+                consumed_milligas: '1000000',
+              },
+            },
+          },
+        ],
+        signature:
+          'sigrsWF7LpFpUBrTdvLnKm8DMuijk1LcZovZdKZDgsaafTPZhKsvLzPFHDzZYKCy4kobkgxVL7YPGnU5qzJJBcP2cAu5HW1C',
+      },
+    ],
+  ],
+};
+
 export const blockMondaynetSample = {
   protocol: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
   chain_id: 'NetXrxsLyu6hTHx',
