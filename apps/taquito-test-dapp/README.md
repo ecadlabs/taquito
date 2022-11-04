@@ -11,3 +11,6 @@ A minimal end-to-end testing setup for developing Tezos DApps with Taquito and B
 4. Start development server:
     `npm run dev`
 5. Open http://localhost:3030 in your browser to see a sample application.
+6. Start production server:
+    `npm run build && npm run preview`
+7. Open http://localhost:4173 in your browser to see a preview application.

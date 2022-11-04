@@ -9,6 +9,7 @@ import { createToken } from '../tokens/createToken';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
 import { TicketToken } from '../tokens/ticket';
+import { TicketDeprecatedToken } from '../tokens/ticket-deprecated';
 import {
   BigMapKeyType,
   Semantic,
@@ -159,6 +160,9 @@ export class Schema {
       return true;
     }
     if (this.root instanceof TicketToken && val.ticketer && val.value && val.amount) {
+      return true;
+    }
+    if (this.root instanceof TicketDeprecatedToken && val.ticketer && val.value && val.amount) {
       return true;
     }
     try {
