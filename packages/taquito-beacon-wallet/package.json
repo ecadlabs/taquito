@@ -67,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^3.2.0",
+    "@airgap/beacon-dapp": "^3.3.0",
     "@taquito/taquito": "^14.0.0",
     "libsodium-wrappers": "0.7.9"
   },
