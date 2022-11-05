@@ -25,6 +25,7 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  UpdateConsensusKeyParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -40,6 +41,7 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createUpdateConsensusKeyOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -54,6 +56,7 @@ import { TxRollupOriginationOperation } from '../operations/tx-rollup-originatio
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
+import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -512,6 +515,38 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new IncreasePaidStorageOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   *
+   * @description Update the consensus key of the signing delegate to pk
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params updateConsensusKey operation parameter
+   */
+  async updateConsensusKey(params: UpdateConsensusKeyParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.updateConsensusKey.bind(this.estimator)
+    );
+    const operation = await createUpdateConsensusKeyOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: publicKeyHash });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new UpdateConsensusKeyOperation(
       hash,
       operation,
       publicKeyHash,

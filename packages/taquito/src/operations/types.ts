@@ -17,6 +17,7 @@ export type ParamsWithKind =
   | withKind<ActivationParams, OpKind.ACTIVATION>
   | withKind<RegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>
   | withKind<IncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
+  | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
   | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>
   | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>;
@@ -54,6 +55,7 @@ export type RPCOpWithFee =
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
   | RPCIncreasePaidStorageOperation
+  | RPCUpdateConsensusKeyOperation
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation;
@@ -64,6 +66,7 @@ export type RPCOpWithSource =
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
   | RPCIncreasePaidStorageOperation
+  | RPCUpdateConsensusKeyOperation
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation;
@@ -425,6 +428,29 @@ export interface RPCIncreasePaidStorageOperation {
   destination: string;
 }
 
+/**
+ * @description Parameters for the updateConsensusKey method
+ */
+export interface UpdateConsensusKeyParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  pk: string;
+}
+
+/**
+ * @description RPC updateConsensusKey operation
+ */
+export interface RPCUpdateConsensusKeyOperation {
+  kind: OpKind.UPDATE_CONSENSUS_KEY;
+  source: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  pk: string;
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -435,7 +461,8 @@ export type RPCOperation =
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
-  | RPCIncreasePaidStorageOperation;
+  | RPCIncreasePaidStorageOperation
+  | RPCUpdateConsensusKeyOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

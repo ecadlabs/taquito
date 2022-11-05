@@ -21,6 +21,8 @@ import {
   RPCTransferTicketOperation,
   IncreasePaidStorageParams,
   RPCIncreasePaidStorageOperation,
+  UpdateConsensusKeyParams,
+  RPCUpdateConsensusKeyOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -263,4 +265,21 @@ export const createIncreasePaidStorageOperation = async ({
     amount,
     destination,
   } as RPCIncreasePaidStorageOperation;
+};
+
+export const createUpdateConsensusKeyOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  pk,
+}: UpdateConsensusKeyParams) => {
+  return {
+    kind: OpKind.UPDATE_CONSENSUS_KEY,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    pk,
+  } as RPCUpdateConsensusKeyOperation;
 };
