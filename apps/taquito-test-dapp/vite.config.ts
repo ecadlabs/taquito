@@ -33,7 +33,7 @@ export default ({ command }) => {
         ),
         // polyfills
         "readable-stream": "vite-compatible-readable-stream",
-        stream: "vite-compatible-readable-stream"
+        "stream": "vite-compatible-readable-stream"
       },
       preserveSymlinks: true
     }
