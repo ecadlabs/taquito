@@ -15,6 +15,7 @@ import {
   TxRollupOriginationSchema,
   TxRollupSubmitBatchSchema,
   IncreasePaidStorageSchema,
+  UpdateConsensusKeySchema,
 } from './schema/operation';
 
 type OperationKind =
@@ -31,7 +32,8 @@ type OperationKind =
   | OpKind.TRANSFER_TICKET
   | OpKind.TX_ROLLUP_ORIGINATION
   | OpKind.TX_ROLLUP_SUBMIT_BATCH
-  | OpKind.INCREASE_PAID_STORAGE;
+  | OpKind.INCREASE_PAID_STORAGE
+  | OpKind.UPDATE_CONSENSUS_KEY;
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
@@ -48,6 +50,7 @@ const OperationKindMapping = {
   tx_rollup_origination: TxRollupOriginationSchema,
   tx_rollup_submit_batch: TxRollupSubmitBatchSchema,
   increase_paid_storage: IncreasePaidStorageSchema,
+  update_consensus_key: UpdateConsensusKeySchema,
 };
 
 // Asymmetric difference: only account for things in arr2 that are not present in arr1, not vice versa

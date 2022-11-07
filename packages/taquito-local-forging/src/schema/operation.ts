@@ -136,6 +136,15 @@ export const IncreasePaidStorageSchema = {
   destination: CODEC.SMART_CONTRACT_ADDRESS,
 };
 
+export const UpdateConsensusKeySchema = {
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  pk: CODEC.PUBLIC_KEY,
+};
+
 export const operationEncoder =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverse)) {

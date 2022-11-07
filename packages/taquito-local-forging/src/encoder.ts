@@ -29,6 +29,7 @@ import {
   DelegationSchema,
   EndorsementSchema,
   IncreasePaidStorageSchema,
+  UpdateConsensusKeySchema,
   ManagerOperationSchema,
   operationEncoder,
   OriginationSchema,
@@ -93,4 +94,6 @@ encoders[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: any) =>
   schemaEncoder(encoders)(TxRollupSubmitBatchSchema)(val);
 encoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
   schemaEncoder(encoders)(IncreasePaidStorageSchema)(val);
+encoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: any) =>
+  schemaEncoder(encoders)(UpdateConsensusKeySchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);
