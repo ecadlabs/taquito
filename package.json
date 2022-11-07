@@ -1,5 +1,13 @@
 {
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "packages/taquito-michel-codec/pack-test-tool",
+    "apps/taquito-test-dapp",
+    "website",
+    "example",
+    "integration-tests"
+  ],
   "scripts": {
     "build": "nx run-many --target=build --exclude=@taquito/website,taquito-test-dapp-vite",
     "build-test-dapp": "lerna run build --scope=taquito-test-dapp-vite",
