@@ -19,7 +19,6 @@
     "clean": "lerna clean --yes",
     "commit": "git-cz",
     "graph": "nx graph",
-    "prebuild-test-dapp": "if test \"$NETLIFY\" = \"true\" ; then npm run rebuild ; fi",
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && npm run example",
     "lerna": "lerna",
