@@ -21,8 +21,6 @@ import {
   RPCTransferTicketOperation,
   IncreasePaidStorageParams,
   RPCIncreasePaidStorageOperation,
-  BallotParams,
-  RPCBallotOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -265,13 +263,4 @@ export const createIncreasePaidStorageOperation = async ({
     amount,
     destination,
   } as RPCIncreasePaidStorageOperation;
-};
-
-export const createBallotOperation = async ({ source, proposal, ballot }: BallotParams) => {
-  return {
-    kind: OpKind.BALLOT,
-    source,
-    proposal,
-    ballot,
-  } as RPCBallotOperation;
 };
