@@ -13,7 +13,6 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
-  createUpdateConsensusKeyOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -32,7 +31,6 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
-  UpdateConsensusKeyParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -177,17 +175,6 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to update consensus key to the batch
-   *
-   * @param params UpdateConsensusKey operation parameter
-   */
-  withUpdateConsensusKey(params: UpdateConsensusKeyParams) {
-    this.operations.push({ kind: OpKind.UPDATE_CONSENSUS_KEY, ...params });
-    return this;
-  }
-
-  /**
-   *
    * @description Add an operation to originate a rollup to the batch
    *
    * @param params Rollup origination operation parameter
@@ -236,10 +223,6 @@ export class OperationBatch extends OperationEmitter {
         return createIncreasePaidStorageOperation({
           ...param,
         });
-      case OpKind.UPDATE_CONSENSUS_KEY:
-        return createUpdateConsensusKeyOperation({
-          ...param,
-        });
       case OpKind.TX_ROLLUP_ORIGINATION:
         return createTxRollupOriginationOperation({
           ...param,
@@ -283,9 +266,6 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.INCREASE_PAID_STORAGE:
           this.withIncreasePaidStorage(param);
-          break;
-        case OpKind.UPDATE_CONSENSUS_KEY:
-          this.withUpdateConsensusKey(param);
           break;
         case OpKind.TX_ROLLUP_ORIGINATION:
           this.withTxRollupOrigination(param);
