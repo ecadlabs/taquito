@@ -59,7 +59,6 @@ describe('RpcContractProvider test', () => {
     getChainId: jest.Mock<any, any>;
     getSaplingDiffById: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
-    getCurrentPeriod: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -114,7 +113,6 @@ describe('RpcContractProvider test', () => {
       getChainId: jest.fn(),
       getSaplingDiffById: jest.fn(),
       getProtocols: jest.fn(),
-      getCurrentPeriod: jest.fn(),
     };
 
     mockForger = {
@@ -147,16 +145,6 @@ describe('RpcContractProvider test', () => {
       header: {
         level: 0,
       },
-    });
-
-    mockRpcClient.getCurrentPeriod.mockResolvedValue({
-      voting_period: {
-        index: 1,
-        kind: 'exploration',
-        start_position: 16,
-      },
-      position: 3,
-      remaining: 12,
     });
 
     const context = new Context(mockRpcClient as any, mockSigner as any);
@@ -1672,36 +1660,6 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-      done();
-    });
-  });
-
-  describe('ballot', () => {
-    it('should produce a ballot operation', async (done) => {
-      const result = await rpcContractProvider.ballot({
-        proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-        ballot: 'yay',
-      });
-
-      expect(result.raw).toEqual({
-        opbytes: 'test',
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              source: 'test_pub_key_hash',
-              kind: 'ballot',
-              period: 1,
-              proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-              ballot: 'yay',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        counter: 0,
-      });
-
       done();
     });
   });
