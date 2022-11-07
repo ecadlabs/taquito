@@ -29,7 +29,7 @@ export default ({ command }) => {
           // `./node_modules/@airgap/beacon-dapp/dist/${
           //   isBuild ? "esm" : "cjs"
           // }/index.js`
-          `./node_modules/@airgap/beacon-dapp/dist/walletbeacon.dapp.min.js`
+          `../../node_modules/@airgap/beacon-dapp/dist/walletbeacon.dapp.min.js`
         ),
         // polyfills
         "readable-stream": "vite-compatible-readable-stream",
