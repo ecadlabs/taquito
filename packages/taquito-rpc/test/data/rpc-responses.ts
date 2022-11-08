@@ -4944,6 +4944,40 @@ export const blockLimanetSample = {
               },
             },
           },
+          {
+            kind: 'drain_delegate',
+            consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+            delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+            destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+                  change: '-15525772494',
+                  origin: 'block',
+                },
+                {
+                  kind: 'contract',
+                  contract: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+                  change: '15525772494',
+                  origin: 'block',
+                },
+                {
+                  kind: 'contract',
+                  contract: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+                  change: '-156825984',
+                  origin: 'block',
+                },
+                {
+                  kind: 'contract',
+                  contract: 'tz1hoyMUiJYYr4FRPMU8Z7WJzYkqgjygjaTy',
+                  change: '156825984',
+                  origin: 'block',
+                },
+              ],
+            },
+          },
         ],
         signature:
           'sigrsWF7LpFpUBrTdvLnKm8DMuijk1LcZovZdKZDgsaafTPZhKsvLzPFHDzZYKCy4kobkgxVL7YPGnU5qzJJBcP2cAu5HW1C',
