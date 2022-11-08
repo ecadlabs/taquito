@@ -12,8 +12,6 @@ describe('ContractsLibrary tests', () => {
   it('get VERSION for ContractsLibrary', () => {
     const version = VERSION;
     expect(version).toBeDefined;
-    expect(version.commitHash).toHaveLength(40);
-    expect(version.version).toHaveLength(6);
   });
 
   it('adds one contract to the library', () => {
