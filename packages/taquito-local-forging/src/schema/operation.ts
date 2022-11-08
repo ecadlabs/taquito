@@ -145,6 +145,12 @@ export const UpdateConsensusKeySchema = {
   pk: CODEC.PUBLIC_KEY,
 };
 
+export const DrainDelegateSchema = {
+  consensus_key: CODEC.PKH,
+  delegate: CODEC.PKH,
+  destination: CODEC.PKH,
+};
+
 export const operationEncoder =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverse)) {

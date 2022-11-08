@@ -50,6 +50,7 @@ export enum CODEC {
   TX_ROLLUP_BATCH_CONTENT = 'tx_rollup_batch_content',
   OP_INCREASE_PAID_STORAGE = 'increase_paid_storage',
   OP_UPDATE_CONSENSUS_KEY = 'update_consensus_key',
+  OP_DRAIN_DELEGATE = 'drain_delegate',
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
@@ -233,6 +234,7 @@ export const kindMapping: { [key: number]: string } = {
   0x9e: 'transfer_ticket',
   0x71: 'increase_paid_storage',
   0x72: 'update_consensus_key',
+  0x09: 'drain_delegate',
 };
 
 export const kindMappingReverse = (() => {

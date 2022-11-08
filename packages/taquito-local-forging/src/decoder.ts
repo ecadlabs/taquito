@@ -30,6 +30,7 @@ import {
   EndorsementSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
+  DrainDelegateSchema,
   ManagerOperationSchema,
   operationDecoder,
   OriginationSchema,
@@ -104,4 +105,6 @@ decoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(IncreasePaidStorageSchema)(val);
 decoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(UpdateConsensusKeySchema)(val);
+decoders[CODEC.OP_DRAIN_DELEGATE] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(DrainDelegateSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
