@@ -17,11 +17,11 @@ jobs:
       fail-fast: false
       matrix:
         node: 
-          - '16.13.1'
-          - '17.3.x'
+          - '16'
+          - '18'
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
@@ -45,27 +45,27 @@ jobs:
         protocol:
           - kathmandunet
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: 16.13.1
+        node-version: 16
     - run: npm ci
     - run: npm run build
     - name: Tailscale
       uses: tailscale/github-action@v1
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-        version: 1.22.2
+        version: 1.32.2
     - run: cd integration-tests && npm run test:${{ matrix.protocol }} -- --maxWorkers=8
 
   integration-tests-flextesa:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: 16.13.1
+        node-version: 16
     - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
     - run: npm ci
     - run: npm run lerna -- bootstrap
