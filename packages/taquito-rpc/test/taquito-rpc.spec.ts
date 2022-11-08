@@ -3299,7 +3299,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('query the right url and data', async (done) => {
+    it('query the right url and data (with consensus key in delegates)', async (done) => {
       httpBackend.createRequest.mockResolvedValue([
         {
           level: 547386,
