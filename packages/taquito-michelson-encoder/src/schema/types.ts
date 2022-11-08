@@ -67,6 +67,14 @@ export type TicketTokenSchema = {
     amount: { __michelsonType: 'int'; schema: 'int' };
   };
 };
+export type TicketDeprecatedTokenSchema = {
+  __michelsonType: 'ticket_deprecated';
+  schema: {
+    value: TokenSchema;
+    ticketer: { __michelsonType: 'contract'; schema: 'contract' };
+    amount: { __michelsonType: 'int'; schema: 'int' };
+  };
+};
 
 export type TokenSchema =
   | BaseTokenSchema
@@ -83,4 +91,5 @@ export type TokenSchema =
   | SaplingStateTokenSchema
   | SaplingTransactionTokenSchema
   | SaplingTransactionDeprecatedTokenSchema
-  | TicketTokenSchema;
+  | TicketTokenSchema
+  | TicketDeprecatedTokenSchema;
