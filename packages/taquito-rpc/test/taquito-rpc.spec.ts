@@ -3282,7 +3282,7 @@ describe('RpcClient test', () => {
         'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv'
       );
       expect(content.metadata.balance_updates![0].change).toEqual('-369');
-      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
 
       expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
       expect(content.metadata.balance_updates![1].category).toEqual('block fees');
