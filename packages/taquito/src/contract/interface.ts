@@ -19,13 +19,11 @@ import {
   TxRollupOriginateParams,
   TxRollupBatchParams,
   IncreasePaidStorageParams,
-  UpdateConsensusKeyParams,
   TransferTicketParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
-import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 
 export type ContractSchema = Schema | unknown;
@@ -196,16 +194,6 @@ export interface ContractProvider extends StorageProvider {
    * @param params IncreasePaidStorage operation parameter
    */
   increasePaidStorage(params: IncreasePaidStorageParams): Promise<IncreasePaidStorageOperation>;
-
-  /**
-   *
-   * @description Update the consensus key of the signing delegate to pk
-   *
-   * @returns An operation handle with the result from the rpc node
-   *
-   * @param params UpdateConsensusKey operation parameter
-   */
-  updateConsensusKey(params: UpdateConsensusKeyParams): Promise<UpdateConsensusKeyOperation>;
 
   /**
    *
