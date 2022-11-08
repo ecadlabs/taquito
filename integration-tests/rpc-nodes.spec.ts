@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const jakartanet = protocol === Protocols.PtJakart2 ? test : test.skip;
+    const limanet = protocol === Protocols.PtLimaPtL ? test : test.skip;
     const kathmandunetAndAlpha = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     beforeAll(async (done) => {
@@ -409,13 +409,13 @@ CONFIGS().forEach(
           done();
         });
 
-        jakartanet('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on jakartanet', async (done) => {
+        it('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        jakartanet('Verify that rpcClient.getTxRollupState will access the state of a rollup on jakartanet', async (done) => {
+        it('Verify that rpcClient.getTxRollupState will access the state of a rollup', async (done) => {
           const state = await rpcClient.getTxRollupState(txRollupAddress);
           expect(state).toBeDefined();
           done();

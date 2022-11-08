@@ -4,7 +4,6 @@ import { UnitValue } from '@taquito/michelson-encoder';
 
 CONFIGS().forEach(({lib, setup, protocol}) => {
   const tezos = lib;
-  const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`jakarta contract originations and method calls to test the type of tx_rollup_l2_address`, () => {
@@ -12,7 +11,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       await setup();
       done();
     })
-    jakartanet(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
+    it(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
       const op = await tezos.contract.originate({
         code: `
         parameter (pair address tx_rollup_l2_address string);
@@ -69,7 +68,7 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       done();
     })
 
-    jakartanet(`jakarta contract with params and storage as tx_rollup_l2_address`, async (done) => {
+    it(`jakarta contract with params and storage as tx_rollup_l2_address`, async (done) => {
       const op = await tezos.contract.originate({
         code: [{"prim":"parameter","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"storage","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"code","args":[[{"prim":"CAR"},{"prim":"NIL","args":[{"prim":"operation"}]},{"prim":"PAIR"}]]}],
         storage: "tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8"
