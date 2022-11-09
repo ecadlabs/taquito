@@ -11,7 +11,7 @@
   "scripts": {
     "build": "nx run-many --target=build --exclude=@taquito/website,taquito-test-dapp-vite",
     "build-test-dapp": "lerna run build --scope=taquito-test-dapp-vite",
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap --force-local",
     "rebuild": "npm run clean && npm clean-install && npm run build",
     "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website,taquito-test-dapp-vite --collectCoverage",
     "postinstall": "npm run bootstrap",
