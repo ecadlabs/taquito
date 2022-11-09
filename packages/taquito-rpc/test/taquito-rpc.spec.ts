@@ -528,6 +528,8 @@ describe('RpcClient test', () => {
         nonce_hash: null,
         consumed_gas: '10200',
         deactivated: [],
+        proposer_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+        baker_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
         balance_updates: [
           {
             kind: 'contract',
@@ -591,6 +593,8 @@ describe('RpcClient test', () => {
         nonce_hash: null,
         consumed_gas: '10200',
         deactivated: [],
+        proposer_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+        baker_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
         balance_updates: [
           {
             kind: 'contract',
@@ -3221,12 +3225,14 @@ describe('RpcClient test', () => {
           delegate: 'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
           priority: 4,
           estimated_time: '2019-08-02T09:48:56Z',
+          consensus_key: 'tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6',
         },
         {
           level: 547387,
           delegate: 'tz1NMdMmWZN8QPB8pY4ddncACDg1cHi1xD2e',
           priority: 8,
           estimated_time: '2019-08-02T09:53:56Z',
+          consensus_key: 'tz1N4GvBKsfdBdtgbNeQQLv52L7YB4FBZtVf',
         },
       ]);
       const result = await client.getBakingRights({
@@ -3246,6 +3252,7 @@ describe('RpcClient test', () => {
 
       expect(result[0].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
       expect(result[0].estimated_time).toEqual('2019-08-02T09:48:56Z');
+      expect(result[0].consensus_key).toEqual('tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6');
       done();
     });
   });
@@ -3289,6 +3296,40 @@ describe('RpcClient test', () => {
       expect(result[1].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
       expect(result[1].estimated_time).toEqual('2019-08-02T09:42:56Z');
       expect(result[1].slots!.length).toEqual(3);
+      done();
+    });
+
+    it('query the right url and data (with consensus key in delegates)', async (done) => {
+      httpBackend.createRequest.mockResolvedValue([
+        {
+          level: 547386,
+          delegates: [
+            {
+              delegate: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
+              first_slot: 1,
+              endorsing_power: 1,
+              consensus_key: 'tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6',
+            },
+          ],
+          slots: [27],
+          estimated_time: '2019-08-02T09:42:56Z',
+        },
+      ]);
+      const result = await client.getEndorsingRights();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        query: {},
+        url: 'root/chains/test/blocks/head/helpers/endorsing_rights',
+      });
+
+      expect(result[0].delegates).toBeDefined();
+      expect(result[0].delegates![0].delegate).toEqual('tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K');
+      expect(result[0].delegates![0].first_slot).toEqual(1);
+      expect(result[0].delegates![0].endorsing_power).toEqual(1);
+      expect(result[0].delegates![0].consensus_key).toEqual('tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6');
+      expect(result[0].estimated_time).toEqual('2019-08-02T09:42:56Z');
+      expect(result[0].slots!.length).toEqual(1);
       done();
     });
   });
