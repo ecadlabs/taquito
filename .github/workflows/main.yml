@@ -30,7 +30,7 @@ jobs:
     - run: npm run build-docs
     - run: npm run test -- --runInBand
     - name: Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3.1.1
       with:
         file: .coverage/*.json
       env:
