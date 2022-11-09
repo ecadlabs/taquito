@@ -4,7 +4,7 @@
  */
 
 import { STATUS_CODE } from './status_code';
-import axios from 'axios';
+import axios, { Axios, AxiosAdapter } from 'axios';
 
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
@@ -124,7 +124,7 @@ export class HttpBackend {
     }
 
     try {
-      const adapter = adapterPromise && (await adapterPromise);
+      const adapter = adapterPromise && (await adapterPromise) as AxiosAdapter;
       const response = await axios.request<T>({
         url: url + this.serialize(query),
         method: method ?? 'GET',
