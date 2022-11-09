@@ -59,7 +59,7 @@
       "default",
       "jest-stare"
     ],
-    "testResultsProcessor": "./node_modules/jest-stare"
+    "testResultsProcessor": "../node_modules/jest-stare"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
