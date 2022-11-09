@@ -42,7 +42,7 @@
   };
 
   const createNewWalletConnect2 = async () => {
-    return WalletConnect2.init({
+    const wallet = await WalletConnect2.init({
       logger: "debug",
       relayUrl: "wss://relay.walletconnect.com",
       projectId: "861613623da99d7285aaad8279a87ee9", // Your Project ID gives you access to WalletConnect Cloud.
@@ -53,6 +53,16 @@
         url: "",
       },
     });
+    wallet.signClient.on("session_ping", ({ id, topic }) => {
+      console.log("session_ping in test dapp", id, topic);
+    });
+    wallet.signClient.on("session_delete", ({ topic }) => {
+      console.log("EVEN: session_delete", topic);
+      if (!wallet.isActiveSession()) {
+        resetApp();
+      }
+    });
+    return wallet;
   };
 
   const requestPermissionWc2 = async (wallet: WalletConnect2, pairingTopic?: string) => {
@@ -132,18 +142,22 @@
     }
   };
 
-  const disconnectWallet = async () => {
-    if ($store.wallet instanceof BeaconWallet) {
-      await $store.wallet.clearActiveAccount();
-    } else if ($store.wallet instanceof WalletConnect2) {
-      await $store.wallet.disconnect();
-    }
+  const resetApp = async () => {
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
     store.updateSelectedTest(undefined);
     store.updateTests([]);
     store.updateAvailableAccounts(undefined);
+  };
+
+  const disconnectWallet = async () => {
+    if ($store.wallet instanceof BeaconWallet) {
+      await $store.wallet.clearActiveAccount();
+    } else if ($store.wallet instanceof WalletConnect2) {
+      await $store.wallet.disconnect();
+    }
+    resetApp();
   };
 
   const switchActiveAccount = (newActiveAccount: string) => {
