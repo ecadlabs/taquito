@@ -918,7 +918,6 @@ export interface BlockResponse {
 export type BakingRightsArgumentsDelegate = string | string[];
 export type BakingRightsArgumentsCycle = number | number[];
 export type BakingRightsArgumentsLevel = number | number[];
-export type BakingRightsArgumentsConsensusKey = string | string[];
 
 export type BakingRightsQueryArguments =
   | BakingRightsQueryArgumentsProto12
@@ -932,7 +931,7 @@ export interface BakingRightsQueryArgumentsBase {
   level?: BakingRightsArgumentsLevel;
   cycle?: BakingRightsArgumentsCycle;
   delegate?: BakingRightsArgumentsDelegate;
-  consensus_key?: BakingRightsArgumentsConsensusKey;
+  consensus_key?: string;
   max_priority?: number;
   all?: null;
 }
@@ -951,20 +950,19 @@ export type BakingRightsResponse = BakingRightsResponseItem[];
 export type EndorsingRightsArgumentsDelegate = string | string[];
 export type EndorsingRightsArgumentsCycle = number | number[];
 export type EndorsingRightsArgumentsLevel = number | number[];
-export type EndorsingRightsArgumentsConsensusKey = string | string[];
 
 export interface EndorsingRightsQueryArguments {
   level?: EndorsingRightsArgumentsLevel;
   cycle?: EndorsingRightsArgumentsCycle;
   delegate?: EndorsingRightsArgumentsDelegate;
-  consensus_key?: EndorsingRightsArgumentsConsensusKey;
+  consensus_key?: string;
 }
 
 export interface EndorsingRightsResponseItemDelegates {
   delegate: string;
   first_slot: number;
   endorsing_power: number;
-  consensus_key: string;
+  consensus_key?: string;
 }
 export interface EndorsingRightsResponseItem {
   level: number;
