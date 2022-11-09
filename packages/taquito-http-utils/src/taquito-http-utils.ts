@@ -4,7 +4,7 @@
  */
 
 import { STATUS_CODE } from './status_code';
-import axios, { Axios, AxiosAdapter } from 'axios';
+import axios, { AxiosAdapter } from 'axios';
 
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
