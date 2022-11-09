@@ -27,6 +27,8 @@ import { LegacyWalletProvider, Wallet, WalletProvider } from './wallet';
 import { OperationFactory } from './wallet/operation-factory';
 import { TaquitoLocalForger } from './forger/taquito-local-forger';
 import { EstimationProvider } from './estimate/estimate-provider-interface';
+import { ParserProvider } from './parser/interface';
+import { MichelCodecParser } from './parser/michel-codec-parser';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
@@ -77,6 +79,7 @@ export interface SetProviderOptions {
   config?: Partial<ConfigConfirmation>;
   packer?: Packer;
   globalConstantsProvider?: GlobalConstantsProvider;
+  parserProvider?: ParserProvider;
 }
 
 export interface VersionInfo {
@@ -135,6 +138,7 @@ export class TezosToolkit {
     packer,
     globalConstantsProvider,
     readProvider,
+    parserProvider,
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -144,6 +148,7 @@ export class TezosToolkit {
     this.setPackerProvider(packer);
     this.setGlobalConstantsProvider(globalConstantsProvider);
     this.setReadProvider(readProvider);
+    this.setParserProvider(parserProvider);
 
     this._context.proto = protocol;
     if (config) {
@@ -310,6 +315,23 @@ export class TezosToolkit {
     const readP = readProvider ? readProvider : new RpcReadAdapter(this._context.rpc);
     this._options.readProvider = readP;
     this._context.readProvider = readP;
+  }
+
+  /**
+   * @description Sets parser provider on the Tezos Taquito instance
+   *
+   * @param options parserProvider to use to interact with the Tezos network
+   *
+   */
+  setParserProvider(parserProvider?: SetProviderOptions['parserProvider']) {
+    if (!this._options.parserProvider && typeof parserProvider === 'undefined') {
+      const p = new MichelCodecParser(this._context);
+      this._context.parser = p;
+      this._options.parserProvider = p;
+    } else if (typeof parserProvider !== 'undefined') {
+      this._context.parser = parserProvider;
+      this._options.parserProvider = parserProvider;
+    }
   }
 
   /**
