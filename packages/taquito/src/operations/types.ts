@@ -4,6 +4,7 @@ import {
   OpKind,
   TransactionOperationParameter,
   MichelsonV1Expression,
+  BallotVote,
 } from '@taquito/rpc';
 
 export { OpKind } from '@taquito/rpc';
@@ -425,6 +426,23 @@ export interface RPCIncreasePaidStorageOperation {
   destination: string;
 }
 
+/**
+ * @description Ballot operation params
+ */
+export interface BallotParams {
+  source?: string;
+  proposal: string;
+  ballot: BallotVote;
+}
+
+export interface RPCBallotOperation {
+  kind: OpKind.BALLOT;
+  source: string;
+  period: number;
+  proposal: string;
+  ballot: BallotVote;
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -435,7 +453,8 @@ export type RPCOperation =
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
-  | RPCIncreasePaidStorageOperation;
+  | RPCIncreasePaidStorageOperation
+  | RPCBallotOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];
