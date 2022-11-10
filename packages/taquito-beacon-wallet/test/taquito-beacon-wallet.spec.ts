@@ -64,4 +64,25 @@ describe('Beacon Wallet tests', () => {
     const formattedParam = await wallet.formatParameters({ gasLimit: 40 });
     expect(formattedParam.gasLimit).toEqual('40');
   });
+
+  it(`Verify removeDefaultParameters for fees`, async () => {
+    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
+    const formattedParam = await wallet.removeDefaultParams({ fee: 10 }, { fee: 30 });
+    expect(formattedParam.fee).toEqual(30);
+  });
+
+  it(`Verify removeDefaultParameters for storageLimit`, async () => {
+    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
+    const formattedParam = await wallet.removeDefaultParams(
+      { storageLimit: 2000 },
+      { storageLimit: 165 }
+    );
+    expect(formattedParam.storageLimit).toEqual(165);
+  });
+
+  it(`Verify removeDefaultParameters for gas limit`, async () => {
+    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
+    const formattedParam = await wallet.removeDefaultParams({ gasLimit: 40 }, { gasLimit: 80 });
+    expect(formattedParam.gasLimit).toEqual(80);
+  });
 });
