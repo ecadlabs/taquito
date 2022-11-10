@@ -4,10 +4,12 @@ import {
   OpKind,
   RpcClientInterface,
   RPCRunOperationParam,
+  VotingPeriodBlockResult,
 } from '@taquito/rpc';
 import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../estimate/estimate';
+import { RPCResponseError } from '../error';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import {
@@ -81,6 +83,21 @@ export abstract class OperationEmitter {
     const publicKeyHash = pkh ? pkh : await this.signer.publicKeyHash();
     let counterPromise: Promise<string | undefined> = Promise.resolve(undefined);
 
+    // initializes a currentVotingPeriod if the operation is a ballot op
+    let currentVotingPeriodPromise: Promise<VotingPeriodBlockResult | undefined> =
+      Promise.resolve(undefined);
+    ops.find(async (op) => {
+      if (op.kind === 'ballot') {
+        try {
+          currentVotingPeriodPromise = this.rpc.getCurrentPeriod();
+        } catch (e) {
+          throw new RPCResponseError(
+            `Failed to get the current voting period index: ${JSON.stringify(e)}`
+          );
+        }
+      }
+    });
+
     for (let i = 0; i < ops.length; i++) {
       if (isOpRequireReveal(ops[i]) || ops[i].kind === 'reveal') {
         counterPromise = this.context.readProvider.getCounter(publicKeyHash, 'head');
@@ -88,10 +105,11 @@ export abstract class OperationEmitter {
       }
     }
 
-    const [hash, protocol, headCounter] = await Promise.all([
+    const [hash, protocol, headCounter, currentVotingPeriod] = await Promise.all([
       blockHashPromise,
       blockProtoPromise,
       counterPromise,
+      currentVotingPeriodPromise,
     ]);
 
     const counter = parseInt(headCounter || '0', 10);
@@ -166,6 +184,14 @@ export abstract class OperationEmitter {
               amount: `${op.amount}`,
               ...getSource(op),
               ...getFee(op),
+            };
+          case OpKind.BALLOT:
+            if (currentVotingPeriod === undefined) {
+              throw new RPCResponseError(`Failed to get the current voting period index`);
+            }
+            return {
+              ...op,
+              period: currentVotingPeriod?.voting_period.index,
             };
 
           default:

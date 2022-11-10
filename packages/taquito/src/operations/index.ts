@@ -22,6 +22,8 @@ export {
   RPCActivateOperation,
   RPCOperation,
   PrepareOperationParams,
+  BallotParams,
+  RPCBallotOperation,
 } from './types';
 export {
   TezosOperationError,
@@ -32,4 +34,5 @@ export { BatchOperation } from './batch-operation';
 export { DelegateOperation } from './delegate-operation';
 export { OriginationOperation } from './origination-operation';
 export { TransactionOperation } from './transaction-operation';
+export { BallotOperation } from './ballot-operation';
 export { Operation } from './operations';

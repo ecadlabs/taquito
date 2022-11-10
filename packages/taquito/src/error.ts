@@ -30,3 +30,10 @@ export class InvalidFilterExpressionError extends Error {
     super(message);
   }
 }
+
+export class RPCResponseError extends Error {
+  public name = 'RPCResponseError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
