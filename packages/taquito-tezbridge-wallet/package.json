@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tezbridge-wallet",
-  "version": "14.0.0",
+  "version": "14.1.0",
   "description": "Tezbridge wallet provider",
   "keywords": [
     "tezos",
@@ -61,7 +61,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/taquito": "^14.0.0"
+    "@taquito/taquito": "^14.1.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
