@@ -25,8 +25,8 @@ const sidebars = {
       items: [
         'quick_start',
         'react-template',
+        'amendment_and_voting',
         'batch_API',
-        'ballot',
         'beaconwallet-singleton',
         'confirmation_event_stream',
         'set_delegate',
