@@ -7,7 +7,9 @@ author: Davis Sawali
 In Tezos, the economic protocol can be amended by proposing and voting for changes. The protocol change will happen depending on the result of the votes.
 
 ## Proposals
-A `Proposals` operation can be injected during a **Proposal Period**. It allows a delegate to submit a proposal identified by a protocol hash. The proposal with the most support is selected and will move on to the **Exploration Period**.
+A `Proposals` operation can be injected during a **Proposal Period**. It allows a delegate to submit a proposal identified by a protocol hash. Submitting a proposal also upvotes said proposal during the **Proposal Period**, not to be confused with *Ballot* votes in the section below. 
+
+The proposal with the most support is selected and will move on to the **Exploration Period**.
 
 :::info
 Note: Each delegate can submit a maximum of 20 proposals
@@ -25,7 +27,7 @@ await op.confirmation();
 - `proposals` parameter takes in a list of Protocol hash(es) you would like to submit.  
 
 ## Ballot
-The `Ballot` operation allows delegates to cast one `Yay`, `Nay`, or `Pass` ballot on a selected proposal. Delegates are only able to cast their votes during the **Exploration period** and the **Promotion period**
+The `Ballot` operation allows delegates to cast one `Yay`, `Nay`, or `Pass` ballot on a selected proposal. Delegates are only able to cast their votes during the **Exploration period** and the **Promotion period**.
 
 ### Example
 The `Ballot` operation is currently available in the Contract API, and can be used as such:
