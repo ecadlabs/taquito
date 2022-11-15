@@ -1,13 +1,10 @@
 import { CONFIGS } from "./config";
 import { MichelsonMap } from "@taquito/taquito";
 import { contractWithTxr1Address } from "./data/contract-txr1-address";
-import { Protocols } from "@taquito/taquito";
 
 
 CONFIGS().forEach(({ lib, setup }) => {
   const Tezos = lib;
-  const limanet = Protocols.PtLimaPtL === protocol ? test : test.skip
-
   beforeEach(async (done) => {
     await setup();
     done();
@@ -15,7 +12,7 @@ CONFIGS().forEach(({ lib, setup }) => {
   describe('test', () => {
     type Storage = { addressSet: string[], addressMap: MichelsonMap<string, number>; }
 
-    limanet('should pass with tz addresses', async (done) => {
+    test('should pass with tz addresses', async (done) => {
 
       const initialStorage: Storage = {
         addressSet: [
@@ -79,7 +76,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       expect(newMapStorage.addressMap.get('txr1bZx7qro4xNsxLhmpXfmzQojHkg8XqrUvL')).toBeUndefined();
       done();
     })
-    limanet('should pass with KT1', async (done) => {
+    test('should pass with KT1', async (done) => {
 
       const initialStorage: Storage = {
         addressSet: [
