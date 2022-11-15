@@ -1,0 +1,435 @@
+parameter (or
+            (or
+              (lambda %admin_update
+                (pair
+                  (pair (address %owner)
+                        (big_map %records bytes
+                                          (pair
+                                            (pair
+                                              (pair (option %address address)
+                                                    (map %data string
+                                                               (or
+                                                                 (or
+                                                                   (or
+                                                                     (or
+                                                                       (address %address)
+                                                                       (bool %bool))
+                                                                     (or (bytes %bytes)
+                                                                         (int %int)))
+                                                                   (or
+                                                                     (or (key %key)
+                                                                         (key_hash %key_hash))
+                                                                     (or (nat %nat)
+                                                                         (signature %signature))))
+                                                                 (or
+                                                                   (or (string %string)
+                                                                       (mutez %tez))
+                                                                   (timestamp %timestamp)))))
+                                              (pair (address %owner) (option %ttl nat)))
+                                            (option %validator nat))))
+                  (map %validators nat address))
+                (pair
+                  (pair (address %owner)
+                        (big_map %records bytes
+                                          (pair
+                                            (pair
+                                              (pair (option %address address)
+                                                    (map %data string
+                                                               (or
+                                                                 (or
+                                                                   (or
+                                                                     (or
+                                                                       (address %address)
+                                                                       (bool %bool))
+                                                                     (or (bytes %bytes)
+                                                                         (int %int)))
+                                                                   (or
+                                                                     (or (key %key)
+                                                                         (key_hash %key_hash))
+                                                                     (or (nat %nat)
+                                                                         (signature %signature))))
+                                                                 (or
+                                                                   (or (string %string)
+                                                                       (mutez %tez))
+                                                                   (timestamp %timestamp)))))
+                                              (pair (address %owner) (option %ttl nat)))
+                                            (option %validator nat))))
+                  (map %validators nat address)))
+              (pair %resolve (contract %callback (option address)) (bytes %name)))
+            (or
+              (pair %set_child_record
+                (pair
+                  (pair (option %address address)
+                        (map %data string
+                                   (or
+                                     (or
+                                       (or (or (address %address) (bool %bool))
+                                           (or (bytes %bytes) (int %int)))
+                                       (or (or (key %key) (key_hash %key_hash))
+                                           (or (nat %nat) (signature %signature))))
+                                     (or (or (string %string) (mutez %tez))
+                                         (timestamp %timestamp)))))
+                  (pair (bytes %label) (address %owner)))
+                (pair (bytes %parent) (option %ttl nat)))
+              (pair %update_record
+                (pair
+                  (pair (option %address address)
+                        (map %data string
+                                   (or
+                                     (or
+                                       (or (or (address %address) (bool %bool))
+                                           (or (bytes %bytes) (int %int)))
+                                       (or (or (key %key) (key_hash %key_hash))
+                                           (or (nat %nat) (signature %signature))))
+                                     (or (or (string %string) (mutez %tez))
+                                         (timestamp %timestamp)))))
+                  (pair (bytes %name) (address %owner)))
+                (option %ttl nat))));
+storage (pair
+          (pair (address %owner)
+                (big_map %records bytes
+                                  (pair
+                                    (pair
+                                      (pair (option %address address)
+                                            (map %data string
+                                                       (or
+                                                         (or
+                                                           (or
+                                                             (or (address %address)
+                                                                 (bool %bool))
+                                                             (or (bytes %bytes)
+                                                                 (int %int)))
+                                                           (or
+                                                             (or (key %key)
+                                                                 (key_hash %key_hash))
+                                                             (or (nat %nat)
+                                                                 (signature %signature))))
+                                                         (or
+                                                           (or (string %string)
+                                                               (mutez %tez))
+                                                           (timestamp %timestamp)))))
+                                      (pair (address %owner) (option %ttl nat)))
+                                    (option %validator nat))))
+          (map %validators nat address));
+code { DUP ;
+       CDR ;
+       PUSH mutez 0 ;
+       AMOUNT ;
+       COMPARE ;
+       GT ;
+       IF
+         { PUSH string "AMOUNT_NOT_ZERO" ; FAILWITH }
+         { DIG 1 ;
+           DUP ;
+           DUG 2 ;
+           CAR ;
+           IF_LEFT
+             { DUP ;
+               IF_LEFT
+                 { DIG 2 ; DUP ; DUG 3 ; DIG 1 ; DUP ; DUG 2 ; SWAP ; EXEC ; NIL operation ; PAIR ; DIP { DROP } }
+                 { DIG 2 ;
+                   DUP ;
+                   DUG 3 ;
+                   DIG 3 ;
+                   DUP ;
+                   DUG 4 ;
+                   DIG 2 ;
+                   DUP ;
+                   DUG 3 ;
+                   PAIR ;
+                   DUP ;
+                   CAR ;
+                   DIG 1 ;
+                   DUP ;
+                   DUG 2 ;
+                   CDR ;
+                   CAR ;
+                   CDR ;
+                   DIG 1 ;
+                   DUP ;
+                   DUG 2 ;
+                   CDR ;
+                   GET ;
+                   IF_NONE { NONE address } { DUP ; CAR ; CAR ; CAR ; DIP { DROP } } ;
+                   NIL operation ;
+                   DIG 2 ;
+                   DUP ;
+                   DUG 3 ;
+                   CAR ;
+                   PUSH mutez 0 ;
+                   DIG 3 ;
+                   DUP ;
+                   DUG 4 ;
+                   TRANSFER_TOKENS ;
+                   CONS ;
+                   DIP { DROP 3 } ;
+                   PAIR ;
+                   DIP { DROP } } ;
+               DIP { DROP } }
+             { DUP ;
+               IF_LEFT
+                 { DIG 2 ;
+                   DUP ;
+                   DUG 3 ;
+                   DIG 1 ;
+                   DUP ;
+                   DUG 2 ;
+                   PAIR ;
+                   DUP ;
+                   CAR ;
+                   DIG 1 ;
+                   DUP ;
+                   DUG 2 ;
+                   CDR ;
+                   DUP ;
+                   CAR ;
+                   CDR ;
+                   DIG 2 ;
+                   DUP ;
+                   DUG 3 ;
+                   CDR ;
+                   CAR ;
+                   GET ;
+                   IF_NONE
+                     { PUSH string "PARENT_NOT_FOUND" ; FAILWITH }
+                     { SENDER ;
+                       DIG 1 ;
+                       DUP ;
+                       DUG 2 ;
+                       CAR ;
+                       CDR ;
+                       CAR ;
+                       COMPARE ;
+                       NEQ ;
+                       IF
+                         { PUSH string "NOT_AUTHORIZED" ; FAILWITH }
+                         { PUSH bytes 0x ;
+                           DIG 3 ;
+                           DUP ;
+                           DUG 4 ;
+                           CDR ;
+                           CAR ;
+                           COMPARE ;
+                           EQ ;
+                           IF
+                             { DIG 2 ; DUP ; DUG 3 ; CAR ; CDR ; CAR }
+                             { DIG 2 ;
+                               DUP ;
+                               DUG 3 ;
+                               CDR ;
+                               CAR ;
+                               PUSH bytes 0x2e ;
+                               CONCAT ;
+                               DIG 3 ;
+                               DUP ;
+                               DUG 4 ;
+                               CAR ;
+                               CDR ;
+                               CAR ;
+                               CONCAT } ;
+                           DIG 2 ;
+                           DUP ;
+                           DUG 3 ;
+                           DIG 3 ;
+                           DUP ;
+                           DUG 4 ;
+                           CAR ;
+                           CDR ;
+                           DIG 3 ;
+                           DUP ;
+                           DUG 4 ;
+                           CDR ;
+                           DIG 6 ;
+                           DUP ;
+                           DUG 7 ;
+                           CDR ;
+                           CDR ;
+                           DIG 7 ;
+                           DUP ;
+                           DUG 8 ;
+                           CAR ;
+                           CDR ;
+                           CDR ;
+                           PAIR ;
+                           DIG 7 ;
+                           DUP ;
+                           DUG 8 ;
+                           CAR ;
+                           CAR ;
+                           CDR ;
+                           DIG 8 ;
+                           DUP ;
+                           DUG 9 ;
+                           CAR ;
+                           CAR ;
+                           CAR ;
+                           PAIR ;
+                           PAIR ;
+                           PAIR ;
+                           SOME ;
+                           DIG 3 ;
+                           DUP ;
+                           DUG 4 ;
+                           UPDATE ;
+                           DIP { DUP ; CDR ; SWAP ; CAR ; CAR } ;
+                           SWAP ;
+                           PAIR ;
+                           PAIR ;
+                           DIG 3 ;
+                           DUP ;
+                           DUG 4 ;
+                           CAR ;
+                           CDR ;
+                           DIG 2 ;
+                           DUP ;
+                           DUG 3 ;
+                           GET ;
+                           IF_NONE
+                             { DIG 2 ;
+                               DUP ;
+                               DUG 3 ;
+                               CDR ;
+                               IF_NONE
+                                 { NIL operation }
+                                 { NIL operation ;
+                                   DIG 1 ;
+                                   DUP ;
+                                   DUG 2 ;
+                                   DIG 7 ;
+                                   DUP ;
+                                   DUG 8 ;
+                                   CAR ;
+                                   CDR ;
+                                   CAR ;
+                                   DIG 7 ;
+                                   DUP ;
+                                   DUG 8 ;
+                                   PAIR ;
+                                   PAIR ;
+                                   DUP ;
+                                   CAR ;
+                                   CAR ;
+                                   CDR ;
+                                   DIG 1 ;
+                                   DUP ;
+                                   DUG 2 ;
+                                   CDR ;
+                                   GET ;
+                                   IF_NONE
+                                     { PUSH string "INVALID_VALIDATOR_INDEX" ; FAILWITH }
+                                     { DUP ;
+                                       CONTRACT %validate bytes ;
+                                       IF_NONE
+                                         { PUSH string "INVALID_VALIDATOR_CONTRACT" ;
+                                           FAILWITH }
+                                         { DUP ;
+                                           PUSH mutez 0 ;
+                                           DIG 4 ;
+                                           DUP ;
+                                           DUG 5 ;
+                                           CAR ;
+                                           CDR ;
+                                           TRANSFER_TOKENS ;
+                                           DIP { DROP } } ;
+                                       DIP { DROP } } ;
+                                   DIP { DROP } ;
+                                   CONS ;
+                                   DIP { DROP } } }
+                             { DROP ; NIL operation } ;
+                           PAIR ;
+                           DIP { DROP } } ;
+                       DIP { DROP } } ;
+                   DIP { DROP 4 } }
+                 { DIG 2 ;
+                   DUP ;
+                   DUG 3 ;
+                   DIG 1 ;
+                   DUP ;
+                   DUG 2 ;
+                   PAIR ;
+                   DUP ;
+                   CAR ;
+                   DIG 1 ;
+                   DUP ;
+                   DUG 2 ;
+                   CDR ;
+                   DUP ;
+                   CAR ;
+                   CDR ;
+                   DIG 2 ;
+                   DUP ;
+                   DUG 3 ;
+                   CAR ;
+                   CDR ;
+                   CAR ;
+                   GET ;
+                   IF_NONE
+                     { PUSH string "RECORD_NOT_FOUND" ; FAILWITH }
+                     { SENDER ;
+                       DIG 1 ;
+                       DUP ;
+                       DUG 2 ;
+                       CAR ;
+                       CDR ;
+                       CAR ;
+                       COMPARE ;
+                       NEQ ;
+                       IF
+                         { PUSH string "NOT_AUTHORIZED" ; FAILWITH }
+                         { DIG 1 ;
+                           DUP ;
+                           DUG 2 ;
+                           DIG 2 ;
+                           DUP ;
+                           DUG 3 ;
+                           CAR ;
+                           CDR ;
+                           DIG 2 ;
+                           DUP ;
+                           DUG 3 ;
+                           CDR ;
+                           DIG 5 ;
+                           DUP ;
+                           DUG 6 ;
+                           CDR ;
+                           DIG 6 ;
+                           DUP ;
+                           DUG 7 ;
+                           CAR ;
+                           CDR ;
+                           CDR ;
+                           PAIR ;
+                           DIG 6 ;
+                           DUP ;
+                           DUG 7 ;
+                           CAR ;
+                           CAR ;
+                           CDR ;
+                           DIG 7 ;
+                           DUP ;
+                           DUG 8 ;
+                           CAR ;
+                           CAR ;
+                           CAR ;
+                           PAIR ;
+                           PAIR ;
+                           PAIR ;
+                           SOME ;
+                           DIG 5 ;
+                           DUP ;
+                           DUG 6 ;
+                           CAR ;
+                           CDR ;
+                           CAR ;
+                           UPDATE ;
+                           DIP { DUP ; CDR ; SWAP ; CAR ; CAR } ;
+                           SWAP ;
+                           PAIR ;
+                           PAIR } ;
+                       DIP { DROP } } ;
+                   DIP { DROP 3 } ;
+                   NIL operation ;
+                   PAIR ;
+                   DIP { DROP } } ;
+               DIP { DROP } } } ;
+       DIP { DROP 2 } }

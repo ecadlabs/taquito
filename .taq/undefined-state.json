@@ -1,0 +1,70 @@
+{
+    "operations": {},
+    "tasks": {
+        "@taqueria/plugin-taquito.deploy.1668539174537": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1668539174537,
+            "output": [
+                {
+                    "contract": "MichelsonMapContract.tz",
+                    "address": "KT1V8cS9EnkqwovRkG6MdHqLk6DyJKg1ZNeY",
+                    "alias": "MichelsonMapContract",
+                    "destination": "local"
+                }
+            ]
+        },
+        "@taqueria/plugin-taquito.deploy.1668551134446": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1668551134446,
+            "output": [
+                {
+                    "contract": "LambdaViewContract.tz",
+                    "address": "KT19sKbCG1hVZcQTxSbwHxrHpCFsJNCdQswV",
+                    "alias": "LambdaViewContract",
+                    "destination": "local"
+                }
+            ]
+        },
+        "@taqueria/plugin-taquito.deploy.1668551395517": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1668551395517,
+            "output": [
+                {
+                    "contract": "LambdaViewWithTokenContract.tz",
+                    "address": "KT1GbrgK5upe8EE1b6r81CaSwdzzu5xXFDWC",
+                    "alias": "LambdaViewWithTokenContract",
+                    "destination": "local"
+                }
+            ]
+        },
+        "@taqueria/plugin-taquito.deploy.1668552255150": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1668552255150,
+            "output": [
+                {
+                    "contract": "BigMapPackContract.tz",
+                    "address": "KT1G5f7kKpYRVDTq4eTJp5Q1NzxbPcv4U58N",
+                    "alias": "BigMapPackContract",
+                    "destination": "local"
+                }
+            ]
+        },
+        "@taqueria/plugin-taquito.deploy.1668553284202": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1668553284202,
+            "output": [
+                {
+                    "contract": "BigMapsComplexStorageContract.tz",
+                    "address": "KT1S28i5AXr38Bh9HMr83kjUX3zSvXB5YGdD",
+                    "alias": "BigMapsComplexStorageContract",
+                    "destination": "local"
+                }
+            ]
+        }
+    }
+}
