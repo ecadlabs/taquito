@@ -443,6 +443,18 @@ export interface RPCBallotOperation {
   ballot: BallotVote;
 }
 
+export interface ProposalsParams {
+  source?: string;
+  proposals: string[];
+}
+
+export interface RPCProposalsOperation {
+  kind: OpKind.PROPOSALS;
+  source: string;
+  period: number;
+  proposals: string[];
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -454,7 +466,8 @@ export type RPCOperation =
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCIncreasePaidStorageOperation
-  | RPCBallotOperation;
+  | RPCBallotOperation
+  | RPCProposalsOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

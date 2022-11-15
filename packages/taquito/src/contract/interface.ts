@@ -21,12 +21,14 @@ import {
   IncreasePaidStorageParams,
   TransferTicketParams,
   BallotParams,
+  ProposalsParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { BallotOperation } from '../operations';
+import { ProposalsOperation } from '../operations/proposals-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -226,4 +228,14 @@ export interface ContractProvider extends StorageProvider {
    * @param BallotParams Ballot operation parameter
    */
   ballot(params: BallotParams): Promise<BallotOperation>;
+
+  /**
+   *
+   * @description Submit proposal
+   *
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param ProposalsParams Proposals operation parameter
+   */
+  proposals(params: ProposalsParams): Promise<ProposalsOperation>;
 }
