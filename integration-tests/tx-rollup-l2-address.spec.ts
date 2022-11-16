@@ -1,10 +1,8 @@
-import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { UnitValue } from '@taquito/michelson-encoder';
 
-CONFIGS().forEach(({lib, setup, protocol, txRollupAddress}) => {
+CONFIGS().forEach(({lib, setup, txRollupAddress}) => {
   const tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Contract originations and method calls to test the type of tx_rollup_l2_address`, () => {
     beforeEach(async (done) => {
