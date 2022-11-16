@@ -98,7 +98,7 @@ When it becomes clear that the next protocol proposal will be promoted, AND we h
 
 It is essential for updated packages to be released before the protocol changes, so that Taquito developers have time to update and test their projects.
 
-During "Major" version updates, breaking changes in the Taquito public APIs MAY include breaking changes; we endeavor to make this clear, and document it in our release notes.
+During "Major" version updates, the Taquito public APIs MAY include breaking changes; we endeavor to make this clear, and document it in our release notes.
 
 Note that all previous releases are *backwards compatible* with chain data, all the way back to the *genesis protocol*. Support for older Tezos node RPCs is maintained where feasible, but are eventually dropped.
 
