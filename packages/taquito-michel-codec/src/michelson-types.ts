@@ -98,6 +98,7 @@ type MichelsonRegularInstructionID =
   | 'IF_NONE'
   | 'ITER'
   | 'LAMBDA'
+  | 'LAMBDA_REC'
   | 'LEFT'
   | 'LOOP'
   | 'LOOP_LEFT'
@@ -140,7 +141,7 @@ export type MichelsonInstruction =
   | InstrX<'EMPTY_SET', [MichelsonType]>
   | InstrX<'EMPTY_MAP', [MichelsonType, MichelsonType]>
   | InstrX<'EMPTY_BIG_MAP', [MichelsonType, MichelsonType]>
-  | InstrX<'LAMBDA', [MichelsonType, MichelsonType, InstructionList]>
+  | InstrX<'LAMBDA' | 'LAMBDA_REC', [MichelsonType, MichelsonType, InstructionList]>
   | InstrX<'DIP', [IntLiteral, InstructionList] | [InstructionList]>
   | InstrX<'VIEW', [StringLiteral, MichelsonType]>
   | InstrX<'EMIT', [MichelsonType]>
@@ -175,6 +176,7 @@ export type MichelsonTypeID =
   | 'pair'
   | 'or'
   | 'lambda'
+  | 'lambda_rec'
   | 'map'
   | 'big_map'
   | 'sapling_transaction'
@@ -225,6 +227,9 @@ export interface MichelsonTypeContract<T extends MichelsonType> extends TypeX<'c
 export interface MichelsonTypeOr<T extends [MichelsonType, MichelsonType]> extends TypeX<'or', T> {}
 export interface MichelsonTypeLambda<Arg extends MichelsonType, Ret extends MichelsonType>
   extends TypeX<'lambda', [Arg, Ret]> {}
+export interface MichelsonTypeLambdaRec<Arg extends MichelsonType, Ret extends MichelsonType>
+  extends TypeX<'lambda_rec', [Arg, Ret]> {}
+
 export interface MichelsonTypeSet<T extends MichelsonType> extends TypeX<'set', [T]> {}
 export interface MichelsonTypeMap<K extends MichelsonType, V extends MichelsonType>
   extends TypeX<'map', [K, V]> {}
@@ -278,6 +283,8 @@ export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> = T exten
   ? MichelsonTypeOr<[MichelsonType, MichelsonType]>
   : T extends 'lambda'
   ? MichelsonTypeLambda<MichelsonType, MichelsonType>
+  : T extends 'lambda_rec'
+  ? MichelsonTypeLambdaRec<MichelsonType, MichelsonType>
   : T extends 'set'
   ? MichelsonTypeSet<MichelsonType>
   : T extends 'map'

@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import { inspect } from 'util';
+// import { InvalidDataExpressionError, InvalidTypeExpressionError } from '../src/error';
 import { Contract, ContractOptions } from '../src/michelson-contract';
 import { Protocol } from '../src/michelson-types';
+// import { MichelsonValidationError } from '../src/michelson-validator';
 import { MichelsonError } from '../src/utils';
 
 const contracts: {
@@ -446,6 +448,81 @@ describe('PtLimaPtL', () => {
             throw err;
           }
         });
+
+        // it('parse check null case', () => {
+        //   const options: ContractOptions = {
+        //     protocol: Protocol.PtLimaPtL,
+        //   };
+        //   const src = '';
+        //   expect(() => Contract.parse(src, options)).toThrow('empty contract');
+        //   expect(() => Contract.parse(src, options)).toThrow(
+        //     expect.objectContaining({
+        //       name: expect.stringContaining('InvalidContractError'),
+        //     })
+        //   );
+        //   expect(() => Contract.parse(src, options)).toThrow(
+        //     expect.objectContaining({
+        //       message: expect.stringContaining('empty contract'),
+        //     })
+        //   );
+        // });
+
+        // it('parseTypeExpression null case', () => {
+        //   const options: ContractOptions = {
+        //     protocol: Protocol.PtLimaPtL,
+        //   };
+        //   const src = '';
+        //   expect(() => Contract.parseTypeExpression(src, options)).toThrow(
+        //     InvalidTypeExpressionError
+        //   );
+        //   expect(() => Contract.parseTypeExpression(src, options)).toThrow(
+        //     expect.objectContaining({
+        //       message: expect.stringContaining('empty type expression'),
+        //     })
+        //   );
+        // });
+
+        // it('parse error case', () => {
+        //   const options: ContractOptions = {
+        //     protocol: Protocol.PtLimaPtL,
+        //   };
+        //   const contract = `{ parameter unit ;
+        //     unit ;
+        //     code { DROP ;
+        //            UNIT ;
+        //            PUSH nat 10 ;
+        //            LEFT string ;
+        //            EMIT %event ;
+        //            PUSH string "lorem ipsum" ;
+        //            RIGHT nat ;
+        //            EMIT %event (or (nat %number) (string %words)) ;
+        //            NIL operation ;
+        //            SWAP ;
+        //            CONS ;
+        //            SWAP ;
+        //            CONS ;
+        //            PAIR } }`;
+        //   expect(() => Contract.parse(contract, options)).toThrow(MichelsonValidationError);
+        //   expect(() => Contract.parse(contract, options)).toThrow(
+        //     expect.objectContaining({
+        //       message: expect.stringContaining('unexpected contract section: unit'),
+        //     })
+        //   );
+        // });
+
+        // it('parseDataExpression check the null case', () => {
+        //   const options: ContractOptions = {
+        //     protocol: Protocol.PtLimaPtL,
+        //   };
+        //   expect(() => Contract.parseDataExpression('', options)).toThrow(
+        //     InvalidDataExpressionError
+        //   );
+        //   expect(() => Contract.parseDataExpression('', options)).toThrow(
+        //     expect.objectContaining({
+        //       message: expect.stringContaining('empty data expression'),
+        //     })
+        //   );
+        // });
       }
     });
   }

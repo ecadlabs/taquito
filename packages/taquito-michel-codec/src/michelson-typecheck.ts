@@ -121,6 +121,7 @@ function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, field = fals
       break;
 
     case 'lambda':
+    case 'lambda_rec':
     case 'map':
     case 'big_map':
       assertScalarTypesEqual(a.args[0], (b as typeof a).args[0]);
@@ -201,6 +202,7 @@ export function assertTypeAnnotationsValid(t: MichelsonType, field = false): voi
       break;
 
     case 'lambda':
+    case 'lambda_rec':
     case 'map':
     case 'big_map':
       assertTypeAnnotationsValid(t.args[0]);
@@ -502,8 +504,8 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
         }
       }
       throw new MichelsonTypeError(t, d, `union (or) expected: ${JSON.stringify(d)}`);
-
     case 'lambda':
+    case 'lambda_rec':
       if (isFunction(d)) {
         const ret = functionTypeInternal(d, [t.args[0]], ctx);
         if ('failed' in ret) {
@@ -1830,6 +1832,30 @@ function functionTypeInternal(
         ensureTypesEqual(instruction.args[1], body[0]);
         return [
           annotateVar({ prim: 'lambda', args: [instruction.args[0], instruction.args[1]] }),
+          ...stack,
+        ];
+      }
+      case 'LAMBDA_REC': {
+        assertTypeAnnotationsValid(instruction.args[0]);
+        assertTypeAnnotationsValid(instruction.args[1]);
+        const body = functionTypeInternal(instruction.args[2], [instruction.args[0]], {
+          ...ctx,
+          contract: undefined,
+        });
+        if ('failed' in body) {
+          return { failed: body.failed, level: body.level + 1 };
+        }
+        if (body.length !== 1) {
+          throw new MichelsonInstructionError(
+            instruction,
+            stack,
+            `${instruction.prim}: function must return a value`
+          );
+        }
+        ensureTypesEqual(instruction.args[1], body[0]);
+        console.log('here')
+        return [
+          annotateVar({ prim: 'lambda_rec', args: [instruction.args[0], instruction.args[1]] }),
           ...stack,
         ];
       }

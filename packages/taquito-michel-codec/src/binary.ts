@@ -87,6 +87,7 @@ const primitives: PrimID[] = [
   'IF_NONE',
   'INT',
   'LAMBDA',
+  'LAMBDA_REC',
   'LE',
   'LEFT',
   'LOOP',
