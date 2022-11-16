@@ -3215,7 +3215,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('should be able to access the properties of internal operation type event, proto15', async (done) => {
+    it('should be able to access the properties of operation type drain_delegate, proto15', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetSample));
 
       const response = await client.getBlock();
@@ -3260,7 +3260,7 @@ describe('RpcClient test', () => {
       done();
     });
 
-    it('should be able to access the properties of internal operation type event, proto15', async (done) => {
+    it('should be able to access the properties of operation type update_consensus_key, proto15', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetSample));
 
       const response = await client.getBlock();
