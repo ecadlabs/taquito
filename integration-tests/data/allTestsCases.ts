@@ -22,7 +22,6 @@ import { genericCode, genericStorage } from './generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './token_bigmap';
 import { noAnnotCode, noAnnotInit } from './token_without_annotation';
 import { voteInitSample, voteSample } from './vote-contract';
-import { chestCode, chestStorage } from './contract_with_chest';
 import { submutezCode, submutezStorage } from './contract_with_sub_mutez';
 import {
   storageContractWithConstant,
@@ -1154,27 +1153,6 @@ export const commonCases: TestCase[] = [
           script: {
             code: example10.script.code,
             storage: [],
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
-    operation: {
-      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: chestCode,
-            storage: chestStorage,
           },
         },
       ],
