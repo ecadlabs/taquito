@@ -106,10 +106,17 @@ export interface DelegatesResponse {
   deactivated: boolean;
   grace_period: number;
   voting_power?: BigNumber;
-  current_ballot?: BallotEnum;
+  current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
+  active_consensus_key?: string;
+  pending_consensus_keys?: PendingConsensusKey[];
 }
+
+export type PendingConsensusKey = {
+  cycle: number;
+  pkh: string;
+};
 
 export type VotingInfoResponse = {
   voting_power?: string;
@@ -182,7 +189,7 @@ export interface InlinedPreEndorsement {
   signature?: string;
 }
 
-export type BallotEnum = 'nay' | 'yay' | 'pass';
+export type BallotVote = 'nay' | 'yay' | 'pass';
 
 export interface OperationContentsEndorsement {
   kind: OpKind.ENDORSEMENT;
@@ -269,7 +276,7 @@ export interface OperationContentsBallot {
   source: string;
   period: number;
   proposal: string;
-  ballot: BallotEnum;
+  ballot: BallotVote;
 }
 
 export interface OperationContentsReveal {
@@ -687,7 +694,7 @@ export interface OperationContentsAndResultBallot {
   source: string;
   period: number;
   proposal: string;
-  ballot: BallotEnum;
+  ballot: BallotVote;
 }
 
 export interface OperationContentsAndResultReveal {
@@ -975,6 +982,7 @@ export interface BakingRightsQueryArgumentsBase {
   level?: BakingRightsArgumentsLevel;
   cycle?: BakingRightsArgumentsCycle;
   delegate?: BakingRightsArgumentsDelegate;
+  consensus_key?: string;
   max_priority?: number;
   all?: null;
 }
@@ -985,6 +993,7 @@ export interface BakingRightsResponseItem {
   priority?: number;
   round?: number;
   estimated_time?: Date;
+  consensus_key?: string;
 }
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
@@ -997,12 +1006,14 @@ export interface EndorsingRightsQueryArguments {
   level?: EndorsingRightsArgumentsLevel;
   cycle?: EndorsingRightsArgumentsCycle;
   delegate?: EndorsingRightsArgumentsDelegate;
+  consensus_key?: string;
 }
 
 export interface EndorsingRightsResponseItemDelegates {
   delegate: string;
   first_slot: number;
   endorsing_power: number;
+  consensus_key?: string;
 }
 export interface EndorsingRightsResponseItem {
   level: number;
@@ -1756,6 +1767,8 @@ export interface BlockMetadata {
   liquidity_baking_toggle_ema?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
   consumed_milligas?: string;
+  proposer_consensus_key?: string;
+  baker_consensus_key?: string;
 }
 
 export type RPCRunOperationParam = {
