@@ -4860,16 +4860,12 @@ export const blockLimanetSample = {
     max_operations_ttl: 120,
     max_operation_data_length: 32768,
     max_block_header_length: 289,
-<<<<<<< HEAD
-    max_operation_list_length: [[Object], [Object], [Object], [Object]],
-=======
     max_operation_list_length: [
       { max_size: 4194304, max_op: 2048 },
       { max_size: 32768 },
       { max_size: 135168, max_op: 132 },
       { max_size: 524288 },
     ],
->>>>>>> ecade81b5a4af4699f2b7e8c74d879f10c13eb50
     proposer: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
     baker: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
     level_info: {
@@ -4879,15 +4875,11 @@ export const blockLimanetSample = {
       cycle_position: 2027,
       expected_commitment: false,
     },
-<<<<<<< HEAD
-    voting_period_info: { voting_period: [Object], position: 2027, remaining: 2068 },
-    nonce_hash: null,
-    deactivated: [],
-    balance_updates: [[Object], [Object], [Object], [Object], [Object]],
-    liquidity_baking_toggle_ema: 583905253,
-    implicit_operations_results: [[Object]],
-=======
-    voting_period_info: { voting_period: { index: 5, kind: 'proposal', start_position: 102400 }, position: 2027, remaining: 2068 },
+    voting_period_info: {
+      voting_period: { index: 5, kind: 'proposal', start_position: 102400 },
+      position: 2027,
+      remaining: 2068,
+    },
     nonce_hash: null,
     deactivated: [],
     balance_updates: [
@@ -4946,7 +4938,6 @@ export const blockLimanetSample = {
         storage_size: '4632',
       },
     ],
->>>>>>> ecade81b5a4af4699f2b7e8c74d879f10c13eb50
     proposer_consensus_key: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
     baker_consensus_key: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
     consumed_milligas: '1100000',
@@ -5015,8 +5006,6 @@ export const blockLimanetSample = {
               },
             },
           },
-<<<<<<< HEAD
-=======
           {
             kind: 'drain_delegate',
             consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
@@ -5051,7 +5040,6 @@ export const blockLimanetSample = {
               ],
             },
           },
->>>>>>> ecade81b5a4af4699f2b7e8c74d879f10c13eb50
         ],
         signature:
           'sigrsWF7LpFpUBrTdvLnKm8DMuijk1LcZovZdKZDgsaafTPZhKsvLzPFHDzZYKCy4kobkgxVL7YPGnU5qzJJBcP2cAu5HW1C',
