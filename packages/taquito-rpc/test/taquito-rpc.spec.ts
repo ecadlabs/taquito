@@ -752,7 +752,7 @@ describe('RpcClient test', () => {
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(-1),
-        minimal_stake: "6000000000",
+        minimal_stake: new BigNumber(6000000000),
         vdf_difficulty: new BigNumber(2000000000),
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
