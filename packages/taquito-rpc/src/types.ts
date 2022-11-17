@@ -1284,13 +1284,15 @@ export interface TicketUpdates {
     amount: string;
   }[]
 }
+export type TicketReceipt  = TicketUpdates
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
   storage?: MichelsonV1Expression;
   big_map_diff?: ContractBigMapDiff;
   balance_updates?: OperationBalanceUpdates;
-  ticket_updates?: TicketUpdates[]
+  ticket_updates?: TicketUpdates[];
+  ticket_receipt?: TicketReceipt[];
   originated_contracts?: string[];
   consumed_gas?: string;
   storage_size?: string;

@@ -40,6 +40,7 @@ import {
   delegatesKathmandunetSample,
   votingInfoKathmandunetSample,
   ticketUpdatesSample,
+  ticketReceiptSample,
 } from './data/rpc-responses';
 
 /**
@@ -3423,7 +3424,7 @@ describe('RpcClient test', () => {
 
       done();
     });
-    it('should contain update_tickets for transactions updating ticket storage', async (done) => {
+    it('should contain ticket_updates for transactions updating ticket storage', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketUpdatesSample));
 
       const response = await client.getBlock();
@@ -3434,6 +3435,20 @@ describe('RpcClient test', () => {
       expect(ticketUpdates?.ticket_token.ticketer).toEqual('KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH')
       expect(ticketUpdates?.updates[0].account).toEqual('KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj')
       expect(ticketUpdates?.updates[0].amount).toEqual('-2')
+      done()
+    });
+    // may be removed
+    it('should contain ticket_receipt for transactions updating ticket storage', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketReceiptSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[0][0].contents[0] as OperationContentsAndResultTransaction
+      const ticketUpdates = content.metadata.operation_result.ticket_receipt && content.metadata.operation_result.ticket_receipt[0]
+
+      expect(ticketUpdates).toBeDefined();
+      expect(ticketUpdates?.ticket_token.ticketer).toEqual('KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH')
+      expect(ticketUpdates?.updates[0].account).toEqual('KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj')
+      expect(ticketUpdates?.updates[0].amount).toEqual('1')
       done()
     });
   });

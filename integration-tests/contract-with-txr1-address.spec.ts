@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, setup }) => {
   describe('test', () => {
     type Storage = { addressSet: string[], addressMap: MichelsonMap<string, number>; }
 
-    test('should pass with tz addresses', async (done) => {
+    it('should pass with tz addresses', async (done) => {
 
       const initialStorage: Storage = {
         addressSet: [

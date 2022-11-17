@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { Protocols, ChainIds } from "@taquito/taquito";
+import { Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -20,7 +20,6 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const limanet = protocol === Protocols.PtLimaPtL ? test : test.skip;
     const kathmandunetAndAlpha = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     beforeAll(async (done) => {
@@ -409,13 +408,13 @@ CONFIGS().forEach(
           done();
         });
 
-        limanet('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on jakartanet', async (done) => {
+        it('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on jakartanet', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        limanet('Verify that rpcClient.getTxRollupState will access the state of a rollup on jakartanet', async (done) => {
+        it('Verify that rpcClient.getTxRollupState will access the state of a rollup on jakartanet', async (done) => {
           const state = await rpcClient.getTxRollupState(txRollupAddress);
           expect(state).toBeDefined();
           done();
