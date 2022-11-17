@@ -12,9 +12,9 @@ CONFIGS().forEach(async ({ lib, protocol, setup, rpc }) => {
       await setup();
 
       try {
-        const period = await Tezos.rpc.getCurrentPeriod();
-        const sleepTime = period.remaining * 1000;
-        await sleep(sleepTime);
+        // const period = await Tezos.rpc.getCurrentPeriod();
+        // const sleepTime = period.remaining * 1000;
+        // await sleep(sleepTime);
         
         const proposalsOp = await Tezos.contract.proposals({
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
