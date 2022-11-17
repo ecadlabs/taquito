@@ -322,10 +322,6 @@ export class TezosToolkit {
    *
    * @param options parserProvider to use to interact with the Tezos network
    *
-   * @example
-   * ```
-   * Tezos.setParserProvider(new MichelCodecParser(...))
-   * ```
    */
   setParserProvider(parserProvider?: SetProviderOptions['parserProvider']) {
     if (!this._options.parserProvider && typeof parserProvider === 'undefined') {
