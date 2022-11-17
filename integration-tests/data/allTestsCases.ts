@@ -8,16 +8,17 @@ import {
   example9,
   example10,
 } from './code_with_sapling';
+import { ticketCode, ticketStorage } from './code_with_ticket';
 import {
-  ticketCode,
-  ticketCode2,
-  ticketCode3,
-  ticketCode4,
-  ticketStorage,
-  ticketStorage2,
-  ticketStorage3,
-  ticketStorage4,
-} from './code_with_ticket';
+  ticketCodeProto14,
+  ticketCode2Proto14,
+  ticketCode3Proto14,
+  ticketCode4Proto14,
+  ticketStorageProto14,
+  ticketStorage2Proto14,
+  ticketStorage3Proto14,
+  ticketStorage4Proto14,
+} from './code_with_ticket_proto14';
 import { genericCode, genericStorage } from './generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './token_bigmap';
 import { noAnnotCode, noAnnotInit } from './token_without_annotation';
@@ -942,8 +943,8 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           balance: '0',
           script: {
-            code: ticketCode,
-            storage: ticketStorage,
+            code: ticketCodeProto14,
+            storage: ticketStorageProto14,
           },
         },
       ],
@@ -963,8 +964,8 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           balance: '0',
           script: {
-            code: ticketCode2,
-            storage: ticketStorage2,
+            code: ticketCode2Proto14,
+            storage: ticketStorage2Proto14,
           },
         },
       ],
@@ -984,8 +985,8 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           balance: '0',
           script: {
-            code: ticketCode3,
-            storage: ticketStorage3,
+            code: ticketCode3Proto14,
+            storage: ticketStorage3Proto14,
           },
         },
       ],
@@ -1005,8 +1006,8 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           balance: '0',
           script: {
-            code: ticketCode4,
-            storage: ticketStorage4,
+            code: ticketCode4Proto14,
+            storage: ticketStorage4Proto14,
           },
         },
       ],
