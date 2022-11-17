@@ -68,11 +68,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/utils": "^14.1.0",
+    "@taquito/utils": "*",
     "bignumber.js": "^9.1.0"
   },
   "devDependencies": {
-    "@taquito/rpc": "^14.1.0",
+    "@taquito/rpc": "*",
     "@types/bluebird": "^3.5.36",
     "@types/estree": "^1.0.0",
     "@types/jest": "^26.0.23",
