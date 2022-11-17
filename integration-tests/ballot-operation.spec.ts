@@ -36,7 +36,7 @@ CONFIGS().forEach(async ({ lib, protocol, setup, rpc }) => {
       // console.log(JSON.stringify(period));
 
       if (period.voting_period.kind === 'proposal') {
-        await sleep(period.remaining * 1000);
+        await sleep((period.remaining + 2) * 1000);
       } 
       
       const op = await Tezos.contract.ballot({
