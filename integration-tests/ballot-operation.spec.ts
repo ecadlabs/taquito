@@ -35,27 +35,21 @@ CONFIGS().forEach(async ({ lib, protocol, setup, rpc }) => {
       const period = await Tezos.rpc.getCurrentPeriod();
       // console.log(JSON.stringify(period));
 
-
       if (period.voting_period.kind === 'proposal') {
         await sleep(period.remaining * 1000);
-      } else if (period.voting_period.kind === 'exploration') {
-        try {
-          const op = await Tezos.contract.ballot({
-            proposal: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
-            ballot: 'yay'
-          });
-          await op.confirmation();
-  
-          expect(op.operationResults).toBeDefined();
-          expect(op.operationResults?.proposal).toEqual('ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK');
-          expect(op.operationResults?.ballot).toEqual('yay');
-          expect(op.includedInBlock).toBeDefined();
-  
-        } catch(e) {
-          console.log(e)
-        }
-      }
+      } 
+      
+      const op = await Tezos.contract.ballot({
+        proposal: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
+        ballot: 'yay'
+      });
+      await op.confirmation();
 
+      expect(op.operationResults).toBeDefined();
+      expect(op.operationResults?.proposal).toEqual('ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK');
+      expect(op.operationResults?.ballot).toEqual('yay');
+      expect(op.includedInBlock).toBeDefined();
+  
       done();
     });
   })
