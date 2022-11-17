@@ -1,0 +1,6 @@
+parameter unit;
+storage (pair
+          (pair (address %theAddress)
+                (map %theMap (pair nat address) (pair (mutez %amount) (int %quantity))))
+          (int %theNumber));
+code { DUP ; CDR ; NIL operation ; PAIR ; DIP { DROP } }

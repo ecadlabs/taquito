@@ -1,0 +1,18 @@
+{
+    "operations": {},
+    "tasks": {
+        "@taqueria/plugin-taquito.deploy.1668697139939": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1668697139939,
+            "output": [
+                {
+                    "contract": "MapWithComplexKeysContract.tz",
+                    "address": "KT1LdHAJGf4fR98SRsmR9AXpVSADHGg5Ltmk",
+                    "alias": "MapWithComplexKeysContract",
+                    "destination": "ghostnet"
+                }
+            ]
+        }
+    }
+}

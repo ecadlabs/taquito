@@ -1,0 +1,4 @@
+Pair (Pair True 0)
+      (Pair ""
+            { Elt "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb" "Alice" ;
+              Elt "tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys" "Hello!" })

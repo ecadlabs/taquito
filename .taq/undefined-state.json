@@ -1,67 +1,67 @@
 {
     "operations": {},
     "tasks": {
-        "@taqueria/plugin-taquito.deploy.1668539174537": {
+        "@taqueria/plugin-taquito.deploy.1668700745060": {
             "task": "deploy",
             "plugin": "@taqueria/plugin-taquito",
-            "time": 1668539174537,
+            "time": 1668700745060,
             "output": [
                 {
-                    "contract": "MichelsonMapContract.tz",
-                    "address": "KT1V8cS9EnkqwovRkG6MdHqLk6DyJKg1ZNeY",
-                    "alias": "MichelsonMapContract",
+                    "contract": "Tzip16OffChainContractJSON.tz",
+                    "address": "KT1NgVkdnJkAQ9N3DXVhPKzdMkvvtYb59K8d",
+                    "alias": "Tzip16OffChainContractJSON",
                     "destination": "local"
                 }
             ]
         },
-        "@taqueria/plugin-taquito.deploy.1668551134446": {
+        "@taqueria/plugin-taquito.deploy.1668700809801": {
             "task": "deploy",
             "plugin": "@taqueria/plugin-taquito",
-            "time": 1668551134446,
+            "time": 1668700809801,
             "output": [
                 {
-                    "contract": "LambdaViewContract.tz",
-                    "address": "KT19sKbCG1hVZcQTxSbwHxrHpCFsJNCdQswV",
-                    "alias": "LambdaViewContract",
+                    "contract": "Tzip16OffChainContractMultiply.tz",
+                    "address": "KT19GmkmrBWg1vQLoSGMgyvrHN2m4B2pVxvk",
+                    "alias": "Tzip16OffChainContractMultiply",
                     "destination": "local"
                 }
             ]
         },
-        "@taqueria/plugin-taquito.deploy.1668551395517": {
+        "@taqueria/plugin-taquito.deploy.1668700894285": {
             "task": "deploy",
             "plugin": "@taqueria/plugin-taquito",
-            "time": 1668551395517,
+            "time": 1668700894285,
             "output": [
                 {
-                    "contract": "LambdaViewWithTokenContract.tz",
-                    "address": "KT1GbrgK5upe8EE1b6r81CaSwdzzu5xXFDWC",
-                    "alias": "LambdaViewWithTokenContract",
+                    "contract": "Tzip16SHA256Contract.tz",
+                    "address": "KT1EQagtSzVaLGBvLVEGBex6MT7WPkohe9MT",
+                    "alias": "Tzip16SHA256Contract",
                     "destination": "local"
                 }
             ]
         },
-        "@taqueria/plugin-taquito.deploy.1668552255150": {
+        "@taqueria/plugin-taquito.deploy.1668700954173": {
             "task": "deploy",
             "plugin": "@taqueria/plugin-taquito",
-            "time": 1668552255150,
+            "time": 1668700954173,
             "output": [
                 {
-                    "contract": "BigMapPackContract.tz",
-                    "address": "KT1G5f7kKpYRVDTq4eTJp5Q1NzxbPcv4U58N",
-                    "alias": "BigMapPackContract",
+                    "contract": "Tzip16StorageContract.tz",
+                    "address": "KT1P3kwUj1FUSrbXnrafTt3bMRXCRuu7Usqy",
+                    "alias": "Tzip16StorageContract",
                     "destination": "local"
                 }
             ]
         },
-        "@taqueria/plugin-taquito.deploy.1668553284202": {
+        "@taqueria/plugin-taquito.deploy.1668701199908": {
             "task": "deploy",
             "plugin": "@taqueria/plugin-taquito",
-            "time": 1668553284202,
+            "time": 1668701199908,
             "output": [
                 {
-                    "contract": "BigMapsComplexStorageContract.tz",
-                    "address": "KT1S28i5AXr38Bh9HMr83kjUX3zSvXB5YGdD",
-                    "alias": "BigMapsComplexStorageContract",
+                    "contract": "WalletContract.tz",
+                    "address": "KT1DyDCvPAboruAzv3ZzFZyfUAFE6ZsQs6TL",
+                    "alias": "WalletContract",
                     "destination": "local"
                 }
             ]

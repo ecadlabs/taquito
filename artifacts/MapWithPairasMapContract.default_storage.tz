@@ -1,0 +1,6 @@
+Pair
+  (Pair 0x00006b82198cb179e8306c1bedd08f12dc863f328886
+        { Elt (Pair 1 "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb") (Pair 100 10) ;
+          Elt (Pair 2 "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx") (Pair 200 20) ;
+          Elt (Pair 3 "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5") (Pair 300 30) })
+  10

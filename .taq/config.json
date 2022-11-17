@@ -6,7 +6,14 @@
         "ghostnet": {
             "label": "ghostnet",
             "rpcUrl": "https://ghostnet.ecadinfra.com",
-            "protocol": "PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg"
+            "protocol": "PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg",
+            "accounts": {
+                "taqRootAccount": {
+                    "publicKey": "p2pk65ZdDC8HWP7Y1uuSeXvjzA4nUxvL4gPStYw3SjGtGNp4Yf6VqVH",
+                    "publicKeyHash": "tz3SnjqPSkBTBfuFBBjMAk4BQG61Ymzf6mvk",
+                    "privateKey": "p2sk3GktfzVkSkhvXjUcL6oySo5bPH717ef7DmUBjo2VgfY9jkFVdf"
+                }
+            }
         }
     },
     "sandbox": {
@@ -59,7 +66,7 @@
                     "address": "KT1ScsxRJz9XB2s5KdkGG6xbW9yCoUuhht2m"
                 },
                 "MichelsonMapContract": {
-                    "address": "KT1V8cS9EnkqwovRkG6MdHqLk6DyJKg1ZNeY"
+                    "address": "KT1UJtw8RV8iNYNriB9vuqMwRXRi1xmQ5pHk"
                 },
                 "LambdaViewContract": {
                     "address": "KT19sKbCG1hVZcQTxSbwHxrHpCFsJNCdQswV"
@@ -72,6 +79,45 @@
                 },
                 "BigMapsComplexStorageContract": {
                     "address": "KT1S28i5AXr38Bh9HMr83kjUX3zSvXB5YGdD"
+                },
+                "BigMapsMultipleValuesContract": {
+                    "address": "KT1DrRjBDvB34qhsmf4gv27TvmHK5igCkFet"
+                },
+                "ContractCallFib": {
+                    "address": "KT1KD3ESh9761eXPiNf96srsjg7gcqsPf57t"
+                },
+                "ContractTopLevelViews": {
+                    "address": "KT1SPuWaGB4a7ZubJMJikN7C3RHGdjDN8qmB"
+                },
+                "MapWithComplexKeysContract": {
+                    "address": "KT1WpT7F4zep9tmVYgpzGXUHDqnyHauJEtA1"
+                },
+                "MapWithWithSingleMapForStorage": {
+                    "address": "KT1X5Q3zJcxUKwJLjswQoiWnVGtscrz88So9"
+                },
+                "TokenContract": {
+                    "address": "KT1Mv9KLwangrsLCcS6TCuvgPHbngpsQa3PE"
+                },
+                "Tzip16HTTPSContract": {
+                    "address": "KT1R2GkeXq9ZWdQJDvocU5F82xHUoBmr2noZ"
+                },
+                "Tzip16IPFSContract": {
+                    "address": "KT1B9BrQ54Su5AbPoYNUx3Hvrh9mE9QBZgU4"
+                },
+                "Tzip16OffChainContractJSON": {
+                    "address": "KT1NgVkdnJkAQ9N3DXVhPKzdMkvvtYb59K8d"
+                },
+                "Tzip16OffChainContractMultiply": {
+                    "address": "KT19GmkmrBWg1vQLoSGMgyvrHN2m4B2pVxvk"
+                },
+                "Tzip16SHA256Contract": {
+                    "address": "KT1EQagtSzVaLGBvLVEGBex6MT7WPkohe9MT"
+                },
+                "Tzip16StorageContract": {
+                    "address": "KT1P3kwUj1FUSrbXnrafTt3bMRXCRuu7Usqy"
+                },
+                "WalletContract": {
+                    "address": "KT1DyDCvPAboruAzv3ZzFZyfUAFE6ZsQs6TL"
                 }
             }
         },
@@ -79,7 +125,12 @@
             "networks": [
                 "ghostnet"
             ],
-            "sandboxes": []
+            "sandboxes": [],
+            "aliases": {
+                "MapWithComplexKeysContract": {
+                    "address": "KT1LdHAJGf4fR98SRsmR9AXpVSADHGg5Ltmk"
+                }
+            }
         }
     },
     "accounts": {
@@ -105,5 +156,5 @@
     ],
     "projectDir": "/home/mike/taquito",
     "configFile": "/home/mike/taquito/.taq/config.json",
-    "hash": "871dd6fb0cc13bbf2c01ae9c3da27cb944a48bd2ebbdcf26324767f1ad652ee6"
+    "hash": "cd84913fb732922e9fd286134ee1a216907beda8407da8ee4a1fec2fba6cce59"
 }

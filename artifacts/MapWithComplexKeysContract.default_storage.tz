@@ -1,0 +1,22 @@
+{ Elt
+    { 1 ;
+      2 ;
+      "test" ;
+      0xcafe ;
+      10 ;
+      True ;
+      "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5" ;
+      1567782509 ;
+      "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5" }
+    100 ;
+  Elt
+    { 10 ;
+      20 ;
+      "Hello" ;
+      0xffff ;
+      100 ;
+      False ;
+      "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx" ;
+      1570374509 ;
+      "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx" }
+    1000 }

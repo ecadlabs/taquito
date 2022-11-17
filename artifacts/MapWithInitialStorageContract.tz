@@ -1,0 +1,4 @@
+parameter unit;
+storage (pair (big_map %thebigmap (pair nat address) int)
+              (map %themap (pair nat address) int));
+code { DUP ; CDR ; NIL operation ; PAIR ; DIP { DROP } }

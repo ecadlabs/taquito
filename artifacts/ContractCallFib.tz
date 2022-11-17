@@ -1,0 +1,6 @@
+parameter (pair nat address);
+storage nat;
+code { CAR ;
+       UNPAIR ;
+       VIEW "fib" nat ;
+       { IF_NONE { { UNIT ; FAILWITH } } { NIL operation ; PAIR } } }

@@ -1,0 +1,63 @@
+parameter nat;
+storage (map nat (pair (nat %current_stock) (mutez %max_price)));
+code { DUP ;
+       CAR ;
+       DIG 1 ;
+       DUP ;
+       DUG 2 ;
+       CDR ;
+       DUP ;
+       DIG 2 ;
+       DUP ;
+       DUG 3 ;
+       GET ;
+       IF_NONE
+         { PUSH string "Unknown kind of taco." ; FAILWITH }
+         { DUP ; DIP { DROP } } ;
+       DUP ;
+       CAR ;
+       DIG 1 ;
+       DUP ;
+       DUG 2 ;
+       CDR ;
+       EDIV ;
+       IF_NONE { PUSH string "DIV by 0" ; FAILWITH } {} ;
+       CAR ;
+       DUP ;
+       AMOUNT ;
+       COMPARE ;
+       NEQ ;
+       IF
+         { PUSH string "Sorry, the taco you are trying to purchase has a different price" ;
+           FAILWITH }
+         { PUSH unit Unit } ;
+       DIG 2 ;
+       DUP ;
+       DUG 3 ;
+       PUSH nat 1 ;
+       DIG 4 ;
+       DUP ;
+       DUG 5 ;
+       CAR ;
+       SUB ;
+       ABS ;
+       SWAP ;
+       CDR ;
+       SWAP ;
+       PAIR ;
+       DIG 4 ;
+       DUP ;
+       DUG 5 ;
+       DIG 1 ;
+       DUP ;
+       DUG 2 ;
+       DIG 7 ;
+       DUP ;
+       DUG 8 ;
+       SWAP ;
+       SOME ;
+       SWAP ;
+       UPDATE ;
+       NIL operation ;
+       PAIR ;
+       DIP { DROP 7 } }

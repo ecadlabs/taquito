@@ -1,0 +1,11 @@
+parameter unit;
+storage (map
+          (pair int
+                (pair nat
+                      (pair string
+                            (pair bytes
+                                  (pair mutez
+                                        (pair bool
+                                              (pair key_hash (pair timestamp address))))))))
+          int);
+code { DUP ; CDR ; NIL operation ; PAIR ; DIP { DROP } }
