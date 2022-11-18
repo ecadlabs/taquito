@@ -191,7 +191,7 @@ export const opMapping: { [key: string]: string } = {
   '85': 'SAPLING_EMPTY_STATE',
   '86': 'SAPLING_VERIFY_UPDATE',
   '87': 'ticket',
-  '88': 'TICKET',
+  '88': 'TICKET_DEPRECATED',
   '89': 'READ_TICKET',
   '8a': 'SPLIT_TICKET',
   '8b': 'JOIN_TICKETS',
@@ -207,6 +207,9 @@ export const opMapping: { [key: string]: string } = {
   '95': 'MIN_BLOCK_TIME',
   '96': 'sapling_transaction',
   '97': 'EMIT',
+  '98': 'Lambda_rec',
+  '99': 'LAMBDA_REC',
+  '9a': 'TICKET',
 };
 
 export const opMappingReverse = (() => {

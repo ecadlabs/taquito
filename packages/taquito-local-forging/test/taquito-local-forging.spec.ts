@@ -6,7 +6,10 @@ import {
   ProtocolsHash,
   Uint8ArrayConsumer,
 } from '../src/taquito-local-forging';
-import { ticketCode3, ticketStorage3 } from '../../../integration-tests/data/code_with_ticket';
+import {
+  ticketCode3Proto14,
+  ticketStorage3Proto14,
+} from '../../../integration-tests/data/code_with_ticket_proto14';
 import { commonCases, kathmanduCases } from '../../../integration-tests/data/allTestsCases';
 import {
   InvalidOperationSchemaError,
@@ -166,8 +169,8 @@ describe('Forge and parse operations default protocol', () => {
             storage_limit: '10',
             balance: '0',
             script: {
-              code: ticketCode3,
-              storage: ticketStorage3,
+              code: ticketCode3Proto14,
+              storage: ticketStorage3Proto14,
             },
           },
         ],
