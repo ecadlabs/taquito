@@ -1,13 +1,19 @@
 import { CONFIGS } from "./config";
-import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { MANAGER_LAMBDA, TezosToolkit  } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
-  const Tezos = lib;
- 
+  const Funder = lib;
+  let Tezos: TezosToolkit;
   describe(`Generic Multisig set delegate: ${rpc}`, () => {
-    beforeEach(async (done) => {
-      await setup(true)
+    beforeAll(async (done) => {
+      await setup(true);
+
+      Tezos = await createAddress();
+      const pkh = await Tezos.signer.publicKeyHash();
+      const fund = await Funder.contract.transfer({ amount: 10000, to: pkh });
+      await fund.confirmation();
+
       done()
     })
     test('test manager transfers set delegate scenarios', async () => {
