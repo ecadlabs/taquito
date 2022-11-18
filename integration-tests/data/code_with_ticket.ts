@@ -38,7 +38,24 @@ export const ticketCode = [
 							{ prim: 'PUSH', args: [{ prim: 'nat' }, { int: '43' }] },
 							{ prim: 'PUSH', args: [{ prim: 'int' }, { int: '1' }] },
 							{ prim: 'TICKET' },
-							{ prim: 'ASSERT_SOME' },
+							[
+								{
+								  "prim": "IF_NONE",
+								  "args": [
+								   [
+									 [
+									   {
+										 "prim": "UNIT"
+									   },
+									   {
+										 "prim": "FAILWITH"
+									   }
+									]
+								  ],
+								  []
+								]
+							   }
+							],
 							{ prim: 'NIL', args: [{ prim: 'operation' }] },
 							{ prim: 'SELF', annots: ['%run'] },
 							{ prim: 'PUSH', args: [{ prim: 'mutez' }, { int: '0' }] },
@@ -51,7 +68,24 @@ export const ticketCode = [
 							{ prim: 'PUSH', args: [{ prim: 'nat' }, { int: '42' }] },
 							{ prim: 'PUSH', args: [{ prim: 'string' }, { string: 'abc' }] },
 							{ prim: 'TICKET' },
-							{ prim: 'ASSERT_SOME' },
+							[
+								{
+								  "prim": "IF_NONE",
+								  "args": [
+								   [
+									 [
+									   {
+										 "prim": "UNIT"
+									   },
+									   {
+										 "prim": "FAILWITH"
+									   }
+									]
+								  ],
+								  []
+								]
+							   }
+							],
 							{ prim: 'DIG', args: [{ int: '3' }] },
 							{ prim: 'SWAP' },
 							{ prim: 'SOME' },
