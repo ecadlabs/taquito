@@ -9,11 +9,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     beforeAll(async (done) => {
       await setup(true);
 
-      Tezos = await createAddress();
-      const pkh = await Tezos.signer.publicKeyHash();
-      const fund = await Funder.contract.transfer({ amount: 10000, to: pkh });
-      await fund.confirmation();
-
+      if (rpc === 'http://0.0.0.0:20000') {
+        Tezos = await createAddress();
+        const pkh = await Tezos.signer.publicKeyHash();
+        const fund = await Funder.contract.transfer({ amount: 10000, to: pkh });
+        await fund.confirmation();
+      } else {
+        Tezos = Funder;
+      }
       done()
     })
     test('test manager transfers set delegate scenarios', async () => {
