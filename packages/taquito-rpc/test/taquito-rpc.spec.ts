@@ -31,6 +31,7 @@ import {
   OperationContentsAndResultTransferTicket,
   OperationContentsAndResultTxRollupReturnBond,
   OperationContentsAndResultUpdateConsensusKey,
+  OperationContentsAndResultDrainDelegate,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -3217,7 +3218,53 @@ describe('RpcClient test', () => {
 
       done();
     });
-    it('should be able to access the properties of internal operation type event, proto15', async (done) => {
+
+    it('should be able to access the properties of operation type drain_delegate, proto15', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[1] as OperationContentsAndResultDrainDelegate;
+
+      expect(content.kind).toEqual(OpKind.DRAIN_DELEGATE);
+      expect(content.consensus_key).toEqual('tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj');
+      expect(content.delegate).toEqual('tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv');
+      expect(content.destination).toEqual('tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-15525772494');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![1].contract).toEqual(
+        'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj'
+      );
+      expect(content.metadata.balance_updates![1].change).toEqual('15525772494');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![2].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![2].contract).toEqual(
+        'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv'
+      );
+      expect(content.metadata.balance_updates![2].change).toEqual('-156825984');
+      expect(content.metadata.balance_updates![2].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![3].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![3].contract).toEqual(
+        'tz1hoyMUiJYYr4FRPMU8Z7WJzYkqgjygjaTy'
+      );
+      expect(content.metadata.balance_updates![3].change).toEqual('156825984');
+      expect(content.metadata.balance_updates![3].origin).toEqual('block');
+
+      done();
+    });
+
+    it('should be able to access the properties of operation type update_consensus_key, proto15', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetSample));
 
       const response = await client.getBlock();
@@ -3239,7 +3286,7 @@ describe('RpcClient test', () => {
         'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv'
       );
       expect(content.metadata.balance_updates![0].change).toEqual('-369');
-      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
 
       expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
       expect(content.metadata.balance_updates![1].category).toEqual('block fees');
