@@ -1460,4 +1460,35 @@ export const limaCases: TestCase[] = [
       ],
     },
   },
+  {
+    name: `Update Consensus Key operation`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_CONSENSUS_KEY,
+          counter: '1',
+          source: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+          fee: '100',
+          gas_limit: '10000',
+          storage_limit: '10',
+          pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7'
+        },
+      ],
+    },
+  },
+  {
+    name: `Drain Delegate operation`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.DRAIN_DELEGATE,
+          consensus_key: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv', 
+          delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+          destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+        },
+      ],
+    },
+  },
 ];
