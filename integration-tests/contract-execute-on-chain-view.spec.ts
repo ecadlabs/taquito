@@ -1,8 +1,7 @@
 import { codeViewsTopLevel } from "./data/contract_views_top_level";
 import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
-import { Protocols, ViewSimulationError } from "@taquito/taquito";
-import { HttpResponseError } from "@taquito/http-utils";
+import { ViewSimulationError } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -74,12 +73,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         // view that always fails
         await contract.contractViews.test_failwith(3).executeView({ viewCaller: contract.address });
       } catch (error: any) {
-        const protocol = (await Tezos.rpc.getProtocols()).protocol
-        if(protocol === Protocols.PtJakart2) {
-          expect(error).toBeInstanceOf(HttpResponseError)
-        } else {
           expect(error).toBeInstanceOf(ViewSimulationError)
-        }
       }
 
       const viewSuccResult = await contract.contractViews.succ({ 0: 16, 1: contract.address }).executeView({ source, viewCaller: contract.address });

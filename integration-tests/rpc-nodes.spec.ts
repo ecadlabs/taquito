@@ -1,5 +1,4 @@
 import { CONFIGS } from './config';
-import { Protocols, ChainIds } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -19,9 +18,6 @@ CONFIGS().forEach(
     txRollupAddress,
   }) => {
     const Tezos = lib;
-
-    const limanet = protocol === Protocols.PtLimaPtL ? test : test.skip;
-    const kathmandunetAndAlpha = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     beforeAll(async (done) => {
       await setup()
@@ -126,7 +122,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunetAndAlpha(`Fetches voting information about a delegate from RPC`, async (done) => {
+        it(`Fetches voting information about a delegate from RPC`, async (done) => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
           done();
@@ -365,7 +361,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunetAndAlpha('Verify that rpcClient.runScriptView executes michelson view', async (done) => {
+        it('Verify that rpcClient.runScriptView executes michelson view', async (done) => {
           const chainId = await Tezos.rpc.getChainId();
           const params: RPCRunScriptViewParam = {
             contract: knownViewContract!,
@@ -420,19 +416,6 @@ CONFIGS().forEach(
           expect(state).toBeDefined();
           done();
         });
-
-        kathmandunetAndAlpha('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
-          expect(inbox).toBeDefined();
-          done();
-        });
-
-        kathmandunetAndAlpha('Verify that rpcClient.getTxRollupState will access the state of a rollup', async (done) => {
-          const state = await rpcClient.getTxRollupState(txRollupAddress);
-          expect(state).toBeDefined();
-          done();
-        });
-
       });
     });
   }
