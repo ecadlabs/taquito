@@ -14,17 +14,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup();
       done()
     })
-    kathmandunet('Originates a contract having ticket with init and the wallet api', async (done) => {
-      const op = await Tezos.wallet.originate({
-        code: ticketCodeProto14,
-        init: ticketStorageProto14
-      }).send();
-
-      await op.confirmation();
-      expect(op.opHash).toBeDefined();
-
-      done();
-    });
 
     kathmandunet('Originates a contract having ticket with init and the contract api', async (done) => {
       const op = await Tezos.contract.originate({
@@ -75,18 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup();
       done()
     })
-    limanetAndAlpha('Originates a contract having ticket with init and the wallet api', async (done) => {
-      const op = await Tezos.wallet.originate({
-        code: ticketCode,
-        init: ticketStorage
-      }).send();
-
-      await op.confirmation();
-      expect(op.opHash).toBeDefined();
-
-      done();
-    });
-
+    
     limanetAndAlpha('Originates a contract having ticket with init and the contract api', async (done) => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
