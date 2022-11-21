@@ -1,15 +1,15 @@
 {
-  "name": "@taquito/rpc",
+  "name": "@taquito/tezbridge-wallet",
   "version": "14.1.0",
-  "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
+  "description": "Tezbridge wallet provider",
   "keywords": [
     "tezos",
     "blockchain",
-    "rpc"
+    "websocket"
   ],
-  "main": "dist/taquito-rpc.umd.js",
-  "module": "dist/taquito-rpc.es6.js",
-  "typings": "dist/types/taquito-rpc.d.ts",
+  "main": "dist/taquito-tezbridge-wallet.umd.js",
+  "module": "dist/taquito-tezbridge-wallet.es6.js",
+  "typings": "dist/types/taquito-tezbridge-wallet.d.ts",
   "files": [
     "signature.json",
     "dist"
@@ -27,9 +27,6 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
@@ -55,9 +52,6 @@
       "tsx",
       "js"
     ],
-    "moduleNameMapper": {
-      "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
-    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
@@ -67,14 +61,13 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "*",
-    "@taquito/utils": "*",
-    "bignumber.js": "^9.1.0"
+    "@taquito/taquito": "*"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
     "@types/jest": "^26.0.23",
     "@types/node": "^17.0.0",
+    "@types/ws": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "colors": "^1.4.0",

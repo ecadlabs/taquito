@@ -43,12 +43,14 @@ Taquito currently supports the following versions of Node.js®:
 
 | Version          | Supported? |
 | ---------------- | ---------- |
-| v12              |    ❌      |
-| v14              |    ❌      |
+| v12 LTS          |    ❌      |
+| v14 LTS          |    ❌      |
 | v16.13.1         |    ✅      |
 | v16.13.2         |    ❌      |
+| v16 LTS/Gallium  |    ✅      |
 | 17.3.x           |    ✅      |
 | v17.5.x          |    ❌      |
+| v18 LTS/Hydrogen |    ✅      |
 
 While other versions often work, the above are what we officially support. YMMV!
 
@@ -118,13 +120,7 @@ You would like to make a contribution to Taquito? Wonderful! Please read on.
 
 Install/use a suitable version of **Node.js** (_as listed above_), for example:
     
-    `nvm use v17.3.0`
-
-* Install `lerna` globally:
-
-    `npm install -g lerna`
-
-*Taquito uses `lerna` internally to simplify the build configuration.*
+    nvm use lts/gallium
 
 * Install `libudev-dev`, if developing on GNU/Linux:
 
@@ -134,13 +130,15 @@ Install/use a suitable version of **Node.js** (_as listed above_), for example:
 
 ### Setup and build Taquito
 
+* Run `npm clean-install`
 * Run `npm run rebuild`
 
 That command invokes serially the following commands:
 
-* Run `npm run clean`
-* Run `npm clean-install`  *# n.b. no `run`: `clean-install` is an npm __built-in__*
-* Run `npm run build`
+* `npm run clean`
+* `npm clean-install`  *# n.b. no `run`: `clean-install` is an npm __built-in__*
+* `npm run bootstrap`
+* `npm run build`
 
 The `clean-install` (or just `ci`) command ensures a clean install of all depenencies, and respects `package-lock.json`, to ensure a deterministic and repeatable build (it is also some 2x to 10x faster than `npm install`). It will not adjust `package.json`: hooray!
 
@@ -156,9 +154,9 @@ See the top-level `package.json` "scripts" section. Some common targets are:
 
 ### Running Integration Tests
 
-The Taquito integration tests are located in the `/integration-tests/` directory.
+The Taquito integration tests are located in the `integration-tests/` directory.
 
-To run the integration tests, `cd` into `/integration-tests/` and run `npm run test` (ensure you have completed the build steps as described earlier in this README file.). The integration test suite runs all tests against the current tezos protocol testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
+To run the integration tests, `cd` into `integration-tests/` and run `npm run test` (ensure you have completed the build steps as described earlier in this README file.). The integration test suite runs all tests against the current tezos protocol testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
 
 There are many integration tests, and as they interact with real testnets, they can be slow. Furthermore, occasionally tests fail due to extrinsic reasons related to public testnets.
 
@@ -176,13 +174,10 @@ Please use `npm run commit` for your last commit before you push, as this will a
 
 The Tezos Taquito [website][4] is built using [Docusaurus][5].
 
-To run the Taquito website in development mode locally, run the following commands:
+To run the Taquito website in development mode locally, run the following commands from the repo's root folder:
 
-```
-cd website
-npm install
-npm start
-```
+* Run `npm clean-install`
+* Run `npm -w @taquito/website start`
 
 ## Contributions / Reporting Issues
 
