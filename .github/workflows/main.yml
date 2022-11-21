@@ -73,7 +73,7 @@ jobs:
     - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
         RUN_KATHMANDUNET_WITH_SECRET_KEY: true
-        SECRET_KEY: edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt
+        SECRET_KEY: edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
         TEZOS_RPC_KATHMANDUNET: http://0.0.0.0:20000
         POLLING_INTERVAL_MILLISECONDS: 100
         RPC_CACHE_MILLISECONDS: 0
