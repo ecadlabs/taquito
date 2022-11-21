@@ -16,12 +16,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node:
-          - '16.13.1'
-          - '17.3.x'
+        node: 
+          - '16'
+          - '18'
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
@@ -30,7 +30,7 @@ jobs:
     - run: npm run build-docs
     - run: npm run test -- --runInBand
     - name: Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3.1.1
       with:
         file: .coverage/*.json
       env:
@@ -46,32 +46,32 @@ jobs:
           - kathmandunet
           - limanet
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: 16.13.1
+        node-version: 16
     - run: npm ci
     - run: npm run build
     - name: Tailscale
       uses: tailscale/github-action@v1
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-        version: 1.22.2
-    - run: cd integration-tests && npm run test:${{ matrix.protocol }} -- --maxWorkers=8
+        version: 1.32.2
+    - run: npm -w integration-tests run test:${{ matrix.protocol }} -- --maxWorkers=8
 
   integration-tests-flextesa:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: 16.13.1
+        node-version: 16
     - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
     - run: npm ci
     - run: npm run lerna -- bootstrap
     - run: npm run build
-    - run: cd integration-tests && npm run test:originate-known-contracts && npm run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
+    - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
         RUN_KATHMANDUNET_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt

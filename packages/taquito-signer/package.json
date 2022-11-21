@@ -70,8 +70,8 @@
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.3",
     "@stablelib/nacl": "^1.0.4",
-    "@taquito/taquito": "^14.1.0",
-    "@taquito/utils": "^14.1.0",
+    "@taquito/taquito": "*",
+    "@taquito/utils": "*",
     "elliptic": "^6.5.4",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"

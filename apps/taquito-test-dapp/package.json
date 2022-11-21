@@ -10,33 +10,30 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
+    "@sveltejs/vite-plugin-svelte": "^1.1.0",
     "@tsconfig/svelte": "^2.0.1",
     "events": "^3.3.0",
-    "libsodium-wrappers": "^0.7.10",
+    "lerna": "^6.0.3",
     "prettier-plugin-svelte": "^2.7.0",
     "sass": "^1.51.0",
-    "svelte": "^3.44.0",
+    "svelte": "^3.52.0",
     "svelte-check": "^2.2.7",
     "svelte-preprocess": "^4.9.8",
     "tslib": "^2.3.1",
     "typescript": "^4.5.4",
-    "vite": "^3.2.0",
-    "vite-compatible-readable-stream": "^3.6.1"
+    "vite": "^3.2.0"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^3.1.4",
-    "@taquito/beacon-wallet": "^14.1.0",
-    "@taquito/taquito": "^14.1.0",
-    "@taquito/utils": "^14.1.0",
+    "@airgap/beacon-sdk": "^3.3.0",
+    "@taquito/beacon-wallet": "*",
+    "@taquito/taquito": "*",
+    "@taquito/utils": "*",
     "buffer": "^6.0.3",
-    "svelte-select": "^4.4.7"
+    "svelte-select": "^4.4.7",
+    "vite-compatible-readable-stream": "^3.6.1"
   },
   "alias": {
-    "@airgap/beacon-sdk": "./node_modules/@airgap/beacon-sdk/dist/esm/index.js",
-    "@taquito/beacon-wallet": "./node_modules/@taquito/beacon-wallet/dist/taquito-beacon-wallet.es5.js",
-    "@taquito/signer": "./node_modules/@taquito/signer/dist/taquito-signer.es5.js",
-    "@taquito/taquito": "./node_modules/@taquito/taquito/dist/taquito.es5.js"
+    "@airgap/beacon-sdk": "../../node_modules/@airgap/beacon-sdk/dist/esm/index.js"
   },
   "prettier": {
     "svelteSortOrder": "options-scripts-styles-markup"
