@@ -87,7 +87,7 @@ export abstract class OperationEmitter {
     let currentVotingPeriodPromise: Promise<VotingPeriodBlockResult | undefined> =
       Promise.resolve(undefined);
     ops.find(async (op) => {
-      if (op.kind === 'ballot') {
+      if (op.kind === 'ballot' || op.kind === 'proposals') {
         try {
           currentVotingPeriodPromise = this.rpc.getCurrentPeriod();
         } catch (e) {
@@ -186,6 +186,14 @@ export abstract class OperationEmitter {
               ...getFee(op),
             };
           case OpKind.BALLOT:
+            if (currentVotingPeriod === undefined) {
+              throw new RPCResponseError(`Failed to get the current voting period index`);
+            }
+            return {
+              ...op,
+              period: currentVotingPeriod?.voting_period.index,
+            };
+          case OpKind.PROPOSALS:
             if (currentVotingPeriod === undefined) {
               throw new RPCResponseError(`Failed to get the current voting period index`);
             }

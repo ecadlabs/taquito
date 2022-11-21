@@ -21,7 +21,6 @@
     { value: "kathmandunet", label: "Kathmandunet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
-    { value: "jakartanet", label: "Jakartanet", group: "other testnets" },
     { value: "mondaynet", label: "Mondaynet", group: "other testnets" },
     { value: "custom", label: "Custom", group: "custom network" },
   ];

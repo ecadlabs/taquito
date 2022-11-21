@@ -14,8 +14,11 @@ module.exports = {
     filename: pkg.unpkg,
     crossOriginLoading: 'anonymous'
   },
-  node: {
-    fs: 'empty'
+  resolve: {
+    fallback: {
+      fs: false,
+      stream: require.resolve("stream-browserify")
+    }
   },
   optimization: {
     minimize: true,
