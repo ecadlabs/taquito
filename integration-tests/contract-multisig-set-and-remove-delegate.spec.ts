@@ -8,7 +8,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   describe(`Generic Multisig set delegate: ${rpc}`, () => {
     beforeAll(async (done) => {
       await setup(true);
-
+      // Checks if test is being run in Flextesa or not
+      // If it is, fund the signer account using using 'Funder', which is the flextesa_bootstrap account
       if (rpc === 'http://0.0.0.0:20000') {
         Tezos = await createAddress();
         const pkh = await Tezos.signer.publicKeyHash();
