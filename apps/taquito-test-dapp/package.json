@@ -30,6 +30,7 @@
     "@taquito/utils": "*",
     "@taquito/wallet-connect-2": "*",
     "buffer": "^6.0.3",
+    "svelte-modals": "^2.0.0-beta.2",
     "svelte-select": "^4.4.7",
     "vite-compatible-readable-stream": "^3.6.1"
   },
