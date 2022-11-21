@@ -4,8 +4,6 @@ CONFIGS().forEach(async ({ lib, protocol, setup, rpc }) => {
   const Tezos = lib;
   const flextesanet = (rpc === 'http://0.0.0.0:20000') ? it : it.skip;
 
-  Tezos.setRpcProvider(rpc);
-
   describe(`Ballot operation test (${protocol})`, () => {
     beforeAll(async (done) => {
       await setup();
@@ -42,6 +40,7 @@ CONFIGS().forEach(async ({ lib, protocol, setup, rpc }) => {
       expect(op.operationResults?.proposal).toEqual('ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK');
       expect(op.operationResults?.ballot).toEqual('yay');
       expect(op.includedInBlock).toBeDefined();
+      expect(op.hash).toBeDefined();
   
       done();
     });
