@@ -31,17 +31,6 @@ describe('Forge and parse operations default protocol', () => {
     });
   });
 
-  // describe('Forge and parse operations kathmandu protocol', () => {
-  //   const localForger = new LocalForger();
-  //   kathmanduCases.forEach(({ name, operation, expected }) => {
-  //     test(`Common test: ${name}`, async (done) => {
-  //       const result = await localForger.forge(operation);
-  //       expect(await localForger.parse(result)).toEqual(expected || operation);
-  //       done();
-  //     });
-  //   });
-  // });
-
   describe('Forge should validate parameters against the schema', () => {
     const hexToParse = `0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28`;
 
