@@ -35,7 +35,7 @@ describe('Beacon Wallet tests', () => {
   it(`Verify that a Beacon Wallet has a beacon ID`, async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
     expect(typeof (await wallet.client.beaconId)).toEqual('string');
-    expect(await wallet.client.beaconId).toBeDefined;
+    expect(await wallet.client.beaconId).toBeDefined();
   });
 
   it(`Verify that an error is thrown if BeaconWallet is initialized with an empty object`, async () => {

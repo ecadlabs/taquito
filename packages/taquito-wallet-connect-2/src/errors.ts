@@ -7,8 +7,20 @@ import { PermissionScopeMethods } from './types';
 export class MissingRequiredScope extends Error {
   name = 'MissingRequiredScope';
 
-  constructor(public requiredScopes: PermissionScopeMethods) {
+  constructor(public requiredScopes: PermissionScopeMethods | string) {
     super(`Required permission scope were not granted for: ${requiredScopes}`);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates the wallet returned an invalid namespace
+ */
+ export class InvalidReceivedSessionNamespace extends Error {
+  name = 'InvalidReceivedSessionNamespace';
+
+  constructor(message: string, public code: number, public data?: string | string[]) {
+    super(message);
   }
 }
 

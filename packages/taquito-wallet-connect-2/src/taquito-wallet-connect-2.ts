@@ -19,9 +19,9 @@ import { getSdkError } from '@walletconnect/utils';
 import { PermissionScopeEvents, PermissionScopeMethods, PermissionScopeParam, SigningType } from './types';
 import {
     ActiveAccountUnspecified,
-  ConnectionFailed,
-    //ConnectionFailed,
+    ConnectionFailed,
     InvalidAccount,
+    InvalidReceivedSessionNamespace,
     InvalidSessionKey,
     MissingRequiredScope,
     NotConnected,
@@ -42,7 +42,6 @@ export class WalletConnect2 implements WalletProvider {
             console.log("session_delete in taquito", id, topic);
             console.log('this.session', this.session)
             if (this.session?.topic === topic) {
-
                 this.session = undefined;
             }
         });
@@ -64,6 +63,10 @@ export class WalletConnect2 implements WalletProvider {
         });
         this.signClient.on("session_expire", ({ topic }) => {
             console.log("session_expire in taquito", topic);
+            console.log('this.session', this.session)
+            if (this.session?.topic === topic) {
+                this.session = undefined;
+            }
         });
         this.signClient.on("session_request", ({ id, params, topic }) => {
             console.log("session_request in taquito", id, params, topic);
@@ -90,6 +93,7 @@ export class WalletConnect2 implements WalletProvider {
      * ```
      */
     static async init(options: SignClientTypes.Options) {
+        // initializes the client with persisted storage and a network connection
         const client = await Client.init(options);
         return new WalletConnect2(client);
     }
@@ -136,6 +140,7 @@ export class WalletConnect2 implements WalletProvider {
      */
     async requestPermissions(scope: PermissionScopeParam, pairingTopic?: string) {
         try {
+            // for proposer to create a session
             const { uri, approval } = await this.signClient.connect({
                 requiredNamespaces: {
                     tezos: {
@@ -152,12 +157,16 @@ export class WalletConnect2 implements WalletProvider {
                     // noop
                 });
             }
-            this.session = await approval();
+            const session = await approval();
+
+            this.validateReceivedNamespace(scope, session.namespaces);
+            this.session = session;
             const activeAccount = this.getAccounts();
             if (activeAccount.length === 1) {
                 this.activeAccount = activeAccount[0];
             }
         } catch (error) {
+            console.log(error)
             throw new ConnectionFailed(error);
         } finally {
             QRCodeModal.close();
@@ -279,6 +288,68 @@ export class WalletConnect2 implements WalletProvider {
 
     ping() {
         this.signClient.ping({ topic: this.getSession().topic });
+    }
+
+    private validateReceivedNamespace(scope: PermissionScopeParam, receivedNamespaces: Record<string, SessionTypes.Namespace>) {
+        if (receivedNamespaces['tezos']) {
+            this.validateMethods(scope.methods, receivedNamespaces['tezos'].methods);
+            //this.validateEvents(scope.events, receivedNamespaces['tezos'].events);
+            this.validateAccounts(scope.networks, receivedNamespaces['tezos'].accounts);
+        } else {
+            throw new InvalidReceivedSessionNamespace("All namespaces must be approved", getSdkError("USER_REJECTED").code, 'tezos')
+        }
+    }
+
+    private validateMethods(requiredMethods: string[], receivedMethods: string[]) {
+        const missingMethods: string[] = [];
+        requiredMethods.forEach((method) => {
+            if (!receivedMethods.includes(method)) {
+                missingMethods.push(method);
+            }
+        })
+        if (missingMethods.length > 0) {
+            throw new InvalidReceivedSessionNamespace("All methods must be approved", getSdkError("USER_REJECTED_METHODS").code, missingMethods);
+        }
+    }
+
+    private validateAccounts(requiredNetwork: string[], receivedAccounts: string[]) {
+        if (receivedAccounts.length === 0) {
+            throw new InvalidReceivedSessionNamespace("Accounts must not be empty", getSdkError("USER_REJECTED_CHAINS").code)
+        }
+        const receivedChains: string[] = [];
+        const invalidChains: string[] = [];
+        const missingChains: string[] = [];
+        const invalidChainsNamespace: string[] = [];
+
+        receivedAccounts.forEach((chain) => {
+            const accountId = chain.split(':');
+            if (accountId.length !== 3) {
+                invalidChains.push(chain);
+            }
+            if (accountId[0] !== 'tezos') {
+                invalidChainsNamespace.push(chain);
+            }
+            const network = accountId[1];
+            if (!receivedChains.includes(network)) {
+                receivedChains.push(network);
+            }
+        });
+
+        if (invalidChains.length > 0) {
+            throw new InvalidReceivedSessionNamespace("Accounts must be CAIP-10 compliant", getSdkError("USER_REJECTED_CHAINS").code, invalidChains)
+        }
+
+        if (invalidChainsNamespace.length > 0) {
+            throw new InvalidReceivedSessionNamespace("Accounts must be defined in matching namespace", getSdkError("UNSUPPORTED_ACCOUNTS").code, invalidChainsNamespace)
+        }
+        requiredNetwork.forEach((network) => {
+            if (!receivedChains.includes(network)) {
+                missingChains.push(network);
+            }
+        })
+        if (missingChains.length > 0) {
+            throw new InvalidReceivedSessionNamespace("All chains must have at least one account", getSdkError("USER_REJECTED_CHAINS").code, missingChains)
+        }
     }
 
     private getTezosNamespace(): {
