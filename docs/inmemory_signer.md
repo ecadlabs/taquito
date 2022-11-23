@@ -213,16 +213,10 @@ With a non-default derivation path non-hardened with a tz2 address
   // import { InMemorySigner } from '@taquito/signer'
   // const Tezos = new TezosToolkit('https://limanet.ecadinfra.com');
 
-  const mnemonic =
-    'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business';
-  const password = '';
-  const derivationPath = '44h/1729h/1/0' //  or ' specify hardened derivation path)
-  const curve = 'secp256k1'
-
   const params = {
     mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business',
     password: '',
-    derivationPath: '44h/1729h/1/0',
+    derivationPath: '44h/1729h/1/0', // h  or ' specify hardened derivation path)
     curve: 'secp256k1'
   }
 
