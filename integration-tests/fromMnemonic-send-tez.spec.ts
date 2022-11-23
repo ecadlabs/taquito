@@ -25,13 +25,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
-      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 0.1 }).send();
+      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1 }).send();
       await returnOp.confirmation();
 
       const status = await returnOp.status();
       expect(status).toEqual('applied');
       const result = (await returnOp.operationResults())[0] as OperationContentsAndResultTransaction
-      expect(result).toEqual('100000')
+      expect(result.amount).toEqual('1000000')
       done();
     })
     it('Should create an InMemorySigner (secp256k1) with the fromMnemonic method and transfer tez to an account', async (done) => {
@@ -46,13 +46,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
-      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 0.1 }).send();
+      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1,  }).send();
       await returnOp.confirmation();
 
       const status = await returnOp.status();
       expect(status).toEqual('applied');
       const result = (await returnOp.operationResults())[0] as OperationContentsAndResultTransaction
-      expect(result).toEqual('100000')
+      expect(result.amount).toEqual('1000000')
       done();
     })
     it('Should create an InMemorySigner (p256) with the fromMnemonic method and transfer tez to an account', async (done) => {
@@ -67,13 +67,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
-      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 0.1 }).send();
+      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1 }).send();
       await returnOp.confirmation();
 
       const status = await returnOp.status();
       expect(status).toEqual('applied');
       const result = (await returnOp.operationResults())[0] as OperationContentsAndResultTransaction
-      expect(result).toEqual('100000')
+      expect(result.amount).toEqual('1000000')
       done();
     })
   });
