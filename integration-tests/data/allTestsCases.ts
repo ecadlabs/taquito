@@ -1389,7 +1389,7 @@ export const commonCases: TestCase[] = [
 
 export const limaCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `ticket` were added in the lima protocol
-  ...extractOp(152, 154, opMapping).map((op): TestCase => {
+  ...extractOp(154, 154, opMapping).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {

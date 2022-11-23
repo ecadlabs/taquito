@@ -10,7 +10,7 @@ import {
   ticketCode3Proto14,
   ticketStorage3Proto14,
 } from '../../../integration-tests/data/code_with_ticket_proto14';
-import { commonCases } from '../../../integration-tests/data/allTestsCases';
+import { commonCases, limaCases } from '../../../integration-tests/data/allTestsCases';
 import {
   InvalidOperationSchemaError,
   InvalidBlockHashError,
@@ -28,6 +28,17 @@ describe('Forge and parse operations default protocol', () => {
       const result = await localForger.forge(operation);
       expect(await localForger.parse(result)).toEqual(expected || operation);
       done();
+    });
+  });
+
+  describe('Forge and parse operations lima protocol', () => {
+    const localForger = new LocalForger();
+    limaCases.forEach(({ name, operation, expected }) => {
+      test(`Common test: ${name}`, async (done) => {
+        const result = await localForger.forge(operation);
+        expect(await localForger.parse(result)).toEqual(expected || operation);
+        done();
+      });
     });
   });
 
