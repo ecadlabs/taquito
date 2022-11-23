@@ -193,7 +193,7 @@ With ed25519 default derivation path (Reminder Must be hardened with either h or
   
   // using all default values password = '' curve = 'ed25519' and derivationPath "44'/1729'/0'/0'"
   const params = {
-    mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business';
+    mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business'
   }
   
 
