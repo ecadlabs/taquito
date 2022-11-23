@@ -62,6 +62,11 @@
         resetApp();
       }
     });
+    wallet.signClient.on("session_update", async ({ topic }) => {
+      console.log("EVEN: session_update", topic);
+      const allAccounts = wallet.getAccounts();
+      await updateStore(wallet, allAccounts);
+    });
     return wallet;
   };
 
@@ -72,10 +77,18 @@
         events: [],
         methods: [PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN],
       },
-      pairingTopic
+      pairingTopic,
+      "https://www.tezos.help/wcdata/"
     );
     const allAccounts = wallet.getAccounts();
     await updateStore(wallet, allAccounts);
+  };
+
+  const connectWalletWithExistingSession = async (sessionId: string) => {
+    const newWallet = await createNewWalletConnect2();
+    newWallet.configureWithExistingSessionKey(sessionId);
+    const allAccounts = newWallet.getAccounts();
+    await updateStore(newWallet, allAccounts);
   };
 
   const connectWallet = async () => {
@@ -122,6 +135,7 @@
           userAddress = allAccounts.shift() as TezosAccountAddress;
           store.updateAvailableAccounts(allAccounts);
         } else {
+          store.updateAvailableAccounts([]);
           userAddress = allAccounts[0] as TezosAccountAddress;
         }
       } else {
@@ -177,7 +191,20 @@
   };
 
   onMount(async () => {
-    await connectWallet();
+    console.log("onmount wallet", $store);
+    if (
+      window &&
+      window.localStorage &&
+      window.localStorage["wc@2:client:0.3//session"] &&
+      window.localStorage["wc@2:client:0.3//session"] !== "[]"
+    ) {
+      const sessions = JSON.parse(window.localStorage["wc@2:client:0.3//session"]);
+      const lastSession = sessions[sessions.length - 1].topic;
+      store.updateSdk(SDK.WC2);
+      await connectWalletWithExistingSession(lastSession);
+    } else {
+      await connectWallet();
+    }
   });
 
   afterUpdate(async () => {

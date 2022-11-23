@@ -5,7 +5,7 @@
 
 import Client from '@walletconnect/sign-client';
 import { SignClientTypes, SessionTypes, PairingTypes } from '@walletconnect/types';
-import QRCodeModal from '@walletconnect/qrcode-modal';
+import QRCodeModal from '@walletconnect/legacy-modal';
 import {
     createOriginationOperation,
     createSetDelegateOperation,
@@ -38,19 +38,21 @@ export class WalletConnect2 implements WalletProvider {
 
     constructor(signClient: Client) {
         this.signClient = signClient;
-        this.signClient.on("session_delete", ({ id, topic }) => {
-            console.log("session_delete in taquito", id, topic);
-            console.log('this.session', this.session)
+
+        this.signClient.on("session_delete", ({ topic }) => {
             if (this.session?.topic === topic) {
                 this.session = undefined;
             }
         });
 
+        this.signClient.on("session_update", ({ params, topic }) => {
+            if (this.session?.topic === topic) {
+                this.session.namespaces = params.namespaces;
+            }
+        });
+
         this.signClient.on("proposal_expire", ({ id }) => {
             console.log("Proposal expired in taquito", id);
-        });
-        this.signClient.on("session_update", ({ id, params, topic }) => {
-            console.log("session_update in taquito", id, params, topic);
         });
         this.signClient.on("session_proposal", ({ id, params }) => {
             console.log("session_proposal in taquito", id, params);
@@ -136,9 +138,10 @@ export class WalletConnect2 implements WalletProvider {
      * If pairingTopic is defined, a prompt will appear in the corresponding to accept or decline the session proposal.
      * @param scope The networks, methods, and events that will be granted permission
      * @param pairingTopic Option to connect to an existing active pairing
+     * @param registryUrl registry of wallets to show in the Modal
      * @error ConnectionFailed is thrown if no connection can be established
      */
-    async requestPermissions(scope: PermissionScopeParam, pairingTopic?: string) {
+    async requestPermissions(scope: PermissionScopeParam, pairingTopic?: string, registryUrl?: string) {
         try {
             // for proposer to create a session
             const { uri, approval } = await this.signClient.connect({
@@ -153,9 +156,13 @@ export class WalletConnect2 implements WalletProvider {
             });
 
             if (uri) {
-                QRCodeModal.open(uri, () => {
-                    // noop
-                });
+                QRCodeModal.open(
+                    uri,
+                    () => {
+                        // noop
+                    },
+                    { registryUrl }
+                );
             }
             const session = await approval();
 
