@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const limanet = protocol === Protocols.PtLimaPtL ? test : test.skip;
+    const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
     const kathmandunetAndAlpha = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     beforeAll(async (done) => {
@@ -433,6 +433,17 @@ CONFIGS().forEach(
           done();
         });
 
+        limanetAndAlpha('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async (done) => {
+          const usedSpace = await rpcClient.getStorageUsedSpace(knownContract);
+          expect(usedSpace).toBeDefined();
+          done();
+        });
+
+        limanetAndAlpha('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async (done) => {
+          const paidSpace = await rpcClient.getStoragePaidSpace(knownContract);
+          expect(paidSpace).toBeDefined();
+          done();
+        });
       });
     });
   }
