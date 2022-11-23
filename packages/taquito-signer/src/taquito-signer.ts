@@ -29,6 +29,13 @@ export class InvalidPassphraseError extends Error {
   }
 }
 
+export interface FromMnemonicParams {
+  mnemonic: string;
+  password?: string;
+  derivationPath?: string;
+  curve?: Curves
+}
+
 /**
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
  *
@@ -60,7 +67,7 @@ export class InMemorySigner {
    * @param curve currently only supported for tz1, tz2, tz3 addresses. soon bip25519
    * @returns InMemorySigner
    */
-  static fromMnemonic(mnemonic: string, password = '', derivationPath = "44'/1729'/0'/0'", curve: Curves = 'ed25519') {
+  static fromMnemonic({mnemonic, password = '', derivationPath = "44'/1729'/0'/0'", curve = 'ed25519'}: FromMnemonicParams) {
     // check if curve is defined if not default tz1
     if (!Bip39.validateMnemonic(mnemonic)) {
       // avoiding exposing mnemonic again in case of mistake making invalid

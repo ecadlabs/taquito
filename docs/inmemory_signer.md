@@ -188,15 +188,16 @@ With ed25519 default derivation path (Reminder Must be hardened with either h or
   // import { TezosToolkit } from '@taquito/taquito
   // import { InMemorySigner } from '@taquito/signer'
   // const Tezos = new TezosToolkit('https://limanet.ecadinfra.com');
-
-  const words =
-    'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business';
-  const password = '';
-  // const derivationPath = '44h/1729h/0h/0h' (h or ' specify hardened derivation path)
+  
   // ed25519 must have all hardened paths 
   
+  // using all default values password = '' curve = 'ed25519' and derivationPath "44'/1729'/0'/0'"
+  const params = {
+    mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business';
+  }
+  
 
-  const signer = InMemorySigner.fromMnemonic(words, password, "44'/1729'/0'/0'", 'ed25519');
+  const signer = InMemorySigner.fromMnemonic(params);
   Tezos.setSignerProvider(signer)
   Tezos.signer.publicKeyHash()
     .then((publicKeyHash) => {
@@ -212,14 +213,20 @@ With a non-default derivation path non-hardened with a tz2 address
   // import { InMemorySigner } from '@taquito/signer'
   // const Tezos = new TezosToolkit('https://limanet.ecadinfra.com');
 
-  const words =
+  const mnemonic =
     'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business';
   const password = '';
-  // const derivationPath = '44h/1729h/1/0' (h or ' specify hardened derivation path)
-  // ed25519 must have all hardened paths 
-  
+  const derivationPath = '44h/1729h/1/0' //  or ' specify hardened derivation path)
+  const curve = 'secp256k1'
 
-  const signer = InMemorySigner.fromMnemonic(words, password, "44h/1729h/1/0", 'secp256k1');
+  const params = {
+    mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business',
+    password: '',
+    derivationPath: '44h/1729h/1/0',
+    curve: 'secp256k1'
+  }
+
+  const signer = InMemorySigner.fromMnemonic(params);
   Tezos.setSignerProvider(signer)
   Tezos.signer.publicKeyHash()
     .then((publicKeyHash) => {

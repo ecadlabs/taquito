@@ -7,7 +7,7 @@ import {
 import { InMemorySigner } from '../src/taquito-signer';
 
 describe('inmemory-signer', () => {
-  const words = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
+  const mnemonic = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
   it('fromFundraiser', async (done) => {
     const signer = InMemorySigner.fromFundraiser(
       'rtphpwty.yohjelcp@tezos.example.org',
@@ -254,7 +254,7 @@ describe('inmemory-signer', () => {
   });
 
   it('Should instantiate tz1 from mnemonic from in memory signer', async (done) => {
-    const signer = InMemorySigner.fromMnemonic(words);
+    const signer = InMemorySigner.fromMnemonic({ mnemonic });
     const pkh = await signer.publicKeyHash();
 
     expect(pkh).toEqual('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY');
@@ -265,7 +265,7 @@ describe('inmemory-signer', () => {
     // good path: 44'/1729'/0'/0' || 44h/1729h/0h/0h
     const badPath = '44/1729/0/0';
 
-    expect(() => (InMemorySigner.fromMnemonic(words, '', badPath, 'ed25519'))).toThrowError(InvalidDerivationPathError);
+    expect(() => (InMemorySigner.fromMnemonic({ mnemonic, derivationPath: badPath }))).toThrowError(InvalidDerivationPathError);
     done();
   });
 
@@ -273,7 +273,7 @@ describe('inmemory-signer', () => {
     // good path: 44'/1729'/0'/0' || 44h/1729h/0h/0h
     const badPath = `44/1729/${Number('0x80000000') + 10}'/0'`;
 
-    expect(() => (InMemorySigner.fromMnemonic(words, '', badPath), 'ed25519')).toThrowError(InvalidDerivationPathError);
+    expect(() => (InMemorySigner.fromMnemonic({ mnemonic, derivationPath: badPath }))).toThrowError(InvalidDerivationPathError);
     done();
   });
 
@@ -281,26 +281,26 @@ describe('inmemory-signer', () => {
     // good path: 44'/1729'/0'/0' || 44h/1729h/0h/0h
     const badPath = `44/1729/suspicious'/0'`;
 
-    expect(() => (InMemorySigner.fromMnemonic(words, '', badPath, 'ed25519'))).toThrowError(InvalidDerivationPathError);
+    expect(() => (InMemorySigner.fromMnemonic({ mnemonic, derivationPath: badPath }))).toThrowError(InvalidDerivationPathError);
     done();
   });
 
   it('Should throw error if invalid mnemonic provided', (done) => {
-    const words = 'prefer wait something wrong';
+    const mnemonic = 'prefer wait something wrong';
 
-    expect(() => (InMemorySigner.fromMnemonic(words, '', "44'/1729'/0'/0'", 'ed25519'))).toThrowError(InvalidMnemonicError);
+    expect(() => (InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'" }))).toThrowError(InvalidMnemonicError);
     done();
   });
 
   it('Should throw error if invalid mnemonic provided', (done) => {
-    const words = 'prefer wait flock brown volume recycle scrubbyiswrong elder rate pair twenty giant';
+    const mnemonic = 'prefer wait flock brown volume recycle scrubbyiswrong elder rate pair twenty giant';
 
-    expect(() => (InMemorySigner.fromMnemonic(words, '', "44'/1729'/0'/0'", 'ed25519'))).toThrowError(InvalidMnemonicError);
+    expect(() => (InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'" }))).toThrowError(InvalidMnemonicError);
     done();
   });
 
   it('Should instantiate tz2 hardened from mnemonic from in memory signer', async (done) => {
-    const signer = InMemorySigner.fromMnemonic(words, '', "44'/1729'/0'/0'", 'secp256k1');
+    const signer = InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'", curve: 'secp256k1'});
     const pkh = await signer.publicKeyHash();
 
     expect(pkh).toEqual('tz2SxDTGnT3mHzaHf6mwy6Wtw1qUX1hzm1Sw');
@@ -308,7 +308,7 @@ describe('inmemory-signer', () => {
   });
 
   it('Should instantiate tz2 non-hardened from mnemonic from in memory signer', async (done) => {
-    const signer = InMemorySigner.fromMnemonic(words, '', "44'/1729'/0/0", 'secp256k1');
+    const signer = InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0/0", curve: 'secp256k1'});
     const pkh = await signer.publicKeyHash();
 
     expect(pkh).toEqual('tz2X7pd16c4op3Ne2n4kgDXii4qHUZshguK6');
@@ -316,7 +316,7 @@ describe('inmemory-signer', () => {
   });
 
   it('Should instantiate tz3 hardened path from mnemonic from in memory signer', async (done) => {
-    const signer = InMemorySigner.fromMnemonic(words, '', "44'/1729'/0'/0'", 'p256');
+    const signer = InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'", curve: 'p256' });
     const pkh = await signer.publicKeyHash();
 
     expect(pkh).toEqual('tz3daJuvyT1K3JMDXu7YoW6EyVDbysr2ohL1');
@@ -324,7 +324,7 @@ describe('inmemory-signer', () => {
   });
 
   it('Should instantiate tz3 non-hardened path from mnemonic from in memory signer', async (done) => {
-    const signer = InMemorySigner.fromMnemonic(words, '', "44'/1729'/0/0", 'p256');
+    const signer = InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0/0", curve: 'p256' });
     const pkh = await signer.publicKeyHash();
 
     expect(pkh).toEqual('tz3fL9g1uvwGbQrs52jytzNZ27AnLTX7iY8G');
@@ -333,14 +333,14 @@ describe('inmemory-signer', () => {
 
   // REMOVE WHEN BIP32 IMPLEMENTED
   it('Should throw error if bip32 requested', (done) => {
-    expect(() => (InMemorySigner.fromMnemonic(words, '', "44'/1729'/0'/0'", 'bip25519'))).toThrowError(ToBeImplemented);
+    expect(() => (InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'", curve: 'bip25519' }))).toThrowError(ToBeImplemented);
     done();
   });
 
   it('Should throw error with wrong curve', (done) => {
     // account for js error / bad type cast
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect(() => InMemorySigner.fromMnemonic(words, '', "44'/1729'/0'/0'", 'wrong' as any)).toThrowError(InvalidCurveError)
+    expect(() => InMemorySigner.fromMnemonic({mnemonic, derivationPath: "44'/1729'/0'/0'", curve: 'wrong' as any})).toThrowError(InvalidCurveError)
     done()
   })
 });
