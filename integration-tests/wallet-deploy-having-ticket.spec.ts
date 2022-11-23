@@ -12,8 +12,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     beforeEach(async (done) => {
       await setup();
-      done()
-    })
+      done();
+    });
 
     kathmandunet('Verify wallet.originate for a contract having ticket with init', async (done) => {
       const op = await Tezos.wallet.originate({
@@ -57,8 +57,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     beforeEach(async (done) => {
       await setup();
-      done()
-    })
+      done();
+    });
 
     limanetAndAlpha('Verify wallet.originate for a contract having ticket with init', async (done) => {
       const op = await Tezos.wallet.originate({
