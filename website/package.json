@@ -27,7 +27,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@ledgerhq/hw-transport-webhid": "^6.27.3",
     "@mdx-js/react": "^1.6.21",
-    "@svgr/webpack": "^6.4.0",
+    "@svgr/webpack": "^6.5.1",
     "@taquito/beacon-wallet": "*",
     "@taquito/http-utils": "*",
     "@taquito/ledger-signer": "*",
