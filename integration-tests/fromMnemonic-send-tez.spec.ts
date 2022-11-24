@@ -2,13 +2,15 @@ import { OperationContentsAndResultTransaction } from "@taquito/rpc";
 import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS } from "./config";
+import * as Bip39 from 'bip39'
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   let Funder: TezosToolkit;
    describe(`Test fromMnemonic instantiation with rpc: ${rpc}`, () => {
-    const mnemonic = 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business'
+    let mnemonic: string;
 
     beforeEach(async (done) => {
+      mnemonic = Bip39.generateMnemonic();
       Funder = lib
       await setup()
       done()
@@ -22,8 +24,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
-      expect(tezosPKH).toEqual('tz1WF2UEzaSh4oGHV2TWrqjQBZaJQjXmrrw6')
-
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
@@ -34,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(status).toEqual('applied');
 
       const balance = await Tezos.tz.getBalance(tezosPKH)
-      expect(Number(balance)).toBeLessThan(5000000)
+      expect(Number(balance)).toBeGreaterThan(0)
       done();
     })
     it('Should create an InMemorySigner (secp256k1) with the fromMnemonic method and transfer tez to an account', async (done) => {
@@ -46,8 +46,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
-      expect(tezosPKH).toEqual('tz2DNFBjjrCV7JgeYkr6DWYhZGDxQ3kPBpHJ')
-
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
@@ -57,7 +55,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const status = await returnOp.status();
       expect(status).toEqual('applied');
       const balance = await Tezos.tz.getBalance(tezosPKH)
-      expect(Number(balance)).toBeLessThan(5000000)
+      expect(Number(balance)).toBeGreaterThan(0)
       done();
     })
     it('Should create an InMemorySigner (p256) with the fromMnemonic method and transfer tez to an account', async (done) => {
@@ -69,8 +67,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
-      expect(tezosPKH).toEqual('tz3gM4xav4UpzYUxymVFRHQxGgXikZMeeMgh')
-
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
@@ -80,7 +76,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const status = await returnOp.status();
       expect(status).toEqual('applied');
       const balance = await Tezos.tz.getBalance(tezosPKH)
-      expect(Number(balance)).toBeLessThan(5000000)
+      expect(Number(balance)).toBeGreaterThan(0)
       done();
     })
   });
