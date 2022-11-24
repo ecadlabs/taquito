@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
-import { ticketCode, ticketStorage } from './data/code_with_ticket';
-import { ticketCodeProto14, ticketStorageProto14 } from './data/code_with_ticket_proto14';
+import { ticketCode } from './data/code_with_ticket';
+import { ticketCodeProto14 } from './data/code_with_ticket_proto14';
 import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
@@ -12,8 +12,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     beforeEach(async (done) => {
       await setup();
-      done()
-    })
+      done();
+    });
 
     kathmandunet('Originates a contract having ticket with init and the contract api', async (done) => {
       const op = await Tezos.contract.originate({
@@ -62,8 +62,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     beforeEach(async (done) => {
       await setup();
-      done()
-    })
+      done();
+    });
     
     limanetAndAlpha('Originates a contract having ticket with init and the contract api', async (done) => {
       const op = await Tezos.contract.originate({

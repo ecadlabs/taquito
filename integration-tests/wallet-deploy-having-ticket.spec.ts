@@ -53,6 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
   });
+  
   describe(`Test contract origination having ticket with init through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
