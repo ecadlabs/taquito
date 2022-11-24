@@ -46,6 +46,8 @@ import {
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
+  InternalOperationResult,
+  EventFilter,
 } from '../types';
 
 import {
@@ -579,6 +581,27 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getBlockMetadata({ block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls.
+   *
+   * @description The events included in a given block.
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-events
+   * @example getBlockEvents() will default to /main/chains/block/head.
+   * @example getBlockEvents({ address: "KT18amZmM5W7qDWVt2pH6uj7sCEd3kbzLrHT" }) will return an all events emitted by a given contract on the head block.
+   */
+  async getBlockEvents(filter: EventFilter = {}, options: RPCOptions = defaultRPCOptions): Promise<InternalOperationResult[]> {
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BLOCK_EVENTS, [options.block]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getBlockEvents(filter, options);
       this.put(key, response);
       return response;
     }

@@ -3213,6 +3213,32 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getBlockEvents', () => {
+    it('should query the right url and filter events', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+
+      const response = await client.getBlockEvents();
+      const filteredByAddressResponse = await client.getBlockEvents({ address: "KT1D7mKRckD2ZoWGcGtUvBpDxb48WxpnLu1Q" }, { block: "133163" });
+      const filteredByTagResponse = await client.getBlockEvents({ tag: "SOME_EVENT" });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head',
+      });
+
+      expect(httpBackend.createRequest.mock.calls[1][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/133163',
+      });
+
+      expect(response.length).toEqual(3);
+      expect(filteredByAddressResponse.length).toEqual(2);
+      expect(filteredByTagResponse.length).toEqual(1);
+
+      done();
+    });
+  });
+
   describe('getBakingRights', () => {
     it('query the right url and data', async (done) => {
       httpBackend.createRequest.mockResolvedValue([

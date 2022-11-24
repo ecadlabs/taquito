@@ -20,7 +20,9 @@ import {
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
+  EventFilter,
   ForgeOperationsParams,
+  InternalOperationResult,
   ManagerKeyResponse,
   OperationHash,
   PackDataParams,
@@ -75,6 +77,7 @@ export interface RpcClientInterface {
   getBlock(options?: RPCOptions): Promise<BlockResponse>;
   getBlockHeader(options?: RPCOptions): Promise<BlockHeaderResponse>;
   getBlockMetadata(options?: RPCOptions): Promise<BlockMetadata>;
+  getBlockEvents(eventFilter?: EventFilter, options?: RPCOptions): Promise<InternalOperationResult[]>;
   getBakingRights(
     args: BakingRightsQueryArguments,
     options?: RPCOptions
@@ -129,6 +132,7 @@ export enum RPCMethodName {
   GET_BLOCK = 'getBlock',
   GET_BLOCK_HEADER = 'getBlockHeader',
   GET_BLOCK_METADATA = 'getBlockMetadata',
+  GET_BLOCK_EVENTS = 'GET_BLOCK_EVENTS',
   GET_BALANCE = 'getBalance',
   GET_CHAIN_ID = 'getChainId',
   GET_CONSTANTS = 'getConstants',

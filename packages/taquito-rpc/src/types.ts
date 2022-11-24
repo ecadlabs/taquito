@@ -1834,3 +1834,8 @@ export interface TxRollupInboxResponse {
   cumulated_size: number;
   merkle_root: string;
 }
+
+export interface EventFilter {
+  address?: string;
+  tag?: string;
+}

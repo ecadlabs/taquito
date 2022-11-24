@@ -1,4 +1,4 @@
-import { BlockResponse, InternalOperationResult, OperationEntry } from '@taquito/rpc';
+import { BlockResponse, InternalOperationResult, OperationEntry, EventFilter } from '@taquito/rpc';
 
 export type FilterExpression = {
   or?: ExpressionOrOpFilter[];
@@ -19,11 +19,6 @@ export interface KindFilter {
 
 export interface DestinationFilter {
   destination: string;
-}
-
-export interface EventFilter {
-  address?: string;
-  tag?: string;
 }
 
 export interface EventSubscription extends InternalOperationResult {

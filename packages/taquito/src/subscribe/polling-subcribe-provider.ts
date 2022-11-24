@@ -2,6 +2,8 @@ import {
   BlockResponse,
   InternalOperationResult,
   OperationContentsAndResultTransaction,
+  EventFilter,
+  eventFilter
 } from '@taquito/rpc';
 import { BehaviorSubject, from, Observable, ObservableInput, OperatorFunction, timer } from 'rxjs';
 import {
@@ -15,10 +17,9 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import { Context } from '../context';
-import { evaluateFilter, eventFilter } from './filters';
+import { evaluateFilter } from './filters';
 import {
   Filter,
-  EventFilter,
   SubscribeProvider,
   Subscription,
   OperationContent,

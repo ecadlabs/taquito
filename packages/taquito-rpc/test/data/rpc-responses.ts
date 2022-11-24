@@ -4822,6 +4822,40 @@ export const blockKathmandunetSample = {
                     consumed_milligas: '1000000',
                   },
                 },
+                {
+                  kind: 'event',
+                  source: 'KT1SXE6HjsXCys2RZ7dukoM5PXycK3FUHShQ',
+                  nonce: 0,
+                  type: {
+                    prim: 'pair',
+                    args: [
+                      {
+                        prim: 'int',
+                        annots: ['%a'],
+                      },
+                      {
+                        prim: 'string',
+                        annots: ['%b'],
+                      },
+                    ],
+                  },
+                  tag: 'SOME_EVENT',
+                  payload: {
+                    prim: 'Pair',
+                    args: [
+                      {
+                        int: '1',
+                      },
+                      {
+                        string: 'TEST',
+                      },
+                    ],
+                  },
+                  result: {
+                    status: 'applied',
+                    consumed_milligas: '1000000',
+                  },
+                },
               ],
             },
           },

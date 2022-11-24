@@ -44,6 +44,8 @@ import {
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
+  EventFilter,
+  InternalOperationResult,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -158,6 +160,9 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   }
   async getBlockMetadata({ block }: RPCOptions = defaultRPCOptions): Promise<BlockMetadata> {
     return this.rpc.getBlockMetadata({ block });
+  }
+  async getBlockEvents(filter: EventFilter, options: RPCOptions = defaultRPCOptions): Promise<InternalOperationResult[]> {
+    return this.rpc.getBlockEvents(filter, options);
   }
   async getBakingRights(
     args: BakingRightsQueryArguments,

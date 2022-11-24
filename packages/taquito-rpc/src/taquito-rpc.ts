@@ -57,6 +57,9 @@ import {
   VotingPeriodBlockResult,
   TxRollupStateResponse,
   TxRollupInboxResponse,
+  InternalOperationResult,
+  EventFilter,
+  OperationContentsAndResultTransaction,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -65,6 +68,7 @@ import {
   validateContractAddress,
   ValidationResult,
 } from '@taquito/utils';
+import { eventFilter } from './filters';
 
 export { castToBigNumber } from './utils/utils';
 
@@ -78,6 +82,7 @@ export {
 export { RpcClientCache } from './rpc-client-modules/rpc-cache';
 
 export * from './types';
+export * from './filters';
 
 export { OpKind } from './opkind';
 
@@ -549,6 +554,27 @@ export class RpcClient implements RpcClientInterface {
     });
 
     return response;
+  }
+
+  /**
+   *
+   * @param options contains generic configuration for rpc calls.
+   *
+   * @description The events included in a given block.
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-events
+   * @example getBlockEvents() will default to /main/chains/block/head.
+   * @example getBlockEvents({ address: "KT18amZmM5W7qDWVt2pH6uj7sCEd3kbzLrHT" }) will return an all events emitted by a given contract on the head block.
+   */
+   async getBlockEvents(filter: EventFilter = {}, options: RPCOptions = defaultRPCOptions): Promise<InternalOperationResult[]> {
+    const block = await this.getBlock(options);
+    return block.operations.flat()
+      .flatMap(({contents}) => contents)
+      .flatMap(content => {
+        const tx = content as OperationContentsAndResultTransaction;
+        return tx.metadata.internal_operation_results || []
+      })
+      .filter(op => eventFilter(op, filter?.address, filter?.tag));
   }
 
   /**
