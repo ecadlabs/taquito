@@ -31,6 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const status = await returnOp.status();
       expect(status).toEqual('applied');
       const result = (await returnOp.operationResults())[0] as OperationContentsAndResultTransaction
+      console.log(result)
       expect(result.amount).toEqual('1000000')
       done();
     })
