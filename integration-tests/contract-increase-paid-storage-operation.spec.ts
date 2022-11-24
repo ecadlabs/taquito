@@ -1,25 +1,43 @@
 import { CONFIGS } from './config';
 import { OpKind, Protocols } from '@taquito/taquito';
 import { ligoSample } from './data/ligo-simple-contract';
-import { RpcClient } from '@taquito/rpc';
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
-  const kathmandunetAndAlpha = (protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha) ? test : test.skip;
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+  const kathmandunet = (protocol === Protocols.PtKathman) ? test : test.skip;
   const limanetAndAlpha = (protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha) ? test : test.skip;
   
   const Tezos = lib;
-  const client = new RpcClient(rpc);
-
+  let simpleContractAddress: string;
   describe(`Test Increase Paid Storage using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeAll(async (done) => {
       await setup(true);
+
+      try {
+        const op = await Tezos.contract.originate({
+          balance: "1",
+          code: `parameter string;
+          storage string;
+          code {CAR;
+                PUSH string "Hello ";
+                CONCAT;
+                NIL operation; PAIR};
+          `,
+          init: `"test"`
+        });
+
+        await op.confirmation();
+
+        simpleContractAddress = op.contractAddress!;
+      } catch(e) {
+        console.log(JSON.stringify(e));
+      }
       done();
     });
 
-    kathmandunetAndAlpha('should be able to increase the paid storage of a contract successfully', async (done) => {
+    kathmandunet(`should be able to increase the paid storage of a contract successfully: ${rpc}`, async (done) => {
       const op = await Tezos.contract.increasePaidStorage({
         amount: 1,
-        destination: knownContract
+        destination: simpleContractAddress
       });
 
       await op.confirmation();
@@ -28,25 +46,25 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       done();
     });
     
-    limanetAndAlpha('should be able to increase the paid storage of a contract successfully', async (done) => {
-      const paidSpaceBefore = await client.getStoragePaidSpace(knownContract);
+    limanetAndAlpha(`should be able to increase the paid storage of a contract successfully: ${rpc}`, async (done) => {
+      const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
       const op = await Tezos.contract.increasePaidStorage({
         amount: 1,
-        destination: knownContract
+        destination: simpleContractAddress
       });
 
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.status).toEqual('applied');
 
-      const paidSpaceAfter = await client.getStoragePaidSpace(knownContract);
+      const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
       
       expect(parseInt(paidSpaceAfter)).toEqual(parseInt(paidSpaceBefore) + 1);
       done();
     });
     
-    kathmandunetAndAlpha('should be able to include increasePaidStorage operation in a batch', async (done) => {
+    kathmandunet(`should be able to include increasePaidStorage operation in a batch: ${rpc}`, async (done) => {
       const op = await Tezos.contract
         .batch()
         .withOrigination({
@@ -62,7 +80,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
         })
         .withIncreasePaidStorage({
           amount: 1,
-          destination: knownContract
+          destination: simpleContractAddress
         })
         .send();
       await op.confirmation();
@@ -70,8 +88,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       done();
     });
 
-    limanetAndAlpha('should be able to include increasePaidStorage operation in a batch', async (done) => {
-      const paidSpaceBefore = await client.getStoragePaidSpace(knownContract);
+    limanetAndAlpha(`should be able to include increasePaidStorage operation in a batch: ${rpc}`, async (done) => {
+      const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
       
       const op = await Tezos.contract
         .batch()
@@ -88,19 +106,19 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
         })
         .withIncreasePaidStorage({
           amount: 1,
-          destination: knownContract
+          destination: simpleContractAddress
         })
         .send();
       await op.confirmation();
       expect(op.status).toEqual('applied');
 
-      const paidSpaceAfter = await client.getStoragePaidSpace(knownContract);
+      const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
       
       expect(parseInt(paidSpaceAfter)).toEqual(parseInt(paidSpaceBefore) + 1);
       done();
     });
 
-    kathmandunetAndAlpha('should be able to include increasePaidStorage operation in a batch (different batch syntax)', async (done) => {
+    kathmandunet(`should be able to include increasePaidStorage operation in a batch (different batch syntax): ${rpc}`, async (done) => {
       const op = await Tezos.contract.batch([
         {
           kind: OpKind.ORIGINATION, 
@@ -111,7 +129,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
         { 
           kind: OpKind.INCREASE_PAID_STORAGE,
           amount: 1, 
-          destination: knownContract 
+          destination: simpleContractAddress 
         } 
       ])
       .send();
@@ -121,8 +139,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       done();
     });
 
-    limanetAndAlpha('should be able to include increasePaidStorage operation in a batch (different batch syntax)', async (done) => {
-      const paidSpaceBefore = await client.getStoragePaidSpace(knownContract);
+    limanetAndAlpha(`should be able to include increasePaidStorage operation in a batch (different batch syntax): ${rpc}`, async (done) => {
+      const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
       
       const op = await Tezos.contract.batch([
         {
@@ -134,7 +152,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
         { 
           kind: OpKind.INCREASE_PAID_STORAGE,
           amount: 1, 
-          destination: knownContract 
+          destination: simpleContractAddress 
         } 
       ])
       .send();
@@ -142,7 +160,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownContract }) => {
       await op.confirmation();
       expect(op.status).toEqual('applied');
       
-      const paidSpaceAfter = await client.getStoragePaidSpace(knownContract);
+      const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
       
       expect(parseInt(paidSpaceAfter)).toEqual(parseInt(paidSpaceBefore) + 1);
       done();

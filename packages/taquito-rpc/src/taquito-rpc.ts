@@ -1089,7 +1089,7 @@ export class RpcClient implements RpcClientInterface {
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls
    *
-   * @description Access the amount of used space used in a contract's storage
+   * @description Access the amount of used space in a contract's storage
    *
    * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
    */
