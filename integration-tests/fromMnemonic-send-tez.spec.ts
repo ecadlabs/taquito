@@ -22,6 +22,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
+      expect(tezosPKH).toEqual('tz1WF2UEzaSh4oGHV2TWrqjQBZaJQjXmrrw6')
+
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
@@ -30,9 +32,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const status = await returnOp.status();
       expect(status).toEqual('applied');
-      const result = (await returnOp.operationResults())[0] as OperationContentsAndResultTransaction
-      console.log(result)
-      expect(result.amount).toEqual('1000000')
+
+      const balance = await Tezos.tz.getBalance(tezosPKH)
+      expect(Number(balance)).toBeLessThan(5000000)
       done();
     })
     it('Should create an InMemorySigner (secp256k1) with the fromMnemonic method and transfer tez to an account', async (done) => {
@@ -44,6 +46,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
+      expect(tezosPKH).toEqual('tz2DNFBjjrCV7JgeYkr6DWYhZGDxQ3kPBpHJ')
+
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
@@ -52,8 +56,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const status = await returnOp.status();
       expect(status).toEqual('applied');
-      const result = (await returnOp.operationResults())[0] as OperationContentsAndResultTransaction
-      expect(result.amount).toEqual('1000000')
+      const balance = await Tezos.tz.getBalance(tezosPKH)
+      expect(Number(balance)).toBeLessThan(5000000)
       done();
     })
     it('Should create an InMemorySigner (p256) with the fromMnemonic method and transfer tez to an account', async (done) => {
@@ -65,6 +69,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
+      expect(tezosPKH).toEqual('tz3gM4xav4UpzYUxymVFRHQxGgXikZMeeMgh')
+
       const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
       await fundOp.confirmation();
 
@@ -73,8 +79,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const status = await returnOp.status();
       expect(status).toEqual('applied');
-      const result = (await returnOp.operationResults())[0] as OperationContentsAndResultTransaction
-      expect(result.amount).toEqual('1000000')
+      const balance = await Tezos.tz.getBalance(tezosPKH)
+      expect(Number(balance)).toBeLessThan(5000000)
       done();
     })
   });
