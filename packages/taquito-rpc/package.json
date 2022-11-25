@@ -67,8 +67,8 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^14.2.0-beta-RC.0",
-    "@taquito/utils": "^14.2.0-beta-RC.0",
+    "@taquito/http-utils": "*",
+    "@taquito/utils": "*",
     "bignumber.js": "^9.1.0"
   },
   "devDependencies": {

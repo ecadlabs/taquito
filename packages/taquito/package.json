@@ -77,12 +77,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^14.2.0-beta-RC.0",
-    "@taquito/local-forging": "^14.2.0-beta-RC.0",
-    "@taquito/michel-codec": "^14.2.0-beta-RC.0",
-    "@taquito/michelson-encoder": "^14.2.0-beta-RC.0",
-    "@taquito/rpc": "^14.2.0-beta-RC.0",
-    "@taquito/utils": "^14.2.0-beta-RC.0",
+    "@taquito/http-utils": "*",
+    "@taquito/local-forging": "*",
+    "@taquito/michel-codec": "*",
+    "@taquito/michelson-encoder": "*",
+    "@taquito/rpc": "*",
+    "@taquito/utils": "*",
     "bignumber.js": "^9.1.0",
     "rxjs": "^6.6.3"
   },
