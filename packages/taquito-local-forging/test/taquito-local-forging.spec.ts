@@ -32,9 +32,9 @@ describe('Forge and parse operations default protocol', () => {
   });
 
   describe('Forge and parse operations lima protocol', () => {
-    const localForger = new LocalForger();
+    const localForger = new LocalForger(ProtocolsHash.PtLimaPtL);
     limaCases.forEach(({ name, operation, expected }) => {
-      test(`Common test: ${name}`, async (done) => {
+      test(`Lima test: ${name}`, async (done) => {
         const result = await localForger.forge(operation);
         expect(await localForger.parse(result)).toEqual(expected || operation);
         done();
