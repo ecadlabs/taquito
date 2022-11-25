@@ -25,9 +25,9 @@
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^3.3.0",
-    "@taquito/beacon-wallet": "^14.2.0-beta-RC.0",
-    "@taquito/taquito": "^14.2.0-beta-RC.0",
-    "@taquito/utils": "^14.2.0-beta-RC.0",
+    "@taquito/beacon-wallet": "*",
+    "@taquito/taquito": "*",
+    "@taquito/utils": "*",
     "buffer": "^6.0.3",
     "svelte-select": "^4.4.7",
     "vite-compatible-readable-stream": "^3.6.1"

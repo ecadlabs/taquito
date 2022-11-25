@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@airgap/beacon-dapp": "^3.3.0",
-    "@taquito/taquito": "^14.2.0-beta-RC.0"
+    "@taquito/taquito": "*"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
