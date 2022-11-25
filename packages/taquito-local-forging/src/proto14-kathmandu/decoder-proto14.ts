@@ -28,8 +28,6 @@ import {
   DelegationSchema,
   EndorsementSchema,
   IncreasePaidStorageSchema,
-  UpdateConsensusKeySchema,
-  DrainDelegateSchema,
   ManagerOperationSchema,
   operationDecoder,
   OriginationSchema,
@@ -104,8 +102,4 @@ decodersProto14[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decodersProto14)(TxRollupSubmitBatchSchema)(val);
 decodersProto14[CODEC.OP_INCREASE_PAID_STORAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decodersProto14)(IncreasePaidStorageSchema)(val);
-decodersProto14[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: Uint8ArrayConsumer) =>
-  schemaDecoder(decodersProto14)(UpdateConsensusKeySchema)(val);
-decodersProto14[CODEC.OP_DRAIN_DELEGATE] = (val: Uint8ArrayConsumer) =>
-  schemaDecoder(decodersProto14)(DrainDelegateSchema)(val);
 decodersProto14[CODEC.MANAGER] = schemaDecoder(decodersProto14)(ManagerOperationSchema);

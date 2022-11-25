@@ -31,8 +31,6 @@ import {
   DelegationSchema,
   EndorsementSchema,
   IncreasePaidStorageSchema,
-  UpdateConsensusKeySchema,
-  DrainDelegateSchema,
   ManagerOperationSchema,
   operationEncoder,
   OriginationSchema,
@@ -103,8 +101,4 @@ encodersProto14[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: any) =>
   schemaEncoder(encodersProto14)(TxRollupSubmitBatchSchema)(val);
 encodersProto14[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
   schemaEncoder(encodersProto14)(IncreasePaidStorageSchema)(val);
-encodersProto14[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: any) =>
-  schemaEncoder(encodersProto14)(UpdateConsensusKeySchema)(val);
-encodersProto14[CODEC.OP_DRAIN_DELEGATE] = (val: any) =>
-  schemaEncoder(encodersProto14)(DrainDelegateSchema)(val);
 encodersProto14[CODEC.MANAGER] = schemaEncoder(encodersProto14)(ManagerOperationSchema);
