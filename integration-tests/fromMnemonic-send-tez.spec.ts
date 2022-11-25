@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
-      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
+      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
       await fundOp.confirmation();
 
       const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1 }).send();
@@ -46,7 +46,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
-      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
+      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
       await fundOp.confirmation();
 
       const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1, }).send();
@@ -67,7 +67,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const funderPKH = await Funder.wallet.pkh();
       const tezosPKH = await Tezos.wallet.pkh();
 
-      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 5 }).send();
+      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
       await fundOp.confirmation();
 
       const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1 }).send();
