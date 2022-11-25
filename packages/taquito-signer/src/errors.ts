@@ -33,7 +33,7 @@ export class InvalidSeedLengthError extends Error {
   }
 }
 
-export class PrivateKeyError extends Error{
+export class PrivateKeyError extends Error {
   public name = 'PrivateKeyError';
   constructor(public message: string) {
     super(message);

@@ -9,14 +9,14 @@ import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
-import * as Bip39 from 'bip39'
+import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError } from './errors';
 
 export * from './import-key';
 export { VERSION } from './version';
-export * from './derivation-tools'
-export * from './helpers'
+export * from './derivation-tools';
+export * from './helpers';
 
 /**
  *  @category Error
@@ -33,7 +33,7 @@ export interface FromMnemonicParams {
   mnemonic: string;
   password?: string;
   derivationPath?: string;
-  curve?: Curves
+  curve?: Curves;
 }
 
 /**
@@ -47,7 +47,7 @@ export class InMemorySigner {
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
     if (!Bip39.validateMnemonic(mnemonic)) {
-      throw new InvalidMnemonicError(`Invalid mnemonic: ${mnemonic}`)
+      throw new InvalidMnemonicError(`Invalid mnemonic: ${mnemonic}`);
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58cencode(seed.slice(0, 32), prefix.edsk2);
@@ -67,17 +67,17 @@ export class InMemorySigner {
    * @param curve currently only supported for tz1, tz2, tz3 addresses. soon bip25519
    * @returns InMemorySigner
    */
-  static fromMnemonic({mnemonic, password = '', derivationPath = "44'/1729'/0'/0'", curve = 'ed25519'}: FromMnemonicParams) {
+  static fromMnemonic({ mnemonic, password = '', derivationPath = "44'/1729'/0'/0'", curve = 'ed25519' }: FromMnemonicParams) {
     // check if curve is defined if not default tz1
     if (!Bip39.validateMnemonic(mnemonic)) {
       // avoiding exposing mnemonic again in case of mistake making invalid
-      throw new InvalidMnemonicError('Mnemonic provided is invalid')
+      throw new InvalidMnemonicError('Mnemonic provided is invalid');
     }
-    const seed = Bip39.mnemonicToSeedSync(mnemonic, password)
+    const seed = Bip39.mnemonicToSeedSync(mnemonic, password);
 
     const sk = generateSecretKey(seed, derivationPath, curve);
 
-    return new InMemorySigner(sk)
+    return new InMemorySigner(sk);
   }
   /**
    *
