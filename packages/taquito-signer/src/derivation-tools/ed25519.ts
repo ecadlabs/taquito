@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import { HMAC } from "@stablelib/hmac";
-import { SHA512 } from "@stablelib/sha512";
-import { generateKeyPairFromSeed } from "@stablelib/ed25519";
-import { ExtendedPrivateKey, Hard } from "./index";
-import { parseHex } from "./utils";
-import { InvalidDerivationPathError, InvalidSeedLengthError } from "../errors";
+import { HMAC } from '@stablelib/hmac';
+import { SHA512 } from '@stablelib/sha512';
+import { generateKeyPairFromSeed } from '@stablelib/ed25519';
+import { ExtendedPrivateKey, Hard } from './index';
+import { parseHex } from './utils';
+import { InvalidDerivationPathError, InvalidSeedLengthError } from '../errors';
 
 // MinSeedSize is the minimal allowed seed byte length
 const minSeedSize = 16;
 // MaxSeedSize is the maximal allowed seed byte length
 const maxSeedSize = 64;
 
-const ed25519Key = "ed25519 seed";
+const ed25519Key = 'ed25519 seed';
 
 export class PrivateKey implements ExtendedPrivateKey {
   /**
@@ -27,7 +27,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    * @returns instance of PrivateKey
    */
   static fromSeed(seedSrc: Uint8Array | string): PrivateKey {
-    const seed = typeof seedSrc === "string" ? parseHex(seedSrc) : seedSrc;
+    const seed = typeof seedSrc === 'string' ? parseHex(seedSrc) : seedSrc;
     if (seed.length < minSeedSize || seed.length > maxSeedSize) {
       throw new InvalidSeedLengthError(seed.length);
     }

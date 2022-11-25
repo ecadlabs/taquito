@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import { ec, curve } from "elliptic";
-import { Hard, ExtendedPrivateKey } from "./index";
-import { HMAC } from "@stablelib/hmac";
-import { SHA512 } from "@stablelib/sha512";
-import BN from "bn.js";
-import { parseHex } from "./utils";
-import { InvalidBitSize, InvalidCurveError, InvalidSeedLengthError, PrivateKeyError } from "../errors";
+import { ec, curve } from 'elliptic';
+import { Hard, ExtendedPrivateKey } from './index';
+import { HMAC } from '@stablelib/hmac';
+import { SHA512 } from '@stablelib/sha512';
+import BN from 'bn.js';
+import { parseHex } from './utils';
+import { InvalidBitSize, InvalidCurveError, InvalidSeedLengthError, PrivateKeyError } from '../errors';
 
-export type CurveName = "p256" | "secp256k1";
+export type CurveName = 'p256' | 'secp256k1';
 
 const seedKey: Record<CurveName, string> = {
-  p256: "Nist256p1 seed",
-  secp256k1: "Bitcoin seed",
+  p256: 'Nist256p1 seed',
+  secp256k1: 'Bitcoin seed',
 };
 
 interface KeyPair extends ec.KeyPair {
@@ -40,7 +40,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    * @returns instance of PrivateKey non-HD keys derived
    */
   static fromSeed(seedSrc: Uint8Array | string, curve: CurveName): PrivateKey {
-    let seed = typeof seedSrc === "string" ? parseHex(seedSrc) : seedSrc;
+    let seed = typeof seedSrc === 'string' ? parseHex(seedSrc) : seedSrc;
     if (seed.length < minSeedSize || seed.length > maxSeedSize) {
       throw new InvalidSeedLengthError(seed.length);
     }
@@ -73,7 +73,7 @@ export class PrivateKey implements ExtendedPrivateKey {
   }
   /**
    *
-   * @param index derivation path item pre-harded if applicable ie: 44' -> 2^31 + 44
+   * @param index derivation path item pre-hardened if applicable ie: 44' -> 2^31 + 44
    * @returns child PrivateKey of the current PrivateKey
    */
   derive(index: number): PrivateKey {
@@ -124,7 +124,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    */
   bytes(): Uint8Array {
     if (!this.keyPair.priv) {
-      throw new PrivateKeyError("not a private key");
+      throw new PrivateKeyError('not a private key');
     }
     // pad to 32 bytes as toArray() length argument seems to be ignored (BN bug)
     const src = this.keyPair.priv.toArray();
