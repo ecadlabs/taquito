@@ -129,6 +129,28 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('should query used_space url correctly', async (done) => {
+      await client.getStorageUsedSpace(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/storage/used_space`,
+      });
+
+      done();
+    });
+
+    it('should query used_paid url correctly', async (done) => {
+      await client.getStoragePaidSpace(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/storage/paid_space`,
+      });
+
+      done();
+    });
   });
 
   describe('getScript', () => {

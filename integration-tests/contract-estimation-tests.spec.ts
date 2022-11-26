@@ -166,7 +166,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.minimalFeeMutez).toEqual(651);
       expect(estimate.totalCost).toEqual(651);
       expect(estimate.usingBaseFeeMutez).toEqual(651);
-      expect(estimate.consumedMilligas).toEqual(3148528);
+      expect(estimate.consumedMilligas).toEqual(3148700);
       done();
     })
 
@@ -198,7 +198,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.minimalFeeMutez).toEqual(811);
       expect(estimate.totalCost).toEqual(129311);
       expect(estimate.usingBaseFeeMutez).toEqual(811);
-      expect(estimate.consumedMilligas).toEqual(4156198);
+      expect(estimate.consumedMilligas).toEqual(4156370);
       done();
     })
 
@@ -230,7 +230,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.minimalFeeMutez).toEqual(698);
       expect(estimate.totalCost).toEqual(79948);
       expect(estimate.usingBaseFeeMutez).toEqual(698);
-      expect(estimate.consumedMilligas).toEqual(3559038);
+      expect(estimate.consumedMilligas).toEqual(3559210);
       done();
     })
 
@@ -258,7 +258,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       expect(estimate.minimalFeeMutez).toEqual(905);
       expect(estimate.totalCost).toEqual(159405);
       expect(estimate.usingBaseFeeMutez).toEqual(905);
-      expect(estimate.consumedMilligas).toEqual(4977218);
+      expect(estimate.consumedMilligas).toEqual(4977390);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();

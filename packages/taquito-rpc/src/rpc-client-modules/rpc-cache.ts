@@ -1111,4 +1111,58 @@ export class RpcClientCache implements RpcClientInterface {
       return response;
     }
   }
+
+  /**
+   *
+   * @param contract address of the contract we want to retrieve storage information of
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the amount of used space used in a contract's storage
+   *
+   * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
+   */
+  async getStorageUsedSpace(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_STORAGE_USED_SPACE,
+      [block, contract]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getStorageUsedSpace(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   *
+   * @param contract address of the contract we want to retrieve storage information of
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the amount of paid space in a contract's storage
+   *
+   * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
+   */
+  async getStoragePaidSpace(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_STORAGE_PAID_SPACE,
+      [block, contract]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getStoragePaidSpace(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
 }

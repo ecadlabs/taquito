@@ -1,4 +1,5 @@
 import { CONFIGS } from './config';
+import { Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -18,6 +19,9 @@ CONFIGS().forEach(
     txRollupAddress,
   }) => {
     const Tezos = lib;
+
+    const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
+    const kathmandunetAndAlpha = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     beforeAll(async (done) => {
       await setup()
@@ -414,6 +418,30 @@ CONFIGS().forEach(
         it('Verify that rpcClient.getTxRollupState will access the state of a rollup', async (done) => {
           const state = await rpcClient.getTxRollupState(txRollupAddress);
           expect(state).toBeDefined();
+          done();
+        });
+
+        kathmandunetAndAlpha('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup', async (done) => {
+          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
+          expect(inbox).toBeDefined();
+          done();
+        });
+
+        kathmandunetAndAlpha('Verify that rpcClient.getTxRollupState will access the state of a rollup', async (done) => {
+          const state = await rpcClient.getTxRollupState(txRollupAddress);
+          expect(state).toBeDefined();
+          done();
+        });
+
+        limanetAndAlpha('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async (done) => {
+          const usedSpace = await rpcClient.getStorageUsedSpace(knownContract);
+          expect(usedSpace).toBeDefined();
+          done();
+        });
+
+        limanetAndAlpha('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async (done) => {
+          const paidSpace = await rpcClient.getStoragePaidSpace(knownContract);
+          expect(paidSpace).toBeDefined();
           done();
         });
       });
