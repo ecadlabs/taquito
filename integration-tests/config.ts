@@ -97,7 +97,7 @@ const kathmandunetEphemeral = {
 };
 
 const limanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_LIMANET'] || 'https://limanet.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-limanet-full:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
@@ -157,7 +157,7 @@ const kathmandunetSecretKey = {
 };
 
 const limanetSecretKey = {
-  rpc: process.env['TEZOS_RPC_LIMANET'] || 'https://limanet-archive.ecadinfra.com',
+  rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-limanet-full:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
