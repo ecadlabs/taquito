@@ -191,18 +191,15 @@ TEZOS_BAKER=tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
 
 Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local copy of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/).
 
-3. Originate contracts and run integration tests
+3. Run the integration tests
 
 *Note: It is no longer necessary to `cd` into the `integration-tests/` directory*
 
-Run the following from top-level:
-```sh
-npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
-```
+To run the integration tests, invoke `npm run integration-tests`.
 
 The integration test suite runs all tests against the current tezos protocol (Kathmandu) testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
 
-The first time you run the above command, `docker` will download the image in question, so be patient for your prompt to return the first time: *this is expected*.
+Note that the first time you run the integration tests, `docker` will download the image in question, so be patient for your prompt to return the first time: *this is expected*.
 
 #### Modifying Taquito source
 
@@ -213,7 +210,7 @@ npm run test
 npm run commit
 ```
 
-Please use `npm run commit` for your last commit before you push, as this will automagically formulate the correct commit format.
+Please use `npm run commit` for your last commit before you push, as this will automagically formulate the correct commit format. A final lint and test cycle will take place before the commit is performed.
 
 ### Running the website locally
 
