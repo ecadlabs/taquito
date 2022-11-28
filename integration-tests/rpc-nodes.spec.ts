@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { Protocols, ChainIds } from "@taquito/taquito";
+import { Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -126,7 +126,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunetAndAlpha(`Fetches voting information about a delegate from RPC`, async (done) => {
+        it(`Fetches voting information about a delegate from RPC`, async (done) => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
           done();
@@ -365,7 +365,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunetAndAlpha('Verify that rpcClient.runScriptView executes michelson view', async (done) => {
+        it('Verify that rpcClient.runScriptView executes michelson view', async (done) => {
           const chainId = await Tezos.rpc.getChainId();
           const params: RPCRunScriptViewParam = {
             contract: knownViewContract!,
