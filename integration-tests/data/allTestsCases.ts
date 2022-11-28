@@ -31,6 +31,7 @@ import {
 import { codeViewsTopLevel, storageViewsTopLevel } from './contract_views_top_level';
 import { MichelsonV1Expression, OpKind } from '@taquito/rpc';
 import { emitCode } from './code_with_emit';
+import { lambdaRecCode } from './code_with_lambda_rec';
 import { opMappingProto14 } from '../../packages/taquito-local-forging/src/proto14-kathmandu/constants-proto14'
 
 function extractOp(
@@ -1389,7 +1390,7 @@ export const commonCases: TestCase[] = [
 
 export const limaCases: TestCase[] = [
   // In `opMapping` from the file `constants.ts`, the operations and types starting at `ticket` were added in the lima protocol
-  ...extractOp(154, 154, opMapping).map((op): TestCase => {
+  ...extractOp(152, 154, opMapping).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -1460,6 +1461,29 @@ export const limaCases: TestCase[] = [
           consensus_key: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv', 
           delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
           destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+        },
+      ],
+    },
+  },
+  {
+    name: `Origination of a contract that contains the instructions LAMBDA_REC`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '94141',
+          source: 'tz2WH1zahKo2KiS1gcHBhNFTURPfW1Vk7qpE',
+          fee: '603',
+          gas_limit: '1526',
+          storage_limit: '377',
+          balance: '0',
+          script: {
+            code: lambdaRecCode,
+            storage: {
+              prim: 'Unit',
+            },
+          },
         },
       ],
     },
