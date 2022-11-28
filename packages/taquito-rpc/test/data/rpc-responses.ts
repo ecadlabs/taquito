@@ -5177,222 +5177,222 @@ export const txRollupInbox = {
 };
 
 export const ticketUpdatesSample = {
-  "protocol": "PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW",
-  "chain_id": "NetXizpkH94bocH",
-  "hash": "BLAoXLidLrRnUQaUNPanuiaGTS3Ce2azZQysz2mMTCUnFg2799j",
-  "header": {},
-  "metadata": {},
-  "operations": [
+  protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+  chain_id: 'NetXizpkH94bocH',
+  hash: 'BLAoXLidLrRnUQaUNPanuiaGTS3Ce2azZQysz2mMTCUnFg2799j',
+  header: {},
+  metadata: {},
+  operations: [
     [
       {
-        "protocol": "PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW",
-        "chain_id": "NetXizpkH94bocH",
-        "hash": "onrYwrpBkF54XTGkxQBUhEcVhgqoava49oWMo5DmGgrh3yqodYN",
-        "branch": "BKmKts5CAQ2oLv3UvB3jWTMNHKsbxSofMeaNGLWA8WAavY9jqWb",
-        "contents": [
+        protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+        chain_id: 'NetXizpkH94bocH',
+        hash: 'onrYwrpBkF54XTGkxQBUhEcVhgqoava49oWMo5DmGgrh3yqodYN',
+        branch: 'BKmKts5CAQ2oLv3UvB3jWTMNHKsbxSofMeaNGLWA8WAavY9jqWb',
+        contents: [
           {
-            "kind": "transaction",
-            "source": "tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly",
-            "fee": "2122",
-            "counter": "76",
-            "gas_limit": "18472",
-            "storage_limit": "929",
-            "amount": "0",
-            "destination": "KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj",
-            "parameters": {
-              "entrypoint": "exchange_tickets",
-              "value": {
-                "int": "2"
+            kind: 'transaction',
+            source: 'tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly',
+            fee: '2122',
+            counter: '76',
+            gas_limit: '18472',
+            storage_limit: '929',
+            amount: '0',
+            destination: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+            parameters: {
+              entrypoint: 'exchange_tickets',
+              value: {
+                int: '2'
               }
             },
-            "metadata": {
-              "balance_updates": [
+            metadata: {
+              balance_updates: [
                 {
-                  "kind": "contract",
-                  "contract": "tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly",
-                  "change": "-2122",
-                  "origin": "block"
+                  kind: 'contract',
+                  contract: 'tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly',
+                  change: '-2122',
+                  origin: 'block'
                 },
                 {
-                  "kind": "accumulator",
-                  "category": "block fees",
-                  "change": "2122",
-                  "origin": "block"
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '2122',
+                  origin: 'block'
                 }
               ],
-              "operation_result": {
-                "status": "applied",
-                "storage": {
-                  "prim": "Pair",
-                  "args": [
+              operation_result: {
+                status: 'applied',
+                storage: {
+                  prim: 'Pair',
+                  args: [
                     {
-                      "prim": "Pair",
-                      "args": [
+                      prim: 'Pair',
+                      args: [
                         {
-                          "prim": "None"
+                          prim: 'None'
                         },
                         []
                       ]
                     },
                     {
-                      "prim": "Pair",
-                      "args": [
+                      prim: 'Pair',
+                      args: [
                         {
-                          "bytes": "00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05"
+                          bytes: '00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05'
                         },
                         {
-                          "bytes": "016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00"
+                          bytes: '016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00'
                         }
                       ]
                     }
                   ]
                 },
-                "ticket_updates": [
+                ticket_updates: [
                   {
-                    "ticket_token": {
-                      "ticketer": "KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH",
-                      "content_type": {
-                        "prim": "unit"
+                    ticket_token: {
+                      ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
+                      content_type: {
+                        prim: 'unit'
                       },
-                      "content": {
-                        "prim": "Unit"
+                      content: {
+                        prim: 'Unit'
                       }
                     },
-                    "updates": [
+                    updates: [
                       {
-                        "account": "KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj",
-                        "amount": "-2"
+                        account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+                        amount: '-2'
                       }
                     ]
                   }
                 ],
-                "ticket_receipt": [
+                ticket_receipt: [
                   {
-                    "ticket_token": {
-                      "ticketer": "KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH",
-                      "content_type": {
-                        "prim": "string"
+                    ticket_token: {
+                      ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
+                      content_type: {
+                        prim: 'string'
                       },
-                      "content": {
-                        "string": "Ferosinge"
+                      content: {
+                        string: 'Ferosinge'
                       }
                     },
-                    "updates": [
+                    updates: [
                       {
-                        "account": "KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj",
-                        "amount": "1"
+                        account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+                        amount: '1'
                       }
                     ]
                   },
                 ],
-                "consumed_milligas": "4077693",
-                "storage_size": "5600"
+                consumed_milligas: '4077693',
+                storage_size: '5600'
               },
             }
           }
         ],
-        "signature": "sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H"
+        signature: 'sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H'
       }
     ]
   ]
 };
 export const ticketReceiptSample = {
-  "protocol": "PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW",
-  "chain_id": "NetXizpkH94bocH",
-  "hash": "BLAoXLidLrRnUQaUNPanuiaGTS3Ce2azZQysz2mMTCUnFg2799j",
-  "header": {},
-  "metadata": {},
-  "operations": [
+  protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+  chain_id: 'NetXizpkH94bocH',
+  hash: 'BLAoXLidLrRnUQaUNPanuiaGTS3Ce2azZQysz2mMTCUnFg2799j',
+  header: {},
+  metadata: {},
+  operations: [
     [
       {
-        "protocol": "PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW",
-        "chain_id": "NetXizpkH94bocH",
-        "hash": "onrYwrpBkF54XTGkxQBUhEcVhgqoava49oWMo5DmGgrh3yqodYN",
-        "branch": "BKmKts5CAQ2oLv3UvB3jWTMNHKsbxSofMeaNGLWA8WAavY9jqWb",
-        "contents": [
+        protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+        chain_id: 'NetXizpkH94bocH',
+        hash: 'onrYwrpBkF54XTGkxQBUhEcVhgqoava49oWMo5DmGgrh3yqodYN',
+        branch: 'BKmKts5CAQ2oLv3UvB3jWTMNHKsbxSofMeaNGLWA8WAavY9jqWb',
+        contents: [
           {
-            "kind": "transaction",
-            "source": "tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly",
-            "fee": "2122",
-            "counter": "76",
-            "gas_limit": "18472",
-            "storage_limit": "929",
-            "amount": "0",
-            "destination": "KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj",
-            "parameters": {
-              "entrypoint": "exchange_tickets",
-              "value": {
-                "int": "2"
+            kind: 'transaction',
+            source: 'tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly',
+            fee: '2122',
+            counter: '76',
+            gas_limit: '18472',
+            storage_limit: '929',
+            amount: '0',
+            destination: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+            parameters: {
+              entrypoint: 'exchange_tickets',
+              value: {
+                int: '2'
               }
             },
-            "metadata": {
-              "balance_updates": [
+            metadata: {
+              balance_updates: [
                 {
-                  "kind": "contract",
-                  "contract": "tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly",
-                  "change": "-2122",
-                  "origin": "block"
+                  kind: 'contract',
+                  contract: 'tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly',
+                  change: '-2122',
+                  origin: 'block'
                 },
                 {
-                  "kind": "accumulator",
-                  "category": "block fees",
-                  "change": "2122",
-                  "origin": "block"
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '2122',
+                  origin: 'block'
                 }
               ],
-              "operation_result": {
-                "status": "applied",
-                "storage": {
-                  "prim": "Pair",
-                  "args": [
+              operation_result: {
+                status: 'applied',
+                storage: {
+                  prim: 'Pair',
+                  args: [
                     {
-                      "prim": "Pair",
-                      "args": [
+                      prim: 'Pair',
+                      args: [
                         {
-                          "prim": "None"
+                          prim: 'None'
                         },
                         []
                       ]
                     },
                     {
-                      "prim": "Pair",
-                      "args": [
+                      prim: 'Pair',
+                      args: [
                         {
-                          "bytes": "00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05"
+                          bytes: '00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05'
                         },
                         {
-                          "bytes": "016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00"
+                          bytes: '016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00'
                         }
                       ]
                     }
                   ]
                 },
-                "ticket_receipt": [
+                ticket_receipt: [
                   {
-                    "ticket_token": {
-                      "ticketer": "KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH",
-                      "content_type": {
-                        "prim": "string"
+                    ticket_token: {
+                      ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
+                      content_type: {
+                        prim: 'string'
                       },
-                      "content": {
-                        "string": "Ferosinge"
+                      content: {
+                        string: 'Ferosinge'
                       }
                     },
-                    "updates": [
+                    updates: [
                       {
-                        "account": "KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj",
-                        "amount": "1"
+                        account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+                        amount: '1'
                       }
                     ]
                   },
                 ],
-                "consumed_milligas": "4077693",
-                "storage_size": "5600"
+                consumed_milligas: '4077693',
+                storage_size: '5600'
               },
             }
           }
         ],
-        "signature": "sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H"
+        signature: 'sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H'
       }
     ]
   ]
