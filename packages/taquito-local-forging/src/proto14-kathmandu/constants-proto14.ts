@@ -166,3 +166,19 @@ export const opMappingReverseProto14 = (() => {
   });
   return result;
 })();
+
+export const entrypointMappingProto14: { [key: string]: string } = {
+  '00': 'default',
+  '01': 'root',
+  '02': 'do',
+  '03': 'set_delegate',
+  '04': 'remove_delegate',
+};
+
+export const entrypointMappingReverseProto14 = (() => {
+  const result: { [key: string]: string } = {};
+  Object.keys(entrypointMappingProto14).forEach((key: string) => {
+    result[entrypointMappingProto14[key]] = key;
+  });
+  return result;
+})();
