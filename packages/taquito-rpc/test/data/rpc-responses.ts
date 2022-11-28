@@ -4875,7 +4875,11 @@ export const blockLimanetSample = {
       cycle_position: 2027,
       expected_commitment: false,
     },
-    voting_period_info: { voting_period: { index: 5, kind: 'proposal', start_position: 102400 }, position: 2027, remaining: 2068 },
+    voting_period_info: {
+      voting_period: { index: 5, kind: 'proposal', start_position: 102400 },
+      position: 2027,
+      remaining: 2068,
+    },
     nonce_hash: null,
     deactivated: [],
     balance_updates: [
