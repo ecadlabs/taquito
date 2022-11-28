@@ -63,7 +63,7 @@ We are active and enthusiastic participants of the following community support c
 
 ## Project Organization
 
-Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), and is compose of several npm packages that are [published to npmjs.org](https://www.npmjs.com/package/@taquito/taquito) under the `@taquito` handle. Each package has its own README which can be found in the corresponding directory within `packages/`.
+Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), and is composed of several npm packages that are [published to npmjs.org](https://www.npmjs.com/package/@taquito/taquito) under the `@taquito` handle. Each package has its own README which can be found in the corresponding directory within `packages/`.
 
 | High-Level Packages                                            | Responsibility                                               |
 | -------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -71,15 +71,15 @@ Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), an
 
 | Low-Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
-| [@taquito/local-forging](packages/taquito-local-forging)         | Local "forging" (preparation) of Tezos operations             |
+| [@taquito/local-forging](packages/taquito-local-forging)         | Local "forging": serialization of Tezos operations as bytes   |
 | [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Creates JS abstractions of Smart Contracts                    |
 | [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms, expands Macros, etc         |
 | [@taquito/remote-signer](packages/taquito-remote-signer)         | Provides the facility to use a remote signer, such as https://signatory.io    |
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library: every rpc endpoint has its own method     |
 | [@taquito/signer](packages/taquito-signer)                       | Provides functionality to sign data using tezos keys          |
 | [@taquito/utils](packages/taquito-utils)                         | Provides different encoding and decoding utilities            |
-| [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 implementation for Taquito, related to NFTs           |
-| [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 implementation for Taquito, also related to NFTs      |
+| [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 allows retrieving NFT/token metadata                  |
+| [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 allows retrieving contract metadata and executing off-chain views |
 | [@taquito/beacon-wallet](packages/taquito-beacon-wallet)         | TZIP-10 implementation of a Wallet API                        |
 
 ## API Documentation
@@ -171,35 +171,7 @@ See the top-level `package.json` "scripts" section. Common targets include:
 
 ### Running Integration Tests
 
-The Taquito integration tests are located in the `integration-tests/` directory.
-
-To prepare to run the integration tests, perform the following steps:
-
-1. Set the following environment variables
-
-```sh
-RUN_KATHMANDUNET_WITH_SECRET_KEY=true
-SECRET_KEY=edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
-TEZOS_RPC_KATHMANDUNET=http://localhost:20000
-POLLING_INTERVAL_MILLISECONDS=100
-RPC_CACHE_MILLISECONDS=0
-TEZOS_BAKER=tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
-```
-2. Start a Flextesa sandbox to run a Kathmandu local testnet
-
-`docker run --rm --name flextesa_sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start`
-
-Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local copy of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/).
-
-3. Run the integration tests
-
-*Note: It is no longer necessary to `cd` into the `integration-tests/` directory*
-
-To run the integration tests, invoke `npm run integration-tests`.
-
-The integration test suite runs all tests against the current tezos protocol (Kathmandu) testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
-
-Note that the first time you run the integration tests, `docker` will download the image in question, so be patient for your prompt to return the first time: *this is expected*.
+The Taquito integration tests are located in the `integration-tests/` directory. Please see the README.md in that directory for further information.
 
 #### Modifying Taquito source
 
