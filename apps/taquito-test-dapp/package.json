@@ -1,7 +1,7 @@
 {
   "name": "taquito-test-dapp-vite",
   "private": true,
-  "version": "14.2.0-beta-RC.0",
+  "version": "14.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
