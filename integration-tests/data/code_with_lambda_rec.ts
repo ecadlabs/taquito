@@ -10,13 +10,13 @@ export const lambdaRecCode = [
         { prim: 'LAMBDA_REC', args: [
           { prim: 'unit' },
           { prim: 'unit' },
-          [ { prim: 'DIP', args: [ [ { prim: 'DROP' } ] ] } ]
+          [ { prim: 'DIP', args: [ [ { prim: 'DROP' } ] ] } ],
         ] },
         { prim: 'SWAP' },
         { prim: 'EXEC' },
         { prim: 'NIL', args: [ { prim: 'operation' } ] },
-        { prim: 'PAIR' }
-      ]
-    ]
-  }
-]
+        { prim: 'PAIR' },
+      ],
+    ],
+  },
+];
