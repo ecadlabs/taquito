@@ -1,0 +1,10 @@
+# This script is used to test that the optimized representation is used for everything (the script, expressions in the storage, and lambdas in the storage) at origination. The script itself differs from its optimized representation because it uses a readable address literal. It also stores a lambda so that another address literal appearing as argument to PUSH can also be tested in the storage.
+
+parameter never;
+storage (pair address (lambda unit unit));
+code {
+       CAR;
+       PUSH address "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx";
+       DROP;
+       NEVER
+     }

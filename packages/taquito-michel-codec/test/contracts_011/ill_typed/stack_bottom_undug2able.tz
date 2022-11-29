@@ -1,5 +1,0 @@
-parameter unit;
-storage unit;
-code {
-       DUG 2;
-     }

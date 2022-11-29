@@ -1,7 +1,0 @@
-{ parameter nat;
-  storage nat;
-  code { CAR; NIL operation ; PAIR };
-  view "add_v" nat nat { UNPAIR; ADD };
-  view "mul_v" nat nat { UNPAIR; PUSH nat 30; LSR; };
-}
-

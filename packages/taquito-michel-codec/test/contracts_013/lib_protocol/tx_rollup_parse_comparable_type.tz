@@ -1,7 +1,0 @@
-parameter unit;
-storage unit;
-code {
-       DROP;
-       EMPTY_SET tx_rollup_l2_address; DROP;
-       UNIT; NIL operation; PAIR;
-     }

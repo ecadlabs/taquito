@@ -1,0 +1,16 @@
+{ parameter unit ;
+  storage unit ;
+  code { DROP ;
+         UNIT ;
+         PUSH nat 10 ;
+         LEFT string ;
+         EMIT %event ;
+         PUSH string "lorem ipsum" ;
+         RIGHT nat ;
+         EMIT %event (or (nat %number) (string %words)) ;
+         NIL operation ;
+         SWAP ;
+         CONS ;
+         SWAP ;
+         CONS ;
+         PAIR } }

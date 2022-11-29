@@ -1,3 +1,0 @@
-parameter (pair (nat :l) (nat :r));
-storage nat;
-code { CAR; CDR ; NIL operation ; PAIR }

@@ -1,3 +1,0 @@
-parameter bls12_381_fr;
-storage (option (bls12_381_fr));
-code {CAR; NEG; SOME; NIL operation; PAIR}
