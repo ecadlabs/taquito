@@ -15,7 +15,7 @@ crossorigin="anonymous" integrity="sha384-5IK2DApAkSEeQ4JN4LR7WMVJfzKJ3OfQXDUelL
 
 The `TezosToolkit` is a facade class that surfaces all of the library's capability and allows its configuration through different providers. 
 
-## Install 
+## Install      
 
 ```
 npm i --save @taquito/taquito
@@ -25,7 +25,7 @@ npm i --save @taquito/taquito
 ## Minimal configuration
 ### TezosToolkit instantiation
 
-The `TezosToolkit` constructor takes at least an RPC URL as a parameter. When instantiating the toolkit with a URL, a default instance of `RpcClient` is created. The `RpcClient` class is used to interact with the Tezos network. 
+The `TezosToolkit` constructor takes at least one RPC URL as a parameter. When instantiating the toolkit with a URL, a default instance of `RpcClient` is created. The `RpcClient` class is used to interact with the Tezos network. 
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
