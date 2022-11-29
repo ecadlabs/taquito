@@ -1838,24 +1838,23 @@ function functionTypeInternal(
       case 'LAMBDA_REC': {
         assertTypeAnnotationsValid(instruction.args[0]);
         assertTypeAnnotationsValid(instruction.args[1]);
-        const body = functionTypeInternal(instruction.args[2], [instruction.args[0]], {
-          ...ctx,
-          contract: undefined,
-        });
-        if ('failed' in body) {
-          return { failed: body.failed, level: body.level + 1 };
-        }
-        if (body.length !== 1) {
-          throw new MichelsonInstructionError(
-            instruction,
-            stack,
-            `${instruction.prim}: function must return a value`
-          );
-        }
-        ensureTypesEqual(instruction.args[1], body[0]);
-        console.log('here')
+        // const body = functionTypeInternal(instruction.args[2], [instruction.args[0]], {
+        //   ...ctx,
+        //   contract: undefined,
+        // });
+        // if ('failed' in body) {
+        //   return { failed: body.failed, level: body.level + 1 };
+        // }
+        // if (body.length !== 1) {
+        //   throw new MichelsonInstructionError(
+        //     instruction,
+        //     stack,
+        //     `${instruction.prim}: function must return a value`
+        //   );
+        // }
+        // ensureTypesEqual(instruction.args[1], body[0]);
         return [
-          annotateVar({ prim: 'lambda_rec', args: [instruction.args[0], instruction.args[1]] }),
+          annotateVar({ prim: 'lambda', args: [instruction.args[0], instruction.args[1]] }),
           ...stack,
         ];
       }
