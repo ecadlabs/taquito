@@ -88,11 +88,7 @@ CONFIGS().forEach(({lib, setup, protocol, txRollupAddress}) => {
       done();
     })
   })
-  describe(`it contract originations and method calls to test the type of tx_rollup_l2_address`, () => {
-    beforeEach(async (done) => {
-      await setup();
-      done();
-    })
+
     // comment until possible to generate txr1 in test itself
     // mondaynet(`mondaynet Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
     //   const op = await tezos.contract.originate({
@@ -150,26 +146,5 @@ CONFIGS().forEach(({lib, setup, protocol, txRollupAddress}) => {
     //   expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue))
     //   done();
     // })
-
-    it(`Contract with params and storage as tx_rollup_l2_address`, async (done) => {
-      const op = await tezos.contract.originate({
-        code: [{"prim":"parameter","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"storage","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"code","args":[[{"prim":"CAR"},{"prim":"NIL","args":[{"prim":"operation"}]},{"prim":"PAIR"}]]}],
-        storage: "tz4RVDZotqkdHGckMkZLB2mUkqAk8BRqz6Jn"
-      })
-      await op.confirmation();
-
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      const contract = await op.contract();
-      const pkh = await contract.storage()
-      expect(pkh).toEqual("tz4RVDZotqkdHGckMkZLB2mUkqAk8BRqz6Jn");
-
-      const methodCall = await contract.methods.default(pkh).send();
-      await methodCall.confirmation();
-      expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-      done();
-    })
-  })
 
 })
