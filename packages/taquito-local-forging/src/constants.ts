@@ -256,6 +256,7 @@ export const entrypointMapping: { [key: string]: string } = {
   '02': 'do',
   '03': 'set_delegate',
   '04': 'remove_delegate',
+  '05': 'deposit',
 };
 
 export const entrypointMappingReverse = (() => {
