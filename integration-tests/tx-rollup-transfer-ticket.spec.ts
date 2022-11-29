@@ -5,20 +5,20 @@ import { InMemorySigner } from "@taquito/signer"
 import { HttpBackend } from "@taquito/http-utils";
 
 
-CONFIGS().forEach(({ lib, setup, protocol, txRollupDepositContract, txRollupWithdrawContract }) => {
+CONFIGS().forEach(({ lib, setup, txRollupDepositContract, txRollupWithdrawContract, txRollupRpc }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const withTORU = txRollupRpc !== '' ? test : test.skip;
 
   describe(`mondaynet test TransferTicket operation`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     })
-    mondaynet("transfer tickets L2 to L1 final step in toru node rollup back to L1", async (done) => {
+    withTORU("transfer tickets L2 to L1 final step in toru node rollup back to L1", async (done) => {
         const backend = new HttpBackend()
         const checkFinalized = async () => {
           // check L2 finalization
-          const req = await backend.createRequest<{metadata: {finalized: boolean}}>({ url: 'http://mondaynet.ecadinfra.com:9999/block/head', method: 'GET'})
+          const req = await backend.createRequest<{metadata: {finalized: boolean}}>({ url: txRollupRpc, method: 'GET'})
           expect(typeof req.metadata.finalized).toEqual('boolean')
 
           if (req.metadata.finalized) {

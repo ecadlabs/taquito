@@ -37,6 +37,7 @@ interface Config {
   txRollupWithdrawContract: string;
   txRollupDepositContract: string;
   txRollupAddress: string;
+  txRollupRpc: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | SecretKeyConfig;
 }
@@ -75,6 +76,16 @@ const defaultSecretKey: SecretKeyConfig = {
   password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
+const mondaynetTxRollupRpc = 'http://mondaynet.ecadinfra.com:9999/block/head';
+
+function getTxRollupRpc(environmentVariable: string, defaultRpc: string) : string {
+  if (process.env[environmentVariable] !== undefined) {
+    return (process.env[environmentVariable] as string);
+  } else {
+    return defaultRpc;
+  }
+}
+
 const kathmandunetEphemeral = {
   rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
@@ -88,6 +99,7 @@ const kathmandunetEphemeral = {
   txRollupDepositContract: process.env['TEZOS_KATHMANDUNET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
   knownViewContract: process.env['TEZOS_KATHMANDUNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtKathman,
   txRollupAddress: process.env['TEZOS_KATHMANDUNET_TXROLLUP_ADDRESS'] || txRollupAddressPtKathman,
+  txRollupRpc: getTxRollupRpc('TEZOS_KATHMANDUNET_TXROLLUP_RPC', ''),
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -109,6 +121,7 @@ const limanetEphemeral = {
   txRollupDepositContract: process.env['TEZOS_LIMANET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
   knownViewContract: process.env['TEZOS_LIMANET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtLimaPtL,
   txRollupAddress: process.env['TEZOS_LIMANET_TXROLLUP_ADDRESS'] || txRollupAddressPtLimaPtL,
+  txRollupRpc: getTxRollupRpc('TEZOS_LIMANET_TXROLLUP_RPC', ''),
   protocol: Protocols.PtLimaPtL,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -131,6 +144,7 @@ const mondaynetEphemeral = {
   txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
   knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressProtoALph,
   txRollupAddress: process.env['TEZOS_MONDAYNET_TXROLLUP_ADDRESS'] || txRollupAddressProtoALph,
+  txRollupRpc: getTxRollupRpc('TEZOS_MONDAYNET_TXROLLUP_RPC', mondaynetTxRollupRpc),
   protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -152,6 +166,7 @@ const kathmandunetSecretKey = {
   txRollupDepositContract: process.env['TEZOS_KATHMANDUNET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
   knownViewContract: process.env['TEZOS_KATHMANDUNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtKathman,
   txRollupAddress: process.env['TEZOS_KATHMANDUNET_TXROLLUP_ADDRESS'] || txRollupAddressPtKathman,
+  txRollupRpc: getTxRollupRpc('TEZOS_KATHMANDUNET_TXROLLUP_RPC', ''),
   protocol: Protocols.PtKathman,
   signerConfig: defaultSecretKey,
 };
@@ -169,6 +184,7 @@ const limanetSecretKey = {
   txRollupDepositContract: process.env['TEZOS_LIMANET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
   knownViewContract: process.env['TEZOS_LIMANET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtLimaPtL,
   txRollupAddress: process.env['TEZOS_LIMANET_TXROLLUP_ADDRESS'] || txRollupAddressPtLimaPtL,
+  txRollupRpc: getTxRollupRpc('TEZOS_LIMANET_TXROLLUP_RPC', ''),
   protocol: Protocols.PtLimaPtL,
   signerConfig: defaultSecretKey
 };
@@ -186,6 +202,7 @@ const mondaynetSecretKey = {
   txRollupDepositContract: process.env['TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
   knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressProtoALph,
   txRollupAddress: process.env['TEZOS_MONDAYNET_TXROLLUP_ADDRESS'] || txRollupAddressProtoALph,
+  txRollupRpc: getTxRollupRpc('TEZOS_MONDAYNET_TXROLLUP_RPC', mondaynetTxRollupRpc),
   protocol: Protocols.ProtoALpha,
   signerConfig: defaultSecretKey
 };
@@ -300,6 +317,7 @@ export const CONFIGS = () => {
         signerConfig,
         txRollupDepositContract,
         txRollupWithdrawContract,
+        txRollupRpc,
       }) => {
         const Tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
 
@@ -324,6 +342,7 @@ export const CONFIGS = () => {
           signerConfig,
           txRollupDepositContract,
           txRollupWithdrawContract,
+          txRollupRpc,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.SECRET_KEY) {
               setupWithSecretKey(Tezos, signerConfig);
