@@ -37,7 +37,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const balance = await Tezos.tz.getBalance(tezosPKH);
         expect(Number(balance)).toBeGreaterThan(0);
       } catch (err) {
-        console.log({ err, mnemonic });
+        throw { err, mnemonic };
       }
       done();
     });
@@ -62,7 +62,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const balance = await Tezos.tz.getBalance(tezosPKH);
         expect(Number(balance)).toBeGreaterThan(0);
       } catch (err) {
-        console.log({ err, mnemonic });
+        throw { err, mnemonic };
       }
       done();
     });
@@ -87,7 +87,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const balance = await Tezos.tz.getBalance(tezosPKH);
         expect(Number(balance)).toBeGreaterThan(0);
       } catch (err) {
-        console.log({ err, mnemonic });
+        throw { err, mnemonic };
       }
       done();
     });
