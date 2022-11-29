@@ -6,6 +6,7 @@
       "items": [
         "quick_start",
         "boilerplate",
+        "amendment_and_voting",
         "batch_API",
         "beaconwallet-singleton",
         "failwith_errors",

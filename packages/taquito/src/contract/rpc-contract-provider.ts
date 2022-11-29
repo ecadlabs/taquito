@@ -25,6 +25,8 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  BallotParams,
+  ProposalsParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -40,6 +42,8 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createBallotOperation,
+  createProposalsOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -54,6 +58,8 @@ import { TxRollupOriginationOperation } from '../operations/tx-rollup-originatio
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
+import { BallotOperation } from '../operations';
+import { ProposalsOperation } from '../operations/proposals-operation';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -583,6 +589,56 @@ export class RpcContractProvider
       opResponse,
       context
     );
+  }
+
+  /**
+   *
+   * @description Submit a ballot vote to a specified proposal
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param BallotParams Ballot operation parameter
+   */
+  async ballot(params: BallotParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+    const source = params.source ?? publicKeyHash;
+    const operation = await createBallotOperation({
+      ...params,
+      source,
+    });
+    const prepared = await this.prepareOperation({ operation, source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new BallotOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Submit or upvote a proposal during the Proposal period
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param BallotParams Proposals operation parameter
+   */
+  async proposals(params: ProposalsParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+    const source = params.source ?? publicKeyHash;
+    const operation = await createProposalsOperation({
+      ...params,
+      source,
+    });
+    const prepared = await this.prepareOperation({ operation, source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new ProposalsOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
   }
 
   async at<T extends DefaultContractType = DefaultContractType>(

@@ -203,7 +203,7 @@ module.exports = {
       require.resolve('./plugins/webpack5plugin/index.js'), 
       'docusaurus-plugin-sass',
       [
-        'docusaurus2-dotenv',
+        'docusaurus-plugin-dotenv',
         {
           path: "./.env",
           systemvars: true

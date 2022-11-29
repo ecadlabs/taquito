@@ -106,7 +106,7 @@ export interface DelegatesResponse {
   deactivated: boolean;
   grace_period: number;
   voting_power?: BigNumber;
-  current_ballot?: OperationContentsBallotEnum;
+  current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
 }
@@ -182,7 +182,7 @@ export interface InlinedPreEndorsement {
   signature?: string;
 }
 
-export type OperationContentsBallotEnum = 'nay' | 'yay' | 'pass';
+export type BallotVote = 'nay' | 'yay' | 'pass';
 
 export interface OperationContentsEndorsement {
   kind: OpKind.ENDORSEMENT;
@@ -269,7 +269,7 @@ export interface OperationContentsBallot {
   source: string;
   period: number;
   proposal: string;
-  ballot: OperationContentsBallotEnum;
+  ballot: BallotVote;
 }
 
 export interface OperationContentsReveal {
@@ -657,7 +657,7 @@ export interface OperationContentsAndResultBallot {
   source: string;
   period: number;
   proposal: string;
-  ballot: OperationContentsBallotEnum;
+  ballot: BallotVote;
 }
 
 export interface OperationContentsAndResultReveal {
