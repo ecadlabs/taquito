@@ -1,8 +1,9 @@
 import { CONFIGS } from "./config";
-import { OpKind, Protocols } from "@taquito/taquito";
+import { OpKind } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
+
   describe(`Test tx rollup batch using: ${rpc}`, () => {
 
     beforeEach(async (done) => {

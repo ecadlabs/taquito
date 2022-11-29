@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { OpKind, Protocols } from "@taquito/taquito";
+import { OpKind } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;

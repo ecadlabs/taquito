@@ -1331,11 +1331,26 @@ export interface TezosGenericOperationError {
   id: string;
 }
 
+export interface TicketUpdates {
+  ticket_token: {
+    ticketer: string;
+    content_type: MichelsonV1Expression;
+    content: MichelsonV1Expression;
+  };
+  updates: {
+    account: string;
+    amount: string;
+  }[]
+}
+export type TicketReceipt  = TicketUpdates
+
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
   storage?: MichelsonV1Expression;
   big_map_diff?: ContractBigMapDiff;
   balance_updates?: OperationBalanceUpdates;
+  ticket_updates?: TicketUpdates[];
+  ticket_receipt?: TicketReceipt[];
   originated_contracts?: string[];
   consumed_gas?: string;
   storage_size?: string;
@@ -1528,6 +1543,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto015 &
   ConstantsResponseProto014 &
   ConstantsResponseProto013 &
   ConstantsResponseProto012 &
@@ -1567,6 +1583,10 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto015 extends ConstantsResponseProto014 {
+  minimal_stake: BigNumber;
+}
 
 export interface DalParametric {
   feature_enable: boolean;
