@@ -16,67 +16,79 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
     it('Should create an InMemorySigner (ed25519) with the fromMnemonic method and transfer tez to an account', async (done) => {
-      const Tezos = new TezosToolkit(rpc);
-      // with all default values
-      const signer = InMemorySigner.fromMnemonic({ mnemonic });
-      Tezos.setSignerProvider(signer);
+      try {
+        const Tezos = new TezosToolkit(rpc);
+        // with all default values
+        const signer = InMemorySigner.fromMnemonic({ mnemonic });
+        Tezos.setSignerProvider(signer);
 
-      const funderPKH = await Funder.wallet.pkh();
-      const tezosPKH = await Tezos.wallet.pkh();
+        const funderPKH = await Funder.wallet.pkh();
+        const tezosPKH = await Tezos.wallet.pkh();
 
-      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
-      await fundOp.confirmation();
+        const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
+        await fundOp.confirmation();
 
-      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1 }).send();
-      await returnOp.confirmation();
+        const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1 }).send();
+        await returnOp.confirmation();
 
-      const status = await returnOp.status();
-      expect(status).toEqual('applied');
+        const status = await returnOp.status();
+        expect(status).toEqual('applied');
 
-      const balance = await Tezos.tz.getBalance(tezosPKH);
-      expect(Number(balance)).toBeGreaterThan(0);
+        const balance = await Tezos.tz.getBalance(tezosPKH);
+        expect(Number(balance)).toBeGreaterThan(0);
+      } catch (err) {
+        throw { err, mnemonic };
+      }
       done();
     });
     it('Should create an InMemorySigner (secp256k1) with the fromMnemonic method and transfer tez to an account', async (done) => {
-      const Tezos = new TezosToolkit(rpc);
-      // with all default values
-      const signer = InMemorySigner.fromMnemonic({ mnemonic, curve: 'secp256k1' });
-      Tezos.setSignerProvider(signer);
+      try {
+        const Tezos = new TezosToolkit(rpc);
+        // with all default values
+        const signer = InMemorySigner.fromMnemonic({ mnemonic, curve: 'secp256k1' });
+        Tezos.setSignerProvider(signer);
 
-      const funderPKH = await Funder.wallet.pkh();
-      const tezosPKH = await Tezos.wallet.pkh();
+        const funderPKH = await Funder.wallet.pkh();
+        const tezosPKH = await Tezos.wallet.pkh();
 
-      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
-      await fundOp.confirmation();
+        const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
+        await fundOp.confirmation();
 
-      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1, }).send();
-      await returnOp.confirmation();
+        const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1, }).send();
+        await returnOp.confirmation();
 
-      const status = await returnOp.status();
-      expect(status).toEqual('applied');
-      const balance = await Tezos.tz.getBalance(tezosPKH);
-      expect(Number(balance)).toBeGreaterThan(0);
+        const status = await returnOp.status();
+        expect(status).toEqual('applied');
+        const balance = await Tezos.tz.getBalance(tezosPKH);
+        expect(Number(balance)).toBeGreaterThan(0);
+      } catch (err) {
+        throw { err, mnemonic };
+      }
       done();
     });
     it('Should create an InMemorySigner (p256) with the fromMnemonic method and transfer tez to an account', async (done) => {
-      const Tezos = new TezosToolkit(rpc);
-      // with all default values
-      const signer = InMemorySigner.fromMnemonic({ mnemonic, curve: 'p256' });
-      Tezos.setSignerProvider(signer);
+      try {
+        const Tezos = new TezosToolkit(rpc);
+        // with all default values
+        const signer = InMemorySigner.fromMnemonic({ mnemonic, curve: 'p256' });
+        Tezos.setSignerProvider(signer);
 
-      const funderPKH = await Funder.wallet.pkh();
-      const tezosPKH = await Tezos.wallet.pkh();
+        const funderPKH = await Funder.wallet.pkh();
+        const tezosPKH = await Tezos.wallet.pkh();
 
-      const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
-      await fundOp.confirmation();
+        const fundOp = await Funder.wallet.transfer({ to: tezosPKH, amount: 2 }).send();
+        await fundOp.confirmation();
 
-      const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1 }).send();
-      await returnOp.confirmation();
+        const returnOp = await Tezos.wallet.transfer({ to: funderPKH, amount: 1 }).send();
+        await returnOp.confirmation();
 
-      const status = await returnOp.status();
-      expect(status).toEqual('applied');
-      const balance = await Tezos.tz.getBalance(tezosPKH);
-      expect(Number(balance)).toBeGreaterThan(0);
+        const status = await returnOp.status();
+        expect(status).toEqual('applied');
+        const balance = await Tezos.tz.getBalance(tezosPKH);
+        expect(Number(balance)).toBeGreaterThan(0);
+      } catch (err) {
+        throw { err, mnemonic };
+      }
       done();
     });
   });
