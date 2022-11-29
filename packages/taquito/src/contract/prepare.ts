@@ -23,6 +23,8 @@ import {
   RPCIncreasePaidStorageOperation,
   BallotParams,
   RPCBallotOperation,
+  ProposalsParams,
+  RPCProposalsOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -274,4 +276,12 @@ export const createBallotOperation = async ({ source, proposal, ballot }: Ballot
     proposal,
     ballot,
   } as RPCBallotOperation;
+};
+
+export const createProposalsOperation = async ({ source, proposals }: ProposalsParams) => {
+  return {
+    kind: OpKind.PROPOSALS,
+    source,
+    proposals,
+  } as RPCProposalsOperation;
 };

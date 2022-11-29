@@ -106,7 +106,7 @@ export interface DelegatesResponse {
   deactivated: boolean;
   grace_period: number;
   voting_power?: BigNumber;
-  current_ballot?: BallotEnum;
+  current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
   active_consensus_key?: string;
@@ -189,7 +189,7 @@ export interface InlinedPreEndorsement {
   signature?: string;
 }
 
-export type BallotEnum = 'nay' | 'yay' | 'pass';
+export type BallotVote = 'nay' | 'yay' | 'pass';
 
 export interface OperationContentsEndorsement {
   kind: OpKind.ENDORSEMENT;
@@ -276,7 +276,7 @@ export interface OperationContentsBallot {
   source: string;
   period: number;
   proposal: string;
-  ballot: BallotEnum;
+  ballot: BallotVote;
 }
 
 export interface OperationContentsReveal {
@@ -445,6 +445,23 @@ export interface OperationContentsTransferTicket {
   entrypoint: string;
 }
 
+export interface OperationContentsUpdateConsensusKey {
+  kind: OpKind.UPDATE_CONSENSUS_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+}
+
+export interface OperationContentsDrainDelegate {
+  kind: OpKind.DRAIN_DELEGATE;
+  consensus_key: string;
+  delegate: string;
+  destination: string;
+}
+
 export interface OperationContentsIncreasePaidStorage {
   kind: OpKind.INCREASE_PAID_STORAGE;
   source: string;
@@ -483,6 +500,8 @@ export type OperationContents =
   | OperationContentsTxRollupRemoveCommitment
   | OperationContentsTxRollupRejection
   | OperationContentsTransferTicket
+  | OperationContentsUpdateConsensusKey
+  | OperationContentsDrainDelegate
   | OperationContentsIncreasePaidStorage;
 
 export interface OperationContentsAndResultMetadataExtended {
@@ -592,6 +611,17 @@ export interface OperationContentsAndResultMetadataIncreasePaidStorage {
   internal_operation_results?: InternalOperationResult[];
 }
 
+export interface OperationContentsAndResultMetadataUpdateConsensusKey {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultUpdateConsensusKey;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataDrainDelegate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  allocated_destination_contract?: boolean;
+}
+
 export interface OperationContentsAndResultEndorsement {
   kind: OpKind.ENDORSEMENT;
   block_payload_hash?: string;
@@ -664,7 +694,7 @@ export interface OperationContentsAndResultBallot {
   source: string;
   period: number;
   proposal: string;
-  ballot: BallotEnum;
+  ballot: BallotVote;
 }
 
 export interface OperationContentsAndResultReveal {
@@ -845,6 +875,25 @@ export interface OperationContentsAndResultTxRollupDispatchTickets {
   metadata: OperationContentsAndResultMetadataTxRollupDispatchTickets;
 }
 
+export interface OperationContentsAndResultUpdateConsensusKey {
+  kind: OpKind.UPDATE_CONSENSUS_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  metadata: OperationContentsAndResultMetadataUpdateConsensusKey;
+}
+
+export interface OperationContentsAndResultDrainDelegate {
+  kind: OpKind.DRAIN_DELEGATE;
+  consensus_key: string;
+  delegate: string;
+  destination: string;
+  metadata: OperationContentsAndResultMetadataDrainDelegate;
+}
+
 export interface OperationContentsAndResultIncreasePaidStorage {
   kind: OpKind.INCREASE_PAID_STORAGE;
   source: string;
@@ -890,6 +939,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTxRollupRejection
   | OperationContentsAndResultTransferTicket
   | OperationContentsAndResultIncreasePaidStorage
+  | OperationContentsAndResultUpdateConsensusKey
+  | OperationContentsAndResultDrainDelegate
   | OperationContentsAndResultVdfRevelation;
 
 export enum OPERATION_METADATA {
@@ -1226,6 +1277,13 @@ export interface OperationResultTransferTicket {
 export interface OperationResultIncreasePaidStorage {
   status: OperationResultStatusEnum;
   balance_updates?: OperationBalanceUpdates;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultUpdateConsensusKey {
+  status: OperationResultStatusEnum;
+  consumed_gas?: string;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
 }

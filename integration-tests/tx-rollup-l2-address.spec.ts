@@ -59,11 +59,11 @@ CONFIGS().forEach(({lib, setup, protocol, txRollupAddress}) => {
       const contract = await op.contract();
       const symbolReturn = await contract.storage()
       expect(JSON.stringify(symbolReturn)).toEqual(JSON.stringify(UnitValue))
-      const methodCall = await contract.methods.default(txRollupAddress, 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
-      await methodCall.confirmation();
+      const ticketDeposit = await contract.methods.default(txRollupAddress, 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
+      await ticketDeposit.confirmation();
 
-      expect(methodCall.hash).toBeDefined();
-      expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      expect(ticketDeposit.hash).toBeDefined();
+      expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue))
       done();
     })
@@ -82,9 +82,9 @@ CONFIGS().forEach(({lib, setup, protocol, txRollupAddress}) => {
       const pkh = await contract.storage()
       expect(pkh).toEqual("tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8");
 
-      const methodCall = await contract.methods.default(pkh).send();
-      await methodCall.confirmation();
-      expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      const ticketDeposit = await contract.methods.default(pkh).send();
+      await ticketDeposit.confirmation();
+      expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       done();
     })
   })

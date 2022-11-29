@@ -20,6 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
+    const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
     const kathmandunetAndAlpha = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     beforeAll(async (done) => {
@@ -125,7 +126,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunetAndAlpha(`Fetches voting information about a delegate from RPC`, async (done) => {
+        it(`Fetches voting information about a delegate from RPC`, async (done) => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
           done();
@@ -364,7 +365,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunetAndAlpha('Verify that rpcClient.runScriptView executes michelson view', async (done) => {
+        it('Verify that rpcClient.runScriptView executes michelson view', async (done) => {
           const chainId = await Tezos.rpc.getChainId();
           const params: RPCRunScriptViewParam = {
             contract: knownViewContract!,
@@ -432,6 +433,17 @@ CONFIGS().forEach(
           done();
         });
 
+        limanetAndAlpha('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async (done) => {
+          const usedSpace = await rpcClient.getStorageUsedSpace(knownContract);
+          expect(usedSpace).toBeDefined();
+          done();
+        });
+
+        limanetAndAlpha('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async (done) => {
+          const paidSpace = await rpcClient.getStoragePaidSpace(knownContract);
+          expect(paidSpace).toBeDefined();
+          done();
+        });
       });
     });
   }

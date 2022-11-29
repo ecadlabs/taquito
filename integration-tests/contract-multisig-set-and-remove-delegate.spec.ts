@@ -1,13 +1,23 @@
 import { CONFIGS } from "./config";
-import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { MANAGER_LAMBDA, TezosToolkit  } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
-  const Tezos = lib;
- 
+  const Funder = lib;
+  let Tezos: TezosToolkit;
   describe(`Generic Multisig set delegate: ${rpc}`, () => {
-    beforeEach(async (done) => {
-      await setup(true)
+    beforeAll(async (done) => {
+      await setup(true);
+      // Checks if test is being run in Flextesa or not
+      // If it is, fund the signer account using using 'Funder', which is the flextesa_bootstrap account
+      if (rpc === 'http://0.0.0.0:20000') {
+        Tezos = await createAddress();
+        const pkh = await Tezos.signer.publicKeyHash();
+        const fund = await Funder.contract.transfer({ amount: 10000, to: pkh });
+        await fund.confirmation();
+      } else {
+        Tezos = Funder;
+      }
       done()
     })
     test('test manager transfers set delegate scenarios', async () => {
