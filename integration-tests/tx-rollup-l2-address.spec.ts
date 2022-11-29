@@ -57,13 +57,8 @@ CONFIGS().forEach(({lib, setup, txRollupAddress}) => {
       const contract = await op.contract();
       const symbolReturn = await contract.storage()
       expect(JSON.stringify(symbolReturn)).toEqual(JSON.stringify(UnitValue))
-<<<<<<< HEAD
       const ticketDeposit = await contract.methods.default(txRollupAddress, 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
       await ticketDeposit.confirmation();
-=======
-      const methodCall = await contract.methods.default(txRollupAddress, 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
-      await methodCall.confirmation();
->>>>>>> ad5112696 (update tests for all testnets)
 
       expect(ticketDeposit.hash).toBeDefined();
       expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
