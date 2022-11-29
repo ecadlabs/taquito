@@ -1,7 +1,7 @@
 import { CONFIGS } from "./config";
-import { OpKind, Protocols } from "@taquito/taquito";
+import { OpKind } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, txRollupAddress }) => {
   const Tezos = lib;
   describe(`Test tx rollup batch using: ${rpc}`, () => {
 
@@ -12,9 +12,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       it('should succeed to submit a tx rollup batch with auto-estimate of the fees', async (done) => {
         const op = await Tezos.contract.txRollupSubmitBatch({
          content: '626c6f62',
-         rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w'
+         rollup: txRollupAddress
        });
-       await op.confirmation(2)
+       await op.confirmation(2);
        expect(op.hash).toBeDefined();
        expect(op.content).toEqual('626c6f62');
        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -27,12 +27,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
      it('should succeed to submit a tx rollup batch with defined fees', async (done) => {
       const op = await Tezos.contract.txRollupSubmitBatch({
          content: '626c6f62',
-         rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
+         rollup: txRollupAddress,
          storageLimit: 6000,
          gasLimit: 3000,
          fee: 500
        });
-       await op.confirmation(2)
+       await op.confirmation(2);
        expect(op.hash).toBeDefined();
        expect(op.content).toEqual('626c6f62');
        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -44,9 +44,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
      it('should succeed to include a tx rollup batch operation in a batch', async (done) => {
       const op = await Tezos.contract.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
-        { kind: OpKind.TX_ROLLUP_SUBMIT_BATCH, content: '626c6f62', rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w', }
+        { kind: OpKind.TX_ROLLUP_SUBMIT_BATCH, content: '626c6f62', rollup: txRollupAddress, }
       ]).send();
-      await op.confirmation(2)
+      await op.confirmation(2);
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(op.status).toBe('applied');
@@ -57,9 +57,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     it('should succeed to include a tx rollup batch operation in a batch using `with` method', async (done) => {
       const op = await Tezos.contract.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
-        .withTxRollupSubmitBatch({ content: '626c6f62', rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w' })
+        .withTxRollupSubmitBatch({ content: '626c6f62', rollup: txRollupAddress })
         .send();
-      await op.confirmation()
+      await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(op.status).toBe('applied');
