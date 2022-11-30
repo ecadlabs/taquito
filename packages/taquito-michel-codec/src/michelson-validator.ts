@@ -397,18 +397,8 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
         }
         break;
 
-      case 'LAMBDA':
-        /* istanbul ignore else */
-        if (assertArgs(ex, 3)) {
-          assertMichelsonType(ex.args[0]);
-          assertMichelsonType(ex.args[1]);
-          /* istanbul ignore else */
-          if (assertSeq(ex.args[2])) {
-            assertMichelsonInstruction(ex.args[2]);
-          }
-        }
-        break;
       case 'LAMBDA_REC':
+      case 'LAMBDA':
         /* istanbul ignore else */
         if (assertArgs(ex, 3)) {
           assertMichelsonType(ex.args[0]);
@@ -755,8 +745,8 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
 export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
   /* istanbul ignore else */
   if (assertSeq(ex)) {
-    const toplevelSec: { [sec: string]: boolean } = {};
-    const views: { [name: string]: boolean } = {};
+    const toplevelSec: { [sec: string]: boolean; } = {};
+    const views: { [name: string]: boolean; } = {};
     for (const sec of ex) {
       if (assertPrim(sec)) {
         if (sec.prim !== 'view') {

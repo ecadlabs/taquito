@@ -206,9 +206,9 @@ const contracts: {
     'reveal_signed_preimage.tz',
     'self_address_receiver.tz',
     'self_address_sender.tz',
-    'send_tickets_in_big_map.tz', // TODO fix TICKET ASSERT_SOME
-    'ticket_builder_fungible.tz', // TODO fix TICKET ASSERT_SOME
-    'ticket_builder_non_fungible.tz', // TODO fix TICKET ASSERT_SOME
+    'send_tickets_in_big_map.tz',
+    'ticket_builder_fungible.tz',
+    'ticket_builder_non_fungible.tz',
     'ticket_wallet_fungible.tz',
     'ticket_wallet_non_fungible.tz',
     'vote_for_delegate.tz',
@@ -389,9 +389,9 @@ const contracts: {
     'sub_timestamp_delta.tz',
     'tez_add_sub.tz',
     'ticket_bad.tz',
-    'ticket_big_store.tz', // TODO fix TICKET ASSERT_SOME
-    'ticketer-2.tz', // TODO fix TICKET ASSERT_SOME
-    'ticketer.tz', // TODO fix TICKET ASSERT_SOME
+    'ticket_big_store.tz',
+    'ticketer-2.tz',
+    'ticketer.tz',
     'ticket_join.tz',
     'ticket_read.tz',
     'ticket_split.tz',
@@ -403,7 +403,7 @@ const contracts: {
     'unpair.tz',
     'update_big_map.tz',
     'utxo_read.tz',
-    'utxor.tz', // TODO fix TICKET ASSERT_SOME
+    'utxor.tz',
     'view_fib.tz',
     'view_mutual_recursion.tz',
     'view_op_add.tz',

@@ -1851,9 +1851,8 @@ function functionTypeInternal(
       case 'TICKET': {
         const s = args(0, null, ['nat'])[0];
         ensureComparableType(s);
-        let r: MichelsonType;
         if (ctx?.protocol === Protocol.PtLimaPtL) {
-          r = [
+          return [
             annotateVar({
               prim: 'option',
               args: [
@@ -1863,12 +1862,11 @@ function functionTypeInternal(
             ...stack.slice(2)
           ];
         } else {
-          r = [
+         return [
             annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 })),
             ...stack.slice(2),
           ];
         }
-        return r;
       }
 
       case 'JOIN_TICKETS': {
