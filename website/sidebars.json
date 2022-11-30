@@ -8,6 +8,7 @@
         "boilerplate",
         "amendment_and_voting",
         "batch_API",
+        "ballot",
         "beaconwallet-singleton",
         "failwith_errors",
         "confirmation_event_stream",
@@ -45,26 +46,23 @@
     {
       "type": "category",
       "label": "Signer",
-      "items": ["inmemory_signer", "tezbridge_signer", "ledger_signer"]
+      "items": ["inmemory_signer", "ledger_signer"]
     },
     {
       "type": "category",
       "label": "Packages",
       "items": [
-        "michelson_encoder", 
-        "contracts-library", 
+        "michelson_encoder",
+        "contracts-library",
         "taquito_utils",
         {
           "type": "category",
           "label": "Sapling",
           "collapsed": true,
           "collapsible": true,
-          "items": [
-            "sapling", 
-            "sapling_in_memory_spending_key", 
-            "sapling_in_memory_viewing_key"
-          ]
-        }]
+          "items": ["sapling", "sapling_in_memory_spending_key", "sapling_in_memory_viewing_key"]
+        }
+      ]
     },
     {
       "type": "category",

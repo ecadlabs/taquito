@@ -1,3 +1,0 @@
-parameter (ticket unit);
-storage (option (ticket unit));
-code { CAR ; SOME ; NIL operation ; PAIR } ;

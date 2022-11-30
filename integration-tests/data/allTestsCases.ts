@@ -8,16 +8,17 @@ import {
   example9,
   example10,
 } from './code_with_sapling';
+import { ticketCode, ticketStorage } from './code_with_ticket';
 import {
-  ticketCode,
-  ticketCode2,
-  ticketCode3,
-  ticketCode4,
-  ticketStorage,
-  ticketStorage2,
-  ticketStorage3,
-  ticketStorage4,
-} from './code_with_ticket';
+  ticketCodeProto14,
+  ticketCode2Proto14,
+  ticketCode3Proto14,
+  ticketCode4Proto14,
+  ticketStorageProto14,
+  ticketStorage2Proto14,
+  ticketStorage3Proto14,
+  ticketStorage4Proto14,
+} from './code_with_ticket_proto14';
 import { genericCode, genericStorage } from './generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './token_bigmap';
 import { noAnnotCode, noAnnotInit } from './token_without_annotation';
@@ -30,6 +31,7 @@ import {
 import { codeViewsTopLevel, storageViewsTopLevel } from './contract_views_top_level';
 import { MichelsonV1Expression, OpKind } from '@taquito/rpc';
 import { emitCode } from './code_with_emit';
+import { opMappingProto14 } from '../../packages/taquito-local-forging/src/proto14-kathmandu/constants-proto14'
 
 function extractOp(
   startIndex: number,
@@ -804,7 +806,7 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-  ...extractOp(0, 150, opMapping).map((op): TestCase => {
+  ...extractOp(0, 151, opMappingProto14).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -941,8 +943,8 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           balance: '0',
           script: {
-            code: ticketCode,
-            storage: ticketStorage,
+            code: ticketCodeProto14,
+            storage: ticketStorageProto14,
           },
         },
       ],
@@ -962,8 +964,8 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           balance: '0',
           script: {
-            code: ticketCode2,
-            storage: ticketStorage2,
+            code: ticketCode2Proto14,
+            storage: ticketStorage2Proto14,
           },
         },
       ],
@@ -983,8 +985,8 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           balance: '0',
           script: {
-            code: ticketCode3,
-            storage: ticketStorage3,
+            code: ticketCode3Proto14,
+            storage: ticketStorage3Proto14,
           },
         },
       ],
@@ -1004,8 +1006,8 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           balance: '0',
           script: {
-            code: ticketCode4,
-            storage: ticketStorage4,
+            code: ticketCode4Proto14,
+            storage: ticketStorage4Proto14,
           },
         },
       ],
@@ -1342,32 +1344,6 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-];
-
-export const kathmanduCases: TestCase[] = [
-  ...extractOp(150, 151, opMapping).map((op): TestCase => {
-    return {
-      name: `Origination operation (${op})`,
-      operation: {
-        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-        contents: [
-          {
-            kind: OpKind.ORIGINATION,
-            counter: '1',
-            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-            fee: '10000',
-            gas_limit: '10',
-            storage_limit: '10',
-            balance: '0',
-            script: {
-              code: genericCode(op) as MichelsonV1Expression[],
-              storage: genericStorage,
-            },
-          },
-        ],
-      },
-    };
-  }),
   {
     name: `Origination of a contract that contains the instructions EMIT`,
     operation: {
@@ -1405,6 +1381,85 @@ export const kathmanduCases: TestCase[] = [
           storage_limit: '10',
           amount: '2',
           destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+        },
+      ],
+    },
+  },
+];
+
+export const limaCases: TestCase[] = [
+  // In `opMapping` from the file `constants.ts`, the operations and types starting at `ticket` were added in the lima protocol
+  ...extractOp(154, 154, opMapping).map((op): TestCase => {
+    return {
+      name: `Origination operation (${op})`,
+      operation: {
+        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+        contents: [
+          {
+            kind: OpKind.ORIGINATION,
+            counter: '1',
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            fee: '10000',
+            gas_limit: '10',
+            storage_limit: '10',
+            balance: '0',
+            script: {
+              code: genericCode(op) as MichelsonV1Expression[],
+              storage: genericStorage,
+            },
+          },
+        ],
+      },
+    };
+  }),
+  {
+    name: `Origination of a contract that contains the instructions TICKET`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '94141',
+          source: 'tz2WH1zahKo2KiS1gcHBhNFTURPfW1Vk7qpE',
+          fee: '603',
+          gas_limit: '1526',
+          storage_limit: '377',
+          balance: '0',
+          script: {
+            code: ticketCode,
+            storage: ticketStorage,
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: `Update Consensus Key operation`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_CONSENSUS_KEY,
+          counter: '1',
+          source: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+          fee: '100',
+          gas_limit: '10000',
+          storage_limit: '10',
+          pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7'
+        },
+      ],
+    },
+  },
+  {
+    name: `Drain Delegate operation`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.DRAIN_DELEGATE,
+          consensus_key: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv', 
+          delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+          destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
         },
       ],
     },

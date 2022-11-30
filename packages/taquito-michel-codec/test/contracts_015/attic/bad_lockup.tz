@@ -1,0 +1,6 @@
+parameter unit;
+storage (pair timestamp (pair address address));
+code { CDR; DUP; CAR; NOW; CMPLT; IF {FAIL} {};
+       DUP; CDAR; CONTRACT unit ; ASSERT_SOME ; PUSH mutez 100000000; UNIT; TRANSFER_TOKENS; SWAP;
+       DUP; CDDR; CONTRACT unit ; ASSERT_SOME ; PUSH mutez 100000000; UNIT; TRANSFER_TOKENS; DIP {SWAP} ;
+       NIL operation ; SWAP ; CONS ; SWAP ; CONS ; PAIR }

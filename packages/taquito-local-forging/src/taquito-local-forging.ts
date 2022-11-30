@@ -11,7 +11,9 @@ import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
 import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
-import { ProtocolsHash } from './protocols';
+import { ProtocolsHash, ProtoInferiorTo } from './protocols';
+import { decodersProto14 } from './proto14-kathmandu/decoder-proto14';
+import { encodersProto14 } from './proto14-kathmandu/encoder-proto14';
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
@@ -21,16 +23,27 @@ export * from './interface';
 export { VERSION } from './version';
 export { ProtocolsHash } from './protocols';
 
-const PROTOCOL_CURRENT = ProtocolsHash.Psithaca2;
+const PROTOCOL_CURRENT = ProtocolsHash.PtKathman;
 
 export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
-  return {
-    encoder: encoders[codec],
-    decoder: (hex: string) => {
-      const consumer = Uint8ArrayConsumer.fromHexString(hex);
-      return decoders[codec](consumer) as any;
-    },
-  };
+  // use proto14 encoders & decoders if it's kathmandu or prior
+  if (_proto === ProtocolsHash.PtKathman || ProtoInferiorTo(_proto, PROTOCOL_CURRENT)) {
+    return {
+      encoder: encodersProto14[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decodersProto14[codec](consumer) as any;
+      },
+    };
+  } else {
+    return {
+      encoder: encoders[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decoders[codec](consumer) as any;
+      },
+    };
+  }
 }
 
 export class LocalForger implements Forger {

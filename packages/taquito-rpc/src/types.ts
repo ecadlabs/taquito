@@ -109,7 +109,14 @@ export interface DelegatesResponse {
   current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
+  active_consensus_key?: string;
+  pending_consensus_keys?: PendingConsensusKey[];
 }
+
+export type PendingConsensusKey = {
+  cycle: number;
+  pkh: string;
+};
 
 export type VotingInfoResponse = {
   voting_power?: string;
@@ -438,6 +445,23 @@ export interface OperationContentsTransferTicket {
   entrypoint: string;
 }
 
+export interface OperationContentsUpdateConsensusKey {
+  kind: OpKind.UPDATE_CONSENSUS_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+}
+
+export interface OperationContentsDrainDelegate {
+  kind: OpKind.DRAIN_DELEGATE;
+  consensus_key: string;
+  delegate: string;
+  destination: string;
+}
+
 export interface OperationContentsIncreasePaidStorage {
   kind: OpKind.INCREASE_PAID_STORAGE;
   source: string;
@@ -476,6 +500,8 @@ export type OperationContents =
   | OperationContentsTxRollupRemoveCommitment
   | OperationContentsTxRollupRejection
   | OperationContentsTransferTicket
+  | OperationContentsUpdateConsensusKey
+  | OperationContentsDrainDelegate
   | OperationContentsIncreasePaidStorage;
 
 export interface OperationContentsAndResultMetadataExtended {
@@ -583,6 +609,17 @@ export interface OperationContentsAndResultMetadataIncreasePaidStorage {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultIncreasePaidStorage;
   internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataUpdateConsensusKey {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultUpdateConsensusKey;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataDrainDelegate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  allocated_destination_contract?: boolean;
 }
 
 export interface OperationContentsAndResultEndorsement {
@@ -838,6 +875,25 @@ export interface OperationContentsAndResultTxRollupDispatchTickets {
   metadata: OperationContentsAndResultMetadataTxRollupDispatchTickets;
 }
 
+export interface OperationContentsAndResultUpdateConsensusKey {
+  kind: OpKind.UPDATE_CONSENSUS_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  metadata: OperationContentsAndResultMetadataUpdateConsensusKey;
+}
+
+export interface OperationContentsAndResultDrainDelegate {
+  kind: OpKind.DRAIN_DELEGATE;
+  consensus_key: string;
+  delegate: string;
+  destination: string;
+  metadata: OperationContentsAndResultMetadataDrainDelegate;
+}
+
 export interface OperationContentsAndResultIncreasePaidStorage {
   kind: OpKind.INCREASE_PAID_STORAGE;
   source: string;
@@ -883,6 +939,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTxRollupRejection
   | OperationContentsAndResultTransferTicket
   | OperationContentsAndResultIncreasePaidStorage
+  | OperationContentsAndResultUpdateConsensusKey
+  | OperationContentsAndResultDrainDelegate
   | OperationContentsAndResultVdfRevelation;
 
 export enum OPERATION_METADATA {
@@ -924,6 +982,7 @@ export interface BakingRightsQueryArgumentsBase {
   level?: BakingRightsArgumentsLevel;
   cycle?: BakingRightsArgumentsCycle;
   delegate?: BakingRightsArgumentsDelegate;
+  consensus_key?: string;
   max_priority?: number;
   all?: null;
 }
@@ -934,6 +993,7 @@ export interface BakingRightsResponseItem {
   priority?: number;
   round?: number;
   estimated_time?: Date;
+  consensus_key?: string;
 }
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
@@ -946,12 +1006,14 @@ export interface EndorsingRightsQueryArguments {
   level?: EndorsingRightsArgumentsLevel;
   cycle?: EndorsingRightsArgumentsCycle;
   delegate?: EndorsingRightsArgumentsDelegate;
+  consensus_key?: string;
 }
 
 export interface EndorsingRightsResponseItemDelegates {
   delegate: string;
   first_slot: number;
   endorsing_power: number;
+  consensus_key?: string;
 }
 export interface EndorsingRightsResponseItem {
   level: number;
@@ -1219,6 +1281,13 @@ export interface OperationResultIncreasePaidStorage {
   errors?: TezosGenericOperationError[];
 }
 
+export interface OperationResultUpdateConsensusKey {
+  status: OperationResultStatusEnum;
+  consumed_gas?: string;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
 export interface OperationResultDelegation {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
@@ -1262,11 +1331,26 @@ export interface TezosGenericOperationError {
   id: string;
 }
 
+export interface TicketUpdates {
+  ticket_token: {
+    ticketer: string;
+    content_type: MichelsonV1Expression;
+    content: MichelsonV1Expression;
+  };
+  updates: {
+    account: string;
+    amount: string;
+  }[]
+}
+export type TicketReceipt  = TicketUpdates
+
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
   storage?: MichelsonV1Expression;
   big_map_diff?: ContractBigMapDiff;
   balance_updates?: OperationBalanceUpdates;
+  ticket_updates?: TicketUpdates[];
+  ticket_receipt?: TicketReceipt[];
   originated_contracts?: string[];
   consumed_gas?: string;
   storage_size?: string;
@@ -1459,6 +1543,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto015 &
   ConstantsResponseProto014 &
   ConstantsResponseProto013 &
   ConstantsResponseProto012 &
@@ -1498,6 +1583,10 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto015 extends ConstantsResponseProto014 {
+  minimal_stake: BigNumber;
+}
 
 export interface DalParametric {
   feature_enable: boolean;
@@ -1698,6 +1787,8 @@ export interface BlockMetadata {
   liquidity_baking_toggle_ema?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
   consumed_milligas?: string;
+  proposer_consensus_key?: string;
+  baker_consensus_key?: string;
 }
 
 export type RPCRunOperationParam = {

@@ -1,0 +1,54 @@
+# This is a very simple accounts system.
+# (Left key) initializes or deposits into an account
+# (Right key (pair mutez (signed mutez))) withdraws mutez amount to a
+# IMPLICIT_ACCOUNT created from the key if the balance is available
+# and the key is correctly signed
+parameter (or (key_hash %Initialize)
+              (pair     %Withdraw
+                 (key %from)
+                 (pair
+                    (mutez     %withdraw_amount)
+                    (signature %sig))));
+# Maps the key to the balance they have stored
+storage (map :stored_balance key_hash mutez);
+code { DUP; CAR;
+       # Deposit into account
+       IF_LEFT { DUP; DIIP{ CDR %stored_balance; DUP };
+                 DIP{ SWAP }; GET @opt_prev_balance;
+                 # Create the account
+                 IF_SOME # Add to an existing account
+                   { RENAME @previous_balance;
+                     AMOUNT; ADD; SOME; SWAP; UPDATE; NIL operation; PAIR }
+                   { DIP{ AMOUNT; SOME }; UPDATE; NIL operation; PAIR }}
+               # Withdrawal
+               { DUP; DUP; DUP; DUP;
+                 # Check signature on data
+                 CAR %from;
+                 DIIP{ CDAR %withdraw_amount; PACK ; BLAKE2B @signed_amount };
+                 DIP{ CDDR %sig }; CHECK_SIGNATURE;
+                 IF {} { PUSH string "Bad signature"; FAILWITH };
+                 # Get user account information
+                 DIIP{ CDR %stored_balance; DUP };
+                 CAR %from; HASH_KEY @from_hash; DUP; DIP{ DIP { SWAP }; SWAP}; GET;
+                 # Account does not exist
+                 IF_NONE { PUSH string "Account does not exist"; PAIR; FAILWITH }
+                         # Account exists
+                         { RENAME @previous_balance;
+                           DIP { DROP };
+                           DUP; DIIP{ DUP; CDAR %withdraw_amount; DUP };
+                           # Ensure funds are available
+                           DIP{ CMPLT @not_enough }; SWAP;
+                           IF { PUSH string "Not enough funds"; FAILWITH }
+                              { SUB_MUTEZ @new_balance; ASSERT_SOME; DIP{ DUP; DIP{ SWAP }}; DUP;
+                                # Delete account if balance is 0
+                                PUSH @zero mutez 0; CMPEQ @null_balance;
+                                IF { DROP; NONE @new_balance mutez }
+                                   # Otherwise update storage with new balance
+                                   { SOME @new_balance };
+                                SWAP; CAR %from; HASH_KEY @from_hash; UPDATE;
+                                SWAP; DUP; CDAR %withdraw_amount;
+                                # Execute the transfer
+                                DIP{ CAR %from; HASH_KEY @from_hash; IMPLICIT_ACCOUNT @from_account}; UNIT;
+                                TRANSFER_TOKENS @withdraw_transfer_op;
+                                NIL operation; SWAP; CONS;
+                                PAIR }}}}

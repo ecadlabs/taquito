@@ -1,4 +1,0 @@
-# Test that LOOP_LEFT {FAILWITH} is allowed by the typechecker
-parameter (or string nat);
-storage nat;
-code { CAR; LOOP_LEFT {FAILWITH}; NIL operation; PAIR }

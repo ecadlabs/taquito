@@ -1,7 +1,0 @@
-parameter nat;
-storage unit;
-storage unit;
-code { CAR;
-       DUP; NEG; ABS; COMPARE; ASSERT_EQ;
-       UNIT; NIL operation; PAIR };
-code {}

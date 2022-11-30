@@ -2333,7 +2333,7 @@ export const constants = {
   hard_gas_limit_per_operation: new BigNumber(1040000),
   hard_gas_limit_per_block: new BigNumber(5200000),
   proof_of_work_threshold: new BigNumber(70368744177663),
-  tokens_per_roll: new BigNumber(8000000000),
+  minimal_stake: new BigNumber(8000000000),
   michelson_maximum_type_size: 1000,
   seed_nonce_revelation_tip: new BigNumber(125000),
   origination_size: 257,
@@ -4833,6 +4833,221 @@ export const blockKathmandunetSample = {
   ],
 };
 
+export const blockLimanetSample = {
+  protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+  chain_id: 'NetXizpkH94bocH',
+  hash: 'BM5sGpbt1rEiNmfbbo8jcQHJaUZQYwKUXe4MK6B8hcxHDeEfuJx',
+  header: {
+    level: 104428,
+    proto: 2,
+    predecessor: 'BLoSHvgQ6i64fxa2cWV2PW77FB2apjFpuMgGT9CN9YTCkLHYUEu',
+    timestamp: '2022-11-02T02:02:55Z',
+    validation_pass: 4,
+    operations_hash: 'LLob51uyaK2Kn61U7LPTwPDGe7bEsAifAGjHaAXb5QvfwWv1nBwCC',
+    fitness: ['02', '000197ec', '', 'ffffffff', '00000000'],
+    context: 'CoVH2RtM1HHzLZmdbM86EkfwLEg42hmcdr4UGVmUezUDjyUEqYyj',
+    payload_hash: 'vh2keAERJ5aCT7EagCysfCYcxshQiDKmX1nVPw5mMxB1C6QVZ4eP',
+    payload_round: 0,
+    proof_of_work_nonce: 'e45ea3f000000000',
+    liquidity_baking_toggle_vote: 'off',
+    signature:
+      'sigPXDyg4aUDxaCQKFvsX1Bttek8M9LxSinKCfNnoFEKYBKRL2V7of9vRJUPVckdaA8GYaTcW5W3MXpvASNQX4PeHEkMSrM3',
+  },
+  metadata: {
+    protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+    next_protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+    test_chain_status: { status: 'not_running' },
+    max_operations_ttl: 120,
+    max_operation_data_length: 32768,
+    max_block_header_length: 289,
+    max_operation_list_length: [
+      { max_size: 4194304, max_op: 2048 },
+      { max_size: 32768 },
+      { max_size: 135168, max_op: 132 },
+      { max_size: 524288 },
+    ],
+    proposer: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+    baker: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+    level_info: {
+      level: 104428,
+      level_position: 104427,
+      cycle: 25,
+      cycle_position: 2027,
+      expected_commitment: false,
+    },
+    voting_period_info: {
+      voting_period: { index: 5, kind: 'proposal', start_position: 102400 },
+      position: 2027,
+      remaining: 2068,
+    },
+    nonce_hash: null,
+    deactivated: [],
+    balance_updates: [
+      {
+        kind: 'minted',
+        category: 'baking rewards',
+        change: '-5000000',
+        origin: 'block',
+      },
+      {
+        kind: 'contract',
+        contract: 'tz1MeT8NACB8Q4uV9dPQ3YxXBmYgapbxQxQ5',
+        change: '5000000',
+        origin: 'block',
+      },
+      {
+        kind: 'minted',
+        category: 'baking bonuses',
+        change: '-4073843',
+        origin: 'block',
+      },
+      {
+        kind: 'contract',
+        contract: 'tz1MeT8NACB8Q4uV9dPQ3YxXBmYgapbxQxQ5',
+        change: '4073843',
+        origin: 'block',
+      },
+    ],
+    liquidity_baking_toggle_ema: 583905253,
+    implicit_operations_results: [
+      {
+        kind: 'transaction',
+        storage: [
+          { int: '1' },
+          { int: '261067500100' },
+          { int: '100' },
+          { bytes: '01e927f00ef734dfc85919635e9afc9166c83ef9fc00' },
+          { bytes: '0115eb0104481a6d7921160bc982c5e0a561cd8a3a00' },
+        ],
+        balance_updates: [
+          {
+            kind: 'minted',
+            category: 'subsidy',
+            change: '-2500000',
+            origin: 'subsidy',
+          },
+          {
+            kind: 'contract',
+            contract: 'KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5',
+            change: '2500000',
+            origin: 'subsidy',
+          },
+        ],
+        consumed_gas: '225',
+        consumed_milligas: '224023',
+        storage_size: '4632',
+      },
+    ],
+    proposer_consensus_key: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+    baker_consensus_key: 'tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru',
+    consumed_milligas: '1100000',
+  },
+  operations: [
+    [
+      {
+        protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+        chain_id: 'NetXizpkH94bocH',
+        hash: 'opT8tdDhEafJu7qrzsdtwSqP1LcD9rKCNG7DoVT59vQV1JdxUu3',
+        branch: 'BKtKnh7dkSaZyRbAhRL8vF4ZT1SDKRvXptBQ4pKEh6pbmKE7yf4',
+        contents: [
+          {
+            kind: 'endorsement',
+            slot: 0,
+            level: 104427,
+            round: 0,
+            block_payload_hash: 'vh2zfP3jrzMXxabzESqDmMvSf6iStm9gW6TwsQHscCa423YbrULT',
+            metadata: {
+              delegate: 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc',
+              endorsement_power: 316,
+              consensus_key: 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc',
+            },
+          },
+        ],
+        signature:
+          'sigRk4JF7pC3BcfqqPYqdPvv3yAuxJBfUkTMqnx6oDDm6WZZggH7DLkyJMFennY1AaXtprhHBgFtnVptfxPYGRLYLYutqggG',
+      },
+    ],
+    [],
+    [],
+    [
+      {
+        protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+        chain_id: 'NetXizpkH94bocH',
+        hash: 'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
+        branch: 'BM6qkBbRP17B4UeQAFJBzWyPuy2bxEbKHGbUiP97xihMeeRywzW',
+        contents: [
+          {
+            kind: 'update_consensus_key',
+            source: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+            fee: '369',
+            counter: '19043',
+            gas_limit: '1100',
+            storage_limit: '0',
+            pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+                  change: '-369',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '369',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                consumed_gas: '1000',
+                consumed_milligas: '1000000',
+              },
+            },
+          },
+          {
+            kind: 'drain_delegate',
+            consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+            delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+            destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+                  change: '-15525772494',
+                  origin: 'block',
+                },
+                {
+                  kind: 'contract',
+                  contract: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+                  change: '15525772494',
+                  origin: 'block',
+                },
+                {
+                  kind: 'contract',
+                  contract: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+                  change: '-156825984',
+                  origin: 'block',
+                },
+                {
+                  kind: 'contract',
+                  contract: 'tz1hoyMUiJYYr4FRPMU8Z7WJzYkqgjygjaTy',
+                  change: '156825984',
+                  origin: 'block',
+                },
+              ],
+            },
+          },
+        ],
+        signature:
+          'sigrsWF7LpFpUBrTdvLnKm8DMuijk1LcZovZdKZDgsaafTPZhKsvLzPFHDzZYKCy4kobkgxVL7YPGnU5qzJJBcP2cAu5HW1C',
+      },
+    ],
+  ],
+};
+
 export const blockMondaynetSample = {
   protocol: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
   chain_id: 'NetXrxsLyu6hTHx',
@@ -5174,4 +5389,130 @@ export const txRollupInbox = {
   inbox_length: 1,
   cumulated_size: 4,
   merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
+};
+
+export const ticketUpdatesSample = {
+  protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+  chain_id: 'NetXizpkH94bocH',
+  hash: 'BLAoXLidLrRnUQaUNPanuiaGTS3Ce2azZQysz2mMTCUnFg2799j',
+  header: {},
+  metadata: {},
+  operations: [
+    [
+      {
+        protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+        chain_id: 'NetXizpkH94bocH',
+        hash: 'onrYwrpBkF54XTGkxQBUhEcVhgqoava49oWMo5DmGgrh3yqodYN',
+        branch: 'BKmKts5CAQ2oLv3UvB3jWTMNHKsbxSofMeaNGLWA8WAavY9jqWb',
+        contents: [
+          {
+            kind: 'transaction',
+            source: 'tz1PVMKUxmFBB2c3NqKTRi7K7TKgfNYP97Ly',
+            fee: '2122',
+            counter: '76',
+            gas_limit: '18472',
+            storage_limit: '929',
+            amount: '0',
+            destination: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+            parameters: {
+              entrypoint: 'exchange_tickets',
+              value: {
+                int: '2'
+              }
+            },
+            metadata: {
+              operation_result: {
+                status: 'applied',
+                storage: {
+                  prim: 'Pair',
+                  args: [
+                    {
+                      prim: 'Pair',
+                      args: [
+                        {
+                          prim: 'None'
+                        },
+                        []
+                      ]
+                    },
+                    {
+                      prim: 'Pair',
+                      args: [
+                        {
+                          bytes: '00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05'
+                        },
+                        {
+                          bytes: '016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00'
+                        }
+                      ]
+                    }
+                  ]
+                },
+                ticket_updates: [
+                  {
+                    ticket_token: {
+                      ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
+                      content_type: {
+                        prim: 'unit'
+                      },
+                      content: {
+                        prim: 'Unit'
+                      }
+                    },
+                    updates: [
+                      {
+                        account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+                        amount: '-2'
+                      }
+                    ]
+                  }
+                ],
+                consumed_milligas: '4077693',
+                storage_size: '5600'
+              },
+              internal_operation_results: [
+                {
+                  kind: 'transaction',
+                  source: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
+                  nonce: 1,
+                  amount: '0',
+                  destination: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+                  parameters: {
+                    entrypoint: 'receive_cards',
+                    value: []
+                  },
+                  result: {
+                    status: 'applied',
+                    ticket_receipt: [
+                      {
+                        ticket_token: {
+                          ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
+                          content_type: {
+                            prim: 'string'
+                          },
+                          content: {
+                            string: 'Ferosinge'
+                          }
+                        },
+                        updates: [
+                          {
+                            account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
+                            amount: '1'
+                          }
+                        ]
+                      },
+                    ],
+                    consumed_milligas: '7372756',
+                    storage_size: '6015',
+                    paid_storage_size_diff: '380'
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        signature: 'sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H'
+      }
+    ]
+  ]
 };

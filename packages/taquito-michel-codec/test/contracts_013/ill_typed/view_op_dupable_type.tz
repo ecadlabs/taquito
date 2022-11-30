@@ -1,3 +1,0 @@
-parameter (pair nat address) ;
-storage nat ;
-code { CAR ; UNPAIR ; VIEW "add" (ticket nat); DROP ; PUSH nat 1 ; NIL operation ; PAIR } ;
