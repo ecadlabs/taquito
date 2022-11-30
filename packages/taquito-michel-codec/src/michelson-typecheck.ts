@@ -1876,6 +1876,23 @@ function functionTypeInternal(
           annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 })),
           ...stack.slice(2),
         ];
+        // let r: MichelsonType;
+        // if (ctx?.protocol === Protocol.PtLimaPtL) {
+        //   r = [
+        //     annotateVar({
+        //       prim: 'option',
+        //       args: [
+        //         annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 }))
+        //       ]
+        //     })
+        //   ];
+        // } else {
+        //   r = [
+        //     annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 })),
+        //     ...stack.slice(2),
+        //   ];
+        // }
+        // return r;
       }
 
       case 'JOIN_TICKETS': {
