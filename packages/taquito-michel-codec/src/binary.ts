@@ -87,7 +87,6 @@ const primitives: PrimID[] = [
   'IF_NONE',
   'INT',
   'LAMBDA',
-  'LAMBDA_REC',
   'LE',
   'LEFT',
   'LOOP',
@@ -187,6 +186,7 @@ const primitives: PrimID[] = [
   'constant',
   'SUB_MUTEZ',
   'EMIT',
+  'LAMBDA_REC',
 ];
 
 const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =
