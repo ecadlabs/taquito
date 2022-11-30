@@ -199,7 +199,7 @@ export const primEncoder: Encoder<PrimValue> = (value) => {
   let encodedArgs = (value.args || []).map((arg) => valueEncoder(arg)).join('');
   const encodedAnnots = Array.isArray(value.annots) ? encodeAnnots(value.annots) : '';
 
-  if (value.prim === 'LAMBDA' && argsCount) {
+  if ((value.prim === 'LAMBDA' || value.prim === 'LAMBDA_REC') && argsCount) {
     encodedArgs = pad(encodedArgs.length / 2) + encodedArgs + pad(0);
   }
 
@@ -226,7 +226,7 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
     prim: opMapping[op],
   };
 
-  if (opMapping[op] === 'LAMBDA') {
+  if (opMapping[op] === 'LAMBDA' || opMapping[op] === 'LAMBDA_REC') {
     value.consume(4);
   }
 
@@ -248,7 +248,7 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
 
   const args = new Array(argsCount).fill(0).map(() => valueDecoder(value));
 
-  if (opMapping[op] === 'LAMBDA') {
+  if (opMapping[op] === 'LAMBDA' || opMapping[op] === 'LAMBDA_REC') {
     value.consume(4);
   }
 
