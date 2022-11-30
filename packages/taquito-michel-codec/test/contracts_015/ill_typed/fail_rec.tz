@@ -1,0 +1,8 @@
+{ parameter unit;
+  storage unit;
+  code { CAR;
+         LAMBDA_REC unit unit { };
+         SWAP;
+         EXEC;
+         NIL operation;
+         PAIR}}

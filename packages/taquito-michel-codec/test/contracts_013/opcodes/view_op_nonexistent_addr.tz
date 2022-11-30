@@ -1,5 +1,0 @@
-parameter (pair nat address) ;
-storage bool ;
-code { DROP; PUSH address "tz1SuakBpFdG9b4twyfrSMqZzruxhpMeSrE5"; PUSH nat 0;
-       VIEW "test" bool; IF_SOME { DROP ; PUSH bool True } { PUSH bool False } ;
-       NIL operation ; PAIR } ;

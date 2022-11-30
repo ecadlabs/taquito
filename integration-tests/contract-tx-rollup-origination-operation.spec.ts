@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { OpKind, Protocols } from "@taquito/taquito";
+import { OpKind } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it('should succeed to originate a rollup with defined fees', async (done) => {
       const op = await Tezos.contract.txRollupOriginate({
-        storageLimit: 6000,
+        storageLimit: 60000,
         gasLimit: 2000,
         fee: 500
       });

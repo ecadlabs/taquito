@@ -1,0 +1,7 @@
+# Test for old PAIR k annotation handling bug
+parameter unit;
+storage unit;
+code { SENDER; SOURCE; PAIR 2;
+       SOURCE; SENDER; PAIR 2;
+       COMPARE; DROP;
+       CDR; NIL operation; PAIR }

@@ -43,12 +43,14 @@ Taquito currently supports the following versions of Node.js®:
 
 | Version          | Supported? |
 | ---------------- | ---------- |
-| v12              |    ❌      |
-| v14              |    ❌      |
+| v12 LTS          |    ❌      |
+| v14 LTS          |    ❌      |
 | v16.13.1         |    ✅      |
 | v16.13.2         |    ❌      |
+| v16 LTS/Gallium  |    ✅      |
 | 17.3.x           |    ✅      |
 | v17.5.x          |    ❌      |
+| v18 LTS/Hydrogen |    ✅      |
 
 While other versions often work, the above are what we officially support. YMMV!
 
@@ -56,12 +58,12 @@ While other versions often work, the above are what we officially support. YMMV!
 
 We are active and enthusiastic participants of the following community support channels:
 
-- [TezosTaquito Telegram Community Channel][telegram]
+- [ECAD Labs Discord Channel][discord]
 - [Tezos StackExchange][stackexchange]
 
 ## Project Organization
 
-`taquito` is organized as a [mono repo](https://en.wikipedia.org/wiki/Monorepo), and includes several npm packages published to npmjs.org under the `@taquito` handle. Each package has its own README and can be found in the `packages/` directory
+Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), and is composed of several npm packages that are [published to npmjs.org](https://www.npmjs.com/package/@taquito/taquito) under the `@taquito` handle. Each package has its own README which can be found in the corresponding directory within `packages/`.
 
 | High-Level Packages                                            | Responsibility                                               |
 | -------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -69,16 +71,16 @@ We are active and enthusiastic participants of the following community support c
 
 | Low-Level Packages                                               | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
-| [@taquito/local-forging](packages/taquito-local-forging)         | Local "forging" of Tezos operations                           |
-| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Creates a JS abstraction for Smart Contracts                  |
-| [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms and expands Macros           |
+| [@taquito/local-forging](packages/taquito-local-forging)         | Local "forging": serialization of Tezos operations as bytes   |
+| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Creates JS abstractions of Smart Contracts                    |
+| [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms, expands Macros, etc         |
 | [@taquito/remote-signer](packages/taquito-remote-signer)         | Provides the facility to use a remote signer, such as https://signatory.io    |
 | [@taquito/rpc](packages/taquito-rpc)                             | RPC client library: every rpc endpoint has its own method     |
-| [@taquito/signer](packages/taquito-signer)                       | Provide necessary function to sign using tezos keys           |
-| [@taquito/utils](packages/taquito-utils)                         | Provide different encoding and decoding utilities             |
-| [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 Implementation for Taquito                            |
-| [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 Implementation for Taquito                            |
-| [@taquito/beacon-wallet](packages/taquito-beacon-wallet)         | TZIP-10 Wallet Interaction implementation for the Wallet API  |
+| [@taquito/signer](packages/taquito-signer)                       | Provides functionality to sign data using tezos keys          |
+| [@taquito/utils](packages/taquito-utils)                         | Provides different encoding and decoding utilities            |
+| [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 allows retrieving NFT/token metadata                  |
+| [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 allows retrieving contract metadata and executing off-chain views |
+| [@taquito/beacon-wallet](packages/taquito-beacon-wallet)         | TZIP-10 implementation of a Wallet API                        |
 
 ## API Documentation
 
@@ -114,17 +116,9 @@ Releases (git tags and npm packages) are signed either by [keybase/jevonearth][2
 
 You would like to make a contribution to Taquito? Wonderful! Please read on.
 
-### Setup and build the Taquito project 
+### Setup and build the Taquito project
 
-Install/use a suitable version of **Node.js** (_as listed above_), for example:
-    
-    `nvm use v17.3.0`
-
-* Install `lerna` globally:
-
-    `npm install -g lerna`
-
-*Taquito uses `lerna` internally to simplify the build configuration.*
+*It is important to perform the following in the stated order*
 
 * Install `libudev-dev`, if developing on GNU/Linux:
 
@@ -132,21 +126,42 @@ Install/use a suitable version of **Node.js** (_as listed above_), for example:
 
 *This package contains low-level files required to compile against `libudev-*`.*
 
+* Install/use a suitable version of **Node.js** (_as listed above_), for example:
+
+    `nvm use lts/gallium`
+
+* Install `lerna` **globally** (used by our blazingly-fast nx-based build system):
+
+    `npm install --global lerna`
+
 ### Setup and build Taquito
 
-* Run `npm run rebuild`
+Now that your prerequisites have been installed, run the following commands:
+```sh
+$ npm clean-install
+...
+$ npm run build
+...
+```
 
-That command invokes serially the following commands:
+If all goes well, the last step is to run the unit tests, which should all pass:
+```sh
+$ npm run test
+```
 
-* Run `npm run clean`
-* Run `npm clean-install`  *# n.b. no `run`: `clean-install` is an npm __built-in__*
-* Run `npm run build`
+### Build GOTCHAS!
 
-The `clean-install` (or just `ci`) command ensures a clean install of all depenencies, and respects `package-lock.json`, to ensure a deterministic and repeatable build (it is also some 2x to 10x faster than `npm install`). It will not adjust `package.json`: hooray!
+* **Do not delete `node_modules/` manually, as this will confuse the build system**
+
+The taquito build system is based on `nx`, which uses caching extensively; please use `npm run clean` instead.
+
+* **Do not use `npm install`, as it will unnecessarily update `package.json`**
+
+The `npm clean-install` command (or just `npm ci`) produces a stable installation of all depenencies and respects `package-lock.json`. This will ensure a deterministic and repeatable build. It is also some 2x to 10x faster than `npm install`: hooray!
 
 ### Useful npm command targets/scripts
 
-See the top-level `package.json` "scripts" section. Some common targets are:
+See the top-level `package.json` "scripts" section. Common targets include:
 
 * `npm run clean`: Recursively delete all build artifacts
 * `npm run test`: Run the unit tests
@@ -156,33 +171,27 @@ See the top-level `package.json` "scripts" section. Some common targets are:
 
 ### Running Integration Tests
 
-The Taquito integration tests are located in the `/integration-tests/` directory.
-
-To run the integration tests, `cd` into `/integration-tests/` and run `npm run test` (ensure you have completed the build steps as described earlier in this README file.). The integration test suite runs all tests against the current tezos protocol testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
-
-There are many integration tests, and as they interact with real testnets, they can be slow. Furthermore, occasionally tests fail due to extrinsic reasons related to public testnets.
+The Taquito integration tests are located in the `integration-tests/` directory. Please see the README.md in that directory for further information.
 
 #### Modifying Taquito source
 
-After making a change to Taquito, linting and running the unit test suite should let you know if your changes are working well with the rest of the project.
+After making your changes to Taquito, lint and run the unit test suite; this will let you know if your changes are working well with the rest of the project:
+```sh
+npm run lint
+npm run test
+npm run commit
+```
 
-* Run `npm run lint`
-* Run `npm run test`
-* Run `npm run commit`
-
-Please use `npm run commit` for your last commit before you push, as this will automagically formulate the correct commit format.
+Please use `npm run commit` for your last commit before you push, as this will automagically formulate the correct commit format. A final lint and test cycle will take place before the commit is performed.
 
 ### Running the website locally
 
-The Tezos Taquito [website][4] is built using [Docusaurus][5].
+You may wish to contribute to the live code examples, this explains how to do that. Note that the Tezos Taquito [website][4] is built using [Docusaurus][5].
 
-To run the Taquito website in development mode locally, run the following commands:
+To run the Taquito website in development mode locally, run the following commands from top-level:
 
-```
-cd website
-npm install
-npm start
-```
+* Run `npm clean-install`
+* Run `npm -w @taquito/website start`
 
 ## Contributions / Reporting Issues
 
@@ -216,5 +225,5 @@ Special thanks to these libraries, which have been excellent references for deve
 [3]: https://keybase.io/simrob
 [4]: https://tezostaquito.io
 [5]: https://docusaurus.io/
-[telegram]: https://t.me/tezostaquito
 [stackexchange]: https://tezos.stackexchange.com/questions/tagged/taquito
+[discord]: https://discord.com/channels/934567382700146739/939205889901092874

@@ -1,0 +1,3 @@
+parameter (pair (pair %p1 unit (string %no_name)) bool);
+storage unit;
+code { CAR @param; CADR @name %no_name; DROP; UNIT; NIL operation; PAIR }

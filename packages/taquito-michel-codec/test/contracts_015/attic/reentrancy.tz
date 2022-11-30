@@ -1,0 +1,7 @@
+parameter unit;
+storage (pair address address);
+code { CDR; DUP; CAR;
+       CONTRACT unit ; ASSERT_SOME ; PUSH mutez 5000000; UNIT; TRANSFER_TOKENS;
+       DIP {DUP; CDR;
+            CONTRACT unit ; ASSERT_SOME ; PUSH mutez 5000000; UNIT; TRANSFER_TOKENS};
+       DIIP{NIL operation};DIP{CONS};CONS;PAIR};

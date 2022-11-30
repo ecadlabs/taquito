@@ -9,10 +9,14 @@ import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
-import { mnemonicToSeedSync } from './mnemonicToSeedSync';
+import * as Bip39 from 'bip39';
+import { Curves, generateSecretKey } from './helpers';
+import { InvalidMnemonicError } from './errors';
 
 export * from './import-key';
 export { VERSION } from './version';
+export * from './derivation-tools';
+export * from './helpers';
 
 /**
  *  @category Error
@@ -25,6 +29,13 @@ export class InvalidPassphraseError extends Error {
   }
 }
 
+export interface FromMnemonicParams {
+  mnemonic: string;
+  password?: string;
+  derivationPath?: string;
+  curve?: Curves;
+}
+
 /**
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
  *
@@ -35,7 +46,10 @@ export class InMemorySigner {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
-    const seed = mnemonicToSeedSync(mnemonic, `${email}${password}`);
+    if (!Bip39.validateMnemonic(mnemonic)) {
+      throw new InvalidMnemonicError(`Invalid mnemonic: ${mnemonic}`);
+    }
+    const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58cencode(seed.slice(0, 32), prefix.edsk2);
     return new InMemorySigner(key);
   }
@@ -44,6 +58,27 @@ export class InMemorySigner {
     return new InMemorySigner(key, passphrase);
   }
 
+  /**
+   *
+   * @description Instantiation of an InMemorySigner instance from a mnemonic
+   * @param mnemonic 12-24 word mnemonic
+   * @param password password used to encrypt the mnemonic to seed value
+   * @param derivationPath default 44'/1729'/0'/0' (44'/1729' mandatory)
+   * @param curve currently only supported for tz1, tz2, tz3 addresses. soon bip25519
+   * @returns InMemorySigner
+   */
+  static fromMnemonic({ mnemonic, password = '', derivationPath = "44'/1729'/0'/0'", curve = 'ed25519' }: FromMnemonicParams) {
+    // check if curve is defined if not default tz1
+    if (!Bip39.validateMnemonic(mnemonic)) {
+      // avoiding exposing mnemonic again in case of mistake making invalid
+      throw new InvalidMnemonicError('Mnemonic provided is invalid');
+    }
+    const seed = Bip39.mnemonicToSeedSync(mnemonic, password);
+
+    const sk = generateSecretKey(seed, derivationPath, curve);
+
+    return new InMemorySigner(sk);
+  }
   /**
    *
    * @param key Encoded private key

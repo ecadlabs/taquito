@@ -1,3 +1,0 @@
-parameter (list (pair bls12_381_g1 bls12_381_g2));
-storage (option bool);
-code {CAR; PAIRING_CHECK; SOME; NIL operation; PAIR}

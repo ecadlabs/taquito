@@ -117,6 +117,8 @@ export interface RpcClientInterface {
     blockLevel: string,
     options?: RPCOptions
   ): Promise<TxRollupInboxResponse | null>;
+  getStorageUsedSpace(contract: string, options?: RPCOptions): Promise<string>;
+  getStoragePaidSpace(contract: string, options?: RPCOptions): Promise<string>;
 }
 
 export enum RPCMethodName {
@@ -155,4 +157,6 @@ export enum RPCMethodName {
   GET_TX_ROLLUP_STATE = 'getTxRollupState',
   GET_VOTES_LISTINGS = 'getVotesListings',
   PACK_DATA = 'packData',
+  GET_STORAGE_USED_SPACE = 'getStorageUsedSpace',
+  GET_STORAGE_PAID_SPACE = 'getStoragePaidSpace',
 }

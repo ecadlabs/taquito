@@ -1,7 +1,0 @@
-parameter (or (pair %view_const unit (contract nat)) (pair %view_add (pair int int) (contract int)));
-storage unit;
-code {
-       CAR;
-       IF_LEFT {CDR; AMOUNT; PUSH nat 5; TRANSFER_TOKENS; NIL operation; SWAP; CONS; UNIT; SWAP; PAIR}
-               {UNPAIR; UNPAIR; ADD; AMOUNT; SWAP; TRANSFER_TOKENS; NIL operation; SWAP; CONS; UNIT; SWAP; PAIR};
-       }

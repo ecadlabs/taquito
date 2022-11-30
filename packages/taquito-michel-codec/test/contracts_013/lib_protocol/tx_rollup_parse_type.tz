@@ -1,3 +1,0 @@
-parameter tx_rollup_l2_address;
-storage unit;
-code { DROP; UNIT; NIL operation; PAIR; }

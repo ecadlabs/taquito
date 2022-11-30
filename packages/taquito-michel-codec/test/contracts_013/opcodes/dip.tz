@@ -1,8 +1,0 @@
-parameter (pair nat nat);
-storage (pair nat nat);
-code{
-      CAR; UNPAIR;
-      DUP; DIP { ADD };
-      PAIR;
-      NIL operation;
-      PAIR};

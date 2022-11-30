@@ -30,4 +30,5 @@ export enum OpKind {
   DRAIN_DELEGATE = 'drain_delegate',
   VDF_REVELATION = 'vdf_revelation',
   EVENT = 'event',
+  TICKET_UPDATES = 'ticket_updates',
 }
