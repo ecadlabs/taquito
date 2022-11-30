@@ -133,11 +133,11 @@ const contracts: {
   lib_protocol: [
     'emit.tz',
     'int-store.tz',
-    // 'omega.tz', TODO add new instruction LAMDBA_REC
-    // 'rec_fact_apply_store.tz', TODO add new instruction LAMDBA_REC
-    // 'rec_fact_apply.tz', TODO add new instruction LAMDBA_REC
-    // 'rec_fact_store.tz', TODO add new instruction LAMDBA_REC
-    // 'rec_fact.tz', TODO add new instruction LAMDBA_REC
+    'omega.tz',
+    'rec_fact_apply_store.tz',
+    'rec_fact_apply.tz',
+    'rec_fact_store.tz',
+    'rec_fact.tz',
     'sapling_contract_double.tz',
     'sapling_contract_drop.tz',
     'sapling_contract_send.tz',
@@ -179,7 +179,7 @@ const contracts: {
     'unpair_macro.tz',
   ],
   mini_scenarios: [
-    // 'add_clear_tickets.tz', TODO fix TICKET ASSERT_SOME
+    'add_clear_tickets.tz', //TODO fix TICKET ASSERT_SOME
     'authentication.tz',
     'big_map_entrypoints.tz',
     'big_map_magic.tz',
@@ -208,9 +208,9 @@ const contracts: {
     'reveal_signed_preimage.tz',
     'self_address_receiver.tz',
     'self_address_sender.tz',
-    // 'send_tickets_in_big_map.tz', TODO fix TICKET ASSERT_SOME
-    // 'ticket_builder_fungible.tz', TODO fix TICKET ASSERT_SOME
-    // 'ticket_builder_non_fungible.tz', TODO fix TICKET ASSERT_SOME
+    'send_tickets_in_big_map.tz', // TODO fix TICKET ASSERT_SOME
+    'ticket_builder_fungible.tz', // TODO fix TICKET ASSERT_SOME
+    'ticket_builder_non_fungible.tz', // TODO fix TICKET ASSERT_SOME
     'ticket_wallet_fungible.tz',
     'ticket_wallet_non_fungible.tz',
     'vote_for_delegate.tz',
@@ -391,9 +391,9 @@ const contracts: {
     'sub_timestamp_delta.tz',
     'tez_add_sub.tz',
     'ticket_bad.tz',
-    // 'ticket_big_store.tz', TODO fix TICKET ASSERT_SOME
-    // 'ticketer-2.tz', TODO fix TICKET ASSERT_SOME
-    // 'ticketer.tz', TODO fix TICKET ASSERT_SOME
+    'ticket_big_store.tz', // TODO fix TICKET ASSERT_SOME
+    'ticketer-2.tz', // TODO fix TICKET ASSERT_SOME
+    'ticketer.tz', // TODO fix TICKET ASSERT_SOME
     'ticket_join.tz',
     'ticket_read.tz',
     'ticket_split.tz',
@@ -405,7 +405,7 @@ const contracts: {
     'unpair.tz',
     'update_big_map.tz',
     'utxo_read.tz',
-    // 'utxor.tz', TODO fix TICKET ASSERT_SOME
+    'utxor.tz', // TODO fix TICKET ASSERT_SOME
     'view_fib.tz',
     'view_mutual_recursion.tz',
     'view_op_add.tz',
@@ -448,81 +448,6 @@ describe('PtLimaPtL', () => {
             throw err;
           }
         });
-
-        // it('parse check null case', () => {
-        //   const options: ContractOptions = {
-        //     protocol: Protocol.PtLimaPtL,
-        //   };
-        //   const src = '';
-        //   expect(() => Contract.parse(src, options)).toThrow('empty contract');
-        //   expect(() => Contract.parse(src, options)).toThrow(
-        //     expect.objectContaining({
-        //       name: expect.stringContaining('InvalidContractError'),
-        //     })
-        //   );
-        //   expect(() => Contract.parse(src, options)).toThrow(
-        //     expect.objectContaining({
-        //       message: expect.stringContaining('empty contract'),
-        //     })
-        //   );
-        // });
-
-        // it('parseTypeExpression null case', () => {
-        //   const options: ContractOptions = {
-        //     protocol: Protocol.PtLimaPtL,
-        //   };
-        //   const src = '';
-        //   expect(() => Contract.parseTypeExpression(src, options)).toThrow(
-        //     InvalidTypeExpressionError
-        //   );
-        //   expect(() => Contract.parseTypeExpression(src, options)).toThrow(
-        //     expect.objectContaining({
-        //       message: expect.stringContaining('empty type expression'),
-        //     })
-        //   );
-        // });
-
-        // it('parse error case', () => {
-        //   const options: ContractOptions = {
-        //     protocol: Protocol.PtLimaPtL,
-        //   };
-        //   const contract = `{ parameter unit ;
-        //     unit ;
-        //     code { DROP ;
-        //            UNIT ;
-        //            PUSH nat 10 ;
-        //            LEFT string ;
-        //            EMIT %event ;
-        //            PUSH string "lorem ipsum" ;
-        //            RIGHT nat ;
-        //            EMIT %event (or (nat %number) (string %words)) ;
-        //            NIL operation ;
-        //            SWAP ;
-        //            CONS ;
-        //            SWAP ;
-        //            CONS ;
-        //            PAIR } }`;
-        //   expect(() => Contract.parse(contract, options)).toThrow(MichelsonValidationError);
-        //   expect(() => Contract.parse(contract, options)).toThrow(
-        //     expect.objectContaining({
-        //       message: expect.stringContaining('unexpected contract section: unit'),
-        //     })
-        //   );
-        // });
-
-        // it('parseDataExpression check the null case', () => {
-        //   const options: ContractOptions = {
-        //     protocol: Protocol.PtLimaPtL,
-        //   };
-        //   expect(() => Contract.parseDataExpression('', options)).toThrow(
-        //     InvalidDataExpressionError
-        //   );
-        //   expect(() => Contract.parseDataExpression('', options)).toThrow(
-        //     expect.objectContaining({
-        //       message: expect.stringContaining('empty data expression'),
-        //     })
-        //   );
-        // });
       }
     });
   }
