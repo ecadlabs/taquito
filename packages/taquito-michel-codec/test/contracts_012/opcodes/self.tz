@@ -1,3 +1,0 @@
-parameter unit ;
-storage address ;
-code { DROP ; SELF ; ADDRESS ; NIL operation ; PAIR }

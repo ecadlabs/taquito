@@ -1,4 +1,0 @@
-# Test that LOOP {FAILWITH} is allowed by the typechecker
-parameter bool;
-storage unit;
-code { UNPAIR; LOOP {FAILWITH}; NIL operation; PAIR }

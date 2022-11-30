@@ -1,5 +1,0 @@
-parameter nat;
-storage nat;
-code { CAR ; NIL operation ; PAIR } ;
-view "dup" (ticket nat) nat { DROP; PUSH nat 1; PUSH nat 1 ; PAIR} ;
-

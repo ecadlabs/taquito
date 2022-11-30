@@ -1,6 +1,0 @@
-storage (pair (big_map string string) unit);
-parameter (map string (option string));
-# this contract the stored big_map according to the map taken in parameter
-code { UNPAPAIR;
-       ITER { UNPAIR; UPDATE; } ;
-       PAIR; NIL operation; PAIR};

@@ -1,4 +1,0 @@
-parameter unit;
-storage nat;
-code { FAIL };
-view "map" (big_map string nat) unit { DROP; UNIT;};

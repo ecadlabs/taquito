@@ -1,4 +1,0 @@
-# A trivial contract with some entrypoints
-parameter (or (unit %A) (or (string %B) (nat %C))) ;
-storage unit;
-code { CDR ; NIL operation ; PAIR }

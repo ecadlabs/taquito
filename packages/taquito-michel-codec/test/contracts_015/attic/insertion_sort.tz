@@ -1,0 +1,16 @@
+parameter (list int) ;
+storage (list int) ;
+code { CAR ;
+       NIL int ; SWAP ;
+       ITER { SWAP; DIIP{NIL int} ; PUSH bool True ;
+              LOOP
+                { IF_CONS
+                    { SWAP ;
+                      DIP{DUP ; DIIP{DUP} ; DIP{CMPLT} ; SWAP} ;
+                      SWAP ;
+                      IF { DIP{SWAP ; DIP{CONS}} ; PUSH bool True}
+                         { SWAP ; CONS ; PUSH bool False}}
+                    { NIL int ; PUSH bool False}} ;
+              SWAP ; CONS ; SWAP ;
+              ITER {CONS}} ;
+       NIL operation ; PAIR }

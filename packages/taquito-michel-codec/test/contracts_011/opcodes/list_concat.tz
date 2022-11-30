@@ -1,3 +1,0 @@
-parameter (list string);
-storage string;
-code { UNPAIR ; SWAP ; CONS ; CONCAT; NIL operation; PAIR}
