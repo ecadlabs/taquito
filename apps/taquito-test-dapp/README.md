@@ -7,8 +7,8 @@ A minimal end-to-end testing setup for developing Tezos DApps with Taquito and B
 #### Initial setup:
 1. Clone the Taquito repository: `git clone git@github.com:ecadlabs/taquito.git`
 1. Change your current working directory to the newly cloned repository.
-1. Install dependencies with `npm i`
-1. Build Taquito. `npm run build`
+1. Install dependencies: `npm i`
+1. Build Taquito: `npm run build`
 1. Change your current working directory to `apps/taquito-test-dapp`.
 1. Start development or production server as is shown below.
 
