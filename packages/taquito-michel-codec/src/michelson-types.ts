@@ -176,7 +176,6 @@ export type MichelsonTypeID =
   | 'pair'
   | 'or'
   | 'lambda'
-  | 'lambda_rec'
   | 'map'
   | 'big_map'
   | 'sapling_transaction'
@@ -227,8 +226,6 @@ export interface MichelsonTypeContract<T extends MichelsonType> extends TypeX<'c
 export interface MichelsonTypeOr<T extends [MichelsonType, MichelsonType]> extends TypeX<'or', T> {}
 export interface MichelsonTypeLambda<Arg extends MichelsonType, Ret extends MichelsonType>
   extends TypeX<'lambda', [Arg, Ret]> {}
-export interface MichelsonTypeLambdaRec<Arg extends MichelsonType, Ret extends MichelsonType>
-  extends TypeX<'lambda_rec', [Arg, Ret]> {}
 
 export interface MichelsonTypeSet<T extends MichelsonType> extends TypeX<'set', [T]> {}
 export interface MichelsonTypeMap<K extends MichelsonType, V extends MichelsonType>
@@ -283,8 +280,6 @@ export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> = T exten
   ? MichelsonTypeOr<[MichelsonType, MichelsonType]>
   : T extends 'lambda'
   ? MichelsonTypeLambda<MichelsonType, MichelsonType>
-  : T extends 'lambda_rec'
-  ? MichelsonTypeLambdaRec<MichelsonType, MichelsonType>
   : T extends 'set'
   ? MichelsonTypeSet<MichelsonType>
   : T extends 'map'

@@ -154,7 +154,6 @@ const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparabl
   big_map: true,
   contract: true,
   lambda: true,
-  lambda_rec: true,
   list: true,
   map: true,
   operation: true,
@@ -624,13 +623,6 @@ function traverseType(ex: Prim | Expr[], cb: (ex: Prim | Expr[]) => void): ex is
       break;
 
     case 'lambda':
-      /* istanbul ignore else */
-      if (assertArgs(ex, 2)) {
-        assertMichelsonType(ex.args[0]);
-        assertMichelsonType(ex.args[1]);
-      }
-      break;
-    case 'lambda_rec':
       /* istanbul ignore else */
       if (assertArgs(ex, 2)) {
         assertMichelsonType(ex.args[0]);

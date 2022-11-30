@@ -121,7 +121,6 @@ function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, field = fals
       break;
 
     case 'lambda':
-    case 'lambda_rec':
     case 'map':
     case 'big_map':
       assertScalarTypesEqual(a.args[0], (b as typeof a).args[0]);
@@ -202,7 +201,6 @@ export function assertTypeAnnotationsValid(t: MichelsonType, field = false): voi
       break;
 
     case 'lambda':
-    case 'lambda_rec':
     case 'map':
     case 'big_map':
       assertTypeAnnotationsValid(t.args[0]);
@@ -505,7 +503,6 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       }
       throw new MichelsonTypeError(t, d, `union (or) expected: ${JSON.stringify(d)}`);
     case 'lambda':
-    case 'lambda_rec':
       if (isFunction(d)) {
         const ret = functionTypeInternal(d, [t.args[0]], ctx);
         if ('failed' in ret) {
@@ -1102,7 +1099,6 @@ function functionTypeInternal(
             `${instruction.prim}: function's argument must be a pair: ${typeID(s[1].args[0])}`
           );
         }
-        console.log('ap', s);
         const pt = s[1].args[0];
         ensureTypesEqual(s[0], typeArgs(pt)[0]);
         return [
@@ -1825,7 +1821,6 @@ function functionTypeInternal(
           ...ctx,
           contract: undefined,
         });
-        console.log('here', s,'body',  body)
         if ('failed' in body) {
           return { failed: body.failed, level: body.level + 1 };
         }
@@ -1855,12 +1850,7 @@ function functionTypeInternal(
 
       case 'TICKET': {
         const s = args(0, null, ['nat'])[0];
-        console.log('s', s)
         ensureComparableType(s);
-        // return [
-        //   annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 })),
-        //   ...stack.slice(2),
-        // ];
         let r: MichelsonType;
         if (ctx?.protocol === Protocol.PtLimaPtL) {
           r = [
