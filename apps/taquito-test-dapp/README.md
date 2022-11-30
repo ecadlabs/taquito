@@ -10,7 +10,7 @@ A minimal end-to-end testing setup for developing Tezos DApps with Taquito and B
 1. Install dependencies: `npm i`
 1. Build Taquito: `npm run build`
 1. Change your current working directory to `apps/taquito-test-dapp`.
-1. Start development or production server as is shown below.
+1. Start development or production server as shown below.
 
 #### Start development server:
 1. `npm run dev`
