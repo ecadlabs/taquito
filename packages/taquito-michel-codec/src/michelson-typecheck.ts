@@ -699,7 +699,7 @@ function functionTypeInternal(
 
   // unpack instruction annotations and assert their maximum number
   function instructionAnn(
-    num: { f?: number; t?: number; v?: number },
+    num: { f?: number; t?: number; v?: number; },
     opt?: UnpackAnnotationsOptions
   ) {
     const a = argAnn(instruction, {
@@ -2078,7 +2078,7 @@ export function contractSection<T extends 'parameter' | 'storage' | 'code'>(
 export function contractViews(contract: MichelsonContract): {
   [name: string]: MichelsonContractView;
 } {
-  const views: { [name: string]: MichelsonContractView } = {};
+  const views: { [name: string]: MichelsonContractView; } = {};
   for (const s of contract) {
     if (s.prim === 'view') {
       views[s.args[0].string] = s;
