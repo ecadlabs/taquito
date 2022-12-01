@@ -324,7 +324,7 @@ type DataList<T extends MichelsonData[]> = T & Node;
 export type MichelsonDataPair<T extends MichelsonData[]> = DataX<'Pair', T> | DataList<T>;
 export type MichelsonMapElt = PrimX<'Elt', [MichelsonData, MichelsonData]>;
 export type MichelsonMapEltList = List<MichelsonMapElt>;
-export type MichelsonLambdaRec = DataX<'Lambda_rec', [MichelsonLambdaRec]>
+export type MichelsonLambdaRec = DataX<'Lambda_rec', [InstructionList]>
 
 export type MichelsonData =
   | IntLiteral
