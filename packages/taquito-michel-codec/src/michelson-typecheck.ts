@@ -1851,7 +1851,12 @@ function functionTypeInternal(
       case 'TICKET': {
         const s = args(0, null, ['nat'])[0];
         ensureComparableType(s);
-        if (ctx?.protocol === Protocol.PtLimaPtL) {
+        if (ProtoInferiorTo(proto, Protocol.PtLimaPtL)) {
+          return [
+            annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 })),
+            ...stack.slice(2),
+          ];
+        } else {
           return [
             annotateVar({
               prim: 'option',
@@ -1861,11 +1866,7 @@ function functionTypeInternal(
             }),
             ...stack.slice(2)
           ];
-        } else {
-         return [
-            annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 })),
-            ...stack.slice(2),
-          ];
+
         }
       }
 

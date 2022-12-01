@@ -312,7 +312,8 @@ export type MichelsonDataID =
   | 'Pair'
   | 'Left'
   | 'Right'
-  | 'Some';
+  | 'Some'
+  | 'Lambda_rec';
 
 type Data0<PT extends MichelsonDataID> = Prim0<PT>;
 type DataX<PT extends MichelsonDataID, AT extends MichelsonData[]> = PrimX<PT, AT>;
@@ -323,6 +324,7 @@ type DataList<T extends MichelsonData[]> = T & Node;
 export type MichelsonDataPair<T extends MichelsonData[]> = DataX<'Pair', T> | DataList<T>;
 export type MichelsonMapElt = PrimX<'Elt', [MichelsonData, MichelsonData]>;
 export type MichelsonMapEltList = List<MichelsonMapElt>;
+export type MichelsonLambdaRec = DataX<'Lambda_rec', [MichelsonLambdaRec]>
 
 export type MichelsonData =
   | IntLiteral
@@ -334,7 +336,8 @@ export type MichelsonData =
   | DataList<MichelsonData[]>
   | MichelsonDataPair<MichelsonData[]>
   | InstructionList
-  | MichelsonMapEltList;
+  | MichelsonMapEltList
+  | MichelsonLambdaRec;
 
 // Top level script sections
 
