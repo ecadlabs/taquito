@@ -1676,6 +1676,36 @@ describe('RpcContractProvider test', () => {
     });
   });
 
+  describe('drainDelegate', () => {
+    it('should produce a drain operation', async (done) => {
+      const result = await rpcContractProvider.drainDelegate({
+        consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+        delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+        destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'drain_delegate',
+              consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+              delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+              destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+
+      done();
+    });
+  });
+
   describe('ballot', () => {
     it('should produce a ballot operation', async (done) => {
       const result = await rpcContractProvider.ballot({
