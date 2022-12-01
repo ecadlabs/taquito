@@ -201,6 +201,13 @@ export abstract class OperationEmitter {
               ...op,
               period: currentVotingPeriod?.voting_period.index,
             };
+          case OpKind.UPDATE_CONSENSUS_KEY:
+            return {
+              ...op,
+              ...getSource(op),
+              ...getFee(op),
+              pk: op.pk,
+            };
 
           default:
             throw new InvalidOperationKindError((op as any).kind);

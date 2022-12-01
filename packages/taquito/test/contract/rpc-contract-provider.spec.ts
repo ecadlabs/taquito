@@ -84,6 +84,7 @@ describe('RpcContractProvider test', () => {
     txRollupSubmitBatch: jest.Mock<any, any>;
     transferTicket: jest.Mock<any, any>;
     increasePaidStorage: jest.Mock<any, any>;
+    updateConsensusKey: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -139,6 +140,7 @@ describe('RpcContractProvider test', () => {
       txRollupSubmitBatch: jest.fn(),
       transferTicket: jest.fn(),
       increasePaidStorage: jest.fn(),
+      updateConsensusKey: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -1786,6 +1788,103 @@ describe('RpcContractProvider test', () => {
         counter: 0,
       });
 
+      done();
+    });
+  });
+
+  describe('updateConsensusKey', () => {
+    it('should produce an updateConsensusKey operation', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockEstimate.reveal.mockResolvedValue(undefined);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.updateConsensusKey({
+        pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'update_consensus_key',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              counter: '1',
+              pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
+
+    it('should produce an updateConsensusKey operation and reveal op', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.updateConsensusKey({
+        pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              kind: 'update_consensus_key',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
+
+    it('should produce an updateConsensusKey operation and reveal op with fees specified', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.updateConsensusKey({
+        pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+        fee: 500,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              kind: 'update_consensus_key',
+              source: 'test_pub_key_hash',
+              fee: '500',
+              gas_limit: '1330',
+              storage_limit: '93',
+              pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
       done();
     });
   });

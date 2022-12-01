@@ -12,6 +12,7 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  UpdateConsensusKeyParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 
@@ -117,4 +118,14 @@ export interface EstimationProvider {
    * @param Estimate
    */
   txRollupSubmitBatch(params: TxRollupBatchParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an Update Consensus Key operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  updateConsensusKey(params: UpdateConsensusKeyParams): Promise<Estimate>;
 }

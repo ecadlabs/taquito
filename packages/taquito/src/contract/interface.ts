@@ -22,6 +22,7 @@ import {
   TransferTicketParams,
   BallotParams,
   ProposalsParams,
+  UpdateConsensusKeyParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
@@ -29,6 +30,7 @@ import { IncreasePaidStorageOperation } from '../operations/increase-paid-storag
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { BallotOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
+import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -238,4 +240,14 @@ export interface ContractProvider extends StorageProvider {
    * @param ProposalsParams Proposals operation parameter
    */
   proposals(params: ProposalsParams): Promise<ProposalsOperation>;
+
+  /**
+   *
+   * @description Update consensus key
+   *
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param UpdateConsensusKeyParams Proposals operation parameter
+   */
+  updateConsensusKey(params: UpdateConsensusKeyParams): Promise<UpdateConsensusKeyOperation>;
 }
