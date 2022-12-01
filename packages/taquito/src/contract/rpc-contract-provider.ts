@@ -25,6 +25,7 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  DrainDelegateParams,
   BallotParams,
   ProposalsParams,
 } from '../operations/types';
@@ -42,6 +43,7 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createDrainDelegateOperation,
   createBallotOperation,
   createProposalsOperation,
 } from './prepare';
@@ -58,7 +60,7 @@ import { TxRollupOriginationOperation } from '../operations/tx-rollup-originatio
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
-import { BallotOperation } from '../operations';
+import { BallotOperation, DrainDelegateOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
 
 export class RpcContractProvider
@@ -518,6 +520,32 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new IncreasePaidStorageOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   *
+   * @description Transfers the spendable balance of the delegate to destination when consensus_key is the active consensus key of delegate
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params drainDelegate operation parameter
+   */
+  async drainDelegate(params: DrainDelegateParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const operation = await createDrainDelegateOperation({
+      ...params,
+    });
+    const prepared = await this.prepareOperation({ operation: operation, source: publicKeyHash });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new DrainDelegateOperation(
       hash,
       operation,
       publicKeyHash,

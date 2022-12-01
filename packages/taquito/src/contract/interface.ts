@@ -20,6 +20,7 @@ import {
   TxRollupBatchParams,
   IncreasePaidStorageParams,
   TransferTicketParams,
+  DrainDelegateParams,
   BallotParams,
   ProposalsParams,
 } from '../operations/types';
@@ -27,6 +28,7 @@ import { ContractAbstraction, ContractStorageType, DefaultContractType } from '.
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
+import { DrainDelegateOperation } from '../operations';
 import { BallotOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
 
@@ -218,6 +220,16 @@ export interface ContractProvider extends StorageProvider {
    * @param TxRollupBatchParams Batch tx rollup operation parameter
    */
   txRollupSubmitBatch(params: TxRollupBatchParams): Promise<TxRollupBatchOperation>;
+
+  /**
+   *
+   * @description Submit drain delegate for an ongoing proposal
+   *
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param DrainDelegateParams DrainDelegate operation parameter
+   */
+  drainDelegate(params: DrainDelegateParams): Promise<DrainDelegateOperation>;
 
   /**
    *

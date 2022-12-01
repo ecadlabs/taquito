@@ -137,6 +137,7 @@ export abstract class OperationEmitter {
       cOps.map((op: RPCOperation) => {
         switch (op.kind) {
           case OpKind.ACTIVATION:
+          case OpKind.DRAIN_DELEGATE:
             return {
               ...op,
             };

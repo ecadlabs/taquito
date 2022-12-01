@@ -21,6 +21,8 @@ import {
   RPCTransferTicketOperation,
   IncreasePaidStorageParams,
   RPCIncreasePaidStorageOperation,
+  DrainDelegateParams,
+  RPCDrainDelegateOperation,
   BallotParams,
   RPCBallotOperation,
   ProposalsParams,
@@ -267,6 +269,19 @@ export const createIncreasePaidStorageOperation = async ({
     amount,
     destination,
   } as RPCIncreasePaidStorageOperation;
+};
+
+export const createDrainDelegateOperation = async ({
+  consensus_key,
+  delegate,
+  destination,
+}: DrainDelegateParams) => {
+  return {
+    kind: OpKind.DRAIN_DELEGATE,
+    consensus_key,
+    delegate,
+    destination,
+  } as RPCDrainDelegateOperation;
 };
 
 export const createBallotOperation = async ({ source, proposal, ballot }: BallotParams) => {
