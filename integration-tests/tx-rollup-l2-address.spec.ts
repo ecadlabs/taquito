@@ -59,7 +59,6 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const contract = await op.contract();
-      console.log(contract.address);
 
       const storage = await contract.storage();
       expect(JSON.stringify(storage)).toEqual(JSON.stringify(UnitValue));
@@ -120,7 +119,6 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const contract = await op.contract();
-      console.log(contract.address);
 
       const storage = await contract.storage();
       expect(JSON.stringify(storage)).toEqual(JSON.stringify(UnitValue));
