@@ -538,21 +538,13 @@ export class RpcContractProvider
    * @param params drainDelegate operation parameter
    */
   async drainDelegate(params: DrainDelegateParams) {
-    const publicKeyHash = await this.signer.publicKeyHash();
     const operation = await createDrainDelegateOperation({
       ...params,
     });
-    const prepared = await this.prepareOperation({ operation: operation, source: publicKeyHash });
+    const prepared = await this.prepareOperation({ operation: operation });
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new DrainDelegateOperation(
-      hash,
-      operation,
-      publicKeyHash,
-      forgedBytes,
-      opResponse,
-      context
-    );
+    return new DrainDelegateOperation(hash, operation, forgedBytes, opResponse, context);
   }
 
   /**

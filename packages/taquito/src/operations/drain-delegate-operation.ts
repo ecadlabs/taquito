@@ -13,7 +13,6 @@ export class DrainDelegateOperation extends Operation {
   constructor(
     hash: string,
     private readonly params: RPCDrainDelegateOperation,
-    public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
     context: Context
@@ -40,7 +39,7 @@ export class DrainDelegateOperation extends Operation {
     return this.params.delegate;
   }
 
-  get detination() {
+  get destination() {
     return this.params.destination;
   }
 }
