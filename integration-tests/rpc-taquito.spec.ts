@@ -48,6 +48,10 @@ CONFIGS().forEach(({ rpc, knownContract }) => {
               expect(() => client.getNormalizedScript(knownContract, {unparsing_mode: 'else' as any})).rejects.toThrowError(HttpResponseError)
               done()
             })
+            it('Should fail unparsing_mode not acceptable', async (done) => {
+              expect(() => client.getNormalizedScript(knownContract, {} as any )).rejects.toThrowError(HttpResponseError)
+              done()
+            })
         })
     })
 })
