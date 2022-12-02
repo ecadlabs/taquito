@@ -1,8 +1,9 @@
 import { CONFIGS } from "./config";
 import { RpcClient } from '@taquito/rpc';
+import { HttpResponseError } from "@taquito/http-utils";
 
 
-CONFIGS().forEach(({ rpc }) => {
+CONFIGS().forEach(({ rpc, knownContract }) => {
     const client = new RpcClient(rpc);
 
     describe(`Test Taquito RPC: ${rpc}`, () => {
@@ -27,6 +28,25 @@ CONFIGS().forEach(({ rpc }) => {
 
                 expect(predecessorBlock.hash).toEqual(block.header.predecessor);
                 done();
+            })
+            it('Verify that unparse_mode has no error: Readable', async (done) => {
+              const response = await client.getNormalizedScript(knownContract, {unparsing_mode: 'Readable'})
+              expect(response.code).toBeDefined();
+              done()
+            })
+            it('Verify that unparse_mode has no error: Optimized', async (done) => {
+              const response = await client.getNormalizedScript(knownContract, {unparsing_mode: 'Optimized'})
+              expect(response.code).toBeDefined();
+              done()
+            })
+            it('Verify that unparse_mode has no error: Optimized_legacy', async (done) => {
+              const response = await client.getNormalizedScript(knownContract, {unparsing_mode: 'Optimized_legacy'})
+              expect(response.code).toBeDefined();
+              done()
+            })
+            it('Should fail unparsing_mode not acceptable', async (done) => {
+              expect(() => client.getNormalizedScript(knownContract, {unparsing_mode: 'else' as any})).rejects.toThrowError(HttpResponseError)
+              done()
             })
         })
     })
