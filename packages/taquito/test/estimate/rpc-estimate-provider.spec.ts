@@ -22,6 +22,7 @@ import {
   txRollupSubmitBatchWithReveal,
   TransferTicketNoReveal,
   TransferTicketWithReveal,
+  updateConsensusKeyNoReveal,
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
@@ -148,7 +149,7 @@ describe('RPCEstimateProvider test signer', () => {
   });
 
   describe('transfer', () => {
-    test('return the correct estimate for multiple internal origination', async (done) => {
+    it('return the correct estimate for multiple internal origination', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOrigination());
       // Simulate real op size
@@ -165,7 +166,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    test('return the correct estimate for multiple internal origination, no reveal', async (done) => {
+    it('return the correct estimate for multiple internal origination, no reveal', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalOriginationNoReveal());
       // Simulate real op size
       mockForger.forge.mockResolvedValue(new Array(297).fill('aa').join(''));
@@ -181,7 +182,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    test('return the correct estimate for 2 internal transfer that need allocation', async (done) => {
+    it('return the correct estimate for 2 internal transfer that need allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(multipleInternalTransfer());
       // Simulate real op size
@@ -198,7 +199,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    test('return the correct estimate for delegation', async (done) => {
+    it('return the correct estimate for delegation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(delegate());
       // Simulate real op size
@@ -215,7 +216,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    test('return the correct estimate for origination', async (done) => {
+    it('return the correct estimate for origination', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(origination());
       // Simulate real op size
@@ -232,7 +233,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    test('return the correct estimate for internal transfer without allocation', async (done) => {
+    it('return the correct estimate for internal transfer without allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(internalTransfer());
       // Simulate real op size
@@ -249,7 +250,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    test('return the correct estimate for transfer without allocation', async (done) => {
+    it('return the correct estimate for transfer without allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithoutAllocation());
       // Simulate real op size
@@ -266,7 +267,7 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
 
-    test('return the correct estimate for transfer with allocation', async (done) => {
+    it('return the correct estimate for transfer with allocation', async (done) => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       mockRpcClient.runOperation.mockResolvedValue(transferWithAllocation());
       // Simulate real op size
@@ -1630,6 +1631,20 @@ describe('RPCEstimateProvider test wallet', () => {
           'Unable to estimate the reveal operation, the public key is unknown'
         );
       }
+      done();
+    });
+  });
+
+  describe('updateConsensusKey', () => {
+    it('should return estimate for updateConsensusKey operation', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(updateConsensusKeyNoReveal);
+      const estimate = await estimateProvider.updateConsensusKey({
+        pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+      });
+
+      expect(estimate.gasLimit).toEqual(1100);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(312);
       done();
     });
   });

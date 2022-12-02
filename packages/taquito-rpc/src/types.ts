@@ -1326,6 +1326,7 @@ export type ContractBigMapDiff = ContractBigMapDiffItem[];
 export interface TezosGenericOperationError {
   kind: string;
   id: string;
+  delegate?: string;
 }
 
 export interface TicketUpdates {
