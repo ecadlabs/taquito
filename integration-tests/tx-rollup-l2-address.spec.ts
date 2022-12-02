@@ -66,6 +66,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       const ticketDeposit = await contract.methods.default(txRollupAddress, 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
       await ticketDeposit.confirmation();
 
+
       expect(ticketDeposit.hash).toBeDefined();
       expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue));

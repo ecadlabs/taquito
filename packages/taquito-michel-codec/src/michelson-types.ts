@@ -71,6 +71,7 @@ type MichelsonNoArgInstructionID =
   | 'SUB_MUTEZ'
   | 'SWAP'
   | 'TICKET'
+  | 'TICKET_DEPRECATED'
   | 'TOTAL_VOTING_POWER'
   | 'TRANSFER_TOKENS'
   | 'UNIT'
@@ -98,6 +99,7 @@ type MichelsonRegularInstructionID =
   | 'IF_NONE'
   | 'ITER'
   | 'LAMBDA'
+  | 'LAMBDA_REC'
   | 'LEFT'
   | 'LOOP'
   | 'LOOP_LEFT'
@@ -140,7 +142,7 @@ export type MichelsonInstruction =
   | InstrX<'EMPTY_SET', [MichelsonType]>
   | InstrX<'EMPTY_MAP', [MichelsonType, MichelsonType]>
   | InstrX<'EMPTY_BIG_MAP', [MichelsonType, MichelsonType]>
-  | InstrX<'LAMBDA', [MichelsonType, MichelsonType, InstructionList]>
+  | InstrX<'LAMBDA' | 'LAMBDA_REC', [MichelsonType, MichelsonType, InstructionList]>
   | InstrX<'DIP', [IntLiteral, InstructionList] | [InstructionList]>
   | InstrX<'VIEW', [StringLiteral, MichelsonType]>
   | InstrX<'EMIT', [MichelsonType]>
@@ -178,6 +180,7 @@ export type MichelsonTypeID =
   | 'map'
   | 'big_map'
   | 'sapling_transaction'
+  | 'sapling_transaction_deprecated'
   | 'sapling_state'
   | 'ticket'
   | 'bls12_381_g1'
@@ -225,6 +228,7 @@ export interface MichelsonTypeContract<T extends MichelsonType> extends TypeX<'c
 export interface MichelsonTypeOr<T extends [MichelsonType, MichelsonType]> extends TypeX<'or', T> {}
 export interface MichelsonTypeLambda<Arg extends MichelsonType, Ret extends MichelsonType>
   extends TypeX<'lambda', [Arg, Ret]> {}
+
 export interface MichelsonTypeSet<T extends MichelsonType> extends TypeX<'set', [T]> {}
 export interface MichelsonTypeMap<K extends MichelsonType, V extends MichelsonType>
   extends TypeX<'map', [K, V]> {}
@@ -310,7 +314,8 @@ export type MichelsonDataID =
   | 'Pair'
   | 'Left'
   | 'Right'
-  | 'Some';
+  | 'Some'
+  | 'Lambda_rec';
 
 type Data0<PT extends MichelsonDataID> = Prim0<PT>;
 type DataX<PT extends MichelsonDataID, AT extends MichelsonData[]> = PrimX<PT, AT>;
@@ -321,6 +326,7 @@ type DataList<T extends MichelsonData[]> = T & Node;
 export type MichelsonDataPair<T extends MichelsonData[]> = DataX<'Pair', T> | DataList<T>;
 export type MichelsonMapElt = PrimX<'Elt', [MichelsonData, MichelsonData]>;
 export type MichelsonMapEltList = List<MichelsonMapElt>;
+export type MichelsonLambdaRec = DataX<'Lambda_rec', [InstructionList]>;
 
 export type MichelsonData =
   | IntLiteral
@@ -332,7 +338,8 @@ export type MichelsonData =
   | DataList<MichelsonData[]>
   | MichelsonDataPair<MichelsonData[]>
   | InstructionList
-  | MichelsonMapEltList;
+  | MichelsonMapEltList
+  | MichelsonLambdaRec;
 
 // Top level script sections
 
