@@ -247,7 +247,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @returns An operation handle with the result from the RPC node
    *
-   * @param UpdateConsensusKeyParams Proposals operation parameter
+   * @param UpdateConsensusKeyParams UpdateConsensusKey operation parameter
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<UpdateConsensusKeyOperation>;
 }

@@ -15,8 +15,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
         const account = await createAddress();
         pk = await account.signer.publicKey();
         const pkh = await account.signer.publicKeyHash();
-        console.log(pkh);
-        console.log(pk);
 
         const fund = await Tezos.contract.transfer({ amount: 5, to: pkh });
         await fund.confirmation();
