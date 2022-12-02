@@ -196,7 +196,7 @@ Tezos.setProvider({ wallet });
 
 Make sure you have the Temple browser extension installed first.
 
-```js live noInline noConfig
+```js
 //import { TempleWallet } from '@temple-wallet/dapp';
 TempleWallet.isAvailable()
   .then(() => {
