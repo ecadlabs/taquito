@@ -1,9 +1,8 @@
-import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
-    const kathmandunetAndAlpha = (protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha) ? test : test.skip;
+
     describe(`Test injecting more than one manager operation in a block: ${rpc}`, () => {
 
         beforeEach(async (done) => {
@@ -11,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
             done()
         })
 
-        kathmandunetAndAlpha('Verify that doing transfers without awaiting the confirmation after each will fail', async (done) => {
+        it('Verify that doing transfers without awaiting the confirmation after each will fail', async (done) => {
             try {
                 const op1 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 1 });
                 const op2 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 });
