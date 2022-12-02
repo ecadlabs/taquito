@@ -71,6 +71,7 @@ type MichelsonNoArgInstructionID =
   | 'SUB_MUTEZ'
   | 'SWAP'
   | 'TICKET'
+  | 'TICKET_DEPRECATED'
   | 'TOTAL_VOTING_POWER'
   | 'TRANSFER_TOKENS'
   | 'UNIT'
@@ -179,6 +180,7 @@ export type MichelsonTypeID =
   | 'map'
   | 'big_map'
   | 'sapling_transaction'
+  | 'sapling_transaction_deprecated'
   | 'sapling_state'
   | 'ticket'
   | 'bls12_381_g1'
@@ -324,7 +326,7 @@ type DataList<T extends MichelsonData[]> = T & Node;
 export type MichelsonDataPair<T extends MichelsonData[]> = DataX<'Pair', T> | DataList<T>;
 export type MichelsonMapElt = PrimX<'Elt', [MichelsonData, MichelsonData]>;
 export type MichelsonMapEltList = List<MichelsonMapElt>;
-export type MichelsonLambdaRec = DataX<'Lambda_rec', [InstructionList]>
+export type MichelsonLambdaRec = DataX<'Lambda_rec', [InstructionList]>;
 
 export type MichelsonData =
   | IntLiteral
