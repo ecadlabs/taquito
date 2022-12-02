@@ -1,4 +1,4 @@
-{  
+{
   "name": "@taquito/website",
   "private": true,
   "scripts": {
@@ -73,5 +73,18 @@
     "@tsconfig/docusaurus": "^1.0.4",
     "netlify-cli": "^12.0.11",
     "typescript": "^4.3.5"
-  }
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "version": "14.2.0"
 }
