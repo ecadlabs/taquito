@@ -17,8 +17,14 @@ CONFIGS().forEach(({ rpc, protocol }) => {
     const Tezos = new TezosToolkit(rpc);
 
     describe(`Test binary encoding: ${rpc}`, () => {
-        const fn = path.resolve(__dirname, "./data/pack-test-tool-data.json");
-        const src: TypedTestData[] = JSON.parse(fs.readFileSync(fn).toString());
+        const files = [
+            'binary-data1.json',
+            'binary-data3.json'
+        ];
+        const paths = files.map((f) => path.resolve(__dirname, `../packages/taquito-michel-codec/test/${f}`));
+        const src: TypedTestData[] = [].concat(
+            ...paths.map((p) => JSON.parse(fs.readFileSync(p).toString()))
+        );
 
         describe("Test pack", () => {
             for (const s of src) {

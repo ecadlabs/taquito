@@ -77,6 +77,7 @@ const noArgInstructionIDs: Record<MichelsonNoArgInstruction['prim'], true> = {
   SUB: true,
   SWAP: true,
   TICKET: true,
+  TICKET_DEPRECATED: true,
   TOTAL_VOTING_POWER: true,
   TRANSFER_TOKENS: true,
   UNIT: true,
@@ -162,6 +163,7 @@ const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparabl
   bls12_381_g2: true,
   bls12_381_fr: true,
   sapling_transaction: true,
+  sapling_transaction_deprecated: true,
   sapling_state: true,
   ticket: true,
   chest_key: true,
@@ -723,6 +725,12 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
         }
         break;
 
+      case 'Lambda_rec':
+        if (ex.args) {
+          assertMichelsonInstruction(ex.args);
+        }
+        break;
+
       default:
         if (Object.prototype.hasOwnProperty.call(instructionIDs, ex.prim)) {
           assertMichelsonInstruction(ex);
@@ -745,8 +753,8 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
 export function assertMichelsonContract(ex: Expr): ex is MichelsonContract {
   /* istanbul ignore else */
   if (assertSeq(ex)) {
-    const toplevelSec: { [sec: string]: boolean; } = {};
-    const views: { [name: string]: boolean; } = {};
+    const toplevelSec: { [sec: string]: boolean } = {};
+    const views: { [name: string]: boolean } = {};
     for (const sec of ex) {
       if (assertPrim(sec)) {
         if (sec.prim !== 'view') {

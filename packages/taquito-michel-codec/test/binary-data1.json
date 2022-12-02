@@ -348,7 +348,6 @@
     "packed": "0507070a00000004f3d485540100000003666f6f"
   },
   {
-    "proto": "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA",
     "data": {
       "prim": "Pair",
       "args": [
@@ -480,5 +479,107 @@
       ]
     },
     "packed": "05020000001f020000000801000000036f6e650200000008010000000374776f0200000000"
+  },
+  {
+    "proto": "PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW",
+    "data": {
+      "prim": "Lambda_rec",
+      "args": [
+        [
+          {
+            "prim": "DUP"
+          },
+          {
+            "prim": "EQ"
+          },
+          {
+            "prim": "IF",
+            "args": [
+              [
+                {
+                  "prim": "PUSH",
+                  "args": [
+                    {
+                      "prim": "int"
+                    },
+                    {
+                      "int": "1"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "prim": "DUP"
+                },
+                {
+                  "prim": "DUP",
+                  "args": [
+                    {
+                      "int": "3"
+                    }
+                  ]
+                },
+                {
+                  "prim": "PUSH",
+                  "args": [
+                    {
+                      "prim": "int"
+                    },
+                    {
+                      "int": "1"
+                    }
+                  ]
+                },
+                {
+                  "prim": "DUP",
+                  "args": [
+                    {
+                      "int": "4"
+                    }
+                  ]
+                },
+                {
+                  "prim": "SUB"
+                },
+                {
+                  "prim": "EXEC"
+                },
+                {
+                  "prim": "MUL"
+                }
+              ]
+            ]
+          },
+          {
+            "prim": "DIP",
+            "args": [
+              [
+                {
+                  "prim": "DROP",
+                  "args": [
+                    {
+                      "int": "2"
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        ]
+      ]
+    },
+    "type": {
+      "prim": "lambda",
+      "args": [
+        {
+          "prim": "int"
+        },
+        {
+          "prim": "int"
+        }
+      ]
+    },
+    "packed": "050598020000003703210325072c02000000060743035b000102000000160321052100030743035b000105210004034b0326033a051f020000000405200002"
   }
 ]
