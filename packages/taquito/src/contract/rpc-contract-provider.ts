@@ -28,6 +28,7 @@ import {
   DrainDelegateParams,
   BallotParams,
   ProposalsParams,
+  UpdateConsensusKeyParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -46,6 +47,7 @@ import {
   createDrainDelegateOperation,
   createBallotOperation,
   createProposalsOperation,
+  createUpdateConsensusKeyOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -62,6 +64,7 @@ import { TransferTicketOperation } from '../operations/transfer-ticket-operation
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
 import { BallotOperation, DrainDelegateOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
+import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -659,6 +662,38 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new ProposalsOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Updates the consensus key of the baker to public_key starting from the current cycle plus PRESERVED_CYCLES + 1
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param UpdateConsensusKeyParams
+   */
+  async updateConsensusKey(params: UpdateConsensusKeyParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.updateConsensusKey.bind(this.estimator)
+    );
+    const operation = await createUpdateConsensusKeyOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new UpdateConsensusKeyOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
   }
 
   async at<T extends DefaultContractType = DefaultContractType>(

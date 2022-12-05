@@ -412,7 +412,7 @@ export interface OperationContentsTxRollupRejection {
   message_result_path: string[];
   previous_message_result: TxRollupPreviousMessageResult;
   previous_message_result_path: string[];
-  proof: TxRollupProof;
+  proof: TxRollupProof | string;
 }
 
 export interface OperationContentsTxRollupDispatchTickets {
@@ -509,12 +509,14 @@ export interface OperationContentsAndResultMetadataExtended {
   delegate: string;
   slots?: number[];
   endorsement_power?: number;
+  consensus_key?: string;
 }
 
 export interface OperationContentsAndResultMetadataPreEndorsement {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
   preendorsement_power: number;
+  consensus_key?: string;
 }
 
 export interface OperationContentsAndResultMetadataReveal {
@@ -839,7 +841,7 @@ export interface OperationContentsAndResultTxRollupRejection {
   message_result_path: string[];
   previous_message_result: TxRollupPreviousMessageResult;
   previous_message_result_path: string[];
-  proof: TxRollupProof;
+  proof: TxRollupProof | string;
   metadata: OperationContentsAndResultMetadataTxRollupRejection;
 }
 
@@ -970,20 +972,15 @@ export type BakingRightsArgumentsDelegate = string | string[];
 export type BakingRightsArgumentsCycle = number | number[];
 export type BakingRightsArgumentsLevel = number | number[];
 
-export type BakingRightsQueryArguments =
-  | BakingRightsQueryArgumentsProto12
-  | BakingRightsQueryArgumentsBase;
+export type BakingRightsQueryArguments = BakingRightsQueryArgumentsBase;
 
-export interface BakingRightsQueryArgumentsProto12
-  extends Omit<BakingRightsQueryArgumentsBase, 'max_priority'> {
-  max_round?: string;
-}
 export interface BakingRightsQueryArgumentsBase {
   level?: BakingRightsArgumentsLevel;
   cycle?: BakingRightsArgumentsCycle;
   delegate?: BakingRightsArgumentsDelegate;
   consensus_key?: string;
   max_priority?: number;
+  max_round?: string;
   all?: null;
 }
 
@@ -1329,6 +1326,7 @@ export type ContractBigMapDiff = ContractBigMapDiffItem[];
 export interface TezosGenericOperationError {
   kind: string;
   id: string;
+  delegate?: string;
 }
 
 export interface TicketUpdates {
@@ -1340,9 +1338,9 @@ export interface TicketUpdates {
   updates: {
     account: string;
     amount: string;
-  }[]
+  }[];
 }
-export type TicketReceipt  = TicketUpdates
+export type TicketReceipt = TicketUpdates;
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
@@ -1584,8 +1582,24 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
-export interface ConstantsResponseProto015 extends ConstantsResponseProto014 {
+export interface ConstantsResponseProto015
+  extends Omit<
+    ConstantsResponseProto014,
+    | 'max_wrapped_proof_binary_size'
+    | 'tokens_per_roll'
+    | 'liquidity_baking_sunset_level'
+    | 'sc_rollup_max_available_messages'
+  > {
   minimal_stake: BigNumber;
+  sc_max_wrapped_proof_binary_size: number;
+  sc_rollup_message_size_limit: number;
+  sc_rollup_max_number_of_messages_per_commitment_period: number;
+  sc_rollup_number_of_sections_in_dissection: number;
+  sc_rollup_timeout_period_in_blocks: number;
+  sc_rollup_max_number_of_cemented_commitments: number;
+  zk_rollup_enable: number;
+  zk_rollup_origination_size: number;
+  zk_rollup_min_pending_to_process: number;
 }
 
 export interface DalParametric {
@@ -1594,6 +1608,9 @@ export interface DalParametric {
   number_of_shards: number;
   endorsement_lag: number;
   availability_threshold: number;
+  slot_size?: number;
+  redundancy_factor?: number;
+  page_size?: number;
 }
 
 export interface ConstantsResponseProto014 extends ConstantsResponseProto013 {
@@ -1721,7 +1738,7 @@ export interface ConstantsResponseProto003
   max_proposals_per_delegate?: number;
 }
 
-export interface ConstantsResponseProto001And002 {
+export interface ConstantsResponseProto001And002 extends ConstantsResponseCommon {
   max_revelations_per_block?: number;
   origination_burn?: string;
   block_reward?: BigNumber;
