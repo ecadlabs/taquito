@@ -1,4 +1,0 @@
-parameter unit;
-storage nat;
-code { FAIL; };
-view "get_map" unit (big_map string nat) { CDR; CDR; };

@@ -1,9 +1,0 @@
-parameter (pair nat nat);
-storage (option nat);
-# This contract takes a pair of natural numbers as argument and
-# stores the result of their binary OR.
-code { CAR;
-       UNPAIR;
-       OR;
-       SOME; NIL operation; PAIR
-     }

@@ -1,4 +1,0 @@
-# Test that DIP {FAILWITH} is not allowed by the typechecker
-parameter string;
-storage nat;
-code { UNPAIR; DIP {FAILWITH} }

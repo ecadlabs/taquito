@@ -489,6 +489,7 @@ export class RpcClient implements RpcClientInterface {
       'tx_rollup_commitment_bond',
       'vdf_difficulty',
       'sc_rollup_stake_amount',
+      'minimal_stake'
     ]);
 
     return {
@@ -1079,6 +1080,48 @@ export class RpcClient implements RpcClientInterface {
     return this.httpBackend.createRequest<TxRollupInboxResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/tx_rollup/${txRollupId}/inbox/${blockLevel}`
+      ),
+      method: 'GET',
+    });
+  }
+
+  /**
+   *
+   * @param contract address of the contract we want to retrieve storage information of
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the amount of used space in a contract's storage
+   *
+   * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
+   */
+  async getStorageUsedSpace(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string> {
+    return this.httpBackend.createRequest<string>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/used_space`
+      ),
+      method: 'GET',
+    });
+  }
+
+  /**
+   *
+   * @param contract address of the contract we want to retrieve storage information of
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the amount of paid space in a contract's storage
+   *
+   * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
+   */
+  async getStoragePaidSpace(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string> {
+    return this.httpBackend.createRequest<string>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/paid_space`
       ),
       method: 'GET',
     });

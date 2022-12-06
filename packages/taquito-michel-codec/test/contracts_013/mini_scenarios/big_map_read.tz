@@ -1,9 +1,0 @@
-storage (nat);
-parameter (big_map nat nat);
-code { CAR;
-       PUSH nat 1;
-       GET;
-       ASSERT_SOME;
-       NIL operation;
-       PAIR;
-     }

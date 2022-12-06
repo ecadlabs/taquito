@@ -557,30 +557,6 @@
             "sha512": "cb78a93ca519f8e1a05f573326fd7cf966db4eb5a5366dc48403ddd0c7480a7a5527debbbd72d14e32923df620354e03164b7357dba5acc9003cc35c939f07b9"
           },
           {
-            "path": "packages/taquito-tezbridge-signer/dist/taquito-tezbridge-signer.es5.js",
-            "sha512": "a07612a8efc37ad4195d158f2ae7eedac203a7026e711474a8a64ea90d54d4ba0e371a7faa06d8feb83d777289a8ec97077a5dc3d08913b682f63e0bad8479af"
-          },
-          {
-            "path": "packages/taquito-tezbridge-signer/dist/lib/taquito-tezbridge-signer.js",
-            "sha512": "51619498bf0f0708904aa7edf787b26086af08393d0d8f3d438f0c8ded42350e7caf26f091d71c7b293b96c0f14e05baec1948708641dad7f589edf5e87a4556"
-          },
-          {
-            "path": "packages/taquito-tezbridge-signer/dist/taquito-tezbridge-signer.umd.js",
-            "sha512": "33e6e8847649d09eaaaa515ebf5c9eba8e942e0ae6e2f72f48b142baca9328de1ffe6a835e375ef9e4a46cda9194d85cd51df08cd0b9f2c14148799ae112f854"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/dist/taquito-tezbridge-wallet.es5.js",
-            "sha512": "0ba6c0f1f2e43774ee8a3109d452acc38ceaf4bd88ca41849cb5e0ae16ef56924a0a3f1adf6244176ee9868461fb61e7fa1cfe9b3446f3fb6bef192534492c6b"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/dist/lib/taquito-tezbridge-wallet.js",
-            "sha512": "d18d49ee3da6527e785570611a7ec1e7cde2bee54c67ac0bf289e56bb0189df0602c0948c69065201b60324c84ca183dd7de2eb3e9580181c594782d2795f6f8"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/dist/taquito-tezbridge-wallet.umd.js",
-            "sha512": "e67cf2bd9e68a129c0c710476d965945dc382d4ea06e0484bd286645e21a65db7c5482a1236f6ac23de3b4866737cfde2d3a067cfb503706243a00d092e3b2d1"
-          },
-          {
             "path": "packages/taquito-utils/dist/taquito-utils.es5.js",
             "sha512": "9f47e8fc5fe90abe937f3d46bfab7ea1ddced7991cfd8b4fdac5c6ceda0691162de7a4a70524c086b251630be22ec37083a8ccdf5852c6790a066b5aefec5643"
           },
@@ -749,14 +725,6 @@
             "sha512": "681b11552a9d3be1a494372891b5c46ef2841649f2f786e7c01fe6988bcda32d5629f47389baf57a597ba2eb14124689c2bedb477259b7a6836f92e13a0d0aaa"
           },
           {
-            "path": "packages/taquito-tezbridge-signer/package.json",
-            "sha512": "f25e4cec475f7fd3ba6f5e2a1c2856487512956b77c5ee10f4b1806668db5ee6edbbe99fc34ea55caa5ca64552e8c24d673ca5a6c5b13034f71ce884d3727b52"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/package.json",
-            "sha512": "7fdb1615bd880ca703b2d2dc31d73240ad783b2c193adda7e21a3f000a8c2897895c58409c6faf9bde542edcb66b93b4ed924a8c2cad5bf6f577371fb1859ece"
-          },
-          {
             "path": "packages/taquito-utils/package.json",
             "sha512": "66df55b5cc6dae2c012adf1e31ce1e7075112f527a63a5090a11d1cb4caa7c6c32e323faf8ee46e1de5ca0007a04a27379ff168a75d7ec79e4376e4899f526c3"
           },
@@ -807,14 +775,6 @@
           {
             "path": "packages/taquito-signer/signature.json",
             "sha512": "c6d2a309e8656cb13339319695140039935b5078a7fb66fb6a2d8007e73511566f9a7b568e946f0aab8a4dd4ad7f227cf89979fe986743d1a1e9a484036a8f4d"
-          },
-          {
-            "path": "packages/taquito-tezbridge-signer/signature.json",
-            "sha512": "6105b803f44bd03500523d504ed3af61596dfc2f8b4c2e32b53b91328dc1361773209963d30711cbd7001375f2b51ba072ecc9a605885ba8ddf9b4f078f36507"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/signature.json",
-            "sha512": "f8902983bde9340ce78239c2764eeb4a21206dc8ae9bc6ceda5a4e6ff6594a2d24e052063eb7c5f696d5284c22716234decda085df150cd6bc21263b2043e574"
           },
           {
             "path": "packages/taquito-utils/signature.json",
@@ -1353,30 +1313,6 @@
             "sha512": "79d0e8ec713032eb50322836f1703d62ebd23824de3eec47a794bbd0d50d36a8ba552d3685cd0b87f74d006f2bf8d7bfaf67cebd5ca19ee60945c172be3f37f5"
           },
           {
-            "path": "packages/taquito-tezbridge-signer/dist/taquito-tezbridge-signer.es5.js.map",
-            "sha512": "84052a722dbb6776f9ba9065e1fcd1b0f79d751a7d98ac07a8827d2d43d4cebb8ae4b07c957e35dbbf37e7fc1a017f3beaa9a7a6d7d11ebde5ea80562b1f866f"
-          },
-          {
-            "path": "packages/taquito-tezbridge-signer/dist/lib/taquito-tezbridge-signer.js.map",
-            "sha512": "18b24ad31e54e3c4b3b7cb7614bc5231a39d2756147506a7ea490362965112cb5c670b5ec9eeade2a17aa12364a188b32d93be15cc46c6c9849f45617ab711d1"
-          },
-          {
-            "path": "packages/taquito-tezbridge-signer/dist/taquito-tezbridge-signer.umd.js.map",
-            "sha512": "131419d4793997e929a4298c3ea283d243f995253f0360896d9700475061813e2c6acde01c856003ffc1ee4d63aca556eb52fb559e3e94e6e76f95fa0cf78bae"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/dist/taquito-tezbridge-wallet.es5.js.map",
-            "sha512": "dfdc535a27567a312d9957233265ad718c3c254a32dfc171fa054b200b7e30dde86d58646128d458f8587151575933914821aab07347f885768488edf86a96b5"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/dist/lib/taquito-tezbridge-wallet.js.map",
-            "sha512": "ab0f072edc707e99ad2115156791555280e6b6489d00d4aafda3318b6f83f14923cacae6f6baafe828aa099aa46c1bd73b90008c28fa684b1f8faad7eff321d3"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/dist/taquito-tezbridge-wallet.umd.js.map",
-            "sha512": "e1ba4c9b3c006c891fb1c2aee36569fe68b6ed3c0786665398e0458c08b265b24d95afca6ec754efa69d209e704d18869002a7d192f184bbc364d1b6c41ec7a9"
-          },
-          {
             "path": "packages/taquito-utils/dist/taquito-utils.es5.js.map",
             "sha512": "c3f5794b968eda4ad4ccb08a4e9feb7b9869c3cc83390fcdcb3379792b2056d25e39d298f2ffff52c2c1e3bbc63e84e85508b9d9b52eab25016ab053123997ac"
           },
@@ -1599,10 +1535,6 @@
           {
             "path": "docs/storage_annotations.md",
             "sha512": "9c551482ce9b3f79e1e99a5029f24e37178466c0c7e5d92f9aca181b8c4dc3f6c0573fbebf2231edd34a0cf1e94f71b75235ce24b2807e6ba32f1c8e5668dc30"
-          },
-          {
-            "path": "docs/tezbridge_signer.md",
-            "sha512": "f0a1cd604f99d90a443cc892d0de2524d6aaa5dbaa7eb582532791042c04080f63317bd0ee11d174ff323e04c74ad0632b1bef9a2676037dc2f1b67016c9921b"
           },
           {
             "path": "docs/tutorial_links.md",
@@ -2371,14 +2303,6 @@
           {
             "path": "packages/taquito-signer/dist/types/taquito-signer.d.ts",
             "sha512": "b730dffa7375f7684850d77f00920374111a574affd07b3ff08d39915c974c05071e9fb91b055b146b1d103f4754b8c1aaed89eaec3c2284f0ff4d961729ec59"
-          },
-          {
-            "path": "packages/taquito-tezbridge-signer/dist/types/taquito-tezbridge-signer.d.ts",
-            "sha512": "f84760a0c2cb3988216f07a920c56a505313d9a93b8acbefa72980c295595e739d7323ccb42d4c9136a114597a9486ff9aac77923841953c4c046ec9343696b5"
-          },
-          {
-            "path": "packages/taquito-tezbridge-wallet/dist/types/taquito-tezbridge-wallet.d.ts",
-            "sha512": "3f7a10fd9e10aed789c5021fc8042c50a8f851ec78808a410ae2f8632d0373dd55cda1def50f8b378a50b4eb4f4809ccf9ab37d6c26e0aa242e0865cdf6d4691"
           },
           {
             "path": "packages/taquito-utils/dist/types/taquito-utils.d.ts",

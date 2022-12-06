@@ -1,4 +1,0 @@
-# Test that MAP {FAILWITH} is not allowed by the typechecker
-parameter (list nat);
-storage unit;
-code { UNPAIR; MAP {FAILWITH}; DROP; NIL operation; PAIR }

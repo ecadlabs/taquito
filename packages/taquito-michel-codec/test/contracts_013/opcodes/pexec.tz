@@ -1,6 +1,0 @@
-parameter nat;
-storage nat;
-code {
-      LAMBDA (pair nat nat) nat
-             {UNPAIR ; ADD};
-      SWAP; UNPAIR ; DIP { APPLY } ; EXEC ; NIL operation; PAIR};

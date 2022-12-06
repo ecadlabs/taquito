@@ -11,8 +11,6 @@ module.exports = {
     './packages/taquito-remote-signer/src/taquito-remote-signer.ts',
     './packages/taquito-rpc/src/taquito-rpc.ts',
     './packages/taquito-signer/src/taquito-signer.ts',
-    './packages/taquito-tezbridge-signer/src/taquito-tezbridge-signer.ts',
-    './packages/taquito-tezbridge-wallet/src/taquito-tezbridge-wallet.ts',
     './packages/taquito-tzip12/src/taquito-tzip12.ts',
     './packages/taquito-tzip16/src/taquito-tzip16.ts',
     './packages/taquito-utils/src/taquito-utils.ts',

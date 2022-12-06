@@ -1,7 +1,0 @@
-parameter unit;
-storage unit;
-code {
-       DROP;
-       PUSH address "txr1YNMEtkj5Vkqsbdmt7xaxBTMRZjzS96UAi"; DROP;
-       UNIT; NIL operation; PAIR;
-     }

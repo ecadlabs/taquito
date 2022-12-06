@@ -27,8 +27,10 @@ const sidebars = {
         'react-template',
         'amendment_and_voting',
         'batch_API',
+        'ballot',
         'beaconwallet-singleton',
         'confirmation_event_stream',
+        'consensus_key',
         'set_delegate',
         'dapp_prelaunch',
         'estimate',
@@ -59,6 +61,8 @@ const sidebars = {
         'wallet_API',
         'wallets',
         'web3js_taquito',
+        'contracts_collection',
+        'subscribe_event',
       ],
     },
     {
@@ -67,7 +71,7 @@ const sidebars = {
       className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
-      items: ['inmemory_signer', 'tezbridge_signer', 'ledger_signer'],
+      items: ['inmemory_signer', 'ledger_signer'],
     },
     {
       type: 'category',
@@ -76,21 +80,17 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
-        'michelson_encoder', 
-        'contracts-library', 
+        'michelson_encoder',
+        'contracts-library',
         'taquito_utils',
-      {
-        type: 'category',
-        label: 'Sapling',
-        collapsed: true,
-        collapsible:true,
-        items: [
-          'sapling', 
-          'sapling_in_memory_spending_key', 
-          'sapling_in_memory_viewing_key'
-        ]
-      }
-    ],
+        {
+          type: 'category',
+          label: 'Sapling',
+          collapsed: true,
+          collapsible: true,
+          items: ['sapling', 'sapling_in_memory_spending_key', 'sapling_in_memory_viewing_key'],
+        },
+      ],
     },
     {
       type: 'category',
@@ -98,7 +98,7 @@ const sidebars = {
       className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
-      items: ['tx_rollups']
+      items: ['tx_rollups'],
     },
     {
       type: 'category',
@@ -130,7 +130,7 @@ const sidebars = {
       className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
-      items: ['mobile_bundle']
+      items: ['mobile_bundle'],
     },
     {
       'Upgrading Guide': ['upgrading_guide'],

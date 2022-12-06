@@ -1,3 +1,0 @@
-parameter (big_map int int);
-storage (big_map int int);
-code { CAR; NIL operation; PAIR }

@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async (done) => {
-      await setup();
+      await setup(true);
       done();
     });
 

@@ -1,8 +1,0 @@
-storage (big_map nat nat);
-parameter (unit);
-code { DROP;
-       EMPTY_BIG_MAP nat nat;
-       NIL operation;
-       PAIR;
-     }
-

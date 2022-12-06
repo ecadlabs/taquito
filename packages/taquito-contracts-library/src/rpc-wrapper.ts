@@ -294,4 +294,16 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<TxRollupInboxResponse | null> {
     return this.rpc.getTxRollupInbox(txRollupId, blockLevel, { block });
   }
+  async getStorageUsedSpace(
+    contract: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<string> {
+    return this.rpc.getStorageUsedSpace(contract, { block });
+  }
+  async getStoragePaidSpace(
+    contract: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<string> {
+    return this.rpc.getStoragePaidSpace(contract, { block });
+  }
 }

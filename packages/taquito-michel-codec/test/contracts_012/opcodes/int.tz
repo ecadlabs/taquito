@@ -1,5 +1,0 @@
-parameter nat;
-storage (option int);
-# this contract takes a natural number as parameter, converts it to an
-# integer and stores it.
-code { CAR; INT; SOME; NIL operation; PAIR };

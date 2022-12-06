@@ -1,7 +1,0 @@
-parameter nat;
-storage (pair (big_map nat nat) (option bool)) ;
-# stores (map, Some flag) where flag = parameter is a member of
-# the map in first component of storage
-code { UNPAIR;
-       DIP { CAR; DUP };
-       MEM; SOME; SWAP; PAIR; NIL operation; PAIR;}

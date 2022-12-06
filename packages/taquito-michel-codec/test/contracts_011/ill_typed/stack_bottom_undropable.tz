@@ -1,5 +1,0 @@
-parameter unit;
-storage unit;
-code {
-       DROP 2;
-     }

@@ -1,3 +1,0 @@
-parameter (pair nat address) ;
-storage nat ;
-code { CAR ; UNPAIR ; VIEW "add" nat ; IF_SOME { } { FAIL }; NIL operation ; PAIR } ;

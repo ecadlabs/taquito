@@ -1,0 +1,16 @@
+parameter unit;
+storage unit;
+code { DROP ;
+       UNIT ;
+       PUSH string "right" ;
+       RIGHT nat ;
+       EMIT %tag1 ;
+       PUSH nat 2 ;
+       LEFT string ;
+       EMIT %tag2 (or (nat %int) (string %str)) ;
+       NIL operation ;
+       SWAP ;
+       CONS ;
+       SWAP ;
+       CONS ;
+       PAIR }

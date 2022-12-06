@@ -36,6 +36,8 @@ type PrimID =
   | 'Elt'
   | 'constant';
 
+// The order is important!
+// The position represent the encoding value.
 const primitives: PrimID[] = [
   'parameter',
   'storage',
@@ -169,11 +171,11 @@ const primitives: PrimID[] = [
   'bls12_381_g2',
   'bls12_381_fr',
   'sapling_state',
-  'sapling_transaction',
+  'sapling_transaction_deprecated',
   'SAPLING_EMPTY_STATE',
   'SAPLING_VERIFY_UPDATE',
   'ticket',
-  'TICKET',
+  'TICKET_DEPRECATED',
   'READ_TICKET',
   'SPLIT_TICKET',
   'JOIN_TICKETS',
@@ -185,7 +187,13 @@ const primitives: PrimID[] = [
   'view',
   'constant',
   'SUB_MUTEZ',
+  'tx_rollup_l2_address',
+  'MIN_BLOCK_TIME',
+  'sapling_transaction',
   'EMIT',
+  'Lambda_rec',
+  'LAMBDA_REC',
+  'TICKET',
 ];
 
 const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =

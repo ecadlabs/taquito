@@ -54,6 +54,8 @@ describe('RpcClientCache test', () => {
       getLiveBlocks: jest.fn(),
       getBalance: jest.fn(),
       getStorage: jest.fn(),
+      getStorageUsedSpace: jest.fn(),
+      getStoragePaidSpace: jest.fn(),
       getScript: jest.fn(),
       getNormalizedScript: jest.fn(),
       getContract: jest.fn(),
@@ -90,6 +92,8 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getLiveBlocks.mockReturnValue(liveBlocks);
     mockRpcClient.getBalance.mockReturnValue(balance);
     mockRpcClient.getStorage.mockReturnValue(storage);
+    mockRpcClient.getStorageUsedSpace.mockReturnValue('100');
+    mockRpcClient.getStoragePaidSpace.mockReturnValue('120');
     mockRpcClient.getScript.mockReturnValue(script);
     mockRpcClient.getNormalizedScript.mockReturnValue(script);
     mockRpcClient.getContract.mockReturnValue(contract);
@@ -117,7 +121,6 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getProtocols.mockReturnValue(protocols);
     mockRpcClient.getTxRollupInbox.mockReturnValue(txRollupInbox);
     mockRpcClient.getTxRollupState.mockReturnValue(txRollupState);
-
     rpcCache = new RpcClientCache(mockRpcClient);
   });
 
@@ -132,6 +135,8 @@ describe('RpcClientCache test', () => {
     await rpcCache.getLiveBlocks();
     await rpcCache.getBalance(address);
     await rpcCache.getStorage(contractAddress);
+    await rpcCache.getStoragePaidSpace(contractAddress);
+    await rpcCache.getStorageUsedSpace(contractAddress);
     await rpcCache.getScript(contractAddress);
     await rpcCache.getNormalizedScript(contractAddress);
     await rpcCache.getContract(contractAddress);
@@ -172,6 +177,12 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getStorage/head/${contractAddress}/`].response
     ).toEqual(storage);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getStoragePaidSpace/head/${contractAddress}/`].response
+    ).toEqual('120');
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getStorageUsedSpace/head/${contractAddress}/`].response
+    ).toEqual('100');
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getScript/head/${contractAddress}/`].response
     ).toEqual(script);
@@ -256,6 +267,8 @@ describe('RpcClientCache test', () => {
     await rpcCache.getLiveBlocks(block);
     await rpcCache.getBalance(address, block);
     await rpcCache.getStorage(contractAddress, block);
+    await rpcCache.getStoragePaidSpace(contractAddress, block);
+    await rpcCache.getStorageUsedSpace(contractAddress, block);
     await rpcCache.getScript(contractAddress, block);
     await rpcCache.getNormalizedScript(contractAddress, { unparsing_mode: 'Readable' }, block);
     await rpcCache.getContract(contractAddress, block);
@@ -306,6 +319,14 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getStorage/${block.block}/${contractAddress}/`].response
     ).toEqual(storage);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getStoragePaidSpace/${block.block}/${contractAddress}/`]
+        .response
+    ).toEqual('120');
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getStorageUsedSpace/${block.block}/${contractAddress}/`]
+        .response
+    ).toEqual('100');
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getScript/${block.block}/${contractAddress}/`].response
     ).toEqual(script);
@@ -402,6 +423,8 @@ describe('RpcClientCache test', () => {
     await rpcCache.getLiveBlocks();
     await rpcCache.getBalance(address);
     await rpcCache.getStorage(contractAddress);
+    await rpcCache.getStoragePaidSpace(contractAddress);
+    await rpcCache.getStorageUsedSpace(contractAddress);
     await rpcCache.getScript(contractAddress);
     await rpcCache.getNormalizedScript(contractAddress);
     await rpcCache.getContract(contractAddress);
