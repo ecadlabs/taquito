@@ -8,7 +8,7 @@ The "consensus key" feature allows bakers to use a different key, called the con
 Starting from Lima protocol, these 2 new operations will be available:
 
 ## Update Consensus Key
-This is a manager operation that must be signed by the manager key of the baker. This operation updates the consensus key of the baker to `PUBLIC_KEY` starting from the current cycle plus `PRESERVED_CYCLES + 1`. A consensus key can only be used by a signle baker, the operation will fail otherwise
+This is a manager operation that must be signed by the manager key of the baker. This operation updates the consensus key of the baker to `PUBLIC_KEY` starting from the current cycle plus `PRESERVED_CYCLES + 1`. A consensus key can only be used by a single baker, the operation will fail otherwise.
 
 ### Examples
 ```typescript
