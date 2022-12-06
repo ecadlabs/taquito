@@ -4,9 +4,9 @@ import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
-import { knownBigMapContractProtoALph, knownContractProtoALph, knownOnChainViewContractAddressProtoALph, knownSaplingContractProtoALph, knownTzip12BigMapOffChainContractProtoALph } from './known-contracts-ProtoALph';
-import { knownContractPtGhostnet, knownBigMapContractPtGhostnet, knownTzip12BigMapOffChainContractPtGhostnet, knownSaplingContractPtGhostnet, knownOnChainViewContractAddressPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractPtNairobi, knownBigMapContractPtNairobi, knownTzip12BigMapOffChainContractPtNairobi, knownSaplingContractPtNairobi, knownOnChainViewContractAddressPtNairobi } from './known-contracts-PtNairobi';
+import { knownContractsProtoALph } from './known-contracts-ProtoALph';
+import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
+import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
 
@@ -81,11 +81,11 @@ const nairobinetEphemeral = {
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_NAIROBINET_CONTRACT_ADDRESS'] || knownContractPtNairobi,
-  knownBigMapContract: process.env['TEZOS_NAIROBINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtNairobi,
-  knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtNairobi,
-  knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtNairobi,
-  knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtNairobi,
+  knownContract: process.env['TEZOS_NAIROBINET_CONTRACT_ADDRESS'] || knownContractsPtNairobi.contract,
+  knownBigMapContract: process.env['TEZOS_NAIROBINET_BIGMAPCONTRACT_ADDRESS'] || knownContractsPtNairobi.bigMapContract,
+  knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownContractsPtNairobi.tzip12BigMapOffChainContract,
+  knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownContractsPtNairobi.saplingContract,
+  knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsPtNairobi.onChainViewContractAddress,
   protocol: Protocols.PtNairobi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -99,11 +99,11 @@ const ghostnetEphemeral = {
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_GHOSTNET_CONTRACT_ADDRESS'] || knownContractPtGhostnet,
-  knownBigMapContract: process.env['TEZOS_GHOSTNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtGhostnet,
-  knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
-  knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
-  knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
+  knownContract: process.env['TEZOS_GHOSTNET_CONTRACT_ADDRESS'] || knownContractsPtGhostnet.contract,
+  knownBigMapContract: process.env['TEZOS_GHOSTNET_BIGMAPCONTRACT_ADDRESS'] || knownContractsPtGhostnet.bigMapContract,
+  knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownContractsPtGhostnet.tzip12BigMapOffChainContract,
+  knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownContractsPtGhostnet.saplingContract,
+  knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsPtGhostnet.onChainViewContractAddress,
   protocol: Protocols.PtMumbai2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -117,11 +117,11 @@ const mondaynetEphemeral = {
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
-  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractProtoALph,
-  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractProtoALph,
-  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractProtoALph,
-  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractProtoALph,
-  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressProtoALph,
+  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractsProtoALph.contract,
+  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownContractsProtoALph.bigMapContract,
+  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownContractsProtoALph.tzip12BigMapOffChainContract,
+  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownContractsProtoALph.saplingContract,
+  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsProtoALph.onChainViewContractAddress,
   protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
@@ -136,11 +136,11 @@ const nairobinetSecretKey = {
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_NAIROBINET_CONTRACT_ADDRESS'] || knownContractPtNairobi,
-  knownBigMapContract: process.env['TEZOS_NAIROBINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtNairobi,
-  knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtNairobi,
-  knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtNairobi,
-  knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtNairobi,
+  knownContract: process.env['TEZOS_NAIROBINET_CONTRACT_ADDRESS'] || knownContractsPtNairobi.contract,
+  knownBigMapContract: process.env['TEZOS_NAIROBINET_BIGMAPCONTRACT_ADDRESS'] || knownContractsPtNairobi.bigMapContract,
+  knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownContractsPtNairobi.tzip12BigMapOffChainContract,
+  knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownContractsPtNairobi.saplingContract,
+  knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsPtNairobi.onChainViewContractAddress,
   protocol: Protocols.PtNairobi,
   signerConfig: defaultSecretKey
 };
@@ -150,11 +150,11 @@ const ghostnetSecretKey = {
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_GHOSTNET_CONTRACT_ADDRESS'] || knownContractPtGhostnet,
-  knownBigMapContract: process.env['TEZOS_GHOSTNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtGhostnet,
-  knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
-  knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
-  knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
+  knownContract: process.env['TEZOS_GHOSTNET_CONTRACT_ADDRESS'] || knownContractsPtGhostnet.contract,
+  knownBigMapContract: process.env['TEZOS_GHOSTNET_BIGMAPCONTRACT_ADDRESS'] || knownContractsPtGhostnet.bigMapContract,
+  knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownContractsPtGhostnet.tzip12BigMapOffChainContract,
+  knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownContractsPtGhostnet.saplingContract,
+  knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsPtGhostnet.onChainViewContractAddress,
   protocol: Protocols.PtMumbai2,
   signerConfig: defaultSecretKey
 };
@@ -164,11 +164,11 @@ const mondaynetSecretKey = {
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_MONDAYNET_BAKER'] || 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
-  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractProtoALph,
-  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractProtoALph,
-  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractProtoALph,
-  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractProtoALph,
-  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressProtoALph,
+  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractsProtoALph.contract,
+  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownContractsProtoALph.bigMapContract,
+  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownContractsProtoALph.tzip12BigMapOffChainContract,
+  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownContractsProtoALph.saplingContract,
+  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsProtoALph.onChainViewContractAddress,
   protocol: Protocols.ProtoALpha,
   signerConfig: defaultSecretKey
 };
