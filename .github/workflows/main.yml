@@ -101,7 +101,8 @@ jobs:
         --name my-sandbox 
         --detach 
         -p 20001:20000
-        oxheadalpha/flextesa:latest 
+        oxheadalpha/flextesa:latest
+        flextesa mini-net
           --root /tmp/mini-box --size 1 \ 
           --set-history-mode N000:archive \
           --number-of-b 1 \ 
