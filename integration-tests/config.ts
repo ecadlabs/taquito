@@ -29,6 +29,17 @@ export const isSandbox = (config: {rpc: string}) => {
 
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
+// A network type. TESTNETs corresponds to a pre-existing set of test
+// networks, such as Jakartanet, Kathmanet, Mondaynet etc.  Some
+// integration test cases are hardcoded against such networks.  A
+// SANDBOX is a local, ephemeral sandboxed network. When the
+// integration test suite runs against such network, the test
+// network-specific test cases are disabled.
+export enum NetworkType {
+  TESTNET,
+  SANDBOX,
+}
+
 interface Config {
   rpc: string;
   pollingIntervalMilliseconds?: string;
@@ -41,6 +52,7 @@ interface Config {
   knownViewContract: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | SecretKeyConfig;
+  networkType: NetworkType;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -102,6 +114,9 @@ const defaultConfig = ({
   knownContracts,
   signerConfig
 }: DefaultConfiguration): Config => {
+  const networkType = (process.env['TEZOS_NETWORK_TYPE'] === 'sandbox')
+    ? NetworkType.SANDBOX
+    : NetworkType.TESTNET;
   return {
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
@@ -114,6 +129,7 @@ const defaultConfig = ({
     knownViewContract: process.env[`TEZOS_${networkName}_ON_CHAIN_VIEW_CONTRACT`] || knownContracts.onChainViewContractAddress,
     protocol: protocol,
     signerConfig: signerConfig,
+    networkType: networkType
   }
 }
 
@@ -260,6 +276,7 @@ export const CONFIGS = () => {
         knownSaplingContract,
         knownViewContract,
         signerConfig,
+        networkType
       }) => {
         const Tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
 
@@ -281,6 +298,7 @@ export const CONFIGS = () => {
           knownSaplingContract,
           knownViewContract,
           signerConfig,
+          networkType,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.SECRET_KEY) {
               setupWithSecretKey(Tezos, signerConfig);
