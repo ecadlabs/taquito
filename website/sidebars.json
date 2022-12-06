@@ -12,7 +12,6 @@
         "beaconwallet-singleton",
         "failwith_errors",
         "confirmation_event_stream",
-        "consensus_key",
         "set_delegate",
         "dapp_prelaunch",
         "estimate",
