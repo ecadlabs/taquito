@@ -30,6 +30,7 @@ const sidebars = {
         'ballot',
         'beaconwallet-singleton',
         'confirmation_event_stream',
+        'consensus_key',
         'set_delegate',
         'dapp_prelaunch',
         'estimate',
