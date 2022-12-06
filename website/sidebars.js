@@ -58,6 +58,7 @@ const sidebars = {
         'validators',
         'wallet_API',
         'wallets',
+        'wallet_connect_2',
         'web3js_taquito',
       ],
     },

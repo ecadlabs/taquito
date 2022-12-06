@@ -41,6 +41,7 @@
     "@taquito/tzip12": "*",
     "@taquito/tzip16": "*",
     "@taquito/utils": "*",
+    "@taquito/wallet-connect-2": "*",
     "@temple-wallet/dapp": "^7.0.0",
     "abort-controller": "^3.0.0",
     "algoliasearch": "^4.14.2",

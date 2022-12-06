@@ -16,7 +16,7 @@ export class MissingRequiredScope extends Error {
  *  @category Error
  *  @description Error that indicates the wallet returned an invalid namespace
  */
- export class InvalidReceivedSessionNamespace extends Error {
+export class InvalidReceivedSessionNamespace extends Error {
   name = 'InvalidReceivedSessionNamespace';
 
   constructor(message: string, public code: number, public data?: string | string[]) {
@@ -38,13 +38,39 @@ export class InvalidSessionKey extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the pkh is not part of the active account in the session
+ *  @description Error that indicates the pkh is not part of the active accounts in the session
  */
 export class InvalidAccount extends Error {
   name = 'InvalidAccount';
 
-  constructor(public key: string) {
-    super(`Invalid pkh ${key}`);
+  constructor(public pkh: string) {
+    super(`Invalid pkh ${pkh}`);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates the network is not part of the active networks in the session
+ */
+export class InvalidNetwork extends Error {
+  name = 'InvalidNetwork';
+
+  constructor(public network: string) {
+    super(`Invalid network ${network}`);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates the combinaison pkh-network is not part of the active session
+ */
+export class InvalidNetworkOrAccount extends Error {
+  name = 'InvalidNetworkOrAccount';
+
+  constructor(public network: string, public pkh: string) {
+    super(
+      `No permission. The combinaison ${network} and ${pkh} is not part of the active session.`
+    );
   }
 }
 
@@ -81,5 +107,17 @@ export class ActiveAccountUnspecified extends Error {
 
   constructor() {
     super('Please specify the active account using the "setActiveAccount" method.');
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates the active network is not specified
+ */
+export class ActiveNetworkUnspecified extends Error {
+  name = 'ActiveNetworkUnspecified';
+
+  constructor() {
+    super('Please specify the active network using the "setActiveNetwork" method.');
   }
 }

@@ -70,15 +70,15 @@
   };
 
   const requestPermissionWc2 = async (wallet: WalletConnect2, pairingTopic?: string) => {
-    await wallet.requestPermissions(
-      {
+    await wallet.requestPermissions({
+      permissionScope: {
         networks: [$store.networkType],
         events: [],
         methods: [PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN],
       },
       pairingTopic,
-      "https://www.tezos.help/wcdata/"
-    );
+      registryUrl: "https://www.tezos.help/wcdata/"
+    });
     const allAccounts = wallet.getAccounts();
     await updateStore(wallet, allAccounts);
   };
@@ -143,6 +143,7 @@
       store.updateUserAddress(userAddress);
       if (wallet instanceof WalletConnect2) {
         wallet.setActiveAccount(userAddress);
+        wallet.setActiveNetwork($store.networkType);
       }
 
       const Tezos = new TezosToolkit(rpcUrl[$store.networkType]);
