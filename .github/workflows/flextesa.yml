@@ -14,7 +14,7 @@ jobs:
         image: oxheadalpha/flextesa:latest
         ports:
           - 20000:20000
-        options: --entrypoint 'flextesa mini-net --root /tmp/mini-box --size 1 --set-history-mode N000:archive --number-of-b 1 --balance-of-bootstrap-accounts tez:100_000_000 --time-b "$time_bb" --add-bootstrap-account="alice,edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn,tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb,unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq@2_000_000_000_000" --add-bootstrap-account="$bob,edpkurPsQ8eUApnLUJ9ZPDvu98E8VNj4KtJa1aZr16Cr5ow5VHKnz4,tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6,unencrypted:edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt@2_000_000_000_000"  --until-level 200_000_000 --protocol-kind Lima'
+        options: --entrypoint='flextesa mini-net --root /tmp/mini-box --size 1 --set-history-mode N000:archive --number-of-b 1 --balance-of-bootstrap-accounts tez:100_000_000 --time-b "$time_bb" --add-bootstrap-account="alice,edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn,tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb,unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq@2_000_000_000_000" --add-bootstrap-account="$bob,edpkurPsQ8eUApnLUJ9ZPDvu98E8VNj4KtJa1aZr16Cr5ow5VHKnz4,tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6,unencrypted:edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt@2_000_000_000_000"  --until-level 200_000_000 --protocol-kind Lima'
 
     steps:
     - uses: actions/checkout@v3
