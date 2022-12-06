@@ -4,6 +4,7 @@ import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
+import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
@@ -76,102 +77,81 @@ export const defaultSecretKey: SecretKeyConfig = {
   password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
-const nairobinetEphemeral = {
-  rpc: process.env['TEZOS_RPC_NAIROBINET'] || 'http://ecad-nairobinet-full.i.tez.ie:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_NAIROBINET_CONTRACT_ADDRESS'] || knownContractsPtNairobi.contract,
-  knownBigMapContract: process.env['TEZOS_NAIROBINET_BIGMAPCONTRACT_ADDRESS'] || knownContractsPtNairobi.bigMapContract,
-  knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownContractsPtNairobi.tzip12BigMapOffChainContract,
-  knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownContractsPtNairobi.saplingContract,
-  knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsPtNairobi.onChainViewContractAddress,
-  protocol: Protocols.PtNairobi,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/nairobinet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
+const defaultEphemeralConfig = (keyUrl: string): EphemeralConfig => ({
+  type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+  keyUrl: keyUrl,
+  requestHeaders: { Authorization: 'Bearer taquito-example' },
+});
 
-const ghostnetEphemeral = {
-  rpc: process.env['TEZOS_RPC_GHOSTNET'] || 'ecad-ghostnet-rolling:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_GHOSTNET_CONTRACT_ADDRESS'] || knownContractsPtGhostnet.contract,
-  knownBigMapContract: process.env['TEZOS_GHOSTNET_BIGMAPCONTRACT_ADDRESS'] || knownContractsPtGhostnet.bigMapContract,
-  knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownContractsPtGhostnet.tzip12BigMapOffChainContract,
-  knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownContractsPtGhostnet.saplingContract,
-  knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsPtGhostnet.onChainViewContractAddress,
-  protocol: Protocols.PtMumbai2,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/ghostnet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
+// Named parameters for defaultConfig below
+interface DefaultConfiguration {
+  networkName: string;
+  protocol: Protocols;
+  defaultRpc: string;
+  knownContracts: KnownContracts;
+  signerConfig: EphemeralConfig | SecretKeyConfig;
+}
 
-const mondaynetEphemeral = {
-  rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
-  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractsProtoALph.contract,
-  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownContractsProtoALph.bigMapContract,
-  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownContractsProtoALph.tzip12BigMapOffChainContract,
-  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownContractsProtoALph.saplingContract,
-  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsProtoALph.onChainViewContractAddress,
-  protocol: Protocols.ProtoALpha,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
+// Creates a default Config for the given networkName, running
+// protocol, available on defaultRpc, a set of knownContracts and
+// signerConfig.
+const defaultConfig = ({
+  networkName,
+  protocol,
+  defaultRpc,
+  knownContracts,
+  signerConfig
+}: DefaultConfiguration): Config => {
+  return {
+    rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
+    pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
+    rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
+    knownBaker: process.env[`TEZOS_BAKER`] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+    knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
+    knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
+    knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
+    knownSaplingContract: process.env[`TEZOS_${networkName}_SAPLINGCONTRACT_ADDRESS`] || knownContracts.saplingContract,
+    knownViewContract: process.env[`TEZOS_${networkName}_ON_CHAIN_VIEW_CONTRACT`] || knownContracts.onChainViewContractAddress,
+    protocol: protocol,
+    signerConfig: signerConfig,
+  }
+}
 
+const nairobinetEphemeral: Config =
+  defaultConfig({
+    networkName: 'NAIROBINET',
+    protocol: Protocols.PtNairobi,
+    defaultRpc: 'http://ecad-nairobinet-full.i.tez.ie:8732',
+    knownContracts: knownContractsPtNairobi,
+    signerConfig: defaultEphemeralConfig('https://api.tez.ie/keys/nairobinet')
+  });
 
-const nairobinetSecretKey = {
-  rpc: process.env['TEZOS_RPC_NAIROBINET'] || 'http://ecad-nairobinet-full:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_NAIROBINET_CONTRACT_ADDRESS'] || knownContractsPtNairobi.contract,
-  knownBigMapContract: process.env['TEZOS_NAIROBINET_BIGMAPCONTRACT_ADDRESS'] || knownContractsPtNairobi.bigMapContract,
-  knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownContractsPtNairobi.tzip12BigMapOffChainContract,
-  knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownContractsPtNairobi.saplingContract,
-  knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsPtNairobi.onChainViewContractAddress,
-  protocol: Protocols.PtNairobi,
-  signerConfig: defaultSecretKey
-};
+const nairobinetSecretKey: Config =
+  { ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey },  ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
 
-const ghostnetSecretKey = {
-  rpc: process.env['TEZOS_RPC_GHOSTNET'] || 'http://ecad-ghostnet-rolling:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_GHOSTNET_CONTRACT_ADDRESS'] || knownContractsPtGhostnet.contract,
-  knownBigMapContract: process.env['TEZOS_GHOSTNET_BIGMAPCONTRACT_ADDRESS'] || knownContractsPtGhostnet.bigMapContract,
-  knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownContractsPtGhostnet.tzip12BigMapOffChainContract,
-  knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownContractsPtGhostnet.saplingContract,
-  knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsPtGhostnet.onChainViewContractAddress,
-  protocol: Protocols.PtMumbai2,
-  signerConfig: defaultSecretKey
-};
+const ghostnetEphemeral: Config =
+  defaultConfig({
+    networkName: 'GHOSTNET',
+    protocol: Protocols.PtMumbai2,
+    defaultRpc: 'ecad-ghostnet-rolling:8732',
+    knownContracts: knownContractsPtGhostnet,
+    signerConfig: defaultEphemeralConfig('https://api.tez.ie/keys/ghostnet')
+  });
 
-const mondaynetSecretKey = {
-  rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_MONDAYNET_BAKER'] || 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
-  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractsProtoALph.contract,
-  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownContractsProtoALph.bigMapContract,
-  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownContractsProtoALph.tzip12BigMapOffChainContract,
-  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownContractsProtoALph.saplingContract,
-  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownContractsProtoALph.onChainViewContractAddress,
-  protocol: Protocols.ProtoALpha,
-  signerConfig: defaultSecretKey
-};
+const ghostnetSecretKey: Config =
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling:8732' } };
+
+const mondaynetEphemeral: Config =
+  defaultConfig({
+    networkName: 'MONDAYNET',
+    protocol: Protocols.ProtoALpha,
+    defaultRpc: 'http://mondaynet.ecadinfra.com:8732',
+    knownContracts: knownContractsProtoALph,
+    signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
+  });
+
+const mondaynetSecretKey: Config =
+  { ...mondaynetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
 const providers: Config[] = [];
 
