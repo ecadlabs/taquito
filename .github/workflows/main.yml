@@ -59,7 +59,7 @@ jobs:
         version: 1.32.2
     - run: npm -w integration-tests run test:${{ matrix.protocol }} -- --maxWorkers=8
 
-  integration-tests-flextesa:
+  integration-tests-flextesa-kathmandu:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -70,11 +70,57 @@ jobs:
     - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
     - run: npm ci
     - run: npm run build
-    - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
+    - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns contract-drain-delegate-operation.spec.ts ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
         RUN_KATHMANDUNET_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
         TEZOS_RPC_KATHMANDUNET: http://0.0.0.0:20000
+        POLLING_INTERVAL_MILLISECONDS: 100
+        RPC_CACHE_MILLISECONDS: 0
+        TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
+    - run: docker kill my-sandbox
+
+  integration-tests-flextesa-lima:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - run: |-
+        export flextesa_docker_image='oxheadalpha/flextesa:20221123'
+
+        export alice="$(docker run --rm ${flextesa_docker_image} flextesa key alice)"
+        export bob="$(docker run --rm ${flextesa_docker_image} flextesa key bob)"
+        export charlie="$(docker run --rm ${flextesa_docker_image} flextesa key charlie)"
+        export donald="$(docker run --rm ${flextesa_docker_image} flextesa key donald)"
+
+        docker run 
+        --rm 
+        --name my-sandbox 
+        --detach 
+        -p 20001:20000
+        oxheadalpha/flextesa:latest 
+          --root /tmp/mini-box --size 1 \ 
+          --set-history-mode N000:archive \
+          --number-of-b 1 \ 
+          --balance-of-bootstrap-accounts tez:100_000_000 \
+          --time-b 1 \
+          --add-bootstrap-account="$alice@2_000_000_000_000" \
+          --add-bootstrap-account="$bob@2_000_000_000_000" \
+          --add-bootstrap-account="$charlie@2_000_000_000_000" \
+          --add-bootstrap-account="$donald@2_000_000_000_000" \
+          --no-daemons-for=donald \
+          --until-level 200_000_000 \
+          --protocol-kind Lima
+    - run: npm ci
+    - run: npm run build
+    - run: npm -w integration-tests run test:limanet-secret-key -- contract-drain-delegate-operation.spec.ts
+      env:
+        RUN_LIMANET_WITH_SECRET_KEY: true
+        SECRET_KEY: edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
+        TEZOS_RPC_LIMANET: http://0.0.0.0:20001
         POLLING_INTERVAL_MILLISECONDS: 100
         RPC_CACHE_MILLISECONDS: 0
         TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb

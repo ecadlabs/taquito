@@ -1,9 +1,12 @@
+import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  const flextesanet = (rpc === 'http://0.0.0.0:20000') ? it : it.skip
+  const signer = new InMemorySigner('edsk3RgWvbKKA1atEUcaGwivge7QtckHkTL9nQJUXQKY5r8WKp4pF4');
+  Tezos.setSignerProvider(signer);
+  const flextesanet = (rpc === 'http://0.0.0.0:20001') ? it : it.skip
 
   describe(`Test drain delegate with defaul consensus key through contract api using: ${rpc}`, () => {
     let delegate: TezosToolkit
@@ -13,12 +16,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setup(true)
 
       try {
-        delegate = await createAddress()
-        delegatePkh = await delegate.signer.publicKeyHash()
-        const fund = await Tezos.contract.transfer({ amount: 5, to: delegatePkh})
-        await fund.confirmation();
-        const register = await delegate.contract.registerDelegate({})
-        await register.confirmation()
+        // delegate = await createAddress()
+        // delegatePkh = await delegate.signer.publicKeyHash()
+        // const fund = await Tezos.contract.transfer({ amount: 5, to: delegatePkh})
+        // await fund.confirmation();
+        // const register = await Tezos.contract.registerDelegate({})
+        // await register.confirmation()
         
         const destination = await createAddress()
         destinationPkh = await destination.signer.publicKeyHash()
@@ -31,13 +34,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     })
     flextesanet('Verify that new Account can be created, registered as delegate and drained itself', async (done) => {
 
-      expect((await delegate.rpc.getBalance(delegatePkh)).toNumber()).toBeGreaterThan(0)
-      await delegate.contract.drainDelegate({
+      expect((await Tezos.rpc.getBalance(await signer.publicKeyHash())).toNumber()).toBeGreaterThan(0)
+      await Tezos.contract.drainDelegate({
         consensus_key: destinationPkh,
-        delegate: delegatePkh,
+        delegate: await signer.publicKeyHash(),
         destination: destinationPkh,
       })
-      expect((await delegate.tz.getBalance(delegatePkh)).toNumber).toEqual(0)
+      expect((await delegate.tz.getBalance(await signer.publicKeyHash())).toNumber).toEqual(0)
       done();
     });
   });
