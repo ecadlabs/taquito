@@ -77,6 +77,7 @@ const noArgInstructionIDs: Record<MichelsonNoArgInstruction['prim'], true> = {
   SUB: true,
   SWAP: true,
   TICKET: true,
+  TICKET_DEPRECATED: true,
   TOTAL_VOTING_POWER: true,
   TRANSFER_TOKENS: true,
   UNIT: true,
@@ -110,6 +111,7 @@ export const instructionIDs: Record<MichelsonInstruction['prim'], true> = Object
     IF_NONE: true,
     ITER: true,
     LAMBDA: true,
+    LAMBDA_REC: true,
     LEFT: true,
     LOOP: true,
     LOOP_LEFT: true,
@@ -161,6 +163,7 @@ const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparabl
   bls12_381_g2: true,
   bls12_381_fr: true,
   sapling_transaction: true,
+  sapling_transaction_deprecated: true,
   sapling_state: true,
   ticket: true,
   chest_key: true,
@@ -396,6 +399,7 @@ export function assertMichelsonInstruction(ex: Expr): ex is MichelsonCode {
         }
         break;
 
+      case 'LAMBDA_REC':
       case 'LAMBDA':
         /* istanbul ignore else */
         if (assertArgs(ex, 3)) {
@@ -718,6 +722,12 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
         /* istanbul ignore else */
         if (assertArgs(ex, 1)) {
           assertMichelsonData(ex.args[0]);
+        }
+        break;
+
+      case 'Lambda_rec':
+        if (ex.args) {
+          assertMichelsonInstruction(ex.args);
         }
         break;
 

@@ -1,0 +1,6 @@
+parameter bytes; 
+storage (option (lambda unit unit)); 
+code { CAR; 
+       UNPACK (lambda unit unit); 
+       NIL operation; 
+       PAIR }

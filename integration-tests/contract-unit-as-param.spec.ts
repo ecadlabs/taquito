@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with unit as params through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
-      await setup()
+      await setup(true)
       done()
     })
     test('Verify contract.originate for a contract and call deposit method with unit param', async (done) => {

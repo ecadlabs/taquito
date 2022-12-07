@@ -1,9 +1,0 @@
-parameter nat;
-storage (bls12_381_fr);
-code {
-       UNPAIR;
-       SWAP;
-       MUL;
-       NIL operation;
-       PAIR;
-     };

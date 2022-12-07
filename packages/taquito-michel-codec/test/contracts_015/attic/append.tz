@@ -1,0 +1,8 @@
+parameter (pair (list int) (list int));
+storage (list int);
+code { CAR; UNPAIR  ; # Unpack lists
+       NIL int; SWAP; # Setup reverse accumulator
+       ITER {CONS};   # Reverse list
+       ITER {CONS};   # Append reversed list
+       NIL operation;
+       PAIR}

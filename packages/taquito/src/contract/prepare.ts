@@ -25,6 +25,8 @@ import {
   RPCBallotOperation,
   ProposalsParams,
   RPCProposalsOperation,
+  UpdateConsensusKeyParams,
+  RPCUpdateConsensusKeyOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -284,4 +286,21 @@ export const createProposalsOperation = async ({ source, proposals }: ProposalsP
     source,
     proposals,
   } as RPCProposalsOperation;
+};
+
+export const createUpdateConsensusKeyOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  pk,
+}: UpdateConsensusKeyParams) => {
+  return {
+    kind: OpKind.UPDATE_CONSENSUS_KEY,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    pk,
+  } as RPCUpdateConsensusKeyOperation;
 };

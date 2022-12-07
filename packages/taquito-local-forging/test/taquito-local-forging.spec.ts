@@ -6,8 +6,11 @@ import {
   ProtocolsHash,
   Uint8ArrayConsumer,
 } from '../src/taquito-local-forging';
-import { ticketCode3, ticketStorage3 } from '../../../integration-tests/data/code_with_ticket';
-import { commonCases, kathmanduCases } from '../../../integration-tests/data/allTestsCases';
+import {
+  ticketCode3Proto14,
+  ticketStorage3Proto14,
+} from '../../../integration-tests/data/code_with_ticket_proto14';
+import { commonCases, limaCases } from '../../../integration-tests/data/allTestsCases';
 import {
   InvalidOperationSchemaError,
   InvalidBlockHashError,
@@ -28,10 +31,10 @@ describe('Forge and parse operations default protocol', () => {
     });
   });
 
-  describe('Forge and parse operations kathmandu protocol', () => {
-    const localForger = new LocalForger();
-    kathmanduCases.forEach(({ name, operation, expected }) => {
-      test(`Common test: ${name}`, async (done) => {
+  describe('Forge and parse operations lima protocol', () => {
+    const localForger = new LocalForger(ProtocolsHash.PtLimaPtL);
+    limaCases.forEach(({ name, operation, expected }) => {
+      test(`Lima test: ${name}`, async (done) => {
         const result = await localForger.forge(operation);
         expect(await localForger.parse(result)).toEqual(expected || operation);
         done();
@@ -166,8 +169,8 @@ describe('Forge and parse operations default protocol', () => {
             storage_limit: '10',
             balance: '0',
             script: {
-              code: ticketCode3,
-              storage: ticketStorage3,
+              code: ticketCode3Proto14,
+              storage: ticketStorage3Proto14,
             },
           },
         ],

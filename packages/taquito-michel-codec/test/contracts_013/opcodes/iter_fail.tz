@@ -1,4 +1,0 @@
-# Test that ITER {FAILWITH} is allowed by the typechecker
-parameter (set nat);
-storage unit;
-code { UNPAIR; ITER {FAILWITH}; NIL operation; PAIR }

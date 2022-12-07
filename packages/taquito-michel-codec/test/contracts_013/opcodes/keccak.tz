@@ -1,8 +1,0 @@
-storage (option bytes);
-parameter bytes;
-code
-  {
-    CAR;
-    KECCAK; SOME;
-    NIL operation; PAIR
-  }

@@ -1,0 +1,16 @@
+
+parameter (pair (lambda int int) (list int));
+storage (list int);
+code { DIP{NIL int};
+       CAR;
+       DUP;
+       DIP{CAR; PAIR};          # Unpack data and setup accumulator
+       CDR;
+       ITER {PAIR;
+             DUP; CDAR;
+             DIP{ DUP; DIP{CDAR}; DUP;
+                  CAR; DIP{CDDR; SWAP}; EXEC; CONS};
+             PAIR};
+       CDR; DIP{NIL int}; # First reduce
+       ITER {CONS}; # Reverse
+       NIL operation; PAIR}     # Calling convention

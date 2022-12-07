@@ -1,9 +1,0 @@
-{
-    parameter nat;
-    storage nat;
-    code { CAR ;
-    MIN_BLOCK_TIME ;
-    ADD ;
-    NIL operation ;
-    PAIR }
-}

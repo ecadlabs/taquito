@@ -1,8 +1,0 @@
-parameter address ;
-storage (option (pair (pair mutez mutez) (pair (pair address address) address )));
-code { CAR ;
-       UNIT;
-       VIEW "step_constants" (pair (pair mutez mutez) (pair (pair address address) address )) ;
-       NIL operation ;
-       PAIR } ;
-

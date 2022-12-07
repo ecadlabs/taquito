@@ -44,6 +44,7 @@ jobs:
       matrix:
         protocol:
           - kathmandunet
+          - limanet
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -68,7 +69,6 @@ jobs:
         node-version: 16
     - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
     - run: npm ci
-    - run: npm run lerna -- bootstrap
     - run: npm run build
     - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:

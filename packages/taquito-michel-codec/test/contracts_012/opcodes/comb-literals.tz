@@ -1,9 +1,0 @@
-# This pushes a list of combs to test the effect of the normalize script command
-parameter unit;
-storage unit;
-code {
-       PUSH
-         (list (pair nat nat nat nat))
-         {Pair 0 3 6 9; Pair 1 (Pair 4 (Pair 7 10)); {2; 5; 8; 11}};
-       DROP 2; UNIT; NIL operation; PAIR
-     }
