@@ -32,6 +32,7 @@ const sidebars = {
         'confirmation_event_stream',
         'set_delegate',
         'dapp_prelaunch',
+        'drain_delegate',
         'estimate',
         'subscribe_event',
         'fa2_parameters',
