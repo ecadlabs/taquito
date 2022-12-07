@@ -115,13 +115,6 @@ jobs:
   integration-tests-flextesa-lima:
     runs-on: ubuntu-latest
     continue-on-error: true
-    strategy:
-      matrix:
-        include:
-          - protocol: Kathmandu
-            testnet: kathmandunet
-          - protocol: Lima
-            testnet: limanet
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
