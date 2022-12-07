@@ -14,7 +14,6 @@
         "confirmation_event_stream",
         "set_delegate",
         "dapp_prelaunch",
-        "drain_delegate",
         "estimate",
         "fa2_parameters",
         "lambda_view",
