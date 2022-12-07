@@ -96,13 +96,13 @@ jobs:
         export charlie="$(docker run --rm ${flextesa_docker_image} flextesa key charlie)"
         export donald="$(docker run --rm ${flextesa_docker_image} flextesa key donald)"
 
-        docker run
-        --rm 
-        --name my-sandbox 
-        --detach 
-        -p 20001:20000
-        oxheadalpha/flextesa:latest
-        flextesa mini-net
+        docker run \
+        --rm \
+        --name my-sandbox \
+        --detach \
+        -p 20001:20000 \
+        oxheadalpha/flextesa:latest \
+        flextesa mini-net \
           --root /tmp/mini-box --size 1 \
           --set-history-mode N000:archive \
           --number-of-b 1 \
