@@ -11,7 +11,7 @@ export const sessionExample = {
         'tezos:ghostnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
         'tezos:ghostnet:tz2JobFgDoJ5HZ1jAoMgZCyNdbBEdAstkytV',
       ],
-      methods: ['tezos_signExpression'],
+      methods: ['tezos_sendOperations'],
       events: [],
     },
   },
@@ -37,7 +37,7 @@ export const sessionExample = {
   },
   requiredNamespaces: {
     tezos: {
-      methods: ['tezos_signExpression'],
+      methods: ['tezos_sendOperations'],
       chains: ['tezos:ghostnet'],
       events: [],
     },
