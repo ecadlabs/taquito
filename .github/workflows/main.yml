@@ -96,7 +96,7 @@ jobs:
         export charlie="$(docker run --rm ${flextesa_docker_image} flextesa key charlie)"
         export donald="$(docker run --rm ${flextesa_docker_image} flextesa key donald)"
 
-        docker run 
+        docker run
         --rm 
         --name my-sandbox 
         --detach 
