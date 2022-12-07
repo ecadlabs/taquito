@@ -103,9 +103,9 @@ jobs:
         -p 20001:20000
         oxheadalpha/flextesa:latest
         flextesa mini-net
-          --root /tmp/mini-box --size 1 \ 
+          --root /tmp/mini-box --size 1 \
           --set-history-mode N000:archive \
-          --number-of-b 1 \ 
+          --number-of-b 1 \
           --balance-of-bootstrap-accounts tez:100_000_000 \
           --time-b 1 \
           --add-bootstrap-account="$alice@2_000_000_000_000" \
