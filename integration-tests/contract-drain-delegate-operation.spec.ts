@@ -1,46 +1,55 @@
-import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
-import { CONFIGS } from "./config";
+import { CONFIGS, sleep } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  const signer = new InMemorySigner('edsk3RgWvbKKA1atEUcaGwivge7QtckHkTL9nQJUXQKY5r8WKp4pF4');
-  Tezos.setSignerProvider(signer);
-  const flextesanet = (rpc === 'http://0.0.0.0:20001') ? it : it.skip
+  const flextesanet = (rpc === 'http://0.0.0.0:20001') ? it : it.skip;
 
-  describe(`Test drain delegate with defaul consensus key through contract api using: ${rpc}`, () => {
-    let delegate: TezosToolkit
-    let delegatePkh: string
-    let destinationPkh: string
+  describe(`Test Drain Delegate using: ${rpc}`, () => {
+    let Delegate: TezosToolkit;
+    let delegatePkh: string;
+    let Destination: TezosToolkit;
+    let destinationPkh: string;
     beforeAll(async (done) => {
-      await setup(true)
+      await setup(true);
 
       try {
-        // delegate = await createAddress()
-        // delegatePkh = await delegate.signer.publicKeyHash()
-        // const fund = await Tezos.contract.transfer({ amount: 5, to: delegatePkh})
-        // await fund.confirmation();
-        // const register = await Tezos.contract.registerDelegate({})
-        // await register.confirmation()
-        
-        const destination = await createAddress()
-        destinationPkh = await destination.signer.publicKeyHash()
-        const consensus = await delegate.contract.updateConsensusKey({pk: await destination.signer.publicKey()})
-        await consensus.confirmation()
+        Delegate = await createAddress();
+        delegatePkh = await Delegate.signer.publicKeyHash();;
+        Destination = await createAddress();
+        destinationPkh = await Destination.signer.publicKeyHash();
+
+        // fund the delegate
+        const transferOp = await Tezos.contract.transfer({ to: delegatePkh, amount: 5 });
+        await transferOp.confirmation();
+
+        // register as delegate
+        const registerOp = await Delegate.contract.registerDelegate({});
+        await registerOp.confirmation();
+
+        // update consensus key to destination
+        const updateOp = await Delegate.contract.updateConsensusKey({ pk: await Destination.signer.publicKey() });
+        await updateOp.confirmation();
+
+        // wait for more than preserved_cycles + 1 for consensus_key to be active
+        const constants = await Delegate.rpc.getConstants();
+        await sleep(((constants.preserved_cycles + 2) * constants.blocks_per_cycle * (constants.minimal_block_delay!.toNumber())) * 1000);
+
       } catch(e) {
-        console.log(JSON.stringify(e))
+        console.log(JSON.stringify(e));
       }
       done();
     })
-    flextesanet('Verify that new Account can be created, registered as delegate and drained itself', async (done) => {
-
-      expect((await Tezos.rpc.getBalance(await signer.publicKeyHash())).toNumber()).toBeGreaterThan(0)
-      await Tezos.contract.drainDelegate({
+    flextesanet('Should be able to inject drain_delegate operation', async (done) => {
+      const drainOp = await Destination.contract.drainDelegate({
         consensus_key: destinationPkh,
-        delegate: await signer.publicKeyHash(),
+        delegate: delegatePkh,
         destination: destinationPkh,
-      })
-      expect((await delegate.tz.getBalance(await signer.publicKeyHash())).toNumber).toEqual(0)
+      });
+      await drainOp.confirmation();
+      
+      expect((await Delegate.rpc.getBalance(delegatePkh)).toNumber()).toEqual(0);
+      expect((await Destination.rpc.getBalance(destinationPkh)).toNumber()).toBeGreaterThan(0);
       done();
     });
   });
