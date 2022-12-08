@@ -3,7 +3,7 @@ import { CONFIGS, sleep } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  const flextesanet = (rpc === 'http://localhost:20001') ? it : it.skip;
+  const flextesaLimaNet = (rpc === 'http://localhost:20000') ? it : it.skip;
 
   describe(`Test Drain Delegate using: ${rpc}`, () => {
     let Delegate: TezosToolkit;
@@ -40,16 +40,20 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       }
       done();
     })
-    flextesanet('Should be able to inject drain_delegate operation', async (done) => {
+    flextesaLimaNet('Should be able to inject drain_delegate operation', async (done) => {
+      expect((await Delegate.rpc.getBalance(delegatePkh)).toNumber()).toBeGreaterThan(0);
+      let destinationBalanceBefore = (await Destination.rpc.getBalance(destinationPkh)).toNumber();
+
       const drainOp = await Destination.contract.drainDelegate({
         consensus_key: destinationPkh,
         delegate: delegatePkh,
         destination: destinationPkh,
       });
       await drainOp.confirmation();
-      
+
+      expect(drainOp.includedInBlock).toBeDefined()
       expect((await Delegate.rpc.getBalance(delegatePkh)).toNumber()).toEqual(0);
-      expect((await Destination.rpc.getBalance(destinationPkh)).toNumber()).toBeGreaterThan(0);
+      expect((await Destination.rpc.getBalance(destinationPkh)).toNumber()).toBeGreaterThan(destinationBalanceBefore);
       done();
     });
   });

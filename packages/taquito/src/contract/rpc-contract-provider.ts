@@ -62,7 +62,8 @@ import { TxRollupOriginationOperation } from '../operations/tx-rollup-originatio
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
-import { BallotOperation, DrainDelegateOperation } from '../operations';
+import { BallotOperation } from '../operations/ballot-operation';
+import { DrainDelegateOperation } from '../operations/drain-delegate-operation';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 
