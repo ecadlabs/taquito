@@ -21,6 +21,7 @@ CONFIGS().forEach(
     const Tezos = lib;
 
     const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
+    const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test
 
     beforeAll(async (done) => {
       await setup()
@@ -155,7 +156,7 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async (done) => {
+        unrestrictedRPCNode('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async (done) => {
           const bakingRights = await rpcClient.getBakingRights({
             max_round: '2'
           });
@@ -165,7 +166,7 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async (done) => {
+        unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async (done) => {
           const endorsingRights = await rpcClient.getEndorsingRights();
           expect(endorsingRights).toBeDefined();
           expect(endorsingRights[0].delegates).toBeDefined();
