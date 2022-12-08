@@ -64,7 +64,7 @@ jobs:
     - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=8
       env:
         # Ternary operator workaround
-        TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-${{ matrix.testnet }}-archive:8732' || 'https://${{ matrix.testnet }}.ecadinfra.com'}}
+        TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.repository_owner == 'ecadlabs' && "http://ecad-${{ matrix.testnet }}-archive:8732" || "https://${{ matrix.testnet }}.ecadinfra.com"}}
         
   integration-tests-flextesa-old:
     runs-on: ubuntu-latest
