@@ -103,7 +103,7 @@ jobs:
           --set-history-mode N000:archive \
           --number-of-b 1 \
           --balance-of-bootstrap-accounts tez:100_000_000 \
-          --time-b 1 \
+          --time-b 2 \
           --add-bootstrap-account="${alice}@2_000_000_000_000" \
           --add-bootstrap-account="${bob}@2_000_000_000_000" \
           --add-bootstrap-account="${charlie}@2_000_000_000_000" \
@@ -116,7 +116,7 @@ jobs:
     - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
-        SECRET_KEY: edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
+        SECRET_KEY: edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2
         TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
         POLLING_INTERVAL_MILLISECONDS: 100
         RPC_CACHE_MILLISECONDS: 0
