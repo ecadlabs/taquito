@@ -3,7 +3,7 @@ import { CONFIGS, sleep } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  const flextesanet = (rpc === 'http://0.0.0.0:20001') ? it : it.skip;
+  const flextesanet = (rpc === 'http://localhost:20001') ? it : it.skip;
 
   describe(`Test Drain Delegate using: ${rpc}`, () => {
     let Delegate: TezosToolkit;
