@@ -1,7 +1,7 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseCommon, ConstantsResponseProto009, ConstantsResponseProto010, ConstantsResponseProto011, ConstantsResponseProto012, ConstantsResponseProto013, ConstantsResponseProto014, ConstantsResponseProto015 } from '@taquito/rpc';
+import { ConstantsResponseProto009, ConstantsResponseProto010, ConstantsResponseProto011, ConstantsResponseProto012, ConstantsResponseProto013, ConstantsResponseProto014, ConstantsResponseProto015 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
   const Tezos = lib;
