@@ -92,7 +92,7 @@ jobs:
         --rm \
         --name my-sandbox \
         --detach \
-        -p 20001:20000 \
+        -p 20000:20000 \
         ${flextesa_docker_image} \
         flextesa mini-net \
           --root /tmp/mini-box --size 1 \
@@ -144,7 +144,7 @@ jobs:
         --rm \
         --name my-sandbox \
         --detach \
-        -p 20001:20000 \
+        -p 20000:20000 \
         ${flextesa_docker_image} \
         flextesa mini-net \
           --root /tmp/mini-box --size 1 \
