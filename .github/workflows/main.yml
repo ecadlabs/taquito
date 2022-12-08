@@ -64,6 +64,26 @@ jobs:
         # Ternary operator workaround
         TEZOS_RPC_${{ matrix.protocol }}: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-${{ matrix.protocol }}-archive:8732' || 'https://${{ matrix.protocol }}.ecadinfra.com'}}
         
+  integration-tests-flextesa-old:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - run: docker run --rm --name my-sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start
+    - run: npm ci
+    - run: npm run build
+    - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
+      env:
+        RUN_KATHMANDUNET_WITH_SECRET_KEY: true
+        SECRET_KEY: edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
+        TEZOS_RPC_KATHMANDUNET: http://0.0.0.0:20000
+        POLLING_INTERVAL_MILLISECONDS: 100
+        RPC_CACHE_MILLISECONDS: 0
+        TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
+    - run: docker kill my-sandbox
 
   integration-tests-flextesa:
     runs-on: ubuntu-latest
@@ -115,7 +135,7 @@ jobs:
           --protocol-kind ${{ matrix.protocol }}
     - run: npm ci
     - run: npm run build
-    - run: npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
+    - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
         RUN_${{ matrix.testnet }}_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
