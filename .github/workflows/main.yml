@@ -53,12 +53,18 @@ jobs:
         node-version: 16
     - run: npm ci
     - run: npm run build
-    - name: Tailscale
+    - if: ${{ github.repository_owner == 'ecadlabs' }}
+      name: Tailscale
       uses: tailscale/github-action@v1
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.32.2
     - run: npm -w integration-tests run test:${{ matrix.protocol }} -- --maxWorkers=8
+      env:
+        # Ternary operator workaround
+        TEZOS_RPC_KATHMANDUNET: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-kathmandunet-archive:8732' || 'https://kathmandunet.ecadinfra.com'}}
+        TEZOS_RPC_LIMANET: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-limanet-archive:8732' || 'https://limanet.ecadinfra.com' }}
+        
 
   integration-tests-flextesa-kathmandu:
     runs-on: ubuntu-latest
