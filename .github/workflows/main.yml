@@ -62,7 +62,7 @@ jobs:
     - run: npm -w integration-tests run test:${{ matrix.protocol }} -- --maxWorkers=8
       env:
         # Ternary operator workaround
-        TEZOS_RPC_KATHMANDUNET: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-kathmandunet-archive:8732' || 'https://kathmandunet.ecadinfra.com'}}
+        TEZOS_RPC_${{ matrix.protocol }}: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-kathmandunet-archive:8732' || 'https://kathmandunet.ecadinfra.com'}}
         TEZOS_RPC_LIMANET: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-limanet-archive:8732' || 'https://limanet.ecadinfra.com' }}
         
 
@@ -91,7 +91,7 @@ jobs:
         docker run \
         --rm \
         --name my-sandbox \
-        --detach \
+        -it \
         -p 20000:20000 \
         ${flextesa_docker_image} \
         flextesa mini-net \
@@ -143,7 +143,7 @@ jobs:
         docker run \
         --rm \
         --name my-sandbox \
-        --detach \
+        -it \
         -p 20000:20000 \
         ${flextesa_docker_image} \
         flextesa mini-net \
@@ -159,13 +159,14 @@ jobs:
           --no-daemons-for=donald \
           --until-level 200_000_000 \
           --protocol-kind Lima
+    - run: echo "flextesa_container_ip=$(docker container inspect --format='{{.NetworkSettings.IPAddress}}' my-sandbox)"
     - run: npm ci
     - run: npm run build
     - run: npm -w integration-tests run test:limanet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
         RUN_LIMANET_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
-        TEZOS_RPC_LIMANET: http://localhost:20000
+        TEZOS_RPC_LIMANET: http://${{ env.flextesa_container_ip }}:20000
         POLLING_INTERVAL_MILLISECONDS: 100
         RPC_CACHE_MILLISECONDS: 0
         TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
