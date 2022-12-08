@@ -97,6 +97,7 @@ jobs:
         docker run \
         --rm \
         --name my-sandbox \
+        --detach \
         -p 20000:20000 \
         ${flextesa_docker_image} \
         flextesa mini-net \
