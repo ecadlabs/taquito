@@ -43,9 +43,11 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        protocol:
-          - kathmandunet
-          - limanet
+        include:
+          - testnet: kathmandunet
+            testnet_uppercase: KATHMANDUNET
+          - testnet: limanet
+            testnet_uppercase: LIMANET
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -59,10 +61,10 @@ jobs:
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.32.2
-    - run: npm -w integration-tests run test:${{ matrix.protocol }} -- --maxWorkers=8
+    - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=8
       env:
         # Ternary operator workaround
-        TEZOS_RPC_${{ matrix.protocol }}: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-${{ matrix.protocol }}-archive:8732' || 'https://${{ matrix.protocol }}.ecadinfra.com'}}
+        TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.repository_owner == 'ecadlabs' && 'http://ecad-${{ matrix.testnet }}-archive:8732' || 'https://${{ matrix.testnet }}.ecadinfra.com'}}
         
   integration-tests-flextesa-old:
     runs-on: ubuntu-latest
@@ -93,8 +95,10 @@ jobs:
         include:
           - protocol: Kathmandu
             testnet: kathmandunet
+            testnet_uppercase: KATHMANDUNET
           - protocol: Lima
             testnet: limanet
+            testnet_uppercase: LIMANET
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -137,9 +141,9 @@ jobs:
     - run: npm run build
     - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts
       env:
-        RUN_${{ matrix.testnet }}_WITH_SECRET_KEY: true
+        RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
-        TEZOS_RPC_${{ matrix.testnet }}: http://localhost:20000
+        TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
         POLLING_INTERVAL_MILLISECONDS: 100
         RPC_CACHE_MILLISECONDS: 0
         TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
