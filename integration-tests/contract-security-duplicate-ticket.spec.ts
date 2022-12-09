@@ -24,6 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
             PUSH nat 1;
             PUSH string "test";
             TICKET;
+            ASSERT_SOME;
             DUP;
             DROP;
             DROP;
@@ -53,6 +54,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 PUSH nat 1;
                 PUSH string "test";
                 TICKET;
+                ASSERT_SOME;
                 PUSH nat 10;
                 DUP 2;
                 DROP;
@@ -84,6 +86,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 PUSH nat 1;
                 PUSH string "test";
                 TICKET;
+                ASSERT_SOME;
                 NIL (ticket string);
                 SWAP;
                 CONS;
@@ -93,7 +96,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 UNIT;
                 NIL operation;
                 PAIR;
-              };        
+              };
         }`,
           storage: 0,
         });
@@ -116,12 +119,13 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 PUSH nat 1;
                 PUSH string "test";
                 TICKET;
+                ASSERT_SOME;
                 PACK;
                 DROP;
                 UNIT;
                 NIL operation;
                 PAIR;
-              };       
+              };
         }`,
           storage: 0,
         });
@@ -144,12 +148,13 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 PUSH nat 1;
                 PUSH string "test";
                 TICKET;
+                ASSERT_SOME;
                 PACK;
                 DROP;
                 UNIT;
                 NIL operation;
                 PAIR;
-              };       
+              };
         }`,
           storage: 0,
         });
@@ -172,6 +177,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                 PUSH nat 1;
                 PUSH string "test";
                 TICKET;
+                ASSERT_SOME;
                 SOME;
                 NIL operation;
                 PAIR;
