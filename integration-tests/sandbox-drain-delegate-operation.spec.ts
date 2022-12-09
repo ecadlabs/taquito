@@ -1,9 +1,9 @@
-import { TezosToolkit } from "@taquito/taquito";
+import { TezosToolkit, Protocols } from "@taquito/taquito";
 import { CONFIGS, sleep } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  const flextesaLimaNet = (rpc === 'http://localhost:20000') ? it : it.skip;
+  const flextesanet = (protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha) && rpc === 'http://localhost:20000' ? test : test.skip;
 
   describe(`Test Drain Delegate using: ${rpc}`, () => {
     let Delegate: TezosToolkit;
@@ -40,7 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       }
       done();
     })
-    flextesaLimaNet('Should be able to inject drain_delegate operation', async (done) => {
+    flextesanet('Should be able to inject drain_delegate operation', async (done) => {
       expect((await Delegate.rpc.getBalance(delegatePkh)).toNumber()).toBeGreaterThan(0);
       let destinationBalanceBefore = (await Destination.rpc.getBalance(destinationPkh)).toNumber();
 

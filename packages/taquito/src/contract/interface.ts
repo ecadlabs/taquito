@@ -225,7 +225,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Submit drain delegate operation
+   * @description Submit a drain delegate operation
    *
    * @returns An operation handle with the result from the RPC node
    *
