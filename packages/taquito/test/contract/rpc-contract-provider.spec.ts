@@ -2215,7 +2215,20 @@ describe('RpcContractProvider test', () => {
       const storage = await rpcContract.storage() as any;
 
       const keyList = storage.keyMap;
-      expect(keyList.size).toEqual(3);
+      expect(keyList.size).toEqual(1);
+      done();
+    })
+    it('should have defined storage with TicketTokens without errors (#1762)', async (done) => {
+      mockRpcClient.getEntrypoints.mockResolvedValue({
+        entrypoints: {},
+      })
+      mockRpcClient.getContract.mockResolvedValue(anotherMapTypecheckError)
+      const rpcContract = await rpcContractProvider.at('KT1SpsNu3hGHN5T5Vt9g9GKUggzvBpxaLxq7');
+      expect(rpcContract).toBeDefined();
+      const storage = await rpcContract.storage() as any;
+
+      const keyList = storage.keyMap;
+      expect(keyList.size).toEqual(1);
       done();
     })
   })
