@@ -128,14 +128,14 @@ export class WalletConnect2 implements WalletProvider {
         );
       }
       const session = await approval();
-      this.validateReceivedNamespace(connectParams.permissionScope, session.namespaces);
       this.session = session;
-      this.setDefaultAccountAndNetwork();
     } catch (error) {
       throw new ConnectionFailed(error);
     } finally {
       QRCodeModal.close();
     }
+    this.validateReceivedNamespace(connectParams.permissionScope, this.session.namespaces);
+    this.setDefaultAccountAndNetwork();
   }
 
   /**
@@ -173,7 +173,7 @@ export class WalletConnect2 implements WalletProvider {
         topic: this.session.topic,
         reason: getSdkError('USER_DISCONNECTED'),
       });
-      this.deleteAll();
+      this.clearState();
     }
   }
 
@@ -313,7 +313,7 @@ export class WalletConnect2 implements WalletProvider {
     }
   }
 
-  private deleteAll() {
+  private clearState() {
     this.session = undefined;
     this.activeAccount = undefined;
   }
@@ -342,6 +342,7 @@ export class WalletConnect2 implements WalletProvider {
       //this.validateEvents(scope.events, receivedNamespaces['tezos'].events);
       this.validateAccounts(scope.networks, receivedNamespaces[TEZOS_PLACEHOLDER].accounts);
     } else {
+      this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'All namespaces must be approved',
         getSdkError('USER_REJECTED').code,
@@ -358,6 +359,7 @@ export class WalletConnect2 implements WalletProvider {
       }
     });
     if (missingMethods.length > 0) {
+      this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'All methods must be approved',
         getSdkError('USER_REJECTED_METHODS').code,
@@ -368,6 +370,7 @@ export class WalletConnect2 implements WalletProvider {
 
   private validateAccounts(requiredNetwork: string[], receivedAccounts: string[]) {
     if (receivedAccounts.length === 0) {
+      this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'Accounts must not be empty',
         getSdkError('USER_REJECTED_CHAINS').code
@@ -393,6 +396,7 @@ export class WalletConnect2 implements WalletProvider {
     });
 
     if (invalidChains.length > 0) {
+      this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'Accounts must be CAIP-10 compliant',
         getSdkError('USER_REJECTED_CHAINS').code,
@@ -401,6 +405,7 @@ export class WalletConnect2 implements WalletProvider {
     }
 
     if (invalidChainsNamespace.length > 0) {
+      this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'Accounts must be defined in matching namespace',
         getSdkError('UNSUPPORTED_ACCOUNTS').code,
@@ -413,6 +418,7 @@ export class WalletConnect2 implements WalletProvider {
       }
     });
     if (missingChains.length > 0) {
+      this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'All chains must have at least one account',
         getSdkError('USER_REJECTED_CHAINS').code,

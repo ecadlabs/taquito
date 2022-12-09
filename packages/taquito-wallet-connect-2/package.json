@@ -27,13 +27,15 @@
     "node": ">=6.0.0"
   },
   "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch",
+    "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts ",
-    "start": "rollup -c rollup.config.ts -w",
-    "test": "jest"
+    "start": "rollup -c rollup.config.ts -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
