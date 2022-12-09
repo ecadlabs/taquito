@@ -56,7 +56,7 @@ jobs:
     - run: echo "${{ github.event }}"
     - run: npm ci
     - run: npm run build
-    - if: ${{ contains(secrets.DUMMY_SECRET, 'dummy') }}
+    - if: ${{ !github.event.pull_request.head.repo.fork }}
       name: Tailscale
       uses: tailscale/github-action@v1
       with:
@@ -65,7 +65,7 @@ jobs:
     - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=8
       env:
         # Ternary operator workaround
-        TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ contains(secrets.DUMMY_SECRET, 'dummy') && format('http://ecad-{0}-archive:8732', matrix.testnet) || format('https://{0}.ecadinfra.com', matrix.testnet) }}
+        TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ !github.event.pull_request.head.repo.fork && format('http://ecad-{0}-archive:8732', matrix.testnet) || format('https://{0}.ecadinfra.com', matrix.testnet) }}
 
   integration-tests-flextesa:
     runs-on: ubuntu-latest
