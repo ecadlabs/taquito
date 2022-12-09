@@ -53,7 +53,9 @@ jobs:
       with:
         node-version: 16
     # TODO: remove after debugging
-    - run: echo "${{ github.event }}"
+    - env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
     - run: npm ci
     - run: npm run build
     - if: ${{ !github.event.pull_request.head.repo.fork }}
