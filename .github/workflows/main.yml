@@ -59,7 +59,7 @@ jobs:
         version: 1.32.2
     - run: npm -w integration-tests run test:${{ matrix.protocol }} -- --maxWorkers=8
 
-  integration-tests-flextesa-kathmandu:
+  integration-tests-flextesa:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
