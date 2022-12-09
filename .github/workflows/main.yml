@@ -48,6 +48,9 @@ jobs:
           - testnet: limanet
             testnet_uppercase: LIMANET
     steps:
+    - run: echo 'repository_owner ${{ github.repository_owner }}'
+    - run: env
+    - run: echo $GITHUB_ENV
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
