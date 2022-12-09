@@ -53,8 +53,7 @@ jobs:
       with:
         node-version: 16
     # TODO: remove after debugging
-    - run: env
-    - run: cat $GITHUB_ENV
+    - run: echo "${{ github.event }}"
     - run: npm ci
     - run: npm run build
     - if: ${{ contains(secrets.DUMMY_SECRET, 'dummy') }}
