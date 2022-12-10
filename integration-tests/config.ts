@@ -91,7 +91,7 @@ const kathmandunetEphemeral = {
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
+    keyUrl: process.env['TEZOS_KEYGEN_URL'] || 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   }
 };
@@ -112,7 +112,7 @@ const limanetEphemeral = {
   protocol: Protocols.PtLimaPtL,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3000/limanet',
+    keyUrl: process.env['TEZOS_KEYGEN_URL'] || 'http://key-gen-1.i.tez.ie:3000/limanet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };
@@ -134,7 +134,7 @@ const mondaynetEphemeral = {
   protocol: Protocols.ProtoALpha,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
+    keyUrl: process.env['TEZOS_KEYGEN_URL'] || 'http://key-gen-1.i.tez.ie:3010/mondaynet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };

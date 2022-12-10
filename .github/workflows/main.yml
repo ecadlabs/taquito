@@ -67,7 +67,8 @@ jobs:
     - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=8
       env:
         # Ternary operator workaround
-        TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ !github.event.pull_request.head.repo.fork && format('http://ecad-{0}-archive:8732', matrix.testnet) || format('https://{0}.ecadinfra.com', matrix.testnet) }}
+        TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
+        TEZOS_KEYGEN_URL: ${{ github.event.pull_request.head.repo.fork && format('https://api.tez.ie/keys/{0}', matrix.testnet) || null }}
 
   integration-tests-flextesa:
     runs-on: ubuntu-latest
