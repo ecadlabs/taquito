@@ -2,6 +2,76 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v15.0.0
+
+**Breaking Changes**:
+- Some types have changed to support the `consensus_key` change in Protocol Lima. Refer to issue #2069 for more details
+
+## Summary
+
+### Lima Support
+- `@taquito/taquito` Support new operation `update_consensus_key` in the Contract API #2067
+- `@taquito/local-forging` Support new operation `update_consensus_key` #2065
+- `@taquito/local-forging` Support new instruction `LAMBDA_REC` and value `Lambda_rec` and support changes related to the `TICKET` instruction #2074 #2072
+- `@taquito/rpc` Support new types and operations for `update_consensus_key` and `drain_delegate` #2066
+- `@taquito/rpc` Support new properties related to Lima #2172 #2071
+- `@taquito/michelson-encoder` Support new type `TICKET_DEPRECATED` #2073
+- `@taquito/michel-codec` Support new instruction `LAMBDA_REC` and value `Lambda_rec` and support changes related to the `TICKET` instruction #2181 #2075
+
+### Testing
+- Removed tests that referenced Timelock feature (`CHEST_OPEN` Michelson instruction) #2070
+- Added tests for `unparsing_mode` #2077
+- Updated tx-rollup tests to use address from config instead of hard coded addresses #2170
+- Fixed local-forging tests failing in Limanet #2158
+
+### Documentation
+- Added documentation for consensus key operations (`update_consensus_key`) #2067 #2068
+### Internals
+- Removed legacy `lerna bootstrap` commands from build workflow #2188
+
+### Deprecation
+`@taquito/tezbridge-signer` and `@taquito/tezbridge-wallet` has been deprecated, and references to them have been removed from the codebase #2080
+
+### Others
+- Removed Jakarta protocol references in on chain view related code #2098
+- Removed temple-wallet/dapp dependency from Taquito website that was producing build errors [PR](https://github.com/ecadlabs/taquito/pull/2202)
+
+
+## `@taquito/taquito` - Added support for `update_consensus_key`
+A new manager operation to update consensus keys can be used as follows:
+```typescript
+const op = await Tezos.contract.updateConsensusKey({
+    pk: 'PUBLIC_KEY'
+});
+
+await op.confirmation();
+```
+
+## `@taquito/local-forging` - Added support for Lima operations and instructions
+- Updated local-forger to forge and parse `update_consensus_key` and `drain_delegate`
+- Updated local-forger to support the new Michelson instruction `LAMBDA_REC` and the new data constructor named `Lambda_rec` which enables recursive LAMBDA
+
+## `@taquito/rpc` - Updated types to support Lima protocol
+Added a few new types to accommodate Lima protocol changes:
+- `OperationContentsUpdateConsensusKey`
+- `OperationContentsDrainDelegate`
+- `OperationContentsAndResultMetadataUpdateConsensusKey`
+- `OperationContentsAndResultMetadataDrainDelegate`
+- `OperationContentsAndResultUpdateConsensusKey`
+- `OperationContentsAndResultDrainDelegate`
+- `OperationResultUpdateConsensusKey`
+
+Also updates to existing types to accommodate changes regarding consensus keys.
+
+## `@taquito/michelson-encoder` - Support new type `TICKET_DEPRECATED`
+- Added support for the new Michelson type `TICKET_DEPRECATED`. More info here: https://tezos.gitlab.io/protocols/015_lima.html#breaking-changes
+
+## `@taquito/michel-codec` - Support new instruction `LAMBDA_REC` and value `Lambda_rec`
+
+The Lima protocol introduces a new Michelson type named `LAMBDA_REC`, and a new data constructor named `Lambda_rec`, allowing the creation of recursive lambda functions. Support for those primitives has been added in the michel-codec package enabling users to validate or pack/unpack Michelson code containing them.
+
+The `TICKET` instruction now returns an optional ticket instead of a ticket. This change has also been reflected in the michel-codec parser.
+
 # Taquito v14.2.0-beta
 ## Summary
 ### New Features
