@@ -21,13 +21,13 @@ export class DrainDelegateOperation extends Operation {
   }
 
   get operationResults() {
-    const DrainDelegateOp =
+    const drainDelegateOp =
       Array.isArray(this.results) &&
       (this.results.find(
         (op) => op.kind === 'drain_delegate'
       ) as OperationContentsAndResultDrainDelegate);
     const result =
-      DrainDelegateOp && DrainDelegateOp.metadata && DrainDelegateOp.metadata.balance_updates;
+      drainDelegateOp && drainDelegateOp.metadata && drainDelegateOp.metadata.balance_updates;
     return result ? result : undefined;
   }
 
