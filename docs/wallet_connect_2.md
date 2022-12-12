@@ -13,7 +13,7 @@ The first step is to instantiate `WalletConnect2` by passing your dapp details a
 import { WalletConnect2 } from "@taquito/wallet-connect-2";
 
 const walletConnect = await WalletConnect2.init({
-  projectId: "YOUR_PROJECT_ID",
+  projectId: "YOUR_PROJECT_ID", // Your Project ID gives you access to WalletConnect Cloud
   metadata: {
     name: "YOUR_DAPP_NAME",
     description: "YOUR_DAPP_DESCRIPTION",
@@ -65,29 +65,36 @@ Tezos.setRpcProvider('https://ghostnet.ecadinfra.com/');
 
 WalletConnect2.init({
   logger: 'debug',
-  projectId, // Your Project ID gives you access to WalletConnect Cloud.
+  projectId: MY_PROJECT_ID,
   metadata: {
-    name: 'Taquito website', 
-    description: 'Taquito website with WalletConnect2', 
-    icons: []
+    name: 'Taquito website',
+    description: 'Taquito website with WalletConnect2',
+    url: 'https://tezostaquito.io/',
+    icons: [],
   },
-}).then(walletConnect => {
- walletConnect.requestPermissions({
-    permissionScope: {
-      networks: ['ghostnet'],
-      methods: [PermissionScopeMethods.OPERATION_REQUEST]
-    },
-    registryUrl: "https://www.tezos.help/wcdata/"
- }).then(() => {
-     Tezos.setWalletProvider(walletConnect);
-     Tezos.wallet.transfer({ to: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', amount: 1 }).send()
-  .then((op) => {
-    println(`Waiting for ${op.opHash} to be confirmed...`);
-    return op.confirmation().then(() => op.opHash);
+})
+  .then((walletConnect) => {
+    walletConnect
+      .requestPermissions({
+        permissionScope: {
+          networks: [NetworkType.GHOSTNET],
+          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+        },
+        registryUrl: 'https://www.tezos.help/wcdata/',
+      })
+      .then(() => {
+        Tezos.setWalletProvider(walletConnect);
+        Tezos.wallet
+          .transfer({ to: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', amount: 1 })
+          .send()
+          .then((op) => {
+            println(`Waiting for ${op.opHash} to be confirmed...`);
+            return op.confirmation().then(() => op.opHash);
+          })
+          .then((hash) => println(`https://ghostnet.tzkt.io/${hash}`));
+      });
   })
-  .then((hash) => println(`https://ghostnet.tzkt.io/${hash}`))
- })
-}).catch((err) => console.log(err));
+  .catch((err) => println(err));
 ```
 
 ## Sign payload with `WalletConnect2`
