@@ -68,7 +68,6 @@ jobs:
       env:
         # Ternary operator workaround
         TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
-        TEZOS_KEYGEN_URL: ${{ github.event.pull_request.head.repo.fork && format('https://api.tez.ie/keys/{0}', matrix.testnet) || null }}
 
   integration-tests-flextesa:
     runs-on: ubuntu-latest
