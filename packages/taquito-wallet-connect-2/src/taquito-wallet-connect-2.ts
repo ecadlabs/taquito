@@ -333,19 +333,28 @@ export class WalletConnect2 implements WalletProvider {
     this.signClient.ping({ topic: this.getSession().topic });
   }
 
+  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#non-controller-side-validation-of-incoming-proposal-namespaces-dapp
+  // TODO: add validations related to Namespaces extensions and related unit tests:
+  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#210-extensions-may-be-merged-into-namespace
+  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#212-session-namespaces-extensions-may-extend-methods-and-events-of-proposal-namespaces-extensions
+  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#213-session-namespaces-extensions-may-contain-accounts-from-chains-not-defined-in-proposal-namespaces-extensions
+  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#214-session-namespaces-may-add-extensions-not-defined-in-proposal-namespaces-extensions
   private validateReceivedNamespace(
     scope: PermissionScopeParam,
     receivedNamespaces: Record<string, SessionTypes.Namespace>
   ) {
     if (receivedNamespaces[TEZOS_PLACEHOLDER]) {
       this.validateMethods(scope.methods, receivedNamespaces[TEZOS_PLACEHOLDER].methods);
-      //this.validateEvents(scope.events, receivedNamespaces['tezos'].events);
+      if(scope.events){
+        this.validateEvents(scope.events, receivedNamespaces['tezos'].events);
+      }
       this.validateAccounts(scope.networks, receivedNamespaces[TEZOS_PLACEHOLDER].accounts);
     } else {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'All namespaces must be approved',
         getSdkError('USER_REJECTED').code,
+        'incomplete',
         'tezos'
       );
     }
@@ -363,7 +372,26 @@ export class WalletConnect2 implements WalletProvider {
       throw new InvalidReceivedSessionNamespace(
         'All methods must be approved',
         getSdkError('USER_REJECTED_METHODS').code,
+        'incomplete',
         missingMethods
+      );
+    }
+  }
+
+  private validateEvents(requiredEvents: string[], receivedEvents: string[]) {
+    const missingEvents: string[] = [];
+    requiredEvents.forEach((method) => {
+      if (!receivedEvents.includes(method)) {
+        missingEvents.push(method);
+      }
+    });
+    if (missingEvents.length > 0) {
+      this.clearState();
+      throw new InvalidReceivedSessionNamespace(
+        'All events must be approved',
+        getSdkError('USER_REJECTED_EVENTS').code,
+        'incomplete',
+        missingEvents
       );
     }
   }
@@ -373,7 +401,8 @@ export class WalletConnect2 implements WalletProvider {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'Accounts must not be empty',
-        getSdkError('USER_REJECTED_CHAINS').code
+        getSdkError('USER_REJECTED_CHAINS').code,
+        'incomplete'
       );
     }
     const receivedChains: string[] = [];
@@ -400,6 +429,7 @@ export class WalletConnect2 implements WalletProvider {
       throw new InvalidReceivedSessionNamespace(
         'Accounts must be CAIP-10 compliant',
         getSdkError('USER_REJECTED_CHAINS').code,
+        'invalid',
         invalidChains
       );
     }
@@ -409,6 +439,7 @@ export class WalletConnect2 implements WalletProvider {
       throw new InvalidReceivedSessionNamespace(
         'Accounts must be defined in matching namespace',
         getSdkError('UNSUPPORTED_ACCOUNTS').code,
+        'invalid',
         invalidChainsNamespace
       );
     }
@@ -422,6 +453,7 @@ export class WalletConnect2 implements WalletProvider {
       throw new InvalidReceivedSessionNamespace(
         'All chains must have at least one account',
         getSdkError('USER_REJECTED_CHAINS').code,
+        'incomplete',
         missingChains
       );
     }

@@ -19,8 +19,10 @@ export class MissingRequiredScope extends Error {
 export class InvalidReceivedSessionNamespace extends Error {
   name = 'InvalidReceivedSessionNamespace';
 
-  constructor(message: string, public code: number, public data?: string | string[]) {
-    super(message);
+  constructor(public messageWc: string, public codeWc: number, type: 'invalid'|'incomplete', public data?: string | string[]) {
+    super();
+    const baseMessage = `${codeWc}: ${messageWc}.`
+    this.message = data? type === 'incomplete'?` ${baseMessage} "${data}" is missing in the session namespace.`: ` ${baseMessage} "${data}" is invalid.` : baseMessage;
   }
 }
 
@@ -44,7 +46,7 @@ export class InvalidAccount extends Error {
   name = 'InvalidAccount';
 
   constructor(public pkh: string) {
-    super(`Invalid pkh ${pkh}`);
+    super(`Invalid pkh "${pkh}"`);
   }
 }
 
@@ -56,7 +58,7 @@ export class InvalidNetwork extends Error {
   name = 'InvalidNetwork';
 
   constructor(public network: string) {
-    super(`Invalid network ${network}`);
+    super(`Invalid network "${network}"`);
   }
 }
 
