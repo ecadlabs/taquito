@@ -6,9 +6,7 @@ export const sessionExample = {
   expiry: 1668023668,
   namespaces: {
     tezos: {
-      accounts: [
-        'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'
-      ],
+      accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
       methods: ['tezos_sendOperations'],
       events: [],
     },
@@ -93,17 +91,47 @@ export const sessionMultipleChains = {
 
 export const existingPairings = [
   {
-      topic: "db507c396bed3286e281266aa4cb7804f52b4b0193fae9a4b0c8c10b21c29c6a",
-      expiry: 1673202920,
-      relay: {
-          protocol: "irn"
+    topic: 'db507c396bed3286e281266aa4cb7804f52b4b0193fae9a4b0c8c10b21c29c6a',
+    expiry: 1673202920,
+    relay: {
+      protocol: 'irn',
+    },
+    active: true,
+    peerMetadata: {
+      name: 'Kukai Wallet',
+      description:
+        'Manage your digital assets and seamlessly connect with experiences and apps on Tezos.',
+      url: 'https://wallet.kukai.app',
+      icons: [],
+    },
+  },
+];
+
+export const fakeCode = [
+  {
+    prim: 'parameter',
+    args: [
+      {
+        prim: 'nat',
       },
-      active: true,
-      peerMetadata: {
-          name: "Kukai Wallet",
-          description: "Manage your digital assets and seamlessly connect with experiences and apps on Tezos.",
-          url: "https://wallet.kukai.app",
-          icons: []
-      }
-  }
-]
+    ],
+  },
+  {
+    prim: 'storage',
+    args: [
+      {
+        prim: 'nat',
+      },
+    ],
+  },
+  {
+    prim: 'code',
+    args: [
+      [
+        {
+          prim: 'AMOUNT',
+        },
+      ],
+    ],
+  },
+];

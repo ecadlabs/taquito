@@ -10,13 +10,22 @@ import {
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  RPCDelegateOperation,
+  RPCOriginationOperation,
+  RPCTransferOperation,
   WalletDelegateParams,
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
 import { getSdkError } from '@walletconnect/utils';
-import { NetworkType, PermissionScopeMethods, PermissionScopeParam, SigningType } from './types';
+import {
+  NetworkType,
+  OperationParams,
+  PermissionScopeMethods,
+  PermissionScopeParam,
+  SigningType,
+} from './types';
 import {
   ActiveAccountUnspecified,
   ActiveNetworkUnspecified,
@@ -185,12 +194,12 @@ export class WalletConnect2 implements WalletProvider {
    * @description Once the session is establish, send Tezos operations to be approved, signed and inject by the wallet.
    * @error MissingRequiredScope is thrown if permission to send operation was not granted
    */
-  async sendOperations(params: any[]) {
+  async sendOperations(params: OperationParams[]) {
     const session = this.getSession();
     if (!this.getPermittedMethods().includes(PermissionScopeMethods.OPERATION_REQUEST)) {
       throw new MissingRequiredScope(PermissionScopeMethods.OPERATION_REQUEST);
     }
-    const network = await this.getActiveNetwork();
+    const network = this.getActiveNetwork();
     const account = await this.getPKH();
     this.validateNetworkAndAccount(network, account);
     const hash = await this.signClient.request<string>({
@@ -220,7 +229,7 @@ export class WalletConnect2 implements WalletProvider {
     if (!this.getPermittedMethods().includes(PermissionScopeMethods.SIGN)) {
       throw new MissingRequiredScope(PermissionScopeMethods.SIGN);
     }
-    const network = await this.getActiveNetwork();
+    const network = this.getActiveNetwork();
     const account = await this.getPKH();
     this.validateNetworkAndAccount(network, account);
     const signature = await this.signClient.request<string>({
@@ -265,6 +274,7 @@ export class WalletConnect2 implements WalletProvider {
    */
   async getPKH() {
     if (!this.activeAccount) {
+      this.getSession();
       throw new ActiveAccountUnspecified();
     }
     return this.activeAccount;
@@ -295,8 +305,9 @@ export class WalletConnect2 implements WalletProvider {
    * @description Access the active network
    * @error ActiveNetworkUnspecified thorwn when there are multiple Tezos netwroks in the session and none is set as the active one
    */
-  async getActiveNetwork() {
+  getActiveNetwork() {
     if (!this.activeNetwork) {
+      this.getSession();
       throw new ActiveNetworkUnspecified();
     }
     return this.activeNetwork;
@@ -316,9 +327,10 @@ export class WalletConnect2 implements WalletProvider {
   private clearState() {
     this.session = undefined;
     this.activeAccount = undefined;
+    this.activeNetwork = undefined;
   }
 
-  private getSession() {
+  getSession() {
     if (!this.session) {
       throw new NotConnected();
     }
@@ -345,7 +357,7 @@ export class WalletConnect2 implements WalletProvider {
   ) {
     if (receivedNamespaces[TEZOS_PLACEHOLDER]) {
       this.validateMethods(scope.methods, receivedNamespaces[TEZOS_PLACEHOLDER].methods);
-      if(scope.events){
+      if (scope.events) {
         this.validateEvents(scope.events, receivedNamespaces['tezos'].events);
       }
       this.validateAccounts(scope.networks, receivedNamespaces[TEZOS_PLACEHOLDER].accounts);
@@ -495,38 +507,40 @@ export class WalletConnect2 implements WalletProvider {
     return this.getTezosRequiredNamespace().methods;
   }
 
-  private getPermittedEvents() {
-    return this.getTezosRequiredNamespace().events;
-  }
-
   private getPermittedNetwork() {
     return this.getTezosRequiredNamespace().chains.map((chain) => chain.split(':')[1]);
   }
 
-  private formatParameters(params: any) {
-    if (params.fee) {
-      params.fee = params.fee.toString();
+  private formatParameters(
+    params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams
+  ) {
+    const formatedParams: any = params;
+    if (typeof params.fee !== 'undefined') {
+      formatedParams.fee = params.fee.toString();
     }
-    if (params.storageLimit) {
-      params.storageLimit = params.storageLimit.toString();
+    if (typeof params.storageLimit !== 'undefined') {
+      formatedParams.storageLimit = params.storageLimit.toString();
     }
-    if (params.gasLimit) {
-      params.gasLimit = params.gasLimit.toString();
+    if (typeof params.gasLimit !== 'undefined') {
+      formatedParams.gasLimit = params.gasLimit.toString();
     }
-    return params;
+    return formatedParams;
   }
 
-  private removeDefaultParams(
+  private removeDefaultLimits(
     params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams,
-    operatedParams: any
+    operatedParams:
+      | Partial<RPCTransferOperation>
+      | Partial<RPCOriginationOperation>
+      | Partial<RPCDelegateOperation>
   ) {
-    if (!params.fee) {
+    if (typeof params.fee === 'undefined') {
       delete operatedParams.fee;
     }
-    if (!params.storageLimit) {
+    if (typeof params.storageLimit === 'undefined') {
       delete operatedParams.storage_limit;
     }
-    if (!params.gasLimit) {
+    if (typeof params.gasLimit === 'undefined') {
       delete operatedParams.gas_limit;
     }
     return operatedParams;
@@ -535,7 +549,7 @@ export class WalletConnect2 implements WalletProvider {
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
     const walletParams: WalletTransferParams = await params();
 
-    return this.removeDefaultParams(
+    return this.removeDefaultLimits(
       walletParams,
       await createTransferOperation(this.formatParameters(walletParams))
     );
@@ -543,7 +557,8 @@ export class WalletConnect2 implements WalletProvider {
 
   async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
     const walletParams: WalletOriginateParams = await params();
-    return this.removeDefaultParams(
+
+    return this.removeDefaultLimits(
       walletParams,
       await createOriginationOperation(this.formatParameters(walletParams))
     );
@@ -552,7 +567,7 @@ export class WalletConnect2 implements WalletProvider {
   async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
     const walletParams: WalletDelegateParams = await params();
 
-    return this.removeDefaultParams(
+    return this.removeDefaultLimits(
       walletParams,
       await createSetDelegateOperation(this.formatParameters(walletParams))
     );

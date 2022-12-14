@@ -8,7 +8,7 @@ export class MissingRequiredScope extends Error {
   name = 'MissingRequiredScope';
 
   constructor(public requiredScopes: PermissionScopeMethods | string) {
-    super(`Required permission scope were not granted for: ${requiredScopes}`);
+    super(`Required permission scope were not granted for "${requiredScopes}"`);
   }
 }
 
@@ -19,10 +19,19 @@ export class MissingRequiredScope extends Error {
 export class InvalidReceivedSessionNamespace extends Error {
   name = 'InvalidReceivedSessionNamespace';
 
-  constructor(public messageWc: string, public codeWc: number, type: 'invalid'|'incomplete', public data?: string | string[]) {
+  constructor(
+    public messageWc: string,
+    public codeWc: number,
+    type: 'invalid' | 'incomplete',
+    public data?: string | string[]
+  ) {
     super();
-    const baseMessage = `${codeWc}: ${messageWc}.`
-    this.message = data? type === 'incomplete'?` ${baseMessage} "${data}" is missing in the session namespace.`: ` ${baseMessage} "${data}" is invalid.` : baseMessage;
+    const baseMessage = `${codeWc}: ${messageWc}.`;
+    this.message = data
+      ? type === 'incomplete'
+        ? ` ${baseMessage} "${data}" is missing in the session namespace.`
+        : ` ${baseMessage} "${data}" is invalid.`
+      : baseMessage;
   }
 }
 
@@ -34,7 +43,7 @@ export class InvalidSessionKey extends Error {
   name = 'InvalidSessionKey';
 
   constructor(public key: string) {
-    super(`Invalid session key ${key}`);
+    super(`Invalid session key "${key}"`);
   }
 }
 
