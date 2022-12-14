@@ -15,7 +15,7 @@
   "version": "15.0.0",
   "dependencies": {
     "@ledgerhq/devices": "6.20.0",
-    "@ledgerhq/hw-transport": "6.20.0",
+    "@ledgerhq/hw-transport": "6.27.7",
     "@ledgerhq/hw-transport-node-hid": "6.20.0",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.20.0",
     "@taquito/contracts-library": "^15.0.0",
