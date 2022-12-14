@@ -52,10 +52,6 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    # TODO: remove after debugging
-    - env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
     - run: npm ci
     - run: npm run build
     - if: ${{ !github.event.pull_request.head.repo.fork }}
