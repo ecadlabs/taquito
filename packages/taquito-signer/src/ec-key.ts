@@ -103,6 +103,6 @@ export class ECKey {
 export const Tz3 = ECKey.bind(null, 'p256');
 
 /**
- * @description Tz3 key class using the secp256k1 curve
+ * @description Tz2 key class using the secp256k1 curve
  */
 export const Tz2 = ECKey.bind(null, 'secp256k1');

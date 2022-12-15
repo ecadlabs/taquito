@@ -1573,6 +1573,7 @@ export const TransferTicketNoReveal = {
   signature:
     'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG',
 };
+
 export const TransferTicketWithReveal = {
   contents: [
     {
@@ -1639,4 +1640,41 @@ export const TransferTicketWithReveal = {
   ],
   signature:
     'sigSqrxEBiHXwuXgXUB8S67dtSycbFvduxpi2Fn7LeVdefgr7FicV5KajbW1z44hykdZA6Mznef3fpPXAcbfaYBUYdWPPbXG',
+};
+
+export const updateConsensusKeyNoReveal = {
+  contents: [
+    {
+      kind: 'update_consensus_key',
+      source: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+      fee: '369',
+      counter: '19043',
+      gas_limit: '1100',
+      storage_limit: '0',
+      pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+            change: '-369',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '369',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          consumed_gas: '1000',
+          consumed_milligas: '1000000',
+        },
+      },
+    },
+  ],
+  signature:
+    'sigrsWF7LpFpUBrTdvLnKm8DMuijk1LcZovZdKZDgsaafTPZhKsvLzPFHDzZYKCy4kobkgxVL7YPGnU5qzJJBcP2cAu5HW1C',
 };

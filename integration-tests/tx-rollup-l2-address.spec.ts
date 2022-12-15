@@ -1,18 +1,19 @@
-import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { UnitValue } from '@taquito/michelson-encoder';
+import { Protocols } from "@taquito/taquito";
 
-CONFIGS().forEach(({lib, setup, protocol}) => {
+CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
   const tezos = lib;
-  const jakartanet = (protocol === Protocols.PtJakart2) ? test : test.skip;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
+  const kathmandunet = protocol === Protocols.PtKathman ? test : test.skip;
+  const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`jakarta contract originations and method calls to test the type of tx_rollup_l2_address`, () => {
+  describe(`Contract originations and method calls to test the type of tx_rollup_l2_address: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     })
-    jakartanet(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
+
+    kathmandunet(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
       const op = await tezos.contract.originate({
         code: `
         parameter (pair address tx_rollup_l2_address string);
@@ -58,20 +59,83 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const contract = await op.contract();
-      const symbolReturn = await contract.storage()
-      expect(JSON.stringify(symbolReturn)).toEqual(JSON.stringify(UnitValue))
-      const methodCall = await contract.methods.default('txr1di1E5BgY6QSPx61eE62P7KW93ckGwH2e7', 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
-      await methodCall.confirmation();
 
-      expect(methodCall.hash).toBeDefined();
-      expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue))
+      const storage = await contract.storage();
+      expect(JSON.stringify(storage)).toEqual(JSON.stringify(UnitValue));
+
+      const ticketDeposit = await contract.methods.default(txRollupAddress, 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
+      await ticketDeposit.confirmation();
+
+
+      expect(ticketDeposit.hash).toBeDefined();
+      expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue));
       done();
     })
 
-    jakartanet(`jakarta contract with params and storage as tx_rollup_l2_address`, async (done) => {
+    limanetAndAlpha(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
       const op = await tezos.contract.originate({
-        code: [{"prim":"parameter","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"storage","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"code","args":[[{"prim":"CAR"},{"prim":"NIL","args":[{"prim":"operation"}]},{"prim":"PAIR"}]]}],
+        code: `
+        parameter (pair address tx_rollup_l2_address string);
+        storage (unit);
+        code {
+          # cast the address to contract type
+          CAR;
+          UNPAIR;
+          CONTRACT %deposit (pair (ticket (pair unit string)) tx_rollup_l2_address);
+
+          IF_SOME {
+            SWAP;
+            UNPAIR; SWAP;
+
+            # create a ticket
+            PUSH nat 10;
+            SWAP;
+            UNIT;
+            PAIR;
+            TICKET;
+            ASSERT_SOME;
+            PAIR;
+
+            # amount for transfering
+            PUSH mutez 0;
+            SWAP;
+
+            # deposit
+            TRANSFER_TOKENS;
+
+            DIP { NIL operation };
+            CONS;
+
+            DIP { PUSH unit Unit };
+            PAIR;
+          }
+          { FAIL ; }
+        }
+        `,
+        storage: "Unit"
+      })
+      await op.confirmation();
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+
+      const contract = await op.contract();
+
+      const storage = await contract.storage();
+      expect(JSON.stringify(storage)).toEqual(JSON.stringify(UnitValue));
+
+      const ticketDeposit = await contract.methods.default(txRollupAddress, 'tz4VHgLiRx5ZZjwU2QaybHc11EMJk3NcyvVc', '1').send();
+      await ticketDeposit.confirmation();
+
+      expect(ticketDeposit.hash).toBeDefined();
+      expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue));
+      done();
+    })
+
+    it(`Contract with params and storage as tx_rollup_l2_address`, async (done) => {
+      const op = await tezos.contract.originate({
+        code: [{ "prim": "parameter", "args": [{ "prim": "tx_rollup_l2_address" }] }, { "prim": "storage", "args": [{ "prim": "tx_rollup_l2_address" }] }, { "prim": "code", "args": [[{ "prim": "CAR" }, { "prim": "NIL", "args": [{ "prim": "operation" }] }, { "prim": "PAIR" }]] }],
         storage: "tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8"
       })
       await op.confirmation();
@@ -80,97 +144,13 @@ CONFIGS().forEach(({lib, setup, protocol}) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const contract = await op.contract();
-      const pkh = await contract.storage()
+      const pkh = await contract.storage();
       expect(pkh).toEqual("tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8");
 
-      const methodCall = await contract.methods.default(pkh).send();
-      await methodCall.confirmation();
-      expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      const ticketDeposit = await contract.methods.default(pkh).send();
+      await ticketDeposit.confirmation();
+      expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       done();
     })
   })
-  describe(`mondaynet contract originations and method calls to test the type of tx_rollup_l2_address`, () => {
-    beforeEach(async (done) => {
-      await setup();
-      done();
-    })
-    // comment until possible to generate txr1 in test itself
-    // mondaynet(`mondaynet Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
-    //   const op = await tezos.contract.originate({
-    //     code: `
-    //     parameter (pair address tx_rollup_l2_address string);
-    //     storage (unit);
-    //     code {
-    //       # cast the address to contract type
-    //       CAR;
-    //       UNPAIR;
-    //       CONTRACT %deposit (pair (ticket (pair unit string)) tx_rollup_l2_address);
-
-    //       IF_SOME {
-    //         SWAP;
-    //         UNPAIR; SWAP;
-
-    //         # create a ticket
-    //         PUSH nat 10;
-    //         SWAP;
-    //         UNIT;
-    //         PAIR;
-    //         TICKET;
-    //         PAIR;
-
-    //         # amount for transfering
-    //         PUSH mutez 0;
-    //         SWAP;
-
-    //         # deposit
-    //         TRANSFER_TOKENS;
-
-    //         DIP { NIL operation };
-    //         CONS;
-
-    //         DIP { PUSH unit Unit };
-    //         PAIR;
-    //       }
-    //       { FAIL ; }
-    //     }
-    //     `,
-    //     storage: "Unit"
-    //   })
-    //   await op.confirmation();
-    //   expect(op.hash).toBeDefined();
-    //   expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-    //   const contract = await op.contract();
-    //   const symbolReturn = await contract.storage()
-    //   expect(JSON.stringify(symbolReturn)).toEqual(JSON.stringify(UnitValue))
-    //   const methodCall = await contract.methods.default('txr1kXEJHuy7xiJ2fTPWxf2yoNY5EZ6hzQXLM', 'tz4RVDZotqkdHGckMkZLB2mUkqAk8BRqz6Jn', '1').send();
-    //   await methodCall.confirmation();
-
-    //   expect(methodCall.hash).toBeDefined();
-    //   expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-    //   expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue))
-    //   done();
-    // })
-
-    mondaynet(`mondaynet contract with params and storage as tx_rollup_l2_address`, async (done) => {
-      const op = await tezos.contract.originate({
-        code: [{"prim":"parameter","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"storage","args":[{"prim":"tx_rollup_l2_address"}]},{"prim":"code","args":[[{"prim":"CAR"},{"prim":"NIL","args":[{"prim":"operation"}]},{"prim":"PAIR"}]]}],
-        storage: "tz4RVDZotqkdHGckMkZLB2mUkqAk8BRqz6Jn"
-      })
-      await op.confirmation();
-
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      const contract = await op.contract();
-      const pkh = await contract.storage()
-      expect(pkh).toEqual("tz4RVDZotqkdHGckMkZLB2mUkqAk8BRqz6Jn");
-
-      const methodCall = await contract.methods.default(pkh).send();
-      await methodCall.confirmation();
-      expect(methodCall.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-      done();
-    })
-  })
-
 })

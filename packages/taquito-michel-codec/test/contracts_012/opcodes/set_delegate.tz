@@ -1,9 +1,0 @@
-parameter (option key_hash);
-storage unit;
-code {
-       UNPAIR;
-       SET_DELEGATE;
-       DIP {NIL operation};
-       CONS;
-       PAIR
-     }

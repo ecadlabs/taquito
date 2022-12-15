@@ -7,22 +7,22 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE, RpcReadAdapter } from '@taquito/taquito';
 import { verifySignature } from '@taquito/utils';
-import { 
-  validateAddress, 
-  validateChain, 
-  validateKeyHash, 
-  validateContractAddress, 
-  validatePublicKey, 
+import {
+  validateAddress,
+  validateChain,
+  validateKeyHash,
+  validateContractAddress,
+  validatePublicKey,
   validateSignature,
   validateBlock,
   validateProtocol,
-  validateOperation, 
-  b58cencode, 
-  prefix, 
-  Prefix 
+  validateOperation,
+  b58cencode,
+  prefix,
+  Prefix
 } from '@taquito/utils';
 import { BeaconWallet } from '@taquito/beacon-wallet';
-import { InMemorySigner, importKey } from '@taquito/signer';
+import { InMemorySigner, importKey, Path, ECDSA, Ed25519, generateSecretKey } from '@taquito/signer';
 import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
 import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
 import { Tzip12Module, tzip12 } from "@taquito/tzip12";
@@ -30,7 +30,6 @@ import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
 import { Parser, packDataBytes } from '@taquito/michel-codec';
 import { RpcClient } from '@taquito/rpc';
 import { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } from '@taquito/sapling';
-import { TempleWallet } from '@temple-wallet/dapp';
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
@@ -42,12 +41,12 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './styles.module.css';
 
-let wallet; 
+let wallet;
 if (typeof window !== 'undefined') {
   // solve localStorage is not defined Error when building server
   // can use localStorage on the browser, not on the server
   wallet = new BeaconWallet({ name:"exampleWallet" });
-} 
+}
 
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
@@ -94,46 +93,49 @@ export default ({
 
     return (
       <Playground
-        scope={{ ...React, 
-          Tezos, 
+        scope={{ ...React,
+          Tezos,
           wallet,
           importKey,
-          validateAddress, 
-          validateChain, 
-          validateKeyHash, 
-          validateContractAddress, 
-          validatePublicKey, 
+          validateAddress,
+          validateChain,
+          validateKeyHash,
+          validateContractAddress,
+          validatePublicKey,
           validateSignature,
           validateBlock,
           validateOperation,
           validateProtocol,
-          b58cencode, 
-          prefix, 
-          Prefix, 
-          MichelsonMap, 
-          InMemorySigner, 
+          b58cencode,
+          prefix,
+          Prefix,
+          MichelsonMap,
+          InMemorySigner,
           LedgerSigner,
           Tzip16Module,
           tzip16,
           bytes2Char,
           MichelsonStorageView,
-          Tzip12Module, 
+          Tzip12Module,
           tzip12,
-          TempleWallet, 
-          DerivationType, 
+          DerivationType,
           TransportWebHID,
           compose,
           Schema,
           ParameterSchema,
           DEFAULT_FEE,
           verifySignature,
-          Parser, 
-          packDataBytes, 
+          Parser,
+          packDataBytes,
           RpcReadAdapter,
           SaplingToolkit,
           RpcClient,
           InMemorySpendingKey,
-          InMemoryViewingKey
+          InMemoryViewingKey,
+          Ed25519,
+          ECDSA,
+          Path,
+          generateSecretKey,
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

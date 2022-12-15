@@ -25,6 +25,9 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  BallotParams,
+  ProposalsParams,
+  UpdateConsensusKeyParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -40,6 +43,9 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createBallotOperation,
+  createProposalsOperation,
+  createUpdateConsensusKeyOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -54,6 +60,9 @@ import { TxRollupOriginationOperation } from '../operations/tx-rollup-originatio
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
+import { BallotOperation } from '../operations';
+import { ProposalsOperation } from '../operations/proposals-operation';
+import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -576,6 +585,88 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new TxRollupBatchOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   *
+   * @description Submit a ballot vote to a specified proposal
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param BallotParams Ballot operation parameter
+   */
+  async ballot(params: BallotParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+    const source = params.source ?? publicKeyHash;
+    const operation = await createBallotOperation({
+      ...params,
+      source,
+    });
+    const prepared = await this.prepareOperation({ operation, source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new BallotOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Submit or upvote a proposal during the Proposal period
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param BallotParams Proposals operation parameter
+   */
+  async proposals(params: ProposalsParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+
+    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source);
+    }
+    const source = params.source ?? publicKeyHash;
+    const operation = await createProposalsOperation({
+      ...params,
+      source,
+    });
+    const prepared = await this.prepareOperation({ operation, source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new ProposalsOperation(hash, operation, publicKeyHash, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Updates the consensus key of the baker to public_key starting from the current cycle plus PRESERVED_CYCLES + 1
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param UpdateConsensusKeyParams
+   */
+  async updateConsensusKey(params: UpdateConsensusKeyParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.updateConsensusKey.bind(this.estimator)
+    );
+    const operation = await createUpdateConsensusKeyOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new UpdateConsensusKeyOperation(
       hash,
       operation,
       publicKeyHash,

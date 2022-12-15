@@ -168,7 +168,6 @@ For more information about the navigation bar, click [here](https://docusaurus.i
 ```
 For more information about custom pages, click [here](https://docusaurus.io/docs/en/custom-pages).
 
-
 # Documentation Versioning
 ## Making versioned copies of the current documentation
 Everything under `docs/` is the latest version of our documentation. When writing docs for a release candidate, you can version documents under `docs/` by running:

@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { Protocols, ChainIds } from "@taquito/taquito";
+import { Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -20,8 +20,8 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const jakartanet = protocol === Protocols.PtJakart2 ? test : test.skip;
-    const kathmandunetAndAlpha = protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha ? test : test.skip;
+    const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
+    const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test
 
     beforeAll(async (done) => {
       await setup()
@@ -126,7 +126,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunetAndAlpha(`Fetches voting information about a delegate from RPC`, async (done) => {
+        it(`Fetches voting information about a delegate from RPC`, async (done) => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
           done();
@@ -156,7 +156,7 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async (done) => {
+        unrestrictedRPCNode('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async (done) => {
           const bakingRights = await rpcClient.getBakingRights({
             max_round: '2'
           });
@@ -166,7 +166,7 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async (done) => {
+        unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async (done) => {
           const endorsingRights = await rpcClient.getEndorsingRights();
           expect(endorsingRights).toBeDefined();
           expect(endorsingRights[0].delegates).toBeDefined();
@@ -365,7 +365,7 @@ CONFIGS().forEach(
           done();
         });
 
-        kathmandunetAndAlpha('Verify that rpcClient.runScriptView executes michelson view', async (done) => {
+        it('Verify that rpcClient.runScriptView executes michelson view', async (done) => {
           const chainId = await Tezos.rpc.getChainId();
           const params: RPCRunScriptViewParam = {
             contract: knownViewContract!,
@@ -409,30 +409,29 @@ CONFIGS().forEach(
           done();
         });
 
-        jakartanet('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on jakartanet', async (done) => {
+        it('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on jakartanet', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        jakartanet('Verify that rpcClient.getTxRollupState will access the state of a rollup on jakartanet', async (done) => {
+        it('Verify that rpcClient.getTxRollupState will access the state of a rollup on jakartanet', async (done) => {
           const state = await rpcClient.getTxRollupState(txRollupAddress);
           expect(state).toBeDefined();
           done();
         });
 
-        kathmandunetAndAlpha('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
-          expect(inbox).toBeDefined();
+        limanetAndAlpha('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async (done) => {
+          const usedSpace = await rpcClient.getStorageUsedSpace(knownContract);
+          expect(usedSpace).toBeDefined();
           done();
         });
 
-        kathmandunetAndAlpha('Verify that rpcClient.getTxRollupState will access the state of a rollup', async (done) => {
-          const state = await rpcClient.getTxRollupState(txRollupAddress);
-          expect(state).toBeDefined();
+        limanetAndAlpha('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async (done) => {
+          const paidSpace = await rpcClient.getStoragePaidSpace(knownContract);
+          expect(paidSpace).toBeDefined();
           done();
         });
-
       });
     });
   }

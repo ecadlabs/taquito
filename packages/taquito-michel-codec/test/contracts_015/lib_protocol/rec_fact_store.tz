@@ -1,0 +1,22 @@
+{ storage (or int (lambda int int));
+  parameter (or (unit %gen) (int %exec));
+  code { UNPAIR;
+         IF_LEFT{ DROP 2;
+                  LAMBDA_REC  int int
+                              { DUP;
+                                EQ;
+                                IF { PUSH int 1 }
+                                   { DUP;
+                                     DUP 3;
+                                     PUSH int 1;
+                                     DUP 4;
+                                     SUB;
+                                     EXEC;
+                                     MUL};
+                                DIP { DROP 2 }};
+                  RIGHT int}
+                { DIP { ASSERT_RIGHT };
+                  EXEC;
+                  LEFT (lambda int int)};
+         NIL operation;
+         PAIR}}

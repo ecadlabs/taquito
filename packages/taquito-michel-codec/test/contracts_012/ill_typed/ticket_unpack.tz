@@ -1,5 +1,0 @@
-# UNPACK on ticket should produce a type error
-parameter unit;
-storage (option (ticket nat));
-code { DROP ; PUSH nat 2 ; PACK ; UNPACK (ticket nat) ;
-       NIL operation ; PAIR }

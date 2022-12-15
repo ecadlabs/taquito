@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                         storage (option (ticket string));
                         code
                           {
-                            UNPAIR; 
+                            UNPAIR;
                             SWAP;
                             IF_NONE {
                                       SOME;
@@ -33,7 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                                     };
                             NIL operation;
                             PAIR;
-                          }     
+                          }
                     }`,
           init: 'None',
         });
@@ -52,6 +52,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                           PUSH nat 1;
                           PUSH string "test";
                           TICKET;
+                          ASSERT_SOME;
                           SWAP;
                           CONTRACT (ticket string);
                           IF_NONE { FAIL } {};
@@ -67,7 +68,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                           UNIT;
                           SWAP;
                           PAIR;
-                        }    
+                        }
                     }`,
           init: 'Unit',
         });
@@ -93,10 +94,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                     code
                       {
                         DROP ; # drop storage and input
-                        EMPTY_MAP nat (ticket string); 
+                        EMPTY_MAP nat (ticket string);
                         PUSH nat 1;
                         PUSH string "test";
                         TICKET;
+                        ASSERT_SOME;
                         SOME;
                         PUSH nat 0;
                         UPDATE;
@@ -128,10 +130,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                     code
                       {
                         DROP ; # drop storage and input
-                        EMPTY_BIG_MAP nat (ticket string); 
+                        EMPTY_BIG_MAP nat (ticket string);
                         PUSH nat 1;
                         PUSH string "test";
                         TICKET;
+                        ASSERT_SOME;
                         SOME;
                         PUSH nat 0;
                         UPDATE;

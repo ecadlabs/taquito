@@ -424,7 +424,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       if (
         'string' in d &&
         checkDecodeTezosID(d.string, 'ED25519PublicKey', 'SECP256K1PublicKey', 'P256PublicKey') !==
-          null
+        null
       ) {
         return;
       } else if ('bytes' in d) {
@@ -502,7 +502,6 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
         }
       }
       throw new MichelsonTypeError(t, d, `union (or) expected: ${JSON.stringify(d)}`);
-
     case 'lambda':
       if (isFunction(d)) {
         const ret = functionTypeInternal(d, [t.args[0]], ctx);
@@ -697,7 +696,7 @@ function functionTypeInternal(
 
   // unpack instruction annotations and assert their maximum number
   function instructionAnn(
-    num: { f?: number; t?: number; v?: number },
+    num: { f?: number; t?: number; v?: number; },
     opt?: UnpackAnnotationsOptions
   ) {
     const a = argAnn(instruction, {
@@ -728,10 +727,10 @@ function functionTypeInternal(
     const ann =
       a.v !== undefined || a.t !== undefined || a.f !== undefined
         ? [
-            ...((a.v === null ? src.v : a.v) || []),
-            ...((a.t === null ? src.t : a.t) || []),
-            ...((a.f === null ? src.f : a.f) || []),
-          ]
+          ...((a.v === null ? src.v : a.v) || []),
+          ...((a.t === null ? src.t : a.t) || []),
+          ...((a.f === null ? src.f : a.f) || []),
+        ]
         : undefined;
 
     const { annots: _annots, ...rest } = t;
@@ -779,12 +778,12 @@ function functionTypeInternal(
             ? ['@' + fieldAnn.slice(1)]
             : undefined
           : insVarAnn === '@%%'
-          ? varAnn
-            ? ['@' + varAnn.slice(1) + '.' + (fieldAnn ? fieldAnn.slice(1) : defField)]
-            : fieldAnn
-            ? ['@' + fieldAnn.slice(1)]
-            : undefined
-          : [insVarAnn]
+            ? varAnn
+              ? ['@' + varAnn.slice(1) + '.' + (fieldAnn ? fieldAnn.slice(1) : defField)]
+              : fieldAnn
+                ? ['@' + fieldAnn.slice(1)]
+                : undefined
+            : [insVarAnn]
         : null,
     });
   }
@@ -1677,8 +1676,8 @@ function functionTypeInternal(
         return s.prim === 'list'
           ? [annotateVar({ prim: 'list', args: [body[0]] }), ...tail]
           : s.prim === 'map'
-          ? [annotateVar({ prim: 'map', args: [s.args[0], body[0]] }), ...tail]
-          : [annotateVar({ prim: 'option', args: [body[0]] }), ...tail];
+            ? [annotateVar({ prim: 'map', args: [s.args[0], body[0]] }), ...tail]
+            : [annotateVar({ prim: 'option', args: [body[0]] }), ...tail];
       }
 
       case 'ITER': {
@@ -1810,10 +1809,15 @@ function functionTypeInternal(
           ...stack,
         ];
 
+      case 'LAMBDA_REC':
       case 'LAMBDA': {
         assertTypeAnnotationsValid(instruction.args[0]);
         assertTypeAnnotationsValid(instruction.args[1]);
-        const body = functionTypeInternal(instruction.args[2], [instruction.args[0]], {
+        const s = [instruction.args[0]];
+        if (instruction.prim === "LAMBDA_REC") {
+          s.push({ prim: 'lambda', args: [instruction.args[0], instruction.args[1]] });
+        }
+        const body = functionTypeInternal(instruction.args[2], s, {
           ...ctx,
           contract: undefined,
         });
@@ -1847,10 +1851,23 @@ function functionTypeInternal(
       case 'TICKET': {
         const s = args(0, null, ['nat'])[0];
         ensureComparableType(s);
-        return [
-          annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 })),
-          ...stack.slice(2),
-        ];
+        if (ProtoInferiorTo(proto, Protocol.PtLimaPtL)) {
+          return [
+            annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 })),
+            ...stack.slice(2),
+          ];
+        } else {
+          return [
+            annotateVar({
+              prim: 'option',
+              args: [
+                annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 }))
+              ]
+            }),
+            ...stack.slice(2)
+          ];
+
+        }
       }
 
       case 'JOIN_TICKETS': {
@@ -1961,35 +1978,35 @@ function functionTypeInternal(
         }
         return ProtoInferiorTo(proto, Protocol.PtJakarta)
           ? [
-              annotateVar({
-                prim: 'option',
-                args: [
-                  {
-                    prim: 'pair',
-                    args: [{ prim: 'int' }, annotate(s[1], { t: null })],
-                  },
-                ],
-              }),
-              ...stack.slice(2),
-            ]
+            annotateVar({
+              prim: 'option',
+              args: [
+                {
+                  prim: 'pair',
+                  args: [{ prim: 'int' }, annotate(s[1], { t: null })],
+                },
+              ],
+            }),
+            ...stack.slice(2),
+          ]
           : [
-              annotateVar({
-                prim: 'option',
-                args: [
-                  {
-                    prim: 'pair',
-                    args: [
-                      { prim: 'bytes' },
-                      {
-                        prim: 'pair',
-                        args: [{ prim: 'int' }, annotate(s[1], { t: null })],
-                      },
-                    ],
-                  },
-                ],
-              }),
-              ...stack.slice(2),
-            ];
+            annotateVar({
+              prim: 'option',
+              args: [
+                {
+                  prim: 'pair',
+                  args: [
+                    { prim: 'bytes' },
+                    {
+                      prim: 'pair',
+                      args: [{ prim: 'int' }, annotate(s[1], { t: null })],
+                    },
+                  ],
+                },
+              ],
+            }),
+            ...stack.slice(2),
+          ];
       }
 
       case 'OPEN_CHEST':
@@ -2053,7 +2070,7 @@ export function contractSection<T extends 'parameter' | 'storage' | 'code'>(
 export function contractViews(contract: MichelsonContract): {
   [name: string]: MichelsonContractView;
 } {
-  const views: { [name: string]: MichelsonContractView } = {};
+  const views: { [name: string]: MichelsonContractView; } = {};
   for (const s of contract) {
     if (s.prim === 'view') {
       views[s.args[0].string] = s;

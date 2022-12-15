@@ -1,25 +1,28 @@
 {
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "packages/taquito-michel-codec/pack-test-tool",
+    "apps/taquito-test-dapp",
+    "website",
+    "example",
+    "integration-tests"
+  ],
   "scripts": {
-    "build": "nx run-many --target=build --no-private",
-    "bootstrap": "lerna bootstrap --force-local",
+    "build": "nx run-many --target=build --exclude=@taquito/website,taquito-test-dapp-vite",
+    "build-test-dapp": "lerna run build --scope=taquito-test-dapp-vite",
     "rebuild": "npm run clean && npm clean-install && npm run build",
-    "test": "nx run-many --target=test --collectCoverage",
-    "postinstall": "npm run bootstrap",
+    "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website,taquito-test-dapp-vite --collectCoverage",
     "lint": "lerna run lint",
-    "clean": "lerna clean --yes",
+    "clean": "rm -rf ./node_modules/* && lerna clean --yes",
     "commit": "git-cz",
-    "graph": "nx graph",
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && npm run example",
-    "lerna": "lerna",
     "build-docs": "typedoc --tsconfig ./tsconfig.typedoc.json",
     "gh-pages": "gh-pages",
+    "integration-tests": "npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts",
     "version-stamp": "lerna run version-stamp"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "jest": {
     "transform": {
       ".(ts|tsx)": "ts-jest"
@@ -80,7 +83,7 @@
     "husky": "^8.0.1",
     "jest": "^26.6.3",
     "jest-config": "^26.6.3",
-    "lerna": "^5.1.2",
+    "lerna": "^6.0.3",
     "lint-staged": "^13.0.1",
     "lodash.camelcase": "^4.3.0",
     "nx": "^15.0.3",

@@ -49,6 +49,8 @@ export enum CODEC {
   TX_ROLLUP_ID = 'tx_rollup_id',
   TX_ROLLUP_BATCH_CONTENT = 'tx_rollup_batch_content',
   OP_INCREASE_PAID_STORAGE = 'increase_paid_storage',
+  OP_UPDATE_CONSENSUS_KEY = 'update_consensus_key',
+  OP_DRAIN_DELEGATE = 'drain_delegate',
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
@@ -189,7 +191,7 @@ export const opMapping: { [key: string]: string } = {
   '85': 'SAPLING_EMPTY_STATE',
   '86': 'SAPLING_VERIFY_UPDATE',
   '87': 'ticket',
-  '88': 'TICKET',
+  '88': 'TICKET_DEPRECATED',
   '89': 'READ_TICKET',
   '8a': 'SPLIT_TICKET',
   '8b': 'JOIN_TICKETS',
@@ -205,6 +207,9 @@ export const opMapping: { [key: string]: string } = {
   '95': 'MIN_BLOCK_TIME',
   '96': 'sapling_transaction',
   '97': 'EMIT',
+  '98': 'Lambda_rec',
+  '99': 'LAMBDA_REC',
+  '9a': 'TICKET',
 };
 
 export const opMappingReverse = (() => {
@@ -215,7 +220,7 @@ export const opMappingReverse = (() => {
   return result;
 })();
 
-// See https://tezos.gitlab.io/api/p2p.html
+// See https://tezos.gitlab.io/shell/p2p_api.html?highlight=p2p
 export const kindMapping: { [key: number]: string } = {
   0x04: 'activate_account',
   0x6b: 'reveal',
@@ -231,6 +236,8 @@ export const kindMapping: { [key: number]: string } = {
   0x97: 'tx_rollup_submit_batch',
   0x9e: 'transfer_ticket',
   0x71: 'increase_paid_storage',
+  0x72: 'update_consensus_key',
+  0x09: 'drain_delegate',
 };
 
 export const kindMappingReverse = (() => {
@@ -249,6 +256,7 @@ export const entrypointMapping: { [key: string]: string } = {
   '02': 'do',
   '03': 'set_delegate',
   '04': 'remove_delegate',
+  '05': 'deposit',
 };
 
 export const entrypointMappingReverse = (() => {

@@ -1,0 +1,47 @@
+# This contract takes an address, mints 100 string tickets, puts them in a
+# big-map and sends the big-map to the given address.
+parameter address ;
+storage unit ;
+code { CAR ;
+       CONTRACT (big_map int (ticket string)) ;
+       IF_NONE
+         { PUSH string "Contract of type `big_map(ticket(string))` not found" ;
+           FAILWITH }
+         { EMPTY_BIG_MAP int (ticket string) ;
+           PUSH int 100 ;
+           SWAP ;
+           PAIR ;
+           LEFT (big_map int (ticket string)) ;
+           LOOP_LEFT
+             { UNPAIR ;
+               SWAP ;
+               DUP ;
+               DUG 2 ;
+               PUSH int 0 ;
+               COMPARE ;
+               LT ;
+               IF { PUSH int 1 ;
+                    DUP 3 ;
+                    SUB ;
+                    SWAP ;
+                    PUSH nat 1 ;
+                    PUSH string "BLUE" ;
+                    TICKET ;
+                    ASSERT_SOME ;
+                    DIG 3 ;
+                    SWAP ;
+                    SOME ;
+                    SWAP ;
+                    UPDATE ;
+                    PAIR ;
+                    LEFT (big_map int (ticket string)) }
+                  { SWAP ; DROP ; RIGHT (pair (big_map int (ticket string)) int) } } ;
+           SWAP ;
+           PUSH mutez 0 ;
+           DIG 2 ;
+           TRANSFER_TOKENS ;
+           PUSH unit Unit ;
+           NIL operation ;
+           DIG 2 ;
+           CONS ;
+           PAIR } }

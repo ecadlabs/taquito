@@ -1,0 +1,5 @@
+{ parameter unit ;
+  storage unit ;
+  code { DROP ;
+         LAMBDA unit unit {} ; UNIT ; EXEC ;
+         NIL operation ; PAIR } }

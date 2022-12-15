@@ -1,3 +1,0 @@
-parameter (ticket nat);
-storage (option (ticket nat));
-code { CAR ; SOME ; NIL operation ; PAIR } ;

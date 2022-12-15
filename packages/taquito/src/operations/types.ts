@@ -4,6 +4,7 @@ import {
   OpKind,
   TransactionOperationParameter,
   MichelsonV1Expression,
+  BallotVote,
 } from '@taquito/rpc';
 
 export { OpKind } from '@taquito/rpc';
@@ -19,7 +20,8 @@ export type ParamsWithKind =
   | withKind<IncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
   | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>
   | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>
-  | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>;
+  | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
+  | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
 
@@ -56,7 +58,9 @@ export type RPCOpWithFee =
   | RPCIncreasePaidStorageOperation
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
-  | RPCTransferTicketOperation;
+  | RPCTransferTicketOperation
+  | RPCUpdateConsensusKeyOperation;
+
 export type RPCOpWithSource =
   | RPCTransferOperation
   | RPCOriginationOperation
@@ -66,7 +70,8 @@ export type RPCOpWithSource =
   | RPCIncreasePaidStorageOperation
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
-  | RPCTransferTicketOperation;
+  | RPCTransferTicketOperation
+  | RPCUpdateConsensusKeyOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
@@ -82,6 +87,7 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'tx_rollup_origination',
       'tx_rollup_submit_batch',
       'transfer_ticket',
+      'update_consensus_key',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -99,6 +105,7 @@ export const isOpRequireReveal = <T extends { kind: OpKind }>(
       'tx_rollup_origination',
       'tx_rollup_submit_batch',
       'transfer_ticket',
+      'update_consensus_key',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -425,6 +432,52 @@ export interface RPCIncreasePaidStorageOperation {
   destination: string;
 }
 
+/**
+ * @description Ballot operation params
+ */
+export interface BallotParams {
+  source?: string;
+  proposal: string;
+  ballot: BallotVote;
+}
+
+export interface RPCBallotOperation {
+  kind: OpKind.BALLOT;
+  source: string;
+  period: number;
+  proposal: string;
+  ballot: BallotVote;
+}
+
+export interface ProposalsParams {
+  source?: string;
+  proposals: string[];
+}
+
+export interface RPCProposalsOperation {
+  kind: OpKind.PROPOSALS;
+  source: string;
+  period: number;
+  proposals: string[];
+}
+
+export interface UpdateConsensusKeyParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  pk: string;
+}
+
+export interface RPCUpdateConsensusKeyOperation {
+  kind: OpKind.UPDATE_CONSENSUS_KEY;
+  source: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  pk: string;
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -435,7 +488,10 @@ export type RPCOperation =
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
-  | RPCIncreasePaidStorageOperation;
+  | RPCIncreasePaidStorageOperation
+  | RPCBallotOperation
+  | RPCProposalsOperation
+  | RPCUpdateConsensusKeyOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

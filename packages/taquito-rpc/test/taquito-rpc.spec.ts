@@ -30,15 +30,21 @@ import {
   OperationResultEvent,
   OperationContentsAndResultTransferTicket,
   OperationContentsAndResultTxRollupReturnBond,
+  OperationContentsAndResultUpdateConsensusKey,
+  OperationContentsAndResultDrainDelegate,
+  TxRollupProof,
+  ConstantsResponseProto015,
 } from '../src/types';
 import {
   blockIthacanetSample,
   blockJakartanetSample,
   blockKathmandunetSample,
+  blockLimanetSample,
   blockMondaynetSample,
   delegatesIthacanetSample,
   delegatesKathmandunetSample,
   votingInfoKathmandunetSample,
+  ticketUpdatesSample,
 } from './data/rpc-responses';
 
 /**
@@ -122,6 +128,28 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/storage`,
+      });
+
+      done();
+    });
+
+    it('should query used_space url correctly', async (done) => {
+      await client.getStorageUsedSpace(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/storage/used_space`,
+      });
+
+      done();
+    });
+
+    it('should query used_paid url correctly', async (done) => {
+      await client.getStoragePaidSpace(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/storage/paid_space`,
       });
 
       done();
@@ -528,6 +556,8 @@ describe('RpcClient test', () => {
         nonce_hash: null,
         consumed_gas: '10200',
         deactivated: [],
+        proposer_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+        baker_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
         balance_updates: [
           {
             kind: 'contract',
@@ -591,6 +621,8 @@ describe('RpcClient test', () => {
         nonce_hash: null,
         consumed_gas: '10200',
         deactivated: [],
+        proposer_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
+        baker_consensus_key: 'tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE',
         balance_updates: [
           {
             kind: 'contract',
@@ -618,6 +650,212 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getConstants Proto015', () => {
+    it('should query the right url and casts relevant properties to BigNumber', async (done) => {
+      httpBackend.createRequest.mockResolvedValue({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        max_micheline_node_count: 50000,
+        max_micheline_bytes_limit: 50000,
+        max_allowed_global_constants_depth: 10000,
+        cache_layout_size: 3,
+        michelson_maximum_type_size: 2001,
+        sc_max_wrapped_proof_binary_size: 30000,
+        sc_rollup_message_size_limit: 4096,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        nonce_revelation_threshold: 256,
+        blocks_per_stake_snapshot: 256,
+        cycles_per_voting_period: 1,
+        hard_gas_limit_per_operation: '1040000',
+        hard_gas_limit_per_block: '5200000',
+        proof_of_work_threshold: '-1',
+        minimal_stake: '6000000000',
+        vdf_difficulty: '2000000000',
+        seed_nonce_revelation_tip: '125000',
+        origination_size: 257,
+        baking_reward_fixed_portion: '10000000',
+        baking_reward_bonus_per_slot: '4286',
+        endorsing_reward_per_slot: '2857',
+        cost_per_byte: '250',
+        hard_storage_limit_per_operation: '60000',
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: '2500000',
+        liquidity_baking_toggle_ema_threshold: 1000000000,
+        max_operations_time_to_live: 120,
+        minimal_block_delay: '15',
+        delay_increment_per_round: '5',
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          numerator: 2,
+          denominator: 3,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: '640000000',
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          numerator: 1,
+          denominator: 2,
+        },
+        testnet_dictator: 'tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8',
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cache_sampler_state_cycles: 8,
+        tx_rollup_enable: true,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_commitment_bond: '10000000000',
+        tx_rollup_finality_period: 40000,
+        tx_rollup_withdraw_period: 40000,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        dal_parametric: {
+          feature_enable: false,
+          number_of_slots: 256,
+          number_of_shards: 2048,
+          endorsement_lag: 1,
+          availability_threshold: 50,
+          slot_size: 1048576,
+          redundancy_factor: 16,
+          page_size: 4096,
+        },
+        sc_rollup_enable: false,
+        sc_rollup_origination_size: 6314,
+        sc_rollup_challenge_window_in_blocks: 20160,
+        sc_rollup_max_number_of_messages_per_commitment_period: 300000000,
+        sc_rollup_stake_amount: '10000000000',
+        sc_rollup_commitment_period_in_blocks: 30,
+        sc_rollup_max_lookahead_in_blocks: 30000,
+        sc_rollup_max_active_outbox_levels: 20160,
+        sc_rollup_max_outbox_messages_per_level: 100,
+        sc_rollup_number_of_sections_in_dissection: 32,
+        sc_rollup_timeout_period_in_blocks: 20160,
+        sc_rollup_max_number_of_cemented_commitments: 5,
+        zk_rollup_enable: false,
+        zk_rollup_origination_size: 4000,
+        zk_rollup_min_pending_to_process: 10,
+      });
+
+      const response: ConstantsResponseProto015 = await client.getConstants();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/constants',
+      });
+      expect(response).toEqual({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        max_micheline_node_count: 50000,
+        max_micheline_bytes_limit: 50000,
+        max_allowed_global_constants_depth: 10000,
+        cache_layout_size: 3,
+        michelson_maximum_type_size: 2001,
+        sc_max_wrapped_proof_binary_size: 30000,
+        sc_rollup_message_size_limit: 4096,
+        preserved_cycles: 3,
+        blocks_per_cycle: 4096,
+        blocks_per_commitment: 32,
+        nonce_revelation_threshold: 256,
+        blocks_per_stake_snapshot: 256,
+        cycles_per_voting_period: 1,
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        proof_of_work_threshold: new BigNumber(-1),
+        minimal_stake: new BigNumber(6000000000),
+        vdf_difficulty: new BigNumber(2000000000),
+        seed_nonce_revelation_tip: new BigNumber(125000),
+        origination_size: 257,
+        baking_reward_fixed_portion: new BigNumber(10000000),
+        baking_reward_bonus_per_slot: new BigNumber(4286),
+        endorsing_reward_per_slot: new BigNumber(2857),
+        cost_per_byte: new BigNumber(250),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: new BigNumber(2500000),
+        liquidity_baking_toggle_ema_threshold: 1000000000,
+        max_operations_time_to_live: 120,
+        minimal_block_delay: new BigNumber(15),
+        delay_increment_per_round: new BigNumber(5),
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          numerator: 2,
+          denominator: 3,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: new BigNumber(640000000),
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          numerator: 1,
+          denominator: 2,
+        },
+        testnet_dictator: 'tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8',
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cache_sampler_state_cycles: 8,
+        tx_rollup_enable: true,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_commitment_bond: new BigNumber(10000000000),
+        tx_rollup_finality_period: 40000,
+        tx_rollup_withdraw_period: 40000,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        dal_parametric: {
+          feature_enable: false,
+          number_of_slots: 256,
+          number_of_shards: 2048,
+          endorsement_lag: 1,
+          availability_threshold: 50,
+          slot_size: 1048576,
+          redundancy_factor: 16,
+          page_size: 4096,
+        },
+        sc_rollup_enable: false,
+        sc_rollup_origination_size: 6314,
+        sc_rollup_challenge_window_in_blocks: 20160,
+        sc_rollup_max_number_of_messages_per_commitment_period: 300000000,
+        sc_rollup_stake_amount: new BigNumber(10000000000),
+        sc_rollup_commitment_period_in_blocks: 30,
+        sc_rollup_max_lookahead_in_blocks: 30000,
+        sc_rollup_max_active_outbox_levels: 20160,
+        sc_rollup_max_outbox_messages_per_level: 100,
+        sc_rollup_number_of_sections_in_dissection: 32,
+        sc_rollup_timeout_period_in_blocks: 20160,
+        sc_rollup_max_number_of_cemented_commitments: 5,
+        zk_rollup_enable: false,
+        zk_rollup_origination_size: 4000,
+        zk_rollup_min_pending_to_process: 10,
+      });
+      done();
+    });
+  });
   describe('getConstants Proto014', () => {
     it('should query the right url and casts relevant properties to BigNumber', async (done) => {
       httpBackend.createRequest.mockResolvedValue({
@@ -2949,24 +3187,26 @@ describe('RpcClient test', () => {
       );
 
       expect(content.proof).toBeDefined();
-      expect(content.proof.version).toEqual(3);
-      expect((content.proof.before as { node: string }).node).toEqual(
+
+      const proof = content.proof as TxRollupProof;
+      expect(proof.version).toEqual(3);
+      expect((proof.before as { node: string }).node).toEqual(
         'CoVUv68XdJts8f6Ysaoxm4jnt4JKXfqx8WYVFnkj2UFfgKHJUrLs'
       );
-      expect((content.proof.after as { node: string }).node).toEqual(
+      expect((proof.after as { node: string }).node).toEqual(
         'CoUn3twa3TmvNby5VAGeN2jHvzbfpmJAXcyDHJuLLAuuLiaZZnzC'
       );
 
-      expect(content.proof.state).toBeDefined();
+      expect(proof.state).toBeDefined();
 
-      const inodeState1 = (content.proof.state[0] as { inode: Inode }).inode;
+      const inodeState1 = (proof.state[0] as { inode: Inode }).inode;
       expect(inodeState1.length).toEqual('14');
       expect(inodeState1.proofs).toEqual([
         'CoVbQczQE6uDug4tWErtLgszzZBRDJKEGHgcQp8jGYSEfBLnsMXH',
         'CoWZ31tY65qh38Sfgm64Ny8kDTLQQMr5xuRDkDkz1JopiBnPDu11',
       ]);
 
-      const inodeState2 = (content.proof.state[2] as { inode: Inode }).inode;
+      const inodeState2 = (proof.state[2] as { inode: Inode }).inode;
       expect(inodeState2.length).toEqual('3');
       expect(inodeState2.proofs).toEqual([
         null,
@@ -2974,7 +3214,7 @@ describe('RpcClient test', () => {
       ]);
 
       const otherEltsNode = (
-        (content.proof.state[4] as { other_elts: OtherElts }).other_elts as {
+        (proof.state[4] as { other_elts: OtherElts }).other_elts as {
           node: [string, { value: string }][];
         }
       ).node;
@@ -2984,7 +3224,7 @@ describe('RpcClient test', () => {
       ]);
 
       const otherEltsOtherElts = (
-        (content.proof.state[5] as { other_elts: OtherElts }).other_elts as {
+        (proof.state[5] as { other_elts: OtherElts }).other_elts as {
           other_elts: { value: any };
         }
       ).other_elts;
@@ -3211,6 +3451,120 @@ describe('RpcClient test', () => {
 
       done();
     });
+
+    it('should be able to access the properties of operation type drain_delegate, proto15', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[1] as OperationContentsAndResultDrainDelegate;
+
+      expect(content.kind).toEqual(OpKind.DRAIN_DELEGATE);
+      expect(content.consensus_key).toEqual('tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj');
+      expect(content.delegate).toEqual('tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv');
+      expect(content.destination).toEqual('tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-15525772494');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![1].contract).toEqual(
+        'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj'
+      );
+      expect(content.metadata.balance_updates![1].change).toEqual('15525772494');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![2].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![2].contract).toEqual(
+        'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv'
+      );
+      expect(content.metadata.balance_updates![2].change).toEqual('-156825984');
+      expect(content.metadata.balance_updates![2].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![3].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![3].contract).toEqual(
+        'tz1hoyMUiJYYr4FRPMU8Z7WJzYkqgjygjaTy'
+      );
+      expect(content.metadata.balance_updates![3].change).toEqual('156825984');
+      expect(content.metadata.balance_updates![3].origin).toEqual('block');
+
+      done();
+    });
+
+    it('should be able to access the properties of operation type update_consensus_key, proto15', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[3][0]
+        .contents[0] as OperationContentsAndResultUpdateConsensusKey;
+
+      expect(content.kind).toEqual(OpKind.UPDATE_CONSENSUS_KEY);
+      expect(content.source).toEqual('tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv');
+      expect(content.fee).toEqual('369');
+      expect(content.counter).toEqual('19043');
+      expect(content.gas_limit).toEqual('1100');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.pk).toEqual('edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7');
+
+      expect(content.metadata.balance_updates).toBeDefined();
+
+      expect(content.metadata.balance_updates![0].kind).toEqual('contract');
+      expect(content.metadata.balance_updates![0].contract).toEqual(
+        'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv'
+      );
+      expect(content.metadata.balance_updates![0].change).toEqual('-369');
+      expect(content.metadata.balance_updates![0].origin).toEqual('block');
+
+      expect(content.metadata.balance_updates![1].kind).toEqual('accumulator');
+      expect(content.metadata.balance_updates![1].category).toEqual('block fees');
+      expect(content.metadata.balance_updates![1].change).toEqual('369');
+      expect(content.metadata.balance_updates![1].origin).toEqual('block');
+
+      expect(content.metadata.operation_result.status).toEqual('applied');
+      expect(content.metadata.operation_result.consumed_gas).toEqual('1000');
+      expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
+      done();
+    });
+    it('should contain ticket_updates for transactions updating ticket storage', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketUpdatesSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultTransaction;
+      const ticketUpdates =
+        content.metadata.operation_result.ticket_updates &&
+        content.metadata.operation_result.ticket_updates[0];
+
+      expect(ticketUpdates).toBeDefined();
+      expect(ticketUpdates?.ticket_token.ticketer).toEqual('KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH');
+      expect(ticketUpdates?.updates[0].account).toEqual('KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj');
+      expect(ticketUpdates?.updates[0].amount).toEqual('-2');
+      done();
+    });
+    // may be removed
+    it('should contain ticket_receipt for transactions updating ticket storage', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketUpdatesSample));
+
+      const response = await client.getBlock();
+      const content = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultTransaction;
+      const internalContent =
+        content.metadata.internal_operation_results &&
+        (content.metadata.internal_operation_results[0].result as OperationResultTransaction);
+      const ticketReceipt = internalContent?.ticket_receipt && internalContent.ticket_receipt[0];
+
+      expect(ticketReceipt).toBeDefined();
+      expect(ticketReceipt?.ticket_token.ticketer).toEqual('KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH');
+      expect(ticketReceipt?.updates[0].account).toEqual('KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj');
+      expect(ticketReceipt?.updates[0].amount).toEqual('1');
+      done();
+    });
   });
 
   describe('getBakingRights', () => {
@@ -3221,12 +3575,14 @@ describe('RpcClient test', () => {
           delegate: 'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
           priority: 4,
           estimated_time: '2019-08-02T09:48:56Z',
+          consensus_key: 'tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6',
         },
         {
           level: 547387,
           delegate: 'tz1NMdMmWZN8QPB8pY4ddncACDg1cHi1xD2e',
           priority: 8,
           estimated_time: '2019-08-02T09:53:56Z',
+          consensus_key: 'tz1N4GvBKsfdBdtgbNeQQLv52L7YB4FBZtVf',
         },
       ]);
       const result = await client.getBakingRights({
@@ -3246,6 +3602,7 @@ describe('RpcClient test', () => {
 
       expect(result[0].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
       expect(result[0].estimated_time).toEqual('2019-08-02T09:48:56Z');
+      expect(result[0].consensus_key).toEqual('tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6');
       done();
     });
   });
@@ -3289,6 +3646,40 @@ describe('RpcClient test', () => {
       expect(result[1].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
       expect(result[1].estimated_time).toEqual('2019-08-02T09:42:56Z');
       expect(result[1].slots!.length).toEqual(3);
+      done();
+    });
+
+    it('query the right url and data (with consensus key in delegates)', async (done) => {
+      httpBackend.createRequest.mockResolvedValue([
+        {
+          level: 547386,
+          delegates: [
+            {
+              delegate: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
+              first_slot: 1,
+              endorsing_power: 1,
+              consensus_key: 'tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6',
+            },
+          ],
+          slots: [27],
+          estimated_time: '2019-08-02T09:42:56Z',
+        },
+      ]);
+      const result = await client.getEndorsingRights();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        query: {},
+        url: 'root/chains/test/blocks/head/helpers/endorsing_rights',
+      });
+
+      expect(result[0].delegates).toBeDefined();
+      expect(result[0].delegates![0].delegate).toEqual('tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K');
+      expect(result[0].delegates![0].first_slot).toEqual(1);
+      expect(result[0].delegates![0].endorsing_power).toEqual(1);
+      expect(result[0].delegates![0].consensus_key).toEqual('tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6');
+      expect(result[0].estimated_time).toEqual('2019-08-02T09:42:56Z');
+      expect(result[0].slots!.length).toEqual(1);
       done();
     });
   });

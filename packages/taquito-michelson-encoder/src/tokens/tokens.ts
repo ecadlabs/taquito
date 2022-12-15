@@ -33,6 +33,7 @@ import { OperationToken } from './operation';
 import { SetToken } from './set';
 import { ChainIDToken } from './chain-id';
 import { TicketToken } from './ticket';
+import { TicketDeprecatedToken } from './ticket-deprecated';
 import { NeverToken } from './never';
 import { SaplingStateToken } from './sapling-state';
 import { SaplingTransactionToken } from './sapling-transaction';
@@ -70,6 +71,7 @@ export const tokens = [
   SetToken,
   ChainIDToken,
   TicketToken,
+  TicketDeprecatedToken,
   NeverToken,
   SaplingStateToken,
   SaplingTransactionToken,

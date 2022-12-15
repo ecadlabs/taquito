@@ -1,8 +1,0 @@
-parameter address;
-storage (big_map string nat);
-code {
-       CAR;
-       UNIT;
-       VIEW "get_map" (big_map string nat);
-       IF_SOME { PUSH nat 10 ; SOME ; PUSH string "bar"; UPDATE; NIL operation; PAIR; } { FAIL; }
-     }
