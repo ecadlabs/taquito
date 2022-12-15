@@ -592,7 +592,7 @@ export const ticketTokenTestMock = {
   },
 };
 
-export const smallerTypeCheckError = {
+export const smallNestedMapTypecheck = {
   address: '',
   script: {
     "code": [
