@@ -433,6 +433,25 @@ export interface RPCIncreasePaidStorageOperation {
 }
 
 /**
+ * @description Parameters for the DrainDelegate method
+ */
+export interface DrainDelegateParams {
+  consensus_key: string;
+  delegate: string;
+  destination: string;
+}
+
+/**
+ * @description RPC DrainDelegate operation
+ */
+export interface RPCDrainDelegateOperation {
+  kind: OpKind.DRAIN_DELEGATE;
+  consensus_key: string;
+  delegate: string;
+  destination: string;
+}
+
+/**
  * @description Ballot operation params
  */
 export interface BallotParams {
@@ -489,6 +508,7 @@ export type RPCOperation =
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCIncreasePaidStorageOperation
+  | RPCDrainDelegateOperation
   | RPCBallotOperation
   | RPCProposalsOperation
   | RPCUpdateConsensusKeyOperation;
