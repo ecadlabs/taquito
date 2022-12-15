@@ -2218,6 +2218,3 @@ describe('RpcContractProvider test', () => {
     })
   })
   });
-  describe('Nested maps typecheck', () => {
-
-})
