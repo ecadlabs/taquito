@@ -110,14 +110,6 @@ export class BigMapToken extends Token {
     if (semantic && semantic[BigMapToken.prim]) {
       return semantic[BigMapToken.prim](val, this.val);
     }
-
-    // TO REMOVE POSSIBLY
-    if (val.get('id') && val.get('schema')  && val.get('provider')) {
-      return {
-        prim: 'Elt',
-        args: [this.KeySchema.EncodeObject(val.get('id')), this.ValueSchema.EncodeObject(val.get('id'))]
-      }
-    }
     return Array.from(val.keys())
       .sort((a: any, b: any) => this.KeySchema.compare(a, b))
       .map((key) => {
