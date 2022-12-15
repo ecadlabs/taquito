@@ -7,6 +7,12 @@ export class SaplingTransactionValidationError extends TokenValidationError {
     super(value, token, message);
   }
 }
+export class SaplingTransactionExecuteError extends TokenValidationError {
+  name = 'SaplingTransactionExecuteError';
+  constructor(public value: any, public token: SaplingTransactionToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class SaplingTransactionToken extends Token {
   static prim: 'sapling_transaction' = 'sapling_transaction' as const;
@@ -20,7 +26,7 @@ export class SaplingTransactionToken extends Token {
   }
 
   Execute(_val: any) {
-    throw new SaplingTransactionValidationError(
+    throw new SaplingTransactionExecuteError(
       _val,
       this,
       'There is no literal value for the sapling_transaction type.'

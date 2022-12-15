@@ -7,6 +7,12 @@ export class SaplingStateValidationError extends TokenValidationError {
     super(value, token, message);
   }
 }
+export class SaplingStateExecuteError extends TokenValidationError {
+  name = 'SaplingStateExecuteError';
+  constructor(public value: any, public token: SaplingStateToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class SaplingStateToken extends Token {
   static prim: 'sapling_state' = 'sapling_state' as const;
@@ -30,7 +36,7 @@ export class SaplingStateToken extends Token {
     if ('int' in val) {
       return val.int;
     } else {
-      throw new SaplingStateValidationError(
+      throw new SaplingStateExecuteError(
         val,
         this,
         `Sapling state is expecting an object with an int property. Got ${JSON.stringify(val)}`

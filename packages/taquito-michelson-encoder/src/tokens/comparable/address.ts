@@ -15,6 +15,15 @@ export class AddressValidationError extends TokenValidationError {
   }
 }
 
+export class AddressExecuteError extends TokenValidationError {
+  name = 'AddressExecuteError';
+  constructor(public value: BytesAndString, public token: AddressToken, message: string) {
+    super(value, token, message)
+  }
+}
+
+export interface BytesAndString { bytes: string; string: string };
+
 export class AddressToken extends ComparableToken {
   static prim: 'address' = 'address' as const;
 
@@ -66,12 +75,12 @@ export class AddressToken extends ComparableToken {
     return { string: val };
   }
 
-  public Execute(val: { bytes: string; string: string }): string {
+  public Execute(val: BytesAndString): string {
     if (val.string) {
       return val.string;
     }
     if (!val.bytes) {
-      throw new AddressValidationError(
+      throw new AddressExecuteError(
         val,
         this,
         `cannot be missing both string and bytes: ${val}`

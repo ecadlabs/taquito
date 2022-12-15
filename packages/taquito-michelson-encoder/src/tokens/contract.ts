@@ -9,6 +9,12 @@ export class ContractValidationError extends TokenValidationError {
     super(value, token, message);
   }
 }
+export class ContractExecuteError extends TokenValidationError {
+  name = 'ContractExecuteError';
+  constructor(public value: any, public token: ContractToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class ContractToken extends Token {
   static prim: 'contract' = 'contract' as const;
@@ -35,7 +41,7 @@ export class ContractToken extends Token {
       return val.string;
     }
     if (!val.bytes) {
-      throw new ContractValidationError(val, this, 'must contain bytes or string');
+      throw new ContractExecuteError(val, this, 'must contain bytes or string');
     }
 
     return encodePubKey(val.bytes);

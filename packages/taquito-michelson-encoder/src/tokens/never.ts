@@ -7,6 +7,12 @@ export class NeverTokenError extends TokenValidationError {
     super(value, token, message);
   }
 }
+export class NeverTokenExecuteError extends TokenValidationError {
+  name = 'NeverTokenExecuteError';
+  constructor(public value: any, public token: NeverToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class NeverToken extends Token {
   static prim: 'never' = 'never' as const;
@@ -28,7 +34,7 @@ export class NeverToken extends Token {
     throw new NeverTokenError(val, this, 'Assigning a value to the type never is forbidden.');
   }
   public Execute(val: any) {
-    throw new NeverTokenError(val, this, 'There is no literal value for the type never.');
+    throw new NeverTokenExecuteError(val, this, 'There is no literal value for the type never.');
   }
 
   /**

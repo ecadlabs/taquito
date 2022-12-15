@@ -19,6 +19,12 @@ export class TxRollupL2AddressValidationError extends TokenValidationError {
     super(value, token, message);
   }
 }
+export class TxRollupL2AddressExecuteError extends TokenValidationError {
+  name = 'TxRollupL2AddressExecuteError';
+  constructor(public value: unknown, public token: TxRollupL2AddressToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class TxRollupL2AddressToken extends ComparableToken {
   static prim: 'tx_rollup_l2_address' = 'tx_rollup_l2_address' as const;
@@ -80,7 +86,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
       return val.string;
     }
     if (!val.bytes) {
-      throw new TxRollupL2AddressValidationError(
+      throw new TxRollupL2AddressExecuteError(
         val,
         this,
         `value cannot be missing string and byte value. must have one ${JSON.stringify(val)}`
@@ -104,7 +110,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
       return string;
     }
     if (!bytes) {
-      throw new TxRollupL2AddressValidationError(
+      throw new TxRollupL2AddressExecuteError(
         bytes,
         this,
         `value cannot be missing string and byte value. must have one: bytes = ${bytes}`

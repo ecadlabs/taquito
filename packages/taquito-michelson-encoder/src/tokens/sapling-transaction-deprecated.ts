@@ -7,6 +7,12 @@ export class SaplingTransactionDeprecatedValidationError extends TokenValidation
     super(value, token, message);
   }
 }
+export class SaplingTransactionDeprecatedExecuteError extends TokenValidationError {
+  name = 'SaplingTransactionDeprecatedExecuteError';
+  constructor(public value: any, public token: SaplingTransactionDeprecatedToken, message: string) {
+    super(value, token, message);
+  }
+}
 
 export class SaplingTransactionDeprecatedToken extends Token {
   static prim: 'sapling_transaction_deprecated' = 'sapling_transaction_deprecated' as const;
@@ -20,7 +26,7 @@ export class SaplingTransactionDeprecatedToken extends Token {
   }
 
   Execute(_val: any) {
-    throw new SaplingTransactionDeprecatedValidationError(
+    throw new SaplingTransactionDeprecatedExecuteError(
       _val,
       this,
       'There is no literal value for the sapling_transaction_deprecated type.'
