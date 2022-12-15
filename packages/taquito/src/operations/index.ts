@@ -22,6 +22,8 @@ export {
   RPCActivateOperation,
   RPCOperation,
   PrepareOperationParams,
+  DrainDelegateParams,
+  RPCDrainDelegateOperation,
   BallotParams,
   RPCBallotOperation,
 } from './types';
@@ -35,4 +37,5 @@ export { DelegateOperation } from './delegate-operation';
 export { OriginationOperation } from './origination-operation';
 export { TransactionOperation } from './transaction-operation';
 export { BallotOperation } from './ballot-operation';
+export { DrainDelegateOperation } from './drain-delegate-operation';
 export { Operation } from './operations';
