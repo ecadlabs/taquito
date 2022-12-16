@@ -74,7 +74,7 @@ export class RpcContractProvider
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
-  contractProviderTypeSymbol = Symbol.for('taquito--provider-type-symbol');
+  contractProviderTypeSymbol = Symbol.for('taquito-contract-provider-type-symbol');
 
   /**
    *

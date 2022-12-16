@@ -591,3 +591,89 @@ export const ticketTokenTestMock = {
     ],
   },
 };
+
+export const smallNestedMapTypecheck = {
+  address: '',
+  script: {
+    "code": [
+      {
+        "prim": "parameter",
+        "args": [
+          {
+            "prim": "unit"
+          }
+        ]
+      },
+      {
+        "prim": "storage",
+        "args": [
+          {
+            "prim": "map",
+            "args": [
+              {
+                "prim": "string"
+              },
+              {
+                "prim": "map",
+                "args": [
+                  {
+                    "prim": "string"
+                  },
+                  {
+                    "prim": "big_map",
+                    "args": [
+                      {
+                        "prim": "nat"
+                      },
+                      {
+                        "prim": "nat"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "prim": "code",
+        "args": [
+          [
+            [
+              {
+                "prim": "UNIT"
+              },
+              {
+                "prim": "FAILWITH"
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "storage": [
+      {
+        "prim": "Elt",
+        "args": [
+          {
+            "string": "test"
+          },
+          [
+            {
+              "prim": "Elt",
+              "args": [
+                {
+                  "string": "test 2"
+                },
+                {
+                  "int": "143106"
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    ]
+  }
+}
