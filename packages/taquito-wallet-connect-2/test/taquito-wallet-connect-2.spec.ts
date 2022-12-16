@@ -10,9 +10,12 @@ import {
 import { existingPairings, fakeCode, sessionExample, sessionMultipleChains } from './data';
 
 describe('Wallet connect 2 tests', () => {
+  let sessionDeletedEvent: (eventParams: { topic: string }) => void;
+  let sessionExpiredEvent: (eventParams: { topic: string }) => void;
+  let sessionUpdatedEvent: (eventParams: { topic: string; params: any }) => void;
   let walletConnect: WalletConnect2;
   let mockSignClient: {
-    on: jest.Mock<any, any>;
+    on: any;
     connect: jest.Mock<any, any>;
     pairing: {
       getAll: jest.Mock<any, any>;
@@ -30,7 +33,15 @@ describe('Wallet connect 2 tests', () => {
 
   beforeEach(() => {
     mockSignClient = {
-      on: jest.fn(),
+      on: (eventName: string, eventFct: any) => {
+        if (eventName === 'session_delete') {
+          sessionDeletedEvent = eventFct;
+        } else if (eventName == 'session_expire') {
+          sessionExpiredEvent = eventFct;
+        } else if (eventName == 'session_update') {
+          sessionUpdatedEvent = eventFct;
+        }
+      },
       connect: jest.fn(),
       pairing: {
         getAll: jest.fn(),
@@ -82,6 +93,32 @@ describe('Wallet connect 2 tests', () => {
         },
       })
     ).rejects.toThrow('Unable to connect');
+  });
+
+  it('should throw an error if tezos is not part of the requiredNamespace', async () => {
+    mockSignClient.connect.mockReturnValue({
+      approval: async () => {
+        return {
+          ...sessionExample,
+          requiredNamespaces: {
+            unknown: {
+              methods: [PermissionScopeMethods.OPERATION_REQUEST],
+              chains: ['tezos:ghostnet'],
+              events: [],
+            },
+          },
+        };
+      },
+    });
+
+    await expect(
+      walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          networks: [NetworkType.GHOSTNET],
+        },
+      })
+    ).rejects.toThrow('Tezos not found in requiredNamespaces');
   });
 
   describe('test pairing', () => {
@@ -751,6 +788,55 @@ describe('Wallet connect 2 tests', () => {
         'Required permission scope were not granted for "tezos_sendOperations"'
       );
     });
+
+    it('should fail to send operation if mismatch between account-network', async () => {
+      mockSignClient.connect.mockReturnValue({
+        approval: async () => {
+          return {
+            ...sessionExample,
+            namespaces: {
+              tezos: {
+                accounts: [
+                  'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+                  'tezos:limanet:tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+                ],
+                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                events: [],
+              },
+            },
+            requiredNamespaces: {
+              tezos: {
+                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                chains: ['tezos:ghostnet', 'tezos:limanet'],
+                events: [],
+              },
+            },
+          };
+        },
+      });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          networks: [NetworkType.GHOSTNET, NetworkType.LIMANET],
+        },
+      });
+
+      walletConnect.setActiveAccount('tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh');
+      walletConnect.setActiveNetwork(NetworkType.LIMANET);
+
+      const params: TransferParams[] = [
+        {
+          kind: OpKind.TRANSACTION,
+          amount: '100000',
+          destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+        },
+      ];
+
+      await expect(walletConnect.sendOperations(params)).rejects.toThrow(
+        'No permission. The combinaison "limanet" and "tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh" is not part of the active session.'
+      );
+    });
   });
 
   describe('test sign payload', () => {
@@ -1046,6 +1132,35 @@ describe('Wallet connect 2 tests', () => {
       };
 
       expect(await walletConnect.mapDelegateParamsToWalletParams(params)).toEqual(mappedParams);
+    });
+  });
+
+  describe('test events', () => {
+    beforeEach(async () => {
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+    });
+
+    it('should delete session when session_delete event is received', async () => {
+      expect(walletConnect.isActiveSession()).toBeTruthy();
+      sessionDeletedEvent({ topic: sessionExample.topic });
+      expect(walletConnect.isActiveSession()).toBeFalsy();
+    });
+
+    it('should delete session when session_expire event is received', async () => {
+      expect(walletConnect.isActiveSession()).toBeTruthy();
+      sessionExpiredEvent({ topic: sessionExample.topic });
+      expect(walletConnect.isActiveSession()).toBeFalsy();
+    });
+
+    it('should update session when session_update event is received', async () => {
+      expect(walletConnect.getSession().namespaces).toEqual(sessionExample.namespaces);
+      sessionUpdatedEvent({ topic: sessionExample.topic, params: sessionMultipleChains });
+      expect(walletConnect.getSession().namespaces).toEqual(sessionMultipleChains.namespaces);
     });
   });
 });

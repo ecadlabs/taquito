@@ -80,7 +80,7 @@ export class InvalidNetworkOrAccount extends Error {
 
   constructor(public network: string, public pkh: string) {
     super(
-      `No permission. The combinaison ${network} and ${pkh} is not part of the active session.`
+      `No permission. The combinaison "${network}" and "${pkh}" is not part of the active session.`
     );
   }
 }
@@ -130,5 +130,17 @@ export class ActiveNetworkUnspecified extends Error {
 
   constructor() {
     super('Please specify the active network using the "setActiveNetwork" method.');
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates the session is invalid
+ */
+export class InvalidSession extends Error {
+  name = 'InvalidSession';
+
+  constructor(message: string) {
+    super(message);
   }
 }

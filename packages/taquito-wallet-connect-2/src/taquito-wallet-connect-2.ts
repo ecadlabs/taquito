@@ -34,6 +34,7 @@ import {
   InvalidNetwork,
   InvalidNetworkOrAccount,
   InvalidReceivedSessionNamespace,
+  InvalidSession,
   InvalidSessionKey,
   MissingRequiredScope,
   NotConnected,
@@ -69,12 +70,12 @@ export class WalletConnect2 implements WalletProvider {
     this.signClient.on('session_update', ({ params, topic }) => {
       if (this.session?.topic === topic) {
         this.session.namespaces = params.namespaces;
-        // validate namespace here too?
+        // TODO determine if we need validation on the namespace here
       }
     });
 
     this.signClient.on('session_event', () => {
-      // TODO Handle session events, such as "chainChanged", "accountsChanged", etc.
+      // TODO Do we need to handle other session events, such as "chainChanged", "accountsChanged", etc.
     });
   }
 
@@ -113,6 +114,7 @@ export class WalletConnect2 implements WalletProvider {
     pairingTopic?: string;
     registryUrl?: string;
   }) {
+    // TODO when Tezos wallets will officially support wallet connect 2, we need to provide a default value for registryUrl
     try {
       const { uri, approval } = await this.signClient.connect({
         requiredNamespaces: {
@@ -476,10 +478,10 @@ export class WalletConnect2 implements WalletProvider {
     methods: string[];
     events: string[];
   } {
-    if (Object.prototype.hasOwnProperty.call(this.getSession().namespaces, TEZOS_PLACEHOLDER)) {
+    if (TEZOS_PLACEHOLDER in this.getSession().namespaces) {
       return this.getSession().namespaces[TEZOS_PLACEHOLDER];
     } else {
-      throw new Error('invalid session, tezos namespace not found');
+      throw new InvalidSession('Tezos not found in namespaces');
     }
   }
 
@@ -488,12 +490,10 @@ export class WalletConnect2 implements WalletProvider {
     methods: string[];
     events: string[];
   } {
-    if (
-      Object.prototype.hasOwnProperty.call(this.getSession().requiredNamespaces, TEZOS_PLACEHOLDER)
-    ) {
+    if (TEZOS_PLACEHOLDER in this.getSession().requiredNamespaces) {
       return this.getSession().requiredNamespaces[TEZOS_PLACEHOLDER];
     } else {
-      throw new Error('invalid session, tezos requiredNamespaces not found');
+      throw new InvalidSession('Tezos not found in requiredNamespaces');
     }
   }
 
