@@ -7,9 +7,10 @@
   import { formatTokenAmount, shortenHash } from "../utils";
   import { defaultMatrixNode, rpcUrl } from "../config";
   import type { TezosAccountAddress } from "../types";
-  import { WalletConnect2, PermissionScopeMethods } from "@taquito/wallet-connect-2";
+  import { WalletConnect2, PermissionScopeMethods, NetworkType as NetworkTypeWc2 } from "@taquito/wallet-connect-2";
   import { Modals, closeModal, openModal } from "svelte-modals";
   import ModalActivePairing from "./ModalActivePairing.svelte";
+  import type { NetworkType as  NetworkTypeBeacon } from "@airgap/beacon-sdk";
 
   let showDialog = false;
   let connectedWallet = "";
@@ -37,7 +38,7 @@
     return new BeaconWallet({
       name: "Taquito Test Dapp",
       matrixNodes: [defaultMatrixNode] as any,
-      preferredNetwork: $store.networkType,
+      preferredNetwork: $store.networkType as NetworkTypeBeacon,
     });
   };
 
@@ -72,7 +73,7 @@
   const requestPermissionWc2 = async (wallet: WalletConnect2, pairingTopic?: string) => {
     await wallet.requestPermissions({
       permissionScope: {
-        networks: [$store.networkType],
+        networks: [$store.networkType as NetworkTypeWc2],
         events: [],
         methods: [PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN],
       },
@@ -96,7 +97,7 @@
         const newWallet = createNewBeaconWallet();
         await newWallet.requestPermissions({
           network: {
-            type: $store.networkType,
+            type: $store.networkType as NetworkTypeBeacon,
             rpcUrl: rpcUrl[$store.networkType],
           },
         });
@@ -143,7 +144,7 @@
       store.updateUserAddress(userAddress);
       if (wallet instanceof WalletConnect2) {
         wallet.setActiveAccount(userAddress);
-        wallet.setActiveNetwork($store.networkType);
+        wallet.setActiveNetwork($store.networkType as any);
       }
 
       const Tezos = new TezosToolkit(rpcUrl[$store.networkType]);

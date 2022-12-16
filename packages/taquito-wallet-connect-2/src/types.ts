@@ -17,7 +17,6 @@ export enum NetworkType {
   DAILYNET = 'dailynet',
   KATHMANDUNET = 'kathmandunet',
   LIMANET = 'limanet',
-  CUSTOM = 'custom',
 }
 
 export interface PermissionScopeParam {

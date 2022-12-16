@@ -4,6 +4,7 @@
   import type { TestSettings, TestResult } from "../types";
   import { shortenHash } from "../utils";
   import { NetworkType } from "@airgap/beacon-sdk";
+  import { BeaconWallet } from "@taquito/beacon-wallet";
 
   let test: TestSettings | undefined;
   let executionTime = 0;
@@ -77,7 +78,9 @@
   };
 
   const switchAccount = async () => {
-    await $store.wallet.clearActiveAccount();
+    if($store.wallet instanceof BeaconWallet){
+      await $store.wallet.clearActiveAccount();
+    }
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
