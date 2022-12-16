@@ -42,9 +42,11 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        protocol:
-          - kathmandunet
-          - limanet
+        include:
+          - testnet: kathmandunet
+            testnet_uppercase: KATHMANDUNET
+          - testnet: limanet
+            testnet_uppercase: LIMANET
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -52,12 +54,16 @@ jobs:
         node-version: 16
     - run: npm ci
     - run: npm run build
-    - name: Tailscale
+    - if: ${{ !github.event.pull_request.head.repo.fork }}
+      name: Tailscale
       uses: tailscale/github-action@v1
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
         version: 1.32.2
-    - run: npm -w integration-tests run test:${{ matrix.protocol }} -- --maxWorkers=8
+    - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=8
+      env:
+        # Ternary operator workaround
+        TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
 
   integration-tests-flextesa:
     runs-on: ubuntu-latest

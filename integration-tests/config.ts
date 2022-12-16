@@ -91,7 +91,7 @@ const kathmandunetEphemeral = {
   protocol: Protocols.PtKathman,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3000/kathmandunet',
+    keyUrl: 'https://api.tez.ie/keys/kathmandunet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   }
 };
@@ -112,7 +112,7 @@ const limanetEphemeral = {
   protocol: Protocols.PtLimaPtL,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3000/limanet',
+    keyUrl: 'https://api.tez.ie/keys/limanet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };

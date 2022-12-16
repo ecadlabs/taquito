@@ -10,6 +10,7 @@ export { DelegateOperation } from './delegate-operation';
 export { OriginationOperation } from './origination-operation';
 export { TransactionOperation } from './transaction-operation';
 export { BallotOperation } from './ballot-operation';
+export { DrainDelegateOperation } from './drain-delegate-operation';
 export { Operation } from './operations';
 export { IncreasePaidStorageOperation } from './increase-paid-storage-operation';
 export { ProposalsOperation } from './proposals-operation';
