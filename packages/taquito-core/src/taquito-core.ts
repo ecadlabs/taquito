@@ -3,4 +3,4 @@
  * @module @taquito/core
  */
 
-export * from './errors';
+export * from './error/errors';
