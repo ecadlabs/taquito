@@ -5,7 +5,11 @@ import { OpKind, Protocols } from "@taquito/taquito";
 CONFIGS().forEach(({ lib, rpc, setup, protocol, txRollupAddress }) => {
   const Tezos = lib;
 
+<<<<<<< HEAD
   const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
+=======
+  const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip;
+>>>>>>> a917ed69e (format and lint)
   describe(`Test tx rollup batch using: ${rpc}`, () => {
 
     beforeEach(async (done) => {

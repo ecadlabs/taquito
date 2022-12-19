@@ -21,7 +21,11 @@ CONFIGS().forEach(
     const Tezos = lib;
 
     const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
+<<<<<<< HEAD
     const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
+=======
+    const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip;
+>>>>>>> a917ed69e (format and lint)
 
 
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;

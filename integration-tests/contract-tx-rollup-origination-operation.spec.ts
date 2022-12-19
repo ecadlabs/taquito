@@ -3,7 +3,11 @@ import { OpKind, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
+<<<<<<< HEAD
   const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
+=======
+  const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip;
+>>>>>>> a917ed69e (format and lint)
 
   describe(`Test tx rollup origination using: ${rpc}`, () => {
 
@@ -11,7 +15,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup(true);
       done();
     });
+<<<<<<< HEAD
     Limanet('should succeed to originate a rollup with auto-estimate of the fees', async (done) => {
+=======
+    kathAndLima('should succeed to originate a rollup with auto-estimate of the fees', async (done) => {
+>>>>>>> a917ed69e (format and lint)
       const op = await Tezos.contract.txRollupOriginate();
       await op.confirmation();
       expect(op.hash).toBeDefined();
