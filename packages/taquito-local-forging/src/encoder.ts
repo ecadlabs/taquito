@@ -13,6 +13,7 @@ import {
   proposalEncoder,
   proposalsEncoder,
   publicKeyEncoder,
+  depositsLimitEncoder,
   smartContractAddressEncoder,
   txRollupBatchContentEncoder,
   txRollupIdEncoder,
@@ -43,6 +44,7 @@ import {
   TransferTicketSchema,
   TxRollupOriginationSchema,
   TxRollupSubmitBatchSchema,
+  SetDepositsLimitSchema,
 } from './schema/operation';
 
 export type Encoder<T> = (val: T) => string;
@@ -72,6 +74,7 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdEncoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentEncoder,
   [CODEC.BURN_LIMIT]: burnLimitEncoder,
+  [CODEC.DEPOSITS_LIMIT]: depositsLimitEncoder,
 };
 
 encoders[CODEC.OPERATION] = operationEncoder(encoders);
@@ -99,3 +102,4 @@ encoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: any) =>
   schemaEncoder(encoders)(UpdateConsensusKeySchema)(val);
 encoders[CODEC.OP_DRAIN_DELEGATE] = (val: any) => schemaEncoder(encoders)(DrainDelegateSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);
+encoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val) => schemaEncoder(encoders)(SetDepositsLimitSchema)(val);

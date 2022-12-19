@@ -12,6 +12,7 @@ import {
   proposalDecoder,
   proposalsDecoder,
   publicKeyDecoder,
+  depositsLimitDecoder,
   smartContractAddressDecoder,
   txRollupBatchContentDecoder,
   txRollupIdDecoder,
@@ -36,6 +37,7 @@ import {
   RevealSchema,
   schemaDecoder,
   SeedNonceRevelationSchema,
+  SetDepositsLimitSchema,
   TransactionSchema,
   TransferTicketSchema,
   TxRollupOriginationSchema,
@@ -71,6 +73,7 @@ export const decodersProto14: { [key: string]: Decoder } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdDecoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentDecoder,
   [CODEC.BURN_LIMIT]: burnLimitDecoder,
+  [CODEC.DEPOSITS_LIMIT]: depositsLimitDecoder,
 };
 
 decodersProto14[CODEC.OPERATION] = operationDecoder(decodersProto14);
@@ -103,3 +106,4 @@ decodersProto14[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: Uint8ArrayConsumer) =>
 decodersProto14[CODEC.OP_INCREASE_PAID_STORAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decodersProto14)(IncreasePaidStorageSchema)(val);
 decodersProto14[CODEC.MANAGER] = schemaDecoder(decodersProto14)(ManagerOperationSchema);
+decodersProto14[CODEC.OP_SET_DEPOSITS_LIMIT] = (val: Uint8ArrayConsumer) => schemaDecoder(decodersProto14)(SetDepositsLimitSchema)(val);

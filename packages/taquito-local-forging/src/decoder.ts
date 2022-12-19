@@ -13,6 +13,7 @@ import {
   proposalDecoder,
   proposalsDecoder,
   publicKeyDecoder,
+  depositsLimitDecoder,
   smartContractAddressDecoder,
   txRollupBatchContentDecoder,
   txRollupIdDecoder,
@@ -43,6 +44,7 @@ import {
   TransferTicketSchema,
   TxRollupOriginationSchema,
   TxRollupSubmitBatchSchema,
+  SetDepositsLimitSchema,
 } from './schema/operation';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { toHexString } from './utils';
@@ -74,6 +76,7 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdDecoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentDecoder,
   [CODEC.BURN_LIMIT]: burnLimitDecoder,
+  [CODEC.OP_SET_DEPOSITS_LIMIT]: depositsLimitDecoder
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);
@@ -108,3 +111,4 @@ decoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: Uint8ArrayConsumer) =>
 decoders[CODEC.OP_DRAIN_DELEGATE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(DrainDelegateSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
+decoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(SetDepositsLimitSchema)(val);

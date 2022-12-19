@@ -151,6 +151,15 @@ export const DrainDelegateSchema = {
   destination: CODEC.PKH,
 };
 
+export const SetDepositsLimitSchema = {
+	source: CODEC.PKH,
+	fee: CODEC.ZARITH,
+	counter: CODEC.ZARITH,
+	gas_limit: CODEC.ZARITH,
+	storage_limit: CODEC.ZARITH,
+	limit: CODEC.DEPOSITS_LIMIT,
+};
+
 export const operationEncoder =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverse)) {

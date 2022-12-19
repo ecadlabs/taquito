@@ -393,3 +393,14 @@ export const burnLimitDecoder = (value: Uint8ArrayConsumer) => {
     return zarithDecoder(value);
   }
 };
+
+export const depositsLimitEncoder = (val: string) => {
+  return !val ? '00' : `ff${zarithEncoder(val)}`;
+};
+
+export const depositsLimitDecoder = (value: Uint8ArrayConsumer) => {
+  const prefix = value.consume(1);
+  if (Buffer.from(prefix).toString('hex') !== '00') {
+    return zarithDecoder(value);
+  }
+};

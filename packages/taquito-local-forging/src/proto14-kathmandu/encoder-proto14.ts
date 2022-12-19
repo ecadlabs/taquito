@@ -5,6 +5,7 @@ import {
   branchEncoder,
   burnLimitEncoder,
   delegateEncoder,
+  depositsLimitEncoder,
   int16Encoder,
   int32Encoder,
   pkhEncoder,
@@ -43,6 +44,7 @@ import {
   TransferTicketSchema,
   TxRollupOriginationSchema,
   TxRollupSubmitBatchSchema,
+  SetDepositsLimitSchema,
 } from '../schema/operation';
 
 export type Encoder<T> = (val: T) => string;
@@ -72,6 +74,7 @@ export const encodersProto14: { [key: string]: Encoder<any> } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdEncoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentEncoder,
   [CODEC.BURN_LIMIT]: burnLimitEncoder,
+  [CODEC.DEPOSITS_LIMIT]: depositsLimitEncoder,
 };
 
 encodersProto14[CODEC.OPERATION] = operationEncoder(encodersProto14);
@@ -102,3 +105,4 @@ encodersProto14[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: any) =>
 encodersProto14[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
   schemaEncoder(encodersProto14)(IncreasePaidStorageSchema)(val);
 encodersProto14[CODEC.MANAGER] = schemaEncoder(encodersProto14)(ManagerOperationSchema);
+encodersProto14[CODEC.OP_SET_DEPOSITS_LIMIT] = (val) => schemaEncoder(encodersProto14)(SetDepositsLimitSchema)(val);
