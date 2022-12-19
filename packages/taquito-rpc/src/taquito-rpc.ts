@@ -60,11 +60,11 @@ import {
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
-  InvalidAddressError,
   validateAddress,
   validateContractAddress,
   ValidationResult,
 } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/core'
 
 export { castToBigNumber } from './utils/utils';
 

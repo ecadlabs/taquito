@@ -6,6 +6,7 @@
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
 import { b58cencode, prefix, Prefix, ProhibitedActionError } from '@taquito/utils';
+import { InvalidDerivationPathError } from '@taquito/core';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -39,19 +40,6 @@ export class InvalidDerivationTypeError extends Error {
   constructor(public derivationType: string) {
     super(
       `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1, DerivationType.P256 or DerivationType.BIP32_ED25519`
-    );
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid derivation path being passed or used
- */
-export class InvalidDerivationPathError extends Error {
-  public name = 'InvalidDerivationPathError';
-  constructor(public derivationPath: string) {
-    super(
-      `The derivation path ${derivationPath} is invalid. The derivation path must start with 44'/1729`
     );
   }
 }
@@ -112,7 +100,7 @@ export class LedgerSigner implements Signer {
   ) {
     this.transport.setScrambleKey('XTZ');
     if (!path.startsWith("44'/1729'")) {
-      throw new InvalidDerivationPathError(path);
+      throw new InvalidDerivationPathError(`The derivation path ${path} is invalid. The derivation path must start with 44'/1729`);
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
       throw new InvalidDerivationTypeError(derivationType.toString());

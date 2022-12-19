@@ -54,9 +54,9 @@ import {
   validateAddress,
   validateContractAddress,
   InvalidContractAddressError,
-  InvalidAddressError,
   ValidationResult,
 } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/core'
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';

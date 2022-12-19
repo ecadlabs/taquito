@@ -41,12 +41,12 @@ import {
 } from '../contract/prepare';
 import {
   validateAddress,
-  InvalidAddressError,
   ValidationResult,
   InvalidOperationKindError,
   validateContractAddress,
   InvalidContractAddressError,
 } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/core'
 import { RevealEstimateError } from './error';
 
 interface Limits {
