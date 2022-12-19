@@ -52,12 +52,13 @@ export class InvalidInitParameter extends Error {
   }
 }
 
+// change class for more accurate name since other InvalidViewParameterError is fundamentally different
 /**
  *  @category Error
  *  @description Error that indicates invalid view parameter of a smart contract
  */
-export class InvalidViewParameterError extends Error {
-  name = 'Invalid view parameters error';
+export class InvalidContractViewParameterError extends Error {
+  name = 'Invalid contract view parameters error';
   cause: any;
   constructor(
     public smartContractViewName: string,

@@ -7,9 +7,8 @@ import {
   prefixLength,
   InvalidKeyHashError,
   InvalidPublicKeyError,
-  InvalidAddressError,
-  InvalidContractAddressError,
 } from '@taquito/utils';
+import { InvalidContractAddressError, InvalidAddressError } from '@taquito/core';
 import { OversizedEntryPointError, InvalidBallotValueError, DecodeBallotValueError } from './error';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
@@ -327,7 +326,7 @@ export const entrypointEncoder = (entrypoint: string) => {
   }
 };
 
-export const parametersEncoder = (val: { entrypoint: string; value: MichelsonValue }) => {
+export const parametersEncoder = (val: { entrypoint: string; value: MichelsonValue; }) => {
   if (!val || (val.entrypoint === 'default' && 'prim' in val.value && val.value.prim === 'Unit')) {
     return '00';
   }

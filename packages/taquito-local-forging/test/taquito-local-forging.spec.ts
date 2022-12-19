@@ -13,9 +13,9 @@ import {
 import { commonCases, limaCases } from '../../../integration-tests/data/allTestsCases';
 import {
   InvalidOperationSchemaError,
-  InvalidBlockHashError,
   UnsupportedOperationError,
 } from '../src/error';
+import { InvalidBlockHashError } from "@taquito/core"
 
 import { InvalidOperationKindError } from '@taquito/utils';
 import { schemaDecoder, SeedNonceRevelationSchema } from '../src/schema/operation';

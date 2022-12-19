@@ -15,8 +15,9 @@ import { validatePkAndExtractPrefix } from './verify-signature';
 import { hash } from '@stablelib/blake2b';
 import blake from 'blakejs';
 import bs58check from 'bs58check';
-import { ValueConversionError, InvalidHexStringError } from './errors';
+import { ValueConversionError } from './errors';
 import BigNumber from 'bignumber.js';
+import { InvalidHexStringError } from '@taquito/core'
 
 export * from './validators';
 export { VERSION } from './version';
@@ -131,7 +132,7 @@ export function b58decodeL2Address(payload: string) {
  */
 export function encodePubKey(value: string) {
   if (value.substring(0, 2) === '00') {
-    const pref: { [key: string]: Uint8Array } = {
+    const pref: { [key: string]: Uint8Array; } = {
       '0000': prefix.tz1,
       '0001': prefix.tz2,
       '0002': prefix.tz3,
@@ -161,7 +162,7 @@ export function encodeL2Address(value: string) {
  */
 export function encodeKey(value: string) {
   if (value[0] === '0') {
-    const pref: { [key: string]: Uint8Array } = {
+    const pref: { [key: string]: Uint8Array; } = {
       '00': new Uint8Array([13, 15, 37, 217]),
       '01': new Uint8Array([3, 254, 226, 86]),
       '02': new Uint8Array([3, 178, 139, 127]),
@@ -179,7 +180,7 @@ export function encodeKey(value: string) {
  */
 export function encodeKeyHash(value: string) {
   if (value[0] === '0') {
-    const pref: { [key: string]: Uint8Array } = {
+    const pref: { [key: string]: Uint8Array; } = {
       '00': new Uint8Array([6, 161, 159]),
       '01': new Uint8Array([6, 161, 161]),
       '02': new Uint8Array([6, 161, 164]),

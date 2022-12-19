@@ -41,12 +41,11 @@ import {
 } from '../contract/prepare';
 import {
   validateAddress,
-  InvalidAddressError,
   ValidationResult,
   InvalidOperationKindError,
   validateContractAddress,
-  InvalidContractAddressError,
 } from '@taquito/utils';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import { RevealEstimateError } from './error';
 
 interface Limits {
@@ -117,12 +116,12 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       fee: 0,
       gasLimit: numberOfOps
         ? Math.floor(
-            this.ajustGasForBatchOperation(
-              hard_gas_limit_per_block,
-              hard_gas_limit_per_operation,
-              numberOfOps
-            ).toNumber()
-          )
+          this.ajustGasForBatchOperation(
+            hard_gas_limit_per_block,
+            hard_gas_limit_per_operation,
+            numberOfOps
+          ).toNumber()
+        )
         : hard_gas_limit_per_operation.toNumber(),
       storageLimit: Math.floor(
         BigNumber.min(balance.dividedBy(cost_per_byte), hard_storage_limit_per_operation).toNumber()

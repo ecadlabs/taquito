@@ -1,4 +1,5 @@
-import { InvalidHexStringError } from './error';
+import { InvalidHexStringError } from '@taquito/core';
+
 export class Uint8ArrayConsumer {
   static fromHexString(hex: string) {
     const lowHex = hex.toLowerCase();
@@ -8,7 +9,7 @@ export class Uint8ArrayConsumer {
       );
       return new Uint8ArrayConsumer(arr);
     } else {
-      throw new InvalidHexStringError(lowHex);
+      throw new InvalidHexStringError(`The hex string '${lowHex}' is invalid`);
     }
   }
 
