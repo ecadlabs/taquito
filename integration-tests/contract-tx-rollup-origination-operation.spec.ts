@@ -3,7 +3,7 @@ import { OpKind, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip;
+  const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
 
   describe(`Test tx rollup origination using: ${rpc}`, () => {
 
@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await setup(true);
       done();
     });
-    kathAndLima('should succeed to originate a rollup with auto-estimate of the fees', async (done) => {
+    Limanet('should succeed to originate a rollup with auto-estimate of the fees', async (done) => {
       const op = await Tezos.contract.txRollupOriginate();
       await op.confirmation();
       expect(op.hash).toBeDefined();
@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    kathAndLima('should succeed to originate a rollup with defined fees', async (done) => {
+    Limanet('should succeed to originate a rollup with defined fees', async (done) => {
       const op = await Tezos.contract.txRollupOriginate({
         storageLimit: 60000,
         gasLimit: 2000,
@@ -37,7 +37,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    kathAndLima('should succeed to include a rollupOrigination operation in a batch', async (done) => {
+    Limanet('should succeed to include a rollupOrigination operation in a batch', async (done) => {
       const op = await Tezos.contract.batch([
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
         { kind: OpKind.TX_ROLLUP_ORIGINATION }
@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    kathAndLima('should succeed to include a rollupOrigination operation in a batch using `with` method', async (done) => {
+    Limanet('should succeed to include a rollupOrigination operation in a batch using `with` method', async (done) => {
       const op = await Tezos.contract.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTxRollupOrigination()

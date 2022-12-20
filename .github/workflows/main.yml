@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: 
+        node:
           - '16'
           - '18'
     steps:
@@ -43,8 +43,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - testnet: kathmandunet
-            testnet_uppercase: KATHMANDUNET
           - testnet: limanet
             testnet_uppercase: LIMANET
     steps:
@@ -71,9 +69,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - protocol: Kathmandu
-            testnet: kathmandunet
-            testnet_uppercase: KATHMANDUNET
           - protocol: Lima
             testnet: limanet
             testnet_uppercase: LIMANET
@@ -92,7 +87,7 @@ jobs:
     # donald,edpkvXGp1BMZxHkwg3mKnWfJYS6HTJ5JtufD8YXxLtH8UKqLZkZVun,tz1eSWp4B9s1qhtNMMNXAkaf2oqCnDHd2iAm,unencrypted:edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2
     - name: Generate Flextesa bootstrap accounts
       run: |-
-        echo "alice=$(docker run --rm ${flextesa_docker_image} flextesa key alice)" >> $GITHUB_ENV 
+        echo "alice=$(docker run --rm ${flextesa_docker_image} flextesa key alice)" >> $GITHUB_ENV
         echo "bob=$(docker run --rm ${flextesa_docker_image} flextesa key bob)" >> $GITHUB_ENV
         echo "charlie=$(docker run --rm ${flextesa_docker_image} flextesa key charlie)" >> $GITHUB_ENV
         echo "donald=$(docker run --rm ${flextesa_docker_image} flextesa key donald)" >> $GITHUB_ENV

@@ -21,7 +21,7 @@ CONFIGS().forEach(
     const Tezos = lib;
 
     const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
-    const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip;
+    const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
 
 
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
@@ -412,13 +412,13 @@ CONFIGS().forEach(
           done();
         });
 
-        kathAndLima('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on kathmandu or lima', async (done) => {
+        Limanet('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on lima', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        kathAndLima('Verify that rpcClient.getTxRollupState will access the state of a rollup on kathmandu or lima', async (done) => {
+        Limanet('Verify that rpcClient.getTxRollupState will access the state of a rollup on lima', async (done) => {
           const state = await rpcClient.getTxRollupState(txRollupAddress);
           expect(state).toBeDefined();
           done();

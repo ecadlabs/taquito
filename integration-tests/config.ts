@@ -75,27 +75,6 @@ const defaultSecretKey: SecretKeyConfig = {
   password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
-const kathmandunetEphemeral = {
-  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_KATHMANDUNET_CONTRACT_ADDRESS'] || knownContractPtKathman,
-  knownBigMapContract: process.env['TEZOS_KATHMANDUNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtKathman,
-  knownTzip1216Contract: process.env['TEZOS_KATHMANDUNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtKathman,
-  knownSaplingContract: process.env['TEZOS_KATHMANDUNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtKathman,
-  txRollupWithdrawContract: process.env['TEZOS_KATHMANDUNET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
-  txRollupDepositContract: process.env['TEZOS_KATHMANDUNET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
-  knownViewContract: process.env['TEZOS_KATHMANDUNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtKathman,
-  txRollupAddress: process.env['TEZOS_KATHMANDUNET_TXROLLUP_ADDRESS'] || txRollupAddressPtKathman,
-  protocol: Protocols.PtKathman,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/kathmandunet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  }
-};
-
 const limanetEphemeral = {
   rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-limanet-full:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
@@ -139,23 +118,6 @@ const mondaynetEphemeral = {
   },
 };
 
-const kathmandunetSecretKey = {
-  rpc: process.env['TEZOS_RPC_KATHMANDUNET'] || 'http://ecad-kathmandunet-archive.i.tez.ie:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_KATHMANDUNET_CONTRACT_ADDRESS'] || knownContractPtKathman,
-  knownBigMapContract: process.env['TEZOS_KATHMANDUNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtKathman,
-  knownTzip1216Contract: process.env['TEZOS_KATHMANDUNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtKathman,
-  knownSaplingContract: process.env['TEZOS_KATHMANDUNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtKathman,
-  txRollupWithdrawContract: process.env['TEZOS_KATHMANDUNET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
-  txRollupDepositContract: process.env['TEZOS_KATHMANDUNET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
-  knownViewContract: process.env['TEZOS_KATHMANDUNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtKathman,
-  txRollupAddress: process.env['TEZOS_KATHMANDUNET_TXROLLUP_ADDRESS'] || txRollupAddressPtKathman,
-  protocol: Protocols.PtKathman,
-  signerConfig: defaultSecretKey,
-};
-
 const limanetSecretKey = {
   rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-limanet-full:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
@@ -193,21 +155,17 @@ const mondaynetSecretKey = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(limanetSecretKey, kathmandunetSecretKey);
+  providers.push(limanetSecretKey);
 } else if (process.env['RUN_LIMANET_WITH_SECRET_KEY']) {
   providers.push(limanetSecretKey);
-} else if (process.env['RUN_KATHMANDUNET_WITH_SECRET_KEY']) {
-  providers.push(kathmandunetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
   providers.push(mondaynetSecretKey);
-} else if (process.env['KATHMANDUNET']) {
-  providers.push(kathmandunetEphemeral);
 } else if (process.env['LIMANET']) {
   providers.push(limanetEphemeral);
 } else if (process.env['MONDAYNET']) {
   providers.push(mondaynetEphemeral);
 } else {
-  providers.push(limanetEphemeral, kathmandunetEphemeral);
+  providers.push(limanetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
