@@ -4,9 +4,9 @@ describe('errors', () => {
   it('should throw an ParameterValidationError', () => {
     try {
       throw new ParameterValidationError('parameter error');
-    } catch (e) {
-      console.log(e);
-      expect(e.message).toContain('parameter error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toEqual('parameter error');
     }
   });
 });
