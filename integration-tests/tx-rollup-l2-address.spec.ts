@@ -4,8 +4,7 @@ import { Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
   const tezos = lib;
-  const kathmandunet = protocol === Protocols.PtKathman ? test : test.skip;
-  const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
+  const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? test : test.skip;
 
   describe(`Contract originations and method calls to test the type of tx_rollup_l2_address: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -13,7 +12,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       done();
     })
 
-    kathmandunet(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
+    kathAndLima(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
       const op = await tezos.contract.originate({
         code: `
         parameter (pair address tx_rollup_l2_address string);
@@ -73,7 +72,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       done();
     })
 
-    limanetAndAlpha(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
+    kathAndLima(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
       const op = await tezos.contract.originate({
         code: `
         parameter (pair address tx_rollup_l2_address string);
@@ -133,7 +132,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       done();
     })
 
-    it(`Contract with params and storage as tx_rollup_l2_address`, async (done) => {
+    kathAndLima(`Contract with params and storage as tx_rollup_l2_address`, async (done) => {
       const op = await tezos.contract.originate({
         code: [{ "prim": "parameter", "args": [{ "prim": "tx_rollup_l2_address" }] }, { "prim": "storage", "args": [{ "prim": "tx_rollup_l2_address" }] }, { "prim": "code", "args": [[{ "prim": "CAR" }, { "prim": "NIL", "args": [{ "prim": "operation" }] }, { "prim": "PAIR" }]] }],
         storage: "tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8"

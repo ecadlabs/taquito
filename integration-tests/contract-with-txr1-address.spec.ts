@@ -1,10 +1,12 @@
 import { CONFIGS } from "./config";
-import { MichelsonMap } from "@taquito/taquito";
+import { MichelsonMap, Protocols } from "@taquito/taquito";
 import { contractWithTxr1Address } from "./data/contract-txr1-address";
 
 
-CONFIGS().forEach(({ lib, setup }) => {
+CONFIGS().forEach(({ lib, setup, protocol }) => {
   const Tezos = lib;
+  const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip
+
   beforeEach(async (done) => {
     await setup();
     done();
@@ -12,7 +14,7 @@ CONFIGS().forEach(({ lib, setup }) => {
   describe('test', () => {
     type Storage = { addressSet: string[], addressMap: MichelsonMap<string, number>; }
 
-    it('should pass with tz addresses', async (done) => {
+    kathAndLima('should pass with tz addresses', async (done) => {
 
       const initialStorage: Storage = {
         addressSet: [
@@ -76,7 +78,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       expect(newMapStorage.addressMap.get('txr1bZx7qro4xNsxLhmpXfmzQojHkg8XqrUvL')).toBeUndefined();
       done();
     })
-    it('should pass with KT1', async (done) => {
+    kathAndLima('should pass with KT1', async (done) => {
 
       const initialStorage: Storage = {
         addressSet: [
