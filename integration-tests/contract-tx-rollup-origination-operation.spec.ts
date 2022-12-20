@@ -3,17 +3,17 @@ import { OpKind, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip
+  const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip;
 
   describe(`Test tx rollup origination using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
-      await setup(true)
-      done()
-    })
+      await setup(true);
+      done();
+    });
     kathAndLima('should succeed to originate a rollup with auto-estimate of the fees', async (done) => {
       const op = await Tezos.contract.txRollupOriginate();
-      await op.confirmation()
+      await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.originatedRollup).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -28,7 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         gasLimit: 2000,
         fee: 500
       });
-      await op.confirmation()
+      await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.originatedRollup).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -42,7 +42,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
         { kind: OpKind.TX_ROLLUP_ORIGINATION }
       ]).send();
-      await op.confirmation()
+      await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(op.status).toBe('applied');
@@ -55,11 +55,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTxRollupOrigination()
         .send();
-      await op.confirmation()
+      await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(op.status).toBe('applied');
       done();
     });
   });
-})
+});

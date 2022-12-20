@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
     beforeEach(async (done) => {
       await setup();
       done();
-    })
+    });
 
     kathAndLima(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
       const op = await tezos.contract.originate({
@@ -52,7 +52,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
         }
         `,
         storage: "Unit"
-      })
+      });
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -70,7 +70,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue));
       done();
-    })
+    });
 
     kathAndLima(`Originate a contract with a hex string type tz1 & tz4 in initial storage tz4 & string`, async (done) => {
       const op = await tezos.contract.originate({
@@ -113,7 +113,7 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
         }
         `,
         storage: "Unit"
-      })
+      });
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -130,13 +130,13 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(JSON.stringify(await contract.storage())).toEqual(JSON.stringify(UnitValue));
       done();
-    })
+    });
 
     kathAndLima(`Contract with params and storage as tx_rollup_l2_address`, async (done) => {
       const op = await tezos.contract.originate({
         code: [{ "prim": "parameter", "args": [{ "prim": "tx_rollup_l2_address" }] }, { "prim": "storage", "args": [{ "prim": "tx_rollup_l2_address" }] }, { "prim": "code", "args": [[{ "prim": "CAR" }, { "prim": "NIL", "args": [{ "prim": "operation" }] }, { "prim": "PAIR" }]] }],
         storage: "tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8"
-      })
+      });
       await op.confirmation();
 
       expect(op.hash).toBeDefined();
@@ -150,6 +150,6 @@ CONFIGS().forEach(({ lib, setup, protocol, txRollupAddress, rpc }) => {
       await ticketDeposit.confirmation();
       expect(ticketDeposit.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       done();
-    })
-  })
-})
+    });
+  });
+});

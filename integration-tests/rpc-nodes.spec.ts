@@ -21,14 +21,14 @@ CONFIGS().forEach(
     const Tezos = lib;
 
     const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
-    const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip
+    const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip;
 
 
-    const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test
+    const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
 
     beforeAll(async (done) => {
-      await setup()
-      done()
+      await setup();
+      done();
     });
 
     const rpcList: Array<string> = [rpc];
@@ -268,7 +268,7 @@ CONFIGS().forEach(
           } catch (ex) {
             expect(ex).toEqual(expect.objectContaining({
               message: expect.stringContaining('has already been revealed')
-            }))
+            }));
           }
 
           try {
@@ -360,9 +360,9 @@ CONFIGS().forEach(
             input: {
               string: 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP'
             }
-          }
+          };
 
-          const views = await Tezos.rpc.runView(params)
+          const views = await Tezos.rpc.runView(params);
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "100" } });
           done();
@@ -377,9 +377,9 @@ CONFIGS().forEach(
             input: {
               int: '0'
             }
-          }
+          };
 
-          const views = await Tezos.rpc.runScriptView(params)
+          const views = await Tezos.rpc.runScriptView(params);
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "2" } });
           done();
@@ -392,7 +392,7 @@ CONFIGS().forEach(
         });
 
         it('Verify that rpcClient.getSaplingDiffById will access the value associated with a sapling state ID', async (done) => {
-          const saplingStateId = (await rpcClient.getStorage(knownSaplingContract) as any)['int']
+          const saplingStateId = (await rpcClient.getStorage(knownSaplingContract) as any)['int'];
           const saplingDiffById = await rpcClient.getSaplingDiffById(saplingStateId);
           expect(saplingDiffById).toBeDefined();
           done();
