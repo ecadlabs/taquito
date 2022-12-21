@@ -46,6 +46,7 @@ module.exports = {
       // },
     },
     navbar: {
+      hideOnScroll: true,
       logo: {
         alt: 'Taquito Logo',
         src: 'img/taquito_header.svg',

@@ -23,7 +23,7 @@ export * from './interface';
 export { VERSION } from './version';
 export { ProtocolsHash } from './protocols';
 
-const PROTOCOL_CURRENT = ProtocolsHash.PtKathman;
+const PROTOCOL_CURRENT = ProtocolsHash.PtLimaPtL;
 
 export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
   // use proto14 encoders & decoders if it's kathmandu or prior
