@@ -1,7 +1,6 @@
 import { NetworkType } from "@airgap/beacon-sdk";
 
 export const rpcUrl = {
-  kathmandunet: "https://kathmandunet.ecadinfra.com/",
   ghostnet: "https://ghostnet.ecadinfra.com/",
   ithacanet: "https://ithacanet.ecadinfra.com/",
   mainnet: "https://mainnet.api.tez.ie", //"https://mainnet-tezos.giganode.io"
@@ -17,5 +16,4 @@ export const contractAddress = {
   ithacanet: "KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5",
   ghostnet: "KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5",
   custom: "KT1T2gL26SwYMxpkR5SZT1pHRBF84knfw8Cg",
-  kathmandunet: "KT1BQuSVXWz23iGeXQCrAGR6GcVcqKeE1F7T"
 };

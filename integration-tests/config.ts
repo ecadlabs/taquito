@@ -5,7 +5,6 @@ import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { knownBigMapContractProtoALph, knownContractProtoALph, knownOnChainViewContractAddressProtoALph, knownSaplingContractProtoALph, knownTzip12BigMapOffChainContractProtoALph, txRollupAddressProtoALph } from './known-contracts-ProtoALph';
-import { knownContractPtKathman, knownBigMapContractPtKathman, knownTzip12BigMapOffChainContractPtKathman, knownSaplingContractPtKathman, knownOnChainViewContractAddressPtKathman, txRollupAddressPtKathman } from './known-contracts-PtKathman';
 import { knownContractPtLimaPtL, knownBigMapContractPtLimaPtL, knownTzip12BigMapOffChainContractPtLimaPtL, knownSaplingContractPtLimaPtL, knownOnChainViewContractAddressPtLimaPtL, txRollupAddressPtLimaPtL } from './known-contracts-PtLimaPtL';
 
 const nodeCrypto = require('crypto');

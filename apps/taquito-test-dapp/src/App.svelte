@@ -18,7 +18,6 @@
   let browser = "";
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
-    { value: "kathmandunet", label: "Kathmandunet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
     { value: "mondaynet", label: "Mondaynet", group: "other testnets" },
@@ -42,10 +41,6 @@
         store.updateTezos(new TezosToolkit(rpcUrl.mainnet));
         store.updateNetworkType(NetworkType.MAINNET);
         break;
-      case "hangzhounet":
-        store.updateTezos(new TezosToolkit(rpcUrl.hangzhounet));
-        store.updateNetworkType(NetworkType.HANGZHOUNET);
-        break;
       case "ithacanet":
         store.updateTezos(new TezosToolkit(rpcUrl.ithacanet));
         store.updateNetworkType(NetworkType.ITHACANET);
@@ -53,10 +48,6 @@
       case "ghostnet":
         store.updateTezos(new TezosToolkit(rpcUrl.ghostnet));
         store.updateNetworkType(NetworkType.GHOSTNET);
-        break;
-      case "kathmandunet":
-        store.updateTezos(new TezosToolkit(rpcUrl.kathmandunet));
-        store.updateNetworkType(NetworkType.KATHMANDUNET);
         break;
       case "custom":
         //TODO: input custom RPC URL
