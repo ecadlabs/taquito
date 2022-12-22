@@ -4,8 +4,6 @@
     "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand",
     "test:limanet": "LIMANET=true jest",
     "test:limanet-secret-key": "RUN_LIMANET_WITH_SECRET_KEY=true jest --runInBand",
-    "test:kathmandunet": "KATHMANDUNET=true jest",
-    "test:kathmandunet-secret-key": "RUN_KATHMANDUNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
     "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest",
     "test:mondaynet": "MONDAYNET=true jest",
