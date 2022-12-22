@@ -195,6 +195,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(limanetSecretKey);
 } else if (process.env['RUN_LIMANET_WITH_SECRET_KEY']) {
   providers.push(limanetSecretKey);
+} else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
+  providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
   providers.push(mondaynetSecretKey);
 } else if (process.env['LIMANET']) {

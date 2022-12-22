@@ -62,7 +62,7 @@ Tezos.estimate
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
