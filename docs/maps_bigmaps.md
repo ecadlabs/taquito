@@ -174,7 +174,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1F87iGz4YrtE3dTBDWe26iHre8B7HVFWfq')
+  .at('KT1B3SpFJ1iHagwdkd1utVYP18RyYgZXeGio')
   .then((myContract) => {
     return myContract
       .storage()
@@ -217,7 +217,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1F87iGz4YrtE3dTBDWe26iHre8B7HVFWfq')
+  .at('KT1B3SpFJ1iHagwdkd1utVYP18RyYgZXeGio')
   .then((myContract) => {
     return myContract
       .storage()
@@ -413,14 +413,14 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1LxxKhCWH2BijfeT8R3MgPcwMF79reGSmR')
+  .at('KT1JDDU888CaVWFey2BYxpDzPBaYYn65Q4o3')
   .then((myContract) => {
     return myContract.storage();
   })
   .then((myStorage) => {
     const value = myStorage['theMap'].get({
       0: '2', //nat
-      1: 'tz2PEc59TDZH6hAou8J9LZrpqr5r8F2k9ZMx', //address
+      1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
     });
     println(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
     ${value[Object.keys(value)[1]]}`);
@@ -433,14 +433,14 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1LxxKhCWH2BijfeT8R3MgPcwMF79reGSmR')
+  .at('KT1JDDU888CaVWFey2BYxpDzPBaYYn65Q4o3')
   .then((myContract) => {
     return myContract.storage();
   })
   .then((myStorage) => {
     const value = myStorage['theMap'].get({
       0: '2', //nat
-      1: 'tz2PEc59TDZH6hAou8J9LZrpqr5r8F2k9ZMx', //address
+      1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
     });
     println(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
     ${value[Object.keys(value)[1]]}`);
@@ -597,7 +597,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1Vp1CdsxxyU8Uc6YwFbeuFZyPk1icddW4m')
+  .at('KT1PBDZULVwbDW7BqEANmyEJGWuzjk43hDJG')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -609,9 +609,9 @@ Tezos.contract
       3: 'cafe', // bytes
       4: '10', // mutez
       5: true, // bool
-      6: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', // key_hash
-      7: '2019-09-06T15:08:29.000Z', // timestamp
-      8: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', // address
+      6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // key_hash
+      7: '2019-09-06T15:08:29Z', // timestamp
+      8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
     });
     println(`The value associated to this key is ${value}.`);
   })
@@ -623,7 +623,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1Vp1CdsxxyU8Uc6YwFbeuFZyPk1icddW4m')
+  .at('KT1PBDZULVwbDW7BqEANmyEJGWuzjk43hDJG')
   .then((myContract) => {
     return myContract.storage();
   })
@@ -635,9 +635,9 @@ Tezos.wallet
       3: 'cafe', // bytes
       4: '10', // mutez
       5: true, // bool
-      6: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', // key_hash
-      7: '2019-09-06T15:08:29.000Z', // timestamp
-      8: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', // address
+      6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // key_hash
+      7: '2019-09-06T15:08:29Z', // timestamp
+      8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
     });
     println(`The value associated to this key is ${value}.`);
   })
@@ -796,7 +796,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT19dUBDxDYV6WeqD6Zss9ZRaGsBazJFFPsR')
+  .at('KT1PZb8sEVvsKQGzLwusyQRkJpSCDQ7WFfny')
   .then((myContract) => {
     return myContract
       .storage()
@@ -804,7 +804,7 @@ Tezos.contract
         //When called on a map, the get method returns the value directly
         const valueMap = myStorage['themap'].get({
           0: '1', //nat
-          1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
+          1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
         });
         println(`The value associated with the specified key of the map is ${valueMap}.`);
         return myContract.storage();
@@ -814,7 +814,7 @@ Tezos.contract
         //When called on a bigMap, the get method returns a promise
         return myStorage['thebigmap'].get({
           0: '10', //nat
-          1: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', //address
+          1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
         });
       })
       .then((valueBigMap) => {
@@ -829,7 +829,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT19dUBDxDYV6WeqD6Zss9ZRaGsBazJFFPsR')
+  .at('KT1PZb8sEVvsKQGzLwusyQRkJpSCDQ7WFfny')
   .then((myContract) => {
     return myContract
       .storage()
@@ -837,7 +837,7 @@ Tezos.wallet
         //When called on a map, the get method returns the value directly
         const valueMap = myStorage['themap'].get({
           0: '1', //nat
-          1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
+          1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
         });
         println(`The value associated with the specified key of the map is ${valueMap}.`);
         return myContract.storage();
@@ -847,7 +847,7 @@ Tezos.wallet
         //When called on a bigMap, the get method returns a promise
         return myStorage['thebigmap'].get({
           0: '10', //nat
-          1: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', //address
+          1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
         });
       })
       .then((valueBigMap) => {
@@ -902,7 +902,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1D2T7Err6p3kd3Y1KJommJDkJhBNHsCmCW')
+  .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
   .then((contract) => {
     println('Fetching the storage of the contract...');
     return contract.storage();
@@ -932,7 +932,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1D2T7Err6p3kd3Y1KJommJDkJhBNHsCmCW')
+  .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
   .then((contract) => {
     println('Fetching the storage of the contract...');
     return contract.storage();

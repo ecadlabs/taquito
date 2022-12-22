@@ -106,7 +106,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -121,7 +121,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -154,7 +154,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -168,7 +168,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -198,7 +198,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
     const i = 7;
 
@@ -209,7 +209,7 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(3).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
@@ -219,7 +219,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
     const i = 7;
 
@@ -230,7 +230,7 @@ Tezos.wallet
     println(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(3).then(() => op.opHash);
   })
-  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
   </TabItem>
@@ -262,7 +262,7 @@ In the following example, a contract's `set_child_record` method will be called 
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
+  .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
     println(
@@ -285,7 +285,7 @@ The preceding example returns an array which contains the different possible sig
 
 importKey(Tezos, secretKey)
   .then((signer) => {
-    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz');
+    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
   })
   .then((contract) => {
     return contract.methods
@@ -303,7 +303,7 @@ importKey(Tezos, secretKey)
     println(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation().then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -316,7 +316,7 @@ In the following example, a contract's `set_child_record` method will be called 
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
+  .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
     println(
@@ -339,7 +339,7 @@ The preceding example returns an object giving indication on how to structure th
 
 importKey(Tezos, secretKey)
   .then((signer) => {
-    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz');
+    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
   })
   .then((contract) => {
     return contract.methodsObject
@@ -356,7 +356,7 @@ importKey(Tezos, secretKey)
     println(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation().then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
   </TabItem>

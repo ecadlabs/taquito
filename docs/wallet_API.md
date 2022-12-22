@@ -163,7 +163,7 @@ const wallet = new TempleWallet('MyAwesomeDapp');
 The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
 
 ```js
-await wallet.connect('mainnet' | 'jakartanet' | 'ghostnet' | 'labnet' | 'sandbox');
+await wallet.connect('mainnet' | 'limanet' | 'ghostnet' | 'mondaynet' | 'sandbox');
 ```
 
 (Temple used to be called Thanos and some Taquito code still uses the name Thanos.)
@@ -243,7 +243,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ```js live noInline wallet
 Tezos.wallet
-  .transfer({ to: 'KT1PCnEwqaNrWHzkrmqqcEzH253rFKE49EYn', amount: 0.2 })
+  .transfer({ to: 'KT1TBxaaeikEUcVN2qdQY7n9Q21ykcX1NLzY', amount: 0.2 })
   .send()
   .then((op) => {
     println(`Waiting for ${op.opHash} to be confirmed...`);
@@ -262,7 +262,7 @@ Sending a transaction to a smart contract to update its storage will be a differ
 Fortunately, Taquito will make this operation go like a breeze! First, you need the contract abstraction created with the address of the smart contract you are targeting:
 
 ```js
-const contract = await Tezos.wallet.at('KT1KgtEEbDuw1b7QEFKh3VW6wzvQGYjawDwa');
+const contract = await Tezos.wallet.at('KT1TBxaaeikEUcVN2qdQY7n9Q21ykcX1NLzY');
 ```
 
 This line creates a contract abstraction with multiple methods named after the contract entrypoints. For example, if you have a `transfer` entrypoint in your contract, you will also have a `.transfer()` method in the `contract` object. Each method accepts parameters required by the contract entrypoint.
@@ -277,7 +277,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1HNgQQEUb7mDmnmLKy4xcq1xdPw3ieoKzv')
+  .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
   .then((contract) => contract.methods.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -300,7 +300,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1HNgQQEUb7mDmnmLKy4xcq1xdPw3ieoKzv')
+  .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
   .then((contract) =>
     contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
   )

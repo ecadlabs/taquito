@@ -134,7 +134,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 importKey(Tezos, secretKey)
 .then(signer => {
-    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
+    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -152,7 +152,7 @@ importKey(Tezos, secretKey)
 
 importKey(Tezos, secretKey)
 .then(signer => {
-    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
+    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -169,7 +169,7 @@ importKey(Tezos, secretKey)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/ghostnet/KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz/operations`);
+    println(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -183,7 +183,7 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 importKey(Tezos, secretKey)
 .then(signer => {
-    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
+    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { nat : '3' })
@@ -200,6 +200,6 @@ importKey(Tezos, secretKey)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/ghostnet/KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz/operations`);
+    println(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

@@ -199,7 +199,7 @@ inMemorySpendingKey.getSaplingViewingKeyProvider()
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   })
   .catch((error) => println(`Error: ${(error)}`));
 ```
@@ -262,7 +262,7 @@ saplingToolkit.prepareSaplingTransaction([{
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
 })
 .catch((error) => println(`Error: ${(error)}`));
 ```
@@ -319,7 +319,7 @@ saplingToolkit.prepareUnshieldedTransaction({
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
 })
 .catch((error) => println(`Error: ${(error)}`));
 ```

@@ -34,7 +34,6 @@ export enum Protocols {
   PtJakart2 = 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
   PtKathman = 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
   PtLimaPtL = 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
-  PtGhostnet = 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -51,8 +50,7 @@ export const protocols = {
   '013': [Protocols.PtJakart2],
   '014': [Protocols.PtKathman],
   '015': [Protocols.PtLimaPtL],
-  '016': [Protocols.PtGhostnet],
-  '017': [Protocols.ProtoALpha]
+  '016': [Protocols.ProtoALpha]
 };
 
 export enum ChainIds {
@@ -68,5 +66,4 @@ export enum ChainIds {
   JAKARTANET2 = 'NetXLH1uAxK7CCh',
   KATHMANDUNET = 'NetXazhm4yetmff',
   LIMANET = 'NetXizpkH94bocH',
-  GHOSTNET = 'NetXizpkH94bocH',
 }

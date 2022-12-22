@@ -103,7 +103,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
     const i = 7;
     return contract.methods.increment(i).toTransferParams({});
@@ -133,7 +133,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.api.tez.ie');
 
 Tezos.wallet
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
     const i = 7;
     return contract.methods.increment(i).toTransferParams({});
