@@ -587,6 +587,10 @@ Tezos.wallet
 
 The `get` method of the `MichelsonMap` class accesses values of the map for a specified key.
 
+:::caution Warning
+** This example is under migration to a different testnet **
+:::
+
 <Tabs
 defaultValue="contractAPI"
 values={[
