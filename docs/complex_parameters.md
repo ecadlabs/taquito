@@ -52,7 +52,7 @@ An annotation identifies every argument. Therefore we can ignore optional values
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // import { importKey } from '@taquito/signer';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 //%data
 const dataMap = new MichelsonMap();
@@ -129,7 +129,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com')
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, secretKey)
@@ -147,7 +147,7 @@ importKey(Tezos, secretKey)
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com')
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, secretKey)
@@ -169,7 +169,7 @@ importKey(Tezos, secretKey)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/kathmandunet/KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz/operations`);
+    println(`Operation injected: https://better-call.dev/ghostnet/KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -200,6 +200,6 @@ importKey(Tezos, secretKey)
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/kathmandunet/KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz/operations`);
+    println(`Operation injected: https://better-call.dev/ghostnet/KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz/operations`);
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

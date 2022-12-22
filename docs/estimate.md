@@ -37,7 +37,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -62,7 +62,7 @@ Tezos.estimate
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://ghostnet.api.tez.ie');
 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
@@ -100,7 +100,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
   .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
@@ -130,7 +130,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://ghostnet.api.tez.ie');
 
 Tezos.wallet
   .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
@@ -172,7 +172,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 println(`Estimating the contract origination : `);
 Tezos.estimate
@@ -202,7 +202,7 @@ Tezos.estimate
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 println(`Estimating the contract origination : `);
 Tezos.estimate

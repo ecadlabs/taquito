@@ -304,7 +304,7 @@ Note for the users of the lower level APIs: injecting more than one manager oper
 The `increase_paid_storage` operation allows increasing the paid storage of a smart contract by a specified bytes amount. The smart contract owner doesn't have to do it; any user can increase the storage. The operation is of interest for high-traffic dapps as it allows prepaying for storage and prevents transactions from failing because of an unpredictable storage burn.
 
 ```typescript
-const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 const op = await Tezos.contract.increasePaidStorage({
     amount: 5,

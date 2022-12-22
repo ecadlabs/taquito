@@ -131,7 +131,7 @@ const ghostnetEphemeral = {
   txRollupDepositContract: process.env['TEZOS_GHOSTNET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
   knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
   txRollupAddress: process.env['TEZOS_GHOSTANET_TXROLLUP_ADDRESS'] || txRollupAddressPtGhostnet,
-  protocol: Protocols.PtGhostnet,
+  protocol: Protocols.PtLimaPtL,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ghostnet',
@@ -207,7 +207,7 @@ const ghostnetSecretKey = {
   txRollupDepositContract: process.env['TEZOS_GHOSTNET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
   knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
   txRollupAddress: process.env['TEZOS_GHOSTNET_TXROLLUP_ADDRESS'] || txRollupAddressPtGhostnet,
-  protocol: Protocols.PtGhostnet,
+  protocol: Protocols.PtLimaPtL,
   signerConfig: defaultSecretKey
 };
 
