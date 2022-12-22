@@ -55,7 +55,7 @@ export class NetworkError extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates
+ *  @description Error that indicates permission
  */
 export class PermissionDeniedError extends Error {
   public name = 'PermissionDeniedError';
