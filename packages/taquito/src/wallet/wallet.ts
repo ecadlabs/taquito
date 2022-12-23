@@ -107,6 +107,7 @@ export class WalletOperationBatch {
       throw new InvalidAddressError(params.destination)
     }
     this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params })
+    return this;
   }
 
   private async mapOperation(param: WalletParamsWithKind) {
