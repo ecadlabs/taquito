@@ -5,11 +5,7 @@ import { contractWithTxr1Address } from "./data/contract-txr1-address";
 
 CONFIGS().forEach(({ lib, setup, protocol }) => {
   const Tezos = lib;
-<<<<<<< HEAD
   const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
-=======
-  const kathAndLima = protocol === Protocols.PtKathman || protocol === Protocols.PtLimaPtL ? it : it.skip;
->>>>>>> a917ed69e (format and lint)
 
   beforeEach(async (done) => {
     await setup();
@@ -82,11 +78,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
       expect(newMapStorage.addressMap.get('txr1bZx7qro4xNsxLhmpXfmzQojHkg8XqrUvL')).toBeUndefined();
       done();
     });
-<<<<<<< HEAD
     Limanet('should pass with KT1', async (done) => {
-=======
-    kathAndLima('should pass with KT1', async (done) => {
->>>>>>> a917ed69e (format and lint)
 
       const initialStorage: Storage = {
         addressSet: [
