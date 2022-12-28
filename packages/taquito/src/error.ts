@@ -37,3 +37,10 @@ export class RPCResponseError extends Error {
     super(message);
   }
 }
+
+export class InvalidPrepareParamsError extends Error {
+  public name = 'InvalidOperationParamsError';
+  constructor(public opKind: string) {
+    super(`No '${opKind}' operation parameters have been passed`);
+  }
+}
