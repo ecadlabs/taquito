@@ -764,6 +764,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         cache_stake_distribution_cycles: 8,
         cycles_per_voting_period: 1,
         sc_max_wrapped_proof_binary_size: 30000,
+        sc_rollup_arith_pvm_enable: false,
         sc_rollup_challenge_window_in_blocks: 40,
         sc_rollup_enable: true,
         sc_rollup_origination_size: 6314,
