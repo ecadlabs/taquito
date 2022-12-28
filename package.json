@@ -20,7 +20,7 @@
     "example": "cd example && npm run example",
     "build-docs": "typedoc --tsconfig ./tsconfig.typedoc.json",
     "gh-pages": "gh-pages",
-    "integration-tests": "npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:kathmandunet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts",
+    "integration-tests": "npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:limanet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts",
     "version-stamp": "lerna run version-stamp"
   },
   "jest": {
@@ -49,6 +49,7 @@
       "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts",
       "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts",
       "^@taquito/tzip12$": "<rootDir>/packages/taquito-tzip12/src/taquito-tzip12.ts",
+      "^@taquito/core$": "<rootDir>/packages/taquito-core/src/taquito-core.ts",
       "^@taquito/contracts-library$": "<rootDir>/packages/taquito-contracts-library/src/contracts-library.ts"
     },
     "coveragePathIgnorePatterns": [

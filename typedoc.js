@@ -4,6 +4,7 @@ module.exports = {
   entryPoints: [
     './packages/taquito/src/taquito.ts',
     './packages/taquito-beacon-wallet/src/taquito-beacon-wallet.ts',
+    './packages/taquito-core/src/taquito-core.ts',
     './packages/taquito-http-utils/src/taquito-http-utils.ts',
     './packages/taquito-ledger-signer/src/taquito-ledger-signer.ts',
     './packages/taquito-local-forging/src/taquito-local-forging.ts',
