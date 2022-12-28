@@ -4,7 +4,7 @@
  */
 
 import { STATUS_CODE } from './status_code';
-import axios, { AxiosAdapter } from 'axios';
+import axios, { AxiosAdapter, AxiosResponse } from 'axios';
 
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
@@ -31,6 +31,15 @@ export interface HttpRequestOptions {
   query?: ObjectType;
   headers?: { [key: string]: string };
   mimeType?: string;
+}
+
+export interface AxiosFetchAdapterErrorResponse {
+  request?: string;
+  response?: AxiosResponse;
+  message?: string;
+  config?: string;
+  code?: string;
+  status?: number;
 }
 
 /**
@@ -124,7 +133,7 @@ export class HttpBackend {
     }
 
     try {
-      const adapter = adapterPromise && (await adapterPromise) as AxiosAdapter;
+      const adapter = adapterPromise && ((await adapterPromise) as AxiosAdapter);
       const response = await axios.request<T>({
         url: url + this.serialize(query),
         method: method ?? 'GET',
@@ -137,8 +146,8 @@ export class HttpBackend {
       });
 
       return response.data;
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
+    } catch (err: any) {
+      if ((axios.isAxiosError(err) && err.response) || (!isNode && err.response)) {
         let errorData;
 
         if (typeof err.response.data === 'object') {
