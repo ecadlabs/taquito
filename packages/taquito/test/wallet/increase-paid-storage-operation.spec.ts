@@ -70,48 +70,13 @@ describe('WalletOperation', () => {
 
   beforeAll(() => {
     mockContext = {
-      _walletProvider: jest.fn(),
-      _rpcClient: jest.fn(),
-      _forger: jest.fn(),
-      _parser: jest.fn(),
-      _injector: jest.fn(),
       operationFactory: {
         createIncreasePaidStorageOperation: jest.fn(),
       },
-      _packer: jest.fn(),
-      providerDecorator: jest.fn(),
-      _globalConstantsProvider: jest.fn(),
-      _readProvider: jest.fn(),
-      _stream: jest.fn(),
-      tz: jest.fn(),
-      estimate: jest.fn(),
-      contract: jest.fn(),
-      batch: jest.fn(),
-      wallet: jest.fn(),
-      _rpc: jest.fn(),
-      _signer: jest.fn(),
-      _config: jest.fn(),
-      config: jest.fn(),
-      setPartialConfig: jest.fn(),
-      rpc: jest.fn(),
-      injector: jest.fn(),
-      forger: jest.fn(),
-      signer: jest.fn(),
       walletProvider: {
         mapIncreasePaidStorageWalletParams: jest.fn(),
         sendOperations: jest.fn(),
       },
-      proto: jest.fn(),
-      parser: jest.fn(),
-      packer: jest.fn(),
-      globalConstantsProvider: jest.fn(),
-      readProvider: jest.fn(),
-      stream: jest.fn(),
-      isAnyProtocolActive: jest.fn(),
-      isAnySignerConfigured: jest.fn(),
-      clone: jest.fn(),
-      registerProviderDecorator: jest.fn(),
-      withExtensions: jest.fn(),
     };
     mockContext.walletProvider.mapIncreasePaidStorageWalletParams.mockResolvedValue({
       source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
@@ -134,8 +99,7 @@ describe('WalletOperation', () => {
   });
 
   describe('increasePaidStorage', () => {
-    it('should return ', async (done) => {
-      // const { cold, flush, getMessages, e, s } = rxSandbox.create();
+    it('should return format for operation to be sent', async (done) => {
       const op = await createIncreasePaidStorageOperation({
         source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
         amount: 1,
@@ -173,8 +137,7 @@ describe('WalletOperation', () => {
     });
   });
   describe('wallet', () => {
-
-    it('wallet should return the correct response', async (done) => {
+    it('should return the correct mocked data', async (done) => {
       const wallet = new Wallet(mockContext);
       const op = await wallet.increasePaidStorage({ amount: 1, destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7' }).send();
       expect(op).toEqual({
