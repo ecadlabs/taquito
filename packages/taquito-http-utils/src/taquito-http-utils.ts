@@ -147,7 +147,7 @@ export class HttpBackend {
 
       return response.data;
     } catch (err: any) {
-      if ((axios.isAxiosError(err) && err.response) || (!isNode && err.response)) {
+      if ((axios.isAxiosError(err) && err.response) || (!isNode && err)) {
         let errorData;
 
         if (typeof err.response.data === 'object') {

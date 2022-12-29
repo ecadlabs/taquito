@@ -59,7 +59,7 @@
     ]
   },
   "dependencies": {
-    "@vespaiach/axios-fetch-adapter": "^0.3.1",
+    "@vespaiach/axios-fetch-adapter": "github:ecadlabs/axios-fetch-adapter",
     "axios": "^0.26.0"
   },
   "devDependencies": {
