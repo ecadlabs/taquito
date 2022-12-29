@@ -1,8 +1,8 @@
 import { BlockResponse, OperationContentsAndResult, OperationContentsAndResultIncreasePaidStorage, RpcClient } from '@taquito/rpc';
 import { rxSandbox } from 'rx-sandbox';
-import { Context, defaultConfigConfirmation } from '../../src/context';
+import { Context } from '../../src/context';
 import { createIncreasePaidStorageOperation } from '../../src/contract';
-import { Wallet, WalletProvider } from '../../src/wallet';
+import { Wallet } from '../../src/wallet';
 import { IncreasePaidStorageWalletOperation } from '../../src/wallet/increase-paid-storage-operation';
 
 describe('WalletOperation', () => {
