@@ -1,4 +1,4 @@
-import { BlockResponse, OperationContentsAndResult, OperationContentsAndResultIncreasePaidStorage, RpcClient } from '@taquito/rpc';
+import { BlockResponse } from '@taquito/rpc';
 import { rxSandbox } from 'rx-sandbox';
 import { Context } from '../../src/context';
 import { createIncreasePaidStorageOperation } from '../../src/contract';
