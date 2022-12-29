@@ -1,11 +1,12 @@
-import { BlockResponse } from '@taquito/rpc';
+import { BlockResponse, OperationContentsAndResult, OperationContentsAndResultIncreasePaidStorage, RpcClient } from '@taquito/rpc';
 import { rxSandbox } from 'rx-sandbox';
-import { Context } from '../../src/context';
+import { Context, defaultConfigConfirmation } from '../../src/context';
 import { createIncreasePaidStorageOperation } from '../../src/contract';
+import { Wallet, WalletProvider } from '../../src/wallet';
 import { IncreasePaidStorageWalletOperation } from '../../src/wallet/increase-paid-storage-operation';
 
 describe('WalletOperation', () => {
-
+  let mockContext: any;
   const createFakeBlock = (level: number, opHash?: string) => {
     const op = {
       hash: `block_hash_${level}`,
@@ -67,8 +68,74 @@ describe('WalletOperation', () => {
     return op;
   };
 
+  beforeAll(() => {
+    mockContext = {
+      _walletProvider: jest.fn(),
+      _rpcClient: jest.fn(),
+      _forger: jest.fn(),
+      _parser: jest.fn(),
+      _injector: jest.fn(),
+      operationFactory: {
+        createIncreasePaidStorageOperation: jest.fn(),
+      },
+      _packer: jest.fn(),
+      providerDecorator: jest.fn(),
+      _globalConstantsProvider: jest.fn(),
+      _readProvider: jest.fn(),
+      _stream: jest.fn(),
+      tz: jest.fn(),
+      estimate: jest.fn(),
+      contract: jest.fn(),
+      batch: jest.fn(),
+      wallet: jest.fn(),
+      _rpc: jest.fn(),
+      _signer: jest.fn(),
+      _config: jest.fn(),
+      config: jest.fn(),
+      setPartialConfig: jest.fn(),
+      rpc: jest.fn(),
+      injector: jest.fn(),
+      forger: jest.fn(),
+      signer: jest.fn(),
+      walletProvider: {
+        mapIncreasePaidStorageWalletParams: jest.fn(),
+        sendOperations: jest.fn(),
+      },
+      proto: jest.fn(),
+      parser: jest.fn(),
+      packer: jest.fn(),
+      globalConstantsProvider: jest.fn(),
+      readProvider: jest.fn(),
+      stream: jest.fn(),
+      isAnyProtocolActive: jest.fn(),
+      isAnySignerConfigured: jest.fn(),
+      clone: jest.fn(),
+      registerProviderDecorator: jest.fn(),
+      withExtensions: jest.fn(),
+    };
+    mockContext.walletProvider.mapIncreasePaidStorageWalletParams.mockResolvedValue({
+      source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
+      amount: 1,
+      destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7',
+      fee: 397,
+      gasLimit: 1100,
+      storageLimit: 0,
+    });
+    mockContext.walletProvider.sendOperations.mockResolvedValue('ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE')
+
+    mockContext.operationFactory.createIncreasePaidStorageOperation.mockResolvedValue({
+      source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
+      amount: 1,
+      destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7',
+      fee: 397,
+      gas_limit: 1100,
+      storage_limit: 0,
+    })
+  });
+
   describe('increasePaidStorage', () => {
-    it('should create an operation with the correct values and structure', async (done) => {
+    it('should return ', async (done) => {
+      // const { cold, flush, getMessages, e, s } = rxSandbox.create();
       const op = await createIncreasePaidStorageOperation({
         source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
         amount: 1,
@@ -76,7 +143,6 @@ describe('WalletOperation', () => {
         fee: 397,
         gasLimit: 1100,
         storageLimit: 0,
-
       });
       expect(op.source).toEqual('tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3');
       expect(op.amount).toEqual(1);
@@ -103,6 +169,22 @@ describe('WalletOperation', () => {
 
       flush();
       expect(op).toBeInstanceOf(IncreasePaidStorageWalletOperation);
+      done();
+    });
+  });
+  describe('wallet', () => {
+
+    it('wallet should return the correct response', async (done) => {
+      const wallet = new Wallet(mockContext);
+      const op = await wallet.increasePaidStorage({ amount: 1, destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7' }).send();
+      expect(op).toEqual({
+        source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
+        amount: 1,
+        destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7',
+        fee: 397,
+        gas_limit: 1100,
+        storage_limit: 0
+      })
       done();
     });
   });
