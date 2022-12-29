@@ -6,6 +6,7 @@ import { Wallet } from '../../src/wallet';
 import { IncreasePaidStorageWalletOperation } from '../../src/wallet/increase-paid-storage-operation';
 
 describe('WalletOperation', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockContext: any;
   const createFakeBlock = (level: number, opHash?: string) => {
     const op = {
@@ -62,7 +63,7 @@ describe('WalletOperation', () => {
     } as unknown as BlockResponse;
 
     if (opHash) {
-      op.operations.push([{ hash: opHash, contents: [] }] as any);
+      op.operations.push([{ hash: opHash, contents: [], branch: '', chain_id: '', protocol: '' }]);
     }
 
     return op;
