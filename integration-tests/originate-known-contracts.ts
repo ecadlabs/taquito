@@ -18,6 +18,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
 
   (async () => {
     await setup(true);
+    console.log(protocol)
     fs.writeFile(`known-contracts-${protocol.substring(0,9)}.ts`, '', (err: any) => {
       if (err) {
         console.error(err);
