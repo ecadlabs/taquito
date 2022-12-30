@@ -117,7 +117,7 @@ export const txRollupOriginationOp = {} as RPCTxRollupOriginationOperation;
 
 export const txRollupSubmitBatch = {} as RPCTxRollupBatchOperation;
 
-export const UpdateConsensusKeyOp = {
+export const updateConsensusKeyOp = {
   kind: OpKind.UPDATE_CONSENSUS_KEY,
   source: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
   fee: 1,
@@ -126,7 +126,18 @@ export const UpdateConsensusKeyOp = {
   pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
 } as RPCUpdateConsensusKeyOperation;
 
-export const transferTicketOp = {} as RPCTransferTicketOperation;
+export const transferTicketOp = {
+  kind: OpKind.TRANSFER_TICKET,
+  fee: 804,
+  gas_limit: 5009,
+  storage_limit: 130,
+  ticket_contents: { string: 'foobar' },
+  ticket_ty: { prim: 'string' },
+  ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+  ticket_amount: 2,
+  destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+  entrypoint: 'default',
+} as RPCTransferTicketOperation;
 
 export const increasePaidStorageOp = {
   kind: OpKind.INCREASE_PAID_STORAGE,
@@ -138,10 +149,14 @@ export const increasePaidStorageOp = {
 } as RPCIncreasePaidStorageOperation;
 
 export const ballotOp = {
+  kind: OpKind.BALLOT,
+  period: 2,
   proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
   ballot: 'yay',
 } as RPCBallotOperation;
 
 export const proposalsOp = {
+  kind: OpKind.PROPOSALS,
+  period: 1,
   proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
 } as RPCProposalsOperation;

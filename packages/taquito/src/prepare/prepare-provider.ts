@@ -190,7 +190,7 @@ export class PrepareProvider implements Preparation {
 
   async originate({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
-
+    console.log(ops);
     if (!validateOpKindParams(ops, OpKind.ORIGINATION)) {
       throw new InvalidPrepareParamsError(OpKind.ORIGINATION);
     }
@@ -465,8 +465,21 @@ export class PrepareProvider implements Preparation {
 
     const pkh = await this.signer.publicKeyHash();
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+    let currentVotingPeriod: VotingPeriodBlockResult;
 
-    const contents = this.constructOpContents(ops, headCounter, pkh);
+    try {
+      currentVotingPeriod = await this.rpc.getCurrentPeriod();
+    } catch (e) {
+      throw new RPCResponseError('Failed to get the current voting period index');
+    }
+
+    const contents = this.constructOpContents(
+      ops,
+      headCounter,
+      pkh,
+      undefined,
+      currentVotingPeriod
+    );
 
     return {
       opOb: {
@@ -483,6 +496,44 @@ export class PrepareProvider implements Preparation {
 
     if (!validateOpKindParams(ops, OpKind.PROPOSALS)) {
       throw new InvalidPrepareParamsError(OpKind.PROPOSALS);
+    }
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    const pkh = await this.signer.publicKeyHash();
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+    let currentVotingPeriod: VotingPeriodBlockResult;
+
+    try {
+      currentVotingPeriod = await this.rpc.getCurrentPeriod();
+    } catch (e) {
+      throw new RPCResponseError('Failed to get the current voting period index');
+    }
+
+    const contents = this.constructOpContents(
+      ops,
+      headCounter,
+      pkh,
+      undefined,
+      currentVotingPeriod
+    );
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  async drainDelegate({ operation }: PrepareOperationParams): Promise<PreparedOperation> {
+    const ops = this.convertIntoArray(operation);
+
+    if (!validateOpKindParams(ops, OpKind.DRAIN_DELEGATE)) {
+      throw new InvalidPrepareParamsError(OpKind.DRAIN_DELEGATE);
     }
 
     const hash = await this.getBlockHash();
