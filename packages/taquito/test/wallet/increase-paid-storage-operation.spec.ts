@@ -99,7 +99,7 @@ describe('WalletOperation', () => {
     })
   });
 
-  describe('increasePaidStorage', () => {
+  describe('increasePaidStorage format to operation reqs', () => {
     it('should return format for operation to be sent', async (done) => {
       const op = await createIncreasePaidStorageOperation({
         source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
@@ -118,8 +118,8 @@ describe('WalletOperation', () => {
       done();
     });
   });
-  describe('operation', () => {
-    it('should return instance of IncreasePaidStorageWalletOperation', async (done) => {
+  describe('Operation should mock response class instance IncreasePaidStorageWalletOperation for operationFactory', () => {
+    it('should return instance of IncreasePaidStorageWalletOperation ', async (done) => {
       const { cold, flush } = rxSandbox.create();
       const blockObs = cold<BlockResponse>('--a', {
         a: createFakeBlock(1, 'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE')
@@ -137,8 +137,8 @@ describe('WalletOperation', () => {
       done();
     });
   });
-  describe('wallet', () => {
-    it('should return the correct mocked data', async (done) => {
+  describe('Wallet should run full method of operation', () => {
+    it('should run increasePaidStorage method from start to finish with mock data', async (done) => {
       const wallet = new Wallet(mockContext);
       const op = await wallet.increasePaidStorage({ amount: 1, destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7' }).send();
       expect(op).toEqual({
