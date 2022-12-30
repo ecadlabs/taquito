@@ -4,7 +4,7 @@
  */
 
 import { STATUS_CODE } from './status_code';
-import axios, { AxiosAdapter, AxiosResponse } from 'axios';
+import axios, { AxiosAdapter } from 'axios';
 
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
@@ -31,15 +31,6 @@ export interface HttpRequestOptions {
   query?: ObjectType;
   headers?: { [key: string]: string };
   mimeType?: string;
-}
-
-export interface AxiosFetchAdapterErrorResponse {
-  request?: string;
-  response?: AxiosResponse;
-  message?: string;
-  config?: string;
-  code?: string;
-  status?: number;
 }
 
 /**
