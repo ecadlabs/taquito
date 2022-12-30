@@ -12,10 +12,12 @@ import {
 } from '@airgap/beacon-dapp';
 
 import {
+  createIncreasePaidStorageOperation,
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
   WalletDelegateParams,
+  WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
@@ -96,6 +98,21 @@ export class BeaconWallet implements WalletProvider {
       walletParams,
       await createTransferOperation(this.formatParameters(walletParams))
     );
+  }
+
+  async mapIncreasePaidStorageWalletParams(params: () => Promise<WalletIncreasePaidStorageParams>) {
+    let walletParams: WalletIncreasePaidStorageParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI();
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createIncreasePaidStorageOperation(this.formatParameters(walletParams))
+    )
   }
 
   async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {

@@ -24,6 +24,7 @@ import { BlockIdentifier } from '../read-provider/interface';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
 import { BatchWalletOperation } from './batch-operation';
 import { DelegationWalletOperation } from './delegation-operation';
+import { IncreasePaidStorageWalletOperation } from './increase-paid-storage-operation';
 import { WalletOperation } from './operation';
 import { OriginationWalletOperation } from './origination-operation';
 import { TransactionWalletOperation } from './transaction-operation';
@@ -149,5 +150,16 @@ export class OperationFactory {
       this.context.clone(),
       await this.createHeadObservableFromConfig(config)
     );
+  }
+
+  async createIncreasePaidStorageOperation(
+    hash: string,
+    config: OperationFactoryConfig = {}
+  ): Promise<IncreasePaidStorageWalletOperation> {
+    return new IncreasePaidStorageWalletOperation(
+      hash,
+      this.context.clone(),
+      await this.createHeadObservableFromConfig(config)
+    )
   }
 }

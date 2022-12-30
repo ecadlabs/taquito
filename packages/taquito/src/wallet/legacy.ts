@@ -2,6 +2,7 @@ import { Context } from '../context';
 import { attachKind, OpKind } from '../operations/types';
 import {
   WalletDelegateParams,
+  WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
@@ -25,6 +26,10 @@ export class LegacyWalletProvider implements WalletProvider {
 
   async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
     return attachKind(await params(), OpKind.DELEGATION);
+  }
+
+  async mapIncreasePaidStorageWalletParams(params: () => Promise<WalletIncreasePaidStorageParams>) {
+    return attachKind(await params(), OpKind.INCREASE_PAID_STORAGE);
   }
 
   async sendOperations(params: WalletParamsWithKind[]) {
