@@ -1,19 +1,8 @@
 /**
  *  @category Error
- *  @description Error that indicates an invalid block hash being passed or used
- */
- export class InvalidBlockHashError extends Error {
-  public name = 'InvalidBlockHashError';
-  constructor(public blockHash: string) {
-    super(`The block hash '${blockHash}' is invalid`);
-  }
-}
-
-/**
- *  @category Error
  *  @description Error that indicates an invalid address being passed or used (both contract and implicit)
  */
- export class InvalidAddressError extends Error {
+export class InvalidAddressError extends Error {
   public name = 'InvalidAddressError';
   constructor(public address: string, errorDetail?: string) {
     super();
@@ -26,7 +15,7 @@
  *  @category Error
  *  @description Error that indicates an invalid derivation path being passed or used
  */
- export class InvalidDerivationPathError extends Error {
+export class InvalidDerivationPathError extends Error {
   public name = 'InvalidDerivationPathError';
   constructor(public message: string) {
     super(message);

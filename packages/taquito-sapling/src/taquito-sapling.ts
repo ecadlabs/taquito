@@ -14,8 +14,7 @@ import {
   validateKeyHash,
   ValidationResult,
 } from '@taquito/utils';
-import { InvalidAddressError } from '@taquito/core'
-import { InsufficientBalance, InvalidMemo } from './error';
+import { InsufficientBalance, InvalidMemo, InvalidAddressError } from './error';
 import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
 import { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
 import { SaplingForger } from './sapling-forger/sapling-forger';

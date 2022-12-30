@@ -1,3 +1,4 @@
+export { InvalidDerivationPathError, InvalidHexStringError } from '@taquito/core';
 
 export class InvalidMnemonicError extends Error {
   public name = 'InvalidMnemonicError';

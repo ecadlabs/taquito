@@ -3,7 +3,7 @@
  * @module @taquito/local-forging
  */
 
-import { InvalidBlockHashError } from '@taquito/core';
+import { InvalidBlockHashError } from './error';
 import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
 import { decoders } from './decoder';

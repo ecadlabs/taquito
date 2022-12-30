@@ -15,8 +15,7 @@ import { validatePkAndExtractPrefix } from './verify-signature';
 import { hash } from '@stablelib/blake2b';
 import blake from 'blakejs';
 import bs58check from 'bs58check';
-import { ValueConversionError } from './errors';
-import { InvalidHexStringError } from '@taquito/core';
+import { ValueConversionError, InvalidHexStringError } from './errors';
 import BigNumber from 'bignumber.js';
 
 export * from './validators';

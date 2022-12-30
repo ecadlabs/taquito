@@ -6,7 +6,6 @@
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
 import { b58cencode, prefix, Prefix, ProhibitedActionError } from '@taquito/utils';
-import { InvalidDerivationPathError } from '@taquito/core';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -20,6 +19,7 @@ import {
   PublicKeyHashRetrievalError,
   PublicKeyRetrievalError,
   InvalidLedgerResponseError,
+  InvalidDerivationPathError,
 } from './error';
 
 export type LedgerTransport = Pick<Transport, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>;

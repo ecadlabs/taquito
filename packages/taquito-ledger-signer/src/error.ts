@@ -1,3 +1,5 @@
+export { InvalidDerivationPathError } from '@taquito/core';
+
 /**
  *  @category Error
  *  @description Error that indicates an invalid or unparseable ledger response

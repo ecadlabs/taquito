@@ -1,4 +1,4 @@
-export * from '@taquito/core';
+export { InvalidHexStringError } from '@taquito/core';
 
 /**
  *  @category Error

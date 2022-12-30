@@ -1,6 +1,6 @@
 import { ENTRYPOINT_MAX_LENGTH } from './constants';
 
-export * from '@taquito/core';
+export { InvalidAddressError, InvalidHexStringError } from '@taquito/core';
 
 /**
  *  @category Error
@@ -88,5 +88,16 @@ export class UnsupportedOperationError extends Error {
   public name = 'UnsupportedOperationError';
   constructor(public op: string) {
     super(`The operation '${op}' is unsupported`);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid block hash being passed or used
+ */
+export class InvalidBlockHashError extends Error {
+  public name = 'InvalidBlockHashError';
+  constructor(public blockHash: string) {
+    super(`The block hash '${blockHash}' is invalid`);
   }
 }

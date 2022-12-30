@@ -7,7 +7,7 @@ import {
   InvalidBallotValueError,
   OversizedEntryPointError,
 } from '../src/error';
-import { InvalidHexStringError } from '@taquito/core';
+import { InvalidHexStringError } from '../src/error';
 
 import { bytesEncoder } from '../src/michelson/codec';
 
