@@ -6,8 +6,7 @@
 import { EntrypointsResponse, ScriptedContracts } from '@taquito/rpc';
 import { Extension, Context } from '@taquito/taquito';
 import { validateAddress, ValidationResult } from '@taquito/utils';
-import { InvalidScriptFormatError } from './errors';
-import { InvalidAddressError } from '@taquito/core'
+import { InvalidScriptFormatError, InvalidAddressError } from './errors';
 import { ReadWrapperContractsLibrary } from './read-provider-wrapper';
 
 interface ContractsData {

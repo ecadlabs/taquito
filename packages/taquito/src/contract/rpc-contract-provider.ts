@@ -56,7 +56,7 @@ import {
   InvalidContractAddressError,
   ValidationResult,
 } from '@taquito/utils';
-import { InvalidAddressError } from '@taquito/core'
+import { InvalidAddressError } from '@taquito/core';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
@@ -69,8 +69,7 @@ import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-
 
 export class RpcContractProvider
   extends OperationEmitter
-  implements ContractProvider, StorageProvider
-{
+  implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
@@ -162,13 +161,13 @@ export class RpcContractProvider
 
     const bigMapValue = block
       ? await this.context.readProvider.getBigMapValue(
-          { id: id.toString(), expr: encodedExpr },
-          block
-        )
+        { id: id.toString(), expr: encodedExpr },
+        block
+      )
       : await this.context.readProvider.getBigMapValue(
-          { id: id.toString(), expr: encodedExpr },
-          'head'
-        );
+        { id: id.toString(), expr: encodedExpr },
+        'head'
+      );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }

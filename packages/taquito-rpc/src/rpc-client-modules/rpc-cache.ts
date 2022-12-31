@@ -54,7 +54,7 @@ import {
   validateAddress,
   ValidationResult,
 } from '@taquito/utils';
-import { InvalidAddressError } from '../errors'
+import { InvalidAddressError } from '../errors';
 
 interface CachedDataInterface {
   [key: string]: {

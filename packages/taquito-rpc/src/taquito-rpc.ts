@@ -64,11 +64,11 @@ import {
   validateContractAddress,
   ValidationResult,
 } from '@taquito/utils';
-import { InvalidAddressError } from './errors'
+import { InvalidAddressError } from './errors';
 
 export { castToBigNumber } from './utils/utils';
 
-export * from './errors'
+export * from './errors';
 
 export {
   RPCOptions,

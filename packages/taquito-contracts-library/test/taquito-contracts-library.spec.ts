@@ -3,7 +3,7 @@ import { ContractsLibrary } from '../src/taquito-contracts-library';
 import { entrypoints, entrypoints2 } from './data/contract-entrypoints';
 import { script, script2 } from './data/contract-script';
 import { VERSION } from '../src/version';
-import { InvalidAddressError } from '@taquito/core'
+import { InvalidAddressError } from '../src/errors';
 
 describe('ContractsLibrary tests', () => {
   it('ContractsLibrary is instantiable', () => {

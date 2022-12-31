@@ -23,7 +23,7 @@ import {
   ValidationResult,
   InvalidOperationKindError,
 } from '@taquito/utils';
-import { InvalidAddressError } from '@taquito/core'
+import { InvalidAddressError } from '@taquito/core';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -37,7 +37,7 @@ export type WalletParamsWithKind =
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
 
-  constructor(private walletProvider: WalletProvider, private context: Context) {}
+  constructor(private walletProvider: WalletProvider, private context: Context) { }
 
   /**
    *
@@ -156,7 +156,7 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  constructor(private context: Context) {}
+  constructor(private context: Context) { }
 
   private get walletProvider() {
     return this.context.walletProvider;
@@ -194,7 +194,7 @@ export class Wallet {
    */
   originate<TWallet extends DefaultWalletType = DefaultWalletType>(
     params: WalletOriginateParams<ContractStorageType<TWallet>>
-  ): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
+  ): { send: () => Promise<OriginationWalletOperation<TWallet>>; } {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
         this.context.parser.prepareCodeOrigination({
