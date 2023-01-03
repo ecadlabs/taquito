@@ -31,9 +31,8 @@ describe('Format', () => {
       'something',
     ].join(' ');
 
-
     const bytes = char2Bytes(formattedInput);
-    const payloadBytes = '0x' + '05' + '0100' + char2Bytes((bytes.length / 2).toString()) + bytes;
+    const payloadBytes = '0x' + '05' + '01' + `00${char2Bytes((bytes.length / 2).toString())}` + bytes;
     expect(payloadBytes).toBeDefined();
   })
 });

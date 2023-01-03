@@ -54,15 +54,17 @@ After formatting the string properly, you can convert it into bytes, for example
 import { char2Bytes } from '@taquito/utils';
 
 const bytes = char2Bytes(formattedInput);
-const payloadBytes = '0x' + '05' + '0100' + char2Bytes((bytes.length / 2).toString()) + bytes;
+const payloadBytes = '0x' + '05' + '01' + `00${char2Bytes((bytes.length / 2).toString())}` + bytes;
 
 ```
 
-The bytes representation of the string must be prefixed with 3 pieces of information:
+The bytes representation of the string must be prefixed with 5 pieces of information:
 
+- "0x" add zero-padding
 - "05" indicates that this is a Micheline expression
 - "01" indicates that a string was converted to bytes
-- the number of characters in the byte string encoded on 4 bytes
+- the number of characters in the byte string encoded on 4 bytes as string
+- bytes of input
 
 Once you have your bytes, you can send them to the wallet to have them signed:
 
