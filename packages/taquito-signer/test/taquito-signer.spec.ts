@@ -4,7 +4,7 @@ import {
   ToBeImplemented,
 } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
-import { InvalidDerivationPathError } from '../src/errors';
+import { InvalidDerivationPathError } from '@taquito/core';
 
 
 describe('inmemory-signer', () => {

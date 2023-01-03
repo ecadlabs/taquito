@@ -1,4 +1,4 @@
-export { InvalidHexStringError } from '@taquito/core';
+export { InvalidHexStringError, InvalidContractAddressError } from '@taquito/core';
 
 /**
  *  @category Error
@@ -49,17 +49,6 @@ export class InvalidMessageError extends Error {
     super();
     const baseMessage = `The message '${msg}' is invalid.`;
     this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid contract address being passed or used
- */
-export class InvalidContractAddressError extends Error {
-  public name = 'InvalidContractAddressError';
-  constructor(public contractAddress: string) {
-    super(`The contract address '${contractAddress}' is invalid`);
   }
 }
 

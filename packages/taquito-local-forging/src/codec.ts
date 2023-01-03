@@ -7,9 +7,9 @@ import {
   prefixLength,
   InvalidKeyHashError,
   InvalidPublicKeyError,
-  InvalidContractAddressError,
 } from '@taquito/utils';
-import { OversizedEntryPointError, InvalidBallotValueError, DecodeBallotValueError, InvalidAddressError } from './error';
+import { InvalidContractAddressError, InvalidAddressError } from '@taquito/core';
+import { OversizedEntryPointError, InvalidBallotValueError, DecodeBallotValueError } from './error';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
 import { extractRequiredLen, valueDecoder, valueEncoder, MichelsonValue } from './michelson/codec';

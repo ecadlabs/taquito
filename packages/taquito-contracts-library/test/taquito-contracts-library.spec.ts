@@ -3,7 +3,7 @@ import { ContractsLibrary } from '../src/taquito-contracts-library';
 import { entrypoints, entrypoints2 } from './data/contract-entrypoints';
 import { script, script2 } from './data/contract-script';
 import { VERSION } from '../src/version';
-import { InvalidAddressError } from '../src/errors';
+import { InvalidContractAddressError } from '@taquito/core';
 
 describe('ContractsLibrary tests', () => {
   it('ContractsLibrary is instantiable', () => {
@@ -97,7 +97,7 @@ describe('ContractsLibrary tests', () => {
           entrypoints,
         },
       })
-    ).toThrow(InvalidAddressError);
+    ).toThrow(InvalidContractAddressError);
     expect(() =>
       contractLib.addContract({
         [contractAddress]: {
@@ -107,7 +107,7 @@ describe('ContractsLibrary tests', () => {
       })
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining("The address 'KTinvalid' is invalid"),
+        message: expect.stringContaining(`The contract address '${contractAddress}' is invalid`),
       })
     );
   });

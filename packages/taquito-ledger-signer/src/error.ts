@@ -32,3 +32,16 @@ export class PublicKeyHashRetrievalError extends Error {
     super(`Unable to retrieve Public Key Hash from Ledger`);
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid derivation type being passed or used
+ */
+export class InvalidDerivationTypeError extends Error {
+  public name = 'InvalidDerivationTypeError';
+  constructor(public derivationType: string) {
+    super(
+      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1, DerivationType.P256 or DerivationType.BIP32_ED25519`
+    );
+  }
+}

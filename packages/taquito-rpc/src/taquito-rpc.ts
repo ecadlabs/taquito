@@ -64,7 +64,7 @@ import {
   validateContractAddress,
   ValidationResult,
 } from '@taquito/utils';
-import { InvalidAddressError } from './errors';
+import { InvalidAddressError } from '@taquito/core';
 
 export { castToBigNumber } from './utils/utils';
 

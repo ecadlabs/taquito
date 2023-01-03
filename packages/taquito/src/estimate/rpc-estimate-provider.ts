@@ -44,9 +44,8 @@ import {
   ValidationResult,
   InvalidOperationKindError,
   validateContractAddress,
-  InvalidContractAddressError,
 } from '@taquito/utils';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import { RevealEstimateError } from './error';
 
 interface Limits {

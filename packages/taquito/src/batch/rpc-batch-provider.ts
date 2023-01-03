@@ -41,10 +41,9 @@ import {
   ValidationResult,
   InvalidOperationKindError,
   validateContractAddress,
-  InvalidContractAddressError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -326,7 +325,7 @@ export class OperationBatch extends OperationEmitter {
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) { }
+  constructor(private context: Context, private estimator: EstimationProvider) {}
 
   /***
    *

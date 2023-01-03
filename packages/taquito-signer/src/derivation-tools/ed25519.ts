@@ -5,7 +5,7 @@ import { generateKeyPairFromSeed } from '@stablelib/ed25519';
 import { ExtendedPrivateKey, Hard } from './index';
 import { parseHex } from './utils';
 import { InvalidSeedLengthError } from '../errors';
-import { InvalidDerivationPathError } from '../errors';
+import { InvalidDerivationPathError } from '@taquito/core';
 
 // MinSeedSize is the minimal allowed seed byte length
 const minSeedSize = 16;

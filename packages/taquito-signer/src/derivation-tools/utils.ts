@@ -1,4 +1,4 @@
-import { InvalidHexStringError } from '../errors';
+import { InvalidHexStringError } from '@taquito/core';
 
 
 export function parseHex(s: string): Uint8Array {
