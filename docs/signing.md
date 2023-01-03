@@ -54,7 +54,8 @@ After formatting the string properly, you can convert it into bytes, for example
 import { char2Bytes } from '@taquito/utils';
 
 const bytes = char2Bytes(formattedInput);
-const payloadBytes = '0x' + '05' + '0100' + char2Bytes(bytes.length / 2) + bytes;
+const payloadBytes = '0x' + '05' + '0100' + char2Bytes((bytes.length / 2).toString()) + bytes;
+
 ```
 
 The bytes representation of the string must be prefixed with 3 pieces of information:
