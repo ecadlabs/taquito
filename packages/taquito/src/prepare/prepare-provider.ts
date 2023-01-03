@@ -190,7 +190,6 @@ export class PrepareProvider implements Preparation {
 
   async originate({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
-    console.log(ops);
     if (!validateOpKindParams(ops, OpKind.ORIGINATION)) {
       throw new InvalidPrepareParamsError(OpKind.ORIGINATION);
     }

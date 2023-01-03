@@ -11,6 +11,9 @@ import {
   ballotOp,
   proposalsOp,
   transferTicketOp,
+  revealOp,
+  preparedOriginationOp,
+  preparedOriginationOpWithReveal,
 } from './data';
 
 describe('PrepareProvider test', () => {
@@ -87,109 +90,7 @@ describe('PrepareProvider test', () => {
     it('should return a prepared Origination operation', async () => {
       const prepared = await prepareProvider.originate({ operation: originationOp });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'origination',
-              fee: '1',
-              gas_limit: '2',
-              storage_limit: '2',
-              balance: '100',
-              script: {
-                code: [
-                  {
-                    prim: 'storage',
-                    args: [
-                      {
-                        prim: 'pair',
-                        args: [
-                          {
-                            prim: 'big_map',
-                            args: [
-                              {
-                                prim: 'address',
-                              },
-                              {
-                                prim: 'pair',
-                                args: [
-                                  {
-                                    prim: 'nat',
-                                  },
-                                  {
-                                    prim: 'map',
-                                    args: [
-                                      {
-                                        prim: 'address',
-                                      },
-                                      {
-                                        prim: 'nat',
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                          {
-                            prim: 'pair',
-                            args: [
-                              {
-                                prim: 'address',
-                              },
-                              {
-                                prim: 'pair',
-                                args: [
-                                  {
-                                    prim: 'bool',
-                                  },
-                                  {
-                                    prim: 'nat',
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-                storage: {
-                  prim: 'Pair',
-                  args: [
-                    [],
-                    {
-                      prim: 'Pair',
-                      args: [
-                        {
-                          string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-                        },
-                        {
-                          prim: 'Pair',
-                          args: [
-                            {
-                              prim: 'False',
-                            },
-                            {
-                              int: '200',
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              },
-              source: 'test_public_key_hash',
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
+      expect(prepared).toEqual(preparedOriginationOp);
     });
 
     it('should throw an error if parameters does not have related operation kind to the method', async () => {
@@ -198,6 +99,13 @@ describe('PrepareProvider test', () => {
       } catch (e) {
         expect(e.message).toEqual(`No 'origination' operation parameters have been passed`);
       }
+    });
+
+    it('should be able to prepare operation prepended with reveal op', async () => {
+      const prepared = await prepareProvider.originate({ operation: [revealOp, originationOp] });
+
+      expect(prepared).toBeDefined();
+      expect(prepared).toEqual(preparedOriginationOpWithReveal);
     });
   });
 
@@ -233,6 +141,39 @@ describe('PrepareProvider test', () => {
         expect(e.message).toEqual(`No 'transaction' operation parameters have been passed`);
       }
     });
+
+    it('should be able to prepare transaction operation prepended with reveal op', async () => {
+      const prepared = await prepareProvider.transaction({ operation: [revealOp, transactionOp] });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_public_key',
+              source: 'test_pkh_reveal',
+              gas_limit: '1100',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '1',
+              gas_limit: '2',
+              storage_limit: '2',
+              amount: '5',
+              destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+              source: 'test_public_key_hash',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
   });
 
   describe('drainDelegate', () => {
@@ -261,6 +202,37 @@ describe('PrepareProvider test', () => {
       } catch (e) {
         expect(e.message).toEqual(`No 'drain_delegate' operation parameters have been passed`);
       }
+    });
+
+    it('should be able to prepare drain_delegate operation prepended with reveal op', async () => {
+      const prepared = await prepareProvider.drainDelegate({
+        operation: [revealOp, drainDelegateOp],
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_public_key',
+              source: 'test_pkh_reveal',
+              gas_limit: '1100',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'drain_delegate',
+              consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+              delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+              destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
     });
   });
 
@@ -295,6 +267,38 @@ describe('PrepareProvider test', () => {
         expect(e.message).toEqual(`No 'delegation' operation parameters have been passed`);
       }
     });
+
+    it('should be able to prepare delegate operation prepended with reveal op', async () => {
+      const prepared = await prepareProvider.delegation({ operation: [revealOp, delegateOp] });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_public_key',
+              source: 'test_pkh_reveal',
+              gas_limit: '1100',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'delegation',
+              fee: '2',
+              gas_limit: '1',
+              storage_limit: '1',
+              delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+              source: 'test_public_key_hash',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
   });
 
   describe('registerGlobalConstant', () => {
@@ -302,7 +306,6 @@ describe('PrepareProvider test', () => {
       const prepared = await prepareProvider.registerGlobalConstant({
         operation: registerGlobalConstantOp,
       });
-      console.log(JSON.stringify(prepared));
       expect(prepared).toEqual({
         opOb: {
           branch: 'test_block_hash',
@@ -342,24 +345,10 @@ describe('PrepareProvider test', () => {
         );
       }
     });
-  });
 
-  // describe('txRollupOrigination', () => {
-  //   it('should return a prepared x operation', async () => {
-
-  //   });
-  // });
-
-  // describe('txRollupSubmitBatch', () => {
-  //   it('should return a prepared x operation', async () => {
-
-  //   });
-  // });
-
-  describe('updateConsensusKey', () => {
-    it('should return a prepared udpateConsensusKey operation', async () => {
-      const prepared = await prepareProvider.updateConsensusKey({
-        operation: updateConsensusKeyOp,
+    it('should be able to prepare register_global_constant operation prepended with reveal op', async () => {
+      const prepared = await prepareProvider.registerGlobalConstant({
+        operation: [revealOp, registerGlobalConstantOp],
       });
 
       expect(prepared).toEqual({
@@ -367,93 +356,32 @@ describe('PrepareProvider test', () => {
           branch: 'test_block_hash',
           contents: [
             {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_public_key',
+              source: 'test_pkh_reveal',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
+            },
+            {
+              kind: 'register_global_constant',
               fee: '1',
               gas_limit: '1',
-              kind: 'update_consensus_key',
-              pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
-              source: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
               storage_limit: '2',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-
-    it('should throw error when params does not include an updateConsensusKey operation', async () => {
-      try {
-        await prepareProvider.updateConsensusKey({ operation: transactionOp });
-      } catch (e) {
-        expect(e.message).toEqual(
-          `No 'update_consensus_key' operation parameters have been passed`
-        );
-      }
-    });
-  });
-
-  describe('transferTicket', () => {
-    it('should return a prepared transferTicket operation', async () => {
-      const prepared = await prepareProvider.transferTicket({ operation: transferTicketOp });
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              counter: '1',
-              destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-              entrypoint: 'default',
-              fee: '804',
-              gas_limit: '5009',
-              kind: 'transfer_ticket',
-              source: 'test_public_key_hash',
-              storage_limit: '130',
-              ticket_amount: '2',
-              ticket_contents: {
-                string: 'foobar',
+              value: {
+                prim: 'Pair',
+                args: [
+                  {
+                    int: '999',
+                  },
+                  {
+                    int: '999',
+                  },
+                ],
               },
-              ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-              ticket_ty: {
-                prim: 'string',
-              },
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-
-    it('should throw error when params does not include a transferTicket operation', async () => {
-      try {
-        await prepareProvider.transferTicket({ operation: transactionOp });
-      } catch (e) {
-        expect(e.message).toEqual(`No 'transfer_ticket' operation parameters have been passed`);
-      }
-    });
-  });
-
-  describe('increasePaidStorage', () => {
-    it('should return a prepared increasePaidStorage operation', async () => {
-      const prepared = await prepareProvider.increasePaidStorage({
-        operation: increasePaidStorageOp,
-      });
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              amount: '10',
-              counter: '1',
-              destination: 'KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh',
-              fee: '1',
-              gas_limit: '1',
-              kind: 'increase_paid_storage',
               source: 'test_public_key_hash',
-              storage_limit: '2',
+              counter: '2',
             },
           ],
           protocol: 'test_protocol',
@@ -462,73 +390,349 @@ describe('PrepareProvider test', () => {
       });
     });
 
-    it('should throw error when params does not include an increasePaidStorage operation', async () => {
-      try {
-        await prepareProvider.increasePaidStorage({ operation: transactionOp });
-      } catch (e) {
-        expect(e.message).toEqual(
-          `No 'increase_paid_storage' operation parameters have been passed`
-        );
-      }
-    });
-  });
+    describe('updateConsensusKey', () => {
+      it('should return a prepared udpateConsensusKey operation', async () => {
+        const prepared = await prepareProvider.updateConsensusKey({
+          operation: updateConsensusKeyOp,
+        });
 
-  describe('ballot', () => {
-    it('should return a prepared ballot operation', async () => {
-      const prepared = await prepareProvider.ballot({ operation: ballotOp });
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                counter: '1',
+                fee: '1',
+                gas_limit: '1',
+                kind: 'update_consensus_key',
+                pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+                source: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+                storage_limit: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              ballot: 'yay',
-              kind: 'ballot',
-              period: 103,
-              proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+      it('should throw error when params does not include an updateConsensusKey operation', async () => {
+        try {
+          await prepareProvider.updateConsensusKey({ operation: transactionOp });
+        } catch (e) {
+          expect(e.message).toEqual(
+            `No 'update_consensus_key' operation parameters have been passed`
+          );
+        }
+      });
+
+      it('should be able to prepare update_consensus_key operation prepended with reveal op', async () => {
+        const prepared = await prepareProvider.updateConsensusKey({
+          operation: [revealOp, updateConsensusKeyOp],
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '374',
+                public_key: 'test_public_key',
+                source: 'test_pkh_reveal',
+                gas_limit: '1100',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'update_consensus_key',
+                source: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+                fee: '1',
+                gas_limit: '1',
+                storage_limit: '2',
+                pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
     });
 
-    it('should throw error when params does not include a ballot operation', async () => {
-      try {
-        await prepareProvider.ballot({ operation: transactionOp });
-      } catch (e) {
-        expect(e.message).toEqual(`No 'ballot' operation parameters have been passed`);
-      }
-    });
-  });
+    describe('transferTicket', () => {
+      it('should return a prepared transferTicket operation', async () => {
+        const prepared = await prepareProvider.transferTicket({ operation: transferTicketOp });
 
-  describe('proposals', () => {
-    it('should return a prepared proposals operation', async () => {
-      const prepared = await prepareProvider.proposals({ operation: proposalsOp });
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                counter: '1',
+                destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+                entrypoint: 'default',
+                fee: '804',
+                gas_limit: '5009',
+                kind: 'transfer_ticket',
+                source: 'test_public_key_hash',
+                storage_limit: '130',
+                ticket_amount: '2',
+                ticket_contents: {
+                  string: 'foobar',
+                },
+                ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+                ticket_ty: {
+                  prim: 'string',
+                },
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'proposals',
-              period: 103,
-              proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+      it('should throw error when params does not include a transferTicket operation', async () => {
+        try {
+          await prepareProvider.transferTicket({ operation: transactionOp });
+        } catch (e) {
+          expect(e.message).toEqual(`No 'transfer_ticket' operation parameters have been passed`);
+        }
+      });
+
+      it('should be able to prepare transfer_ticket operation prepended with reveal op', async () => {
+        const prepared = await prepareProvider.transferTicket({
+          operation: [revealOp, transferTicketOp],
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '374',
+                public_key: 'test_public_key',
+                source: 'test_pkh_reveal',
+                gas_limit: '1100',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'transfer_ticket',
+                fee: '804',
+                gas_limit: '5009',
+                storage_limit: '130',
+                ticket_contents: {
+                  string: 'foobar',
+                },
+                ticket_ty: {
+                  prim: 'string',
+                },
+                ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+                ticket_amount: '2',
+                destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+                entrypoint: 'default',
+                source: 'test_public_key_hash',
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
     });
 
-    it('should throw error when params does not include a proposals operation', async () => {
-      try {
-        await prepareProvider.proposals({ operation: transactionOp });
-      } catch (e) {
-        expect(e.message).toEqual(`No 'proposals' operation parameters have been passed`);
-      }
+    describe('increasePaidStorage', () => {
+      it('should return a prepared increasePaidStorage operation', async () => {
+        const prepared = await prepareProvider.increasePaidStorage({
+          operation: increasePaidStorageOp,
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                amount: '10',
+                counter: '1',
+                destination: 'KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh',
+                fee: '1',
+                gas_limit: '1',
+                kind: 'increase_paid_storage',
+                source: 'test_public_key_hash',
+                storage_limit: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+
+      it('should throw error when params does not include an increasePaidStorage operation', async () => {
+        try {
+          await prepareProvider.increasePaidStorage({ operation: transactionOp });
+        } catch (e) {
+          expect(e.message).toEqual(
+            `No 'increase_paid_storage' operation parameters have been passed`
+          );
+        }
+      });
+
+      it('should be able to prepare increase_paid_storage operation prepended with reveal op', async () => {
+        const prepared = await prepareProvider.increasePaidStorage({
+          operation: [revealOp, increasePaidStorageOp],
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '374',
+                public_key: 'test_public_key',
+                source: 'test_pkh_reveal',
+                gas_limit: '1100',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'increase_paid_storage',
+                fee: '1',
+                gas_limit: '1',
+                storage_limit: '2',
+                amount: '10',
+                destination: 'KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh',
+                source: 'test_public_key_hash',
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+    });
+
+    describe('ballot', () => {
+      it('should return a prepared ballot operation', async () => {
+        const prepared = await prepareProvider.ballot({ operation: ballotOp });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                ballot: 'yay',
+                kind: 'ballot',
+                period: 103,
+                proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+
+      it('should throw error when params does not include a ballot operation', async () => {
+        try {
+          await prepareProvider.ballot({ operation: transactionOp });
+        } catch (e) {
+          expect(e.message).toEqual(`No 'ballot' operation parameters have been passed`);
+        }
+      });
+
+      it('should be able to prepare increase_paid_storage operation prepended with reveal op', async () => {
+        const prepared = await prepareProvider.ballot({ operation: [revealOp, ballotOp] });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '374',
+                public_key: 'test_public_key',
+                source: 'test_pkh_reveal',
+                gas_limit: '1100',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'ballot',
+                period: 103,
+                proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+                ballot: 'yay',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+    });
+
+    describe('proposals', () => {
+      it('should return a prepared proposals operation', async () => {
+        const prepared = await prepareProvider.proposals({ operation: proposalsOp });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'proposals',
+                period: 103,
+                proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+
+      it('should throw error when params does not include a proposals operation', async () => {
+        try {
+          await prepareProvider.proposals({ operation: transactionOp });
+        } catch (e) {
+          expect(e.message).toEqual(`No 'proposals' operation parameters have been passed`);
+        }
+      });
+
+      it('should be able to prepare proposals operation prepended with reveal op', async () => {
+        const prepared = await prepareProvider.proposals({ operation: [revealOp, proposalsOp] });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '374',
+                public_key: 'test_public_key',
+                source: 'test_pkh_reveal',
+                gas_limit: '1100',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'proposals',
+                period: 103,
+                proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
     });
   });
 });

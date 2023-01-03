@@ -11,11 +11,14 @@ import {
   RPCIncreasePaidStorageOperation,
   RPCProposalsOperation,
   RPCRegisterGlobalConstantOperation,
+  RPCRevealOperation,
   RPCTransferTicketOperation,
   RPCTxRollupBatchOperation,
   RPCTxRollupOriginationOperation,
   RPCUpdateConsensusKeyOperation,
 } from '../../src/operations/types';
+
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../../src/constants';
 
 export const sampleContract: MichelsonContractStorage = {
   prim: 'storage',
@@ -59,6 +62,15 @@ export const sampleStorage: MichelsonData = {
   ],
 };
 
+export const revealOp = {
+  kind: OpKind.REVEAL,
+  fee: DEFAULT_FEE.REVEAL,
+  public_key: 'test_public_key',
+  source: 'test_pkh_reveal',
+  gas_limit: DEFAULT_GAS_LIMIT.REVEAL,
+  storage_limit: DEFAULT_STORAGE_LIMIT.REVEAL,
+} as RPCRevealOperation;
+
 export const originationOp = {
   kind: OpKind.ORIGINATION,
   fee: 1,
@@ -70,6 +82,223 @@ export const originationOp = {
     storage: sampleStorage,
   },
 } as RPCOriginationOperation;
+
+export const preparedOriginationOp = {
+  opOb: {
+    branch: 'test_block_hash',
+    contents: [
+      {
+        kind: 'origination',
+        fee: '1',
+        gas_limit: '2',
+        storage_limit: '2',
+        balance: '100',
+        script: {
+          code: [
+            {
+              prim: 'storage',
+              args: [
+                {
+                  prim: 'pair',
+                  args: [
+                    {
+                      prim: 'big_map',
+                      args: [
+                        {
+                          prim: 'address',
+                        },
+                        {
+                          prim: 'pair',
+                          args: [
+                            {
+                              prim: 'nat',
+                            },
+                            {
+                              prim: 'map',
+                              args: [
+                                {
+                                  prim: 'address',
+                                },
+                                {
+                                  prim: 'nat',
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      prim: 'pair',
+                      args: [
+                        {
+                          prim: 'address',
+                        },
+                        {
+                          prim: 'pair',
+                          args: [
+                            {
+                              prim: 'bool',
+                            },
+                            {
+                              prim: 'nat',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          storage: {
+            prim: 'Pair',
+            args: [
+              [],
+              {
+                prim: 'Pair',
+                args: [
+                  {
+                    string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+                  },
+                  {
+                    prim: 'Pair',
+                    args: [
+                      {
+                        prim: 'False',
+                      },
+                      {
+                        int: '200',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        source: 'test_public_key_hash',
+        counter: '1',
+      },
+    ],
+    protocol: 'test_protocol',
+  },
+  counter: 0,
+};
+
+export const preparedOriginationOpWithReveal = {
+  opOb: {
+    branch: 'test_block_hash',
+    contents: [
+      {
+        kind: 'reveal',
+        fee: '374',
+        public_key: 'test_public_key',
+        source: 'test_pkh_reveal',
+        gas_limit: '1100',
+        storage_limit: '0',
+        counter: '1',
+      },
+      {
+        kind: 'origination',
+        fee: '1',
+        gas_limit: '2',
+        storage_limit: '2',
+        balance: '100',
+        script: {
+          code: [
+            {
+              prim: 'storage',
+              args: [
+                {
+                  prim: 'pair',
+                  args: [
+                    {
+                      prim: 'big_map',
+                      args: [
+                        {
+                          prim: 'address',
+                        },
+                        {
+                          prim: 'pair',
+                          args: [
+                            {
+                              prim: 'nat',
+                            },
+                            {
+                              prim: 'map',
+                              args: [
+                                {
+                                  prim: 'address',
+                                },
+                                {
+                                  prim: 'nat',
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      prim: 'pair',
+                      args: [
+                        {
+                          prim: 'address',
+                        },
+                        {
+                          prim: 'pair',
+                          args: [
+                            {
+                              prim: 'bool',
+                            },
+                            {
+                              prim: 'nat',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          storage: {
+            prim: 'Pair',
+            args: [
+              [],
+              {
+                prim: 'Pair',
+                args: [
+                  {
+                    string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+                  },
+                  {
+                    prim: 'Pair',
+                    args: [
+                      {
+                        prim: 'False',
+                      },
+                      {
+                        int: '200',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        source: 'test_public_key_hash',
+        counter: '2',
+      },
+    ],
+    protocol: 'test_protocol',
+  },
+  counter: 0,
+};
 
 export const transactionOp = {
   kind: OpKind.TRANSACTION,
