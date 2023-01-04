@@ -32,7 +32,10 @@ describe('Format', () => {
     ].join(' ');
 
     const bytes = char2Bytes(formattedInput);
-    const payloadBytes = '0x' + '05' + '01' + `00${char2Bytes((bytes.length / 2).toString())}` + bytes;
+    const bytesLength = (bytes.length / 2).toString(16)
+    const addPadding = `0000${bytesLength}`
+    const paddedBytesLength = addPadding.slice(addPadding.length - 4)
+    const payloadBytes = '0x' + '05' + '0100' + char2Bytes(paddedBytesLength) + bytes;
     expect(payloadBytes).toBeDefined();
   })
 });

@@ -53,8 +53,11 @@ After formatting the string properly, you can convert it into bytes, for example
 ```js
 import { char2Bytes } from '@taquito/utils';
 
-const bytes = char2Bytes(formattedInput);
-const payloadBytes = '0x' + '05' + '0100' + char2Bytes((bytes.length / 2).toString()) + bytes;
+    const bytes = char2Bytes(formattedInput);
+    const bytesLength = (bytes.length / 2).toString(16)
+    const addPadding = `0000${bytesLength}`
+    const paddedBytesLength = addPadding.slice(addPadding.length - 4)
+    const payloadBytes = '0x' + '05' + '0100' + char2Bytes(paddedBytesLength) + bytes;
 
 ```
 
