@@ -10,7 +10,7 @@ import {
   RPCOpWithFee,
   RPCOpWithSource,
 } from '../operations/types';
-import { Preparation, PreparedOperation } from './interface';
+import { PreparationProvider, PreparedOperation } from './interface';
 import { Protocols } from '../constants';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import { RPCResponseError, InvalidPrepareParamsError } from '../error';
@@ -22,7 +22,7 @@ const validateOpKindParams = (operations: RPCOperation[], opKind: string) => {
   });
 };
 
-export class PrepareProvider implements Preparation {
+export class PrepareProvider implements PreparationProvider {
   #counters: { [key: string]: number };
   // context: Context
   constructor(protected context: Context) {
@@ -534,6 +534,27 @@ export class PrepareProvider implements Preparation {
     if (!validateOpKindParams(ops, OpKind.DRAIN_DELEGATE)) {
       throw new InvalidPrepareParamsError(OpKind.DRAIN_DELEGATE);
     }
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    const pkh = await this.signer.publicKeyHash();
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const contents = this.constructOpContents(ops, headCounter, pkh);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  async batch({ operation }: PrepareOperationParams): Promise<PreparedOperation> {
+    const ops = this.convertIntoArray(operation);
 
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();

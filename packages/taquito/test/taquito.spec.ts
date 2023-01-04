@@ -1,6 +1,7 @@
 import { TezosToolkit, SetProviderOptions, Wallet, RpcPacker } from '../src/taquito';
 import { RpcTzProvider } from '../src/tz/rpc-tz-provider';
 import { RpcContractProvider } from '../src/contract/rpc-contract-provider';
+import { PrepareProvider } from '../src/prepare/prepare-provider';
 import { PollingSubscribeProvider } from '../src/subscribe/polling-subcribe-provider';
 import { NoopSigner } from '../src/signer/noop';
 import { RpcClient } from '@taquito/rpc';
@@ -54,6 +55,7 @@ describe('TezosToolkit test', () => {
     expect(tezos.stream).toBeInstanceOf(PollingSubscribeProvider);
     expect(tezos.tz).toBeInstanceOf(RpcTzProvider);
     expect(tezos.wallet).toBeInstanceOf(Wallet);
+    expect(tezos.prepare).toBeInstanceOf(PrepareProvider);
   });
 
   it('setProvider with string should create rpc provider', () => {

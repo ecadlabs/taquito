@@ -17,7 +17,7 @@ import { Packer } from './packer/interface';
 import { RpcPacker } from './packer/rpc-packer';
 import { TzReadProvider } from './read-provider/interface';
 import { RpcReadAdapter } from './read-provider/rpc-read-adapter';
-import { PrepareProvider } from './prepare/prepare-provider';
+import { PreparationProvider } from './prepare/interface';
 import { Signer } from './signer/interface';
 import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
@@ -68,6 +68,7 @@ export {
 export { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 export * from './estimate';
 export { TaquitoLocalForger } from './forger/taquito-local-forger';
+export * from './prepare';
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -352,7 +353,7 @@ export class TezosToolkit {
   /**
    * @description Provide access to tezos operation preparation utilities
    */
-  get prepare(): PrepareProvider {
+  get prepare(): PreparationProvider {
     return this._context.prepare;
   }
 

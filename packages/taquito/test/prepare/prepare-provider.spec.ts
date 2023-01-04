@@ -734,5 +734,43 @@ describe('PrepareProvider test', () => {
         });
       });
     });
+
+    describe('batch', () => {
+      it('should be able to prepare a batch operation', async () => {
+        const prepared = await prepareProvider.batch({
+          operation: [transactionOp, increasePaidStorageOp],
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'transaction',
+                fee: '1',
+                gas_limit: '2',
+                storage_limit: '2',
+                amount: '5',
+                destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+                source: 'test_public_key_hash',
+                counter: '1',
+              },
+              {
+                kind: 'increase_paid_storage',
+                fee: '1',
+                gas_limit: '1',
+                storage_limit: '2',
+                amount: '10',
+                destination: 'KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh',
+                source: 'test_public_key_hash',
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+    });
   });
 });
