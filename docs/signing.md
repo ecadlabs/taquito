@@ -63,7 +63,7 @@ The bytes representation of the string must be prefixed with 5 pieces of informa
 - "0x" add zero-padding
 - "05" indicates that this is a Micheline expression
 - "01" indicates that a string was converted to bytes
-- the number of characters in the bytes (hexadecimal string divided by 2) string encoded on 4 bytes as string 
+- the number of characters in the bytes (hexadecimal string divided by 2) encoded on 4 bytes
 - bytes of formatted input to be signed
 
 Once you have your bytes, you can send them to the wallet to have them signed:
