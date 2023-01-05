@@ -15,6 +15,9 @@ import { Protocols } from '../constants';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import { RPCResponseError, InvalidPrepareParamsError } from '../error';
 import { Context } from '../context';
+import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
+import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
+import { ContractProvider } from '../contract/interface';
 
 const validateOpKindParams = (operations: RPCOperation[], opKind: string) => {
   return operations.some((x) => {
@@ -39,6 +42,10 @@ export class PrepareProvider implements PreparationProvider {
 
   get signer() {
     return this.context.signer;
+  }
+
+  get estimate() {
+    return this.context.estimate;
   }
 
   private async getPkh() {
@@ -697,6 +704,49 @@ export class PrepareProvider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare a batch operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   *
+   * @returns a PreparedOperation object
+   */
+  async contractCall(
+    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+  ): Promise<PreparedOperation> {
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    const pkh = await this.signer.publicKeyHash();
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const params = contractMethod.toTransferParams();
+    const estimate = await this.estimate.transfer(params);
+
+    const ops = [
+      {
+        kind: OpKind.TRANSACTION,
+        fee: params.fee ?? estimate.suggestedFeeMutez,
+        gas_limit: params.gasLimit ?? estimate.gasLimit,
+        storage_limit: params.storageLimit ?? estimate.storageLimit,
+        amount: String(params.amount),
+        destination: params.to,
+      },
+    ] as RPCOperation[];
+
+    const contents = this.constructOpContents(ops, headCounter, pkh);
 
     return {
       opOb: {

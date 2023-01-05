@@ -1,5 +1,8 @@
 import { OperationContents } from '@taquito/rpc';
 import { PrepareOperationParams } from '../operations/types';
+import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
+import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
+import { ContractProvider } from '../contract/interface';
 
 /**
  * @description PrepareProvider is a utility class to output the prepared format of an operation
@@ -165,6 +168,18 @@ export interface PreparationProvider {
    * @returns a PreparedOperation object
    */
   batch({ operation }: PrepareOperationParams): Promise<PreparedOperation>;
+
+  /**
+   *
+   * @description Method to prepare a contract call (transfer) operation
+   *
+   * @param contractMethod ContractMethod or ContractMethodObject retrieved from smart contract
+   *
+   * @returns a PreparedOperation object
+   */
+  contractCall(
+    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+  ): Promise<PreparedOperation>;
 }
 
 export interface PreparedOperation {
