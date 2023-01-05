@@ -22,6 +22,9 @@ const validateOpKindParams = (operations: RPCOperation[], opKind: string) => {
   });
 };
 
+/**
+ * @description PrepareProvider is a utility class to output the prepared format of an operation
+ */
 export class PrepareProvider implements PreparationProvider {
   #counters: { [key: string]: number };
   // context: Context
@@ -163,6 +166,15 @@ export class PrepareProvider implements PreparationProvider {
     });
   }
 
+  /**
+   *
+   * @description Method to prepare a reveal operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async reveal({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
@@ -188,6 +200,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a origination operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async originate({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
     if (!validateOpKindParams(ops, OpKind.ORIGINATION)) {
@@ -212,6 +233,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a transaction operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async transaction({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
@@ -237,6 +267,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare an activation operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async activation({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
@@ -262,6 +301,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a delegation operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async delegation({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
@@ -287,6 +335,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a register_global_constant operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async registerGlobalConstant({
     operation,
     source,
@@ -315,6 +372,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a tx_rollup_origination operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async txRollupOrigination({
     operation,
     source,
@@ -343,6 +409,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a tx_rollup_submit_batch operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async txRollupSubmitBatch({
     operation,
     source,
@@ -371,6 +446,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a update_consensus_key operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async updateConsensusKey({
     operation,
     source,
@@ -399,6 +483,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a transfer_ticket operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async transferTicket({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
@@ -424,6 +517,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a increase_paid_storage operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   *
+   * @returns a PreparedOperation object
+   */
   async increasePaidStorage({
     operation,
     source,
@@ -452,6 +554,14 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a ballot operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   *
+   * @returns a PreparedOperation object
+   */
   async ballot({ operation }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
@@ -490,6 +600,14 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
+  /**
+   *
+   * @description Method to prepare a proposals operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   *
+   * @returns a PreparedOperation object
+   */
   async proposals({ operation }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
@@ -528,7 +646,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
-  async drainDelegate({ operation }: PrepareOperationParams): Promise<PreparedOperation> {
+  /**
+   *
+   * @description Method to prepare a drain_delegate operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   *
+   * @returns a PreparedOperation object
+   */
+  async drainDelegate({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
     if (!validateOpKindParams(ops, OpKind.DRAIN_DELEGATE)) {
@@ -541,7 +667,7 @@ export class PrepareProvider implements PreparationProvider {
     const pkh = await this.signer.publicKeyHash();
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
-    const contents = this.constructOpContents(ops, headCounter, pkh);
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
     return {
       opOb: {
@@ -553,7 +679,15 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
-  async batch({ operation }: PrepareOperationParams): Promise<PreparedOperation> {
+  /**
+   *
+   * @description Method to prepare a batch operation
+   *
+   * @param operation RPCOperation object or RPCOperation array
+   *
+   * @returns a PreparedOperation object
+   */
+  async batch({ operation, source }: PrepareOperationParams): Promise<PreparedOperation> {
     const ops = this.convertIntoArray(operation);
 
     const hash = await this.getBlockHash();
@@ -562,7 +696,7 @@ export class PrepareProvider implements PreparationProvider {
     const pkh = await this.signer.publicKeyHash();
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
-    const contents = this.constructOpContents(ops, headCounter, pkh);
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
     return {
       opOb: {
