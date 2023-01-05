@@ -1,6 +1,6 @@
 /**
  *  @category Error
- *  @description Error that indicates an invalid contract address being passed or used
+ *  @description Error that indicates an invalid address being passed or used (both contract and implicit)
  */
 export class InvalidAddressError extends Error {
   public name = 'InvalidAddressError';
