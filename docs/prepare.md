@@ -62,11 +62,3 @@ activation({ operation, source }: PrepareOperationParams): Promise<PreparedOpera
 - `source` is the source public key hash if you do wish to override the source. This parameter is optional by design. If you do not wish to override it, the source will be grabbed from the `Context`.
 
 `RPCOperation` is really just a combination of the Operation parameters and the estimates of said operation (fee, gas limit, and storage limit estimates). _**Note**_ that this might be amended in the future to make passing parameters a bit more user friendly. 
-
-
-
-
-
-
-
-

@@ -1685,7 +1685,6 @@ describe('RpcContractProvider test', () => {
         delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
         destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
       });
-      console.log(result.raw);
       expect(result.raw).toEqual({
         opbytes: 'test',
         opOb: {
