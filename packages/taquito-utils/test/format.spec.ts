@@ -36,8 +36,9 @@ describe('Format', () => {
     const addPadding = `00000000${bytesLength}`
     const paddedBytesLength = addPadding.slice(addPadding.length - 8)
     const payloadBytes = '0x' + '05' + '01' + paddedBytesLength + bytes;
-
-    console.log(payloadBytes)
-    expect(payloadBytes).toBeDefined();
+    const regex = new RegExp('^(0x|0X)?[a-fA-F0-9]+$')
+    const check = regex.test(payloadBytes)
+    expect(check).toEqual(true);
+    expect(payloadBytes.length % 2).toEqual(0)
   })
 });
