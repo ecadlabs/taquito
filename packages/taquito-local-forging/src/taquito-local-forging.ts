@@ -9,7 +9,8 @@ import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
-import { InvalidOperationSchemaError, InvalidBlockHashError } from './error';
+import { InvalidBlockHashError } from '@taquito/core'
+import { InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash, ProtoInferiorTo } from './protocols';
 import { decodersProto14 } from './proto14-kathmandu/decoder-proto14';

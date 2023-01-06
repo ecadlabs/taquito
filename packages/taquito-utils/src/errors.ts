@@ -1,4 +1,4 @@
-export { InvalidHexStringError, InvalidContractAddressError } from '@taquito/core';
+export { InvalidHexStringError, InvalidContractAddressError, InvalidAddressError, InvalidBlockHashError } from '@taquito/core';
 
 /**
  *  @category Error

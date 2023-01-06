@@ -43,3 +43,15 @@ export class InvalidContractAddressError extends Error {
     super(`The contract address '${contractAddress}' is invalid`);
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid block hash being passed or used
+ */
+export class InvalidBlockHashError extends Error {
+  public name = 'InvalidBlockHashError';
+  constructor(public blockHash: string) {
+    super(`The block hash '${blockHash}' is invalid`);
+  }
+}
+
