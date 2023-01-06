@@ -6,6 +6,7 @@
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
 import { b58cencode, prefix, Prefix, ProhibitedActionError } from '@taquito/utils';
+import { InvalidDerivationPathError } from '@taquito/core';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -19,6 +20,7 @@ import {
   PublicKeyHashRetrievalError,
   PublicKeyRetrievalError,
   InvalidLedgerResponseError,
+  InvalidDerivationTypeError,
 } from './error';
 
 export type LedgerTransport = Pick<Transport, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>;
@@ -30,31 +32,6 @@ export enum DerivationType {
   BIP32_ED25519 = 0x03, // tz1 BIP32
 }
 
-/**
- *  @category Error
- *  @description Error that indicates an invalid derivation type being passed or used
- */
-export class InvalidDerivationTypeError extends Error {
-  public name = 'InvalidDerivationTypeError';
-  constructor(public derivationType: string) {
-    super(
-      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1, DerivationType.P256 or DerivationType.BIP32_ED25519`
-    );
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid derivation path being passed or used
- */
-export class InvalidDerivationPathError extends Error {
-  public name = 'InvalidDerivationPathError';
-  constructor(public derivationPath: string) {
-    super(
-      `The derivation path ${derivationPath} is invalid. The derivation path must start with 44'/1729`
-    );
-  }
-}
 
 export const HDPathTemplate = (account: number) => {
   return `44'/1729'/${account}'/0'`;
@@ -112,7 +89,7 @@ export class LedgerSigner implements Signer {
   ) {
     this.transport.setScrambleKey('XTZ');
     if (!path.startsWith("44'/1729'")) {
-      throw new InvalidDerivationPathError(path);
+      throw new InvalidDerivationPathError(`The derivation path ${path} is invalid. The derivation path must start with 44'/1729`);
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
       throw new InvalidDerivationTypeError(derivationType.toString());
