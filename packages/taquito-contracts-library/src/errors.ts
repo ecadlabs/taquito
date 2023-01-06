@@ -1,4 +1,4 @@
-export * from '@taquito/core';
+export { InvalidAddressError } from '@taquito/core';
 
 /**
  *  @category Error
