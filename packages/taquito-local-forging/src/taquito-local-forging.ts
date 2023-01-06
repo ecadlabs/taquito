@@ -8,13 +8,13 @@ import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
-import { InvalidBlockHashError } from '@taquito/core'
+import { validateBlock, ValidationResult } from '@taquito/utils';
 import { InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash, ProtoInferiorTo } from './protocols';
 import { decodersProto14 } from './proto14-kathmandu/decoder-proto14';
 import { encodersProto14 } from './proto14-kathmandu/encoder-proto14';
+import { InvalidOperationKindError, InvalidBlockHashError } from '@taquito/core';
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
@@ -48,7 +48,7 @@ export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
 }
 
 export class LocalForger implements Forger {
-  constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
+  constructor(public readonly protocolHash = PROTOCOL_CURRENT) { }
 
   private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 

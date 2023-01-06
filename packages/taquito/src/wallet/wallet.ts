@@ -17,13 +17,12 @@ import {
   WalletTransferParams,
 } from './interface';
 
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
+  InvalidAddressError,
+  InvalidContractAddressError,
   InvalidOperationKindError,
-} from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+} from '@taquito/core';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -38,7 +37,7 @@ export type WalletParamsWithKind =
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
 
-  constructor(private walletProvider: WalletProvider, private context: Context) {}
+  constructor(private walletProvider: WalletProvider, private context: Context) { }
 
   /**
    *
@@ -176,7 +175,7 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  constructor(private context: Context) {}
+  constructor(private context: Context) { }
 
   private get walletProvider() {
     return this.context.walletProvider;

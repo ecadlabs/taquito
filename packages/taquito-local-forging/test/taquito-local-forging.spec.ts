@@ -17,7 +17,7 @@ import {
 } from '../src/error';
 import { InvalidBlockHashError } from "@taquito/core"
 
-import { InvalidOperationKindError } from '@taquito/utils';
+import { InvalidOperationKindError } from '@taquito/core';
 import { schemaDecoder, SeedNonceRevelationSchema } from '../src/schema/operation';
 import { ProtoInferiorTo } from '../src/protocols';
 

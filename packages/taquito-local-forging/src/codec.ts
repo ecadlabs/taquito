@@ -5,10 +5,13 @@ import {
   Prefix,
   prefix as prefixMap,
   prefixLength,
+} from '@taquito/utils';
+import {
+  InvalidContractAddressError,
+  InvalidAddressError,
   InvalidKeyHashError,
   InvalidPublicKeyError,
-} from '@taquito/utils';
-import { InvalidContractAddressError, InvalidAddressError } from '@taquito/core';
+} from '@taquito/core';
 import { OversizedEntryPointError, InvalidBallotValueError, DecodeBallotValueError } from './error';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';

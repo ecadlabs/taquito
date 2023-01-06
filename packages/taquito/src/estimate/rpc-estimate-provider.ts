@@ -39,13 +39,12 @@ import {
   createIncreasePaidStorageOperation,
   createUpdateConsensusKeyOperation,
 } from '../contract/prepare';
+import { validateAddress, ValidationResult, validateContractAddress } from '@taquito/utils';
 import {
-  validateAddress,
-  ValidationResult,
+  InvalidAddressError,
+  InvalidContractAddressError,
   InvalidOperationKindError,
-  validateContractAddress,
-} from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+} from '@taquito/core';
 import { RevealEstimateError } from './error';
 
 interface Limits {

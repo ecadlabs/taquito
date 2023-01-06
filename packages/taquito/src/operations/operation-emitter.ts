@@ -11,7 +11,7 @@ import { Context } from '../context';
 import { Estimate } from '../estimate/estimate';
 import { RPCResponseError } from '../error';
 import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
-import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
+import { InvalidOperationKindError, DeprecationError } from '@taquito/core';
 import {
   ForgedBytes,
   isOpRequireReveal,

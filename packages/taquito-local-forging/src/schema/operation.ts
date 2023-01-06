@@ -1,7 +1,7 @@
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { CODEC, kindMapping, kindMappingReverse } from '../constants';
-import { InvalidOperationKindError } from '@taquito/utils';
+import { InvalidOperationKindError } from '@taquito/core';
 import {
   OperationDecodingError,
   OperationEncodingError,
