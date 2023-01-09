@@ -2166,6 +2166,7 @@ describe('RpcContractProvider test', () => {
         const opBatch = new OperationBatch(rpcContractProvider['context'], mockEstimate);
 
         expect(rpcContractProvider.batch()).toBeInstanceOf(OperationBatch);
+        console.log(opBatch);
         expect(rpcContractProvider.batch()).toEqual(opBatch);
 
         expect(rpcContractProvider.batch(opToBatch)).toEqual(opBatch.with(opToBatch));

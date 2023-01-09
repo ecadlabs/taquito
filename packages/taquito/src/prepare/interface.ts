@@ -1,8 +1,23 @@
 import { OperationContents } from '@taquito/rpc';
-import { PrepareOperationParams } from '../operations/types';
+import {
+  BallotParams,
+  DelegateParams,
+  DrainDelegateParams,
+  IncreasePaidStorageParams,
+  OriginateParams,
+  ProposalsParams,
+  RegisterGlobalConstantParams,
+  RevealParams,
+  TransferParams,
+  TransferTicketParams,
+  TxRollupBatchParams,
+  TxRollupOriginateParams,
+  UpdateConsensusKeyParams,
+} from '../operations/types';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { ContractProvider } from '../contract/interface';
+import { ParamsWithKind } from '../operations/types';
 
 /**
  * @description PrepareProvider is a utility class to output the prepared format of an operation
@@ -12,162 +27,153 @@ export interface PreparationProvider {
    *
    * @description Method to prepare a reveal operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params reveal operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  reveal({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  reveal(params: RevealParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a origination operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params originate operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  originate({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  originate(params: OriginateParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a transaction operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params transaction operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  transaction({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
-
-  /**
-   *
-   * @description Method to prepare an activation operation
-   *
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
-   *
-   * @returns a PreparedOperation object
-   */
-  activation({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  transaction(params: TransferParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a delegation operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params delegation operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  delegation({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  // delegation({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+
+  delegation(params: DelegateParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a register_global_constant operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params registerGlobalConstant operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  registerGlobalConstant({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a tx_rollup_origination operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params txRollupOrigination operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  txRollupOrigination({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  txRollupOrigination(params: TxRollupOriginateParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a tx_rollup_submit_batch operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params txRollupSubmitBatch operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  txRollupSubmitBatch({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  txRollupSubmitBatch(params: TxRollupBatchParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a update_consensus_key operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params updateConsensusKey operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  updateConsensusKey({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  updateConsensusKey(params: UpdateConsensusKeyParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a transfer_ticket operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params TransferTicketx operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  transferTicket({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  transferTicket(params: TransferTicketParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a increase_paid_storage operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params increasePaidStorage operation parameters
    * @param source string or undefined source pkh
    *
    * @returns a PreparedOperation object
    */
-  increasePaidStorage({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  increasePaidStorage(params: IncreasePaidStorageParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a ballot operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params ballot operation parameters
    *
    * @returns a PreparedOperation object
    */
-  ballot({ operation }: PrepareOperationParams): Promise<PreparedOperation>;
+  ballot(params: BallotParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a proposals operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params proposals operation parameters
    *
    * @returns a PreparedOperation object
    */
-  proposals({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
+  proposals(params: ProposalsParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a drain_delegate operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params drainDelegatex operation parameters
    *
    * @returns a PreparedOperation object
    */
-  drainDelegate({ operation }: PrepareOperationParams): Promise<PreparedOperation>;
+  drainDelegate(params: DrainDelegateParams): Promise<PreparedOperation>;
 
   /**
    *
    * @description Method to prepare a batch operation
    *
-   * @param operation RPCOperation object or RPCOperation array
+   * @param params x operation parameters
    *
    * @returns a PreparedOperation object
    */
-  batch({ operation }: PrepareOperationParams): Promise<PreparedOperation>;
+  batch(batchParams: ParamsWithKind[]): Promise<PreparedOperation>;
 
   /**
    *

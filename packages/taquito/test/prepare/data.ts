@@ -1,191 +1,4 @@
-import { MichelsonData, MichelsonContractStorage } from '@taquito/michel-codec';
-import {
-  RPCDelegateOperation,
-  RPCDrainDelegateOperation,
-  RPCOriginationOperation,
-  RPCTransferOperation,
-} from '../../src/operations';
-import { OpKind } from '@taquito/rpc';
-import {
-  RPCBallotOperation,
-  RPCIncreasePaidStorageOperation,
-  RPCProposalsOperation,
-  RPCRegisterGlobalConstantOperation,
-  RPCRevealOperation,
-  RPCTransferTicketOperation,
-  RPCTxRollupBatchOperation,
-  RPCTxRollupOriginationOperation,
-  RPCUpdateConsensusKeyOperation,
-} from '../../src/operations/types';
-
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../../src/constants';
-
-export const sampleContract: MichelsonContractStorage = {
-  prim: 'storage',
-  args: [
-    {
-      prim: 'pair',
-      args: [
-        {
-          prim: 'big_map',
-          args: [
-            { prim: 'address' },
-            {
-              prim: 'pair',
-              args: [
-                { prim: 'nat' },
-                { prim: 'map', args: [{ prim: 'address' }, { prim: 'nat' }] },
-              ],
-            },
-          ],
-        },
-        {
-          prim: 'pair',
-          args: [{ prim: 'address' }, { prim: 'pair', args: [{ prim: 'bool' }, { prim: 'nat' }] }],
-        },
-      ],
-    },
-  ],
-};
-
-export const sampleStorage: MichelsonData = {
-  prim: 'Pair',
-  args: [
-    [],
-    {
-      prim: 'Pair',
-      args: [
-        { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' },
-        { prim: 'Pair', args: [{ prim: 'False' }, { int: '200' }] },
-      ],
-    },
-  ],
-};
-
-export const revealOp = {
-  kind: OpKind.REVEAL,
-  fee: DEFAULT_FEE.REVEAL,
-  public_key: 'test_public_key',
-  source: 'test_pkh_reveal',
-  gas_limit: DEFAULT_GAS_LIMIT.REVEAL,
-  storage_limit: DEFAULT_STORAGE_LIMIT.REVEAL,
-} as RPCRevealOperation;
-
-export const originationOp = {
-  kind: OpKind.ORIGINATION,
-  fee: 1,
-  gas_limit: 2,
-  storage_limit: 2,
-  balance: '100',
-  script: {
-    code: [sampleContract],
-    storage: sampleStorage,
-  },
-} as RPCOriginationOperation;
-
-export const preparedOriginationOp = {
-  opOb: {
-    branch: 'test_block_hash',
-    contents: [
-      {
-        kind: 'origination',
-        fee: '1',
-        gas_limit: '2',
-        storage_limit: '2',
-        balance: '100',
-        script: {
-          code: [
-            {
-              prim: 'storage',
-              args: [
-                {
-                  prim: 'pair',
-                  args: [
-                    {
-                      prim: 'big_map',
-                      args: [
-                        {
-                          prim: 'address',
-                        },
-                        {
-                          prim: 'pair',
-                          args: [
-                            {
-                              prim: 'nat',
-                            },
-                            {
-                              prim: 'map',
-                              args: [
-                                {
-                                  prim: 'address',
-                                },
-                                {
-                                  prim: 'nat',
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      prim: 'pair',
-                      args: [
-                        {
-                          prim: 'address',
-                        },
-                        {
-                          prim: 'pair',
-                          args: [
-                            {
-                              prim: 'bool',
-                            },
-                            {
-                              prim: 'nat',
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-          storage: {
-            prim: 'Pair',
-            args: [
-              [],
-              {
-                prim: 'Pair',
-                args: [
-                  {
-                    string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-                  },
-                  {
-                    prim: 'Pair',
-                    args: [
-                      {
-                        prim: 'False',
-                      },
-                      {
-                        int: '200',
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        },
-        source: 'test_public_key_hash',
-        counter: '1',
-      },
-    ],
-    protocol: 'test_protocol',
-  },
-  counter: 0,
-};
+import { PreparedOperation } from '../../src/prepare';
 
 export const preparedOriginationOpWithReveal = {
   opOb: {
@@ -193,102 +6,75 @@ export const preparedOriginationOpWithReveal = {
     contents: [
       {
         kind: 'reveal',
-        fee: '374',
-        public_key: 'test_public_key',
-        source: 'test_pkh_reveal',
-        gas_limit: '1100',
-        storage_limit: '0',
+        fee: '391',
+        public_key: 'test_pub_key',
+        source: 'test_public_key_hash',
+        gas_limit: '101',
+        storage_limit: '1000',
         counter: '1',
       },
       {
         kind: 'origination',
-        fee: '1',
-        gas_limit: '2',
-        storage_limit: '2',
-        balance: '100',
+        fee: '391',
+        gas_limit: '101',
+        storage_limit: '1000',
+        balance: '1000000',
         script: {
           code: [
+            {
+              prim: 'parameter',
+              args: [
+                {
+                  prim: 'string',
+                },
+              ],
+            },
             {
               prim: 'storage',
               args: [
                 {
-                  prim: 'pair',
-                  args: [
-                    {
-                      prim: 'big_map',
-                      args: [
-                        {
-                          prim: 'address',
-                        },
-                        {
-                          prim: 'pair',
-                          args: [
-                            {
-                              prim: 'nat',
-                            },
-                            {
-                              prim: 'map',
-                              args: [
-                                {
-                                  prim: 'address',
-                                },
-                                {
-                                  prim: 'nat',
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      prim: 'pair',
-                      args: [
-                        {
-                          prim: 'address',
-                        },
-                        {
-                          prim: 'pair',
-                          args: [
-                            {
-                              prim: 'bool',
-                            },
-                            {
-                              prim: 'nat',
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
+                  prim: 'string',
                 },
+              ],
+            },
+            {
+              prim: 'code',
+              args: [
+                [
+                  {
+                    prim: 'CAR',
+                  },
+                  {
+                    prim: 'PUSH',
+                    args: [
+                      {
+                        prim: 'string',
+                      },
+                      {
+                        string: 'Hello ',
+                      },
+                    ],
+                  },
+                  {
+                    prim: 'CONCAT',
+                  },
+                  {
+                    prim: 'NIL',
+                    args: [
+                      {
+                        prim: 'operation',
+                      },
+                    ],
+                  },
+                  {
+                    prim: 'PAIR',
+                  },
+                ],
               ],
             },
           ],
           storage: {
-            prim: 'Pair',
-            args: [
-              [],
-              {
-                prim: 'Pair',
-                args: [
-                  {
-                    string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-                  },
-                  {
-                    prim: 'Pair',
-                    args: [
-                      {
-                        prim: 'False',
-                      },
-                      {
-                        int: '200',
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
+            string: 'test',
           },
         },
         source: 'test_public_key_hash',
@@ -298,94 +84,81 @@ export const preparedOriginationOpWithReveal = {
     protocol: 'test_protocol',
   },
   counter: 0,
-};
+} as PreparedOperation;
 
-export const transactionOp = {
-  kind: OpKind.TRANSACTION,
-  fee: 1,
-  gas_limit: 2,
-  storage_limit: 2,
-  amount: '5',
-  destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
-} as RPCTransferOperation;
-
-export const drainDelegateOp = {
-  kind: OpKind.DRAIN_DELEGATE,
-  consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
-  delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
-  destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
-} as RPCDrainDelegateOperation;
-
-export const delegateOp = {
-  kind: OpKind.DELEGATION,
-  fee: 2,
-  gas_limit: 1,
-  storage_limit: 1,
-  delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
-} as RPCDelegateOperation;
-
-export const registerGlobalConstantOp = {
-  kind: OpKind.REGISTER_GLOBAL_CONSTANT,
-  fee: 1,
-  gas_limit: 1,
-  storage_limit: 2,
-  value: {
-    prim: 'Pair',
-    args: [
+export const preparedOriginationOpNoReveal = {
+  opOb: {
+    branch: 'test_block_hash',
+    contents: [
       {
-        int: '999',
-      },
-      {
-        int: '999',
+        kind: 'origination',
+        fee: '391',
+        gas_limit: '101',
+        storage_limit: '1000',
+        balance: '1000000',
+        script: {
+          code: [
+            {
+              prim: 'parameter',
+              args: [
+                {
+                  prim: 'string',
+                },
+              ],
+            },
+            {
+              prim: 'storage',
+              args: [
+                {
+                  prim: 'string',
+                },
+              ],
+            },
+            {
+              prim: 'code',
+              args: [
+                [
+                  {
+                    prim: 'CAR',
+                  },
+                  {
+                    prim: 'PUSH',
+                    args: [
+                      {
+                        prim: 'string',
+                      },
+                      {
+                        string: 'Hello ',
+                      },
+                    ],
+                  },
+                  {
+                    prim: 'CONCAT',
+                  },
+                  {
+                    prim: 'NIL',
+                    args: [
+                      {
+                        prim: 'operation',
+                      },
+                    ],
+                  },
+                  {
+                    prim: 'PAIR',
+                  },
+                ],
+              ],
+            },
+          ],
+          storage: {
+            string: 'test',
+          },
+        },
+        source: 'test_public_key_hash',
+        counter: '1',
       },
     ],
+    protocol: 'test_protocol',
   },
-} as RPCRegisterGlobalConstantOperation;
-
-export const txRollupOriginationOp = {} as RPCTxRollupOriginationOperation;
-
-export const txRollupSubmitBatch = {} as RPCTxRollupBatchOperation;
-
-export const updateConsensusKeyOp = {
-  kind: OpKind.UPDATE_CONSENSUS_KEY,
-  source: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
-  fee: 1,
-  gas_limit: 1,
-  storage_limit: 2,
-  pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
-} as RPCUpdateConsensusKeyOperation;
-
-export const transferTicketOp = {
-  kind: OpKind.TRANSFER_TICKET,
-  fee: 804,
-  gas_limit: 5009,
-  storage_limit: 130,
-  ticket_contents: { string: 'foobar' },
-  ticket_ty: { prim: 'string' },
-  ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-  ticket_amount: 2,
-  destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-  entrypoint: 'default',
-} as RPCTransferTicketOperation;
-
-export const increasePaidStorageOp = {
-  kind: OpKind.INCREASE_PAID_STORAGE,
-  fee: 1,
-  gas_limit: 1,
-  storage_limit: 2,
-  amount: 10,
-  destination: 'KT1Vjr5PFC2Qm5XbSQZ8MdFZLgYMzwG5WZNh',
-} as RPCIncreasePaidStorageOperation;
-
-export const ballotOp = {
-  kind: OpKind.BALLOT,
-  period: 2,
-  proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-  ballot: 'yay',
-} as RPCBallotOperation;
-
-export const proposalsOp = {
-  kind: OpKind.PROPOSALS,
-  period: 1,
-  proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
-} as RPCProposalsOperation;
+  counter: 0,
+} as PreparedOperation;
