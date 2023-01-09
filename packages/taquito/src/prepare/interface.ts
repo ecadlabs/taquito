@@ -88,7 +88,7 @@ export interface PreparationProvider {
   txRollupSubmitBatch(params: TxRollupBatchParams): Promise<PreparedOperation>;
 
   /**
-   * @description Method to prepare a update_consensus_key operation
+   * @description Method to prepare an update_consensus_key operation
    * @param params updateConsensusKey operation parameters
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
