@@ -1,6 +1,6 @@
 import { format } from '../src/format';
 import BigNumber from 'bignumber.js';
-import { char2Bytes } from '../src/taquito-utils';
+import { bytes2Char, char2Bytes } from '../src/taquito-utils';
 
 describe('Format', () => {
   it('Should convert mutez to tz', () => {
@@ -40,5 +40,6 @@ describe('Format', () => {
     const check = regex.test(payloadBytes);
     expect(check).toEqual(true);
     expect(payloadBytes.length % 2).toEqual(0);
+    expect(bytes2Char(payloadBytes)).toEqual(bytes2Char('05' + '01' + paddedBytesLength) + formattedInput);
   });
 });
