@@ -12,23 +12,14 @@ import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
-import { InvalidMnemonicError } from './errors';
+import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 
 export * from './import-key';
 export { VERSION } from './version';
 export * from './derivation-tools';
 export * from './helpers';
+export * from './errors';
 
-/**
- *  @category Error
- *  @description Error that indicates an invalid passphrase being passed or used
- */
-export class InvalidPassphraseError extends Error {
-  public name = 'InvalidPassphraseError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
 
 export interface FromMnemonicParams {
   mnemonic: string;

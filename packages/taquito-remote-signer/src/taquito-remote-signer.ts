@@ -25,27 +25,10 @@ import {
   KeyNotFoundError,
   OperationNotAuthorizedError,
   PublicKeyMismatch,
+  SignatureVerificationFailedError,
 } from './errors';
 import { Signer } from '@taquito/taquito';
 
-/**
- *  @category Error
- *  @description Error
- */
-export class SignatureVerificationFailedError extends Error {
-  public name = 'SignatureVerificationFailedError';
-  constructor(public bytes: string, public signature: string) {
-    super(
-      `
-        Signature failed verification against public key: 
-        {
-          bytes: ${bytes},
-          signature: ${signature}
-        }
-      `
-    );
-  }
-}
 
 interface PublicKeyResponse {
   public_key: string;
@@ -58,7 +41,7 @@ interface SignResponse {
 type curves = 'ed' | 'p2' | 'sp';
 
 export interface RemoteSignerOptions {
-  headers?: { [key: string]: string };
+  headers?: { [key: string]: string; };
 }
 
 export { VERSION } from './version';
