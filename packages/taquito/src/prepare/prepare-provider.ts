@@ -273,7 +273,7 @@ export class PrepareProvider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a origination operation
+   * @description Method to prepare an origination operation
    *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
@@ -528,7 +528,7 @@ export class PrepareProvider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a update_consensus_key operation
+   * @description Method to prepare an update_consensus_key operation
    *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
@@ -571,7 +571,7 @@ export class PrepareProvider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a increase_paid_storage operation
+   * @description Method to prepare an increase_paid_storage operation
    *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh

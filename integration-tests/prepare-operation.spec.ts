@@ -58,7 +58,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       done();
     });
 
-    it('should be able to prepared a batch operation', async (done) => {
+    it('should be able to prepare a batch operation', async (done) => {
       const prepared = await Tezos.prepare.batch([
         {
           kind: OpKind.TRANSACTION,

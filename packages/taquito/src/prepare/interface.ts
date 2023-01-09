@@ -65,8 +65,6 @@ export interface PreparationProvider {
    *
    * @returns a PreparedOperation object
    */
-  // delegation({ operation, source }: PrepareOperationParams): Promise<PreparedOperation>;
-
   delegation(params: DelegateParams): Promise<PreparedOperation>;
 
   /**
