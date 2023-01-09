@@ -1,10 +1,11 @@
 import {
   InvalidCurveError,
-  InvalidDerivationPathError,
   InvalidMnemonicError,
   ToBeImplemented,
 } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
+import { InvalidDerivationPathError } from '@taquito/core';
+
 
 describe('inmemory-signer', () => {
   const mnemonic = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
@@ -57,7 +58,7 @@ describe('inmemory-signer', () => {
         'laptop',
         'oven',
       ].join(' ')
-    )).toThrowError(InvalidMnemonicError)
+    )).toThrowError(InvalidMnemonicError);
 
 
     done();
@@ -300,7 +301,7 @@ describe('inmemory-signer', () => {
   });
 
   it('Should instantiate tz2 hardened from mnemonic from in memory signer', async (done) => {
-    const signer = InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'", curve: 'secp256k1'});
+    const signer = InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'", curve: 'secp256k1' });
     const pkh = await signer.publicKeyHash();
 
     expect(pkh).toEqual('tz2SxDTGnT3mHzaHf6mwy6Wtw1qUX1hzm1Sw');
@@ -308,7 +309,7 @@ describe('inmemory-signer', () => {
   });
 
   it('Should instantiate tz2 non-hardened from mnemonic from in memory signer', async (done) => {
-    const signer = InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0/0", curve: 'secp256k1'});
+    const signer = InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0/0", curve: 'secp256k1' });
     const pkh = await signer.publicKeyHash();
 
     expect(pkh).toEqual('tz2X7pd16c4op3Ne2n4kgDXii4qHUZshguK6');
@@ -340,7 +341,7 @@ describe('inmemory-signer', () => {
   it('Should throw error with wrong curve', (done) => {
     // account for js error / bad type cast
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect(() => InMemorySigner.fromMnemonic({mnemonic, derivationPath: "44'/1729'/0'/0'", curve: 'wrong' as any})).toThrowError(InvalidCurveError)
-    done()
-  })
+    expect(() => InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'", curve: 'wrong' as any })).toThrowError(InvalidCurveError);
+    done();
+  });
 });

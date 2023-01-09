@@ -47,14 +47,12 @@ import {
   VotesListingsResponse,
   VotingPeriodBlockResult,
 } from '../types';
-
 import {
-  InvalidAddressError,
-  InvalidContractAddressError,
   validateContractAddress,
   validateAddress,
   ValidationResult,
 } from '@taquito/utils';
+import { InvalidContractAddressError, InvalidAddressError } from '@taquito/core';
 
 interface CachedDataInterface {
   [key: string]: {
