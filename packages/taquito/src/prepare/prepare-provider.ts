@@ -229,10 +229,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a reveal operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async reveal(params: RevealParams): Promise<PreparedOperation> {
@@ -274,10 +272,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare an origination operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async originate<TContract extends DefaultContractType = DefaultContractType>(
@@ -319,10 +315,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a transaction operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async transaction(params: TransferParams, source?: string): Promise<PreparedOperation> {
@@ -359,10 +353,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a delegation operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async delegation(params: DelegateParams, source?: string): Promise<PreparedOperation> {
@@ -399,10 +391,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a register_global_constant operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async registerGlobalConstant(
@@ -442,10 +432,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a tx_rollup_origination operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async txRollupOrigination(
@@ -486,10 +474,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a tx_rollup_submit_batch operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async txRollupSubmitBatch(
@@ -529,10 +515,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare an update_consensus_key operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async updateConsensusKey(
@@ -572,10 +556,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare an increase_paid_storage operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async increasePaidStorage(
@@ -615,9 +597,7 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a ballot operation
-   *
    * @param operation RPCOperation object or RPCOperation array
-   *
    * @returns a PreparedOperation object
    */
   async ballot(params: BallotParams): Promise<PreparedOperation> {
@@ -663,9 +643,7 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a proposals operation
-   *
    * @param operation RPCOperation object or RPCOperation array
-   *
    * @returns a PreparedOperation object
    */
   async proposals(params: ProposalsParams): Promise<PreparedOperation> {
@@ -711,9 +689,7 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a drain_delegate operation
-   *
    * @param operation RPCOperation object or RPCOperation array
-   *
    * @returns a PreparedOperation object
    */
   async drainDelegate(params: DrainDelegateParams, source?: string): Promise<PreparedOperation> {
@@ -745,10 +721,8 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a transfer_ticket operation
-   *
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   async transferTicket(params: TransferTicketParams, source?: string): Promise<PreparedOperation> {
@@ -785,9 +759,7 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a batch operation
-   *
    * @param operation RPCOperation object or RPCOperation array
-   *
    * @returns a PreparedOperation object
    */
   async batch(batchParams: ParamsWithKind[]): Promise<PreparedOperation> {
@@ -821,9 +793,7 @@ export class PrepareProvider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a batch operation
-   *
    * @param operation RPCOperation object or RPCOperation array
-   *
    * @returns a PreparedOperation object
    */
   async contractCall(

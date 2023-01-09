@@ -26,21 +26,16 @@ export interface PreparationProvider {
   /**
    *
    * @description Method to prepare a reveal operation
-   *
    * @param params reveal operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   reveal(params: RevealParams): Promise<PreparedOperation>;
 
   /**
-   *
-   * @description Method to prepare a origination operation
-   *
+   * @description Method to prepare an origination operation
    * @param params originate operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   originate(params: OriginateParams): Promise<PreparedOperation>;
@@ -59,32 +54,24 @@ export interface PreparationProvider {
   /**
    *
    * @description Method to prepare a delegation operation
-   *
    * @param params delegation operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   delegation(params: DelegateParams): Promise<PreparedOperation>;
 
   /**
-   *
    * @description Method to prepare a register_global_constant operation
-   *
    * @param params registerGlobalConstant operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<PreparedOperation>;
 
   /**
-   *
    * @description Method to prepare a tx_rollup_origination operation
-   *
    * @param params txRollupOrigination operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   txRollupOrigination(params: TxRollupOriginateParams): Promise<PreparedOperation>;
@@ -101,12 +88,9 @@ export interface PreparationProvider {
   txRollupSubmitBatch(params: TxRollupBatchParams): Promise<PreparedOperation>;
 
   /**
-   *
    * @description Method to prepare a update_consensus_key operation
-   *
    * @param params updateConsensusKey operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<PreparedOperation>;
@@ -123,22 +107,16 @@ export interface PreparationProvider {
   transferTicket(params: TransferTicketParams): Promise<PreparedOperation>;
 
   /**
-   *
-   * @description Method to prepare a increase_paid_storage operation
-   *
+   * @description Method to prepare an increase_paid_storage operation
    * @param params increasePaidStorage operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   increasePaidStorage(params: IncreasePaidStorageParams): Promise<PreparedOperation>;
 
   /**
-   *
    * @description Method to prepare a ballot operation
-   *
    * @param params ballot operation parameters
-   *
    * @returns a PreparedOperation object
    */
   ballot(params: BallotParams): Promise<PreparedOperation>;
@@ -146,19 +124,14 @@ export interface PreparationProvider {
   /**
    *
    * @description Method to prepare a proposals operation
-   *
    * @param params proposals operation parameters
-   *
    * @returns a PreparedOperation object
    */
   proposals(params: ProposalsParams): Promise<PreparedOperation>;
 
   /**
-   *
    * @description Method to prepare a drain_delegate operation
-   *
    * @param params drainDelegatex operation parameters
-   *
    * @returns a PreparedOperation object
    */
   drainDelegate(params: DrainDelegateParams): Promise<PreparedOperation>;
@@ -174,11 +147,8 @@ export interface PreparationProvider {
   batch(batchParams: ParamsWithKind[]): Promise<PreparedOperation>;
 
   /**
-   *
    * @description Method to prepare a contract call (transfer) operation
-   *
    * @param contractMethod ContractMethod or ContractMethodObject retrieved from smart contract
-   *
    * @returns a PreparedOperation object
    */
   contractCall(
