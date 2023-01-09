@@ -60,10 +60,10 @@ const paddedBytesLength = addPadding.slice(addPadding.length - 8);
 const payloadBytes = '05' + '01' + paddedBytesLength + bytes;
 ```
 
-The bytes representation of the string must be prefixed with 4 pieces of information:
+The hexadecimal/Micheline representation of the string must contain 4 pieces of information:
 
 - "05" indicates that this is a Micheline expression
-- "01" indicates that a string was converted to bytes
+- "01" indicates that the data is a Micheline string
 - the number of characters in the bytes (hexadecimal string divided by 2) encoded on 4 bytes
 - bytes of formatted input to be signed
 
