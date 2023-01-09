@@ -112,9 +112,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       const content = prepared.opOb.contents[0] as OperationContentsBallot
 
       expect(prepared.opOb.contents[0].kind).toEqual('ballot');
-      expect(content.proposal).toBeDefined();
       expect(content.proposal).toEqual('PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg');
-      expect(content.ballot).toBeDefined();
       expect(content.ballot).toEqual('yay');
       expect(prepared.opOb.protocol).toEqual('PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW');
       done();
