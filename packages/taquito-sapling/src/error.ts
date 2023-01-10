@@ -1,5 +1,3 @@
-export { InvalidAddressError } from '@taquito/core';
-
 /**
  *  @category Error
  *  @description Error indicating that the spending key is invalid

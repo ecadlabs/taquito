@@ -54,14 +54,18 @@ After formatting the string properly, you can convert it into bytes, for example
 import { char2Bytes } from '@taquito/utils';
 
 const bytes = char2Bytes(formattedInput);
-const payloadBytes = '05' + '0100' + char2Bytes(bytes.length) + bytes;
+const bytesLength = (bytes.length / 2).toString(16);
+const addPadding = `00000000${bytesLength}`;
+const paddedBytesLength = addPadding.slice(addPadding.length - 8);
+const payloadBytes = '05' + '01' + paddedBytesLength + bytes;
 ```
 
-The bytes representation of the string must be prefixed with 3 pieces of information:
+The hexadecimal/Micheline representation of the string must contain 4 pieces of information:
 
 - "05" indicates that this is a Micheline expression
-- "01" indicates that a string was converted to bytes
-- the number of characters in the byte string encoded on 4 bytes
+- "01" indicates that the data is a Micheline string
+- the number of characters in the bytes (hexadecimal string divided by 2) encoded on 4 bytes
+- bytes of formatted input to be signed
 
 Once you have your bytes, you can send them to the wallet to have them signed:
 
@@ -125,9 +129,13 @@ const { signature } = signedPayload;
 To verify that the previously generated signature has actually been signed by a wallet, you can use the `veryfySignature` method from the Taquito utils. Here is an example where we check if the payload has been signed by the client wallet, using their public key:
 
 ```js
-import {verifySignature} from "@taquito/utils";
+import { verifySignature } from '@taquito/utils';
 
-const isVerified = verifySignature(payloadBytes, (await wallet.client.getActiveAccount()).publicKey, signature)
+const isVerified = verifySignature(
+  payloadBytes,
+  (await wallet.client.getActiveAccount()).publicKey,
+  signature
+);
 ```
 
 ## Signing Michelson data
@@ -154,9 +162,10 @@ const packed = packDataBytes(
   dataJSON, // as MichelsonData
   typeJSON // as MichelsonType
 );
-Tezos.signer.sign(packed.bytes)
-.then((signed) => println(JSON.stringify(signed, null, 2)))
-.catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+Tezos.signer
+  .sign(packed.bytes)
+  .then((signed) => println(JSON.stringify(signed, null, 2)))
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 First, you provide the Michelson code to be signed as a string along with its type.  
@@ -174,7 +183,9 @@ After forging a signature, you may want to send it to a contract so it can use i
 
 ```js
 const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-const op = await contract.methods.check_signature(public_key, signature, payloadBytes).send();
+const op = await contract.methods
+  .check_signature(public_key, signature, payloadBytes)
+  .send();
 await op.confirmation();
 ```
 

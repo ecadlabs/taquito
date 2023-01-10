@@ -10,7 +10,7 @@ import { validateAddress, ValidationResult } from '@taquito/utils';
 import { TzReadProvider } from '../../read-provider/interface';
 import {
   InvalidViewSimulationContext,
-  InvalidContractViewParameterError,
+  InvalidViewParameterError,
   ViewSimulationError,
   validateAndExtractFailwith,
 } from '../errors';
@@ -85,7 +85,7 @@ export class OnChainView {
     try {
       return this._smartContractViewSchema.encodeViewArgs(this._args);
     } catch (error) {
-      throw new InvalidContractViewParameterError(
+      throw new InvalidViewParameterError(
         this._smartContractViewSchema.viewName,
         this.getSignature(),
         this._args,

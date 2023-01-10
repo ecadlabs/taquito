@@ -60,15 +60,13 @@ import {
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
+  InvalidAddressError,
   validateAddress,
   validateContractAddress,
   ValidationResult,
 } from '@taquito/utils';
-import { InvalidAddressError } from '@taquito/core';
 
 export { castToBigNumber } from './utils/utils';
-
-export * from './errors';
 
 export {
   RPCOptions,
@@ -491,7 +489,7 @@ export class RpcClient implements RpcClientInterface {
       'tx_rollup_commitment_bond',
       'vdf_difficulty',
       'sc_rollup_stake_amount',
-      'minimal_stake'
+      'minimal_stake',
     ]);
 
     return {

@@ -4,13 +4,12 @@ import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { Encoder } from '../taquito-local-forging';
 import { opMappingReverse, opMapping } from '../constants';
 import { pad } from '../utils';
-import { UnexpectedMichelsonValueError } from '../error';
-import { InvalidHexStringError } from '@taquito/core'
+import { InvalidHexStringError, UnexpectedMichelsonValueError } from '../error';
 
-export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[]; };
-export type BytesValue = { bytes: string; };
-export type StringValue = { string: string; };
-export type IntValue = { int: string; };
+export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
+export type BytesValue = { bytes: string };
+export type StringValue = { string: string };
+export type IntValue = { int: string };
 export type MichelsonValue =
   | PrimValue
   | BytesValue
@@ -34,7 +33,7 @@ export const isInt = (value: MichelsonValue): value is IntValue => {
   return 'int' in value && typeof value.int === 'string';
 };
 
-export const scriptEncoder: Encoder<{ code: MichelsonValue; storage: MichelsonValue; }> = (
+export const scriptEncoder: Encoder<{ code: MichelsonValue; storage: MichelsonValue }> = (
   script
 ) => {
   const code = valueEncoder(script.code);
@@ -100,7 +99,7 @@ export const extractRequiredLen = (value: Uint8ArrayConsumer, bytesLength = 4) =
 
 export const bytesEncoder: Encoder<BytesValue> = (value) => {
   if (!/^([A-Fa-f0-9]{2})*$/.test(value.bytes)) {
-    throw new InvalidHexStringError(`The hex string '${value.bytes}' is invalid`);
+    throw new InvalidHexStringError(value.bytes);
   }
 
   const len = value.bytes.length / 2;
@@ -136,8 +135,8 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
     binary.length <= 6
       ? 6
       : (binary.length - 6) % 7
-        ? binary.length + 7 - ((binary.length - 6) % 7)
-        : binary.length;
+      ? binary.length + 7 - ((binary.length - 6) % 7)
+      : binary.length;
 
   const splitted = binary.padStart(pad, '0').match(/\d{6,7}/g);
 
