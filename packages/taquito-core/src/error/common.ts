@@ -35,7 +35,7 @@ export class InvalidDerivationPathError extends ParameterValidationError {
  *  @category Error
  *  @description Error that indicates an invalid derivation type being passed or used
  */
-export class InvalidDerivationTypeError extends Error {
+export class InvalidDerivationTypeError extends ParameterValidationError {
   public name = 'InvalidDerivationTypeError';
   constructor(public derivationType: string) {
     super(
