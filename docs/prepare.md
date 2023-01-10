@@ -3,7 +3,6 @@ title: Preparing Operations
 author: Davis Sawali
 ---
 
-
 :::warning
 This feature is currently a work in progress and may be updated in the near future.
 :::
@@ -37,9 +36,9 @@ The PrepareProvider class affords extension and control to users when preparing 
 ## Usage example
 
 ### Individual Operations
-The `PrepareProvider` will be accessible via the `TezosToolkit` class as such:
+The `PrepareProvider` will be accessible via the `TezosToolkit`:
 ```typescript
-const Tezos = new TezosToolkit('RPC_ENDPOINT');
+// const Tezos = new TezosToolkit('RPC_ENDPOINT');
 
 const prepared = await Tezos.prepare.transaction({ 
   to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -56,3 +55,31 @@ transaction(params: TransferParams , source?: string): Promise<PreparedOperation
 
 - `params` is the Transaction operation parameters. In this case, the required properties are `to` and `amount`.
 - `source` is the source public key hash if you do wish to override the source. This parameter is optional by design. If you do not wish to override it, the source will be grabbed from the `Context`.
+
+### Batch Operations
+The `PrepareProvider` also provides support for batch operations:
+```typescript
+const prepared = await Tezos.prepare.batch([
+  {
+    kind: OpKind.TRANSACTION,
+    to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+    amount: 2,
+  },
+  {
+    kind: OpKind.TRANSACTION,
+    to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+    amount: 2,
+  },
+]);
+```
+- the parameters are the required parameters for each respective operation with the added `kind` property that denotes the operation kind. Users can also utilize `OpKind` which is an enum that holds operation kind values.
+
+### Contract Calls
+Users are also able to utilize the `PrepareProvider` to prepare contract calls:
+```typescript
+// contractAddress refers to an originated increment/decrement smart contract, 
+// omitted for brevity
+const contractAbs = await Tezos.contract.at(contractAddress);
+const method = await contractAbs.methods.increment(1);
+const prepared = await Tezos.prepare.contractCall(method);
+```
