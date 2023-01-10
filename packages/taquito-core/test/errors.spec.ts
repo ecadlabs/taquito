@@ -1,4 +1,4 @@
-import { ParameterValidationError } from '../src/errors';
+import { ParameterValidationError } from '../src/error/errors';
 
 describe('errors', () => {
   it('should throw an ParameterValidationError', () => {
