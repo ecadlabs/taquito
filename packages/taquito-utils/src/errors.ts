@@ -43,7 +43,6 @@ export class InvalidMessageError extends ValidationError {
   }
 }
 
-// NOT USED
 /**
  *  @category Error
  *  @description Error that indicates invalid protocol hash being passed or used

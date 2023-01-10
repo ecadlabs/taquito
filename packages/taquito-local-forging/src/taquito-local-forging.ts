@@ -54,7 +54,7 @@ export class LocalForger implements Forger {
 
   forge(params: ForgeParams): Promise<string> {
     if (validateBlock(params.branch) !== ValidationResult.VALID) {
-      throw new InvalidBlockHashError(`The block hash ${params.branch} is invalid`);
+      throw new InvalidBlockHashError(params.branch);
     }
 
     for (const content of params.contents) {
