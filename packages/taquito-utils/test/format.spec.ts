@@ -23,7 +23,7 @@ describe('Format', () => {
     expect(format('tz', 'mutez', 1)).toEqual(new BigNumber(1000000));
   });
 
-  it('Should be valid bytes tezostaquito example', () => {
+  it('Should be valid bytes tezostaquito example https://tezostaquito.io/docs/next/signing#generating-a-signature-with-beacon-sdk with proper padding for bytes length', () => {
     const formattedInput: string = [
       'Tezos Signed Message:',
       'some url',
