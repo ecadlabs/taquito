@@ -2,7 +2,7 @@ import { ViewSchema } from '@taquito/michelson-encoder';
 import { OnChainView } from '../../src/contract/contract-methods/contract-on-chain-view';
 import BigNumber from 'bignumber.js';
 import {
-  InvalidContractViewParameterError,
+  InvalidViewParameterError,
   InvalidViewSimulationContext,
   ViewSimulationError,
 } from '../../src/contract';
@@ -153,7 +153,7 @@ describe('OnChainView test on K protocol', () => {
     done();
   });
 
-  it('should throw a InvalidContractViewParameterError error if the parameter of the view is invalid', async (done) => {
+  it('should throw a InvalidViewParameterError error if the parameter of the view is invalid', async (done) => {
     view = new OnChainView(
       mockRpcClient as any,
       mockReadProvider,
@@ -172,7 +172,7 @@ describe('OnChainView test on K protocol', () => {
         viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
       });
     } catch (error) {
-      expect(error).toBeInstanceOf(InvalidContractViewParameterError);
+      expect(error).toBeInstanceOf(InvalidViewParameterError);
     }
     done();
   });

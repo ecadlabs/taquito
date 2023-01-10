@@ -1,5 +1,3 @@
-export { InvalidAddressError } from '@taquito/core';
-
 /**
  *  @category Error
  *  @description Error that indicates invalid confirmation count has been passed or configured
