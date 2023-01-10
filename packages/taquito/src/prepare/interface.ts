@@ -79,10 +79,8 @@ export interface PreparationProvider {
   /**
    *
    * @description Method to prepare a tx_rollup_submit_batch operation
-   *
    * @param params txRollupSubmitBatch operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   txRollupSubmitBatch(params: TxRollupBatchParams): Promise<PreparedOperation>;
@@ -98,10 +96,8 @@ export interface PreparationProvider {
   /**
    *
    * @description Method to prepare a transfer_ticket operation
-   *
    * @param params TransferTicketx operation parameters
    * @param source string or undefined source pkh
-   *
    * @returns a PreparedOperation object
    */
   transferTicket(params: TransferTicketParams): Promise<PreparedOperation>;
@@ -139,9 +135,7 @@ export interface PreparationProvider {
   /**
    *
    * @description Method to prepare a batch operation
-   *
    * @param params x operation parameters
-   *
    * @returns a PreparedOperation object
    */
   batch(batchParams: ParamsWithKind[]): Promise<PreparedOperation>;
