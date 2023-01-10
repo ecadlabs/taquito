@@ -49,7 +49,6 @@
       "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts",
       "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts",
       "^@taquito/tzip12$": "<rootDir>/packages/taquito-tzip12/src/taquito-tzip12.ts",
-      "^@taquito/core$": "<rootDir>/packages/taquito-core/src/taquito-core.ts",
       "^@taquito/contracts-library$": "<rootDir>/packages/taquito-contracts-library/src/contracts-library.ts"
     },
     "coveragePathIgnorePatterns": [

@@ -53,9 +53,6 @@
       "@taquito/sapling": [
         "taquito-sapling/src/taquito-sapling.ts"
       ],
-      "@taquito/core": [
-        "taquito-core/src/taquito-core.ts"
-      ],
       "@taquito/ledger-signer": [
         "taquito-ledger-signer/src/taquito-ledger-signer.ts"
       ]

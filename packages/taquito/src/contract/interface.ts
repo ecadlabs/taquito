@@ -29,8 +29,8 @@ import { ContractAbstraction, ContractStorageType, DefaultContractType } from '.
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
-import { DrainDelegateOperation } from '../operations/drain-delegate-operation';
-import { BallotOperation } from '../operations/ballot-operation';
+import { DrainDelegateOperation } from '../operations';
+import { BallotOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 
