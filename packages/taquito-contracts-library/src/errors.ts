@@ -1,4 +1,12 @@
-export { InvalidAddressError } from '@taquito/core';
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid address being used or passed
+ */
+export class InvalidAddressError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
 
 /**
  *  @category Error

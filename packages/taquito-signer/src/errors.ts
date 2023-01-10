@@ -1,4 +1,9 @@
-export { InvalidDerivationPathError, InvalidHexStringError } from '@taquito/core';
+export class InvalidDerivationPathError extends Error {
+  public name = 'InvalidDerivationPathError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
 
 export class InvalidMnemonicError extends Error {
   public name = 'InvalidMnemonicError';

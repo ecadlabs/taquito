@@ -20,10 +20,11 @@ import {
 import {
   validateAddress,
   validateContractAddress,
+  InvalidContractAddressError,
+  InvalidAddressError,
   ValidationResult,
   InvalidOperationKindError,
 } from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -214,7 +215,7 @@ export class Wallet {
    */
   originate<TWallet extends DefaultWalletType = DefaultWalletType>(
     params: WalletOriginateParams<ContractStorageType<TWallet>>
-  ): { send: () => Promise<OriginationWalletOperation<TWallet>>; } {
+  ): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
         this.context.parser.prepareCodeOrigination({

@@ -6,8 +6,7 @@
 import { EntrypointsResponse, ScriptedContracts } from '@taquito/rpc';
 import { Extension, Context } from '@taquito/taquito';
 import { validateAddress, ValidationResult } from '@taquito/utils';
-import { InvalidContractAddressError } from '@taquito/core';
-import { InvalidScriptFormatError } from './errors';
+import { InvalidAddressError, InvalidScriptFormatError } from './errors';
 import { ReadWrapperContractsLibrary } from './read-provider-wrapper';
 
 interface ContractsData {
@@ -71,7 +70,7 @@ export class ContractsLibrary implements Extension {
 
   private validateContractAddress(address: string) {
     if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address);
+      throw new InvalidAddressError(`Address is invalid: ${address}`);
     }
   }
 

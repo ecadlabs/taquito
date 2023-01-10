@@ -91,8 +91,8 @@ export class Base58DecodingError extends Error {
  *  @category Error
  *  @description
  */
-export class InvalidHashLengthError extends Error {
-  public name = 'InvalidHashLengthError';
+export class InvalidMessageError extends Error {
+  public name = 'InvalidMessageError';
   constructor(public message: string) {
     super(message);
   }
@@ -105,7 +105,7 @@ function sha256(msg: number[] | Uint8Array): number[] {
   const pad = r === 0 ? 0 : 64 - r;
 
   if (msg.length > 268435455) {
-    throw new InvalidHashLengthError(`SHA-256 -- message length is too big: ${msg.length}`);
+    throw new InvalidMessageError(`SHA-256 -- message length is too big: ${msg.length}`);
   }
 
   const l = msg.length << 3;

@@ -26,8 +26,7 @@ import {
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
-import { InvalidContractAddressError, InvalidAddressError } from '@taquito/core';
-
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/utils';
 
 /**
  * RPCEstimateProvider test

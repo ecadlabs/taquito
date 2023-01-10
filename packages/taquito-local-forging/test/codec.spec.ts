@@ -1,13 +1,13 @@
-import { entrypointEncoder, entrypointDecoder, ballotEncoder, ballotDecoder, pkhEncoder, publicKeyDecoder, publicKeyEncoder } from '../src/codec';
+import { entrypointEncoder, entrypointDecoder, ballotEncoder, ballotDecoder } from '../src/codec';
 import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
 import { InvalidKeyHashError, InvalidPublicKeyError } from '@taquito/utils';
+import { pkhEncoder, publicKeyDecoder, publicKeyEncoder } from '../src/codec';
 import {
   DecodeBallotValueError,
   InvalidBallotValueError,
+  InvalidHexStringError,
   OversizedEntryPointError,
 } from '../src/error';
-import { InvalidHexStringError } from '@taquito/core';
-
 import { bytesEncoder } from '../src/michelson/codec';
 
 describe('Tests for Entrypoint functions and for encode and decoder error messages', () => {
