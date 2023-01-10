@@ -605,6 +605,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         max_allowed_global_constants_depth: 10000,
         cache_layout_size: 3,
         michelson_maximum_type_size: 2001,
+        sc_max_wrapped_proof_binary_size: 30000,
         sc_rollup_message_size_limit: 4096,
         preserved_cycles: 3,
         blocks_per_cycle: 4096,
@@ -669,7 +670,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
           number_of_slots: 256,
           number_of_shards: 2048,
           endorsement_lag: 1,
-          attestation_threshold: 50,
+          availability_threshold: 50,
           slot_size: 1048576,
           redundancy_factor: 16,
           page_size: 4096
