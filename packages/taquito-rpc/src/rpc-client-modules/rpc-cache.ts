@@ -230,7 +230,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getStorage(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
     this.validateContract(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_STORAGE, [
@@ -257,7 +257,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getScript(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
     this.validateContract(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_SCRIPT, [
@@ -285,7 +285,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getNormalizedScript(
     address: string,
     unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
     this.validateContract(address);
     const key = this.formatCacheKey(
@@ -313,7 +313,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getContract(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
     this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_CONTRACT, [
@@ -340,7 +340,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getManagerKey(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
     this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_MANAGER_KEY, [
@@ -367,7 +367,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getDelegate(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
     this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_DELEGATE, [
@@ -397,7 +397,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getBigMapKey(
     address: string,
     key: BigMapKey,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
     this.validateAddress(address);
     const keyUrl = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BIG_MAP_KEY, [
@@ -427,7 +427,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getBigMapExpr(
     id: string,
     expr: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapResponse> {
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BIG_MAP_EXPR, [
       block,
@@ -454,7 +454,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getDelegates(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
     this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_DELEGATES, [
@@ -482,7 +482,7 @@ export class RpcClientCache implements RpcClientInterface {
 
   async getVotingInfo(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<VotingInfoResponse> {
     this.validateAddress(address);
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_VOTING_INFO, [
@@ -934,7 +934,7 @@ export class RpcClientCache implements RpcClientInterface {
   async packData(
     data: PackDataParams,
     { block }: RPCOptions = defaultRPCOptions
-  ): Promise<{ packed: string; gas: BigNumber | 'unaccounted' | undefined; }> {
+  ): Promise<{ packed: string; gas: BigNumber | 'unaccounted' | undefined }> {
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.PACK_DATA, [
       block,
       data,
@@ -1019,7 +1019,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getSaplingDiffById(
     id: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
@@ -1046,7 +1046,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getSaplingDiffByContract(
     contract: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
@@ -1062,7 +1062,7 @@ export class RpcClientCache implements RpcClientInterface {
     }
   }
 
-  async getProtocols({ block }: { block: string; } = defaultRPCOptions): Promise<ProtocolsResponse> {
+  async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_PROTOCOLS, [
       block,
     ]);
@@ -1077,7 +1077,7 @@ export class RpcClientCache implements RpcClientInterface {
 
   async getTxRollupState(
     txRollupId: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<TxRollupStateResponse> {
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_TX_ROLLUP_STATE, [
       block,
@@ -1095,7 +1095,7 @@ export class RpcClientCache implements RpcClientInterface {
   async getTxRollupInbox(
     txRollupId: string,
     blockLevel: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<TxRollupInboxResponse | null> {
     const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_TX_ROLLUP_INBOX, [
       block,
@@ -1122,7 +1122,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getStorageUsedSpace(
     contract: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
@@ -1149,7 +1149,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getStoragePaidSpace(
     contract: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),

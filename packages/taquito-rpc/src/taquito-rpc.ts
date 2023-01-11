@@ -59,11 +59,7 @@ import {
   TxRollupInboxResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
-import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
-} from '@taquito/utils';
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { InvalidAddressError } from '@taquito/core';
 
 export { castToBigNumber } from './utils/utils';
@@ -187,7 +183,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getStorage(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<StorageResponse> {
     this.validateContract(address);
     return this.httpBackend.createRequest<StorageResponse>({
@@ -209,7 +205,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getScript(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
     this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>({
@@ -232,7 +228,7 @@ export class RpcClient implements RpcClientInterface {
   async getNormalizedScript(
     address: string,
     unparsingMode: UnparsingMode = { unparsing_mode: 'Readable' },
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<ScriptResponse> {
     this.validateContract(address);
     return this.httpBackend.createRequest<ScriptResponse>(
@@ -257,7 +253,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getContract(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<ContractResponse> {
     this.validateAddress(address);
     const contractResponse = await this.httpBackend.createRequest<ContractResponse>({
@@ -281,7 +277,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getManagerKey(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
     this.validateAddress(address);
     return this.httpBackend.createRequest<ManagerKeyResponse>({
@@ -303,7 +299,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getDelegate(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegateResponse> {
     this.validateAddress(address);
     let delegate: DelegateResponse;
@@ -338,7 +334,7 @@ export class RpcClient implements RpcClientInterface {
   async getBigMapKey(
     address: string,
     key: BigMapKey,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
     this.validateAddress(address);
     return this.httpBackend.createRequest<BigMapGetResponse>(
@@ -365,7 +361,7 @@ export class RpcClient implements RpcClientInterface {
   async getBigMapExpr(
     id: string,
     expr: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapResponse> {
     return this.httpBackend.createRequest<BigMapResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/big_maps/${id}/${expr}`),
@@ -384,7 +380,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getDelegates(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<DelegatesResponse> {
     this.validateAddress(address);
     const response = await this.httpBackend.createRequest<DelegatesResponse>({
@@ -409,20 +405,20 @@ export class RpcClient implements RpcClientInterface {
       ...castedResponse,
       frozen_balance_by_cycle: response.frozen_balance_by_cycle
         ? response.frozen_balance_by_cycle.map(({ deposit, deposits, fees, rewards, ...rest }) => {
-          const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
-            'deposit',
-            'deposits',
-            'fees',
-            'rewards',
-          ]);
-          return {
-            ...rest,
-            deposit: castedToBigNumber.deposit,
-            deposits: castedToBigNumber.deposits,
-            fees: castedToBigNumber.fees,
-            rewards: castedToBigNumber.rewards,
-          };
-        })
+            const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
+              'deposit',
+              'deposits',
+              'fees',
+              'rewards',
+            ]);
+            return {
+              ...rest,
+              deposit: castedToBigNumber.deposit,
+              deposits: castedToBigNumber.deposits,
+              fees: castedToBigNumber.fees,
+              rewards: castedToBigNumber.rewards,
+            };
+          })
         : undefined,
     };
   }
@@ -439,7 +435,7 @@ export class RpcClient implements RpcClientInterface {
 
   async getVotingInfo(
     address: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<VotingInfoResponse> {
     this.validateAddress(address);
     return await this.httpBackend.createRequest<VotingInfoResponse>({
@@ -797,7 +793,7 @@ export class RpcClient implements RpcClientInterface {
   ): Promise<EntrypointsResponse> {
     this.validateContract(contract);
     const contractResponse = await this.httpBackend.createRequest<{
-      entrypoints: { [key: string]: MichelsonV1ExpressionExtended; };
+      entrypoints: { [key: string]: MichelsonV1ExpressionExtended };
     }>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/entrypoints`
@@ -1005,7 +1001,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getSaplingDiffById(
     id: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     return this.httpBackend.createRequest<SaplingDiffResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/sapling/${id}/get_diff`),
@@ -1024,7 +1020,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getSaplingDiffByContract(
     contract: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<SaplingDiffResponse> {
     return this.httpBackend.createRequest<SaplingDiffResponse>({
       url: this.createURL(
@@ -1034,7 +1030,7 @@ export class RpcClient implements RpcClientInterface {
     });
   }
 
-  async getProtocols({ block }: { block: string; } = defaultRPCOptions): Promise<ProtocolsResponse> {
+  async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
     return this.httpBackend.createRequest<ProtocolsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/protocols`),
       method: 'GET',
@@ -1053,7 +1049,7 @@ export class RpcClient implements RpcClientInterface {
 
   async getTxRollupState(
     txRollupId: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<TxRollupStateResponse> {
     return this.httpBackend.createRequest<TxRollupStateResponse>({
       url: this.createURL(
@@ -1077,7 +1073,7 @@ export class RpcClient implements RpcClientInterface {
   async getTxRollupInbox(
     txRollupId: string,
     blockLevel: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<TxRollupInboxResponse | null> {
     return this.httpBackend.createRequest<TxRollupInboxResponse>({
       url: this.createURL(
@@ -1098,7 +1094,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getStorageUsedSpace(
     contract: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>({
       url: this.createURL(
@@ -1119,7 +1115,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getStoragePaidSpace(
     contract: string,
-    { block }: { block: string; } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>({
       url: this.createURL(
