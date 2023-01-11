@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "@taquito/rpc": "^15.0.1",
-    "@taquito/core": "^15.0.0",
+    "@taquito/core": "^15.0.1",
     "@types/bluebird": "^3.5.36",
     "@types/estree": "^1.0.0",
     "@types/jest": "^26.0.23",

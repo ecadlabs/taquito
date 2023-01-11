@@ -2,6 +2,28 @@
  *  @category Error
  *  @description Error that indicates an invalid user data input
  */
+export class ExternalError extends Error {
+  public name = 'ExternalError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid user data input
+ */
+export class ValidationError extends Error {
+  public name = 'ValidationError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid user data input
+ */
 export class ParameterValidationError extends Error {
   public name = 'ParameterValidationError';
   constructor(public message: string) {
@@ -55,7 +77,7 @@ export class NetworkError extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates permission
+ *  @description Error that indicates
  */
 export class PermissionDeniedError extends Error {
   public name = 'PermissionDeniedError';

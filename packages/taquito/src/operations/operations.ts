@@ -18,7 +18,8 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
-import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
+import { validateOperation, ValidationResult } from '@taquito/utils';
+import { InvalidOperationHashError } from '@taquito/core';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
 import { InvalidConfirmationCountError } from '../error';
 

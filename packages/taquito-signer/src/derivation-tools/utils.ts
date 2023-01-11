@@ -1,6 +1,5 @@
 import { InvalidHexStringError } from '@taquito/core';
 
-
 export function parseHex(s: string): Uint8Array {
   const res: number[] = [];
   for (let i = 0; i < s.length; i += 2) {

@@ -17,13 +17,12 @@ import {
   WalletTransferParams,
 } from './interface';
 
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
+  InvalidAddressError,
+  InvalidContractAddressError,
   InvalidOperationKindError,
-} from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+} from '@taquito/core';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -103,9 +102,9 @@ export class WalletOperationBatch {
    */
   withIncreasePaidStorage(params: WalletIncreasePaidStorageParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination)
+      throw new InvalidAddressError(params.destination);
     }
-    this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params })
+    this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
     return this;
   }
 
@@ -298,15 +297,15 @@ export class Wallet {
    */
   increasePaidStorage(params: WalletIncreasePaidStorageParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination)
+      throw new InvalidAddressError(params.destination);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapIncreasePaidStorageWalletParams(
         async () => params
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createIncreasePaidStorageOperation(opHash)
-    })
+      return this.context.operationFactory.createIncreasePaidStorageOperation(opHash);
+    });
   }
 
   /**

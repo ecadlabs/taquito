@@ -1,13 +1,7 @@
 import { hash } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
-import {
-  b58cencode,
-  b58cdecode,
-  prefix,
-  buf2hex,
-  isValidPrefix,
-  InvalidKeyError,
-} from '@taquito/utils';
+import { b58cencode, b58cdecode, prefix, buf2hex, isValidPrefix } from '@taquito/utils';
+import { InvalidKeyError } from '@taquito/core';
 import toBuffer from 'typedarray-to-buffer';
 
 /**

@@ -4,7 +4,8 @@
  */
 import { openSecretBox } from '@stablelib/nacl';
 import { hash } from '@stablelib/blake2b';
-import { hex2buf, mergebuf, b58cencode, prefix, InvalidKeyError } from '@taquito/utils';
+import { hex2buf, mergebuf, b58cencode, prefix } from '@taquito/utils';
+import { InvalidKeyError } from '@taquito/core';
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
@@ -67,7 +68,12 @@ export class InMemorySigner {
    * @param curve currently only supported for tz1, tz2, tz3 addresses. soon bip25519
    * @returns InMemorySigner
    */
-  static fromMnemonic({ mnemonic, password = '', derivationPath = "44'/1729'/0'/0'", curve = 'ed25519' }: FromMnemonicParams) {
+  static fromMnemonic({
+    mnemonic,
+    password = '',
+    derivationPath = "44'/1729'/0'/0'",
+    curve = 'ed25519',
+  }: FromMnemonicParams) {
     // check if curve is defined if not default tz1
     if (!Bip39.validateMnemonic(mnemonic)) {
       // avoiding exposing mnemonic again in case of mistake making invalid

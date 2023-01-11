@@ -14,10 +14,10 @@ import {
   verifySignature,
   validateKeyHash,
   ValidationResult,
-  InvalidKeyHashError,
   ProhibitedActionError,
   InvalidSignatureError,
 } from '@taquito/utils';
+import { InvalidKeyHashError } from '@taquito/core';
 import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
 import {
