@@ -328,7 +328,7 @@ export class OperationBatch extends OperationEmitter {
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) { }
+  constructor(private context: Context, private estimator: EstimationProvider) {}
 
   /***
    *

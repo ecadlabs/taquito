@@ -19,7 +19,7 @@ export class ContractMethodObject<T extends ContractProvider | Wallet> implement
         private args: any = 'unit',
         private isMultipleEntrypoint = true,
         private isAnonymous = false
-    ) { }
+    ) {}
 
     /**
      * @description Get the signature of the smart contract method

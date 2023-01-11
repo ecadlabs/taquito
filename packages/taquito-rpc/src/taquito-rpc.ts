@@ -102,7 +102,7 @@ export class RpcClient implements RpcClientInterface {
     protected url: string,
     protected chain: string = defaultChain,
     protected httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
