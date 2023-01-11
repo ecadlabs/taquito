@@ -29,7 +29,7 @@ import {
 } from './errors';
 import { Signer } from '@taquito/taquito';
 
-export { SignatureVerificationFailedError } from './errors'
+export { SignatureVerificationFailedError } from './errors';
 
 
 interface PublicKeyResponse {
