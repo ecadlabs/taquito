@@ -5,13 +5,8 @@ import {
   RpcClientInterface,
   ScriptResponse,
 } from '@taquito/rpc';
-import {
-  validateChain,
-  validateContractAddress,
-  ValidationResult,
-  InvalidChainIdError,
-  DeprecationError,
-} from '@taquito/utils';
+import { validateChain, validateContractAddress, ValidationResult } from '@taquito/utils';
+import { InvalidChainIdError, DeprecationError } from '@taquito/core';
 import { ChainIds } from '../constants';
 import { TzReadProvider } from '../read-provider/interface';
 import { Wallet } from '../wallet';

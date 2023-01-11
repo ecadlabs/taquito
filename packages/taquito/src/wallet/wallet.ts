@@ -17,13 +17,12 @@ import {
   WalletTransferParams,
 } from './interface';
 
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
+  InvalidAddressError,
+  InvalidContractAddressError,
   InvalidOperationKindError,
-} from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+} from '@taquito/core';
 
 export interface PKHOption {
   forceRefetch?: boolean;

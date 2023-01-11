@@ -1,5 +1,6 @@
 import { hash } from '@stablelib/blake2b';
-import { b58cencode, b58cdecode, prefix, isValidPrefix, InvalidKeyError } from '@taquito/utils';
+import { b58cencode, b58cdecode, prefix, isValidPrefix } from '@taquito/utils';
+import { InvalidKeyError } from '@taquito/core';
 import toBuffer from 'typedarray-to-buffer';
 import elliptic from 'elliptic';
 

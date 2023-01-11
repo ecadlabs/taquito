@@ -37,13 +37,16 @@ import { ContractMethodObject } from '../contract/contract-methods/contract-meth
 import {
   validateAddress,
   validateKeyHash,
-  InvalidKeyHashError,
   ValidationResult,
-  InvalidOperationKindError,
   validateContractAddress,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidContractAddressError,
+  InvalidKeyHashError,
+  InvalidOperationKindError,
+} from '@taquito/core';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,

@@ -8,13 +8,13 @@ import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
-import { InvalidBlockHashError } from '@taquito/core'
+import { validateBlock, ValidationResult } from '@taquito/utils';
 import { InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash, ProtoInferiorTo } from './protocols';
 import { decodersProto14 } from './proto14-kathmandu/decoder-proto14';
 import { encodersProto14 } from './proto14-kathmandu/encoder-proto14';
+import { InvalidOperationKindError, InvalidBlockHashError } from '@taquito/core';
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
@@ -54,7 +54,7 @@ export class LocalForger implements Forger {
 
   forge(params: ForgeParams): Promise<string> {
     if (validateBlock(params.branch) !== ValidationResult.VALID) {
-      throw new InvalidBlockHashError(`The block hash ${params.branch} is invalid`);
+      throw new InvalidBlockHashError(params.branch);
     }
 
     for (const content of params.contents) {

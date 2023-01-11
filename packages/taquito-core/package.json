@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "15.0.0",
+  "version": "15.0.1",
   "description": "high level classes and interfaces",
   "keywords": [
     "tezos",

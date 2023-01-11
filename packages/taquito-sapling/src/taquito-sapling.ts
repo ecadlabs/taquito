@@ -8,14 +8,13 @@ import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
 import {
   b58cdecode,
   format,
-  InvalidKeyError,
   prefix,
   Prefix,
   validateKeyHash,
   ValidationResult,
 } from '@taquito/utils';
 import { InsufficientBalance, InvalidMemo } from './error';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidKeyError } from '@taquito/core';
 import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
 import { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
 import { SaplingForger } from './sapling-forger/sapling-forger';

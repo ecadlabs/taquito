@@ -72,7 +72,7 @@
     "@taquito/rpc": "^15.0.1",
     "@taquito/taquito": "^15.0.1",
     "@taquito/utils": "^15.0.1",
-    "@taquito/core": "^15.0.0",
+    "@taquito/core": "^15.0.1",
     "bignumber.js": "^9.1.0",
     "bip39": "^3.0.4",
     "blakejs": "^1.2.1",
