@@ -248,8 +248,6 @@ describe('PrepareProvider test', () => {
 
   describe('drainDelegate', () => {
     it('should return a prepared drain_delegate operation', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
-
       const prepared = await prepareProvider.drainDelegate({
         consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
         delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
