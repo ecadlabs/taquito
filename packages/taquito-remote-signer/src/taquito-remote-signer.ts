@@ -29,6 +29,8 @@ import {
 } from './errors';
 import { Signer } from '@taquito/taquito';
 
+export { SignatureVerificationFailedError } from './errors'
+
 
 interface PublicKeyResponse {
   public_key: string;
