@@ -24,6 +24,7 @@ export class Path extends Array<number> {
    *
    * @param s derivation path eg: 44'/1729'/0'/0'
    * @returns applied hardened values
+   * @throws InvalidDerivationPath thrown when path provided
    */
   static fromString(s: string): Path {
     if (s.length === 0) {

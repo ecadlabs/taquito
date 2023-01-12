@@ -26,6 +26,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    *
    * @param seedSrc result of Bip39.mnemonicToSeed
    * @returns instance of PrivateKey
+   * @throws InvalidSeedLengthError if seed does not match required seed length
    */
   static fromSeed(seedSrc: Uint8Array | string): PrivateKey {
     const seed = typeof seedSrc === 'string' ? parseHex(seedSrc) : seedSrc;
@@ -46,6 +47,7 @@ export class PrivateKey implements ExtendedPrivateKey {
   /**
    * @index current derivation path item ie: 1729'
    * @returns derivation path child of original private key pair
+   * @throws InvalidDerivationPathError if chosen path is not supported
    */
   derive(index: number): PrivateKey {
     if ((index & Hard) === 0) {

@@ -1,5 +1,10 @@
 import { InvalidHexStringError } from '@taquito/core';
 
+/**
+ * @s
+ * @returns Uint8Array from
+ * @thrown Error if invalid hex string
+ */
 export function parseHex(s: string): Uint8Array {
   const res: number[] = [];
   for (let i = 0; i < s.length; i += 2) {

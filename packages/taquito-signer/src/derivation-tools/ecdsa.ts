@@ -38,6 +38,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    * @param seedSrc result of Bip39.mnemonicToSeed
    * @param curve known supported curve p256 or secp256k1
    * @returns instance of PrivateKey non-HD keys derived
+   * @throws validation errors for either invalid parameters or invalid seed from mnemonic
    */
   static fromSeed(seedSrc: Uint8Array | string, curve: CurveName): PrivateKey {
     let seed = typeof seedSrc === 'string' ? parseHex(seedSrc) : seedSrc;
@@ -121,6 +122,7 @@ export class PrivateKey implements ExtendedPrivateKey {
   /**
    *
    * @returns Uint8Array (if contains a private key)
+   * @throws Error if private key bytes are missing from seed to private key fails to generate a key pair. Could be due to invalid mnemonic for given curve
    */
   bytes(): Uint8Array {
     if (!this.keyPair.priv) {

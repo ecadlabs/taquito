@@ -80,7 +80,7 @@ export class InMemorySigner {
    *
    * @param key Encoded private key
    * @param passphrase Passphrase to decrypt the private key if it is encrypted
-   *
+   * @throws error for unsupported keys
    */
   constructor(key: string, passphrase?: string) {
     const encrypted = key.substring(2, 3) === 'e';

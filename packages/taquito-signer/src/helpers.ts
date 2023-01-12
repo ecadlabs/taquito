@@ -13,6 +13,7 @@ export type Curves = 'ed25519' | 'secp256k1' | 'p256' | 'bip25519';
  * @param derivationPath Tezos Requirement 44'/1729' for HD key address default 44'/1729'/0'/0'
  * @param curve 'ed25519' | 'secp256k1' | 'p256''
  * @returns final Derivation of HD keys tezos Secret key
+ * @throws Error if invalid curve is provided
  */
 export const generateSecretKey = (seed: Uint8Array, derivationPath: string, curve: Curves) => {
   const path = Path.fromString(derivationPath);

@@ -90,6 +90,12 @@ export class RemoteSigner implements Signer {
     return `${this.rootUrl.replace(/\/+$/g, '')}${path}`;
   }
 
+  /**
+   *
+   * @returns public key
+   * @throws KeyNotFoundError when the public key is not found
+   *
+   */
   async publicKey(): Promise<string> {
     try {
       const { public_key } = await this.http.createRequest<PublicKeyResponse>({
@@ -108,10 +114,20 @@ export class RemoteSigner implements Signer {
     }
   }
 
+  /**
+   * @throws PohibitedActionError Secret keys should not be exposed
+   */
   async secretKey(): Promise<string> {
     throw new ProhibitedActionError('Secret key cannot be exposed');
   }
 
+  /**
+   *
+   * @param bytes hexadecimal string
+   * @param watermark pre-generated watermark of bytes
+   * @returns signature of bytes
+   * @throws Errors based on type of HttpResponseError status codes
+   */
   async sign(bytes: string, watermark?: Uint8Array) {
     try {
       let bb = hex2buf(bytes);
@@ -167,6 +183,11 @@ export class RemoteSigner implements Signer {
     }
   }
 
+  /**
+   *
+   * @param publicKey to be verified
+   * @throws PublicKeyMismatch when public key has given does not match
+   */
   async verifyPublicKey(publicKey: string) {
     const curve = publicKey.substring(0, 2) as curves;
     const _publicKey = b58cdecode(publicKey, pref[curve].pk);

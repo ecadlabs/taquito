@@ -46,6 +46,7 @@ export { VERSION } from './version';
  * @param prompt Whether to prompt the ledger for public key (default is true)
  * @param derivationType The value which defines the curve to use (DerivationType.ED25519(default), DerivationType.SECP256K1, DerivationType.P256, DerivationType.BIP32_ED25519)
  *
+ * @throws Errors for failed validations for derivation paths and types
  * @example
  * ```
  * import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
@@ -96,6 +97,11 @@ export class LedgerSigner implements Signer {
     }
   }
 
+  /**
+   *
+   * @returns public key hash
+   * @throws Error for pkh retrieval failures
+   */
   async publicKeyHash(): Promise<string> {
     if (!this._publicKeyHash) {
       await this.publicKey();
@@ -124,6 +130,11 @@ export class LedgerSigner implements Signer {
     return publicKey;
   }
 
+  /**
+   *
+   * @returns buffer of public key returned by ledger
+   * @throws PublicKeyRetrievalError for failures to obtain the public key from a ledger
+   */
   private async getLedgerPublicKey(): Promise<Buffer> {
     try {
       let ins = this.INS_PROMPT_PUBLIC_KEY;
@@ -143,10 +154,20 @@ export class LedgerSigner implements Signer {
     }
   }
 
+  /**
+   * @throws cannot expose the secret key
+   */
   async secretKey(): Promise<string> {
     throw new ProhibitedActionError('Secret key cannot be exposed');
   }
 
+  /**
+   *
+   * @param bytes bytes to be signed
+   * @param watermark previously watermarked bytes
+   * @returns signature of bytes
+   * @throws failed response to sign from ledger
+   */
   async sign(bytes: string, watermark?: Uint8Array) {
     const watermarkedBytes = appendWatermark(bytes, watermark);
     const watermarkedBytes2buff = Buffer.from(watermarkedBytes, 'hex');

@@ -17,6 +17,7 @@ export class Tz1 {
    * @param key Encoded private key
    * @param encrypted Is the private key encrypted
    * @param decrypt Decrypt function
+   * @throws Error for invalid prefix or missing key
    */
   constructor(private key: string, encrypted: boolean, decrypt: (k: any) => any) {
     const keyPrefix = key.substr(0, encrypted ? 5 : 4);

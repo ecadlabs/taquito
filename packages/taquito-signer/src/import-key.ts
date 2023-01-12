@@ -11,6 +11,7 @@ import { TezosToolkit } from '@taquito/taquito';
  * @param passphrase If the key is encrypted passphrase to decrypt it
  * @param mnemonic Faucet mnemonic
  * @param secret Faucet secret
+ * @throws caught error in try catch
  */
 export async function importKey(
   toolkit: TezosToolkit,
