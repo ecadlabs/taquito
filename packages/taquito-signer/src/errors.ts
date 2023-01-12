@@ -42,7 +42,7 @@ export class InvalidCurveError extends UnsupportedAction {
 export class InvalidSeedLengthError extends ParameterValidationError {
   public name = 'InvalidSeedLengthError';
   constructor(public seedLength: number) {
-    super(`The seed has an invalid length: ${seedLength}`);
+    super(`The seed has an invalid length: ${seedLength}. This Mnemonic may not be acceptable for this curve`);
   }
 }
 

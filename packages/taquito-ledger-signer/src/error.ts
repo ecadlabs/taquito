@@ -20,7 +20,7 @@ export class InvalidLedgerResponseError extends ExternalError {
 export class PublicKeyRetrievalError extends ExternalError {
   public name = 'PublicKeyRetrievalError';
   constructor() {
-    super(`Unable to retrieve Public Key from Ledger`);
+    super(`Unable to retrieve Public Key from Ledger. Please Check your prompt/connection with your ledger`);
   }
 }
 
@@ -31,6 +31,6 @@ export class PublicKeyRetrievalError extends ExternalError {
 export class PublicKeyHashRetrievalError extends ExternalError {
   public name = 'PublicKeyHashRetrievalError';
   constructor() {
-    super(`Unable to retrieve Public Key Hash from Ledger`);
+    super(`Unable to retrieve Public Key Hash from Ledger. Please Check your prompt/connection with your ledger`);
   }
 }
