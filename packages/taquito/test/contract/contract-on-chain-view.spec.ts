@@ -6,7 +6,7 @@ import {
   InvalidViewSimulationContext,
   ViewSimulationError,
 } from '../../src/contract';
-import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import { HttpResponseError, STATUS_CODE } from '@taquito/core';
 import { RpcReadAdapter } from '../../src/read-provider/rpc-read-adapter';
 import { Protocols } from '../../src/constants';
 

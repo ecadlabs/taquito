@@ -1,4 +1,4 @@
-import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import { HttpResponseError, STATUS_CODE } from '@taquito/core';
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
 import { OpKind, ScriptResponse } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
@@ -50,11 +50,7 @@ import {
   createUpdateConsensusKeyOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
-} from '@taquito/utils';
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
@@ -68,7 +64,8 @@ import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-
 
 export class RpcContractProvider
   extends OperationEmitter
-  implements ContractProvider, StorageProvider {
+  implements ContractProvider, StorageProvider
+{
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
@@ -160,13 +157,13 @@ export class RpcContractProvider
 
     const bigMapValue = block
       ? await this.context.readProvider.getBigMapValue(
-        { id: id.toString(), expr: encodedExpr },
-        block
-      )
+          { id: id.toString(), expr: encodedExpr },
+          block
+        )
       : await this.context.readProvider.getBigMapValue(
-        { id: id.toString(), expr: encodedExpr },
-        'head'
-      );
+          { id: id.toString(), expr: encodedExpr },
+          'head'
+        );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }

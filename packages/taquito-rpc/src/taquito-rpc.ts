@@ -2,7 +2,8 @@
  * @packageDocumentation
  * @module @taquito/rpc
  */
-import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import { HttpBackend } from '@taquito/http-utils';
+import { HttpResponseError, STATUS_CODE } from '@taquito/core';
 import BigNumber from 'bignumber.js';
 import {
   defaultChain,

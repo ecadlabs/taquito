@@ -1,4 +1,4 @@
-import { ValidationError } from '@taquito/core';
+import { InternalValidationError } from '@taquito/core';
 
 export {
   InvalidHexStringError,
@@ -17,7 +17,7 @@ export {
  *  @category Error
  *  @description Error that indicates an invalid signature being passed or used
  */
-export class InvalidSignatureError extends ValidationError {
+export class InvalidSignatureError extends InternalValidationError {
   public name = 'InvalidSignatureError';
   constructor(public signature: string, errorDetail?: string) {
     super(
@@ -32,7 +32,7 @@ export class InvalidSignatureError extends ValidationError {
  *  @category Error
  *  @description Error that indicates an invalid message being passed or used
  */
-export class InvalidMessageError extends ValidationError {
+export class InvalidMessageError extends InternalValidationError {
   public name = 'InvalidMessageError';
   constructor(public msg: string, public errorDetail?: string) {
     super(
@@ -47,7 +47,7 @@ export class InvalidMessageError extends ValidationError {
  *  @category Error
  *  @description Error that indicates invalid protocol hash being passed or used
  */
-export class InvalidProtocolHashError extends ValidationError {
+export class InvalidProtocolHashError extends InternalValidationError {
   public name = 'InvalidProtocolHashError';
   constructor(public protocolHash: string) {
     super(`The protocol hash '${protocolHash}' is invalid`);
@@ -58,7 +58,7 @@ export class InvalidProtocolHashError extends ValidationError {
  *  @category Error
  *  @description General error that indicates a failure when trying to convert data from one type to another
  */
-export class ValueConversionError extends ValidationError {
+export class ValueConversionError extends InternalValidationError {
   public name = 'ValueConversionError';
   constructor(public value: string, public desiredType: string) {
     super(`Unable to convert ${value} to a ${desiredType}`);

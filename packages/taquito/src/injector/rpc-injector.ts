@@ -1,7 +1,7 @@
 import { Injector } from './interface';
 import { Context } from '../context';
 import { formatErrorMessage } from './helper';
-import { HttpResponseError } from '@taquito/http-utils';
+import { HttpResponseError } from '@taquito/core';
 
 export class RpcInjector implements Injector {
   constructor(private context: Context) {}

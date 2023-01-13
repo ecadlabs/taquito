@@ -1,20 +1,10 @@
 /**
  *  @category Error
- *  @description Error that indicates an invalid user data input
+ *  @description Error that indicates the data get from third party has incorrect format
  */
-export class ExternalError extends Error {
-  public name = 'ExternalError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid user data input
- */
-export class ValidationError extends Error {
-  public name = 'ValidationError';
+export class InternalValidationError extends Error {
+  public name = 'InternalValidationError';
+  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -26,6 +16,7 @@ export class ValidationError extends Error {
  */
 export class ParameterValidationError extends Error {
   public name = 'ParameterValidationError';
+  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -37,6 +28,7 @@ export class ParameterValidationError extends Error {
  */
 export class RpcError extends Error {
   public name = 'RpcError';
+  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -48,6 +40,7 @@ export class RpcError extends Error {
  */
 export class TezosToolkitConfigError extends Error {
   public name = 'TezosToolkitConfigError';
+  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -70,6 +63,7 @@ export class UnsupportedAction extends Error {
  */
 export class NetworkError extends Error {
   public name = 'NetworkError';
+  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -81,6 +75,7 @@ export class NetworkError extends Error {
  */
 export class PermissionDeniedError extends Error {
   public name = 'PermissionDeniedError';
+  public category = this.name;
   constructor(public message: string) {
     super(message);
   }

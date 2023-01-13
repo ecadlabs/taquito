@@ -1,5 +1,5 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
-import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import { HttpResponseError, STATUS_CODE } from '@taquito/core';
 import {
   sample,
   sampleStorage,
@@ -2236,15 +2236,15 @@ describe('RpcContractProvider test', () => {
     it('Should have defined storage with Nested bigmap in multiple maps', async (done) => {
       mockRpcClient.getEntrypoints.mockResolvedValue({
         entrypoints: {},
-      })
-      mockRpcClient.getContract.mockResolvedValue(smallNestedMapTypecheck)
+      });
+      mockRpcClient.getContract.mockResolvedValue(smallNestedMapTypecheck);
       const rpcContract = await rpcContractProvider.at('KT1SpsNu3hGHN5T5Vt9g9GKUggzvBpxaLxq7');
       expect(rpcContract).toBeDefined();
-      const storage = await rpcContract.storage() as any;
+      const storage = (await rpcContract.storage()) as any;
 
       const keyList = storage.keyMap;
       expect(keyList.size).toEqual(1);
       done();
-    })
-  })
+    });
   });
+});

@@ -2,8 +2,9 @@ import {
   ParameterValidationError,
   PermissionDeniedError,
   UnsupportedAction,
-  ValidationError,
+  InternalValidationError,
 } from './errors';
+import { STATUS_CODE } from '../interface/status_code';
 
 /**
  *  @category Error
@@ -70,7 +71,7 @@ export class InvalidContractAddressError extends ParameterValidationError {
  *  @category Error
  *  @description Error that indicates an invalid block hash being passed or used
  */
-export class InvalidBlockHashError extends ValidationError {
+export class InvalidBlockHashError extends InternalValidationError {
   public name = 'InvalidBlockHashError';
   constructor(public blockHash: string) {
     super(`The block hash '${blockHash}' is invalid`);
@@ -122,7 +123,7 @@ export class InvalidPublicKeyError extends ParameterValidationError {
  *  @category Error
  *  @description Error that indicates an invalid chain id being passed or used
  */
-export class InvalidChainIdError extends ValidationError {
+export class InvalidChainIdError extends InternalValidationError {
   public name = 'InvalidChainIdError';
   constructor(public chainId: string) {
     super(`The chain id '${chainId}' is invalid`);
@@ -144,7 +145,7 @@ export class InvalidKeyHashError extends ParameterValidationError {
  *  @category Error
  *  @description Error that indicates an invalid operation hash being passed or used
  */
-export class InvalidOperationHashError extends ValidationError {
+export class InvalidOperationHashError extends InternalValidationError {
   public name = 'InvalidOperationHashError';
   constructor(public operationHash: string) {
     super(`The operation hash '${operationHash}' is invalid`);
@@ -180,6 +181,25 @@ export class DeprecationError extends UnsupportedAction {
 export class ProhibitedActionError extends PermissionDeniedError {
   public name = 'ProhibitedActionError';
   constructor(public message: string) {
+    super(message);
+  }
+}
+
+// Unsure the need to extend from high category ReponseError where there will only this error as child
+/**
+ *  @category Error
+ *  @description This error will be thrown when the endpoint returns an HTTP error to the client
+ */
+export class HttpResponseError extends Error {
+  public name = 'HttpResponse';
+
+  constructor(
+    public message: string,
+    public status: STATUS_CODE,
+    public statusText: string,
+    public body: string,
+    public url: string
+  ) {
     super(message);
   }
 }

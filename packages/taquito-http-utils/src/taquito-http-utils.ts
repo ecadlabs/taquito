@@ -5,6 +5,7 @@
 
 import { STATUS_CODE } from './status_code';
 import axios, { AxiosAdapter } from 'axios';
+import { HttpResponseError, ParameterValidationError } from '@taquito/core';
 
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
@@ -15,6 +16,7 @@ const adapterPromise = isNode
 
 export * from './status_code';
 export { VERSION } from './version';
+export { HttpResponseError } from '@taquito/core';
 
 enum ResponseType {
   TEXT = 'text',
@@ -35,27 +37,9 @@ export interface HttpRequestOptions {
 
 /**
  *  @category Error
- *  @description This error will be thrown when the endpoint returns an HTTP error to the client
- */
-export class HttpResponseError extends Error {
-  public name = 'HttpResponse';
-
-  constructor(
-    public message: string,
-    public status: STATUS_CODE,
-    public statusText: string,
-    public body: string,
-    public url: string
-  ) {
-    super(message);
-  }
-}
-
-/**
- *  @category Error
  *  @description Error that indicates a general failure in making the HTTP request
  */
-export class HttpRequestFailed extends Error {
+export class HttpRequestFailed extends ParameterValidationError {
   public name = 'HttpRequestFailed';
 
   constructor(public message: string) {

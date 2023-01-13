@@ -1,4 +1,4 @@
-import { HttpResponseError } from '@taquito/http-utils';
+import { HttpResponseError } from '@taquito/core';
 import { MichelsonV1Expression } from '@taquito/rpc';
 
 /**

@@ -1,7 +1,7 @@
 import { Schema, BigMapKeyType } from '@taquito/michelson-encoder';
 import BigNumber from 'bignumber.js';
 import { ContractProvider } from './interface';
-import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import { HttpResponseError, STATUS_CODE } from '@taquito/core';
 
 export class BigMapAbstraction {
   constructor(private id: BigNumber, private schema: Schema, private provider: ContractProvider) {}
