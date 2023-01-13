@@ -3,7 +3,7 @@
  * @module @taquito/http-utils
  */
 
-import { STATUS_CODE } from './status_code';
+import { STATUS_CODE } from '@taquito/core';
 import axios, { AxiosAdapter } from 'axios';
 import { HttpResponseError, ParameterValidationError } from '@taquito/core';
 
