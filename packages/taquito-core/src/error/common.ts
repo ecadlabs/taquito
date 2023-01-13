@@ -4,7 +4,7 @@ import {
   UnsupportedAction,
   InternalValidationError,
 } from './errors';
-import { STATUS_CODE } from '../interface/status_code';
+import { STATUS_CODE } from '../interface/http_status_code';
 
 /**
  *  @category Error

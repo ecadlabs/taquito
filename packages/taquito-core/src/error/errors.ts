@@ -1,6 +1,6 @@
 /**
  *  @category Error
- *  @description Error that indicates the data get from third party has incorrect format
+ *  @description Error that indicates the data get from other servies has incorrect format
  */
 export class InternalValidationError extends Error {
   public name = 'InternalValidationError';
