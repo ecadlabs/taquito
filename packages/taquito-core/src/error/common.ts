@@ -4,7 +4,7 @@ import {
   UnsupportedAction,
   InternalValidationError,
 } from './errors';
-import { STATUS_CODE } from '../interface/http_status_code';
+import { STATUS_CODE } from '../constants/http_status_code';
 
 /**
  *  @category Error
@@ -189,6 +189,11 @@ export class ProhibitedActionError extends PermissionDeniedError {
 /**
  *  @category Error
  *  @description This error will be thrown when the endpoint returns an HTTP error to the client
+ *  @param message Error description
+ *  @param status Http response status code
+ *  @param statusText Http response status description
+ *  @param body Http request body
+ *  @param url http request url
  */
 export class HttpResponseError extends Error {
   public name = 'HttpResponse';

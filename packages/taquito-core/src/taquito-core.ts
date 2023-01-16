@@ -5,4 +5,4 @@
 
 export * from './error/errors';
 export * from './error/common';
-export * from './interface/http_status_code';
+export * from './constants/http_status_code';
