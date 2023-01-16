@@ -5,7 +5,7 @@
 
 import { STATUS_CODE } from '@taquito/core';
 import axios, { AxiosAdapter } from 'axios';
-import { HttpResponseError, ParameterValidationError } from '@taquito/core';
+import { HttpResponseError, HttpError } from '@taquito/core';
 
 const isNode =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
@@ -39,7 +39,7 @@ export interface HttpRequestOptions {
  *  @category Error
  *  @description Error that indicates a general failure in making the HTTP request
  */
-export class HttpRequestFailed extends ParameterValidationError {
+export class HttpRequestFailed extends HttpError {
   public name = 'HttpRequestFailed';
 
   constructor(public message: string) {

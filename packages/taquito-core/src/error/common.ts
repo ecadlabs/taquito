@@ -3,6 +3,7 @@ import {
   PermissionDeniedError,
   UnsupportedAction,
   InternalValidationError,
+  HttpError,
 } from './errors';
 import { STATUS_CODE } from '../constants/http_status_code';
 
@@ -195,7 +196,7 @@ export class ProhibitedActionError extends PermissionDeniedError {
  *  @param body Http request body
  *  @param url http request url
  */
-export class HttpResponseError extends Error {
+export class HttpResponseError extends HttpError {
   public name = 'HttpResponse';
 
   constructor(

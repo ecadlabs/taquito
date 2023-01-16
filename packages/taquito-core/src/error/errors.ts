@@ -1,6 +1,6 @@
 /**
  *  @category Error
- *  @description Error that indicates the data get from other servies has incorrect format
+ *  @description Error that indicates invalid data being fetched from other services
  */
 export class InternalValidationError extends Error {
   public name = 'InternalValidationError';
@@ -71,10 +71,22 @@ export class NetworkError extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates
+ *  @description Error that permission deneied for a certain action
  */
 export class PermissionDeniedError extends Error {
   public name = 'PermissionDeniedError';
+  public category = this.name;
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error with Http services
+ */
+export class HttpError extends Error {
+  public name = 'HttpError';
   public category = this.name;
   constructor(public message: string) {
     super(message);
