@@ -1,4 +1,4 @@
-import { InternalValidationError } from '@taquito/core';
+import { InternalValidationError, ParameterValidationError } from '@taquito/core';
 
 export {
   InvalidHexStringError,
@@ -58,7 +58,7 @@ export class InvalidProtocolHashError extends InternalValidationError {
  *  @category Error
  *  @description General error that indicates a failure when trying to convert data from one type to another
  */
-export class ValueConversionError extends InternalValidationError {
+export class ValueConversionError extends ParameterValidationError {
   public name = 'ValueConversionError';
   constructor(public value: string, public desiredType: string) {
     super(`Unable to convert ${value} to a ${desiredType}`);
