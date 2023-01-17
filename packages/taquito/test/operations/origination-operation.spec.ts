@@ -118,6 +118,7 @@ describe('Origination operation', () => {
         fakeContext,
         fakeContractProvider
       );
+
       expect(op.contractAddress).toEqual('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD');
     });
 
