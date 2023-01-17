@@ -195,7 +195,7 @@ export class OperationBatch extends OperationEmitter {
     return this;
   }
 
-  private async getRPCOp(param: ParamsWithKind) {
+  async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
         return createTransferOperation({
@@ -282,6 +282,33 @@ export class OperationBatch extends OperationEmitter {
     }
 
     return this;
+  }
+
+  async toPrepare() {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const publicKey = await this.signer.publicKey();
+    const estimates = await this.estimator.batch(this.operations);
+
+    const revealNeeded = await this.isRevealOpNeeded(this.operations, publicKeyHash);
+    let i = revealNeeded ? 1 : 0;
+
+    const ops: RPCOperation[] = [];
+    for (const op of this.operations) {
+      if (isOpWithFee(op)) {
+        const estimated = await this.estimate(op, async () => estimates[i]);
+        ops.push(await this.getRPCOp({ ...op, ...estimated }));
+      } else {
+        ops.push({ ...op });
+      }
+      i++;
+    }
+    if (revealNeeded) {
+      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
+      const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
+      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
+    }
+
+    return ops;
   }
 
   /**

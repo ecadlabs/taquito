@@ -1685,7 +1685,6 @@ describe('RpcContractProvider test', () => {
         delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
         destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
       });
-
       expect(result.raw).toEqual({
         opbytes: 'test',
         opOb: {
@@ -2236,15 +2235,15 @@ describe('RpcContractProvider test', () => {
     it('Should have defined storage with Nested bigmap in multiple maps', async (done) => {
       mockRpcClient.getEntrypoints.mockResolvedValue({
         entrypoints: {},
-      })
-      mockRpcClient.getContract.mockResolvedValue(smallNestedMapTypecheck)
+      });
+      mockRpcClient.getContract.mockResolvedValue(smallNestedMapTypecheck);
       const rpcContract = await rpcContractProvider.at('KT1SpsNu3hGHN5T5Vt9g9GKUggzvBpxaLxq7');
       expect(rpcContract).toBeDefined();
-      const storage = await rpcContract.storage() as any;
+      const storage = (await rpcContract.storage()) as any;
 
       const keyList = storage.keyMap;
       expect(keyList.size).toEqual(1);
       done();
-    })
-  })
+    });
   });
+});
