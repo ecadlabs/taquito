@@ -45,6 +45,7 @@ const sidebars = {
         'multisig_doc',
         'on_chain_views',
         'originate',
+        'prepare',
         'rpc_nodes',
         'rpc_package',
         'signing',
