@@ -4,7 +4,7 @@ import {
   UnsupportedAction,
   InternalValidationError,
   HttpError,
-} from './errors';
+} from './higher-category';
 import { STATUS_CODE } from '../constants/http_status_code';
 
 /**
