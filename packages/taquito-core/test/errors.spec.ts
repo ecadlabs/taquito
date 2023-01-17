@@ -5,7 +5,7 @@ import {
   UnsupportedAction,
   PermissionDeniedError,
   HttpError,
-} from '../src/error/higher-category';
+} from '../src/error/errors';
 import {
   InvalidAddressError,
   InvalidDerivationPathError,
