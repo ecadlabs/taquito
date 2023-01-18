@@ -157,7 +157,7 @@ describe('errors', () => {
     }
   });
 
-  it('should throw an DeprecationError', () => {
+  it('should throw a DeprecationError', () => {
     try {
       throw new DeprecationError('test');
     } catch (e) {

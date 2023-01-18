@@ -77,7 +77,7 @@ export class NetworkError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that permission deneied for a certain action
+ *  @description Error that permission denied for a certain action
  */
 export class PermissionDeniedError extends TaquitoError {
   public name = 'PermissionDeniedError';
