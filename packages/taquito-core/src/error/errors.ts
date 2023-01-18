@@ -1,6 +1,6 @@
 /**
  *  @category Error
- *  @description Original Error class that all high-level category errors extend from
+ *  @description Taquito Error class that all high-level category errors extend from
  */
 export class TaquitoError extends Error {
   public name = 'TaquitoError';
@@ -15,7 +15,6 @@ export class TaquitoError extends Error {
  */
 export class InternalValidationError extends TaquitoError {
   public name = 'InternalValidationError';
-  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -27,7 +26,6 @@ export class InternalValidationError extends TaquitoError {
  */
 export class ParameterValidationError extends TaquitoError {
   public name = 'ParameterValidationError';
-  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -39,7 +37,6 @@ export class ParameterValidationError extends TaquitoError {
  */
 export class RpcError extends TaquitoError {
   public name = 'RpcError';
-  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -51,7 +48,6 @@ export class RpcError extends TaquitoError {
  */
 export class TezosToolkitConfigError extends TaquitoError {
   public name = 'TezosToolkitConfigError';
-  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -74,7 +70,6 @@ export class UnsupportedAction extends TaquitoError {
  */
 export class NetworkError extends TaquitoError {
   public name = 'NetworkError';
-  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -86,7 +81,6 @@ export class NetworkError extends TaquitoError {
  */
 export class PermissionDeniedError extends TaquitoError {
   public name = 'PermissionDeniedError';
-  public category = this.name;
   constructor(public message: string) {
     super(message);
   }
@@ -98,7 +92,6 @@ export class PermissionDeniedError extends TaquitoError {
  */
 export class HttpError extends TaquitoError {
   public name = 'HttpError';
-  public category = this.name;
   constructor(public message: string) {
     super(message);
   }

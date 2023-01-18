@@ -197,8 +197,7 @@ export class ProhibitedActionError extends PermissionDeniedError {
  *  @param url http request url
  */
 export class HttpResponseError extends HttpError {
-  public name = 'HttpResponse';
-
+  public name = 'HttpResponseError';
   constructor(
     public message: string,
     public status: STATUS_CODE,
