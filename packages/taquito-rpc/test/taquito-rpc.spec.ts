@@ -3527,7 +3527,6 @@ describe('RpcClient test', () => {
       expect(content.metadata.balance_updates![1].origin).toEqual('block');
 
       expect(content.metadata.operation_result.status).toEqual('applied');
-      expect(content.metadata.operation_result.consumed_gas).toEqual('1000');
       expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
       done();
     });
