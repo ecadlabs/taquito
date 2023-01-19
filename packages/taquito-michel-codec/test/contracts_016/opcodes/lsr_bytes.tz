@@ -1,0 +1,23 @@
+parameter unit;
+storage unit;
+code { DROP;
+
+       # 0x06 LSR 1 = 0x03
+       PUSH nat 1; PUSH bytes 0x06; LSR; PUSH bytes 0x03; ASSERT_CMPEQ;
+
+       # 0x06 LSR 8 = 0x (empty bytes)
+       PUSH nat 8; PUSH bytes 0x06; LSR; PUSH bytes 0x; ASSERT_CMPEQ;
+
+       # 0x0006 LSR 1 = 0x0003  (not 0x03)
+       PUSH nat 1; PUSH bytes 0x0006; LSR; PUSH bytes 0x0003; ASSERT_CMPEQ;
+
+       # 0x0006 LSR 8 = 0x00
+       PUSH nat 8; PUSH bytes 0x0006; LSR; PUSH bytes 0x00; ASSERT_CMPEQ;
+
+       # 0x001234 LSR 0 = 0x001234
+       PUSH nat 0; PUSH bytes 0x001234; LSR; PUSH bytes 0x001234; ASSERT_CMPEQ;
+
+       # 0x001234 LSR 30 = 0x
+       PUSH nat 30; PUSH bytes 0x001234; LSR; PUSH bytes 0x; ASSERT_CMPEQ;
+
+       UNIT; NIL @noop operation; PAIR; };
