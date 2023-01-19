@@ -1,12 +1,14 @@
+import { Protocols } from '@taquito/taquito';
 import { OperationContentsBallot, OperationContentsTransaction } from '@taquito/rpc';
 import { 
   OpKind, 
 } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
-CONFIGS().forEach(({ lib, setup }) => {
+CONFIGS().forEach(({ lib, setup, protocol }) => {
   const Tezos = lib;
   let contractAddress: string;
+  const limanet = (protocol === Protocols.PtLimaPtL) ? test : test.skip;
 
   describe(`Test Preparation of operations using the PrepareProvider`, () => {
     beforeAll(async (done) => {
@@ -84,7 +86,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       done();
     });
 
-    it('should be able to prepare a txRollupOriginate operation', async (done) => {
+    limanet('should be able to prepare a txRollupOriginate operation', async (done) => {
       const prepared = await Tezos.prepare.txRollupOrigination({});
 
       expect(prepared).toBeDefined();
@@ -114,7 +116,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       expect(prepared.opOb.contents[0].kind).toEqual('ballot');
       expect(content.proposal).toEqual('PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg');
       expect(content.ballot).toEqual('yay');
-      expect(prepared.opOb.protocol).toEqual('PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW');
+      expect(prepared.opOb.protocol).toEqual(protocol);
       done();
     });
 

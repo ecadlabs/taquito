@@ -70,7 +70,7 @@ module.exports = {
           className: 'header-link button_link',
         },
         {
-          href: 'https://t.me/tezostaquito',
+          href: 'https://discord.gg/JgvVdWV7BN',
           position: 'right',
           className: 'header-link header-discord-link',
           'aria-label': 'Discord',
@@ -114,7 +114,7 @@ module.exports = {
             },
             {
               label: 'Discord',
-              to: 'https://discord.gg/tURNUPwp',
+              to: 'https://discord.gg/JgvVdWV7BN',
             },
             {
               label: 'Twitter',
