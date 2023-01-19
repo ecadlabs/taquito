@@ -1,6 +1,6 @@
 import { ENTRYPOINT_MAX_LENGTH } from './constants';
 
-export { InvalidHexStringError } from '@taquito/core';
+export { InvalidHexStringError, InvalidBlockHashError } from '@taquito/core';
 
 /**
  *  @category Error

@@ -96,3 +96,10 @@ export class HttpError extends TaquitoError {
     super(message);
   }
 }
+
+export class TaquitoUtilsError extends TaquitoError {
+  public name = 'TaquitoUtilsError';
+  constructor(public message: string) {
+    super(message);
+  }
+}

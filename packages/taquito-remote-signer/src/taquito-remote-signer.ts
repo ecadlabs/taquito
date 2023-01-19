@@ -3,7 +3,6 @@
  * @module @taquito/remote-signer
  */
 import { HttpBackend } from '@taquito/http-utils';
-import { HttpResponseError, STATUS_CODE } from '@taquito/core';
 import {
   b58cdecode,
   b58cencode,
@@ -15,10 +14,14 @@ import {
   verifySignature,
   validateKeyHash,
   ValidationResult,
+} from '@taquito/utils';
+import {
+  InvalidKeyHashError,
   ProhibitedActionError,
   InvalidSignatureError,
-} from '@taquito/utils';
-import { InvalidKeyHashError } from '@taquito/core';
+  HttpResponseError,
+  STATUS_CODE,
+} from '@taquito/core';
 import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
 import {

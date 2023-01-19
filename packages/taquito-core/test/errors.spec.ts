@@ -21,6 +21,7 @@ import {
   InvalidOperationKindError,
   DeprecationError,
   ProhibitedActionError,
+  InvalidSignatureError,
   HttpResponseError,
 } from '../src/error/common';
 
@@ -175,6 +176,17 @@ describe('errors', () => {
       expect(e).toBeInstanceOf(TaquitoError);
       expect(e).toBeInstanceOf(PermissionDeniedError);
       expect(e).toBeInstanceOf(ProhibitedActionError);
+      expect(e.message).toContain('test');
+    }
+  });
+
+  it('should throw an InvalidSignatureError', () => {
+    try {
+      throw new InvalidSignatureError('test');
+    } catch (e) {
+      expect(e).toBeInstanceOf(TaquitoError);
+      expect(e).toBeInstanceOf(InternalValidationError);
+      expect(e).toBeInstanceOf(InvalidSignatureError);
       expect(e.message).toContain('test');
     }
   });

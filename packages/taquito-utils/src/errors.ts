@@ -1,4 +1,4 @@
-import { InternalValidationError, ParameterValidationError } from '@taquito/core';
+import { TaquitoUtilsError } from '@taquito/core';
 
 export {
   InvalidHexStringError,
@@ -11,28 +11,14 @@ export {
   DeprecationError,
   ProhibitedActionError,
   InvalidChainIdError,
+  InvalidSignatureError,
 } from '@taquito/core';
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid signature being passed or used
- */
-export class InvalidSignatureError extends InternalValidationError {
-  public name = 'InvalidSignatureError';
-  constructor(public signature: string, errorDetail?: string) {
-    super(
-      errorDetail
-        ? `The signature '${signature}' is invalid. ${errorDetail}`
-        : `The signature '${signature}' is invalid.`
-    );
-  }
-}
 
 /**
  *  @category Error
  *  @description Error that indicates an invalid message being passed or used
  */
-export class InvalidMessageError extends InternalValidationError {
+export class InvalidMessageError extends TaquitoUtilsError {
   public name = 'InvalidMessageError';
   constructor(public msg: string, public errorDetail?: string) {
     super(
@@ -45,20 +31,9 @@ export class InvalidMessageError extends InternalValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates invalid protocol hash being passed or used
- */
-export class InvalidProtocolHashError extends InternalValidationError {
-  public name = 'InvalidProtocolHashError';
-  constructor(public protocolHash: string) {
-    super(`The protocol hash '${protocolHash}' is invalid`);
-  }
-}
-
-/**
- *  @category Error
  *  @description General error that indicates a failure when trying to convert data from one type to another
  */
-export class ValueConversionError extends ParameterValidationError {
+export class ValueConversionError extends TaquitoUtilsError {
   public name = 'ValueConversionError';
   constructor(public value: string, public desiredType: string) {
     super(`Unable to convert ${value} to a ${desiredType}`);

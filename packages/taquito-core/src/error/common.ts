@@ -46,6 +46,21 @@ export class InvalidDerivationTypeError extends ParameterValidationError {
   }
 }
 
+/*
+ *   InvalidHexStringError,
+ *   InvalidContractAddressError,
+ *   InvalidBlockHashError
+ *   InvalidKeyError,
+ *   InvalidPublicKeyError,
+ *   InvalidChainIdError,
+ *   InvalidKeyHashError,
+ *   InvalidOperationHashError,
+ *   InvalidOperationKindError,
+ *   DeprecationError,
+ *   ProhibitedActionError,
+ *   InvalidSignatureError
+ * moved from taquito/utils
+ */
 /**
  *  @category Error
  *  @description Error that indicates an invalid hex string being passed or used
@@ -78,21 +93,6 @@ export class InvalidBlockHashError extends InternalValidationError {
     super(`The block hash '${blockHash}' is invalid`);
   }
 }
-
-/**
- *   InvalidHexStringError,
- *   InvalidContractAddressError,
- *   InvalidKeyError,
- *   InvalidPublicKeyError,
- *   InvalidKeyHashError,
- *   InvalidOperationHashError,
- *   InvalidOperationKindError,
- *   DeprecationError,
- *   ProhibitedActionError,
- *   InvalidChainIdError,
- *
- * moved from taquito/utils
- */
 
 /**
  *  @category Error
@@ -186,7 +186,22 @@ export class ProhibitedActionError extends PermissionDeniedError {
   }
 }
 
-// Unsure the need to extend from high category ReponseError where there will only this error as child
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid signature being passed or used
+ */
+export class InvalidSignatureError extends InternalValidationError {
+  public name = 'InvalidSignatureError';
+  constructor(public signature: string, errorDetail?: string) {
+    super(
+      errorDetail
+        ? `The signature '${signature}' is invalid. ${errorDetail}`
+        : `The signature '${signature}' is invalid.`
+    );
+  }
+}
+
+// moved from taquito-http-utils
 /**
  *  @category Error
  *  @description This error will be thrown when the endpoint returns an HTTP error to the client

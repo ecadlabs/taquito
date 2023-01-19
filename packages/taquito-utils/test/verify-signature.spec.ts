@@ -1,5 +1,5 @@
-import { InvalidMessageError, InvalidSignatureError } from '../src/errors';
-import { InvalidPublicKeyError } from '@taquito/core';
+import { InvalidMessageError } from '../src/errors';
+import { InvalidPublicKeyError, InvalidSignatureError } from '@taquito/core';
 import { verifySignature } from '../src/verify-signature';
 
 describe('utils signature validation tests', () => {
