@@ -19,6 +19,7 @@
   --github-svg: url('../../static/img/githubSVG.svg') no-repeat;
   --github-svg-reverse: url('../../static/img/github-svg-white.svg') no-repeat;
   --telegram-svg: url('../../static/img/telegramSVG.svg') no-repeat;
+  --discord-svg: url('../../static/img/discord-mark-black.svg') no-repeat;
   --brown-secondary: #975b19;
   --background-black: #2e2e2e;
   --brown-third: #885924;
@@ -80,6 +81,7 @@
   --github-svg: url('../../static/img/github-svg-white.svg') no-repeat;
   --github-svg-reverse: url('../../static/img/githubSVG.svg') no-repeat;
   --telegram-svg: url('../../static/img/telegram-svg-white.svg') no-repeat;
+  --discord-svg: url('../../static/img/discord-mark-white.svg') no-repeat;
   --ifm-background-color-secondary: var(--background-black);
   --brown--fourth: rgb(211, 131, 43, 0.6);
   --sidebar-text-color: (var(--white));
@@ -247,7 +249,7 @@ h2 {
 }
 
 .header-discord-link:before {
-  background: var(--telegram-svg);
+  background: var(--discord-svg);
   content: '';
   display: flex;
   height: 24px;
