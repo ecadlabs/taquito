@@ -47,6 +47,7 @@ import {
   VotesListingsResponse,
   VotingPeriodBlockResult,
   ticketTokenParams,
+  allTicketBalancesResponse,
 } from '../types';
 
 import {
@@ -1180,6 +1181,24 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getTicketBalance(contract, ticket, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  async getAllTicketBalances(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<allTicketBalancesResponse> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_ALL_TICKET_BALANCES,
+      [block, contract]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getAllTicketBalances(contract, { block });
       this.put(key, response);
       return response;
     }

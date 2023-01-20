@@ -58,6 +58,7 @@ import {
   TxRollupStateResponse,
   TxRollupInboxResponse,
   ticketTokenParams,
+  allTicketBalancesResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1151,5 +1152,26 @@ export class RpcClient implements RpcClientInterface {
       },
       ticket
     );
+  }
+
+  /**
+   *
+   * @param contract address of the contract we want to retrieve ticket balance of
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Access the complete list of tickets owned by the given contract by scanning the contract's storage.
+   *
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getAllTicketBalances(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<allTicketBalancesResponse> {
+    return this.httpBackend.createRequest<allTicketBalancesResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
+      ),
+      method: 'POST',
+    });
   }
 }

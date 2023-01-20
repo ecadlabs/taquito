@@ -1095,6 +1095,14 @@ export interface ticketTokenParams {
   content: MichelsonV1Expression;
 }
 
+export interface allTicketBalancesResponse {
+  ticketer: 'string';
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+  amount: 'string';
+}
+[];
+
 export type HexString = string;
 
 export interface PackDataResponse {

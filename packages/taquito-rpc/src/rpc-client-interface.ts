@@ -45,6 +45,7 @@ import {
   VotingInfoResponse,
   VotingPeriodBlockResult,
   ticketTokenParams,
+  allTicketBalancesResponse,
 } from './types';
 
 export interface RPCOptions {
@@ -125,6 +126,7 @@ export interface RpcClientInterface {
     ticket: ticketTokenParams,
     options?: RPCOptions
   ): Promise<string>;
+  getAllTicketBalances(contract: string, options?: RPCOptions): Promise<allTicketBalancesResponse>;
 }
 
 export enum RPCMethodName {
@@ -166,4 +168,5 @@ export enum RPCMethodName {
   GET_STORAGE_USED_SPACE = 'getStorageUsedSpace',
   GET_STORAGE_PAID_SPACE = 'getStoragePaidSpace',
   GET_TICKET_BALANCE = 'getTicketBalance',
+  GET_ALL_TICKET_BALANCES = 'getAllTicketBalances',
 }
