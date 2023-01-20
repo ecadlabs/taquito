@@ -1171,7 +1171,7 @@ export class RpcClient implements RpcClientInterface {
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
       ),
-      method: 'POST',
+      method: 'GET',
     });
   }
 }
