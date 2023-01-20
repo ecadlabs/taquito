@@ -1089,6 +1089,12 @@ export interface PackDataParams {
   gas?: BigNumber;
 }
 
+export interface ticketTokenParams {
+  ticketer: 'string';
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+}
+
 export type HexString = string;
 
 export interface PackDataResponse {
