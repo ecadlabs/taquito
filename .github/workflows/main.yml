@@ -45,6 +45,8 @@ jobs:
         include:
           - testnet: limanet
             testnet_uppercase: LIMANET
+          - testnet: mumbainet
+            testnet_uppercase: MUMBAINET
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
