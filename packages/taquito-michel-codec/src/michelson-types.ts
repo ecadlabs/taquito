@@ -79,7 +79,9 @@ type MichelsonNoArgInstructionID =
   | 'XOR'
   | 'RENAME'
   | 'OPEN_CHEST'
-  | 'MIN_BLOCK_TIME';
+  | 'MIN_BLOCK_TIME'
+  | 'BYTES'
+  | 'NAT';
 
 type MichelsonRegularInstructionID =
   | 'CONTRACT'

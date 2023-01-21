@@ -1296,8 +1296,16 @@ function functionTypeInternal(
         return [annotateVar({ prim: 'option', args: [{ prim: 'nat' }] }), ...stack.slice(1)];
 
       case 'INT':
-        args(0, ['nat', 'bls12_381_fr']);
+        args(0, ['nat', 'bls12_381_fr', 'bytes']);
         return [annotateVar({ prim: 'int' }), ...stack.slice(1)];
+
+      case 'BYTES':
+        args(0, ['nat', 'int']);
+        return [annotateVar({ prim: 'bytes' }), ...stack.slice(1)];
+
+      case 'NAT':
+        args(0, ['bytes']);
+        return [annotateVar({ prim: 'nat' }), ...stack.slice(1)];
 
       case 'NEG': {
         const s = args(0, ['nat', 'int', 'bls12_381_g1', 'bls12_381_g2', 'bls12_381_fr'])[0];
