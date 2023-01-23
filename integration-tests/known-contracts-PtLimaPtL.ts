@@ -1,6 +1,6 @@
-export const knownContractPtLimaPtL = "KT1Q8j4ahiuMu6cTtD42JmUFNtdc6aE1ctUk";
-export const knownBigMapContractPtLimaPtL = "KT1STPt3btDjttzsZ7MBmQkkfU3FykeAgYnW";
-export const knownTzip12BigMapOffChainContractPtLimaPtL = "KT1Kh3xkT7dvn4ULqhwgxq1p4yz2kGx58o5E";
-export const knownSaplingContractPtLimaPtL = "KT1B1WJhcBYY1ZuWZmgbp2CsPFHEffNZVrEj";
-export const knownOnChainViewContractAddressPtLimaPtL = "KT1MU2tLa61FVUTa1HzVS6FZjVPBZQBhZabM";
-export const txRollupAddressPtLimaPtL = "txr1SNAYyB37mfJwqByczbbRbZj41yYzfDB9F";
+export const knownContractPtLimaPtL = "KT1NiiuTpzeh3qvmpg6x1WoUK5GFA9peHqMR";
+export const knownBigMapContractPtLimaPtL = "KT19WjpKFLhkpnPfvzJCShyVxfiRfKuXx4js";
+export const knownTzip12BigMapOffChainContractPtLimaPtL = "KT1GnRJVaqvzjeeuhcsCUZmn96ZrN8pJ2GxV";
+export const knownSaplingContractPtLimaPtL = "KT1S321F21ZTqjxwC3MgJDE8M8aTX3234ZCY";
+export const knownOnChainViewContractAddressPtLimaPtL = "KT1CH64MzwB9E5XkgdR1s7ZamHYsJuTPkDnt";
+export const txRollupAddressPtLimaPtL = "txr1WtzBSTQMfLcGNPmMeDBUhNPjX7Vo3E5p3";

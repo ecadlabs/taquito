@@ -1,11 +1,8 @@
 import { CONFIGS } from "./config";
 import { ticketCode, ticketStorage } from './data/code_with_ticket';
-import { ticketCodeProto14, ticketStorageProto14 } from './data/code_with_ticket_proto14';
-import { Protocols } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contract origination having ticket with init through wallet api using: ${rpc}`, () => {
 
@@ -14,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    limanetAndAlpha('Verify wallet.originate for a contract having ticket with init', async (done) => {
+    it('Verify wallet.originate for a contract having ticket with init', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage
@@ -26,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    limanetAndAlpha('Verify wallet.originate having ticket with init in JSON', async (done) => {
+    it('Verify wallet.originate having ticket with init in JSON', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }
@@ -37,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    limanetAndAlpha('Verify wallet.originate for a contract having ticket with storage', async (done) => {
+    it('Verify wallet.originate for a contract having ticket with storage', async (done) => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         storage: {
