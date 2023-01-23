@@ -5,7 +5,7 @@ import { addContract, lslContract, lsrContract, notContract, orContract, xorCont
 CONFIGS().forEach(({ lib, protocol, setup }) => {
   const Tezos = lib;
   const limanet = protocol === Protocols.PtLimaPtL ? test : test.skip;
-  const mumbaiAndMonday = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
+  const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test origination of contract with instructions now supporting bytes`, () => {
 
@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       done();
     });
 
-    mumbaiAndMonday(`Should be able to orignate contract with ADD parameter in michelson contract with bytes`, async done => {
+    mumbaiAndAlpha(`Should be able to orignate contract with ADD parameter in michelson contract with bytes`, async done => {
       const contract = await Tezos.contract.originate({
         code: addContract,
         storage: 0
@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       done();
     });
 
-    mumbaiAndMonday(`Should be able to orignate contract with LSL parameter in michelson contract with bytes`, async done => {
+    mumbaiAndAlpha(`Should be able to orignate contract with LSL parameter in michelson contract with bytes`, async done => {
       const contract = await Tezos.contract.originate({
         code: lslContract,
         storage: 0
@@ -36,7 +36,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       done();
     });
 
-    mumbaiAndMonday(`Should be able to orignate contract with LSR parameter in michelson contract with bytes`, async done => {
+    mumbaiAndAlpha(`Should be able to orignate contract with LSR parameter in michelson contract with bytes`, async done => {
       const contract = await Tezos.contract.originate({
         code: lsrContract,
         storage: 0
@@ -47,7 +47,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       done();
     });
 
-    mumbaiAndMonday(`Should be able to orignate contract with NOT parameter in michelson contract with bytes`, async done => {
+    mumbaiAndAlpha(`Should be able to orignate contract with NOT parameter in michelson contract with bytes`, async done => {
       const contract = await Tezos.contract.originate({
         code: notContract,
         storage: 0
@@ -58,7 +58,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       done();
     });
 
-    mumbaiAndMonday(`Should be able to orignate contract with OR parameter in michelson contract with bytes`, async done => {
+    mumbaiAndAlpha(`Should be able to orignate contract with OR parameter in michelson contract with bytes`, async done => {
       const contract = await Tezos.contract.originate({
         code: orContract,
         storage: 0
@@ -69,7 +69,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       done();
     });
 
-    mumbaiAndMonday(`Should be able to orignate contract with XOR parameter in michelson contract with bytes`, async done => {
+    mumbaiAndAlpha(`Should be able to orignate contract with XOR parameter in michelson contract with bytes`, async done => {
       const contract = await Tezos.contract.originate({
         code: xorContract,
         storage: 0
