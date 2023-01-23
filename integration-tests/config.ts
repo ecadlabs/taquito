@@ -7,6 +7,7 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { knownBigMapContractProtoALph, knownContractProtoALph, knownOnChainViewContractAddressProtoALph, knownSaplingContractProtoALph, knownTzip12BigMapOffChainContractProtoALph, txRollupAddressProtoALph } from './known-contracts-ProtoALph';
 import { knownContractPtLimaPtL, knownBigMapContractPtLimaPtL, knownTzip12BigMapOffChainContractPtLimaPtL, knownSaplingContractPtLimaPtL, knownOnChainViewContractAddressPtLimaPtL, txRollupAddressPtLimaPtL } from './known-contracts-PtLimaPtL';
 import { knownContractPtGhostnet, knownBigMapContractPtGhostnet, knownTzip12BigMapOffChainContractPtGhostnet, knownSaplingContractPtGhostnet, knownOnChainViewContractAddressPtGhostnet, txRollupAddressPtGhostnet } from './known-contracts-PtGhostnet';
+import { knownContractPtMumbaii, knownBigMapContractPtMumbaii, knownTzip12BigMapOffChainContractPtMumbaii, knownSaplingContractPtMumbaii, knownOnChainViewContractAddressPtMumbaii, txRollupAddressPtMumbaii } from './known-contracts-PtMumbaii';
 
 const nodeCrypto = require('crypto');
 
@@ -96,6 +97,27 @@ const limanetEphemeral = {
   },
 };
 
+const mumbainetEphemeral = {
+  rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-mumbainet-full.i.tez.ie:8732',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
+  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: process.env['TEZOS_MUMBAINET_CONTRACT_ADDRESS'] || knownContractPtMumbaii,
+  knownBigMapContract: process.env['TEZOS_MUMBAINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtMumbaii,
+  knownTzip1216Contract: process.env['TEZOS_MUMBAINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtMumbaii,
+  knownSaplingContract: process.env['TEZOS_MUMBAINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtMumbaii,
+  txRollupWithdrawContract: process.env['TEZOS_MUMBAINET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_MUMBAINET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_MUMBAINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtMumbaii,
+  txRollupAddress: process.env['TEZOS_MUMBAINET_TXROLLUP_ADDRESS'] || txRollupAddressPtMumbaii,
+  protocol: Protocols.PtMumbaii,
+  signerConfig: {
+    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+    keyUrl: 'https://api.tez.ie/keys/mumbainet',
+    requestHeaders: { Authorization: 'Bearer taquito-example' },
+  },
+};
+
 const ghostnetEphemeral = {
   rpc: process.env['TEZOS_RPC_GHOSTNET'] || 'ecad-ghostnet-rolling:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
@@ -155,6 +177,23 @@ const limanetSecretKey = {
   signerConfig: defaultSecretKey
 };
 
+const mumbainetSecretKey = {
+  rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-limanet-full:8732',
+  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
+  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
+  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+  knownContract: process.env['TEZOS_MUMBAINET_CONTRACT_ADDRESS'] || knownContractPtMumbaii,
+  knownBigMapContract: process.env['TEZOS_MUMBAINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtMumbaii,
+  knownTzip1216Contract: process.env['TEZOS_MUMBAINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtMumbaii,
+  knownSaplingContract: process.env['TEZOS_MUMBAINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtMumbaii,
+  txRollupWithdrawContract: process.env['TEZOS_MUMBAINET_TX_ROLLUP_WITHDRAW_CONTRACT'] || '',
+  txRollupDepositContract: process.env['TEZOS_MUMBAINET_TX_ROLLUP_DEPOSIT_CONTRACT'] || '',
+  knownViewContract: process.env['TEZOS_MUMBAINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtMumbaii,
+  txRollupAddress: process.env['TEZOS_MUMBAINET_TXROLLUP_ADDRESS'] || txRollupAddressPtMumbaii,
+  protocol: Protocols.PtMumbaii,
+  signerConfig: defaultSecretKey
+};
+
 const ghostnetSecretKey = {
   rpc: process.env['TEZOS_RPC_GHOSTNET'] || 'http://ecad-ghostnet-rolling:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
@@ -195,18 +234,22 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(limanetSecretKey);
 } else if (process.env['RUN_LIMANET_WITH_SECRET_KEY']) {
   providers.push(limanetSecretKey);
+} else if (process.env['RUN_MUMBAINET_WITH_SECRET_KEY']) {
+  providers.push(mumbainetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
   providers.push(mondaynetSecretKey);
 } else if (process.env['LIMANET']) {
   providers.push(limanetEphemeral);
+} else if (process.env['MUMBAINET']) {
+  providers.push(mumbainetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['MONDAYNET']) {
   providers.push(mondaynetEphemeral);
 } else {
-  providers.push(limanetEphemeral);
+  providers.push(limanetEphemeral, mumbainetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
