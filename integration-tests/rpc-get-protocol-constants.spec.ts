@@ -859,7 +859,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
           numerator: 1,
         },
         minimal_block_delay: new BigNumber(8),
-        delay_increment_per_round: new BigNumber(3),
+        delay_increment_per_round: new BigNumber(8),
         dal_parametric: {
           attestation_lag: 2,
           attestation_threshold: 50,
