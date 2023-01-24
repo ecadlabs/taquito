@@ -624,6 +624,12 @@ export interface OperationContentsAndResultMetadataDrainDelegate {
   allocated_destination_contract?: boolean;
 }
 
+export interface OperationContentsAndResultMetadataSmartRollupOriginate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupOriginate;
+  internal_operation_results?: InternalOperationResult[];
+}
+
 export interface OperationContentsAndResultEndorsement {
   kind: OpKind.ENDORSEMENT;
   block_payload_hash?: string;
@@ -912,6 +918,19 @@ export interface OperationContentsAndResultVdfRevelation {
   kind: OpKind.VDF_REVELATION;
   solution: string[];
   metadata: OperationContentsAndResultMetadata;
+}
+
+export interface OperationContentsAndResultSmartRollupOriginate {
+  kind: OpKind.SMART_ROLLUP_ORIGINATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pvm_kind: string;
+  kernel: string;
+  origination_proof: string;
+  metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
 }
 
 export type OperationContentsAndResult =
@@ -1306,6 +1325,16 @@ export interface OperationResultRegisterGlobalConstant {
   global_address?: string;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
+}
+
+export interface OperationResultSmartRollupOriginate {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  address: string;
+  genesis_sommitment_hash: string;
+  consumed_milligas?: string;
+  size: string;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface ContractBigMapDiffItem {
