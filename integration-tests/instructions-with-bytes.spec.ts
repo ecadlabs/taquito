@@ -22,6 +22,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       await contract.confirmation();
       expect(contract).toBeDefined();
       expect(contract.contractAddress).toContain("KT1");
+      expect(contract.status).toEqual('applied');
       done();
     });
 
@@ -33,6 +34,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       await contract.confirmation();
       expect(contract).toBeDefined();
       expect(contract.contractAddress).toContain("KT1");
+      expect(contract.status).toEqual('applied');
       done();
     });
 
@@ -44,6 +46,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       await contract.confirmation();
       expect(contract).toBeDefined();
       expect(contract.contractAddress).toContain("KT1");
+      expect(contract.status).toEqual('applied');
       done();
     });
 
@@ -55,6 +58,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       await contract.confirmation();
       expect(contract).toBeDefined();
       expect(contract.contractAddress).toContain("KT1");
+      expect(contract.status).toEqual('applied');
       done();
     });
 
@@ -66,6 +70,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       await contract.confirmation();
       expect(contract).toBeDefined();
       expect(contract.contractAddress).toContain("KT1");
+      expect(contract.status).toEqual('applied');
       done();
     });
 
@@ -77,6 +82,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       await contract.confirmation();
       expect(contract).toBeDefined();
       expect(contract.contractAddress).toContain("KT1");
+      expect(contract.status).toEqual('applied');
       done();
     });
 
