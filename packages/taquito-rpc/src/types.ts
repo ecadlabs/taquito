@@ -1090,16 +1090,16 @@ export interface PackDataParams {
 }
 
 export interface ticketTokenParams {
-  ticketer: 'string';
+  ticketer: string;
   content_type: MichelsonV1Expression;
   content: MichelsonV1Expression;
 }
 
 export interface allTicketBalancesResponse {
-  ticketer: 'string';
+  ticketer: string;
   content_type: MichelsonV1Expression;
   content: MichelsonV1Expression;
-  amount: 'string';
+  amount: string;
 }
 [];
 
