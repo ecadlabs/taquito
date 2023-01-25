@@ -194,6 +194,8 @@ const primitives: PrimID[] = [
   'Lambda_rec',
   'LAMBDA_REC',
   'TICKET',
+  'BYTES',
+  'NAT',
 ];
 
 const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =
