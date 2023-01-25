@@ -630,6 +630,18 @@ export interface OperationContentsAndResultMetadataSmartRollupOriginate {
   internal_operation_results?: InternalOperationResult[];
 }
 
+export interface OperationContentsAndResultMetadataSmartRollupAddMessages {
+  balance_updates?: OperationMetadataBalanceUpdates;
+  operation_results: OperationResultSmartRollupAddMessages;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupCement {
+  balance_updates?: OperationMetadataBalanceUpdates;
+  operation_results: OperationResultSmartRollupCement;
+  internal_operation_results?: InternalOperationResult[];
+}
+
 export interface OperationContentsAndResultEndorsement {
   kind: OpKind.ENDORSEMENT;
   block_payload_hash?: string;
@@ -934,6 +946,29 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
 }
 
+export interface OperationContentsAndResultSmartRollupAddMessages {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  message: string[];
+  metadata: OperationContentsAndResultMetadataSmartRollupAddMessages;
+}
+
+export interface OperationContentsAndResultSmartRollupCement {
+  kind: OpKind.SMART_ROLLUP_CEMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  commitment: string;
+  metadata: OperationContentsAndResultMetadataSmartRollupCement;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -964,7 +999,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultUpdateConsensusKey
   | OperationContentsAndResultDrainDelegate
   | OperationContentsAndResultVdfRevelation
-  | OperationContentsAndResultSmartRollupOriginate;
+  | OperationContentsAndResultSmartRollupOriginate
+  | OperationContentsAndResultSmartRollupAddMessages;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1336,6 +1372,36 @@ export interface OperationResultSmartRollupOriginate {
   genesis_commitment_hash: string;
   consumed_milligas?: string;
   size: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupAddMessages {
+  status: OperationResultStatusEnum;
+  consumed_milligas: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupPublish {
+  status: OperationResultStatusEnum;
+  consumed_milligas: string;
+  staked_hash: string;
+  published_at_level: number;
+  balance_updates: OperationBalanceUpdates;
+  errors?: TezosGenericOperationError[];
+}
+export interface OperationResultSmartRollupRefute {
+  status: OperationResultStatusEnum;
+  consumed_milligas: string;
+  // TODO CREATE INTERFACE
+  game_status: unknown;
+  balance_updates: OperationBalanceUpdates;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupCement {
+  status: OperationResultStatusEnum;
+  consumed_milligas: string;
+  inbox_level: string;
   errors?: TezosGenericOperationError[];
 }
 
