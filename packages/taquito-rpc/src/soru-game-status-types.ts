@@ -1,8 +1,9 @@
 export enum GameStatusStanding {
-  ONGOING = 'Ongoing',
-  ENDED = 'Ended',
+  ONGOING = 'ongoing',
+  ENDED = 'ended',
 }
 
 export enum GamePlayerResult {
   LOSER = 'loser',
+  DRAW = 'draw',
 }
