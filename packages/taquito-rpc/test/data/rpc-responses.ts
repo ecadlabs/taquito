@@ -5417,8 +5417,8 @@ export const ticketUpdatesSample = {
             parameters: {
               entrypoint: 'exchange_tickets',
               value: {
-                int: '2'
-              }
+                int: '2',
+              },
             },
             metadata: {
               operation_result: {
@@ -5430,45 +5430,45 @@ export const ticketUpdatesSample = {
                       prim: 'Pair',
                       args: [
                         {
-                          prim: 'None'
+                          prim: 'None',
                         },
-                        []
-                      ]
+                        [],
+                      ],
                     },
                     {
                       prim: 'Pair',
                       args: [
                         {
-                          bytes: '00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05'
+                          bytes: '00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05',
                         },
                         {
-                          bytes: '016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00'
-                        }
-                      ]
-                    }
-                  ]
+                          bytes: '016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00',
+                        },
+                      ],
+                    },
+                  ],
                 },
                 ticket_updates: [
                   {
                     ticket_token: {
                       ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
                       content_type: {
-                        prim: 'unit'
+                        prim: 'unit',
                       },
                       content: {
-                        prim: 'Unit'
-                      }
+                        prim: 'Unit',
+                      },
                     },
                     updates: [
                       {
                         account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
-                        amount: '-2'
-                      }
-                    ]
-                  }
+                        amount: '-2',
+                      },
+                    ],
+                  },
                 ],
                 consumed_milligas: '4077693',
-                storage_size: '5600'
+                storage_size: '5600',
               },
               internal_operation_results: [
                 {
@@ -5479,7 +5479,7 @@ export const ticketUpdatesSample = {
                   destination: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
                   parameters: {
                     entrypoint: 'receive_cards',
-                    value: []
+                    value: [],
                   },
                   result: {
                     status: 'applied',
@@ -5488,31 +5488,108 @@ export const ticketUpdatesSample = {
                         ticket_token: {
                           ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
                           content_type: {
-                            prim: 'string'
+                            prim: 'string',
                           },
                           content: {
-                            string: 'Ferosinge'
-                          }
+                            string: 'Ferosinge',
+                          },
                         },
                         updates: [
                           {
                             account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
-                            amount: '1'
-                          }
-                        ]
+                            amount: '1',
+                          },
+                        ],
                       },
                     ],
                     consumed_milligas: '7372756',
                     storage_size: '6015',
-                    paid_storage_size_diff: '380'
-                  }
-                }
-              ]
-            }
-          }
+                    paid_storage_size_diff: '380',
+                  },
+                },
+              ],
+            },
+          },
         ],
-        signature: 'sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H'
-      }
-    ]
-  ]
+        signature:
+          'sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H',
+      },
+    ],
+  ],
+};
+
+export const smartRollupOriginateResponse = {
+  protocol: 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
+  chain_id: 'NetXQw6nWSnrJ5t',
+  hash: 'BLFkxJtgGauWp3PXUiX2PuFfEj96WdP94Mtv2nyHcGkEFtvKr6Q',
+  header: {},
+  metadata: {},
+  operations: [
+    [],
+    [
+      {
+        protocol: 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
+        chain_id: 'NetXQw6nWSnrJ5t',
+        hash: 'ooMhfCwjiBzaCcYSxo1kyk4tQMgeDwu22NwPdjU8Yvaybyn26z5',
+        branch: 'BLsmwYwwt1GsoQ2ZSzqYncwbpyhVS52UzsQpEMgbpgzuKCYYw9s',
+        contents: [
+          {
+            kind: 'smart_rollup_originate',
+            source: 'tz1NyHPL2CidRquW3a9zPGde59YYtMDyyzCg',
+            fee: '1497',
+            counter: '19783',
+            gas_limit: '2849',
+            storage_limit: '6572',
+            pvm_kind: 'wasm_2_0_0',
+            kernel:
+              '23212f7573722f62696e2f656e762073680a6578706f7274204b45524e454c3d22303036313733366430313030303030303031323830373630303337663766376630313766363030323766376630313766363030353766376637663766376630313766363030313766303036303031376630313766363030323766376630303630303030303032363130333131373336643631373237343566373236663663366337353730356636333666373236353061373236353631363435663639366537303735373430303030313137333664363137323734356637323666366336633735373035663633366637323635306337373732363937343635356636663735373437303735373430303031313137333664363137323734356637323666366336633735373035663633366637323635306237333734366637323635356637373732363937343635303030323033303530343033303430353036303530333031303030313037313430323033366436353664303230303061366236353732366536353663356637323735366530303036306161343031303432613031303237663431666130303266303130303231303132303030326630313030323130323230303132303032343730343430343165343030343131323431303034316534303034313030313030323161306230623038303032303030343163343030366230623530303130353766343166653030326430303030323130333431666330303266303130303231303232303030326430303030323130343230303032663031303032313035323030313130303432313036323030343230303334363034343032303030343130313661323030313431303136623130303131613035323030353230303234363034343032303030343130373661323030363130303131613062306230623164303130313766343164633031343138343032343139303163313030303231303034313834303232303030313030353431383430323130303330623062333830353030343165343030306231323266366236353732366536353663326636353665373632663732363536323666366637343030343166383030306230323030303130303431666130303062303230303032303034316663303030623032303030303030343166653030306230313031220a',
+            origination_proof:
+              '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea18030fab8a3adde4b553c4d391e9cd19ee13b17941c1f49c040d621bbfbea964993810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9',
+            parameters_ty: {
+              prim: 'bytes',
+            },
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1NyHPL2CidRquW3a9zPGde59YYtMDyyzCg',
+                  change: '-1497',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '1497',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                balance_updates: [
+                  {
+                    kind: 'contract',
+                    contract: 'tz1NyHPL2CidRquW3a9zPGde59YYtMDyyzCg',
+                    change: '-1638000',
+                    origin: 'block',
+                  },
+                  {
+                    kind: 'burned',
+                    category: 'storage fees',
+                    change: '1638000',
+                    origin: 'block',
+                  },
+                ],
+                address: 'sr1K3AUoYanTUup53MCb8DkbvLsiAmFuXfFm',
+                genesis_commitment_hash: 'src14Khe1dnFbwrtTSEi4XWxxM7ej7L29YmduJhQY7U24Y523dmMtw',
+                consumed_milligas: '2748269',
+                size: '6552',
+              },
+            },
+          },
+        ],
+        signature:
+          'sigiKU2RGwT94sQBn4EFFy4SSVgYSGbULKzUneRyi8rURMg94uAJyYPgCpEfcjR8mkaSAoYnRCxqmit8XzVoHdbxGKoNfXRB',
+      },
+    ],
+  ],
 };

@@ -930,6 +930,7 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   pvm_kind: string;
   kernel: string;
   origination_proof: string;
+  parameters_ty: Record<string | number | symbol, unknown>;
   metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
 }
 
@@ -962,7 +963,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultIncreasePaidStorage
   | OperationContentsAndResultUpdateConsensusKey
   | OperationContentsAndResultDrainDelegate
-  | OperationContentsAndResultVdfRevelation;
+  | OperationContentsAndResultVdfRevelation
+  | OperationContentsAndResultSmartRollupOriginate;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1331,7 +1333,7 @@ export interface OperationResultSmartRollupOriginate {
   status: OperationResultStatusEnum;
   balance_updates: OperationBalanceUpdates;
   address: string;
-  genesis_sommitment_hash: string;
+  genesis_commitment_hash: string;
   consumed_milligas?: string;
   size: string;
   errors?: TezosGenericOperationError[];
