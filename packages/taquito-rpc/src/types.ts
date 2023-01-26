@@ -1294,7 +1294,6 @@ export interface OperationResultIncreasePaidStorage {
 
 export interface OperationResultUpdateConsensusKey {
   status: OperationResultStatusEnum;
-  consumed_gas?: string;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
 }

@@ -34,7 +34,6 @@ describe('Update Consensus Key operation', () => {
         ],
         operation_result: {
           status: 'applied',
-          consumed_gas: '1000',
           consumed_milligas: '1000000',
         },
       },
