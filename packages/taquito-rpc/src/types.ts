@@ -672,6 +672,24 @@ export interface OperationContentsAndResultMetadataSmartRollupRecoverBond {
   internal_operation_results?: InternalOperationResult[];
 }
 
+export interface OperationContentsAndResultMetadataZkRollupOriginate {
+  balance_updates?: OperationMetadataBalanceUpdates;
+  operation_results: OperationResultZkRollupOrigination;
+  interal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataZkRollupPublish {
+  balance_updates?: OperationMetadataBalanceUpdates;
+  operation_results: OperationResultZkRollupPublish;
+  interal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataZkRollupUpdate {
+  balance_updates?: OperationMetadataBalanceUpdates;
+  operation_results: OperationResultZkRollupUpdate;
+  interal_operation_results?: InternalOperationResult[];
+}
+
 export interface OperationContentsAndResultEndorsement {
   kind: OpKind.ENDORSEMENT;
   block_payload_hash?: string;
@@ -1059,6 +1077,49 @@ export interface OperationContentsAndResultSmartRollupRecoverBond {
   metadata: OperationContentsAndResultMetadataSmartRollupRecoverBond;
 }
 
+export interface OperationContentsAndResultZkRollupOriginate {
+  kind: OpKind.ZK_ROLLUP_ORIGINATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  public_parameters: string;
+  circuits_info: CircuitInfoKeys[];
+  init_state: string[];
+  nb_ops: number;
+}
+
+export interface OperationContentsAndResultZkRollupPublish {
+  kind: OpKind.ZK_ROLLUP_PUBLISH;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  zk_rollup: string;
+  op: ZkOpPrice | ZkOpTickets[][];
+}
+
+// TODO Double check
+export interface OperationContentsAndResultZkRollupUpdate {
+  kind: OpKind.ZK_ROLLUP_UPDATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  zk_rollup: string;
+  update: {
+    pending_pis: ZkPisStatePending[] | string[];
+    priavte_pis: ZkPisStatePrivate[] | string[];
+    fee_pi: {
+      new_state: string[];
+    };
+    proof: string;
+  };
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -1096,7 +1157,10 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupTimeout
   | OperationContentsAndResultSmartRollupExecuteOutboxMessage
-  | OperationContentsAndResultSmartRollupRecoverBond;
+  | OperationContentsAndResultSmartRollupRecoverBond
+  | OperationContentsAndResultZkRollupOriginate
+  | OperationContentsAndResultZkRollupPublish
+  | OperationContentsAndResultZkRollupUpdate;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1525,6 +1589,32 @@ export interface OperationResultSmartRollupRecoverBond {
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
 }
+
+export interface OperationResultZkRollupOrigination {
+  status: OperationResultStatusEnum;
+  balanace_updates: OperationBalanceUpdates;
+  originated_zk_rollup: string;
+  consumed_milligas: string;
+  size: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultZkRollupPublish {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  comsumed_milligas?: string;
+  size: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultZkRollupUpdate {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  consumed_milligas?: string;
+  paid_storage_size_diff?: string;
+  errors?: TezosGenericOperationError[];
+}
+
 export interface ContractBigMapDiffItem {
   key_hash?: string;
   key?: MichelsonV1Expression;
@@ -2157,4 +2247,38 @@ export interface TxRollupInboxResponse {
   inbox_length: number;
   cumulated_size: number;
   merkle_root: string;
+}
+
+export type CircuitInfoKeys = Record<'private' | 'public' | 'fee', unknown>;
+
+// SHOULD OTHER TYPE SHOULD EXTEND THIS TxRollupTicketsInfo
+export interface TicketerContentsBase {
+  contents: MichelsonV1Expression;
+  ty: MichelsonV1Expression;
+  ticketer: string;
+}
+
+// better name ZkOpPrice
+export interface ZkOpPrice {
+  opcode: number;
+  price: {
+    id: string; // CHECK
+    amount: string;
+  };
+  l1_dst: string;
+  rollup_id: string;
+  payload: string[];
+}
+
+export type ZkOpTickets = TicketerContentsBase | null;
+
+export interface ZkPisStatePending {
+  new_state: string[];
+  fee: string;
+  exit_validity: boolean;
+}
+export interface ZkPisStatePrivate {
+  new_state: string[];
+  fee: string;
+  exit_validity?: boolean;
 }
