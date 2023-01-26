@@ -1025,7 +1025,8 @@ export interface OperationContentsAndResultSmartRollupExecuteOutboxMessage {
   gas_limit: string;
   storage_limit: string;
   rollup: string;
-  commitment: string;
+  cemented_commitment: string;
+  output_proof: string;
   metadata: OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage;
 }
 
@@ -1037,7 +1038,7 @@ export interface OperationContentsAndResultSmartRollupRecoverBond {
   gas_limit: string;
   storage_limit: string;
   rollup: string;
-  commitment: string;
+  staker: string;
   metadata: OperationContentsAndResultMetadataSmartRollupRecoverBond;
 }
 
