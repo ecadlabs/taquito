@@ -35,6 +35,7 @@ import {
   ConstantsResponseProto015,
   OperationContentsAndResultSmartRollupOriginate,
   OperationContentsAndResultSmartRollupAddMessages,
+  OperationContentsAndResultSmartRollupExecuteOutboxMessage,
   RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
 } from '../src/types';
@@ -50,6 +51,7 @@ import {
   ticketUpdatesSample,
   smartRollupOriginateResponse,
   smartRollupAddMessagesResponse,
+  smartRollupExecuteOutboxMessageResponse,
 } from './data/rpc-responses';
 
 /**
@@ -4318,7 +4320,7 @@ describe('RpcClient test', () => {
   });
 
   describe('smartRollupAddMessages', () => {
-    it('should have correct types to access smart_rollup_originate results', async (done) => {
+    it('should have correct types to access smart_rollup_add_messages results', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupAddMessagesResponse));
       const response = await client.getBlock();
       const content = response.operations[1][0]
@@ -4338,6 +4340,32 @@ describe('RpcClient test', () => {
 
       expect(soruResult.status).toEqual('applied');
       expect(soruResult.consumed_milligas).toEqual('1002777');
+      done();
+    });
+  });
+
+  describe('smartRollupOutboxMessages', () => {
+    it('should have correct types to access smart_rollup_execute_outbox_message results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve(smartRollupExecuteOutboxMessageResponse)
+      );
+      const response = await client.getBlock();
+      const content = response.operations[1][0]
+        .contents[0] as OperationContentsAndResultSmartRollupExecuteOutboxMessage;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE);
+      expect(content.source).toEqual('tz1adKm6kWEkiejZ9WYpuHvBCgUewtCxpqRF');
+      expect(content.fee).toEqual('1618');
+      expect(content.counter).toEqual('13');
+      expect(content.gas_limit).toEqual('6485');
+      expect(content.storage_limit).toEqual('36');
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.consumed_milligas).toEqual('4731015');
+      expect(soruResult.ticket_updates).toEqual([]);
+      expect(soruResult.paid_storage_size_diff).toEqual('5');
       done();
     });
   });
