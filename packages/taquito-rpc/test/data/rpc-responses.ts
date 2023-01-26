@@ -5593,3 +5593,57 @@ export const smartRollupOriginateResponse = {
     ],
   ],
 };
+
+export const smartRollupAddMessagesResponse = {
+  protocol: 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
+  chain_id: 'NetXQw6nWSnrJ5t',
+  hash: 'BLFkxJtgGauWp3PXUiX2PuFfEj96WdP94Mtv2nyHcGkEFtvKr6Q',
+  header: {},
+  metadata: {},
+  operations: [
+    [],
+    [
+      {
+        protocol: 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
+        chain_id: 'NetXQw6nWSnrJ5t',
+        hash: 'op3GFxBQArsgC3eHjEiw4Qp31jHrprKfftcgwibKAwnANpzWncG',
+        branch: 'BL7USLDrUeuMzDUX6PdxuCbhngMYCcnmy9WFuotiVRmdBftZeDv',
+        contents: [
+          {
+            kind: 'smart_rollup_add_messages',
+            source: 'tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz',
+            fee: '398',
+            counter: '12191',
+            gas_limit: '1103',
+            storage_limit: '0',
+            message: [
+              '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+            ],
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz',
+                  change: '-398',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '398',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                consumed_milligas: '1002777',
+              },
+            },
+          },
+        ],
+        signature:
+          'sigSUjvKxjAZ4dBWbo4idKKwFDVfLtYscMMqHoQY8KgyghtyaswECPaBhjK921vj2uEsdKD7WJTeVVT1ZDcvwp8rkRuEW9kv',
+      },
+    ],
+  ],
+};

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { OpKind, RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
@@ -35,6 +34,9 @@ import {
   TxRollupProof,
   ConstantsResponseProto015,
   OperationContentsAndResultSmartRollupOriginate,
+  OperationContentsAndResultSmartRollupAddMessages,
+  RPCRunOperationParam,
+  OperationMetadataBalanceUpdates,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -47,6 +49,7 @@ import {
   votingInfoKathmandunetSample,
   ticketUpdatesSample,
   smartRollupOriginateResponse,
+  smartRollupAddMessagesResponse,
 } from './data/rpc-responses';
 
 /**
@@ -3913,11 +3916,13 @@ describe('RpcClient test', () => {
           },
         ],
       });
-      const response = await client.runOperation(testData as any);
+      const response = await client.runOperation(testData as RPCRunOperationParam);
 
       const balanceUpdate =
         'metadata' in response.contents[0]
-          ? response.contents[0]['metadata']['balance_updates']
+          ? (response.contents[0]['metadata'][
+              'balance_updates'
+            ] as OperationMetadataBalanceUpdates[])
           : [];
       expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
       expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
@@ -4281,7 +4286,6 @@ describe('RpcClient test', () => {
     it('should have correct types to access smart_rollup_originate results', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupOriginateResponse));
       const response = await client.getBlock();
-      console.log('response', response);
       const content = response.operations[1][0]
         .contents[0] as OperationContentsAndResultSmartRollupOriginate;
 
@@ -4309,6 +4313,31 @@ describe('RpcClient test', () => {
       );
       expect(soruResult.consumed_milligas).toEqual('2748269');
       expect(soruResult.size).toEqual('6552');
+      done();
+    });
+  });
+
+  describe('smartRollupAddMessages', () => {
+    it('should have correct types to access smart_rollup_originate results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupAddMessagesResponse));
+      const response = await client.getBlock();
+      const content = response.operations[1][0]
+        .contents[0] as OperationContentsAndResultSmartRollupAddMessages;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_ADD_MESSAGES);
+      expect(content.source).toEqual('tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz');
+      expect(content.fee).toEqual('398');
+      expect(content.counter).toEqual('12191');
+      expect(content.gas_limit).toEqual('1103');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.message[0]).toEqual(
+        '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74'
+      );
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.consumed_milligas).toEqual('1002777');
       done();
     });
   });

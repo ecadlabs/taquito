@@ -632,49 +632,49 @@ export interface OperationContentsAndResultMetadataSmartRollupOriginate {
 
 export interface OperationContentsAndResultMetadataSmartRollupAddMessages {
   balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultSmartRollupAddMessages;
+  operation_result: OperationResultSmartRollupAddMessages;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataSmartRollupCement {
   balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultSmartRollupCement;
+  operation_result: OperationResultSmartRollupCement;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataSmartRollupPublish {
   balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultSmartRollupPublish;
+  operation_result: OperationResultSmartRollupPublish;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage {
   balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultSmartRollupExecuteOutboxMessage;
+  operation_result: OperationResultSmartRollupExecuteOutboxMessage;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataSmartRollupRecoverBond {
   balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultSmartRollupRecoverBond;
+  operation_result: OperationResultSmartRollupRecoverBond;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataZkRollupOriginate {
   balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultZkRollupOrigination;
+  operation_result: OperationResultZkRollupOrigination;
   interal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataZkRollupPublish {
   balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultZkRollupPublish;
+  operation_result: OperationResultZkRollupPublish;
   interal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataZkRollupUpdate {
   balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultZkRollupUpdate;
+  operation_result: OperationResultZkRollupUpdate;
   interal_operation_results?: InternalOperationResult[];
 }
 
