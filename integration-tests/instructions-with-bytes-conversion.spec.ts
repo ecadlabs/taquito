@@ -8,14 +8,14 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
   const limanet = protocol === Protocols.PtLimaPtL ? test : test.skip;
   const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`Test origination of contract with instructions now supporting bytes`, () => {
+  describe(`Test origination of contract with instructions now supporting bytes conversion`, () => {
 
     beforeEach(async (done) => {
       await setup();
       done();
     });
 
-    mumbaiAndAlpha(`Should be able to orignate contract with ADD parameter in michelson contract with bytes`, async done => {
+    mumbaiAndAlpha(`Should be able to originate a contract with BYTES -> INT -> BYTES instructions`, async done => {
       const contract = await Tezos.contract.originate({
         code: bytesAndInt,
         storage: 0
@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       done();
     });
 
-    mumbaiAndAlpha(`Should be able to orignate contract with LSL parameter in michelson contract with bytes`, async done => {
+    mumbaiAndAlpha(`Should be able to originate a contract with BYTES -> NAT -> BYTES instructions`, async done => {
       const contract = await Tezos.contract.originate({
         code: bytesAndNat,
         storage: 0
@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, protocol, setup }) => {
       done();
     });
 
-    limanet('Should fail to originate a contract for AND with bytes', async (done) => {
+    limanet('Should fail with non-supported BYTES and NAT instructions', async (done) => {
       try {
         const contract = await Tezos.contract.originate({
           code: bytesAndInt,
