@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { OpKind, RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
