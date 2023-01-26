@@ -648,18 +648,6 @@ export interface OperationContentsAndResultMetadataSmartRollupPublish {
   internal_operation_results?: InternalOperationResult[];
 }
 
-export interface OperationContentsAndResultMetadataSmartRollupRefute {
-  balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultSmartRollupRefute;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataSmartRollupTimeout {
-  balance_updates?: OperationMetadataBalanceUpdates;
-  operation_results: OperationResultSmartRollupTimeout;
-  internal_operation_results?: InternalOperationResult[];
-}
-
 export interface OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage {
   balance_updates?: OperationMetadataBalanceUpdates;
   operation_results: OperationResultSmartRollupExecuteOutboxMessage;
@@ -1029,30 +1017,6 @@ export interface OperationContentsAndResultSmartRollupPublish {
   metadata: OperationContentsAndResultMetadataSmartRollupPublish;
 }
 
-export interface OperationContentsAndResultSmartRollupRefute {
-  kind: OpKind.SMART_ROLLUP_REFUTE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: string;
-  metadata: OperationContentsAndResultMetadataSmartRollupRefute;
-}
-
-export interface OperationContentsAndResultSmartRollupTimeout {
-  kind: OpKind.SMART_ROLLUP_TIMEOUT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: string;
-  metadata: OperationContentsAndResultMetadataSmartRollupTimeout;
-}
-
 export interface OperationContentsAndResultSmartRollupExecuteOutboxMessage {
   kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
   source: string;
@@ -1154,8 +1118,6 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupAddMessages
   | OperationContentsAndResultSmartRollupCement
   | OperationContentsAndResultSmartRollupPublish
-  | OperationContentsAndResultSmartRollupRefute
-  | OperationContentsAndResultSmartRollupTimeout
   | OperationContentsAndResultSmartRollupExecuteOutboxMessage
   | OperationContentsAndResultSmartRollupRecoverBond
   | OperationContentsAndResultZkRollupOriginate
@@ -1554,23 +1516,6 @@ export interface OperationResultSmartRollupPublish {
   staked_hash: string;
   published_at_level: number;
   balance_updates: OperationBalanceUpdates;
-  errors?: TezosGenericOperationError[];
-}
-export interface OperationResultSmartRollupRefute {
-  status: OperationResultStatusEnum;
-  consumed_milligas: string;
-  // TODO CREATE INTERFACE
-  game_status: unknown;
-  balance_updates: OperationBalanceUpdates;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultSmartRollupTimeout {
-  status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
-  // TODO CREATE INTERFACE
-  game_status: unknown;
-  consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
 }
 
