@@ -2217,13 +2217,14 @@ export interface ZkOpPrice {
 
 export type ZkOpTickets = TicketerContentsBase | null;
 
-export interface ZkPisStatePending {
+export interface ZkPisStateBase {
   new_state: string[];
   fee: string;
+}
+
+export interface ZkPisStatePending extends ZkPisStateBase {
   exit_validity: boolean;
 }
-export interface ZkPisStatePrivate {
-  new_state: string[];
-  fee: string;
+export interface ZkPisStatePrivate extends ZkPisStateBase {
   exit_validity?: boolean;
 }
