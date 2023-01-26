@@ -1522,7 +1522,7 @@ export interface OperationResultSmartRollupPublish {
 export interface OperationResultSmartRollupExecuteOutboxMessage {
   status: OperationResultStatusEnum;
   balance_updates: OperationBalanceUpdates;
-  ticket_updates: TicketUpdates;
+  ticket_updates: TicketUpdates[];
   consumed_milligas?: string;
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
