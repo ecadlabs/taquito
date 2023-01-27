@@ -636,46 +636,10 @@ export interface OperationContentsAndResultMetadataSmartRollupAddMessages {
   internal_operation_results?: InternalOperationResult[];
 }
 
-export interface OperationContentsAndResultMetadataSmartRollupCement {
-  balance_updates?: OperationMetadataBalanceUpdates;
-  operation_result: OperationResultSmartRollupCement;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataSmartRollupPublish {
-  balance_updates?: OperationMetadataBalanceUpdates;
-  operation_result: OperationResultSmartRollupPublish;
-  internal_operation_results?: InternalOperationResult[];
-}
-
 export interface OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage {
   balance_updates?: OperationMetadataBalanceUpdates;
   operation_result: OperationResultSmartRollupExecuteOutboxMessage;
   internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataSmartRollupRecoverBond {
-  balance_updates?: OperationMetadataBalanceUpdates;
-  operation_result: OperationResultSmartRollupRecoverBond;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataZkRollupOriginate {
-  balance_updates?: OperationMetadataBalanceUpdates;
-  operation_result: OperationResultZkRollupOrigination;
-  interal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataZkRollupPublish {
-  balance_updates?: OperationMetadataBalanceUpdates;
-  operation_result: OperationResultZkRollupPublish;
-  interal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataZkRollupUpdate {
-  balance_updates?: OperationMetadataBalanceUpdates;
-  operation_result: OperationResultZkRollupUpdate;
-  interal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultEndorsement {
@@ -993,30 +957,6 @@ export interface OperationContentsAndResultSmartRollupAddMessages {
   metadata: OperationContentsAndResultMetadataSmartRollupAddMessages;
 }
 
-export interface OperationContentsAndResultSmartRollupCement {
-  kind: OpKind.SMART_ROLLUP_CEMENT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: string;
-  metadata: OperationContentsAndResultMetadataSmartRollupCement;
-}
-
-export interface OperationContentsAndResultSmartRollupPublish {
-  kind: OpKind.SMART_ROLLUP_PUBLISH;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: string;
-  metadata: OperationContentsAndResultMetadataSmartRollupPublish;
-}
-
 export interface OperationContentsAndResultSmartRollupExecuteOutboxMessage {
   kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
   source: string;
@@ -1028,61 +968,6 @@ export interface OperationContentsAndResultSmartRollupExecuteOutboxMessage {
   cemented_commitment: string;
   output_proof: string;
   metadata: OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage;
-}
-
-export interface OperationContentsAndResultSmartRollupRecoverBond {
-  kind: OpKind.SMART_ROLLUP_RECOVER_BOND;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  staker: string;
-  metadata: OperationContentsAndResultMetadataSmartRollupRecoverBond;
-}
-
-export interface OperationContentsAndResultZkRollupOriginate {
-  kind: OpKind.ZK_ROLLUP_ORIGINATE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  public_parameters: string;
-  circuits_info: CircuitInfoKeys[];
-  init_state: string[];
-  nb_ops: number;
-}
-
-export interface OperationContentsAndResultZkRollupPublish {
-  kind: OpKind.ZK_ROLLUP_PUBLISH;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  zk_rollup: string;
-  op: ZkOpPrice | ZkOpTickets[][];
-}
-
-// TODO Double check
-export interface OperationContentsAndResultZkRollupUpdate {
-  kind: OpKind.ZK_ROLLUP_UPDATE;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  zk_rollup: string;
-  update: {
-    pending_pis: ZkPisStatePending[] | string[];
-    priavte_pis: ZkPisStatePrivate[] | string[];
-    fee_pi: {
-      new_state: string[];
-    };
-    proof: string;
-  };
 }
 
 export type OperationContentsAndResult =
@@ -1117,13 +1002,7 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultVdfRevelation
   | OperationContentsAndResultSmartRollupOriginate
   | OperationContentsAndResultSmartRollupAddMessages
-  | OperationContentsAndResultSmartRollupCement
-  | OperationContentsAndResultSmartRollupPublish
-  | OperationContentsAndResultSmartRollupExecuteOutboxMessage
-  | OperationContentsAndResultSmartRollupRecoverBond
-  | OperationContentsAndResultZkRollupOriginate
-  | OperationContentsAndResultZkRollupPublish
-  | OperationContentsAndResultZkRollupUpdate;
+  | OperationContentsAndResultSmartRollupExecuteOutboxMessage;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1504,58 +1383,10 @@ export interface OperationResultSmartRollupAddMessages {
   errors?: TezosGenericOperationError[];
 }
 
-export interface OperationResultSmartRollupCement {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  inbox_level: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultSmartRollupPublish {
-  status: OperationResultStatusEnum;
-  consumed_milligas?: string;
-  staked_hash: string;
-  published_at_level: number;
-  balance_updates: OperationBalanceUpdates;
-  errors?: TezosGenericOperationError[];
-}
-
 export interface OperationResultSmartRollupExecuteOutboxMessage {
   status: OperationResultStatusEnum;
   balance_updates: OperationBalanceUpdates;
   ticket_updates: TicketUpdates[];
-  consumed_milligas?: string;
-  paid_storage_size_diff?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultSmartRollupRecoverBond {
-  status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
-  consumed_milligas?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultZkRollupOrigination {
-  status: OperationResultStatusEnum;
-  balanace_updates: OperationBalanceUpdates;
-  originated_zk_rollup: string;
-  consumed_milligas: string;
-  size: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultZkRollupPublish {
-  status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
-  comsumed_milligas?: string;
-  size: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultZkRollupUpdate {
-  status: OperationResultStatusEnum;
-  balance_updates: OperationBalanceUpdates;
   consumed_milligas?: string;
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
@@ -2193,39 +2024,4 @@ export interface TxRollupInboxResponse {
   inbox_length: number;
   cumulated_size: number;
   merkle_root: string;
-}
-
-export type CircuitInfoKeys = Record<'private' | 'public' | 'fee', unknown>;
-
-// SHOULD OTHER TYPE SHOULD EXTEND THIS TxRollupTicketsInfo
-export interface TicketerContentsBase {
-  contents: MichelsonV1Expression;
-  ty: MichelsonV1Expression;
-  ticketer: string;
-}
-
-// better name ZkOpPrice
-export interface ZkOpPrice {
-  opcode: number;
-  price: {
-    id: string; // CHECK
-    amount: string;
-  };
-  l1_dst: string;
-  rollup_id: string;
-  payload: string[];
-}
-
-export type ZkOpTickets = TicketerContentsBase | null;
-
-export interface ZkPisStateBase {
-  new_state: string[];
-  fee: string;
-}
-
-export interface ZkPisStatePending extends ZkPisStateBase {
-  exit_validity: boolean;
-}
-export interface ZkPisStatePrivate extends ZkPisStateBase {
-  exit_validity?: boolean;
 }
