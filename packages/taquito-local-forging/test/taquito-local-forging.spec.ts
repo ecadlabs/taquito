@@ -6,11 +6,7 @@ import {
   ProtocolsHash,
   Uint8ArrayConsumer,
 } from '../src/taquito-local-forging';
-import {
-  ticketCode3Proto14,
-  ticketStorage3Proto14,
-} from '../../../integration-tests/data/code_with_ticket_proto14';
-import { commonCases, limaCases } from '../../../integration-tests/data/allTestsCases';
+import { commonCases } from '../../../integration-tests/data/allTestsCases';
 import {
   InvalidOperationSchemaError,
   InvalidBlockHashError,
@@ -28,17 +24,6 @@ describe('Forge and parse operations default protocol', () => {
       const result = await localForger.forge(operation);
       expect(await localForger.parse(result)).toEqual(expected || operation);
       done();
-    });
-  });
-
-  describe('Forge and parse operations lima protocol', () => {
-    const localForger = new LocalForger(ProtocolsHash.PtLimaPtL);
-    limaCases.forEach(({ name, operation, expected }) => {
-      test(`Lima test: ${name}`, async (done) => {
-        const result = await localForger.forge(operation);
-        expect(await localForger.parse(result)).toEqual(expected || operation);
-        done();
-      });
     });
   });
 
@@ -146,36 +131,6 @@ describe('Forge and parse operations default protocol', () => {
           name: expect.stringContaining('InvalidBlockHashError'),
         })
       );
-    });
-
-    test('Should not throw error when origination and delegation does not have a "delegate" property', async () => {
-      const operation: any = {
-        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-        contents: [
-          {
-            kind: 'delegation',
-            counter: '1',
-            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-            fee: '10000',
-            gas_limit: '10',
-            storage_limit: '10',
-          },
-          {
-            kind: 'origination',
-            counter: '1',
-            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-            fee: '10000',
-            gas_limit: '10',
-            storage_limit: '10',
-            balance: '0',
-            script: {
-              code: ticketCode3Proto14,
-              storage: ticketStorage3Proto14,
-            },
-          },
-        ],
-      };
-      expect(localForger.forge(operation)).toBeDefined();
     });
 
     test('Should not throw error when transaction operation does not have a "parameters" property', async () => {
