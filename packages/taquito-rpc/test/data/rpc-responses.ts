@@ -5647,6 +5647,7 @@ export const smartRollupAddMessagesResponse = {
     ],
   ],
 };
+
 export const smartRollupExecuteOutboxMessageResponse = {
   protocol: 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
   chain_id: 'NetXQw6nWSnrJ5t',
