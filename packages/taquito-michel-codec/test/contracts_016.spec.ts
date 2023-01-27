@@ -22,6 +22,8 @@ const contracts: {
     'not_bytes.tz',
     'or_bytes.tz',
     'xor_bytes.tz',
+    'bytes_of_int.tz',
+    'bytes_of_nat.tz',
   ],
 };
 

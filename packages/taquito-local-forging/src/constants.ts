@@ -210,6 +210,8 @@ export const opMapping: { [key: string]: string } = {
   '98': 'Lambda_rec',
   '99': 'LAMBDA_REC',
   '9a': 'TICKET',
+  '9b': 'BYTES',
+  '9c': 'NAT',
 };
 
 export const opMappingReverse = (() => {
