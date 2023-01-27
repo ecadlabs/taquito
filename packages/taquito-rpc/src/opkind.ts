@@ -33,13 +33,5 @@ export enum OpKind {
   TICKET_UPDATES = 'ticket_updates',
   SMART_ROLLUP_ORIGINATE = 'smart_rollup_originate',
   SMART_ROLLUP_ADD_MESSAGES = 'smart_rollup_add_messages',
-  SMART_ROLLUP_CEMENT = 'smart_rollup_cement',
-  SMART_ROLLUP_PUBLISH = 'smart_rollup_publish',
-  SMART_ROLLUP_REFUTE = 'smart_rollup_smart_rollup_refute',
-  SMART_ROLLUP_TIMEOUT = 'smart_rollup_timeout',
   SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'smart_rollup_execute_outbox_message',
-  SMART_ROLLUP_RECOVER_BOND = 'smart_rollup_recover_bond',
-  ZK_ROLLUP_ORIGINATE = 'zk_rollup_originate',
-  ZK_ROLLUP_PUBLISH = 'zk_rollup_publish',
-  ZK_ROLLUP_UPDATE = 'zk_rollup_update',
 }
