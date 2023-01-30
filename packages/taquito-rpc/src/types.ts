@@ -631,13 +631,13 @@ export interface OperationContentsAndResultMetadataSmartRollupOriginate {
 }
 
 export interface OperationContentsAndResultMetadataSmartRollupAddMessages {
-  balance_updates?: OperationMetadataBalanceUpdates;
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultSmartRollupAddMessages;
   internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage {
-  balance_updates?: OperationMetadataBalanceUpdates;
+  balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultSmartRollupExecuteOutboxMessage;
   internal_operation_results?: InternalOperationResult[];
 }
@@ -939,7 +939,7 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  pvm_kind: string;
+  pvm_kind: PVMKind;
   kernel: string;
   origination_proof: string;
   parameters_ty: Record<string | number | symbol, unknown>;
@@ -2025,3 +2025,5 @@ export interface TxRollupInboxResponse {
   cumulated_size: number;
   merkle_root: string;
 }
+
+export type PVMKind = 'wasm_2_0_0' | 'arith';
