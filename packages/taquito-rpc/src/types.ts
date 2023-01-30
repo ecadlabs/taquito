@@ -942,7 +942,7 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   pvm_kind: PVMKind;
   kernel: string;
   origination_proof: string;
-  parameters_ty: Record<string | number | symbol, unknown>;
+  parameters_ty: MichelsonV1Expression;
   metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
 }
 
