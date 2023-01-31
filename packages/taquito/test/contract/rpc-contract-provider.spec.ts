@@ -36,6 +36,7 @@ import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 import { smallNestedMapTypecheck, ticketTokenTestMock } from '../helpers';
+import { PvmKind } from '@taquito/rpc';
 
 /**
  * RPCContractProvider test
@@ -60,6 +61,7 @@ describe('RpcContractProvider test', () => {
     getSaplingDiffById: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
     getCurrentPeriod: jest.Mock<any, any>;
+    getOriginationProof: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -86,6 +88,7 @@ describe('RpcContractProvider test', () => {
     increasePaidStorage: jest.Mock<any, any>;
     updateConsensusKey: jest.Mock<any, any>;
     smartRollupAddMessages: jest.Mock<any, any>;
+    smartRollupOriginate: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -117,6 +120,7 @@ describe('RpcContractProvider test', () => {
       getSaplingDiffById: jest.fn(),
       getProtocols: jest.fn(),
       getCurrentPeriod: jest.fn(),
+      getOriginationProof: jest.fn(),
     };
 
     mockForger = {
@@ -143,6 +147,7 @@ describe('RpcContractProvider test', () => {
       increasePaidStorage: jest.fn(),
       updateConsensusKey: jest.fn(),
       smartRollupAddMessages: jest.fn(),
+      smartRollupOriginate: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -2320,6 +2325,33 @@ describe('RpcContractProvider test', () => {
 
       const keyList = storage.keyMap;
       expect(keyList.size).toEqual(1);
+      done();
+    });
+  });
+
+  describe('smartRollupOriginate', () => {
+    it('Should have correct returned values with origination', async (done) => {
+      const estimate = new Estimate(1230000, 10000, 100, 100);
+      mockEstimate.smartRollupOriginate.mockResolvedValue(estimate);
+      mockRpcClient.getOriginationProof.mockResolvedValue(
+        '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
+      );
+      const smartRollupOriginate = await rpcContractProvider.smartRollupOriginate({
+        pvmKind: PvmKind.WASM2,
+        kernel:
+          '0061736d0100000001280760037f7f7f017f60027f7f017f60057f7f7f7f7f017f60017f0060017f017f60027f7f0060000002610311736d6172745f726f6c6c75705f636f72650a726561645f696e707574000011736d6172745f726f6c6c75705f636f72650c77726974655f6f7574707574000111736d6172745f726f6c6c75705f636f72650b73746f72655f77726974650002030504030405060503010001071402036d656d02000a6b65726e656c5f72756e00060aa401042a01027f41fa002f0100210120002f010021022001200247044041e4004112410041e400410010021a0b0b0800200041c4006b0b5001057f41fe002d0000210341fc002f0100210220002d0000210420002f0100210520011004210620042003460440200041016a200141016b10011a0520052002460440200041076a200610011a0b0b0b1d01017f41dc0141840241901c100021004184022000100541840210030b0b38050041e4000b122f6b65726e656c2f656e762f7265626f6f740041f8000b0200010041fa000b0200020041fc000b0200000041fe000b0101',
+        parametersType: {
+          prim: 'bytes',
+        },
+      });
+
+      expect(smartRollupOriginate.storageLimit).toEqual(10000);
+      expect(smartRollupOriginate.gasLimit).toEqual(1330);
+      expect(smartRollupOriginate.fee).toEqual(433);
+      expect(smartRollupOriginate.originationProof).toEqual(
+        '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
+      );
+
       done();
     });
   });

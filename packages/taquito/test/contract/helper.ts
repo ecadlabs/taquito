@@ -1716,3 +1716,92 @@ export const smartRollupAddMessagesNoReveal = {
   signature:
     'sigSUjvKxjAZ4dBWbo4idKKwFDVfLtYscMMqHoQY8KgyghtyaswECPaBhjK921vj2uEsdKD7WJTeVVT1ZDcvwp8rkRuEW9kv',
 };
+
+export const smartRollupOriginateWithReveal = {
+  contents: [
+    {
+      kind: 'reveal',
+      source: 'tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz',
+      fee: '359',
+      counter: '12054',
+      gas_limit: '1000',
+      storage_limit: '0',
+      public_key: 'sppk7d2tnVN58p2fnxD2ru52kZs71YxdLv4CpWSp1DhkwdaE1vtUeTJ',
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz',
+            change: '-359',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '359',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          consumed_milligas: '1000000',
+        },
+      },
+    },
+    {
+      kind: 'smart_rollup_originate',
+      source: 'tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz',
+      fee: '957',
+      counter: '12055',
+      gas_limit: '2849',
+      storage_limit: '6572',
+      pvm_kind: 'wasm_2_0_0',
+      kernel:
+        '0061736d0100000001280760037f7f7f017f60027f7f017f60057f7f7f7f7f017f60017f0060017f017f60027f7f0060000002610311736d6172745f726f6c6c75705f636f72650a726561645f696e707574000011736d6172745f726f6c6c75705f636f72650c77726974655f6f7574707574000111736d6172745f726f6c6c75705f636f72650b73746f72655f77726974650002030504030405060503010001071402036d656d02000a6b65726e656c5f72756e00060aa401042a01027f41fa002f0100210120002f010021022001200247044041e4004112410041e400410010021a0b0b0800200041c4006b0b5001057f41fe002d0000210341fc002f0100210220002d0000210420002f0100210520011004210620042003460440200041016a200141016b10011a0520052002460440200041076a200610011a0b0b0b1d01017f41dc0141840241901c100021004184022000100541840210030b0b38050041e4000b122f6b65726e656c2f656e762f7265626f6f740041f8000b0200010041fa000b0200020041fc000b0200000041fe000b0101',
+      origination_proof:
+        '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9',
+      parameters_ty: {
+        prim: 'bytes',
+      },
+      metadata: {
+        balance_updates: [
+          {
+            kind: 'contract',
+            contract: 'tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz',
+            change: '-957',
+            origin: 'block',
+          },
+          {
+            kind: 'accumulator',
+            category: 'block fees',
+            change: '957',
+            origin: 'block',
+          },
+        ],
+        operation_result: {
+          status: 'applied',
+          balance_updates: [
+            {
+              kind: 'contract',
+              contract: 'tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz',
+              change: '-1638000',
+              origin: 'block',
+            },
+            {
+              kind: 'burned',
+              category: 'storage fees',
+              change: '1638000',
+              origin: 'block',
+            },
+          ],
+          address: 'sr1HxZ24YmT3hkpeSaxb6N7vrpp6BfbPSrEh',
+          genesis_commitment_hash: 'src135NQY1CGVUaYdE5Jp4PZn8CzGuznh4bz8z5cwtuCbSanLMdPER',
+          consumed_milligas: '2748269',
+          size: '6552',
+        },
+      },
+    },
+  ],
+  signature:
+    'sigRjjHRNcKkfHxRf7kMeQ1Qsjn4SzX6e7Y4zKZqYHDiWC4C9yHDg5f4pusM6usfbitBxmAS9efcVUxBg8TpD6MhR5fipAya',
+};
