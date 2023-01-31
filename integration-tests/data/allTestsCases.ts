@@ -9,16 +9,6 @@ import {
   example10,
 } from './code_with_sapling';
 import { ticketCode, ticketStorage } from './code_with_ticket';
-import {
-  ticketCodeProto14,
-  ticketCode2Proto14,
-  ticketCode3Proto14,
-  ticketCode4Proto14,
-  ticketStorageProto14,
-  ticketStorage2Proto14,
-  ticketStorage3Proto14,
-  ticketStorage4Proto14,
-} from './code_with_ticket_proto14';
 import { genericCode, genericStorage } from './generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './token_bigmap';
 import { noAnnotCode, noAnnotInit } from './token_without_annotation';
@@ -32,7 +22,6 @@ import { codeViewsTopLevel, storageViewsTopLevel } from './contract_views_top_le
 import { MichelsonV1Expression, OpKind } from '@taquito/rpc';
 import { emitCode } from './code_with_emit';
 import { lambdaRecCode } from './code_with_lambda_rec';
-import { opMappingProto14 } from '../../packages/taquito-local-forging/src/proto14-kathmandu/constants-proto14'
 
 function extractOp(
   startIndex: number,
@@ -807,7 +796,7 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-  ...extractOp(0, 151, opMappingProto14).map((op): TestCase => {
+  ...extractOp(0, 154, opMapping).map((op): TestCase => {
     return {
       name: `Origination operation (${op})`,
       operation: {
@@ -926,90 +915,6 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           amount: '1000',
-        },
-      ],
-    },
-  },
-  {
-    name: 'Origination where storage is a pair of 2 optional annotated tickets',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: ticketCodeProto14,
-            storage: ticketStorageProto14,
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Origination where parameter contains a pair having 3 args',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: ticketCode2Proto14,
-            storage: ticketStorage2Proto14,
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Origination where storage contains nested pairs and a ticket inside a big map',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: ticketCode3Proto14,
-            storage: ticketStorage3Proto14,
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Origination with ticket',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: ticketCode4Proto14,
-            storage: ticketStorage4Proto14,
-          },
         },
       ],
     },
@@ -1386,33 +1291,6 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-];
-
-export const limaCases: TestCase[] = [
-  // In `opMapping` from the file `constants.ts`, the operations and types starting at `ticket` were added in the lima protocol
-  ...extractOp(152, 154, opMapping).map((op): TestCase => {
-    return {
-      name: `Origination operation (${op})`,
-      operation: {
-        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-        contents: [
-          {
-            kind: OpKind.ORIGINATION,
-            counter: '1',
-            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-            fee: '10000',
-            gas_limit: '10',
-            storage_limit: '10',
-            balance: '0',
-            script: {
-              code: genericCode(op) as MichelsonV1Expression[],
-              storage: genericStorage,
-            },
-          },
-        ],
-      },
-    };
-  }),
   {
     name: `Origination of a contract that contains the instructions TICKET`,
     operation: {

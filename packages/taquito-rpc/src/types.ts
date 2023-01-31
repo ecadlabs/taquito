@@ -624,6 +624,24 @@ export interface OperationContentsAndResultMetadataDrainDelegate {
   allocated_destination_contract?: boolean;
 }
 
+export interface OperationContentsAndResultMetadataSmartRollupOriginate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupOriginate;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupAddMessages {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupAddMessages;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupExecuteOutboxMessage;
+  internal_operation_results?: InternalOperationResult[];
+}
+
 export interface OperationContentsAndResultEndorsement {
   kind: OpKind.ENDORSEMENT;
   block_payload_hash?: string;
@@ -914,6 +932,44 @@ export interface OperationContentsAndResultVdfRevelation {
   metadata: OperationContentsAndResultMetadata;
 }
 
+export interface OperationContentsAndResultSmartRollupOriginate {
+  kind: OpKind.SMART_ROLLUP_ORIGINATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pvm_kind: PVMKind;
+  kernel: string;
+  origination_proof: string;
+  parameters_ty: MichelsonV1Expression;
+  metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
+}
+
+export interface OperationContentsAndResultSmartRollupAddMessages {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  message: string[];
+  metadata: OperationContentsAndResultMetadataSmartRollupAddMessages;
+}
+
+export interface OperationContentsAndResultSmartRollupExecuteOutboxMessage {
+  kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  cemented_commitment: string;
+  output_proof: string;
+  metadata: OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -943,7 +999,10 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultIncreasePaidStorage
   | OperationContentsAndResultUpdateConsensusKey
   | OperationContentsAndResultDrainDelegate
-  | OperationContentsAndResultVdfRevelation;
+  | OperationContentsAndResultVdfRevelation
+  | OperationContentsAndResultSmartRollupOriginate
+  | OperationContentsAndResultSmartRollupAddMessages
+  | OperationContentsAndResultSmartRollupExecuteOutboxMessage;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1320,6 +1379,31 @@ export interface OperationResultRegisterGlobalConstant {
   global_address?: string;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
+}
+
+export interface OperationResultSmartRollupOriginate {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  address: string;
+  genesis_commitment_hash: string;
+  consumed_milligas?: string;
+  size: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupAddMessages {
+  status: OperationResultStatusEnum;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupExecuteOutboxMessage {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  ticket_updates: TicketUpdates[];
+  consumed_milligas?: string;
+  paid_storage_size_diff?: string;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface ContractBigMapDiffItem {
@@ -1955,3 +2039,5 @@ export interface TxRollupInboxResponse {
   cumulated_size: number;
   merkle_root: string;
 }
+
+export type PVMKind = 'wasm_2_0_0' | 'arith';
