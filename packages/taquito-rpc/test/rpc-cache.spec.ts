@@ -32,6 +32,7 @@ import {
   constants,
   txRollupInbox,
   txRollupState,
+  ticketBalances,
 } from './data/rpc-responses';
 
 /**
@@ -45,6 +46,11 @@ describe('RpcClientCache test', () => {
   const contractAddress = 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D';
   const txRollupId = 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w';
   const blockLevel = '0';
+  const ticketToken = {
+    ticketer: contractAddress,
+    content_type: { prim: 'string' },
+    content: { string: 'ticket1' },
+  };
 
   beforeEach(() => {
     mockRpcClient = {
@@ -84,6 +90,8 @@ describe('RpcClientCache test', () => {
       getProtocols: jest.fn(),
       getTxRollupInbox: jest.fn(),
       getTxRollupState: jest.fn(),
+      getTicketBalance: jest.fn(),
+      getAllTicketBalances: jest.fn(),
     };
 
     mockRpcClient.getRpcUrl.mockReturnValue(rpcUrl);
@@ -121,6 +129,8 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getProtocols.mockReturnValue(protocols);
     mockRpcClient.getTxRollupInbox.mockReturnValue(txRollupInbox);
     mockRpcClient.getTxRollupState.mockReturnValue(txRollupState);
+    mockRpcClient.getTicketBalance.mockReturnValue('3');
+    mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalances);
     rpcCache = new RpcClientCache(mockRpcClient);
   });
 
@@ -167,6 +177,12 @@ describe('RpcClientCache test', () => {
     await rpcCache.getProtocols();
     await rpcCache.getTxRollupInbox(txRollupId, blockLevel);
     await rpcCache.getTxRollupState(txRollupId);
+    await rpcCache.getTicketBalance(contractAddress, {
+      ticketer: contractAddress,
+      content_type: { prim: 'string' },
+      content: { string: 'ticket1' },
+    });
+    await rpcCache.getAllTicketBalances(contractAddress);
 
     expect(rpcCache.getAllCachedData()['rpcTest/getBlockHash/head/'].response).toEqual(blockHash);
     expect(rpcCache.getAllCachedData()['rpcTest/getBlock/head/'].response).toEqual(blockResponse);
@@ -255,6 +271,14 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getTxRollupState/head/${txRollupId}/`].response
     ).toEqual(txRollupState);
+    expect(
+      rpcCache.getAllCachedData()[
+        `rpcTest/getTicketBalance/head/${contractAddress}/${JSON.stringify(ticketToken)}/`
+      ].response
+    ).toEqual('3');
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/head/${contractAddress}/`].response
+    ).toEqual(ticketBalances);
 
     rpcCache.deleteAllCachedData();
     done();
@@ -303,6 +327,16 @@ describe('RpcClientCache test', () => {
     await rpcCache.getProtocols(block);
     await rpcCache.getTxRollupInbox(txRollupId, blockLevel, block);
     await rpcCache.getTxRollupState(txRollupId, block);
+    await rpcCache.getTicketBalance(
+      contractAddress,
+      {
+        ticketer: contractAddress,
+        content_type: { prim: 'string' },
+        content: { string: 'ticket1' },
+      },
+      block
+    );
+    await rpcCache.getAllTicketBalances(contractAddress, block);
 
     expect(rpcCache.getAllCachedData()[`rpcTest/getBlockHash/${block.block}/`].response).toEqual(
       blockHash
@@ -408,10 +442,18 @@ describe('RpcClientCache test', () => {
         `rpcTest/getTxRollupInbox/${block.block}/${txRollupId}/${blockLevel}/`
       ].response
     ).toEqual(txRollupInbox);
-
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getTxRollupState/${block.block}/${txRollupId}/`].response
     ).toEqual(txRollupState);
+    expect(
+      rpcCache.getAllCachedData()[
+        `rpcTest/getTicketBalance/${block.block}/${contractAddress}/${JSON.stringify(ticketToken)}/`
+      ].response
+    ).toEqual('3');
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/${block.block}/${contractAddress}/`]
+        .response
+    ).toEqual(ticketBalances);
 
     rpcCache.deleteAllCachedData();
     done();
@@ -453,6 +495,8 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
     await rpcCache.getProtocols();
+    await rpcCache.getTicketBalance(contractAddress, ticketToken);
+    await rpcCache.getAllTicketBalances(contractAddress);
 
     rpcCache.deleteAllCachedData();
 

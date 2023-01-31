@@ -5391,6 +5391,19 @@ export const txRollupInbox = {
   merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
 };
 
+export const ticketBalances = [
+  {
+    ticketer: 'KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD',
+    content_type: {
+      prim: 'string',
+    },
+    content: {
+      string: 'ticket1',
+    },
+    amount: '1',
+  },
+];
+
 export const ticketUpdatesSample = {
   protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   chain_id: 'NetXizpkH94bocH',
@@ -5417,8 +5430,8 @@ export const ticketUpdatesSample = {
             parameters: {
               entrypoint: 'exchange_tickets',
               value: {
-                int: '2'
-              }
+                int: '2',
+              },
             },
             metadata: {
               operation_result: {
@@ -5430,45 +5443,45 @@ export const ticketUpdatesSample = {
                       prim: 'Pair',
                       args: [
                         {
-                          prim: 'None'
+                          prim: 'None',
                         },
-                        []
-                      ]
+                        [],
+                      ],
                     },
                     {
                       prim: 'Pair',
                       args: [
                         {
-                          bytes: '00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05'
+                          bytes: '00002a3c4ef8b90e40d0a0f3d793e78da4d40ff7ab05',
                         },
                         {
-                          bytes: '016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00'
-                        }
-                      ]
-                    }
-                  ]
+                          bytes: '016a41f23d91041e57a4cf22d0ebf27bba7bc67b2c00',
+                        },
+                      ],
+                    },
+                  ],
                 },
                 ticket_updates: [
                   {
                     ticket_token: {
                       ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
                       content_type: {
-                        prim: 'unit'
+                        prim: 'unit',
                       },
                       content: {
-                        prim: 'Unit'
-                      }
+                        prim: 'Unit',
+                      },
                     },
                     updates: [
                       {
                         account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
-                        amount: '-2'
-                      }
-                    ]
-                  }
+                        amount: '-2',
+                      },
+                    ],
+                  },
                 ],
                 consumed_milligas: '4077693',
-                storage_size: '5600'
+                storage_size: '5600',
               },
               internal_operation_results: [
                 {
@@ -5479,7 +5492,7 @@ export const ticketUpdatesSample = {
                   destination: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
                   parameters: {
                     entrypoint: 'receive_cards',
-                    value: []
+                    value: [],
                   },
                   result: {
                     status: 'applied',
@@ -5488,31 +5501,32 @@ export const ticketUpdatesSample = {
                         ticket_token: {
                           ticketer: 'KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH',
                           content_type: {
-                            prim: 'string'
+                            prim: 'string',
                           },
                           content: {
-                            string: 'Ferosinge'
-                          }
+                            string: 'Ferosinge',
+                          },
                         },
                         updates: [
                           {
                             account: 'KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj',
-                            amount: '1'
-                          }
-                        ]
+                            amount: '1',
+                          },
+                        ],
                       },
                     ],
                     consumed_milligas: '7372756',
                     storage_size: '6015',
-                    paid_storage_size_diff: '380'
-                  }
-                }
-              ]
-            }
-          }
+                    paid_storage_size_diff: '380',
+                  },
+                },
+              ],
+            },
+          },
         ],
-        signature: 'sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H'
-      }
-    ]
-  ]
+        signature:
+          'sigXx1HE97LT5dFaBDGyRZJQvGes8zgTwrcbHidn93VjCAoULiGiqFA2ArzMW89Pt81TuEP5SZoqKpSGfg6qhjhEgQ5Tza9H',
+      },
+    ],
+  ],
 };

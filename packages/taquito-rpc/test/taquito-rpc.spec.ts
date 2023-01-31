@@ -45,6 +45,7 @@ import {
   delegatesKathmandunetSample,
   votingInfoKathmandunetSample,
   ticketUpdatesSample,
+  ticketBalances,
 } from './data/rpc-responses';
 
 /**
@@ -4270,6 +4271,42 @@ describe('RpcClient test', () => {
       expect(txRollupInbox!.merkle_root).toEqual(
         'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
       );
+
+      done();
+    });
+  });
+
+  describe('ticketBalance', () => {
+    it('should query the right url and data', async (done) => {
+      httpBackend.createRequest.mockResolvedValue('3');
+      const response = await client.getTicketBalance(contractAddress, {
+        ticketer: contractAddress,
+        content_type: { prim: 'string ' },
+        content: { string: 'ticket1' },
+      });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/ticket_balance`,
+      });
+
+      expect(response).toEqual('3');
+
+      done();
+    });
+  });
+
+  describe('ticketAllBalance', () => {
+    it('should query the right url and data', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(ticketBalances);
+      const response = await client.getAllTicketBalances('KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD/all_ticket_balances`,
+      });
+
+      expect(response).toEqual(ticketBalances);
 
       done();
     });
