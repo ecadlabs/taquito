@@ -153,3 +153,14 @@ export class OriginationOperationError extends Error {
     super(message);
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error that indicates a general failure happening during an origination operation
+ */
+export class InvalidEstimateValueError extends Error {
+  public name = 'InvalidEstimateValueError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
