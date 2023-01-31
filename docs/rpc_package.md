@@ -111,6 +111,18 @@ const view = await client.runView({
 });
 ```
 
+You can obtain the `Origination Proof` for the `smart_rollup_originate` batch operation (not needed for the `smart_rollup_originate` alone)
+
+This function will obtain the proof needed for the `smart_rollup_originate` batch method
+```js
+//get originationProof
+const originationProof = await client.getOriginationProof({
+  kernel: 'your kernel',
+  kind: 'PVM kind'
+})
+```
+
+
 ## Full documentation
 
 You can find the full documentation at the following address: [https://tezostaquito.io/typedoc/classes/\_taquito_rpc.rpcclient.html](https://tezostaquito.io/typedoc/classes/_taquito_rpc.rpcclient.html)

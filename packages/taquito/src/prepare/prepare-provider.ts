@@ -24,6 +24,7 @@ import {
   DrainDelegateParams,
   ParamsWithKind,
   SmartRollupAddMessagesParams,
+  SmartRollupOriginateParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { Protocols } from '../constants';
@@ -51,6 +52,7 @@ import {
   DefaultContractType,
   ContractStorageType,
   createSmartRollupAddMessagesOperation,
+  createSmartRollupOriginateOperation,
 } from '../contract';
 import { Estimate } from '../estimate';
 import { OperationBatch } from '../batch/rpc-batch-provider';
@@ -187,6 +189,7 @@ export class PrepareProvider implements PreparationProvider {
         case OpKind.TX_ROLLUP_SUBMIT_BATCH:
         case OpKind.UPDATE_CONSENSUS_KEY:
         case OpKind.SMART_ROLLUP_ADD_MESSAGES:
+        case OpKind.SMART_ROLLUP_ORIGINATE:
           return {
             ...op,
             ...this.getSource(op, pkh, source),
@@ -223,7 +226,7 @@ export class PrepareProvider implements PreparationProvider {
             period: currentVotingPeriod?.voting_period.index,
           };
         default:
-          throw new InvalidOperationKindError((op as any).kind);
+          throw new InvalidOperationKindError((op as RPCOperation).kind);
       }
     });
   }
@@ -797,6 +800,47 @@ export class PrepareProvider implements PreparationProvider {
       counter: headCounter,
     };
   }
+
+    /**
+   *
+   * @description Method to prepare a smart_rollup_originate operation
+   * @param operation RPCOperation object or RPCOperation array
+   * @returns a PreparedOperation object
+   */
+    async smartRollupOriginate(params: SmartRollupOriginateParams): Promise<PreparedOperation> {
+      const pkh = await this.signer.publicKeyHash();
+
+      const originationProof = await this.rpc.getOriginationProof({
+        kind: params.pvmKind,
+        kernel: params.kernel,
+      });
+      const completeParams = { ...params, originationProof };
+      const estimate = await this.estimate.smartRollupOriginate(completeParams);
+      const estimates = this.buildEstimates(estimate);
+
+      const op = await createSmartRollupOriginateOperation({
+        ...completeParams,
+        ...estimates,
+      });
+
+      const operation = await this.addRevealOperationIfNeeded(op, pkh);
+      const ops = this.convertIntoArray(operation);
+
+      const hash = await this.getBlockHash();
+      const protocol = await this.getProtocolHash();
+
+      const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+      const contents = this.constructOpContents(ops, headCounter, pkh);
+
+      return {
+        opOb: {
+          branch: hash,
+          contents,
+          protocol,
+        },
+        counter: headCounter,
+      };
+    }
 
   /**
    *

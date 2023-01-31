@@ -46,6 +46,7 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
+  OriginationProofParams,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -320,5 +321,11 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
+  }
+  async getOriginationProof(
+    params: OriginationProofParams,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<string> {
+    return this.rpc.getOriginationProof(params, { block });
   }
 }

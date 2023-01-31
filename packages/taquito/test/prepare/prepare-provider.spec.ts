@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context } from '../../src/context';
 import { PrepareProvider } from '../../src/prepare/prepare-provider';
 import BigNumber from 'bignumber.js';
@@ -5,6 +6,7 @@ import { preparedOriginationOpWithReveal, preparedOriginationOpNoReveal } from '
 import { Estimate } from '../../src/estimate';
 
 import { TransferTicketParams, OpKind } from '../../src/operations/types';
+import { PvmKind } from '@taquito/rpc';
 
 describe('PrepareProvider test', () => {
   let prepareProvider: PrepareProvider;
@@ -30,6 +32,7 @@ describe('PrepareProvider test', () => {
     getCurrentPeriod: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
+    getOriginationProof: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -62,6 +65,7 @@ describe('PrepareProvider test', () => {
       getCurrentPeriod: jest.fn(),
       getConstants: jest.fn(),
       getManagerKey: jest.fn(),
+      getOriginationProof: jest.fn(),
     };
 
     mockSigner = {
@@ -132,6 +136,7 @@ describe('PrepareProvider test', () => {
     jest.spyOn(context.estimate, 'txRollupSubmitBatch').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'updateConsensusKey').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'smartRollupAddMessages').mockResolvedValue(estimate);
+    jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
 
     prepareProvider = new PrepareProvider(context);
   });
@@ -1067,6 +1072,47 @@ describe('PrepareProvider test', () => {
         },
         counter: 0,
       });
+    });
+  });
+
+  describe('SmartRollupOriginate', () => {
+    it('Should prepare smartRollupOriginate without reveal', async (done) => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
+
+      jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
+
+      const prepared = await prepareProvider.smartRollupOriginate({
+        pvmKind: PvmKind.WASM2,
+        kernel: '123456789',
+        parametersType: {
+          prim: 'bytes',
+        },
+      });
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'smart_rollup_originate',
+              pvm_kind: 'wasm_2_0_0',
+              kernel: '123456789',
+              origination_proof: '987654321',
+              parameters_ty: {
+                prim: 'bytes',
+              },
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '1',
+              source: 'test_public_key_hash',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+      done();
     });
   });
 });

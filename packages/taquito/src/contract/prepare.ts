@@ -31,6 +31,8 @@ import {
   RPCUpdateConsensusKeyOperation,
   SmartRollupAddMessagesParams,
   RPCSmartRollupAddMessagesOperation,
+  RPCSmartRollupOriginateOperation,
+  SmartRollupOriginateParamsWithProof,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -338,3 +340,26 @@ export const createSmartRollupAddMessagesOperation = async ({
     message,
   } as RPCSmartRollupAddMessagesOperation;
 };
+
+export const createSmartRollupOriginateOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  pvmKind,
+  kernel,
+  originationProof,
+  parametersType,
+}: SmartRollupOriginateParamsWithProof) => {
+  return {
+    kind: OpKind.SMART_ROLLUP_ORIGINATE,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    pvm_kind: pvmKind,
+    kernel,
+    origination_proof: originationProof,
+    parameters_ty: parametersType,
+  } as RPCSmartRollupOriginateOperation;
+}
