@@ -135,7 +135,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     });
 
     // originate tx rollup
-    if (protocol === Protocols.ProtoALpha) {
+    if (protocol === Protocols.ProtoALpha || protocol === Protocols.PtMumbaii) {
       fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const txRollupAddress${protocol.substring(0,9)} = "";\n`, (err: any) => {
         if (err) {
           console.error(err);
