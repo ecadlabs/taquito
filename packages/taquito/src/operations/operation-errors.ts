@@ -156,7 +156,7 @@ export class OriginationOperationError extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates a general failure happening during an origination operation
+ *  @description Error that indicates an invalid estimate value being passed
  */
 export class InvalidEstimateValueError extends Error {
   public name = 'InvalidEstimateValueError';
