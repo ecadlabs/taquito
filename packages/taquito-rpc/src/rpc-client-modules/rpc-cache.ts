@@ -70,7 +70,6 @@ type RpcMethodParam =
   | UnparsingMode
   | BigMapKey
   | BakingRightsQueryArguments
-  | PackDataParams
   | EndorsingRightsQueryArguments;
 
 const defaultTtl = 1000;
@@ -116,7 +115,7 @@ export class RpcClientCache implements RpcClientInterface {
           : paramsToString + param + '/';
     });
     return rpcMethodData
-      ? `${rpcUrl}/${rpcMethodName}/${paramsToString}/${JSON.stringify(rpcMethodData)}`
+      ? `${rpcUrl}/${rpcMethodName}/${paramsToString}${JSON.stringify(rpcMethodData)}/`
       : `${rpcUrl}/${rpcMethodName}/${paramsToString}`;
   }
 
@@ -938,10 +937,12 @@ export class RpcClientCache implements RpcClientInterface {
     data: PackDataParams,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<{ packed: string; gas: BigNumber | 'unaccounted' | undefined }> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.PACK_DATA, [
-      block,
-      data,
-    ]);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.PACK_DATA,
+      [block],
+      data
+    );
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -1168,15 +1169,26 @@ export class RpcClientCache implements RpcClientInterface {
     }
   }
 
+  /**
+   *
+   * @param contract address of the contract we want to retrieve ticket balance of
+   * @param ticket object to specify ticketer, content type and content
+   * @param options contains generic configuration for rpc calls
+   * @description Access the contract's balance of ticket with specified ticketer, content type, and content.
+   * @example ticket{ ticketer: 'address', content_type: { prim: "string" }, content: { string: 'ticket1' } }
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
   async getTicketBalance(
     contract: string,
     ticket: ticketTokenParams,
-    { block }: { block: string } = defaultRPCOptions
+    { block }: RPCOptions = defaultRPCOptions
   ): Promise<string> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_TICKET_BALANCE, [
-      block,
-      contract,
-    ]);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_TICKET_BALANCE,
+      [block, contract],
+      ticket
+    );
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -1186,9 +1198,16 @@ export class RpcClientCache implements RpcClientInterface {
     }
   }
 
+  /**
+   *
+   * @param contract address of the contract we want to retrieve ticket balance of
+   * @param options contains generic configuration for rpc calls
+   * @description Access the complete list of tickets owned by the given contract by scanning the contract's storage.
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
   async getAllTicketBalances(
     contract: string,
-    { block }: { block: string } = defaultRPCOptions
+    { block }: RPCOptions = defaultRPCOptions
   ): Promise<allTicketBalancesResponse> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
