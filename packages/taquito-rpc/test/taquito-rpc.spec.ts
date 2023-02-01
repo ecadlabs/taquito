@@ -34,6 +34,11 @@ import {
   OperationContentsAndResultDrainDelegate,
   TxRollupProof,
   ConstantsResponseProto015,
+  OperationContentsAndResultSmartRollupOriginate,
+  OperationContentsAndResultSmartRollupAddMessages,
+  OperationContentsAndResultSmartRollupExecuteOutboxMessage,
+  RPCRunOperationParam,
+  OperationMetadataBalanceUpdates,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -45,6 +50,9 @@ import {
   delegatesKathmandunetSample,
   votingInfoKathmandunetSample,
   ticketUpdatesSample,
+  smartRollupOriginateResponse,
+  smartRollupAddMessagesResponse,
+  smartRollupExecuteOutboxMessageResponse,
 } from './data/rpc-responses';
 
 /**
@@ -3527,7 +3535,6 @@ describe('RpcClient test', () => {
       expect(content.metadata.balance_updates![1].origin).toEqual('block');
 
       expect(content.metadata.operation_result.status).toEqual('applied');
-      expect(content.metadata.operation_result.consumed_gas).toEqual('1000');
       expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
       done();
     });
@@ -3912,11 +3919,13 @@ describe('RpcClient test', () => {
           },
         ],
       });
-      const response = await client.runOperation(testData as any);
+      const response = await client.runOperation(testData as RPCRunOperationParam);
 
       const balanceUpdate =
         'metadata' in response.contents[0]
-          ? response.contents[0]['metadata']['balance_updates']
+          ? (response.contents[0]['metadata'][
+              'balance_updates'
+            ] as OperationMetadataBalanceUpdates[])
           : [];
       expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
       expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
@@ -4272,6 +4281,99 @@ describe('RpcClient test', () => {
         'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
       );
 
+      done();
+    });
+  });
+
+  describe('smartRollupOriginate', () => {
+    it('should have correct types to access smart_rollup_originate results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupOriginateResponse));
+      const response = await client.getBlock();
+      const content = response.operations[1][0]
+        .contents[0] as OperationContentsAndResultSmartRollupOriginate;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_ORIGINATE);
+      expect(content.source).toEqual('tz1NyHPL2CidRquW3a9zPGde59YYtMDyyzCg');
+      expect(content.fee).toEqual('1497');
+      expect(content.counter).toEqual('19783');
+      expect(content.gas_limit).toEqual('2849');
+      expect(content.storage_limit).toEqual('6572');
+      expect(content.pvm_kind).toEqual('wasm_2_0_0');
+      expect(content.kernel).toEqual(
+        '23212f7573722f62696e2f656e762073680a6578706f7274204b45524e454c3d22303036313733366430313030303030303031323830373630303337663766376630313766363030323766376630313766363030353766376637663766376630313766363030313766303036303031376630313766363030323766376630303630303030303032363130333131373336643631373237343566373236663663366337353730356636333666373236353061373236353631363435663639366537303735373430303030313137333664363137323734356637323666366336633735373035663633366637323635306337373732363937343635356636663735373437303735373430303031313137333664363137323734356637323666366336633735373035663633366637323635306237333734366637323635356637373732363937343635303030323033303530343033303430353036303530333031303030313037313430323033366436353664303230303061366236353732366536353663356637323735366530303036306161343031303432613031303237663431666130303266303130303231303132303030326630313030323130323230303132303032343730343430343165343030343131323431303034316534303034313030313030323161306230623038303032303030343163343030366230623530303130353766343166653030326430303030323130333431666330303266303130303231303232303030326430303030323130343230303032663031303032313035323030313130303432313036323030343230303334363034343032303030343130313661323030313431303136623130303131613035323030353230303234363034343032303030343130373661323030363130303131613062306230623164303130313766343164633031343138343032343139303163313030303231303034313834303232303030313030353431383430323130303330623062333830353030343165343030306231323266366236353732366536353663326636353665373632663732363536323666366637343030343166383030306230323030303130303431666130303062303230303032303034316663303030623032303030303030343166653030306230313031220a'
+      );
+      expect(content.origination_proof).toEqual(
+        '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea18030fab8a3adde4b553c4d391e9cd19ee13b17941c1f49c040d621bbfbea964993810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
+      );
+      expect(content.parameters_ty).toEqual({ prim: 'bytes' });
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.address).toEqual('sr1K3AUoYanTUup53MCb8DkbvLsiAmFuXfFm');
+      expect(soruResult.genesis_commitment_hash).toEqual(
+        'src14Khe1dnFbwrtTSEi4XWxxM7ej7L29YmduJhQY7U24Y523dmMtw'
+      );
+      expect(soruResult.consumed_milligas).toEqual('2748269');
+      expect(soruResult.size).toEqual('6552');
+      done();
+    });
+  });
+
+  describe('smartRollupAddMessages', () => {
+    it('should have correct types to access smart_rollup_add_messages results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupAddMessagesResponse));
+      const response = await client.getBlock();
+      const content = response.operations[1][0]
+        .contents[0] as OperationContentsAndResultSmartRollupAddMessages;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_ADD_MESSAGES);
+      expect(content.source).toEqual('tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz');
+      expect(content.fee).toEqual('398');
+      expect(content.counter).toEqual('12191');
+      expect(content.gas_limit).toEqual('1103');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.message[0]).toEqual(
+        '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74'
+      );
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.consumed_milligas).toEqual('1002777');
+      done();
+    });
+  });
+
+  describe('smartRollupOutboxMessages', () => {
+    it('should have correct types to access smart_rollup_execute_outbox_message results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve(smartRollupExecuteOutboxMessageResponse)
+      );
+      const response = await client.getBlock();
+      const content = response.operations[1][0]
+        .contents[0] as OperationContentsAndResultSmartRollupExecuteOutboxMessage;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE);
+      expect(content.source).toEqual('tz1adKm6kWEkiejZ9WYpuHvBCgUewtCxpqRF');
+      expect(content.fee).toEqual('1618');
+      expect(content.counter).toEqual('13');
+      expect(content.gas_limit).toEqual('6485');
+      expect(content.storage_limit).toEqual('36');
+      expect(content.rollup).toEqual('sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy');
+      expect(content.cemented_commitment).toEqual(
+        'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628'
+      );
+      expect(content.output_proof).toEqual(
+        '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74'
+      );
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.consumed_milligas).toEqual('4731015');
+      expect(soruResult.ticket_updates).toEqual([]);
+      expect(soruResult.paid_storage_size_diff).toEqual('5');
       done();
     });
   });

@@ -31,4 +31,7 @@ export enum OpKind {
   VDF_REVELATION = 'vdf_revelation',
   EVENT = 'event',
   TICKET_UPDATES = 'ticket_updates',
+  SMART_ROLLUP_ORIGINATE = 'smart_rollup_originate',
+  SMART_ROLLUP_ADD_MESSAGES = 'smart_rollup_add_messages',
+  SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'smart_rollup_execute_outbox_message',
 }

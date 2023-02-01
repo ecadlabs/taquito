@@ -20,9 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
     const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
-
 
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
 
@@ -424,13 +422,13 @@ CONFIGS().forEach(
           done();
         });
 
-        limanetAndAlpha('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async (done) => {
+        it('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async (done) => {
           const usedSpace = await rpcClient.getStorageUsedSpace(knownContract);
           expect(usedSpace).toBeDefined();
           done();
         });
 
-        limanetAndAlpha('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async (done) => {
+        it('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async (done) => {
           const paidSpace = await rpcClient.getStoragePaidSpace(knownContract);
           expect(paidSpace).toBeDefined();
           done();
