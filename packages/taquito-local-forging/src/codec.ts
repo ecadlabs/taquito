@@ -10,12 +10,28 @@ import {
   InvalidAddressError,
   InvalidContractAddressError,
 } from '@taquito/utils';
-import { OversizedEntryPointError, InvalidBallotValueError, DecodeBallotValueError } from './error';
+import {
+  OversizedEntryPointError,
+  InvalidBallotValueError,
+  DecodeBallotValueError,
+  UnsupportedPvmKindError,
+  DecodePvmKindError,
+  InvalidSmartRollupContractAddressError,
+  InvalidSmartRollupAddressError,
+} from './error';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
-import { extractRequiredLen, valueDecoder, valueEncoder, MichelsonValue } from './michelson/codec';
+import {
+  extractRequiredLen,
+  valueDecoder,
+  valueEncoder,
+  MichelsonValue,
+  stripLengthPrefixFromBytes,
+} from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad } from './utils';
+
+// https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
 
 export const prefixEncoder = (prefix: Prefix) => (str: string) => {
   return buf2hex(Buffer.from(b58cdecode(str, prefixMap[prefix])));
@@ -93,6 +109,29 @@ export const ballotDecoder = (ballot: Uint8ArrayConsumer): string => {
   }
 };
 
+export const pvmKindEncoder = (pvm: string): string => {
+  switch (pvm) {
+    case 'arith':
+      return '00';
+    case 'wasm_2_0_0':
+      return '01';
+    default:
+      throw new UnsupportedPvmKindError(pvm);
+  }
+};
+
+export const pvmKindDecoder = (pvm: Uint8ArrayConsumer): string => {
+  const value = pvm.consume(1);
+  switch (value[0]) {
+    case 0x00:
+      return 'arith';
+    case 0x01:
+      return 'wasm_2_0_0';
+    default:
+      throw new DecodePvmKindError(value[0].toString());
+  }
+};
+
 export const delegateEncoder = (val: string) => {
   if (val) {
     return boolEncoder(true) + pkhEncoder(val);
@@ -154,7 +193,7 @@ export const delegateDecoder = (val: Uint8ArrayConsumer) => {
 };
 
 export const pkhEncoder = (val: string) => {
-  const pubkeyPrefix = val.substr(0, 3);
+  const pubkeyPrefix = val.substring(0, 3);
   switch (pubkeyPrefix) {
     case Prefix.TZ1:
       return '00' + prefixEncoder(Prefix.TZ1)(val);
@@ -168,7 +207,7 @@ export const pkhEncoder = (val: string) => {
 };
 
 export const publicKeyEncoder = (val: string) => {
-  const pubkeyPrefix = val.substr(0, 4);
+  const pubkeyPrefix = val.substring(0, 4);
   switch (pubkeyPrefix) {
     case Prefix.EDPK:
       return '00' + prefixEncoder(Prefix.EDPK)(val);
@@ -182,7 +221,7 @@ export const publicKeyEncoder = (val: string) => {
 };
 
 export const addressEncoder = (val: string): string => {
-  const pubkeyPrefix = val.substr(0, 3);
+  const pubkeyPrefix = val.substring(0, 3);
   switch (pubkeyPrefix) {
     case Prefix.TZ1:
     case Prefix.TZ2:
@@ -193,6 +232,13 @@ export const addressEncoder = (val: string): string => {
     default:
       throw new InvalidAddressError(val);
   }
+};
+
+export const smartRollupAddressEncoder = (val: string): string => {
+  if (val.substring(0, 3) !== Prefix.SR1) {
+    throw new InvalidSmartRollupAddressError(val);
+  }
+  return prefixEncoder(Prefix.SR1)(val);
 };
 
 export const smartContractAddressEncoder = (val: string): string => {
@@ -218,6 +264,14 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
   }
 };
 
+export const smartRollupContractAddressEncoder = (val: string): string => {
+  const prefix = val.substring(0, 4);
+  if (prefix === Prefix.SRC1) {
+    return prefixEncoder(Prefix.SRC1)(val);
+  }
+  throw new InvalidSmartRollupContractAddressError(val);
+};
+
 export const addressDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   switch (preamble[0]) {
@@ -233,6 +287,14 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
   }
 };
 
+export const smartRollupAddressDecoder = (val: Uint8ArrayConsumer): string => {
+  const address = prefixDecoder(Prefix.SR1)(val);
+  if (address.substring(0, 3) !== Prefix.SR1) {
+    throw new InvalidAddressError(address);
+  }
+  return address;
+};
+
 export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   if (preamble[0] === 0x01) {
@@ -241,6 +303,14 @@ export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
     return scAddress;
   }
   throw new InvalidContractAddressError(val.toString());
+};
+
+export const smartRollupCommitmentHashDecoder = (val: Uint8ArrayConsumer) => {
+  const address = prefixDecoder(Prefix.SRC1)(val);
+  if (address.substring(0, 4) !== Prefix.SRC1) {
+    throw new InvalidSmartRollupContractAddressError(address);
+  }
+  return address;
 };
 
 export const zarithEncoder = (n: string): string => {
@@ -392,4 +462,26 @@ export const burnLimitDecoder = (value: Uint8ArrayConsumer) => {
   if (Buffer.from(prefix).toString('hex') !== '00') {
     return zarithDecoder(value);
   }
+};
+
+export const paddedBytesEncoder = (val: string, paddingLength = 8) => {
+  return `${pad(val.length / 2, paddingLength)}${val}`;
+};
+
+export const paddedBytesDecoder = (val: Uint8ArrayConsumer) => {
+  const value = extractRequiredLen(val);
+  return Buffer.from(value).toString('hex');
+};
+
+export const smartRollupMessageEncoder = (val: string[]) => {
+  const message = val.reduce((prev, curr) => {
+    return prev + `${pad(curr.length / 2)}${curr}`;
+  }, '');
+  return `${pad(message.length / 2)}${message}`;
+};
+
+export const smartRollupMessageDecoder = (val: Uint8ArrayConsumer) => {
+  const valueArray = extractRequiredLen(val);
+  const ret = stripLengthPrefixFromBytes(new Uint8ArrayConsumer(valueArray));
+  return ret.map((value) => Buffer.from(value).toString('hex'));
 };
