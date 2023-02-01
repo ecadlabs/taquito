@@ -293,7 +293,8 @@ export class RpcClientCache implements RpcClientInterface {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
       RPCMethodName.GET_NORMALIZED_SCRIPT,
-      [block, address, unparsingMode]
+      [block, address],
+      unparsingMode
     );
     if (this.has(key)) {
       return this.get(key);
@@ -402,11 +403,12 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
     this.validateAddress(address);
-    const keyUrl = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BIG_MAP_KEY, [
-      block,
-      address,
-      key,
-    ]);
+    const keyUrl = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_BIG_MAP_KEY,
+      [block, address],
+      key
+    );
     if (this.has(keyUrl)) {
       return this.get(keyUrl);
     } else {
