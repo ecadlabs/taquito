@@ -10,7 +10,12 @@ import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../estimate/estimate';
 import { RPCResponseError } from '../error';
-import { flattenErrors, TezosOperationError, TezosPreapplyFailureError } from './operation-errors';
+import {
+  flattenErrors,
+  TezosOperationError,
+  TezosPreapplyFailureError,
+  InvalidEstimateValueError,
+} from './operation-errors';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import {
   ForgedBytes,
@@ -250,6 +255,20 @@ export abstract class OperationEmitter {
     let calculatedFee = fee;
     let calculatedGas = gasLimit;
     let calculatedStorage = storageLimit;
+
+    if (calculatedFee && calculatedFee % 1 !== 0) {
+      throw new InvalidEstimateValueError(`Fee value must not be a decimal: ${calculatedFee}`);
+    }
+    if (calculatedGas && calculatedGas % 1 !== 0) {
+      throw new InvalidEstimateValueError(
+        `Gas Limit value must not be a decimal: ${calculatedGas}`
+      );
+    }
+    if (calculatedStorage && calculatedStorage % 1 !== 0) {
+      throw new InvalidEstimateValueError(
+        `Storage Limit value must not be a decimal: ${calculatedStorage}`
+      );
+    }
 
     if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
       const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
