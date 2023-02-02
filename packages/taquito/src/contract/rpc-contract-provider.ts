@@ -646,7 +646,7 @@ export class RpcContractProvider
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param BallotParams Proposals operation parameter
+   * @param ProposalsParams Proposals operation parameter
    */
   async proposals(params: ProposalsParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
