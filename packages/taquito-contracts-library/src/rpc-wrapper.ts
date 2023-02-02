@@ -44,8 +44,8 @@ import {
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
-  ticketTokenParams,
-  allTicketBalancesResponse,
+  TicketTokenParams,
+  AllTicketBalances,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -310,7 +310,7 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   }
   async getTicketBalance(
     contract: string,
-    ticket: ticketTokenParams,
+    ticket: TicketTokenParams,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<string> {
     return this.rpc.getTicketBalance(contract, ticket, { block });
@@ -318,7 +318,7 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   async getAllTicketBalances(
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
-  ): Promise<allTicketBalancesResponse> {
+  ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
   }
 }

@@ -57,8 +57,8 @@ import {
   VotingPeriodBlockResult,
   TxRollupStateResponse,
   TxRollupInboxResponse,
-  ticketTokenParams,
-  allTicketBalancesResponse,
+  TicketTokenParams,
+  AllTicketBalances,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1140,7 +1140,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getTicketBalance(
     contract: string,
-    ticket: ticketTokenParams,
+    ticket: TicketTokenParams,
     { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>(
@@ -1164,8 +1164,8 @@ export class RpcClient implements RpcClientInterface {
   async getAllTicketBalances(
     contract: string,
     { block }: { block: string } = defaultRPCOptions
-  ): Promise<allTicketBalancesResponse> {
-    return this.httpBackend.createRequest<allTicketBalancesResponse>({
+  ): Promise<AllTicketBalances> {
+    return this.httpBackend.createRequest<AllTicketBalances>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
       ),
