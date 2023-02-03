@@ -6,6 +6,8 @@ The integration tests can be run in two environments: a local sandbox, and again
 
 ## How to Run the Integration Tests Against a Local Sandbox
 
+**Note: The recommended method to run tests is against testnets, not sandboxes. Running all tests against a sandbox can fail randomly, while running individual tests usually passes.**
+
 To prepare to run the integration tests against a local sandbox, perform the following steps:
 
 1. Set environment variables
