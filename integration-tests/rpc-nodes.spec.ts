@@ -1,11 +1,10 @@
 import { CONFIGS } from './config';
-import { Protocols } from "@taquito/taquito";
+import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
-import { ticketCodeBuyAndRedeem, ticketStorageBuyAndRedeem } from './data/ticket_code_buy_and_redeem';
-import { MichelsonMap } from '@taquito/michelson-encoder';
+import { ticketCode, ticketStorage } from './data/code_with_ticket';
 
 CONFIGS().forEach(
   ({
@@ -26,8 +25,18 @@ CONFIGS().forEach(
     const MumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
 
+    let ticketContract: DefaultContractType;
+
     beforeAll(async (done) => {
       await setup();
+      const ticketOp = await Tezos.contract.originate({
+        code: ticketCode,
+        storage: ticketStorage,
+      });
+      await ticketOp.confirmation();
+      ticketContract = await ticketOp.contract();
+      const ticketCallOp = await ticketContract.methods.auto_call(1).send();
+      await ticketCallOp.confirmation();
       done();
     });
 
@@ -437,31 +446,15 @@ CONFIGS().forEach(
         });
 
         MumbaiAndAlpha('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async (done) => {
-          const op1 = await Tezos.contract.originate({
-            code: ticketCodeBuyAndRedeem,
-            storage: ticketStorageBuyAndRedeem,
-          });
-          await op1.confirmation();
-          const contract = await op1.contract();
-          const op2 = await contract.methods.buy_tickets(1, await Tezos.signer.publicKeyHash(), 'ticket1').send({ amount: 1, mutez: true });
-          await op2.confirmation();
-
-          const ticketBalance = await rpcClient.getTicketBalance(op1.contractAddress!, { ticketer: op1.contractAddress!, content_type: { prim: 'string' }, content: { string: 'ticket1' } });
+          const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } } );
+          console.log(ticketBalance)
           expect(ticketBalance).toBeDefined();
           done();
         });
   
         MumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
-          const op1 = await Tezos.contract.originate({
-              code: ticketCodeBuyAndRedeem,
-              storage: ticketStorageBuyAndRedeem,
-          });
-          await op1.confirmation();
-          const contract = await op1.contract();
-          const op2 = await contract.methods.buy_tickets(1, await Tezos.signer.publicKeyHash(), 'ticket1').send({ amount: 1, mutez: true });
-          await op2.confirmation();
-
-          const ticketBalances = await rpcClient.getAllTicketBalances(op1.contractAddress!);
+          const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address!);
+          console.log(ticketBalances)
           expect(ticketBalances).toBeDefined();
           done();
         });
