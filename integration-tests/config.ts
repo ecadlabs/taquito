@@ -53,6 +53,7 @@ interface ConfigWithSetup extends Config {
   lib: TezosToolkit;
   setup: (preferFreshKey?: boolean) => Promise<void>;
   createAddress: () => Promise<TezosToolkit>;
+  createTz4Address: () => Promise<TezosToolkit>;
 }
 /**
  * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -390,6 +391,19 @@ export const CONFIGS = () => {
 
             return tezos;
           },
+          createTz4Address: async () => {
+            const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
+            setupForger(tezos, forger);
+            configurePollingInterval(tezos, pollingIntervalMilliseconds);
+
+            const keyBytes = Buffer.alloc(32);
+            nodeCrypto.randomFillSync(keyBytes);
+
+            const key = b58cencode(new Uint8Array(keyBytes), new Uint8Array([3, 150, 192, 28]));
+            await importKey(tezos, key);
+
+            return tezos;
+          }
         };
       }
     );

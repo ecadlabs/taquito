@@ -1,12 +1,20 @@
+import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createTz4Address }) => {
   const Tezos = lib;
 
   describe(`Test contract origination of a simple contract through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
       await setup();
+
+      const Tz = await createTz4Address();
+      const pk = await Tz.signer.publicKey();
+      const pkh = await Tz.signer.publicKeyHash();
+
+      console.log(pk);
+      console.log(pkh);
       done();
     });
 
@@ -32,5 +40,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       done();
     });
+
+    // it('test originate tz4', async (done) => {
+      
+      
+    //   done();
+    // })
   });
 });

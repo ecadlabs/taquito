@@ -218,6 +218,19 @@ describe('inmemory-signer', () => {
     done();
   });
 
+  it(`Tz4`, async (done) => {
+    const signer = new InMemorySigner('BLsk3GqCUrAcNeznkg8W1KDq8H3ux884GeQeGj6tYkGeDaEmeMuVtb');
+    // expect(await signer.publicKeyHash()).toEqual('tz4WhAS92VSPxuCjTJgUgMsg5if8dUoMh72r');
+    expect(await signer.secretKey()).toEqual(
+      'BLsk3GqCUrAcNeznkg8W1KDq8H3ux884GeQeGj6tYkGeDaEmeMuVtb'
+    );
+    expect(await signer.publicKey()).toEqual(
+      'BLpk1xuQUv83G2iEnmNBshZBGb2bDuh9FjjijZkZHCzeZTdWkqPDgKXc7KxrdoHx76pg2ut3DbtD'
+    );
+
+    done();
+  });
+
   it('Should instantiate tz1 from mnemonic from in memory signer', async (done) => {
     const signer = InMemorySigner.fromMnemonic({ mnemonic });
     const pkh = await signer.publicKeyHash();

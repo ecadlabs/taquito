@@ -8,6 +8,7 @@ import { hex2buf, mergebuf, b58cencode, prefix, InvalidKeyError } from '@taquito
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
+import { Tz4 } from './bls-key';
 import pbkdf2 from 'pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
@@ -43,7 +44,7 @@ export interface FromMnemonicParams {
  *
  */
 export class InMemorySigner {
-  private _key!: Tz1 | ECKey;
+  private _key!: Tz1 | ECKey | Tz4;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
     if (!Bip39.validateMnemonic(mnemonic)) {
@@ -67,7 +68,12 @@ export class InMemorySigner {
    * @param curve currently only supported for tz1, tz2, tz3 addresses. soon bip25519
    * @returns InMemorySigner
    */
-  static fromMnemonic({ mnemonic, password = '', derivationPath = "44'/1729'/0'/0'", curve = 'ed25519' }: FromMnemonicParams) {
+  static fromMnemonic({
+    mnemonic,
+    password = '',
+    derivationPath = "44'/1729'/0'/0'",
+    curve = 'ed25519',
+  }: FromMnemonicParams) {
     // check if curve is defined if not default tz1
     if (!Bip39.validateMnemonic(mnemonic)) {
       // avoiding exposing mnemonic again in case of mistake making invalid
@@ -120,6 +126,10 @@ export class InMemorySigner {
       case 'p2sk':
       case 'p2es':
         this._key = new Tz3(key, encrypted, decrypt);
+        break;
+      case 'BLsk':
+      case 'BLes':
+        this._key = new Tz4(key, encrypted, decrypt);
         break;
       default:
         throw new InvalidKeyError(key, 'Unsupported key type');
