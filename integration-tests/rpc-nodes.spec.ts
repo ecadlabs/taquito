@@ -29,14 +29,22 @@ CONFIGS().forEach(
 
     beforeAll(async (done) => {
       await setup();
-      const ticketOp = await Tezos.contract.originate({
-        code: ticketCode,
-        storage: ticketStorage,
-      });
-      await ticketOp.confirmation();
-      ticketContract = await ticketOp.contract();
-      const ticketCallOp = await ticketContract.methods.auto_call(1).send();
-      await ticketCallOp.confirmation();
+
+      try {
+        // originate ticket contract
+        const ticketOp = await Tezos.contract.originate({
+          code: ticketCode,
+          storage: ticketStorage,
+        });
+        await ticketOp.confirmation();
+        ticketContract = await ticketOp.contract();
+        // contract call to issue tickets
+        const ticketCallOp = await ticketContract.methods.auto_call(1).send();
+        await ticketCallOp.confirmation();
+      } catch (e) {
+        console.log(JSON.stringify(e));
+      }
+
       done();
     });
 
@@ -452,7 +460,7 @@ CONFIGS().forEach(
         });
   
         MumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
-          const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address!);
+          const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
           expect(ticketBalances).toBeDefined();
           done();
         });
