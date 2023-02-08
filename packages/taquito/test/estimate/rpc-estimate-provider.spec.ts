@@ -26,7 +26,7 @@ import {
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/utils';
 
 /**
  * RPCEstimateProvider test
@@ -604,7 +604,7 @@ describe('RPCEstimateProvider test signer', () => {
       };
 
       expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
-        InvalidContractAddressError
+        InvalidAddressError
       );
 
       done();
