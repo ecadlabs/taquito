@@ -447,14 +447,12 @@ CONFIGS().forEach(
 
         MumbaiAndAlpha('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async (done) => {
           const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } } );
-          console.log(ticketBalance)
           expect(ticketBalance).toBeDefined();
           done();
         });
   
         MumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
           const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address!);
-          console.log(ticketBalances)
           expect(ticketBalances).toBeDefined();
           done();
         });
