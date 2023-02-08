@@ -17,7 +17,6 @@ CONFIGS().forEach(
     knownBigMapContract,
     knownSaplingContract,
     knownViewContract,
-    txRollupAddress,
   }) => {
     const Tezos = lib;
 
@@ -426,18 +425,6 @@ CONFIGS().forEach(
         it('Verify that rpcClient.getProtocols will list past and present Tezos protocols', async (done) => {
           const protocols = await rpcClient.getProtocols();
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
-          done();
-        });
-
-        Limanet('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on lima', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
-          expect(inbox).toBeDefined();
-          done();
-        });
-
-        Limanet('Verify that rpcClient.getTxRollupState will access the state of a rollup on lima', async (done) => {
-          const state = await rpcClient.getTxRollupState(txRollupAddress);
-          expect(state).toBeDefined();
           done();
         });
 

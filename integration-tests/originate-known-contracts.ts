@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { MichelsonMap, OriginateParams, Protocols, RpcForger, TezosToolkit } from '@taquito/taquito';
+import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito/taquito';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { char2Bytes } from '@taquito/utils';
@@ -19,11 +19,11 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
   (async () => {
     await setup(true);
     console.log(protocol)
-    fs.writeFile(`known-contracts-${protocol.substring(0,9)}.ts`, '', (err: any) => {
-      if (err) {
-        console.error(err);
-      }
-    });
+      fs.writeFile(`known-contracts-${protocol.substring(0,9)}.ts`, '', (err: any) => {
+        if (err) {
+          console.error(err);
+        }
+      });
 
     keyPkh = await tezos.signer.publicKeyHash();
     keyInitialBalance = await tezos.tz.getBalance(keyPkh);
@@ -134,28 +134,6 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
       storage: 2
     });
 
-    // originate tx rollup
-    if (protocol === Protocols.ProtoALpha || protocol === Protocols.PtMumbaii) {
-      fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const txRollupAddress${protocol.substring(0,9)} = "";\n`, (err: any) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    } else {
-      try {
-        const op = await tezos.contract.txRollupOriginate({});
-        await op.confirmation();
-        console.log(`txRollupAddress:  ${op.originatedRollup}`);
-        fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const txRollupAddress${protocol.substring(0,9)} = "${op.originatedRollup}";\n`, (err: any) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-      } catch (e: any) {
-        console.error(`Failed to originate tx rollup | Error: ${e.stack}`);
-      }
-    }
-
     console.log(`
 ################################################################################
 Public Key Hash : ${keyPkh}
@@ -173,11 +151,11 @@ Total XTZ Spent : ${keyInitialBalance.minus(await tezos.tz.getBalance(keyPkh)).d
       const contract = await operation.contract();
       console.log(`known${contractName} address:  ${contract.address}`);
       console.log(`::set-output name=known${contractName}Address::${contract.address}\n`);
-      fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const known${contractName}${protocol.substring(0,9)} = "${contract.address}";\n`, (err: any) => {
-        if (err) {
-          console.error(err);
-        }
-      });
+        fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const known${contractName}${protocol.substring(0,9)} = "${contract.address}";\n`, (err: any) => {
+          if (err) {
+            console.error(err);
+          }
+        });
     } catch (e: any) {
       console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
 
