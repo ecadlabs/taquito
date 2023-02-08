@@ -1,6 +1,6 @@
 {
   "name": "@taquito/http-utils",
-  "version": "15.0.0",
+  "version": "15.1.0",
   "description": "",
   "keywords": [
     "tezos"
@@ -59,7 +59,7 @@
     ]
   },
   "dependencies": {
-    "@vespaiach/axios-fetch-adapter": "^0.3.1",
+    "@vespaiach/axios-fetch-adapter": "github:ecadlabs/axios-fetch-adapter",
     "axios": "^0.26.0"
   },
   "devDependencies": {

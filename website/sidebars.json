@@ -24,6 +24,7 @@
         "multisig_doc",
         "originate",
         "global_constant",
+        "prepare",
         "rpc_nodes",
         "rpc_package",
         "signing",

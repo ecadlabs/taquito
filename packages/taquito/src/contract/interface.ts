@@ -154,7 +154,16 @@ export interface ContractProvider extends StorageProvider {
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
 
+  /**
+   *
+   * @description Transfer tickets from L2 to a smart contract address
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param TransferTicket operation parameter
+   */
   transferTicket(params: TransferTicketParams): Promise<TransferTicketOperation>;
+
   /**
    *
    * @description Reveal the current address. Will throw an error if the address is already revealed.

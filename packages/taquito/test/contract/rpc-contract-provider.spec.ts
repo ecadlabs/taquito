@@ -35,7 +35,7 @@ import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operatio
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
-import { ticketTokenTestMock } from '../helpers';
+import { smallNestedMapTypecheck, ticketTokenTestMock } from '../helpers';
 
 /**
  * RPCContractProvider test
@@ -1685,7 +1685,6 @@ describe('RpcContractProvider test', () => {
         delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
         destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
       });
-
       expect(result.raw).toEqual({
         opbytes: 'test',
         opOb: {
@@ -2219,7 +2218,7 @@ describe('RpcContractProvider test', () => {
   });
 
   describe('Storage', () => {
-    it('should have defined storage with TicketTokens without errors (#1762)', async (done) => {
+    it('should have defined storage with TicketTokens without errors', async (done) => {
       mockRpcClient.getEntrypoints.mockResolvedValue({
         entrypoints: {},
       });
@@ -2230,6 +2229,20 @@ describe('RpcContractProvider test', () => {
 
       const keyList = storage.keyMap;
       expect(keyList.size).toEqual(3);
+      done();
+    });
+
+    it('Should have defined storage with Nested bigmap in multiple maps', async (done) => {
+      mockRpcClient.getEntrypoints.mockResolvedValue({
+        entrypoints: {},
+      });
+      mockRpcClient.getContract.mockResolvedValue(smallNestedMapTypecheck);
+      const rpcContract = await rpcContractProvider.at('KT1SpsNu3hGHN5T5Vt9g9GKUggzvBpxaLxq7');
+      expect(rpcContract).toBeDefined();
+      const storage = (await rpcContract.storage()) as any;
+
+      const keyList = storage.keyMap;
+      expect(keyList.size).toEqual(1);
       done();
     });
   });

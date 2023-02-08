@@ -2,6 +2,35 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v15.0.1
+## Hotfix
+- Fixed a bug where the `local-forging` package was using an outdated version of the codec when it's instantiated without passing in a protocol hash. Updated so that the default value uses the current protocol hash. #2242
+
+## Summary
+- `@taquito/taquito` Support new operation `drain_delegate` in the Contract API #2068
+- `@taquito/local-forging` Support new operation `drain_delegate` #2065
+
+## Bug Fixes
+- `@taquito/michelson-encoder` fix MapTypecheck bug triggered by nested maps ending with a big_map #1762
+
+### Documentation
+- Auto hide sticky navbar for mobile view to increase readability on mobile devices. 
+PR: https://github.com/ecadlabs/taquito/pull/2236
+
+### Internals
+- Start running integration tests against testnets for external PRs. 
+PR: https://github.com/ecadlabs/taquito/pull/2221
+
+## `@taquito/taquito` drain_delegate operation support
+A new manager operation related to the consensus_key change in Lima has been added:
+```typescript
+const op = await Tezos.contract.updateConsensusKey({
+    pk: 'PUBLIC_KEY'
+});
+
+await op.confirmation();
+```
+
 # Taquito v15.0.0
 
 **Breaking Changes**:

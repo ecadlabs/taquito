@@ -21,11 +21,14 @@ CONFIGS().forEach(
     const Tezos = lib;
 
     const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
-    const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test
+    const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
+
+
+    const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
 
     beforeAll(async (done) => {
-      await setup()
-      done()
+      await setup();
+      done();
     });
 
     const rpcList: Array<string> = [rpc];
@@ -265,7 +268,7 @@ CONFIGS().forEach(
           } catch (ex) {
             expect(ex).toEqual(expect.objectContaining({
               message: expect.stringContaining('has already been revealed')
-            }))
+            }));
           }
 
           try {
@@ -357,9 +360,9 @@ CONFIGS().forEach(
             input: {
               string: 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP'
             }
-          }
+          };
 
-          const views = await Tezos.rpc.runView(params)
+          const views = await Tezos.rpc.runView(params);
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "100" } });
           done();
@@ -374,9 +377,9 @@ CONFIGS().forEach(
             input: {
               int: '0'
             }
-          }
+          };
 
-          const views = await Tezos.rpc.runScriptView(params)
+          const views = await Tezos.rpc.runScriptView(params);
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "2" } });
           done();
@@ -389,7 +392,7 @@ CONFIGS().forEach(
         });
 
         it('Verify that rpcClient.getSaplingDiffById will access the value associated with a sapling state ID', async (done) => {
-          const saplingStateId = (await rpcClient.getStorage(knownSaplingContract) as any)['int']
+          const saplingStateId = (await rpcClient.getStorage(knownSaplingContract) as any)['int'];
           const saplingDiffById = await rpcClient.getSaplingDiffById(saplingStateId);
           expect(saplingDiffById).toBeDefined();
           done();
@@ -409,13 +412,13 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on jakartanet', async (done) => {
+        Limanet('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on lima', async (done) => {
           const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
           expect(inbox).toBeDefined();
           done();
         });
 
-        it('Verify that rpcClient.getTxRollupState will access the state of a rollup on jakartanet', async (done) => {
+        Limanet('Verify that rpcClient.getTxRollupState will access the state of a rollup on lima', async (done) => {
           const state = await rpcClient.getTxRollupState(txRollupAddress);
           expect(state).toBeDefined();
           done();

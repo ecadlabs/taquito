@@ -6,25 +6,27 @@ The integration tests can be run in two environments: a local sandbox, and again
 
 ## How to Run the Integration Tests Against a Local Sandbox
 
+**Note: The recommended method to run tests is against testnets, not sandboxes. Running all tests against a sandbox can fail randomly, while running individual tests usually passes.**
+
 To prepare to run the integration tests against a local sandbox, perform the following steps:
 
 1. Set environment variables
 
-Execute `$ source integration-tests/sanbox-env.sh` from top-level. This will export the following environment variables:
+Execute `source integration-tests/sandbox-env.sh` from top-level. This will export the following environment variables:
 
 ```sh
-RUN_KATHMANDUNET_WITH_SECRET_KEY=true
+RUN_LIMANET_WITH_SECRET_KEY=true
 SECRET_KEY=edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
-TEZOS_RPC_KATHMANDUNET=http://localhost:20000
+TEZOS_RPC_LIMANET=http://localhost:20000
 POLLING_INTERVAL_MILLISECONDS=100
 RPC_CACHE_MILLISECONDS=0
 TEZOS_BAKER=tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
 ```
-2. Start a Flextesa sandbox to run a Kathmandu local testnet
+2. Start a Flextesa sandbox to run a lima local testnet
 
 Start the docker container which encapsulates the flextesa_sandbox:
 
-`$ docker run --rm --name flextesa_sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest kathmandubox start`
+`docker run --rm --name flextesa_sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest limabox start`
 
 Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local copy of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/).
 
@@ -34,7 +36,7 @@ Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a lo
 
 To run the integration tests, invoke `npm run integration-tests`.
 
-The integration test suite runs all tests against the current tezos protocol (Kathmandu) testnet, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
+The integration test suite runs all tests against the current tezos protocol (lima) sandbox, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
 
 Note that the first time you run the integration tests, `docker` will download the image in question, so be patient for your prompt to return the first time: *this is expected*.
 

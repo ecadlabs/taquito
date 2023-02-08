@@ -6,6 +6,7 @@ import {
 } from '@taquito/rpc';
 import { BigMapToken } from '../tokens/bigmap';
 import { createToken } from '../tokens/createToken';
+import { MapToken } from '../tokens/map';
 import { OrToken } from '../tokens/or';
 import { PairToken } from '../tokens/pair';
 import { TicketToken } from '../tokens/ticket';
@@ -163,6 +164,9 @@ export class Schema {
       return true;
     }
     if (this.root instanceof TicketDeprecatedToken && val.ticketer && val.value && val.amount) {
+      return true;
+    }
+    if (this.root instanceof MapToken && this.root.ValueSchema instanceof BigMapToken) {
       return true;
     }
     try {

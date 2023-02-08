@@ -31,9 +31,24 @@ export class InvalidFilterExpressionError extends Error {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates an error being returned from the RPC response
+ */
 export class RPCResponseError extends Error {
   public name = 'RPCResponseError';
   constructor(public message: string) {
     super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates invalid Preparation parameters being passed
+ */
+export class InvalidPrepareParamsError extends Error {
+  public name = 'InvalidOperationParamsError';
+  constructor(public opKind: string) {
+    super(`No '${opKind}' operation parameters have been passed`);
   }
 }
