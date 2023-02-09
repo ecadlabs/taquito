@@ -7,13 +7,16 @@ import Client from '@walletconnect/sign-client';
 import { SignClientTypes, SessionTypes, PairingTypes } from '@walletconnect/types';
 import QRCodeModal from '@walletconnect/legacy-modal';
 import {
+  createIncreasePaidStorageOperation,
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
   RPCDelegateOperation,
+  RPCIncreasePaidStorageOperation,
   RPCOriginationOperation,
   RPCTransferOperation,
   WalletDelegateParams,
+  WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
@@ -297,7 +300,8 @@ export class WalletConnect2 implements WalletProvider {
    * @error InvalidNetwork thrown if the network is not part of the active networks in the session
    */
   setActiveNetwork(network: NetworkType) {
-    if (!this.getNetworks().includes(network)) {
+    const networks = this.getNetworks();
+    if (networks && networks.length && !networks.includes(network)) {
       throw new InvalidNetwork(network);
     }
     this.activeNetwork = network;
@@ -321,7 +325,7 @@ export class WalletConnect2 implements WalletProvider {
       this.activeAccount = activeAccount[0];
     }
     const activeNetwork = this.getNetworks();
-    if (activeNetwork.length === 1) {
+    if (activeNetwork && activeNetwork.length === 1) {
       this.activeNetwork = activeNetwork[0];
     }
   }
@@ -486,7 +490,7 @@ export class WalletConnect2 implements WalletProvider {
   }
 
   private getTezosRequiredNamespace(): {
-    chains: string[];
+    chains?: string[];
     methods: string[];
     events: string[];
   } {
@@ -508,7 +512,7 @@ export class WalletConnect2 implements WalletProvider {
   }
 
   private getPermittedNetwork() {
-    return this.getTezosRequiredNamespace().chains.map((chain) => chain.split(':')[1]);
+    return this.getTezosRequiredNamespace().chains?.map((chain) => chain.split(':')[1]);
   }
 
   private formatParameters(
@@ -528,11 +532,12 @@ export class WalletConnect2 implements WalletProvider {
   }
 
   private removeDefaultLimits(
-    params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams,
+    params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams | WalletIncreasePaidStorageParams,
     operatedParams:
       | Partial<RPCTransferOperation>
       | Partial<RPCOriginationOperation>
       | Partial<RPCDelegateOperation>
+      | Partial<RPCIncreasePaidStorageOperation>
   ) {
     if (typeof params.fee === 'undefined') {
       delete operatedParams.fee;
@@ -552,6 +557,15 @@ export class WalletConnect2 implements WalletProvider {
     return this.removeDefaultLimits(
       walletParams,
       await createTransferOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapIncreasePaidStorageWalletParams(params: () => Promise<WalletIncreasePaidStorageParams>) {
+    const walletParams: WalletIncreasePaidStorageParams = await params();
+
+    return this.removeDefaultLimits(
+      walletParams,
+      await createIncreasePaidStorageOperation(this.formatParameters(walletParams))
     );
   }
 
