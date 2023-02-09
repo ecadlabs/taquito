@@ -31,6 +31,7 @@ export {
   TezosOperationError,
   TezosOperationErrorWithMessage,
   TezosPreapplyFailureError,
+  InvalidEstimateValueError,
 } from './operation-errors';
 export { BatchOperation } from './batch-operation';
 export { DelegateOperation } from './delegate-operation';
