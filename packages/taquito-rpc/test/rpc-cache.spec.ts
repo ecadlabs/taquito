@@ -32,7 +32,7 @@ import {
   constants,
   txRollupInbox,
   txRollupState,
-  ticketBalances,
+  ticketBalancesResponse,
 } from './data/rpc-responses';
 
 /**
@@ -130,7 +130,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getTxRollupInbox.mockReturnValue(txRollupInbox);
     mockRpcClient.getTxRollupState.mockReturnValue(txRollupState);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
-    mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalances);
+    mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
     rpcCache = new RpcClientCache(mockRpcClient);
   });
 
@@ -278,7 +278,7 @@ describe('RpcClientCache test', () => {
     ).toEqual('3');
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/head/${contractAddress}/`].response
-    ).toEqual(ticketBalances);
+    ).toEqual(ticketBalancesResponse);
 
     rpcCache.deleteAllCachedData();
     done();
@@ -453,7 +453,7 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/${block.block}/${contractAddress}/`]
         .response
-    ).toEqual(ticketBalances);
+    ).toEqual(ticketBalancesResponse);
 
     rpcCache.deleteAllCachedData();
     done();
