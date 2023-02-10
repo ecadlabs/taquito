@@ -5391,7 +5391,7 @@ export const txRollupInbox = {
   merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
 };
 
-export const ticketBalances = [
+export const ticketBalancesResponse = [
   {
     ticketer: 'KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD',
     content_type: {

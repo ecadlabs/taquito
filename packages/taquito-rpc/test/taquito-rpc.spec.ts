@@ -50,7 +50,7 @@ import {
   delegatesKathmandunetSample,
   votingInfoKathmandunetSample,
   ticketUpdatesSample,
-  ticketBalances,
+  ticketBalancesResponse,
   smartRollupOriginateResponse,
   smartRollupAddMessagesResponse,
   smartRollupExecuteOutboxMessageResponse,
@@ -4400,7 +4400,7 @@ describe('RpcClient test', () => {
 
   describe('ticketAllBalance', () => {
     it('should query the right url and data', async (done) => {
-      httpBackend.createRequest.mockResolvedValue(ticketBalances);
+      httpBackend.createRequest.mockResolvedValue(ticketBalancesResponse);
       const response = await client.getAllTicketBalances('KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD');
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -4408,7 +4408,7 @@ describe('RpcClient test', () => {
         url: `root/chains/test/blocks/head/context/contracts/KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD/all_ticket_balances`,
       });
 
-      expect(response).toEqual(ticketBalances);
+      expect(response).toEqual(ticketBalancesResponse);
       done();
     });
   });

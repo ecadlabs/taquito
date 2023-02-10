@@ -20,8 +20,8 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
-    const MumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
+    const limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
+    const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
 
     let ticketContract: DefaultContractType;
@@ -440,13 +440,13 @@ CONFIGS().forEach(
           done();
         });
 
-        MumbaiAndAlpha('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async (done) => {
+        mumbaiAndAlpha('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async (done) => {
           const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } } );
           expect(ticketBalance).toBeDefined();
           done();
         });
   
-        MumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
+        mumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
           const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
           expect(ticketBalances).toBeDefined();
           done();

@@ -1174,7 +1174,7 @@ export class RpcClientCache implements RpcClientInterface {
   /**
    *
    * @param contract address of the contract we want to retrieve ticket balance of
-   * @param ticket object to specify ticketer, content type and content
+   * @param ticket Ticket token parameter object that contains ticketer, content type, and content
    * @param options contains generic configuration for rpc calls
    * @description Access the contract's balance of ticket with specified ticketer, content type, and content.
    * @example ticket{ ticketer: 'address', content_type: { prim: "string" }, content: { string: 'ticket1' } }
@@ -1202,7 +1202,7 @@ export class RpcClientCache implements RpcClientInterface {
 
   /**
    *
-   * @param contract address of the contract we want to retrieve ticket balance of
+   * @param contract address of the contract to retrieve all ticket balances from
    * @param options contains generic configuration for rpc calls
    * @description Access the complete list of tickets owned by the given contract by scanning the contract's storage.
    * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
