@@ -41,8 +41,6 @@ import {
   InvalidKeyHashError,
   ValidationResult,
   InvalidOperationKindError,
-  validateContractAddress,
-  InvalidContractAddressError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 
@@ -86,8 +84,8 @@ export class OperationBatch extends OperationEmitter {
    * @param params Transfer operation parameter
    */
   withTransferTicket(params: TransferTicketParams) {
-    if (validateContractAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(params.destination);
+    if (validateAddress(params.destination) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, 'param destination');
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
