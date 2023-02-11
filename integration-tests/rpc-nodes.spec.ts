@@ -20,7 +20,6 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
     const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
 
@@ -449,6 +448,10 @@ CONFIGS().forEach(
         mumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
           const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
           expect(ticketBalances).toBeDefined();
+          expect(ticketBalances[0].ticketer).toBe(ticketContract.address)
+          expect(ticketBalances[0].content_type).toBeDefined()
+          expect(ticketBalances[0].content).toBeDefined()
+          expect(ticketBalances[0].amount).toBeDefined()
           done();
         });
       });
