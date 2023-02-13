@@ -447,7 +447,7 @@ CONFIGS().forEach(
   
         mumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
           const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
-          expect(ticketBalances).toBeDefined();
+          expect(ticketBalances).toBeInstanceOf(Array)
           expect(ticketBalances[0].ticketer).toBe(ticketContract.address)
           expect(ticketBalances[0].content_type).toBeDefined()
           expect(ticketBalances[0].content).toBeDefined()
