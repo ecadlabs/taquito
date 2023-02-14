@@ -74,7 +74,7 @@ jobs:
           - protocol: Lima
             testnet: limanet
             testnet_uppercase: LIMANET
-            - protocol: Mumbai
+          - protocol: Mumbai
             testnet: mumbai
             testnet_uppercase: MUMBAI
     env:
