@@ -5391,6 +5391,19 @@ export const txRollupInbox = {
   merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
 };
 
+export const ticketBalancesResponse = [
+  {
+    ticketer: 'KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD',
+    content_type: {
+      prim: 'string',
+    },
+    content: {
+      string: 'ticket1',
+    },
+    amount: '1',
+  },
+];
+
 export const ticketUpdatesSample = {
   protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   chain_id: 'NetXizpkH94bocH',

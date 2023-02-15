@@ -44,6 +44,8 @@ import {
   VotesListingsResponse,
   VotingInfoResponse,
   VotingPeriodBlockResult,
+  TicketTokenParams,
+  AllTicketBalances,
 } from './types';
 
 export interface RPCOptions {
@@ -119,6 +121,12 @@ export interface RpcClientInterface {
   ): Promise<TxRollupInboxResponse | null>;
   getStorageUsedSpace(contract: string, options?: RPCOptions): Promise<string>;
   getStoragePaidSpace(contract: string, options?: RPCOptions): Promise<string>;
+  getTicketBalance(
+    contract: string,
+    ticket: TicketTokenParams,
+    options?: RPCOptions
+  ): Promise<string>;
+  getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
 }
 
 export enum RPCMethodName {
@@ -159,4 +167,6 @@ export enum RPCMethodName {
   PACK_DATA = 'packData',
   GET_STORAGE_USED_SPACE = 'getStorageUsedSpace',
   GET_STORAGE_PAID_SPACE = 'getStoragePaidSpace',
+  GET_TICKET_BALANCE = 'getTicketBalance',
+  GET_ALL_TICKET_BALANCES = 'getAllTicketBalances',
 }
