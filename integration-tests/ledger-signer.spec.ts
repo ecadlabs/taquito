@@ -4,7 +4,7 @@ import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { OriginateParams, TezosToolkit } from '@taquito/taquito';
 import { localForger } from '@taquito/local-forging';
-import { contractOriginationParams, rpcToForge } from './data/contract_origination';
+import { rpcToForge } from './data/contract_origination';
 import { MichelsonV1Expression } from '@taquito/rpc';
 
 // PLEASE NOTE MAY NEED TO TEST ONE TEST AT A TIME

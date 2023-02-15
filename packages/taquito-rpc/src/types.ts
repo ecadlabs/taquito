@@ -1148,6 +1148,21 @@ export interface PackDataParams {
   gas?: BigNumber;
 }
 
+export interface TicketTokenParams {
+  ticketer: string;
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+}
+
+export interface TicketBalance {
+  ticketer: string;
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+  amount: string;
+}
+
+export type AllTicketBalances = TicketBalance[];
+
 export type HexString = string;
 
 export interface PackDataResponse {

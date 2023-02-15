@@ -4,7 +4,7 @@ import { CONFIGS } from "./config";
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const limanet = (protocol === Protocols.PtLimaPtL) ? test : test.skip;
-  const alpha = (protocol === Protocols.ProtoALpha) ? test : test.skip;
+  const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;  
 
   describe(`Test injecting more than one manager operation in a block: ${rpc}`, () => {
 
@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     })
 
-    alpha('Verify that doing transfers without awaiting the confirmation after each will fail', async (done) => {
+    mumbaiAndAlpha('Verify that doing transfers without awaiting the confirmation after each will fail', async (done) => {
       try {
         const op1Promise = Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 1 });
         const op2Promise = Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 });
