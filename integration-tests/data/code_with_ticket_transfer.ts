@@ -1,0 +1,5 @@
+// https://gitlab.com/tezos/tezos/-/blob/master/tezt/tests/expected/tickets.ml/Mumbai-%20Send%20tickets%20between%20originated%20contracts%20and%20implicit%20accounts.out
+
+export const ticketsSendTz = `{ parameter (pair address nat) ;storage unit ;code { CAR ; UNPAIR ; CONTRACT (ticket string) ; IF_NONE { PUSH string "Contract not found" ; FAILWITH } { PUSH mutez 0 ; DIG 2 ; PUSH string "Ticket" ; TICKET ; ASSERT_SOME ; TRANSFER_TOKENS ; PUSH unit Unit ; NIL operation ; DIG 2 ; CONS ; PAIR } } }`
+export const ticketsBagTz = `{ parameter (or (ticket %save string) (address %send)) ; storage (list (ticket string)) ; code { UNPAIR ; IF_LEFT { CONS ; NIL operation ; PAIR } { SWAP ; IF_CONS { DIG 2 ; CONTRACT %ticket (ticket string) ; ASSERT_SOME ; PUSH mutez 0 ; DIG 2 ; TRANSFER_TOKENS ; NIL operation ; SWAP ; CONS ; PAIR } { PUSH string "no ticket to send" ; FAILWITH } } } }`
+export const ticketsBlackholeTz = `{ parameter (ticket %ticket string) ; storage unit ; code { CDR ; NIL operation ; PAIR } }`
