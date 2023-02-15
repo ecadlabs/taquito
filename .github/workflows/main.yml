@@ -74,9 +74,6 @@ jobs:
           - protocol: Lima
             testnet: limanet
             testnet_uppercase: LIMANET
-          - protocol: Mumbai
-            testnet: mumbai
-            testnet_uppercase: MUMBAI
     env:
       flextesa_docker_image: oxheadalpha/flextesa:latest
     steps:
