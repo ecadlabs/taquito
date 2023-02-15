@@ -92,7 +92,7 @@ const limanetEphemeral = {
 };
 
 const mumbainetEphemeral = {
-  rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-mumbainet-full.i.tez.ie:8732',
+  rpc: process.env['TEZOS_RPC_MUMBAINET'] || 'http://ecad-mumbainet-full.i.tez.ie:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
@@ -160,7 +160,7 @@ const limanetSecretKey = {
 };
 
 const mumbainetSecretKey = {
-  rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-limanet-full:8732',
+  rpc: process.env['TEZOS_RPC_MUMBAINET'] || 'http://ecad-mumbainet-full:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
