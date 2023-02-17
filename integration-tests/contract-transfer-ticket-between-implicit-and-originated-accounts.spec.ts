@@ -25,22 +25,22 @@ CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
         tezos2Pkh = await Tezos2.signer.publicKeyHash();
 
         // ticketSend contract has one default entrypoint which accepts an addres to issue tickets to
-        const ticketSendOrigination = await Tezos1.contract.originate({ code: ticketsSendTz, storage: null});
+        const ticketSendOrigination = await Tezos1.contract.originate({ code: ticketsSendTz, storage: null });
         await ticketSendOrigination.confirmation();
         ticketSendContract = await ticketSendOrigination.contract();
 
         // ticketBag contract has two entrypoints, one is "save" to receive tickets and the other is "send" to send tickets out
-        const ticketBagOrigination = await Tezos1.contract.originate({ code: ticketsBagTz, storage: []});
+        const ticketBagOrigination = await Tezos1.contract.originate({ code: ticketsBagTz, storage: [] });
         await ticketBagOrigination.confirmation();
         ticketBagContract = await ticketBagOrigination.contract();
 
         // ticketBlackhole contract has one default entrypoint to accept tickets and dispose them
-        const ticketBlackholeOrigination = await Tezos1.contract.originate({ code: ticketsBlackholeTz, storage: null});
+        const ticketBlackholeOrigination = await Tezos1.contract.originate({ code: ticketsBlackholeTz, storage: null });
         await ticketBlackholeOrigination.confirmation();
         ticketBlackholeContract = await ticketBlackholeOrigination.contract();
 
         ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
-      } catch(error){
+      } catch (error) {
         console.error(error);
       }
       done();
@@ -56,53 +56,53 @@ CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
       done();
     });
 
-    mumbaiAndAlpha('will transfer 1 tickets from an implicit to another implicit account', async(done) => {
-      let tezos2TicketBalanceBefore = await client.getTicketBalance(tezos2Pkh, ticketToken );
+    mumbaiAndAlpha('will transfer 1 tickets from an implicit to another implicit account', async (done) => {
+      let tezos2TicketBalanceBefore = await client.getTicketBalance(tezos2Pkh, ticketToken);
       expect(tezos2TicketBalanceBefore).toBe('0');
 
       const implicitToImplicitOp = await Tezos1.contract.transferTicket({
-          ticketContents: { string: "Ticket" },
-          ticketTy: { prim: "string" },
-          ticketTicketer: ticketSendContract.address,
-          ticketAmount: 1,
-          destination: await Tezos2.signer.publicKeyHash(),
-          entrypoint: 'default',
+        ticketContents: { string: "Ticket" },
+        ticketTy: { prim: "string" },
+        ticketTicketer: ticketSendContract.address,
+        ticketAmount: 1,
+        destination: await Tezos2.signer.publicKeyHash(),
+        entrypoint: 'default',
       });
       await implicitToImplicitOp.confirmation();
       expect(implicitToImplicitOp.status).toEqual('applied');
 
-      let tezos1TicketBalanceAfter = await client.getTicketBalance(await Tezos1.signer.publicKeyHash(), ticketToken );
+      let tezos1TicketBalanceAfter = await client.getTicketBalance(await Tezos1.signer.publicKeyHash(), ticketToken);
       expect(tezos1TicketBalanceAfter).toBe('2');
-      let tezos2TicketBalanceAfter = await client.getTicketBalance(await Tezos2.signer.publicKeyHash(), ticketToken );
+      let tezos2TicketBalanceAfter = await client.getTicketBalance(await Tezos2.signer.publicKeyHash(), ticketToken);
       expect(tezos2TicketBalanceAfter).toBe('1');
       done();
     });
 
-    mumbaiAndAlpha('will transfer 1 ticket from an implicit to an originated account', async(done) => {
+    mumbaiAndAlpha('will transfer 1 ticket from an implicit to an originated account', async (done) => {
       const implicitToOriginatedOp = await Tezos1.contract.transferTicket({
-          ticketContents: { string: "Ticket" },
-          ticketTy: { prim: "string" },
-          ticketTicketer: ticketSendContract.address,
-          ticketAmount: 1,
-          destination: ticketBagContract.address,
-          entrypoint: 'save',
-        });
-        await implicitToOriginatedOp.confirmation();
-        expect(implicitToOriginatedOp.status).toEqual('applied');
+        ticketContents: { string: "Ticket" },
+        ticketTy: { prim: "string" },
+        ticketTicketer: ticketSendContract.address,
+        ticketAmount: 1,
+        destination: ticketBagContract.address,
+        entrypoint: 'save',
+      });
+      await implicitToOriginatedOp.confirmation();
+      expect(implicitToOriginatedOp.status).toEqual('applied');
 
-        let contractBagTicketBalance = await client.getTicketBalance(ticketBagContract.address, ticketToken );
-        expect(contractBagTicketBalance).toBe('1');
-        done();
-     });
+      let contractBagTicketBalance = await client.getTicketBalance(ticketBagContract.address, ticketToken);
+      expect(contractBagTicketBalance).toBe('1');
+      done();
+    });
 
     mumbaiAndAlpha('will send 1 ticket from an origianted to another originated account to dispose', async (done) => {
       const ticketSendOriginatedOp = await ticketBagContract.methods.send(ticketBlackholeContract.address).send();
       await ticketSendOriginatedOp.confirmation();
       expect(ticketSendOriginatedOp.status).toEqual('applied');
 
-      let contractBagTicketBalance = await client.getTicketBalance(ticketBagContract.address, ticketToken );
+      let contractBagTicketBalance = await client.getTicketBalance(ticketBagContract.address, ticketToken);
       expect(contractBagTicketBalance).toBe('0');
       done();
-     });
+    });
   });
 });
