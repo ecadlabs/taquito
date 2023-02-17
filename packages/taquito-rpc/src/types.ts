@@ -1339,7 +1339,7 @@ export interface OperationResultTxRollupRejection {
 export interface OperationResultTransferTicket {
   status: OperationResultStatusEnum;
   balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
+  ticket_updates?: TicketUpdates[];
   consumed_milligas?: string;
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
