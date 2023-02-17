@@ -62,7 +62,6 @@ const sidebars = {
         'wallet_API',
         'wallets',
         'web3js_taquito',
-        'contracts_collection',
         'subscribe_event',
       ],
     },
