@@ -173,10 +173,10 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should delete session when calling disconnect', async () => {
-      expect(walletConnect.isActiveSession()).toBeTruthy();
+      expect(walletConnect.isSessionActive()).toBeTruthy();
       await walletConnect.disconnect();
       expect(mockSignClient.disconnect).toHaveBeenCalledTimes(1);
-      expect(walletConnect.isActiveSession()).toBeFalsy();
+      expect(walletConnect.isSessionActive()).toBeFalsy();
     });
   });
 
@@ -1146,15 +1146,15 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should delete session when session_delete event is received', async () => {
-      expect(walletConnect.isActiveSession()).toBeTruthy();
+      expect(walletConnect.isSessionActive()).toBeTruthy();
       sessionDeletedEvent({ topic: sessionExample.topic });
-      expect(walletConnect.isActiveSession()).toBeFalsy();
+      expect(walletConnect.isSessionActive()).toBeFalsy();
     });
 
     it('should delete session when session_expire event is received', async () => {
-      expect(walletConnect.isActiveSession()).toBeTruthy();
+      expect(walletConnect.isSessionActive()).toBeTruthy();
       sessionExpiredEvent({ topic: sessionExample.topic });
-      expect(walletConnect.isActiveSession()).toBeFalsy();
+      expect(walletConnect.isSessionActive()).toBeFalsy();
     });
 
     it('should update session when session_update event is received', async () => {

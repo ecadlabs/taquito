@@ -58,7 +58,7 @@
     });
     wallet.signClient.on("session_delete", ({ topic }) => {
       console.log("EVEN: session_delete", topic);
-      if (!wallet.isActiveSession()) {
+      if (!wallet.isSessionActive()) {
         resetApp();
       }
     });

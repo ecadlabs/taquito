@@ -178,6 +178,7 @@ export class WalletConnect2 implements WalletProvider {
       throw new InvalidSessionKey(key);
     }
     this.session = this.signClient.session.get(key);
+    // Todo: Question: Should we validate the namespace here?
     this.setDefaultAccountAndNetwork();
   }
 
@@ -196,7 +197,7 @@ export class WalletConnect2 implements WalletProvider {
   }
 
   /**
-   * @description Once the session is establish, send Tezos operations to be approved, signed and inject by the wallet.
+   * @description Once the session is establish, send Tezos operations to be approved, signed and injected by the wallet.
    * @error MissingRequiredScope is thrown if permission to send operation was not granted
    */
   async sendOperations(params: OperationParams[]) {
@@ -257,6 +258,7 @@ export class WalletConnect2 implements WalletProvider {
    * @error NotConnected if no active session
    */
   getAccounts() {
+    // Todo: Question: What if some of accounts are not in the right format? Should all fail? Should that one be returned with a special value?
     return this.getTezosNamespace().accounts.map((account) => account.split(':')[2]);
   }
 
@@ -267,6 +269,8 @@ export class WalletConnect2 implements WalletProvider {
    * @error InvalidAccount thrown if the pkh is not part of the active accounts in the session
    */
   setActiveAccount(pkh: string) {
+    // Todo: Question: Should we allow clearing the active account?
+    // Todo: Question: What if the wallet has added an account later (after connection)?
     if (!this.getAccounts().includes(pkh)) {
       throw new InvalidAccount(pkh);
     }
@@ -280,6 +284,10 @@ export class WalletConnect2 implements WalletProvider {
   async getPKH() {
     if (!this.activeAccount) {
       this.getSession();
+      const accounts = this.getAccounts();
+      if (accounts.length === 1) {
+        return accounts[0];
+      }
       throw new ActiveAccountUnspecified();
     }
     return this.activeAccount;
@@ -290,7 +298,7 @@ export class WalletConnect2 implements WalletProvider {
    * @error NotConnected if no active session
    */
   getNetworks() {
-    return this.getPermittedNetwork();
+    return this.getPermittedNetworks();
   }
 
   /**
@@ -300,6 +308,7 @@ export class WalletConnect2 implements WalletProvider {
    * @error InvalidNetwork thrown if the network is not part of the active networks in the session
    */
   setActiveNetwork(network: NetworkType) {
+    // Todo: Question: Should we allow clearing the active network?
     const networks = this.getNetworks();
     if (networks && networks.length && !networks.includes(network)) {
       throw new InvalidNetwork(network);
@@ -314,6 +323,10 @@ export class WalletConnect2 implements WalletProvider {
   getActiveNetwork() {
     if (!this.activeNetwork) {
       this.getSession();
+      const networks = this.getNetworks();
+      if (networks?.length === 1) {
+        return networks[0];
+      }
       throw new ActiveNetworkUnspecified();
     }
     return this.activeNetwork;
@@ -323,10 +336,12 @@ export class WalletConnect2 implements WalletProvider {
     const activeAccount = this.getAccounts();
     if (activeAccount.length === 1) {
       this.activeAccount = activeAccount[0];
+      // Todo: Question: Isn't it better to call the setActiveAccount method instead?
     }
     const activeNetwork = this.getNetworks();
     if (activeNetwork && activeNetwork.length === 1) {
       this.activeNetwork = activeNetwork[0];
+      // Todo: Question: Same, Isn't it better to call the setActiveNetwork method instead?
     }
   }
 
@@ -343,7 +358,7 @@ export class WalletConnect2 implements WalletProvider {
     return this.session;
   }
 
-  isActiveSession() {
+  isSessionActive() {
     return this.session ? true : false;
   }
 
@@ -361,16 +376,17 @@ export class WalletConnect2 implements WalletProvider {
     scope: PermissionScopeParam,
     receivedNamespaces: Record<string, SessionTypes.Namespace>
   ) {
-    if (receivedNamespaces[TEZOS_PLACEHOLDER]) {
-      this.validateMethods(scope.methods, receivedNamespaces[TEZOS_PLACEHOLDER].methods);
+    const tezosNamespaces = receivedNamespaces[TEZOS_PLACEHOLDER];
+    if (tezosNamespaces) {
+      this.validateMethods(scope.methods, tezosNamespaces.methods);
       if (scope.events) {
-        this.validateEvents(scope.events, receivedNamespaces['tezos'].events);
+        this.validateEvents(scope.events, tezosNamespaces.events);
       }
-      this.validateAccounts(scope.networks, receivedNamespaces[TEZOS_PLACEHOLDER].accounts);
+      this.validateAccounts(scope.networks, tezosNamespaces.accounts);
     } else {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'All namespaces must be approved',
+        'All namespaces must be approved', // Todo: Question: This does not let the user know what was the problem
         getSdkError('USER_REJECTED').code,
         'incomplete',
         'tezos'
@@ -381,6 +397,7 @@ export class WalletConnect2 implements WalletProvider {
   private validateMethods(requiredMethods: string[], receivedMethods: string[]) {
     const missingMethods: string[] = [];
     requiredMethods.forEach((method) => {
+      // Todo: Question: Are methods case sensitive? Is this the right way to lookup?
       if (!receivedMethods.includes(method)) {
         missingMethods.push(method);
       }
@@ -388,7 +405,7 @@ export class WalletConnect2 implements WalletProvider {
     if (missingMethods.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'All methods must be approved',
+        'All methods must be approved', // Todo: Question: Should we have a more descriptive message? Should we include the names of missing methods?
         getSdkError('USER_REJECTED_METHODS').code,
         'incomplete',
         missingMethods
@@ -399,6 +416,7 @@ export class WalletConnect2 implements WalletProvider {
   private validateEvents(requiredEvents: string[], receivedEvents: string[]) {
     const missingEvents: string[] = [];
     requiredEvents.forEach((method) => {
+      // Todo: Question: Are events case sensitive? Is this the right way to lookup?
       if (!receivedEvents.includes(method)) {
         missingEvents.push(method);
       }
@@ -406,7 +424,7 @@ export class WalletConnect2 implements WalletProvider {
     if (missingEvents.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'All events must be approved',
+        'All events must be approved', // Todo: Question: Should we have a more descriptive message? Should we include the names of missing events?
         getSdkError('USER_REJECTED_EVENTS').code,
         'incomplete',
         missingEvents
@@ -432,9 +450,11 @@ export class WalletConnect2 implements WalletProvider {
       const accountId = chain.split(':');
       if (accountId.length !== 3) {
         invalidChains.push(chain);
+        // Todo: Question: Should we short-circuit the loop here?
       }
       if (accountId[0] !== TEZOS_PLACEHOLDER) {
         invalidChainsNamespace.push(chain);
+        // Todo: Question: Should we short-circuit the loop here?
       }
       const network = accountId[1];
       if (!receivedChains.includes(network)) {
@@ -443,6 +463,7 @@ export class WalletConnect2 implements WalletProvider {
     });
 
     if (invalidChains.length > 0) {
+      // Todo: Question: What if the Wallet returned some valida accounts?
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'Accounts must be CAIP-10 compliant',
@@ -453,6 +474,7 @@ export class WalletConnect2 implements WalletProvider {
     }
 
     if (invalidChainsNamespace.length > 0) {
+      // Todo: Question: What if the Wallet returned some valida accounts?
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
         'Accounts must be defined in matching namespace',
@@ -485,7 +507,7 @@ export class WalletConnect2 implements WalletProvider {
     if (TEZOS_PLACEHOLDER in this.getSession().namespaces) {
       return this.getSession().namespaces[TEZOS_PLACEHOLDER];
     } else {
-      throw new InvalidSession('Tezos not found in namespaces');
+      throw new InvalidSession('Tezos not found in namespaces'); // Todo: Question: the capitalized T here can be misleading.
     }
   }
 
@@ -511,16 +533,16 @@ export class WalletConnect2 implements WalletProvider {
     return this.getTezosRequiredNamespace().methods;
   }
 
-  private getPermittedNetwork() {
-    return this.getTezosRequiredNamespace().chains?.map((chain) => chain.split(':')[1]);
+  private getPermittedNetworks() {
+    return this.getTezosRequiredNamespace().chains?.map((chain) => chain.split(':')[1]); // Todo: Question: Should we deduplicate?
   }
 
   private formatParameters(
     params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams
   ) {
-    const formatedParams: any = params;
-    if (typeof params.fee !== 'undefined') {
-      formatedParams.fee = params.fee.toString();
+    const formatedParams: any = params; // Todo: Question: Should we use a type that's more constrained?
+    if (typeof params.fee !== 'undefined') { // Todo: Question: Why typeof?
+      formatedParams.fee = params.fee.toString(); // Todo: Question: Does ToString use client's Locale?
     }
     if (typeof params.storageLimit !== 'undefined') {
       formatedParams.storageLimit = params.storageLimit.toString();
@@ -539,6 +561,8 @@ export class WalletConnect2 implements WalletProvider {
       | Partial<RPCDelegateOperation>
       | Partial<RPCIncreasePaidStorageOperation>
   ) {
+    // Todo: Question: Can we get better modularity here? The assumption is that the methods calling this have created operatedParams from params.
+    // What if in the process of creating that param, a field like `fee` has changed?
     if (typeof params.fee === 'undefined') {
       delete operatedParams.fee;
     }
