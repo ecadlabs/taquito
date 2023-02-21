@@ -1,17 +1,16 @@
 import { CONFIGS, sleep } from "./config";
 import { Protocols, PollingSubscribeProvider } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const kathmandunetAndMondaynet = (protocol === Protocols.PtKathman || protocol === Protocols.ProtoALpha) ? test: test.skip;
   let eventContractAddress: string;
-  
+
   describe(`Polling Subscribe Provider using ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
 
       Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ shouldObservableSubscriptionRetry: true, pollingIntervalMilliseconds: 1000 }));
-      
+
       try {
         const op = await Tezos.contract.originate({
           code: `{ parameter unit ;
@@ -33,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           storage: 0
         });
         await op.confirmation();
-        
+
         eventContractAddress = op.contractAddress!;
       } catch(e) {
         console.log(e);
@@ -41,9 +40,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    kathmandunetAndMondaynet('should be able to subscribe to events with tag and address params given', async (done) => {
+    it('should be able to subscribe to events with tag and address params given', async (done) => {
       const data: any = [];
-      
+
       const eventSub = Tezos.stream.subscribeEvent({
         tag: 'first',
         address: eventContractAddress
@@ -52,10 +51,10 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       eventSub.on('data', (x) => {
         data.push(x);
       });
-      
+
       const contract = await Tezos.contract.at(eventContractAddress!);
       const op = await contract.methods.default().send();
-      
+
       await op.confirmation();
 
       await sleep(3000);

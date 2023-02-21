@@ -124,7 +124,7 @@ export class HttpBackend {
     }
 
     try {
-      const adapter = adapterPromise && (await adapterPromise) as AxiosAdapter;
+      const adapter = adapterPromise && ((await adapterPromise) as AxiosAdapter);
       const response = await axios.request<T>({
         url: url + this.serialize(query),
         method: method ?? 'GET',
@@ -137,8 +137,8 @@ export class HttpBackend {
       });
 
       return response.data;
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
+    } catch (err: any) {
+      if ((axios.isAxiosError(err) && err.response) || (!isNode && err.response)) {
         let errorData;
 
         if (typeof err.response.data === 'object') {

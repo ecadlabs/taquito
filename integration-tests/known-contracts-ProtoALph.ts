@@ -1,6 +1,6 @@
-export const knownContractProtoALph = "KT1LfR66GcVP9nBPwUf34xUC4go2wb1NYex8";
-export const knownBigMapContractProtoALph = "KT1MsswzJwY3AAnWXMDc5f5ZmLG89bf8kweW";
-export const knownTzip12BigMapOffChainContractProtoALph = "KT1V1yUaK8svcHwGbwL6EwTiQBW2Wjsb3tu9";
-export const knownSaplingContractProtoALph = "KT1NLd6Q9ZdDbjiKp53rhUUTsD4RrGMJv21v";
-export const knownOnChainViewContractAddressProtoALph = "KT1G4Lkj2rvPHc6EAoZXPcSTqPebdN4TTb58";
-export const txRollupAddressProtoALph = "txr1ZhMZY2XK5Ef2ekWyojeUoapM7AUpFZEhh";
+export const knownContractProtoALph = "KT1Xv5uq5qMQfV8jYeEMimLjUyTMcVStCBv2";
+export const knownBigMapContractProtoALph = "KT1PEif4yNPaeDnmroV2zK9hshJqE6XHVUq8";
+export const knownTzip12BigMapOffChainContractProtoALph = "KT1R6oieCZSFLf1w15yvjx3X38ZjhkdnyyHP";
+export const knownSaplingContractProtoALph = "KT1TGQqMpzhsAMzAaCeDmL3oJRbqphjhFh9S";
+export const knownOnChainViewContractAddressProtoALph = "KT1KmbQjCdEAX3NM5YoSZH6QPYK5foghn2Md";
+export const txRollupAddressProtoALph = "";

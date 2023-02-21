@@ -1,7 +1,7 @@
-import { InvalidDerivationPathError } from "../errors";
+import { InvalidDerivationPathError } from '../errors';
 
-export * as ECDSA from "./ecdsa";
-export * as Ed25519 from "./ed25519";
+export * as ECDSA from './ecdsa';
+export * as Ed25519 from './ed25519';
 
 export const Hard = 0x80000000;
 
@@ -29,9 +29,9 @@ export class Path extends Array<number> {
     if (s.length === 0) {
       return new Path();
     }
-    let parts = s.split("/");
+    let parts = s.split('/');
     const out: number[] = [];
-    if (parts[0] === "m") {
+    if (parts[0] === 'm') {
       parts = parts.slice(1);
     }
     for (let p of parts) {
@@ -40,7 +40,7 @@ export class Path extends Array<number> {
       }
       let h = 0;
       const last = p[p.length - 1];
-      if (last === "'" || last === "h" || last === "H") {
+      if (last === "'" || last === 'h' || last === 'H') {
         h = Hard;
         p = p.slice(0, p.length - 1);
       }
@@ -49,5 +49,4 @@ export class Path extends Array<number> {
     }
     return Path.from(out);
   }
-
 }
