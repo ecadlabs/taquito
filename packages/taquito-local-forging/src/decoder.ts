@@ -76,7 +76,7 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdDecoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentDecoder,
   [CODEC.BURN_LIMIT]: burnLimitDecoder,
-  [CODEC.OP_SET_DEPOSITS_LIMIT]: depositsLimitDecoder
+  [CODEC.DEPOSITS_LIMIT]: depositsLimitDecoder
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);
