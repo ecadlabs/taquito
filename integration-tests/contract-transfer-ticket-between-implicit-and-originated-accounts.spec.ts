@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
         tezos1Pkh = await Tezos1.signer.publicKeyHash();
         tezos2Pkh = await Tezos2.signer.publicKeyHash();
 
-        // ticketSend contract has one default entrypoint which accepts an addres to issue tickets to
+        // ticketSend contract has one default entrypoint which accepts an address to issue tickets to
         const ticketSendOrigination = await Tezos1.contract.originate({ code: ticketsSendTz, storage: null });
         await ticketSendOrigination.confirmation();
         ticketSendContract = await ticketSendOrigination.contract();
