@@ -23,18 +23,18 @@ This website was created with [Docusaurus](https://docusaurus.io/).
 1. Make sure all the dependencies for the website are installed:
 
 ```sh
-$ npm install
+npm install
 ```
 2. Build the Docusaurus website
 ```sh
-$ npm run build
+npm run build
 ```
 
 
 3. Run the Docusaurus website locally
 
 ```sh
-$ npm run serve
+npm run serve
 ```
 
 ## Directory Structure
