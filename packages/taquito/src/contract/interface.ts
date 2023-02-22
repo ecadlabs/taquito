@@ -156,7 +156,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Transfer tickets from L2 to a smart contract address
+   * @description Transfer tickets from an implicit account to a contract or another implicit account.
    *
    * @returns An operation handle with the result from the rpc node
    *
