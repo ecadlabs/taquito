@@ -86,19 +86,6 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
       done();
     });
 
-    limanet('should be able to prepare a txRollupOriginate operation', async (done) => {
-      const prepared = await Tezos.prepare.txRollupOrigination({});
-
-      expect(prepared).toBeDefined();
-      expect(prepared.counter).toBeDefined();
-      expect(prepared.opOb).toBeDefined();
-      expect(prepared.opOb.branch).toBeDefined();
-      expect(prepared.opOb.contents).toBeDefined();
-      expect(prepared.opOb.contents[0].kind).toEqual('tx_rollup_origination');
-
-      done();
-    });
-
     it('should be able to prepare a ballot operation', async (done) => {
       const prepared = await Tezos.prepare.ballot({
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',

@@ -473,6 +473,41 @@ export interface OperationContentsIncreasePaidStorage {
   destination: string;
 }
 
+export interface OperationContentsSmartRollupOriginate {
+  kind: OpKind.SMART_ROLLUP_ORIGINATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pvm_kind: PVMKind;
+  kernel: string;
+  origination_proof: string;
+  parameters_ty: MichelsonV1Expression;
+}
+
+export interface OperationContentsSmartRollupAddMessages {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  message: string[];
+}
+
+export interface OperationContentsSmartRollupExecuteOutboxMessage {
+  kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  cemented_commitment: string;
+  output_proof: string;
+}
+
 export type OperationContents =
   | OperationContentsEndorsement
   | OperationContentsPreEndorsement
@@ -502,7 +537,10 @@ export type OperationContents =
   | OperationContentsTransferTicket
   | OperationContentsUpdateConsensusKey
   | OperationContentsDrainDelegate
-  | OperationContentsIncreasePaidStorage;
+  | OperationContentsIncreasePaidStorage
+  | OperationContentsSmartRollupOriginate
+  | OperationContentsSmartRollupAddMessages
+  | OperationContentsSmartRollupExecuteOutboxMessage;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -1147,6 +1185,21 @@ export interface PackDataParams {
   type: MichelsonV1Expression;
   gas?: BigNumber;
 }
+
+export interface TicketTokenParams {
+  ticketer: string;
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+}
+
+export interface TicketBalance {
+  ticketer: string;
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+  amount: string;
+}
+
+export type AllTicketBalances = TicketBalance[];
 
 export type HexString = string;
 

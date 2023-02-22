@@ -50,6 +50,7 @@ import {
   delegatesKathmandunetSample,
   votingInfoKathmandunetSample,
   ticketUpdatesSample,
+  ticketBalancesResponse,
   smartRollupOriginateResponse,
   smartRollupAddMessagesResponse,
   smartRollupExecuteOutboxMessageResponse,
@@ -4374,6 +4375,40 @@ describe('RpcClient test', () => {
       expect(soruResult.consumed_milligas).toEqual('4731015');
       expect(soruResult.ticket_updates).toEqual([]);
       expect(soruResult.paid_storage_size_diff).toEqual('5');
+      done();
+    });
+  });
+
+  describe('ticketBalance', () => {
+    it('should query the right url and data', async (done) => {
+      httpBackend.createRequest.mockResolvedValue('3');
+      const response = await client.getTicketBalance(contractAddress, {
+        ticketer: contractAddress,
+        content_type: { prim: 'string ' },
+        content: { string: 'ticket1' },
+      });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/ticket_balance`,
+      });
+
+      expect(response).toEqual('3');
+      done();
+    });
+  });
+
+  describe('ticketAllBalance', () => {
+    it('should query the right url and data', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(ticketBalancesResponse);
+      const response = await client.getAllTicketBalances('KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD/all_ticket_balances`,
+      });
+
+      expect(response).toEqual(ticketBalancesResponse);
       done();
     });
   });

@@ -8,12 +8,17 @@ import {
   entrypointNameEncoder,
   int16Encoder,
   int32Encoder,
+  paddedBytesEncoder,
   parametersEncoder,
   pkhEncoder,
+  smartRollupMessageEncoder,
   proposalEncoder,
   proposalsEncoder,
   publicKeyEncoder,
+  pvmKindEncoder,
   smartContractAddressEncoder,
+  smartRollupAddressEncoder,
+  smartRollupContractAddressEncoder,
   txRollupBatchContentEncoder,
   txRollupIdEncoder,
   txRollupOriginationParamEncoder,
@@ -43,6 +48,9 @@ import {
   TransferTicketSchema,
   TxRollupOriginationSchema,
   TxRollupSubmitBatchSchema,
+  SmartRollupOriginateSchema,
+  SmartRollupExecuteOutboxMessageSchema,
+  SmartRollupAddMessagesSchema,
 } from './schema/operation';
 
 export type Encoder<T> = (val: T) => string;
@@ -63,7 +71,9 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.INT32]: int32Encoder,
   [CODEC.PARAMETERS]: parametersEncoder,
   [CODEC.ADDRESS]: addressEncoder,
+  [CODEC.SMART_ROLLUP_ADDRESS]: smartRollupAddressEncoder,
   [CODEC.SMART_CONTRACT_ADDRESS]: smartContractAddressEncoder,
+  [CODEC.SMART_ROLLUP_COMMITMENT_HASH]: smartRollupContractAddressEncoder,
   [CODEC.VALUE]: valueParameterEncoder,
   [CODEC.INT16]: int16Encoder,
   [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashEncoder,
@@ -72,6 +82,9 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdEncoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentEncoder,
   [CODEC.BURN_LIMIT]: burnLimitEncoder,
+  [CODEC.PVM_KIND]: pvmKindEncoder,
+  [CODEC.PADDED_BYTES]: paddedBytesEncoder,
+  [CODEC.SMART_ROLLUP_MESSAGE]: smartRollupMessageEncoder,
 };
 
 encoders[CODEC.OPERATION] = operationEncoder(encoders);
@@ -98,4 +111,10 @@ encoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
 encoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: any) =>
   schemaEncoder(encoders)(UpdateConsensusKeySchema)(val);
 encoders[CODEC.OP_DRAIN_DELEGATE] = (val: any) => schemaEncoder(encoders)(DrainDelegateSchema)(val);
+encoders[CODEC.OP_SMART_ROLLUP_ORIGINATE] = (val: any) =>
+  schemaEncoder(encoders)(SmartRollupOriginateSchema)(val);
+encoders[CODEC.OP_SMART_ROLLUP_ADD_MESSAGES] = (val: any) =>
+  schemaEncoder(encoders)(SmartRollupAddMessagesSchema)(val);
+encoders[CODEC.OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE] = (val: any) =>
+  schemaEncoder(encoders)(SmartRollupExecuteOutboxMessageSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);

@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - mumbai
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
@@ -74,8 +75,11 @@ jobs:
           - protocol: Lima
             testnet: limanet
             testnet_uppercase: LIMANET
-    env:
-      flextesa_docker_image: oxheadalpha/flextesa:latest
+            flextesa_docker_image: oxheadalpha/flextesa:20221123
+          - protocol: Mumbai
+            testnet: mumbainet
+            testnet_uppercase: MUMBAINET
+            flextesa_docker_image: oxheadalpha/flextesa:20230203
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -89,10 +93,10 @@ jobs:
     # donald,edpkvXGp1BMZxHkwg3mKnWfJYS6HTJ5JtufD8YXxLtH8UKqLZkZVun,tz1eSWp4B9s1qhtNMMNXAkaf2oqCnDHd2iAm,unencrypted:edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2
     - name: Generate Flextesa bootstrap accounts
       run: |-
-        echo "alice=$(docker run --rm ${flextesa_docker_image} flextesa key alice)" >> $GITHUB_ENV
-        echo "bob=$(docker run --rm ${flextesa_docker_image} flextesa key bob)" >> $GITHUB_ENV
-        echo "charlie=$(docker run --rm ${flextesa_docker_image} flextesa key charlie)" >> $GITHUB_ENV
-        echo "donald=$(docker run --rm ${flextesa_docker_image} flextesa key donald)" >> $GITHUB_ENV
+        echo "alice=$(docker run --rm ${{ matrix.flextesa_docker_image }} flextesa key alice)" >> $GITHUB_ENV
+        echo "bob=$(docker run --rm ${{ matrix.flextesa_docker_image }} flextesa key bob)" >> $GITHUB_ENV
+        echo "charlie=$(docker run --rm ${{ matrix.flextesa_docker_image }} flextesa key charlie)" >> $GITHUB_ENV
+        echo "donald=$(docker run --rm ${{ matrix.flextesa_docker_image }} flextesa key donald)" >> $GITHUB_ENV
     - name: Provision Flextesa ${{ matrix.protocol }} container
       run: |-
         docker run \
@@ -100,7 +104,7 @@ jobs:
         --name my-sandbox \
         --detach \
         -p 20000:20000 \
-        ${flextesa_docker_image} \
+        ${{ matrix.flextesa_docker_image }} \
         flextesa mini-net \
           --root /tmp/mini-box --size 1 \
           --set-history-mode N000:archive \
