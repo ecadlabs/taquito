@@ -718,7 +718,6 @@ export class RpcContractProvider
 
     const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
     const prepared = await this.prepareOperation({ operation: ops, source: params.source });
-    console.log('PREPARED: ', JSON.stringify(prepared));
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
 
