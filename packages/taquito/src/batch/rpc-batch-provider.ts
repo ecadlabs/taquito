@@ -13,6 +13,7 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createSmartRollupAddMessagesOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -31,6 +32,7 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  SmartRollupAddMessagesParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -186,6 +188,17 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
+   * @description Add an operation to add messages to a smart rollup
+   *
+   * @param params Rollup origination operation parameter
+   */
+  withSmartRollupAddMessages(params: SmartRollupAddMessagesParams) {
+    this.operations.push({ kind: OpKind.SMART_ROLLUP_ADD_MESSAGES, ...params });
+    return this;
+  }
+
+  /**
+   *
    * @description Add an operation to submit a tx rollup batch to the batch
    *
    * @param params Tx rollup batch operation parameter
@@ -235,6 +248,10 @@ export class OperationBatch extends OperationEmitter {
         return createTransferTicketOperation({
           ...param,
         });
+      case OpKind.SMART_ROLLUP_ADD_MESSAGES:
+        return createSmartRollupAddMessagesOperation({
+          ...param,
+        });
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }
@@ -275,6 +292,9 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.TRANSFER_TICKET:
           this.withTransferTicket(param);
+          break;
+        case OpKind.SMART_ROLLUP_ADD_MESSAGES:
+          this.withSmartRollupAddMessages(param);
           break;
         default:
           throw new InvalidOperationKindError((param as any).kind);

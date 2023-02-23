@@ -64,6 +64,7 @@ const sidebars = {
         'web3js_taquito',
         'contracts_collection',
         'subscribe_event',
+        'smart_rollups'
       ],
     },
     {

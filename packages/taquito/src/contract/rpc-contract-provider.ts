@@ -29,6 +29,7 @@ import {
   BallotParams,
   ProposalsParams,
   UpdateConsensusKeyParams,
+  SmartRollupAddMessagesParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -48,6 +49,7 @@ import {
   createBallotOperation,
   createProposalsOperation,
   createUpdateConsensusKeyOperation,
+  createSmartRollupAddMessagesOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -66,6 +68,7 @@ import { BallotOperation } from '../operations/ballot-operation';
 import { DrainDelegateOperation } from '../operations/drain-delegate-operation';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
+import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -688,6 +691,38 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new UpdateConsensusKeyOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   * @description
+   * @param SmartRollupAddMessagesParams
+   * @returns An operation handle with results from the RPC node
+   */
+  async smartRollupAddMessages(params: SmartRollupAddMessagesParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.smartRollupAddMessages.bind(this.estimator)
+    );
+    const operation = await createSmartRollupAddMessagesOperation({
+      ...params,
+      ...estimate,
+    });
+
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
+    console.log('PREPARED: ', JSON.stringify(prepared));
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+
+    return new SmartRollupAddMessagesOperation(
       hash,
       operation,
       publicKeyHash,
