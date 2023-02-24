@@ -1730,9 +1730,9 @@ describe('RPCEstimateProvider test wallet', () => {
         ],
       });
 
-      expect(estimate.gasLimit).toEqual(100);
+      expect(estimate.gasLimit).toEqual(1103);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(212);
+      expect(estimate.suggestedFeeMutez).toEqual(313);
       done();
     });
 

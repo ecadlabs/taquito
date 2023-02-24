@@ -456,6 +456,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             })
           );
           break;
+        case OpKind.SMART_ROLLUP_ADD_MESSAGES:
+          operations.push(
+            await createSmartRollupAddMessagesOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
         default:
           throw new InvalidOperationKindError((params as any).kind);
       }

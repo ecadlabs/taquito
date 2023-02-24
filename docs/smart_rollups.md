@@ -33,13 +33,10 @@ for more information, refer to [this document](https://tezos.gitlab.io/mumbai/sm
 const op = await Tezos.contract.smartRollupAddMessages({
     message: [
         '0000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74'
-    ],
-    gasLimit: 1100
+    ]
 });
 
 await op.confirmation();
 ```
 
 - `message` property is an encoded outbox message. For more information on how to encode or what message gets encoded, refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html#sending-an-external-inbox-message)
-- `gasLimit` is an optional parameter, but the value might vary depending on the length and the contents of your `message`. So adjust this value according to your needs
-

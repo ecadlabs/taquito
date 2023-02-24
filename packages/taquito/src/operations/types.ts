@@ -91,7 +91,7 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
-      'smart_rollup_add_messagess',
+      'smart_rollup_add_messages',
     ].indexOf(op.kind) !== -1
   );
 };

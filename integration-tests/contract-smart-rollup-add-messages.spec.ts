@@ -17,7 +17,6 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
         message: [
           '0000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74'
         ],
-        gasLimit: 1100
       });
       await op.confirmation();
 
