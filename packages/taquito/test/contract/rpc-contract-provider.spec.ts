@@ -1932,8 +1932,6 @@ describe('RpcContractProvider test', () => {
         ],
       });
 
-      console.log(JSON.stringify(op.raw));
-
       expect(op.raw).toEqual({
         opbytes: 'test',
         opOb: {

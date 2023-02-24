@@ -5,7 +5,7 @@ author: Davis Sawali
 
 # Smart Optimistic Rollups
 
-Rollups are a permissionless scaling for the Tezos blockchain. The idea is that anyone can originate and operate one or more rollups, increasing the overall throughput of the Tezos blockchain.
+Rollups are a permissionless scaling implementation for the Tezos blockchain. The idea is that anyone can originate and operate one or more rollups, increasing the overall throughput of the Tezos blockchain.
 
 In Taquito, we have implemented some of the operations included in Mumbai protocol update in regards to smart rollups. In this document, we will go through the ones that we support. We will also go over smart rollups in a more high level view, if you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html).
 
