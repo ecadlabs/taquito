@@ -21,7 +21,7 @@ values={[
 ]}>
 <TabItem value="communityNodes">
 
-| Provider         | Net         | URL                                | Header      |  
+| Provider         | Net         | URL                                | Header      |
 |------------------|-------------|------------------------------------|-------|
 | ECAD Labs        | Mainnet     | https://mainnet.api.tez.ie         | [Check](https://mainnet.api.tez.ie/chains/main/blocks/head/header)      |
 | ECAD Labs        | Kathmandunet   | https://kathmandunet.ecadinfra.com    | [Check](https://kathmandunet.ecadinfra.com/chains/main/blocks/head/header)      |
@@ -45,10 +45,9 @@ values={[
 </TabItem>
   <TabItem value="commercialNodes">
 
-| Provider         |  Details                                    |  
+| Provider         |  Details                                    |
 |------------------|------------------------------------------------------------------------|
 | MIDL.dev         |  https://midl.dev/tezos-rpc/            |
-| Cryptonomic      |  https://github.com/keefertaylor/TezosKit/blob/master/docs/TezosNode.md |
 | TezTools.io      |  https://t.me/teztools (Telegram) |
 
 *If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
@@ -65,4 +64,3 @@ There are many ways to set up a node. Here are some links providing general inst
 - [Use docker images](https://tezos.gitlab.io/introduction/howtoget.html#docker-images)
 - [Build from sources](https://tezos.gitlab.io/introduction/howtoget.html#docker-images)
 - [Use Ansible Role](https://github.com/ecadlabs/ansible-role-tezos-node/blob/master/README.md)
-
