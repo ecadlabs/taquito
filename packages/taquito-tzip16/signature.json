@@ -358,7 +358,7 @@
           },
           "license": "MIT",
           "engines": {
-            "node": ">=6.0.0"
+            "node": ">=16"
           },
           "scripts": {
             "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
