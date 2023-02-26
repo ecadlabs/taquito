@@ -550,7 +550,7 @@
           "devDependencies": {
             "@taquito/rpc": "^7.1.0-beta.0",
             "@types/jest": "^26.0.16",
-            "@types/node": "^14.14.10",
+            "@types/node": "^16",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
