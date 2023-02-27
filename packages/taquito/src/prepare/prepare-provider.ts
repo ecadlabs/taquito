@@ -186,6 +186,7 @@ export class PrepareProvider implements PreparationProvider {
         case OpKind.TX_ROLLUP_ORIGINATION:
         case OpKind.TX_ROLLUP_SUBMIT_BATCH:
         case OpKind.UPDATE_CONSENSUS_KEY:
+        case OpKind.SMART_ROLLUP_ADD_MESSAGES:
           return {
             ...op,
             ...this.getSource(op, pkh, source),
@@ -220,12 +221,6 @@ export class PrepareProvider implements PreparationProvider {
           return {
             ...op,
             period: currentVotingPeriod?.voting_period.index,
-          };
-        case OpKind.SMART_ROLLUP_ADD_MESSAGES:
-          return {
-            ...op,
-            ...this.getSource(op, pkh, source),
-            ...this.getFee(op, pkh, headCounter),
           };
         default:
           throw new InvalidOperationKindError((op as any).kind);

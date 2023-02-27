@@ -701,7 +701,7 @@ export class RpcContractProvider
   }
 
   /**
-   * @description
+   * @description Adds messages to the rollup inbox that can be executed/claimed after it gets cemented
    * @param SmartRollupAddMessagesParams
    * @returns An operation handle with results from the RPC node
    */

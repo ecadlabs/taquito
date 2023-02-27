@@ -7,7 +7,7 @@ author: Davis Sawali
 
 Rollups are a permissionless scaling implementation for the Tezos blockchain. The idea is that anyone can originate and operate one or more rollups, increasing the overall throughput of the Tezos blockchain.
 
-In Taquito, we have implemented some of the operations included in Mumbai protocol update in regards to smart rollups. In this document, we will go through the ones that we support. We will also go over smart rollups in a more high level view, if you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html).
+In Taquito, we have implemented some of the operations included in Mumbai protocol update in regards to smart rollups. In this document, we will go through the operations we support. We also won't go too detailed on how rollups work behind the scenes, if you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html).
 
 ## `smart_rollup_add_messages`
 The add messages operation allows users to send external messages into a rollup inbox. We will go into a bit more detail down below on what that means.
