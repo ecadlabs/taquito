@@ -24,6 +24,7 @@ import {
   BallotParams,
   ProposalsParams,
   UpdateConsensusKeyParams,
+  SmartRollupExecuteOutboxMessageParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
@@ -33,6 +34,7 @@ import { DrainDelegateOperation } from '../operations';
 import { BallotOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
+import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-rollup-execute-outbox-message-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -271,4 +273,16 @@ export interface ContractProvider extends StorageProvider {
    * @param UpdateConsensusKeyParams UpdateConsensusKey operation parameter
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<UpdateConsensusKeyOperation>;
+
+  /**
+   *
+   * @description Smart rollup execute outbox message
+   *
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param SmartRollupExecuteOutboxMessageParams smartRollupExecuteOutboxMessage operation parameter
+   */
+  smartRollupExecuteOutboxMessage(
+    params: SmartRollupExecuteOutboxMessageParams
+  ): Promise<SmartRollupExecuteOutboxMessageOperation>;
 }

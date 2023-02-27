@@ -13,6 +13,7 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createSmartRollupExecuteOutboxMessageOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -31,6 +32,7 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  SmartRollupExecuteOutboxMessageParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -195,6 +197,17 @@ export class OperationBatch extends OperationEmitter {
     return this;
   }
 
+  /**
+   *
+   * @description Add an smart rollup operation to execute outbox message
+   *
+   * @param params Smart rollup execute outbox message operation parameter
+   */
+  withSmartRollupExecuteOutboxMessageBatch(params: SmartRollupExecuteOutboxMessageParams) {
+    this.operations.push({ kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE, ...params });
+    return this;
+  }
+
   async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -233,6 +246,10 @@ export class OperationBatch extends OperationEmitter {
         });
       case OpKind.TRANSFER_TICKET:
         return createTransferTicketOperation({
+          ...param,
+        });
+      case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
+        return createSmartRollupExecuteOutboxMessageOperation({
           ...param,
         });
       default:
@@ -275,6 +292,9 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.TRANSFER_TICKET:
           this.withTransferTicket(param);
+          break;
+        case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
+          this.withSmartRollupExecuteOutboxMessageBatch(param);
           break;
         default:
           throw new InvalidOperationKindError((param as any).kind);

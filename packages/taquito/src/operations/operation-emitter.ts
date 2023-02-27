@@ -173,6 +173,7 @@ export abstract class OperationEmitter {
           case OpKind.TX_ROLLUP_ORIGINATION:
           case OpKind.TX_ROLLUP_SUBMIT_BATCH:
           case OpKind.UPDATE_CONSENSUS_KEY:
+          case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
             return {
               ...op,
               ...getSource(op),

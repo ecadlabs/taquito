@@ -22,6 +22,7 @@ import {
   BallotParams,
   ProposalsParams,
   DrainDelegateParams,
+  SmartRollupExecuteOutboxMessageParams,
   ParamsWithKind,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
@@ -47,6 +48,7 @@ import {
   createBallotOperation,
   createProposalsOperation,
   createDrainDelegateOperation,
+  createSmartRollupExecuteOutboxMessageOperation,
   DefaultContractType,
   ContractStorageType,
 } from '../contract';
@@ -184,6 +186,7 @@ export class PrepareProvider implements PreparationProvider {
         case OpKind.TX_ROLLUP_ORIGINATION:
         case OpKind.TX_ROLLUP_SUBMIT_BATCH:
         case OpKind.UPDATE_CONSENSUS_KEY:
+        case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
           return {
             ...op,
             ...this.getSource(op, pkh, source),
@@ -732,6 +735,47 @@ export class PrepareProvider implements PreparationProvider {
     const estimates = this.buildEstimates(estimate);
 
     const op = await createTransferTicketOperation({
+      ...params,
+      ...estimates,
+    });
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare a smart_rollup_execute_outbox_message operation
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  async smartRollupExecuteOutboxMessage(
+    params: SmartRollupExecuteOutboxMessageParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const pkh = await this.signer.publicKeyHash();
+
+    const estimate = await this.estimate.smartRollupExecuteOutboxMessage(params);
+    const estimates = this.buildEstimates(estimate);
+
+    const op = await createSmartRollupExecuteOutboxMessageOperation({
       ...params,
       ...estimates,
     });

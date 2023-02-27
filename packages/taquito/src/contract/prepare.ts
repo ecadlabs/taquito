@@ -29,6 +29,8 @@ import {
   RPCProposalsOperation,
   UpdateConsensusKeyParams,
   RPCUpdateConsensusKeyOperation,
+  SmartRollupExecuteOutboxMessageParams,
+  RPCSmartRollupExecuteOutboxMessageOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -318,4 +320,25 @@ export const createUpdateConsensusKeyOperation = async ({
     storage_limit: storageLimit,
     pk,
   } as RPCUpdateConsensusKeyOperation;
+};
+
+export const createSmartRollupExecuteOutboxMessageOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  rollup,
+  cementedCommitment,
+  outputProof,
+}: SmartRollupExecuteOutboxMessageParams) => {
+  return {
+    kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    rollup,
+    cemented_commitment: cementedCommitment,
+    output_proof: outputProof,
+  } as RPCSmartRollupExecuteOutboxMessageOperation;
 };

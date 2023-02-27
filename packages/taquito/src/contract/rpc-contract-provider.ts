@@ -29,6 +29,7 @@ import {
   BallotParams,
   ProposalsParams,
   UpdateConsensusKeyParams,
+  SmartRollupExecuteOutboxMessageParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -48,6 +49,7 @@ import {
   createBallotOperation,
   createProposalsOperation,
   createUpdateConsensusKeyOperation,
+  createSmartRollupExecuteOutboxMessageOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -66,6 +68,7 @@ import { BallotOperation } from '../operations/ballot-operation';
 import { DrainDelegateOperation } from '../operations/drain-delegate-operation';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
+import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-rollup-execute-outbox-message-operation';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -688,6 +691,38 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new UpdateConsensusKeyOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   *
+   * @description Enacts a transaction from a smart rollup to a smart contract, as authorized by a cemented commitment.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param SmartRollupExecuteOutboxMessageParams
+   */
+  async smartRollupExecuteOutboxMessage(params: SmartRollupExecuteOutboxMessageParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.smartRollupExecuteOutboxMessage.bind(this.estimator)
+    );
+    const operation = await createSmartRollupExecuteOutboxMessageOperation({
+      ...params,
+      ...estimate,
+    });
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new SmartRollupExecuteOutboxMessageOperation(
       hash,
       operation,
       publicKeyHash,
