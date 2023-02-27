@@ -207,8 +207,8 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-const contractTopLevelViews = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
-const contractCallFib = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
+const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
+const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
 const fibPosition = 7;
 
 Tezos.contract.at(contractTopLevelViews)
