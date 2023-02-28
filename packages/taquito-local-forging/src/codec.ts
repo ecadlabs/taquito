@@ -201,6 +201,8 @@ export const pkhEncoder = (val: string) => {
       return '01' + prefixEncoder(Prefix.TZ2)(val);
     case Prefix.TZ3:
       return '02' + prefixEncoder(Prefix.TZ3)(val);
+    case Prefix.TZ4:
+      return '03' + prefixEncoder(Prefix.TZ4)(val);
     default:
       throw new InvalidKeyHashError(val);
   }
@@ -226,6 +228,7 @@ export const addressEncoder = (val: string): string => {
     case Prefix.TZ1:
     case Prefix.TZ2:
     case Prefix.TZ3:
+    case Prefix.TZ4:
       return '00' + pkhEncoder(val);
     case Prefix.KT1:
       return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
