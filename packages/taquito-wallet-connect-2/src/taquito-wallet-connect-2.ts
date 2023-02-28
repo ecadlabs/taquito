@@ -11,10 +11,6 @@ import {
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
-  RPCDelegateOperation,
-  RPCIncreasePaidStorageOperation,
-  RPCOriginationOperation,
-  RPCTransferOperation,
   WalletDelegateParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
@@ -179,6 +175,9 @@ export class WalletConnect2 implements WalletProvider {
     }
     this.session = this.signClient.session.get(key);
     // Todo: Question: Should we validate the namespace here?
+    // Answer: Yes. Consider this scenario: The Dapp is updated with new requirements. 
+    //    The old sessions might lack required namespaces.
+    //    OR: The wallet has dropped support for some of the methods/events in a namespace.
     this.setDefaultAccountAndNetwork();
   }
 
@@ -258,7 +257,10 @@ export class WalletConnect2 implements WalletProvider {
    * @error NotConnected if no active session
    */
   getAccounts() {
-    // Todo: Question: What if some of accounts are not in the right format? Should all fail? Should that one be returned with a special value?
+    // Todo: Question: What if some of accounts are not in the right format? 
+    //    Should all fail? Should that one be returned with a special value?
+    // Answer: Not important for the moment. The accounts are expected to be in
+    //    the right format.
     return this.getTezosNamespace().accounts.map((account) => account.split(':')[2]);
   }
 
@@ -271,6 +273,9 @@ export class WalletConnect2 implements WalletProvider {
   setActiveAccount(pkh: string) {
     // Todo: Question: Should we allow clearing the active account?
     // Todo: Question: What if the wallet has added an account later (after connection)?
+    // Answer: Actually, the problem will happen if the wallet has removed an account after
+    //    the session is established, as the user will not be able to sign using that account
+    // Question: Is the only solution to disconnect and reconnect?
     if (!this.getAccounts().includes(pkh)) {
       throw new InvalidAccount(pkh);
     }
@@ -386,7 +391,7 @@ export class WalletConnect2 implements WalletProvider {
     } else {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'All namespaces must be approved', // Todo: Question: This does not let the user know what was the problem
+        'The wallet does not support tezos. The namespaces returned by the wallet does not have a "tezos" field.',
         getSdkError('USER_REJECTED').code,
         'incomplete',
         'tezos'
@@ -405,7 +410,7 @@ export class WalletConnect2 implements WalletProvider {
     if (missingMethods.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'All methods must be approved', // Todo: Question: Should we have a more descriptive message? Should we include the names of missing methods?
+        `The wallet does not support the following methods: ${missingMethods.join(', ')}`,
         getSdkError('USER_REJECTED_METHODS').code,
         'incomplete',
         missingMethods
@@ -424,7 +429,7 @@ export class WalletConnect2 implements WalletProvider {
     if (missingEvents.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'All events must be approved', // Todo: Question: Should we have a more descriptive message? Should we include the names of missing events?
+        `The wallet does not support the following events: ${missingEvents.join(', ')}`,
         getSdkError('USER_REJECTED_EVENTS').code,
         'incomplete',
         missingEvents
@@ -442,42 +447,39 @@ export class WalletConnect2 implements WalletProvider {
       );
     }
     const receivedChains: string[] = [];
-    const invalidChains: string[] = [];
+    const invalidAccounts: string[] = [];
     const missingChains: string[] = [];
     const invalidChainsNamespace: string[] = [];
 
-    receivedAccounts.forEach((chain) => {
-      const accountId = chain.split(':');
-      if (accountId.length !== 3) {
-        invalidChains.push(chain);
-        // Todo: Question: Should we short-circuit the loop here?
+    receivedAccounts.forEach((account) => {
+      const accountParts = account.split(':');
+      if (accountParts.length !== 3) {
+        invalidAccounts.push(account);
       }
-      if (accountId[0] !== TEZOS_PLACEHOLDER) {
-        invalidChainsNamespace.push(chain);
-        // Todo: Question: Should we short-circuit the loop here?
+      if (accountParts[0] !== TEZOS_PLACEHOLDER) {
+        invalidChainsNamespace.push(account);
+        return;
       }
-      const network = accountId[1];
+      const network = accountParts[1];
       if (!receivedChains.includes(network)) {
         receivedChains.push(network);
       }
     });
 
-    if (invalidChains.length > 0) {
-      // Todo: Question: What if the Wallet returned some valida accounts?
+    if (invalidAccounts.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'Accounts must be CAIP-10 compliant',
+        `Accounts must be CAIP-10 compliant, but we got ${invalidAccounts.join(' and ')} which ${invalidAccounts.length === 1 ? 'is' : 'are'} not valid.`,
         getSdkError('USER_REJECTED_CHAINS').code,
         'invalid',
-        invalidChains
+        invalidAccounts
       );
     }
 
     if (invalidChainsNamespace.length > 0) {
-      // Todo: Question: What if the Wallet returned some valida accounts?
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'Accounts must be defined in matching namespace',
+        `Tezos accounts should be prefixed with "tezos:", but we also got: ${invalidChainsNamespace.join(', ')}`,
         getSdkError('UNSUPPORTED_ACCOUNTS').code,
         'invalid',
         invalidChainsNamespace
@@ -491,7 +493,7 @@ export class WalletConnect2 implements WalletProvider {
     if (missingChains.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'All chains must have at least one account',
+        `All networks must have at least one account, did not receive accounts for: ${missingChains.join(', ')}`,
         getSdkError('USER_REJECTED_CHAINS').code,
         'incomplete',
         missingChains
@@ -507,7 +509,7 @@ export class WalletConnect2 implements WalletProvider {
     if (TEZOS_PLACEHOLDER in this.getSession().namespaces) {
       return this.getSession().namespaces[TEZOS_PLACEHOLDER];
     } else {
-      throw new InvalidSession('Tezos not found in namespaces'); // Todo: Question: the capitalized T here can be misleading.
+      throw new InvalidSession('Namespaces does not have a field named "tezos"');
     }
   }
 
@@ -534,80 +536,74 @@ export class WalletConnect2 implements WalletProvider {
   }
 
   private getPermittedNetworks() {
-    return this.getTezosRequiredNamespace().chains?.map((chain) => chain.split(':')[1]); // Todo: Question: Should we deduplicate?
+    const networks = this.getTezosRequiredNamespace().chains?.map((chain) => chain.split(':')[1]);
+    const uniqueNetworks = [...new Set(networks)];
+    return uniqueNetworks;
   }
 
-  private formatParameters(
-    params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams
+  private formatAndRemoveDefaultLimits<ParamType extends WalletTransferParams | WalletOriginateParams | WalletDelegateParams | WalletIncreasePaidStorageParams>(
+    params: ParamType,
+    operatedParams: Omit<Partial<ParamType>, 'fee' | 'storageLimit' | 'gasLimit' | 'amount'> & {fee: number | undefined; storage_limit: number | undefined; gas_limit: number | undefined; amount?: number | string | undefined; }
   ) {
-    const formatedParams: any = params; // Todo: Question: Should we use a type that's more constrained?
-    if (typeof params.fee !== 'undefined') { // Todo: Question: Why typeof?
-      formatedParams.fee = params.fee.toString(); // Todo: Question: Does ToString use client's Locale?
+    type ReturnedType = Omit<Partial<ParamType>, 'fee' | 'storageLimit' | 'gasLimit' | 'amount'> & {
+      fee: string | undefined;
+      storage_limit: string | undefined;
+      gas_limit: string | undefined;
+      amount: string | undefined;
+    };
+
+    const formatedParams: ReturnedType = {
+      ...operatedParams,
+      fee: operatedParams.fee?.toString(),
+      storage_limit: operatedParams.storage_limit?.toString(),
+      gas_limit: operatedParams.gas_limit?.toString(),
+      amount: operatedParams.amount?.toString(),
+    };
+
+    if (typeof params.fee === 'undefined') {
+      delete formatedParams.fee;
     }
-    if (typeof params.storageLimit !== 'undefined') {
-      formatedParams.storageLimit = params.storageLimit.toString();
+    if (typeof params.storageLimit === 'undefined') {
+      delete formatedParams.storage_limit;
     }
-    if (typeof params.gasLimit !== 'undefined') {
-      formatedParams.gasLimit = params.gasLimit.toString();
+    if (typeof params.gasLimit === 'undefined') {
+      delete formatedParams.gas_limit;
     }
     return formatedParams;
   }
 
-  private removeDefaultLimits(
-    params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams | WalletIncreasePaidStorageParams,
-    operatedParams:
-      | Partial<RPCTransferOperation>
-      | Partial<RPCOriginationOperation>
-      | Partial<RPCDelegateOperation>
-      | Partial<RPCIncreasePaidStorageOperation>
-  ) {
-    // Todo: Question: Can we get better modularity here? The assumption is that the methods calling this have created operatedParams from params.
-    // What if in the process of creating that param, a field like `fee` has changed?
-    if (typeof params.fee === 'undefined') {
-      delete operatedParams.fee;
-    }
-    if (typeof params.storageLimit === 'undefined') {
-      delete operatedParams.storage_limit;
-    }
-    if (typeof params.gasLimit === 'undefined') {
-      delete operatedParams.gas_limit;
-    }
-    return operatedParams;
-  }
-
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
     const walletParams: WalletTransferParams = await params();
-
-    return this.removeDefaultLimits(
+    return this.formatAndRemoveDefaultLimits(
       walletParams,
-      await createTransferOperation(this.formatParameters(walletParams))
+      await createTransferOperation(walletParams)
     );
   }
 
   async mapIncreasePaidStorageWalletParams(params: () => Promise<WalletIncreasePaidStorageParams>) {
     const walletParams: WalletIncreasePaidStorageParams = await params();
 
-    return this.removeDefaultLimits(
+    return this.formatAndRemoveDefaultLimits(
       walletParams,
-      await createIncreasePaidStorageOperation(this.formatParameters(walletParams))
+      await createIncreasePaidStorageOperation(walletParams)
     );
   }
 
   async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
     const walletParams: WalletOriginateParams = await params();
 
-    return this.removeDefaultLimits(
+    return this.formatAndRemoveDefaultLimits(
       walletParams,
-      await createOriginationOperation(this.formatParameters(walletParams))
+      await createOriginationOperation(walletParams)
     );
   }
 
   async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
     const walletParams: WalletDelegateParams = await params();
 
-    return this.removeDefaultLimits(
+    return this.formatAndRemoveDefaultLimits(
       walletParams,
-      await createSetDelegateOperation(this.formatParameters(walletParams))
+      await createSetDelegateOperation(walletParams)
     );
   }
 }
