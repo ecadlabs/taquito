@@ -39,4 +39,4 @@ const op = await Tezos.contract.smartRollupAddMessages({
 await op.confirmation();
 ```
 
-- `message` property is an encoded outbox message. For more information on how to encode or what message gets encoded, refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html#sending-an-external-inbox-message)
+- `message` property receives an array of encoded outbox messages. For more information on how to encode or what message gets encoded, refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html#sending-an-external-inbox-message)
