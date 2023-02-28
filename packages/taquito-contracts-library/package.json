@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=16"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -76,7 +76,7 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
     "@types/jest": "^26.0.23",
-    "@types/node": "^17.0.0",
+    "@types/node": "^16",
     "@types/superagent": "^4.1.13",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
