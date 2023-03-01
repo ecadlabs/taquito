@@ -31,7 +31,7 @@ import { char2Bytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
 
 
-const provider = 'https://kathmandunet.ecadinfra.com/';
+const provider = 'https://ghostnet.ecadinfra.com/';
 export const signer = new InMemorySigner(
   'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
 );
@@ -144,7 +144,7 @@ async function originateTheContracts() {
     'MapWithWithSingleMapForStorage',
     await originateMapWithSingleMapForStorage()
   );
-  contract_catalogue.set('MapWithPairasMapContract', await originateMapWithPairasMapKeys());
+  contract_catalogue.set('MapWithPairAsMapContract', await originateMapWithPairAsMapKeys());
   contract_catalogue.set('MapWithComplexKeysContract', await originateMapWithComplexKeys());
   contract_catalogue.set(
     'MapWithInitialStorageContract',
@@ -167,7 +167,7 @@ async function originateTheContracts() {
   contract_catalogue.set('WalletContract', await originateWalletOriginateContractTransfer());
   contract_catalogue.set('WalletAreYouThereContract', await originateWalletOriginateAreYouThere());
   contract_catalogue.set('BigMapPackContract', await originateBigMapPackContract());
- 
+
 
   json_contract_catalogue();
 
@@ -300,7 +300,7 @@ async function originateLambda2() {
   }
 }
 
-async function originateMapWithPairasMapKeys() {
+async function originateMapWithPairAsMapKeys() {
   tezos.setSignerProvider(signer);
   try {
     const storageMap = new MichelsonMap();
