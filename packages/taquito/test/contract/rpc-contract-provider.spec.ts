@@ -85,6 +85,7 @@ describe('RpcContractProvider test', () => {
     transferTicket: jest.Mock<any, any>;
     increasePaidStorage: jest.Mock<any, any>;
     updateConsensusKey: jest.Mock<any, any>;
+    smartRollupExecuteOutboxMessage: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -141,6 +142,7 @@ describe('RpcContractProvider test', () => {
       transferTicket: jest.fn(),
       increasePaidStorage: jest.fn(),
       updateConsensusKey: jest.fn(),
+      smartRollupExecuteOutboxMessage: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -1906,6 +1908,115 @@ describe('RpcContractProvider test', () => {
               gas_limit: estimate.gasLimit.toString(),
               storage_limit: estimate.storageLimit.toString(),
               pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
+  });
+
+  describe('smartRollupExecuteOutboxMessage', () => {
+    it('should produce an smartRollupExecuteOutboxMessage operation', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockEstimate.reveal.mockResolvedValue(undefined);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.smartRollupExecuteOutboxMessage.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.smartRollupExecuteOutboxMessage({
+        rollup: 'smart_rollup_hash',
+        cementedCommitment: 'sc_rollup_commitment_hash',
+        outputProof: 'smart_rollup_bytes',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+              source: 'test_pub_key_hash',
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              rollup: 'smart_rollup_hash',
+              cemented_commitment: 'sc_rollup_commitment_hash',
+              output_proof: 'smart_rollup_bytes',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
+
+    it('should produce an smartRollupExecuteOutboxMessage operation and reveal op', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.smartRollupExecuteOutboxMessage.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.smartRollupExecuteOutboxMessage({
+        rollup: 'smart_rollup_hash',
+        cementedCommitment: 'sc_rollup_commitment_hash',
+        outputProof: 'smart_rollup_bytes',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+              source: 'test_pub_key_hash',
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              rollup: 'smart_rollup_hash',
+              cemented_commitment: 'sc_rollup_commitment_hash',
+              output_proof: 'smart_rollup_bytes',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+      done();
+    });
+
+    it('should produce an smartRollupExecuteOutboxMessage operation and reveal op with fees specified', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.smartRollupExecuteOutboxMessage.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.smartRollupExecuteOutboxMessage({
+        rollup: 'smart_rollup_hash',
+        cementedCommitment: 'sc_rollup_commitment_hash',
+        outputProof: 'smart_rollup_bytes',
+        fee: 500,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+              source: 'test_pub_key_hash',
+              fee: '500',
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              rollup: 'smart_rollup_hash',
+              cemented_commitment: 'sc_rollup_commitment_hash',
+              output_proof: 'smart_rollup_bytes',
               counter: '2',
             },
           ],

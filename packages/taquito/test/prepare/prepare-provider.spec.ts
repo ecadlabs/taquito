@@ -131,6 +131,7 @@ describe('PrepareProvider test', () => {
     jest.spyOn(context.estimate, 'txRollupOriginate').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'txRollupSubmitBatch').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'updateConsensusKey').mockResolvedValue(estimate);
+    jest.spyOn(context.estimate, 'smartRollupExecuteOutboxMessage').mockResolvedValue(estimate);
 
     prepareProvider = new PrepareProvider(context);
   });
@@ -820,7 +821,7 @@ describe('PrepareProvider test', () => {
     });
   });
 
-  describe('txRollupSubmitBatch', async () => {
+  describe('txRollupSubmitBatch', () => {
     it('should be able to prepare a txRollupSubmitBatch op with reveal op', async () => {
       jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
 
@@ -879,6 +880,79 @@ describe('PrepareProvider test', () => {
               source: 'test_public_key_hash',
               content: '1234',
               rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+  });
+
+  describe('smartRollupExecuteOutboxMessage', () => {
+    it('should be able to prepare a smartRollupExecuteOutboxMessage operation', async () => {
+      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+
+      const prepared = await prepareProvider.smartRollupExecuteOutboxMessage({
+        rollup: 'smart_rollup_hash',
+        cementedCommitment: 'sc_rollup_commitment_hash',
+        outputProof: 'smart_rollup_bytes',
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: OpKind.REVEAL,
+              fee: '391',
+              public_key: 'test_pub_key',
+              source: 'test_public_key_hash',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '1',
+            },
+            {
+              kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+              source: 'test_public_key_hash',
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              rollup: 'smart_rollup_hash',
+              cemented_commitment: 'sc_rollup_commitment_hash',
+              output_proof: 'smart_rollup_bytes',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to prepare smartRollupAddMessages op without reveal when estimate is undefined', async () => {
+      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+
+      const prepared = await prepareProvider.smartRollupExecuteOutboxMessage({
+        rollup: 'smart_rollup_hash',
+        cementedCommitment: 'sc_rollup_commitment_hash',
+        outputProof: 'smart_rollup_bytes',
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+              source: 'test_public_key_hash',
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              rollup: 'smart_rollup_hash',
+              cemented_commitment: 'sc_rollup_commitment_hash',
+              output_proof: 'smart_rollup_bytes',
               counter: '1',
             },
           ],

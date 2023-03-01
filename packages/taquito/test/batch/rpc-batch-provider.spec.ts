@@ -694,6 +694,142 @@ describe('OperationBatch test', () => {
     });
   });
 
+  describe('with smartRollupExecuteOutboxMessage batch operation', () => {
+    it('should produce an operation batch which contains an smartRollupExecuteOutboxMessage operation', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+          rollup: 'smart_rollup_hash',
+          cementedCommitment: 'sc_rollup_commitment_hash',
+          outputProof: 'smart_rollup_bytes',
+        },
+      ];
+
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        counter: 123456,
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_execute_outbox_message',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              rollup: 'smart_rollup_hash',
+              cemented_commitment: 'sc_rollup_commitment_hash',
+              output_proof: 'smart_rollup_bytes',
+              counter: '123457',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should produce an operation batch which contains a reveal and an smartRollupExecuteOutboxMessage operation', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      const estimateReveal = new Estimate(1000000, 0, 64, 250);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+          rollup: 'smart_rollup_hash',
+          cementedCommitment: 'sc_rollup_commitment_hash',
+          outputProof: 'smart_rollup_bytes',
+        },
+      ];
+
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        counter: 123456,
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              counter: '123457',
+              fee: '374',
+              gas_limit: '1100',
+              kind: 'reveal',
+              public_key: 'test_pub_key',
+              source: 'test_pub_key_hash',
+              storage_limit: '0',
+            },
+            {
+              kind: 'smart_rollup_execute_outbox_message',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              rollup: 'smart_rollup_hash',
+              cemented_commitment: 'sc_rollup_commitment_hash',
+              output_proof: 'smart_rollup_bytes',
+              counter: '123458',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should produce a batch operation which contants an smartRollupExecuteOutboxMessage operation where fee, gas limit, and storage limit are specified by the user', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+          fee: 500,
+          gasLimit: 1400,
+          storageLimit: 100,
+          rollup: 'smart_rollup_hash',
+          cementedCommitment: 'sc_rollup_commitment_hash',
+          outputProof: 'smart_rollup_bytes',
+        },
+      ];
+
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        counter: 123456,
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_execute_outbox_message',
+              source: 'test_pub_key_hash',
+              fee: '500',
+              gas_limit: '1400',
+              storage_limit: '100',
+              rollup: 'smart_rollup_hash',
+              cemented_commitment: 'sc_rollup_commitment_hash',
+              output_proof: 'smart_rollup_bytes',
+              counter: '123457',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+  });
+
   describe('with txRollupOriginate operation', () => {
     it('should produce a batch operation which contains an txRollupOriginate operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
