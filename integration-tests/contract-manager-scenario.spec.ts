@@ -1,6 +1,6 @@
 import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
-import { MANAGER_LAMBDA, Protocols, protocols } from "@taquito/taquito";
+import { MANAGER_LAMBDA, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => {
   const Tezos = lib;
@@ -50,9 +50,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, protocol }) => 
         await contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 50 * 1000000)).send({ amount: 0 })
         fail('Should throw during transfer with amount higher than balance')
       } catch (ex: any) {
-        (protocol === Protocols.PtJakart2) ? 
+        (protocol === Protocols.PtJakart2) ?
             expect(ex.message).toContain('contract.balance_too_low') :
-            expect(ex.message).toContain('tez.subtraction_underflow') 
+            expect(ex.message).toContain('tez.subtraction_underflow')
       }
       done();
     })

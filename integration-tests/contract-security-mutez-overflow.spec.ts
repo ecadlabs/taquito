@@ -1,5 +1,4 @@
 import { Protocols } from '@taquito/taquito';
-import { doesNotMatch } from 'assert';
 import { CONFIGS } from './config';
 
 /**
@@ -42,7 +41,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         const opContract = await op.contract();
         const opSend = await opContract.methods.default(0).send();
         await opSend.confirmation();
-        
+
       } catch (error: any) {
         expect(error.message).toContain('tez.multiplication_overflow');
       }
