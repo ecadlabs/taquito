@@ -365,7 +365,7 @@ describe('Wallet connect 2 tests', () => {
           },
         })
       ).rejects.toThrow(
-        '5002: All methods must be approved. "tezos_signExpression" is missing in the session namespace.'
+        '5002: The wallet does not support some of the required methods. "tezos_signExpression" is missing in the session namespace.'
       );
     });
 
@@ -393,7 +393,7 @@ describe('Wallet connect 2 tests', () => {
           },
         })
       ).rejects.toThrow(
-        '5002: All methods must be approved. "tezos_sendOperations,tezos_signExpression" is missing in the session namespace.'
+        '5002: The wallet does not support some of the required methods. "tezos_sendOperations,tezos_signExpression" is missing in the session namespace.'
       );
     });
 
@@ -423,7 +423,7 @@ describe('Wallet connect 2 tests', () => {
           },
         })
       ).rejects.toThrow(
-        '5001: All chains must have at least one account. "limanet" is missing in the session namespace.'
+        '5001: All networks must have at least one account. "limanet" is missing in the session namespace.'
       );
     });
 
@@ -453,7 +453,7 @@ describe('Wallet connect 2 tests', () => {
           },
         })
       ).rejects.toThrow(
-        '5001: All chains must have at least one account. "limanet,kathmandunet" is missing in the session namespace.'
+        '5001: All networks must have at least one account. "limanet,kathmandunet" is missing in the session namespace.'
       );
     });
 
@@ -561,7 +561,7 @@ describe('Wallet connect 2 tests', () => {
           },
         })
       ).rejects.toThrow(
-        '5103: Accounts must be defined in matching namespace. "unknown:ghostnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G" is invalid.'
+        '5103: Tezos accounts should be prefixed with "tezos:", but we got some invalid accounts. "unknown:ghostnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G" is invalid.'
       );
     });
 
@@ -630,7 +630,7 @@ describe('Wallet connect 2 tests', () => {
           },
         })
       ).rejects.toThrow(
-        '5000: All namespaces must be approved. "tezos" is missing in the session namespace.'
+        '5000: The wallet does not support tezos. "tezos" is missing in the session namespace.'
       );
     });
 
@@ -661,7 +661,7 @@ describe('Wallet connect 2 tests', () => {
           },
         })
       ).rejects.toThrow(
-        '5003: All events must be approved. "accountsChanged" is missing in the session namespace.'
+        '5003: The wallet does not support some of the required events. "accountsChanged" is missing in the session namespace.'
       );
     });
   });

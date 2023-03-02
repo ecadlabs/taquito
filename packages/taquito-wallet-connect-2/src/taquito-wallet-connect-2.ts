@@ -391,7 +391,7 @@ export class WalletConnect2 implements WalletProvider {
     } else {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        'The wallet does not support tezos. The namespaces returned by the wallet does not have a "tezos" field.',
+        'The wallet does not support tezos',
         getSdkError('USER_REJECTED').code,
         'incomplete',
         'tezos'
@@ -410,7 +410,7 @@ export class WalletConnect2 implements WalletProvider {
     if (missingMethods.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        `The wallet does not support the following methods: ${missingMethods.join(', ')}`,
+        `The wallet does not support some of the required methods`,
         getSdkError('USER_REJECTED_METHODS').code,
         'incomplete',
         missingMethods
@@ -429,7 +429,7 @@ export class WalletConnect2 implements WalletProvider {
     if (missingEvents.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        `The wallet does not support the following events: ${missingEvents.join(', ')}`,
+        `The wallet does not support some of the required events`,
         getSdkError('USER_REJECTED_EVENTS').code,
         'incomplete',
         missingEvents
@@ -469,7 +469,7 @@ export class WalletConnect2 implements WalletProvider {
     if (invalidAccounts.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        `Accounts must be CAIP-10 compliant, but we got ${invalidAccounts.join(' and ')} which ${invalidAccounts.length === 1 ? 'is' : 'are'} not valid.`,
+        `Accounts must be CAIP-10 compliant`,
         getSdkError('USER_REJECTED_CHAINS').code,
         'invalid',
         invalidAccounts
@@ -479,7 +479,7 @@ export class WalletConnect2 implements WalletProvider {
     if (invalidChainsNamespace.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        `Tezos accounts should be prefixed with "tezos:", but we also got: ${invalidChainsNamespace.join(', ')}`,
+        `Tezos accounts should be prefixed with "tezos:", but we got some invalid accounts`,
         getSdkError('UNSUPPORTED_ACCOUNTS').code,
         'invalid',
         invalidChainsNamespace
@@ -493,7 +493,7 @@ export class WalletConnect2 implements WalletProvider {
     if (missingChains.length > 0) {
       this.clearState();
       throw new InvalidReceivedSessionNamespace(
-        `All networks must have at least one account, did not receive accounts for: ${missingChains.join(', ')}`,
+        `All networks must have at least one account`,
         getSdkError('USER_REJECTED_CHAINS').code,
         'incomplete',
         missingChains
