@@ -327,7 +327,7 @@ export class RpcContractProvider
     }
 
     // Since babylon delegation source cannot smart contract
-    if (/kt1/i.test(params.source)) {
+    if (params.source && /kt1/i.test(params.source)) {
       throw new InvalidDelegationSource(params.source);
     }
 
