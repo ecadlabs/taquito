@@ -173,6 +173,7 @@ export abstract class OperationEmitter {
           case OpKind.TX_ROLLUP_ORIGINATION:
           case OpKind.TX_ROLLUP_SUBMIT_BATCH:
           case OpKind.UPDATE_CONSENSUS_KEY:
+          case OpKind.SMART_ROLLUP_ADD_MESSAGES:
             return {
               ...op,
               ...getSource(op),
@@ -208,7 +209,6 @@ export abstract class OperationEmitter {
               ...op,
               period: currentVotingPeriod?.voting_period.index,
             };
-
           default:
             throw new InvalidOperationKindError((op as any).kind);
         }
