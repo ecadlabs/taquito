@@ -29,6 +29,8 @@ import {
   RPCProposalsOperation,
   UpdateConsensusKeyParams,
   RPCUpdateConsensusKeyOperation,
+  SmartRollupAddMessagesParams,
+  RPCSmartRollupAddMessagesOperation,
   SmartRollupExecuteOutboxMessageParams,
   RPCSmartRollupExecuteOutboxMessageOperation,
 } from '../operations/types';
@@ -320,6 +322,23 @@ export const createUpdateConsensusKeyOperation = async ({
     storage_limit: storageLimit,
     pk,
   } as RPCUpdateConsensusKeyOperation;
+};
+
+export const createSmartRollupAddMessagesOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  message,
+}: SmartRollupAddMessagesParams) => {
+  return {
+    kind: OpKind.SMART_ROLLUP_ADD_MESSAGES,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    message,
+  } as RPCSmartRollupAddMessagesOperation;
 };
 
 export const createSmartRollupExecuteOutboxMessageOperation = async ({

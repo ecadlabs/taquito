@@ -694,6 +694,143 @@ describe('OperationBatch test', () => {
     });
   });
 
+  describe('withSmartRollupAddMessage op', () => {
+    it('should produce a batch op which contains a smartRollupAddMessages operation', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_ADD_MESSAGES,
+          message: [
+            '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+          ],
+        },
+      ];
+
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              message: [
+                '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+              ],
+              counter: '123457',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 123456,
+      });
+      done();
+    });
+
+    it('should produce a batch op with estimate values overridden', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_ADD_MESSAGES,
+          message: [
+            '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+          ],
+          gasLimit: 1100,
+          fee: 399,
+          storageLimit: 95,
+        },
+      ];
+
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_pub_key_hash',
+              fee: '399',
+              gas_limit: '1100',
+              storage_limit: '95',
+              message: [
+                '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+              ],
+              counter: '123457',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 123456,
+      });
+      done();
+    });
+
+    it('should produce a batch op with reveal operation', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      const estimateReveal = new Estimate(1000000, 0, 64, 250);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_ADD_MESSAGES,
+          message: [
+            '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+          ],
+        },
+      ];
+
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_pub_key',
+              source: 'test_pub_key_hash',
+              gas_limit: '1100',
+              storage_limit: '0',
+              counter: '123457',
+            },
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              message: [
+                '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+              ],
+              counter: '123458',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 123456,
+      });
+
+      done();
+    });
+  });
+
   describe('with smartRollupExecuteOutboxMessage batch operation', () => {
     it('should produce an operation batch which contains an smartRollupExecuteOutboxMessage operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);

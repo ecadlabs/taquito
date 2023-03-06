@@ -67,14 +67,16 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(tz2).toEqual('012ffebbf1560632ca767bc960ccdb84669d284c2c');
     const tz3 = pkhEncoder('tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5');
     expect(tz3).toEqual('026fde46af0356a0476dae4e4600172dc9309b3aa4');
-    expect(() => pkhEncoder('tz4WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5')).toThrow(InvalidKeyHashError);
-    expect(() => pkhEncoder('tz4WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5')).toThrow(
-      expect.objectContaining({
-        message: expect.stringContaining(
-          "The public key hash 'tz4WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' is invalid"
-        ),
-      })
-    );
+    const tz4 = pkhEncoder('tz4HQ8VeXAyrZMhES1qLMJAc9uAVXjbMpS8u');
+    expect(tz4).toEqual('035c14a7a05c10fc8b402fbcdd48dc8136236bf3c1');
+    expect(() => pkhEncoder('tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5')).toThrow(InvalidKeyHashError);
+    try {
+      pkhEncoder('tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5');
+    } catch (e) {
+      expect(e.message).toEqual(
+        "The public key hash 'tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' is invalid"
+      );
+    }
     done();
   });
 

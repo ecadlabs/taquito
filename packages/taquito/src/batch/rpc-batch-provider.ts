@@ -13,6 +13,7 @@ import {
   createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createSmartRollupAddMessagesOperation,
   createSmartRollupExecuteOutboxMessageOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
@@ -32,6 +33,7 @@ import {
   TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
+  SmartRollupAddMessagesParams,
   SmartRollupExecuteOutboxMessageParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
@@ -43,8 +45,6 @@ import {
   InvalidKeyHashError,
   ValidationResult,
   InvalidOperationKindError,
-  validateContractAddress,
-  InvalidContractAddressError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 
@@ -88,8 +88,8 @@ export class OperationBatch extends OperationEmitter {
    * @param params Transfer operation parameter
    */
   withTransferTicket(params: TransferTicketParams) {
-    if (validateContractAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(params.destination);
+    if (validateAddress(params.destination) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, 'param destination');
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
@@ -188,6 +188,17 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
+   * @description Add an operation to add messages to a smart rollup
+   *
+   * @param params Rollup origination operation parameter
+   */
+  withSmartRollupAddMessages(params: SmartRollupAddMessagesParams) {
+    this.operations.push({ kind: OpKind.SMART_ROLLUP_ADD_MESSAGES, ...params });
+    return this;
+  }
+
+  /**
+   *
    * @description Add an operation to submit a tx rollup batch to the batch
    *
    * @param params Tx rollup batch operation parameter
@@ -248,6 +259,10 @@ export class OperationBatch extends OperationEmitter {
         return createTransferTicketOperation({
           ...param,
         });
+      case OpKind.SMART_ROLLUP_ADD_MESSAGES:
+        return createSmartRollupAddMessagesOperation({
+          ...param,
+        });
       case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
         return createSmartRollupExecuteOutboxMessageOperation({
           ...param,
@@ -292,6 +307,9 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.TRANSFER_TICKET:
           this.withTransferTicket(param);
+          break;
+        case OpKind.SMART_ROLLUP_ADD_MESSAGES:
+          this.withSmartRollupAddMessages(param);
           break;
         case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
           this.withSmartRollupExecuteOutboxMessageBatch(param);

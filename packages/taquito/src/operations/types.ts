@@ -22,6 +22,7 @@ export type ParamsWithKind =
   | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
+  | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
   | withKind<SmartRollupExecuteOutboxMessageParams, OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
@@ -61,6 +62,7 @@ export type RPCOpWithFee =
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
+  | RPCSmartRollupAddMessagesOperation
   | RPCSmartRollupExecuteOutboxMessageOperation;
 
 export type RPCOpWithSource =
@@ -74,6 +76,7 @@ export type RPCOpWithSource =
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
+  | RPCSmartRollupAddMessagesOperation
   | RPCSmartRollupExecuteOutboxMessageOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
@@ -91,6 +94,7 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
+      'smart_rollup_add_messages',
       'smart_rollup_execute_outbox_message',
     ].indexOf(op.kind) !== -1
   );
@@ -110,6 +114,7 @@ export const isOpRequireReveal = <T extends { kind: OpKind }>(
       'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
+      'smart_rollup_add_messages',
       'smart_rollup_execute_outbox_message',
     ].indexOf(op.kind) !== -1
   );
@@ -502,6 +507,23 @@ export interface RPCUpdateConsensusKeyOperation {
   pk: string;
 }
 
+export interface RPCSmartRollupAddMessagesOperation {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  message: string[];
+}
+
+export interface SmartRollupAddMessagesParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  message: string[];
+}
+
 export interface SmartRollupExecuteOutboxMessageParams {
   source?: string;
   fee?: number;
@@ -538,6 +560,7 @@ export type RPCOperation =
   | RPCBallotOperation
   | RPCProposalsOperation
   | RPCUpdateConsensusKeyOperation
+  | RPCSmartRollupAddMessagesOperation
   | RPCSmartRollupExecuteOutboxMessageOperation;
 
 export type PrepareOperationParams = {

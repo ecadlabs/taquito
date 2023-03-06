@@ -131,6 +131,7 @@ describe('PrepareProvider test', () => {
     jest.spyOn(context.estimate, 'txRollupOriginate').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'txRollupSubmitBatch').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'updateConsensusKey').mockResolvedValue(estimate);
+    jest.spyOn(context.estimate, 'smartRollupAddMessages').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'smartRollupExecuteOutboxMessage').mockResolvedValue(estimate);
 
     prepareProvider = new PrepareProvider(context);
@@ -880,6 +881,79 @@ describe('PrepareProvider test', () => {
               source: 'test_public_key_hash',
               content: '1234',
               rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+  });
+
+  describe('smartRollupAddMessages', () => {
+    it('should be able to prepare a smartRollupAddMessages operation', async () => {
+      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+
+      const prepared = await prepareProvider.smartRollupAddMessages({
+        message: [
+          '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        ],
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '391',
+              public_key: 'test_pub_key',
+              source: 'test_public_key_hash',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '1',
+            },
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_public_key_hash',
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              message: [
+                '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+              ],
+              counter: '2',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to prepare smartRollupAddMessages op without reveal when estimate is undefined', async () => {
+      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+
+      const prepared = await prepareProvider.smartRollupAddMessages({
+        message: [
+          '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        ],
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_public_key_hash',
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              message: [
+                '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+              ],
               counter: '1',
             },
           ],
