@@ -8,8 +8,8 @@ import {
   buf2hex,
 } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
+import { MinPk } from 'es-blst';
 
-import { getPublicKey, sign } from '@noble/bls12-381';
 export class Tz4 {
   private _key: Uint8Array;
   private _publicKey: Uint8Array;
@@ -21,19 +21,23 @@ export class Tz4 {
     }
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));
-    this._publicKey = getPublicKey(this._key);
-    console.log('this is the pk: ', this._publicKey);
+    console.log('_key: ', this._key);
+    const sk = MinPk.PrivateKey.fromBytes(this._key);
+    console.log('sk: ', sk);
+    this._publicKey = sk.public().bytes();
   }
 
   async sign(bytes: string, bytesHash: Uint8Array) {
-    const signature = await sign(this._key, bytesHash);
+    const sk = MinPk.PrivateKey.fromBytes(this._key);
+    const signature = sk.sign(bytesHash, 'aug');
+
     const signatureBuffer = toBuffer(signature);
     const sbytes = bytes + buf2hex(signatureBuffer);
 
     return {
       bytes,
-      sig: b58cencode(signature, prefix.sig),
-      prefixSig: b58cencode(signature, prefix.BLSig),
+      sig: b58cencode(signature.bytes(), prefix.sig),
+      prefixSig: b58cencode(signature.bytes(), prefix.BLSig),
       sbytes,
     };
   }

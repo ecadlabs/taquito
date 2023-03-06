@@ -220,7 +220,7 @@ describe('inmemory-signer', () => {
 
   it(`Tz4`, async (done) => {
     const signer = new InMemorySigner('BLsk3GqCUrAcNeznkg8W1KDq8H3ux884GeQeGj6tYkGeDaEmeMuVtb');
-    // expect(await signer.publicKeyHash()).toEqual('tz4WhAS92VSPxuCjTJgUgMsg5if8dUoMh72r');
+    expect(await signer.publicKeyHash()).toEqual('tz4WhAS92VSPxuCjTJgUgMsg5if8dUoMh72r');
     expect(await signer.secretKey()).toEqual(
       'BLsk3GqCUrAcNeznkg8W1KDq8H3ux884GeQeGj6tYkGeDaEmeMuVtb'
     );
