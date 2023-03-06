@@ -8,7 +8,6 @@ import {
   ConstantsResponseProto012,
   ConstantsResponseProto013,
   ConstantsResponseProto015,
-  ConstantsResponseProto016,
 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
@@ -706,7 +705,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     mumbainet(`successfully fetches all constants for mumbainet using ${rpc}`, async (done) => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto015 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
@@ -813,7 +812,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     alpha(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto015 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
