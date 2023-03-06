@@ -1677,6 +1677,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto016 &
   ConstantsResponseProto015 &
   ConstantsResponseProto014 &
   ConstantsResponseProto013 &
@@ -1717,6 +1718,42 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto016
+  extends Omit<
+    ConstantsResponseProto015,
+    | 'sc_max_wrapped_proof_binary_size'
+    | 'sc_rollup_challenge_window_in_blocks'
+    | 'sc_rollup_commitment_period_in_blocks'
+    | 'sc_rollup_enable'
+    | 'sc_rollup_max_active_outbox_levels'
+    | 'sc_rollup_max_lookahead_in_blocks'
+    | 'sc_rollup_max_number_of_cemented_commitments'
+    | 'sc_rollup_max_number_of_messages_per_commitment_period'
+    | 'sc_rollup_max_outbox_messages_per_level'
+    | 'sc_rollup_message_size_limit'
+    | 'sc_rollup_number_of_sections_in_dissection'
+    | 'sc_rollup_origination_size'
+    | 'sc_rollup_stake_amount'
+    | 'sc_rollup_timeout_period_in_blocks'
+  > {
+  smart_rollup_arith_pvm_enable: boolean;
+  smart_rollup_challenge_window_in_blocks: number;
+  smart_rollup_commitment_period_in_blocks: number;
+  smart_rollup_enable: boolean;
+  smart_rollup_max_active_outbox_levels: number;
+  smart_rollup_max_lookahead_in_blocks: number;
+  smart_rollup_max_number_of_cemented_commitments: number;
+  smart_rollup_max_number_of_messages_per_level: string;
+  smart_rollup_max_number_of_parallel_games: number;
+  smart_rollup_max_outbox_messages_per_level: number;
+  smart_rollup_max_wrapped_proof_binary_size: number;
+  smart_rollup_message_size_limit: number;
+  smart_rollup_number_of_sections_in_dissection: number;
+  smart_rollup_origination_size: number;
+  smart_rollup_stake_amount: string;
+  smart_rollup_timeout_period_in_blocks: number;
+}
 
 export interface ConstantsResponseProto015
   extends Omit<
