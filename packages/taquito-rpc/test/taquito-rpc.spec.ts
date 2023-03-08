@@ -4285,7 +4285,7 @@ describe('RpcClient test', () => {
           branch: 'BM7jodocPv8q3gxjcFAhvGRU6RVnkqmEj9fgDsixz67nGX6PVeh',
           contents: [
             {
-              kind: 'preendorsement',
+              kind: OpKind.PREENDORSEMENT,
               slot: 257,
               level: 3208683,
               round: 0,
@@ -4299,7 +4299,7 @@ describe('RpcClient test', () => {
           branch: 'BKyc9SUNpoybSYaAduoDbdW5FWa5RdqMyhU66do1ffFTDsUDUdT',
           contents: [
             {
-              kind: 'transaction',
+              kind: OpKind.TRANSACTION,
               source: 'tz1fXne2svkg9JM9BxHxjPAyxNAF5DH6qENd',
               fee: '534',
               counter: '95674680',
@@ -4317,7 +4317,40 @@ describe('RpcClient test', () => {
           ],
           signature: "sigcbF2mhgXRUyyL9XcGLYNSZMQx6FcYc28X1DLkqYXFEsgQheNjwN7uzcrv2sTRFFeigjSZuBVVu3S7FmMcYpPC9oVk49wL"
         }],
-        refused: [],
+        refused: [
+          [
+            'oneDmhYTW4V9UoVGuweyy5NbR9SQmkFGW9siTKcD1EpnJ1Nym8q',
+            {
+              protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+              branch: 'BLfgeRyKd5B8atWXbZp7vL3aV6q3QGk5SDvcPbBK6i76MGuvs2z',
+              contents: [
+                {
+                  kind: OpKind.TRANSACTION,
+                  source: 'tz1YKS3pgkBDyoFfSjDCBiC9KYtkfwWfaBGZ',
+                  fee: '830',
+                  counter: '42578972',
+                  gas_limit: '20000',
+                  storage_limit: '553',
+                  amount: '1000000',
+                  destination: 'KT1AgsJw6EEwk56r9XoQHss9yAA7dNPZYvFH',
+                  parameters: {
+                    entrypoint: 'mint',
+                    value: {
+                      bytes: '6d303d302e313036266d313d302e363833266d323d302e373034266d333d302e353532266d343d302e393034'
+                    }
+                  }
+                }
+              ],
+              signature: 'sigS6YWsdzaG3KbBatyuwRYYUtEo4RajZZYCKC7MgMs9Dq4WaERKYKxdysKuyBFSJZLcMPa4dCqGiEzv9mN6UQCYuiENJVYZ',
+              error: [
+                {
+                  "kind": "permanent",
+                  "id": "proto.015-PtLimaPt.prefilter.fees_too_low"
+                }
+              ]
+            }
+          ]
+        ],
         outdated: [],
         branch_refused: [],
       };

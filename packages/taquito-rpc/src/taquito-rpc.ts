@@ -1135,7 +1135,7 @@ export class RpcClient implements RpcClientInterface {
    * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/lima-mempool-openapi.json
    */
   async getMempoolPendingOperations(): Promise<MempoolPendingOperationsResponse> {
-      return this.httpBackend.createRequest<string>({
+      return this.httpBackend.createRequest<MempoolPendingOperationsResponse>({
         url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
         method: 'GET',
       });

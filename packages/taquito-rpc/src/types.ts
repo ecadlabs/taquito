@@ -968,20 +968,27 @@ export interface BlockResponse {
   operations: OperationEntry[][];
 }
 
+export type MempoolPendingOperationsEntry =
+  Pick<OperationEntry, 'hash' | 'branch' | 'signature'>
+  & {
+    protocol?: string;
+    contents: OperationContents[];
+  };
+
 export interface MempoolPendingOperationsResponse {
-  applied: Omit<OperationEntry, 'protocol'>[];
+  applied: MempoolPendingOperationsEntry[];
   refused: [
-    string,
-    OperationEntry
-  ];
+    string, // hash
+    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
+  ][];
   outdated: [
     string,
-    OperationEntry
-  ];
+    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
+  ][];
   branch_refused: [
     string,
-    OperationEntry
-  ];
+    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
+  ][];
   // branch_refused
   // branch_delayed
   // unprocessed
