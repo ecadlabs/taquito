@@ -34,6 +34,7 @@ import {
   OperationContentsAndResultDrainDelegate,
   TxRollupProof,
   ConstantsResponseProto015,
+  MempoolPendingOperationsResponse,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -4275,4 +4276,66 @@ describe('RpcClient test', () => {
       done();
     });
   });
+
+  describe('getMempoolPendingOperations', () => {
+    it('should query the correct url and retrun mempool operations', async (done) => {
+      const response: MempoolPendingOperationsResponse = {
+        applied: [{
+          hash: 'opasNWPUpH411x8TNtjmf9cYfhnNsLKwC9s1AMkC9AgdeA38fdH',
+          branch: 'BM7jodocPv8q3gxjcFAhvGRU6RVnkqmEj9fgDsixz67nGX6PVeh',
+          contents: [
+            {
+              kind: 'preendorsement',
+              slot: 257,
+              level: 3208683,
+              round: 0,
+              block_payload_hash: 'vh379h1gqm33adBvDXv3F6WySR5QfK1SK7e4ADpTyH7smMkCAuo7'
+            }
+          ],
+          signature: 'sigXRuND9L66mK5qTvazJpuUv5b15aaMcMEKQcfpQdbK6JCB5cTajqgaBxi2bRs5aJjMjsJnWzQ7LRuAmgfLJTzNLwbNXfZ4'
+        },
+        {
+          hash: 'opBGgrDKiwLgh99yJR3vpsseAatZsWnpCd3EJ4zA2jqdhPzsYTd',
+          branch: 'BKyc9SUNpoybSYaAduoDbdW5FWa5RdqMyhU66do1ffFTDsUDUdT',
+          contents: [
+            {
+              kind: 'transaction',
+              source: 'tz1fXne2svkg9JM9BxHxjPAyxNAF5DH6qENd',
+              fee: '534',
+              counter: '95674680',
+              gas_limit: '2484',
+              storage_limit: '350',
+              amount: '0',
+              destination: 'KT1WvzYHCNBvDSdwafTHv7nJ1dWmZ8GCYuuC',
+              parameters: {
+                entrypoint: 'retract_ask',
+                value: {
+                  int: '3178636'
+                }
+              }
+            }
+          ],
+          signature: "sigcbF2mhgXRUyyL9XcGLYNSZMQx6FcYc28X1DLkqYXFEsgQheNjwN7uzcrv2sTRFFeigjSZuBVVu3S7FmMcYpPC9oVk49wL"
+        }],
+        refused: [],
+        outdated: [],
+        branch_refused: [],
+      };
+
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(response));
+
+      const mempoolOps = await client.getMempoolPendingOperations();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/main/mempool/pending_operations`,
+      });
+
+      expect(mempoolOps).toBeDefined();
+      expect(mempoolOps.applied).toBeDefined();
+      expect(mempoolOps.applied[0].hash).toBe('opasNWPUpH411x8TNtjmf9cYfhnNsLKwC9s1AMkC9AgdeA38fdH');
+      done();
+    });
+  });
+
 });

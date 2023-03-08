@@ -968,6 +968,25 @@ export interface BlockResponse {
   operations: OperationEntry[][];
 }
 
+export interface MempoolPendingOperationsResponse {
+  applied: Omit<OperationEntry, 'protocol'>[];
+  refused: [
+    string,
+    OperationEntry
+  ];
+  outdated: [
+    string,
+    OperationEntry
+  ];
+  branch_refused: [
+    string,
+    OperationEntry
+  ];
+  // branch_refused
+  // branch_delayed
+  // unprocessed
+}
+
 export type BakingRightsArgumentsDelegate = string | string[];
 export type BakingRightsArgumentsCycle = number | number[];
 export type BakingRightsArgumentsLevel = number | number[];
