@@ -8,6 +8,7 @@ import {
   ConstantsResponseProto012,
   ConstantsResponseProto013,
   ConstantsResponseProto015,
+  ConstantsResponseProto016,
 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
@@ -705,7 +706,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     mumbainet(`successfully fetches all constants for mumbainet using ${rpc}`, async (done) => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto015 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
@@ -812,20 +813,20 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     alpha(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto015 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
         nonce_length: 32,
-        nonce_revelation_threshold: 64,
+        nonce_revelation_threshold: 32,
         max_anon_ops_per_block: 132,
         max_operation_data_length: 32768,
         max_proposals_per_delegate: 20,
         preserved_cycles: 3,
-        blocks_per_cycle: 256,
-        blocks_per_commitment: 32,
+        blocks_per_cycle: 128,
+        blocks_per_commitment: 16,
         hard_gas_limit_per_operation: new BigNumber(1040000),
-        hard_gas_limit_per_block: new BigNumber(2600000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(-1),
         seed_nonce_revelation_tip: new BigNumber(125000),
         origination_size: 257,
@@ -834,17 +835,17 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         quorum_min: 2000,
         quorum_max: 7000,
         min_proposal_quorum: 500,
-        liquidity_baking_subsidy: new BigNumber(666666),
+        liquidity_baking_subsidy: new BigNumber(2500000),
         liquidity_baking_toggle_ema_threshold: 100000,
         max_allowed_global_constants_depth: 10000,
         max_micheline_bytes_limit: 50000,
         max_micheline_node_count: 50000,
         michelson_maximum_type_size: 2001,
-        blocks_per_stake_snapshot: 128,
-        baking_reward_fixed_portion: new BigNumber(2666666),
-        baking_reward_bonus_per_slot: new BigNumber(1143),
-        endorsing_reward_per_slot: new BigNumber(761),
-        max_operations_time_to_live: 240,
+        blocks_per_stake_snapshot: 64,
+        baking_reward_fixed_portion: new BigNumber(10000000),
+        baking_reward_bonus_per_slot: new BigNumber(4286),
+        endorsing_reward_per_slot: new BigNumber(2857),
+        max_operations_time_to_live: 120,
         consensus_committee_size: 7000,
         consensus_threshold: 4667,
         minimal_participation_ratio: {
@@ -858,8 +859,8 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
           denominator: 2,
           numerator: 1,
         },
-        minimal_block_delay: new BigNumber(8),
-        delay_increment_per_round: new BigNumber(8),
+        minimal_block_delay: new BigNumber(15),
+        delay_increment_per_round: new BigNumber(15),
         dal_parametric: {
           attestation_lag: 2,
           attestation_threshold: 50,
@@ -878,11 +879,11 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         cache_stake_distribution_cycles: 8,
         cycles_per_voting_period: 1,
         smart_rollup_arith_pvm_enable: false,
-        smart_rollup_challenge_window_in_blocks: 80640,
-        smart_rollup_commitment_period_in_blocks: 60,
+        smart_rollup_challenge_window_in_blocks: 40,
+        smart_rollup_commitment_period_in_blocks: 20,
         smart_rollup_enable: true,
-        smart_rollup_max_active_outbox_levels: 80640,
-        smart_rollup_max_lookahead_in_blocks: 172800,
+        smart_rollup_max_active_outbox_levels: 20160,
+        smart_rollup_max_lookahead_in_blocks: 30000,
         smart_rollup_max_number_of_cemented_commitments: 5,
         smart_rollup_max_number_of_messages_per_level: "1000000",
         smart_rollup_max_number_of_parallel_games: 32,
@@ -892,7 +893,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         smart_rollup_number_of_sections_in_dissection: 32,
         smart_rollup_origination_size: 6314,
         smart_rollup_stake_amount: "32000000",
-        smart_rollup_timeout_period_in_blocks: 40320,
+        smart_rollup_timeout_period_in_blocks: 500,
         tx_rollup_commitment_bond: new BigNumber(10000000000),
         tx_rollup_cost_per_byte_ema_factor: 120,
         tx_rollup_enable: false,

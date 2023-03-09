@@ -46,10 +46,8 @@ Taquito currently supports the following versions of Node.js®:
 | v12 LTS          |    ❌      |
 | v14 LTS          |    ❌      |
 | v16.13.1         |    ✅      |
-| v16.13.2         |    ❌      |
 | v16 LTS/Gallium  |    ✅      |
 | 17.3.x           |    ✅      |
-| v17.5.x          |    ❌      |
 | v18 LTS/Hydrogen |    ✅      |
 
 While other versions often work, the above are what we officially support. YMMV!
@@ -121,8 +119,8 @@ You would like to make a contribution to Taquito? Wonderful! Please read on.
 *It is important to perform the following in the stated order*
 
 * Install `libudev-dev`, if developing on GNU/Linux:
-
-    `sudo apt-get install libudev-dev`
+    - For **Ubuntu** and other **Debian**-based distros: `sudo apt-get install libudev-dev`
+    - For **Fedora** and other **Redhat**-based distros: `sudo dnf install libudev-devel`
 
 *This package contains low-level files required to compile against `libudev-*`.*
 
@@ -138,15 +136,15 @@ You would like to make a contribution to Taquito? Wonderful! Please read on.
 
 Now that your prerequisites have been installed, run the following commands:
 ```sh
-$ npm clean-install
+npm clean-install
 ...
-$ npm run build
+npm run build
 ...
 ```
 
 If all goes well, the last step is to run the unit tests, which should all pass:
 ```sh
-$ npm run test
+npm run test
 ```
 
 ### Build GOTCHAS!
