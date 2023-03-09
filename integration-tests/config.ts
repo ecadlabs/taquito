@@ -101,7 +101,7 @@ const mumbainetEphemeral = {
   knownTzip1216Contract: process.env['TEZOS_MUMBAINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtMumbaii,
   knownSaplingContract: process.env['TEZOS_MUMBAINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtMumbaii,
   knownViewContract: process.env['TEZOS_MUMBAINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtMumbaii,
-  protocol: Protocols.PtMumbaii,
+  protocol: Protocols.PtMumbai2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/mumbainet',
@@ -169,7 +169,7 @@ const mumbainetSecretKey = {
   knownTzip1216Contract: process.env['TEZOS_MUMBAINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtMumbaii,
   knownSaplingContract: process.env['TEZOS_MUMBAINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtMumbaii,
   knownViewContract: process.env['TEZOS_MUMBAINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtMumbaii,
-  protocol: Protocols.PtMumbaii,
+  protocol: Protocols.PtMumbai2,
   signerConfig: defaultSecretKey
 };
 

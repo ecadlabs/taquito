@@ -5,7 +5,7 @@ import { addContract, lslContract, lsrContract, notContract, orContract, xorCont
 CONFIGS().forEach(({ lib, protocol, setup }) => {
   const Tezos = lib;
   const limanet = protocol === Protocols.PtLimaPtL ? test : test.skip;
-  const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
+  const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test origination of contract with instructions now supporting bytes`, () => {
 

@@ -3,7 +3,7 @@ import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup }) => {
   const Tezos = lib;
-  const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
+  const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
   
   describe(`Smart Rollup Add Messages operation test using: ${rpc}`, () => {
     beforeEach(async (done) => {
