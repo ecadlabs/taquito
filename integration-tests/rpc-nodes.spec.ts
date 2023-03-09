@@ -40,7 +40,7 @@ CONFIGS().forEach(
         const ticketCallOp = await ticketContract.methods.auto_call(1).send();
         await ticketCallOp.confirmation();
       } catch (e) {
-        console.log(JSON.stringify(e));
+        console.log('Failed to originate ticket contract', JSON.stringify(e));
       }
 
       done();

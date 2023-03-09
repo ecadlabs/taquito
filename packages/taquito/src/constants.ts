@@ -52,7 +52,7 @@ export const protocols = {
   '013': [Protocols.PtJakart2],
   '014': [Protocols.PtKathman],
   '015': [Protocols.PtLimaPtL],
-  '016': [Protocols.PtMumbaii, Protocols.PtMumbai2],
+  '016': [Protocols.PtMumbai2], // mumbai v2
   '017': [Protocols.ProtoALpha],
 };
 
