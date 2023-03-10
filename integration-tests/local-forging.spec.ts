@@ -7,7 +7,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
   const Tezos = new TezosToolkit(rpc);
 
   describe(`Test local forger: ${rpc}`, () => {
-    const mumbaiAndAlpha = protocol === Protocols.ProtoALpha || protocol == Protocols.PtMumbaii ? it : it.skip;
+    const mumbaiAndAlpha = protocol === Protocols.ProtoALpha || protocol == Protocols.PtMumbai2 ? it : it.skip;
     // all protocols
     commonCases.forEach(({ name, operation, expected }) => {
       it(`Verify that .forge for local forge will return same result as for network forge for rpc: ${name} (${rpc})`, async done => {

@@ -14,7 +14,7 @@ import {
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
   const Tezos = lib;
   const limanet = (protocol === Protocols.PtLimaPtL) ? test : test.skip;
-  const mumbainet = (protocol === Protocols.PtMumbaii) ? test : test.skip;
+  const mumbainet = (protocol === Protocols.PtMumbai2) ? test : test.skip;
   const alpha = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
@@ -771,11 +771,11 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         cache_stake_distribution_cycles: 8,
         cycles_per_voting_period: 1,
         smart_rollup_arith_pvm_enable: false,
-        smart_rollup_challenge_window_in_blocks: 80640,
-        smart_rollup_commitment_period_in_blocks: 60,
+        smart_rollup_challenge_window_in_blocks: 40,
+        smart_rollup_commitment_period_in_blocks: 20,
         smart_rollup_enable: true,
-        smart_rollup_max_active_outbox_levels: 80640,
-        smart_rollup_max_lookahead_in_blocks: 172800,
+        smart_rollup_max_active_outbox_levels: 20160,
+        smart_rollup_max_lookahead_in_blocks: 30000,
         smart_rollup_max_number_of_cemented_commitments: 5,
         smart_rollup_max_number_of_messages_per_level: "1000000",
         smart_rollup_max_number_of_parallel_games: 32,
@@ -785,7 +785,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         smart_rollup_number_of_sections_in_dissection: 32,
         smart_rollup_origination_size: 6314,
         smart_rollup_stake_amount: "10000000000",
-        smart_rollup_timeout_period_in_blocks: 40320,
+        smart_rollup_timeout_period_in_blocks: 500,
         tx_rollup_commitment_bond: new BigNumber(10000000000),
         tx_rollup_cost_per_byte_ema_factor: 120,
         tx_rollup_enable: false,
@@ -801,7 +801,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         tx_rollup_rejection_max_proof_size: 30000,
         tx_rollup_sunset_level: 10000000,
         tx_rollup_withdraw_period: 40000,
-        vdf_difficulty: new BigNumber('2000000000'),
+        vdf_difficulty: new BigNumber('10000000000'),
         zk_rollup_enable: false,
         zk_rollup_min_pending_to_process: 10,
         zk_rollup_origination_size: 4000,

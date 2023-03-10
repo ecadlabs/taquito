@@ -6,7 +6,7 @@ import { RpcClient, TicketTokenParams } from '@taquito/rpc';
 CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
   const Tezos1 = lib;
   const client = new RpcClient(rpc);
-  const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
+  const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
   let tezos1Pkh: string;
   let tezos2Pkh: string;
   let Tezos2: TezosToolkit;

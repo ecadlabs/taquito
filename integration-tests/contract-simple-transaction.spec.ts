@@ -3,7 +3,7 @@ import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
+  const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test simple transaction to tezos public key hashes: ${rpc}`, () => {
     beforeEach(async (done) => {

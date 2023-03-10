@@ -35,6 +35,7 @@ export enum Protocols {
   PtKathman = 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
   PtLimaPtL = 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   PtMumbaii = 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
+  PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -51,7 +52,7 @@ export const protocols = {
   '013': [Protocols.PtJakart2],
   '014': [Protocols.PtKathman],
   '015': [Protocols.PtLimaPtL],
-  '016': [Protocols.PtMumbaii],
+  '016': [Protocols.PtMumbai2], // mumbai v2
   '017': [Protocols.ProtoALpha],
 };
 
@@ -69,4 +70,5 @@ export enum ChainIds {
   KATHMANDUNET = 'NetXazhm4yetmff',
   LIMANET = 'NetXizpkH94bocH',
   MUMBAINET = 'NetXQw6nWSnrJ5t',
+  MUMBAINET2 = 'NetXgbcrNtXD2yA',
 }

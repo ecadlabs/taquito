@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
 
-    const mumbaiAndAlpha = protocol === Protocols.PtMumbaii || protocol === Protocols.ProtoALpha ? test : test.skip;
+    const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
 
     let ticketContract: DefaultContractType;
@@ -40,7 +40,7 @@ CONFIGS().forEach(
         const ticketCallOp = await ticketContract.methods.auto_call(1).send();
         await ticketCallOp.confirmation();
       } catch (e) {
-        console.log(JSON.stringify(e));
+        console.log('Failed to originate ticket contract', JSON.stringify(e));
       }
 
       done();
