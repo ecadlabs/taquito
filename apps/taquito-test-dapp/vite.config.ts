@@ -4,7 +4,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 // https://vitejs.dev/config/
 export default ({ command }) => {
-  // const isBuild = command === "build";
+  const isBuild = command === "build";
   return defineConfig({
     plugins: [svelte()],
     define: {
@@ -26,10 +26,10 @@ export default ({ command }) => {
         "@airgap/beacon-dapp": path.resolve(
           path.resolve(),
           // "./src/walletbeacon.dapp.min.js"
-          // `./node_modules/@airgap/beacon-dapp/dist/${
-          //   isBuild ? "esm" : "cjs"
-          // }/index.js`
-          `../../node_modules/@airgap/beacon-dapp/dist/walletbeacon.dapp.min.js`
+          `../../node_modules/@airgap/beacon-dapp/dist/${
+            isBuild ? "esm" : "cjs"
+          }/index.js`
+          // `../../node_modules/@airgap/beacon-dapp/dist/walletbeacon.dapp.min.js`
         ),
         // polyfills
         "readable-stream": "vite-compatible-readable-stream",
