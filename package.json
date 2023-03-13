@@ -27,6 +27,9 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!es-blst)"
+    ],
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/integration-tests/"

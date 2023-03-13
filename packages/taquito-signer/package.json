@@ -48,6 +48,9 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!es-blst)"
+    ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -78,7 +81,7 @@
     "@types/bn.js": "^5.1.1",
     "bip39": "^3.0.4",
     "elliptic": "^6.5.4",
-    "es-blst": "^1.0.0",
+    "es-blst": "^1.0.2",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
   },
