@@ -1,9 +1,10 @@
 import { CONFIGS } from './config';
-import { Protocols } from "@taquito/taquito";
+import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
+import { ticketCode, ticketStorage } from './data/code_with_ticket';
 
 CONFIGS().forEach(
   ({
@@ -16,18 +17,32 @@ CONFIGS().forEach(
     knownBigMapContract,
     knownSaplingContract,
     knownViewContract,
-    txRollupAddress,
   }) => {
     const Tezos = lib;
 
-    const limanetAndAlpha = protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha ? test : test.skip;
-    const Limanet = protocol === Protocols.PtLimaPtL ? it : it.skip;
-
-
+    const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
+
+    let ticketContract: DefaultContractType;
 
     beforeAll(async (done) => {
       await setup();
+
+      try {
+        // originate ticket contract
+        const ticketOp = await Tezos.contract.originate({
+          code: ticketCode,
+          storage: ticketStorage,
+        });
+        await ticketOp.confirmation();
+        ticketContract = await ticketOp.contract();
+        // contract call to issue tickets
+        const ticketCallOp = await ticketContract.methods.auto_call(1).send();
+        await ticketCallOp.confirmation();
+      } catch (e) {
+        console.log('Failed to originate ticket contract', JSON.stringify(e));
+      }
+
       done();
     });
 
@@ -412,27 +427,31 @@ CONFIGS().forEach(
           done();
         });
 
-        Limanet('Verify that rpcClient.getTxRollupInbox will access the inbox of a transaction rollup on lima', async (done) => {
-          const inbox = await rpcClient.getTxRollupInbox(txRollupAddress, '0');
-          expect(inbox).toBeDefined();
-          done();
-        });
-
-        Limanet('Verify that rpcClient.getTxRollupState will access the state of a rollup on lima', async (done) => {
-          const state = await rpcClient.getTxRollupState(txRollupAddress);
-          expect(state).toBeDefined();
-          done();
-        });
-
-        limanetAndAlpha('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async (done) => {
+        it('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async (done) => {
           const usedSpace = await rpcClient.getStorageUsedSpace(knownContract);
           expect(usedSpace).toBeDefined();
           done();
         });
 
-        limanetAndAlpha('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async (done) => {
+        it('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async (done) => {
           const paidSpace = await rpcClient.getStoragePaidSpace(knownContract);
           expect(paidSpace).toBeDefined();
+          done();
+        });
+
+        mumbaiAndAlpha('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async (done) => {
+          const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } } );
+          expect(ticketBalance).toBeDefined();
+          done();
+        });
+  
+        mumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
+          const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
+          expect(ticketBalances).toBeInstanceOf(Array)
+          expect(ticketBalances[0].ticketer).toBe(ticketContract.address)
+          expect(ticketBalances[0].content_type).toBeDefined()
+          expect(ticketBalances[0].content).toBeDefined()
+          expect(ticketBalances[0].amount).toBeDefined()
           done();
         });
       });

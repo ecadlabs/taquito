@@ -473,6 +473,41 @@ export interface OperationContentsIncreasePaidStorage {
   destination: string;
 }
 
+export interface OperationContentsSmartRollupOriginate {
+  kind: OpKind.SMART_ROLLUP_ORIGINATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pvm_kind: PVMKind;
+  kernel: string;
+  origination_proof: string;
+  parameters_ty: MichelsonV1Expression;
+}
+
+export interface OperationContentsSmartRollupAddMessages {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  message: string[];
+}
+
+export interface OperationContentsSmartRollupExecuteOutboxMessage {
+  kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  cemented_commitment: string;
+  output_proof: string;
+}
+
 export type OperationContents =
   | OperationContentsEndorsement
   | OperationContentsPreEndorsement
@@ -502,7 +537,10 @@ export type OperationContents =
   | OperationContentsTransferTicket
   | OperationContentsUpdateConsensusKey
   | OperationContentsDrainDelegate
-  | OperationContentsIncreasePaidStorage;
+  | OperationContentsIncreasePaidStorage
+  | OperationContentsSmartRollupOriginate
+  | OperationContentsSmartRollupAddMessages
+  | OperationContentsSmartRollupExecuteOutboxMessage;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -622,6 +660,24 @@ export interface OperationContentsAndResultMetadataUpdateConsensusKey {
 export interface OperationContentsAndResultMetadataDrainDelegate {
   balance_updates?: OperationMetadataBalanceUpdates[];
   allocated_destination_contract?: boolean;
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupOriginate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupOriginate;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupAddMessages {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupAddMessages;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupExecuteOutboxMessage;
+  internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultEndorsement {
@@ -914,6 +970,44 @@ export interface OperationContentsAndResultVdfRevelation {
   metadata: OperationContentsAndResultMetadata;
 }
 
+export interface OperationContentsAndResultSmartRollupOriginate {
+  kind: OpKind.SMART_ROLLUP_ORIGINATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pvm_kind: PVMKind;
+  kernel: string;
+  origination_proof: string;
+  parameters_ty: MichelsonV1Expression;
+  metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
+}
+
+export interface OperationContentsAndResultSmartRollupAddMessages {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  message: string[];
+  metadata: OperationContentsAndResultMetadataSmartRollupAddMessages;
+}
+
+export interface OperationContentsAndResultSmartRollupExecuteOutboxMessage {
+  kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  cemented_commitment: string;
+  output_proof: string;
+  metadata: OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -943,7 +1037,10 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultIncreasePaidStorage
   | OperationContentsAndResultUpdateConsensusKey
   | OperationContentsAndResultDrainDelegate
-  | OperationContentsAndResultVdfRevelation;
+  | OperationContentsAndResultVdfRevelation
+  | OperationContentsAndResultSmartRollupOriginate
+  | OperationContentsAndResultSmartRollupAddMessages
+  | OperationContentsAndResultSmartRollupExecuteOutboxMessage;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1088,6 +1185,21 @@ export interface PackDataParams {
   type: MichelsonV1Expression;
   gas?: BigNumber;
 }
+
+export interface TicketTokenParams {
+  ticketer: string;
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+}
+
+export interface TicketBalance {
+  ticketer: string;
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+  amount: string;
+}
+
+export type AllTicketBalances = TicketBalance[];
 
 export type HexString = string;
 
@@ -1265,7 +1377,7 @@ export interface OperationResultTxRollupRejection {
 export interface OperationResultTransferTicket {
   status: OperationResultStatusEnum;
   balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
+  ticket_updates?: TicketUpdates[];
   consumed_milligas?: string;
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
@@ -1280,7 +1392,6 @@ export interface OperationResultIncreasePaidStorage {
 
 export interface OperationResultUpdateConsensusKey {
   status: OperationResultStatusEnum;
-  consumed_gas?: string;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
 }
@@ -1307,6 +1418,31 @@ export interface OperationResultRegisterGlobalConstant {
   global_address?: string;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
+}
+
+export interface OperationResultSmartRollupOriginate {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  address: string;
+  genesis_commitment_hash: string;
+  consumed_milligas?: string;
+  size: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupAddMessages {
+  status: OperationResultStatusEnum;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupExecuteOutboxMessage {
+  status: OperationResultStatusEnum;
+  balance_updates: OperationBalanceUpdates;
+  ticket_updates: TicketUpdates[];
+  consumed_milligas?: string;
+  paid_storage_size_diff?: string;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface ContractBigMapDiffItem {
@@ -1541,6 +1677,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto016 &
   ConstantsResponseProto015 &
   ConstantsResponseProto014 &
   ConstantsResponseProto013 &
@@ -1581,6 +1718,42 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto016
+  extends Omit<
+    ConstantsResponseProto015,
+    | 'sc_max_wrapped_proof_binary_size'
+    | 'sc_rollup_challenge_window_in_blocks'
+    | 'sc_rollup_commitment_period_in_blocks'
+    | 'sc_rollup_enable'
+    | 'sc_rollup_max_active_outbox_levels'
+    | 'sc_rollup_max_lookahead_in_blocks'
+    | 'sc_rollup_max_number_of_cemented_commitments'
+    | 'sc_rollup_max_number_of_messages_per_commitment_period'
+    | 'sc_rollup_max_outbox_messages_per_level'
+    | 'sc_rollup_message_size_limit'
+    | 'sc_rollup_number_of_sections_in_dissection'
+    | 'sc_rollup_origination_size'
+    | 'sc_rollup_stake_amount'
+    | 'sc_rollup_timeout_period_in_blocks'
+  > {
+  smart_rollup_arith_pvm_enable: boolean;
+  smart_rollup_challenge_window_in_blocks: number;
+  smart_rollup_commitment_period_in_blocks: number;
+  smart_rollup_enable: boolean;
+  smart_rollup_max_active_outbox_levels: number;
+  smart_rollup_max_lookahead_in_blocks: number;
+  smart_rollup_max_number_of_cemented_commitments: number;
+  smart_rollup_max_number_of_messages_per_level: string;
+  smart_rollup_max_number_of_parallel_games: number;
+  smart_rollup_max_outbox_messages_per_level: number;
+  smart_rollup_max_wrapped_proof_binary_size: number;
+  smart_rollup_message_size_limit: number;
+  smart_rollup_number_of_sections_in_dissection: number;
+  smart_rollup_origination_size: number;
+  smart_rollup_stake_amount: string;
+  smart_rollup_timeout_period_in_blocks: number;
+}
 
 export interface ConstantsResponseProto015
   extends Omit<
@@ -1942,3 +2115,5 @@ export interface TxRollupInboxResponse {
   cumulated_size: number;
   merkle_root: string;
 }
+
+export type PVMKind = 'wasm_2_0_0' | 'arith';

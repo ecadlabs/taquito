@@ -97,6 +97,27 @@ export const extractRequiredLen = (value: Uint8ArrayConsumer, bytesLength = 4) =
   return value.consume(valueLen);
 };
 
+/**
+ * @description parse bytes into multiple items of an array
+ * @param value Uint8ArrayConsumer class of forged segment to parse
+ * @param bytesLength default 4 bytes for length of variable bytes
+ * @returns array of Uint8Array values for each array item
+ */
+export const stripLengthPrefixFromBytes = (
+  value: Uint8ArrayConsumer,
+  bytesLength = 4
+): Uint8Array[] => {
+  const ret: Uint8Array[] = [];
+  let values = value;
+  while (values.length()) {
+    const len = values.consume(bytesLength);
+    const valueLen = parseInt(Buffer.from(len).toString('hex'), 16);
+    ret.push(values.consume(valueLen));
+    values = values.slice(valueLen + bytesLength);
+  }
+  return ret;
+};
+
 export const bytesEncoder: Encoder<BytesValue> = (value) => {
   if (!/^([A-Fa-f0-9]{2})*$/.test(value.bytes)) {
     throw new InvalidHexStringError(value.bytes);

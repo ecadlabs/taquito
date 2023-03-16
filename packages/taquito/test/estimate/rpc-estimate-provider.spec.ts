@@ -23,10 +23,11 @@ import {
   TransferTicketNoReveal,
   TransferTicketWithReveal,
   updateConsensusKeyNoReveal,
+  smartRollupAddMessagesNoReveal,
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/utils';
 
 /**
  * RPCEstimateProvider test
@@ -567,6 +568,7 @@ describe('RPCEstimateProvider test signer', () => {
 
       done();
     });
+
     it('should throw an error with invalid source', async (done) => {
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHG',
@@ -587,6 +589,7 @@ describe('RPCEstimateProvider test signer', () => {
 
       done();
     });
+
     it('should throw an error with invalid destination', async (done) => {
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
@@ -602,7 +605,7 @@ describe('RPCEstimateProvider test signer', () => {
       };
 
       expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
-        InvalidContractAddressError
+        InvalidAddressError
       );
 
       done();
@@ -1708,6 +1711,39 @@ describe('RPCEstimateProvider test wallet', () => {
         await estimateProvider.txRollupSubmitBatch({
           rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
           content: '626c6f62',
+        });
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+      done();
+    });
+  });
+
+  describe('smartRollupAddMessages', () => {
+    it('should return the correct estimate for smartRollupAddMessages op', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(smartRollupAddMessagesNoReveal);
+      const estimate = await estimateProvider.smartRollupAddMessages({
+        message: [
+          '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+        ],
+      });
+
+      expect(estimate.gasLimit).toEqual(1103);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(313);
+      done();
+    });
+
+    it('should return an error if account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+
+      try {
+        await estimateProvider.smartRollupAddMessages({
+          message: [
+            '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+          ],
         });
       } catch (e) {
         expect(e.message).toEqual(

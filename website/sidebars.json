@@ -44,7 +44,8 @@
         "wallet_API",
         "wallets",
         "web3js_taquito",
-        "subscribe_event"
+        "subscribe_event",
+        "smart_rollups"
       ]
     },
     {

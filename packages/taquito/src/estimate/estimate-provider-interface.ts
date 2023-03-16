@@ -13,6 +13,7 @@ import {
   TransferTicketParams,
   IncreasePaidStorageParams,
   UpdateConsensusKeyParams,
+  SmartRollupAddMessagesParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 
@@ -128,4 +129,14 @@ export interface EstimationProvider {
    * @param Estimate
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Add Messages operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  smartRollupAddMessages(params: SmartRollupAddMessagesParams): Promise<Estimate>;
 }

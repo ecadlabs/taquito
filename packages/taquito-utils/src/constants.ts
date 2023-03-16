@@ -51,6 +51,9 @@ export enum Prefix {
   TXMR = 'txmr',
   TXRL = 'txM',
   TXW = 'txw',
+
+  SR1 = 'sr1',
+  SRC1 = 'src1',
 }
 
 export const prefix = {
@@ -105,6 +108,9 @@ export const prefix = {
   [Prefix.TXMR]: new Uint8Array([18, 7, 206, 87]),
   [Prefix.TXRL]: new Uint8Array([79, 146, 82]),
   [Prefix.TXW]: new Uint8Array([79, 150, 72]),
+
+  [Prefix.SR1]: new Uint8Array([6, 124, 117]),
+  [Prefix.SRC1]: new Uint8Array([17, 165, 134, 138]),
 };
 
 export const prefixLength: { [key: string]: number } = {
@@ -139,4 +145,7 @@ export const prefixLength: { [key: string]: number } = {
   [Prefix.TXMR]: 32,
   [Prefix.TXRL]: 32,
   [Prefix.TXW]: 32,
+
+  [Prefix.SR1]: 20,
+  [Prefix.SRC1]: 32,
 };

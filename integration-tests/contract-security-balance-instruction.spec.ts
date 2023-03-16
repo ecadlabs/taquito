@@ -1,4 +1,4 @@
-import { BigMapAbstraction, Protocols } from '@taquito/taquito';
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 // TC-008: Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code.
