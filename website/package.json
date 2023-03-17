@@ -36,7 +36,7 @@
     "@taquito/remote-signer": "file:../packages/taquito-remote-signer",
     "@taquito/rpc": "file:../packages/taquito-rpc",
     "@taquito/sapling": "file:../packages/taquito-sapling",
-    "@taquito/signer": "^16.0.0-beta-RC.0",
+    "@taquito/signer": "file:../packages/taquito-signer",
     "@taquito/taquito": "file:../packages/taquito",
     "@taquito/tzip12": "file:../packages/taquito-tzip12",
     "@taquito/tzip16": "file:../packages/taquito-tzip16",
