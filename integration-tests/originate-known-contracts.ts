@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { MichelsonMap, OriginateParams, Protocols, RpcForger, TezosToolkit } from '@taquito/taquito';
+import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito/taquito';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { char2Bytes } from '@taquito/utils';
@@ -133,28 +133,6 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
       code: codeViewsTopLevel,
       storage: 2
     });
-
-    // originate tx rollup
-    if (protocol === Protocols.ProtoALpha) {
-      fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const txRollupAddress${protocol.substring(0,9)} = "";\n`, (err: any) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    } else {
-      try {
-        const op = await tezos.contract.txRollupOriginate({});
-        await op.confirmation();
-        console.log(`txRollupAddress:  ${op.originatedRollup}`);
-        fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const txRollupAddress${protocol.substring(0,9)} = "${op.originatedRollup}";\n`, (err: any) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-      } catch (e: any) {
-        console.error(`Failed to originate tx rollup | Error: ${e.stack}`);
-      }
-    }
 
     console.log(`
 ################################################################################

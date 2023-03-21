@@ -58,6 +58,8 @@ import {
   TxRollupStateResponse,
   TxRollupInboxResponse,
   MempoolPendingOperationsResponse,
+  TicketTokenParams,
+  AllTicketBalances,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1140,4 +1142,46 @@ export class RpcClient implements RpcClientInterface {
         method: 'GET',
       });
     }
+
+   * @param contract implicit or originated address we want to retrieve ticket balance of
+   * @param ticket object to specify a ticket by ticketer, content type and content
+   * @param options contains generic configuration for rpc calls
+   * @description Access the contract's balance of ticket with specified ticketer, content type, and content.
+   * @example ticket { ticketer: 'address', content_type: { prim: "string" }, content: { string: 'ticket1' } }
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getTicketBalance(
+    contract: string,
+    ticket: TicketTokenParams,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string> {
+    return this.httpBackend.createRequest<string>(
+      {
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/ticket_balance`
+        ),
+        method: 'POST',
+      },
+      ticket
+    );
+  }
+
+  /**
+   *
+   * @param contract originated address we want to retrieve ticket balances of
+   * @param options contains generic configuration for rpc calls
+   * @description Access the complete list of tickets owned by the given contract by scanning the contract's storage.
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getAllTicketBalances(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<AllTicketBalances> {
+    return this.httpBackend.createRequest<AllTicketBalances>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
+      ),
+      method: 'GET',
+    });
+  }
 }

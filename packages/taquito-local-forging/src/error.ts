@@ -110,3 +110,47 @@ export class UnsupportedOperationError extends Error {
     super(`The operation '${op}' is unsupported`);
   }
 }
+
+/**
+ * @cateogry Error
+ * @description Error that indicates an unsupported pvm being passed or used
+ */
+export class UnsupportedPvmKindError extends Error {
+  public name = 'UnsupportedPvmKindError';
+  constructor(public pvm: string) {
+    super(`The Pvm "${pvm}" is not supported`);
+  }
+}
+
+/**
+ * @category Error
+ * @description Error that indicates an unsupported decoded pvm
+ */
+export class DecodePvmKindError extends Error {
+  public name = 'DecodePvmKindError';
+  constructor(public pvm: string) {
+    super(`The encoded Pvm ${pvm} is not supported`);
+  }
+}
+
+/**
+ * @category Error
+ * @description Error that indicates an invalid Smart Rollup Address (sr1)
+ */
+export class InvalidSmartRollupAddressError extends Error {
+  public name = 'InvalidSmartRollupContractAddress';
+  constructor(public address: string) {
+    super(`The Smart Rollup Contract Address: ${address} is invalid`);
+  }
+}
+
+/**
+ * @category Error
+ * @description Error that indicates an invalid Smart Rollup Contract Address (src1)
+ */
+export class InvalidSmartRollupContractAddressError extends Error {
+  public name = 'InvalidSmartRollupContractAddress';
+  constructor(public address: string) {
+    super(`The Smart Rollup Contract Address: ${address} is invalid`);
+  }
+}

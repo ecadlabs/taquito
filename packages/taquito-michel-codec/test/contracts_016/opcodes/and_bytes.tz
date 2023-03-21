@@ -1,0 +1,15 @@
+parameter unit;
+storage unit;
+code { DROP;
+
+       # 0x05 & 0x06 = 0x04
+       PUSH bytes 0x05; PUSH bytes 0x06; AND; PUSH bytes 0x04; ASSERT_CMPEQ;
+
+       # 0x0005 & 0x0106 = 0x0004, not 0x04
+       PUSH bytes 0x0005; PUSH bytes 0x0106; AND; PUSH bytes 0x0004; ASSERT_CMPEQ;
+
+       # Longer bytes is cut its prefix to have the same length as the shorter one
+       # 0x05 & 0x0106 = 0x05 & 0x06 = 0x04, not 0x0004
+       PUSH bytes 0x05; PUSH bytes 0x0106; AND; PUSH bytes 0x04; ASSERT_CMPEQ;
+
+       UNIT; NIL @noop operation; PAIR; };
