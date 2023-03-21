@@ -1065,6 +1065,32 @@ export interface BlockResponse {
   operations: OperationEntry[][];
 }
 
+export type MempoolPendingOperationsEntry =
+  Pick<OperationEntry, 'hash' | 'branch' | 'signature'>
+  & {
+    protocol?: string;
+    contents: OperationContents[];
+  };
+
+export interface MempoolPendingOperationsResponse {
+  applied: MempoolPendingOperationsEntry[];
+  refused: [
+    string, // hash
+    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
+  ][];
+  outdated: [
+    string,
+    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
+  ][];
+  branch_refused: [
+    string,
+    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
+  ][];
+  // branch_refused
+  // branch_delayed
+  // unprocessed
+}
+
 export type BakingRightsArgumentsDelegate = string | string[];
 export type BakingRightsArgumentsCycle = number | number[];
 export type BakingRightsArgumentsLevel = number | number[];
