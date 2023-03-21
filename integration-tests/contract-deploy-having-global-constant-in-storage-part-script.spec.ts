@@ -1,4 +1,4 @@
-import { Protocols, DefaultGlobalConstantsProvider } from '@taquito/taquito';
+import { DefaultGlobalConstantsProvider } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { voteSampleGlobalConstants } from './data/vote_contract_global_constant_storage';
 

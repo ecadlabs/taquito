@@ -29,6 +29,7 @@ import { saplingLiveCodeContract } from './data/sapling_live_code_contract';
 import { contractMap8pairs } from './data/contractMap8pairs';
 import { char2Bytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
+import BigNumber from 'bignumber.js';
 
 
 const provider = 'https://ghostnet.ecadinfra.com/';
@@ -102,8 +103,8 @@ async function checkBalances(users: string | any[]) {
   console.log('checking funds of users...');
   try {
     for (let i = 0; i < users.length; i++) {
-      const user_balance: any = await tezos.tz.getBalance(users[i]);
-      if (user_balance < min_balance) {
+      const user_balance = await tezos.tz.getBalance(users[i]);
+      if (user_balance < BigNumber(min_balance)) {
         low_balance.push(users[i]);
       }
       console.log(users[i], user_balance);

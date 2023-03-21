@@ -29,6 +29,7 @@ import {
   BallotParams,
   ProposalsParams,
   UpdateConsensusKeyParams,
+  SmartRollupAddMessagesParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -48,6 +49,7 @@ import {
   createBallotOperation,
   createProposalsOperation,
   createUpdateConsensusKeyOperation,
+  createSmartRollupAddMessagesOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -66,6 +68,7 @@ import { BallotOperation } from '../operations/ballot-operation';
 import { DrainDelegateOperation } from '../operations/drain-delegate-operation';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
+import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -414,11 +417,11 @@ export class RpcContractProvider
    * @param TransferTicketParams operation parameter
    */
   async transferTicket(params: TransferTicketParams) {
-    if (validateContractAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(params.destination);
+    if (validateAddress(params.destination) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, 'param destination');
     }
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+      throw new InvalidAddressError(params.source, 'param source');
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -688,6 +691,37 @@ export class RpcContractProvider
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new UpdateConsensusKeyOperation(
+      hash,
+      operation,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   * @description Adds messages to the rollup inbox that can be executed/claimed after it gets cemented
+   * @param SmartRollupAddMessagesParams
+   * @returns An operation handle with results from the RPC node
+   */
+  async smartRollupAddMessages(params: SmartRollupAddMessagesParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.smartRollupAddMessages.bind(this.estimator)
+    );
+    const operation = await createSmartRollupAddMessagesOperation({
+      ...params,
+      ...estimate,
+    });
+
+    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
+    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+
+    return new SmartRollupAddMessagesOperation(
       hash,
       operation,
       publicKeyHash,

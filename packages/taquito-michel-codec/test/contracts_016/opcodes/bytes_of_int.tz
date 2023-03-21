@@ -1,0 +1,25 @@
+parameter unit;
+storage unit;
+code { DROP;
+
+       PUSH int 0; BYTES; PUSH bytes 0x; ASSERT_CMPEQ;
+       PUSH int 1; BYTES; PUSH bytes 0x01; ASSERT_CMPEQ;
+       PUSH int 1193046; BYTES; PUSH bytes 0x123456; ASSERT_CMPEQ;
+
+       PUSH bytes 0x123456; INT; PUSH int 1193046; ASSERT_CMPEQ;
+       PUSH bytes 0x0000123456; INT; PUSH int 1193046; ASSERT_CMPEQ;
+       PUSH bytes 0x; INT; PUSH int 0; ASSERT_CMPEQ;
+       PUSH bytes 0x0000; INT; PUSH int 0; ASSERT_CMPEQ;
+
+       PUSH int -128; BYTES; PUSH bytes 0x80; ASSERT_CMPEQ;
+       PUSH int -129; BYTES; PUSH bytes 0xff7f; ASSERT_CMPEQ;
+       PUSH int -33024; BYTES; PUSH bytes 0xff7f00; ASSERT_CMPEQ;
+       PUSH int -4294967296; BYTES; PUSH bytes 0xff00000000; ASSERT_CMPEQ;
+
+       PUSH bytes 0x80; INT; PUSH int -128; ASSERT_CMPEQ;
+       PUSH bytes 0xff7f; INT; PUSH int -129; ASSERT_CMPEQ;
+       PUSH bytes 0xff7f00; INT; PUSH int -33024; ASSERT_CMPEQ;
+       PUSH bytes 0xffffff7f00; INT; PUSH int -33024; ASSERT_CMPEQ;
+       PUSH bytes 0xff00000000; INT; PUSH int -4294967296; ASSERT_CMPEQ;
+
+       UNIT; NIL operation; PAIR; }
