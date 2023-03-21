@@ -34,6 +34,7 @@ import {
   OperationContentsAndResultDrainDelegate,
   TxRollupProof,
   ConstantsResponseProto015,
+  MempoolPendingOperationsResponse,
   OperationContentsAndResultSmartRollupOriginate,
   OperationContentsAndResultSmartRollupAddMessages,
   OperationContentsAndResultSmartRollupExecuteOutboxMessage,
@@ -4282,6 +4283,100 @@ describe('RpcClient test', () => {
         'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
       );
 
+      done();
+    });
+  });
+
+  describe('getMempoolPendingOperations', () => {
+    it('should query the correct url and retrun mempool operations', async (done) => {
+      const response: MempoolPendingOperationsResponse = {
+        applied: [{
+          hash: 'opasNWPUpH411x8TNtjmf9cYfhnNsLKwC9s1AMkC9AgdeA38fdH',
+          branch: 'BM7jodocPv8q3gxjcFAhvGRU6RVnkqmEj9fgDsixz67nGX6PVeh',
+          contents: [
+            {
+              kind: OpKind.PREENDORSEMENT,
+              slot: 257,
+              level: 3208683,
+              round: 0,
+              block_payload_hash: 'vh379h1gqm33adBvDXv3F6WySR5QfK1SK7e4ADpTyH7smMkCAuo7'
+            }
+          ],
+          signature: 'sigXRuND9L66mK5qTvazJpuUv5b15aaMcMEKQcfpQdbK6JCB5cTajqgaBxi2bRs5aJjMjsJnWzQ7LRuAmgfLJTzNLwbNXfZ4'
+        },
+        {
+          hash: 'opBGgrDKiwLgh99yJR3vpsseAatZsWnpCd3EJ4zA2jqdhPzsYTd',
+          branch: 'BKyc9SUNpoybSYaAduoDbdW5FWa5RdqMyhU66do1ffFTDsUDUdT',
+          contents: [
+            {
+              kind: OpKind.TRANSACTION,
+              source: 'tz1fXne2svkg9JM9BxHxjPAyxNAF5DH6qENd',
+              fee: '534',
+              counter: '95674680',
+              gas_limit: '2484',
+              storage_limit: '350',
+              amount: '0',
+              destination: 'KT1WvzYHCNBvDSdwafTHv7nJ1dWmZ8GCYuuC',
+              parameters: {
+                entrypoint: 'retract_ask',
+                value: {
+                  int: '3178636'
+                }
+              }
+            }
+          ],
+          signature: "sigcbF2mhgXRUyyL9XcGLYNSZMQx6FcYc28X1DLkqYXFEsgQheNjwN7uzcrv2sTRFFeigjSZuBVVu3S7FmMcYpPC9oVk49wL"
+        }],
+        refused: [
+          [
+            'oneDmhYTW4V9UoVGuweyy5NbR9SQmkFGW9siTKcD1EpnJ1Nym8q',
+            {
+              protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
+              branch: 'BLfgeRyKd5B8atWXbZp7vL3aV6q3QGk5SDvcPbBK6i76MGuvs2z',
+              contents: [
+                {
+                  kind: OpKind.TRANSACTION,
+                  source: 'tz1YKS3pgkBDyoFfSjDCBiC9KYtkfwWfaBGZ',
+                  fee: '830',
+                  counter: '42578972',
+                  gas_limit: '20000',
+                  storage_limit: '553',
+                  amount: '1000000',
+                  destination: 'KT1AgsJw6EEwk56r9XoQHss9yAA7dNPZYvFH',
+                  parameters: {
+                    entrypoint: 'mint',
+                    value: {
+                      bytes: '6d303d302e313036266d313d302e363833266d323d302e373034266d333d302e353532266d343d302e393034'
+                    }
+                  }
+                }
+              ],
+              signature: 'sigS6YWsdzaG3KbBatyuwRYYUtEo4RajZZYCKC7MgMs9Dq4WaERKYKxdysKuyBFSJZLcMPa4dCqGiEzv9mN6UQCYuiENJVYZ',
+              error: [
+                {
+                  "kind": "permanent",
+                  "id": "proto.015-PtLimaPt.prefilter.fees_too_low"
+                }
+              ]
+            }
+          ]
+        ],
+        outdated: [],
+        branch_refused: [],
+      };
+
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(response));
+
+      const mempoolOps = await client.getMempoolPendingOperations();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/main/mempool/pending_operations`,
+      });
+
+      expect(mempoolOps).toBeDefined();
+      expect(mempoolOps.applied).toBeDefined();
+      expect(mempoolOps.applied[0].hash).toBe('opasNWPUpH411x8TNtjmf9cYfhnNsLKwC9s1AMkC9AgdeA38fdH');
       done();
     });
   });

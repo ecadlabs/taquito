@@ -57,6 +57,7 @@ import {
   VotingPeriodBlockResult,
   TxRollupStateResponse,
   TxRollupInboxResponse,
+  MempoolPendingOperationsResponse,
   TicketTokenParams,
   AllTicketBalances,
 } from './types';
@@ -1131,6 +1132,17 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
+   * @description Retrieve pending operations in Mempool
+   *
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/lima-mempool-openapi.json
+   */
+  async getMempoolPendingOperations(): Promise<MempoolPendingOperationsResponse> {
+      return this.httpBackend.createRequest<MempoolPendingOperationsResponse>({
+        url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
+        method: 'GET',
+      });
+    }
+
    * @param contract implicit or originated address we want to retrieve ticket balance of
    * @param ticket object to specify a ticket by ticketer, content type and content
    * @param options contains generic configuration for rpc calls
