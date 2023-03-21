@@ -533,6 +533,7 @@ export interface SmartRollupOriginateParams {
   kernel: string;
   parametersType: MichelsonV1Expression;
 }
+
 export interface SmartRollupOriginateParamsWithProof extends SmartRollupOriginateParams {
   originationProof: string;
 }

@@ -1114,5 +1114,53 @@ describe('PrepareProvider test', () => {
       });
       done();
     });
+
+    it('Should prepare smartRollupOriginate with reveal', async (done) => {
+      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
+
+      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
+
+      const prepared = await prepareProvider.smartRollupOriginate({
+        pvmKind: PvmKind.WASM2,
+        kernel: '123456789',
+        parametersType: {
+          prim: 'bytes',
+        },
+      });
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '391',
+              public_key: 'test_pub_key',
+              source: 'test_public_key_hash',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '1',
+            },
+            {
+              kind: 'smart_rollup_originate',
+              pvm_kind: 'wasm_2_0_0',
+              kernel: '123456789',
+              origination_proof: '987654321',
+              parameters_ty: {
+                prim: 'bytes',
+              },
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '2',
+              source: 'test_public_key_hash',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+      done();
+    });
   });
 });
