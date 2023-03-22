@@ -41,7 +41,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         await op2.confirmation();
 
       } catch (error: any) {
-        expect(error.message).toContain('mempool already contains a conflicting operation');
+        expect(error.message).toContain('Only one manager operation per manager per block allowed');
       }
       done();
     });
