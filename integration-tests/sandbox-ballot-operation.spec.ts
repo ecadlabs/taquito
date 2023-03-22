@@ -1,8 +1,8 @@
 import { CONFIGS, sleep } from './config';
 
-CONFIGS().forEach(async ({ lib, protocol, setup, rpc }) => {
+CONFIGS().forEach(async ({ lib, protocol, setup }) => {
   const Tezos = lib;
-  const flextesanet = rpc === 'http://localhost:20000' ? it : it.skip;
+  // const flextesanet = rpc === 'http://localhost:20000' ? it : it.skip;
 
   describe(`Ballot operation test (${protocol})`, () => {
     beforeAll(async (done) => {
@@ -23,7 +23,8 @@ CONFIGS().forEach(async ({ lib, protocol, setup, rpc }) => {
       done();
     });
 
-    flextesanet('Submit a proposal and inject ballot vote', async (done) => {
+    // TODO: Fix timing issues in regards to different block times in different sandboxes
+    it.skip('Submit a proposal and inject ballot vote', async (done) => {
       const period = await Tezos.rpc.getCurrentPeriod();
 
       if (period.voting_period.kind === 'proposal') {
