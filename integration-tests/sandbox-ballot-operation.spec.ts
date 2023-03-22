@@ -2,7 +2,6 @@ import { CONFIGS, sleep } from './config';
 
 CONFIGS().forEach(async ({ lib, protocol, setup }) => {
   const Tezos = lib;
-  // const flextesanet = rpc === 'http://localhost:20000' ? it : it.skip;
 
   describe(`Ballot operation test (${protocol})`, () => {
     beforeAll(async (done) => {
