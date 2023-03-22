@@ -148,8 +148,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     content: PreapplyResponse['contents'][0],
     size: number,
     costPerByte: BigNumber,
-    tx_rollup_origination_size: number,
-    _smart_rollup_origination_size: number //figure out of will be removed or  accurate
+    tx_rollup_origination_size: number
   ): EstimateProperties {
     const operationResults = flattenOperationResult({ contents: [content] });
     let totalMilligas = 0;
@@ -209,7 +208,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     };
 
     const { opResponse } = await this.simulate(operation);
-    const { cost_per_byte, tx_rollup_origination_size, smart_rollup_origination_size } = constants;
+    const { cost_per_byte, tx_rollup_origination_size } = constants;
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
     // Fail early in case of errors
@@ -231,8 +230,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         // TODO: Calculate a specific opSize for each operation.
         x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : opbytes.length / 2 / numberOfOps,
         cost_per_byte,
-        tx_rollup_origination_size ?? 0,
-        smart_rollup_origination_size ?? 0
+        tx_rollup_origination_size ?? 0
       );
     });
   }
