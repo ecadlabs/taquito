@@ -1065,32 +1065,6 @@ export interface BlockResponse {
   operations: OperationEntry[][];
 }
 
-export type MempoolPendingOperationsEntry =
-  Pick<OperationEntry, 'hash' | 'branch' | 'signature'>
-  & {
-    protocol?: string;
-    contents: OperationContents[];
-  };
-
-export interface MempoolPendingOperationsResponse {
-  applied: MempoolPendingOperationsEntry[];
-  refused: [
-    string, // hash
-    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
-  ][];
-  outdated: [
-    string,
-    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
-  ][];
-  branch_refused: [
-    string,
-    Omit<MempoolPendingOperationsEntry, 'hash'> & { error?: TezosGenericOperationError[] }
-  ][];
-  // branch_refused
-  // branch_delayed
-  // unprocessed
-}
-
 export type BakingRightsArgumentsDelegate = string | string[];
 export type BakingRightsArgumentsCycle = number | number[];
 export type BakingRightsArgumentsLevel = number | number[];
@@ -2143,3 +2117,29 @@ export interface TxRollupInboxResponse {
 }
 
 export type PVMKind = 'wasm_2_0_0' | 'arith';
+
+export interface PendingOperationsQuery {
+  version?: '1';
+  applied?: boolean;
+  refused?: boolean;
+  outdated?: boolean;
+  branchRefused?: boolean;
+  branchDelayed?: boolean;
+  validationPass?: '0' | '1' | '2' | '3';
+}
+
+type failedProcessedOperation = Pick<
+  OperationEntry,
+  'hash' | 'protocol' | 'branch' | 'contents' | 'signature'
+> & {
+  error: TezosGenericOperationError[];
+};
+
+export interface PendingOperations {
+  applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
+  refused: failedProcessedOperation[];
+  outdated: failedProcessedOperation[];
+  branch_refused: failedProcessedOperation[];
+  branch_delayed: failedProcessedOperation[];
+  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
+}

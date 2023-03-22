@@ -57,9 +57,10 @@ import {
   VotingPeriodBlockResult,
   TxRollupStateResponse,
   TxRollupInboxResponse,
-  MempoolPendingOperationsResponse,
   TicketTokenParams,
   AllTicketBalances,
+  PendingOperationsQuery,
+  PendingOperations,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1132,17 +1133,6 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @description Retrieve pending operations in Mempool
-   *
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/lima-mempool-openapi.json
-   */
-  async getMempoolPendingOperations(): Promise<MempoolPendingOperationsResponse> {
-      return this.httpBackend.createRequest<MempoolPendingOperationsResponse>({
-        url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
-        method: 'GET',
-      });
-    }
-
    * @param contract implicit or originated address we want to retrieve ticket balance of
    * @param ticket object to specify a ticket by ticketer, content type and content
    * @param options contains generic configuration for rpc calls
@@ -1182,6 +1172,20 @@ export class RpcClient implements RpcClientInterface {
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
       ),
       method: 'GET',
+    });
+  }
+
+  /**
+   * @description List the prevalidated operations in mempool
+   * @param queryParam has 5 optional properties. We support version 1 with new encoding as version 0 will be deprecated soon. The rest of the properties is to filter pending operatoins response
+   * @default queryParam { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
+   * @see https://tezos.gitlab.io/CHANGES.html?highlight=pending_operations#id4
+   */
+  async getPendingOperations(args: PendingOperationsQuery = {}): Promise<PendingOperations> {
+    return this.httpBackend.createRequest<PendingOperations>({
+      url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
+      method: 'GET',
+      query: args,
     });
   }
 }
