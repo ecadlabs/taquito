@@ -5404,6 +5404,109 @@ export const ticketBalancesResponse = [
   },
 ];
 
+export const pendingOperationsResponse = {
+  applied: [
+    {
+      hash: 'onjTGvtnaudo1o5sfTe51XEumhsENAhM7oMzhvsSXzZFXNcj1LE',
+      branch: 'BLvb5tzmepwJkxhRYCnnQeYXqRWhUvdmx4NbpVK9w4nkM6tdXEr',
+      contents: [
+        {
+          kind: 'preendorsement',
+          slot: 14,
+          level: 128135,
+          round: 0,
+          block_payload_hash: 'vh3Tk5KEy88s4scEbJM1n6vzYdYSn3PNmsH5uSP4zoLccNVyXAZd',
+        },
+      ],
+      signature:
+        'sigNWXUeYUraaGi1GrxjrqKTfk7KF8xRG4pABA1qeZi8bQWRmcSmDWD6BehCNC1qNDMgQkf3JdEFHKuomToBza2iGucg9SuC',
+    },
+  ],
+  refused: [
+    {
+      hash: 'ongFJ3rNnTwratXX2mTHN8MLww2rG11BeJwiPGxr2z2KdESZKKG',
+      protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+      branch: 'BLf8hVJk9kK539kTKQ9PHFjtet3nJuAKYGqCqvFuHTZQWavrP7u',
+      contents: [
+        {
+          kind: 'reveal',
+          source: 'tz2GeK37F1ThiGwamtxUykBuWqamWc7UcmHN',
+          fee: '374',
+          counter: '54971',
+          gas_limit: '1100',
+          storage_limit: '0',
+          public_key: 'sppk7c9pb7WyLmaw2JwHyH2PYeXcmALCnGwHzVCTfzx33XMV8bW3aT7',
+        },
+        {
+          kind: 'origination',
+          source: 'tz2GeK37F1ThiGwamtxUykBuWqamWc7UcmHN',
+          fee: '544',
+          counter: '54972',
+          gas_limit: '600000',
+          storage_limit: '319',
+          balance: '0',
+          script: {
+            code: [
+              { prim: 'parameter', args: [{ prim: 'string' }] },
+              { prim: 'storage', args: [{ prim: 'string' }] },
+              {
+                prim: 'code',
+                args: [
+                  [
+                    { prim: 'CAR' },
+                    { prim: 'PUSH', args: [{ prim: 'string' }, { string: 'Hello ' }] },
+                    { prim: 'CONCAT' },
+                    { prim: 'NIL', args: [{ prim: 'operation' }] },
+                    { prim: 'PAIR' },
+                  ],
+                ],
+              },
+            ],
+            storage: { string: 'test' },
+          },
+        },
+      ],
+      signature:
+        'sigaD9KjwZXtfhUEpxGirsvNWyScLKQVFQM9kkFB4sTgixfwnJD2D9wt2Km1CM5o2ExGGRTZGLxAr1dZDESurwJusiuHKQvZ',
+      error: [
+        {
+          kind: 'permanent',
+          id: 'proto.016-PtMumbai.prefilter.fees_too_low',
+        },
+      ],
+    },
+  ],
+  outdated: [
+    {
+      hash: 'oneJE697j4ZNCnhoEsbyPyj4Y5MmyQh4xX6FU3HEGzKnaJkdL5B',
+      protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+      branch: 'BLf4UgJixDsXcRnirtBzfst8uzzkcpbBjXQuMmzwwJwD75gh3GU',
+      contents: [
+        {
+          kind: 'preendorsement',
+          slot: 15,
+          level: 128095,
+          round: 0,
+          block_payload_hash: 'vh3Xu8Y1EQDMGFYaLXiau3sLukEWGjs3zHW7jynH1m7RaLTqXJpw',
+        },
+      ],
+      signature:
+        'sigsVPdVAmQZrCeucDX5QNjz3H4jNWGfVEZRhjXBGg8ZSxWRK2cGdgUCdyDF47DctaJXqAbMwMHB24En9qWj4mEaTwWMC4SN',
+      error: [
+        {
+          kind: 'Preendorsement',
+          id: 'proto.016-PtMumbai.validate.consensus_operation_for_old_level',
+          expected: 128096,
+          provided: 128095,
+        },
+      ],
+    },
+  ],
+  branch_refused: [],
+  branch_dealyed: [],
+  unprocessed: [],
+};
+
 export const ticketUpdatesSample = {
   protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   chain_id: 'NetXizpkH94bocH',
