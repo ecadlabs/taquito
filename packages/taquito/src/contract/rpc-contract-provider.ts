@@ -736,7 +736,7 @@ export class RpcContractProvider
 
   /**
    * @description Creates a smart rollup originate operation
-   * @param SmartRollupOrigianteParams
+   * @param SmartRollupOriginateParams
    * @returns An operation handle with results from the RPC node
    */
   async smartRollupOriginate(params: SmartRollupOriginateParams) {
