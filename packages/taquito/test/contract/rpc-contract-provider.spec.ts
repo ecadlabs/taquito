@@ -86,6 +86,7 @@ describe('RpcContractProvider test', () => {
     increasePaidStorage: jest.Mock<any, any>;
     updateConsensusKey: jest.Mock<any, any>;
     smartRollupAddMessages: jest.Mock<any, any>;
+    contractCall: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -143,6 +144,7 @@ describe('RpcContractProvider test', () => {
       increasePaidStorage: jest.fn(),
       updateConsensusKey: jest.fn(),
       smartRollupAddMessages: jest.fn(),
+      contractCall: jest.fn(),
     };
 
     // Required for operations confirmation polling
