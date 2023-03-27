@@ -1,7 +1,7 @@
-import { Protocols } from "@taquito/taquito";
-import { CONFIGS } from "./config";
+import { Protocols } from '@taquito/taquito';
+import { CONFIGS } from './config';
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol, }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const limanet = protocol === Protocols.PtLimaPtL && !(rpc === 'http://localhost:20000') ? test : test.skip;
   const flextesaLima = protocol === Protocols.PtLimaPtL && rpc === 'http://localhost:20000' ? test : test.skip;

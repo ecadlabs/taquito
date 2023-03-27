@@ -167,8 +167,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           ? Number(result.storage_size) || 0
           : 0;
       totalStorage += 'originated_rollup' in result ? tx_rollup_origination_size : 0;
-      totalStorage +=
-        content.kind === 'smart_rollup_originate' ? Number(operationResults[0].size) : 0;
+      totalStorage += 'genesis_commitment_hash' in result ? Number(result.size) : 0;
     });
 
     if (isOpWithFee(content)) {

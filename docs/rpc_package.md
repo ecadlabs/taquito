@@ -115,7 +115,6 @@ You can obtain the `Origination Proof` for the `smart_rollup_originate` batch op
 
 This function will obtain the proof needed for the `smart_rollup_originate` batch method
 ```js
-//get originationProof
 const originationProof = await client.getOriginationProof({
   kernel: 'your kernel',
   kind: 'PVM kind'

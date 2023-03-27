@@ -1176,8 +1176,8 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param params contains the kind (PVM) and kernel to generate the origination proof from
-   * @description rpc call to generate the origination proof needed for the smart rollup originate operation
+   * @param params contains the PVM kind and kernel to generate the origination proof from
+   * @description rpc call to generate the origination proof needed for a smart rollup originate operation
    * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
    */
   async getOriginationProof(
