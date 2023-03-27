@@ -78,7 +78,7 @@ jobs:
           - protocol: Mumbai
             testnet: mumbainet
             testnet_uppercase: MUMBAINET
-            flextesa_docker_image: oxheadalpha/flextesa:20230203
+            flextesa_docker_image: oxheadalpha/flextesa:20230313
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
