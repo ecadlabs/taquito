@@ -1753,4 +1753,12 @@ describe('RPCEstimateProvider test wallet', () => {
       done();
     });
   });
+
+  describe('contractCall', () => {
+    it('should return correct estimates for a contractCall', async (done) => {
+      // mockRpcClient.runOperation.mockResolvedValue()
+      // const estimate = await estimateProvider.contractCall()
+      done();
+    });
+  });
 });

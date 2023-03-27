@@ -48,6 +48,7 @@ import {
   InvalidOperationKindError,
 } from '@taquito/utils';
 import { RevealEstimateError } from './error';
+import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
 
 interface Limits {
   fee?: number;
@@ -708,6 +709,43 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const op = await createSmartRollupAddMessagesOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for contract call
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the contract call
+   *
+   * @param Estimate
+   */
+  async contractCall(
+    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+  ) {
+    const params = contractMethod.toTransferParams();
+    const { fee, storageLimit, gasLimit, ...rest } = params;
+
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createTransferOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
