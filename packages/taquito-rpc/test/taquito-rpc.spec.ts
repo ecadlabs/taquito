@@ -39,6 +39,7 @@ import {
   OperationContentsAndResultSmartRollupExecuteOutboxMessage,
   RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
+  PendingOperations,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -4417,7 +4418,7 @@ describe('RpcClient test', () => {
   describe('getPendingOperations', () => {
     it('should query the correct url and retrun pending operations in mempool', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
-      const response = await client.getPendingOperations();
+      const response: PendingOperations = await client.getPendingOperations();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',

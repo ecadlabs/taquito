@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
 import { DefaultContractType, Protocols } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperations } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -456,7 +456,7 @@ CONFIGS().forEach(
         });
 
         it('Verify that rpcClient.getPendingOperations will retrieve the pending operations in mempool', async (done) => {
-          const pendingOperations = await rpcClient.getPendingOperations();
+          const pendingOperations: PendingOperations = await rpcClient.getPendingOperations();
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.applied).toBeInstanceOf(Array);
           expect(pendingOperations.refused).toBeInstanceOf(Array);
