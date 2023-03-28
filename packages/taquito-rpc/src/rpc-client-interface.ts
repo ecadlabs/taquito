@@ -46,6 +46,7 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
+  OriginationProofParams,
 } from './types';
 
 export interface RPCOptions {
@@ -127,6 +128,7 @@ export interface RpcClientInterface {
     options?: RPCOptions
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
+  getOriginationProof(params: OriginationProofParams, options?: RPCOptions): Promise<string>;
 }
 
 export enum RPCMethodName {
@@ -169,4 +171,5 @@ export enum RPCMethodName {
   GET_STORAGE_PAID_SPACE = 'getStoragePaidSpace',
   GET_TICKET_BALANCE = 'getTicketBalance',
   GET_ALL_TICKET_BALANCES = 'getAllTicketBalances',
+  GET_ORIGINATION_PROOF = 'getOriginationProof',
 }
