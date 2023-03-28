@@ -9,7 +9,7 @@ Rollups are a permissionless scaling implementation for the Tezos blockchain. Th
 
 In Taquito, we have implemented some of the operations included in Mumbai protocol update in regards to smart rollups. In this document, we will go through the operations we support. We also won't go too detailed on how rollups work behind the scenes, if you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html).
 
-## Smart Rollup Originate
+## `smart_rollup_originate`
 
 The `Smart Rollup Originate` operation allows a user to originate a smart rollup. Users must pass a `kernel`, `pvmKind`, and `parameterType`.
 
@@ -29,6 +29,7 @@ await op.confirmation();
 - `pvmKind` at this time the only PVM supported is `wasm_2_0_0`
 - `kernel` is passed as a hexadecimal string examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/mumbai/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
 - `parametersType` is a MichelsonV1Expression to define the type. 
+-  **Please note** `originationProof` is needed origination in `batch` which can be obtained with the `rpc.getOriginationProof({kernel, kind: PVMKind})`
 
 For more information in regards to Smart Rollup Origination please refer to the this [link](https://tezos.gitlab.io/mumbai/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
 
