@@ -47,7 +47,7 @@ import {
   TicketTokenParams,
   AllTicketBalances,
   PendingOperations,
-  PendingOperationsQuery,
+  PendingOperationsQueryArguments,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -323,7 +323,7 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
   }
-  async getPendingOperations(args: PendingOperationsQuery): Promise<PendingOperations> {
+  async getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperations> {
     return this.rpc.getPendingOperations(args);
   }
 }

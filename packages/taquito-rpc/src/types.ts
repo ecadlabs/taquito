@@ -2118,7 +2118,7 @@ export interface TxRollupInboxResponse {
 
 export type PVMKind = 'wasm_2_0_0' | 'arith';
 
-export interface PendingOperationsQuery {
+export interface PendingOperationsQueryArguments {
   version?: '1';
   applied?: boolean;
   refused?: boolean;

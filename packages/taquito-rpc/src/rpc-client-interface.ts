@@ -47,7 +47,7 @@ import {
   TicketTokenParams,
   AllTicketBalances,
   PendingOperations,
-  PendingOperationsQuery,
+  PendingOperationsQueryArguments,
 } from './types';
 
 export interface RPCOptions {
@@ -129,7 +129,7 @@ export interface RpcClientInterface {
     options?: RPCOptions
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
-  getPendingOperations(args: PendingOperationsQuery): Promise<PendingOperations>;
+  getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperations>;
 }
 
 export enum RPCMethodName {
