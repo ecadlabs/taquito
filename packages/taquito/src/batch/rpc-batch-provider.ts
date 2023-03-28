@@ -155,7 +155,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to register a global constant to the batch
+   * @description Add a register a global constant operation to the batch
    *
    * @param params RegisterGlobalConstant operation parameter
    */
@@ -166,7 +166,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to increase paid storage to the batch
+   * @description Add an increase paid storage operation to the batch
    *
    * @param params IncreasePaidStorage operation parameter
    */
@@ -177,7 +177,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to originate a rollup to the batch
+   * @description Add a tx rollup origination operation to the batch
    *
    * @param params Rollup origination operation parameter
    */
@@ -188,7 +188,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to add messages to a smart rollup
+   * @description Add a smart rollup add messages operation to the batch
    *
    * @param params Rollup origination operation parameter
    */
@@ -199,7 +199,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to originate a smart rollup to batch
+   * @description Add a smart rollup originate operation to the batch
    *
    * @param params Smart Rollup Originate operation parameter
    */
@@ -210,7 +210,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to submit a tx rollup batch to the batch
+   * @description Add a tx rollup batch operation to the batch
    *
    * @param params Tx rollup batch operation parameter
    */
