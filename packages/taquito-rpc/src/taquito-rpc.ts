@@ -61,6 +61,7 @@ import {
   AllTicketBalances,
   PendingOperationsQueryArguments,
   PendingOperations,
+  OriginationProofParams,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1189,5 +1190,26 @@ export class RpcClient implements RpcClientInterface {
       method: 'GET',
       query: args,
     });
+  }
+
+  /**
+   *
+   * @param params contains the PVM kind and kernel to generate the origination proof from
+   * @description rpc call to generate the origination proof needed for a smart rollup originate operation
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getOriginationProof(
+    params: OriginationProofParams,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string> {
+    return this.httpBackend.createRequest<string>(
+      {
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/smart_rollups/all/origination_proof`
+        ),
+        method: 'POST',
+      },
+      params
+    );
   }
 }

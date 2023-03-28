@@ -14,6 +14,7 @@ import {
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
   createSmartRollupAddMessagesOperation,
+  createSmartRollupOriginateOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import { OperationEmitter } from '../operations/operation-emitter';
@@ -33,6 +34,7 @@ import {
   TransferTicketParams,
   IncreasePaidStorageParams,
   SmartRollupAddMessagesParams,
+  SmartRollupOriginateParamsWithProof,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -153,7 +155,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to register a global constant to the batch
+   * @description Add a register a global constant operation to the batch
    *
    * @param params RegisterGlobalConstant operation parameter
    */
@@ -164,7 +166,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to increase paid storage to the batch
+   * @description Add an increase paid storage operation to the batch
    *
    * @param params IncreasePaidStorage operation parameter
    */
@@ -175,7 +177,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to originate a rollup to the batch
+   * @description Add a tx rollup origination operation to the batch
    *
    * @param params Rollup origination operation parameter
    */
@@ -186,7 +188,7 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to add messages to a smart rollup
+   * @description Add a smart rollup add messages operation to the batch
    *
    * @param params Rollup origination operation parameter
    */
@@ -197,7 +199,18 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add an operation to submit a tx rollup batch to the batch
+   * @description Add a smart rollup originate operation to the batch
+   *
+   * @param params Smart Rollup Originate operation parameter
+   */
+  withSmartRollupOriginate(params: SmartRollupOriginateParamsWithProof) {
+    this.operations.push({ kind: OpKind.SMART_ROLLUP_ORIGINATE, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Add a tx rollup batch operation to the batch
    *
    * @param params Tx rollup batch operation parameter
    */
@@ -250,6 +263,11 @@ export class OperationBatch extends OperationEmitter {
         return createSmartRollupAddMessagesOperation({
           ...param,
         });
+      case OpKind.SMART_ROLLUP_ORIGINATE: {
+        return createSmartRollupOriginateOperation({
+          ...param,
+        });
+      }
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }
@@ -293,6 +311,9 @@ export class OperationBatch extends OperationEmitter {
           break;
         case OpKind.SMART_ROLLUP_ADD_MESSAGES:
           this.withSmartRollupAddMessages(param);
+          break;
+        case OpKind.SMART_ROLLUP_ORIGINATE:
+          this.withSmartRollupOriginate(param);
           break;
         default:
           throw new InvalidOperationKindError((param as any).kind);

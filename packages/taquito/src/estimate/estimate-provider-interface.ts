@@ -14,6 +14,7 @@ import {
   IncreasePaidStorageParams,
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
+  SmartRollupOriginateParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
@@ -152,4 +153,13 @@ export interface EstimationProvider {
   contractCall(
     contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
   ): Promise<Estimate>;
+
+  /**
+   * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Originate operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param SmartRollupOrigianteParams
+   */
+    smartRollupOriginate(params: SmartRollupOriginateParams): Promise<Estimate>;
 }
