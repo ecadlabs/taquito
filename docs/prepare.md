@@ -86,3 +86,28 @@ const contractAbs = await Tezos.contract.at(contractAddress);
 const method = await contractAbs.methods.increment(1);
 const prepared = await Tezos.prepare.contractCall(method);
 ```
+
+### preparing PreapplyParams
+Users are able to utilize the `PrepareProvider` to modify the results of a `PreparedOperation` to the `PreapplyParams` for the `preapplyOperation` method
+```typescript
+// prepared transfer of tez from one account to another
+// omitted for brevity
+const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: pkhOfReceiver  });
+const preapplyParams = await Tezos.prepare.toPreapply(preparedTransfer)
+const preapply = await Tezos.rpc.preapplyOperations(preapplyParams);
+```
+
+## preparing ForgeParams
+Users are able to utilize the `PrepareProvider` to modify the results of a `PreparedOperation` to the `PreapplyParams` for the `preapplyOperation` method
+
+`toForge` is a method that will return the structured params for the `forge` method
+
+it will take in the `PreparedOperation` and return the `ForgeParams`.
+
+### Example 
+
+```ts
+  const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: receivingPKH })
+  const params = Tezos.prepare.toForge(preparedTransfer)
+  const forgedBytes = await forger.forge(params)
+```

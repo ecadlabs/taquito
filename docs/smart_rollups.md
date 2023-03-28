@@ -9,6 +9,7 @@ Rollups are a permissionless scaling implementation for the Tezos blockchain. Th
 
 In Taquito, we have implemented some of the operations included in Mumbai protocol update in regards to smart rollups. In this document, we will go through the operations we support. We also won't go too detailed on how rollups work behind the scenes, if you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html).
 
+
 ## `smart_rollup_originate`
 
 The `Smart Rollup Originate` operation allows a user to originate a smart rollup. Users must pass a `kernel`, `pvmKind`, and `parameterType`.

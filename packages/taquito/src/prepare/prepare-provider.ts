@@ -3,6 +3,7 @@ import {
   OperationContents,
   OpKind,
   VotingPeriodBlockResult,
+  PreapplyParams,
 } from '@taquito/rpc';
 import {
   DelegateParams,
@@ -56,6 +57,7 @@ import {
 } from '../contract';
 import { Estimate } from '../estimate';
 import { OperationBatch } from '../batch/rpc-batch-provider';
+import { ForgeParams } from '@taquito/local-forging';
 
 /**
  * @description PrepareProvider is a utility class to output the prepared format of an operation
@@ -932,6 +934,36 @@ export class PrepareProvider implements PreparationProvider {
         protocol,
       },
       counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to covert a PreparedOperation to the params needed for the preapplyOperation method
+   * @param prepared a Prepared Operation
+   * @returns a PreapplyParams object
+   */
+  async toPreapply(prepared: PreparedOperation): Promise<PreapplyParams> {
+    const {
+      opOb: { contents, branch, protocol },
+    } = prepared;
+    const forgeParams = this.toForge(prepared);
+    const forged = await this.context.forger.forge(forgeParams);
+    const sig = await this.context.signer.sign(forged, new Uint8Array([3]));
+
+    return [{ contents, branch, protocol, signature: sig.prefixSig }];
+  }
+
+  /**
+   *
+   * @description Method to convert a PreparedOperation to the params needed for forging
+   * @param param a Prepared Operation
+   * @returns a ForgeParams object
+   */
+  toForge({ opOb: { contents, branch } }: PreparedOperation): ForgeParams {
+    return {
+      branch,
+      contents,
     };
   }
 }
