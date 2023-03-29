@@ -28,6 +28,7 @@ values={[
 | ECAD Labs        | Mumbainet    | https://mumbainet.ecadinfra.com          | [Check](https://mumbainet.ecadinfra.com/chains/main/blocks/head/header)         |
 | ECAD Labs        | Limanet      | https://limanet.ecadinfra.com            | [Check](https://limanet.ecadinfra.com/chains/main/blocks/head/header)           |
 | SmartPy          | Mainnet      | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header)              |
+| SmartPy          | Ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header)             |
 | SmartPy          | Limanet      | https://limanet.smartpy.io/              | [Check](https://limanet.smartpy.io/chains/main/blocks/head/header)              |
 | Tezos Foundation | Mainnet      | https://rpc.tzbeta.net/                  | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)                  |
 | Tezos Foundation | Limanet      | https://rpczero.tzbeta.net/              | [Check](https://rpczero.tzbeta.net/chains/main/blocks/head/header)              |
