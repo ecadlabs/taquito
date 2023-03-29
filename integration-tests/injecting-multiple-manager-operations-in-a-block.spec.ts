@@ -1,11 +1,11 @@
 import { Protocols } from '@taquito/taquito';
-import { CONFIGS } from "./config";
+import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const limanet = protocol === Protocols.PtLimaPtL && !(rpc === 'http://localhost:20000') ? test : test.skip;
   const flextesaLima = protocol === Protocols.PtLimaPtL && rpc === 'http://localhost:20000' ? test : test.skip;
-  const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;  
+  const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test injecting more than one manager operation in a block: ${rpc}`, () => {
 
