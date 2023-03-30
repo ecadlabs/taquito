@@ -7,7 +7,7 @@ import { managerCode } from "./data/manager_code";
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => {
   const Tezos = lib;
-  const Mumbainet = protocol === Protocols.PtMumbai2 ? it : it.skip;
+  const mumbainet = protocol === Protocols.PtMumbai2 ? it : it.skip;
 
   describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -37,7 +37,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       }
     });
 
-    Mumbainet('Verify .estimate.transfer with allocated destination', async (done) => {
+    mumbainet('Verify .estimate.transfer with allocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(0);
@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Mumbainet('Verify .estimate.transfer with unallocated destination', async (done) => {
+    mumbainet('Verify .estimate.transfer with unallocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(257);
@@ -63,7 +63,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Mumbainet('Verify .estimate.originate simple contract', async (done) => {
+    mumbainet('Verify .estimate.originate simple contract', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -80,7 +80,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Mumbainet('Verify .estimate.setDelegate result', async (done) => {
+    mumbainet('Verify .estimate.setDelegate result', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -96,7 +96,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Mumbainet('Verify .estimate.transfer for internal transfer to allocated implicit', async (done) => {
+    mumbainet('Verify .estimate.transfer for internal transfer to allocated implicit', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(3257);
@@ -110,7 +110,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Mumbainet('Verify .estimate.transfer for multiple internal transfers to unallocated account', async (done) => {
+    mumbainet('Verify .estimate.transfer for multiple internal transfers to unallocated account', async (done) => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -128,7 +128,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Mumbainet('Verify .estimate.transfer for internal origination', async (done) => {
+    mumbainet('Verify .estimate.transfer for internal origination', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(3668);
@@ -142,7 +142,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Mumbainet('Verify .estimate.transfer for multiple internal originations', async (done) => {
+    mumbainet('Verify .estimate.transfer for multiple internal originations', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(5094);
