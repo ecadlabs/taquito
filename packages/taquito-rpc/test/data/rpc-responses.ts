@@ -5503,7 +5503,7 @@ export const pendingOperationsResponse = {
     },
   ],
   branch_refused: [],
-  branch_dealyed: [],
+  branch_delayed: [],
   unprocessed: [],
 };
 

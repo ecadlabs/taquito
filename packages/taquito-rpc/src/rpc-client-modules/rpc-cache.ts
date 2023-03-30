@@ -1229,7 +1229,7 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   /**
-   * @description List the prevalidated operations in mempool (accessbililty of mempool depends on each rpc endpoint)
+   * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
    * @param args has 5 optional properties. We support version 1 with new encoding as version 0 will be deprecated soon. The rest of the properties is to filter pending operations response
    * @default args { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
    * @see https://tezos.gitlab.io/CHANGES.html?highlight=pending_operations#id4

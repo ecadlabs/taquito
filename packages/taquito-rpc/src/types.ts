@@ -2128,7 +2128,7 @@ export interface PendingOperationsQueryArguments {
   validationPass?: '0' | '1' | '2' | '3';
 }
 
-type failedProcessedOperation = Pick<
+type FailedProcessedOperation = Pick<
   OperationEntry,
   'hash' | 'protocol' | 'branch' | 'contents' | 'signature'
 > & {
@@ -2137,9 +2137,9 @@ type failedProcessedOperation = Pick<
 
 export interface PendingOperations {
   applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
-  refused: failedProcessedOperation[];
-  outdated: failedProcessedOperation[];
-  branch_refused: failedProcessedOperation[];
-  branch_delayed: failedProcessedOperation[];
+  refused: FailedProcessedOperation[];
+  outdated: FailedProcessedOperation[];
+  branch_refused: FailedProcessedOperation[];
+  branch_delayed: FailedProcessedOperation[];
   unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
 }
