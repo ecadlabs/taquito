@@ -1312,9 +1312,6 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
-];
-
-export const mumbaiCases: TestCase[] = [
   {
     name: `Origination of a smart_rollup_originate operation`,
     operation: {
