@@ -30,7 +30,6 @@ import {
   ProposalsParams,
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
-  SmartRollupOriginateParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -51,7 +50,6 @@ import {
   createProposalsOperation,
   createUpdateConsensusKeyOperation,
   createSmartRollupAddMessagesOperation,
-  createSmartRollupOriginateOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
 import {
@@ -71,7 +69,6 @@ import { DrainDelegateOperation } from '../operations/drain-delegate-operation';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
-import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -725,42 +722,6 @@ export class RpcContractProvider
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
 
     return new SmartRollupAddMessagesOperation(
-      hash,
-      operation,
-      publicKeyHash,
-      forgedBytes,
-      opResponse,
-      context
-    );
-  }
-
-  /**
-   * @description Creates a smart rollup originate operation
-   * @param SmartRollupOriginateParams
-   * @returns An operation handle with results from the RPC node
-   */
-  async smartRollupOriginate(params: SmartRollupOriginateParams) {
-    const publicKeyHash = await this.signer.publicKeyHash();
-    const estimate = await this.estimate(
-      params,
-      this.estimator.smartRollupOriginate.bind(this.estimator)
-    );
-    const originationProof = await this.rpc.getOriginationProof({
-      kind: params.pvmKind,
-      kernel: params.kernel,
-    });
-    const completeParams = { ...params, originationProof };
-
-    const operation = await createSmartRollupOriginateOperation({
-      ...completeParams,
-      ...estimate,
-    });
-    const ops = await this.addRevealOperationIfNeeded(operation, publicKeyHash);
-    const prepared = await this.prepareOperation({ operation: ops, source: params.source });
-    const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-
-    return new SmartRollupOriginateOperation(
       hash,
       operation,
       publicKeyHash,
