@@ -24,7 +24,6 @@ import {
   IncreasePaidStorageParams,
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
-  SmartRollupOriginateParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -41,7 +40,6 @@ import {
   createIncreasePaidStorageOperation,
   createUpdateConsensusKeyOperation,
   createSmartRollupAddMessagesOperation,
-  createSmartRollupOriginateOperation,
 } from '../contract/prepare';
 import {
   validateAddress,
@@ -167,7 +165,6 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
           ? Number(result.storage_size) || 0
           : 0;
       totalStorage += 'originated_rollup' in result ? tx_rollup_origination_size : 0;
-      totalStorage += 'genesis_commitment_hash' in result ? Number(result.size) : 0;
     });
 
     if (isOpWithFee(content)) {
@@ -190,10 +187,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
 
   private async prepareEstimate(
     params: PrepareOperationParams,
-    constants: Pick<
-      ConstantsResponse,
-      'cost_per_byte' | 'tx_rollup_origination_size' | 'smart_rollup_origination_size'
-    >,
+    constants: Pick<ConstantsResponse, 'cost_per_byte' | 'tx_rollup_origination_size'>,
     pkh: string
   ) {
     const prepared = await this.prepareOperation(params, pkh);
@@ -468,22 +462,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
             })
           );
           break;
-        case OpKind.SMART_ROLLUP_ORIGINATE: {
-          const originationProof = await this.rpc.getOriginationProof({
-            kernel: param.kernel,
-            kind: param.pvmKind,
-          });
-          operations.push(
-            await createSmartRollupOriginateOperation({
-              ...param,
-              originationProof,
-              ...mergeLimits(param, DEFAULT_PARAMS),
-            })
-          );
-          break;
-        }
         default:
-          throw new InvalidOperationKindError(param.kind);
+          throw new InvalidOperationKindError((params as any).kind);
       }
     }
     const isRevealNeeded = await this.isRevealOpNeeded(operations, publicKeyHash);
@@ -739,42 +719,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       protocolConstants,
       pkh
     );
-    if (isRevealNeeded) {
-      estimateProperties.shift();
-    }
-    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
-  }
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Originate operation
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation
-   *
-   * @param SmartRollupOriginateParams
-   */
-  async smartRollupOriginate(params: SmartRollupOriginateParams) {
-    const { fee, storageLimit, gasLimit, ...rest } = params;
-    const pkh = (await this.getKeys()).publicKeyHash;
-    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
 
-    const originationProof = await this.rpc.getOriginationProof({
-      kind: params.pvmKind,
-      kernel: params.kernel,
-    });
-
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
-    const op = await createSmartRollupOriginateOperation({
-      ...rest,
-      originationProof,
-      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
-    });
-    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
-    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
-    const estimateProperties = await this.prepareEstimate(
-      { operation: ops, source: pkh },
-      protocolConstants,
-      pkh
-    );
     if (isRevealNeeded) {
       estimateProperties.shift();
     }
