@@ -480,7 +480,7 @@ export interface OperationContentsSmartRollupOriginate {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  pvm_kind: PvmKind;
+  pvm_kind: PVMKind;
   kernel: string;
   origination_proof: string;
   parameters_ty: MichelsonV1Expression;
@@ -977,7 +977,7 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  pvm_kind: PvmKind;
+  pvm_kind: PVMKind;
   kernel: string;
   origination_proof: string;
   parameters_ty: MichelsonV1Expression;
@@ -2116,12 +2116,4 @@ export interface TxRollupInboxResponse {
   merkle_root: string;
 }
 
-export enum PvmKind {
-  WASM2 = 'wasm_2_0_0',
-  ARITH = 'arith',
-}
-
-export interface OriginationProofParams {
-  kind: PvmKind;
-  kernel: string;
-}
+export type PVMKind = 'wasm_2_0_0' | 'arith';
