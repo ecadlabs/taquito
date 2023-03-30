@@ -31,7 +31,6 @@ values={[
 | SmartPy          | Ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header)             |
 | SmartPy          | Limanet      | https://limanet.smartpy.io/              | [Check](https://limanet.smartpy.io/chains/main/blocks/head/header)              |
 | Tezos Foundation | Mainnet      | https://rpc.tzbeta.net/                  | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)                  |
-| Tezos Foundation | Limanet      | https://rpczero.tzbeta.net/              | [Check](https://rpczero.tzbeta.net/chains/main/blocks/head/header)              |
 | Marigold         | Mainnet      | https://mainnet.tezos.marigold.dev/      | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)      |
 | Marigold         | Ghostnet     | https://ghostnet.tezos.marigold.dev/     | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
 | Marigold         | Mumbainet    | https://mumbainet.tezos.marigold.dev/    | [Check](https://mumbainet.tezos.marigold.dev/chains/main/blocks/head/header)    |
