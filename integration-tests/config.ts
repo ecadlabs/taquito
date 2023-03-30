@@ -5,7 +5,6 @@ import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { knownBigMapContractProtoALph, knownContractProtoALph, knownOnChainViewContractAddressProtoALph, knownSaplingContractProtoALph, knownTzip12BigMapOffChainContractProtoALph } from './known-contracts-ProtoALph';
-import { knownContractPtLimaPtL, knownBigMapContractPtLimaPtL, knownTzip12BigMapOffChainContractPtLimaPtL, knownSaplingContractPtLimaPtL, knownOnChainViewContractAddressPtLimaPtL } from './known-contracts-PtLimaPtL';
 import { knownContractPtGhostnet, knownBigMapContractPtGhostnet, knownTzip12BigMapOffChainContractPtGhostnet, knownSaplingContractPtGhostnet, knownOnChainViewContractAddressPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractPtMumbai2, knownBigMapContractPtMumbai2, knownTzip12BigMapOffChainContractPtMumbai2, knownSaplingContractPtMumbai2, knownOnChainViewContractAddressPtMumbai2 } from './known-contracts-PtMumbai2';
 
@@ -73,24 +72,6 @@ const defaultSecretKey: SecretKeyConfig = {
   password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
-const limanetEphemeral = {
-  rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-limanet-full:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_LIMANET_CONTRACT_ADDRESS'] || knownContractPtLimaPtL,
-  knownBigMapContract: process.env['TEZOS_LIMANET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtLimaPtL,
-  knownTzip1216Contract: process.env['TEZOS_LIMANET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtLimaPtL,
-  knownSaplingContract: process.env['TEZOS_LIMANET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtLimaPtL,
-  knownViewContract: process.env['TEZOS_LIMANET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtLimaPtL,
-  protocol: Protocols.PtLimaPtL,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/limanet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
-
 const mumbainetEphemeral = {
   rpc: process.env['TEZOS_RPC_MUMBAINET'] || 'http://ecad-mumbainet-full.i.tez.ie:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
@@ -119,7 +100,7 @@ const ghostnetEphemeral = {
   knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
   knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
   knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
-  protocol: Protocols.PtLimaPtL,
+  protocol: Protocols.PtMumbai2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ghostnet',
@@ -143,20 +124,6 @@ const mondaynetEphemeral = {
     keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
-};
-
-const limanetSecretKey = {
-  rpc: process.env['TEZOS_RPC_LIMANET'] || 'http://ecad-limanet-full:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_LIMANET_CONTRACT_ADDRESS'] || knownContractPtLimaPtL,
-  knownBigMapContract: process.env['TEZOS_LIMANET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtLimaPtL,
-  knownTzip1216Contract: process.env['TEZOS_LIMANET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtLimaPtL,
-  knownSaplingContract: process.env['TEZOS_LIMANET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtLimaPtL,
-  knownViewContract: process.env['TEZOS_LIMANET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtLimaPtL,
-  protocol: Protocols.PtLimaPtL,
-  signerConfig: defaultSecretKey
 };
 
 const mumbainetSecretKey = {
@@ -183,7 +150,7 @@ const ghostnetSecretKey = {
   knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
   knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
   knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
-  protocol: Protocols.PtLimaPtL,
+  protocol: Protocols.PtMumbai2,
   signerConfig: defaultSecretKey
 };
 
@@ -204,17 +171,13 @@ const mondaynetSecretKey = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(limanetSecretKey);
-} else if (process.env['RUN_LIMANET_WITH_SECRET_KEY']) {
-  providers.push(limanetSecretKey);
+  providers.push(mumbainetSecretKey);
 } else if (process.env['RUN_MUMBAINET_WITH_SECRET_KEY']) {
   providers.push(mumbainetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
   providers.push(mondaynetSecretKey);
-} else if (process.env['LIMANET']) {
-  providers.push(limanetEphemeral);
 } else if (process.env['MUMBAINET']) {
   providers.push(mumbainetEphemeral);
 } else if (process.env['GHOSTNET']) {
@@ -222,7 +185,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['MONDAYNET']) {
   providers.push(mondaynetEphemeral);
 } else {
-  providers.push(limanetEphemeral, mumbainetEphemeral);
+  providers.push(mumbainetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
