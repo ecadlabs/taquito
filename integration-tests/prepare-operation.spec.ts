@@ -1,19 +1,17 @@
-import { Protocols } from '@taquito/taquito';
 import { OperationContentsBallot, OperationContentsTransaction } from '@taquito/rpc';
-import { 
-  OpKind, 
+import {
+  OpKind,
 } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, setup, protocol }) => {
   const Tezos = lib;
   let contractAddress: string;
-  const limanet = (protocol === Protocols.PtLimaPtL) ? test : test.skip;
 
   describe(`Test Preparation of operations using the PrepareProvider`, () => {
     beforeAll(async (done) => {
       await setup();
-      
+
       try {
         const op = await Tezos.contract.originate({
           code: `{ parameter (or (or (int %decrement) (int %increment)) (unit %reset)) ;
@@ -34,7 +32,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
 
       done();
     })
-    
+
     beforeEach(async (done) => {
       done();
     });
@@ -122,4 +120,4 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     });
   });
 
-}) 
+})
