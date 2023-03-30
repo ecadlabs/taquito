@@ -4,7 +4,6 @@ import {
   OperationResultOrigination,
   OperationResultRegisterGlobalConstant,
   OperationResultReveal,
-  OperationResultSmartRollupOriginate,
   OperationResultTransaction,
   OperationResultTransferTicket,
   OperationResultTxRollupOrigination,
@@ -75,7 +74,6 @@ export type MergedOperationResult = OperationResultTransaction &
   OperationResultTxRollupOrigination &
   OperationResultTxRollupSubmitBatch &
   OperationResultTransferTicket &
-  Partial<OperationResultSmartRollupOriginate> &
   OperationResultReveal & {
     fee?: string;
   };

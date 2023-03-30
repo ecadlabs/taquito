@@ -54,7 +54,6 @@ export interface TzReadProvider {
     hard_storage_limit_per_operation: BigNumber;
     cost_per_byte: BigNumber;
     tx_rollup_origination_size?: number;
-    smart_rollup_origination_size: number;
   }>;
 
   /**

@@ -48,7 +48,6 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  OriginationProofParams,
 } from '../types';
 
 import {
@@ -71,8 +70,7 @@ type RpcMethodParam =
   | UnparsingMode
   | BigMapKey
   | BakingRightsQueryArguments
-  | EndorsingRightsQueryArguments
-  | OriginationProofParams;
+  | EndorsingRightsQueryArguments;
 
 const defaultTtl = 1000;
 
@@ -1222,30 +1220,6 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getAllTicketBalances(contract, { block });
-      this.put(key, response);
-      return response;
-    }
-  }
-
-  /**
-   *
-   * @param params contains the PVM kind and kernel to generate the origination proof from
-   * @description rpc call to generate the origination proof needed for the smart rollup originate operation
-   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
-   */
-  async getOriginationProof(
-    params: OriginationProofParams,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<string> {
-    const key = this.formatCacheKey(
-      this.rpcClient.getRpcUrl(),
-      RPCMethodName.GET_ORIGINATION_PROOF,
-      [block, params]
-    );
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getOriginationProof(params, { block });
       this.put(key, response);
       return response;
     }
