@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context } from '../../src/context';
 import { RPCEstimateProvider } from '../../src/estimate/rpc-estimate-provider';
-import { miStr, ligoSample } from '../contract/data';
+import { miStr, ligoSample, entrypointsGenericMultisig } from '../contract/data';
 import BigNumber from 'bignumber.js';
 import {
   preapplyResultFrom,
@@ -28,6 +28,10 @@ import {
 import { OpKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
 import { InvalidAddressError } from '@taquito/utils';
+import { ContractAbstraction } from '../../src/contract';
+import { genericMultisig } from '../../../../integration-tests/data/multisig';
+import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
+import { Estimate } from '../../src/estimate';
 
 /**
  * RPCEstimateProvider test
@@ -60,6 +64,8 @@ describe('RPCEstimateProvider test signer', () => {
     publicKey: jest.Mock<any, any>;
     sign: jest.Mock<any, any>;
   };
+
+  let context: Context;
 
   beforeEach(() => {
     mockRpcClient = {
@@ -116,7 +122,7 @@ describe('RPCEstimateProvider test signer', () => {
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-    const context = new Context(mockRpcClient as any, mockSigner as any);
+    context = new Context(mockRpcClient as any, mockSigner as any);
     context.forger = mockForger;
     estimateProvider = new RPCEstimateProvider(context);
   });
@@ -1255,6 +1261,55 @@ describe('RPCEstimateProvider test signer', () => {
           }),
         })
       );
+      done();
+    });
+  });
+
+  describe('contractCall', () => {
+    it('should return estimates for contract calls', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            metadata: {
+              operation_result: {
+                consumed_milligas: 1000000,
+              },
+            },
+          },
+        ],
+      });
+
+      const mockEstimate = {};
+      const mockReadProvider = {};
+      const rpcContractProvider = new RpcContractProvider(context, mockEstimate as any);
+
+      const contractAbs = new ContractAbstraction(
+        'contractAddress',
+        {
+          code: genericMultisig,
+          storage: {},
+        },
+        rpcContractProvider,
+        rpcContractProvider,
+        entrypointsGenericMultisig,
+        mockRpcClient as any,
+        mockReadProvider as any
+      );
+
+      const contractMethod = contractAbs.methods.main(
+        2,
+        'change_keys',
+        2,
+        ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'],
+        [
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        ]
+      );
+
+      const estimate = await estimateProvider.contractCall(contractMethod);
+
+      expect(estimate).toBeInstanceOf(Estimate);
       done();
     });
   });
