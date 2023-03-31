@@ -1266,7 +1266,7 @@ describe('RPCEstimateProvider test signer', () => {
   });
 
   describe('contractCall', () => {
-    it('should return estiamtes for contract calls', async (done) => {
+    it('should return estimates for contract calls', async (done) => {
       mockRpcClient.runOperation.mockResolvedValue({
         contents: [
           {
