@@ -1,12 +1,12 @@
 import { CONFIGS } from "./config";
-import { Protocols, DefaultContractType, TezosToolkit } from "@taquito/taquito";
+import { DefaultContractType, TezosToolkit } from "@taquito/taquito";
 import { ticketsSendTz, ticketsBagTz, ticketsBlackholeTz } from "./data/code_with_ticket_transfer";
 import { RpcClient, TicketTokenParams } from '@taquito/rpc';
 
-CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos1 = lib;
   const client = new RpcClient(rpc);
-  const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
+
   let tezos1Pkh: string;
   let tezos2Pkh: string;
   let Tezos2: TezosToolkit;
@@ -46,7 +46,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
       done();
     });
 
-    mumbaiAndAlpha('will send 3 tickets from an originated to an implicit account', async (done) => {
+    it('will send 3 tickets from an originated to an implicit account', async (done) => {
       const ticketSendToImplicitOp = await ticketSendContract.methods.default(tezos1Pkh, '3').send();
       await ticketSendToImplicitOp.confirmation();
       expect(ticketSendToImplicitOp.status).toEqual('applied');
@@ -56,7 +56,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
       done();
     });
 
-    mumbaiAndAlpha('will transfer 1 tickets from an implicit to another implicit account', async (done) => {
+    it('will transfer 1 tickets from an implicit to another implicit account', async (done) => {
       let tezos2TicketBalanceBefore = await client.getTicketBalance(tezos2Pkh, ticketToken);
       expect(tezos2TicketBalanceBefore).toBe('0');
 
@@ -78,7 +78,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
       done();
     });
 
-    mumbaiAndAlpha('will transfer 1 ticket from an implicit to an originated account', async (done) => {
+    it('will transfer 1 ticket from an implicit to an originated account', async (done) => {
       const implicitToOriginatedOp = await Tezos1.contract.transferTicket({
         ticketContents: { string: "Ticket" },
         ticketTy: { prim: "string" },
@@ -95,7 +95,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
       done();
     });
 
-    mumbaiAndAlpha('will send 1 ticket from an origianted to another originated account to dispose', async (done) => {
+    it('will send 1 ticket from an origianted to another originated account to dispose', async (done) => {
       const ticketSendOriginatedOp = await ticketBagContract.methods.send(ticketBlackholeContract.address).send();
       await ticketSendOriginatedOp.confirmation();
       expect(ticketSendOriginatedOp.status).toEqual('applied');

@@ -36,6 +36,9 @@ describe('validateAddress', () => {
     expect(validateAddress('tz4')).toEqual(ValidationResult.INVALID_CHECKSUM);
     expect(validateAddress('test')).toEqual(ValidationResult.NO_PREFIX_MATCHED);
     expect(validateAddress('')).toEqual(ValidationResult.NO_PREFIX_MATCHED);
+    expect(validateAddress('tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9mAAAAAAAAAA')).toEqual(
+      ValidationResult.INVALID_CHECKSUM
+    );
   });
 });
 
@@ -86,6 +89,12 @@ describe('validateContractAddress', () => {
       ValidationResult.NO_PREFIX_MATCHED
     );
     expect(validateContractAddress('txr1YNMEtkj5Vkqsbdmt7xaxBTMRZjzS96UAu')).toEqual(
+      ValidationResult.INVALID_CHECKSUM
+    );
+    expect(
+      validateContractAddress('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4Dasdasdasdasdadasd')
+    ).toEqual(ValidationResult.INVALID_CHECKSUM);
+    expect(validateContractAddress('KT1Fe71jyjrxFg9ZrYqtvaX7uQ')).toEqual(
       ValidationResult.INVALID_CHECKSUM
     );
   });

@@ -38,10 +38,14 @@ function validatePrefixedValue(value: string, prefixes: Prefix[]) {
     return ValidationResult.NO_PREFIX_MATCHED;
   }
 
-  // Remove annotation from contract address before doing the validation
-  const contractAddress = /^(KT1\w{33})(%(.*))?/.exec(value);
-  if (contractAddress) {
-    value = contractAddress[1];
+  // Check whether annotation exist before starting validation
+  if (value.includes('%')) {
+    value = value.split('%')[0];
+  }
+
+  const kt1Regex = /^(KT1\w{33})$/;
+  if (!kt1Regex.test(value) && prefixKey === 'KT1') {
+    return ValidationResult.INVALID_CHECKSUM;
   }
 
   // decodeUnsafe return undefined if decoding fail
