@@ -87,12 +87,14 @@ const method = await contractAbs.methods.increment(1);
 const prepared = await Tezos.prepare.contractCall(method);
 ```
 
+## Conversion methods
+
 We've also added a couple utility methods to convert a `PreparedOperation` into objects that can be consumed by the `forger` as well as the `preapplyOperations` method.
 
-## `toPreapply()`
+### `toPreapply()`
 The `toPreapply()` method converts a `PreparedOperation` object into an entity that is consumable by the `preapplyOperations()` method in the RPC package (i.e. `PreapplyParams` type object).
 
-### Example
+#### Example
 ```typescript
 // prepared transfer of tez from one account to another
 // omitted for brevity
@@ -104,11 +106,11 @@ const params = await Tezos.prepare.toPreapply(preparedTransferOp);
 const preapplyOp = await Tezos.rpc.preapplyOperations(params);
 ```
 
-## `toForge()`
+### `toForge()`
 The `toForge()` method converts a `PreparedOperation` into an object that can be passed into the `forge` method (i.e. `ForgeParams` type object)
 
 
-### Example
+#### Example
 
 ```typescript
 const preparedTransfer = await Tezos.prepare.transaction({
