@@ -2117,3 +2117,29 @@ export interface TxRollupInboxResponse {
 }
 
 export type PVMKind = 'wasm_2_0_0' | 'arith';
+
+export interface PendingOperationsQueryArguments {
+  version?: '1';
+  applied?: boolean;
+  refused?: boolean;
+  outdated?: boolean;
+  branchRefused?: boolean;
+  branchDelayed?: boolean;
+  validationPass?: '0' | '1' | '2' | '3';
+}
+
+type FailedProcessedOperation = Pick<
+  OperationEntry,
+  'hash' | 'protocol' | 'branch' | 'contents' | 'signature'
+> & {
+  error: TezosGenericOperationError[];
+};
+
+export interface PendingOperations {
+  applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
+  refused: FailedProcessedOperation[];
+  outdated: FailedProcessedOperation[];
+  branch_refused: FailedProcessedOperation[];
+  branch_delayed: FailedProcessedOperation[];
+  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
+}

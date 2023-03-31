@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
 import { DefaultContractType } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam } from '@taquito/rpc';
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperations } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -445,11 +445,22 @@ CONFIGS().forEach(
 
         it('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
           const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
-          expect(ticketBalances).toBeInstanceOf(Array)
-          expect(ticketBalances[0].ticketer).toBe(ticketContract.address)
-          expect(ticketBalances[0].content_type).toBeDefined()
-          expect(ticketBalances[0].content).toBeDefined()
-          expect(ticketBalances[0].amount).toBeDefined()
+          expect(ticketBalances).toBeInstanceOf(Array);
+          expect(ticketBalances[0].ticketer).toBe(ticketContract.address);
+          expect(ticketBalances[0].content_type).toBeDefined();
+          expect(ticketBalances[0].content).toBeDefined();
+          expect(ticketBalances[0].amount).toBeDefined();
+          done();
+        });
+
+        it('Verify that rpcClient.getPendingOperations will retrieve the pending operations in mempool', async (done) => {
+          const pendingOperations: PendingOperations = await rpcClient.getPendingOperations();
+          expect(pendingOperations).toBeDefined();
+          expect(pendingOperations.applied).toBeInstanceOf(Array);
+          expect(pendingOperations.refused).toBeInstanceOf(Array);
+          expect(pendingOperations.outdated).toBeInstanceOf(Array);
+          expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
+          expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
           done();
         });
       });
