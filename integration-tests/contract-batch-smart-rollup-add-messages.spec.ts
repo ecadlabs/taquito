@@ -1,10 +1,8 @@
 import { CONFIGS } from './config';
 import { ligoSample } from './data/ligo-simple-contract';
-import { Protocols } from '@taquito/taquito';
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contract.batch with smart rollup add messages using: ${rpc}`, () => {
     beforeEach(async (done) => {
@@ -12,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    mumbaiAndAlpha('should be able to batch smart rollup add messages with other operations', async (done) => {
+    it('should be able to batch smart rollup add messages with other operations', async (done) => {
       const batch = Tezos.contract
         .batch()
         .withSmartRollupAddMessages({
@@ -26,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         });
       const op = await batch.send();
       await op.confirmation();
-      
+
       expect(op.status).toEqual('applied');
       expect(op.includedInBlock).toBeDefined();
 

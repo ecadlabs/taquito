@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { DefaultContractType, Protocols } from "@taquito/taquito";
+import { DefaultContractType } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperations } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -19,8 +19,6 @@ CONFIGS().forEach(
     knownViewContract,
   }) => {
     const Tezos = lib;
-
-    const mumbaiAndAlpha = protocol === Protocols.PtMumbai2 || protocol === Protocols.ProtoALpha ? test : test.skip;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
 
     let ticketContract: DefaultContractType;
@@ -439,13 +437,13 @@ CONFIGS().forEach(
           done();
         });
 
-        mumbaiAndAlpha('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async (done) => {
-          const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } });
+        it('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async (done) => {
+          const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } } );
           expect(ticketBalance).toBeDefined();
           done();
         });
 
-        mumbaiAndAlpha('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
+        it('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async (done) => {
           const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
           expect(ticketBalances).toBeInstanceOf(Array);
           expect(ticketBalances[0].ticketer).toBe(ticketContract.address);
