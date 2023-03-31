@@ -87,27 +87,34 @@ const method = await contractAbs.methods.increment(1);
 const prepared = await Tezos.prepare.contractCall(method);
 ```
 
-### preparing PreapplyParams
-Users are able to utilize the `PrepareProvider` to modify the results of a `PreparedOperation` to the `PreapplyParams` for the `preapplyOperation` method
+We've also added a couple utility methods to convert a `PreparedOperation` into objects that can be consumed by the `forger` as well as the `preapplyOperations` method.
+
+## `toPreapply()`
+The `toPreapply()` method converts a `PreparedOperation` object into an entity that is consumable by the `preapplyOperations()` method in the RPC package (i.e. `PreapplyParams` type object).
+
+### Example
 ```typescript
 // prepared transfer of tez from one account to another
 // omitted for brevity
-const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: pkhOfReceiver  });
-const preapplyParams = await Tezos.prepare.toPreapply(preparedTransfer)
-const preapply = await Tezos.rpc.preapplyOperations(preapplyParams);
+const preparedTransferOp = await Tezos.prepare.transaction({
+    amount: 1,
+    to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+});
+const params = await Tezos.prepare.toPreapply(preparedTransferOp);
+const preapplyOp = await Tezos.rpc.preapplyOperations(params);
 ```
 
-## preparing ForgeParams
-Users are able to utilize the `PrepareProvider` to modify the results of a `PreparedOperation` to the `PreapplyParams` for the `preapplyOperation` method
+## `toForge()`
+The `toForge()` method converts a `PreparedOperation` into an object that can be passed into the `forge` method (i.e. `ForgeParams` type object)
 
-`toForge` is a method that will return the structured params for the `forge` method
 
-it will take in the `PreparedOperation` and return the `ForgeParams`.
+### Example
 
-### Example 
-
-```ts
-  const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: receivingPKH })
-  const params = Tezos.prepare.toForge(preparedTransfer)
-  const forgedBytes = await forger.forge(params)
+```typescript
+const preparedTransfer = await Tezos.prepare.transaction({
+  amount: 1,
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+});
+const params = Tezos.prepare.toForge(preparedTransfer);
+const forgedBytes = await forger.forge(params);
 ```
