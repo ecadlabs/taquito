@@ -1,0 +1,19 @@
+parameter unit;
+storage unit;
+code { DROP;
+
+       # If shift is 0, LSL returns the bytes untouched
+       # 0x06 LSL 0 = 0x06
+       PUSH nat 0; PUSH bytes 0x06; LSL; PUSH bytes 0x06; ASSERT_CMPEQ;
+
+       # If shift is not 0, LSL returns a bytes longer than the original
+       # 0x06 LSL 1 = 0x000c  (not 0x0c)
+       PUSH nat 1; PUSH bytes 0x06; LSL; PUSH bytes 0x000c; ASSERT_CMPEQ;
+
+       # 0x06 LSL 8 = 0x0600
+       PUSH nat 8; PUSH bytes 0x06; LSL; PUSH bytes 0x0600; ASSERT_CMPEQ;
+
+       # 0x0006 LSL 1 = 0x00000c  (not 0x0c nor 0x000c)
+       PUSH nat 1; PUSH bytes 0x0006; LSL; PUSH bytes 0x00000c; ASSERT_CMPEQ;
+
+       UNIT; NIL @noop operation; PAIR; };

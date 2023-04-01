@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context } from '../../src/context';
 import { RPCEstimateProvider } from '../../src/estimate/rpc-estimate-provider';
-import { miStr, ligoSample } from '../contract/data';
+import { miStr, ligoSample, entrypointsGenericMultisig } from '../contract/data';
 import BigNumber from 'bignumber.js';
 import {
   preapplyResultFrom,
@@ -23,10 +23,15 @@ import {
   TransferTicketNoReveal,
   TransferTicketWithReveal,
   updateConsensusKeyNoReveal,
+  smartRollupAddMessagesNoReveal,
 } from '../contract/helper';
 import { OpKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/utils';
+import { ContractAbstraction } from '../../src/contract';
+import { genericMultisig } from '../../../../integration-tests/data/multisig';
+import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
+import { Estimate } from '../../src/estimate';
 
 /**
  * RPCEstimateProvider test
@@ -59,6 +64,8 @@ describe('RPCEstimateProvider test signer', () => {
     publicKey: jest.Mock<any, any>;
     sign: jest.Mock<any, any>;
   };
+
+  let context: Context;
 
   beforeEach(() => {
     mockRpcClient = {
@@ -115,7 +122,7 @@ describe('RPCEstimateProvider test signer', () => {
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-    const context = new Context(mockRpcClient as any, mockSigner as any);
+    context = new Context(mockRpcClient as any, mockSigner as any);
     context.forger = mockForger;
     estimateProvider = new RPCEstimateProvider(context);
   });
@@ -567,6 +574,7 @@ describe('RPCEstimateProvider test signer', () => {
 
       done();
     });
+
     it('should throw an error with invalid source', async (done) => {
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHG',
@@ -587,6 +595,7 @@ describe('RPCEstimateProvider test signer', () => {
 
       done();
     });
+
     it('should throw an error with invalid destination', async (done) => {
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
@@ -602,7 +611,7 @@ describe('RPCEstimateProvider test signer', () => {
       };
 
       expect(() => estimateProvider.transferTicket(params)).rejects.toThrowError(
-        InvalidContractAddressError
+        InvalidAddressError
       );
 
       done();
@@ -1255,6 +1264,55 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
   });
+
+  describe('contractCall', () => {
+    it('should return estimates for contract calls', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            metadata: {
+              operation_result: {
+                consumed_milligas: 1000000,
+              },
+            },
+          },
+        ],
+      });
+
+      const mockEstimate = {};
+      const mockReadProvider = {};
+      const rpcContractProvider = new RpcContractProvider(context, mockEstimate as any);
+
+      const contractAbs = new ContractAbstraction(
+        'contractAddress',
+        {
+          code: genericMultisig,
+          storage: {},
+        },
+        rpcContractProvider,
+        rpcContractProvider,
+        entrypointsGenericMultisig,
+        mockRpcClient as any,
+        mockReadProvider as any
+      );
+
+      const contractMethod = contractAbs.methods.main(
+        2,
+        'change_keys',
+        2,
+        ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'],
+        [
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        ]
+      );
+
+      const estimate = await estimateProvider.contractCall(contractMethod);
+
+      expect(estimate).toBeInstanceOf(Estimate);
+      done();
+    });
+  });
 });
 
 describe('RPCEstimateProvider test wallet', () => {
@@ -1708,6 +1766,39 @@ describe('RPCEstimateProvider test wallet', () => {
         await estimateProvider.txRollupSubmitBatch({
           rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
           content: '626c6f62',
+        });
+      } catch (e) {
+        expect(e.message).toEqual(
+          'Unable to estimate the reveal operation, the public key is unknown'
+        );
+      }
+      done();
+    });
+  });
+
+  describe('smartRollupAddMessages', () => {
+    it('should return the correct estimate for smartRollupAddMessages op', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue(smartRollupAddMessagesNoReveal);
+      const estimate = await estimateProvider.smartRollupAddMessages({
+        message: [
+          '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+        ],
+      });
+
+      expect(estimate.gasLimit).toEqual(1103);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(313);
+      done();
+    });
+
+    it('should return an error if account is unrevealed', async (done) => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+
+      try {
+        await estimateProvider.smartRollupAddMessages({
+          message: [
+            '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+          ],
         });
       } catch (e) {
         expect(e.message).toEqual(

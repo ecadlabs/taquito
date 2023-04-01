@@ -87,6 +87,8 @@ const noArgInstructionIDs: Record<MichelsonNoArgInstruction['prim'], true> = {
   OPEN_CHEST: true,
   SUB_MUTEZ: true,
   MIN_BLOCK_TIME: true,
+  BYTES: true,
+  NAT: true,
 };
 
 export const instructionIDs: Record<MichelsonInstruction['prim'], true> = Object.assign(

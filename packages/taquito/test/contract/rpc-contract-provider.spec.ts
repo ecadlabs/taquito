@@ -85,6 +85,8 @@ describe('RpcContractProvider test', () => {
     transferTicket: jest.Mock<any, any>;
     increasePaidStorage: jest.Mock<any, any>;
     updateConsensusKey: jest.Mock<any, any>;
+    smartRollupAddMessages: jest.Mock<any, any>;
+    contractCall: jest.Mock<any, any>;
   };
 
   const revealOp = (source: string) => ({
@@ -141,6 +143,8 @@ describe('RpcContractProvider test', () => {
       transferTicket: jest.fn(),
       increasePaidStorage: jest.fn(),
       updateConsensusKey: jest.fn(),
+      smartRollupAddMessages: jest.fn(),
+      contractCall: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -1914,6 +1918,81 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
+      done();
+    });
+  });
+
+  describe('smartRollupAddMessages', async () => {
+    it('should produce a smartRollupAddMessages op', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockEstimate.reveal.mockResolvedValue(undefined);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.smartRollupAddMessages.mockResolvedValue(estimate);
+      const op = await rpcContractProvider.smartRollupAddMessages({
+        message: [
+          '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+        ],
+      });
+
+      expect(op.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              message: [
+                '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+              ],
+              counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+
+      done();
+    });
+
+    it('should produce a smartRollupAddMessages op with reveal', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.smartRollupAddMessages.mockResolvedValue(estimate);
+      const op = await rpcContractProvider.smartRollupAddMessages({
+        message: [
+          '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+        ],
+      });
+
+      expect(op.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('test_pub_key_hash'),
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              message: [
+                '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
+              ],
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+
       done();
     });
   });

@@ -1,6 +1,6 @@
 {
   "name": "@taquito/signer",
-  "version": "15.1.0",
+  "version": "16.0.1",
   "description": "Provide signing functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=16"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -73,8 +73,8 @@
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/pbkdf2": "^1.0.1",
     "@stablelib/sha512": "^1.0.1",
-    "@taquito/taquito": "^15.1.0",
-    "@taquito/utils": "^15.1.0",
+    "@taquito/taquito": "^16.0.1",
+    "@taquito/utils": "^16.0.1",
     "@types/bn.js": "^5.1.1",
     "bip39": "^3.0.4",
     "elliptic": "^6.5.4",
@@ -85,7 +85,7 @@
     "@types/bluebird": "^3.5.36",
     "@types/elliptic": "^6.4.14",
     "@types/jest": "^26.0.23",
-    "@types/node": "^17.0.0",
+    "@types/node": "^16",
     "@types/pbkdf2": "^3.1.0",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",

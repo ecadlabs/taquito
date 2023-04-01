@@ -6,9 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination of a simple contract through contract api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {
-      await setup()
-      done()
-    })
+      await setup();
+      done();
+    });
+
     test('Verify contract.originate for a simple contract', async (done) => {
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -32,4 +33,4 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
   });
-})
+});

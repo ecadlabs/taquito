@@ -8,13 +8,18 @@ import {
   entrypointNameDecoder,
   int16Decoder,
   int32Decoder,
+  paddedBytesDecoder,
   parametersDecoder,
   pkhDecoder,
+  smartRollupMessageDecoder,
   proposalDecoder,
   proposalsDecoder,
   publicKeyDecoder,
   depositsLimitDecoder,
+  pvmKindDecoder,
   smartContractAddressDecoder,
+  smartRollupAddressDecoder,
+  smartRollupCommitmentHashDecoder,
   txRollupBatchContentDecoder,
   txRollupIdDecoder,
   txRollupOriginationParamDecoder,
@@ -45,6 +50,9 @@ import {
   TxRollupOriginationSchema,
   TxRollupSubmitBatchSchema,
   SetDepositsLimitSchema,
+  SmartRollupOriginateSchema,
+  SmartRollupAddMessagesSchema,
+  SmartRollupExecuteOutboxMessageSchema,
 } from './schema/operation';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { toHexString } from './utils';
@@ -67,7 +75,9 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.PROPOSAL_ARR]: proposalsDecoder,
   [CODEC.PARAMETERS]: parametersDecoder,
   [CODEC.ADDRESS]: addressDecoder,
+  [CODEC.SMART_ROLLUP_ADDRESS]: smartRollupAddressDecoder,
   [CODEC.SMART_CONTRACT_ADDRESS]: smartContractAddressDecoder,
+  [CODEC.SMART_ROLLUP_COMMITMENT_HASH]: smartRollupCommitmentHashDecoder,
   [CODEC.VALUE]: valueParameterDecoder,
   [CODEC.INT16]: int16Decoder,
   [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashDecoder,
@@ -76,7 +86,10 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdDecoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentDecoder,
   [CODEC.BURN_LIMIT]: burnLimitDecoder,
-  [CODEC.DEPOSITS_LIMIT]: depositsLimitDecoder
+  [CODEC.DEPOSITS_LIMIT]: depositsLimitDecoder,
+  [CODEC.PVM_KIND]: pvmKindDecoder,
+  [CODEC.PADDED_BYTES]: paddedBytesDecoder,
+  [CODEC.SMART_ROLLUP_MESSAGE]: smartRollupMessageDecoder,
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);
@@ -110,5 +123,11 @@ decoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(UpdateConsensusKeySchema)(val);
 decoders[CODEC.OP_DRAIN_DELEGATE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(DrainDelegateSchema)(val);
+decoders[CODEC.OP_SMART_ROLLUP_ORIGINATE] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(SmartRollupOriginateSchema)(val);
+decoders[CODEC.OP_SMART_ROLLUP_ADD_MESSAGES] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(SmartRollupAddMessagesSchema)(val);
+decoders[CODEC.OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(SmartRollupExecuteOutboxMessageSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
 decoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(SetDepositsLimitSchema)(val);

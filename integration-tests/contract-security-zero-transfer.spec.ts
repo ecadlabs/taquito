@@ -1,5 +1,4 @@
 import { CONFIGS } from './config';
-import { RpcClient } from '@taquito/rpc';
 import { Protocols } from '@taquito/taquito';
 
 // TC-007 - A 0tez transaction to an implicit account should fail.

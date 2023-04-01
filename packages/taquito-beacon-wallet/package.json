@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "15.1.0",
+  "version": "16.0.1",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=16"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -68,13 +68,13 @@
   },
   "dependencies": {
     "@airgap/beacon-dapp": "^3.3.1",
-    "@taquito/taquito": "^15.1.0"
+    "@taquito/taquito": "^16.0.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
     "@types/chrome": "0.0.171",
     "@types/jest": "^26.0.23",
-    "@types/node": "^17.0.0",
+    "@types/node": "^16",
     "@types/ws": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
