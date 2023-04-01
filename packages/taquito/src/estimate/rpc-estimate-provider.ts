@@ -23,6 +23,7 @@ import {
   TransferTicketParams,
   IncreasePaidStorageParams,
   UpdateConsensusKeyParams,
+  SmartRollupAddMessagesParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -38,16 +39,16 @@ import {
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
   createUpdateConsensusKeyOperation,
+  createSmartRollupAddMessagesOperation,
 } from '../contract/prepare';
 import {
   validateAddress,
   InvalidAddressError,
   ValidationResult,
   InvalidOperationKindError,
-  validateContractAddress,
-  InvalidContractAddressError,
 } from '@taquito/utils';
 import { RevealEstimateError } from './error';
+import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
 
 interface Limits {
   fee?: number;
@@ -302,11 +303,11 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param TransferTicketParams operation parameter
    */
   async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
-    if (validateContractAddress(rest.destination) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(rest.destination);
+    if (validateAddress(rest.destination) !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.destination, 'param destination');
     }
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source ?? '');
+      throw new InvalidAddressError(rest.source ?? '', 'param source');
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -449,6 +450,14 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
         case OpKind.INCREASE_PAID_STORAGE:
           operations.push(
             await createIncreasePaidStorageOperation({
+              ...param,
+              ...mergeLimits(param, DEFAULT_PARAMS),
+            })
+          );
+          break;
+        case OpKind.SMART_ROLLUP_ADD_MESSAGES:
+          operations.push(
+            await createSmartRollupAddMessagesOperation({
               ...param,
               ...mergeLimits(param, DEFAULT_PARAMS),
             })
@@ -679,6 +688,76 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       protocolConstants,
       pkh
     );
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a smart_rollup_add_messages operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  async smartRollupAddMessages(params: SmartRollupAddMessagesParams) {
+    const { fee, storageLimit, gasLimit, ...rest } = params;
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createSmartRollupAddMessagesOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+
+    if (isRevealNeeded) {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for contract call
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the contract call
+   *
+   * @param Estimate
+   */
+  async contractCall(
+    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+  ) {
+    const params = contractMethod.toTransferParams();
+    const { fee, storageLimit, gasLimit, ...rest } = params;
+
+    const pkh = (await this.getKeys()).publicKeyHash;
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const op = await createTransferOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+
+    const isRevealNeeded = await this.isRevealOpNeeded([op], pkh);
+    const ops = isRevealNeeded ? await this.addRevealOp([op], pkh) : op;
+    const estimateProperties = await this.prepareEstimate(
+      { operation: ops, source: pkh },
+      protocolConstants,
+      pkh
+    );
+
     if (isRevealNeeded) {
       estimateProperties.shift();
     }

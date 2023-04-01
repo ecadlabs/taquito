@@ -424,7 +424,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       if (
         'string' in d &&
         checkDecodeTezosID(d.string, 'ED25519PublicKey', 'SECP256K1PublicKey', 'P256PublicKey') !==
-        null
+          null
       ) {
         return;
       } else if ('bytes' in d) {
@@ -696,7 +696,7 @@ function functionTypeInternal(
 
   // unpack instruction annotations and assert their maximum number
   function instructionAnn(
-    num: { f?: number; t?: number; v?: number; },
+    num: { f?: number; t?: number; v?: number },
     opt?: UnpackAnnotationsOptions
   ) {
     const a = argAnn(instruction, {
@@ -727,10 +727,10 @@ function functionTypeInternal(
     const ann =
       a.v !== undefined || a.t !== undefined || a.f !== undefined
         ? [
-          ...((a.v === null ? src.v : a.v) || []),
-          ...((a.t === null ? src.t : a.t) || []),
-          ...((a.f === null ? src.f : a.f) || []),
-        ]
+            ...((a.v === null ? src.v : a.v) || []),
+            ...((a.t === null ? src.t : a.t) || []),
+            ...((a.f === null ? src.f : a.f) || []),
+          ]
         : undefined;
 
     const { annots: _annots, ...rest } = t;
@@ -778,12 +778,12 @@ function functionTypeInternal(
             ? ['@' + fieldAnn.slice(1)]
             : undefined
           : insVarAnn === '@%%'
-            ? varAnn
-              ? ['@' + varAnn.slice(1) + '.' + (fieldAnn ? fieldAnn.slice(1) : defField)]
-              : fieldAnn
-                ? ['@' + fieldAnn.slice(1)]
-                : undefined
-            : [insVarAnn]
+          ? varAnn
+            ? ['@' + varAnn.slice(1) + '.' + (fieldAnn ? fieldAnn.slice(1) : defField)]
+            : fieldAnn
+            ? ['@' + fieldAnn.slice(1)]
+            : undefined
+          : [insVarAnn]
         : null,
     });
   }
@@ -1296,8 +1296,16 @@ function functionTypeInternal(
         return [annotateVar({ prim: 'option', args: [{ prim: 'nat' }] }), ...stack.slice(1)];
 
       case 'INT':
-        args(0, ['nat', 'bls12_381_fr']);
+        args(0, ['nat', 'bls12_381_fr', 'bytes']);
         return [annotateVar({ prim: 'int' }), ...stack.slice(1)];
+
+      case 'BYTES':
+        args(0, ['nat', 'int']);
+        return [annotateVar({ prim: 'bytes' }), ...stack.slice(1)];
+
+      case 'NAT':
+        args(0, ['bytes']);
+        return [annotateVar({ prim: 'nat' }), ...stack.slice(1)];
 
       case 'NEG': {
         const s = args(0, ['nat', 'int', 'bls12_381_g1', 'bls12_381_g2', 'bls12_381_fr'])[0];
@@ -1309,12 +1317,12 @@ function functionTypeInternal(
 
       case 'LSL':
       case 'LSR':
-        args(0, ['nat'], ['nat']);
+        args(0, ['nat', 'bytes'], ['nat', 'bytes']);
         return [annotateVar({ prim: 'nat' }), ...stack.slice(2)];
 
       case 'OR':
       case 'XOR': {
-        const s = args(0, ['nat', 'bool'], ['nat', 'bool']);
+        const s = args(0, ['nat', 'bytes', 'bool'], ['nat', 'bytes', 'bool']);
         if (s[0].prim !== s[1].prim) {
           throw new MichelsonInstructionError(
             instruction,
@@ -1326,7 +1334,7 @@ function functionTypeInternal(
       }
 
       case 'AND': {
-        const s = args(0, ['nat', 'bool', 'int'], ['nat', 'bool']);
+        const s = args(0, ['nat', 'bytes', 'bool', 'int'], ['nat', 'bytes', 'bool']);
         if ((s[0].prim !== 'int' || s[1].prim !== 'nat') && s[0].prim !== s[1].prim) {
           throw new MichelsonInstructionError(
             instruction,
@@ -1338,7 +1346,7 @@ function functionTypeInternal(
       }
 
       case 'NOT': {
-        const s = args(0, ['nat', 'bool', 'int'])[0];
+        const s = args(0, ['nat', 'bytes', 'bool', 'int'])[0];
         if (s.prim === 'bool') {
           return [annotateVar({ prim: 'bool' }), ...stack.slice(1)];
         }
@@ -1676,8 +1684,8 @@ function functionTypeInternal(
         return s.prim === 'list'
           ? [annotateVar({ prim: 'list', args: [body[0]] }), ...tail]
           : s.prim === 'map'
-            ? [annotateVar({ prim: 'map', args: [s.args[0], body[0]] }), ...tail]
-            : [annotateVar({ prim: 'option', args: [body[0]] }), ...tail];
+          ? [annotateVar({ prim: 'map', args: [s.args[0], body[0]] }), ...tail]
+          : [annotateVar({ prim: 'option', args: [body[0]] }), ...tail];
       }
 
       case 'ITER': {
@@ -1814,7 +1822,7 @@ function functionTypeInternal(
         assertTypeAnnotationsValid(instruction.args[0]);
         assertTypeAnnotationsValid(instruction.args[1]);
         const s = [instruction.args[0]];
-        if (instruction.prim === "LAMBDA_REC") {
+        if (instruction.prim === 'LAMBDA_REC') {
           s.push({ prim: 'lambda', args: [instruction.args[0], instruction.args[1]] });
         }
         const body = functionTypeInternal(instruction.args[2], s, {
@@ -1860,13 +1868,10 @@ function functionTypeInternal(
           return [
             annotateVar({
               prim: 'option',
-              args: [
-                annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 }))
-              ]
+              args: [annotate({ prim: 'ticket', args: [s] }, instructionAnn({ t: 1, v: 1 }))],
             }),
-            ...stack.slice(2)
+            ...stack.slice(2),
           ];
-
         }
       }
 
@@ -1978,35 +1983,35 @@ function functionTypeInternal(
         }
         return ProtoInferiorTo(proto, Protocol.PtJakarta)
           ? [
-            annotateVar({
-              prim: 'option',
-              args: [
-                {
-                  prim: 'pair',
-                  args: [{ prim: 'int' }, annotate(s[1], { t: null })],
-                },
-              ],
-            }),
-            ...stack.slice(2),
-          ]
+              annotateVar({
+                prim: 'option',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'int' }, annotate(s[1], { t: null })],
+                  },
+                ],
+              }),
+              ...stack.slice(2),
+            ]
           : [
-            annotateVar({
-              prim: 'option',
-              args: [
-                {
-                  prim: 'pair',
-                  args: [
-                    { prim: 'bytes' },
-                    {
-                      prim: 'pair',
-                      args: [{ prim: 'int' }, annotate(s[1], { t: null })],
-                    },
-                  ],
-                },
-              ],
-            }),
-            ...stack.slice(2),
-          ];
+              annotateVar({
+                prim: 'option',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [
+                      { prim: 'bytes' },
+                      {
+                        prim: 'pair',
+                        args: [{ prim: 'int' }, annotate(s[1], { t: null })],
+                      },
+                    ],
+                  },
+                ],
+              }),
+              ...stack.slice(2),
+            ];
       }
 
       case 'OPEN_CHEST':
@@ -2070,7 +2075,7 @@ export function contractSection<T extends 'parameter' | 'storage' | 'code'>(
 export function contractViews(contract: MichelsonContract): {
   [name: string]: MichelsonContractView;
 } {
-  const views: { [name: string]: MichelsonContractView; } = {};
+  const views: { [name: string]: MichelsonContractView } = {};
   for (const s of contract) {
     if (s.prim === 'view') {
       views[s.args[0].string] = s;

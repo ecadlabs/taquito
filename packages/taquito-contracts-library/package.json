@@ -1,6 +1,6 @@
 {
   "name": "@taquito/contracts-library",
-  "version": "15.1.0",
+  "version": "16.0.1",
   "description": "Can be used as an extension on the TezosToolkit to provide contracts data",
   "keywords": [
     "tezos"
@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=16"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -68,15 +68,15 @@
     ]
   },
   "dependencies": {
-    "@taquito/rpc": "^15.1.0",
-    "@taquito/taquito": "^15.1.0",
-    "@taquito/utils": "^15.1.0",
+    "@taquito/rpc": "^16.0.1",
+    "@taquito/taquito": "^16.0.1",
+    "@taquito/utils": "^16.0.1",
     "bignumber.js": "^9.1.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
     "@types/jest": "^26.0.23",
-    "@types/node": "^17.0.0",
+    "@types/node": "^16",
     "@types/superagent": "^4.1.13",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",

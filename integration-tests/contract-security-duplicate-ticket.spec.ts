@@ -1,4 +1,4 @@
-import { Protocols, TezosOperationError } from '@taquito/taquito';
+import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 // TC-T-001: Testcase to duplicate a ticket using "dup" instruction.

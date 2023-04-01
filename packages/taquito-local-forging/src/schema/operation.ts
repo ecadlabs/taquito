@@ -160,6 +160,38 @@ export const SetDepositsLimitSchema = {
 	limit: CODEC.DEPOSITS_LIMIT,
 };
 
+export const SmartRollupOriginateSchema = {
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  pvm_kind: CODEC.PVM_KIND,
+  kernel: CODEC.PADDED_BYTES,
+  origination_proof: CODEC.PADDED_BYTES,
+  parameters_ty: CODEC.VALUE,
+};
+
+export const SmartRollupAddMessagesSchema = {
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  message: CODEC.SMART_ROLLUP_MESSAGE,
+};
+
+export const SmartRollupExecuteOutboxMessageSchema = {
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  rollup: CODEC.SMART_ROLLUP_ADDRESS,
+  cemented_commitment: CODEC.SMART_ROLLUP_COMMITMENT_HASH,
+  output_proof: CODEC.PADDED_BYTES,
+};
+
 export const operationEncoder =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverse)) {

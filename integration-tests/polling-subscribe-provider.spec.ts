@@ -1,5 +1,5 @@
 import { CONFIGS, sleep } from "./config";
-import { Protocols, PollingSubscribeProvider } from "@taquito/taquito";
+import { PollingSubscribeProvider } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;

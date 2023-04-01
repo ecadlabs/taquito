@@ -328,8 +328,7 @@ export class SaplingToolkit {
       if (!input.isSpent && sumSelectedInputs.isLessThan(amountMutez)) {
         const txAmount = convertValueToBigNumber(input.value);
         sumSelectedInputs = sumSelectedInputs.plus(txAmount);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { isSpent, ...rest } = input;
+        const { isSpent: _isSpent, ...rest } = input;
         inputsToSpend.push(rest);
       }
     });

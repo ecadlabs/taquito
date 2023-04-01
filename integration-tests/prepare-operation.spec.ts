@@ -1,19 +1,17 @@
-import { Protocols } from '@taquito/taquito';
 import { OperationContentsBallot, OperationContentsTransaction } from '@taquito/rpc';
-import { 
-  OpKind, 
+import {
+  OpKind,
 } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, setup, protocol }) => {
   const Tezos = lib;
   let contractAddress: string;
-  const limanet = (protocol === Protocols.PtLimaPtL) ? test : test.skip;
 
   describe(`Test Preparation of operations using the PrepareProvider`, () => {
     beforeAll(async (done) => {
       await setup();
-      
+
       try {
         const op = await Tezos.contract.originate({
           code: `{ parameter (or (or (int %decrement) (int %increment)) (unit %reset)) ;
@@ -34,7 +32,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
 
       done();
     })
-    
+
     beforeEach(async (done) => {
       done();
     });
@@ -86,19 +84,6 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
       done();
     });
 
-    limanet('should be able to prepare a txRollupOriginate operation', async (done) => {
-      const prepared = await Tezos.prepare.txRollupOrigination({});
-
-      expect(prepared).toBeDefined();
-      expect(prepared.counter).toBeDefined();
-      expect(prepared.opOb).toBeDefined();
-      expect(prepared.opOb.branch).toBeDefined();
-      expect(prepared.opOb.contents).toBeDefined();
-      expect(prepared.opOb.contents[0].kind).toEqual('tx_rollup_origination');
-
-      done();
-    });
-
     it('should be able to prepare a ballot operation', async (done) => {
       const prepared = await Tezos.prepare.ballot({
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
@@ -135,4 +120,4 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     });
   });
 
-}) 
+})
