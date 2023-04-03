@@ -152,7 +152,7 @@ export interface PreparationProvider {
 
   /**
    *
-   * @description Method to covert a PreparedOperation to the params needed for the preapplyOperation method
+   * @description Method to convert a PreparedOperation to the params needed for the preapplyOperation method
    * @param prepared a Prepared Operation
    * @returns a PreapplyParams object
    */
