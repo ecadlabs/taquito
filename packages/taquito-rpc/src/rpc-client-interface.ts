@@ -48,6 +48,7 @@ import {
   AllTicketBalances,
   PendingOperations,
   PendingOperationsQueryArguments,
+  OriginationProofParams,
 } from './types';
 
 export interface RPCOptions {
@@ -130,6 +131,7 @@ export interface RpcClientInterface {
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
   getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperations>;
+  getOriginationProof(params: OriginationProofParams, options?: RPCOptions): Promise<string>;
 }
 
 export enum RPCMethodName {
@@ -173,4 +175,5 @@ export enum RPCMethodName {
   GET_TICKET_BALANCE = 'getTicketBalance',
   GET_ALL_TICKET_BALANCES = 'getAllTicketBalances',
   GET_PENDING_OPERATIONS = 'getPendingOperations',
+  GET_ORIGINATION_PROOF = 'getOriginationProof',
 }
