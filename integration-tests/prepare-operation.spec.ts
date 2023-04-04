@@ -37,12 +37,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
     });
 
     it('should be able to prepare a transaction operation', async (done) => {
-      await setup(true);
-      const account = await createAddress();
-      const fundOp = await Tezos.contract.transfer({ to: await account.signer.publicKeyHash(), amount: 6 })
-      await fundOp.confirmation();
-
-      const prepared = await account.prepare.transaction({
+      const prepared = await Tezos.prepare.transaction({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 5
       });
@@ -53,7 +48,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(prepared.opOb.branch).toBeDefined();
       expect(prepared.opOb.contents).toBeDefined();
 
-      const content = prepared.opOb.contents[1] as OperationContentsTransaction;
+      const content = prepared.opOb.contents[0] as OperationContentsTransaction;
 
       expect(content.kind).toEqual('transaction');
       expect(content.destination).toEqual('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')
@@ -63,12 +58,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
     });
 
     it('should be able to prepare a batch operation', async (done) => {
-      await setup(true);
-      const account = await createAddress();
-      const fundOp = await Tezos.contract.transfer({ to: await account.signer.publicKeyHash(), amount: 6 })
-      await fundOp.confirmation();
-
-      const prepared = await account.prepare.batch([
+      const prepared = await Tezos.prepare.batch([
         {
           kind: OpKind.TRANSACTION,
           to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -86,9 +76,9 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(prepared.opOb).toBeDefined();
       expect(prepared.opOb.branch).toBeDefined();
       expect(prepared.opOb.contents).toBeDefined();
-      expect(prepared.opOb.contents.length).toEqual(3);
+      expect(prepared.opOb.contents.length).toEqual(2);
+      expect(prepared.opOb.contents[0].kind).toEqual('transaction');
       expect(prepared.opOb.contents[1].kind).toEqual('transaction');
-      expect(prepared.opOb.contents[2].kind).toEqual('transaction');
 
       done();
     });
@@ -131,19 +121,14 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
   describe('toPreapply conversion method', () => {
     it('Verify toPreaplyParams returns executable params for preapplyOperations', async (done) => {
-      await setup(true);
       const reciever = await createAddress();
-      const sender = await createAddress();
-
-      const fundOp = await Tezos.contract.transfer({ amount: 5, to: await sender.signer.publicKeyHash()})
-      await fundOp.confirmation()
 
       const pkh = await reciever.signer.publicKeyHash();
-      const preparedTransfer = await sender.prepare.transaction({ amount: 1, to: pkh });
+      const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: pkh });
 
-      const preapplyParams = await sender.prepare.toPreapply(preparedTransfer)
+      const preapplyParams = await Tezos.prepare.toPreapply(preparedTransfer)
 
-      const preapply = await sender.rpc.preapplyOperations(preapplyParams);
+      const preapply = await Tezos.rpc.preapplyOperations(preapplyParams);
 
       expect(preapplyParams[0].contents).toEqual(preparedTransfer.opOb.contents)
       expect(preapplyParams[0].branch).toEqual(preparedTransfer.opOb.branch)
