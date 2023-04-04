@@ -13,12 +13,12 @@
   // https://better-call.dev/granadanet/KT1T836HqhBu9waqmknStVDCXu2WogZtzsNz/operations
   // https://better-call.dev/hangzhounet/KT1T2gL26SwYMxpkR5SZT1pHRBF84knfw8Cg/operations
   // https://better-call.dev/ithacanet/KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5/operations
-  // https://better-call.dev/kathmandunet/KT1BQuSVXWz23iGeXQCrAGR6GcVcqKeE1F7T/operations
+  // https://better-call.dev/mumbainet/KT1Tkm7U3NS9JWgeCGywrRTSQdLZJvDSgD5Z/operations
 
   let browser = "";
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
-    { value: "kathmandunet", label: "Kathmandunet", group: "current testnets" },
+    { value: "mumbainet", label: "Mumbainet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
     { value: "mondaynet", label: "Mondaynet", group: "other testnets" },
@@ -42,10 +42,6 @@
         store.updateTezos(new TezosToolkit(rpcUrl.mainnet));
         store.updateNetworkType(NetworkType.MAINNET);
         break;
-      case "hangzhounet":
-        store.updateTezos(new TezosToolkit(rpcUrl.hangzhounet));
-        store.updateNetworkType(NetworkType.HANGZHOUNET);
-        break;
       case "ithacanet":
         store.updateTezos(new TezosToolkit(rpcUrl.ithacanet));
         store.updateNetworkType(NetworkType.ITHACANET);
@@ -54,9 +50,9 @@
         store.updateTezos(new TezosToolkit(rpcUrl.ghostnet));
         store.updateNetworkType(NetworkType.GHOSTNET);
         break;
-      case "kathmandunet":
-        store.updateTezos(new TezosToolkit(rpcUrl.kathmandunet));
-        store.updateNetworkType(NetworkType.KATHMANDUNET);
+      case "mumbainet":
+        store.updateTezos(new TezosToolkit(rpcUrl.mumbainet));
+        store.updateNetworkType(NetworkType.MUMBAINET);
         break;
       case "custom":
         //TODO: input custom RPC URL
