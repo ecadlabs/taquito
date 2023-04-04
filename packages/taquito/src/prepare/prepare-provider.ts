@@ -257,6 +257,7 @@ export class PrepareProvider implements PreparationProvider {
       const hash = await this.getBlockHash();
       const protocol = await this.getProtocolHash();
 
+      this.#counters = {};
       const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
       const contents = this.constructOpContents(ops, headCounter, pkh);
@@ -303,6 +304,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -341,6 +343,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -379,6 +382,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -420,6 +424,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -462,6 +467,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -503,6 +509,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -544,6 +551,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -585,6 +593,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -617,6 +626,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     let currentVotingPeriod: VotingPeriodBlockResult;
@@ -663,6 +673,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     let currentVotingPeriod: VotingPeriodBlockResult;
@@ -709,6 +720,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -747,6 +759,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
@@ -788,6 +801,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
@@ -801,46 +815,46 @@ export class PrepareProvider implements PreparationProvider {
     };
   }
 
-    /**
+  /**
    *
    * @description Method to prepare a smart_rollup_originate operation
    * @param operation RPCOperation object or RPCOperation array
    * @returns a PreparedOperation object
    */
-    async smartRollupOriginate(params: SmartRollupOriginateParams): Promise<PreparedOperation> {
-      const pkh = await this.signer.publicKeyHash();
+  async smartRollupOriginate(params: SmartRollupOriginateParams): Promise<PreparedOperation> {
+    const pkh = await this.signer.publicKeyHash();
 
-      const originationProof = await this.rpc.getOriginationProof({
-        kind: params.pvmKind,
-        kernel: params.kernel,
-      });
-      const completeParams = { ...params, originationProof };
-      const estimate = await this.estimate.smartRollupOriginate(completeParams);
-      const estimates = this.buildEstimates(estimate);
+    const originationProof = await this.rpc.getOriginationProof({
+      kind: params.pvmKind,
+      kernel: params.kernel,
+    });
+    const completeParams = { ...params, originationProof };
+    const estimate = await this.estimate.smartRollupOriginate(completeParams);
+    const estimates = this.buildEstimates(estimate);
 
-      const op = await createSmartRollupOriginateOperation({
-        ...completeParams,
-        ...estimates,
-      });
+    const op = await createSmartRollupOriginateOperation({
+      ...completeParams,
+      ...estimates,
+    });
 
-      const operation = await this.addRevealOperationIfNeeded(op, pkh);
-      const ops = this.convertIntoArray(operation);
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
 
-      const hash = await this.getBlockHash();
-      const protocol = await this.getProtocolHash();
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
 
-      const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
-      const contents = this.constructOpContents(ops, headCounter, pkh);
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+    const contents = this.constructOpContents(ops, headCounter, pkh);
 
-      return {
-        opOb: {
-          branch: hash,
-          contents,
-          protocol,
-        },
-        counter: headCounter,
-      };
-    }
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
 
   /**
    *
@@ -862,6 +876,7 @@ export class PrepareProvider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
@@ -889,6 +904,8 @@ export class PrepareProvider implements PreparationProvider {
     const protocol = await this.getProtocolHash();
 
     const pkh = await this.signer.publicKeyHash();
+
+    this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const params = contractMethod.toTransferParams();
