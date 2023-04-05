@@ -1,9 +1,9 @@
 import { TezosToolkit, Protocols } from "@taquito/taquito";
 import { CONFIGS, sleep } from "./config";
 
-CONFIGS().forEach(({ lib, protocol, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  const flextesanet = (protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha) && rpc === 'http://localhost:20000' ? test : test.skip;
+  const flextesanet =  rpc === 'http://localhost:20000' ? test : test.skip;
 
   describe(`Test Drain Delegate using: ${rpc}`, () => {
     let Delegate: TezosToolkit;

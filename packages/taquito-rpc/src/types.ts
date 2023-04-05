@@ -480,7 +480,7 @@ export interface OperationContentsSmartRollupOriginate {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  pvm_kind: PVMKind;
+  pvm_kind: PvmKind;
   kernel: string;
   origination_proof: string;
   parameters_ty: MichelsonV1Expression;
@@ -977,7 +977,7 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  pvm_kind: PVMKind;
+  pvm_kind: PvmKind;
   kernel: string;
   origination_proof: string;
   parameters_ty: MichelsonV1Expression;
@@ -2116,4 +2116,38 @@ export interface TxRollupInboxResponse {
   merkle_root: string;
 }
 
-export type PVMKind = 'wasm_2_0_0' | 'arith';
+
+export interface PendingOperationsQueryArguments {
+  version?: '1';
+  applied?: boolean;
+  refused?: boolean;
+  outdated?: boolean;
+  branchRefused?: boolean;
+  branchDelayed?: boolean;
+  validationPass?: '0' | '1' | '2' | '3';
+}
+
+type FailedProcessedOperation = Pick<
+  OperationEntry,
+  'hash' | 'protocol' | 'branch' | 'contents' | 'signature'
+> & {
+  error: TezosGenericOperationError[];
+};
+
+export interface PendingOperations {
+  applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
+  refused: FailedProcessedOperation[];
+  outdated: FailedProcessedOperation[];
+  branch_refused: FailedProcessedOperation[];
+  branch_delayed: FailedProcessedOperation[];
+  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
+}
+export enum PvmKind {
+  WASM2 = 'wasm_2_0_0',
+  ARITH = 'arith',
+}
+
+export interface OriginationProofParams {
+  kind: PvmKind;
+  kernel: string;
+}

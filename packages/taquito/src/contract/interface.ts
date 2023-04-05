@@ -25,6 +25,7 @@ import {
   ProposalsParams,
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
+  SmartRollupOriginateParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
@@ -35,6 +36,7 @@ import { BallotOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
+import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -285,4 +287,12 @@ export interface ContractProvider extends StorageProvider {
   smartRollupAddMessages(
     params: SmartRollupAddMessagesParams
   ): Promise<SmartRollupAddMessagesOperation>;
+  /**
+   * @description Smart rollup originate
+   *
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param SmartRollupOriginateParams smartRollupOriginate operation parameter
+   */
+  smartRollupOriginate(params: SmartRollupOriginateParams): Promise<SmartRollupOriginateOperation>;
 }

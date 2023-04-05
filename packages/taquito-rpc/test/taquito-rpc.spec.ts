@@ -39,6 +39,7 @@ import {
   OperationContentsAndResultSmartRollupExecuteOutboxMessage,
   RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
+  PendingOperations,
 } from '../src/types';
 import {
   blockIthacanetSample,
@@ -54,6 +55,7 @@ import {
   smartRollupOriginateResponse,
   smartRollupAddMessagesResponse,
   smartRollupExecuteOutboxMessageResponse,
+  pendingOperationsResponse,
 } from './data/rpc-responses';
 
 /**
@@ -4409,6 +4411,22 @@ describe('RpcClient test', () => {
       });
 
       expect(response).toEqual(ticketBalancesResponse);
+      done();
+    });
+  });
+
+  describe('getPendingOperations', () => {
+    it('should query the correct url and retrun pending operations in mempool', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
+      const response: PendingOperations = await client.getPendingOperations();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/mempool/pending_operations`,
+        query: {},
+      });
+
+      expect(response).toEqual(pendingOperationsResponse);
       done();
     });
   });

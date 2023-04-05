@@ -33,6 +33,7 @@ import {
   txRollupInbox,
   txRollupState,
   ticketBalancesResponse,
+  pendingOperationsResponse,
 } from './data/rpc-responses';
 
 /**
@@ -92,6 +93,7 @@ describe('RpcClientCache test', () => {
       getTxRollupState: jest.fn(),
       getTicketBalance: jest.fn(),
       getAllTicketBalances: jest.fn(),
+      getPendingOperations: jest.fn(),
     };
 
     mockRpcClient.getRpcUrl.mockReturnValue(rpcUrl);
@@ -131,6 +133,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getTxRollupState.mockReturnValue(txRollupState);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
     mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
+    mockRpcClient.getPendingOperations.mockReturnValue(pendingOperationsResponse);
     rpcCache = new RpcClientCache(mockRpcClient);
   });
 
@@ -183,6 +186,7 @@ describe('RpcClientCache test', () => {
       content: { string: 'ticket1' },
     });
     await rpcCache.getAllTicketBalances(contractAddress);
+    await rpcCache.getPendingOperations();
 
     expect(rpcCache.getAllCachedData()['rpcTest/getBlockHash/head/'].response).toEqual(blockHash);
     expect(rpcCache.getAllCachedData()['rpcTest/getBlock/head/'].response).toEqual(blockResponse);
@@ -279,6 +283,9 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/head/${contractAddress}/`].response
     ).toEqual(ticketBalancesResponse);
+    expect(rpcCache.getAllCachedData()[`rpcTest/getPendingOperations/{}/`].response).toEqual(
+      pendingOperationsResponse
+    );
 
     rpcCache.deleteAllCachedData();
     done();
@@ -497,6 +504,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getProtocols();
     await rpcCache.getTicketBalance(contractAddress, ticketToken);
     await rpcCache.getAllTicketBalances(contractAddress);
+    await rpcCache.getPendingOperations();
 
     rpcCache.deleteAllCachedData();
 

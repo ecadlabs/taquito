@@ -48,6 +48,9 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
+  PendingOperationsQueryArguments,
+  PendingOperations,
+  OriginationProofParams,
 } from '../types';
 
 import {
@@ -70,7 +73,10 @@ type RpcMethodParam =
   | UnparsingMode
   | BigMapKey
   | BakingRightsQueryArguments
-  | EndorsingRightsQueryArguments;
+  | PendingOperationsQueryArguments
+  | EndorsingRightsQueryArguments
+  | OriginationProofParams;
+
 
 const defaultTtl = 1000;
 
@@ -1220,6 +1226,53 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getAllTicketBalances(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
+   * @param args has 5 optional properties. We support version 1 with new encoding as version 0 will be deprecated soon. The rest of the properties is to filter pending operations response
+   * @default args { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
+   * @see https://tezos.gitlab.io/CHANGES.html?highlight=pending_operations#id4
+   */
+    async getPendingOperations(
+      args: PendingOperationsQueryArguments = {}
+    ): Promise<PendingOperations> {
+      const key = this.formatCacheKey(
+        this.rpcClient.getRpcUrl(),
+        RPCMethodName.GET_PENDING_OPERATIONS,
+        [args]
+      );
+      if (this.has(key)) {
+        return this.get(key);
+      } else {
+        const response = this.rpcClient.getPendingOperations(args);
+        this.put(key, response);
+        return response;
+      }
+    }
+
+  /**
+   *
+   * @param params contains the PVM kind and kernel to generate the origination proof from
+   * @description rpc call to generate the origination proof needed for the smart rollup originate operation
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getOriginationProof(
+    params: OriginationProofParams,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<string> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_ORIGINATION_PROOF,
+      [block, params]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getOriginationProof(params, { block });
       this.put(key, response);
       return response;
     }

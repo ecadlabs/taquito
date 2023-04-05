@@ -1,3 +1,4 @@
+import { PvmKind } from '@taquito/rpc';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { Context } from '../../src/context';
 import { Estimate } from '../../src/estimate/estimate';
@@ -828,6 +829,142 @@ describe('OperationBatch test', () => {
       });
 
       done();
+    });
+  });
+
+  describe('withSmartRollupOriginate op', () => {
+    it('should produce a batch op without reveal', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_ORIGINATE,
+          pvmKind: PvmKind.WASM2,
+          kernel: '1234567890',
+          originationProof: '0987654321',
+          parametersType: { prim: 'bytes' },
+        },
+      ];
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_originate',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              kernel: '1234567890',
+              origination_proof: '0987654321',
+              parameters_ty: { prim: 'bytes' },
+              pvm_kind: 'wasm_2_0_0',
+              counter: '123457',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 123456,
+      });
+    });
+
+    it('should produce a batch op with estimate values overridden', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_ORIGINATE,
+          pvmKind: PvmKind.WASM2,
+          kernel: '1234567890',
+          originationProof: '0987654321',
+          parametersType: { prim: 'bytes' },
+          gasLimit: 1100,
+          fee: 399,
+          storageLimit: 95,
+        },
+      ];
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_originate',
+              source: 'test_pub_key_hash',
+              fee: '399',
+              gas_limit: '1100',
+              storage_limit: '95',
+              kernel: '1234567890',
+              origination_proof: '0987654321',
+              parameters_ty: { prim: 'bytes' },
+              pvm_kind: 'wasm_2_0_0',
+              counter: '123457',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 123456,
+      });
+    });
+
+    it('should produce a batch op with reveal', async () => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      const estimateReveal = new Estimate(1000000, 0, 64, 250);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_ORIGINATE,
+          pvmKind: PvmKind.WASM2,
+          kernel: '1234567890',
+          originationProof: '0987654321',
+          parametersType: { prim: 'bytes' },
+        },
+      ];
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_pub_key',
+              source: 'test_pub_key_hash',
+              gas_limit: '1100',
+              storage_limit: '0',
+              counter: '123457',
+            },
+            {
+              kind: 'smart_rollup_originate',
+              source: 'test_pub_key_hash',
+              fee: '475',
+              gas_limit: '1330',
+              storage_limit: '93',
+              kernel: '1234567890',
+              origination_proof: '0987654321',
+              parameters_ty: { prim: 'bytes' },
+              pvm_kind: 'wasm_2_0_0',
+              counter: '123458',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 123456,
+      });
     });
   });
 

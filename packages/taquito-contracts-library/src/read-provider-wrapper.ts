@@ -46,6 +46,7 @@ export class ReadWrapperContractsLibrary implements TzReadProvider {
     hard_gas_limit_per_block: BigNumber;
     hard_storage_limit_per_operation: BigNumber;
     cost_per_byte: BigNumber;
+    smart_rollup_origination_size: number;
   }> {
     return this.readProvider.getProtocolConstants(block);
   }
