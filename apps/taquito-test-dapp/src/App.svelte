@@ -8,6 +8,8 @@
   import Layout from "./Layout.svelte";
   import TestContainer from "./lib/TestContainer.svelte";
 
+  let layout: Layout;
+
   // https://ide.ligolang.org/p/RL93C86hftTTCNGU0ykLMw | https://ide.ligolang.org/p/61ENTorA4PSfQg-jhpu0jA
   // https://better-call.dev/florencenet/KT1PzUGbdKaN332Smfd1ExpdKQ7BSzzJRqJ4/operations
   // https://better-call.dev/granadanet/KT1T836HqhBu9waqmknStVDCXu2WogZtzsNz/operations
@@ -37,22 +39,16 @@
   const changeNetwork = (event) => {
     networkError = false;
     showCustomNetworkInput = false;
+    const walletComponent = layout.getSideBar().getWallet();
     switch (event.detail.value.toLocaleLowerCase()) {
       case "mainnet":
-        store.updateTezos(new TezosToolkit(rpcUrl.mainnet));
-        store.updateNetworkType(NetworkType.MAINNET);
-        break;
-      case "ithacanet":
-        store.updateTezos(new TezosToolkit(rpcUrl.ithacanet));
-        store.updateNetworkType(NetworkType.ITHACANET);
+        walletComponent.setWallet({networkType: NetworkType.MAINNET});
         break;
       case "ghostnet":
-        store.updateTezos(new TezosToolkit(rpcUrl.ghostnet));
-        store.updateNetworkType(NetworkType.GHOSTNET);
+        walletComponent.setWallet({networkType: NetworkType.GHOSTNET});
         break;
       case "mumbainet":
-        store.updateTezos(new TezosToolkit(rpcUrl.mumbainet));
-        store.updateNetworkType(NetworkType.MUMBAINET);
+        walletComponent.setWallet({networkType: NetworkType.MUMBAINET});
         break;
       case "custom":
         //TODO: input custom RPC URL
@@ -180,7 +176,7 @@
   }
 </style>
 
-<Layout>
+<Layout bind:this={layout}>
   {#if $store.userAddress && $store.wallet}
     <TestContainer />
   {:else}
