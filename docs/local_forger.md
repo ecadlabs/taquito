@@ -6,7 +6,7 @@ author: Michael Kernaghan
 
 # How to Use the Taquito Local Forging Package
 
-If you are looking for a way to interact with the Tezos blockchain, Taquito is a great option. One of the tools offered by Taquito is the local forging package, which allows you to simulate the forging and signing of transactions locally without interacting with a node. Here is a step-by-step guide on how to use the Taquito local forging package:
+One of the tools offered by Taquito is the local forging package, which allows you to forge transactions locally without interacting with a node. Here is a step-by-step guide on how to use the Taquito local forging package:
 
 ## Step 1: Import the Local Forger
 
@@ -19,7 +19,7 @@ import { LocalForger } from '@taquito/local-forging';
 
 ## Step 2: Create a Transaction
 
-Next, you must create a transaction you want to simulate. You can do this using the Taquito library as you normally would. Here is an example of creating a transaction to transfer 1 XTZ from one address to another:
+Next, you must create a transaction you want to forge. You can do this using the Taquito library as you normally would. Here is an example of creating a transaction to transfer 1 XTZ from one address to another:
 
 ```
 import { TezosToolkit } from '@taquito/taquito';
@@ -35,7 +35,7 @@ const transferOperation = await tezos.contract.transfer({ to, amount }).send({ f
 
 ## Step 3: Forge the Transaction
 
-Once you have created your transaction, you can use the LocalForger class to simulate the forging and signing process. Here is an example of how to do this:
+Once you have created your transaction, you can use the LocalForger class. Here is an example of how to do this:
 
 ```
 const forger = new LocalForger();
