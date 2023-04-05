@@ -121,9 +121,9 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
   describe('toPreapply conversion method', () => {
     it('Verify toPreaplyParams returns executable params for preapplyOperations', async (done) => {
-      const reciever = await createAddress();
+      const receiver = await createAddress();
 
-      const pkh = await reciever.signer.publicKeyHash();
+      const pkh = await receiver.signer.publicKeyHash();
       const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: pkh });
 
       const preapplyParams = await Tezos.prepare.toPreapply(preparedTransfer)
@@ -148,8 +148,8 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
   describe('toForge conversion method', () => {
 
     it('Verify that toForge is executable for both local forger and rpc.forgeOperations', async (done) => {
-      const reciever = await createAddress();
-      const pkh = await reciever.signer.publicKeyHash();
+      const receiver = await createAddress();
+      const pkh = await receiver.signer.publicKeyHash();
       const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: pkh });
       const forger = new LocalForger();
 
