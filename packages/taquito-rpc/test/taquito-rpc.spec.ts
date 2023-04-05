@@ -44,12 +44,10 @@ import {
   OperationContentsAndResultSmartRollupPublish,
   OperationContentsAndResultSmartRollupRefute,
   SmartRollupRefutationMove,
-  SmartRollupRefutationMoveStepProof,
   OperationContentsAndResultSmartRollupRecoverBond,
   OperationContentsAndResultSmartRollupTimeout,
-  SmartRollupTimeoutStakers,
   SmartRollupRefutationStart,
-  SmartRollupRefutationMoveStepDissection,
+  SmartRollupRefutationOptions,
 } from '../src/types';
 import {
   blockIthacanetResponse,
@@ -4492,10 +4490,18 @@ describe('RpcClient test', () => {
       expect(content.opponent).toEqual('tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC');
 
       const refutation = content.refutation as SmartRollupRefutationMove;
-      const step = refutation.step as SmartRollupRefutationMoveStepProof;
+      if (refutation.refutation_kind !== SmartRollupRefutationOptions.MOVE) {
+        fail('expected refutation_kind: "move"');
+      }
 
       expect(refutation.refutation_kind).toEqual('move');
       expect(refutation.choice).toEqual('176000000003');
+
+      const step = refutation.step;
+      if (Array.isArray(step)) {
+        fail('expected an object not an array');
+      }
+
       expect(step.pvm_step).toEqual(
         '03000298e4e3d5c88da366e885edf675ffd7a5087c8e0a2fcd508e7951113fe4c1491810067c06a78b88cb7c3e60c56b47ba9e14c922dbdbd4811ac6fee80a309620630005820764757261626c6582066b65726e656cd07d20c53bdd5b536a6be9c4cdad16e69a9af40b93a6564655fffd88bba050519008726561646f6e6c7982066b65726e656cd0a645771d9d5228a31312b282119c596699ccb6b60b93d759c2072a493ddbb5740c7761736d5f76657273696f6e8101408208636f6e74656e7473810130c10200322e302e30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066c656e677468c008000000000000000503746167c00800000004536f6d650003810370766d00050004000381166f7574626f785f76616c69646974795f706572696f64c00400013b0082136c6173745f746f705f6c6576656c5f63616c6cc00680c0abd38f05196d6178696d756d5f7265626f6f74735f7065725f696e707574c002e80781146f7574626f785f6d6573736167655f6c696d6974c002a401810c6d61785f6e625f7469636b73c00580dc9afd28820576616c7565810370766d8107627566666572738205696e7075740003810468656164c001008208636f6e74656e7473d06e2c0a5b371a53e76a9b7f221a5baa67170b3f9f43205fb06c0649123cec2358066c656e677468c00103066f75747075740004820132810a6c6173745f6c6576656cc0040000a33f0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f786573d0ccbff4c181451166adb153f7a1631e9f036832f8e5c82acd8e8c12876eeeda870134810d6d6573736167655f6c696d6974c002a401047761736d00048205696e707574c0050000a33f0203746167c00b0000000770616464696e67820c63757272656e745f7469636bc00683c0abd38f050e7265626f6f745f636f756e746572c002e907'
       );
@@ -4543,11 +4549,18 @@ describe('RpcClient test', () => {
       expect(content.rollup).toEqual('sr1LhGA2zC9VcYALSifpRBCgDiQfDSQ6bb4x');
       expect(content.opponent).toEqual('tz1ZpuBypK6G754crXDZyoMPaVPoBmBsPda2');
 
-      const refutation = content.refutation as SmartRollupRefutationMove;
-      const step = refutation.step as SmartRollupRefutationMoveStepDissection[];
+      const refutation = content.refutation;
+      if (refutation.refutation_kind !== SmartRollupRefutationOptions.MOVE) {
+        fail('Expected Refutation kind: "move"');
+      }
 
       expect(refutation.refutation_kind).toEqual('move');
       expect(refutation.choice).toEqual('0');
+
+      const step = refutation.step;
+      if (!Array.isArray(step)) {
+        fail('expected step to be an array');
+      }
       expect(step[0]).toEqual({
         state: 'srs11y1ZCJfeWnHzoX3rAjcTXiphwg8NvqQhvishP3PU68jgSREuk6',
         tick: '0',
@@ -4594,7 +4607,7 @@ describe('RpcClient test', () => {
       expect(content.storage_limit).toEqual('0');
       expect(content.rollup).toEqual('sr1QZkk1swognQW3dmiXvga3wVkEgBq7QFjE');
 
-      const stakers = content.stakers as SmartRollupTimeoutStakers;
+      const stakers = content.stakers;
 
       expect(stakers.alice).toEqual('tz1TecRhYLVV9bTKRKU9g1Hhpb1Ymw3ynzWS');
       expect(stakers.bob).toEqual('tz1iFnSQ6V2d8piVMPMjtDNdkYNMaUfKwsoy');
