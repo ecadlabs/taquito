@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "16.0.1",
+  "version": "16.1.0",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -77,12 +77,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^16.0.1",
-    "@taquito/local-forging": "^16.0.1",
-    "@taquito/michel-codec": "^16.0.1",
-    "@taquito/michelson-encoder": "^16.0.1",
-    "@taquito/rpc": "^16.0.1",
-    "@taquito/utils": "^16.0.1",
+    "@taquito/http-utils": "^16.1.0",
+    "@taquito/local-forging": "^16.1.0",
+    "@taquito/michel-codec": "^16.1.0",
+    "@taquito/michelson-encoder": "^16.1.0",
+    "@taquito/rpc": "^16.1.0",
+    "@taquito/utils": "^16.1.0",
     "bignumber.js": "^9.1.0",
     "rxjs": "^6.6.3"
   },

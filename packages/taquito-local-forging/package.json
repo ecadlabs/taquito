@@ -1,6 +1,6 @@
 {
   "name": "@taquito/local-forging",
-  "version": "16.0.1",
+  "version": "16.1.0",
   "description": "Provide local forging functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -68,11 +68,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/utils": "^16.0.1",
+    "@taquito/utils": "^16.1.0",
     "bignumber.js": "^9.1.0"
   },
   "devDependencies": {
-    "@taquito/rpc": "^16.0.1",
+    "@taquito/rpc": "^16.1.0",
     "@types/bluebird": "^3.5.36",
     "@types/estree": "^1.0.0",
     "@types/jest": "^26.0.23",

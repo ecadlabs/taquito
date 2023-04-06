@@ -1,7 +1,7 @@
 {
   "name": "taquito-test-dapp-vite",
   "private": true,
-  "version": "16.0.1",
+  "version": "16.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -25,9 +25,9 @@
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^3.3.1",
-    "@taquito/beacon-wallet": "^16.0.1",
-    "@taquito/taquito": "^16.0.1",
-    "@taquito/utils": "^16.0.1",
+    "@taquito/beacon-wallet": "^16.1.0",
+    "@taquito/taquito": "^16.1.0",
+    "@taquito/utils": "^16.1.0",
     "buffer": "^6.0.3",
     "svelte-select": "^4.4.7",
     "vite-compatible-readable-stream": "^3.6.1"
