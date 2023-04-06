@@ -56,6 +56,8 @@ export class LocalForger implements Forger {
           continue;
         } else if (content.kind === 'transaction' && diff[0] === 'parameters') {
           continue;
+        } else if (content.kind === 'set_deposits_limit' && diff[0] === 'limit') {
+          continue
         } else if (
           content.kind === ('tx_rollup_submit_batch' as unknown) &&
           diff[0] === 'burn_limit'
