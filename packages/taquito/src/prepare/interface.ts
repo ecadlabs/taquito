@@ -1,4 +1,4 @@
-import { OperationContents } from '@taquito/rpc';
+import { OperationContents, PreapplyParams } from '@taquito/rpc';
 import {
   BallotParams,
   DelegateParams,
@@ -18,6 +18,7 @@ import { ContractMethod } from '../contract/contract-methods/contract-method-fla
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { ContractProvider } from '../contract/interface';
 import { ParamsWithKind } from '../operations/types';
+import { ForgeParams } from '@taquito/local-forging';
 
 /**
  * @description PrepareProvider is a utility class to output the prepared format of an operation
@@ -148,6 +149,22 @@ export interface PreparationProvider {
   contractCall(
     contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
   ): Promise<PreparedOperation>;
+
+  /**
+   *
+   * @description Method to convert a PreparedOperation to the params needed for the preapplyOperation method
+   * @param prepared a Prepared Operation
+   * @returns a PreapplyParams object
+   */
+  toPreapply(prepared: PreparedOperation): Promise<PreapplyParams>;
+
+  /**
+   *
+   * @description Method to convert a PreparedOperation to the params needed for forging
+   * @param param a Prepared Operation
+   * @returns a ForgeParams object
+   */
+  toForge(param: PreparedOperation): ForgeParams;
 }
 
 export interface PreparedOperation {
