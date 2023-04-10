@@ -41,6 +41,7 @@ const sidebars = {
         'increase_paid_storage',
         'lambda_view',
         'liquidity_baking',
+        'local_forger',
         'manager_lambda',
         'maps_bigmaps',
         'michelsonmap',
