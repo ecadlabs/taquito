@@ -11,7 +11,7 @@ const isNode =
 
 const adapterPromise = isNode
   ? undefined
-  : import('@vespaiach/axios-fetch-adapter').then((mod) => mod.default).catch(() => undefined);
+  : import('@taquito/axios-fetch-adapter').then((mod) => mod.default).catch(() => undefined);
 
 export * from './status_code';
 export { VERSION } from './version';
