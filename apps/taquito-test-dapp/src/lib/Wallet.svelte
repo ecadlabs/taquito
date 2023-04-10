@@ -13,13 +13,15 @@
   let showDialog = false;
   let connectedWallet = "";
 
-  const createNewWallet = () => {
+  const createNewWallet = (config: {
+    networkType: NetworkType,
+  }) => {
     return new BeaconWallet(
       $store.disableDefaultEvents
         ? {
             name: "Taquito Test Dapp",
             matrixNodes: [defaultMatrixNode] as any,
-            preferredNetwork: $store.networkType,
+            preferredNetwork: config.networkType,
             // disableDefaultEvents: true // Disable all events / UI. This also disables the pairing alert.
             // eventHandlers: {
             //   // To keep the pairing alert, we have to add the following default event handlers back
@@ -34,7 +36,7 @@
         : {
             name: "Taquito Test Dapp",
             matrixNodes: [defaultMatrixNode] as any,
-            preferredNetwork: $store.networkType,
+            preferredNetwork: config.networkType,
           }
     );
   };
@@ -42,7 +44,9 @@
   const connectWallet = async () => {
     const wallet = (() => {
       if (!$store.wallet) {
-        return createNewWallet();
+        return createNewWallet({
+          networkType: $store.networkType
+        });
       } else {
         return $store.wallet;
       }
@@ -85,17 +89,19 @@
     store.updateSelectedTest(undefined);
   };
 
-  onMount(async () => {
-    store.updateNetworkType(defaultNetworkType);
+  export const setWallet = async (config: {
+    networkType: NetworkType,
+  }) => {
+    store.updateNetworkType(config.networkType);
 
-    const wallet = createNewWallet();
+    const wallet = createNewWallet(config);
     store.updateWallet(wallet);
     const activeAccount = await wallet.client.getActiveAccount();
     if (activeAccount) {
       const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
       store.updateUserAddress(userAddress);
 
-      const Tezos = new TezosToolkit(rpcUrl[$store.networkType]);
+      const Tezos = new TezosToolkit(rpcUrl[config.networkType]);
       Tezos.setWalletProvider(wallet);
       store.updateTezos(Tezos);
 
@@ -104,6 +110,13 @@
         store.updateUserBalance(balance.toNumber());
       }
     }
+
+  }
+
+  onMount(async () => {
+    await setWallet({
+      networkType: defaultNetworkType
+    });
   });
 
   afterUpdate(async () => {

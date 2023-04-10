@@ -2,6 +2,9 @@
   import Sidebar from "./lib/Sidebar.svelte";
   import TaquitoLogo from "./lib/TaquitoLogo.svelte";
   import store from "./store";
+  let side: Sidebar;
+
+  export const getSideBar = () => side;
 </script>
 
 <style lang="scss">
@@ -30,7 +33,7 @@
       ? `(v${$store.Tezos.getVersionInfo().version})`
       : ""}
   </div>
-  <Sidebar />
+  <Sidebar bind:this={side}/>
   <slot />
 </main>
 <TaquitoLogo dir="normal" />

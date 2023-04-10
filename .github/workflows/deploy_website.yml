@@ -20,6 +20,8 @@ jobs:
         node-version: lts/gallium
     - run: npm ci
     - run: npm run build
+    - run: npm ci
+      working-directory: website
     - run: npm run build
       working-directory: website
       env:
