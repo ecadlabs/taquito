@@ -2,6 +2,81 @@
 title: Versions
 author: Jev Bjorsell
 ---
+
+# Taquito v16.1.1
+## Bug Fixes
+- Fixed an issue where the package forked from `vespaiach/axios-fetch-adapter` was not able to be resolved by some package managers. We have since published the fork on NPM as `@taquito/axios-fetch-adapter` [PR #2427](https://github.com/ecadlabs/taquito/pull/2427)
+
+# Taquito v16.1.0
+## Summary
+- `@taquito/rpc` - Added RPC endpoint to add pending transactions in mempool #2382
+- `@taquito/rpc` - Added support for types of smart rollup operations in the RPC package #2409
+    - `smart_rollup_publish`
+    - `smart_rollup_cement`
+    - `smart_rollup_recover_bond`
+    - `smart_rollup_refute`
+    - `smart_rollup_timeout`
+- `@taquito/taquito` - Added support for `contractCall()` in the estimate provider #2019
+- `@taquito/taquito` - Added support for `smart_rollup_originate` operation #2306
+- `@taquito/taquito` - Added utility functions in prepare provider to accomodate forging and operation pre-apply (dry runs) #2256
+- `@taquito/local-forging` - Added support for `set_deposits_limit` in the local forger [PR #2237](https://github.com/ecadlabs/taquito/pull/2237)
+
+### Bug Fixes
+- Fixed a bug with the Prepare Provider where operation counters get carried over in subsequent method calls #2425
+
+### Documentation
+- Fixed typo in Taquito README [PR #2275](https://github.com/ecadlabs/taquito/pull/2275)
+- Updated example in signing documentation [PR #2399](https://github.com/ecadlabs/taquito/pull/2399)
+- Added Exaion node as a commercial provider [PR #2401](https://github.com/ecadlabs/taquito/pull/2401)
+
+### `@taquito/rpc` - Added RPC endpoint to add pending transactions in mempool
+
+This RPC endpoint returns the list of prevalidated operations in the mempool. Note that accessibility of the mempool depends on each Node.
+
+```typescript
+await rpcClient.getPendingOperations();
+```
+
+### `@taquito/taquito` - Added support for `contractCall()` in the estimate provider
+
+The estimate provider now supports estimates for contract calls directly, and is usable as such:
+```typescript
+const contract = await Tezos.contract.at(contractAddress!);
+const opEntrypoint = contract.methods.default(5);
+const estimate = await Tezos.estimate.contractCall(opEntrypoint);
+```
+
+### `@taquito/taquito` - Added `smart_rollup_originate` operation support
+Added support in the contract provider to inject `smart_rollup_originate` operations
+
+```typescript
+const op = await Tezos.contract.smartRollupOriginate({
+  pvmKind: PvmKind.WASM2,
+  kernel: ${KERNEL_VALUE} ,
+  parametersType: { prim: 'bytes' }
+});
+```
+
+### `@taquito/taquito` - Added utility functions in prepare provider to accomodate forging and operation pre-apply (dry runs)
+Provided 2 utility functions to convert results from the `PrepareProvider` (`PreparedOperation` type objects) into `ForgeParams` and `PreapplyParams`
+```typescript!
+// pre-apply 
+const prepared = await Tezos.prepare.transaction({
+  amount: 1,
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+});
+const params = await Tezos.prepare.toPreapply(prepared);
+const preapplyOp = await Tezos.rpc.preapplyOperations(params);
+
+// forge
+const prepared = await Tezos.prepare.transaction({
+  amount: 1,
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+});
+const params = Tezos.prepare.toForge(prepared);
+const forgedBytes = await forger.forge(params);
+```
+
 # Taquito v16.0.0
 ## Summary
 
