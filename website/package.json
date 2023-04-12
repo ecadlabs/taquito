@@ -27,7 +27,6 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@ledgerhq/hw-transport-webhid": "^6.27.3",
     "@mdx-js/react": "^1.6.21",
-    "@netlify/esbuild-darwin-64": "^0.14.39",
     "@svgr/webpack": "^6.4.0",
     "@taquito/beacon-wallet": "file:../packages/taquito-beacon-wallet",
     "@taquito/http-utils": "file:../packages/taquito-http-utils",
