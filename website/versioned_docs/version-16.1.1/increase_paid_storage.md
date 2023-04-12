@@ -9,9 +9,11 @@ This helps resolve an issue where several operations on the same contract would 
 
 For more information on this change, refer to this [MR](https://gitlab.com/tezos/tezos/-/merge_requests/5605) in the Tezos codebase.
 ## Examples
-Similar to other operations, the Increase Paid Storage operation will be available in the Contract API (and later, the wallet API).
+Similar to other operations, the Increase Paid Storage operation is available in the Contract and Wallet API
 
-### Simple Usage
+### Contract API
+
+#### Simple Usage
 ```js
 const op = await Tezos.contract.increasePaidStorage({
   amount: 2,
@@ -25,8 +27,8 @@ await op.confirmation();
 
 After waiting for the operation confirmation, you will also have access to various getters of the operation such as `status`, `amount`, `destination`, `fee`, `gasLimit`, `errors`, `storageLimit`, `consumedMilligas`.
 
-### Usage in Batches
-```js
+#### Usage in Batches
+```typescript
 const op = await Tezos.contract
     .batch()
     .withOrigination({
@@ -45,12 +47,12 @@ const op = await Tezos.contract
       destination: 'SMART_CONTRACT_ADDRESS'
     })
     .send();
-    
+
     await op.confirmation();
 ```
 
 or 
-```js
+```typescript
 const op = await Tezos.contract.batch([
     {
       kind: 'origination', 
@@ -70,3 +72,37 @@ await op.confirmation();
 ```
 
 Both syntax will work fine for batching any operations, including `increase_paid_storage`.
+
+### Wallet API
+
+#### Usage Example
+```typescript
+const op = await Tezos.wallet.increasePaidStorage({
+  amount: 1,
+  destination: simpleContractAddress
+}).send();
+```
+
+#### Usage in Batches
+```typescript
+const batch = await Tezos.wallet
+  .batch()
+  .withOrigination({
+    balance: "1",
+    code: `parameter string;
+      storage string;
+      code {CAR;
+      PUSH string "Hello ";
+      CONCAT;
+      NIL operation; PAIR};
+    `,
+    init: `"test"`
+  })
+  .withIncreasePaidStorage({
+    amount: 1,
+    destination: simpleContractAddress
+  });
+
+const op = await batch.send();
+await op.confirmation();
+```

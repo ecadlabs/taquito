@@ -3,6 +3,366 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v16.1.1
+## Bug Fixes
+- Fixed an issue where the package forked from `vespaiach/axios-fetch-adapter` was not able to be resolved by some package managers. We have since published the fork on NPM as `@taquito/axios-fetch-adapter` [PR #2427](https://github.com/ecadlabs/taquito/pull/2427)
+
+# Taquito v16.1.0
+## Summary
+- `@taquito/rpc` - Added RPC endpoint to add pending transactions in mempool #2382
+- `@taquito/rpc` - Added support for types of smart rollup operations in the RPC package #2409
+    - `smart_rollup_publish`
+    - `smart_rollup_cement`
+    - `smart_rollup_recover_bond`
+    - `smart_rollup_refute`
+    - `smart_rollup_timeout`
+- `@taquito/taquito` - Added support for `contractCall()` in the estimate provider #2019
+- `@taquito/taquito` - Added support for `smart_rollup_originate` operation #2306
+- `@taquito/taquito` - Added utility functions in prepare provider to accomodate forging and operation pre-apply (dry runs) #2256
+- `@taquito/local-forging` - Added support for `set_deposits_limit` in the local forger [PR #2237](https://github.com/ecadlabs/taquito/pull/2237)
+
+### Bug Fixes
+- Fixed a bug with the Prepare Provider where operation counters get carried over in subsequent method calls #2425
+
+### Documentation
+- Fixed typo in Taquito README [PR #2275](https://github.com/ecadlabs/taquito/pull/2275)
+- Updated example in signing documentation [PR #2399](https://github.com/ecadlabs/taquito/pull/2399)
+- Added Exaion node as a commercial provider [PR #2401](https://github.com/ecadlabs/taquito/pull/2401)
+
+### `@taquito/rpc` - Added RPC endpoint to add pending transactions in mempool
+
+This RPC endpoint returns the list of prevalidated operations in the mempool. Note that accessibility of the mempool depends on each Node.
+
+```typescript
+await rpcClient.getPendingOperations();
+```
+
+### `@taquito/taquito` - Added support for `contractCall()` in the estimate provider
+
+The estimate provider now supports estimates for contract calls directly, and is usable as such:
+```typescript
+const contract = await Tezos.contract.at(contractAddress!);
+const opEntrypoint = contract.methods.default(5);
+const estimate = await Tezos.estimate.contractCall(opEntrypoint);
+```
+
+### `@taquito/taquito` - Added `smart_rollup_originate` operation support
+Added support in the contract provider to inject `smart_rollup_originate` operations
+
+```typescript
+const op = await Tezos.contract.smartRollupOriginate({
+  pvmKind: PvmKind.WASM2,
+  kernel: ${KERNEL_VALUE} ,
+  parametersType: { prim: 'bytes' }
+});
+```
+
+### `@taquito/taquito` - Added utility functions in prepare provider to accomodate forging and operation pre-apply (dry runs)
+Provided 2 utility functions to convert results from the `PrepareProvider` (`PreparedOperation` type objects) into `ForgeParams` and `PreapplyParams`
+```typescript!
+// pre-apply 
+const prepared = await Tezos.prepare.transaction({
+  amount: 1,
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+});
+const params = await Tezos.prepare.toPreapply(prepared);
+const preapplyOp = await Tezos.rpc.preapplyOperations(params);
+
+// forge
+const prepared = await Tezos.prepare.transaction({
+  amount: 1,
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+});
+const params = Tezos.prepare.toForge(prepared);
+const forgedBytes = await forger.forge(params);
+```
+
+# Taquito v16.0.0
+## Summary
+
+### Mumbai Support
+- `@taquito/taquito` Support new operation `smart_rollup_add_messages` #2309
+- `@taquito/taquito` Updated `transferTicket` operation in the contract API to support ticket transfers between implicit accounts #2320
+- `@taquito/local-forging` Support new Mumbai operations #2308
+    - `smart_rollup_originate`, 
+    - `smart_rollup_add_messages`, 
+    - `smart_rollup_execute_outbox_message`
+- `@taquito/local-forging` updated validation to allow tz4 addresses #2350
+- `@taquito/rpc` support Mumbai operation types in the RPC package #2307
+- `@taquito/rpc` added Mumbai protocol constants in the RPC package #2375
+- `@taquito/rpc` removed `consumed_gas` property in `update_consensus_key` return type in the RPC package #2273
+- `@taquito/rpc` added new RPC endpoints #2270:
+    - `getTicketBalance`
+    - `getAllTicketBalances`
+- `@taquito/michel-codec` Added support for `bytes` in these following Michelson instructions #2267:
+    - `AND`, `OR`, `XOR`, `NOT`, `LSL`, `LSR`
+- `@taquito/michel-codec` added support for bytes-nat conversion in Michelson #2268
+
+### Bug Fixes
+- Fixed broken website live examples #2305
+- Updated estimation to validate against decimal values to prevent unwanted errors #2318
+
+### Documentation
+- Removed Cryptonomic links from the commercial RPC list on the website #2332
+- Added documentation on `MANAGER_LAMBDA` #1718
+- Added documentation on ~100 most popular contract entrypoint parameter examples on Tezos #2153
+- Fixed broken link on Dapp pre-launch checklist page #2293
+- Fixed broken link on smart contract collection page #2295
+- Fixed broken live code examples on the `tezostaquito.io` website #2305
+- Removed invalid links and duplicate entries #2332
+- Added documentation for contract entrypoints parameters in JS/TS #2153
+- Fixed broken link on Smart Contract collection page #2295
+- Fixed broken link on DApp pre-launch checklist page #2293
+- Added documentation on MANAGER_LAMBDA #1718
+- Updated Ledger examples to point to Ghostnet [PR](https://github.com/ecadlabs/taquito/pull/2365)
+- Updated README to include cases for specific Linux distros [PR](https://github.com/ecadlabs/taquito/pull/2330)
+
+
+### Internals
+- Removed Kathmandu references from local-forger #2131
+- Bumped Node versions to 16 [PR](https://github.com/ecadlabs/taquito/pull/2359) #1845
+- Delete TezEdge workflows [PR](https://github.com/ecadlabs/taquito/pull/2364)
+- Updated Docusaurus version to it's latest stable release (v2.3.1) [PR](https://github.com/ecadlabs/taquito/pull/2381)
+- Removed references to older protocols in Taquito and updated integration tests and examples #485
+
+## `@taquito/taquito` - Support for new operation `smart_rollup_add_messages`
+Support for a new manager operation to add messages to a smart rollup inbox have been added, and can be used as follows:
+```typescript
+const op = await Tezos.contract.smartRollupAddMessages({
+  message: [
+    '0000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74'
+  ]
+});
+```
+
+## `@taquito/rpc` - Support for new Mumbai operation types in the RPC package
+Added a few new types to accommodate for Mumbai protocol changes:
+- `OperationContentsAndResultSmartRollupOriginate`
+- `OperationContentsAndResultSmartRollupAddMessages`
+- `OperationContentsAndResultSmartRollupExecuteOutboxMessage`
+- `OperationResultSmartRollupOriginate`
+- `OperationResultSmartRollupAddMessages`
+- `OperationResultSmartRollupExecuteOutboxMessage`
+- `OperationContentsAndResultMetadataSmartRollupOriginate`
+- `OperationContentsAndResultMetadataSmartRollupAddMessages`
+- `OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage`
+
+## `@taquito/michel-codec` - Added support for `bytes`
+The Mumbai protocol update introduces a change where the following Michelson instructions support `bytes`: `AND`, `OR`, `XOR`, `NOT`, `LSL`, `LSR`
+
+These instructions now have bytes support of the opcodes. For more information, refer to [this document](https://gitlab.com/tezos/tezos/-/merge_requests/6055)
+
+
+## `@taquito/michel-codec` - Added support for bytes-nat conversion in Michelson
+The Mumbai protocol update now supports conversion between `bytes` and `nat` as well as `bytes` and `int`
+
+For more information, refer to [this page](https://gitlab.com/tezos/tezos/-/merge_requests/6681)
+# Taquito v15.1.0
+## Summary
+
+### New Features
+- `@taquito/taquito` New provider support `PrepareProvider` to facilitate preparation of operations in Taquito. #2020
+- `@taquito/taquito` Support new operation `increase_paid_storage` on the wallet API #1768
+
+### Bug Fixes
+- Fixed a bug where `axios-fetch-adapter` was not returning the response body from errors, causing the wrong error to be captured by the calling method #2187
+
+### Documentation
+- Update Taquito website live code examples to use Ghostnet endpoint. #2224
+
+### Internals
+- Updated Beacon version to v3.3.1 [PR](https://github.com/ecadlabs/taquito/pull/2266)
+- Updated Taquito Github Workflows to use Node LTS/Gallium (v16) [PR](https://github.com/ecadlabs/taquito/pull/2301)
+
+## `@taquito/taquito` - Added new provider `PrepareProvider` to facilitate operation preparation
+
+`PrepareProvider` now extends more control to the user to give them the ability to 'prepare' Tezos operations before forging and injection. The preparation step now can be done through the `TezosToolkit` class as such:
+
+```typescript
+// example of a transaction operation preparation
+const prepare = await Tezos.prepare.transaction({
+    to: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+    amount: 5
+});
+```
+
+The expected output will look something like this:
+```typescript
+{
+        opOb: {
+          branch: 'BLOCK_HASH',
+          contents: [
+            {
+              kind: 'transaction',
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              amount: '5000000',
+              destination: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
+              source: 'PUBLIC_KEY_HASH',
+              counter: '1',
+            },
+          ],
+          protocol: 'PROTOCOL_HASH',
+        },
+        counter: 0,
+      }
+```
+
+## `@taquito/taquito` - Increase paid storage operation support in the wallet API
+Taquito now supports `increase_paid_storage` operation in the Wallet API (previously only available in the Contract API).
+
+```typescript
+const op = await Tezos.wallet.increasePaidStorage({
+  amount: 1,
+  destination: simpleContractAddress
+}).send();
+```
+
+# Taquito v15.0.1
+## Hotfix
+- Fixed a bug where the `local-forging` package was using an outdated version of the codec when it's instantiated without passing in a protocol hash. Updated so that the default value uses the current protocol hash. #2242
+
+## Summary
+- `@taquito/taquito` Support new operation `drain_delegate` in the Contract API #2068
+- `@taquito/local-forging` Support new operation `drain_delegate` #2065
+
+## Bug Fixes
+- `@taquito/michelson-encoder` fix MapTypecheck bug triggered by nested maps ending with a big_map #1762
+
+### Documentation
+- Auto hide sticky navbar for mobile view to increase readability on mobile devices. 
+PR: https://github.com/ecadlabs/taquito/pull/2236
+
+### Internals
+- Start running integration tests against testnets for external PRs. 
+PR: https://github.com/ecadlabs/taquito/pull/2221
+
+## `@taquito/taquito` drain_delegate operation support
+A new manager operation related to the consensus_key change in Lima has been added:
+```typescript
+const op = await Tezos.contract.updateConsensusKey({
+    pk: 'PUBLIC_KEY'
+});
+
+await op.confirmation();
+```
+
+# Taquito v15.0.0
+
+**Breaking Changes**:
+- Some types have changed to support the `consensus_key` change in Protocol Lima. Refer to issue #2069 for more details
+
+## Summary
+
+### Lima Support
+- `@taquito/taquito` Support new operation `update_consensus_key` in the Contract API #2067
+- `@taquito/local-forging` Support new operation `update_consensus_key` #2065
+- `@taquito/local-forging` Support new instruction `LAMBDA_REC` and value `Lambda_rec` and support changes related to the `TICKET` instruction #2074 #2072
+- `@taquito/rpc` Support new types and operations for `update_consensus_key` and `drain_delegate` #2066
+- `@taquito/rpc` Support new properties related to Lima #2172 #2071
+- `@taquito/michelson-encoder` Support new type `TICKET_DEPRECATED` #2073
+- `@taquito/michel-codec` Support new instruction `LAMBDA_REC` and value `Lambda_rec` and support changes related to the `TICKET` instruction #2181 #2075
+
+### Testing
+- Removed tests that referenced Timelock feature (`CHEST_OPEN` Michelson instruction) #2070
+- Added tests for `unparsing_mode` #2077
+- Updated tx-rollup tests to use address from config instead of hard coded addresses #2170
+- Fixed local-forging tests failing in Limanet #2158
+
+### Documentation
+- Added documentation for consensus key operations (`update_consensus_key`) #2067 #2068
+### Internals
+- Removed legacy `lerna bootstrap` commands from build workflow #2188
+
+### Deprecation
+`@taquito/tezbridge-signer` and `@taquito/tezbridge-wallet` has been deprecated, and references to them have been removed from the codebase #2080
+
+### Others
+- Removed Jakarta protocol references in on chain view related code #2098
+- Removed temple-wallet/dapp dependency from Taquito website that was producing build errors [PR](https://github.com/ecadlabs/taquito/pull/2202)
+
+
+## `@taquito/taquito` - Added support for `update_consensus_key`
+A new manager operation to update consensus keys can be used as follows:
+```typescript
+const op = await Tezos.contract.updateConsensusKey({
+    pk: 'PUBLIC_KEY'
+});
+
+await op.confirmation();
+```
+
+## `@taquito/local-forging` - Added support for Lima operations and instructions
+- Updated local-forger to forge and parse `update_consensus_key` and `drain_delegate`
+- Updated local-forger to support the new Michelson instruction `LAMBDA_REC` and the new data constructor named `Lambda_rec` which enables recursive LAMBDA
+
+## `@taquito/rpc` - Updated types to support Lima protocol
+Added a few new types to accommodate Lima protocol changes:
+- `OperationContentsUpdateConsensusKey`
+- `OperationContentsDrainDelegate`
+- `OperationContentsAndResultMetadataUpdateConsensusKey`
+- `OperationContentsAndResultMetadataDrainDelegate`
+- `OperationContentsAndResultUpdateConsensusKey`
+- `OperationContentsAndResultDrainDelegate`
+- `OperationResultUpdateConsensusKey`
+
+Also updates to existing types to accommodate changes regarding consensus keys.
+
+## `@taquito/michelson-encoder` - Support new type `TICKET_DEPRECATED`
+- Added support for the new Michelson type `TICKET_DEPRECATED`. More info here: https://tezos.gitlab.io/protocols/015_lima.html#breaking-changes
+
+## `@taquito/michel-codec` - Support new instruction `LAMBDA_REC` and value `Lambda_rec`
+
+The Lima protocol introduces a new Michelson type named `LAMBDA_REC`, and a new data constructor named `Lambda_rec`, allowing the creation of recursive lambda functions. Support for those primitives has been added in the michel-codec package enabling users to validate or pack/unpack Michelson code containing them.
+
+The `TICKET` instruction now returns an optional ticket instead of a ticket. This change has also been reflected in the michel-codec parser.
+
+# Taquito v14.2.0-beta
+## Summary
+### New Features
+
+- `@taquito/taquito` - Added support for `Ballot` operation in the Contract API #1630
+- `@taquito/taquito` - Added support for `Proposals` operation in the Contract API #2099
+- `@taquito/taquito-signer` - Added new method `fromMnemonic` to the `InMemorySigner` #1228
+
+### Documentation
+- Updated and organized Taquito README to prepare for translations to other languages #2015
+
+### Internals
+- Added integration test for `Ballot` and `Proposals` operation #2087
+- Configured NPM workspaces for Taquito to improve build process #2127
+
+## `@taquito/taquito` - Added support for `Ballot` operation
+We added a new Contract API method to support the `Ballot` operation. Bakers can now cast their ballots using this operation from Taquito as follows:
+
+```typescript
+const op = await Tezos.contract.ballot({
+  proposal: 'PROTOCOL_HASH',
+  ballot: 'BALLOT_VOTE_STRING'
+});
+
+await op.confirmation();
+```
+
+## `@taquito/taquito` - Added support for `Proposals` operation
+Alongside the `Ballot` operation support, bakers can now also submit proposals using the `Proposals` operation that can be used as follows:
+
+```typescript
+const op = await Tezos.contract.proposals({
+  proposals: ['PROTOCOL_HASH1', 'PROTOCOL_HASH2']
+});
+
+await op.confirmation();
+```
+
+## `@taquito/taquito-signer` - Added new method `fromMnemonic`
+Users can now create an `InMemorySigner` instance using the `fromMnemonic` method for a tz1, tz2, or tz3 address: ed25519, secp256k1, or p256 respectively.
+
+```typescript
+const mnemonic = 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business'
+const signer = InMemorySigner.fromMnemonic({ mnemonic, password, derivationPath: "44h/1729h/1/0", curve: 'secp256k1' });
+```
 # Taquito v14.1.0-beta
 
 ## Summary
@@ -190,7 +550,7 @@ Note for the users of the lower level APIs: injecting more than one manager oper
 The `increase_paid_storage` operation allows increasing the paid storage of a smart contract by a specified bytes amount. The smart contract owner doesn't have to do it; any user can increase the storage. The operation is of interest for high-traffic dapps as it allows prepaying for storage and prevents transactions from failing because of an unpredictable storage burn.
 
 ```typescript
-const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 const op = await Tezos.contract.increasePaidStorage({
     amount: 5,
