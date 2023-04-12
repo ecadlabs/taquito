@@ -173,6 +173,8 @@
     --itemHoverColor: rgba(2, 83, 185, 1);
     --errorBorder: 2px solid red;
     --errorBackground: transparent;
+    display: flex;
+    justify-content: space-between;
   }
 </style>
 
@@ -182,7 +184,7 @@
   {:else}
     <div class="connect-container">
       <div class="connect-options">
-        <h1>Welcome to the Taquito test dapp</h1>
+        <h1>Welcome to the Taquito Test Dapp</h1>
         {#if browser !== "chrome" && browser !== "firefox"}
           <div>(use Chrome for a better experience)</div>
         {/if}
@@ -196,20 +198,18 @@
             <span class="material-icons-outlined"> account_balance_wallet </span>
             &nbsp; Connect your wallet
           </button>
-          <button>
+          <!-- TODO later -->
+          <!-- <button>
             <span class="material-icons-outlined"> usb </span>
             &nbsp; Connect your Nano ledger
-          </button>
+          </button> -->
           <label for="rpc-node-select" class="custom-select">
             <span class="select-title">RPC node:</span>
             <Select
               id="rpc-node-select"
               containerStyles="width:200px"
               items={availableNetworks}
-              value={$store.networkType
-                .split("")
-                .map((char, i) => (i === 0 ? char.toUpperCase() : char))
-                .join("")}
+              value={$store.networkType.charAt(0).toUpperCase() + $store.networkType.slice(1)}
               hasError={networkError}
               {groupBy}
               on:select={changeNetwork}

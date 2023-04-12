@@ -29,6 +29,7 @@
     "@taquito/taquito": "^16.2.0-beta-RC.0",
     "@taquito/utils": "^16.2.0-beta-RC.0",
     "buffer": "^6.0.3",
+    "esbuild": "^0.17.16",
     "svelte-select": "^4.4.7",
     "vite-compatible-readable-stream": "^3.6.1"
   },

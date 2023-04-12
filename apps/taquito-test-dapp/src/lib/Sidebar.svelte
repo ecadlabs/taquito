@@ -43,7 +43,7 @@
 
     ul {
       height: 95%;
-      list-style-image: url(description_white_24dp.svg);
+      list-style-image: url(../assets/icons/description_white_24dp.svg);
       list-style-position: inside;
       overflow: auto;
       margin-left: 0px;
@@ -110,8 +110,13 @@
           class:error={test.lastResult.option === "some" && !test.lastResult.val}
           class:selected={$store.selectedTest === test.id && test.lastResult.option === "none"}
           on:click={() => store.updateSelectedTest(test.id)}
+          on:keypress={(e) => {
+            if (e.key === "Enter") {
+              store.updateSelectedTest(test.id);
+            }
+          }}
         >
-          <span>{test.name}</span>
+            <span>{test.name}</span>
         </li>
       {/each}
     {/if}

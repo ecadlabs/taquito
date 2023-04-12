@@ -10,11 +10,9 @@ import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { char2Bytes, verifySignature } from "@taquito/utils";
 import type { RequestSignPayloadInput } from "@airgap/beacon-sdk";
 import { SigningType } from "./types";
-import { get } from "svelte/store";
 import type { TestSettings, TestResult } from "./types";
 import store from "./store";
 import contractToOriginate from "./contractToOriginate";
-import localStore from "./store";
 
 const preparePayloadToSign = (
   input: string,
@@ -25,9 +23,13 @@ const preparePayloadToSign = (
 } => {
   const formattedInput = `Tezos Signed Message: taquito-test-dapp.netlify.app/ ${new Date().toISOString()} ${input}`;
   const bytes = char2Bytes(formattedInput);
+  const bytesLength = (bytes.length / 2).toString(16);
+  const addPadding = `00000000${bytesLength}`;
+  const paddedBytesLength = addPadding.slice(addPadding.length - 8);
+  const payloadBytes = '05' + '01' + paddedBytesLength + bytes;
   const payload: RequestSignPayloadInput = {
     signingType: SigningType.MICHELINE,
-    payload: "05" + "0100" + char2Bytes(bytes.length.toString()) + bytes,
+    payload: payloadBytes,
     sourceAddress: userAddress
   };
   return {
@@ -57,7 +59,7 @@ const sendInt = async (
   let opHash = "";
   try {
     const op = await contract.methods.simple_param(5).send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = op["opHash"] ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
@@ -75,7 +77,7 @@ const sendComplexParam = async (
     const op = await contract.methodsObject
       .complex_param({ 0: 5, 1: "Taquito" })
       .send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = op["opHash"] ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
@@ -90,17 +92,17 @@ const callFail = async (
   let opHash = "";
   try {
     const op = await contract.methods.fail([["unit"]]).send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = op["opHash"] ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
     console.log(error);
     if (
-      error.hasOwnProperty("data") &&
+      error["data"] &&
       Array.isArray(error.data) &&
       error.data.length === 2 &&
-      error.data[1].hasOwnProperty("with") &&
-      error.data[1].with.hasOwnProperty("string") &&
+      error.data[1]["with"] &&
+      error.data[1].with["string"] &&
       error.data[1].with.string === "Fail entrypoint"
     ) {
       return { success: true, opHash };
@@ -116,17 +118,17 @@ const callFaiWithInt = async (
   let opHash = "";
   try {
     const op = await contract.methods.fail_with_int([["unit"]]).send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = op["opHash"] ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
     console.log(error);
     if (
-      error.hasOwnProperty("data") &&
+      error["data"] &&
       Array.isArray(error.data) &&
       error.data.length === 2 &&
-      error.data[1].hasOwnProperty("with") &&
-      error.data[1].with.hasOwnProperty("int") &&
+      error.data[1]["with"] &&
+      error.data[1].with["int"] &&
       error.data[1].with.int == 5
     ) {
       return { success: true, opHash };
@@ -142,24 +144,24 @@ const callFaiWithPair = async (
   let opHash = "";
   try {
     const op = await contract.methods.fail_with_pair([["unit"]]).send();
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = op["opHash"] ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
     console.log(error);
     if (
-      error.hasOwnProperty("data") &&
+      error["data"] &&
       Array.isArray(error.data) &&
       error.data.length === 2 &&
-      error.data[1].hasOwnProperty("with") &&
-      error.data[1].with.hasOwnProperty("prim") &&
+      error.data[1]["with"] &&
+      error.data[1].with["prim"] &&
       error.data[1].with.prim === "Pair" &&
-      error.data[1].with.hasOwnProperty("args") &&
+      error.data[1].with["args"] &&
       Array.isArray(error.data[1].with.args) &&
       error.data[1].with.args.length === 2 &&
-      error.data[1].with.args[0].hasOwnProperty("int") &&
+      error.data[1].with.args[0]["int"] &&
       error.data[1].with.args[0].int == 6 &&
-      error.data[1].with.args[1].hasOwnProperty("string") &&
+      error.data[1].with.args[1]["string"] &&
       error.data[1].with.args[1].string === "taquito"
     ) {
       return { success: true, opHash };
@@ -307,7 +309,7 @@ const signPayloadAndSend = async (
     await op.confirmation();
     return {
       success: true,
-      opHash: op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"],
+      opHash: op["opHash"] ? op["opHash"] : op["hash"],
       output: signedPayload.signature,
       sigDetails: { input, formattedInput, bytes: payload.payload }
     };
@@ -319,7 +321,7 @@ const signPayloadAndSend = async (
 const verifySignatureWithTaquito = async (
   input: string,
   wallet: BeaconWallet,
-  contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
+  _contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
 ): Promise<TestResult> => {
   if (!input) throw "No input provided";
 
@@ -371,7 +373,7 @@ const setTransactionLimits = async (
       });
     }
 
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    opHash = op["opHash"] ? op["opHash"] : op["hash"];
     await op.confirmation();
     console.log("Operation successful with op hash:", opHash);
     return { success: true, opHash };
@@ -390,16 +392,17 @@ const tryConfirmationObservable = async (
         .transfer({ to: "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb", amount: 1 })
         .send();*/
     store.resetConfirmationObservableTest();
-
     const storage: any = await contract.storage();
+    console.log(contract.address, contract.storage())
     const val = storage.simple.toNumber() + 1;
     const op = await contract.methods.simple_param(val).send();
+
+    opHash = op["opHash"] ? op["opHash"] : op["hash"];
 
     const entries = await new Promise((resolve, reject) => {
       const evts: any[] = [];
       op.confirmationObservable(3).subscribe(
         event => {
-          console.log(event);
           const entry = {
             level: event.block.header.level,
             currentConfirmation: event.currentConfirmation
@@ -412,115 +415,11 @@ const tryConfirmationObservable = async (
       );
     });
 
-    console.log({ entries });
-
     return { success: true, opHash, confirmationObsOutput: entries as any };
   } catch (error) {
     console.log(error);
     return { success: false, opHash: "" };
   }
-};
-
-const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
-  const store = get(localStore);
-
-  const expectedBytes =
-    "05070707070a00000004f5f466ab0a0000001601c6ac120153e9a6f3daa3ecdfbf0bb13f529f832500070700000a0000002105a6a36a686b864c75b0cf59816d24c8649f6f6fb0ea10c4beaed8988d1d55edef";
-
-  try {
-    const contractAddress = "KT1ShFVQPoLvekQu21pvuJst7cG1TjtnzdvW";
-    const contract = await Tezos.wallet.at(contractAddress);
-    // hashes the parameter for the contract call
-    const mintParam: any = contract.methods
-      .mint(store.userAddress, 100)
-      .toTransferParams().parameter?.value;
-    const mintParamType = contract.entrypoints.entrypoints["mint"];
-    // packs the entrypoint call
-    const rawPacked = await Tezos.rpc.packData({
-      data: mintParam,
-      type: mintParamType
-    });
-    const packedParam = rawPacked.packed;
-    const paramHash = packedParam;
-    /*"05" +
-        buf2hex(blake.blake2b(hex2buf(packedParam), null, 32).buffer as Buffer);*/
-    // hashes the parameter for the signature
-    const chainId = await Tezos.rpc.getChainId();
-    const contractStorage: any = await contract.storage();
-    const counter = contractStorage.counter;
-    const sigParamData: any = {
-      prim: "Pair",
-      args: [
-        {
-          prim: "Pair",
-          args: [
-            {
-              string: chainId
-            },
-            {
-              string: contractAddress
-            }
-          ]
-        },
-        {
-          prim: "Pair",
-          args: [
-            {
-              int: counter
-            },
-            {
-              string: paramHash
-            }
-          ]
-        }
-      ]
-    };
-    const sigParamType = {
-      prim: "pair",
-      args: [
-        {
-          prim: "pair",
-          args: [
-            {
-              prim: "chain_id"
-            },
-            { prim: "address" }
-          ]
-        },
-        {
-          prim: "pair",
-          args: [{ prim: "nat" }, { prim: "string" }]
-        }
-      ]
-    };
-    const sigParamPacked = await Tezos.rpc.packData({
-      data: sigParamData,
-      type: sigParamType
-    });
-    console.log(sigParamPacked.packed, paramHash);
-    // signs the hash
-    /*const sig = await wallet.client.requestSignPayload({
-        signingType: SigningType.MICHELINE,
-        payload: paramHash,
-        sourceAddress: store.userAddress
-      });
-      const { publicKey } = await wallet.client.getActiveAccount();
-      const permitMethodOp = await contract.methods
-        .permit([{ 0: publicKey, 1: sig.signature, 2: paramHash }])
-        .send();
-      await permitMethodOp.confirmation();
-      console.log(permitMethodOp.opHash);*/
-  } catch (error) {
-    console.error(error);
-  }
-
-  return { success: false, opHash: "" };
-};
-
-const saplingShielded = async (
-  contract: ContractAbstraction<Wallet>
-): Promise<TestResult> => {
-  return { success: false, opHash: "" };
 };
 
 export const list = [
@@ -538,8 +437,6 @@ export const list = [
   "Verify a provided signature",
   "Set the transaction limits",
   "Subscribe to confirmations",
-  "Permit contract",
-  "Sapling"
 ];
 
 export const init = (
@@ -723,28 +620,6 @@ export const init = (
     inputRequired: false,
     lastResult: { option: "none", val: false }
   },
-  {
-    id: "permit",
-    name: "Permit contract",
-    description: "This test implements TZIP-17",
-    keyword: 'permit',
-    run: () => permit(Tezos, wallet),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "sapling-shielded",
-    name: "Sapling shielded transaction",
-    description: "This test prepares and sends a shielded transaction to a Sapling pool",
-    documentation: 'https://tezostaquito.io/docs/sapling/',
-    keyword: 'sapling',
-    run: () => saplingShielded(contract as ContractAbstraction<Wallet>),
-    showExecutionTime: false,
-    inputRequired: true,
-    inputType: "sapling",
-    lastResult: { option: "none", val: false }
-  }
   /*{
         id: "originate-fail",
         name: "Originate smart contract that fails",
