@@ -3,9 +3,9 @@
  * @module @taquito/wallet-connect-2
  */
 
-import Client from '@walletconnect/sign-client';
+import SignClient from '@walletconnect/sign-client';
 import { SignClientTypes, SessionTypes, PairingTypes } from '@walletconnect/types';
-import QRCodeModal from '@walletconnect/legacy-modal';
+import { Web3Modal } from '@web3modal/standalone';
 import {
   createIncreasePaidStorageOperation,
   createOriginationOperation,
@@ -46,13 +46,15 @@ export * from './types';
 const TEZOS_PLACEHOLDER = 'tezos';
 
 export class WalletConnect2 implements WalletProvider {
-  public signClient: Client;
+  public signClient: SignClient;
   private session: SessionTypes.Struct | undefined;
   private activeAccount: string | undefined;
   private activeNetwork: string | undefined;
+  private web3Modal: Web3Modal;
 
-  constructor(signClient: Client) {
+  constructor(signClient: SignClient, web3Modal: Web3Modal) {
     this.signClient = signClient;
+    this.web3Modal = web3Modal;
 
     this.signClient.on('session_delete', ({ topic }) => {
       if (this.session?.topic === topic) {
@@ -96,8 +98,16 @@ export class WalletConnect2 implements WalletProvider {
    * ```
    */
   static async init(initParams: SignClientTypes.Options) {
-    const client = await Client.init(initParams);
-    return new WalletConnect2(client);
+    if (!initParams.projectId) {
+      throw new Error('ProjectId needs to be set in `initParams: SignClientTypes.Options` sent to `WalletConnect2.init`')
+    }
+    const client = await SignClient.init(initParams);
+    const web3Modal = new Web3Modal({
+      walletConnectVersion: 2,
+      projectId: initParams.projectId,
+      standaloneChains: ['eip155:1']
+    })
+    return new WalletConnect2(client, web3Modal);
   }
 
   /**
@@ -129,20 +139,17 @@ export class WalletConnect2 implements WalletProvider {
       });
 
       if (uri) {
-        QRCodeModal.open(
+        this.web3Modal.openModal({
           uri,
-          () => {
-            // noop
-          },
-          { registryUrl: connectParams.registryUrl }
-        );
+          // TODO: registryUrl: connectParams.registryUrl
+        });
       }
       const session = await approval();
       this.session = session;
     } catch (error) {
       throw new ConnectionFailed(error);
     } finally {
-      QRCodeModal.close();
+      this.web3Modal.closeModal();
     }
     this.validateReceivedNamespace(connectParams.permissionScope, this.session.namespaces);
     this.setDefaultAccountAndNetwork();
