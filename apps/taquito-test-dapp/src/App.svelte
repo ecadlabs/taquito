@@ -18,7 +18,18 @@
   // https://better-call.dev/mumbainet/KT1Tkm7U3NS9JWgeCGywrRTSQdLZJvDSgD5Z/operations
 
   let browser = "";
-  let availableNetworks = [
+  interface AvailableNetwork {
+    value: string;
+    label: string;
+    group: string;
+  }
+
+  interface AvailableMatrixNodes {
+    value: string;
+    label: string;
+  }
+
+  let availableNetworks: AvailableNetwork[] = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
     { value: "mumbainet", label: "Mumbainet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
@@ -26,7 +37,7 @@
     { value: "mondaynet", label: "Mondaynet", group: "other testnets" },
     { value: "custom", label: "Custom", group: "custom network" },
   ];
-  let availableMatrixNodes = [
+  let availableMatrixNodes: AvailableMatrixNodes[] = [
     { value: "default", label: "Default" },
     { value: "taquito", label: "Taquito" },
     { value: "custom", label: "Custom" },
@@ -34,9 +45,9 @@
   let networkError = false;
   let showCustomNetworkInput = false;
   let customNetworkInput = "https://";
-  const groupBy = (item) => item.group;
+  const groupBy = (item: AvailableNetwork) => item.group;
 
-  const changeNetwork = (event) => {
+  const changeNetwork = (event: CustomEvent<AvailableNetwork>) => {
     networkError = false;
     showCustomNetworkInput = false;
     const walletComponent = layout.getSideBar().getWallet();
@@ -63,7 +74,7 @@
     }
   };
 
-  const changeMatrixNode = (event) => {
+  const changeMatrixNode = (event: CustomEvent<AvailableMatrixNodes>) => {
     switch (event.detail.value.toLocaleLowerCase()) {
       case "default":
         store.updateMatrixNode("beacon-node-1.sky.papers.tech");

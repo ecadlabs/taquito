@@ -3,7 +3,11 @@ import {
   ContractAbstraction,
   Wallet,
   MichelsonMap,
-  OpKind
+  OpKind,
+  ParamsWithKind,
+  WalletParamsWithKind,
+  TransactionOperation,
+  TransactionWalletOperation
 } from "@taquito/taquito";
 import type { ContractProvider } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
@@ -223,20 +227,20 @@ const batchApiTest = async (Tezos: TezosToolkit): Promise<TestResult> => {
 };
 
 const batchApiContractCallsTest = async (
-  Tezos: TezosToolkit,
+  _Tezos: TezosToolkit,
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>,
-  callToContract
+  callToContract: Wallet | ContractProvider
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    const storage: any = await contract.storage();
+    const storage: { simple: string } = await contract.storage();
     /*const batch = Tezos.wallet
         .batch()
         .withContractCall(contract.methods.simple_param(5))
         .withContractCall(contract.methods.simple_param(6))
         .withContractCall(contract.methods.simple_param(7));
       const op = await batch.send();*/
-    const batch = [
+    const batch: WalletParamsWithKind[] & ParamsWithKind[] = [
       {
         kind: OpKind.TRANSACTION,
         ...contract.methods.simple_param(5).toTransferParams()
@@ -251,16 +255,16 @@ const batchApiContractCallsTest = async (
       }
     ];
     const op = await callToContract.batch(batch).send();
-    opHash = op.opHash;
+    opHash = op['opHash'] ? op['opHash'] : op['hash'];
     await op.confirmation();
-    const newStorage: any = await contract.storage();
+    const newStorage: { simple: string } = await contract.storage();
     if (
-      newStorage.simple.toNumber() ===
-      storage.simple.toNumber() + 5 + 6 + 7
+      Number(newStorage.simple) ===
+      Number(storage.simple) + 5 + 6 + 7
     ) {
       return { success: true, opHash };
     } else {
-      throw `Unexpected number in storage, expected ${storage.simple.toNumber()}, got ${newStorage.simple.toNumber()}`;
+      throw `Unexpected number in storage, expected ${Number(storage.simple)}, got ${Number(newStorage.simple)}`;
     }
   } catch (error) {
     console.log(error);
@@ -361,7 +365,7 @@ const setTransactionLimits = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    let op;
+    let op: TransactionOperation | TransactionWalletOperation;
     if (isNaN(+fee) || isNaN(+storageLimit) || isNaN(+gasLimit)) {
       // if one of the parameters is missing, transaction is sent as is
       op = await contract.methods.simple_param(5).send();
@@ -392,15 +396,14 @@ const tryConfirmationObservable = async (
         .transfer({ to: "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb", amount: 1 })
         .send();*/
     store.resetConfirmationObservableTest();
-    const storage: any = await contract.storage();
-    console.log(contract.address, contract.storage())
-    const val = storage.simple.toNumber() + 1;
+    const storage: { simple: string} = await contract.storage();
+    const val = Number(storage.simple) + 1;
     const op = await contract.methods.simple_param(val).send();
 
     opHash = op["opHash"] ? op["opHash"] : op["hash"];
 
-    const entries = await new Promise((resolve, reject) => {
-      const evts: any[] = [];
+    const entries = await new Promise<TestResult['confirmationObsOutput']>((resolve, reject) => {
+      const evts: TestResult['confirmationObsOutput'] = [];
       op.confirmationObservable(3).subscribe(
         event => {
           const entry = {
@@ -415,7 +418,7 @@ const tryConfirmationObservable = async (
       );
     });
 
-    return { success: true, opHash, confirmationObsOutput: entries as any };
+    return { success: true, opHash, confirmationObsOutput: entries };
   } catch (error) {
     console.log(error);
     return { success: false, opHash: "" };
