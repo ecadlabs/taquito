@@ -92,11 +92,11 @@
 <section>
   <Wallet bind:this={wallet} />
   <div class="title">
-    <h4>Available tests ({list.length})</h4>
+    <h4>Available tests ({Object.entries(list).length})</h4>
   </div>
   <ul>
     {#if $store.tests.length === 0}
-      {#each list as test}
+      {#each Object.values(list) as test}
         <li style="cursor:not-allowed">
           <span>{test}</span>
         </li>

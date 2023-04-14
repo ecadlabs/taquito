@@ -11,36 +11,12 @@ import {
 } from "@taquito/taquito";
 import type { ContractProvider } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
-import { char2Bytes, verifySignature } from "@taquito/utils";
-import type { RequestSignPayloadInput } from "@airgap/beacon-sdk";
-import { SigningType } from "./types";
+import { verifySignature } from "@taquito/utils";
 import type { TestSettings, TestResult } from "./types";
 import store from "./store";
 import contractToOriginate from "./contractToOriginate";
+import { preparePayloadToSign } from "./utils";
 
-const preparePayloadToSign = (
-  input: string,
-  userAddress: string
-): {
-  payload: RequestSignPayloadInput;
-  formattedInput: string;
-} => {
-  const formattedInput = `Tezos Signed Message: taquito-test-dapp.netlify.app/ ${new Date().toISOString()} ${input}`;
-  const bytes = char2Bytes(formattedInput);
-  const bytesLength = (bytes.length / 2).toString(16);
-  const addPadding = `00000000${bytesLength}`;
-  const paddedBytesLength = addPadding.slice(addPadding.length - 8);
-  const payloadBytes = '05' + '01' + paddedBytesLength + bytes;
-  const payload: RequestSignPayloadInput = {
-    signingType: SigningType.MICHELINE,
-    payload: payloadBytes,
-    sourceAddress: userAddress
-  };
-  return {
-    payload,
-    formattedInput
-  };
-};
 
 const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
   let opHash = "";
@@ -52,7 +28,6 @@ const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
     opHash = op.opHash;
     return { success: true, opHash };
   } catch (error) {
-    console.log(error);
     return { success: false, opHash: "" };
   }
 };
@@ -67,7 +42,6 @@ const sendInt = async (
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
-    console.log(error);
     return { success: false, opHash: "" };
   }
 };
@@ -77,7 +51,7 @@ const sendComplexParam = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    // const op = await contract.methods.complex_param(5, "Taquito").send();
+    // const op = await contract.methods.complex_param(5, "Taquito").send(); // This is the old way of calling a contract with multiple parameters
     const op = await contract.methodsObject
       .complex_param({ 0: 5, 1: "Taquito" })
       .send();
@@ -85,7 +59,6 @@ const sendComplexParam = async (
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
-    console.log(error);
     return { success: false, opHash: "" };
   }
 };
@@ -100,7 +73,6 @@ const callFail = async (
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
-    console.log(error);
     if (
       error["data"] &&
       Array.isArray(error.data) &&
@@ -126,7 +98,6 @@ const callFaiWithInt = async (
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
-    console.log(error);
     if (
       error["data"] &&
       Array.isArray(error.data) &&
@@ -152,7 +123,6 @@ const callFaiWithPair = async (
     await op.confirmation();
     return { success: false, opHash: "" };
   } catch (error) {
-    console.log(error);
     if (
       error["data"] &&
       Array.isArray(error.data) &&
@@ -178,7 +148,6 @@ const callFaiWithPair = async (
 const originateSuccess = async (Tezos: TezosToolkit): Promise<TestResult> => {
   let opHash = "";
   try {
-    // fetches contract code
     const storage = new MichelsonMap();
     const op = await Tezos.wallet
       .originate({ code: contractToOriginate, storage })
@@ -187,10 +156,22 @@ const originateSuccess = async (Tezos: TezosToolkit): Promise<TestResult> => {
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
-    console.log(error);
     return { success: false, opHash: "" };
   }
 };
+
+const originateFail = async (Tezos: TezosToolkit): Promise<TestResult> => {
+  let opHash = "";
+  try {
+    const storage = new MichelsonMap();
+    const op = await Tezos.wallet.originate({ code: contractToOriginate, storage, storageLimit: 0 }).send();
+    opHash = op.opHash;
+    await op.confirmation();
+    return { success: false, opHash: "" };
+  } catch (error) {
+    return { success: true, opHash };
+  }
+}
 
 const batchApiTest = async (Tezos: TezosToolkit): Promise<TestResult> => {
   let opHash = "";
@@ -221,7 +202,6 @@ const batchApiTest = async (Tezos: TezosToolkit): Promise<TestResult> => {
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
-    console.log(error);
     return { success: false, opHash: "" };
   }
 };
@@ -267,7 +247,6 @@ const batchApiContractCallsTest = async (
       throw `Unexpected number in storage, expected ${Number(storage.simple)}, got ${Number(newStorage.simple)}`;
     }
   } catch (error) {
-    console.log(error);
     return { success: false, opHash: "" };
   }
 };
@@ -287,7 +266,6 @@ const signPayload = async (
       sigDetails: { input, formattedInput, bytes: payload.payload }
     };
   } catch (error) {
-    console.log(error);
     return { success: false, opHash: "", output: JSON.stringify(error) };
   }
 };
@@ -368,7 +346,7 @@ const setTransactionLimits = async (
     let op: TransactionOperation | TransactionWalletOperation;
     if (isNaN(+fee) || isNaN(+storageLimit) || isNaN(+gasLimit)) {
       // if one of the parameters is missing, transaction is sent as is
-      op = await contract.methods.simple_param(5).send();
+      return { success: false, opHash: "", output: `Expected as numbers fee: ${isNaN(+fee)}, storageLimit: ${isNaN(+storageLimit)}, gasLimit: ${isNaN(+gasLimit)}`};
     } else {
       op = await contract.methods.simple_param(5).send({
         storageLimit: +storageLimit,
@@ -379,11 +357,9 @@ const setTransactionLimits = async (
 
     opHash = op["opHash"] ? op["opHash"] : op["hash"];
     await op.confirmation();
-    console.log("Operation successful with op hash:", opHash);
     return { success: true, opHash };
   } catch (error) {
-    console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", output: `Expected as numbers fee: ${isNaN(+fee)}, storageLimit: ${isNaN(+storageLimit)}, gasLimit: ${isNaN(+gasLimit)}`};
   }
 };
 
@@ -392,9 +368,6 @@ const tryConfirmationObservable = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    /*const op = await Tezos.wallet
-        .transfer({ to: "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb", amount: 1 })
-        .send();*/
     store.resetConfirmationObservableTest();
     const storage: { simple: string} = await contract.storage();
     const val = Number(storage.simple) + 1;
@@ -420,27 +393,27 @@ const tryConfirmationObservable = async (
 
     return { success: true, opHash, confirmationObsOutput: entries };
   } catch (error) {
-    console.log(error);
     return { success: false, opHash: "" };
   }
 };
 
-export const list = [
-  "Send tez",
-  "Contract call with int",
-  "Contract call with (pair nat string)",
-  "Contract call that fails",
-  "Contract call that fails with int",
-  "Contract call that fails with (pair int string)",
-  "Originate smart contract with success",
-  "Use the Batch API with a wallet",
-  "Use the Batch API for contract calls",
-  "Sign the provided payload",
-  "Sign and send the signature to the contract",
-  "Verify a provided signature",
-  "Set the transaction limits",
-  "Subscribe to confirmations",
-];
+export const list = {
+  sendTez: "Send tez",
+  contractWithInt: "Contract call with int",
+  contractWithPair: "Contract call with (pair nat string)",
+  contractFail: "Contract call that fails",
+  contractFailInt: "Contract call that fails with int",
+  contractFailPair: "Contract call that fails with (pair int string)",
+  originate: "Originate smart contract with success",
+  originateFail: "Originate smart contract that fails",
+  batch: "Use the Batch API with a wallet",
+  batchContract: "Use the Batch API for contract calls",
+  sign: "Sign the provided payload",
+  signAndSend: "Sign and send the signature to the contract",
+  signAndVerify: "Verify a provided signature",
+  setLimits: "Set the transaction limits",
+  subscribe: "Subscribe to confirmations",
+};
 
 export const init = (
   Tezos: TezosToolkit,
@@ -449,7 +422,7 @@ export const init = (
 ): TestSettings[] => [
   {
     id: "send-tez",
-    name: "Send tez",
+    name: list.sendTez,
     description: "This test sends 0.1 tez to Alice's address",
     documentation: 'https://tezostaquito.io/docs/wallet_API#making-transfers',
     keyword: 'transfer',
@@ -460,7 +433,7 @@ export const init = (
   },
   {
     id: "contract-call-simple-type",
-    name: "Contract call with int",
+    name: list.contractWithInt,
     description: "This test calls a contract entrypoint and passes an int",
     documentation: 'https://tezostaquito.io/docs/smartcontracts',
     keyword: 'methods',
@@ -471,7 +444,7 @@ export const init = (
   },
   {
     id: "contract-call-complex-type",
-    name: "Contract call with (pair nat string)",
+    name: list.contractWithPair,
     description:
       "This test calls a contract entrypoint and passes a pair holding a nat and a string",
     documentation: 'https://tezostaquito.io/docs/smartcontracts/#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts',
@@ -483,7 +456,7 @@ export const init = (
   },
   {
     id: "contract-call-fail",
-    name: "Contract call that fails",
+    name: list.contractFail,
     description:
       'This test calls a contract entrypoint that fails with the message "Fail entrypoint"',
     documentation: 'https://tezostaquito.io/docs/failwith_errors/',
@@ -495,7 +468,7 @@ export const init = (
   },
   {
     id: "contract-call-fail-with-int",
-    name: "Contract call that fails with int",
+    name: list.contractFailInt,
     description: "This test calls a contract entrypoint that fails with an int",
     documentation: 'https://tezostaquito.io/docs/failwith_errors/',
     keyword: 'failwith',
@@ -506,7 +479,7 @@ export const init = (
   },
   {
     id: "contract-call-fail-with-pair",
-    name: "Contract call that fails with (pair int string)",
+    name: list.contractFailPair,
     description: "This test calls a contract entrypoint that fails with a pair",
     documentation: 'https://tezostaquito.io/docs/failwith_errors/',
     keyword: 'failwith',
@@ -517,7 +490,7 @@ export const init = (
   },
   {
     id: "originate-success",
-    name: "Originate smart contract with success",
+    name: list.originate,
     description: "This test successfully originates a smart contract",
     documentation: 'https://tezostaquito.io/docs/originate/#originate-the-contract-using-taquito',
     keyword: 'originate',
@@ -527,8 +500,18 @@ export const init = (
     lastResult: { option: "none", val: false }
   },
   {
+    id: "originate-fail",
+    name: list.originateFail,
+    description: "This test originates a smart contract that fails",
+    keyword: 'failwith',
+    run: (Tezos) => originateFail(Tezos),
+    showExecutionTime: false,
+    inputRequired: false,
+    lastResult: { option: "none", val: false }
+  },
+  {
     id: "batch-api",
-    name: "Use the Batch API with a wallet",
+    name: list.batch,
     description: "This test sends 0.3 tez to 3 different addresses",
     documentation: 'https://tezostaquito.io/docs/batch_api/#--the-withtransfer-method',
     keyword: 'withTransfer',
@@ -539,7 +522,7 @@ export const init = (
   },
   {
     id: "batch-api-contract-call",
-    name: "Use the Batch API for contract calls",
+    name: list.batchContract,
     description: "This test calls the same entrypoint 3 times in 1 transaction",
     documentation: 'https://tezostaquito.io/docs/batch_api/#--the-withcontractcall-method',
     keyword: 'withcontractcall',
@@ -555,7 +538,7 @@ export const init = (
   },
   {
     id: "sign-payload",
-    name: "Sign the provided payload",
+    name: list.sign,
     description: "This test signs the payload provided by the user",
     documentation: 'https://tezostaquito.io/docs/signing/#generating-a-signature-with-beacon-sdk',
     keyword: 'requestSignPayload',
@@ -567,7 +550,7 @@ export const init = (
   },
   {
     id: "sign-payload-and-send",
-    name: "Sign and send the signature to the contract",
+    name: list.signAndSend,
     description:
       "This test signs the provided payload and sends it to the contract to check it",
       documentation: 'https://tezostaquito.io/docs/signing/#sending-the-signature-to-a-smart-contract',
@@ -580,7 +563,7 @@ export const init = (
   },
   {
     id: "verify-signature",
-    name: "Verify a provided signature",
+    name: list.signAndVerify,
     description:
       "This test signs the provided payload and uses Taquito to verify the signature",
       documentation: 'https://tezostaquito.io/docs/signing/#verifying-a-signature',
@@ -593,7 +576,7 @@ export const init = (
   },
   {
     id: "set-transaction-limits",
-    name: "Set the transaction limits",
+    name: list.setLimits,
     description:
       "This test allows you to set the fee, storage limit and gas limit manually",
       documentation: 'https://tezostaquito.io/docs/transaction_limits/#setting-the-limits',
@@ -612,7 +595,7 @@ export const init = (
   },
   {
     id: "confirmation-observable",
-    name: "Subscribe to confirmations",
+    name: list.subscribe,
     description:
       "This test updates the underlying contract and subscribes to 3 confirmations",
       documentation: 'https://tezostaquito.io/docs/confirmation_event_stream/#setting-up-the-observable',
@@ -623,10 +606,4 @@ export const init = (
     inputRequired: false,
     lastResult: { option: "none", val: false }
   },
-  /*{
-        id: "originate-fail",
-        name: "Originate smart contract that fails",
-        description: "This test originates a smart contract that fails",
-        run: () => console.log("originate-fail")
-      }*/
 ];
