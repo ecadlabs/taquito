@@ -184,8 +184,6 @@
     --itemHoverColor: rgba(2, 83, 185, 1);
     --errorBorder: 2px solid red;
     --errorBackground: transparent;
-    display: flex;
-    justify-content: space-between;
   }
 </style>
 
