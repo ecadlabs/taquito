@@ -51,7 +51,7 @@ const sendComplexParam = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    // const op = await contract.methods.complex_param(5, "Taquito").send(); // This is the old way of calling a contract with multiple parameters
+    // const op = await contract.methods.complex_param(5, "Taquito").send(); // This is another way of calling a contract with multiple parameters
     const op = await contract.methodsObject
       .complex_param({ 0: 5, 1: "Taquito" })
       .send();
@@ -207,7 +207,6 @@ const batchApiTest = async (Tezos: TezosToolkit): Promise<TestResult> => {
 };
 
 const batchApiContractCallsTest = async (
-  _Tezos: TezosToolkit,
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>,
   callToContract: Wallet | ContractProvider
 ): Promise<TestResult> => {
@@ -303,7 +302,6 @@ const signPayloadAndSend = async (
 const verifySignatureWithTaquito = async (
   input: string,
   wallet: BeaconWallet,
-  _contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
 ): Promise<TestResult> => {
   if (!input) throw "No input provided";
 
@@ -354,12 +352,11 @@ const setTransactionLimits = async (
         fee: +fee
       });
     }
-
     opHash = op["opHash"] ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: true, opHash };
   } catch (error) {
-    return { success: false, opHash: "", output: `Expected as numbers fee: ${isNaN(+fee)}, storageLimit: ${isNaN(+storageLimit)}, gasLimit: ${isNaN(+gasLimit)}`};
+    return { success: false, opHash: "", output: `${JSON.stringify(error)}`};
   }
 };
 
@@ -528,7 +525,6 @@ export const init = (
     keyword: 'withcontractcall',
     run: () =>
       batchApiContractCallsTest(
-        Tezos,
         contract,
         wallet ? Tezos.wallet : Tezos.contract
       ),
@@ -568,7 +564,7 @@ export const init = (
       "This test signs the provided payload and uses Taquito to verify the signature",
       documentation: 'https://tezostaquito.io/docs/signing/#verifying-a-signature',
       keyword: 'verifySignature',
-    run: input => verifySignatureWithTaquito(input.text, wallet, contract),
+    run: input => verifySignatureWithTaquito(input.text, wallet),
     showExecutionTime: false,
     inputRequired: true,
     inputType: "string",

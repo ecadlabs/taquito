@@ -116,7 +116,7 @@
             }
           }}
         >
-            <span>{test.name}</span>
+          <span>{test.name}</span>
         </li>
       {/each}
     {/if}

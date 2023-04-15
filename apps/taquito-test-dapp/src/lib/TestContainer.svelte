@@ -10,7 +10,7 @@
   let loading = false;
   let success: boolean | undefined;
   let opHash = "";
-  let input = { text: "", fee: 400, storageLimit: 400, gasLimit: 1320 };
+  let input = { text: "", fee: 500, storageLimit: 800, gasLimit: 3000 };
   let testResult: { id: string; title: string; body: any };
 
   const run = async () => {
