@@ -155,6 +155,6 @@ describe('Exchange contract test', () => {
   it('Should extract signature properly', () => {
     const schema = new ParameterSchema(parameter.args[0]);
     expect(schema.ExtractSignatures()).toContainEqual(['key_hash']);
-    expect(schema.ExtractSignatures()).toContainEqual([]);
+    expect(schema.ExtractSignatures()).toContainEqual('option');
   });
 });

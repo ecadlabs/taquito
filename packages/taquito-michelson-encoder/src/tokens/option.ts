@@ -30,6 +30,9 @@ export class OptionToken extends ComparableToken {
     const value = args;
     if (value === undefined || value === null) {
       return { prim: 'None' };
+    } else if (Array.isArray(value) && Array.isArray(value[0]) && value[0][0] === 'Some') {
+      value[0].shift();
+      return { prim: 'Some', args: [this.schema().Encode(value[0])] };
     } else if (
       Array.isArray(value) &&
       (value[value.length - 1] === undefined || value[value.length - 1] === null)
@@ -37,17 +40,16 @@ export class OptionToken extends ComparableToken {
       value.pop();
       return { prim: 'None' };
     }
-
-    return { prim: 'Some', args: [this.schema().Encode(args)] };
+    return { prim: 'Some', args: [this.schema().Encode(value)] };
   }
 
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
-    const value = args;
+    let value = args;
 
     if (value === undefined || value === null) {
       return { prim: 'None' };
     }
-
+    value = typeof value === 'object' && 'Some' in value ? value['Some'] : value;
     return { prim: 'Some', args: [this.schema().EncodeObject(value, semantic)] };
   }
 
@@ -56,7 +58,7 @@ export class OptionToken extends ComparableToken {
       return null;
     }
 
-    return this.schema().Execute(val.args[0], semantics);
+    return { Some: this.schema().Execute(val.args[0], semantics) };
   }
 
   /**
@@ -64,7 +66,7 @@ export class OptionToken extends ComparableToken {
    *
    */
   public ExtractSchema() {
-    return this.schema().ExtractSchema();
+    return { Some: this.schema().ExtractSchema() };
   }
 
   generateSchema(): OptionTokenSchema {
@@ -75,7 +77,8 @@ export class OptionToken extends ComparableToken {
   }
 
   public ExtractSignature() {
-    return [...this.schema().ExtractSignature(), []];
+    // return [...this.schema().ExtractSignature(), []];
+    return ['Some' as any, ...this.schema().ExtractSignature()];
   }
 
   get KeySchema(): ComparableToken {

@@ -409,7 +409,7 @@ describe('Ticket_deprecated token', () => {
         })
       ).toEqual({
         ticketer: 'KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw',
-        value: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        value: { Some: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' },
         amount: new BigNumber('2'),
       });
     });

@@ -5,10 +5,15 @@ import { UnitValue } from '../../src/taquito-michelson-encoder';
 describe('Option token', () => {
   let token: OptionToken;
   let unitToken: OptionToken;
+  let nestedToken: OptionToken;
   beforeEach(() => {
     token = createToken({ prim: 'option', args: [{ prim: 'int' }], annots: [] }, 0) as OptionToken;
     unitToken = createToken(
       { prim: 'option', args: [{ prim: 'unit' }], annots: [] },
+      0
+    ) as OptionToken;
+    nestedToken = createToken(
+      { prim: 'option', args: [{ prim: 'option', args: [{ prim: 'int' }] }], annots: [] },
       0
     ) as OptionToken;
   });
@@ -29,6 +34,17 @@ describe('Option token', () => {
       expect(token.EncodeObject(undefined)).toEqual({ prim: 'None' });
       expect(unitToken.EncodeObject(undefined)).toEqual({ prim: 'None' });
     });
+
+    it('Should encode to Some(None) when { Some: null }', () => {
+      expect(nestedToken.EncodeObject({ Some: null })).toEqual({
+        prim: 'Some',
+        args: [{ prim: 'None' }],
+      });
+      expect(nestedToken.EncodeObject({ Some: null })).toEqual({
+        prim: 'Some',
+        args: [{ prim: 'None' }],
+      });
+    });
   });
 
   describe('Encode', () => {
@@ -47,13 +63,32 @@ describe('Option token', () => {
       expect(token.Encode([undefined])).toEqual({ prim: 'None' });
       expect(unitToken.Encode([undefined])).toEqual({ prim: 'None' });
     });
+
+    it('Should encode to Some(None) when ["Some", null]', () => {
+      console.log(nestedToken.Encode(['Some', null]));
+      expect(nestedToken.Encode(['Some', null])).toEqual({
+        prim: 'Some',
+        args: [{ prim: 'None' }],
+      });
+      expect(nestedToken.Encode(['Some', null])).toEqual({
+        prim: 'Some',
+        args: [{ prim: 'None' }],
+      });
+    });
   });
 
   describe('Execute', () => {
     it('Should execute on Some michelson value', () => {
-      expect(token.Execute({ prim: 'Some', args: [{ int: '0' }] }).toString()).toEqual('0');
-      expect(token.Execute({ prim: 'Some', args: [{ int: '1000' }] }).toString()).toEqual('1000');
-      expect(unitToken.Execute({ prim: 'Some', args: [{ prim: 'Unit' }] })).toEqual(UnitValue);
+      expect(token.Execute({ prim: 'Some', args: [{ int: '0' }] })!).toHaveProperty('Some');
+      expect(token.Execute({ prim: 'Some', args: [{ int: '0' }] })!.Some.toString()).toEqual('0');
+      expect(token.Execute({ prim: 'Some', args: [{ int: '1000' }] })!).toHaveProperty('Some');
+      expect(token.Execute({ prim: 'Some', args: [{ int: '1000' }] })!.Some.toString()).toEqual(
+        '1000'
+      );
+      expect(unitToken.Execute({ prim: 'Some', args: [{ prim: 'Unit' }] })).toHaveProperty('Some');
+      expect(unitToken.Execute({ prim: 'Some', args: [{ prim: 'Unit' }] })!.Some).toEqual(
+        UnitValue
+      );
     });
 
     it('Should execute on None michelson value', () => {
@@ -74,7 +109,8 @@ describe('Option token', () => {
 
   describe('Tokey', () => {
     it('Should transform Michelson bytes data to a key of type string', () => {
-      expect(token.ToKey({ prim: 'Some', args: [{ int: '4' }] }).toString()).toEqual('4');
+      expect(token.ToKey({ prim: 'Some', args: [{ int: '4' }] })!).toHaveProperty('Some');
+      expect(token.ToKey({ prim: 'Some', args: [{ int: '4' }] })!.Some.toString()).toEqual('4');
     });
   });
 
@@ -82,7 +118,7 @@ describe('Option token', () => {
     it('Should transform option value to a Michelson big map key', () => {
       expect(token.ToBigMapKey(5)).toEqual({
         key: { prim: 'Some', args: [{ int: '5' }] },
-        type: { prim: 'option', args: [{ prim: 'int' }] }
+        type: { prim: 'option', args: [{ prim: 'int' }] },
       });
     });
   });
@@ -93,8 +129,8 @@ describe('Option token', () => {
         __michelsonType: 'option',
         schema: {
           __michelsonType: 'int',
-          schema: 'int'
-        }
+          schema: 'int',
+        },
       });
     });
   });
