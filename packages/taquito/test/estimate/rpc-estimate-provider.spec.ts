@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context } from '../../src/context';
 import { RPCEstimateProvider } from '../../src/estimate/rpc-estimate-provider';
-import { miStr, ligoSample } from '../contract/data';
+import { miStr, ligoSample, entrypointsGenericMultisig } from '../contract/data';
 import BigNumber from 'bignumber.js';
 import {
   preapplyResultFrom,
@@ -24,10 +24,15 @@ import {
   TransferTicketWithReveal,
   updateConsensusKeyNoReveal,
   smartRollupAddMessagesNoReveal,
+  smartRollupOriginateWithReveal,
 } from '../contract/helper';
-import { OpKind } from '@taquito/rpc';
+import { OpKind, PvmKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
 import { InvalidAddressError } from '@taquito/utils';
+import { ContractAbstraction } from '../../src/contract';
+import { genericMultisig } from '../../../../integration-tests/data/multisig';
+import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
+import { Estimate } from '../../src/estimate';
 
 /**
  * RPCEstimateProvider test
@@ -60,6 +65,8 @@ describe('RPCEstimateProvider test signer', () => {
     publicKey: jest.Mock<any, any>;
     sign: jest.Mock<any, any>;
   };
+
+  let context: Context;
 
   beforeEach(() => {
     mockRpcClient = {
@@ -116,7 +123,7 @@ describe('RPCEstimateProvider test signer', () => {
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
     mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-    const context = new Context(mockRpcClient as any, mockSigner as any);
+    context = new Context(mockRpcClient as any, mockSigner as any);
     context.forger = mockForger;
     estimateProvider = new RPCEstimateProvider(context);
   });
@@ -1258,6 +1265,55 @@ describe('RPCEstimateProvider test signer', () => {
       done();
     });
   });
+
+  describe('contractCall', () => {
+    it('should return estimates for contract calls', async (done) => {
+      mockRpcClient.runOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            metadata: {
+              operation_result: {
+                consumed_milligas: 1000000,
+              },
+            },
+          },
+        ],
+      });
+
+      const mockEstimate = {};
+      const mockReadProvider = {};
+      const rpcContractProvider = new RpcContractProvider(context, mockEstimate as any);
+
+      const contractAbs = new ContractAbstraction(
+        'contractAddress',
+        {
+          code: genericMultisig,
+          storage: {},
+        },
+        rpcContractProvider,
+        rpcContractProvider,
+        entrypointsGenericMultisig,
+        mockRpcClient as any,
+        mockReadProvider as any
+      );
+
+      const contractMethod = contractAbs.methods.main(
+        2,
+        'change_keys',
+        2,
+        ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'],
+        [
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        ]
+      );
+
+      const estimate = await estimateProvider.contractCall(contractMethod);
+
+      expect(estimate).toBeInstanceOf(Estimate);
+      done();
+    });
+  });
 });
 
 describe('RPCEstimateProvider test wallet', () => {
@@ -1277,6 +1333,7 @@ describe('RPCEstimateProvider test wallet', () => {
     getChainId: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
+    getOriginationProof: jest.Mock<any, any>;
   };
 
   let mockForger: {
@@ -1303,6 +1360,7 @@ describe('RPCEstimateProvider test wallet', () => {
       getChainId: jest.fn(),
       getConstants: jest.fn(),
       getProtocols: jest.fn(),
+      getOriginationProof: jest.fn(),
     };
 
     mockForger = {
@@ -1750,6 +1808,40 @@ describe('RPCEstimateProvider test wallet', () => {
           'Unable to estimate the reveal operation, the public key is unknown'
         );
       }
+      done();
+    });
+  });
+
+  describe('smartRollupOriginate', () => {
+    it('Should return the correct estimate for SmartRollupOriginate operation', async (done) => {
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        cost_per_byte: new BigNumber(1000),
+        smart_rollup_origination_size: new BigNumber(6314),
+      });
+      mockRpcClient.runOperation.mockResolvedValue(smartRollupOriginateWithReveal);
+      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
+
+      const estimate = await estimateProvider.smartRollupOriginate({
+        pvmKind: PvmKind.WASM2,
+        kernel:
+          '0061736d0100000001280760037f7f7f017f60027f7f017f60057f7f7f7f7f017f60017f0060017f017f60027f7f0060000002610311736d6172745f726f6c6c75705f636f72650a726561645f696e707574000011736d6172745f726f6c6c75705f636f72650c77726974655f6f7574707574000111736d6172745f726f6c6c75705f636f72650b73746f72655f77726974650002030504030405060503010001071402036d656d02000a6b65726e656c5f72756e00060aa401042a01027f41fa002f0100210120002f010021022001200247044041e4004112410041e400410010021a0b0b0800200041c4006b0b5001057f41fe002d0000210341fc002f0100210220002d0000210420002f0100210520011004210620042003460440200041016a200141016b10011a0520052002460440200041076a200610011a0b0b0b1d01017f41dc0141840241901c100021004184022000100541840210030b0b38050041e4000b122f6b65726e656c2f656e762f7265626f6f740041f8000b0200010041fa000b0200020041fc000b0200000041fe000b0101',
+        parametersType: {
+          prim: 'bytes',
+        },
+      });
+      expect(estimate.gasLimit).toEqual(3849);
+      expect(estimate.storageLimit).toEqual(6552);
+      expect(estimate.suggestedFeeMutez).toEqual(651);
+
+      expect(estimate).toMatchObject({
+        gasLimit: 3849,
+        storageLimit: 6552,
+        suggestedFeeMutez: 651,
+        minimalFeeMutez: 551,
+      });
       done();
     });
   });

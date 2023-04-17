@@ -14,7 +14,13 @@
       rel="stylesheet"
     />
     <script>
+      window.global = window;
       const global = globalThis;
+    </script>
+
+    <script type="module">
+      import {Buffer} from "buffer";
+      window.Buffer = Buffer;
     </script>
   </head>
   <body>

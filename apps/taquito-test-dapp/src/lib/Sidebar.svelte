@@ -5,6 +5,10 @@
   import Wallet from "./Wallet.svelte";
   import { contractAddress } from "../config";
 
+  let wallet: Wallet;
+
+  export const getWallet = () => wallet;
+
   afterUpdate(async () => {
     if ($store.Tezos && $store.wallet && $store.tests.length === 0) {
       const contract = await $store.Tezos.wallet.at(contractAddress[$store.networkType]);
@@ -86,7 +90,7 @@
 </style>
 
 <section>
-  <Wallet />
+  <Wallet bind:this={wallet} />
   <div class="title">
     <h4>Available tests ({list.length})</h4>
   </div>

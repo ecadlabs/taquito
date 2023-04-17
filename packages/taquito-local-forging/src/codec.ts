@@ -467,6 +467,17 @@ export const burnLimitDecoder = (value: Uint8ArrayConsumer) => {
   }
 };
 
+export const depositsLimitEncoder = (val: string) => {
+  return !val ? '00' : `ff${zarithEncoder(val)}`;
+};
+
+export const depositsLimitDecoder = (value: Uint8ArrayConsumer) => {
+  const prefix = value.consume(1);
+  if (Buffer.from(prefix).toString('hex') !== '00') {
+    return zarithDecoder(value);
+  }
+};
+
 export const paddedBytesEncoder = (val: string, paddingLength = 8) => {
   return `${pad(val.length / 2, paddingLength)}${val}`;
 };
