@@ -4,6 +4,7 @@ import {
   InvalidMnemonicError,
   ToBeImplemented,
 } from '../src/errors';
+import { Blst } from '../src/es-blst/blst';
 import { InMemorySigner } from '../src/taquito-signer';
 
 describe('inmemory-signer', () => {
@@ -218,7 +219,14 @@ describe('inmemory-signer', () => {
     done();
   });
 
+  const sleeper = (ms: number) => {
+    return new Promise(resolve => setTimeout(() => resolve({}), ms));
+  }
+
   it(`Tz4`, async (done) => {
+    while (!Blst.blst) {
+      await sleeper(100);
+    }
     const signer = new InMemorySigner('BLsk3GqCUrAcNeznkg8W1KDq8H3ux884GeQeGj6tYkGeDaEmeMuVtb');
     expect(await signer.publicKeyHash()).toEqual('tz4WhAS92VSPxuCjTJgUgMsg5if8dUoMh72r');
     expect(await signer.secretKey()).toEqual(

@@ -32,7 +32,7 @@
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && mkdir dist && cp blst.wasm dist",
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
     "start": "rollup -c rollup.config.ts -w"
@@ -81,7 +81,6 @@
     "@types/bn.js": "^5.1.1",
     "bip39": "^3.0.4",
     "elliptic": "^6.5.4",
-    "es-blst": "^1.0.2",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
   },

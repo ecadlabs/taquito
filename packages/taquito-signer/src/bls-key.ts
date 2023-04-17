@@ -8,7 +8,7 @@ import {
   buf2hex,
 } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
-import { MinPk } from 'es-blst';
+import * as MinPk from './es-blst/minpk';
 
 export class Tz4 {
   private _key: Uint8Array;
