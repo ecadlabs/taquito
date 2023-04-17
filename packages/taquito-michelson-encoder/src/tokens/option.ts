@@ -27,18 +27,22 @@ export class OptionToken extends ComparableToken {
   }
 
   public Encode(args: any): any {
-    const value = args;
+    let value = args;
     if (value === undefined || value === null) {
       return { prim: 'None' };
-    } else if (Array.isArray(value) && Array.isArray(value[0]) && value[0][0] === 'Some') {
-      value[0].shift();
-      return { prim: 'Some', args: [this.schema().Encode(value[0])] };
-    } else if (
-      Array.isArray(value) &&
-      (value[value.length - 1] === undefined || value[value.length - 1] === null)
-    ) {
-      value.pop();
+    }
+    if (!Array.isArray(value)) {
+      return { prim: 'Some', args: [this.schema().Encode(value)] };
+    }
+    if (value.length === 1 && Array.isArray(value[0])) {
+      value = value[0];
+    }
+    if (value[0] === 'None' || value[0] === null || value[0] === undefined) {
       return { prim: 'None' };
+    }
+    if (value[0] === 'Some') {
+      value.shift();
+      return { prim: 'Some', args: [this.schema().Encode(value)] };
     }
     return { prim: 'Some', args: [this.schema().Encode(value)] };
   }
