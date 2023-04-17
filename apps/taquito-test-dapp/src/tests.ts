@@ -212,7 +212,7 @@ const batchApiContractCallsTest = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    const storage: { simple: string } = await contract.storage();
+    const storage = await contract.storage<{ simple: string }>();
     /*const batch = Tezos.wallet
         .batch()
         .withContractCall(contract.methods.simple_param(5))
@@ -236,7 +236,7 @@ const batchApiContractCallsTest = async (
     const op = await callToContract.batch(batch).send();
     opHash = op['opHash'] ? op['opHash'] : op['hash'];
     await op.confirmation();
-    const newStorage: { simple: string } = await contract.storage();
+    const newStorage = await contract.storage<{ simple: string }>();
     if (
       Number(newStorage.simple) ===
       Number(storage.simple) + 5 + 6 + 7
@@ -366,7 +366,7 @@ const tryConfirmationObservable = async (
   let opHash = "";
   try {
     store.resetConfirmationObservableTest();
-    const storage: { simple: string} = await contract.storage();
+    const storage = await contract.storage<{ simple: string }>();
     const val = Number(storage.simple) + 1;
     const op = await contract.methods.simple_param(val).send();
 
@@ -394,7 +394,7 @@ const tryConfirmationObservable = async (
   }
 };
 
-export const list = {
+export const testList = {
   sendTez: "Send tez",
   contractWithInt: "Contract call with int",
   contractWithPair: "Contract call with (pair nat string)",
@@ -419,7 +419,7 @@ export const init = (
 ): TestSettings[] => [
   {
     id: "send-tez",
-    name: list.sendTez,
+    name: testList.sendTez,
     description: "This test sends 0.1 tez to Alice's address",
     documentation: 'https://tezostaquito.io/docs/wallet_API#making-transfers',
     keyword: 'transfer',
@@ -430,7 +430,7 @@ export const init = (
   },
   {
     id: "contract-call-simple-type",
-    name: list.contractWithInt,
+    name: testList.contractWithInt,
     description: "This test calls a contract entrypoint and passes an int",
     documentation: 'https://tezostaquito.io/docs/smartcontracts',
     keyword: 'methods',
@@ -441,7 +441,7 @@ export const init = (
   },
   {
     id: "contract-call-complex-type",
-    name: list.contractWithPair,
+    name: testList.contractWithPair,
     description:
       "This test calls a contract entrypoint and passes a pair holding a nat and a string",
     documentation: 'https://tezostaquito.io/docs/smartcontracts/#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts',
@@ -453,7 +453,7 @@ export const init = (
   },
   {
     id: "contract-call-fail",
-    name: list.contractFail,
+    name: testList.contractFail,
     description:
       'This test calls a contract entrypoint that fails with the message "Fail entrypoint"',
     documentation: 'https://tezostaquito.io/docs/failwith_errors/',
@@ -465,7 +465,7 @@ export const init = (
   },
   {
     id: "contract-call-fail-with-int",
-    name: list.contractFailInt,
+    name: testList.contractFailInt,
     description: "This test calls a contract entrypoint that fails with an int",
     documentation: 'https://tezostaquito.io/docs/failwith_errors/',
     keyword: 'failwith',
@@ -476,7 +476,7 @@ export const init = (
   },
   {
     id: "contract-call-fail-with-pair",
-    name: list.contractFailPair,
+    name: testList.contractFailPair,
     description: "This test calls a contract entrypoint that fails with a pair",
     documentation: 'https://tezostaquito.io/docs/failwith_errors/',
     keyword: 'failwith',
@@ -487,7 +487,7 @@ export const init = (
   },
   {
     id: "originate-success",
-    name: list.originate,
+    name: testList.originate,
     description: "This test successfully originates a smart contract",
     documentation: 'https://tezostaquito.io/docs/originate/#originate-the-contract-using-taquito',
     keyword: 'originate',
@@ -498,7 +498,7 @@ export const init = (
   },
   {
     id: "originate-fail",
-    name: list.originateFail,
+    name: testList.originateFail,
     description: "This test originates a smart contract that fails",
     keyword: 'failwith',
     run: (Tezos) => originateFail(Tezos),
@@ -508,7 +508,7 @@ export const init = (
   },
   {
     id: "batch-api",
-    name: list.batch,
+    name: testList.batch,
     description: "This test sends 0.3 tez to 3 different addresses",
     documentation: 'https://tezostaquito.io/docs/batch_api/#--the-withtransfer-method',
     keyword: 'withTransfer',
@@ -519,7 +519,7 @@ export const init = (
   },
   {
     id: "batch-api-contract-call",
-    name: list.batchContract,
+    name: testList.batchContract,
     description: "This test calls the same entrypoint 3 times in 1 transaction",
     documentation: 'https://tezostaquito.io/docs/batch_api/#--the-withcontractcall-method',
     keyword: 'withcontractcall',
@@ -534,7 +534,7 @@ export const init = (
   },
   {
     id: "sign-payload",
-    name: list.sign,
+    name: testList.sign,
     description: "This test signs the payload provided by the user",
     documentation: 'https://tezostaquito.io/docs/signing/#generating-a-signature-with-beacon-sdk',
     keyword: 'requestSignPayload',
@@ -546,7 +546,7 @@ export const init = (
   },
   {
     id: "sign-payload-and-send",
-    name: list.signAndSend,
+    name: testList.signAndSend,
     description:
       "This test signs the provided payload and sends it to the contract to check it",
       documentation: 'https://tezostaquito.io/docs/signing/#sending-the-signature-to-a-smart-contract',
@@ -559,7 +559,7 @@ export const init = (
   },
   {
     id: "verify-signature",
-    name: list.signAndVerify,
+    name: testList.signAndVerify,
     description:
       "This test signs the provided payload and uses Taquito to verify the signature",
       documentation: 'https://tezostaquito.io/docs/signing/#verifying-a-signature',
@@ -572,7 +572,7 @@ export const init = (
   },
   {
     id: "set-transaction-limits",
-    name: list.setLimits,
+    name: testList.setLimits,
     description:
       "This test allows you to set the fee, storage limit and gas limit manually",
       documentation: 'https://tezostaquito.io/docs/transaction_limits/#setting-the-limits',
@@ -591,7 +591,7 @@ export const init = (
   },
   {
     id: "confirmation-observable",
-    name: list.subscribe,
+    name: testList.subscribe,
     description:
       "This test updates the underlying contract and subscribes to 3 confirmations",
       documentation: 'https://tezostaquito.io/docs/confirmation_event_stream/#setting-up-the-observable',
