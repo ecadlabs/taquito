@@ -24,7 +24,7 @@
     "vite": "^3.2.0"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "4.0.0",
+    "@airgap/beacon-sdk": "4.0.1-beta.0",
     "@taquito/beacon-wallet": "^16.1.2-beta-RC.0",
     "@taquito/taquito": "^16.1.2-beta-RC.0",
     "@taquito/utils": "^16.1.2-beta-RC.0",
