@@ -1,5 +1,5 @@
 import { CONFIGS, sleep } from './config';
-import { PollingSubscribeProvider } from '@taquito/taquito';
+import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
 import { localForger } from '@taquito/local-forging';
 import { send } from 'process';
 import { validateAddress } from '@taquito/utils';
@@ -30,14 +30,20 @@ export const main = (param: parameter, store: storage) => {
   return [list([Tezos.emit("%eventFromCalledContract", param + 1)]), store];
 }`;
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   let calledContractAddress: string;
   let mainContractAddress: string;
+  let secondUser: TezosToolkit;
 
   describe(`Polling Subscribe Provider using ${rpc}`, () => {
     beforeAll(async (done) => {
       await setup();
+
+      secondUser = await createAddress();
+      const secondUserAddress = await secondUser.signer.publicKeyHash();
+      const transfer = await Tezos.contract.transfer({ to: secondUserAddress, amount: 1 });
+      await transfer.confirmation();
 
       Tezos.setStreamProvider(
         Tezos.getFactory(PollingSubscribeProvider)({
@@ -149,27 +155,29 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         data.push(x);
       });
 
-      const contract = await Tezos.contract.at(mainContractAddress!);
-      console.log(`Storage is: ${await contract.storage()}`);
+      const contract1 = await Tezos.contract.at(mainContractAddress!);
+      const contract2 = await secondUser.contract.at(mainContractAddress!);
+      
 
-      const batch = Tezos.contract
-        .batch()
-        .withContractCall(contract.methodsObject.default({
-          ad: calledContractAddress,
-          newStore: 0,
-          p: 0,
-          t: 0
-        }))
-        .withContractCall(contract.methodsObject.default({
-          ad: calledContractAddress,
-          newStore: 0,
-          p: 0,
-          t: 0
-        }));
+      const operation1 = contract1.methodsObject.default({
+        ad: calledContractAddress,
+        newStore: 0,
+        p: 0,
+        t: 0
+      });
 
-      const op = await batch.send();
+      const operation2 = contract2.methodsObject.default({
+        ad: calledContractAddress,
+        newStore: 0,
+        p: 0,
+        t: 0
+      });
 
-      await op.confirmation();
+      const sent1 = await operation1.send();
+      const sent2 = await operation2.send();
+
+      await sent1.confirmation();
+      await sent2.confirmation();
 
       await sleep(3000);
 
@@ -196,66 +204,113 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         address: mainContractAddress,
       });
 
-      eventSub.on('error', (x) => {
+      eventSub.on('error', (event) => {
         data.push({
           type: 'error',
-          x,
+          event,
         });
       });
 
-      eventSub.on('data', (x) => {
+      eventSub.on('data', (event) => {
         data.push({
           type: 'data',
-          x,
+          event,
         });
       });
 
-      const contract = await Tezos.contract.at(mainContractAddress!);
-      console.log(`Storage is: ${await contract.storage()}`);
+      const contract1 = await Tezos.contract.at(mainContractAddress!);
+      const contract2 = await secondUser.contract.at(mainContractAddress!);
       try {
-        const batch = Tezos.contract
-          .batch()
-          .withContractCall(contract.methodsObject.default({
-            ad: calledContractAddress,
-            newStore: 1,
-            p: 0,
-            t: 0
-          }))
-          .withContractCall(
-            contract.methodsObject.default({
-              ad: calledContractAddress,
-              newStore: 0,
-              p: 0,
-              t: 0
-            })
-            // , {
-            //   fee: 926,
-            //   gasLimit: 5850, // Estimte was: 5972,
-            //   storageLimit: 0,
-            // }
-          );
-        const op = await batch.send();
-
-        await op.confirmation();
-        console.log(op);
+        const operation1 = contract1.methodsObject.default({
+          ad: calledContractAddress,
+          newStore: 1,
+          p: 0,
+          t: 0
+        });
+  
+        const operation2 = contract2.methodsObject.default({
+          ad: calledContractAddress,
+          newStore: 0,
+          p: 0,
+          t: 0
+        });
+  
+        const sent1 = await operation1.send();
+        const sent2 = await operation2.send();
+  
+        await sent1.confirmation();
+        await sent2.confirmation();
       } catch (e) {
-        console.log(e);
         // Failure is expected
-        console.log(e);
       }
 
       await sleep(5000);
       eventSub.close();
 
-      console.log(JSON.stringify(data));
       expect(data.length).toEqual(3);
+      expect(data[1].event.result.status).toEqual('backtracked');
+      done();
+    });
+
+    it('should properly filter events from failed operations', async (done) => {
+      const data: any = [];
+
+      const eventSub = Tezos.stream.subscribeEvent({
+        address: mainContractAddress,
+        excludeFailedOperations: true,
+      });
+
+      eventSub.on('error', (event) => {
+        data.push({
+          type: 'error',
+          event,
+        });
+      });
+
+      eventSub.on('data', (event) => {
+        data.push({
+          type: 'data',
+          event,
+        });
+      });
+
+      const contract1 = await Tezos.contract.at(mainContractAddress!);
+      const contract2 = await secondUser.contract.at(mainContractAddress!);
+      try {
+        const operation1 = contract1.methodsObject.default({
+          ad: calledContractAddress,
+          newStore: 1,
+          p: 0,
+          t: 0
+        });
+  
+        const operation2 = contract2.methodsObject.default({
+          ad: calledContractAddress,
+          newStore: 0,
+          p: 0,
+          t: 0
+        });
+  
+        const sent1 = await operation1.send();
+        const sent2 = await operation2.send();
+  
+        await sent1.confirmation();
+        await sent2.confirmation();
+      } catch (e) {
+        // Failure is expected
+      }
+
+      await sleep(5000);
+      eventSub.close();
+
+      expect(data.length).toEqual(1);
       done();
     });
   });
 });
 
 /* 
-1- Send a batch of transactions with two transactions
+1- Send two transactions from two users in parallel
 2- The first transaction will change a value in storage
 3- The second transaction depends on that value and does an extra thing
 4- Because of the extra thing (emits the event), the gas cost will be higher than estimated
