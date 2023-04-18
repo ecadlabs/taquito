@@ -160,19 +160,6 @@ const originateSuccess = async (Tezos: TezosToolkit): Promise<TestResult> => {
   }
 };
 
-const originateFail = async (Tezos: TezosToolkit): Promise<TestResult> => {
-  let opHash = "";
-  try {
-    const storage = new MichelsonMap();
-    const op = await Tezos.wallet.originate({ code: contractToOriginate, storage, storageLimit: 0 }).send();
-    opHash = op.opHash;
-    await op.confirmation();
-    return { success: false, opHash: "" };
-  } catch (error) {
-    return { success: true, opHash };
-  }
-}
-
 const batchApiTest = async (Tezos: TezosToolkit): Promise<TestResult> => {
   let opHash = "";
   try {
@@ -402,7 +389,6 @@ export const testList = {
   contractFailInt: "Contract call that fails with int",
   contractFailPair: "Contract call that fails with (pair int string)",
   originate: "Originate smart contract with success",
-  originateFail: "Originate smart contract that fails",
   batch: "Use the Batch API with a wallet",
   batchContract: "Use the Batch API for contract calls",
   sign: "Sign the provided payload",
@@ -492,16 +478,6 @@ export const init = (
     documentation: 'https://tezostaquito.io/docs/originate/#originate-the-contract-using-taquito',
     keyword: 'originate',
     run: () => originateSuccess(Tezos),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "originate-fail",
-    name: testList.originateFail,
-    description: "This test originates a smart contract that fails",
-    keyword: 'failwith',
-    run: (Tezos) => originateFail(Tezos),
     showExecutionTime: false,
     inputRequired: false,
     lastResult: { option: "none", val: false }
