@@ -43,7 +43,7 @@ try {
 
 - `tag` is the tag string that was defined in the smart contract with the EMIT instruction
 - `address` is the address of the smart contract that was called 
-- `excludeFailedOperations`: In rare cases, events from failed opera can be received by the subscriber. You can use this field to filter out these events (if you pass `true` to this field, only events from successful operations will be received)
+- `excludeFailedOperations`: In rare cases, events from failed operations can be received by the subscriber. You can use this field to filter out these events (if you pass `true` to this field, only events from successful operations will be received)
 
 :::info
 If you would like to subscribe to **_any_** event that goes through, you can call `subscribeEvent()` as is without any parameters

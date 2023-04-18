@@ -4,6 +4,9 @@ import { localForger } from '@taquito/local-forging';
 import { send } from 'process';
 import { validateAddress } from '@taquito/utils';
 
+/* mainContract.jsligo: This is the source code for the main contract.
+If you need to change the main contract, you can change this, use the ligo compiler to compile it, and update both the Michelson code below and the jsligo here.
+
 const _mainContractJsLigo = `type storage = int
 type parameter = {p: int, ad: address, t: tez, newStore: int}
 
@@ -20,7 +23,54 @@ export const main = ({p, ad, t, newStore} : parameter, store : storage) => {
     } else {
         return [list([event1, tran]), newStore];
     }
-}`;
+}`; */
+
+const mainContractMichelson = `{ parameter (pair (pair (address %ad) (int %newStore)) (int %p) (mutez %t)) ;
+  storage int ;
+  code { UNPAIR ;
+         UNPAIR ;
+         UNPAIR ;
+         DIG 2 ;
+         UNPAIR ;
+         PUSH int 1 ;
+         DUP 2 ;
+         COMPARE ;
+         EQ ;
+         IF { SWAP ; DIG 2 ; DIG 4 ; DROP 4 ; NIL operation }
+            { PUSH int 4 ;
+              DUP 2 ;
+              COMPARE ;
+              NEQ ;
+              IF {}
+                 { PUSH string "The main contract fails if parameter is four" ; FAILWITH } ;
+              DIG 2 ;
+              CONTRACT int ;
+              IF_NONE { PUSH string "option is None" ; FAILWITH } {} ;
+              DIG 2 ;
+              DUP 3 ;
+              TRANSFER_TOKENS ;
+              PUSH int 1 ;
+              DIG 2 ;
+              ADD ;
+              EMIT %intFromMainContract int ;
+              PUSH int 1 ;
+              DIG 4 ;
+              COMPARE ;
+              EQ ;
+              IF { PUSH string "lorem ipsum" ;
+                   EMIT %stringFromMainContract string ;
+                   DIG 3 ;
+                   NIL operation ;
+                   DIG 4 ;
+                   CONS ;
+                   DIG 2 }
+                 { DIG 2 ; NIL operation ; DIG 3 } ;
+              CONS ;
+              DIG 2 ;
+              CONS } ;
+         PAIR } }`;
+
+/* CalledContract.jsligo:
 
 const _calledContractJSLigo = `type storage = unit
 type parameter = int
@@ -28,7 +78,25 @@ type parameter = int
 export const main = (param: parameter, store: storage) => {
   assert_with_error(param != 5, "The called contract fails if parameter is five");
   return [list([Tezos.emit("%eventFromCalledContract", param + 1)]), store];
-}`;
+}`; */
+
+const calledContractMichelson = `{ parameter int ;
+  storage unit ;
+  code { UNPAIR ;
+         PUSH int 5 ;
+         DUP 2 ;
+         COMPARE ;
+         NEQ ;
+         IF {}
+            { PUSH string "The called contract fails if parameter is five" ; FAILWITH } ;
+         SWAP ;
+         NIL operation ;
+         PUSH int 1 ;
+         DIG 3 ;
+         ADD ;
+         EMIT %eventFromCalledContract int ;
+         CONS ;
+         PAIR } }`;
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
@@ -54,73 +122,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       try {
         const calledContract = await Tezos.contract.originate({
-          code: `{ parameter int ;
-            storage unit ;
-            code { UNPAIR ;
-                   PUSH int 5 ;
-                   DUP 2 ;
-                   COMPARE ;
-                   NEQ ;
-                   IF {}
-                      { PUSH string "The called contract fails if parameter is five" ; FAILWITH } ;
-                   SWAP ;
-                   NIL operation ;
-                   PUSH int 1 ;
-                   DIG 3 ;
-                   ADD ;
-                   EMIT %eventFromCalledContract int ;
-                   CONS ;
-                   PAIR } }`,
+          code: calledContractMichelson,
           storage: 0,
         });
         await calledContract.confirmation();
         calledContractAddress = calledContract.contractAddress!;
 
         let mainContract = await Tezos.contract.originate({
-          code: `{ parameter (pair (pair (address %ad) (int %newStore)) (int %p) (mutez %t)) ;
-            storage int ;
-            code { UNPAIR ;
-                   UNPAIR ;
-                   UNPAIR ;
-                   DIG 2 ;
-                   UNPAIR ;
-                   PUSH int 1 ;
-                   DUP 2 ;
-                   COMPARE ;
-                   EQ ;
-                   IF { SWAP ; DIG 2 ; DIG 4 ; DROP 4 ; NIL operation }
-                      { PUSH int 4 ;
-                        DUP 2 ;
-                        COMPARE ;
-                        NEQ ;
-                        IF {}
-                           { PUSH string "The main contract fails if parameter is four" ; FAILWITH } ;
-                        DIG 2 ;
-                        CONTRACT int ;
-                        IF_NONE { PUSH string "option is None" ; FAILWITH } {} ;
-                        DIG 2 ;
-                        DUP 3 ;
-                        TRANSFER_TOKENS ;
-                        PUSH int 1 ;
-                        DIG 2 ;
-                        ADD ;
-                        EMIT %intFromMainContract int ;
-                        PUSH int 1 ;
-                        DIG 4 ;
-                        COMPARE ;
-                        EQ ;
-                        IF { PUSH string "lorem ipsum" ;
-                             EMIT %stringFromMainContract string ;
-                             DIG 3 ;
-                             NIL operation ;
-                             DIG 4 ;
-                             CONS ;
-                             DIG 2 }
-                           { DIG 2 ; NIL operation ; DIG 3 } ;
-                        CONS ;
-                        DIG 2 ;
-                        CONS } ;
-                   PAIR } }`,
+          code: mainContractMichelson,
           storage: 0,
         });
         await mainContract.confirmation();
@@ -308,15 +317,3 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     });
   });
 });
-
-/* 
-1- Send two transactions from two users in parallel
-2- The first transaction will change a value in storage
-3- The second transaction depends on that value and does an extra thing
-4- Because of the extra thing (emits the event), the gas cost will be higher than estimated
-5- The second transaction will fail (gas exhaustion, backtracked)
-6- The second transaction ends up on the block (as backtracked)
-7- The event emitted from the second transaction will be received
-
-8- check that the cost estimation of the two transactions are equal, but in reality, the second transaction costs more gas
-*/
