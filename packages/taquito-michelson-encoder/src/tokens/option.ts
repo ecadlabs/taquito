@@ -34,15 +34,20 @@ export class OptionToken extends ComparableToken {
     if (!Array.isArray(value)) {
       return { prim: 'Some', args: [this.schema().Encode(value)] };
     }
-    if (value.length === 1 && Array.isArray(value[0])) {
-      value = value[0];
-    }
-    if (value[0] === 'None' || value[0] === null || value[0] === undefined) {
-      return { prim: 'None' };
+    if (Array.isArray(value[value.length - 1])) {
+      value = value[value.length - 1];
     }
     if (value[0] === 'Some') {
       value.shift();
       return { prim: 'Some', args: [this.schema().Encode(value)] };
+    }
+    if (
+      value[value.length - 1] === 'None' ||
+      value[value.length - 1] === null ||
+      value[value.length - 1] === undefined
+    ) {
+      value.pop();
+      return { prim: 'None' };
     }
     return { prim: 'Some', args: [this.schema().Encode(value)] };
   }

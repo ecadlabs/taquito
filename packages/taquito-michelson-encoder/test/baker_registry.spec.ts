@@ -11,9 +11,9 @@ describe('Baker Registry contract test', () => {
         big_map: {
           key: 'key_hash',
           value: {
-            data: 'bytes',
+            data: { Some: 'bytes' },
             last_update: 'timestamp',
-            reporter: 'address',
+            reporter: { Some: 'address' },
           },
         },
       },
@@ -111,8 +111,8 @@ describe('Baker Registry contract test', () => {
     expect(schema.ExtractSchema()).toEqual({
       set_data: {
         delegate: 'key_hash',
-        data: 'bytes',
-        reporter: 'address',
+        data: { Some: 'bytes' },
+        reporter: { Some: 'address' },
       },
       set_fees: {
         signup_fee: 'mutez',

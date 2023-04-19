@@ -7,11 +7,11 @@ describe('Schema test', () => {
     expect(schema.ExtractSchema()).toEqual({
       mgr1: {
         addr: 'address',
-        key: 'key_hash',
+        key: { Some: 'key_hash' },
       },
       mgr2: {
         addr: 'address',
-        key: 'key_hash',
+        key: { Some: 'key_hash' },
       },
     });
 
@@ -22,35 +22,35 @@ describe('Schema test', () => {
           __michelsonType: 'pair',
           schema: {
             addr: {
-              __michelsonType: "address",
-              schema: "address"
+              __michelsonType: 'address',
+              schema: 'address',
             },
             key: {
-              "__michelsonType": "option",
-              "schema": {
-                __michelsonType: "key_hash",
-                schema: "key_hash"
-              }
+              __michelsonType: 'option',
+              schema: {
+                __michelsonType: 'key_hash',
+                schema: 'key_hash',
+              },
             },
-          }
+          },
         },
         mgr2: {
           __michelsonType: 'pair',
           schema: {
             addr: {
-              __michelsonType: "address",
-              schema: "address"
+              __michelsonType: 'address',
+              schema: 'address',
             },
             key: {
-              "__michelsonType": "option",
-              "schema": {
-                __michelsonType: "key_hash",
-                schema: "key_hash"
-              }
+              __michelsonType: 'option',
+              schema: {
+                __michelsonType: 'key_hash',
+                schema: 'key_hash',
+              },
             },
-          }
+          },
         },
-      }
+      },
     });
   });
 

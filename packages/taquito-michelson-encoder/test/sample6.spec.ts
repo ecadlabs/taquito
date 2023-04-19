@@ -23,8 +23,10 @@ describe('Schema test', () => {
         overall_threshold: 'nat',
       },
       pour_info: {
-        pour_authorizer: 'key',
-        pour_dest: 'contract',
+        Some: {
+          pour_authorizer: 'key',
+          pour_dest: 'contract',
+        },
       },
       vesting: {
         vesting_quantities: {
@@ -225,12 +227,14 @@ describe('Schema test', () => {
     const schema = new ParameterSchema(params6);
     expect(schema.ExtractSchema()).toEqual({
       Pour: {
-        pour_amount: 'mutez',
-        pour_auth: 'signature',
+        Some: {
+          pour_amount: 'mutez',
+          pour_auth: 'signature',
+        },
       },
       Action: {
         action_input: {
-          Set_delegate: 'key_hash',
+          Set_delegate: { Some: 'key_hash' },
           Set_keys: {
             key_groups: {
               list: {
@@ -243,8 +247,10 @@ describe('Schema test', () => {
             overall_threshold: 'nat',
           },
           Set_pour: {
-            pour_authorizer: 'key',
-            pour_dest: 'contract',
+            Some: {
+              pour_authorizer: 'key',
+              pour_dest: 'contract',
+            },
           },
           Transfer: {
             dest: 'contract',
@@ -253,7 +259,7 @@ describe('Schema test', () => {
         },
         signatures: {
           list: {
-            list: 'signature',
+            list: { Some: 'signature' },
           },
         },
       },
@@ -384,7 +390,7 @@ describe('Schema test', () => {
       'Action',
       'Set_delegate',
       'key_hash',
-      { list: { list: 'signature' } },
+      { list: { list: { Some: 'signature' } } },
     ]);
   });
 
