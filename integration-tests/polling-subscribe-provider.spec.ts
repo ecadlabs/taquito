@@ -188,8 +188,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await sent1.confirmation();
       await sent2.confirmation();
 
-      await sleep(3000);
-
       eventSub.close();
 
       expect(data.length).toEqual(2);
@@ -206,7 +204,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done();
     });
 
-    it('should include events from failed operations when not filtering', async (done) => {
+    it('should include events from failed operations when filter does not exclude events from failed operations', async (done) => {
       const data: any = [];
 
       const eventSub = Tezos.stream.subscribeEvent({
@@ -253,11 +251,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         // Failure is expected
       }
 
-      await sleep(5000);
       eventSub.close();
 
       expect(data.length).toEqual(3);
-      expect(data[1].event.result.status).toEqual('backtracked');
+      expect(data.filter((x: any) => x.event.result.status === 'backtracked').length).toEqual(2);
       done();
     });
 
@@ -309,7 +306,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         // Failure is expected
       }
 
-      await sleep(5000);
       eventSub.close();
 
       expect(data.length).toEqual(1);
