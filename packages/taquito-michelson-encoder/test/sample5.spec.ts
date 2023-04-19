@@ -11,7 +11,7 @@ describe('Schema test', () => {
     expect(storage).toEqual({
       '0': expectMichelsonMap(),
       totalSupply: new BigNumber('1000'),
-      approver: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2',
+      approver: { Some: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2' },
       centralBank: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2',
     });
   });
