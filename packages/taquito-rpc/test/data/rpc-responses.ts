@@ -2489,7 +2489,7 @@ export const protocols = {
   next_protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
 };
 
-export const delegatesIthacanetSample = {
+export const delegatesIthacanetResponse = {
   full_balance: '1198951292321',
   current_frozen_deposits: '120167343864',
   frozen_deposits: '120167343864',
@@ -2501,7 +2501,7 @@ export const delegatesIthacanetSample = {
   voting_power: 199,
 };
 
-export const delegatesKathmandunetSample = {
+export const delegatesKathmandunetResponse = {
   full_balance: '965532868030',
   current_frozen_deposits: '96350095609',
   frozen_deposits: '96350095609',
@@ -2514,12 +2514,12 @@ export const delegatesKathmandunetSample = {
   remaining_proposals: 20,
 };
 
-export const votingInfoKathmandunetSample = {
+export const votingInfoKathmandunetResponse = {
   voting_power: '1054404383333',
   remaining_proposals: 20,
 };
 
-export const blockIthacanetSample = {
+export const blockIthacanetResponse = {
   protocol: 'Psithaca2MLRFYargivpo7YvUr7wUDqyxrdhC5CQq78mRvimz6A',
   chain_id: 'NetXnHfVqm9iesp',
   hash: 'BMGdK16iMkm4YmgAneYuvd7B4R5S8nYQKFfKzXCKMHP1FqS5hXQ',
@@ -3434,7 +3434,7 @@ export const blockIthacanetSample = {
   ],
 };
 
-export const blockJakartanetSample = {
+export const blockJakartanetResponse = {
   protocol: 'PtJakart2xVj7pYXJBXrqHgd82rdkLey5ZeeGwDgPp9rhQUbSqY',
   chain_id: 'NetXLH1uAxK7CCh',
   hash: 'BLivfHQoHCtixrwXCNnsMQj33F3mLukQBBh4KoJ9AT6ADvLz7Ev',
@@ -4504,7 +4504,7 @@ export const blockJakartanetSample = {
   ],
 };
 
-export const blockKathmandunetSample = {
+export const blockKathmandunetResponse = {
   protocol: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
   chain_id: 'NetXi2ZagzEsXbZ',
   hash: 'BLHBkJLRFwRhs1Nvrbrf8gVnVgSxx5515iTdizVnagm97baSXNF',
@@ -4833,7 +4833,7 @@ export const blockKathmandunetSample = {
   ],
 };
 
-export const blockLimanetSample = {
+export const blockLimanetResponse = {
   protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   chain_id: 'NetXizpkH94bocH',
   hash: 'BM5sGpbt1rEiNmfbbo8jcQHJaUZQYwKUXe4MK6B8hcxHDeEfuJx',
@@ -5048,7 +5048,7 @@ export const blockLimanetSample = {
   ],
 };
 
-export const blockMondaynetSample = {
+export const blockMondaynetResponse = {
   protocol: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
   chain_id: 'NetXrxsLyu6hTHx',
   hash: 'BLxSQZzbnjL8yWqo8fJDE6cy2ATPmqQSaLKtheFBzAz4QVTcm5h',
@@ -5507,7 +5507,7 @@ export const pendingOperationsResponse = {
   unprocessed: [],
 };
 
-export const ticketUpdatesSample = {
+export const ticketUpdatesResponse = {
   protocol: 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   chain_id: 'NetXizpkH94bocH',
   hash: 'BLAoXLidLrRnUQaUNPanuiaGTS3Ce2azZQysz2mMTCUnFg2799j',
@@ -5868,6 +5868,413 @@ export const smartRollupExecuteOutboxMessageResponse = {
         ],
         signature:
           'sigs8LVwSkqcMLzTVZWa1yS8aNz26A8bzR6QUHws5uVELh6kcmH7dWz5aKPqW3RXoFfynf5kVCvLJcsP3ucB5P6DEbD2YcQR',
+      },
+    ],
+  ],
+};
+
+export const smartRollupCementResponse = {
+  protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+  chain_id: 'NetXgbcrNtXD2yA',
+  hash: 'BLs7YR6xRt4pBu7f9B8ndikSU7KwjqAAFkd8mMWBxgLVidY3Z62',
+  header: {},
+  metadata: {},
+  operations: [
+    [
+      {
+        protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+        chain_id: 'NetXgbcrNtXD2yA',
+        hash: 'oohRSufw6kfFxX1kA3zWqzQMbo8q69DGY9ACvLW5FpvWxPYKxeg',
+        branch: 'BMLa28j2y5QjbVHpkUpdZGg1Sddfa99YXJNCagQ9dhzK6d3dHCb',
+        contents: [
+          {
+            kind: 'smart_rollup_cement',
+            source: 'tz1gCe1sFpppbGGVwCt5jLRqDS9FD1W4Qca4',
+            fee: '922',
+            counter: '41267',
+            gas_limit: '6432',
+            storage_limit: '0',
+            rollup: 'sr1AE6U3GNzE8iKzj6sKS5wh1U32ogeULCoN',
+            commitment: 'src13w2EBEZmVg4jsDd5PfYNakBRZ6GqSGDgWLz7EHZGeeG1gm7HT5',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1gCe1sFpppbGGVwCt5jLRqDS9FD1W4Qca4',
+                  change: '-922',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '922',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                consumed_milligas: '6331052',
+                inbox_level: 197111,
+              },
+            },
+          },
+        ],
+        signature:
+          'sigjozz364ebVDu7w8upHMfYwGShKHVpAGSi8LjaX7bzU6eipEW8qZ5ctiLeX8PYDvpCzgwQy7SW4HbcWbsH5oQyjWZk7HZy',
+      },
+    ],
+  ],
+};
+
+export const smartRollupPublishResponse = {
+  protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+  chain_id: 'NetXgbcrNtXD2yA',
+  hash: 'BL9UBPLykShAAvAebxCiZxELFjSJBxhbQXC12pfZb2ddwtCa1XU',
+  header: {},
+  metadata: {},
+  operations: [
+    [
+      {
+        protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+        chain_id: 'NetXgbcrNtXD2yA',
+        hash: 'opaTRLSsdqtd8APeDHqU3BxvqYDg4Lor3roR2cdh3V3Hv1VXucm',
+        branch: 'BM8ZBBpLnURFuRB1Wd6s7Z6iN3LiddUkKM4vsTS3LgqSmFMtCLE',
+        contents: [
+          {
+            kind: 'smart_rollup_publish',
+            source: 'tz1gCe1sFpppbGGVwCt5jLRqDS9FD1W4Qca4',
+            fee: '964',
+            counter: '41266',
+            gas_limit: '6418',
+            storage_limit: '0',
+            rollup: 'sr1AE6U3GNzE8iKzj6sKS5wh1U32ogeULCoN',
+            commitment: {
+              compressed_state: 'srs13FywcbcZV9VvHxdVkYK83Ch4477cqHMgM8d5oT955yf4XXMvKS',
+              inbox_level: 197151,
+              predecessor: 'src12i7dL2z9VbgshFDdGFP5TPBoJu6WnZNWJXGa1QQgPTErVPPtd8',
+              number_of_ticks: '880000000000',
+            },
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1gCe1sFpppbGGVwCt5jLRqDS9FD1W4Qca4',
+                  change: '-964',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '964',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                consumed_milligas: '6317837',
+                staked_hash: 'src13TanyZ7RvSULqVb2tjx1zRVw2jyJC2ToHLz1ZKg38sZ4HBYdSN',
+                published_at_level: 197154,
+                balance_updates: [],
+              },
+            },
+          },
+        ],
+        signature:
+          'sigiYrQFjQLnYe94Vc9VH1jGEkfSAsBGkZzBVL8jLgBK88vhbLM6fBD2x24wBhBdN718WRRTSMBqCGR7Zp9Z5eDmDotgGaTu',
+      },
+      {
+        protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+        chain_id: 'NetXgbcrNtXD2yA',
+        hash: 'onjnz6RP5FPXafHfWupSb9Hv3uJZt5BGpVHPTisJkLsYEjP114H',
+        branch: 'BKyGmNai1eFrUv3BBMz1ZNhtmMVW7KQH9x8DEj2egDZEH86ajno',
+        contents: [
+          {
+            kind: 'smart_rollup_publish',
+            source: 'tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC',
+            fee: '956',
+            counter: '32544',
+            gas_limit: '7298',
+            storage_limit: '0',
+            rollup: 'sr1LhGA2zC9VcYALSifpRBCgDiQfDSQ6bb4x',
+            commitment: {
+              compressed_state: 'srs12r6jebz4VTuP1C58mHGzezqFQdV6n5pdaqEamDo4FvD9omn9YJ',
+              inbox_level: 41806,
+              predecessor: 'src12rCbiTAvYntPQXcMoqdNh6ZXXBmfxzhaxZsxsbRKGC7bE3L1mD',
+              number_of_ticks: '880000000000',
+            },
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC',
+                  change: '-956',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '956',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                consumed_milligas: '7197891',
+                staked_hash: 'src14ErSMhBhf3Hi6isN3cEdR4RgxT5egSjQYtgHEc5NP9qVFgmcpE',
+                published_at_level: 41809,
+                balance_updates: [
+                  {
+                    kind: 'contract',
+                    contract: 'tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC',
+                    change: '-10000000000',
+                    origin: 'block',
+                  },
+                  {
+                    kind: 'freezer',
+                    category: 'bonds',
+                    contract: 'tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC',
+                    bond_id: {
+                      smart_rollup: 'sr1LhGA2zC9VcYALSifpRBCgDiQfDSQ6bb4x',
+                    },
+                    change: '10000000000',
+                    origin: 'block',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        signature:
+          'sigosbVhqFLPBoXUhtjwZ7UBDq4veP1pGECDm2nc7iviBE8gqmzGFgh9tPMviTDhETd4rjCwcRCCMwEL5hBu3tfgNJcydnrS',
+      },
+    ],
+  ],
+};
+
+export const smartRollupRefuteResponse = {
+  protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+  chain_id: 'NetXgbcrNtXD2yA',
+  hash: 'BMRMq4e7QgU2xw5hHyFtDgv4rZCGCRbF9Z8FhWoAwmprSsJKPGx',
+  header: {},
+  operations: [
+    [
+      {
+        protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+        chain_id: 'NetXgbcrNtXD2yA',
+        hash: 'oofTxRxHWQCYo9B4vmpLY7FZfQXrH9s1n7rRU7wHjazhrqVu2oJ',
+        branch: 'BLDgHuXsD2qtEPy8SYcYCk1Wt2uDdDXUYXYmbfX6g1s1an8L5u6',
+        contents: [
+          {
+            kind: 'smart_rollup_refute',
+            source: 'tz1ZpuBypK6G754crXDZyoMPaVPoBmBsPda2',
+            fee: '2096',
+            counter: '32553',
+            gas_limit: '6299',
+            storage_limit: '0',
+            rollup: 'sr1LhGA2zC9VcYALSifpRBCgDiQfDSQ6bb4x',
+            opponent: 'tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC',
+            refutation: {
+              refutation_kind: 'move',
+              choice: '176000000003',
+              step: {
+                pvm_step:
+                  '03000298e4e3d5c88da366e885edf675ffd7a5087c8e0a2fcd508e7951113fe4c1491810067c06a78b88cb7c3e60c56b47ba9e14c922dbdbd4811ac6fee80a309620630005820764757261626c6582066b65726e656cd07d20c53bdd5b536a6be9c4cdad16e69a9af40b93a6564655fffd88bba050519008726561646f6e6c7982066b65726e656cd0a645771d9d5228a31312b282119c596699ccb6b60b93d759c2072a493ddbb5740c7761736d5f76657273696f6e8101408208636f6e74656e7473810130c10200322e302e30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066c656e677468c008000000000000000503746167c00800000004536f6d650003810370766d00050004000381166f7574626f785f76616c69646974795f706572696f64c00400013b0082136c6173745f746f705f6c6576656c5f63616c6cc00680c0abd38f05196d6178696d756d5f7265626f6f74735f7065725f696e707574c002e80781146f7574626f785f6d6573736167655f6c696d6974c002a401810c6d61785f6e625f7469636b73c00580dc9afd28820576616c7565810370766d8107627566666572738205696e7075740003810468656164c001008208636f6e74656e7473d06e2c0a5b371a53e76a9b7f221a5baa67170b3f9f43205fb06c0649123cec2358066c656e677468c00103066f75747075740004820132810a6c6173745f6c6576656cc0040000a33f0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f786573d0ccbff4c181451166adb153f7a1631e9f036832f8e5c82acd8e8c12876eeeda870134810d6d6573736167655f6c696d6974c002a401047761736d00048205696e707574c0050000a33f0203746167c00b0000000770616464696e67820c63757272656e745f7469636bc00683c0abd38f050e7265626f6f745f636f756e746572c002e907',
+              },
+            },
+          },
+        ],
+        signature:
+          'sigQYS3D4Ppabx7MhsmJyHkQUo9cmAfieSykZXWnGmvVbn6W4cQvVvxbRXDPSnaNVn72N2ih9QwovsPw7Cv1eoELapdNjLTB',
+      },
+      {
+        protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+        chain_id: 'NetXgbcrNtXD2yA',
+        hash: 'opUUHJwTXLDe2jMwvTWtC3bwoEQukhBjdPiYa5Ri1qBo7TiYJpq',
+        branch: 'BMJcT8gh5PgoTvjWi6SQSUGn7gbx3Bb2rSKcdJQKB9PbzpS7FvH',
+        contents: [
+          {
+            kind: 'smart_rollup_refute',
+            source: 'tz1Qn5AXWB5vYPgzDXsunDbZ7tTUp9cFDaRp',
+            fee: '943',
+            counter: '25002',
+            gas_limit: '6109',
+            storage_limit: '0',
+            rollup: 'sr1Ce7znpA1ea2YZca3v1CefxqXMhqYgDEXR',
+            opponent: 'tz1VN3J6DyH712W1y13Uu1N8fxkt8RvMyqzm',
+            refutation: {
+              refutation_kind: 'start',
+              player_commitment_hash: 'src14Liog4xxPoZ55AgpBpeDweFSxHK6b3zbybhp7ChsWbM9g1Jsrd',
+              opponent_commitment_hash: 'src12q2zZyxuK5UeYPQYSutA6RPMv7sZDtJ7oAWxAytuJC3rjvWct6',
+            },
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1Qn5AXWB5vYPgzDXsunDbZ7tTUp9cFDaRp',
+                  change: '-943',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '943',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                consumed_milligas: '6008940',
+                game_status: 'ongoing',
+                balance_updates: [],
+              },
+            },
+          },
+        ],
+        signature:
+          'sigg9W1bDVuvKgs7WDq9Q4wKp2oTtMwWsm1tt7khCYYCa4PZ3fvsWUWktuAR8SyTzmywKmBWX752VcDb28JzHUmYJ7De94Kt',
+      },
+      {
+        protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+        chain_id: 'NetXgbcrNtXD2yA',
+        hash: 'onqrLmUkjEowxhiS3t2CmxBCKQAEUf3PA4d8RD3zja9v2PtU11a',
+        branch: 'BMbQxrYG4uUmjqy2Dht5FUeskoiQcebXqN46H9kt26hSzZ5W3Qs',
+        contents: [
+          {
+            kind: 'smart_rollup_refute',
+            source: 'tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC',
+            fee: '1989',
+            counter: '32546',
+            gas_limit: '4333',
+            storage_limit: '0',
+            rollup: 'sr1LhGA2zC9VcYALSifpRBCgDiQfDSQ6bb4x',
+            opponent: 'tz1ZpuBypK6G754crXDZyoMPaVPoBmBsPda2',
+            refutation: {
+              refutation_kind: 'move',
+              choice: '0',
+              step: [
+                {
+                  state: 'srs11y1ZCJfeWnHzoX3rAjcTXiphwg8NvqQhvishP3PU68jgSREuk6',
+                  tick: '0',
+                },
+                {
+                  state: 'srs12ti4nRqiqahBZedqjgnFx9ZK88KkSgpYD8ns5Q41UMEXGg9w3b',
+                  tick: '22000000000',
+                },
+                {
+                  state: 'srs12zdMUHiLiqTAuN81f1NS3rgD1M7fqUtMq4RpWq3wf3QDvsPCxa',
+                  tick: '44000000000',
+                },
+              ],
+            },
+          },
+        ],
+        signature:
+          'sigojctsjFdB6nv51JNAyRdANvbnSB5NyrfNq5KBnov58Hcqi9d1CHPWYwEJeQgBjjJv5vgQJC37tKMSUJZZoY4pPQj6A2X5',
+      },
+    ],
+  ],
+};
+
+export const smartRollupRecoverBondResponse = {
+  protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+  chain_id: 'NetXgbcrNtXD2yA',
+  hash: 'BLxusPoX4vzCKAc9qmfS4myFs8KKEJpvwgAuMrccqqPXcn8Rxon',
+  header: {},
+  metadata: {},
+  operations: [
+    [
+      {
+        protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+        chain_id: 'NetXgbcrNtXD2yA',
+        hash: 'opWkyTZEwh5929VqXC4BZgrBSRQ7JvomNTv71rdkx1QAiRLpYAu',
+        branch: 'BL5EYnuHPXMTq9s1HR8CcFWkgNHCvoZyVQCU2H2DjSudr6GXgXf',
+        contents: [
+          {
+            kind: 'smart_rollup_recover_bond',
+            source: 'tz1bTS4QDBnpQPmMPNM3rn7jN1hevkWDHSKw',
+            fee: '1000000',
+            counter: '25156',
+            gas_limit: '4016',
+            storage_limit: '0',
+            rollup: 'sr1EYxm4fQjr15TASs2Q7PgZ1LqS6unkZhHL',
+            staker: 'tz1bTS4QDBnpQPmMPNM3rn7jN1hevkWDHSKw',
+            metadata: {
+              balance_updates: [
+                {
+                  kind: 'contract',
+                  contract: 'tz1bTS4QDBnpQPmMPNM3rn7jN1hevkWDHSKw',
+                  change: '-1000000',
+                  origin: 'block',
+                },
+                {
+                  kind: 'accumulator',
+                  category: 'block fees',
+                  change: '1000000',
+                  origin: 'block',
+                },
+              ],
+              operation_result: {
+                status: 'applied',
+                balance_updates: [
+                  {
+                    kind: 'freezer',
+                    category: 'bonds',
+                    contract: 'tz1bTS4QDBnpQPmMPNM3rn7jN1hevkWDHSKw',
+                    bond_id: {
+                      smart_rollup: 'sr1EYxm4fQjr15TASs2Q7PgZ1LqS6unkZhHL',
+                    },
+                    change: '-10000000000',
+                    origin: 'block',
+                  },
+                  {
+                    kind: 'contract',
+                    contract: 'tz1bTS4QDBnpQPmMPNM3rn7jN1hevkWDHSKw',
+                    change: '10000000000',
+                    origin: 'block',
+                  },
+                ],
+                consumed_milligas: '3915240',
+              },
+            },
+          },
+        ],
+        signature:
+          'sigPbtnebwMZD1CZUEfFnhcjGuhyLhX2WPEFvQEFKaD6DKeYjMSBD6pc4UkR4zkAw5KdifSH7QdJ7wg9CmsruSi9cUGvqEap',
+      },
+    ],
+  ],
+};
+
+export const smartRollupTimeoutResponse = {
+  protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+  chain_id: 'NetXgbcrNtXD2yA',
+  hash: 'BM5txTKWoRptQ7k8M4hF2SjLQjz7ezriNfaHZQZxNjHsqzESjMu',
+  header: {},
+  metadata: {},
+  operations: [
+    [
+      {
+        protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+        chain_id: 'NetXgbcrNtXD2yA',
+        hash: 'opZMSbsYYSL1tMKYxgPoDvtaehAt24PSbwuNeQo8ry52KpWwzqa',
+        branch: 'BLpiGot997JRMKyrYoP8MmjVMWHHXMiLj17gue86uNaRnip8jux',
+        contents: [
+          {
+            kind: 'smart_rollup_timeout',
+            source: 'tz1TecRhYLVV9bTKRKU9g1Hhpb1Ymw3ynzWS',
+            fee: '753',
+            counter: '23077',
+            gas_limit: '4647',
+            storage_limit: '0',
+            rollup: 'sr1QZkk1swognQW3dmiXvga3wVkEgBq7QFjE',
+            stakers: {
+              alice: 'tz1TecRhYLVV9bTKRKU9g1Hhpb1Ymw3ynzWS',
+              bob: 'tz1iFnSQ6V2d8piVMPMjtDNdkYNMaUfKwsoy',
+            },
+          },
+        ],
+        signature:
+          'sigN53ibLsMQAnkeE7EQZY9ZFkiBgtdsLKtsPdswdvGHU4kPAMh3Arz2fFDGKT3EyKHuYy5G9T6pJtTdfkRuWpN2fgvmH1Pr',
       },
     ],
   ],

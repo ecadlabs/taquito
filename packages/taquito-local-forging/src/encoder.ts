@@ -15,6 +15,7 @@ import {
   proposalEncoder,
   proposalsEncoder,
   publicKeyEncoder,
+  depositsLimitEncoder,
   pvmKindEncoder,
   smartContractAddressEncoder,
   smartRollupAddressEncoder,
@@ -48,6 +49,7 @@ import {
   TransferTicketSchema,
   TxRollupOriginationSchema,
   TxRollupSubmitBatchSchema,
+  SetDepositsLimitSchema,
   SmartRollupOriginateSchema,
   SmartRollupExecuteOutboxMessageSchema,
   SmartRollupAddMessagesSchema,
@@ -82,6 +84,7 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdEncoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentEncoder,
   [CODEC.BURN_LIMIT]: burnLimitEncoder,
+  [CODEC.DEPOSITS_LIMIT]: depositsLimitEncoder,
   [CODEC.PVM_KIND]: pvmKindEncoder,
   [CODEC.PADDED_BYTES]: paddedBytesEncoder,
   [CODEC.SMART_ROLLUP_MESSAGE]: smartRollupMessageEncoder,
@@ -118,3 +121,4 @@ encoders[CODEC.OP_SMART_ROLLUP_ADD_MESSAGES] = (val: any) =>
 encoders[CODEC.OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE] = (val: any) =>
   schemaEncoder(encoders)(SmartRollupExecuteOutboxMessageSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);
+encoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val) => schemaEncoder(encoders)(SetDepositsLimitSchema)(val);

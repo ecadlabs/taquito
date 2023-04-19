@@ -5,31 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE, RpcReadAdapter } from '@taquito/taquito';
-import { verifySignature } from '@taquito/utils';
-import {
-  validateAddress,
-  validateChain,
-  validateKeyHash,
-  validateContractAddress,
-  validatePublicKey,
-  validateSignature,
-  validateBlock,
-  validateProtocol,
-  validateOperation,
-  b58cencode,
-  prefix,
-  Prefix
-} from '@taquito/utils';
-import { BeaconWallet } from '@taquito/beacon-wallet';
-import { InMemorySigner, importKey, Path, ECDSA, Ed25519, generateSecretKey } from '@taquito/signer';
-import { LedgerSigner, DerivationType } from '@taquito/ledger-signer';
-import { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } from '@taquito/tzip16'
-import { Tzip12Module, tzip12 } from "@taquito/tzip12";
-import { Schema, ParameterSchema } from "@taquito/michelson-encoder";
-import { Parser, packDataBytes } from '@taquito/michel-codec';
-import { RpcClient } from '@taquito/rpc';
-import { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } from '@taquito/sapling';
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
@@ -40,13 +15,6 @@ import defaultTheme from 'prism-react-renderer/themes/palenight';
 import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './styles.module.css';
-
-let wallet;
-if (typeof window !== 'undefined') {
-  // solve localStorage is not defined Error when building server
-  // can use localStorage on the browser, not on the server
-  wallet = new BeaconWallet({ name:"exampleWallet" });
-}
 
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
@@ -63,6 +31,7 @@ export default ({
     },
   } = useDocusaurusContext();
   const [showCopied, setShowCopied] = useState(false);
+  const [dependencies, setDependencies] = useState(null);
   const target = useRef(null);
   const button = useRef(null);
   let highlightLines = [];
@@ -88,54 +57,138 @@ export default ({
     };
   }, [button.current, target.current]);
 
+  useEffect(() => {
+    async function getDependencies() {
+      const { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE, RpcReadAdapter } = await import('@taquito/taquito');
+      const { verifySignature } = await import('@taquito/utils');
+      const {
+        validateAddress,
+        validateChain,
+        validateKeyHash,
+        validateContractAddress,
+        validatePublicKey,
+        validateSignature,
+        validateBlock,
+        validateProtocol,
+        validateOperation,
+        b58cencode,
+        prefix,
+        Prefix
+      } = await import('@taquito/utils');
+      const { BeaconWallet } = await import('@taquito/beacon-wallet');
+      const { InMemorySigner, importKey, Path, ECDSA, Ed25519, generateSecretKey } = await import('@taquito/signer');
+      const { LedgerSigner, DerivationType } = await import('@taquito/ledger-signer');
+      const { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } = await import('@taquito/tzip16')
+      const { Tzip12Module, tzip12 } = await import("@taquito/tzip12");
+      const { Schema, ParameterSchema } = await import("@taquito/michelson-encoder");
+      const { Parser, packDataBytes } = await import('@taquito/michel-codec');
+      const { RpcClient } = await import('@taquito/rpc');
+      const { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } = await import('@taquito/sapling');
+  
+      let wallet;
+      if (typeof window !== 'undefined') {
+        // solve localStorage is not defined Error when building server
+        // can use localStorage on the browser, not on the server
+        wallet = new BeaconWallet({ name:"exampleWallet" });
+      }      
+      const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
+      setDependencies({
+        Tezos,
+        wallet,
+        importKey,
+        validateAddress,
+        validateChain,
+        validateKeyHash,
+        validateContractAddress,
+        validatePublicKey,
+        validateSignature,
+        validateBlock,
+        validateOperation,
+        validateProtocol,
+        b58cencode,
+        prefix,
+        Prefix,
+        MichelsonMap,
+        InMemorySigner,
+        LedgerSigner,
+        Tzip16Module,
+        tzip16,
+        bytes2Char,
+        MichelsonStorageView,
+        Tzip12Module,
+        tzip12,
+        DerivationType,
+        TransportWebHID,
+        compose,
+        Schema,
+        ParameterSchema,
+        DEFAULT_FEE,
+        verifySignature,
+        Parser,
+        packDataBytes,
+        RpcReadAdapter,
+        SaplingToolkit,
+        RpcClient,
+        InMemorySpendingKey,
+        InMemoryViewingKey,
+        Ed25519,
+        ECDSA,
+        Path,
+        generateSecretKey,
+      });
+    }
+    if (!dependencies) {
+      getDependencies();
+    }
+  }, []);
+
   if (live) {
-    const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
 
     return (
       <Playground
         scope={{ ...React,
-          Tezos,
-          wallet,
-          importKey,
-          validateAddress,
-          validateChain,
-          validateKeyHash,
-          validateContractAddress,
-          validatePublicKey,
-          validateSignature,
-          validateBlock,
-          validateOperation,
-          validateProtocol,
-          b58cencode,
-          prefix,
-          Prefix,
-          MichelsonMap,
-          InMemorySigner,
-          LedgerSigner,
-          Tzip16Module,
-          tzip16,
-          bytes2Char,
-          MichelsonStorageView,
-          Tzip12Module,
-          tzip12,
-          DerivationType,
-          TransportWebHID,
-          compose,
-          Schema,
-          ParameterSchema,
-          DEFAULT_FEE,
-          verifySignature,
-          Parser,
-          packDataBytes,
-          RpcReadAdapter,
-          SaplingToolkit,
-          RpcClient,
-          InMemorySpendingKey,
-          InMemoryViewingKey,
-          Ed25519,
-          ECDSA,
-          Path,
-          generateSecretKey,
+          Tezos: dependencies?.Tezos,
+          wallet: dependencies?.wallet,
+          importKey: dependencies?.importKey,
+          validateAddress: dependencies?.validateAddress,
+          validateChain: dependencies?.validateChain,
+          validateKeyHash: dependencies?.validateKeyHash,
+          validateContractAddress: dependencies?.validateContractAddress,
+          validatePublicKey: dependencies?.validatePublicKey,
+          validateSignature: dependencies?.validateSignature,
+          validateBlock: dependencies?.validateBlock,
+          validateOperation: dependencies?.validateOperation,
+          validateProtocol: dependencies?.validateProtocol,
+          b58cencode: dependencies?.b58cencode,
+          prefix: dependencies?.prefix,
+          Prefix: dependencies?.Prefix,
+          MichelsonMap: dependencies?.MichelsonMap,
+          InMemorySigner: dependencies?.InMemorySigner,
+          LedgerSigner: dependencies?.LedgerSigner,
+          Tzip16Module: dependencies?.Tzip16Module,
+          tzip16: dependencies?.tzip16,
+          bytes2Char: dependencies?.bytes2Char,
+          MichelsonStorageView: dependencies?.MichelsonStorageView,
+          Tzip12Module: dependencies?.Tzip12Module,
+          tzip12: dependencies?.tzip12,
+          DerivationType: dependencies?.DerivationType,
+          TransportWebHID: dependencies?.TransportWebHID,
+          compose: dependencies?.compose,
+          Schema: dependencies?.Schema,
+          ParameterSchema: dependencies?.ParameterSchema,
+          DEFAULT_FEE: dependencies?.DEFAULT_FEE,
+          verifySignature: dependencies?.verifySignature,
+          Parser: dependencies?.Parser,
+          packDataBytes: dependencies?.packDataBytes,
+          RpcReadAdapter: dependencies?.RpcReadAdapter,
+          SaplingToolkit: dependencies?.SaplingToolkit,
+          RpcClient: dependencies?.RpcClient,
+          InMemorySpendingKey: dependencies?.InMemorySpendingKey,
+          InMemoryViewingKey: dependencies?.InMemoryViewingKey,
+          Ed25519: dependencies?.Ed25519,
+          ECDSA: dependencies?.ECDSA,
+          Path: dependencies?.Path,
+          generateSecretKey: dependencies?.generateSecretKey,
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

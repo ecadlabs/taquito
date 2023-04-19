@@ -15,6 +15,7 @@ import {
   proposalDecoder,
   proposalsDecoder,
   publicKeyDecoder,
+  depositsLimitDecoder,
   pvmKindDecoder,
   smartContractAddressDecoder,
   smartRollupAddressDecoder,
@@ -48,6 +49,7 @@ import {
   TransferTicketSchema,
   TxRollupOriginationSchema,
   TxRollupSubmitBatchSchema,
+  SetDepositsLimitSchema,
   SmartRollupOriginateSchema,
   SmartRollupAddMessagesSchema,
   SmartRollupExecuteOutboxMessageSchema,
@@ -84,6 +86,7 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.TX_ROLLUP_ID]: txRollupIdDecoder,
   [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentDecoder,
   [CODEC.BURN_LIMIT]: burnLimitDecoder,
+  [CODEC.DEPOSITS_LIMIT]: depositsLimitDecoder,
   [CODEC.PVM_KIND]: pvmKindDecoder,
   [CODEC.PADDED_BYTES]: paddedBytesDecoder,
   [CODEC.SMART_ROLLUP_MESSAGE]: smartRollupMessageDecoder,
@@ -127,3 +130,4 @@ decoders[CODEC.OP_SMART_ROLLUP_ADD_MESSAGES] = (val: Uint8ArrayConsumer) =>
 decoders[CODEC.OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(SmartRollupExecuteOutboxMessageSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
+decoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(SetDepositsLimitSchema)(val);

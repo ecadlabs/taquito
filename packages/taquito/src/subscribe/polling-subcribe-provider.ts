@@ -68,7 +68,7 @@ const applyEventFilter = (filter?: EventFilter) =>
             const internalOpResults = tx.metadata.internal_operation_results;
             if (internalOpResults) {
               for (const event of internalOpResults) {
-                if (eventFilter(event, filter?.address, filter?.tag)) {
+                if (eventFilter(event, filter?.address, filter?.tag, filter?.excludeFailedOperations)) {
                   sub.next({
                     opHash: op.hash,
                     blockHash: block.hash,

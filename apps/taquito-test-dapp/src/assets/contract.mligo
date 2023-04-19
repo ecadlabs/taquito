@@ -45,12 +45,12 @@ let check_signature (sig_params, s: sig_params * storage): storage =
     let (signer, (sig_, msg)) = sig_params in
     (* casts the provided key to a key hash *)
     let k_hash: key_hash = Crypto.hash_key signer in
-    if (Tezos.address (Tezos.implicit_account k_hash)) <> Tezos.sender
+    if (Tezos.address (Tezos.implicit_account k_hash)) <> Tezos.get_sender()
     then (failwith "DIFFERENT_SIGNER_SENDER": storage)
     else
         (* verifies the signature *)
         if Crypto.check signer sig_ msg
-        then { s with last_checked_sig = Some { sender = Tezos.sender; sig_ = sig_; msg = msg } }
+        then { s with last_checked_sig = Some { sender = Tezos.get_sender(); sig_ = sig_; msg = msg } }
         else
             (failwith "DIFFERENT_SIGNER": storage)
 

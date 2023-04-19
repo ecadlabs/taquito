@@ -52,20 +52,20 @@ const destinationFilter = (x: OperationContent, filter: DestinationFilter) => {
   }
 };
 
-export const eventFilter = (result: InternalOperationResult, address?: string, tag?: string) => {
-  if (result.kind === 'event') {
-    if (address && tag) {
-      return result.source === address && result.tag === tag;
-    } else if (address && !tag) {
-      return result.source === address;
-    } else if (tag) {
-      return result.tag === tag;
-    } else {
-      return true;
-    }
-  } else {
+export const eventFilter = (result: InternalOperationResult, address?: string, tag?: string, excludeFailedOperations?: boolean) => {
+  if (result.kind !== 'event') {
     return false;
   }
+  if (tag && result.tag !== tag) {
+    return false;
+  }
+  if (address && result.source !== address) {
+    return false;
+  }
+  if (excludeFailedOperations && result.result.status !== 'applied') {
+    return false;
+  }
+  return true;
 };
 
 export const evaluateOpFilter = (op: OperationContent, filter: OpFilter) => {
