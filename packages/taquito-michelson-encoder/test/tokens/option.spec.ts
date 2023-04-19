@@ -67,10 +67,6 @@ describe('Option token', () => {
         prim: 'Some',
         args: [{ prim: 'Some', args: [{ int: '10' }] }],
       });
-      expect(nestedToken.Encode(['Some', 10])).toEqual({
-        prim: 'Some',
-        args: [{ prim: 'Some', args: [{ int: '10' }] }],
-      });
     });
 
     it('Should encode to None when null', () => {
@@ -83,13 +79,6 @@ describe('Option token', () => {
       expect(token.Encode([undefined])).toEqual({ prim: 'None' });
       expect(unitToken.Encode([undefined])).toEqual({ prim: 'None' });
       expect(nestedToken.Encode([undefined])).toEqual({ prim: 'None' });
-    });
-
-    it('Should encode to Some(None) when ["Some", null]', () => {
-      expect(nestedToken.Encode(['Some', null])).toEqual({
-        prim: 'Some',
-        args: [{ prim: 'None' }],
-      });
     });
   });
 
