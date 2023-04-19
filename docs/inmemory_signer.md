@@ -6,6 +6,7 @@ author: Simon Boissonneault-Robert
 :::caution Warning
 **Storing private keys in memory is suitable for development workflows but risky for
 production use-cases! Use the InMemorySigner appropriately given your risk profile**
+**More information on why can be found [here](https://github.com/ecadlabs/taquito/issues/1764)**
 :::
 
 Inmemory signer is a local signer implementation that allows you to directly use a private key in your browser or your nodejs app.
