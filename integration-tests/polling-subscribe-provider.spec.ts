@@ -8,15 +8,15 @@ import { validateAddress } from '@taquito/utils';
 If you need to change the main contract, you can change this, use the ligo compiler to compile it, and update both the Michelson code below and the jsligo here.
 
 const _mainContractJsLigo = `type storage = int
-type parameter = {p: int, ad: address, t: tez, newStore: int}
+type parameter = {mode: int, targetContractAddress: address, amount: tez, newStore: int}
 
-export const main = ({p, ad, t, newStore} : parameter, store : storage) => {
-    if (p == 1) {
+export const main = ({mode, targetContractAddress, amount, newStore} : parameter, store : storage) => {
+    if (mode == 1) {
         return [list([]), newStore];
     }
-    assert_with_error(p != 4, "The main contract fails if parameter is four");
-    let tran = Tezos.transaction(p, t, Option.unopt(Tezos.get_contract_opt(ad)));
-    let event1 = Tezos.emit("%intFromMainContract", p + 1);
+    assert_with_error(mode != 4, "The main contract fails if parameter is four");
+    let tran = Tezos.transaction(mode, amount, Option.unopt(Tezos.get_contract_opt(targetContractAddress)));
+    let event1 = Tezos.emit("%intFromMainContract", mode + 1);
     if (store == 1) {
         let event2 = Tezos.emit("%stringFromMainContract", "lorem ipsum");
         return [list([event1, event2, tran]), newStore];
@@ -25,7 +25,10 @@ export const main = ({p, ad, t, newStore} : parameter, store : storage) => {
     }
 }`; */
 
-const mainContractMichelson = `{ parameter (pair (pair (address %ad) (int %newStore)) (int %p) (mutez %t)) ;
+const mainContractMichelson = `{ parameter
+  (pair (pair (mutez %amount) (int %mode))
+        (int %newStore)
+        (address %targetContractAddress)) ;
   storage int ;
   code { UNPAIR ;
          UNPAIR ;
@@ -33,24 +36,24 @@ const mainContractMichelson = `{ parameter (pair (pair (address %ad) (int %newSt
          DIG 2 ;
          UNPAIR ;
          PUSH int 1 ;
-         DUP 2 ;
+         DUP 5 ;
          COMPARE ;
          EQ ;
-         IF { SWAP ; DIG 2 ; DIG 4 ; DROP 4 ; NIL operation }
+         IF { SWAP ; DIG 2 ; DIG 3 ; DIG 4 ; DROP 4 ; NIL operation }
             { PUSH int 4 ;
-              DUP 2 ;
+              DUP 5 ;
               COMPARE ;
               NEQ ;
               IF {}
                  { PUSH string "The main contract fails if parameter is four" ; FAILWITH } ;
-              DIG 2 ;
+              SWAP ;
               CONTRACT int ;
               IF_NONE { PUSH string "option is None" ; FAILWITH } {} ;
               DIG 2 ;
-              DUP 3 ;
+              DUP 4 ;
               TRANSFER_TOKENS ;
               PUSH int 1 ;
-              DIG 2 ;
+              DIG 3 ;
               ADD ;
               EMIT %intFromMainContract int ;
               PUSH int 1 ;
@@ -142,12 +145,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     beforeEach(async (done) => {
       const contract = await Tezos.contract.at(mainContractAddress!);
-      const resetStorageOperation = await contract.methodsObject.default({
-        ad: calledContractAddress,
-        newStore: 0,
-        p: 1,
-        t: 0
-      }).send();
+      const resetStorageOperation = await contract.methodsObject
+        .default({
+          targetContractAddress: calledContractAddress,
+          newStore: 0,
+          mode: 1,
+          amount: 0,
+        })
+        .send();
       await resetStorageOperation.confirmation();
       done();
     });
@@ -166,20 +171,19 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       const contract1 = await Tezos.contract.at(mainContractAddress!);
       const contract2 = await secondUser.contract.at(mainContractAddress!);
-      
 
       const operation1 = contract1.methodsObject.default({
-        ad: calledContractAddress,
+        targetContractAddress: calledContractAddress,
         newStore: 0,
-        p: 0,
-        t: 0
+        mode: 0,
+        amount: 0,
       });
 
       const operation2 = contract2.methodsObject.default({
-        ad: calledContractAddress,
+        targetContractAddress: calledContractAddress,
         newStore: 0,
-        p: 0,
-        t: 0
+        mode: 0,
+        amount: 0,
       });
 
       const sent1 = await operation1.send();
@@ -229,22 +233,22 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const contract2 = await secondUser.contract.at(mainContractAddress!);
       try {
         const operation1 = contract1.methodsObject.default({
-          ad: calledContractAddress,
+          targetContractAddress: calledContractAddress,
           newStore: 1,
-          p: 0,
-          t: 0
+          mode: 0,
+          amount: 0,
         });
-  
+
         const operation2 = contract2.methodsObject.default({
-          ad: calledContractAddress,
+          targetContractAddress: calledContractAddress,
           newStore: 0,
-          p: 0,
-          t: 0
+          mode: 0,
+          amount: 0,
         });
-  
+
         const sent1 = await operation1.send();
         const sent2 = await operation2.send();
-  
+
         await sent1.confirmation();
         await sent2.confirmation();
       } catch (e) {
@@ -284,22 +288,22 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const contract2 = await secondUser.contract.at(mainContractAddress!);
       try {
         const operation1 = contract1.methodsObject.default({
-          ad: calledContractAddress,
+          targetContractAddress: calledContractAddress,
           newStore: 1,
-          p: 0,
-          t: 0
+          mode: 0,
+          amount: 0,
         });
-  
+
         const operation2 = contract2.methodsObject.default({
-          ad: calledContractAddress,
+          targetContractAddress: calledContractAddress,
           newStore: 0,
-          p: 0,
-          t: 0
+          mode: 0,
+          amount: 0,
         });
-  
+
         const sent1 = await operation1.send();
         const sent2 = await operation2.send();
-  
+
         await sent1.confirmation();
         await sent2.confirmation();
       } catch (e) {
