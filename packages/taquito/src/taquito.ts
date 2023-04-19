@@ -30,6 +30,8 @@ import { TaquitoLocalForger } from './forger/taquito-local-forger';
 import { EstimationProvider } from './estimate/estimate-provider-interface';
 import { ParserProvider } from './parser/interface';
 import { MichelCodecParser } from './parser/michel-codec-parser';
+import { Injector } from './injector/interface';
+import { RpcInjector } from './injector/rpc-injector';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
@@ -82,6 +84,7 @@ export interface SetProviderOptions {
   packer?: Packer;
   globalConstantsProvider?: GlobalConstantsProvider;
   parserProvider?: ParserProvider;
+  injectorProvider?: Injector;
 }
 
 export interface VersionInfo {
@@ -141,6 +144,7 @@ export class TezosToolkit {
     globalConstantsProvider,
     readProvider,
     parserProvider,
+    injectorProvider,
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -151,6 +155,7 @@ export class TezosToolkit {
     this.setGlobalConstantsProvider(globalConstantsProvider);
     this.setReadProvider(readProvider);
     this.setParserProvider(parserProvider);
+    this.setInjectorProvider(injectorProvider);
 
     this._context.proto = protocol;
     if (config) {
@@ -333,6 +338,23 @@ export class TezosToolkit {
     } else if (typeof parserProvider !== 'undefined') {
       this._context.parser = parserProvider;
       this._options.parserProvider = parserProvider;
+    }
+  }
+
+  /**
+   * @description Sets injector provider on the Tezos Taquito instance
+   *
+   * @param options parserProvider to use to interact with the Tezos network
+   *
+   */
+  setInjectorProvider(injectorProvider?: SetProviderOptions['injectorProvider']) {
+    if (!this._options.injectorProvider && typeof injectorProvider === 'undefined') {
+      const p = new RpcInjector(this._context);
+      this._context.injector = p;
+      this._options.injectorProvider = p;
+    } else if (typeof injectorProvider !== 'undefined') {
+      this._context.injector = injectorProvider;
+      this._options.injectorProvider = injectorProvider;
     }
   }
 
