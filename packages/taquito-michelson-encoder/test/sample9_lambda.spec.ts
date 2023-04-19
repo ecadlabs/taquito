@@ -16,7 +16,7 @@ describe('Schema test', () => {
       '0': {
         '0': 'address',
         '1': 'string',
-        '2': 'bytes',
+        '2': { Some: 'bytes' },
       },
       '1': 'mutez',
       '2': {
@@ -26,7 +26,7 @@ describe('Schema test', () => {
       '3': {
         lambda: {
           parameters: {
-            5: 'bytes',
+            5: { Some: 'bytes' },
             3: 'address',
             4: 'string',
           },
@@ -39,72 +39,72 @@ describe('Schema test', () => {
       __michelsonType: 'or',
       schema: {
         '0': {
-          __michelsonType: "pair",
+          __michelsonType: 'pair',
           schema: {
             '0': {
-              __michelsonType: "address",
-              schema: 'address'
+              __michelsonType: 'address',
+              schema: 'address',
             },
             '1': {
-              __michelsonType: "string",
-              schema: 'string'
+              __michelsonType: 'string',
+              schema: 'string',
             },
             '2': {
-              __michelsonType: "option",
+              __michelsonType: 'option',
               schema: {
-                __michelsonType: "bytes",
-                schema: 'bytes'
-              }
-            },
-          }
-        },
-        '1': {
-          __michelsonType: "mutez",
-          schema: 'mutez'
-        },
-        '2': {
-          __michelsonType: "pair",
-          schema: {
-            '2': {
-              __michelsonType: "address",
-              schema: 'address'
-            },
-            '3': {
-              __michelsonType: "bool",
-              schema: 'bool'
-            },
-          }
-        },
-        '3': {
-          __michelsonType: "lambda",
-          schema: {
-            parameters: {
-              __michelsonType: "pair",
-              schema: {
-                3: {
-                  __michelsonType: "address",
-                  schema: 'address'
-                },
-                4: {
-                  __michelsonType: "string",
-                  schema: 'string'
-                },
-                5: {
-                  __michelsonType: "option",
-                  schema: {
-                    __michelsonType: "bytes",
-                    schema: 'bytes'
-                  }
-                },
-              }
-            },
-            returns: {
-              __michelsonType: "operation",
-              schema: 'operation'
+                __michelsonType: 'bytes',
+                schema: 'bytes',
+              },
             },
           },
         },
-      }
+        '1': {
+          __michelsonType: 'mutez',
+          schema: 'mutez',
+        },
+        '2': {
+          __michelsonType: 'pair',
+          schema: {
+            '2': {
+              __michelsonType: 'address',
+              schema: 'address',
+            },
+            '3': {
+              __michelsonType: 'bool',
+              schema: 'bool',
+            },
+          },
+        },
+        '3': {
+          __michelsonType: 'lambda',
+          schema: {
+            parameters: {
+              __michelsonType: 'pair',
+              schema: {
+                3: {
+                  __michelsonType: 'address',
+                  schema: 'address',
+                },
+                4: {
+                  __michelsonType: 'string',
+                  schema: 'string',
+                },
+                5: {
+                  __michelsonType: 'option',
+                  schema: {
+                    __michelsonType: 'bytes',
+                    schema: 'bytes',
+                  },
+                },
+              },
+            },
+            returns: {
+              __michelsonType: 'operation',
+              schema: 'operation',
+            },
+          },
+        },
+      },
     });
 
     expect({
