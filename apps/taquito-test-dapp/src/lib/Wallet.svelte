@@ -42,15 +42,12 @@
   };
 
   const connectWallet = async () => {
-    const wallet = (() => {
-      if (!$store.wallet) {
-        return createNewWallet({
+    setWallet({
+      networkType: $store.networkType
+    });
+    const wallet = createNewWallet({
           networkType: $store.networkType
         });
-      } else {
-        return $store.wallet;
-      }
-    })();
 
     try {
       await wallet.requestPermissions({
@@ -92,18 +89,27 @@
   export const setWallet = async (config: {
     networkType: NetworkType,
   }) => {
+    if (window && window.localStorage) {
+      // finds the Beacon keys
+      const beaconKeys = Object.keys(window.localStorage).filter((key) =>
+        key.toLowerCase().includes("beacon")
+      );
+      // deletes the keys
+      beaconKeys.forEach((key) => delete window.localStorage[key]);
+    }
+
     store.updateNetworkType(config.networkType);
 
     const wallet = createNewWallet(config);
     store.updateWallet(wallet);
+    const Tezos = new TezosToolkit(rpcUrl[config.networkType]);
+    Tezos.setWalletProvider(wallet);
+    store.updateTezos(Tezos);
+
     const activeAccount = await wallet.client.getActiveAccount();
     if (activeAccount) {
       const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
       store.updateUserAddress(userAddress);
-
-      const Tezos = new TezosToolkit(rpcUrl[config.networkType]);
-      Tezos.setWalletProvider(wallet);
-      store.updateTezos(Tezos);
 
       const balance = await Tezos.tz.getBalance(userAddress);
       if (balance) {
@@ -114,9 +120,7 @@
   }
 
   onMount(async () => {
-    await setWallet({
-      networkType: defaultNetworkType
-    });
+    store.updateNetworkType(defaultNetworkType);
   });
 
   afterUpdate(async () => {
