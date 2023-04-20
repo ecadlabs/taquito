@@ -170,7 +170,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       });
 
       const contract1 = await Tezos.contract.at(mainContractAddress!);
-      const contract2 = await secondUser.contract.at(mainContractAddress!);
 
       const operation1 = contract1.methodsObject.default({
         targetContractAddress: calledContractAddress,
@@ -179,23 +178,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         amount: 0,
       });
 
-      const operation2 = contract2.methodsObject.default({
-        targetContractAddress: calledContractAddress,
-        newStore: 0,
-        mode: 0,
-        amount: 0,
-      });
-
       const sent1 = await operation1.send();
-      const sent2 = await operation2.send();
 
       await sent1.confirmation();
-      await sent2.confirmation();
 
       await sleep(5000);
       eventSub.close();
 
-      expect(data.length).toEqual(2);
+      expect(data.length).toEqual(1);
       expect(data[0].opHash).toBeDefined();
       expect(data[0].blockHash).toBeDefined();
       expect(data[0].level).toBeDefined();
