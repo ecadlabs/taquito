@@ -316,6 +316,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       eventSub.close();
 
       expect(data.length).toEqual(1);
+      expect(data[0].event.result.status).toEqual('applied');
       done();
     });
   });
