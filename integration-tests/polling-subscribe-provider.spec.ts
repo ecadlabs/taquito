@@ -192,6 +192,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await sent1.confirmation();
       await sent2.confirmation();
 
+      await sleep(3000);
       eventSub.close();
 
       expect(data.length).toEqual(2);
@@ -255,6 +256,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         // Failure is expected
       }
 
+      await sleep(3000);
       eventSub.close();
 
       expect(data.length).toEqual(3);
@@ -310,6 +312,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         // Failure is expected
       }
 
+      await sleep(3000);
       eventSub.close();
 
       expect(data.length).toEqual(1);
