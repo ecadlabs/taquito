@@ -197,7 +197,9 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     >,
     pkh: string
   ) {
+    console.log(`PARAMS: ${JSON.stringify(params)}`);
     const prepared = await this.prepareOperation(params, pkh);
+    console.log(`PREPARED OPERATION INSIDE ESTIMATE: ${JSON.stringify(prepared)}`);
     const {
       opbytes,
       opOb: { branch, contents },
@@ -574,6 +576,8 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+
+    console.log(`DEFAULT_PARAMS`, DEFAULT_PARAMS);
     const op = await createRegisterGlobalConstantOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),

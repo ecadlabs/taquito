@@ -10,7 +10,6 @@ import { PvmKind } from '@taquito/rpc';
 import { preparedTransactionMock } from '../helpers';
 import { PreparedOperation } from '../../src/prepare';
 
-
 describe('PrepareProvider test', () => {
   let prepareProvider: PrepareProvider;
 
@@ -165,7 +164,7 @@ describe('PrepareProvider test', () => {
       });
 
       const res = JSON.parse(JSON.stringify(prepared));
-
+      console.log(JSON.stringify(prepared));
       expect(res).toEqual(preparedOriginationOpWithReveal);
     });
 

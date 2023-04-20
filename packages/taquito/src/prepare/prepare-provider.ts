@@ -1,9 +1,10 @@
 import {
-  RpcClientInterface,
+  // RpcClientInterface,
   OperationContents,
   OpKind,
   VotingPeriodBlockResult,
   PreapplyParams,
+  ConstantsResponse,
 } from '@taquito/rpc';
 import {
   DelegateParams,
@@ -58,23 +59,42 @@ import {
 import { Estimate } from '../estimate';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { ForgeParams } from '@taquito/local-forging';
+import { Provider } from '../provider';
+// import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import BigNumber from 'bignumber.js';
+
+interface Limits {
+  fee?: number;
+  storageLimit?: number;
+  gasLimit?: number;
+}
+
+const mergeLimits = (
+  userDefinedLimit: Limits,
+  defaultLimits: Required<Limits>
+): Required<Limits> => {
+  return {
+    fee: typeof userDefinedLimit.fee === 'undefined' ? defaultLimits.fee : userDefinedLimit.fee,
+    gasLimit:
+      typeof userDefinedLimit.gasLimit === 'undefined'
+        ? defaultLimits.gasLimit
+        : userDefinedLimit.gasLimit,
+    storageLimit:
+      typeof userDefinedLimit.storageLimit === 'undefined'
+        ? defaultLimits.storageLimit
+        : userDefinedLimit.storageLimit,
+  };
+};
 
 /**
  * @description PrepareProvider is a utility class to output the prepared format of an operation
  */
-export class PrepareProvider implements PreparationProvider {
+export class PrepareProvider extends Provider implements PreparationProvider {
   #counters: { [key: string]: number };
 
   constructor(protected context: Context) {
+    super(context);
     this.#counters = {};
-  }
-
-  get rpc(): RpcClientInterface {
-    return this.context.rpc;
-  }
-
-  get signer() {
-    return this.context.signer;
   }
 
   get estimate() {
@@ -99,6 +119,49 @@ export class PrepareProvider implements PreparationProvider {
 
   private async getHeadCounter(pkh: string): Promise<string> {
     return this.context.readProvider.getCounter(pkh, 'head') ?? '0';
+  }
+
+  private adjustGasForBatchOperation(
+    gasLimitBlock: BigNumber,
+    gaslimitOp: BigNumber,
+    numberOfOps: number
+  ) {
+    return BigNumber.min(gaslimitOp, gasLimitBlock.div(numberOfOps + 1));
+  }
+
+  private async getAccountLimits(
+    pkh: string,
+    constants: Pick<
+      ConstantsResponse,
+      | 'hard_gas_limit_per_operation'
+      | 'hard_gas_limit_per_block'
+      | 'hard_storage_limit_per_operation'
+      | 'cost_per_byte'
+    >,
+    numberOfOps?: number
+  ) {
+    const balance = await this.context.readProvider.getBalance(pkh, 'head');
+    const {
+      hard_gas_limit_per_operation,
+      hard_gas_limit_per_block,
+      hard_storage_limit_per_operation,
+      cost_per_byte,
+    } = constants;
+    return {
+      fee: 0,
+      gasLimit: numberOfOps
+        ? Math.floor(
+            this.adjustGasForBatchOperation(
+              hard_gas_limit_per_block,
+              hard_gas_limit_per_operation,
+              numberOfOps
+            ).toNumber()
+          )
+        : hard_gas_limit_per_operation.toNumber(),
+      storageLimit: Math.floor(
+        BigNumber.min(balance.dividedBy(cost_per_byte), hard_storage_limit_per_operation).toNumber()
+      ),
+    };
   }
 
   private getFee(op: RPCOpWithFee, pkh: string, headCounter: number) {
@@ -139,6 +202,19 @@ export class PrepareProvider implements PreparationProvider {
       }
     }
     return operation;
+  }
+
+  private async getKeys(): Promise<{
+    pkh: string;
+    publicKey?: string;
+  }> {
+    const isSignerConfigured = this.context.isAnySignerConfigured();
+    return {
+      pkh: isSignerConfigured
+        ? await this.signer.publicKeyHash()
+        : await this.context.walletProvider.getPKH(),
+      publicKey: isSignerConfigured ? await this.signer.publicKey() : undefined,
+    };
   }
 
   private convertIntoArray(op: RPCOperation | RPCOperation[]): RPCOperation[] {
@@ -242,7 +318,6 @@ export class PrepareProvider implements PreparationProvider {
    */
   async reveal(params: RevealParams): Promise<PreparedOperation> {
     const pkh = await this.signer.publicKeyHash();
-
     const estimate = await this.estimate.reveal(params);
     if (estimate) {
       const estimates = this.buildEstimates(estimate);
@@ -285,18 +360,18 @@ export class PrepareProvider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async originate<TContract extends DefaultContractType = DefaultContractType>(
-    params: OriginateParams<ContractStorageType<TContract>>,
+    { fee, storageLimit, gasLimit, ...rest }: OriginateParams<ContractStorageType<TContract>>,
     source?: string
   ): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
-    const estimate = await this.estimate.originate(params);
-    const estimates = this.buildEstimates(estimate);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createOriginationOperation(
       await this.context.parser.prepareCodeOrigination({
-        ...params,
-        ...estimates,
+        ...rest,
+        ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
       })
     );
 
@@ -328,15 +403,18 @@ export class PrepareProvider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async transaction(params: TransferParams, source?: string): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+  async transaction(
+    { fee, storageLimit, gasLimit, ...rest }: TransferParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
 
-    const estimate = await this.estimate.transfer(params);
-    const estimates = this.buildEstimates(estimate);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createTransferOperation({
-      ...params,
-      ...estimates,
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
@@ -367,15 +445,18 @@ export class PrepareProvider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async delegation(params: DelegateParams, source?: string): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+  async delegation(
+    { fee, storageLimit, gasLimit, ...rest }: DelegateParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
 
-    const estimate = await this.estimate.setDelegate(params);
-    const estimates = this.buildEstimates(estimate);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createSetDelegateOperation({
-      ...params,
-      ...estimates,
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
@@ -407,17 +488,17 @@ export class PrepareProvider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async registerGlobalConstant(
-    params: RegisterGlobalConstantParams,
+    { fee, storageLimit, gasLimit, ...rest }: RegisterGlobalConstantParams,
     source?: string
   ): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
-    const estimate = await this.estimate.registerGlobalConstant(params);
-    const estimates = this.buildEstimates(estimate);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createRegisterGlobalConstantOperation({
-      ...params,
-      ...estimates,
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
@@ -534,17 +615,17 @@ export class PrepareProvider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async updateConsensusKey(
-    params: UpdateConsensusKeyParams,
+    { fee, storageLimit, gasLimit, ...rest }: UpdateConsensusKeyParams,
     source?: string
   ): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
-    const estimate = await this.estimate.updateConsensusKey(params);
-    const estimates = this.buildEstimates(estimate);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createUpdateConsensusKeyOperation({
-      ...params,
-      ...estimates,
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
@@ -576,17 +657,17 @@ export class PrepareProvider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async increasePaidStorage(
-    params: IncreasePaidStorageParams,
+    { fee, storageLimit, gasLimit, ...rest }: IncreasePaidStorageParams,
     source?: string
   ): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
-    const estimate = await this.estimate.increasePaidStorage(params);
-    const estimates = this.buildEstimates(estimate);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createIncreasePaidStorageOperation({
-      ...params,
-      ...estimates,
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
@@ -744,15 +825,18 @@ export class PrepareProvider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async transferTicket(params: TransferTicketParams, source?: string): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+  async transferTicket(
+    { fee, storageLimit, gasLimit, ...rest }: TransferTicketParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
 
-    const estimate = await this.estimate.transferTicket(params);
-    const estimates = this.buildEstimates(estimate);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createTransferTicketOperation({
-      ...params,
-      ...estimates,
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
@@ -784,17 +868,17 @@ export class PrepareProvider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async smartRollupAddMessages(
-    params: SmartRollupAddMessagesParams,
+    { fee, storageLimit, gasLimit, ...rest }: SmartRollupAddMessagesParams,
     source?: string
   ): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
-    const estimate = await this.estimate.smartRollupAddMessages(params);
-    const estimates = this.buildEstimates(estimate);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createSmartRollupAddMessagesOperation({
-      ...params,
-      ...estimates,
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
@@ -838,6 +922,17 @@ export class PrepareProvider implements PreparationProvider {
       ...completeParams,
       ...estimates,
     });
+
+    // const { pkh } = await this.getKeys();
+
+    // const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    // const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+
+    // const op = await createSmartRollupAddMessagesOperation({
+    //   ...rest,
+    //   ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    //   ...originationProof
+    // });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);
