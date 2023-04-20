@@ -57,6 +57,11 @@ import {
   VotingPeriodBlockResult,
   TxRollupStateResponse,
   TxRollupInboxResponse,
+  TicketTokenParams,
+  AllTicketBalances,
+  PendingOperationsQueryArguments,
+  PendingOperations,
+  OriginationProofParams,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1125,5 +1130,86 @@ export class RpcClient implements RpcClientInterface {
       ),
       method: 'GET',
     });
+  }
+
+  /**
+   *
+   * @param contract implicit or originated address we want to retrieve ticket balance of
+   * @param ticket object to specify a ticket by ticketer, content type and content
+   * @param options contains generic configuration for rpc calls
+   * @description Access the contract's balance of ticket with specified ticketer, content type, and content.
+   * @example ticket { ticketer: 'address', content_type: { prim: "string" }, content: { string: 'ticket1' } }
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getTicketBalance(
+    contract: string,
+    ticket: TicketTokenParams,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string> {
+    return this.httpBackend.createRequest<string>(
+      {
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/ticket_balance`
+        ),
+        method: 'POST',
+      },
+      ticket
+    );
+  }
+
+  /**
+   *
+   * @param contract originated address we want to retrieve ticket balances of
+   * @param options contains generic configuration for rpc calls
+   * @description Access the complete list of tickets owned by the given contract by scanning the contract's storage.
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getAllTicketBalances(
+    contract: string,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<AllTicketBalances> {
+    return this.httpBackend.createRequest<AllTicketBalances>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
+      ),
+      method: 'GET',
+    });
+  }
+
+  /**
+   * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
+   * @param args has 5 optional properties. We support version 1 with new encoding as version 0 will be deprecated soon. The rest of the properties is to filter pending operations response
+   * @default args { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
+   * @see https://tezos.gitlab.io/CHANGES.html?highlight=pending_operations#id4
+   */
+  async getPendingOperations(
+    args: PendingOperationsQueryArguments = {}
+  ): Promise<PendingOperations> {
+    return this.httpBackend.createRequest<PendingOperations>({
+      url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
+      method: 'GET',
+      query: args,
+    });
+  }
+
+  /**
+   *
+   * @param params contains the PVM kind and kernel to generate the origination proof from
+   * @description rpc call to generate the origination proof needed for a smart rollup originate operation
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getOriginationProof(
+    params: OriginationProofParams,
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string> {
+    return this.httpBackend.createRequest<string>(
+      {
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/smart_rollups/all/origination_proof`
+        ),
+        method: 'POST',
+      },
+      params
+    );
   }
 }

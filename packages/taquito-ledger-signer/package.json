@@ -1,6 +1,6 @@
 {
   "name": "@taquito/ledger-signer",
-  "version": "15.1.0",
+  "version": "16.1.2-beta-RC.0",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=16"
   },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
@@ -60,14 +60,14 @@
   "dependencies": {
     "@ledgerhq/hw-transport": "^6.27.3",
     "@stablelib/blake2b": "^1.0.1",
-    "@taquito/taquito": "^15.1.0",
-    "@taquito/utils": "^15.1.0",
+    "@taquito/taquito": "^16.1.2-beta-RC.0",
+    "@taquito/utils": "^16.1.2-beta-RC.0",
     "buffer": "^6.0.3"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
     "@types/jest": "^26.0.24",
-    "@types/node": "^17.0.0",
+    "@types/node": "^16",
     "@types/ws": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",

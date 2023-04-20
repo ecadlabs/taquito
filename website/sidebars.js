@@ -31,6 +31,7 @@ const sidebars = {
         'beaconwallet-singleton',
         'confirmation_event_stream',
         'consensus_key',
+        'contract_call_parameters',
         'set_delegate',
         'dapp_prelaunch',
         'estimate',
@@ -40,6 +41,8 @@ const sidebars = {
         'increase_paid_storage',
         'lambda_view',
         'liquidity_baking',
+        'local_forger',
+        'manager_lambda',
         'maps_bigmaps',
         'michelsonmap',
         'multisig_doc',
@@ -63,8 +66,8 @@ const sidebars = {
         'wallets',
         'wallet_connect_2',
         'web3js_taquito',
-        'contracts_collection',
         'subscribe_event',
+        'smart_rollups'
       ],
     },
     {

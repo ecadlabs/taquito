@@ -46,10 +46,8 @@ Taquito currently supports the following versions of Node.js®:
 | v12 LTS          |    ❌      |
 | v14 LTS          |    ❌      |
 | v16.13.1         |    ✅      |
-| v16.13.2         |    ❌      |
 | v16 LTS/Gallium  |    ✅      |
 | 17.3.x           |    ✅      |
-| v17.5.x          |    ❌      |
 | v18 LTS/Hydrogen |    ✅      |
 
 While other versions often work, the above are what we officially support. YMMV!
@@ -157,7 +155,7 @@ The taquito build system is based on `nx`, which uses caching extensively; pleas
 
 * **Do not use `npm install`, as it will unnecessarily update `package.json`**
 
-The `npm clean-install` command (or just `npm ci`) produces a stable installation of all depenencies and respects `package-lock.json`. This will ensure a deterministic and repeatable build. It is also some 2x to 10x faster than `npm install`: hooray!
+The `npm clean-install` command (or just `npm ci`) produces a stable installation of all dependencies and respects `package-lock.json`. This will ensure a deterministic and repeatable build. It is also some 2x to 10x faster than `npm install`: hooray!
 
 ### Useful npm command targets/scripts
 

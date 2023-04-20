@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context } from '../../src/context';
 import { PrepareProvider } from '../../src/prepare/prepare-provider';
 import BigNumber from 'bignumber.js';
@@ -5,6 +6,10 @@ import { preparedOriginationOpWithReveal, preparedOriginationOpNoReveal } from '
 import { Estimate } from '../../src/estimate';
 
 import { TransferTicketParams, OpKind } from '../../src/operations/types';
+import { PvmKind } from '@taquito/rpc';
+import { preparedTransactionMock } from '../helpers';
+import { PreparedOperation } from '../../src/prepare';
+
 
 describe('PrepareProvider test', () => {
   let prepareProvider: PrepareProvider;
@@ -30,11 +35,14 @@ describe('PrepareProvider test', () => {
     getCurrentPeriod: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
+    getOriginationProof: jest.Mock<any, any>;
+    forgeOperations: jest.Mock<any, any>;
   };
 
   let mockSigner: {
     publicKeyHash: jest.Mock<any, any>;
     publicKey: jest.Mock<any, any>;
+    sign: jest.Mock<any, any>;
   };
 
   let estimate: Estimate;
@@ -62,11 +70,14 @@ describe('PrepareProvider test', () => {
       getCurrentPeriod: jest.fn(),
       getConstants: jest.fn(),
       getManagerKey: jest.fn(),
+      getOriginationProof: jest.fn(),
+      forgeOperations: jest.fn(),
     };
 
     mockSigner = {
       publicKeyHash: jest.fn(),
       publicKey: jest.fn(),
+      sign: jest.fn(),
     };
 
     mockRpcClient.getContract.mockResolvedValue({
@@ -131,6 +142,8 @@ describe('PrepareProvider test', () => {
     jest.spyOn(context.estimate, 'txRollupOriginate').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'txRollupSubmitBatch').mockResolvedValue(estimate);
     jest.spyOn(context.estimate, 'updateConsensusKey').mockResolvedValue(estimate);
+    jest.spyOn(context.estimate, 'smartRollupAddMessages').mockResolvedValue(estimate);
+    jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
 
     prepareProvider = new PrepareProvider(context);
   });
@@ -889,6 +902,79 @@ describe('PrepareProvider test', () => {
     });
   });
 
+  describe('smartRollupAddMessages', () => {
+    it('should be able to prepare a smartRollupAddMessages operation', async () => {
+      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+
+      const prepared = await prepareProvider.smartRollupAddMessages({
+        message: [
+          '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        ],
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '391',
+              public_key: 'test_pub_key',
+              source: 'test_public_key_hash',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '1',
+            },
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_public_key_hash',
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              message: [
+                '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+              ],
+              counter: '2',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to prepare smartRollupAddMessages op without reveal when estimate is undefined', async () => {
+      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+
+      const prepared = await prepareProvider.smartRollupAddMessages({
+        message: [
+          '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        ],
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'smart_rollup_add_messages',
+              source: 'test_public_key_hash',
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              message: [
+                '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+              ],
+              counter: '1',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+  });
+
   describe('batch', () => {
     it('should be able to prepare a batch operation', async () => {
       jest.spyOn(context.estimate, 'batch').mockResolvedValue([estimate, estimate, estimate]);
@@ -993,6 +1079,131 @@ describe('PrepareProvider test', () => {
         },
         counter: 0,
       });
+    });
+
+    it('toPreapply should forge, sign forged bytes and return the PreapplyParams object', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+      mockSigner.sign.mockResolvedValue({
+        sig: '',
+        bytes: '',
+        prefixSig:
+          'spsig18HJsGY8pVAeHNHE7hURPsFfkGGBuH7cVifwabCAby2iN5R5ckNUqWfPBr8KxwUMJfrug1DZS1fjGzyemWDgukbAeRpwUe',
+        sbytes: '',
+      });
+
+      const { contents, branch, protocol } = preparedTransactionMock.opOb;
+
+      const result = await prepareProvider.toPreapply(preparedTransactionMock);
+      expect(result).toEqual([
+        {
+          contents,
+          branch,
+          protocol,
+          signature:
+            'spsig18HJsGY8pVAeHNHE7hURPsFfkGGBuH7cVifwabCAby2iN5R5ckNUqWfPBr8KxwUMJfrug1DZS1fjGzyemWDgukbAeRpwUe',
+        },
+      ]);
+    });
+    it('toForge should return the ForgeParams that can be forged', async () => {
+      mockRpcClient.forgeOperations.mockResolvedValue('1234');
+      const { contents, branch } = preparedTransactionMock.opOb;
+
+      const result = prepareProvider.toForge(preparedTransactionMock as PreparedOperation);
+      expect(result).toEqual({
+        contents,
+        branch,
+      });
+      const forged = await prepareProvider.rpc.forgeOperations(result);
+      expect(forged).toEqual('1234');
+    });
+  });
+
+  describe('SmartRollupOriginate', () => {
+    it('Should prepare smartRollupOriginate without reveal', async (done) => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
+
+      jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
+
+      const prepared = await prepareProvider.smartRollupOriginate({
+        pvmKind: PvmKind.WASM2,
+        kernel: '123456789',
+        parametersType: {
+          prim: 'bytes',
+        },
+      });
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'smart_rollup_originate',
+              pvm_kind: 'wasm_2_0_0',
+              kernel: '123456789',
+              origination_proof: '987654321',
+              parameters_ty: {
+                prim: 'bytes',
+              },
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '1',
+              source: 'test_public_key_hash',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+      done();
+    });
+
+    it('Should prepare smartRollupOriginate with reveal', async (done) => {
+      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
+
+      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
+
+      const prepared = await prepareProvider.smartRollupOriginate({
+        pvmKind: PvmKind.WASM2,
+        kernel: '123456789',
+        parametersType: {
+          prim: 'bytes',
+        },
+      });
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '391',
+              public_key: 'test_pub_key',
+              source: 'test_public_key_hash',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '1',
+            },
+            {
+              kind: 'smart_rollup_originate',
+              pvm_kind: 'wasm_2_0_0',
+              kernel: '123456789',
+              origination_proof: '987654321',
+              parameters_ty: {
+                prim: 'bytes',
+              },
+              fee: '391',
+              gas_limit: '101',
+              storage_limit: '1000',
+              counter: '2',
+              source: 'test_public_key_hash',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+      done();
     });
   });
 });

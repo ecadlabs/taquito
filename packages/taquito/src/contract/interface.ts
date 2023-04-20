@@ -24,6 +24,8 @@ import {
   BallotParams,
   ProposalsParams,
   UpdateConsensusKeyParams,
+  SmartRollupAddMessagesParams,
+  SmartRollupOriginateParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
@@ -33,6 +35,8 @@ import { DrainDelegateOperation } from '../operations';
 import { BallotOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
+import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
+import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -156,7 +160,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Transfer tickets from L2 to a smart contract address
+   * @description Transfer tickets from an implicit account to a contract or another implicit account.
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -271,4 +275,24 @@ export interface ContractProvider extends StorageProvider {
    * @param UpdateConsensusKeyParams UpdateConsensusKey operation parameter
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<UpdateConsensusKeyOperation>;
+
+  /**
+   *
+   * @description Smart Rollup Add Messages
+   *
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param SmartRollupAddMessagesParams smartRollupAddMessages operation parameter
+   */
+  smartRollupAddMessages(
+    params: SmartRollupAddMessagesParams
+  ): Promise<SmartRollupAddMessagesOperation>;
+  /**
+   * @description Smart rollup originate
+   *
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param SmartRollupOriginateParams smartRollupOriginate operation parameter
+   */
+  smartRollupOriginate(params: SmartRollupOriginateParams): Promise<SmartRollupOriginateOperation>;
 }

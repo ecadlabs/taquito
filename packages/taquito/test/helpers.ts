@@ -12,6 +12,7 @@ import {
   OperationContentsAndResultIncreasePaidStorage,
   OperationContentsAndResultUpdateConsensusKey,
 } from '@taquito/rpc';
+import { PreparedOperation } from '../src/prepare';
 
 const defaultTransferData = {
   kind: OpKind.TRANSACTION as OpKind.TRANSACTION,
@@ -595,85 +596,104 @@ export const ticketTokenTestMock = {
 export const smallNestedMapTypecheck = {
   address: '',
   script: {
-    "code": [
+    code: [
       {
-        "prim": "parameter",
-        "args": [
+        prim: 'parameter',
+        args: [
           {
-            "prim": "unit"
-          }
-        ]
+            prim: 'unit',
+          },
+        ],
       },
       {
-        "prim": "storage",
-        "args": [
+        prim: 'storage',
+        args: [
           {
-            "prim": "map",
-            "args": [
+            prim: 'map',
+            args: [
               {
-                "prim": "string"
+                prim: 'string',
               },
               {
-                "prim": "map",
-                "args": [
+                prim: 'map',
+                args: [
                   {
-                    "prim": "string"
+                    prim: 'string',
                   },
                   {
-                    "prim": "big_map",
-                    "args": [
+                    prim: 'big_map',
+                    args: [
                       {
-                        "prim": "nat"
+                        prim: 'nat',
                       },
                       {
-                        "prim": "nat"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+                        prim: 'nat',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
       {
-        "prim": "code",
-        "args": [
+        prim: 'code',
+        args: [
           [
             [
               {
-                "prim": "UNIT"
+                prim: 'UNIT',
               },
               {
-                "prim": "FAILWITH"
-              }
-            ]
-          ]
-        ]
-      }
+                prim: 'FAILWITH',
+              },
+            ],
+          ],
+        ],
+      },
     ],
-    "storage": [
+    storage: [
       {
-        "prim": "Elt",
-        "args": [
+        prim: 'Elt',
+        args: [
           {
-            "string": "test"
+            string: 'test',
           },
           [
             {
-              "prim": "Elt",
-              "args": [
+              prim: 'Elt',
+              args: [
                 {
-                  "string": "test 2"
+                  string: 'test 2',
                 },
                 {
-                  "int": "143106"
-                }
-              ]
-            }
-          ]
-        ]
-      }
-    ]
-  }
-}
+                  int: '143106',
+                },
+              ],
+            },
+          ],
+        ],
+      },
+    ],
+  },
+};
+
+export const preparedTransactionMock = {
+  opOb: {
+    branch: 'BKvS9KTjoC5NNbu1P9Z7rUud4cF2Pr2cnKox1RduhCzGy8J53a3',
+    contents: [
+      {
+        kind: 'transaction',
+        fee: '465',
+        gas_limit: '1101',
+        storage_limit: '257',
+        amount: '1000000',
+        destination: 'tz3SBLWcdfGnt4RFSjJnmmvWgeKHooVZKn5P',
+        source: 'tz2XWgpXu3Fqdhsm1FzGQXRqgvqizfFjxpLt',
+        counter: '31552',
+      },
+    ],
+    protocol: 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+  },
+} as PreparedOperation;

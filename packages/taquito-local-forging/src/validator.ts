@@ -17,6 +17,10 @@ import {
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
   DrainDelegateSchema,
+  SetDepositsLimitSchema,
+  SmartRollupOriginateSchema,
+  SmartRollupAddMessagesSchema,
+  SmartRollupExecuteOutboxMessageSchema,
 } from './schema/operation';
 
 type OperationKind =
@@ -35,7 +39,11 @@ type OperationKind =
   | OpKind.TX_ROLLUP_SUBMIT_BATCH
   | OpKind.INCREASE_PAID_STORAGE
   | OpKind.UPDATE_CONSENSUS_KEY
-  | OpKind.DRAIN_DELEGATE;
+  | OpKind.DRAIN_DELEGATE
+  | OpKind.SET_DEPOSITS_LIMIT
+  | OpKind.SMART_ROLLUP_ORIGINATE
+  | OpKind.SMART_ROLLUP_ADD_MESSAGES
+  | OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
@@ -54,6 +62,10 @@ const OperationKindMapping = {
   increase_paid_storage: IncreasePaidStorageSchema,
   update_consensus_key: UpdateConsensusKeySchema,
   drain_delegate: DrainDelegateSchema,
+  set_deposits_limit: SetDepositsLimitSchema,
+  smart_rollup_originate: SmartRollupOriginateSchema,
+  smart_rollup_add_messages: SmartRollupAddMessagesSchema,
+  smart_rollup_execute_outbox_message: SmartRollupExecuteOutboxMessageSchema,
 };
 
 // Asymmetric difference: only account for things in arr2 that are not present in arr1, not vice versa

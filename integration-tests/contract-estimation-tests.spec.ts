@@ -1,13 +1,13 @@
-import { DEFAULT_FEE, MANAGER_LAMBDA, TezosToolkit, Protocols, ChainIds } from "@taquito/taquito";
+import { DEFAULT_FEE, MANAGER_LAMBDA, Protocols, TezosToolkit } from "@taquito/taquito";
 import { Contract } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { originate, originate2, transferImplicit2 } from "./data/lambda";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 
-CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => {
+CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => {
   const Tezos = lib;
-  const limanet = (protocol === Protocols.PtLimaPtL) ? test : test.skip;
+  const mumbainet = protocol === Protocols.PtMumbai2 ? it : it.skip;
 
   describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -37,7 +37,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       }
     });
 
-    limanet('Verify .estimate.transfer with allocated destination', async (done) => {
+    mumbainet('Verify .estimate.transfer with allocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(0);
@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    limanet('Verify .estimate.transfer with unallocated destination', async (done) => {
+    mumbainet('Verify .estimate.transfer with unallocated destination', async (done) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(257);
@@ -63,7 +63,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    limanet('Verify .estimate.originate simple contract', async (done) => {
+    mumbainet('Verify .estimate.originate simple contract', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: "1",
         code: ligoSample,
@@ -80,7 +80,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    limanet('Verify .estimate.setDelegate result', async (done) => {
+    mumbainet('Verify .estimate.setDelegate result', async (done) => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -96,63 +96,63 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    limanet('Verify .estimate.transfer for internal transfer to allocated implicit', async (done) => {
+    mumbainet('Verify .estimate.transfer for internal transfer to allocated implicit', async (done) => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(3249);
+      expect(estimate.gasLimit).toEqual(3257);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(751);
+      expect(estimate.suggestedFeeMutez).toEqual(752);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(651);
-      expect(estimate.totalCost).toEqual(651);
-      expect(estimate.usingBaseFeeMutez).toEqual(651);
-      expect(estimate.consumedMilligas).toEqual(3148786);
+      expect(estimate.minimalFeeMutez).toEqual(652);
+      expect(estimate.totalCost).toEqual(652);
+      expect(estimate.usingBaseFeeMutez).toEqual(652);
+      expect(estimate.consumedMilligas).toEqual(3156735);
       done();
     });
 
-    limanet('Verify .estimate.transfer for multiple internal transfers to unallocated account', async (done) => {
+    mumbainet('Verify .estimate.transfer for multiple internal transfers to unallocated account', async (done) => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
         50)
       ).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(4257);
+      expect(estimate.gasLimit).toEqual(4272);
       expect(estimate.storageLimit).toEqual(514);
-      expect(estimate.suggestedFeeMutez).toEqual(911);
+      expect(estimate.suggestedFeeMutez).toEqual(913);
       expect(estimate.burnFeeMutez).toEqual(128500);
-      expect(estimate.minimalFeeMutez).toEqual(811);
-      expect(estimate.totalCost).toEqual(129311);
-      expect(estimate.usingBaseFeeMutez).toEqual(811);
-      expect(estimate.consumedMilligas).toEqual(4156456);
+      expect(estimate.minimalFeeMutez).toEqual(813);
+      expect(estimate.totalCost).toEqual(129313);
+      expect(estimate.usingBaseFeeMutez).toEqual(813);
+      expect(estimate.consumedMilligas).toEqual(4171270);
       done();
     });
 
-    limanet('Verify .estimate.transfer for internal origination', async (done) => {
+    mumbainet('Verify .estimate.transfer for internal origination', async (done) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(3660);
+      expect(estimate.gasLimit).toEqual(3668);
       expect(estimate.storageLimit).toEqual(317);
-      expect(estimate.suggestedFeeMutez).toEqual(798);
+      expect(estimate.suggestedFeeMutez).toEqual(799);
       expect(estimate.burnFeeMutez).toEqual(79250);
-      expect(estimate.minimalFeeMutez).toEqual(698);
-      expect(estimate.totalCost).toEqual(79948);
-      expect(estimate.usingBaseFeeMutez).toEqual(698);
-      expect(estimate.consumedMilligas).toEqual(3559296);
+      expect(estimate.minimalFeeMutez).toEqual(699);
+      expect(estimate.totalCost).toEqual(79949);
+      expect(estimate.usingBaseFeeMutez).toEqual(699);
+      expect(estimate.consumedMilligas).toEqual(3567848);
       done();
     });
 
-    limanet('Verify .estimate.transfer for multiple internal originations', async (done) => {
+    mumbainet('Verify .estimate.transfer for multiple internal originations', async (done) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(5078);
+      expect(estimate.gasLimit).toEqual(5094);
       expect(estimate.storageLimit).toEqual(634);
-      expect(estimate.suggestedFeeMutez).toEqual(1005);
+      expect(estimate.suggestedFeeMutez).toEqual(1007);
       expect(estimate.burnFeeMutez).toEqual(158500);
-      expect(estimate.minimalFeeMutez).toEqual(905);
-      expect(estimate.totalCost).toEqual(159405);
-      expect(estimate.usingBaseFeeMutez).toEqual(905);
-      expect(estimate.consumedMilligas).toEqual(4977476);
+      expect(estimate.minimalFeeMutez).toEqual(907);
+      expect(estimate.totalCost).toEqual(159407);
+      expect(estimate.usingBaseFeeMutez).toEqual(907);
+      expect(estimate.consumedMilligas).toEqual(4993496);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
@@ -174,7 +174,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    limanet('Verify .estimate.transfer to regular address', async (done) => {
+    it('Verify .estimate.transfer to regular address', async (done) => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(1101);
       expect(estimate.storageLimit).toEqual(0);
@@ -187,21 +187,21 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, protocol, rpc }) => 
       done();
     });
 
-    limanet('Estimate transfer to regular address with a fixed fee', async (done) => {
+    it('Estimate transfer to regular address with a fixed fee', async (done) => {
 
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
 
       await expect(LowAmountTez.estimate.transfer(params)).rejects.toMatchObject({
-        id: 'proto.015-PtLimaPt.implicit.empty_implicit_contract',
+        id: 'proto.016-PtMumbai.implicit.empty_implicit_contract',
       });
       done();
     });
 
-    limanet('Estimate transfer to regular address with insufficient balance', async (done) => {
+    it('Estimate transfer to regular address with insufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toMatchObject({
-        id: 'proto.015-PtLimaPt.tez.subtraction_underflow',
+        id: 'proto.016-PtMumbai.tez.subtraction_underflow',
       });
       done();
     });

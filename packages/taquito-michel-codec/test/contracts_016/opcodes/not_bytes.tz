@@ -1,0 +1,14 @@
+parameter unit;
+storage unit;
+code { DROP;
+
+       # ~0x05 = 0xfa
+       PUSH bytes 0x05; NOT; PUSH bytes 0xfa; ASSERT_CMPEQ;
+
+       # ~0x0005 = 0xfffa
+       PUSH bytes 0x0005; NOT; PUSH bytes 0xfffa; ASSERT_CMPEQ;
+
+       # ~0xff05 = 0x00fa, not 0xfa
+       PUSH bytes 0xff05; NOT; PUSH bytes 0x00fa; ASSERT_CMPEQ;
+
+       UNIT; NIL @noop operation; PAIR; };

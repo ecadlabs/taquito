@@ -1,9 +1,8 @@
 import { CONFIGS } from './config';
-import { OpKind, Protocols } from '@taquito/taquito';
+import { OpKind } from '@taquito/taquito';
 import { ligoSample } from './data/ligo-simple-contract';
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
-  const limanetAndAlpha = (protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha) ? test : test.skip;
+CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   const Tezos = lib;
   let simpleContractAddress: string;
@@ -33,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    limanetAndAlpha(`should be able to increase the paid storage of a contract successfully: ${rpc}`, async (done) => {
+    it(`should be able to increase the paid storage of a contract successfully: ${rpc}`, async (done) => {
       const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
       const op = await Tezos.contract.increasePaidStorage({
@@ -51,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    limanetAndAlpha(`should be able to include increasePaidStorage operation in a batch: ${rpc}`, async (done) => {
+    it(`should be able to include increasePaidStorage operation in a batch: ${rpc}`, async (done) => {
       const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
       const op = await Tezos.contract
@@ -81,7 +80,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    limanetAndAlpha(`should be able to include increasePaidStorage operation in a batch (different batch syntax): ${rpc}`, async (done) => {
+    it(`should be able to include increasePaidStorage operation in a batch (different batch syntax): ${rpc}`, async (done) => {
       const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
       const op = await Tezos.contract.batch([

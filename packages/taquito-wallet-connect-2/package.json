@@ -67,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/taquito": "^15.0.0",
+    "@taquito/taquito": "^16.1.2-beta-RC.0",
     "@walletconnect/sign-client": "^2.7.0",
     "@web3modal/standalone": "^2.3.0"
   },

@@ -1,4 +1,3 @@
-import { PollingSubscribeProvider } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {

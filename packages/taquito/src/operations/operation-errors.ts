@@ -4,6 +4,7 @@ import {
   OperationResultOrigination,
   OperationResultRegisterGlobalConstant,
   OperationResultReveal,
+  OperationResultSmartRollupOriginate,
   OperationResultTransaction,
   OperationResultTransferTicket,
   OperationResultTxRollupOrigination,
@@ -74,6 +75,7 @@ export type MergedOperationResult = OperationResultTransaction &
   OperationResultTxRollupOrigination &
   OperationResultTxRollupSubmitBatch &
   OperationResultTransferTicket &
+  Partial<OperationResultSmartRollupOriginate> &
   OperationResultReveal & {
     fee?: string;
   };
@@ -149,6 +151,17 @@ export const flattenErrors = (
  */
 export class OriginationOperationError extends Error {
   public name = 'OriginationOperationError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid estimate value being passed
+ */
+export class InvalidEstimateValueError extends Error {
+  public name = 'InvalidEstimateValueError';
   constructor(public message: string) {
     super(message);
   }

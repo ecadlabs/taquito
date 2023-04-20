@@ -3,4 +3,3 @@ export const knownBigMapContractPtGhostnet = "KT1Dig4sQxbZaZjo9X18etvpEWN1eGKxTV
 export const knownTzip12BigMapOffChainContractPtGhostnet = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
 export const knownSaplingContractPtGhostnet = "KT1ToBD7bovonshNrxs3i4KMFuZ8PE2LUmQf";
 export const knownOnChainViewContractAddressPtGhostnet = "KT1R5spjSabhD9q8cwZfCvssuvUoHmEd6KNv";
-export const txRollupAddressPtGhostnet = "txr1Xz6LiZSspZ9bJu2SC5r97B1ikCBAAYKdQ";

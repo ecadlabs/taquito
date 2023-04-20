@@ -8,17 +8,19 @@
   import Layout from "./Layout.svelte";
   import TestContainer from "./lib/TestContainer.svelte";
 
+  let layout: Layout;
+
   // https://ide.ligolang.org/p/RL93C86hftTTCNGU0ykLMw | https://ide.ligolang.org/p/61ENTorA4PSfQg-jhpu0jA
   // https://better-call.dev/florencenet/KT1PzUGbdKaN332Smfd1ExpdKQ7BSzzJRqJ4/operations
   // https://better-call.dev/granadanet/KT1T836HqhBu9waqmknStVDCXu2WogZtzsNz/operations
   // https://better-call.dev/hangzhounet/KT1T2gL26SwYMxpkR5SZT1pHRBF84knfw8Cg/operations
   // https://better-call.dev/ithacanet/KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5/operations
-  // https://better-call.dev/kathmandunet/KT1BQuSVXWz23iGeXQCrAGR6GcVcqKeE1F7T/operations
+  // https://better-call.dev/mumbainet/KT1Tkm7U3NS9JWgeCGywrRTSQdLZJvDSgD5Z/operations
 
   let browser = "";
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
-    { value: "kathmandunet", label: "Kathmandunet", group: "current testnets" },
+    { value: "mumbainet", label: "Mumbainet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
     { value: "mondaynet", label: "Mondaynet", group: "other testnets" },
@@ -37,18 +39,16 @@
   const changeNetwork = (event) => {
     networkError = false;
     showCustomNetworkInput = false;
+    const walletComponent = layout.getSideBar().getWallet();
     switch (event.detail.value.toLocaleLowerCase()) {
       case "mainnet":
-        store.updateTezos(new TezosToolkit(rpcUrl.mainnet));
-        store.updateNetworkType(NetworkType.MAINNET);
+        walletComponent.setWallet({networkType: NetworkType.MAINNET});
         break;
       case "ghostnet":
-        store.updateTezos(new TezosToolkit(rpcUrl.ghostnet));
-        store.updateNetworkType(NetworkType.GHOSTNET);
+        walletComponent.setWallet({networkType: NetworkType.GHOSTNET});
         break;
-      case "kathmandunet":
-        store.updateTezos(new TezosToolkit(rpcUrl.kathmandunet));
-        store.updateNetworkType(NetworkType.KATHMANDUNET);
+      case "mumbainet":
+        walletComponent.setWallet({networkType: NetworkType.MUMBAINET});
         break;
       case "custom":
         //TODO: input custom RPC URL
@@ -188,7 +188,7 @@
   }
 </style>
 
-<Layout>
+<Layout bind:this={layout}>
   {#if $store.userAddress && $store.wallet}
     <TestContainer />
   {:else}

@@ -13,12 +13,15 @@
         "failwith_errors",
         "confirmation_event_stream",
         "consensus_key",
+        "contract_call_parameters",
         "set_delegate",
         "dapp_prelaunch",
         "estimate",
         "fa2_parameters",
         "lambda_view",
         "liquidity_baking",
+        "local_forger",
+        "manager_lambda",
         "maps_bigmaps",
         "michelsonmap",
         "multisig_doc",
@@ -43,7 +46,8 @@
         "wallets",
         "wallet_connect_2",
         "web3js_taquito",
-        "subscribe_event"
+        "subscribe_event",
+        "smart_rollups"
       ]
     },
     {

@@ -5,6 +5,7 @@ import {
   TransactionOperationParameter,
   MichelsonV1Expression,
   BallotVote,
+  PvmKind,
 } from '@taquito/rpc';
 
 export { OpKind } from '@taquito/rpc';
@@ -21,7 +22,9 @@ export type ParamsWithKind =
   | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>
   | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
-  | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>;
+  | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
+  | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
+  | withKind<SmartRollupOriginateParamsWithProof, OpKind.SMART_ROLLUP_ORIGINATE>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
 
@@ -59,7 +62,9 @@ export type RPCOpWithFee =
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
-  | RPCUpdateConsensusKeyOperation;
+  | RPCUpdateConsensusKeyOperation
+  | RPCSmartRollupAddMessagesOperation
+  | RPCSmartRollupOriginateOperation;
 
 export type RPCOpWithSource =
   | RPCTransferOperation
@@ -71,7 +76,9 @@ export type RPCOpWithSource =
   | RPCTxRollupOriginationOperation
   | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
-  | RPCUpdateConsensusKeyOperation;
+  | RPCUpdateConsensusKeyOperation
+  | RPCSmartRollupAddMessagesOperation
+  | RPCSmartRollupOriginateOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
@@ -88,6 +95,8 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
+      'smart_rollup_add_messages',
+      'smart_rollup_originate',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -106,6 +115,8 @@ export const isOpRequireReveal = <T extends { kind: OpKind }>(
       'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
+      'smart_rollup_add_messages',
+      'smart_rollup_originate',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -497,6 +508,48 @@ export interface RPCUpdateConsensusKeyOperation {
   pk: string;
 }
 
+export interface RPCSmartRollupAddMessagesOperation {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  message: string[];
+}
+
+export interface SmartRollupAddMessagesParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  message: string[];
+}
+export interface SmartRollupOriginateParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  pvmKind: PvmKind;
+  kernel: string;
+  parametersType: MichelsonV1Expression;
+}
+
+export interface SmartRollupOriginateParamsWithProof extends SmartRollupOriginateParams {
+  originationProof: string;
+}
+
+export interface RPCSmartRollupOriginateOperation {
+  kind: OpKind.SMART_ROLLUP_ORIGINATE;
+  source: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  pvm_kind: PvmKind;
+  kernel: string;
+  origination_proof: string;
+  parameters_ty: MichelsonV1Expression;
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -511,7 +564,9 @@ export type RPCOperation =
   | RPCDrainDelegateOperation
   | RPCBallotOperation
   | RPCProposalsOperation
-  | RPCUpdateConsensusKeyOperation;
+  | RPCUpdateConsensusKeyOperation
+  | RPCSmartRollupAddMessagesOperation
+  | RPCSmartRollupOriginateOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

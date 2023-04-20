@@ -473,6 +473,97 @@ export interface OperationContentsIncreasePaidStorage {
   destination: string;
 }
 
+export interface OperationContentsSmartRollupOriginate {
+  kind: OpKind.SMART_ROLLUP_ORIGINATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pvm_kind: PvmKind;
+  kernel: string;
+  origination_proof: string;
+  parameters_ty: MichelsonV1Expression;
+}
+
+export interface OperationContentsSmartRollupAddMessages {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  message: string[];
+}
+
+export interface OperationContentsSmartRollupExecuteOutboxMessage {
+  kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  cemented_commitment: string;
+  output_proof: string;
+}
+
+export interface OperationContentsSmartRollupPublish {
+  kind: OpKind.SMART_ROLLUP_PUBLISH;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  commitment: SmartRollupPublishCommitment;
+}
+
+export interface OperationContentsSmartRollupCement {
+  kind: OpKind.SMART_ROLLUP_CEMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  commitment: string;
+}
+
+export interface OperationContentsSmartRollupRefute {
+  kind: OpKind.SMART_ROLLUP_REFUTE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  opponent: string;
+  refutation: SmartRollupRefutation;
+}
+
+export interface OperationContentsSmartRollupRecoverBond {
+  kind: OpKind.SMART_ROLLUP_RECOVER_BOND;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  staker: string;
+}
+
+export interface OperationContentsSmartRollupTimeout {
+  kind: OpKind.SMART_ROLLUP_TIMEOUT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  stakers: SmartRollupTimeoutStakers;
+}
+
 export type OperationContents =
   | OperationContentsEndorsement
   | OperationContentsPreEndorsement
@@ -502,7 +593,15 @@ export type OperationContents =
   | OperationContentsTransferTicket
   | OperationContentsUpdateConsensusKey
   | OperationContentsDrainDelegate
-  | OperationContentsIncreasePaidStorage;
+  | OperationContentsIncreasePaidStorage
+  | OperationContentsSmartRollupOriginate
+  | OperationContentsSmartRollupAddMessages
+  | OperationContentsSmartRollupExecuteOutboxMessage
+  | OperationContentsSmartRollupPublish
+  | OperationContentsSmartRollupCement
+  | OperationContentsSmartRollupRefute
+  | OperationContentsSmartRollupRecoverBond
+  | OperationContentsSmartRollupTimeout;
 
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -622,6 +721,54 @@ export interface OperationContentsAndResultMetadataUpdateConsensusKey {
 export interface OperationContentsAndResultMetadataDrainDelegate {
   balance_updates?: OperationMetadataBalanceUpdates[];
   allocated_destination_contract?: boolean;
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupOriginate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupOriginate;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupAddMessages {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupAddMessages;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupExecuteOutboxMessage;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupPublish {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupPublish;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupCement {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupCement;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupRefute {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupRefute;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupRecoverBond {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupRecoverBond;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataSmartRollupTimeout {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultSmartRollupTimeout;
+  internal_operation_results?: InternalOperationResult[];
 }
 
 export interface OperationContentsAndResultEndorsement {
@@ -914,6 +1061,105 @@ export interface OperationContentsAndResultVdfRevelation {
   metadata: OperationContentsAndResultMetadata;
 }
 
+export interface OperationContentsAndResultSmartRollupOriginate {
+  kind: OpKind.SMART_ROLLUP_ORIGINATE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pvm_kind: PvmKind;
+  kernel: string;
+  origination_proof: string;
+  parameters_ty: MichelsonV1Expression;
+  metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
+}
+
+export interface OperationContentsAndResultSmartRollupAddMessages {
+  kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  message: string[];
+  metadata: OperationContentsAndResultMetadataSmartRollupAddMessages;
+}
+
+export interface OperationContentsAndResultSmartRollupExecuteOutboxMessage {
+  kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  cemented_commitment: string;
+  output_proof: string;
+  metadata: OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage;
+}
+
+export interface OperationContentsAndResultSmartRollupPublish {
+  kind: OpKind.SMART_ROLLUP_PUBLISH;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  commitment: SmartRollupPublishCommitment;
+  metadata: OperationContentsAndResultMetadataSmartRollupPublish;
+}
+
+export interface OperationContentsAndResultSmartRollupCement {
+  kind: OpKind.SMART_ROLLUP_CEMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  commitment: string;
+  metadata: OperationContentsAndResultMetadataSmartRollupCement;
+}
+
+export interface OperationContentsAndResultSmartRollupRefute {
+  kind: OpKind.SMART_ROLLUP_REFUTE;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  opponent: string;
+  refutation: SmartRollupRefutation;
+  metadata: OperationContentsAndResultMetadataSmartRollupRefute;
+}
+
+export interface OperationContentsAndResultSmartRollupRecoverBond {
+  kind: OpKind.SMART_ROLLUP_RECOVER_BOND;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  staker: string;
+  metadata: OperationContentsAndResultMetadataSmartRollupRecoverBond;
+}
+
+export interface OperationContentsAndResultSmartRollupTimeout {
+  kind: OpKind.SMART_ROLLUP_TIMEOUT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  rollup: string;
+  stakers: SmartRollupTimeoutStakers;
+  metadata: OperationContentsAndResultMetadataSmartRollupTimeout;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -943,7 +1189,15 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultIncreasePaidStorage
   | OperationContentsAndResultUpdateConsensusKey
   | OperationContentsAndResultDrainDelegate
-  | OperationContentsAndResultVdfRevelation;
+  | OperationContentsAndResultVdfRevelation
+  | OperationContentsAndResultSmartRollupOriginate
+  | OperationContentsAndResultSmartRollupAddMessages
+  | OperationContentsAndResultSmartRollupExecuteOutboxMessage
+  | OperationContentsAndResultSmartRollupPublish
+  | OperationContentsAndResultSmartRollupCement
+  | OperationContentsAndResultSmartRollupRefute
+  | OperationContentsAndResultSmartRollupRecoverBond
+  | OperationContentsAndResultSmartRollupTimeout;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1089,6 +1343,21 @@ export interface PackDataParams {
   gas?: BigNumber;
 }
 
+export interface TicketTokenParams {
+  ticketer: string;
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+}
+
+export interface TicketBalance {
+  ticketer: string;
+  content_type: MichelsonV1Expression;
+  content: MichelsonV1Expression;
+  amount: string;
+}
+
+export type AllTicketBalances = TicketBalance[];
+
 export type HexString = string;
 
 export interface PackDataResponse {
@@ -1142,11 +1411,11 @@ export interface ScriptedContracts {
 
 export type BondId =
   | {
-      sc_rollup?: never;
+      smart_rollup?: never;
       tx_rollup: string;
     }
   | {
-      sc_rollup: string;
+      smart_rollup: string;
       tx_rollup?: never;
     };
 
@@ -1265,7 +1534,7 @@ export interface OperationResultTxRollupRejection {
 export interface OperationResultTransferTicket {
   status: OperationResultStatusEnum;
   balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
+  ticket_updates?: TicketUpdates[];
   consumed_milligas?: string;
   paid_storage_size_diff?: string;
   errors?: TezosGenericOperationError[];
@@ -1280,7 +1549,6 @@ export interface OperationResultIncreasePaidStorage {
 
 export interface OperationResultUpdateConsensusKey {
   status: OperationResultStatusEnum;
-  consumed_gas?: string;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
 }
@@ -1307,6 +1575,70 @@ export interface OperationResultRegisterGlobalConstant {
   global_address?: string;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
+}
+
+export interface OperationResultSmartRollupOriginate {
+  status: OperationResultStatusEnum;
+  balance_updates?: OperationBalanceUpdates;
+  address?: string;
+  genesis_commitment_hash?: string;
+  consumed_milligas?: string;
+  size: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupAddMessages {
+  status: OperationResultStatusEnum;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupExecuteOutboxMessage {
+  status: OperationResultStatusEnum;
+  balance_updates?: OperationBalanceUpdates;
+  ticket_updates?: TicketUpdates[];
+  consumed_milligas?: string;
+  paid_storage_size_diff?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupPublish {
+  status: OperationResultStatusEnum;
+  consumed_milligas?: string;
+  staked_hash?: string;
+  published_at_level?: number;
+  balance_updates?: OperationBalanceUpdates;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupCement {
+  status: OperationResultStatusEnum;
+  consumed_milligas?: string;
+  inbox_level?: number;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupRefute {
+  status: OperationResultStatusEnum;
+  consumed_milligas?: string;
+  game_status?: SmartRollupGameStatus;
+  balance_updates?: OperationBalanceUpdates;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupRecoverBond {
+  status: OperationResultStatusEnum;
+  balance_updates?: OperationBalanceUpdates;
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
+export interface OperationResultSmartRollupTimeout {
+  status: OperationResultStatusEnum;
+  consumed_milligas?: string;
+  game_status?: SmartRollupGameStatus;
+  balance_updates?: OperationBalanceUpdates;
+  errors?: TezosGenericOperationError[];
 }
 
 export interface ContractBigMapDiffItem {
@@ -1541,6 +1873,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto016 &
   ConstantsResponseProto015 &
   ConstantsResponseProto014 &
   ConstantsResponseProto013 &
@@ -1581,6 +1914,42 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto016
+  extends Omit<
+    ConstantsResponseProto015,
+    | 'sc_max_wrapped_proof_binary_size'
+    | 'sc_rollup_challenge_window_in_blocks'
+    | 'sc_rollup_commitment_period_in_blocks'
+    | 'sc_rollup_enable'
+    | 'sc_rollup_max_active_outbox_levels'
+    | 'sc_rollup_max_lookahead_in_blocks'
+    | 'sc_rollup_max_number_of_cemented_commitments'
+    | 'sc_rollup_max_number_of_messages_per_commitment_period'
+    | 'sc_rollup_max_outbox_messages_per_level'
+    | 'sc_rollup_message_size_limit'
+    | 'sc_rollup_number_of_sections_in_dissection'
+    | 'sc_rollup_origination_size'
+    | 'sc_rollup_stake_amount'
+    | 'sc_rollup_timeout_period_in_blocks'
+  > {
+  smart_rollup_arith_pvm_enable: boolean;
+  smart_rollup_challenge_window_in_blocks: number;
+  smart_rollup_commitment_period_in_blocks: number;
+  smart_rollup_enable: boolean;
+  smart_rollup_max_active_outbox_levels: number;
+  smart_rollup_max_lookahead_in_blocks: number;
+  smart_rollup_max_number_of_cemented_commitments: number;
+  smart_rollup_max_number_of_messages_per_level: string;
+  smart_rollup_max_number_of_parallel_games: number;
+  smart_rollup_max_outbox_messages_per_level: number;
+  smart_rollup_max_wrapped_proof_binary_size: number;
+  smart_rollup_message_size_limit: number;
+  smart_rollup_number_of_sections_in_dissection: number;
+  smart_rollup_origination_size: number;
+  smart_rollup_stake_amount: string;
+  smart_rollup_timeout_period_in_blocks: number;
+}
 
 export interface ConstantsResponseProto015
   extends Omit<
@@ -1698,7 +2067,7 @@ export interface ConstantsResponseProto011 extends ConstantsResponseProto010 {
   max_micheline_bytes_limit?: number;
   cache_layout?: BigNumber[];
 }
-export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
+export interface ConstantsResponseProto010 extends ConstantsResponseProto009 {
   minimal_block_delay?: BigNumber;
   liquidity_baking_subsidy?: BigNumber;
   liquidity_baking_sunset_level?: number;
@@ -1706,7 +2075,7 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto007 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto007 {}
+export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
@@ -1941,4 +2310,177 @@ export interface TxRollupInboxResponse {
   inbox_length: number;
   cumulated_size: number;
   merkle_root: string;
+}
+
+export interface PendingOperationsQueryArguments {
+  version?: '1';
+  applied?: boolean;
+  refused?: boolean;
+  outdated?: boolean;
+  branchRefused?: boolean;
+  branchDelayed?: boolean;
+  validationPass?: '0' | '1' | '2' | '3';
+}
+
+type FailedProcessedOperation = Pick<
+  OperationEntry,
+  'hash' | 'protocol' | 'branch' | 'contents' | 'signature'
+> & {
+  error: TezosGenericOperationError[];
+};
+
+export interface PendingOperations {
+  applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
+  refused: FailedProcessedOperation[];
+  outdated: FailedProcessedOperation[];
+  branch_refused: FailedProcessedOperation[];
+  branch_delayed: FailedProcessedOperation[];
+  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
+}
+
+export enum PvmKind {
+  WASM2 = 'wasm_2_0_0',
+  ARITH = 'arith',
+}
+
+export interface OriginationProofParams {
+  kind: PvmKind;
+  kernel: string;
+}
+
+export interface SmartRollupPublishCommitment {
+  compressed_state: string;
+  inbox_level: number;
+  predecessor: string;
+  number_of_ticks: number;
+}
+
+export enum SmartRollupRefutationOptions {
+  START = 'start',
+  MOVE = 'move',
+}
+
+export type SmartRollupRefutation = SmartRollupRefutationStart | SmartRollupRefutationMove;
+
+export interface SmartRollupRefutationStart {
+  refutation_kind: SmartRollupRefutationOptions.START;
+  player_commitment_hash: string;
+  opponent_commitment_hash: string;
+}
+
+export interface SmartRollupRefutationMove {
+  refutation_kind: SmartRollupRefutationOptions.MOVE;
+  choice: number;
+  step: SmartRollupRefutationMoveStep;
+}
+
+export type SmartRollupRefutationMoveStep =
+  | SmartRollupRefutationMoveStepDissection[]
+  | SmartRollupRefutationMoveStepProof;
+
+export interface SmartRollupRefutationMoveStepDissection {
+  state?: string;
+  tick: number;
+}
+
+export interface SmartRollupRefutationMoveStepProof {
+  pvm_step: string;
+  input_proof?: SmartRollupRefutationMoveInputProof;
+}
+
+export enum SmartRollupInputProofKind {
+  INBOX_PROOF = 'inbox_proof',
+  REVEAL_PROOF = 'reveal_proof',
+  FIRST_INPUT = 'first_input',
+}
+
+export interface SmartRollupRefutationMoveInputProofInbox {
+  input_proof_kind: SmartRollupInputProofKind.INBOX_PROOF;
+  level: number;
+  message_counter: string;
+  serialized_proof: string;
+}
+
+export interface SmartRollupRefutationMoveInputProofReveal {
+  input_proof_kind: SmartRollupInputProofKind.REVEAL_PROOF;
+  reveal_proof: SmartRollupRefuteRevealProofOptions;
+}
+
+export interface SmartRollupRefutationMoveInputProofFirstInput {
+  input_proof_kind: SmartRollupInputProofKind.FIRST_INPUT;
+}
+
+export type SmartRollupRefutationMoveInputProof =
+  | SmartRollupRefutationMoveInputProofInbox
+  | SmartRollupRefutationMoveInputProofReveal
+  | SmartRollupRefutationMoveInputProofFirstInput;
+
+export enum SmartRollupRefuteRevealProofKind {
+  RAW_DATA_PROOF = 'raw_data_proof',
+  METADATA_PROOF = 'metadata_proof',
+  DAL_PAGE_PROOF = 'dal_page_proof',
+}
+
+export interface SmartRollupRefuteRevealProofRaw {
+  reveal_proof_kind: SmartRollupRefuteRevealProofKind.RAW_DATA_PROOF;
+  raw_data: string;
+}
+export interface SmartRollupRefuteRevealProofMetadata {
+  reveal_proof_kind: SmartRollupRefuteRevealProofKind.METADATA_PROOF;
+}
+export interface SmartRollupRefuteRevealProofDalPage {
+  reveal_proof_kind: SmartRollupRefuteRevealProofKind.DAL_PAGE_PROOF;
+  dal_page_id: {
+    published_level: number;
+    slot_index: number;
+    page_index: number;
+  };
+  dal_proof: string;
+}
+
+export type SmartRollupRefuteRevealProofOptions =
+  | SmartRollupRefuteRevealProofRaw
+  | SmartRollupRefuteRevealProofMetadata
+  | SmartRollupRefuteRevealProofDalPage;
+
+export type SmartRollupGameStatus =
+  | SmartRollupRefuteGameStatusOptions.ONGOING
+  | SmartRollupRefuteGameStatusEnded;
+
+export enum SmartRollupRefuteGameStatusOptions {
+  ONGOING = 'ongoing',
+  ENDED = 'ended',
+}
+
+export interface SmartRollupRefuteGameStatusEnded {
+  result: SmartRollupRefuteGameStatusResult;
+}
+
+export type SmartRollupRefuteGameStatusResult =
+  | SmartRollupRefuteGameEndedResultLoser
+  | SmartRollupRefuteGameEndedResultDraw;
+
+export interface SmartRollupRefuteGameEndedResultLoser {
+  kind: SmartRollupRefuteGameEndedPlayerOutcomes.LOSER;
+  reason: SmartRollupRefuteGameEndedReason;
+  player: string;
+}
+
+export interface SmartRollupRefuteGameEndedResultDraw {
+  kind: SmartRollupRefuteGameEndedPlayerOutcomes.DRAW;
+}
+
+export enum SmartRollupRefuteGameEndedPlayerOutcomes {
+  LOSER = 'loser',
+  DRAW = 'draw',
+}
+
+export enum SmartRollupRefuteGameEndedReason {
+  CONFLICT_RESOLVED = 'conflict_resolved',
+  TIMEOUT = 'timeout',
+}
+
+export interface SmartRollupTimeoutStakers {
+  alice: string;
+  bob: string;
 }

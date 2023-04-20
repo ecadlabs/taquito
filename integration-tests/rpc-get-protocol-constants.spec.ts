@@ -1,11 +1,19 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseProto009, ConstantsResponseProto010, ConstantsResponseProto011, ConstantsResponseProto012, ConstantsResponseProto013, ConstantsResponseProto014, ConstantsResponseProto015 } from '@taquito/rpc';
+import {
+  ConstantsResponseProto009,
+  ConstantsResponseProto010,
+  ConstantsResponseProto011,
+  ConstantsResponseProto012,
+  ConstantsResponseProto013,
+  ConstantsResponseProto015,
+  ConstantsResponseProto016,
+} from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
   const Tezos = lib;
-  const limanet = (protocol === Protocols.PtLimaPtL) ? test : test.skip;
+  const mumbainet = (protocol === Protocols.PtMumbai2) ? test : test.skip;
   const alpha = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
@@ -590,126 +598,20 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
   describe(`Fetch constants for testnet`, () => {
 
-    limanet(`successfully fetches all constants for limanet using ${rpc}`, async (done) => {
+    mumbainet(`successfully fetches all constants for mumbainet using ${rpc}`, async (done) => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto015 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
         nonce_length: 32,
-        max_anon_ops_per_block: 132,
-        max_operation_data_length: 32768,
-        max_proposals_per_delegate: 20,
-        max_micheline_node_count: 50000,
-        max_micheline_bytes_limit: 50000,
-        max_allowed_global_constants_depth: 10000,
-        cache_layout_size: 3,
-        michelson_maximum_type_size: 2001,
-        sc_max_wrapped_proof_binary_size: 30000,
-        sc_rollup_message_size_limit: 4096,
-        preserved_cycles: 3,
-        blocks_per_cycle: 4096,
-        blocks_per_commitment: 32,
-        nonce_revelation_threshold: 256,
-        blocks_per_stake_snapshot: 256,
-        cycles_per_voting_period: 1,
-        hard_gas_limit_per_operation: new BigNumber(1040000),
-        hard_gas_limit_per_block: new BigNumber(5200000),
-        proof_of_work_threshold: new BigNumber(-1),
-        minimal_stake: new BigNumber(6000000000),
-        vdf_difficulty: new BigNumber(2000000000),
-        seed_nonce_revelation_tip: new BigNumber(125000),
-        origination_size: 257,
-        baking_reward_fixed_portion: new BigNumber(10000000),
-        baking_reward_bonus_per_slot: new BigNumber(4286),
-        endorsing_reward_per_slot: new BigNumber(2857),
-        cost_per_byte: new BigNumber(250),
-        hard_storage_limit_per_operation: new BigNumber(60000),
-        quorum_min: 2000,
-        quorum_max: 7000,
-        min_proposal_quorum: 500,
-        liquidity_baking_subsidy: new BigNumber(2500000),
-        liquidity_baking_toggle_ema_threshold: 1000000000,
-        max_operations_time_to_live: 120,
-        minimal_block_delay: new BigNumber(15),
-        delay_increment_per_round: new BigNumber(5),
-        consensus_committee_size: 7000,
-        consensus_threshold: 4667,
-        minimal_participation_ratio: {
-          numerator: 2,
-          denominator: 3
-        },
-        max_slashing_period: 2,
-        frozen_deposits_percentage: 10,
-        double_baking_punishment: new BigNumber(640000000),
-        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
-          numerator: 1,
-          denominator: 2
-        },
-        testnet_dictator: 'tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8',
-        cache_script_size: 100000000,
-        cache_stake_distribution_cycles: 8,
-        cache_sampler_state_cycles: 8,
-        tx_rollup_enable: true,
-        tx_rollup_origination_size: 4000,
-        tx_rollup_hard_size_limit_per_inbox: 500000,
-        tx_rollup_hard_size_limit_per_message: 5000,
-        tx_rollup_max_withdrawals_per_batch: 15,
-        tx_rollup_commitment_bond: new BigNumber(10000000000),
-        tx_rollup_finality_period: 40000,
-        tx_rollup_withdraw_period: 40000,
-        tx_rollup_max_inboxes_count: 40100,
-        tx_rollup_max_messages_per_inbox: 1010,
-        tx_rollup_max_commitments_count: 80100,
-        tx_rollup_cost_per_byte_ema_factor: 120,
-        tx_rollup_max_ticket_payload_size: 2048,
-        tx_rollup_rejection_max_proof_size: 30000,
-        tx_rollup_sunset_level: 10000000,
-        dal_parametric: {
-          feature_enable: false,
-          number_of_slots: 256,
-          number_of_shards: 2048,
-          endorsement_lag: 1,
-          availability_threshold: 50,
-          slot_size: 1048576,
-          redundancy_factor: 16,
-          page_size: 4096
-        },
-        sc_rollup_enable: false,
-        sc_rollup_origination_size: 6314,
-        sc_rollup_challenge_window_in_blocks: 20160,
-        sc_rollup_max_number_of_messages_per_commitment_period: 300000000,
-        sc_rollup_stake_amount: new BigNumber(10000000000),
-        sc_rollup_commitment_period_in_blocks: 30,
-        sc_rollup_max_lookahead_in_blocks: 30000,
-        sc_rollup_max_active_outbox_levels: 20160,
-        sc_rollup_max_outbox_messages_per_level: 100,
-        sc_rollup_number_of_sections_in_dissection: 32,
-        sc_rollup_timeout_period_in_blocks: 20160,
-        sc_rollup_max_number_of_cemented_commitments: 5,
-        zk_rollup_enable: false,
-        zk_rollup_origination_size: 4000,
-        zk_rollup_min_pending_to_process: 10
-      });
-
-      done();
-    });
-
-
-    alpha(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
-      Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto015 = await Tezos.rpc.getConstants();
-
-      expect(constants).toEqual({
-        proof_of_work_nonce_size: 8,
-        nonce_length: 32,
-        nonce_revelation_threshold: 64,
+        nonce_revelation_threshold: 512,
         max_anon_ops_per_block: 132,
         max_operation_data_length: 32768,
         max_proposals_per_delegate: 20,
         preserved_cycles: 3,
-        blocks_per_cycle: 256,
-        blocks_per_commitment: 32,
+        blocks_per_cycle: 8192,
+        blocks_per_commitment: 64,
         hard_gas_limit_per_operation: new BigNumber(1040000),
         hard_gas_limit_per_block: new BigNumber(2600000),
         proof_of_work_threshold: new BigNumber(-1),
@@ -720,16 +622,16 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         quorum_min: 2000,
         quorum_max: 7000,
         min_proposal_quorum: 500,
-        liquidity_baking_subsidy: new BigNumber(1250000),
-        liquidity_baking_toggle_ema_threshold: 100000,
+        liquidity_baking_subsidy: new BigNumber(666666),
+        liquidity_baking_toggle_ema_threshold: 1000000000,
         max_allowed_global_constants_depth: 10000,
         max_micheline_bytes_limit: 50000,
         max_micheline_node_count: 50000,
         michelson_maximum_type_size: 2001,
-        blocks_per_stake_snapshot: 128,
-        baking_reward_fixed_portion: new BigNumber(5000000),
-        baking_reward_bonus_per_slot: new BigNumber(2143),
-        endorsing_reward_per_slot: new BigNumber(1428),
+        blocks_per_stake_snapshot: 512,
+        baking_reward_fixed_portion: new BigNumber(2666666),
+        baking_reward_bonus_per_slot: new BigNumber(1143),
+        endorsing_reward_per_slot: new BigNumber(761),
         max_operations_time_to_live: 240,
         consensus_committee_size: 7000,
         consensus_threshold: 4667,
@@ -744,8 +646,115 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
           denominator: 2,
           numerator: 1,
         },
+        minimal_block_delay: new BigNumber(8),
+        delay_increment_per_round: new BigNumber(3),
+        dal_parametric: {
+          attestation_lag: 1,
+          feature_enable: false,
+          number_of_shards: 2048,
+          number_of_slots: 256,
+          page_size: 4096,
+          redundancy_factor: 16,
+          slot_size: 1048576,
+          availability_threshold: 50
+        },
+        minimal_stake: new BigNumber('6000000000'),
+        cache_layout_size: 3,
+        cache_sampler_state_cycles: 8,
+        cache_script_size: 100000000,
+        cache_stake_distribution_cycles: 8,
+        cycles_per_voting_period: 1,
+        smart_rollup_arith_pvm_enable: false,
+        smart_rollup_challenge_window_in_blocks: 40,
+        smart_rollup_commitment_period_in_blocks: 20,
+        smart_rollup_enable: true,
+        smart_rollup_max_active_outbox_levels: 20160,
+        smart_rollup_max_lookahead_in_blocks: 30000,
+        smart_rollup_max_number_of_cemented_commitments: 5,
+        smart_rollup_max_number_of_messages_per_level: "1000000",
+        smart_rollup_max_number_of_parallel_games: 32,
+        smart_rollup_max_outbox_messages_per_level: 100,
+        smart_rollup_max_wrapped_proof_binary_size: 30000,
+        smart_rollup_message_size_limit: 4096,
+        smart_rollup_number_of_sections_in_dissection: 32,
+        smart_rollup_origination_size: 6314,
+        smart_rollup_stake_amount: "10000000000",
+        smart_rollup_timeout_period_in_blocks: 500,
+        tx_rollup_commitment_bond: new BigNumber(10000000000),
+        tx_rollup_cost_per_byte_ema_factor: 120,
+        tx_rollup_enable: false,
+        tx_rollup_finality_period: 40000,
+        tx_rollup_hard_size_limit_per_inbox: 500000,
+        tx_rollup_hard_size_limit_per_message: 5000,
+        tx_rollup_max_commitments_count: 80100,
+        tx_rollup_max_inboxes_count: 40100,
+        tx_rollup_max_messages_per_inbox: 1010,
+        tx_rollup_max_ticket_payload_size: 2048,
+        tx_rollup_max_withdrawals_per_batch: 15,
+        tx_rollup_origination_size: 4000,
+        tx_rollup_rejection_max_proof_size: 30000,
+        tx_rollup_sunset_level: 10000000,
+        tx_rollup_withdraw_period: 40000,
+        vdf_difficulty: new BigNumber('10000000000'),
+        zk_rollup_enable: false,
+        zk_rollup_min_pending_to_process: 10,
+        zk_rollup_origination_size: 4000,
+        testnet_dictator: 'tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8'
+      });
+
+      done();
+    });
+
+    alpha(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
+      Tezos.setRpcProvider(rpc);
+      const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
+
+      expect(constants).toEqual({
+        proof_of_work_nonce_size: 8,
+        nonce_length: 32,
+        nonce_revelation_threshold: 32,
+        max_anon_ops_per_block: 132,
+        max_operation_data_length: 32768,
+        max_proposals_per_delegate: 20,
+        preserved_cycles: 3,
+        blocks_per_cycle: 128,
+        blocks_per_commitment: 16,
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        proof_of_work_threshold: new BigNumber(-1),
+        seed_nonce_revelation_tip: new BigNumber(125000),
+        origination_size: 257,
+        cost_per_byte: new BigNumber(250),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        quorum_min: 2000,
+        quorum_max: 7000,
+        min_proposal_quorum: 500,
+        liquidity_baking_subsidy: new BigNumber(2500000),
+        liquidity_baking_toggle_ema_threshold: 100000,
+        max_allowed_global_constants_depth: 10000,
+        max_micheline_bytes_limit: 50000,
+        max_micheline_node_count: 50000,
+        michelson_maximum_type_size: 2001,
+        blocks_per_stake_snapshot: 64,
+        baking_reward_fixed_portion: new BigNumber(10000000),
+        baking_reward_bonus_per_slot: new BigNumber(4286),
+        endorsing_reward_per_slot: new BigNumber(2857),
+        max_operations_time_to_live: 120,
+        consensus_committee_size: 7000,
+        consensus_threshold: 4667,
+        minimal_participation_ratio: {
+          denominator: 3,
+          numerator: 2,
+        },
+        max_slashing_period: 2,
+        frozen_deposits_percentage: 10,
+        double_baking_punishment: new BigNumber(640000000),
+        ratio_of_frozen_deposits_slashed_per_double_endorsement: {
+          denominator: 2,
+          numerator: 1,
+        },
         minimal_block_delay: new BigNumber(15),
-        delay_increment_per_round: new BigNumber(8),
+        delay_increment_per_round: new BigNumber(15),
         dal_parametric: {
           attestation_lag: 2,
           attestation_threshold: 50,
@@ -764,11 +773,11 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         cache_stake_distribution_cycles: 8,
         cycles_per_voting_period: 1,
         smart_rollup_arith_pvm_enable: false,
-        smart_rollup_challenge_window_in_blocks: 80640,
-        smart_rollup_commitment_period_in_blocks: 60,
+        smart_rollup_challenge_window_in_blocks: 40,
+        smart_rollup_commitment_period_in_blocks: 20,
         smart_rollup_enable: true,
-        smart_rollup_max_active_outbox_levels: 80640,
-        smart_rollup_max_lookahead_in_blocks: 172800,
+        smart_rollup_max_active_outbox_levels: 20160,
+        smart_rollup_max_lookahead_in_blocks: 30000,
         smart_rollup_max_number_of_cemented_commitments: 5,
         smart_rollup_max_number_of_messages_per_level: "1000000",
         smart_rollup_max_number_of_parallel_games: 32,
@@ -778,7 +787,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         smart_rollup_number_of_sections_in_dissection: 32,
         smart_rollup_origination_size: 6314,
         smart_rollup_stake_amount: "32000000",
-        smart_rollup_timeout_period_in_blocks: 40320,
+        smart_rollup_timeout_period_in_blocks: 500,
         tx_rollup_commitment_bond: new BigNumber(10000000000),
         tx_rollup_cost_per_byte_ema_factor: 120,
         tx_rollup_enable: false,

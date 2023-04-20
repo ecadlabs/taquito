@@ -1,8 +1,6 @@
-import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
-  const limanetAndAlpha = (protocol === Protocols.PtLimaPtL || protocol === Protocols.ProtoALpha) ? test : test.skip;
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   const Tezos = lib;
 
@@ -29,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
       done();
     });
 
-    limanetAndAlpha('should be able to inject update_consensus_key operation', async (done) => {
+    it('should be able to inject update_consensus_key operation', async (done) => {
       const op = await Tezos.contract.updateConsensusKey({ pk });
       await op.confirmation();
 

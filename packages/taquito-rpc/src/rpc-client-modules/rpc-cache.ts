@@ -46,6 +46,11 @@ import {
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
+  TicketTokenParams,
+  AllTicketBalances,
+  PendingOperationsQueryArguments,
+  PendingOperations,
+  OriginationProofParams,
 } from '../types';
 
 import {
@@ -68,8 +73,10 @@ type RpcMethodParam =
   | UnparsingMode
   | BigMapKey
   | BakingRightsQueryArguments
-  | PackDataParams
-  | EndorsingRightsQueryArguments;
+  | PendingOperationsQueryArguments
+  | EndorsingRightsQueryArguments
+  | OriginationProofParams;
+
 
 const defaultTtl = 1000;
 
@@ -114,7 +121,7 @@ export class RpcClientCache implements RpcClientInterface {
           : paramsToString + param + '/';
     });
     return rpcMethodData
-      ? `${rpcUrl}/${rpcMethodName}/${paramsToString}/${JSON.stringify(rpcMethodData)}`
+      ? `${rpcUrl}/${rpcMethodName}/${paramsToString}${JSON.stringify(rpcMethodData)}/`
       : `${rpcUrl}/${rpcMethodName}/${paramsToString}`;
   }
 
@@ -292,7 +299,8 @@ export class RpcClientCache implements RpcClientInterface {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
       RPCMethodName.GET_NORMALIZED_SCRIPT,
-      [block, address, unparsingMode]
+      [block, address],
+      unparsingMode
     );
     if (this.has(key)) {
       return this.get(key);
@@ -401,11 +409,12 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<BigMapGetResponse> {
     this.validateAddress(address);
-    const keyUrl = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BIG_MAP_KEY, [
-      block,
-      address,
-      key,
-    ]);
+    const keyUrl = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_BIG_MAP_KEY,
+      [block, address],
+      key
+    );
     if (this.has(keyUrl)) {
       return this.get(keyUrl);
     } else {
@@ -936,10 +945,12 @@ export class RpcClientCache implements RpcClientInterface {
     data: PackDataParams,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<{ packed: string; gas: BigNumber | 'unaccounted' | undefined }> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.PACK_DATA, [
-      block,
-      data,
-    ]);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.PACK_DATA,
+      [block],
+      data
+    );
     if (this.has(key)) {
       return this.get(key);
     } else {
@@ -1161,6 +1172,107 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getStoragePaidSpace(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   *
+   * @param contract address of the contract we want to retrieve ticket balance of
+   * @param ticket Ticket token parameter object that contains ticketer, content type, and content
+   * @param options contains generic configuration for rpc calls
+   * @description Access the contract's balance of ticket with specified ticketer, content type, and content.
+   * @example ticket{ ticketer: 'address', content_type: { prim: "string" }, content: { string: 'ticket1' } }
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getTicketBalance(
+    contract: string,
+    ticket: TicketTokenParams,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<string> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_TICKET_BALANCE,
+      [block, contract],
+      ticket
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getTicketBalance(contract, ticket, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   *
+   * @param contract address of the contract to retrieve all ticket balances from
+   * @param options contains generic configuration for rpc calls
+   * @description Access the complete list of tickets owned by the given contract by scanning the contract's storage.
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getAllTicketBalances(
+    contract: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<AllTicketBalances> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_ALL_TICKET_BALANCES,
+      [block, contract]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getAllTicketBalances(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
+   * @param args has 5 optional properties. We support version 1 with new encoding as version 0 will be deprecated soon. The rest of the properties is to filter pending operations response
+   * @default args { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
+   * @see https://tezos.gitlab.io/CHANGES.html?highlight=pending_operations#id4
+   */
+    async getPendingOperations(
+      args: PendingOperationsQueryArguments = {}
+    ): Promise<PendingOperations> {
+      const key = this.formatCacheKey(
+        this.rpcClient.getRpcUrl(),
+        RPCMethodName.GET_PENDING_OPERATIONS,
+        [args]
+      );
+      if (this.has(key)) {
+        return this.get(key);
+      } else {
+        const response = this.rpcClient.getPendingOperations(args);
+        this.put(key, response);
+        return response;
+      }
+    }
+
+  /**
+   *
+   * @param params contains the PVM kind and kernel to generate the origination proof from
+   * @description rpc call to generate the origination proof needed for the smart rollup originate operation
+   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
+   */
+  async getOriginationProof(
+    params: OriginationProofParams,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<string> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_ORIGINATION_PROOF,
+      [block, params]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getOriginationProof(params, { block });
       this.put(key, response);
       return response;
     }

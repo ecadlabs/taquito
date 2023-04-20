@@ -34,17 +34,41 @@ import {
   OperationContentsAndResultDrainDelegate,
   TxRollupProof,
   ConstantsResponseProto015,
+  OperationContentsAndResultSmartRollupOriginate,
+  OperationContentsAndResultSmartRollupAddMessages,
+  OperationContentsAndResultSmartRollupExecuteOutboxMessage,
+  RPCRunOperationParam,
+  OperationMetadataBalanceUpdates,
+  PendingOperations,
+  OperationContentsAndResultSmartRollupCement,
+  OperationContentsAndResultSmartRollupPublish,
+  OperationContentsAndResultSmartRollupRefute,
+  SmartRollupRefutationMove,
+  OperationContentsAndResultSmartRollupRecoverBond,
+  OperationContentsAndResultSmartRollupTimeout,
+  SmartRollupRefutationStart,
+  SmartRollupRefutationOptions,
 } from '../src/types';
 import {
-  blockIthacanetSample,
-  blockJakartanetSample,
-  blockKathmandunetSample,
-  blockLimanetSample,
-  blockMondaynetSample,
-  delegatesIthacanetSample,
-  delegatesKathmandunetSample,
-  votingInfoKathmandunetSample,
-  ticketUpdatesSample,
+  blockIthacanetResponse,
+  blockJakartanetResponse,
+  blockKathmandunetResponse,
+  blockLimanetResponse,
+  blockMondaynetResponse,
+  delegatesIthacanetResponse,
+  delegatesKathmandunetResponse,
+  votingInfoKathmandunetResponse,
+  ticketUpdatesResponse,
+  ticketBalancesResponse,
+  smartRollupOriginateResponse,
+  smartRollupAddMessagesResponse,
+  smartRollupExecuteOutboxMessageResponse,
+  pendingOperationsResponse,
+  smartRollupCementResponse,
+  smartRollupPublishResponse,
+  smartRollupRefuteResponse,
+  smartRollupRecoverBondResponse,
+  smartRollupTimeoutResponse,
 } from './data/rpc-responses';
 
 /**
@@ -350,7 +374,7 @@ describe('RpcClient test', () => {
     });
 
     it('should parse the response properly, proto12', async (done) => {
-      httpBackend.createRequest.mockResolvedValue(delegatesIthacanetSample);
+      httpBackend.createRequest.mockResolvedValue(delegatesIthacanetResponse);
       const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
@@ -369,7 +393,7 @@ describe('RpcClient test', () => {
     });
 
     it('should parse the response properly, proto14', async (done) => {
-      httpBackend.createRequest.mockResolvedValue(delegatesKathmandunetSample);
+      httpBackend.createRequest.mockResolvedValue(delegatesKathmandunetResponse);
       const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
@@ -391,7 +415,7 @@ describe('RpcClient test', () => {
 
   describe('getVotingInfo', () => {
     it('should query the right url', async (done) => {
-      httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetSample);
+      httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetResponse);
       await client.getVotingInfo(contractAddress);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -403,7 +427,7 @@ describe('RpcClient test', () => {
     });
 
     it('should parse the response properly', async (done) => {
-      httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetSample);
+      httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetResponse);
       const response = await client.getVotingInfo(contractAddress);
 
       expect(response).toEqual({
@@ -2789,7 +2813,7 @@ describe('RpcClient test', () => {
     });
 
     it('should use enum to represent property category in balance_updates, proto 12', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetResponse));
 
       const response = await client.getBlock();
 
@@ -2811,7 +2835,7 @@ describe('RpcClient test', () => {
     });
 
     it('should fetch a block and access new properties in header, proto 12', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetResponse));
 
       const response = await client.getBlock();
 
@@ -2828,7 +2852,7 @@ describe('RpcClient test', () => {
     });
 
     it('should fetch a block and access new properties in metadata, proto 12', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetResponse));
 
       const response = await client.getBlock();
 
@@ -2840,7 +2864,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access new properties of the operation type endorsement, proto 12', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetResponse));
 
       const response = await client.getBlock();
 
@@ -2864,7 +2888,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access new properties of the operation type set_deposits_limit, proto 12', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockIthacanetResponse));
 
       const response = await client.getBlock();
 
@@ -2901,7 +2925,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access the properties of the operation type tx_rollup_origination, proto 13', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -2954,7 +2978,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access the properties of the operation type tx_rollup_submit_batch, proto13', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -2990,7 +3014,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access the properties of the operation type tx_rollup_commit, proto13', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3038,7 +3062,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access the properties of the operation type tx_rollup_finalize_commitment, proto13', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3075,7 +3099,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access the properties of the operation type tx_rollup_dispatch_tickets, proto13', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3110,7 +3134,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access the properties of the operation type tx_rollup_remove_commitment, proto13', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3145,7 +3169,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access the properties of the operation type tx_rollup_rejection, proto13', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3286,7 +3310,7 @@ describe('RpcClient test', () => {
     });
 
     it('should access the properties of operation type tx_rollup_return_bond, proto13', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockJakartanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3330,7 +3354,7 @@ describe('RpcClient test', () => {
     });
 
     it('should be able to access the properties of operation type transfer_ticket, proto14', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockMondaynetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockMondaynetResponse));
       const response = await client.getBlock();
       const content = response.operations[3][0]
         .contents[1] as OperationContentsAndResultTransferTicket;
@@ -3369,7 +3393,7 @@ describe('RpcClient test', () => {
     });
 
     it('should be able to access the properties of operation type increase_paid_storage, proto14', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3405,7 +3429,7 @@ describe('RpcClient test', () => {
     });
 
     it('should be able to access the properties of internal operation type event, proto14', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockKathmandunetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][1]
@@ -3453,7 +3477,7 @@ describe('RpcClient test', () => {
     });
 
     it('should be able to access the properties of operation type drain_delegate, proto15', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3498,7 +3522,7 @@ describe('RpcClient test', () => {
     });
 
     it('should be able to access the properties of operation type update_consensus_key, proto15', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockLimanetResponse));
 
       const response = await client.getBlock();
       const content = response.operations[3][0]
@@ -3527,12 +3551,11 @@ describe('RpcClient test', () => {
       expect(content.metadata.balance_updates![1].origin).toEqual('block');
 
       expect(content.metadata.operation_result.status).toEqual('applied');
-      expect(content.metadata.operation_result.consumed_gas).toEqual('1000');
       expect(content.metadata.operation_result.consumed_milligas).toEqual('1000000');
       done();
     });
     it('should contain ticket_updates for transactions updating ticket storage', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketUpdatesSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketUpdatesResponse));
 
       const response = await client.getBlock();
       const content = response.operations[0][0]
@@ -3549,7 +3572,7 @@ describe('RpcClient test', () => {
     });
     // may be removed
     it('should contain ticket_receipt for transactions updating ticket storage', async (done) => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketUpdatesSample));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(ticketUpdatesResponse));
 
       const response = await client.getBlock();
       const content = response.operations[0][0]
@@ -3912,11 +3935,13 @@ describe('RpcClient test', () => {
           },
         ],
       });
-      const response = await client.runOperation(testData as any);
+      const response = await client.runOperation(testData as RPCRunOperationParam);
 
       const balanceUpdate =
         'metadata' in response.contents[0]
-          ? response.contents[0]['metadata']['balance_updates']
+          ? (response.contents[0]['metadata'][
+              'balance_updates'
+            ] as OperationMetadataBalanceUpdates[])
           : [];
       expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
       expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
@@ -4272,6 +4297,370 @@ describe('RpcClient test', () => {
         'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
       );
 
+      done();
+    });
+  });
+
+  describe('smartRollupOriginate', () => {
+    it('should have correct types to access smart_rollup_originate results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupOriginateResponse));
+      const response = await client.getBlock();
+      const content = response.operations[1][0]
+        .contents[0] as OperationContentsAndResultSmartRollupOriginate;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_ORIGINATE);
+      expect(content.source).toEqual('tz1NyHPL2CidRquW3a9zPGde59YYtMDyyzCg');
+      expect(content.fee).toEqual('1497');
+      expect(content.counter).toEqual('19783');
+      expect(content.gas_limit).toEqual('2849');
+      expect(content.storage_limit).toEqual('6572');
+      expect(content.pvm_kind).toEqual('wasm_2_0_0');
+      expect(content.kernel).toEqual(
+        '23212f7573722f62696e2f656e762073680a6578706f7274204b45524e454c3d22303036313733366430313030303030303031323830373630303337663766376630313766363030323766376630313766363030353766376637663766376630313766363030313766303036303031376630313766363030323766376630303630303030303032363130333131373336643631373237343566373236663663366337353730356636333666373236353061373236353631363435663639366537303735373430303030313137333664363137323734356637323666366336633735373035663633366637323635306337373732363937343635356636663735373437303735373430303031313137333664363137323734356637323666366336633735373035663633366637323635306237333734366637323635356637373732363937343635303030323033303530343033303430353036303530333031303030313037313430323033366436353664303230303061366236353732366536353663356637323735366530303036306161343031303432613031303237663431666130303266303130303231303132303030326630313030323130323230303132303032343730343430343165343030343131323431303034316534303034313030313030323161306230623038303032303030343163343030366230623530303130353766343166653030326430303030323130333431666330303266303130303231303232303030326430303030323130343230303032663031303032313035323030313130303432313036323030343230303334363034343032303030343130313661323030313431303136623130303131613035323030353230303234363034343032303030343130373661323030363130303131613062306230623164303130313766343164633031343138343032343139303163313030303231303034313834303232303030313030353431383430323130303330623062333830353030343165343030306231323266366236353732366536353663326636353665373632663732363536323666366637343030343166383030306230323030303130303431666130303062303230303032303034316663303030623032303030303030343166653030306230313031220a'
+      );
+      expect(content.origination_proof).toEqual(
+        '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea18030fab8a3adde4b553c4d391e9cd19ee13b17941c1f49c040d621bbfbea964993810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
+      );
+      expect(content.parameters_ty).toEqual({ prim: 'bytes' });
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.address).toEqual('sr1K3AUoYanTUup53MCb8DkbvLsiAmFuXfFm');
+      expect(soruResult.genesis_commitment_hash).toEqual(
+        'src14Khe1dnFbwrtTSEi4XWxxM7ej7L29YmduJhQY7U24Y523dmMtw'
+      );
+      expect(soruResult.consumed_milligas).toEqual('2748269');
+      expect(soruResult.size).toEqual('6552');
+      done();
+    });
+  });
+
+  describe('smartRollupAddMessages', () => {
+    it('should have correct types to access smart_rollup_add_messages results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupAddMessagesResponse));
+      const response = await client.getBlock();
+      const content = response.operations[1][0]
+        .contents[0] as OperationContentsAndResultSmartRollupAddMessages;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_ADD_MESSAGES);
+      expect(content.source).toEqual('tz2Q3yRaczTqZVf3ZQvwiiTqKjhJFyDzeRSz');
+      expect(content.fee).toEqual('398');
+      expect(content.counter).toEqual('12191');
+      expect(content.gas_limit).toEqual('1103');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.message[0]).toEqual(
+        '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74'
+      );
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.consumed_milligas).toEqual('1002777');
+      done();
+    });
+  });
+
+  describe('smartRollupOutboxMessages', () => {
+    it('should have correct types to access smart_rollup_execute_outbox_message results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve(smartRollupExecuteOutboxMessageResponse)
+      );
+      const response = await client.getBlock();
+      const content = response.operations[1][0]
+        .contents[0] as OperationContentsAndResultSmartRollupExecuteOutboxMessage;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE);
+      expect(content.source).toEqual('tz1adKm6kWEkiejZ9WYpuHvBCgUewtCxpqRF');
+      expect(content.fee).toEqual('1618');
+      expect(content.counter).toEqual('13');
+      expect(content.gas_limit).toEqual('6485');
+      expect(content.storage_limit).toEqual('36');
+      expect(content.rollup).toEqual('sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy');
+      expect(content.cemented_commitment).toEqual(
+        'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628'
+      );
+      expect(content.output_proof).toEqual(
+        '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74'
+      );
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.consumed_milligas).toEqual('4731015');
+      expect(soruResult.ticket_updates).toEqual([]);
+      expect(soruResult.paid_storage_size_diff).toEqual('5');
+      done();
+    });
+  });
+
+  describe('smartRollupPublish', () => {
+    it('should have correct types to access smart_rollup_publish results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupPublishResponse));
+      const response = await client.getBlock();
+      const content = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultSmartRollupPublish;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_PUBLISH);
+      expect(content.source).toEqual('tz1gCe1sFpppbGGVwCt5jLRqDS9FD1W4Qca4');
+      expect(content.fee).toEqual('964');
+      expect(content.counter).toEqual('41266');
+      expect(content.gas_limit).toEqual('6418');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('sr1AE6U3GNzE8iKzj6sKS5wh1U32ogeULCoN');
+
+      const commitment = content.commitment;
+      expect(commitment.compressed_state).toEqual(
+        'srs13FywcbcZV9VvHxdVkYK83Ch4477cqHMgM8d5oT955yf4XXMvKS'
+      );
+      expect(commitment.inbox_level).toEqual(197151);
+      expect(commitment.predecessor).toEqual(
+        'src12i7dL2z9VbgshFDdGFP5TPBoJu6WnZNWJXGa1QQgPTErVPPtd8'
+      );
+      expect(commitment.number_of_ticks).toEqual('880000000000');
+
+      const soruResult = content.metadata.operation_result;
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.consumed_milligas).toEqual('6317837');
+      expect(soruResult.staked_hash).toEqual(
+        'src13TanyZ7RvSULqVb2tjx1zRVw2jyJC2ToHLz1ZKg38sZ4HBYdSN'
+      );
+      expect(soruResult.published_at_level).toEqual(197154);
+      expect(soruResult.balance_updates).toEqual([]);
+
+      done();
+    });
+
+    it('should have correct access to metadata.operation_result.balanceUpdate in smart_rollup_publish', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupPublishResponse));
+      const response = await client.getBlock();
+      const contentWithDiffBalanceUpdate = response.operations[0][1]
+        .contents[0] as OperationContentsAndResultSmartRollupPublish;
+
+      const balanceUpdates =
+        contentWithDiffBalanceUpdate.metadata.operation_result.balance_updates ?? [];
+
+      const diffBalanceUpdate = balanceUpdates[1];
+      expect(diffBalanceUpdate.bond_id?.smart_rollup).toEqual(
+        'sr1LhGA2zC9VcYALSifpRBCgDiQfDSQ6bb4x'
+      );
+      done();
+    });
+  });
+
+  describe('smartRollupCement', () => {
+    it('shoud have correct types to access smart_rollup_cement results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupCementResponse));
+      const response = await client.getBlock();
+      const content = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultSmartRollupCement;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_CEMENT);
+      expect(content.source).toEqual('tz1gCe1sFpppbGGVwCt5jLRqDS9FD1W4Qca4');
+      expect(content.fee).toEqual('922');
+      expect(content.counter).toEqual('41267');
+      expect(content.gas_limit).toEqual('6432');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('sr1AE6U3GNzE8iKzj6sKS5wh1U32ogeULCoN');
+      expect(content.commitment).toEqual('src13w2EBEZmVg4jsDd5PfYNakBRZ6GqSGDgWLz7EHZGeeG1gm7HT5');
+
+      const soruResult = content.metadata.operation_result;
+
+      expect(soruResult.status).toEqual('applied');
+      expect(soruResult.consumed_milligas).toEqual('6331052');
+      expect(soruResult.inbox_level).toEqual(197111);
+      done();
+    });
+  });
+
+  describe('smartRollupRefute', () => {
+    it('should have correct types to access smart_rollup_refute results move with pvm_step', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupRefuteResponse));
+      const response = await client.getBlock();
+      const content = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultSmartRollupRefute;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_REFUTE);
+      expect(content.source).toEqual('tz1ZpuBypK6G754crXDZyoMPaVPoBmBsPda2');
+      expect(content.fee).toEqual('2096');
+      expect(content.counter).toEqual('32553');
+      expect(content.gas_limit).toEqual('6299');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('sr1LhGA2zC9VcYALSifpRBCgDiQfDSQ6bb4x');
+      expect(content.opponent).toEqual('tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC');
+
+      const refutation = content.refutation as SmartRollupRefutationMove;
+      if (refutation.refutation_kind !== SmartRollupRefutationOptions.MOVE) {
+        fail('expected refutation_kind: "move"');
+      }
+
+      expect(refutation.refutation_kind).toEqual('move');
+      expect(refutation.choice).toEqual('176000000003');
+
+      const step = refutation.step;
+      if (Array.isArray(step)) {
+        fail('expected an object not an array');
+      }
+
+      expect(step.pvm_step).toEqual(
+        '03000298e4e3d5c88da366e885edf675ffd7a5087c8e0a2fcd508e7951113fe4c1491810067c06a78b88cb7c3e60c56b47ba9e14c922dbdbd4811ac6fee80a309620630005820764757261626c6582066b65726e656cd07d20c53bdd5b536a6be9c4cdad16e69a9af40b93a6564655fffd88bba050519008726561646f6e6c7982066b65726e656cd0a645771d9d5228a31312b282119c596699ccb6b60b93d759c2072a493ddbb5740c7761736d5f76657273696f6e8101408208636f6e74656e7473810130c10200322e302e30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066c656e677468c008000000000000000503746167c00800000004536f6d650003810370766d00050004000381166f7574626f785f76616c69646974795f706572696f64c00400013b0082136c6173745f746f705f6c6576656c5f63616c6cc00680c0abd38f05196d6178696d756d5f7265626f6f74735f7065725f696e707574c002e80781146f7574626f785f6d6573736167655f6c696d6974c002a401810c6d61785f6e625f7469636b73c00580dc9afd28820576616c7565810370766d8107627566666572738205696e7075740003810468656164c001008208636f6e74656e7473d06e2c0a5b371a53e76a9b7f221a5baa67170b3f9f43205fb06c0649123cec2358066c656e677468c00103066f75747075740004820132810a6c6173745f6c6576656cc0040000a33f0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f786573d0ccbff4c181451166adb153f7a1631e9f036832f8e5c82acd8e8c12876eeeda870134810d6d6573736167655f6c696d6974c002a401047761736d00048205696e707574c0050000a33f0203746167c00b0000000770616464696e67820c63757272656e745f7469636bc00683c0abd38f050e7265626f6f745f636f756e746572c002e907'
+      );
+      done();
+    });
+
+    it('should have correct types to access smart_rollup_refute results start', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupRefuteResponse));
+      const response = await client.getBlock();
+      const content = response.operations[0][1]
+        .contents[0] as OperationContentsAndResultSmartRollupRefute;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_REFUTE);
+      expect(content.source).toEqual('tz1Qn5AXWB5vYPgzDXsunDbZ7tTUp9cFDaRp');
+      expect(content.fee).toEqual('943');
+      expect(content.counter).toEqual('25002');
+      expect(content.gas_limit).toEqual('6109');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('sr1Ce7znpA1ea2YZca3v1CefxqXMhqYgDEXR');
+      expect(content.opponent).toEqual('tz1VN3J6DyH712W1y13Uu1N8fxkt8RvMyqzm');
+
+      const refutation = content.refutation as SmartRollupRefutationStart;
+
+      expect(refutation.refutation_kind).toEqual('start');
+      expect(refutation.player_commitment_hash).toEqual(
+        'src14Liog4xxPoZ55AgpBpeDweFSxHK6b3zbybhp7ChsWbM9g1Jsrd'
+      );
+      expect(refutation.opponent_commitment_hash).toEqual(
+        'src12q2zZyxuK5UeYPQYSutA6RPMv7sZDtJ7oAWxAytuJC3rjvWct6'
+      );
+      done();
+    });
+    it('should have correct types to access smart_rollup_refute results move with dissection', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupRefuteResponse));
+      const response = await client.getBlock();
+      const content = response.operations[0][2]
+        .contents[0] as OperationContentsAndResultSmartRollupRefute;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_REFUTE);
+      expect(content.source).toEqual('tz1QD39GBmSzccuDxWMevj2gudiTX1pZL5kC');
+      expect(content.fee).toEqual('1989');
+      expect(content.counter).toEqual('32546');
+      expect(content.gas_limit).toEqual('4333');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('sr1LhGA2zC9VcYALSifpRBCgDiQfDSQ6bb4x');
+      expect(content.opponent).toEqual('tz1ZpuBypK6G754crXDZyoMPaVPoBmBsPda2');
+
+      const refutation = content.refutation;
+      if (refutation.refutation_kind !== SmartRollupRefutationOptions.MOVE) {
+        fail('Expected Refutation kind: "move"');
+      }
+
+      expect(refutation.refutation_kind).toEqual('move');
+      expect(refutation.choice).toEqual('0');
+
+      const step = refutation.step;
+      if (!Array.isArray(step)) {
+        fail('expected step to be an array');
+      }
+      expect(step[0]).toEqual({
+        state: 'srs11y1ZCJfeWnHzoX3rAjcTXiphwg8NvqQhvishP3PU68jgSREuk6',
+        tick: '0',
+      });
+      expect(step[1]).toEqual({
+        state: 'srs12ti4nRqiqahBZedqjgnFx9ZK88KkSgpYD8ns5Q41UMEXGg9w3b',
+        tick: '22000000000',
+      });
+      done();
+    });
+  });
+
+  describe('smartRollupRecoverBond', () => {
+    it('should have correct types to access smart_rollup_recover_bond results', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(smartRollupRecoverBondResponse));
+      const response = await client.getBlock();
+      const content = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultSmartRollupRecoverBond;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_RECOVER_BOND);
+      expect(content.source).toEqual('tz1bTS4QDBnpQPmMPNM3rn7jN1hevkWDHSKw');
+      expect(content.fee).toEqual('1000000');
+      expect(content.counter).toEqual('25156');
+      expect(content.gas_limit).toEqual('4016');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('sr1EYxm4fQjr15TASs2Q7PgZ1LqS6unkZhHL');
+      expect(content.staker).toEqual('tz1bTS4QDBnpQPmMPNM3rn7jN1hevkWDHSKw');
+      done();
+    });
+  });
+
+  describe('smartRollupTimeout', () => {
+    it('should have correct types to access smart_rollup_timeout', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(Promise.resolve(smartRollupTimeoutResponse));
+      const response = await client.getBlock();
+      const content = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultSmartRollupTimeout;
+
+      expect(content.kind).toEqual(OpKind.SMART_ROLLUP_TIMEOUT);
+      expect(content.source).toEqual('tz1TecRhYLVV9bTKRKU9g1Hhpb1Ymw3ynzWS');
+      expect(content.fee).toEqual('753');
+      expect(content.counter).toEqual('23077');
+      expect(content.gas_limit).toEqual('4647');
+      expect(content.storage_limit).toEqual('0');
+      expect(content.rollup).toEqual('sr1QZkk1swognQW3dmiXvga3wVkEgBq7QFjE');
+
+      const stakers = content.stakers;
+
+      expect(stakers.alice).toEqual('tz1TecRhYLVV9bTKRKU9g1Hhpb1Ymw3ynzWS');
+      expect(stakers.bob).toEqual('tz1iFnSQ6V2d8piVMPMjtDNdkYNMaUfKwsoy');
+      done();
+    });
+  });
+
+  describe('ticketBalance', () => {
+    it('should query the right url and data', async (done) => {
+      httpBackend.createRequest.mockResolvedValue('3');
+      const response = await client.getTicketBalance(contractAddress, {
+        ticketer: contractAddress,
+        content_type: { prim: 'string ' },
+        content: { string: 'ticket1' },
+      });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/ticket_balance`,
+      });
+
+      expect(response).toEqual('3');
+      done();
+    });
+  });
+
+  describe('ticketAllBalance', () => {
+    it('should query the right url and data', async (done) => {
+      httpBackend.createRequest.mockResolvedValue(ticketBalancesResponse);
+      const response = await client.getAllTicketBalances('KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD');
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/KT1X6mCNdfQZSpyU9zZw9sWckPVJyz2X8vwD/all_ticket_balances`,
+      });
+
+      expect(response).toEqual(ticketBalancesResponse);
+      done();
+    });
+  });
+
+  describe('getPendingOperations', () => {
+    it('should query the correct url and retrun pending operations in mempool', async (done) => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
+      const response: PendingOperations = await client.getPendingOperations();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/mempool/pending_operations`,
+        query: {},
+      });
+
+      expect(response).toEqual(pendingOperationsResponse);
       done();
     });
   });

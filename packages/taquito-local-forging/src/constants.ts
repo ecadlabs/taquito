@@ -26,7 +26,11 @@ export enum CODEC {
   PARAMETERS = 'parameters',
   ADDRESS = 'address',
   SMART_CONTRACT_ADDRESS = 'smart_contract_address',
+  SMART_ROLLUP_ADDRESS = 'smart_rollup_address',
+  SMART_ROLLUP_COMMITMENT_HASH = 'smart_rollup_commitment_hash',
   VALUE = 'value',
+  PADDED_BYTES = 'padded_bytes',
+  SMART_ROLLUP_MESSAGE = 'smart_rollup_message',
   MANAGER = 'manager',
   BLOCK_PAYLOAD_HASH = 'blockPayloadHash',
   ENTRYPOINT = 'entrypoint',
@@ -51,6 +55,12 @@ export enum CODEC {
   OP_INCREASE_PAID_STORAGE = 'increase_paid_storage',
   OP_UPDATE_CONSENSUS_KEY = 'update_consensus_key',
   OP_DRAIN_DELEGATE = 'drain_delegate',
+  DEPOSITS_LIMIT = 'deposits_limit',
+  OP_SET_DEPOSITS_LIMIT = 'set_deposits_limit',
+  OP_SMART_ROLLUP_ORIGINATE = 'smart_rollup_originate',
+  PVM_KIND = 'pvm_kind',
+  OP_SMART_ROLLUP_ADD_MESSAGES = 'smart_rollup_add_messages',
+  OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'smart_rollup_execute_outbox_message',
 }
 
 // See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
@@ -210,6 +220,8 @@ export const opMapping: { [key: string]: string } = {
   '98': 'Lambda_rec',
   '99': 'LAMBDA_REC',
   '9a': 'TICKET',
+  '9b': 'BYTES',
+  '9c': 'NAT',
 };
 
 export const opMappingReverse = (() => {
@@ -235,9 +247,13 @@ export const kindMapping: { [key: number]: string } = {
   0x96: 'tx_rollup_origination',
   0x97: 'tx_rollup_submit_batch',
   0x9e: 'transfer_ticket',
+  0x70: 'set_deposits_limit',
   0x71: 'increase_paid_storage',
   0x72: 'update_consensus_key',
   0x09: 'drain_delegate',
+  0xc8: 'smart_rollup_originate',
+  0xc9: 'smart_rollup_add_messages',
+  0xce: 'smart_rollup_execute_outbox_message',
 };
 
 export const kindMappingReverse = (() => {
