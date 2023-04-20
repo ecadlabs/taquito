@@ -232,7 +232,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         const operation2 = contract2.methodsObject.default({
           targetContractAddress: calledContractAddress,
-          newStore: 0,
+          newStore: 1,
           mode: 0,
           amount: 0,
         });
@@ -288,7 +288,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         const operation2 = contract2.methodsObject.default({
           targetContractAddress: calledContractAddress,
-          newStore: 0,
+          newStore: 1,
           mode: 0,
           amount: 0,
         });
