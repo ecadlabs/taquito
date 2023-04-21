@@ -45,7 +45,7 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
             },
             mgr2: {
                 addr: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-                key: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+                key: {Some: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr'},
             },
         }
 

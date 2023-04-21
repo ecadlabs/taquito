@@ -58,9 +58,9 @@ describe('ContractAbstraction test', () => {
           'nat',
           'operation',
           { lambda: { parameters: 'unit', returns: { list: 'operation' } } },
-          { list: 'signature' },
+          { list: { Some: 'signature' } },
         ],
-        ['nat', 'change_keys', 'nat', { list: 'key' }, { list: 'signature' }],
+        ['nat', 'change_keys', 'nat', { list: 'key' }, { list: { Some: 'signature' } }],
       ]);
 
       // Calling the smart contract main method using an object as a parameter where the keys are the annotations
@@ -99,7 +99,7 @@ describe('ContractAbstraction test', () => {
             },
           },
         },
-        sigs: { list: 'signature' },
+        sigs: { list: { Some: 'signature' } },
       });
       expect(methodObjectMainChangeKeys.toTransferParams()).toEqual(
         methodMainChangeKeys.toTransferParams()
