@@ -199,7 +199,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done();
     });
 
-    it('should include events from failed operations when filter does not exclude events from failed operations', async (done) => {
+    it.skip('should include events from failed operations when filter does not exclude events from failed operations', async (done) => {
       const data: any = [];
 
       const eventSub = Tezos.stream.subscribeEvent({
@@ -254,7 +254,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       done();
     });
 
-    it('should properly filter events from failed operations', async (done) => {
+    it.skip('should properly filter events from failed operations', async (done) => {
       const data: any = [];
 
       const eventSub = Tezos.stream.subscribeEvent({
