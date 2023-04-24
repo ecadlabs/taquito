@@ -16,7 +16,7 @@
   "dependencies": {
     "@ledgerhq/devices": "6.20.0",
     "@ledgerhq/hw-transport": "6.20.0",
-    "@ledgerhq/hw-transport-node-hid": "6.20.0",
+    "@ledgerhq/hw-transport-node-hid": "6.27.13",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.20.0",
     "@taquito/contracts-library": "^16.1.2-beta-RC.0",
     "@taquito/http-utils": "^16.1.2-beta-RC.0",
