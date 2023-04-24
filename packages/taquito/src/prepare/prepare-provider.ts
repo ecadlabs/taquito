@@ -1,5 +1,4 @@
 import {
-  // RpcClientInterface,
   OperationContents,
   OpKind,
   VotingPeriodBlockResult,
@@ -16,8 +15,6 @@ import {
   RegisterGlobalConstantParams,
   TransferParams,
   OriginateParams,
-  TxRollupOriginateParams,
-  TxRollupBatchParams,
   UpdateConsensusKeyParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
@@ -27,6 +24,7 @@ import {
   ParamsWithKind,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  isOpWithFee,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { Protocols } from '../constants';
@@ -42,9 +40,6 @@ import {
   createRevealOperation,
   createRegisterGlobalConstantOperation,
   createOriginationOperation,
-  RevealOperationError,
-  createTxRollupOriginationOperation,
-  createTxRollupBatchOperation,
   createUpdateConsensusKeyOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
@@ -57,10 +52,8 @@ import {
   createSmartRollupOriginateOperation,
 } from '../contract';
 import { Estimate } from '../estimate';
-import { OperationBatch } from '../batch/rpc-batch-provider';
 import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
-// import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import BigNumber from 'bignumber.js';
 
 interface Limits {
@@ -95,10 +88,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   constructor(protected context: Context) {
     super(context);
     this.#counters = {};
-  }
-
-  get estimate() {
-    return this.context.estimate;
   }
 
   get parser() {
@@ -194,10 +183,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     if (isOpRequireReveal(operation)) {
       const ops: RPCOperation[] = [operation];
       const publicKey = await this.signer.publicKey();
-      const estimateReveal = await this.estimate.reveal();
-      if (estimateReveal) {
-        const estimatedReveal = this.buildEstimates(estimateReveal);
-        ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
+      if (await this.isAccountRevealRequired(publicKeyHash)) {
+        const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+        const DEFAULT_PARAMS = await this.getAccountLimits(publicKeyHash, protocolConstants);
+        ops.unshift(await createRevealOperation(DEFAULT_PARAMS, publicKeyHash, publicKey));
         return ops;
       }
     }
@@ -316,40 +305,40 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async reveal(params: RevealParams): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
-    const estimate = await this.estimate.reveal(params);
-    if (estimate) {
-      const estimates = this.buildEstimates(estimate);
-      const op = await createRevealOperation(
-        {
-          ...estimates,
-        },
-        pkh,
-        await this.signer.publicKey()
-      );
+  async reveal({ fee, gasLimit, storageLimit }: RevealParams): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
 
-      const ops = this.convertIntoArray(op);
+    const op = await createRevealOperation(
+      {
+        fee: mergedEstimates.fee,
+        gasLimit: mergedEstimates.gasLimit,
+        storageLimit: mergedEstimates.storageLimit,
+      },
+      pkh,
+      await this.signer.publicKey()
+    );
 
-      const hash = await this.getBlockHash();
-      const protocol = await this.getProtocolHash();
+    const ops = this.convertIntoArray(op);
 
-      this.#counters = {};
-      const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
 
-      const contents = this.constructOpContents(ops, headCounter, pkh);
+    this.#counters = {};
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
-      return {
-        opOb: {
-          branch: hash,
-          contents,
-          protocol,
-        },
-        counter: headCounter,
-      };
-    } else {
-      throw new RevealOperationError(`The publicKeyHash '${pkh}' has already been revealed.`);
-    }
+    const contents = this.constructOpContents(ops, headCounter, pkh);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
   }
 
   /**
@@ -524,91 +513,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a tx_rollup_origination operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
-   * @returns a PreparedOperation object
-   */
-  async txRollupOrigination(
-    params?: TxRollupOriginateParams,
-    source?: string
-  ): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
-
-    const estimate = await this.estimate.txRollupOriginate(params);
-
-    const estimates = this.buildEstimates(estimate);
-
-    const op = await createTxRollupOriginationOperation({
-      ...params,
-      ...estimates,
-    });
-
-    const operation = await this.addRevealOperationIfNeeded(op, pkh);
-    const ops = this.convertIntoArray(operation);
-
-    const hash = await this.getBlockHash();
-    const protocol = await this.getProtocolHash();
-
-    this.#counters = {};
-    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
-
-    const contents = this.constructOpContents(ops, headCounter, pkh, source);
-
-    return {
-      opOb: {
-        branch: hash,
-        contents,
-        protocol,
-      },
-      counter: headCounter,
-    };
-  }
-
-  /**
-   *
-   * @description Method to prepare a tx_rollup_submit_batch operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
-   * @returns a PreparedOperation object
-   */
-  async txRollupSubmitBatch(
-    params: TxRollupBatchParams,
-    source?: string
-  ): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
-
-    const estimate = await this.estimate.txRollupSubmitBatch(params);
-    const estimates = this.buildEstimates(estimate);
-
-    const op = await createTxRollupBatchOperation({
-      ...params,
-      ...estimates,
-    });
-
-    const operation = await this.addRevealOperationIfNeeded(op, pkh);
-    const ops = this.convertIntoArray(operation);
-
-    const hash = await this.getBlockHash();
-    const protocol = await this.getProtocolHash();
-
-    this.#counters = {};
-    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
-
-    const contents = this.constructOpContents(ops, headCounter, pkh, source);
-
-    return {
-      opOb: {
-        branch: hash,
-        contents,
-        protocol,
-      },
-      counter: headCounter,
-    };
-  }
-
-  /**
-   *
    * @description Method to prepare an update_consensus_key operation
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
@@ -698,7 +602,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async ballot(params: BallotParams): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
     const op = await createBallotOperation({
       ...params,
@@ -745,7 +649,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async proposals(params: ProposalsParams): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
     const op = await createProposalsOperation({
       ...params,
@@ -792,7 +696,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async drainDelegate(params: DrainDelegateParams, source?: string): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
     const op = await createDrainDelegateOperation({
       ...params,
@@ -907,32 +811,28 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param operation RPCOperation object or RPCOperation array
    * @returns a PreparedOperation object
    */
-  async smartRollupOriginate(params: SmartRollupOriginateParams): Promise<PreparedOperation> {
-    const pkh = await this.signer.publicKeyHash();
+  async smartRollupOriginate({
+    fee,
+    storageLimit,
+    gasLimit,
+    ...rest
+  }: SmartRollupOriginateParams): Promise<PreparedOperation> {
+    // const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
     const originationProof = await this.rpc.getOriginationProof({
-      kind: params.pvmKind,
-      kernel: params.kernel,
+      kind: rest.pvmKind,
+      kernel: rest.kernel,
     });
-    const completeParams = { ...params, originationProof };
-    const estimate = await this.estimate.smartRollupOriginate(completeParams);
-    const estimates = this.buildEstimates(estimate);
+
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createSmartRollupOriginateOperation({
-      ...completeParams,
-      ...estimates,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+      ...rest,
+      originationProof,
     });
-
-    // const { pkh } = await this.getKeys();
-
-    // const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    // const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
-
-    // const op = await createSmartRollupAddMessagesOperation({
-    //   ...rest,
-    //   ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
-    //   ...originationProof
-    // });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);
@@ -961,15 +861,37 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async batch(batchParams: ParamsWithKind[]): Promise<PreparedOperation> {
-    // const ops = this.convertIntoArray(operation);
     const pkh = await this.signer.publicKeyHash();
-    const batch = new OperationBatch(this.context, this.estimate);
+    const pk = await this.signer.publicKey();
 
-    if (Array.isArray(batchParams)) {
-      batch.with(batchParams);
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const revealNeeded = await this.isRevealOpNeeded(batchParams, pkh);
+
+    const ops: RPCOperation[] = [];
+    for (const op of batchParams) {
+      if (isOpWithFee(op)) {
+        const defaultLimits = mergeLimits(
+          {
+            fee: op.fee,
+            storageLimit: op.storageLimit,
+            gasLimit: op.gasLimit,
+          },
+          DEFAULT_PARAMS
+        );
+        const estimates = {
+          fee: defaultLimits.fee,
+          storageLimit: defaultLimits.storageLimit,
+          gasLimit: defaultLimits.gasLimit,
+        };
+        ops.push(await this.getRPCOp({ ...op, ...estimates }));
+      } else {
+        ops.push({ ...op });
+      }
     }
-
-    const ops = await batch.toPrepare();
+    if (revealNeeded) {
+      ops.unshift(await createRevealOperation({ ...DEFAULT_PARAMS }, pkh, pk));
+    }
 
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
@@ -1001,20 +923,31 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
-    const pkh = await this.signer.publicKeyHash();
+    const { pkh } = await this.getKeys();
 
     this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const params = contractMethod.toTransferParams();
-    const estimate = await this.estimate.transfer(params);
+
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+
+    const estimateLimits = mergeLimits(
+      {
+        fee: params.fee,
+        storageLimit: params.storageLimit,
+        gasLimit: params.gasLimit,
+      },
+      DEFAULT_PARAMS
+    );
 
     const ops = [
       {
         kind: OpKind.TRANSACTION,
-        fee: params.fee ?? estimate.suggestedFeeMutez,
-        gas_limit: params.gasLimit ?? estimate.gasLimit,
-        storage_limit: params.storageLimit ?? estimate.storageLimit,
+        fee: params.fee ?? estimateLimits.fee,
+        gas_limit: params.gasLimit ?? estimateLimits.gasLimit,
+        storage_limit: params.storageLimit ?? estimateLimits.storageLimit,
         amount: String(params.amount),
         destination: params.to,
       },

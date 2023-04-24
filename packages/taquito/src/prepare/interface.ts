@@ -10,8 +10,6 @@ import {
   RevealParams,
   TransferParams,
   TransferTicketParams,
-  TxRollupBatchParams,
-  TxRollupOriginateParams,
   UpdateConsensusKeyParams,
 } from '../operations/types';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
@@ -69,22 +67,22 @@ export interface PreparationProvider {
    */
   registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<PreparedOperation>;
 
-  /**
-   * @description Method to prepare a tx_rollup_origination operation
-   * @param params txRollupOrigination operation parameters
-   * @param source string or undefined source pkh
-   * @returns a PreparedOperation object
-   */
-  txRollupOrigination(params: TxRollupOriginateParams): Promise<PreparedOperation>;
+  // /**
+  //  * @description Method to prepare a tx_rollup_origination operation
+  //  * @param params txRollupOrigination operation parameters
+  //  * @param source string or undefined source pkh
+  //  * @returns a PreparedOperation object
+  //  */
+  // txRollupOrigination(params: TxRollupOriginateParams): Promise<PreparedOperation>;
 
-  /**
-   *
-   * @description Method to prepare a tx_rollup_submit_batch operation
-   * @param params txRollupSubmitBatch operation parameters
-   * @param source string or undefined source pkh
-   * @returns a PreparedOperation object
-   */
-  txRollupSubmitBatch(params: TxRollupBatchParams): Promise<PreparedOperation>;
+  // /**
+  //  *
+  //  * @description Method to prepare a tx_rollup_submit_batch operation
+  //  * @param params txRollupSubmitBatch operation parameters
+  //  * @param source string or undefined source pkh
+  //  * @returns a PreparedOperation object
+  //  */
+  // txRollupSubmitBatch(params: TxRollupBatchParams): Promise<PreparedOperation>;
 
   /**
    * @description Method to prepare an update_consensus_key operation
