@@ -1,0 +1,4 @@
+/**
+ * @packageDocumentation
+ * @module @taquito/core
+ */
