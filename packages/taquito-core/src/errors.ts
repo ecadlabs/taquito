@@ -1,3 +1,6 @@
+// ==========================================================================================
+// parent error classes for Taquito
+// ==========================================================================================
 /**
  *  @category Error
  *  @description Parent error class all taquito errors to extend from
@@ -39,3 +42,19 @@ export class NetworkError extends TaquitoError {}
  *  @description Error indicates user attempts an action without necessary permissions
  */
 export class PermissionDeniedError extends TaquitoError {}
+
+// ==========================================================================================
+// common error classes for Taquito
+// ==========================================================================================
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid address being passed or used (both contract and implicit)
+ */
+export class InvalidAddressError extends Error {
+  public name = 'InvalidAddressError';
+  constructor(public address: string, errorDetail?: string) {
+    super();
+    const baseMessage = `The address '${address}' is invalid.`;
+    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
+  }
+}

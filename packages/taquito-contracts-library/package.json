@@ -68,6 +68,7 @@
     ]
   },
   "dependencies": {
+    "@taquito/core": "^16.1.2-beta-RC.0",
     "@taquito/rpc": "^16.1.2-beta-RC.0",
     "@taquito/taquito": "^16.1.2-beta-RC.0",
     "@taquito/utils": "^16.1.2-beta-RC.0",

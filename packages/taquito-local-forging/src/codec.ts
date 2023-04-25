@@ -7,9 +7,9 @@ import {
   prefixLength,
   InvalidKeyHashError,
   InvalidPublicKeyError,
-  InvalidAddressError,
   InvalidContractAddressError,
 } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/core';
 import {
   OversizedEntryPointError,
   InvalidBallotValueError,

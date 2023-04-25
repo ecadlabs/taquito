@@ -43,12 +43,8 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
 } from '../contract/prepare';
-import {
-  validateAddress,
-  InvalidAddressError,
-  ValidationResult,
-  InvalidOperationKindError,
-} from '@taquito/utils';
+import { validateAddress, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/core';
 import { RevealEstimateError } from './error';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
 
