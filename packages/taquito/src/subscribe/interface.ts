@@ -24,6 +24,7 @@ export interface DestinationFilter {
 export interface EventFilter {
   address?: string;
   tag?: string;
+  excludeFailedOperations?: boolean;
 }
 
 export interface EventSubscription extends InternalOperationResult {

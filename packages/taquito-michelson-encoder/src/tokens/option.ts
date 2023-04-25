@@ -42,12 +42,12 @@ export class OptionToken extends ComparableToken {
   }
 
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
-    const value = args;
+    let value = args;
 
     if (value === undefined || value === null) {
       return { prim: 'None' };
     }
-
+    value = typeof value === 'object' && 'Some' in value ? value['Some'] : value;
     return { prim: 'Some', args: [this.schema().EncodeObject(value, semantic)] };
   }
 
@@ -56,7 +56,7 @@ export class OptionToken extends ComparableToken {
       return null;
     }
 
-    return this.schema().Execute(val.args[0], semantics);
+    return { Some: this.schema().Execute(val.args[0], semantics) };
   }
 
   /**
@@ -64,7 +64,7 @@ export class OptionToken extends ComparableToken {
    *
    */
   public ExtractSchema() {
-    return this.schema().ExtractSchema();
+    return { Some: this.schema().ExtractSchema() };
   }
 
   generateSchema(): OptionTokenSchema {
@@ -75,7 +75,7 @@ export class OptionToken extends ComparableToken {
   }
 
   public ExtractSignature() {
-    return [...this.schema().ExtractSignature(), []];
+    return [...this.schema().ExtractSignature()];
   }
 
   get KeySchema(): ComparableToken {

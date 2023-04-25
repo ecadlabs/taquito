@@ -31,6 +31,36 @@ const mockInternalOperationResult = {
   },
 };
 
+const mockFailedInternalOperationResult = {
+  kind: 'event',
+  source: 'KT1TzvwJxn8dNHc8M2FLvTiUg6LwjUfC4X94',
+  nonce: 2,
+  type: {
+    prim: 'or',
+    args: [
+      {
+        prim: 'nat',
+      },
+      {
+        prim: 'string',
+      },
+    ],
+  },
+  tag: 'test',
+  payload: {
+    prim: 'Left',
+    args: [
+      {
+        int: '10',
+      },
+    ],
+  },
+  result: {
+    status: 'failed',
+    consumed_milligas: '1000000',
+  },
+};
+
 const mockNonEventInternalOperationResult = {
   kind: 'transaction',
   source: 'KT1TzvwJxn8dNHc8M2FLvTiUg6LwjUfC4X94',
@@ -139,6 +169,46 @@ describe('Event filter', () => {
     );
     expect(result).toBeFalsy();
   });
+
+  it('should return true for a failed operation when not filtering failed operations', () => {
+    const result = eventFilter(
+      mockFailedInternalOperationResult as InternalOperationResult,
+      'KT1TzvwJxn8dNHc8M2FLvTiUg6LwjUfC4X94',
+      'test',
+    );
+    expect(result).toBeTruthy();
+  });
+
+  it('should return true for a failed operation when passing false to excludeFailedOperations', () => {
+    const result = eventFilter(
+      mockFailedInternalOperationResult as InternalOperationResult,
+      'KT1TzvwJxn8dNHc8M2FLvTiUg6LwjUfC4X94',
+      'test',
+      false
+    );
+    expect(result).toBeTruthy();
+  });
+
+  it('should return true for a successful operation when passing true to excludeFailedOperations', () => {
+    const result = eventFilter(
+      mockInternalOperationResult as InternalOperationResult,
+      'KT1TzvwJxn8dNHc8M2FLvTiUg6LwjUfC4X94',
+      'test',
+      true
+    );
+    expect(result).toBeTruthy();
+  });
+
+  it('should return false for a failed operation when passing true to excludeFailedOperations', () => {
+    const result = eventFilter(
+      mockFailedInternalOperationResult as InternalOperationResult,
+      'KT1TzvwJxn8dNHc8M2FLvTiUg6LwjUfC4X94',
+      'test',
+      true
+    );
+    expect(result).toBeFalsy();
+  });
+
 });
 
 describe('Evaluate expression', () => {
