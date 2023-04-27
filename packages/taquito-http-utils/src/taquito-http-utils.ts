@@ -3,6 +3,7 @@
  * @module @taquito/http-utils
  */
 
+import fetchAdapter from './fetch-adapter';
 import { STATUS_CODE } from './status_code';
 import axios, { AxiosAdapter } from 'axios';
 
@@ -11,7 +12,7 @@ const isNode =
 
 const adapterPromise = isNode
   ? undefined
-  : import('@taquito/axios-fetch-adapter').then((mod) => mod.default).catch(() => undefined);
+  : fetchAdapter;
 
 export * from './status_code';
 export { VERSION } from './version';
