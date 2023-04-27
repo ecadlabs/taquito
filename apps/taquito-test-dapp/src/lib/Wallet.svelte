@@ -95,32 +95,29 @@
   };
 
   const connectWallet = async () => {
-    if (!$store.wallet) {
-      if ($store.sdk === SDK.BEACON) {
-        const newWallet = createNewBeaconWallet({
-          networkType: $store.networkType,
-        });
-        await newWallet.requestPermissions({
-          network: {
-            type: $store.networkType as NetworkTypeBeacon,
-            rpcUrl: rpcUrl[$store.networkType],
-          },
-        });
+    if ($store.sdk === SDK.BEACON) {
+      const newWallet = createNewBeaconWallet({
+        networkType: $store.networkType,
+      });
+      await newWallet.requestPermissions({
+        network: {
+          type: $store.networkType as NetworkTypeBeacon,
+          rpcUrl: rpcUrl[$store.networkType],
+        },
+      });
 
-        const peers = await newWallet.client.getPeers();
-        connectedWallet = peers[0].name;
-        await updateStore(newWallet);
-      } else if ($store.sdk === SDK.WC2) {
-        const newWallet = await createNewWalletConnect2();
-        const existingPairing = newWallet.getAvailablePairing();
-        if (existingPairing.length > 0) {
-          selectExistingPairing(newWallet, existingPairing);
-        } else {
-          await requestPermissionWc2(newWallet);
-        }
+      const peers = await newWallet.client.getPeers();
+      connectedWallet = peers[0].name;
+      await updateStore(newWallet);
+    } else if ($store.sdk === SDK.WC2) {
+      console.log("connectWallet WC2");
+      const newWallet = await createNewWalletConnect2();
+      const existingPairing = newWallet.getAvailablePairing();
+      if (existingPairing.length > 0) {
+        selectExistingPairing(newWallet, existingPairing);
+      } else {
+        await requestPermissionWc2(newWallet);
       }
-    } else {
-      return $store.wallet;
     }
   };
 
