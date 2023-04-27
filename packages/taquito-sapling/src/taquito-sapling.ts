@@ -295,14 +295,14 @@ export class SaplingToolkit {
     if (validateKeyHash(to) !== ValidationResult.VALID) {
       throw new InvalidAddressError(
         to,
-        "The 'to' parameter must be a Tezos public key hash (tz1, tz2, tz3)."
+        "The 'to' parameter must be a Tezos public key hash (tz1, tz2, tz3)"
       );
     }
   }
 
   private validateDestinationSaplingAddress(to: string) {
     if (!to.startsWith(Prefix.ZET1)) {
-      throw new InvalidAddressError(to, "The 'to' parameter must be a sapling address (zet1).");
+      throw new InvalidAddressError(to, "The 'to' parameter must be a sapling address (zet1)");
     }
   }
 

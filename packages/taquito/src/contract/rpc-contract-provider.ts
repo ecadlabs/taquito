@@ -326,10 +326,10 @@ export class RpcContractProvider
    */
   async setDelegate(params: DelegateParams) {
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+      throw new InvalidAddressError(params.source, 'param source');
     }
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+      throw new InvalidAddressError(params.delegate, 'param delegate');
     }
 
     // Since babylon delegation source cannot smart contract
@@ -391,10 +391,10 @@ export class RpcContractProvider
 
   async transfer(params: TransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+      throw new InvalidAddressError(params.to, 'param to');
     }
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+      throw new InvalidAddressError(params.source, 'param source');
     }
 
     const publickKeyHash = await this.signer.publicKeyHash();
@@ -633,7 +633,7 @@ export class RpcContractProvider
     const publicKeyHash = await this.signer.publicKeyHash();
 
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+      throw new InvalidAddressError(params.source, 'param source');
     }
     const source = params.source ?? publicKeyHash;
     const operation = await createBallotOperation({
@@ -658,7 +658,7 @@ export class RpcContractProvider
     const publicKeyHash = await this.signer.publicKeyHash();
 
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+      throw new InvalidAddressError(params.source, 'param source');
     }
     const source = params.source ?? publicKeyHash;
     const operation = await createProposalsOperation({

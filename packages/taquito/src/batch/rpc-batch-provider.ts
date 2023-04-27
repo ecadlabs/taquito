@@ -75,7 +75,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withTransfer(params: TransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+      throw new InvalidAddressError(params.to, 'param to');
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -117,10 +117,10 @@ export class OperationBatch extends OperationEmitter {
    */
   withDelegation(params: DelegateParams) {
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+      throw new InvalidAddressError(params.source, 'param source');
     }
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+      throw new InvalidAddressError(params.delegate, 'param delegate');
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;

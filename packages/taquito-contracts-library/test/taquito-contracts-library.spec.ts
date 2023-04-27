@@ -107,7 +107,7 @@ describe('ContractsLibrary tests', () => {
       })
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining(`The address 'KTinvalid' is invalid.`),
+        message: expect.stringContaining(`address 'KTinvalid' is invalid.`),
       })
     );
   });

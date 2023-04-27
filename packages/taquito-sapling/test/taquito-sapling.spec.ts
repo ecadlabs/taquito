@@ -265,7 +265,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      "The address 'tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z' is invalid. The 'to' parameter must be a sapling address (zet1)."
+      "The 'to' parameter must be a sapling address (zet1) address 'tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z' is invalid."
     );
 
     done();
@@ -517,7 +517,7 @@ describe('SaplingToolkit', () => {
         amount: 8,
       })
     ).rejects.toThrowError(
-      "The address 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y' is invalid. The 'to' parameter must be a Tezos public key hash (tz1, tz2, tz3)."
+      "The 'to' parameter must be a Tezos public key hash (tz1, tz2, tz3) address 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y' is invalid."
     );
 
     done();
@@ -654,7 +654,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      "The address 'tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh' is invalid. The 'to' parameter must be a sapling address (zet1)."
+      "The 'to' parameter must be a sapling address (zet1) address 'tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh' is invalid."
     );
 
     done();

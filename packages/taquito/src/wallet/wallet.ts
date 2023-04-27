@@ -48,7 +48,7 @@ export class WalletOperationBatch {
    */
   withTransfer(params: WalletTransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+      throw new InvalidAddressError(params.to, 'parm to');
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -76,7 +76,7 @@ export class WalletOperationBatch {
    */
   withDelegation(params: WalletDelegateParams) {
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+      throw new InvalidAddressError(params.delegate, 'param delegate');
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -103,7 +103,7 @@ export class WalletOperationBatch {
    */
   withIncreasePaidStorage(params: WalletIncreasePaidStorageParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination);
+      throw new InvalidAddressError(params.destination, 'param destination');
     }
     this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
     return this;
@@ -238,7 +238,7 @@ export class Wallet {
    */
   setDelegate(params: WalletDelegateParams) {
     if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+      throw new InvalidAddressError(params.delegate, 'param delegate');
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
@@ -277,7 +277,7 @@ export class Wallet {
    */
   transfer(params: WalletTransferParams) {
     if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+      throw new InvalidAddressError(params.to, 'param to');
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
@@ -298,7 +298,7 @@ export class Wallet {
    */
   increasePaidStorage(params: WalletIncreasePaidStorageParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination);
+      throw new InvalidAddressError(params.destination, 'param destination');
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapIncreasePaidStorageWalletParams(
