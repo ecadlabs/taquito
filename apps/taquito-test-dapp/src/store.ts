@@ -1,5 +1,4 @@
 import { writable } from "svelte/store";
-import type { NetworkType as  NetworkTypeBeacon } from "@airgap/beacon-sdk";
 import type { TezosToolkit } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { defaultMatrixNode, defaultNetworkType } from "./config";

@@ -48,7 +48,7 @@
         walletComponent.setWallet({networkType: NetworkType.GHOSTNET});
         break;
       case "mumbainet":
-        walletComponent.setWallet({networkType: NetworkType.MUMBAINET});
+        walletComponent.setWallet({networkType: "mumbainet"});
         break;
       case "custom":
         //TODO: input custom RPC URL

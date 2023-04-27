@@ -58,9 +58,8 @@
       "src/**/*.{js,ts}"
     ]
   },
-  "dependencies": {
-    "@taquito/axios-fetch-adapter": "^0.3.1",
-    "axios": "^0.26.0"
+  "peerDependencies": {
+    "axios": "^0.24.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
@@ -84,7 +83,7 @@
     "rollup": "^2.75.6",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
-    "rollup-plugin-typescript2": "^0.32.1",
+    "rollup-plugin-typescript2": "^0.34.1",
     "shelljs": "^0.8.5",
     "ts-jest": "^26.4.4",
     "ts-node": "^10.4.0",

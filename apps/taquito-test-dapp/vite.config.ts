@@ -33,7 +33,11 @@ export default ({ command }) => {
         ),
         // polyfills
         "readable-stream": "vite-compatible-readable-stream",
-        "stream": "vite-compatible-readable-stream"
+        "stream": "vite-compatible-readable-stream",
+        // "axios": path.resolve(
+        //   path.resolve(),
+        //   `../../node_modules/axios/dist/axios.js`
+        // ),
       },
       preserveSymlinks: true
     }

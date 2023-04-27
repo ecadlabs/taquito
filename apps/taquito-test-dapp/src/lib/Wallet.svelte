@@ -10,7 +10,6 @@
   import { WalletConnect2, PermissionScopeMethods, NetworkType as NetworkTypeWc2 } from "@taquito/wallet-connect-2";
   import { Modals, closeModal, openModal } from "svelte-modals";
   import ModalActivePairing from "./ModalActivePairing.svelte";
-  import type { NetworkType, NetworkType as  NetworkTypeBeacon } from "@airgap/beacon-sdk";
 
   let showDialog = false;
   let connectedWallet = "";
@@ -37,6 +36,7 @@
   const createNewBeaconWallet = (config: {
     networkType: NetworkType,
   }) => {
+    console.log("createNewBeaconWallet", config);
     return new BeaconWallet({
       name: "Taquito Test Dapp",
       matrixNodes: [defaultMatrixNode] as any,
@@ -45,6 +45,7 @@
   };
 
   const createNewWalletConnect2 = async () => {
+    console.log("createNewWalletConnect2");
     const wallet = await WalletConnect2.init({
       logger: "debug",
       projectId: "861613623da99d7285aaad8279a87ee9", // Your Project ID gives you access to WalletConnect Cloud.
