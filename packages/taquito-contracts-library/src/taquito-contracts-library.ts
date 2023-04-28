@@ -71,7 +71,7 @@ export class ContractsLibrary implements Extension {
 
   private validateContractAddress(address: string) {
     if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address);
+      throw new InvalidAddressError(address, 'contract');
     }
   }
 

@@ -271,10 +271,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
     if (validateAddress(rest.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.to, 'param to');
+      throw new InvalidAddressError(rest.to, 'params to');
     }
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, 'param source');
+      throw new InvalidAddressError(rest.source, 'params source');
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -306,10 +306,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
     if (validateAddress(rest.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.destination, 'param destination');
+      throw new InvalidAddressError(rest.destination, 'params destination');
     }
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source ?? '', 'param source');
+      throw new InvalidAddressError(rest.source ?? '', 'params source');
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -341,10 +341,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, 'param source');
+      throw new InvalidAddressError(rest.source, 'params source');
     }
     if (rest.delegate && validateAddress(rest.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.delegate, 'param delegate');
+      throw new InvalidAddressError(rest.delegate, 'params delegate');
     }
 
     const pkh = (await this.getKeys()).publicKeyHash;

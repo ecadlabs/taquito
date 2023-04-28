@@ -6,9 +6,10 @@ import {
   UnsupportedAction,
   NetworkError,
   PermissionDeniedError,
+  InvalidAddressError,
 } from '../src/taquito-core';
 
-describe('parent-errors', () => {
+describe('parent error classes', () => {
   it('should throw an ParameterValidationError', () => {
     try {
       throw new ParameterValidationError('tez');
@@ -68,6 +69,25 @@ describe('parent-errors', () => {
       expect(error).toBeInstanceOf(TaquitoError);
       expect(error).toBeInstanceOf(PermissionDeniedError);
       expect(error.message).toEqual('tez');
+    }
+  });
+});
+
+describe('common error classes', () => {
+  it('should throw an InvalidAddressError', () => {
+    try {
+      throw new InvalidAddressError('tz1');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidAddressError);
+      expect(error.message).toEqual("address 'tz1' is invalid.");
+    }
+    try {
+      throw new InvalidAddressError('tz1', 'implicit');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidAddressError);
+      expect(error.message).toEqual("implicit address 'tz1' is invalid.");
     }
   });
 });

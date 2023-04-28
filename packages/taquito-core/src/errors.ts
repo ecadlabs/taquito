@@ -48,14 +48,14 @@ export class PermissionDeniedError extends TaquitoError {}
 // ==========================================================================================
 /**
  *  @category Error
- *  @description Error that indicates an invalid address being passed or used (both contract and implicit)
+ *  @description Error indicates an invalid originated or implicit address being passed or used
  */
-export class InvalidAddressError extends Error {
+export class InvalidAddressError extends ParameterValidationError {
   constructor(address: string, errorDetail?: string) {
     super();
     this.name = 'InvalidAddressError';
     this.message = errorDetail
-      ? `${errorDetail!} address '${address}' is invalid.`
+      ? `${errorDetail} address '${address}' is invalid.`
       : `address '${address}' is invalid.`;
   }
 }
