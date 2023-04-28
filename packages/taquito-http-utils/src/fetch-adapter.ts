@@ -45,27 +45,27 @@ export default async function fetchAdapter(config: AxiosRequestConfig): Promise<
 
 
 /**
- * Fetch API stage two is to get response body. This funtion tries to retrieve
+ * Fetch API stage two is to get response body. This function tries to retrieve
  * response body based on response's type
  */
 async function getResponse(request: RequestInfo | URL, config: AxiosRequestConfig) {
     try {
         const stageOne = await fetch(request as any);
+        console.log(stageOne.headers);
         
-        const response = {
-          ok: stageOne.ok,
-          status: stageOne.status,
-          statusText: stageOne.statusText,
-          headers: new Headers(stageOne.headers), // Make a copy of headers
-          config: config,
-          request,
-        }
-
+        
         if (stageOne.status >= 400) {
+            const response = {
+              ok: stageOne.ok,
+              status: stageOne.status,
+              statusText: stageOne.statusText,
+              headers: new Headers(stageOne.headers), // Make a copy of headers
+              config: config,
+              request,
+            }
           return createError('Response Error', config, 'ERR_NETWORK', request, response);
         }
-
-        const result: {
+        const response: {
             ok: boolean;
             status: number;
             statusText: string;
@@ -85,25 +85,25 @@ async function getResponse(request: RequestInfo | URL, config: AxiosRequestConfi
         if (stageOne.status >= 200 && stageOne.status !== 204) {
             switch (config.responseType) {
                 case 'arraybuffer':
-                    result.data = await stageOne.arrayBuffer();
+                    response.data = await stageOne.arrayBuffer();
                     break;
                 case 'blob':
-                    result.data = await stageOne.blob();
+                    response.data = await stageOne.blob();
                     break;
                 case 'json':
-                    result.data = await stageOne.json();
+                    response.data = await stageOne.json();
                     break;
                 // TODO: the next option does not exist in response type
                 // case 'formData':
-                //     result.data = await stageOne.formData();
+                //     response.data = await stageOne.formData();
                 //     break;
                 default:
-                    result.data = await stageOne.text();
+                    response.data = await stageOne.text();
                     break;
             }
         }
     
-        return result;
+        return response;
     } catch (e) {
         return createError('Network Error', config, 'ERR_NETWORK', request);
     }
