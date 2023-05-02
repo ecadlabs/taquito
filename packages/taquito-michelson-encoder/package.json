@@ -74,7 +74,6 @@
     "fast-json-stable-stringify": "^2.1.0"
   },
   "devDependencies": {
-    "@taquito/rpc": "^14.0.0-beta-RC.0",
     "@types/bluebird": "^3.5.36",
     "@types/jest": "^26.0.23",
     "@types/node": "^16",

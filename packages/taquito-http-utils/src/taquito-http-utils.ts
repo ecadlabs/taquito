@@ -7,8 +7,7 @@ import fetchAdapter from './fetch-adapter';
 import { STATUS_CODE } from './status_code';
 import axios from 'axios';
 
-const isNode =
-  typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+const isNode = !!(process?.versions?.node);
 
 const adapter = isNode ? undefined : fetchAdapter;
 

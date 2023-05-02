@@ -36,13 +36,12 @@ export default async function fetchAdapter(config: AxiosRequestConfig): Promise<
             reject(data);
         } else {
             const c: any = config;
-            ('settle' in c) && typeof(c.settle) === 'function' && Object.prototype.toString.call(c.settle) === '[object Function]'
+            ('settle' in c) && Object.prototype.toString.call(c.settle) === '[object Function]'
                 ? c.settle(resolve, reject, data)
                 : settle(resolve, reject, data);
         }
     });
 }
-
 
 /**
  * Fetch API stage two is to get response body. This function tries to retrieve
@@ -51,21 +50,8 @@ export default async function fetchAdapter(config: AxiosRequestConfig): Promise<
 async function getResponse(request: RequestInfo | URL, config: AxiosRequestConfig) {
     try {
         const stageOne = await fetch(request as any);
-        console.log(stageOne.headers);
         
-        
-        if (stageOne.status >= 400) {
-            const response = {
-              ok: stageOne.ok,
-              status: stageOne.status,
-              statusText: stageOne.statusText,
-              headers: new Headers(stageOne.headers), // Make a copy of headers
-              config: config,
-              request,
-            }
-          return createError('Response Error', config, 'ERR_NETWORK', request, response);
-        }
-        const response: {
+        let response: {
             ok: boolean;
             status: number;
             statusText: string;
@@ -74,6 +60,18 @@ async function getResponse(request: RequestInfo | URL, config: AxiosRequestConfi
             request: RequestInfo | URL;
             data?: unknown;
         } = {
+            ok: stageOne.ok,
+            status: stageOne.status,
+            statusText: stageOne.statusText,
+            headers: new Headers(stageOne.headers), // Make a copy of headers
+            config: config,
+            request,
+          }
+        if (stageOne.status >= 400) {
+          return createError('Response Error', config, 'ERR_NETWORK', request, response);
+        }
+
+        response ={
             ok: stageOne.ok,
             status: stageOne.status,
             statusText: stageOne.statusText,
@@ -186,7 +184,7 @@ function createRequest(config: AxiosRequestConfig) {
  */
 function createError(message: string, config: AxiosRequestConfig, code?: string, request?: RequestInfo | URL, response?: object) {
     // TODO: this code never runs
-    // if (axios.AxiosError && typeof axios.AxiosError === 'function') {
+    // if ('AxiosError' in axios && axios.AxiosError && typeof axios.AxiosError === 'function' && isConstructor(axios.AxiosError)) {
     //     return new axios.AxiosError(message, axios.AxiosError[code], config, request, response);
     // }
 
