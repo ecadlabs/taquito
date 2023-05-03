@@ -108,3 +108,18 @@ export class InvalidMessageError extends ParameterValidationError {
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error indicates invalid view parameter of a smart contract
+ */
+export class InvalidViewParameterError extends Error {
+  name = 'Invalid view parameters error';
+  constructor(public viewName: string, public sigs: any, public args: any, public cause?: any) {
+    super();
+    this.name = 'InvalidViewParameterError';
+    this.message = `${viewName} received ${JSON.stringify(
+      args
+    )} arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`;
+  }
+}

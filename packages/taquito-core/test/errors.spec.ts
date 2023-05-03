@@ -11,6 +11,7 @@ import {
   InvalidDerivationPathError,
   InvalidHexStringError,
   InvalidMessageError,
+  InvalidViewParameterError,
 } from '../src/taquito-core';
 
 describe('parent errors classes', () => {
@@ -157,6 +158,16 @@ describe('common error classes', () => {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidMessageError);
       expect(error.message).toEqual(`Message "" is invalid. cannot be empty`);
+    }
+  });
+
+  it('should throw an InvalidViewParameterError', () => {
+    try {
+      throw new InvalidViewParameterError('add', { parameter: 'nat', result: 'nat' }, 'test');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidViewParameterError);
+      expect(error.message).toEqual(`Message "hi" is invalid.`);
     }
   });
 });
