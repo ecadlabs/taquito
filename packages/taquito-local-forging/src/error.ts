@@ -47,17 +47,6 @@ export class DecodeBallotValueError extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid hex string have been passed or used
- */
-export class InvalidHexStringError extends Error {
-  public name = 'InvalidHexStringError';
-  constructor(public hexString: string) {
-    super(`The hex string '${hexString}' is invalid`);
-  }
-}
-
-/**
- *  @category Error
  *  @description Error that indicates unexpected Michelson Value being passed or used
  */
 export class UnexpectedMichelsonValueError extends Error {

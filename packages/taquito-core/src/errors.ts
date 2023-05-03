@@ -54,7 +54,7 @@ export class InvalidAddressError extends ParameterValidationError {
   constructor(public address: string, errorDetail?: string) {
     super();
     this.name = 'InvalidAddressError';
-    this.message = `Address '${address}' is invalid.`;
+    this.message = `Address "${address}" is invalid.`;
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
@@ -66,7 +66,7 @@ export class InvalidAddressError extends ParameterValidationError {
   constructor(public blockHash: string) {
     super();
     this.name = 'InvalidBlockHashError';
-    this.message = `Block hash '${blockHash}' is invalid.`;
+    this.message = `Block hash "${blockHash}" is invalid.`;
   }
 }
 
@@ -78,7 +78,20 @@ export class InvalidDerivationPathError extends ParameterValidationError {
   constructor(public derivationPath: string, errorDetail?: string) {
     super();
     this.name = 'InvalidDerivationPathError';
-    this.message = `The derivation path ${derivationPath} is invalid.`;
+    this.message = `Derivation path "${derivationPath}" is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid hex string have been passed or used
+ */
+export class InvalidHexStringError extends ParameterValidationError {
+  constructor(public hexString: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidHexStringError';
+    this.message = `Hex string "${hexString}" is invalid.`;
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }

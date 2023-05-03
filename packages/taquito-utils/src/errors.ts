@@ -1,4 +1,4 @@
-export { InvalidAddressError, InvalidBlockHashError } from '@taquito/core';
+export { InvalidAddressError, InvalidBlockHashError, InvalidHexStringError } from '@taquito/core';
 
 /**
  *  @category Error
@@ -147,16 +147,5 @@ export class ValueConversionError extends Error {
   public name = 'ValueConversionError';
   constructor(public value: string, public desiredType: string) {
     super(`Unable to convert ${value} to a ${desiredType}`);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid hex string being passed or used
- */
-export class InvalidHexStringError extends Error {
-  public name = 'InvalidHexStringError';
-  constructor(public message: string) {
-    super(message);
   }
 }

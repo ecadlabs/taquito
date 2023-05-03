@@ -9,6 +9,7 @@ import {
   InvalidAddressError,
   InvalidBlockHashError,
   InvalidDerivationPathError,
+  InvalidHexStringError,
 } from '../src/taquito-core';
 
 describe('parent errors classes', () => {
@@ -86,14 +87,14 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidAddressError);
-      expect(error.message).toEqual("Address 'tz1' is invalid.");
+      expect(error.message).toEqual(`Address "tz1" is invalid.`);
     }
     try {
       throw new InvalidAddressError('tz1', 'params source');
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidAddressError);
-      expect(error.message).toEqual("Address 'tz1' is invalid. params source");
+      expect(error.message).toEqual(`Address "tz1" is invalid. params source`);
     }
   });
 
@@ -103,7 +104,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidBlockHashError);
-      expect(error.message).toEqual("Block hash 'Bl' is invalid.");
+      expect(error.message).toEqual(`Block hash "Bl" is invalid.`);
     }
   });
 
@@ -113,14 +114,31 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidDerivationPathError);
-      expect(error.message).toEqual("Derivation path '1729' is invalid.");
+      expect(error.message).toEqual(`Derivation path "1729" is invalid.`);
     }
     try {
       throw new InvalidDerivationPathError('1729', 'invalid BIP32 path');
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidDerivationPathError);
-      expect(error.message).toEqual("Derivation path '1729' is invalid. invalid BIP32 path");
+      expect(error.message).toEqual(`Derivation path "1729" is invalid. invalid BIP32 path`);
+    }
+  });
+
+  it('should throw an InvalidHexStringError', () => {
+    try {
+      throw new InvalidHexStringError('0x12');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidHexStringError);
+      expect(error.message).toEqual(`Hex string "0x12" is invalid.`);
+    }
+    try {
+      throw new InvalidHexStringError('0x12', 'invalid hexadecimal number');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidHexStringError);
+      expect(error.message).toEqual(`Hex string "0x12" is invalid. invalid hexadecimal number`);
     }
   });
 });

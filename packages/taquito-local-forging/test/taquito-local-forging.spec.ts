@@ -117,7 +117,7 @@ describe('Forge and parse operations default protocol', () => {
         localForger.forge(operation);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining(`Block hash 'Invalid_Block_Hash' is invalid`),
+          message: expect.stringContaining(`Block hash "Invalid_Block_Hash" is invalid`),
         })
       );
       expect(() => {
