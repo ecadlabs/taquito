@@ -8,6 +8,7 @@ import {
   PermissionDeniedError,
   InvalidAddressError,
   InvalidBlockHashError,
+  InvalidDerivationPathError,
 } from '../src/taquito-core';
 
 describe('parent errors classes', () => {
@@ -103,6 +104,23 @@ describe('common error classes', () => {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidBlockHashError);
       expect(error.message).toEqual("Block hash 'Bl' is invalid.");
+    }
+  });
+
+  it('should throw an InvalidDerivationPathError', () => {
+    try {
+      throw new InvalidDerivationPathError('1729');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidDerivationPathError);
+      expect(error.message).toEqual("Derivation path '1729' is invalid.");
+    }
+    try {
+      throw new InvalidDerivationPathError('1729', 'invalid BIP32 path');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidDerivationPathError);
+      expect(error.message).toEqual("Derivation path '1729' is invalid. invalid BIP32 path");
     }
   });
 });
