@@ -167,7 +167,11 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidViewParameterError);
-      expect(error.message).toEqual(`Message "hi" is invalid.`);
+      expect(error.message).toEqual(
+        `view name: add received arguments: "test" while expecting one of the following signatures: (${JSON.stringify(
+          { parameter: 'nat', result: 'nat' }
+        )})`
+      );
     }
   });
 });
