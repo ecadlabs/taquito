@@ -69,3 +69,16 @@ export class InvalidAddressError extends ParameterValidationError {
     this.message = `Block hash '${blockHash}' is invalid.`;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid derivation path being passed or used
+ */
+export class InvalidDerivationPathError extends ParameterValidationError {
+  constructor(public derivationPath: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidDerivationPathError';
+    this.message = `The derivation path ${derivationPath} is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}

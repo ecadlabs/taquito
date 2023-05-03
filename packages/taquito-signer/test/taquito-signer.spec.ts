@@ -1,10 +1,6 @@
-import {
-  InvalidCurveError,
-  InvalidDerivationPathError,
-  InvalidMnemonicError,
-  ToBeImplemented,
-} from '../src/errors';
+import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
+import { InvalidDerivationPathError } from '@taquito/core';
 
 describe('inmemory-signer', () => {
   const mnemonic = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
