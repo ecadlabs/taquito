@@ -41,12 +41,12 @@ import { ContractMethodObject } from '../contract/contract-methods/contract-meth
 import {
   validateAddress,
   validateKeyHash,
-  InvalidAddressError,
   InvalidKeyHashError,
   ValidationResult,
   InvalidOperationKindError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
+import { InvalidAddressError } from '@taquito/core';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -89,7 +89,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withTransferTicket(params: TransferTicketParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, 'param destination');
+      throw new InvalidAddressError(params.destination, 'params destination');
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;

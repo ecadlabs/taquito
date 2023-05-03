@@ -66,6 +66,7 @@
     ]
   },
   "dependencies": {
+    "@taquito/core": "^16.1.2-beta-RC.0",
     "@airgap/sapling-wasm": "0.0.9",
     "@stablelib/nacl": "^1.0.3",
     "@stablelib/random": "^1.0.1",

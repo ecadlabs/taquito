@@ -6,9 +6,10 @@ import {
   UnsupportedAction,
   NetworkError,
   PermissionDeniedError,
+  InvalidAddressError,
 } from '../src/taquito-core';
 
-describe('parent-errors', () => {
+describe('parent errors classes', () => {
   it('should throw an ParameterValidationError', () => {
     try {
       throw new ParameterValidationError('tez');
@@ -30,6 +31,7 @@ describe('parent-errors', () => {
       expect(error.message).toEqual('tez');
     }
   });
+
   it('should throw an TezosToolkitConfigError', () => {
     try {
       throw new TezosToolkitConfigError('tez');
@@ -40,6 +42,7 @@ describe('parent-errors', () => {
       expect(error.message).toEqual('tez');
     }
   });
+
   it('should throw an UnsupportedAction', () => {
     try {
       throw new UnsupportedAction('tez');
@@ -50,6 +53,7 @@ describe('parent-errors', () => {
       expect(error.message).toEqual('tez');
     }
   });
+
   it('should throw an NetworkError', () => {
     try {
       throw new NetworkError('tez');
@@ -60,6 +64,7 @@ describe('parent-errors', () => {
       expect(error.message).toEqual('tez');
     }
   });
+
   it('should throw an PermissionDeniedError', () => {
     try {
       throw new PermissionDeniedError('tez');
@@ -68,6 +73,25 @@ describe('parent-errors', () => {
       expect(error).toBeInstanceOf(TaquitoError);
       expect(error).toBeInstanceOf(PermissionDeniedError);
       expect(error.message).toEqual('tez');
+    }
+  });
+});
+
+describe('common error classes', () => {
+  it('should throw an InvalidAddressError', () => {
+    try {
+      throw new InvalidAddressError('tz1');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidAddressError);
+      expect(error.message).toEqual("Address 'tz1' is invalid.");
+    }
+    try {
+      throw new InvalidAddressError('tz1', 'params source');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidAddressError);
+      expect(error.message).toEqual("Address 'tz1' is invalid. params source");
     }
   });
 });

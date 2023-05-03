@@ -58,7 +58,6 @@ import {
   validateAddress,
   validateContractAddress,
   InvalidContractAddressError,
-  InvalidAddressError,
   ValidationResult,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -72,6 +71,7 @@ import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
+import { InvalidAddressError } from '@taquito/core';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -421,10 +421,10 @@ export class RpcContractProvider
    */
   async transferTicket(params: TransferTicketParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, 'param destination');
+      throw new InvalidAddressError(params.destination, 'params destination');
     }
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, 'param source');
+      throw new InvalidAddressError(params.source, 'params source');
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();
