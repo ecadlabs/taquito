@@ -1,0 +1,225 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": "dist/lib/ec-key.js",
+            "sha512": "9c07bfd146fb307548d528795213d75310a85cae21b0726b51ca367ae9b720e399bc0c28d43aee65129a153345f3253c6e5895bae209a2b7e4edffc82e5c26b7"
+          },
+          {
+            "path": "dist/lib/ed-key.js",
+            "sha512": "62dbdb23883fd4a4c9b67c0381356595bda46fee720be189d963daabe3506a69a3b464821652f478460e7d8ca51a270f6f84c20818aec4d511b1d560a4dd1b11"
+          },
+          {
+            "path": "dist/lib/import-key.js",
+            "sha512": "4e1fad91017a63adf08343b4bc12b4916bcad9d6ae5fc4dc4df8ae5c6cd1a1d88340b2e1e17171e8a86cc2295e82d897ef53b5f296ed6cb3e44186d0e6de5228"
+          },
+          {
+            "path": "dist/taquito-signer.es5.js",
+            "sha512": "a18843a908e102443c1a359b0500d02f322c2b17e69804d1d06c7a7117f1a3adfcf886f8607c63cee4717a9b28107e05eb3a803e057af544b9ee3283fdfae4ea"
+          },
+          {
+            "path": "dist/lib/taquito-signer.js",
+            "sha512": "71777e543602dbb3ef170f337513fdf9ffe9624b452979a72e0dc0896ea40d6a5953cbe876617df576de78902aa8d3f583346ab0ab78b0651c92206a16a51651"
+          },
+          {
+            "path": "dist/taquito-signer.umd.js",
+            "sha512": "cb78a93ca519f8e1a05f573326fd7cf966db4eb5a5366dc48403ddd0c7480a7a5527debbbd72d14e32923df620354e03164b7357dba5acc9003cc35c939f07b9"
+          },
+          {
+            "path": "dist/lib/ec-key.js.map",
+            "sha512": "32e91cb313e87cad9448236e3d3b0056a8914e0c4ccf504769f053ef085cfeac6ae8fafca691b73bdb165f5549269591f80e56c29d912e13d49987c1ae7564a5"
+          },
+          {
+            "path": "dist/lib/ed-key.js.map",
+            "sha512": "dc4ef8620f17657569480234eb94ef74081f6c2e6666f978230fc086091c03b52a1f3cb1a0a30143a7ba92d540a4b84dbf060ba02c41a1412c8bda311c93a508"
+          },
+          {
+            "path": "dist/lib/import-key.js.map",
+            "sha512": "b47c65b6d699ee44f223dc49d24703282ff8d68dedc9a4cead222fd84b52812e82f4a4f265b98ab8653370ce8b6f7ad71c9b68bbe9d62ca91da7694895667b02"
+          },
+          {
+            "path": "dist/taquito-signer.es5.js.map",
+            "sha512": "caafc5f73db0325b8ccc403c5ddb6d258b1ef5b399d9e6c44107e12400ef5f328bc6e6c10c2a1cb0612e5e768ec222ef471f3c59561ab25744fe8587b1b017fb"
+          },
+          {
+            "path": "dist/lib/taquito-signer.js.map",
+            "sha512": "fcb802926ae055cab052b1111a28398ccf3986fd04654c18cc48490a2a0ff057e5cc09aa324f63b78caf4cdae43bb4c81b1408d1704ed0ff389c9e94487aa3db"
+          },
+          {
+            "path": "dist/taquito-signer.umd.js.map",
+            "sha512": "8cadd1bb56f1401f294ceca9f46e08a225a857e2de4c97aa8f67ea94e8d3231424e91be4aa14f1929ca309ff32dafcb62c932350a85ba1b28cb0dfa241a8c159"
+          },
+          {
+            "path": "dist/types/ec-key.d.ts",
+            "sha512": "9dc9ac5c6e19fd43ad48e6b1db540fc9100f54aa62af7f6c4fe523bd3acaedd501856fe2db59cdc62398202d00e1202e07d166c2382eb82e4a1118c89643877b"
+          },
+          {
+            "path": "dist/types/ed-key.d.ts",
+            "sha512": "3066c9c370fca305ef23fe3ce3443eff385f0b47713d7c31659fdb8d5cc0bad6868d21b831f48d3873b0c5e8b60284532ab5d6c1e404b6d43e4b2ef6ef7f3add"
+          },
+          {
+            "path": "dist/types/import-key.d.ts",
+            "sha512": "95163b26030a90d4fdb6d76dea71c490fcbdcf32e7aaff11486ac52e08a74cd6bda2305ce81d3179559ad70bf9668273ea5424efaf970c03b852658b2b2fd9a1"
+          },
+          {
+            "path": "dist/types/taquito-signer.d.ts",
+            "sha512": "b730dffa7375f7684850d77f00920374111a574affd07b3ff08d39915c974c05071e9fb91b055b146b1d103f4754b8c1aaed89eaec3c2284f0ff4d961729ec59"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "author",
+          "dependencies",
+          "description",
+          "devDependencies",
+          "engines",
+          "files",
+          "gitHead",
+          "jest",
+          "keywords",
+          "license",
+          "lint-staged",
+          "main",
+          "module",
+          "name",
+          "publishConfig",
+          "repository",
+          "scripts",
+          "typings",
+          "version"
+        ],
+        "sha512": "c065e36b6e31129bdd690ad2a8d591c6f6b70326f925e29b350072221ea842842196a6774b804929f0df314c7323a37d8dbcf1356b91d8a00037d1139bf03fa4"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "name": "@taquito/signer",
+          "version": "8.0.4-beta.0",
+          "description": "Provide signing functionality to be with taquito",
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "signer"
+          ],
+          "main": "dist/taquito-signer.umd.js",
+          "module": "dist/taquito-signer.es5.js",
+          "typings": "dist/types/taquito-signer.d.ts",
+          "files": [
+            "dist",
+            "signature.json"
+          ],
+          "publishConfig": {
+            "access": "public"
+          },
+          "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+          "repository": {
+            "type": "git",
+            "url": ""
+          },
+          "license": "MIT",
+          "engines": {
+            "node": ">=16"
+          },
+          "scripts": {
+            "test": "jest --coverage",
+            "test:watch": "jest --coverage --watch",
+            "test:prod": "npm run lint && npm run test -- --no-cache",
+            "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+            "precommit": "lint-staged",
+            "prebuild": "rimraf dist",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+            "start": "rollup -c rollup.config.ts -w"
+          },
+          "lint-staged": {
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
+          },
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "moduleNameMapper": {
+              "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
+            },
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
+          },
+          "dependencies": {
+            "@taquito/taquito": "^8.0.4-beta.0",
+            "@taquito/utils": "^8.0.4-beta.0",
+            "bignumber.js": "^9.0.1",
+            "bip39": "^3.0.2",
+            "elliptic": "^6.5.3",
+            "libsodium-wrappers": "^0.7.8",
+            "pbkdf2": "^3.1.1",
+            "typedarray-to-buffer": "^3.1.5"
+          },
+          "devDependencies": {
+            "@types/elliptic": "^6.4.12",
+            "@types/jest": "^26.0.16",
+            "@types/libsodium-wrappers": "^0.7.8",
+            "@types/node": "^16",
+            "@types/pbkdf2": "^3.1.0",
+            "colors": "^1.4.0",
+            "coveralls": "^3.1.0",
+            "cross-env": "^7.0.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
+            "lint-staged": "^10.4.0",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^2.1.2",
+            "prompt": "^1.0.0",
+            "replace-in-file": "^6.1.0",
+            "rimraf": "^3.0.2",
+            "rollup": "^2.28.2",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
+            "shelljs": "^0.8.4",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
+            "tslint": "^6.1.3",
+            "tslint-config-prettier": "^1.18.0",
+            "tslint-config-standard": "^9.0.0",
+            "typedoc": "^0.20.23",
+            "typescript": "~4.1.5"
+          },
+          "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgN/UGCRAD9Qy5GYHsngAANIAQAJzDpq2JbtqK/6Dmu+KlJu3B\n8oIpUJf5nY429f6l8uMEJrh4Ajm806O9czXzL6Wy24M1wfUhCnXXTHAY0h/TWeRg\nwDO5E3dxKpiqZw3bmG+bQnhswxYrzJbOfeRwt+D/edW3R63T3p0pqxlIxjlwrMIs\nEtflcp/wFWDeKIhtOPomKO8e7JKAu7REu7E7o6XmREs0X2LkOe9n7cDbqcevqDvn\nbh+L+m5XFulP3u51t7zfU5PI0bUNhrJBXTFYR7897CQYXAgW0o6IqLDp9E7C4LMA\nv0yKmQNeBi/lyymTNPDdA+AR9BDJkEMrzEs2qd/ADKe5H0c28Q8hWOkQ5HXjO1qb\nOay4TJKr+RpFtWmrXHWUjPNMBBkkSpcpsq1vkKDdMrnjy5RIp9t3u3uH4dBpnYcy\nWlEZsThv60Gy5cLK9D9bBjsg42YQj473nvCo6mOsMuSDkJ/TXVvGdbgO1CqVyEb2\n7nps0QxxO8rQqfBSiW5H5yF3IO+CK6icZORQuyYoMbT4Hnurk36QCYg8a55QLicx\nWKKomTacuVsLDqB8JhWhN0ubnp6tXklPGewOQpCaIN4aGjWo8lPhxqsW/7nMYvv8\njo7149vrfl37+I5nWpWcKHBSrjQEaDXAsBoZEtoOOpZERcocfo1V338T4hjt4ptq\ndURtpCRMfphoodkFb3p1\n=pHMQ\n-----END PGP SIGNATURE-----\n"
+}

@@ -1,0 +1,204 @@
+{
+  "entries": [
+    {
+      "entry": "files/v1alpha2",
+      "value": {
+        "files": [
+          {
+            "path": "dist/lib/constants.js",
+            "sha512": "f90631a1855f27c26b2d3e9d2e7077b4e4bb3cbcb5c942f1c62b5410e26e9594e50493b958e29dd9a9993efc26b0313e51e82e0ab848042bbd376ef1242d85ac"
+          },
+          {
+            "path": "dist/taquito-utils.es5.js",
+            "sha512": "4ad7437ac7d14119dea9c80189d04bb6a48b8b15ab26ae50530c72054b8793ad8e15557c1755b4fc508bd7f7ccb25df0cb0b03336171319ff3eab143e2924676"
+          },
+          {
+            "path": "dist/lib/taquito-utils.js",
+            "sha512": "6bcc206db868d3a158e2a4476b3edb621ccf1fb41f5a75cc509704248afe378d3cc431390986c6af802f709699457aa74e5b40c84bbfccaeff5d902ce36123c0"
+          },
+          {
+            "path": "dist/taquito-utils.umd.js",
+            "sha512": "8a1fc6095d4c88d0370818248f0389b5b44929e8022d9e067c7adee1dbe35eef695ae09025567c0e3004229d4026d2e27d5d986b6ef6641901c414743c379502"
+          },
+          {
+            "path": "dist/lib/validators.js",
+            "sha512": "7a7c491e86b6571b67cc2c4def71b7322f5a09302a434256f0a7c3c9d751bb029b1627079ee4485095ca580582bb79a63b3f88308dc499925c0df1cc9f4d684a"
+          },
+          {
+            "path": "dist/lib/constants.js.map",
+            "sha512": "60386bfe60bb0dd477fda291b40cbaf2528fabc0b7d94e87f724715c9e22f202537c675069658e610a928cb450843f40fc4dc18660388d22a1dd34c9c4bc4aab"
+          },
+          {
+            "path": "dist/taquito-utils.es5.js.map",
+            "sha512": "2767129ef4568323876b48c51dbf2738e4dab9ed1771774a7cf85a5a720c952d971f11b69ae6ff6d3e4b20b24f889c4e791f0e8393e41e07385c0d9c91dd28c3"
+          },
+          {
+            "path": "dist/lib/taquito-utils.js.map",
+            "sha512": "8bb851fdc72dd7f1eb6b923af598b7f9a0fe799429a055855cac638f85a874507a7a879eb82b50680db5228e828fdc48274413848269c5a286bc5c22dcb76e43"
+          },
+          {
+            "path": "dist/taquito-utils.umd.js.map",
+            "sha512": "37844b6c0f2436ce7612727b5a033da4e4bea4274df1e916147313804e17553230b2726e030506aec335520cd87b69e936a0c6ffbe9c62be980d7ce257d84bc5"
+          },
+          {
+            "path": "dist/lib/validators.js.map",
+            "sha512": "241dfa50909d88042aa3c67f706423ccf76ba76aa609998217eb5c5fd8c15126aa178ac7e1c458bfc2edf3522d7154787d09c3f579f8be5eeb9704faf8015907"
+          },
+          {
+            "path": "README.md",
+            "sha512": "c490ab6c91154a3a4364f45fce93659a4338416b811d15c0ea550026c2478a58e5135e7be03708988497459e6c792190bde62e51996f1652596471cfcdfda20a"
+          },
+          {
+            "path": "dist/types/constants.d.ts",
+            "sha512": "649a276e336facb6ee335fdbb9cfbbead96b09a707ae3cab5d068c6263351d632aadfd76200cd1626570066b3f2980e127c619b4c999ecaa7d8fdcbf65751ab7"
+          },
+          {
+            "path": "dist/types/taquito-utils.d.ts",
+            "sha512": "338ffde57329bcbf50881b88dc4d72ee990ba204aba170828a303a49633e974494b48f4ff2c17e942ac599fb9e0c26cb4f2b2ec64cea1df15c77425385518ccf"
+          },
+          {
+            "path": "dist/types/validators.d.ts",
+            "sha512": "7a36ebb852c5aef5a12aaf419dd625f065a5f1341e936edd463da2e65b4bb64b7633a815b21309cce624f31ff2e7cd696f1987b92470be160e658d1949be94df"
+          }
+        ]
+      }
+    },
+    {
+      "entry": "identity/v1alpha2",
+      "value": {
+        "identity": {
+          "keybaseUser": "jevonearth"
+        }
+      }
+    },
+    {
+      "entry": "npmCompatiblePackageJson/v1alpha2",
+      "value": {
+        "packageJsonProperties": [
+          "author",
+          "dependencies",
+          "description",
+          "devDependencies",
+          "engines",
+          "files",
+          "gitHead",
+          "jest",
+          "keywords",
+          "license",
+          "lint-staged",
+          "main",
+          "module",
+          "name",
+          "publishConfig",
+          "repository",
+          "scripts",
+          "typings",
+          "version"
+        ],
+        "sha512": "9755739c8bd025d2c605909fee27d8373e6d5d4b088e8039a6aa3b299ad3f481695500396ae0478826ec73096ddb11df50c75ea8d7c7621272a3747feaa70289"
+      }
+    },
+    {
+      "entry": "packageJson/v1alpha2",
+      "value": {
+        "packageJson": {
+          "name": "@taquito/utils",
+          "version": "8.0.4-beta.0",
+          "description": "converts michelson data and types into convenient JS/TS objects",
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "michelson",
+            "smart-contract"
+          ],
+          "main": "dist/taquito-utils.umd.js",
+          "module": "dist/taquito-utils.es5.js",
+          "typings": "dist/types/taquito-utils.d.ts",
+          "files": [
+            "dist",
+            "signature.json"
+          ],
+          "publishConfig": {
+            "access": "public"
+          },
+          "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+          "repository": {
+            "type": "git",
+            "url": ""
+          },
+          "license": "MIT",
+          "engines": {
+            "node": ">=16"
+          },
+          "scripts": {
+            "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+            "precommit": "lint-staged",
+            "prebuild": "rimraf dist",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+            "start": "rollup -c rollup.config.ts -w"
+          },
+          "lint-staged": {
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix",
+              "git add"
+            ]
+          },
+          "jest": {
+            "transform": {
+              ".(ts|tsx)": "ts-jest"
+            },
+            "testEnvironment": "node",
+            "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
+          },
+          "dependencies": {
+            "blakejs": "^1.1.0",
+            "bs58check": "^2.1.2",
+            "buffer": "^5.6.0"
+          },
+          "devDependencies": {
+            "@types/jest": "^26.0.16",
+            "@types/node": "^16",
+            "colors": "^1.4.0",
+            "coveralls": "^3.1.0",
+            "cross-env": "^7.0.2",
+            "jest": "^26.6.3",
+            "jest-config": "^26.6.3",
+            "lint-staged": "^10.4.0",
+            "lodash.camelcase": "^4.3.0",
+            "prettier": "^2.1.2",
+            "prompt": "^1.0.0",
+            "replace-in-file": "^6.1.0",
+            "rimraf": "^3.0.2",
+            "rollup": "^2.28.2",
+            "rollup-plugin-json": "^4.0.0",
+            "rollup-plugin-sourcemaps": "^0.6.3",
+            "rollup-plugin-typescript2": "^0.27.3",
+            "shelljs": "^0.8.4",
+            "ts-jest": "^26.4.4",
+            "ts-node": "^9.1.1",
+            "tslint": "^6.1.3",
+            "tslint-config-prettier": "^1.18.0",
+            "tslint-config-standard": "^9.0.0",
+            "typedoc": "^0.20.23",
+            "typescript": "~4.1.5"
+          },
+          "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
+        }
+      }
+    }
+  ],
+  "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJgN/UMCRAD9Qy5GYHsngAAEnsQAI0aVnCzRBDVIMgJlYmG3BHi\nym+B+M3h3CR8nN5tFqAdsS/rDPCTMvucut0Feg8HptBbWT3ht8fMU+vsBJ7r3Lx2\n0bL/d5CC8copKC11+xSIqaeTjHhKrbzH87mLW+97NqkSwMFUqRKInhJXRh55qaiV\n4CkToyj0x1sGaDujelCgcnkrFg6L0wBeyHPSiTlXjkVur0oeXcfzdRd5LJQz+U89\nQeBUj7TvIM1Ao+8szfk/K1DqKXU4O/kuclKJmUaD0m5BLohqHYhyL6K8JYOqxQfN\nJR1BxQoW7SnOYiL+0rU3wanHSpVKhpEHE8oGxjyHw11lSf3kZa2KMd+CD3nCpQ4D\naMhYDuFjaDC5vJRMGrZp8008qatwaIuSVfdR+pxGB0cehVZmuq87UmBGomaL2p9/\nbPDuK/Gs31gGCws/eeYDtqb5IXR807YLoSO/cF6gKw3MBlL1wiWty85HzkYxFJy6\nfWbwbrBOT+1dzTxhcUJYUv9+op1CAaF5grPv+KLJgPNzqfwwvmelK50quxfps+Gc\nVlSv1jAgzEIEdqbJfLlinpbg+M0wCBU4Ixj/66omgthklhdvpKswIS2sQCEZh6Re\nWhLVyIHAUIf6Q67ZFzCboQ65q6A3nJiJEmHO6s2f0jk6VDq/bGLiBsz3eR8K7xZ8\n6+hL4igSDE3/0LdErbN1\n=RbTt\n-----END PGP SIGNATURE-----\n"
+}
