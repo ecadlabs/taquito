@@ -7,6 +7,7 @@ import {
   NetworkError,
   PermissionDeniedError,
   InvalidAddressError,
+  InvalidBlockHashError,
 } from '../src/taquito-core';
 
 describe('parent errors classes', () => {
@@ -92,6 +93,16 @@ describe('common error classes', () => {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidAddressError);
       expect(error.message).toEqual("Address 'tz1' is invalid. params source");
+    }
+  });
+
+  it('should throw an InvalidBlockHashError', () => {
+    try {
+      throw new InvalidBlockHashError('Bl');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidBlockHashError);
+      expect(error.message).toEqual("Block hash 'Bl' is invalid.");
     }
   });
 });

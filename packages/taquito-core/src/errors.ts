@@ -51,11 +51,21 @@ export class PermissionDeniedError extends TaquitoError {}
  *  @description Error indicates an invalid originated or implicit address being passed or used
  */
 export class InvalidAddressError extends ParameterValidationError {
-  public name = 'InvalidAddressError';
   constructor(public address: string, errorDetail?: string) {
     super();
     this.name = 'InvalidAddressError';
     this.message = `Address '${address}' is invalid.`;
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid block hash being passed or used
+ */ export class InvalidBlockHashError extends ParameterValidationError {
+  constructor(public blockHash: string) {
+    super();
+    this.name = 'InvalidBlockHashError';
+    this.message = `Block hash '${blockHash}' is invalid.`;
   }
 }

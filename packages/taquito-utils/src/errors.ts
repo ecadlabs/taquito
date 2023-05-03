@@ -1,4 +1,4 @@
-export { InvalidAddressError } from '@taquito/core';
+export { InvalidAddressError, InvalidBlockHashError } from '@taquito/core';
 
 /**
  *  @category Error
@@ -82,16 +82,6 @@ export class InvalidKeyHashError extends Error {
   public name = 'InvalidKeyHashError';
   constructor(public keyHash: string) {
     super(`The public key hash '${keyHash}' is invalid`);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid block hash being passed or used
- */ export class InvalidBlockHashError extends Error {
-  public name = 'InvalidBlockHashError';
-  constructor(public blockHash: string) {
-    super(`The block hash '${blockHash}' is invalid`);
   }
 }
 
