@@ -17,7 +17,7 @@
     "baseUrl": "packages",
     "downlevelIteration": true,
     "paths": {
-      "taquito-beacon-wallet": [
+      "@taquito/beacon-wallet": [
         "taquito-beacon-wallet/src/taquito-beacon-wallet.ts"
       ],
       "@taquito/contracts-library": [
@@ -36,12 +36,12 @@
       "@taquito/michelson-encoder": [
         "taquito-michelson-encoder/src/taquito-michelson-encoder.ts"
       ],
-      "taquito-remote-signer": [
+      "@taquito/remote-signer": [
         "taquito-remote-signer/src/taquito-remote-signer.ts"
       ],
       "@taquito/rpc": ["taquito-rpc/src/taquito-rpc.ts"],
       "@taquito/sapling": ["taquito-sapling/taquito-sapling.ts"],
-      "taquito-signer": ["taquito-signer/src/taquito-signer.ts"],
+      "@taquito/signer": ["taquito-signer/src/taquito-signer.ts"],
       "@taquito/taquito": ["taquito/src/taquito.ts"],
       "@taquito/tzip12": ["taquito-tzip12/src/taquito-tzip12.ts"],
       "@taquito/tzip16": ["taquito-tzip16/src/taquito-tzip16.ts"],
