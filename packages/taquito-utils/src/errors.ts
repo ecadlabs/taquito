@@ -1,4 +1,9 @@
-export { InvalidAddressError, InvalidBlockHashError, InvalidHexStringError } from '@taquito/core';
+export {
+  InvalidAddressError,
+  InvalidBlockHashError,
+  InvalidHexStringError,
+  InvalidMessageError,
+} from '@taquito/core';
 
 /**
  *  @category Error
@@ -35,19 +40,6 @@ export class InvalidSignatureError extends Error {
   constructor(public signature: string, errorDetail?: string) {
     super();
     const baseMessage = `The signature '${signature}' is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid message being passed or used
- */
-export class InvalidMessageError extends Error {
-  public name = 'InvalidMessageError';
-  constructor(public msg: string, public errorDetail?: string) {
-    super();
-    const baseMessage = `The message '${msg}' is invalid.`;
     this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
   }
 }

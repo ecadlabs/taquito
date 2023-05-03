@@ -10,6 +10,7 @@ import {
   InvalidBlockHashError,
   InvalidDerivationPathError,
   InvalidHexStringError,
+  InvalidMessageError,
 } from '../src/taquito-core';
 
 describe('parent errors classes', () => {
@@ -139,6 +140,23 @@ describe('common error classes', () => {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidHexStringError);
       expect(error.message).toEqual(`Hex string "0x12" is invalid. invalid hexadecimal number`);
+    }
+  });
+
+  it('should throw an InvalidMessageError', () => {
+    try {
+      throw new InvalidMessageError('hi');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidMessageError);
+      expect(error.message).toEqual(`Message "hi" is invalid.`);
+    }
+    try {
+      throw new InvalidMessageError('', 'cannot be empty');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidMessageError);
+      expect(error.message).toEqual(`Message "" is invalid. cannot be empty`);
     }
   });
 });

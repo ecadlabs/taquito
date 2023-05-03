@@ -95,3 +95,16 @@ export class InvalidHexStringError extends ParameterValidationError {
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid message being passed or used
+ */
+export class InvalidMessageError extends ParameterValidationError {
+  constructor(public msg: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidMessageError';
+    this.message = `Message "${msg}" is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}
