@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "16.1.2-beta-RC.0",
+  "version": "16.1.2",
   "description": "high level error classes and interfaces",
   "keywords": [
     "tezos",
