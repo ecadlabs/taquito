@@ -421,10 +421,10 @@ export class RpcContractProvider
    */
   async transferTicket(params: TransferTicketParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, 'params destination');
+      throw new InvalidAddressError(params.destination);
     }
     if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, 'params source');
+      throw new InvalidAddressError(params.source);
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();

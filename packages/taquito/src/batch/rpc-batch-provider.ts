@@ -89,7 +89,7 @@ export class OperationBatch extends OperationEmitter {
    */
   withTransferTicket(params: TransferTicketParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, 'params destination');
+      throw new InvalidAddressError(params.destination);
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
