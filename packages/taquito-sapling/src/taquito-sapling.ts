@@ -8,7 +8,6 @@ import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
 import {
   b58cdecode,
   format,
-  InvalidAddressError,
   InvalidKeyError,
   prefix,
   Prefix,
@@ -31,6 +30,7 @@ import {
 import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
 import { DEFAULT_BOUND_DATA, DEFAULT_MEMO } from './constants';
 import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
+import { InvalidAddressError } from '@taquito/core';
 
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';

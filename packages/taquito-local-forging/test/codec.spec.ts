@@ -15,11 +15,11 @@ import {
   DecodeBallotValueError,
   DecodePvmKindError,
   InvalidBallotValueError,
-  InvalidHexStringError,
   OversizedEntryPointError,
   UnsupportedPvmKindError,
 } from '../src/error';
 import { bytesEncoder } from '../src/michelson/codec';
+import { InvalidHexStringError } from '@taquito/core';
 
 describe('Tests for Entrypoint functions and for encode and decoder error messages', () => {
   test('Entrypoint encoder', () => {
@@ -212,7 +212,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     ).toThrow(
       expect.objectContaining({
         message: expect.stringContaining(
-          "The hex string 'H05c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9' is invalid"
+          `Hex string "H05c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9" is invalid`
         ),
         name: expect.stringMatching('InvalidHexStringError'),
       })

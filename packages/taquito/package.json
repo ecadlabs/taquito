@@ -77,6 +77,7 @@
     ]
   },
   "dependencies": {
+    "@taquito/core": "^16.1.2",
     "@taquito/http-utils": "^16.1.2",
     "@taquito/local-forging": "^16.1.2",
     "@taquito/michel-codec": "^16.1.2",

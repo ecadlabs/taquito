@@ -7,7 +7,6 @@ import {
   prefixLength,
   InvalidKeyHashError,
   InvalidPublicKeyError,
-  InvalidAddressError,
   InvalidContractAddressError,
 } from '@taquito/utils';
 import {
@@ -30,6 +29,7 @@ import {
 } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad } from './utils';
+import { InvalidAddressError } from '@taquito/core';
 
 // https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
 

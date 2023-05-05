@@ -15,9 +15,9 @@ import { validatePkAndExtractPrefix } from './verify-signature';
 import { hash } from '@stablelib/blake2b';
 import blake from 'blakejs';
 import bs58check from 'bs58check';
-import { ValueConversionError, InvalidHexStringError } from './errors';
+import { ValueConversionError } from './errors';
 import BigNumber from 'bignumber.js';
-
+import { InvalidHexStringError } from '@taquito/core';
 export * from './validators';
 export { VERSION } from './version';
 
@@ -351,9 +351,7 @@ export function bytes2Char(hex: string): string {
  */
 export function hex2Bytes(hex: string): Buffer {
   if (!hex.match(/[\da-f]{2}/gi)) {
-    throw new InvalidHexStringError(
-      `The hex string ${hex} does not have an even number of characters`
-    );
+    throw new InvalidHexStringError(hex, `Does not have an even number of characters`);
   }
   return Buffer.from(hex, 'hex');
 }

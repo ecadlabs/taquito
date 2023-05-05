@@ -2,17 +2,6 @@ import { ENTRYPOINT_MAX_LENGTH } from './constants';
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid block hash being passed or used
- */
-export class InvalidBlockHashError extends Error {
-  public name = 'InvalidBlockHashError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
-
-/**
- *  @category Error
  *  @description Error that indicates an invalid operation schema being passed or used
  */ export class InvalidOperationSchemaError extends Error {
   public name = 'InvalidOperationSchemaError';
@@ -53,17 +42,6 @@ export class DecodeBallotValueError extends Error {
   public name = 'DecodeBallotValueError';
   constructor(public ballotValue: string) {
     super(`Failed to decode ballot value ${ballotValue}`);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid hex string have been passed or used
- */
-export class InvalidHexStringError extends Error {
-  public name = 'InvalidHexStringError';
-  constructor(public hexString: string) {
-    super(`The hex string '${hexString}' is invalid`);
   }
 }
 

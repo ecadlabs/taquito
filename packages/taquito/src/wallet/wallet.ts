@@ -16,12 +16,11 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from './interface';
-
+import { InvalidAddressError } from '@taquito/core';
 import {
   validateAddress,
   validateContractAddress,
   InvalidContractAddressError,
-  InvalidAddressError,
   ValidationResult,
   InvalidOperationKindError,
 } from '@taquito/utils';
