@@ -4,7 +4,8 @@ import { SHA512 } from '@stablelib/sha512';
 import { generateKeyPairFromSeed } from '@stablelib/ed25519';
 import { ExtendedPrivateKey, Hard } from './index';
 import { parseHex } from './utils';
-import { InvalidDerivationPathError, InvalidSeedLengthError } from '../errors';
+import { InvalidSeedLengthError } from '../errors';
+import { InvalidDerivationPathError } from '@taquito/core';
 
 // MinSeedSize is the minimal allowed seed byte length
 const minSeedSize = 16;
@@ -48,7 +49,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    */
   derive(index: number): PrivateKey {
     if ((index & Hard) === 0) {
-      throw new InvalidDerivationPathError('Non-hardened derivation path');
+      throw new InvalidDerivationPathError('', 'Non-hardened derivation path');
     }
     const data = new Uint8Array(37);
     data.set(this.seed(), 1);

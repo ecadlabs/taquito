@@ -1,3 +1,5 @@
+import { InvalidMessageError } from '@taquito/core';
+
 const H = [
   0x6a09e667 | 0,
   0xbb67ae85 | 0,
@@ -87,17 +89,6 @@ export class Base58DecodingError extends Error {
   }
 }
 
-/**
- *  @category Error
- *  @description
- */
-export class InvalidMessageError extends Error {
-  public name = 'InvalidMessageError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
-
 // https://tools.ietf.org/html/rfc6234
 function sha256(msg: number[] | Uint8Array): number[] {
   // pad the message
@@ -105,7 +96,7 @@ function sha256(msg: number[] | Uint8Array): number[] {
   const pad = r === 0 ? 0 : 64 - r;
 
   if (msg.length > 268435455) {
-    throw new InvalidMessageError(`SHA-256 -- message length is too big: ${msg.length}`);
+    throw new InvalidMessageError('', `SHA-256 -- message length is too big: ${msg.length}`);
   }
 
   const l = msg.length << 3;

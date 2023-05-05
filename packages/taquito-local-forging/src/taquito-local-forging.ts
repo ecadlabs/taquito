@@ -9,9 +9,10 @@ import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
-import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
+import { InvalidOperationSchemaError } from './error';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash } from './protocols';
+import { InvalidBlockHashError } from '@taquito/core';
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
@@ -40,7 +41,7 @@ export class LocalForger implements Forger {
 
   forge(params: ForgeParams): Promise<string> {
     if (validateBlock(params.branch) !== ValidationResult.VALID) {
-      throw new InvalidBlockHashError(`The block hash ${params.branch} is invalid`);
+      throw new InvalidBlockHashError(params.branch);
     }
 
     for (const content of params.contents) {
@@ -57,7 +58,7 @@ export class LocalForger implements Forger {
         } else if (content.kind === 'transaction' && diff[0] === 'parameters') {
           continue;
         } else if (content.kind === 'set_deposits_limit' && diff[0] === 'limit') {
-          continue
+          continue;
         } else if (
           content.kind === ('tx_rollup_submit_batch' as unknown) &&
           diff[0] === 'burn_limit'

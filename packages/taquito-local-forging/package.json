@@ -68,6 +68,7 @@
     ]
   },
   "dependencies": {
+    "@taquito/core": "^16.1.2",
     "@taquito/utils": "^16.1.2",
     "bignumber.js": "^9.1.0"
   },

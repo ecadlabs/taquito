@@ -43,14 +43,10 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
 } from '../contract/prepare';
-import {
-  validateAddress,
-  InvalidAddressError,
-  ValidationResult,
-  InvalidOperationKindError,
-} from '@taquito/utils';
+import { validateAddress, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
 import { RevealEstimateError } from './error';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
+import { InvalidAddressError } from '@taquito/core';
 
 interface Limits {
   fee?: number;
@@ -310,10 +306,10 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    */
   async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
     if (validateAddress(rest.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.destination, 'param destination');
+      throw new InvalidAddressError(rest.destination);
     }
     if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source ?? '', 'param source');
+      throw new InvalidAddressError(rest.source ?? '');
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');

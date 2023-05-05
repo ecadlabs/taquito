@@ -10,10 +10,10 @@ import { validateAddress, ValidationResult } from '@taquito/utils';
 import { TzReadProvider } from '../../read-provider/interface';
 import {
   InvalidViewSimulationContext,
-  InvalidViewParameterError,
   ViewSimulationError,
   validateAndExtractFailwith,
 } from '../errors';
+import { InvalidViewParameterError } from '@taquito/core';
 
 export interface ExecutionContextParams {
   source?: string;
