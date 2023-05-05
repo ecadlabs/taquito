@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             // location of the contract metadata
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
-            const metadataSha256 = '0x7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b';
+            const metadataSha256 = '0x18b983a4cc78d7c15d53f7642461176c1366fbdb83960ea432188130db1f8c9d';
             const url = 'sha256://' + metadataSha256 + '/https:' + urlPercentEncoded;
             const bytesUrl = char2Bytes(url);
 
@@ -54,9 +54,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
 
-            expect(metadata.uri).toEqual('sha256://0x7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b/https:%2F%2Fstorage.googleapis.com%2Ftzip-16%2Ftaco-shop-metadata.json');
+            expect(metadata.uri).toEqual('sha256://0x18b983a4cc78d7c15d53f7642461176c1366fbdb83960ea432188130db1f8c9d/https:%2F%2Fstorage.googleapis.com%2Ftzip-16%2Ftaco-shop-metadata.json');
             expect(metadata.integrityCheckResult).toEqual(true);
-            expect(metadata.sha256Hash).toEqual('7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b');
+            expect(metadata.sha256Hash).toEqual('18b983a4cc78d7c15d53f7642461176c1366fbdb83960ea432188130db1f8c9d');
             expect(metadata.metadata).toEqual({
                 "name": "Taquito test with valid metadata",
                 "description": "This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage",
@@ -136,7 +136,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             expect(metadata.uri).toEqual('sha256://0x7e99ecf3a4491e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b/https:%2F%2Fstorage.googleapis.com%2Ftzip-16%2Ftaco-shop-metadata.json');
             expect(metadata.integrityCheckResult).toEqual(false);
-            expect(metadata.sha256Hash).toEqual('7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b');
+            expect(metadata.sha256Hash).toEqual('18b983a4cc78d7c15d53f7642461176c1366fbdb83960ea432188130db1f8c9d');
             expect(metadata.metadata).toEqual({
                 "name": "Taquito test with valid metadata",
                 "description": "This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage",
