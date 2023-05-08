@@ -105,9 +105,9 @@ TEZOS_BAKER=tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
 
 Start the docker container which encapsulates the flextesa_sandbox:
 ```sh!
-docker run --rm --name flextesa_sandbox --detach -p 20000:20000 -e block_time=1 oxheadalpha/flextesa:latest mumbaibox start
+docker run --rm --name flextesa_sandbox --detach -p 20000:20000 oxheadalpha/flextesa:latest mumbaibox start
 ```
-Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local copy of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/).
+Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local copy of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/). A number of options are available for controlling block timings.
 
 ### 3. Run the integration tests
 
@@ -131,7 +131,7 @@ export const knownOnChainViewContractAddressPtMumbai2 = "KT1JxWH1vtMiTcvg4AdhTaG
 When the tests are first run these contracts are originated, but then this file is emptied, so you hvae to repopulate it if you rerun tests.
 
 ```bash!
-source sandbox-env.sh
+source integration-tests/sandbox-env.sh
 
 npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:mumbainet-secret-key
 ```
