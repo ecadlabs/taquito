@@ -138,13 +138,26 @@ export class InvalidKeyError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an Invalid Public Key being passed or used
+ *  @description Error indicates an Invalid Public Key being passed or used
  */
 export class InvalidPublicKeyError extends ParameterValidationError {
   constructor(public publicKey: string, errorDetail?: string) {
     super();
     this.name = 'InvalidPublicKeyError';
     this.message = `The public key '${publicKey}' is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid signature being passed or used
+ */
+export class InvalidSignatureError extends ParameterValidationError {
+  constructor(public signature: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidSignatureError';
+    this.message = `The signature '${signature}' is invalid.`;
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }

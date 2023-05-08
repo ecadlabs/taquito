@@ -5,20 +5,8 @@ export {
   InvalidMessageError,
   InvalidKeyError,
   InvalidPublicKeyError,
+  InvalidSignatureError,
 } from '@taquito/core';
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid signature being passed or used
- */
-export class InvalidSignatureError extends Error {
-  public name = 'InvalidSignatureError';
-  constructor(public signature: string, errorDetail?: string) {
-    super();
-    const baseMessage = `The signature '${signature}' is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
-  }
-}
 
 /**
  *  @category Error

@@ -12,8 +12,7 @@ import {
 } from './taquito-utils';
 import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
-import { InvalidMessageError, InvalidSignatureError } from './errors';
-import { InvalidPublicKeyError } from '@taquito/core';
+import { InvalidPublicKeyError, InvalidMessageError, InvalidSignatureError } from '@taquito/core';
 
 type PkPrefix = Prefix.EDPK | Prefix.SPPK | Prefix.P2PK | Prefix.BLPK;
 type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
@@ -26,7 +25,7 @@ type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
  * @param publicKey The public key to verify the signature against
  * @param signature The signature to verify
  * @returns A boolean indicating if the signature matches
- * @throws {@link InvalidPublicKeyError}
+ * @throws {@link InvalidPublicKeyError} | {@link InvalidSignatureError} | {@link InvalidMessageError}
  * @example
  * ```
  * const message = '03d0c10e3ed11d7c6e3357f6ef335bab9e8f2bd54d0ce20c482e241191a6e4b8ce6c01be917311d9ac46959750e405d57e268e2ed9e174a80794fbd504e12a4a000141eb3781afed2f69679ff2bbe1c5375950b0e40d00ff000000005e05050505050507070100000024747a32526773486e74516b72794670707352466261313652546656503539684b72654a4d07070100000024747a315a6672455263414c42776d4171776f6e525859565142445439426a4e6a42484a750001';
@@ -102,7 +101,7 @@ function validateSigAndExtractPrefix(signature: string): SigPrefix {
     } else if (validation === ValidationResult.INVALID_LENGTH) {
       throw new InvalidSignatureError(signature, 'invalid length');
     } else if (validation === ValidationResult.NO_PREFIX_MATCHED) {
-      throw new InvalidSignatureError(signaturePrefix, 'unsupported prefix');
+      throw new InvalidSignatureError(signature, 'unsupported prefix');
     }
   }
   return signaturePrefix as SigPrefix;
