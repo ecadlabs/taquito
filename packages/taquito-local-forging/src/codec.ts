@@ -218,7 +218,10 @@ export const publicKeyEncoder = (val: string) => {
     case Prefix.P2PK:
       return '02' + prefixEncoder(Prefix.P2PK)(val);
     default:
-      throw new InvalidPublicKeyError(val);
+      throw new InvalidPublicKeyError(
+        val,
+        `Expecting one of the following prefix 'edpk', 'sppk', 'p2pk' or 'BLpk'.`
+      );
   }
 };
 
@@ -263,7 +266,7 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
     case 0x02:
       return prefixDecoder(Prefix.P2PK)(val);
     default:
-      throw new InvalidPublicKeyError(val.toString());
+      throw new InvalidPublicKeyError(val.toString(), `Expecting a valid prefix`);
   }
 };
 

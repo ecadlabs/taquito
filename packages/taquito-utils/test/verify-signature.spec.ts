@@ -1,5 +1,6 @@
-import { InvalidMessageError, InvalidPublicKeyError, InvalidSignatureError } from '../src/errors';
+import { InvalidSignatureError } from '../src/errors';
 import { verifySignature } from '../src/verify-signature';
+import { InvalidMessageError, InvalidPublicKeyError } from '@taquito/core';
 
 describe('utils signature validation tests', () => {
   describe('SECP256K1 curve', () => {
@@ -288,7 +289,9 @@ describe('utils signature validation tests', () => {
         'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidPublicKeyError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/unsupported prefix/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(
+        `Expecting one of the following prefix 'edpk', 'sppk', 'p2pk' or 'BLpk'.`
+      );
     });
 
     it('Should throw InvalidPublicKeyError if the public key is invalid', () => {

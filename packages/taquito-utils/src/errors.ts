@@ -4,20 +4,8 @@ export {
   InvalidHexStringError,
   InvalidMessageError,
   InvalidKeyError,
+  InvalidPublicKeyError,
 } from '@taquito/core';
-
-/**
- *  @category Error
- *  @description Error that indicates an Invalid Public Key being passed or used
- */
-export class InvalidPublicKeyError extends Error {
-  public name = 'InvalidPublicKeyError';
-  constructor(public publicKey: string, errorDetail?: string) {
-    super();
-    const baseMessage = `The public key '${publicKey}' is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
-  }
-}
 
 /**
  *  @category Error
