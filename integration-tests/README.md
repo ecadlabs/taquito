@@ -76,6 +76,9 @@ export SECRET_KEY='edsk...'
 
 If running the test with a configured secret key, ensure that the account balance is not zero.
 
+ ## Test Report
+ To review the graphical report of the test run open the index.html file in ~/taquito/integration-tests/jest-stare after reach test run.
+
 ## Taquito Integration Tests with Flextesa
 
 >**Be sure to use  a working NVM!  16.6 has been verified.**
@@ -178,5 +181,11 @@ Total XTZ Spent : -22.452365 XTZ
  PASS  ./contract-batch.spec.ts (11.825 s)
  ```
 
- ## Test Report
- To review the graphical report of the test run open the index.html file in ~/taquito/integration-tests/jest-stare after reach test run.
+### Flextesa optional parameters
+
+The default block_time is 5 seconds. To change the blocktime, use `-e block_time=3`
+Other defaults on options include:
+ - blocks_per_voting_period = 16
+ - extra_dummy_proposals_batch_size = 2
+ - extra_dummy_proposals_batch_level = 3,5
+ - number_of_bootstrap_accounts = 4
