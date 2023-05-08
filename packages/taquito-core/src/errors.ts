@@ -114,12 +114,24 @@ export class InvalidMessageError extends ParameterValidationError {
  *  @description Error indicates invalid view parameter of a smart contract
  */
 export class InvalidViewParameterError extends ParameterValidationError {
-  name = 'Invalid view parameters error';
   constructor(public viewName: string, public sigs: any, public args: any, public cause?: any) {
     super();
     this.name = 'InvalidViewParameterError';
     this.message = `view name: ${viewName} received arguments: ${JSON.stringify(
       args
     )} while expecting one of the following signatures: (${JSON.stringify(sigs)})`;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid key being passed or used
+ */
+export class InvalidKeyError extends ParameterValidationError {
+  constructor(public key: string, public errorDetail?: string) {
+    super();
+    this.name = 'InvalidKeyError';
+    this.message = `The key ${key} is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }

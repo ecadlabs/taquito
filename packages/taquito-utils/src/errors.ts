@@ -3,20 +3,8 @@ export {
   InvalidBlockHashError,
   InvalidHexStringError,
   InvalidMessageError,
+  InvalidKeyError,
 } from '@taquito/core';
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid key being passed or used
- */
-export class InvalidKeyError extends Error {
-  public name = 'InvalidKeyError';
-  constructor(public key: string, public errorDetail?: string) {
-    super();
-    const baseMessage = `The key ${key} is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
-  }
-}
 
 /**
  *  @category Error

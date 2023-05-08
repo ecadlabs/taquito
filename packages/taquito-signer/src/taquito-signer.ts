@@ -4,7 +4,7 @@
  */
 import { openSecretBox } from '@stablelib/nacl';
 import { hash } from '@stablelib/blake2b';
-import { hex2buf, mergebuf, b58cencode, prefix, InvalidKeyError } from '@taquito/utils';
+import { hex2buf, mergebuf, b58cencode, prefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
@@ -12,6 +12,7 @@ import pbkdf2 from 'pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError } from './errors';
+import { InvalidKeyError } from '@taquito/core';
 
 export * from './import-key';
 export { VERSION } from './version';
@@ -67,7 +68,12 @@ export class InMemorySigner {
    * @param curve currently only supported for tz1, tz2, tz3 addresses. soon bip25519
    * @returns InMemorySigner
    */
-  static fromMnemonic({ mnemonic, password = '', derivationPath = "44'/1729'/0'/0'", curve = 'ed25519' }: FromMnemonicParams) {
+  static fromMnemonic({
+    mnemonic,
+    password = '',
+    derivationPath = "44'/1729'/0'/0'",
+    curve = 'ed25519',
+  }: FromMnemonicParams) {
     // check if curve is defined if not default tz1
     if (!Bip39.validateMnemonic(mnemonic)) {
       // avoiding exposing mnemonic again in case of mistake making invalid
@@ -83,6 +89,7 @@ export class InMemorySigner {
    *
    * @param key Encoded private key
    * @param passphrase Passphrase to decrypt the private key if it is encrypted
+   * @throws {@link InvalidKeyError} when the key doesn't have valid prefix
    *
    */
   constructor(key: string, passphrase?: string) {
@@ -122,7 +129,10 @@ export class InMemorySigner {
         this._key = new Tz3(key, encrypted, decrypt);
         break;
       default:
-        throw new InvalidKeyError(key, 'Unsupported key type');
+        throw new InvalidKeyError(
+          key,
+          `Unsupported key type, expecting one of the following prefix 'edes', 'edsk', 'spsk', 'spes', 'p2sk' or 'p2es'.`
+        );
     }
   }
 

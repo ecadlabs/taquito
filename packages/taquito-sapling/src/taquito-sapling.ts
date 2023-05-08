@@ -8,7 +8,6 @@ import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
 import {
   b58cdecode,
   format,
-  InvalidKeyError,
   prefix,
   Prefix,
   validateKeyHash,
@@ -277,7 +276,10 @@ export class SaplingToolkit {
         break;
       }
       default: {
-        throw new InvalidKeyError(destination, "The 'to' parameter contains an invalid prefix.");
+        throw new InvalidAddressError(
+          destination,
+          `The 'to' parameter contains an invalid prefix, expecting one of the following prefix 'tz1', 'tz2' or 'tz3'.`
+        );
       }
     }
 
