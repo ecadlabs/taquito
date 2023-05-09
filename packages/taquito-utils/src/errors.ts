@@ -8,18 +8,8 @@ export {
   InvalidSignatureError,
   InvalidContractAddressError,
   InvalidChainIdError,
+  InvalidKeyHashError,
 } from '@taquito/core';
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid key hash being passed or used
- */
-export class InvalidKeyHashError extends Error {
-  public name = 'InvalidKeyHashError';
-  constructor(public keyHash: string) {
-    super(`The public key hash '${keyHash}' is invalid`);
-  }
-}
 
 /**
  *  @category Error
