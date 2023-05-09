@@ -1,7 +1,7 @@
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { CODEC, kindMapping, kindMappingReverse } from '../constants';
-import { InvalidOperationKindError } from '@taquito/utils';
+import { InvalidOperationKindError } from '@taquito/core';
 import {
   OperationDecodingError,
   OperationEncodingError,
@@ -152,12 +152,12 @@ export const DrainDelegateSchema = {
 };
 
 export const SetDepositsLimitSchema = {
-	source: CODEC.PKH,
-	fee: CODEC.ZARITH,
-	counter: CODEC.ZARITH,
-	gas_limit: CODEC.ZARITH,
-	storage_limit: CODEC.ZARITH,
-	limit: CODEC.DEPOSITS_LIMIT,
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  limit: CODEC.DEPOSITS_LIMIT,
 };
 
 export const SmartRollupOriginateSchema = {

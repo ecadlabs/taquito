@@ -38,14 +38,9 @@ import {
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import {
-  validateAddress,
-  validateKeyHash,
-  ValidationResult,
-  InvalidOperationKindError,
-} from '@taquito/utils';
+import { validateAddress, validateKeyHash, ValidationResult } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { InvalidAddressError, InvalidKeyHashError } from '@taquito/core';
+import { InvalidAddressError, InvalidKeyHashError, InvalidOperationKindError } from '@taquito/core';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -213,6 +208,7 @@ export class OperationBatch extends OperationEmitter {
    * @description Add a tx rollup batch operation to the batch
    *
    * @param params Tx rollup batch operation parameter
+   * @throws {@link InvalidOperationKindError}
    */
   withTxRollupSubmitBatch(params: TxRollupBatchParams) {
     this.operations.push({ kind: OpKind.TX_ROLLUP_SUBMIT_BATCH, ...params });
@@ -269,7 +265,7 @@ export class OperationBatch extends OperationEmitter {
         });
       }
       default:
-        throw new InvalidOperationKindError((param as any).kind);
+        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
   }
 
@@ -278,6 +274,7 @@ export class OperationBatch extends OperationEmitter {
    * @description Add a group operation to the batch. Operation will be applied in the order they are in the params array
    *
    * @param params Operations parameter
+   * @throws {@link InvalidOperationKindError}
    */
   with(params: ParamsWithKind[]) {
     for (const param of params) {
@@ -316,7 +313,7 @@ export class OperationBatch extends OperationEmitter {
           this.withSmartRollupOriginate(param);
           break;
         default:
-          throw new InvalidOperationKindError((param as any).kind);
+          throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
       }
     }
 

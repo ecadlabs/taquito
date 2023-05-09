@@ -43,10 +43,10 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
 } from '../contract/prepare';
-import { validateAddress, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
+import { validateAddress, ValidationResult } from '@taquito/utils';
 import { RevealEstimateError } from './error';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidOperationKindError } from '@taquito/core';
 
 interface Limits {
   fee?: number;
@@ -371,7 +371,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees for a each operation in the batch
-   *
+   * @throws {@link InvalidOperationKindError}
    * @returns An array of Estimate objects. If a reveal operation is needed, the first element of the array is the Estimate for the reveal operation.
    */
   async batch(params: ParamsWithKind[]) {

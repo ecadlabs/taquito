@@ -16,13 +16,12 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from './interface';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
+  InvalidAddressError,
+  InvalidContractAddressError,
   InvalidOperationKindError,
-} from '@taquito/utils';
+} from '@taquito/core';
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -96,9 +95,9 @@ export class WalletOperationBatch {
 
   /**
    *
-   * @description
+   * @description Add an IncreasePaidStorage operation to the batch
    *
-   * @param param
+   * @param param IncreasePaidStorage operation parameter
    */
   withIncreasePaidStorage(params: WalletIncreasePaidStorageParams) {
     if (validateAddress(params.destination) !== ValidationResult.VALID) {
@@ -123,7 +122,7 @@ export class WalletOperationBatch {
       case OpKind.INCREASE_PAID_STORAGE:
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
       default:
-        throw new InvalidOperationKindError((param as any).kind);
+        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
   }
 
@@ -132,6 +131,7 @@ export class WalletOperationBatch {
    * @description Add a group operation to the batch. Operation will be applied in the order they are in the params array
    *
    * @param params Operations parameter
+   * @throws {@link InvalidOperationKindError}
    */
   with(params: WalletParamsWithKind[]) {
     for (const param of params) {
@@ -149,7 +149,7 @@ export class WalletOperationBatch {
           this.withIncreasePaidStorage(param);
           break;
         default:
-          throw new InvalidOperationKindError((param as any).kind);
+          throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
       }
     }
 

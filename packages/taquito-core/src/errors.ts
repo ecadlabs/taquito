@@ -212,3 +212,16 @@ export class InvalidKeyHashError extends ParameterValidationError {
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid operation kind being passed or used
+ */
+export class InvalidOperationKindError extends ParameterValidationError {
+  constructor(public operationKind: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidOperationKindError';
+    this.message = `The operation kind '${operationKind}' is unsupported.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}

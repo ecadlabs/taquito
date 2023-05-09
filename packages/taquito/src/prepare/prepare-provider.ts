@@ -29,7 +29,7 @@ import {
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { Protocols } from '../constants';
-import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
+import { DeprecationError } from '@taquito/utils';
 import { RPCResponseError } from '../error';
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
@@ -58,6 +58,7 @@ import {
 import { Estimate } from '../estimate';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { ForgeParams } from '@taquito/local-forging';
+import { InvalidOperationKindError } from '@taquito/core';
 
 /**
  * @description PrepareProvider is a utility class to output the prepared format of an operation
