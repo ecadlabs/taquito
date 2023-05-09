@@ -1,10 +1,10 @@
 # Taquito Integration Tests
 
-The `taquito/integration-tests` directory contains the integration test suite for Taquito. These tests will be executed against live Tezos testnets.
+The `taquito/integration-tests` directory contains the integration test suite for Taquito. These tests are executed against live Tezos testnets, ensuring a comprehensive evaluation of various Taquito use cases.
 
 ## Running Integration Tests Against a Tezos Testnet
 
-These tests cover various Taquito use cases against a live Tezos testnet. To run tests in this environment, ensure that you have:
+To run tests in this environment, make sure you have:
 
 - Taquito source code cloned to your local machine
 - A compatible version of Node.js installed (see the top-level README.md)
@@ -76,25 +76,26 @@ export SECRET_KEY='edsk...'
 
 If running the test with a configured secret key, ensure that the account balance is not zero.
 
- ## Test Report
- To review the graphical report of the test run open the index.html file in ~/taquito/integration-tests/jest-stare after reach test run.
+## Test Report
+
+To review the graphical report of the test run, open the index.html file in ~/taquito/integration-tests/jest-stare after each test run.
 
 ## Taquito Integration Tests with Flextesa
 
->**Be sure to use  a working NVM!  16.6 has been verified.**
-
->The recommended method to run tests is against testnets, not sandboxes. Running all tests against a sandbox can fail randomly, while running individual tests usually passes.
+> **Be sure to use a working NVM! 16.6 has been verified.**
+> The recommended method to run tests is against testnets, not sandboxes. Running all tests against a sandbox can fail randomly, while running individual tests usually passes.
 
 To prepare to run the integration tests against a local sandbox, perform the following steps:
 
 ### 1. Set environment variables
 
-Execute 
-```bash!
+Execute
+
+```bash
 source integration-tests/sandbox-env.sh
 ```
-from top-level. This will export the following environment variables:
 
+from the top-level. This will export the following environment variables:
 
 ```sh
 RUN_MUMBAINET_WITH_SECRET_KEY=true
@@ -104,12 +105,20 @@ POLLING_INTERVAL_MILLISECONDS=100
 RPC_CACHE_MILLISECONDS=0
 TEZOS_BAKER=tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
 ```
-### 2. Start a Flextesa sandbox to run a mumbai local testnet
+
+### 2. Start a Flextesa sandbox to run a Mumbai local testnet
 
 Start the docker container which encapsulates the flextesa_sandbox:
-```sh!
+
+```sh
 docker run --rm --name flextesa_sandbox --detach -p 20000:20000 oxheadalpha/flextesa:latest mumbaibox start
 ```
+The default block time is 5 seconds. If we want to simulate Nairobi block times we could use
+```sh
+docker run --rm --name flextesa_sandbox --detach -e block_time=8 -p 20000:20000 oxheadalpha/flextesa:latest mumbaibox start
+```
+The idea behind Flextesa is to be able to use block times of 1 second. However, the tests as presently written do not always support that rate.
+
 Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local copy of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/). A number of options are available for controlling block timings.
 
 ### 3. Run the integration tests
@@ -118,34 +127,61 @@ Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a lo
 
 To run the integration tests, invoke `npm run integration-tests`.
 
-The integration test suite runs all tests against the current tezos protocol (mumbai) sandbox, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
+The integration test suite runs all tests against the current Tezos protocol (Mumbai) sandbox, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
 
 Note that the first time you run the integration tests, `docker` will download the image in question, so be patient for your prompt to return the first time: *this is expected*.
 
-ensure that the file ~/taquito/integration-tests/known-contracts-PtMumbai2.ts includes 
-```bash!
+Ensure that the file ~/taquito/integration-tests/known-contracts-PtMumbai2.ts includes
 
+```bash
 export const knownContractPtMumbai2 = "KT1XFiUYC36XSeLTanGJwZxqLzsxz9zquLFB";
 export const knownBigMapContractPtMumbai2 = "KT1KbbvszHoWVSS8Nzh9yLgvRBDkzVjKmCtj";
 export const knownTzip12BigMapOffChainContractPtMumbai2 = "KT1KKU19PxFbQUT9sBJS8KwYCVaXAzYsTkUK";
 export const knownSaplingContractPtMumbai2 = "KT1UHkJDY1CWAgYZJR1NkxXv27gsuu7hC77R";
 export const knownOnChainViewContractAddressPtMumbai2 = "KT1JxWH1vtMiTcvg4AdhTaGmyHt2oBb71tzW";
 ```
-When the tests are first run these contracts are originated, but then this file is emptied, so you hvae to repopulate it if you rerun tests.
 
-```bash!
+When the tests are first run, these contracts are originated, but then this file is emptied, so you have to repopulate it if you rerun tests.
+
+Set the required environment variables for the Flextesa run
+
+```bash
 source integration-tests/sandbox-env.sh
-
-npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:mumbainet-secret-key
 ```
-You should see
-```bash!
+
+You need to pass the Jest config `--runInBand` when running Flextesa tests, as they only have one baking account. The tests need to run one by one.
+
+```bash
+ npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:mumbainet-secret-key --runInBand 
+```
+
+Note that when running tests a second time in the session, you do not need to originate the test contracts again. You can use:
+
+```bash
+npm -w --runInBand integration-tests run test:mumbainet-secret-key
+```
+
+We can skip some tests that will invariably fail due to test data discrepancies (such as new or dropped RPC endpoints, or estimated gas costs) as these change from protocol to protocol.
+
+```bash
+npm -w integration-tests run test:mumbainet-secret-key -- --runInBand --testPathIgnorePatterns='ledger-signer-failing-tests.spec.ts|ledger-signer.spec.ts|contract-estimation-tests.spec.ts|rpc-get-protocol-constants.spec.ts|'
+```
+
+We might choose to isolate test suites for later analysis, such as for example, `sapling*.spec.ts`. Then we would run
+
+```bash
+npm -w integration-tests run test:mumbainet-secret-key -- --runInBand --testPathIgnorePatterns='ledger-signer-failing-tests.spec.ts|ledger-signer.spec.ts|contract-estimation-tests.spec.ts|rpc-get-protocol-constants.spec.ts|sapling-batched-transactions.spec.ts| sapling-transactions-contract-with-multiple-sapling-states.spec.ts|sapling-transactions-contract-with-single-state.spec.ts|sapling-transactions-proof-using-proving-key.spec.ts'
+```
+
+On successful start with contract origination, you should see
+
+```bash
 > integration-tests@16.1.2 test:originate-known-contracts
 > node -r ts-node/register originate-known-contracts.ts
 
 PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1
 knownContract address:  KT1CX4Qbkfy4N9fgRD5L7RPZW9ByydfKxh5t
-::set-output name=knownContractAddress::KT1CX4Qbkfy4N9fgRD5L7RPZW9ByydfKxh5t
+::set-output name=knownContractAddress::KT1CX4Qbkfy4N9fgRD5L7RPZW9Byv2ycodEBUxHWoRkWHFBht
 
 knownBigMapContract address:  KT1NN9wjEDzrpcXynvA1L97Y5JCT7ebyjPNj
 ::set-output name=knownBigMapContractAddress::KT1NN9wjEDzrpcXynvA1L97Y5JCT7ebyjPNj
@@ -167,13 +203,10 @@ Final Balance   : 90856909.589235 XTZ
 
 Total XTZ Spent : -22.452365 XTZ
 
-
 > integration-tests@16.1.2 test:mumbainet-secret-key
 > RUN_MUMBAINET_WITH_SECRET_KEY=true jest --runInBand
 
-
  RUNS  ./contract-manager-scenario.spec.ts
- 
  PASS  ./contract-manager-scenario.spec.ts (6.167 s)
  PASS  ./contract-permits.spec.ts (16.898 s)
  PASS  ./wallet-manager-scenario.spec.ts (6.033 s)
