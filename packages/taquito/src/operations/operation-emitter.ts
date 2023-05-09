@@ -16,7 +16,6 @@ import {
   TezosPreapplyFailureError,
   InvalidEstimateValueError,
 } from './operation-errors';
-import { DeprecationError } from '@taquito/utils';
 import {
   ForgedBytes,
   isOpRequireReveal,
@@ -26,7 +25,7 @@ import {
   RPCOpWithFee,
   RPCOpWithSource,
 } from './types';
-import { InvalidOperationKindError } from '@taquito/core';
+import { InvalidOperationKindError, DeprecationError } from '@taquito/core';
 
 export interface PreparedOperation {
   opOb: {

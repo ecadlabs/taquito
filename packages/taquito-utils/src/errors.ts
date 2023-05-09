@@ -11,6 +11,7 @@ export {
   InvalidKeyHashError,
   InvalidOperationHashError,
   InvalidOperationKindError,
+  DeprecationError,
 } from '@taquito/core';
 
 /**
@@ -21,17 +22,6 @@ export class InvalidProtocolHashError extends Error {
   public name = 'InvalidProtocolHashError';
   constructor(public protocolHash: string) {
     super(`The protocol hash '${protocolHash}' is invalid`);
-  }
-}
-
-/**
- *  @category Error
- *  @description General error that indicates something is no longer supported and/or deprecated
- */
-export class DeprecationError extends Error {
-  public name = 'DeprecationError';
-  constructor(public message: string) {
-    super(message);
   }
 }
 

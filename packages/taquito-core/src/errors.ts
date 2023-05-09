@@ -225,3 +225,14 @@ export class InvalidOperationKindError extends ParameterValidationError {
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
+
+/**
+ *  @category Error
+ *  @description General error that indicates something is no longer supported and/or deprecated
+ */
+export class DeprecationError extends UnsupportedAction {
+  constructor(public message: string) {
+    super();
+    this.name = 'DeprecationError';
+  }
+}
