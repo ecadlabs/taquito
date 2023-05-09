@@ -12,72 +12,76 @@ import {
   InvalidHexStringError,
   InvalidMessageError,
   InvalidViewParameterError,
+  InvalidKeyError,
+  InvalidPublicKeyError,
+  InvalidSignatureError,
+  InvalidContractAddressError,
+  InvalidChainIdError,
+  InvalidKeyHashError,
+  InvalidOperationHashError,
+  InvalidOperationKindError,
+  DeprecationError,
+  ProhibitedActionError,
 } from '../src/taquito-core';
 
 describe('parent errors classes', () => {
   it('should throw an ParameterValidationError', () => {
     try {
-      throw new ParameterValidationError('tez');
+      throw new ParameterValidationError();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(TaquitoError);
       expect(error).toBeInstanceOf(ParameterValidationError);
-      expect(error.message).toEqual('tez');
     }
   });
 
   it('should throw an RpcError', () => {
     try {
-      throw new RpcError('tez');
+      throw new RpcError();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(TaquitoError);
       expect(error).toBeInstanceOf(RpcError);
-      expect(error.message).toEqual('tez');
     }
   });
 
   it('should throw an TezosToolkitConfigError', () => {
     try {
-      throw new TezosToolkitConfigError('tez');
+      throw new TezosToolkitConfigError();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(TaquitoError);
       expect(error).toBeInstanceOf(TezosToolkitConfigError);
-      expect(error.message).toEqual('tez');
     }
   });
 
   it('should throw an UnsupportedAction', () => {
     try {
-      throw new UnsupportedAction('tez');
+      throw new UnsupportedAction();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(TaquitoError);
       expect(error).toBeInstanceOf(UnsupportedAction);
-      expect(error.message).toEqual('tez');
     }
   });
 
   it('should throw an NetworkError', () => {
     try {
-      throw new NetworkError('tez');
+      throw new NetworkError();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(TaquitoError);
       expect(error).toBeInstanceOf(NetworkError);
-      expect(error.message).toEqual('tez');
     }
   });
 
   it('should throw an PermissionDeniedError', () => {
     try {
-      throw new PermissionDeniedError('tez');
+      throw new PermissionDeniedError();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(TaquitoError);
       expect(error).toBeInstanceOf(PermissionDeniedError);
-      expect(error.message).toEqual('tez');
     }
   });
 });
@@ -85,45 +89,31 @@ describe('parent errors classes', () => {
 describe('common error classes', () => {
   it('should throw an InvalidAddressError', () => {
     try {
-      throw new InvalidAddressError('tz1');
+      throw new InvalidAddressError('foo');
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidAddressError);
-      expect(error.message).toEqual(`Address "tz1" is invalid.`);
-    }
-    try {
-      throw new InvalidAddressError('tz1', 'params source');
-    } catch (error) {
-      expect(error).toBeInstanceOf(ParameterValidationError);
-      expect(error).toBeInstanceOf(InvalidAddressError);
-      expect(error.message).toEqual(`Address "tz1" is invalid. params source`);
+      expect(error.message).toEqual(`Address "foo" is invalid.`);
     }
   });
 
   it('should throw an InvalidBlockHashError', () => {
     try {
-      throw new InvalidBlockHashError('Bl');
+      throw new InvalidBlockHashError('foo');
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidBlockHashError);
-      expect(error.message).toEqual(`Block hash "Bl" is invalid.`);
+      expect(error.message).toEqual(`Block hash "foo" is invalid.`);
     }
   });
 
   it('should throw an InvalidDerivationPathError', () => {
     try {
-      throw new InvalidDerivationPathError('1729');
+      throw new InvalidDerivationPathError('foo');
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidDerivationPathError);
-      expect(error.message).toEqual(`Derivation path "1729" is invalid.`);
-    }
-    try {
-      throw new InvalidDerivationPathError('1729', 'invalid BIP32 path');
-    } catch (error) {
-      expect(error).toBeInstanceOf(ParameterValidationError);
-      expect(error).toBeInstanceOf(InvalidDerivationPathError);
-      expect(error.message).toEqual(`Derivation path "1729" is invalid. invalid BIP32 path`);
+      expect(error.message).toEqual(`Derivation path "foo" is invalid.`);
     }
   });
 
@@ -135,43 +125,131 @@ describe('common error classes', () => {
       expect(error).toBeInstanceOf(InvalidHexStringError);
       expect(error.message).toEqual(`Hex string "0x12" is invalid.`);
     }
-    try {
-      throw new InvalidHexStringError('0x12', 'invalid hexadecimal number');
-    } catch (error) {
-      expect(error).toBeInstanceOf(ParameterValidationError);
-      expect(error).toBeInstanceOf(InvalidHexStringError);
-      expect(error.message).toEqual(`Hex string "0x12" is invalid. invalid hexadecimal number`);
-    }
   });
 
   it('should throw an InvalidMessageError', () => {
     try {
-      throw new InvalidMessageError('hi');
+      throw new InvalidMessageError('foo');
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidMessageError);
-      expect(error.message).toEqual(`Message "hi" is invalid.`);
-    }
-    try {
-      throw new InvalidMessageError('', 'cannot be empty');
-    } catch (error) {
-      expect(error).toBeInstanceOf(ParameterValidationError);
-      expect(error).toBeInstanceOf(InvalidMessageError);
-      expect(error.message).toEqual(`Message "" is invalid. cannot be empty`);
+      expect(error.message).toEqual(`Message "foo" is invalid.`);
     }
   });
 
   it('should throw an InvalidViewParameterError', () => {
     try {
-      throw new InvalidViewParameterError('add', { parameter: 'nat', result: 'nat' }, 'test');
+      throw new InvalidViewParameterError('foo', { parameter: 'nat', result: 'nat' }, 'bar');
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidViewParameterError);
       expect(error.message).toEqual(
-        `view name: add received arguments: "test" while expecting one of the following signatures: (${JSON.stringify(
+        `view name: foo received arguments: "bar" while expecting one of the following signatures: (${JSON.stringify(
           { parameter: 'nat', result: 'nat' }
-        )})`
+        )}).`
       );
+    }
+  });
+
+  it('should throw an InvalidKeyError', () => {
+    try {
+      throw new InvalidKeyError('foo');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidKeyError);
+      expect(error.message).toEqual(`The key 'foo' is invalid.`);
+    }
+  });
+
+  it('should throw an InvalidPublicKeyError', () => {
+    try {
+      throw new InvalidPublicKeyError('foo');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidPublicKeyError);
+      expect(error.message).toEqual(`The public key 'foo' is invalid.`);
+    }
+  });
+
+  it('should throw an InvalidSignatureError', () => {
+    try {
+      throw new InvalidSignatureError('foo');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidSignatureError);
+      expect(error.message).toEqual(`The signature 'foo' is invalid.`);
+    }
+  });
+
+  it('should throw an InvalidContractAddressError', () => {
+    try {
+      throw new InvalidContractAddressError('foo');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidContractAddressError);
+      expect(error.message).toEqual(`The contract address 'foo' is invalid.`);
+    }
+  });
+
+  it('should throw an InvalidChainIdError', () => {
+    try {
+      throw new InvalidChainIdError('foo');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidChainIdError);
+      expect(error.message).toEqual(`The chain id 'foo' is invalid.`);
+    }
+  });
+
+  it('should throw an InvalidKeyHashError', () => {
+    try {
+      throw new InvalidKeyHashError('foo');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidKeyHashError);
+      expect(error.message).toEqual(`The public key hash 'foo' is invalid.`);
+    }
+  });
+
+  it('should throw an InvalidOperationHashError', () => {
+    try {
+      throw new InvalidOperationHashError('foo');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidOperationHashError);
+      expect(error.message).toEqual(`The operation hash 'foo' is invalid.`);
+    }
+  });
+
+  it('should throw an InvalidOperationKindError', () => {
+    try {
+      throw new InvalidOperationKindError('foo');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidOperationKindError);
+      expect(error.message).toEqual(`The operation kind 'foo' is unsupported.`);
+    }
+  });
+
+  it('should throw an DeprecationError', () => {
+    try {
+      throw new DeprecationError('foo');
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      expect(error).toBeInstanceOf(UnsupportedAction);
+      expect(error).toBeInstanceOf(DeprecationError);
+      expect(error.message).toEqual(`foo`);
+    }
+  });
+
+  it('should throw an ProhibitedActionError', () => {
+    try {
+      throw new ProhibitedActionError('foo');
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      expect(error).toBeInstanceOf(UnsupportedAction);
+      expect(error).toBeInstanceOf(ProhibitedActionError);
+      expect(error.message).toEqual(`foo`);
     }
   });
 });

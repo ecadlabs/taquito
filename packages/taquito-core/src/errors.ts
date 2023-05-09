@@ -119,7 +119,7 @@ export class InvalidViewParameterError extends ParameterValidationError {
     this.name = 'InvalidViewParameterError';
     this.message = `view name: ${viewName} received arguments: ${JSON.stringify(
       args
-    )} while expecting one of the following signatures: (${JSON.stringify(sigs)})`;
+    )} while expecting one of the following signatures: (${JSON.stringify(sigs)}).`;
   }
 }
 
@@ -131,7 +131,7 @@ export class InvalidKeyError extends ParameterValidationError {
   constructor(public key: string, public errorDetail?: string) {
     super();
     this.name = 'InvalidKeyError';
-    this.message = `The key ${key} is invalid.`;
+    this.message = `The key '${key}' is invalid.`;
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
