@@ -236,3 +236,14 @@ export class DeprecationError extends UnsupportedAction {
     this.name = 'DeprecationError';
   }
 }
+
+/**
+ *  @category Error
+ *  @description General error that indicates an action is prohibited or not allowed
+ */
+export class ProhibitedActionError extends UnsupportedAction {
+  constructor(public message: string) {
+    super();
+    this.name = 'ProhibitedActionError';
+  }
+}

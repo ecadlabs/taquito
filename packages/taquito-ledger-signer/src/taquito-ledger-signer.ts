@@ -5,7 +5,7 @@
 
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
-import { b58cencode, prefix, Prefix, ProhibitedActionError } from '@taquito/utils';
+import { b58cencode, prefix, Prefix } from '@taquito/utils';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -20,7 +20,7 @@ import {
   PublicKeyRetrievalError,
   InvalidLedgerResponseError,
 } from './error';
-import { InvalidDerivationPathError } from '@taquito/core';
+import { InvalidDerivationPathError, ProhibitedActionError } from '@taquito/core';
 
 export { InvalidDerivationPathError } from '@taquito/core';
 

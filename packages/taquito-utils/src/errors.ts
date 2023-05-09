@@ -12,6 +12,7 @@ export {
   InvalidOperationHashError,
   InvalidOperationKindError,
   DeprecationError,
+  ProhibitedActionError,
 } from '@taquito/core';
 
 /**
@@ -22,17 +23,6 @@ export class InvalidProtocolHashError extends Error {
   public name = 'InvalidProtocolHashError';
   constructor(public protocolHash: string) {
     super(`The protocol hash '${protocolHash}' is invalid`);
-  }
-}
-
-/**
- *  @category Error
- *  @description General error that indicates an action is prohibited or not allowed
- */
-export class ProhibitedActionError extends Error {
-  public name = 'ProhibitedActionError';
-  constructor(public message: string) {
-    super(message);
   }
 }
 
