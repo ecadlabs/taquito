@@ -14,7 +14,6 @@ import {
   verifySignature,
   validateKeyHash,
   ValidationResult,
-  InvalidKeyHashError,
   ProhibitedActionError,
 } from '@taquito/utils';
 import { hash } from '@stablelib/blake2b';
@@ -26,7 +25,7 @@ import {
   PublicKeyMismatch,
 } from './errors';
 import { Signer } from '@taquito/taquito';
-import { InvalidSignatureError } from '@taquito/core';
+import { InvalidSignatureError, InvalidKeyHashError } from '@taquito/core';
 
 /**
  *  @category Error

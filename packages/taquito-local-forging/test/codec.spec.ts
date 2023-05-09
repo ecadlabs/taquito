@@ -9,7 +9,6 @@ import {
   paddedBytesDecoder,
 } from '../src/codec';
 import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
-import { InvalidKeyHashError, InvalidPublicKeyError } from '@taquito/utils';
 import { pkhEncoder, publicKeyDecoder, publicKeyEncoder } from '../src/codec';
 import {
   DecodeBallotValueError,
@@ -19,7 +18,7 @@ import {
   UnsupportedPvmKindError,
 } from '../src/error';
 import { bytesEncoder } from '../src/michelson/codec';
-import { InvalidHexStringError } from '@taquito/core';
+import { InvalidHexStringError, InvalidPublicKeyError, InvalidKeyHashError } from '@taquito/core';
 
 describe('Tests for Entrypoint functions and for encode and decoder error messages', () => {
   test('Entrypoint encoder', () => {
@@ -73,8 +72,8 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     try {
       pkhEncoder('tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5');
     } catch (e) {
-      expect(e.message).toEqual(
-        "The public key hash 'tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' is invalid"
+      expect(e.message).toContain(
+        "The public key hash 'tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' is invalid."
       );
     }
     done();

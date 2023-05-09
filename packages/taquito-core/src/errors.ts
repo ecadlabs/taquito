@@ -187,3 +187,16 @@ export class InvalidChainIdError extends ParameterValidationError {
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid public key hash being passed or used
+ */
+export class InvalidKeyHashError extends ParameterValidationError {
+  constructor(public keyHash: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidKeyHashError';
+    this.message = `The public key hash '${keyHash}' is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}

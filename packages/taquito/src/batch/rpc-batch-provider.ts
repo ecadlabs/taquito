@@ -41,12 +41,11 @@ import { ContractMethodObject } from '../contract/contract-methods/contract-meth
 import {
   validateAddress,
   validateKeyHash,
-  InvalidKeyHashError,
   ValidationResult,
   InvalidOperationKindError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidKeyHashError } from '@taquito/core';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -131,6 +130,7 @@ export class OperationBatch extends OperationEmitter {
    * @description Add an activation operation to the batch
    *
    * @param params Activation operation parameter
+   * @throws {@link InvalidKeyHashError}
    */
   withActivation({ pkh, secret }: ActivationParams) {
     if (validateKeyHash(pkh) !== ValidationResult.VALID) {
