@@ -16,11 +16,10 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from './interface';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
   validateAddress,
   validateContractAddress,
-  InvalidContractAddressError,
   ValidationResult,
   InvalidOperationKindError,
 } from '@taquito/utils';
@@ -333,6 +332,7 @@ export class Wallet {
    * smart contract abstraction will leverage the wallet provider to make smart contract calls
    *
    * @param address Smart contract address
+   * @throws {@link InvalidContractAddressError} If the contract address is not valid
    */
   async at<T extends ContractAbstraction<Wallet>>(
     address: string,

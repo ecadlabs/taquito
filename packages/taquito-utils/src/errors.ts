@@ -6,18 +6,8 @@ export {
   InvalidKeyError,
   InvalidPublicKeyError,
   InvalidSignatureError,
+  InvalidContractAddressError,
 } from '@taquito/core';
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid contract address being passed or used
- */
-export class InvalidContractAddressError extends Error {
-  public name = 'InvalidContractAddressError';
-  constructor(public contractAddress: string) {
-    super(`The contract address '${contractAddress}' is invalid`);
-  }
-}
 
 /**
  *  @category Error

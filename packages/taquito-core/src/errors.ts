@@ -161,3 +161,16 @@ export class InvalidSignatureError extends ParameterValidationError {
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid contract address being passed or used
+ */
+export class InvalidContractAddressError extends ParameterValidationError {
+  constructor(public contractAddress: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidContractAddressError';
+    this.message = `The contract address '${contractAddress}' is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}

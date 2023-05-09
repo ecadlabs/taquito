@@ -52,13 +52,8 @@ import {
   PendingOperations,
   OriginationProofParams,
 } from '../types';
-import { InvalidAddressError } from '@taquito/core';
-import {
-  InvalidContractAddressError,
-  validateContractAddress,
-  validateAddress,
-  ValidationResult,
-} from '@taquito/utils';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import { validateContractAddress, validateAddress, ValidationResult } from '@taquito/utils';
 
 interface CachedDataInterface {
   [key: string]: {
@@ -229,7 +224,7 @@ export class RpcClientCache implements RpcClientInterface {
    *
    * @param address contract address from which we want to retrieve the storage
    * @param options contains generic configuration for rpc calls
-   *
+   * @throws {@link InvalidContractAddressError}
    * @description Access the data of the contract.
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-storage
@@ -256,7 +251,7 @@ export class RpcClientCache implements RpcClientInterface {
    *
    * @param address contract address from which we want to retrieve the script
    * @param options contains generic configuration for rpc calls
-   *
+   * @throws {@link InvalidContractAddressError}
    * @description Access the code and data of the contract.
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
@@ -284,7 +279,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param address contract address from which we want to retrieve the script
    * @param unparsingMode default is { unparsing_mode: "Readable" }
    * @param options contains generic configuration for rpc calls
-   *
+   * @throws {@link InvalidContractAddressError}
    * @description Access the script of the contract and normalize it using the requested unparsing mode.
    *
    */
@@ -824,7 +819,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param contract address of the contract we want to get the entrypoints of
    *
    * @description Return the list of entrypoints of the contract
-   *
+   * @throws {@link InvalidContractAddressError}
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-entrypoints
    *
    * @version 005_PsBABY5H

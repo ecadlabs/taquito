@@ -54,12 +54,7 @@ import {
   createSmartRollupOriginateOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import {
-  validateAddress,
-  validateContractAddress,
-  InvalidContractAddressError,
-  ValidationResult,
-} from '@taquito/utils';
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
@@ -71,7 +66,7 @@ import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
 export class RpcContractProvider
   extends OperationEmitter
@@ -88,7 +83,7 @@ export class RpcContractProvider
    *
    * @param contract contract address you want to get the storage from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
-   *
+   * @throws {@link InvalidContractAddressError}
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
@@ -117,7 +112,7 @@ export class RpcContractProvider
    * @param contract contract address you want to get the storage from
    * @param key contract big map key to fetch value from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
-   *
+   * @throws {@link InvalidContractAddressError}
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
@@ -769,7 +764,13 @@ export class RpcContractProvider
       context
     );
   }
-
+  /**
+   *
+   * @description Create an smart contract abstraction for the address specified.
+   *
+   * @param address Smart contract address
+   * @throws {@link InvalidContractAddressError}
+   */
   async at<T extends DefaultContractType = DefaultContractType>(
     address: string,
     contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
