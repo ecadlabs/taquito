@@ -194,6 +194,7 @@ export function encodeKeyHash(value: string) {
  * @description Convert an hex string to a Uint8Array
  *
  * @param hex Hex string to convert
+ * @throws {@link ValueConversionError}
  */
 export const hex2buf = (hex: string): Uint8Array => {
   const match = hex.match(/[\da-f]{2}/gi);

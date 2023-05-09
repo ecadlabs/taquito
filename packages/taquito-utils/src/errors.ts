@@ -1,3 +1,5 @@
+import { ParameterValidationError, UnsupportedAction } from '@taquito/core';
+
 export {
   InvalidAddressError,
   InvalidBlockHashError,
@@ -17,22 +19,26 @@ export {
 
 /**
  *  @category Error
- *  @description Error that indicates invalid protocol hash being passed or used
+ *  @description Error indicates invalid protocol hash being passed or used
  */
-export class InvalidProtocolHashError extends Error {
+export class InvalidProtocolHashError extends ParameterValidationError {
   public name = 'InvalidProtocolHashError';
-  constructor(public protocolHash: string) {
-    super(`The protocol hash '${protocolHash}' is invalid`);
+  constructor(public protocolHash: string, errorDetails?: string) {
+    super();
+    this.name = 'InvalidProtocolHashError';
+    this.message = `The protocol hash '${protocolHash}' is invalid`;
+    errorDetails ? (this.message += `: ${errorDetails}`) : null;
   }
 }
 
 /**
  *  @category Error
- *  @description General error that indicates a failure when trying to convert data from one type to another
+ *  @description Error indicates unable to convert data type from one to another
  */
-export class ValueConversionError extends Error {
-  public name = 'ValueConversionError';
+export class ValueConversionError extends UnsupportedAction {
   constructor(public value: string, public desiredType: string) {
-    super(`Unable to convert ${value} to a ${desiredType}`);
+    super();
+    this.name = 'ValueConversionError';
+    this.message = `Unable to convert ${value} to a ${desiredType}`;
   }
 }
