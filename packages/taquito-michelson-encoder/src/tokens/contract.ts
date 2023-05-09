@@ -1,7 +1,8 @@
 import { TokenSchema } from './../schema/types';
-import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { encodePubKey, validateAddress } from '@taquito/utils';
 import { ContractTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
+import { ValidationResult } from '@taquito/core';
 
 export class ContractValidationError extends TokenValidationError {
   name = 'ContractValidationError';

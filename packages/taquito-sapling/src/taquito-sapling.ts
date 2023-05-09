@@ -5,14 +5,7 @@
 
 import BigNumber from 'bignumber.js';
 import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
-import {
-  b58cdecode,
-  format,
-  prefix,
-  Prefix,
-  validateKeyHash,
-  ValidationResult,
-} from '@taquito/utils';
+import { b58cdecode, format, prefix, Prefix, validateKeyHash } from '@taquito/utils';
 import { InsufficientBalance, InvalidMemo } from './error';
 import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
 import { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
@@ -29,7 +22,7 @@ import {
 import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
 import { DEFAULT_BOUND_DATA, DEFAULT_MEMO } from './constants';
 import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, ValidationResult } from '@taquito/core';
 
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';

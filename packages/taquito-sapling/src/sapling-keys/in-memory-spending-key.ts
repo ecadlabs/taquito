@@ -1,7 +1,7 @@
 import { InvalidSpendingKey } from '../error';
 import { InMemoryViewingKey } from './in-memory-viewing-key';
 import * as sapling from '@airgap/sapling-wasm';
-import { Prefix, prefix, b58cencode, ValidationResult } from '@taquito/utils';
+import { Prefix, prefix, b58cencode } from '@taquito/utils';
 import * as bip39 from 'bip39';
 import {
   ParametersSpendProof,
@@ -10,6 +10,7 @@ import {
   SaplingTransactionInput,
 } from '../types';
 import { decryptKey } from './helpers';
+import { ValidationResult } from '@taquito/core';
 
 /**
  * @description holds the spending key, create proof and signature for spend descriptions

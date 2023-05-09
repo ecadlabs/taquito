@@ -1,6 +1,5 @@
 import {
   validateAddress,
-  ValidationResult,
   validateChain,
   validateKeyHash,
   validateContractAddress,
@@ -10,6 +9,7 @@ import {
   validateProtocol,
   validateBlock,
 } from '../src/validators';
+import { ValidationResult } from '@taquito/core';
 
 describe('validateAddress', () => {
   it('Validate address properly', () => {

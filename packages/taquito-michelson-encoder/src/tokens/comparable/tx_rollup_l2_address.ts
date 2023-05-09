@@ -1,10 +1,5 @@
 import { BaseTokenSchema } from '../../schema/types';
-import {
-  b58decodeL2Address,
-  encodeL2Address,
-  validateAddress,
-  ValidationResult,
-} from '@taquito/utils';
+import { b58decodeL2Address, encodeL2Address, validateAddress } from '@taquito/utils';
 import {
   ComparableToken,
   SemanticEncoding,
@@ -12,6 +7,7 @@ import {
   TokenFactory,
   TokenValidationError,
 } from '../token';
+import { ValidationResult } from '@taquito/core';
 
 export class TxRollupL2AddressValidationError extends TokenValidationError {
   name = 'TxRollupL2AddressValidationError';

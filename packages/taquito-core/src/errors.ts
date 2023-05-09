@@ -62,7 +62,8 @@ export class InvalidAddressError extends ParameterValidationError {
 /**
  *  @category Error
  *  @description Error indicates an invalid block hash being passed or used
- */ export class InvalidBlockHashError extends ParameterValidationError {
+ */
+export class InvalidBlockHashError extends ParameterValidationError {
   constructor(public blockHash: string) {
     super();
     this.name = 'InvalidBlockHashError';
@@ -204,7 +205,8 @@ export class InvalidKeyHashError extends ParameterValidationError {
 /**
  *  @category Error
  *  @description Error indicates an invalid operation hash being passed or used
- */ export class InvalidOperationHashError extends ParameterValidationError {
+ */
+export class InvalidOperationHashError extends ParameterValidationError {
   constructor(public operationHash: string, errorDetail?: string) {
     super();
     this.name = 'InvalidOperationHashError';

@@ -6,14 +6,14 @@ import {
   RPCRunCodeParam,
   RPCRunScriptViewParam,
 } from '@taquito/rpc';
-import { validateAddress, ValidationResult } from '@taquito/utils';
+import { validateAddress } from '@taquito/utils';
 import { TzReadProvider } from '../../read-provider/interface';
 import {
   InvalidViewSimulationContext,
   ViewSimulationError,
   validateAndExtractFailwith,
 } from '../errors';
-import { InvalidViewParameterError } from '@taquito/core';
+import { InvalidViewParameterError, ValidationResult } from '@taquito/core';
 
 export interface ExecutionContextParams {
   source?: string;

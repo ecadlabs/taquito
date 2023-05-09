@@ -54,7 +54,7 @@ import {
   createSmartRollupOriginateOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
+import { validateAddress, validateContractAddress } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
@@ -66,7 +66,7 @@ import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidContractAddressError, ValidationResult } from '@taquito/core';
 
 export class RpcContractProvider
   extends OperationEmitter

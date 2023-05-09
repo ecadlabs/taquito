@@ -5,15 +5,9 @@ import {
   TokenFactory,
   TokenValidationError,
 } from './token';
-import {
-  encodeKey,
-  validatePublicKey,
-  ValidationResult,
-  Prefix,
-  b58cdecode,
-  prefix,
-} from '@taquito/utils';
+import { encodeKey, validatePublicKey, Prefix, b58cdecode, prefix } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
+import { ValidationResult } from '@taquito/core';
 
 const publicKeyPrefixLength = 4;
 

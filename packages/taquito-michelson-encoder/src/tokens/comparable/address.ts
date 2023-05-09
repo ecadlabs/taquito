@@ -5,8 +5,9 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from '../token';
-import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { b58decode, encodePubKey, validateAddress } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
+import { ValidationResult } from '@taquito/core';
 
 export class AddressValidationError extends TokenValidationError {
   name = 'AddressValidationError';

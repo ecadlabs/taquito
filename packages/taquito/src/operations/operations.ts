@@ -18,10 +18,10 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
-import { validateOperation, ValidationResult } from '@taquito/utils';
+import { validateOperation } from '@taquito/utils';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
 import { InvalidConfirmationCountError } from '../error';
-import { InvalidOperationHashError } from '@taquito/core';
+import { InvalidOperationHashError, ValidationResult } from '@taquito/core';
 
 interface PollingConfig {
   timeout: number;

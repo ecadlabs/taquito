@@ -5,8 +5,9 @@ import {
   TokenFactory,
   TokenValidationError,
 } from './token';
-import { validateSignature, ValidationResult } from '@taquito/utils';
+import { validateSignature } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
+import { ValidationResult } from '@taquito/core';
 
 export class SignatureValidationError extends TokenValidationError {
   name = 'SignatureValidationError';

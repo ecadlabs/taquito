@@ -16,10 +16,10 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
-import { validateOperation, ValidationResult } from '@taquito/utils';
+import { validateOperation } from '@taquito/utils';
 import { BlockIdentifier } from '../read-provider/interface';
 import { InvalidConfirmationCountError, ConfirmationUndefinedError } from '../error';
-import { InvalidOperationHashError } from '@taquito/core';
+import { InvalidOperationHashError, ValidationResult } from '@taquito/core';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
