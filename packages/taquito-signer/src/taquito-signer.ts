@@ -89,7 +89,7 @@ export class InMemorySigner {
    *
    * @param key Encoded private key
    * @param passphrase Passphrase to decrypt the private key if it is encrypted
-   * @throws {@link InvalidKeyError} when the key doesn't have valid prefix
+   * @throws {@link InvalidKeyError}
    *
    */
   constructor(key: string, passphrase?: string) {
@@ -131,7 +131,7 @@ export class InMemorySigner {
       default:
         throw new InvalidKeyError(
           key,
-          `Unsupported key type, expecting one of the following prefix 'edes', 'edsk', 'spsk', 'spes', 'p2sk' or 'p2es'.`
+          `With unsupported prefix, expecting one of the following 'edes', 'edsk', 'spsk', 'spes', 'p2sk' or 'p2es'.`
         );
     }
   }

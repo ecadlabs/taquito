@@ -77,13 +77,13 @@ export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
   const validation = validatePublicKey(publicKey);
   if (validation !== ValidationResult.VALID) {
     if (validation === ValidationResult.INVALID_CHECKSUM) {
-      throw new InvalidPublicKeyError(publicKey, 'The public key provided has an invalid checksum');
+      throw new InvalidPublicKeyError(publicKey, 'With invalid checksum');
     } else if (validation === ValidationResult.INVALID_LENGTH) {
-      throw new InvalidPublicKeyError(publicKey, 'The public key provided has an invalid length');
+      throw new InvalidPublicKeyError(publicKey, 'With invalid length');
     } else if (validation === ValidationResult.NO_PREFIX_MATCHED) {
       throw new InvalidPublicKeyError(
         publicKey,
-        `Expecting one of the following prefix 'edpk', 'sppk', 'p2pk' or 'BLpk'.`
+        `With unsupported prefix expecting one of the following 'edpk', 'sppk', 'p2pk' or 'BLpk'.`
       );
     }
   }
@@ -97,11 +97,11 @@ function validateSigAndExtractPrefix(signature: string): SigPrefix {
   const validation = validateSignature(signature);
   if (validation !== ValidationResult.VALID) {
     if (validation === ValidationResult.INVALID_CHECKSUM) {
-      throw new InvalidSignatureError(signature, `invalid checksum`);
+      throw new InvalidSignatureError(signature, `With invalid checksum`);
     } else if (validation === ValidationResult.INVALID_LENGTH) {
-      throw new InvalidSignatureError(signature, 'invalid length');
+      throw new InvalidSignatureError(signature, 'With invalid length');
     } else if (validation === ValidationResult.NO_PREFIX_MATCHED) {
-      throw new InvalidSignatureError(signature, 'unsupported prefix');
+      throw new InvalidSignatureError(signature, 'With unsupported prefix');
     }
   }
   return signaturePrefix as SigPrefix;

@@ -17,15 +17,12 @@ export class Tz1 {
    * @param key Encoded private key
    * @param encrypted Is the private key encrypted
    * @param decrypt Decrypt function
-   * @throws {@link InvalidKeyError} when the key doesn't have valid prefix or unable to decode
+   * @throws {@link InvalidKeyError}
    */
   constructor(private key: string, encrypted: boolean, decrypt: (k: any) => any) {
     const keyPrefix = key.substr(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
-      throw new InvalidKeyError(
-        key,
-        `Key contains invalid prefix, expecting prefix 'edes' or 'edsk'.`
-      );
+      throw new InvalidKeyError(key, `With unsupported prefix expecting either 'edes' or 'edsk'.`);
     }
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));

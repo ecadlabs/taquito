@@ -61,9 +61,7 @@ describe('inmemory-signer', () => {
   it('Invalid key', (done) => {
     expect(function () {
       new InMemorySigner('test');
-    }).toThrow(
-      `Unsupported key type, expecting one of the following prefix 'edes', 'edsk', 'spsk', 'spes', 'p2sk' or 'p2es'.`
-    );
+    }).toThrow(`unsupported prefix`);
     done();
   });
 

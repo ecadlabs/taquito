@@ -32,7 +32,7 @@ export class ECKey {
    * @param key Encoded private key
    * @param encrypted Is the private key encrypted
    * @param decrypt Decrypt function
-   * @throws {@link InvalidKeyError} when the key doesn't have valid prefix
+   * @throws {@link InvalidKeyError}
    */
   constructor(
     private curve: 'p256' | 'secp256k1',
@@ -44,7 +44,7 @@ export class ECKey {
     if (!isValidPrefix(keyPrefix)) {
       throw new InvalidKeyError(
         key,
-        `Key contains invalid prefix expecting one of the following prefix 'spsk', 'spes', 'p2sk' or 'p2es'`
+        `With unsupported prefix expecting one of the following 'spsk', 'spes', 'p2sk' or 'p2es'`
       );
     }
 
