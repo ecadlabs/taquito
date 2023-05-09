@@ -7,18 +7,8 @@ export {
   InvalidPublicKeyError,
   InvalidSignatureError,
   InvalidContractAddressError,
+  InvalidChainIdError,
 } from '@taquito/core';
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid chain id being passed or used
- */
-export class InvalidChainIdError extends Error {
-  public name = 'InvalidChainIdError';
-  constructor(public chainId: string) {
-    super(`The chain id '${chainId}' is invalid`);
-  }
-}
 
 /**
  *  @category Error

@@ -174,3 +174,16 @@ export class InvalidContractAddressError extends ParameterValidationError {
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid chain id being passed or used
+ */
+export class InvalidChainIdError extends ParameterValidationError {
+  constructor(public chainId: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidChainIdError';
+    this.message = `The chain id '${chainId}' is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}
