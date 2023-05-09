@@ -9,6 +9,7 @@ export {
   InvalidContractAddressError,
   InvalidChainIdError,
   InvalidKeyHashError,
+  InvalidOperationHashError,
 } from '@taquito/core';
 
 /**
@@ -19,16 +20,6 @@ export class InvalidProtocolHashError extends Error {
   public name = 'InvalidProtocolHashError';
   constructor(public protocolHash: string) {
     super(`The protocol hash '${protocolHash}' is invalid`);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid operation hash being passed or used
- */ export class InvalidOperationHashError extends Error {
-  public name = 'InvalidOperationHashError';
-  constructor(public operationHash: string) {
-    super(`The operation hash '${operationHash}' is invalid`);
   }
 }
 

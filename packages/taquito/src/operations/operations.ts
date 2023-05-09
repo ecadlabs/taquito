@@ -18,9 +18,10 @@ import {
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
-import { validateOperation, ValidationResult, InvalidOperationHashError } from '@taquito/utils';
+import { validateOperation, ValidationResult } from '@taquito/utils';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
 import { InvalidConfirmationCountError } from '../error';
+import { InvalidOperationHashError } from '@taquito/core';
 
 interface PollingConfig {
   timeout: number;
@@ -86,6 +87,7 @@ export class Operation {
    * @param hash Operation hash
    * @param raw Raw operation that was injected
    * @param context Taquito context allowing access to rpc and signer
+   * @throws {@link InvalidOperationHashError}
    */
   constructor(
     public readonly hash: string,

@@ -200,3 +200,15 @@ export class InvalidKeyHashError extends ParameterValidationError {
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid operation hash being passed or used
+ */ export class InvalidOperationHashError extends ParameterValidationError {
+  constructor(public operationHash: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidOperationHashError';
+    this.message = `The operation hash '${operationHash}' is invalid.`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+  }
+}
