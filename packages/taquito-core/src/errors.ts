@@ -81,7 +81,7 @@ export class InvalidDerivationPathError extends ParameterValidationError {
     super();
     this.name = 'InvalidDerivationPathError';
     this.message = `Invalid derivation path "${derivationPath}"`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -93,8 +93,8 @@ export class InvalidHexStringError extends ParameterValidationError {
   constructor(public hexString: string, errorDetail?: string) {
     super();
     this.name = 'InvalidHexStringError';
-    this.message = `Hex string "${hexString}" is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid hex string "${hexString}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 

@@ -123,7 +123,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidHexStringError);
-      expect(error.message).toEqual(`Hex string "0x12" is invalid.`);
+      expect(error.message).toEqual(`Invalid hex string "0x12"`);
     }
   });
 

@@ -352,7 +352,7 @@ export function bytes2Char(hex: string): string {
  */
 export function hex2Bytes(hex: string): Buffer {
   if (!hex.match(/[\da-f]{2}/gi)) {
-    throw new InvalidHexStringError(hex, `Does not have an even number of characters`);
+    throw new InvalidHexStringError(hex, `: Expecting even number of characters`);
   }
   return Buffer.from(hex, 'hex');
 }
