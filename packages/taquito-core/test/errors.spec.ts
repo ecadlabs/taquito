@@ -113,7 +113,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidDerivationPathError);
-      expect(error.message).toEqual(`Derivation path "foo" is invalid.`);
+      expect(error.message).toEqual(`Invalid derivation path "foo"`);
     }
   });
 

@@ -80,7 +80,7 @@ export class InvalidDerivationPathError extends ParameterValidationError {
   constructor(public derivationPath: string, errorDetail?: string) {
     super();
     this.name = 'InvalidDerivationPathError';
-    this.message = `Derivation path "${derivationPath}" is invalid.`;
+    this.message = `Invalid derivation path "${derivationPath}"`;
     errorDetail ? (this.message += ` ${errorDetail}`) : null;
   }
 }
