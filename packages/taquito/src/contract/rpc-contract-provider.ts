@@ -1,7 +1,7 @@
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
 import { OpKind, ScriptResponse } from '@taquito/rpc';
-import { encodeExpr } from '@taquito/utils';
+import { encodeExpr, invalidErrorDetail } from '@taquito/utils';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -320,11 +320,13 @@ export class RpcContractProvider
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source);
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
-    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+    const delegateValidation = validateAddress(params.delegate ?? '');
+    if (params.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.delegate, invalidErrorDetail(delegateValidation));
     }
 
     // Since babylon delegation source cannot smart contract
@@ -385,11 +387,13 @@ export class RpcContractProvider
    */
 
   async transfer(params: TransferParams) {
-    if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidErrorDetail(toValidation));
     }
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
 
     const publickKeyHash = await this.signer.publicKeyHash();
@@ -415,11 +419,13 @@ export class RpcContractProvider
    * @param TransferTicketParams operation parameter
    */
   async transferTicket(params: TransferTicketParams) {
-    if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination);
+    const destinationValidation = validateAddress(params.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, invalidErrorDetail(destinationValidation));
     }
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const srouceValidation = validateAddress(params.source ?? '');
+    if (params.source && srouceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(srouceValidation));
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -626,9 +632,9 @@ export class RpcContractProvider
    */
   async ballot(params: BallotParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
-
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
     const source = params.source ?? publicKeyHash;
     const operation = await createBallotOperation({
@@ -651,9 +657,9 @@ export class RpcContractProvider
    */
   async proposals(params: ProposalsParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
-
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
     const source = params.source ?? publicKeyHash;
     const operation = await createProposalsOperation({

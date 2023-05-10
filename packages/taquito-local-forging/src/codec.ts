@@ -7,6 +7,7 @@ import {
   prefixLength,
   InvalidKeyHashError,
   InvalidPublicKeyError,
+  invalidErrorDetail,
 } from '@taquito/utils';
 import {
   OversizedEntryPointError,
@@ -28,7 +29,7 @@ import {
 } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad } from './utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidContractAddressError, ValidationResult } from '@taquito/core';
 
 // https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
 
@@ -235,7 +236,11 @@ export const addressEncoder = (val: string): string => {
     case Prefix.KT1:
       return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
     default:
-      throw new InvalidAddressError(val);
+      throw new InvalidAddressError(
+        val,
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one of the following prefix '${Prefix.TZ1}', ${Prefix.TZ2}', '${Prefix.TZ3}', '${Prefix.TZ4}' or '${Prefix.KT1}'.`
+      );
   }
 };
 
@@ -288,14 +293,17 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
       return address;
     }
     default:
-      throw new InvalidAddressError(val.toString());
+      throw new InvalidAddressError(val.toString(), 'unable to decode');
   }
 };
 
 export const smartRollupAddressDecoder = (val: Uint8ArrayConsumer): string => {
   const address = prefixDecoder(Prefix.SR1)(val);
   if (address.substring(0, 3) !== Prefix.SR1) {
-    throw new InvalidAddressError(address);
+    throw new InvalidAddressError(
+      address,
+      invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+    );
   }
   return address;
 };

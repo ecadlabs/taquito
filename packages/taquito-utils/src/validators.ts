@@ -244,3 +244,20 @@ export function validateBlock(value: string): ValidationResult {
 export function validateSpendingKey(value: any): ValidationResult {
   return validatePrefixedValue(value, [Prefix.SASK]);
 }
+
+export function invalidErrorDetail(validation: ValidationResult): string {
+  switch (validation) {
+    case ValidationResult.NO_PREFIX_MATCHED:
+      return 'wtih invalid prefix';
+      break;
+    case ValidationResult.INVALID_CHECKSUM:
+      return 'wtih invalid checksum';
+      break;
+    case ValidationResult.INVALID_LENGTH:
+      return 'with invalid length';
+      break;
+    default:
+      return '';
+      break;
+  }
+}

@@ -5,7 +5,14 @@
 
 import BigNumber from 'bignumber.js';
 import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
-import { b58cdecode, format, prefix, Prefix, validateKeyHash } from '@taquito/utils';
+import {
+  b58cdecode,
+  format,
+  prefix,
+  Prefix,
+  validateKeyHash,
+  invalidErrorDetail,
+} from '@taquito/utils';
 import { InsufficientBalance, InvalidMemo } from './error';
 import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
 import { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
@@ -22,7 +29,7 @@ import {
 import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
 import { DEFAULT_BOUND_DATA, DEFAULT_MEMO } from './constants';
 import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
-import { InvalidAddressError, ValidationResult } from '@taquito/core';
+import { InvalidAddressError, InvalidKeyHashError, ValidationResult } from '@taquito/core';
 
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';
@@ -271,7 +278,11 @@ export class SaplingToolkit {
       default: {
         throw new InvalidAddressError(
           destination,
-          `The 'to' parameter contains an invalid prefix, expecting one of the following prefix 'tz1', 'tz2' or 'tz3'.`
+          `${invalidErrorDetail(
+            ValidationResult.NO_PREFIX_MATCHED
+          )}, expecting one of the following prefix '${Prefix.TZ1}', '${Prefix.TZ2}' or '${
+            Prefix.TZ3
+          }'.`
         );
       }
     }
@@ -288,7 +299,7 @@ export class SaplingToolkit {
 
   private validateDestinationImplicitAddress(to: string) {
     if (validateKeyHash(to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(
+      throw new InvalidKeyHashError(
         to,
         "The 'to' parameter must be a Tezos public key hash (tz1, tz2, tz3)."
       );
@@ -297,7 +308,10 @@ export class SaplingToolkit {
 
   private validateDestinationSaplingAddress(to: string) {
     if (!to.startsWith(Prefix.ZET1)) {
-      throw new InvalidAddressError(to, "The 'to' parameter must be a sapling address (zet1).");
+      throw new InvalidAddressError(
+        to,
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix ${Prefix.ZET1}.`
+      );
     }
   }
 

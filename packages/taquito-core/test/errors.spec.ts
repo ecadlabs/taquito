@@ -93,7 +93,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidAddressError);
-      expect(error.message).toEqual(`Address "foo" is invalid.`);
+      expect(error.message).toEqual(`Address "foo" is invalid`);
     }
   });
 
@@ -235,7 +235,6 @@ describe('common error classes', () => {
     try {
       throw new DeprecationError('foo');
     } catch (error) {
-      console.log(JSON.stringify(error));
       expect(error).toBeInstanceOf(UnsupportedAction);
       expect(error).toBeInstanceOf(DeprecationError);
       expect(error.message).toEqual(`foo`);
@@ -246,7 +245,6 @@ describe('common error classes', () => {
     try {
       throw new ProhibitedActionError('foo');
     } catch (error) {
-      console.log(JSON.stringify(error));
       expect(error).toBeInstanceOf(UnsupportedAction);
       expect(error).toBeInstanceOf(ProhibitedActionError);
       expect(error.message).toEqual(`foo`);

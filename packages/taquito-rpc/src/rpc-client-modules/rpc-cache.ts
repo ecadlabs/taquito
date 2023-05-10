@@ -53,7 +53,7 @@ import {
   OriginationProofParams,
 } from '../types';
 import { InvalidAddressError, InvalidContractAddressError, ValidationResult } from '@taquito/core';
-import { validateContractAddress, validateAddress } from '@taquito/utils';
+import { validateContractAddress, validateAddress, invalidErrorDetail } from '@taquito/utils';
 
 interface CachedDataInterface {
   [key: string]: {
@@ -141,8 +141,9 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   private validateAddress(address: string) {
-    if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address);
+    const addressValidation = validateAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address, invalidErrorDetail(addressValidation));
     }
   }
 

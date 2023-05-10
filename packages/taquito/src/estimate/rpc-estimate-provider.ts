@@ -43,7 +43,7 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
 } from '../contract/prepare';
-import { validateAddress } from '@taquito/utils';
+import { invalidErrorDetail, validateAddress } from '@taquito/utils';
 import { RevealEstimateError } from './error';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
 import { InvalidAddressError, InvalidOperationKindError, ValidationResult } from '@taquito/core';
@@ -270,11 +270,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param TransferOperation Originate operation parameter
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
-    if (validateAddress(rest.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.to);
+    const toValidation = validateAddress(rest.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.to, invalidErrorDetail(toValidation));
     }
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source);
+    const srouceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && srouceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(srouceValidation));
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -305,11 +307,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param TransferTicketParams operation parameter
    */
   async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
-    if (validateAddress(rest.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.destination);
+    const destinationValidation = validateAddress(rest.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.destination, invalidErrorDetail(destinationValidation));
     }
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source ?? '');
+    const sourceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(sourceValidation));
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -340,11 +344,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source);
+    const sourceValidation = validateAddress(rest.source);
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(sourceValidation));
     }
-    if (rest.delegate && validateAddress(rest.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.delegate);
+    const delegateValidation = validateAddress(rest.delegate ?? '');
+    if (rest.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.delegate, invalidErrorDetail(delegateValidation));
     }
 
     const pkh = (await this.getKeys()).publicKeyHash;

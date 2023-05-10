@@ -38,7 +38,7 @@ import {
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import { validateAddress, validateKeyHash } from '@taquito/utils';
+import { validateAddress, validateKeyHash, invalidErrorDetail } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import {
   InvalidAddressError,
@@ -73,8 +73,9 @@ export class OperationBatch extends OperationEmitter {
    * @param params Transfer operation parameter
    */
   withTransfer(params: TransferParams) {
-    if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidErrorDetail(toValidation));
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -87,8 +88,9 @@ export class OperationBatch extends OperationEmitter {
    * @param params Transfer operation parameter
    */
   withTransferTicket(params: TransferTicketParams) {
-    if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination);
+    const destinationValidation = validateAddress(params.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, invalidErrorDetail(destinationValidation));
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
@@ -115,11 +117,13 @@ export class OperationBatch extends OperationEmitter {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source);
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
-    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+    const delegateValidation = validateAddress(params.delegate ?? '');
+    if (params.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.delegate, invalidErrorDetail(delegateValidation));
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
