@@ -64,10 +64,11 @@ export class InvalidAddressError extends ParameterValidationError {
  *  @description Error indicates an invalid block hash being passed or used
  */
 export class InvalidBlockHashError extends ParameterValidationError {
-  constructor(public blockHash: string) {
+  constructor(public blockHash: string, errorDetail?: string) {
     super();
     this.name = 'InvalidBlockHashError';
-    this.message = `Block hash "${blockHash}" is invalid.`;
+    this.message = `Invalid block hash "${blockHash}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 

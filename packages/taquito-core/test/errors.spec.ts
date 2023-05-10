@@ -103,7 +103,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidBlockHashError);
-      expect(error.message).toEqual(`Block hash "foo" is invalid.`);
+      expect(error.message).toEqual(`Invalid block hash "foo"`);
     }
   });
 
