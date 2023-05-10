@@ -54,8 +54,8 @@ export class InvalidAddressError extends ParameterValidationError {
   constructor(public address: string, errorDetail?: string) {
     super();
     this.name = 'InvalidAddressError';
-    this.message = `Address "${address}" is invalid`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid address "${address}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 

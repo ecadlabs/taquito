@@ -265,7 +265,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      `Address "tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z" is invalid wtih invalid prefix expecting prefix zet1.`
+      `Invalid address "tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z": Invalid prefix expecting prefix zet1.`
     );
 
     done();
@@ -654,7 +654,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      `Address "tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh" is invalid wtih invalid prefix expecting prefix zet1`
+      `Invalid address "tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh": Invalid prefix expecting prefix zet1`
     );
 
     done();

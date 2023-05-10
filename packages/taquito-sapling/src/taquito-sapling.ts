@@ -278,11 +278,8 @@ export class SaplingToolkit {
       default: {
         throw new InvalidAddressError(
           destination,
-          `${invalidErrorDetail(
-            ValidationResult.NO_PREFIX_MATCHED
-          )}, expecting one of the following prefix '${Prefix.TZ1}', '${Prefix.TZ2}' or '${
-            Prefix.TZ3
-          }'.`
+          invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+            ` expecting one of the following prefix '${Prefix.TZ1}', '${Prefix.TZ2}' or '${Prefix.TZ3}'.`
         );
       }
     }

@@ -248,16 +248,12 @@ export function validateSpendingKey(value: any): ValidationResult {
 export function invalidErrorDetail(validation: ValidationResult): string {
   switch (validation) {
     case ValidationResult.NO_PREFIX_MATCHED:
-      return 'wtih invalid prefix';
-      break;
+      return ': Invalid prefix';
     case ValidationResult.INVALID_CHECKSUM:
-      return 'wtih invalid checksum';
-      break;
+      return ': Checksum failed';
     case ValidationResult.INVALID_LENGTH:
-      return 'with invalid length';
-      break;
+      return ': Invalid length';
     default:
       return '';
-      break;
   }
 }

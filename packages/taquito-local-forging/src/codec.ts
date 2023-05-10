@@ -293,7 +293,7 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
       return address;
     }
     default:
-      throw new InvalidAddressError(val.toString(), 'unable to decode');
+      throw new InvalidAddressError(val.toString(), ': Unable to decode.');
   }
 };
 
