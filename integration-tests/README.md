@@ -60,7 +60,13 @@ To run tests against a node that is not preconfigured in Taquito, use:
 
 `export TEZOS_RPC_MUMBAINET='http://localhost:8732'`.
 
-## Using a Secret Key Instead of the Keygen API
+## Keygen API
+
+Internally Taquito is tested with tests running in parallel. This is achieved using an application that generates new keys and funds them as needed per test.
+
+The application is not publicly available. External users, therefore, must run the Taquito Integration Tests in sequence, one test at a time.
+
+### Using a Secret Key Instead of the Keygen API
 
 By default, the integration tests use an ephemeral key managed by the Keygen API. To use a secret key instead, use the CLI option `<testnet>-secret-key`, like this:
 
@@ -113,25 +119,25 @@ Start the docker container which encapsulates the flextesa_sandbox:
 ```sh
 docker run --rm --name flextesa_sandbox --detach -p 20000:20000 oxheadalpha/flextesa:latest mumbaibox start
 ```
+
 The default block time is 5 seconds. If we want to simulate Nairobi block times we could use
+
 ```sh
 docker run --rm --name flextesa_sandbox --detach -e block_time=8 -p 20000:20000 oxheadalpha/flextesa:latest mumbaibox start
 ```
+
 The idea behind Flextesa is to be able to use block times of 1 second. However, the tests as presently written do not always support that rate.
 
 Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local copy of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/). A number of options are available for controlling block timings.
 
 ### 3. Run the integration tests
-
 *Note: It is no longer necessary to `cd` into the `integration-tests/` directory*
 
-To run the integration tests, invoke `npm run integration-tests`.
+To run the integration tests, use the command `npm run integration-tests`. The integration test suite will execute all tests against the current Tezos protocol (Mumbai) sandbox, and typically also against the previous and next protocol testnets. You can find specific test targets in the `scripts` property in the `integration-tests/package.json` file.
 
-The integration test suite runs all tests against the current Tezos protocol (Mumbai) sandbox, and typically also against the previous and next protocol testnets. See the `scripts` property in the `integration-tests/package.json` file for specific test targets.
+Keep in mind that the first time you run the integration tests, `docker` will download the required image, which might take some time. This is normal, so please be patient until your prompt returns.
 
-Note that the first time you run the integration tests, `docker` will download the image in question, so be patient for your prompt to return the first time: *this is expected*.
-
-Ensure that the file ~/taquito/integration-tests/known-contracts-PtMumbai2.ts includes
+Before running the tests, make sure the file `~/taquito/integration-tests/known-contracts-PtMumbai2.ts` includes the following:
 
 ```bash
 export const knownContractPtMumbai2 = "KT1XFiUYC36XSeLTanGJwZxqLzsxz9zquLFB";
@@ -141,84 +147,70 @@ export const knownSaplingContractPtMumbai2 = "KT1UHkJDY1CWAgYZJR1NkxXv27gsuu7hC7
 export const knownOnChainViewContractAddressPtMumbai2 = "KT1JxWH1vtMiTcvg4AdhTaGmyHt2oBb71tzW";
 ```
 
-When the tests are first run, these contracts are originated, but then this file is emptied, so you have to repopulate it if you rerun tests.
+These contracts will be originated when the tests are first run, but the file will be emptied afterward. You'll need to repopulate it if you want to rerun the tests.
 
-Set the required environment variables for the Flextesa run
+Next, set the required environment variables for the Flextesa run:
 
 ```bash
 source integration-tests/sandbox-env.sh
 ```
 
-You need to pass the Jest config `--runInBand` when running Flextesa tests, as they only have one baking account. The tests need to run one by one.
+When running Flextesa tests, you need to pass the Jest config `--runInBand`, as they only have one baking account and tests need to run sequentially.
 
 ```bash
- npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:mumbainet-secret-key --runInBand 
+npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:mumbainet-secret-key --runInBand
 ```
 
-Note that when running tests a second time in the session, you do not need to originate the test contracts again. You can use:
+If you're running the tests for a second time in the same session, you don't need to originate the test contracts again. Instead, use:
 
 ```bash
 npm -w --runInBand integration-tests run test:mumbainet-secret-key
 ```
 
-We can skip some tests that will invariably fail due to test data discrepancies (such as new or dropped RPC endpoints, or estimated gas costs) as these change from protocol to protocol.
+Some tests might fail due to test data discrepancies, such as changes in RPC endpoints or estimated gas costs from one protocol to another. You can skip these tests using:
 
 ```bash
 npm -w integration-tests run test:mumbainet-secret-key -- --runInBand --testPathIgnorePatterns='ledger-signer-failing-tests.spec.ts|ledger-signer.spec.ts|contract-estimation-tests.spec.ts|rpc-get-protocol-constants.spec.ts|'
 ```
 
-We might choose to isolate test suites for later analysis, such as for example, `sapling*.spec.ts`. Then we would run
+You can also avoid slow running tests. For example, if you want to not run the `sapling*.spec.ts` tests, run:
 
 ```bash
 npm -w integration-tests run test:mumbainet-secret-key -- --runInBand --testPathIgnorePatterns='ledger-signer-failing-tests.spec.ts|ledger-signer.spec.ts|contract-estimation-tests.spec.ts|rpc-get-protocol-constants.spec.ts|sapling-batched-transactions.spec.ts| sapling-transactions-contract-with-multiple-sapling-states.spec.ts|sapling-transactions-contract-with-single-state.spec.ts|sapling-transactions-proof-using-proving-key.spec.ts'
 ```
 
-On successful start with contract origination, you should see
+Upon successfully starting the tests with contract origination, you should see the following output:
 
 ```bash
 > integration-tests@16.1.2 test:originate-known-contracts
 > node -r ts-node/register originate-known-contracts.ts
-
 PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1
-knownContract address:  KT1CX4Qbkfy4N9fgRD5L7RPZW9ByydfKxh5t
+knownContract address: KT1CX4Qbkfy4N9fgRD5L7RPZW9ByydfKxh5t
 ::set-output name=knownContractAddress::KT1CX4Qbkfy4N9fgRD5L7RPZW9Byv2ycodEBUxHWoRkWHFBht
-
-knownBigMapContract address:  KT1NN9wjEDzrpcXynvA1L97Y5JCT7ebyjPNj
+knownBigMapContract address: KT1NN9wjEDzrpcXynvA1L97Y5JCT7ebyjPNj
 ::set-output name=knownBigMapContractAddress::KT1NN9wjEDzrpcXynvA1L97Y5JCT7ebyjPNj
-
-knownTzip12BigMapOffChainContract address:  KT1UXPQiyHR4AesmD4QYefprVXH21JrGefnQ
+knownTzip12BigMapOffChainContract address: KT1UXPQiyHR4AesmD4QYefprVXH21JrGefnQ
 ::set-output name=knownTzip12BigMapOffChainContractAddress::KT1UXPQiyHR4AesmD4QYefprVXH21JrGefnQ
-
-knownSaplingContract address:  KT1Hkdt7v2ycodEBUxHWoRkWHFBhtutgmVDU
+knownSaplingContract address: KT1Hkdt7v2ycodEBUxHWoRkWHFBhtutgmVDU
 ::set-output name=knownSaplingContractAddress::KT1Hkdt7v2ycodEBUxHWoRkWHFBhtutgmVDU
-
-knownOnChainViewContractAddress address:  KT1JirmFdgjttrm6wgwRxFGfwrP3twT5Y7CT
+knownOnChainViewContractAddress address: KT1JirmFdgjttrm6wgwRxFGfwrP3twT5Y7CT
 ::set-output name=knownOnChainViewContractAddressAddress::KT1JirmFdgjttrm6wgwRxFGfwrP3twT5Y7CT
-
-
 ################################################################################
 Public Key Hash : tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU
 Initial Balance : 90856887.13687 XTZ
-Final Balance   : 90856909.589235 XTZ
-
+Final Balance : 90856909.589235 XTZ
 Total XTZ Spent : -22.452365 XTZ
-
 > integration-tests@16.1.2 test:mumbainet-secret-key
 > RUN_MUMBAINET_WITH_SECRET_KEY=true jest --runInBand
-
- RUNS  ./contract-manager-scenario.spec.ts
- PASS  ./contract-manager-scenario.spec.ts (6.167 s)
- PASS  ./contract-permits.spec.ts (16.898 s)
- PASS  ./wallet-manager-scenario.spec.ts (6.033 s)
- PASS  ./sapling-transactions-proof-using-proving-key.spec.ts (111.076 s)
- PASS  ./contract-batch.spec.ts (11.825 s)
- ```
+RUNS  ./contract-manager-scenario.spec.ts
+PASS  ./contract-manager-scenario.spec.ts (6.167 s)
+...
 
 ### Flextesa optional parameters
 
-The default block_time is 5 seconds. To change the blocktime, use `-e block_time=3`
-Other defaults on options include:
- - blocks_per_voting_period = 16
- - extra_dummy_proposals_batch_size = 2
- - extra_dummy_proposals_batch_level = 3,5
- - number_of_bootstrap_accounts = 4
+The default block time is 5 seconds. If you want to change it, use `-e block_time=3`. Other default options include:
+
+- blocks_per_voting_period = 16
+- extra_dummy_proposals_batch_size = 2
+- extra_dummy_proposals_batch_level = 3,5
+- number_of_bootstrap_accounts = 4
