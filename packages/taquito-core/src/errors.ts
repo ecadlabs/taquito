@@ -119,9 +119,11 @@ export class InvalidViewParameterError extends ParameterValidationError {
   constructor(public viewName: string, public sigs: any, public args: any, public cause?: any) {
     super();
     this.name = 'InvalidViewParameterError';
-    this.message = `view name: ${viewName} received arguments: ${JSON.stringify(
+    this.message = `Invalid arguments ${JSON.stringify(
       args
-    )} while expecting one of the following signatures: (${JSON.stringify(sigs)}).`;
+    )} received for view name "${viewName}", expecting one of the following signatures: "${JSON.stringify(
+      sigs
+    )}".`;
   }
 }
 
