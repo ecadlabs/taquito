@@ -1,0 +1,108 @@
+{
+  "name": "smartpy-permits",
+  "views": [
+    {
+      "name": "GetCounter",
+      "pure": true,
+      "description": "Access the contract's counter",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "code": [
+              {
+                "args": [],
+                "prim": "CDR",
+                "annots": []
+              },
+              {
+                "args": [],
+                "prim": "CAR",
+                "annots": []
+              },
+              {
+                "args": [],
+                "prim": "CDR",
+                "annots": []
+              },
+              {
+                "args": [],
+                "prim": "CAR",
+                "annots": []
+              }
+            ],
+            "parameter": {
+              "args": [],
+              "prim": "unit",
+              "annots": []
+            },
+            "returnType": {
+              "args": [],
+              "prim": "nat",
+              "annots": []
+            },
+            "annotations": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "GetDefaultExpiry",
+      "pure": true,
+      "description": "Access the contract's default expiry in seconds",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "code": [
+              {
+                "args": [],
+                "prim": "CDR",
+                "annots": []
+              },
+              {
+                "args": [],
+                "prim": "CAR",
+                "annots": []
+              },
+              {
+                "args": [],
+                "prim": "CDR",
+                "annots": []
+              },
+              {
+                "args": [],
+                "prim": "CDR",
+                "annots": []
+              },
+              {
+                "args": [],
+                "prim": "CAR",
+                "annots": []
+              }
+            ],
+            "parameter": {
+              "args": [],
+              "prim": "unit",
+              "annots": []
+            },
+            "returnType": {
+              "args": [],
+              "prim": "nat",
+              "annots": []
+            },
+            "annotations": []
+          }
+        }
+      ]
+    }
+  ],
+  "license": {
+    "name": "MIT",
+    "details": "The MIT License"
+  },
+  "homepage": "https://github.com/EGuenz/smartpy-permits",
+  "interfaces": [
+    "TZIP-16",
+    "TZIP-17"
+  ],
+  "description": "Implementation of Tzip-17 in Smartpy on basic FA1.2 contract\n"
+}

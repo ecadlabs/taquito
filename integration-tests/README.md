@@ -1,5 +1,6 @@
 # Taquito Integration Tests
 
+
 The `taquito/integration-tests` directory contains the integration test suite for Taquito. These tests are executed against live Tezos testnets, ensuring a comprehensive evaluation of various Taquito use cases.
 
 ## Running Integration Tests Against a Tezos Testnet
@@ -88,8 +89,10 @@ To review the graphical report of the test run, open the index.html file in ~/ta
 
 ## Taquito Integration Tests with Flextesa
 
+
 > **Be sure to use a working NVM! 16.6 has been verified.**
 > The recommended method to run tests is against testnets, not sandboxes. Running all tests against a sandbox can fail randomly, while running individual tests usually passes.
+
 
 To prepare to run the integration tests against a local sandbox, perform the following steps:
 
@@ -100,6 +103,7 @@ Execute
 ```bash
 source integration-tests/sandbox-env.sh
 ```
+
 
 from the top-level. This will export the following environment variables:
 
@@ -116,6 +120,7 @@ TEZOS_BAKER=tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
 
 Start the docker container which encapsulates the flextesa_sandbox:
 
+
 ```sh
 docker run --rm --name flextesa_sandbox --detach -p 20000:20000 oxheadalpha/flextesa:latest mumbaibox start
 ```
@@ -124,6 +129,7 @@ The default block time is 5 seconds. If we want to simulate Nairobi block times 
 
 ```sh
 docker run --rm --name flextesa_sandbox --detach -e block_time=8 -p 20000:20000 oxheadalpha/flextesa:latest mumbaibox start
+
 ```
 
 The idea behind Flextesa is to be able to use block times of 1 second. However, the tests as presently written do not always support that rate.

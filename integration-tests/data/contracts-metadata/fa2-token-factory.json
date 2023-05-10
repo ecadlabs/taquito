@@ -1,0 +1,16 @@
+{
+    "name": "Test Taquito FA2 token Factory",
+    "description": "This is a test to retrieve tokens metadata when they are located in the storage of the contract in the big map %token_metadata",
+    "source": {
+        "tools": [
+            "FA2 Token Factory"
+        ],
+        "location": "https://www.github.com/claudebarde"
+    },
+    "interfaces": [
+        "TZIP-012"
+    ],
+    "license": {
+        "name": "MIT"
+    }
+}
