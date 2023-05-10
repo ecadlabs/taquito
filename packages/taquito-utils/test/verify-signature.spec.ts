@@ -262,9 +262,7 @@ describe('utils signature validation tests', () => {
         'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidMessageError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(
-        /message provided for verifying signature cannot be empty/
-      );
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/: Cannot be empty./);
     });
 
     it('Should throw InvalidPublicKeyError if the public key is an empty string', () => {

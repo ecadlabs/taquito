@@ -133,7 +133,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidMessageError);
-      expect(error.message).toEqual(`Message "foo" is invalid.`);
+      expect(error.message).toEqual(`Invalid message "foo"`);
     }
   });
 

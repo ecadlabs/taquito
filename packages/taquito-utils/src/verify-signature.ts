@@ -65,10 +65,7 @@ export function verifySignature(
 
 function validateMessageNotEmpty(message: string) {
   if (message === '') {
-    throw new InvalidMessageError(
-      message,
-      'The message provided for verifying signature cannot be empty.'
-    );
+    throw new InvalidMessageError(message, ': Cannot be empty.');
   }
   return message;
 }

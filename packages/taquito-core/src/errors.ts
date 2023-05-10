@@ -106,8 +106,8 @@ export class InvalidMessageError extends ParameterValidationError {
   constructor(public msg: string, errorDetail?: string) {
     super();
     this.name = 'InvalidMessageError';
-    this.message = `Message "${msg}" is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid message "${msg}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
