@@ -1,8 +1,15 @@
 import { hash } from '@stablelib/blake2b';
-import { b58cencode, b58cdecode, prefix, isValidPrefix } from '@taquito/utils';
+import {
+  b58cencode,
+  b58cdecode,
+  prefix,
+  isValidPrefix,
+  invalidErrorDetail,
+  Prefix,
+} from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import elliptic from 'elliptic';
-import { InvalidKeyError } from '@taquito/core';
+import { InvalidKeyError, ValidationResult } from '@taquito/core';
 
 const pref = {
   p256: {
@@ -44,7 +51,8 @@ export class ECKey {
     if (!isValidPrefix(keyPrefix)) {
       throw new InvalidKeyError(
         key,
-        `With unsupported prefix expecting one of the following 'spsk', 'spes', 'p2sk' or 'p2es'`
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one of the following prefix '${Prefix.SPSK}', '${Prefix.SPESK}', '${Prefix.P2SK}' or '${Prefix.P2ESK}'.`
       );
     }
 

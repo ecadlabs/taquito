@@ -157,7 +157,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidKeyError);
-      expect(error.message).toEqual(`The key 'foo' is invalid.`);
+      expect(error.message).toEqual(`Invalid key "foo"`);
     }
   });
 

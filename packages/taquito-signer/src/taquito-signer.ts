@@ -4,7 +4,7 @@
  */
 import { openSecretBox } from '@stablelib/nacl';
 import { hash } from '@stablelib/blake2b';
-import { hex2buf, mergebuf, b58cencode, prefix } from '@taquito/utils';
+import { hex2buf, mergebuf, b58cencode, prefix, Prefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
@@ -131,7 +131,7 @@ export class InMemorySigner {
       default:
         throw new InvalidKeyError(
           key,
-          `With unsupported prefix, expecting one of the following 'edes', 'edsk', 'spsk', 'spes', 'p2sk' or 'p2es'.`
+          `With unsupported prefix, expecting one of the following '${Prefix.EDESK}', '${Prefix.EDSK}', '${Prefix.SPSK}', '${Prefix.SPESK}', '${Prefix.P2SK}' or '${Prefix.P2ESK}'.`
         );
     }
   }

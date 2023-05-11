@@ -1,6 +1,6 @@
 import { hash } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
-import { b58cencode, b58cdecode, prefix, buf2hex, isValidPrefix } from '@taquito/utils';
+import { b58cencode, b58cdecode, prefix, buf2hex, isValidPrefix, Prefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { InvalidKeyError } from '@taquito/core';
 
@@ -22,7 +22,10 @@ export class Tz1 {
   constructor(private key: string, encrypted: boolean, decrypt: (k: any) => any) {
     const keyPrefix = key.substr(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
-      throw new InvalidKeyError(key, `With unsupported prefix expecting either 'edes' or 'edsk'.`);
+      throw new InvalidKeyError(
+        key,
+        `With unsupported prefix expecting either '${Prefix.EDESK}' or '${Prefix.EDSK}'.`
+      );
     }
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));
