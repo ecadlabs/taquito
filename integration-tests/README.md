@@ -1,8 +1,12 @@
 # Taquito Integration Tests
 
 
-The `taquito/integration-tests` directory contains the integration test suite for Taquito. These tests are executed against live Tezos testnets, ensuring a comprehensive evaluation of various Taquito use cases.
+The `taquito/integration-tests` directory contains the integration test suite for Taquito. These tests are executed against live Tezos testnets, ensuring a comprehensive evaluation of various Taquito use cases. 
 
+The tests may also be run using Flextesa. This is useful for testing new features not in current test nets and for testing features around governance that benefit from shortened block processing times. As well Flextesa tests offer a secondary confirmation of the test net results.
+
+Internally Taquito is tested with tests running in parallel. This is achieved using an application that generates new keys and funds them as needed per test. 
+The application is not publicly available. External users, therefore, must run the Taquito Integration Tests in sequence, one test at a time. 
 
 ## Running Integration Tests Against a Tezos Testnet
 
@@ -36,23 +40,7 @@ Depending on the current Tezos upgrade cycle, multiple testnet networks may be c
 MUMBAINET=true npm run test
 ```
 
-
-To target a specific test within the suite, use the Jest `--testNamePattern=<regex>` parameter or `-t` for short. Specify the "spec name" of the test you want to run. With `npm`, the command looks like this:
-
-
-`npm run test -- -t "Title of the test here"`
-
-
-For example:
-
-
-```
-npm run test -- -t "Originate FA1.2 contract and fetch data from view entrypoints"
-```
-
-
 ## Configuration
-
 
 Refer to the `taquito/integration-tests/config.ts` file for details on test configurations and target networks. Some configurations have default values that can be overridden using environment variables. Sometimes, you can use CLI commands to invoke a configuration instead of exporting it.
 
@@ -64,7 +52,7 @@ If different testnets are configured in the `config.ts` file, you can run tests 
 
 
 ```
-npm run test:mumbainet "manager-wallet-scenario.spec.ts"
+npm run test:mumbainet contract-with-bigmap-init.spec.ts
 ```
 
 
@@ -72,7 +60,7 @@ Or for a specific test within a test file:
 
 
 ```
-npm run test:mumbainet -- -t "Originate FA1.2 contract and fetch data from view entrypoints"
+npm run test:mumbainet -- -t "Verify contract.originate for a contract and call deposit method with unit param"
 ```
 
 
@@ -84,24 +72,14 @@ To run tests against a node that is not pre-configured in Taquito, use:
 
 `export TEZOS_RPC_MUMBAINET='http://localhost:8732'`.
 
-
-## Keygen API
-
-
-Internally Taquito is tested with tests running in parallel. This is achieved using an application that generates new keys and funds them as needed per test.
+## Using a Secret Key Instead of the Keygen API
 
 
-The application is not publicly available. External users, therefore, must run the Taquito Integration Tests in sequence, one test at a time.
-
-
-### Using a Secret Key Instead of the Keygen API
-
-
-By default, the integration tests use an ephemeral key managed by the Keygen API. To use a secret key instead, use the CLI option `<testnet>-secret-key`, like this:
+By default, the integration tests use an ephemeral key managed by the Keygen API, which requires internal access. However, to use a secret key of your own instead, use the CLI option `<testnet>-secret-key`, like this:
 
 
 ```
-npm run test:mumbainet-secret-key manager-wallet-scenario.spec.ts
+npm run test:mumbainet-secret-key contract-with-bigmap-init.spec.ts
 ```
 
 
@@ -125,7 +103,8 @@ To review the graphical report of the test run, open the index.html file in ~/ta
 ## Taquito Integration Tests with Flextesa
 
 
-> **Be sure to use a working NVM! 16.6 has been verified.**
+> **Be sure to use a working NVM! such as lts/gallium or lts/hydrogen**
+
 > The recommended method to run tests is against testnets, not sandboxes. Running all tests against a sandbox can fail randomly, while individual tests usually pass.
 
 
@@ -250,8 +229,8 @@ Upon successfully starting the tests with contract origination, you should see t
 
 
 ```bash
-> integration-tests@16.1.2 test:originate-known-contracts
-> node -r ts-node/register originate-known-contracts.ts
+integration-tests@16.1.2 test:originate-known-contracts
+node -r ts-node/register originate-known-contracts.ts
 PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1
 knownContract address: KT1CX4Qbkfy4N9fgRD5L7RPZW9ByydfKxh5t
 ::set-output name=knownContractAddress::KT1CX4Qbkfy4N9fgRD5L7RPZW9Byv2ycodEBUxHWoRkWHFBht
@@ -263,28 +242,66 @@ knownSaplingContract address: KT1Hkdt7v2ycodEBUxHWoRkWHFBhtutgmVDU
 ::set-output name=knownSaplingContractAddress::KT1Hkdt7v2ycodEBUxHWoRkWHFBhtutgmVDU
 knownOnChainViewContractAddress address: KT1JirmFdgjttrm6wgwRxFGfwrP3twT5Y7CT
 ::set-output name=knownOnChainViewContractAddressAddress::KT1JirmFdgjttrm6wgwRxFGfwrP3twT5Y7CT
-################################################################################
+
 Public Key Hash : tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU
 Initial Balance : 90856887.13687 XTZ
 Final Balance : 90856909.589235 XTZ
 Total XTZ Spent : -22.452365 XTZ
+
 > integration-tests@16.1.2 test:mumbainet-secret-key
 > RUN_MUMBAINET_WITH_SECRET_KEY=true jest --runInBand
 RUNS  ./contract-manager-scenario.spec.ts
 PASS  ./contract-manager-scenario.spec.ts (6.167 s)
-...
+```
 
+## Testing Baking and Governance Operations with Flextesa
 
-### Flextesa optional parameters
+We provide a shell script `integration-tests/sandbox-bakers.sh` for setting up and runnng a mini net of bakers with Flextesa.
+The default vaues for the sandbox include
+  - blocks_per_voting_period=12 
+  - extra_dummy_proposals_batch_size=2 
+  - extra_dummy_proposals_batch_level=2,4 
+  - number_of_bootstrap_accounts=2
 
+Before running the script, make sure the file `~/taquito/integration-tests/known-contracts-PtMumbai2.ts` is populated. Stop the `baking-sandbox` docker process before running the script again.
 
-The default block time is 5 seconds. If you want to change it, use `-e block_time=3`. Other default options include:
+To run this script, save it as `integration-tests/sandbox-bakers.sh` and execute it with the required arguments:
 
+```bash
+chmod +x sandbox-bakers.sh
+./sandbox-bakers.sh <flextesa_docker_image> <protocol> <testnet> <testnet_uppercase>
+```
+for example,
+```bash
+./sandbox-bakers.sh oxheadalpha/flextesa:20230313 Mumbai mumbainet MUMBAINET
+```
 
-- blocks_per_voting_period = 16
-- extra_dummy_proposals_batch_size = 2
-- extra_dummy_proposals_batch_level = 3,5
-- number_of_bootstrap_accounts = 4
+Create an alias to make interacting with the flextesa node easier
+```bash!
+alias tcli='docker exec baking-sandbox octez-client'
+```
+Then, various commands are run like so
+```bash!
+tcli get balance for alice
+tcli --wait none transfer 10 from alice to bob   # Option `--wait` is IMPORTANT!
+tcli show address alice
+```
 
+For baking, check for baking rights
+```bash!
+tcli show address alice # get the pkh
+tcli rpc get /chains/main/blocks/head/metadata | jq .level_info,.protocol # get the cycle
+tcli  rpc get /chains/main/blocks/head/helpers/baking_rights\?cycle=<CYCLE>\&delegate=<PKH>\&max_round=7 
+```
+Since the cycles fly by in this setup, check for rights a few cycles ahead ..
 
-
+Then 
+```bash!
+tcli bake for alice
+```
+You should see something like:
+```bash!
+May 11 20:14:39.014 - 016-PtMumbai.baker.transitions: received new head BLr6cAaj2oM2ibakFp8zZMNEbpcSAZ94WhzeV57njD7NrnaYrZU at
+May 11 20:14:39.014 - 016-PtMumbai.baker.transitions:   level 1152, round 0
+Block BLCjrRGMJxZEBoZaxafUHcTCNBnmGzRfX2Qf5qru2XtAhiNEsun (1153) injected
+```
