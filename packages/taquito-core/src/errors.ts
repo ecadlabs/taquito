@@ -119,9 +119,9 @@ export class InvalidViewParameterError extends ParameterValidationError {
   constructor(public viewName: string, public sigs: any, public args: any, public cause?: any) {
     super();
     this.name = 'InvalidViewParameterError';
-    this.message = `Invalid arguments ${JSON.stringify(
+    this.message = `Invalid view arguments ${JSON.stringify(
       args
-    )} received for view name "${viewName}", expecting one of the following signatures: ${JSON.stringify(
+    )} received for name "${viewName}" expecting one of the following signatures ${JSON.stringify(
       sigs
     )}`;
   }
@@ -148,8 +148,8 @@ export class InvalidPublicKeyError extends ParameterValidationError {
   constructor(public publicKey: string, errorDetail?: string) {
     super();
     this.name = 'InvalidPublicKeyError';
-    this.message = `The public key '${publicKey}' is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid public key "${publicKey}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -161,8 +161,8 @@ export class InvalidSignatureError extends ParameterValidationError {
   constructor(public signature: string, errorDetail?: string) {
     super();
     this.name = 'InvalidSignatureError';
-    this.message = `The signature '${signature}' is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid signature "${signature}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -174,8 +174,8 @@ export class InvalidContractAddressError extends ParameterValidationError {
   constructor(public contractAddress: string, errorDetail?: string) {
     super();
     this.name = 'InvalidContractAddressError';
-    this.message = `The contract address '${contractAddress}' is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid contract address "${contractAddress}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -187,8 +187,8 @@ export class InvalidChainIdError extends ParameterValidationError {
   constructor(public chainId: string, errorDetail?: string) {
     super();
     this.name = 'InvalidChainIdError';
-    this.message = `The chain id '${chainId}' is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid chain id "${chainId}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -200,8 +200,8 @@ export class InvalidKeyHashError extends ParameterValidationError {
   constructor(public keyHash: string, errorDetail?: string) {
     super();
     this.name = 'InvalidKeyHashError';
-    this.message = `The public key hash '${keyHash}' is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid public key hash "${keyHash}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -213,8 +213,8 @@ export class InvalidOperationHashError extends ParameterValidationError {
   constructor(public operationHash: string, errorDetail?: string) {
     super();
     this.name = 'InvalidOperationHashError';
-    this.message = `The operation hash '${operationHash}' is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid operation hash "${operationHash}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -226,8 +226,8 @@ export class InvalidOperationKindError extends ParameterValidationError {
   constructor(public operationKind: string, errorDetail?: string) {
     super();
     this.name = 'InvalidOperationKindError';
-    this.message = `The operation kind '${operationKind}' is unsupported.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid operation kind "${operationKind}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 

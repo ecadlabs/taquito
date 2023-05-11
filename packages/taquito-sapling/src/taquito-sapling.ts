@@ -295,11 +295,9 @@ export class SaplingToolkit {
   }
 
   private validateDestinationImplicitAddress(to: string) {
-    if (validateKeyHash(to) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(
-        to,
-        "The 'to' parameter must be a Tezos public key hash (tz1, tz2, tz3)."
-      );
+    const toValidation = validateKeyHash(to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(to, invalidErrorDetail(toValidation));
     }
   }
 

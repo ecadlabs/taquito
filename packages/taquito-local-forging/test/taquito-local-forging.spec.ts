@@ -49,7 +49,7 @@ describe('Forge and parse operations default protocol', () => {
         localForger.forge(operation);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining("The operation kind 'invalid' is unsupported"),
+          message: expect.stringContaining(`Invalid operation kind "invalid"`),
         })
       );
       expect(() => {

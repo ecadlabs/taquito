@@ -148,8 +148,9 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   private validateContract(address: string) {
-    if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address);
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, invalidErrorDetail(addressValidation));
     }
   }
   /**

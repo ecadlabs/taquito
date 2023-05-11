@@ -13,6 +13,7 @@ import {
   prefix,
   verifySignature,
   validateKeyHash,
+  invalidErrorDetail,
 } from '@taquito/utils';
 import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
@@ -93,8 +94,9 @@ export class RemoteSigner implements Signer {
     private options: RemoteSignerOptions = {},
     private http = new HttpBackend()
   ) {
-    if (validateKeyHash(this.pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(this.pkh);
+    const pkhValidation = validateKeyHash(this.pkh);
+    if (pkhValidation !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(this.pkh, invalidErrorDetail(pkhValidation));
     }
   }
 
@@ -151,7 +153,7 @@ export class RemoteSigner implements Signer {
       if (!isValidPrefix(pref)) {
         throw new InvalidSignatureError(
           signature,
-          'Signature with unsupported prefix is given by remote signer.'
+          invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` from a remote signer.`
         );
       }
 

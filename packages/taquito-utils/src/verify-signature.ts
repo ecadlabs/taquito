@@ -4,6 +4,7 @@ import {
   b58cdecode,
   buf2hex,
   hex2buf,
+  invalidErrorDetail,
   Prefix,
   prefix,
   validatePublicKey,
@@ -72,21 +73,12 @@ function validateMessageNotEmpty(message: string) {
 
 export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
   if (publicKey === '') {
-    throw new InvalidPublicKeyError(publicKey, 'Public key cannot be empty');
+    throw new InvalidPublicKeyError(publicKey, ': Can not be empty');
   }
   const pkPrefix = publicKey.substring(0, 4);
-  const validation = validatePublicKey(publicKey);
-  if (validation !== ValidationResult.VALID) {
-    if (validation === ValidationResult.INVALID_CHECKSUM) {
-      throw new InvalidPublicKeyError(publicKey, 'With invalid checksum');
-    } else if (validation === ValidationResult.INVALID_LENGTH) {
-      throw new InvalidPublicKeyError(publicKey, 'With invalid length');
-    } else if (validation === ValidationResult.NO_PREFIX_MATCHED) {
-      throw new InvalidPublicKeyError(
-        publicKey,
-        `With unsupported prefix expecting one of the following 'edpk', 'sppk', 'p2pk' or 'BLpk'.`
-      );
-    }
+  const publicKeyValidation = validatePublicKey(publicKey);
+  if (publicKeyValidation !== ValidationResult.VALID) {
+    throw new InvalidPublicKeyError(publicKey, invalidErrorDetail(publicKeyValidation));
   }
   return pkPrefix as PkPrefix;
 }
@@ -97,13 +89,7 @@ function validateSigAndExtractPrefix(signature: string): SigPrefix {
     : signature.substr(0, 5);
   const validation = validateSignature(signature);
   if (validation !== ValidationResult.VALID) {
-    if (validation === ValidationResult.INVALID_CHECKSUM) {
-      throw new InvalidSignatureError(signature, `With invalid checksum`);
-    } else if (validation === ValidationResult.INVALID_LENGTH) {
-      throw new InvalidSignatureError(signature, 'With invalid length');
-    } else if (validation === ValidationResult.NO_PREFIX_MATCHED) {
-      throw new InvalidSignatureError(signature, 'With unsupported prefix');
-    }
+    throw new InvalidSignatureError(signature, invalidErrorDetail(validation));
   }
   return signaturePrefix as SigPrefix;
 }

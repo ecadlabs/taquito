@@ -71,7 +71,7 @@ describe('utils signature validation tests', () => {
         'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidPublicKeyError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/invalid checksum/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Checksum failed/);
     });
 
     it('Should throw if the signature does not have a valid prefix', () => {
@@ -82,7 +82,7 @@ describe('utils signature validation tests', () => {
         'ssig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidSignatureError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/unsupported prefix/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Invalid prefix/);
     });
   });
 
@@ -155,7 +155,7 @@ describe('utils signature validation tests', () => {
         'p2sigagM3BrzRFALwKGP18QdzJ9SxBwu5S71QLBgcT1TRTJS2xgjFXJfa5tsaYBeH4V2awuKYHouqo19RLDAzMHY6Xo2H1APy5';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidPublicKeyError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/invalid checksum/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Checksum failed/);
     });
 
     it('Should throw if the signature does not have a valid prefix', () => {
@@ -166,7 +166,7 @@ describe('utils signature validation tests', () => {
         't2sigagM3BrzRFALwKGP18QdzJ9SxBwu5S71QLBgcT1TRTJS2xgjFXJfa5tsaYBeH4V2awuKYHouqo19RLDAzMHY6Xo2H1APy5';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidSignatureError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/unsupported prefix/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Invalid prefix/);
     });
   });
 
@@ -239,7 +239,7 @@ describe('utils signature validation tests', () => {
         'edsigtZAr36wyLRsSsCdbXY2gwfyqVGL7QFaHEbSryhdU3By6Na7X1uwNNpZXD7GGrAk6QrRVb87TPrtf2PSvBfd2iY99h3JnHk';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidPublicKeyError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/invalid checksum/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Checksum failed/);
     });
 
     it('Should throw if the signature does not have a valid prefix', () => {
@@ -250,7 +250,7 @@ describe('utils signature validation tests', () => {
         'esigtZAr36wyLRsSsCdbXY2gwfyqVGL7QFaHEbSryhdU3By6Na7X1uwNNpZXD7GGrAk6QrRVb87TPrtf2PSvBfd2iY99h3JnHk';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidSignatureError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/unsupported prefix/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Invalid prefix/);
     });
   });
 
@@ -274,7 +274,7 @@ describe('utils signature validation tests', () => {
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidPublicKeyError);
       expect(() => verifySignature(message, pk, sig)).toThrowError(
-        "The public key '' is invalid. Public key cannot be empty"
+        `Invalid public key "": Can not be empty`
       );
     });
 
@@ -286,7 +286,7 @@ describe('utils signature validation tests', () => {
         'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidPublicKeyError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/unsupported prefix/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Invalid prefix/);
     });
 
     it('Should throw InvalidPublicKeyError if the public key is invalid', () => {
@@ -297,7 +297,7 @@ describe('utils signature validation tests', () => {
         'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidPublicKeyError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/invalid checksum/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Checksum failed/);
     });
 
     it('Should throw InvalidSignatureError if the prefix of the signature is unknown', () => {
@@ -308,7 +308,7 @@ describe('utils signature validation tests', () => {
         'spesig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidSignatureError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/unsupported prefix/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Invalid prefix/);
     });
 
     it('Should throw InvalidSignatureError if the checksum of the signature is invalid', () => {
@@ -319,7 +319,7 @@ describe('utils signature validation tests', () => {
         'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47';
 
       expect(() => verifySignature(message, pk, sig)).toThrowError(InvalidSignatureError);
-      expect(() => verifySignature(message, pk, sig)).toThrowError(/invalid checksum/);
+      expect(() => verifySignature(message, pk, sig)).toThrowError(/Checksum failed/);
     });
   });
 });

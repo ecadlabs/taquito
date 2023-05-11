@@ -517,7 +517,7 @@ describe('SaplingToolkit', () => {
         amount: 8,
       })
     ).rejects.toThrowError(
-      `The public key hash 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y' is invalid. The 'to' parameter must be a Tezos public key hash (tz1, tz2, tz3).`
+      `Invalid public key hash "zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y": Invalid prefix`
     );
 
     done();

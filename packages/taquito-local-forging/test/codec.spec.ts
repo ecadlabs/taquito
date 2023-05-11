@@ -72,9 +72,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     try {
       pkhEncoder('tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5');
     } catch (e) {
-      expect(e.message).toContain(
-        "The public key hash 'tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' is invalid."
-      );
+      expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
     }
     done();
   });
@@ -94,7 +92,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     ).toThrow(
       expect.objectContaining({
         message: expect.stringContaining(
-          "The public key 'p4zzk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' is invalid."
+          `Invalid public key "p4zzk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV"`
         ),
       })
     );
@@ -139,7 +137,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining("The public key '[object Object]' is invalid."),
+        message: expect.stringContaining(`Invalid public key "[object Object]": Invalid prefix`),
       })
     );
 

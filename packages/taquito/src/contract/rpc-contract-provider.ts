@@ -87,8 +87,9 @@ export class RpcContractProvider
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
-    if (validateContractAddress(contract) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(contract);
+    const contractValidation = validateContractAddress(contract);
+    if (contractValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(contract, invalidErrorDetail(contractValidation));
     }
     const script = await this.context.readProvider.getScript(contract, 'head');
     if (!schema) {
@@ -118,8 +119,9 @@ export class RpcContractProvider
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
-    if (validateContractAddress(contract) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(contract);
+    const contractValidation = validateContractAddress(contract);
+    if (contractValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(contract, invalidErrorDetail(contractValidation));
     }
     if (!schema) {
       schema = (await this.rpc.getContract(contract)).script;
@@ -781,8 +783,9 @@ export class RpcContractProvider
     address: string,
     contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
   ): Promise<T> {
-    if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address);
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, invalidErrorDetail(addressValidation));
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;

@@ -204,7 +204,11 @@ export const pkhEncoder = (val: string) => {
     case Prefix.TZ4:
       return '03' + prefixEncoder(Prefix.TZ4)(val);
     default:
-      throw new InvalidKeyHashError(val);
+      throw new InvalidKeyHashError(
+        val,
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one for the following "${Prefix.TZ1}", "${Prefix.TZ2}", "${Prefix.TZ3}" or "${Prefix.TZ4}".`
+      );
   }
 };
 
@@ -220,7 +224,8 @@ export const publicKeyEncoder = (val: string) => {
     default:
       throw new InvalidPublicKeyError(
         val,
-        `With unsupported prefix expecting one of the following 'edpk', 'sppk', 'p2pk' or 'BLpk'.`
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one of the following '${Prefix.EDPK}', '${Prefix.SPPK}', '${Prefix.P2PK}' or '${Prefix.BLPK}'.`
       );
   }
 };
@@ -257,7 +262,10 @@ export const smartContractAddressEncoder = (val: string): string => {
   if (prefix === Prefix.KT1) {
     return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
   }
-  throw new InvalidContractAddressError(val);
+  throw new InvalidContractAddressError(
+    val,
+    invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.KT1}'.`
+  );
 };
 
 export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
@@ -270,7 +278,10 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
     case 0x02:
       return prefixDecoder(Prefix.P2PK)(val);
     default:
-      throw new InvalidPublicKeyError(val.toString(), `With unsupported prefix`);
+      throw new InvalidPublicKeyError(
+        val.toString(),
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED)
+      );
   }
 };
 
@@ -315,7 +326,10 @@ export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
     val.consume(1);
     return scAddress;
   }
-  throw new InvalidContractAddressError(val.toString());
+  throw new InvalidContractAddressError(
+    val.toString(),
+    invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED)
+  );
 };
 
 export const smartRollupCommitmentHashDecoder = (val: Uint8ArrayConsumer) => {

@@ -144,9 +144,9 @@ describe('common error classes', () => {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidViewParameterError);
       expect(error.message).toEqual(
-        `Invalid arguments "bar" received for view name "foo", expecting one of the following signatures: "${JSON.stringify(
+        `Invalid view arguments "bar" received for name "foo" expecting one of the following signatures ${JSON.stringify(
           { parameter: 'nat', result: 'nat' }
-        )}".`
+        )}`
       );
     }
   });
@@ -167,7 +167,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidPublicKeyError);
-      expect(error.message).toEqual(`The public key 'foo' is invalid.`);
+      expect(error.message).toEqual(`Invalid public key "foo"`);
     }
   });
 
@@ -177,7 +177,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidSignatureError);
-      expect(error.message).toEqual(`The signature 'foo' is invalid.`);
+      expect(error.message).toEqual(`Invalid signature "foo"`);
     }
   });
 
@@ -187,7 +187,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidContractAddressError);
-      expect(error.message).toEqual(`The contract address 'foo' is invalid.`);
+      expect(error.message).toEqual(`Invalid contract address "foo"`);
     }
   });
 
@@ -197,7 +197,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidChainIdError);
-      expect(error.message).toEqual(`The chain id 'foo' is invalid.`);
+      expect(error.message).toEqual(`Invalid chain id "foo"`);
     }
   });
 
@@ -207,7 +207,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidKeyHashError);
-      expect(error.message).toEqual(`The public key hash 'foo' is invalid.`);
+      expect(error.message).toEqual(`Invalid public key hash "foo"`);
     }
   });
 
@@ -217,7 +217,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidOperationHashError);
-      expect(error.message).toEqual(`The operation hash 'foo' is invalid.`);
+      expect(error.message).toEqual(`Invalid operation hash "foo"`);
     }
   });
 
@@ -227,7 +227,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidOperationKindError);
-      expect(error.message).toEqual(`The operation kind 'foo' is unsupported.`);
+      expect(error.message).toEqual(`Invalid operation kind "foo"`);
     }
   });
 
