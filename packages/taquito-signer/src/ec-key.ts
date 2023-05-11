@@ -47,7 +47,7 @@ export class ECKey {
     encrypted: boolean,
     decrypt: (k: any) => any
   ) {
-    const keyPrefix = key.substr(0, encrypted ? 5 : 4);
+    const keyPrefix = key.substring(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
       throw new InvalidKeyError(
         key,

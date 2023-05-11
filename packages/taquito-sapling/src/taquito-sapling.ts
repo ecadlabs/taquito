@@ -259,7 +259,7 @@ export class SaplingToolkit {
     }
   }
   private async createBoundData(destination: string) {
-    const pref = destination.substr(0, 3);
+    const pref = destination.substring(0, 3);
 
     let pad: Buffer;
     switch (pref) {

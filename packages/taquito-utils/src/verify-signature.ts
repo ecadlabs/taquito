@@ -85,8 +85,8 @@ export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
 
 function validateSigAndExtractPrefix(signature: string): SigPrefix {
   const signaturePrefix = signature.startsWith('sig')
-    ? signature.substr(0, 3)
-    : signature.substr(0, 5);
+    ? signature.substring(0, 3)
+    : signature.substring(0, 5);
   const validation = validateSignature(signature);
   if (validation !== ValidationResult.VALID) {
     throw new InvalidSignatureError(signature, invalidErrorDetail(validation));

@@ -115,7 +115,7 @@ export class InMemorySigner {
       };
     }
 
-    switch (key.substr(0, 4)) {
+    switch (key.substring(0, 4)) {
       case 'edes':
       case 'edsk':
         this._key = new Tz1(key, encrypted, decrypt);
