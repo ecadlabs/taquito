@@ -49,7 +49,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    */
   derive(index: number): PrivateKey {
     if ((index & Hard) === 0) {
-      throw new InvalidDerivationPathError('', 'Non-hardened derivation path');
+      throw new InvalidDerivationPathError(index.toString(), ': Non-hardened derivation path.');
     }
     const data = new Uint8Array(37);
     data.set(this.seed(), 1);

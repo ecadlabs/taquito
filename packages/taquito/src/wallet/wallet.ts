@@ -16,13 +16,16 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from './interface';
-import { InvalidAddressError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidContractAddressError,
+  InvalidOperationKindError,
+} from '@taquito/core';
 import {
   validateAddress,
   validateContractAddress,
-  InvalidContractAddressError,
   ValidationResult,
-  InvalidOperationKindError,
+  invalidErrorDetail,
 } from '@taquito/utils';
 
 export interface PKHOption {
@@ -47,8 +50,9 @@ export class WalletOperationBatch {
    * @param params Transfer operation parameter
    */
   withTransfer(params: WalletTransferParams) {
-    if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidErrorDetail(toValidation));
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -75,8 +79,9 @@ export class WalletOperationBatch {
    * @param params Delegation operation parameter
    */
   withDelegation(params: WalletDelegateParams) {
-    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+    const delegateValidation = validateAddress(params.delegate ?? '');
+    if (params.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.delegate, invalidErrorDetail(delegateValidation));
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -97,13 +102,14 @@ export class WalletOperationBatch {
 
   /**
    *
-   * @description
+   * @description Add an IncreasePaidStorage operation to the batch
    *
-   * @param param
+   * @param param IncreasePaidStorage operation parameter
    */
   withIncreasePaidStorage(params: WalletIncreasePaidStorageParams) {
-    if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination);
+    const destinationValidation = validateAddress(params.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, invalidErrorDetail(destinationValidation));
     }
     this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
     return this;
@@ -124,7 +130,7 @@ export class WalletOperationBatch {
       case OpKind.INCREASE_PAID_STORAGE:
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
       default:
-        throw new InvalidOperationKindError((param as any).kind);
+        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
   }
 
@@ -133,6 +139,7 @@ export class WalletOperationBatch {
    * @description Add a group operation to the batch. Operation will be applied in the order they are in the params array
    *
    * @param params Operations parameter
+   * @throws {@link InvalidOperationKindError}
    */
   with(params: WalletParamsWithKind[]) {
     for (const param of params) {
@@ -150,7 +157,7 @@ export class WalletOperationBatch {
           this.withIncreasePaidStorage(param);
           break;
         default:
-          throw new InvalidOperationKindError((param as any).kind);
+          throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
       }
     }
 
@@ -237,8 +244,9 @@ export class Wallet {
    * @param delegateParams operation parameter
    */
   setDelegate(params: WalletDelegateParams) {
-    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+    const delegateValidation = validateAddress(params.delegate ?? '');
+    if (params.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.delegate, invalidErrorDetail(delegateValidation));
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
@@ -276,8 +284,9 @@ export class Wallet {
    * @param params operation parameter
    */
   transfer(params: WalletTransferParams) {
-    if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidErrorDetail(toValidation));
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
@@ -297,8 +306,9 @@ export class Wallet {
    * @param params
    */
   increasePaidStorage(params: WalletIncreasePaidStorageParams) {
-    if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination);
+    const destinationValidation = validateAddress(params.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, invalidErrorDetail(destinationValidation));
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapIncreasePaidStorageWalletParams(
@@ -333,14 +343,16 @@ export class Wallet {
    * smart contract abstraction will leverage the wallet provider to make smart contract calls
    *
    * @param address Smart contract address
+   * @throws {@link InvalidContractAddressError} If the contract address is not valid
    */
   async at<T extends ContractAbstraction<Wallet>>(
     address: string,
     contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
       x as any
   ): Promise<T> {
-    if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address);
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, invalidErrorDetail(addressValidation));
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;

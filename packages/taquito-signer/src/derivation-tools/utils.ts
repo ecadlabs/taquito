@@ -6,7 +6,7 @@ export function parseHex(s: string): Uint8Array {
     const ss = s.slice(i, i + 2);
     const x = parseInt(ss, 16);
     if (Number.isNaN(x)) {
-      throw new InvalidHexStringError(ss, `invalid hexadecimal number`);
+      throw new InvalidHexStringError(ss);
     }
     res.push(x);
   }

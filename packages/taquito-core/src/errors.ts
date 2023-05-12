@@ -54,19 +54,21 @@ export class InvalidAddressError extends ParameterValidationError {
   constructor(public address: string, errorDetail?: string) {
     super();
     this.name = 'InvalidAddressError';
-    this.message = `Address "${address}" is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid address "${address}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
 /**
  *  @category Error
  *  @description Error indicates an invalid block hash being passed or used
- */ export class InvalidBlockHashError extends ParameterValidationError {
-  constructor(public blockHash: string) {
+ */
+export class InvalidBlockHashError extends ParameterValidationError {
+  constructor(public blockHash: string, errorDetail?: string) {
     super();
     this.name = 'InvalidBlockHashError';
-    this.message = `Block hash "${blockHash}" is invalid.`;
+    this.message = `Invalid block hash "${blockHash}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -78,8 +80,8 @@ export class InvalidDerivationPathError extends ParameterValidationError {
   constructor(public derivationPath: string, errorDetail?: string) {
     super();
     this.name = 'InvalidDerivationPathError';
-    this.message = `Derivation path "${derivationPath}" is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid derivation path "${derivationPath}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -91,8 +93,8 @@ export class InvalidHexStringError extends ParameterValidationError {
   constructor(public hexString: string, errorDetail?: string) {
     super();
     this.name = 'InvalidHexStringError';
-    this.message = `Hex string "${hexString}" is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid hex string "${hexString}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -104,8 +106,8 @@ export class InvalidMessageError extends ParameterValidationError {
   constructor(public msg: string, errorDetail?: string) {
     super();
     this.name = 'InvalidMessageError';
-    this.message = `Message "${msg}" is invalid.`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : null;
+    this.message = `Invalid message "${msg}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }
 
@@ -114,12 +116,139 @@ export class InvalidMessageError extends ParameterValidationError {
  *  @description Error indicates invalid view parameter of a smart contract
  */
 export class InvalidViewParameterError extends ParameterValidationError {
-  name = 'Invalid view parameters error';
   constructor(public viewName: string, public sigs: any, public args: any, public cause?: any) {
     super();
     this.name = 'InvalidViewParameterError';
-    this.message = `view name: ${viewName} received arguments: ${JSON.stringify(
+    this.message = `Invalid view arguments ${JSON.stringify(
       args
-    )} while expecting one of the following signatures: (${JSON.stringify(sigs)})`;
+    )} received for name "${viewName}" expecting one of the following signatures ${JSON.stringify(
+      sigs
+    )}`;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid key being passed or used
+ */
+export class InvalidKeyError extends ParameterValidationError {
+  constructor(public key: string, public errorDetail?: string) {
+    super();
+    this.name = 'InvalidKeyError';
+    this.message = `Invalid key "${key}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an Invalid Public Key being passed or used
+ */
+export class InvalidPublicKeyError extends ParameterValidationError {
+  constructor(public publicKey: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidPublicKeyError';
+    this.message = `Invalid public key "${publicKey}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid signature being passed or used
+ */
+export class InvalidSignatureError extends ParameterValidationError {
+  constructor(public signature: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidSignatureError';
+    this.message = `Invalid signature "${signature}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid contract address being passed or used
+ */
+export class InvalidContractAddressError extends ParameterValidationError {
+  constructor(public contractAddress: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidContractAddressError';
+    this.message = `Invalid contract address "${contractAddress}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid chain id being passed or used
+ */
+export class InvalidChainIdError extends ParameterValidationError {
+  constructor(public chainId: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidChainIdError';
+    this.message = `Invalid chain id "${chainId}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid public key hash being passed or used
+ */
+export class InvalidKeyHashError extends ParameterValidationError {
+  constructor(public keyHash: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidKeyHashError';
+    this.message = `Invalid public key hash "${keyHash}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid operation hash being passed or used
+ */
+export class InvalidOperationHashError extends ParameterValidationError {
+  constructor(public operationHash: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidOperationHashError';
+    this.message = `Invalid operation hash "${operationHash}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid operation kind being passed or used
+ */
+export class InvalidOperationKindError extends ParameterValidationError {
+  constructor(public operationKind: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidOperationKindError';
+    this.message = `Invalid operation kind "${operationKind}"`;
+    errorDetail ? (this.message += `${errorDetail}`) : null;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description General error that indicates something is no longer supported and/or deprecated
+ */
+export class DeprecationError extends UnsupportedAction {
+  constructor(public message: string) {
+    super();
+    this.name = 'DeprecationError';
+  }
+}
+
+/**
+ *  @category Error
+ *  @description General error that indicates an action is prohibited or not allowed
+ */
+export class ProhibitedActionError extends UnsupportedAction {
+  constructor(public message: string) {
+    super();
+    this.name = 'ProhibitedActionError';
   }
 }

@@ -96,7 +96,7 @@ function sha256(msg: number[] | Uint8Array): number[] {
   const pad = r === 0 ? 0 : 64 - r;
 
   if (msg.length > 268435455) {
-    throw new InvalidMessageError('', `SHA-256 -- message length is too big: ${msg.length}`);
+    throw new InvalidMessageError('', `: Invalid length ${msg.length} is too big -- SHA-256.`);
   }
 
   const l = msg.length << 3;
