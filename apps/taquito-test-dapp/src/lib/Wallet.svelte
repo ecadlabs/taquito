@@ -4,7 +4,7 @@
   import { TezosToolkit } from "@taquito/taquito";
   import { BeaconWallet } from "@taquito/beacon-wallet";
   // import { BeaconEvent, defaultEventCallbacks } from "@airgap/beacon-sdk";
-  import { NetworkType } from "@airgap/beacon-sdk";
+  import type { DAppClientOptions, NetworkType } from "@airgap/beacon-sdk";
   import store from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
   import { defaultMatrixNode, rpcUrl, defaultNetworkType } from "../config";
@@ -16,29 +16,27 @@
   const createNewWallet = (config: {
     networkType: NetworkType,
   }) => {
-    return new BeaconWallet(
-      $store.disableDefaultEvents
-        ? {
-            name: "Taquito Test Dapp",
-            matrixNodes: [defaultMatrixNode] as any,
-            preferredNetwork: config.networkType,
-            // disableDefaultEvents: true // Disable all events / UI. This also disables the pairing alert.
-            // eventHandlers: {
-            //   // To keep the pairing alert, we have to add the following default event handlers back
-            //   [BeaconEvent.PAIR_INIT]: {
-            //     handler: defaultEventCallbacks.PAIR_INIT
-            //   },
-            //   [BeaconEvent.PAIR_SUCCESS]: {
-            //     handler: defaultEventCallbacks.PAIR_SUCCESS
-            //   }
-            // }
-          }
-        : {
-            name: "Taquito Test Dapp",
-            matrixNodes: [defaultMatrixNode] as any,
-            preferredNetwork: config.networkType,
-          }
-    );
+    const options: DAppClientOptions = {
+      name: "Taquito Test Dapp",
+      matrixNodes: [defaultMatrixNode] as any,
+      preferredNetwork: config.networkType,
+      walletConnectOptions: {
+        projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',
+      }
+    };
+    // if ($store.disableDefaultEvents) {
+    //   options.disableDefaultEvents = true;
+    //   options.eventHandlers = {
+    //     // To keep the pairing alert, we have to add the following default event handlers back
+    //     [BeaconEvent.PAIR_INIT]: {
+    //       handler: defaultEventCallbacks.PAIR_INIT
+    //     },
+    //     [BeaconEvent.PAIR_SUCCESS]: {
+    //       handler: defaultEventCallbacks.PAIR_SUCCESS
+    //     }
+    //   }
+    // }
+    return new BeaconWallet(options);
   };
 
   const connectWallet = async () => {
