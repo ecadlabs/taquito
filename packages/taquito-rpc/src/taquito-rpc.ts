@@ -64,8 +64,13 @@ import {
   OriginationProofParams,
 } from './types';
 import { castToBigNumber } from './utils/utils';
-import { validateAddress, validateContractAddress, invalidErrorDetail } from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError, ValidationResult } from '@taquito/core';
+import {
+  validateAddress,
+  validateContractAddress,
+  ValidationResult,
+  invalidErrorDetail,
+} from '@taquito/utils';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
 export { castToBigNumber } from './utils/utils';
 

@@ -1,7 +1,14 @@
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
 import { OpKind, ScriptResponse } from '@taquito/rpc';
-import { encodeExpr, invalidErrorDetail } from '@taquito/utils';
+import {
+  encodeExpr,
+  invalidErrorDetail,
+  validateAddress,
+  validateContractAddress,
+  ValidationResult,
+} from '@taquito/utils';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -54,7 +61,6 @@ import {
   createSmartRollupOriginateOperation,
 } from './prepare';
 import { smartContractAbstractionSemantic } from './semantic';
-import { validateAddress, validateContractAddress } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
@@ -66,7 +72,6 @@ import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
-import { InvalidAddressError, InvalidContractAddressError, ValidationResult } from '@taquito/core';
 
 export class RpcContractProvider
   extends OperationEmitter

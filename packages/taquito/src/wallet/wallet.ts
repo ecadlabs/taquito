@@ -20,9 +20,13 @@ import {
   InvalidAddressError,
   InvalidContractAddressError,
   InvalidOperationKindError,
-  ValidationResult,
 } from '@taquito/core';
-import { validateAddress, validateContractAddress, invalidErrorDetail } from '@taquito/utils';
+import {
+  validateAddress,
+  validateContractAddress,
+  ValidationResult,
+  invalidErrorDetail,
+} from '@taquito/utils';
 
 export interface PKHOption {
   forceRefetch?: boolean;

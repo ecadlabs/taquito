@@ -13,6 +13,7 @@ import {
   prefix,
   verifySignature,
   validateKeyHash,
+  ValidationResult,
   invalidErrorDetail,
 } from '@taquito/utils';
 import { hash } from '@stablelib/blake2b';
@@ -24,12 +25,7 @@ import {
   PublicKeyMismatch,
 } from './errors';
 import { Signer } from '@taquito/taquito';
-import {
-  InvalidSignatureError,
-  InvalidKeyHashError,
-  ProhibitedActionError,
-  ValidationResult,
-} from '@taquito/core';
+import { InvalidSignatureError, InvalidKeyHashError, ProhibitedActionError } from '@taquito/core';
 
 /**
  *  @category Error

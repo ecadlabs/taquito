@@ -5,10 +5,10 @@
 
 import { EntrypointsResponse, ScriptedContracts } from '@taquito/rpc';
 import { Extension, Context } from '@taquito/taquito';
-import { validateAddress, invalidErrorDetail } from '@taquito/utils';
+import { validateAddress, ValidationResult, invalidErrorDetail } from '@taquito/utils';
 import { InvalidScriptFormatError } from './errors';
 import { ReadWrapperContractsLibrary } from './read-provider-wrapper';
-import { InvalidAddressError, ValidationResult } from '@taquito/core';
+import { InvalidAddressError } from '@taquito/core';
 
 interface ContractsData {
   [contractAddress: string]: { script: ScriptedContracts; entrypoints: EntrypointsResponse };

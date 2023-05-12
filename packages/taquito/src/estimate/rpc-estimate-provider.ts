@@ -43,10 +43,10 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
 } from '../contract/prepare';
-import { invalidErrorDetail, validateAddress } from '@taquito/utils';
+import { validateAddress, ValidationResult, invalidErrorDetail } from '@taquito/utils';
 import { RevealEstimateError } from './error';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
-import { InvalidAddressError, InvalidOperationKindError, ValidationResult } from '@taquito/core';
+import { InvalidAddressError, InvalidOperationKindError } from '@taquito/core';
 
 interface Limits {
   fee?: number;

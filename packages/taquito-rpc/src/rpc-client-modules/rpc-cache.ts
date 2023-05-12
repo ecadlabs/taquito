@@ -52,8 +52,13 @@ import {
   PendingOperations,
   OriginationProofParams,
 } from '../types';
-import { InvalidAddressError, InvalidContractAddressError, ValidationResult } from '@taquito/core';
-import { validateContractAddress, validateAddress, invalidErrorDetail } from '@taquito/utils';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import {
+  validateContractAddress,
+  validateAddress,
+  ValidationResult,
+  invalidErrorDetail,
+} from '@taquito/utils';
 
 interface CachedDataInterface {
   [key: string]: {

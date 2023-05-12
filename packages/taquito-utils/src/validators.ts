@@ -1,8 +1,12 @@
 import { prefix, prefixLength, Prefix } from './constants';
-import { ValidationResult } from '@taquito/core';
 import bs58check from 'bs58check';
 
-export { ValidationResult } from '@taquito/core';
+export enum ValidationResult {
+  NO_PREFIX_MATCHED,
+  INVALID_CHECKSUM,
+  INVALID_LENGTH,
+  VALID,
+}
 
 export function isValidPrefix(value: unknown): value is Prefix {
   if (typeof value !== 'string') {

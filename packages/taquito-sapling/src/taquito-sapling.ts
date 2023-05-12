@@ -11,6 +11,7 @@ import {
   prefix,
   Prefix,
   validateKeyHash,
+  ValidationResult,
   invalidErrorDetail,
 } from '@taquito/utils';
 import { InsufficientBalance, InvalidMemo } from './error';
@@ -29,7 +30,7 @@ import {
 import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
 import { DEFAULT_BOUND_DATA, DEFAULT_MEMO } from './constants';
 import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
-import { InvalidAddressError, InvalidKeyHashError, ValidationResult } from '@taquito/core';
+import { InvalidAddressError, InvalidKeyHashError } from '@taquito/core';
 
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';

@@ -5,7 +5,12 @@ import {
   RpcClientInterface,
   ScriptResponse,
 } from '@taquito/rpc';
-import { invalidErrorDetail, validateChain, validateContractAddress } from '@taquito/utils';
+import {
+  invalidErrorDetail,
+  validateChain,
+  validateContractAddress,
+  ValidationResult,
+} from '@taquito/utils';
 import { ChainIds } from '../constants';
 import { TzReadProvider } from '../read-provider/interface';
 import { Wallet } from '../wallet';
@@ -15,7 +20,7 @@ import { ContractMethodObject } from './contract-methods/contract-method-object-
 import { OnChainView } from './contract-methods/contract-on-chain-view';
 import { InvalidParameterError } from './errors';
 import { ContractProvider, StorageProvider } from './interface';
-import { InvalidChainIdError, DeprecationError, ValidationResult } from '@taquito/core';
+import { InvalidChainIdError, DeprecationError } from '@taquito/core';
 
 export const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
 

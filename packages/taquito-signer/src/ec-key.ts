@@ -6,10 +6,11 @@ import {
   isValidPrefix,
   invalidErrorDetail,
   Prefix,
+  ValidationResult,
 } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import elliptic from 'elliptic';
-import { InvalidKeyError, ValidationResult } from '@taquito/core';
+import { InvalidKeyError } from '@taquito/core';
 
 const pref = {
   p256: {

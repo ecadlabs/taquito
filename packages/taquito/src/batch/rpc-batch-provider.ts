@@ -38,14 +38,14 @@ import {
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import { validateAddress, validateKeyHash, invalidErrorDetail } from '@taquito/utils';
-import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import {
-  InvalidAddressError,
-  InvalidKeyHashError,
-  InvalidOperationKindError,
+  validateAddress,
+  validateKeyHash,
   ValidationResult,
-} from '@taquito/core';
+  invalidErrorDetail,
+} from '@taquito/utils';
+import { EstimationProvider } from '../estimate/estimate-provider-interface';
+import { InvalidAddressError, InvalidKeyHashError, InvalidOperationKindError } from '@taquito/core';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,

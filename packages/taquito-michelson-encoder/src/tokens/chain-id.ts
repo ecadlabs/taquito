@@ -5,9 +5,8 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from './token';
-import { validateChain } from '@taquito/utils';
+import { validateChain, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
-import { ValidationResult } from '@taquito/core';
 
 export class ChainIDValidationError extends TokenValidationError {
   name = 'ChainIDValidationError';

@@ -7,11 +7,12 @@ import { TzProvider } from './interface';
 import { OpKind } from '@taquito/rpc';
 import {
   validateAddress,
+  ValidationResult,
   validateKeyHash,
   InvalidKeyHashError,
   invalidErrorDetail,
 } from '@taquito/utils';
-import { InvalidAddressError, ValidationResult } from '@taquito/core';
+import { InvalidAddressError } from '@taquito/core';
 
 export class RpcTzProvider extends OperationEmitter implements TzProvider {
   constructor(context: Context) {
