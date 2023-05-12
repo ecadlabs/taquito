@@ -3,6 +3,8 @@
   import { fly } from "svelte/transition";
   import { TezosToolkit } from "@taquito/taquito";
   import { BeaconWallet } from "@taquito/beacon-wallet";
+  // import { BeaconEvent, defaultEventCallbacks } from "@airgap/beacon-sdk";
+  import type { DAppClientOptions, NetworkType } from "@airgap/beacon-sdk";
   import store, { SDK } from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
   import { defaultMatrixNode, defaultNetworkType, rpcUrl } from "../config";
@@ -37,11 +39,27 @@
   const createNewBeaconWallet = (config: {
     networkType: NetworkType,
   }) => {
-    return new BeaconWallet({
+    const options: DAppClientOptions = {
       name: "Taquito Test Dapp",
       matrixNodes: [defaultMatrixNode] as any,
       preferredNetwork: config.networkType,
-    });
+      walletConnectOptions: {
+        projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',
+      }
+    };
+    // if ($store.disableDefaultEvents) {
+    //   options.disableDefaultEvents = true;
+    //   options.eventHandlers = {
+    //     // To keep the pairing alert, we have to add the following default event handlers back
+    //     [BeaconEvent.PAIR_INIT]: {
+    //       handler: defaultEventCallbacks.PAIR_INIT
+    //     },
+    //     [BeaconEvent.PAIR_SUCCESS]: {
+    //       handler: defaultEventCallbacks.PAIR_SUCCESS
+    //     }
+    //   }
+    // }
+    return new BeaconWallet(options);
   };
 
   const createNewWalletConnect2 = async () => {
