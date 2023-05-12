@@ -42,13 +42,13 @@
     const walletComponent = layout.getSideBar().getWallet();
     switch (event.detail.value.toLocaleLowerCase()) {
       case "mainnet":
-        walletComponent.setWallet({networkType: NetworkType.MAINNET});
+        store.updateNetworkType(NetworkType.MAINNET);
         break;
       case "ghostnet":
-        walletComponent.setWallet({networkType: NetworkType.GHOSTNET});
+        store.updateNetworkType(NetworkType.GHOSTNET);
         break;
       case "mumbainet":
-        walletComponent.setWallet({networkType: NetworkType.MUMBAINET});
+        store.updateNetworkType(NetworkType.MUMBAINET);
         break;
       case "custom":
         //TODO: input custom RPC URL
