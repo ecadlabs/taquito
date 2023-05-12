@@ -1,5 +1,4 @@
 import { prefix, prefixLength, Prefix } from './constants';
-
 import bs58check from 'bs58check';
 
 export enum ValidationResult {
@@ -248,4 +247,17 @@ export function validateBlock(value: string): ValidationResult {
  */
 export function validateSpendingKey(value: any): ValidationResult {
   return validatePrefixedValue(value, [Prefix.SASK]);
+}
+
+export function invalidErrorDetail(validation: ValidationResult): string {
+  switch (validation) {
+    case ValidationResult.NO_PREFIX_MATCHED:
+      return ': Invalid prefix';
+    case ValidationResult.INVALID_CHECKSUM:
+      return ': Checksum failed';
+    case ValidationResult.INVALID_LENGTH:
+      return ': Invalid length';
+    default:
+      return '';
+  }
 }

@@ -163,7 +163,9 @@ describe('RemoteSigner test', () => {
           httpBackend as any
         );
       } catch (error: any) {
-        expect(error.message).toContain('is invalid');
+        expect(error.message).toContain(
+          'Invalid public key hash "tz9iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv"'
+        );
       }
       done();
     });

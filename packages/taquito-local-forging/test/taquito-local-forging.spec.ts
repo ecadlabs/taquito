@@ -8,8 +8,7 @@ import {
 } from '../src/taquito-local-forging';
 import { commonCases } from '../../../integration-tests/data/allTestsCases';
 import { InvalidOperationSchemaError, UnsupportedOperationError } from '../src/error';
-import { InvalidBlockHashError } from '@taquito/core';
-import { InvalidOperationKindError } from '@taquito/utils';
+import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
 import { schemaDecoder, SeedNonceRevelationSchema } from '../src/schema/operation';
 import { ProtoInferiorTo } from '../src/protocols';
 
@@ -50,7 +49,7 @@ describe('Forge and parse operations default protocol', () => {
         localForger.forge(operation);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining("The operation kind 'invalid' is unsupported"),
+          message: expect.stringContaining(`Invalid operation kind "invalid"`),
         })
       );
       expect(() => {
@@ -117,7 +116,7 @@ describe('Forge and parse operations default protocol', () => {
         localForger.forge(operation);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining(`Block hash "Invalid_Block_Hash" is invalid`),
+          message: expect.stringContaining(`Invalid block hash "Invalid_Block_Hash"`),
         })
       );
       expect(() => {

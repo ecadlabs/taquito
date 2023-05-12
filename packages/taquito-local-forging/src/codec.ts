@@ -7,7 +7,8 @@ import {
   prefixLength,
   InvalidKeyHashError,
   InvalidPublicKeyError,
-  InvalidContractAddressError,
+  ValidationResult,
+  invalidErrorDetail,
 } from '@taquito/utils';
 import {
   OversizedEntryPointError,
@@ -29,7 +30,7 @@ import {
 } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad } from './utils';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
 // https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
 
@@ -204,7 +205,11 @@ export const pkhEncoder = (val: string) => {
     case Prefix.TZ4:
       return '03' + prefixEncoder(Prefix.TZ4)(val);
     default:
-      throw new InvalidKeyHashError(val);
+      throw new InvalidKeyHashError(
+        val,
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one for the following "${Prefix.TZ1}", "${Prefix.TZ2}", "${Prefix.TZ3}" or "${Prefix.TZ4}".`
+      );
   }
 };
 
@@ -218,7 +223,11 @@ export const publicKeyEncoder = (val: string) => {
     case Prefix.P2PK:
       return '02' + prefixEncoder(Prefix.P2PK)(val);
     default:
-      throw new InvalidPublicKeyError(val);
+      throw new InvalidPublicKeyError(
+        val,
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one of the following '${Prefix.EDPK}', '${Prefix.SPPK}', '${Prefix.P2PK}' or '${Prefix.BLPK}'.`
+      );
   }
 };
 
@@ -233,7 +242,11 @@ export const addressEncoder = (val: string): string => {
     case Prefix.KT1:
       return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
     default:
-      throw new InvalidAddressError(val);
+      throw new InvalidAddressError(
+        val,
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one of the following prefix '${Prefix.TZ1}', ${Prefix.TZ2}', '${Prefix.TZ3}', '${Prefix.TZ4}' or '${Prefix.KT1}'.`
+      );
   }
 };
 
@@ -250,7 +263,10 @@ export const smartContractAddressEncoder = (val: string): string => {
   if (prefix === Prefix.KT1) {
     return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
   }
-  throw new InvalidContractAddressError(val);
+  throw new InvalidContractAddressError(
+    val,
+    invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.KT1}'.`
+  );
 };
 
 export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
@@ -263,7 +279,10 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
     case 0x02:
       return prefixDecoder(Prefix.P2PK)(val);
     default:
-      throw new InvalidPublicKeyError(val.toString());
+      throw new InvalidPublicKeyError(
+        val.toString(),
+        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED)
+      );
   }
 };
 
@@ -286,14 +305,17 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
       return address;
     }
     default:
-      throw new InvalidAddressError(val.toString());
+      throw new InvalidAddressError(val.toString(), ': Unable to decode.');
   }
 };
 
 export const smartRollupAddressDecoder = (val: Uint8ArrayConsumer): string => {
   const address = prefixDecoder(Prefix.SR1)(val);
   if (address.substring(0, 3) !== Prefix.SR1) {
-    throw new InvalidAddressError(address);
+    throw new InvalidAddressError(
+      address,
+      invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+    );
   }
   return address;
 };
@@ -305,7 +327,10 @@ export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
     val.consume(1);
     return scAddress;
   }
-  throw new InvalidContractAddressError(val.toString());
+  throw new InvalidContractAddressError(
+    val.toString(),
+    invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED)
+  );
 };
 
 export const smartRollupCommitmentHashDecoder = (val: Uint8ArrayConsumer) => {

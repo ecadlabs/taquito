@@ -36,7 +36,7 @@ export class Path extends Array<number> {
     }
     for (let p of parts) {
       if (p.length === 0) {
-        throw new InvalidDerivationPathError(s, `invalid BIP32 path`);
+        throw new InvalidDerivationPathError(s, `: Invalid BIP32 path`);
       }
       let h = 0;
       const last = p[p.length - 1];

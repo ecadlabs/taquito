@@ -43,10 +43,10 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
 } from '../contract/prepare';
-import { validateAddress, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
+import { validateAddress, ValidationResult, invalidErrorDetail } from '@taquito/utils';
 import { RevealEstimateError } from './error';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidOperationKindError } from '@taquito/core';
 
 interface Limits {
   fee?: number;
@@ -270,11 +270,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param TransferOperation Originate operation parameter
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
-    if (validateAddress(rest.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.to);
+    const toValidation = validateAddress(rest.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.to, invalidErrorDetail(toValidation));
     }
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source);
+    const srouceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && srouceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(srouceValidation));
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -305,11 +307,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param TransferTicketParams operation parameter
    */
   async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
-    if (validateAddress(rest.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.destination);
+    const destinationValidation = validateAddress(rest.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.destination, invalidErrorDetail(destinationValidation));
     }
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source ?? '');
+    const sourceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(sourceValidation));
     }
     const pkh = (await this.getKeys()).publicKeyHash;
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -340,11 +344,13 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
    * @param Estimate
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source);
+    const sourceValidation = validateAddress(rest.source);
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(sourceValidation));
     }
-    if (rest.delegate && validateAddress(rest.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.delegate);
+    const delegateValidation = validateAddress(rest.delegate ?? '');
+    if (rest.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.delegate, invalidErrorDetail(delegateValidation));
     }
 
     const pkh = (await this.getKeys()).publicKeyHash;
@@ -371,7 +377,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees for a each operation in the batch
-   *
+   * @throws {@link InvalidOperationKindError}
    * @returns An array of Estimate objects. If a reveal operation is needed, the first element of the array is the Estimate for the reveal operation.
    */
   async batch(params: ParamsWithKind[]) {

@@ -9,7 +9,6 @@ import {
   paddedBytesDecoder,
 } from '../src/codec';
 import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
-import { InvalidKeyHashError, InvalidPublicKeyError } from '@taquito/utils';
 import { pkhEncoder, publicKeyDecoder, publicKeyEncoder } from '../src/codec';
 import {
   DecodeBallotValueError,
@@ -19,7 +18,7 @@ import {
   UnsupportedPvmKindError,
 } from '../src/error';
 import { bytesEncoder } from '../src/michelson/codec';
-import { InvalidHexStringError } from '@taquito/core';
+import { InvalidHexStringError, InvalidPublicKeyError, InvalidKeyHashError } from '@taquito/core';
 
 describe('Tests for Entrypoint functions and for encode and decoder error messages', () => {
   test('Entrypoint encoder', () => {
@@ -73,9 +72,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     try {
       pkhEncoder('tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5');
     } catch (e) {
-      expect(e.message).toEqual(
-        "The public key hash 'tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' is invalid"
-      );
+      expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
     }
     done();
   });
@@ -95,7 +92,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     ).toThrow(
       expect.objectContaining({
         message: expect.stringContaining(
-          "The public key 'p4zzk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' is invalid."
+          `Invalid public key "p4zzk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV"`
         ),
       })
     );
@@ -140,7 +137,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining("The public key '[object Object]' is invalid."),
+        message: expect.stringContaining(`Invalid public key "[object Object]": Invalid prefix`),
       })
     );
 
@@ -212,7 +209,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     ).toThrow(
       expect.objectContaining({
         message: expect.stringContaining(
-          `Hex string "H05c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9" is invalid`
+          `Invalid hex string "H05c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9"`
         ),
         name: expect.stringMatching('InvalidHexStringError'),
       })

@@ -1,14 +1,8 @@
 import { hash } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
-import {
-  b58cencode,
-  b58cdecode,
-  prefix,
-  buf2hex,
-  isValidPrefix,
-  InvalidKeyError,
-} from '@taquito/utils';
+import { b58cencode, b58cdecode, prefix, buf2hex, isValidPrefix, Prefix } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
+import { InvalidKeyError } from '@taquito/core';
 
 /**
  * @description Provide signing logic for ed25519 curve based key (tz1)
@@ -23,11 +17,15 @@ export class Tz1 {
    * @param key Encoded private key
    * @param encrypted Is the private key encrypted
    * @param decrypt Decrypt function
+   * @throws {@link InvalidKeyError}
    */
   constructor(private key: string, encrypted: boolean, decrypt: (k: any) => any) {
-    const keyPrefix = key.substr(0, encrypted ? 5 : 4);
+    const keyPrefix = key.substring(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
-      throw new InvalidKeyError(key, 'Key contains invalid prefix');
+      throw new InvalidKeyError(
+        key,
+        `With unsupported prefix expecting either '${Prefix.EDESK}' or '${Prefix.EDSK}'.`
+      );
     }
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));

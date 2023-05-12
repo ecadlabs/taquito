@@ -52,7 +52,7 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
         i++;
       }
       yield { t: Literal.Ident, v: src.slice(start, i), first: start, last: i };
-    } else if (src.length - i > 1 && src.substr(i, 2) === '0x') {
+    } else if (src.length - i > 1 && src.substring(i, i + 2) === '0x') {
       // Bytes
       i += 2;
       while (i < src.length && isHex.test(src[i])) {
@@ -100,10 +100,10 @@ export function* scan(src: string, scanComments = false): Generator<Token, void>
       if (scanComments) {
         yield { t: Literal.Comment, v: src.slice(start, i), first: start, last: i };
       }
-    } else if (src.length - i > 1 && src.substr(i, 2) === '/*') {
+    } else if (src.length - i > 1 && src.substring(i, i + 2) === '/*') {
       // C style comment
       i += 2;
-      while (i < src.length && !(src.length - i > 1 && src.substr(i, 2) === '*/')) {
+      while (i < src.length && !(src.length - i > 1 && src.substring(i, i + 2) === '*/')) {
         i++;
       }
       if (i === src.length) {

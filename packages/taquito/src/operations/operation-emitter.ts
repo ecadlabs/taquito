@@ -16,7 +16,6 @@ import {
   TezosPreapplyFailureError,
   InvalidEstimateValueError,
 } from './operation-errors';
-import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import {
   ForgedBytes,
   isOpRequireReveal,
@@ -26,6 +25,7 @@ import {
   RPCOpWithFee,
   RPCOpWithSource,
 } from './types';
+import { InvalidOperationKindError, DeprecationError } from '@taquito/core';
 
 export interface PreparedOperation {
   opOb: {
@@ -211,7 +211,7 @@ export abstract class OperationEmitter {
               period: currentVotingPeriod?.voting_period.index,
             };
           default:
-            throw new InvalidOperationKindError((op as any).kind);
+            throw new InvalidOperationKindError(JSON.stringify((op as any).kind));
         }
       });
 
