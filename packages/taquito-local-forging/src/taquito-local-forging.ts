@@ -9,7 +9,7 @@ import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { validateBlock, ValidationResult, invalidErrorDetail } from '@taquito/utils';
-import { InvalidOperationSchemaError } from './error';
+import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash } from './protocols';
 import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';

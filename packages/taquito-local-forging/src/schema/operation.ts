@@ -6,7 +6,7 @@ import {
   OperationDecodingError,
   OperationEncodingError,
   UnsupportedOperationError,
-} from '../error';
+} from '../errors';
 
 export const ManagerOperationSchema = {
   branch: CODEC.BRANCH,

@@ -16,7 +16,7 @@ import {
   InvalidBallotValueError,
   OversizedEntryPointError,
   UnsupportedPvmKindError,
-} from '../src/error';
+} from '../src/errors';
 import { bytesEncoder } from '../src/michelson/codec';
 import { InvalidHexStringError, InvalidPublicKeyError, InvalidKeyHashError } from '@taquito/core';
 

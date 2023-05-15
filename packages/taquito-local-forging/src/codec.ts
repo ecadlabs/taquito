@@ -18,7 +18,7 @@ import {
   DecodePvmKindError,
   InvalidSmartRollupContractAddressError,
   InvalidSmartRollupAddressError,
-} from './error';
+} from './errors';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
 import {
