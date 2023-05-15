@@ -1,4 +1,4 @@
-import { ParameterValidationError, UnsupportedAction } from '@taquito/core';
+import { ParameterValidationError, UnsupportedActionError } from '@taquito/core';
 
 export {
   InvalidAddressError,
@@ -35,7 +35,7 @@ export class InvalidProtocolHashError extends ParameterValidationError {
  *  @category Error
  *  @description Error indicates unable to convert data type from one to another
  */
-export class ValueConversionError extends UnsupportedAction {
+export class ValueConversionError extends UnsupportedActionError {
   constructor(public value: string, public desiredType: string) {
     super();
     this.name = 'ValueConversionError';

@@ -29,11 +29,11 @@ export class TezosToolkitConfigError extends TaquitoError {}
  *  @category Error
  *  @description Error indicates a requested action is not supported by Taquito
  */
-export class UnsupportedAction extends TaquitoError {}
+export class UnsupportedActionError extends TaquitoError {}
 
 /**
  *  @category Error
- *  @description Error returned by network
+ *  @description Error during a network operation
  */
 export class NetworkError extends TaquitoError {}
 
@@ -235,7 +235,7 @@ export class InvalidOperationKindError extends ParameterValidationError {
  *  @category Error
  *  @description General error that indicates something is no longer supported and/or deprecated
  */
-export class DeprecationError extends UnsupportedAction {
+export class DeprecationError extends UnsupportedActionError {
   constructor(public message: string) {
     super();
     this.name = 'DeprecationError';
@@ -246,7 +246,7 @@ export class DeprecationError extends UnsupportedAction {
  *  @category Error
  *  @description General error that indicates an action is prohibited or not allowed
  */
-export class ProhibitedActionError extends UnsupportedAction {
+export class ProhibitedActionError extends UnsupportedActionError {
   constructor(public message: string) {
     super();
     this.name = 'ProhibitedActionError';

@@ -3,7 +3,7 @@ import {
   ParameterValidationError,
   RpcError,
   TezosToolkitConfigError,
-  UnsupportedAction,
+  UnsupportedActionError,
   NetworkError,
   PermissionDeniedError,
   InvalidAddressError,
@@ -55,13 +55,13 @@ describe('parent errors classes', () => {
     }
   });
 
-  it('should throw an UnsupportedAction', () => {
+  it('should throw an UnsupportedActionError', () => {
     try {
-      throw new UnsupportedAction();
+      throw new UnsupportedActionError();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(TaquitoError);
-      expect(error).toBeInstanceOf(UnsupportedAction);
+      expect(error).toBeInstanceOf(UnsupportedActionError);
     }
   });
 
@@ -235,7 +235,7 @@ describe('common error classes', () => {
     try {
       throw new DeprecationError('foo');
     } catch (error) {
-      expect(error).toBeInstanceOf(UnsupportedAction);
+      expect(error).toBeInstanceOf(UnsupportedActionError);
       expect(error).toBeInstanceOf(DeprecationError);
       expect(error.message).toEqual(`foo`);
     }
@@ -245,7 +245,7 @@ describe('common error classes', () => {
     try {
       throw new ProhibitedActionError('foo');
     } catch (error) {
-      expect(error).toBeInstanceOf(UnsupportedAction);
+      expect(error).toBeInstanceOf(UnsupportedActionError);
       expect(error).toBeInstanceOf(ProhibitedActionError);
       expect(error.message).toEqual(`foo`);
     }

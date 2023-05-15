@@ -1,7 +1,7 @@
 {
   "name": "@taquito/core",
   "version": "16.1.2",
-  "description": "high level error classes and interfaces",
+  "description": "Classes, interfaces, and types shared across Taquito packages",
   "keywords": [
     "tezos",
     "blockchain"
@@ -63,6 +63,5 @@
   "dependencies": {
   },
   "devDependencies": {
-  },
-  "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
+  }
 }
