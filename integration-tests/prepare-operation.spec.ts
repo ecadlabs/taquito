@@ -42,8 +42,6 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
         amount: 5
       });
 
-      console.log(JSON.stringify(prepared));
-
       expect(prepared).toBeDefined();
       expect(prepared.counter).toBeDefined();
       expect(prepared.opOb).toBeDefined();
@@ -73,8 +71,6 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
         },
       ]);
 
-      console.log(JSON.stringify(prepared));
-
       expect(prepared).toBeDefined();
       expect(prepared.counter).toBeDefined();
       expect(prepared.opOb).toBeDefined();
@@ -92,7 +88,6 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
         ballot: 'yay'
       });
-      console.log(JSON.stringify(prepared));
 
       expect(prepared).toBeDefined();
       expect(prepared.counter).toBeDefined();
@@ -113,7 +108,6 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       const contractAbs = await Tezos.contract.at(contractAddress);
       const method = await contractAbs.methods.increment(1);
       const prepared = await Tezos.prepare.contractCall(method);
-      console.log(JSON.stringify(prepared));
 
       expect(prepared).toBeDefined();
       expect(prepared.counter).toBeDefined();
