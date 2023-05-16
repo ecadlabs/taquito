@@ -28,7 +28,7 @@ The counter contract's storage is a simple integer that gets increased or decrea
 
 ### Counter Contract in JSLIGO
 
-```js
+```
 type storage = int;
 
 // @entry
