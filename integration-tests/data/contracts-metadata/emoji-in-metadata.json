@@ -1,0 +1,17 @@
+{
+    "name": "Taquito test with valid metadata containing emoji 😀 🤩",
+    "description": "👋 This is metadata test for Taquito integration tests 🧐 with the Ligo Taco shop contract modified to include metadata URI in the storage",
+    "version": "7.1.0-beta.0",
+    "license": {
+        "name": "MIT",
+        "details": "The MIT License"
+    },
+    "homepage": "https://github.com/ecadlabs/taquito",
+    "source": {
+        "tools": [
+            "Ligo",
+            "https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A"
+        ],
+        "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
+    }
+}

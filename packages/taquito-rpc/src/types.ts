@@ -2364,7 +2364,7 @@ export interface SmartRollupPublishCommitment {
   compressed_state: string;
   inbox_level: number;
   predecessor: string;
-  number_of_ticks: number;
+  number_of_ticks: string;
 }
 
 export enum SmartRollupRefutationOptions {
@@ -2382,7 +2382,7 @@ export interface SmartRollupRefutationStart {
 
 export interface SmartRollupRefutationMove {
   refutation_kind: SmartRollupRefutationOptions.MOVE;
-  choice: number;
+  choice: string;
   step: SmartRollupRefutationMoveStep;
 }
 

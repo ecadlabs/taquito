@@ -1,6 +1,6 @@
 ---
 title: Contract call parameters
-author: Claude Barde
+author: Claude Barde & Hui-An Yang
 ---
 
 The smart contracts on the Tezos blockchain only work with Michelson, so it can be sometimes complicated to write the correct JavaScript values that Taquito will translate to Michelson values for contract calls.
@@ -11,46 +11,47 @@ You will find below tables that match some of the most common values that smart 
 
 ## Primitive types
 
-| Michelson type | Michelson value            | Taquito                    |
-| -------------- | -------------------------- | -------------------------- |
-| unit           | Unit                       | [["unit"]]                 |
-| bool           | True                       | true                       |
-| int            | 6                          | 6                          |
-| nat            | 7                          | 7                          |
-| string         | "Tezos"                    | "Tezos"                    |
-| mutez          | 500000                     | 50000 / 50_000             |
-| timestamp      | "2022-12-19T15:53:26.055Z" | "2022-12-19T15:53:26.055Z" |
+| Michelson type | Michelson value            | Taquito `methods & methodObject`|
+| -------------- | -------------------------- | ------------------------------- |
+| unit           | Unit                       | \[["unit"]]                     |
+| bool           | True                       | true                            |
+| int            | 6                          | 6                               |
+| nat            | 7                          | 7                               |
+| string         | "Tezos"                    | "Tezos"                         |
+| mutez          | 500000                     | 50000 / 50_000                  |
+| timestamp      | "2022-12-19T15:53:26.055Z" | "2022-12-19T15:53:26.055Z"      |
 
 > Note: if you want to pass the current timestamp to a contract entrypoint, you can use `new Date().toISOString()` which will output the right format.
 
 ## Option
 
-| Michelson type           | Michelson value        | Taquito      |
-| ------------------------ | ---------------------- | ------------ |
-| option nat               | None                   | null         |
-| option nat               | Some 6                 | 6            |
-| option string            | Some "Tezos"           | "Tezos"      |
-| option (list nat)        | Some { 6 ; 7 ; 8 ; 9 } | [6, 7, 8, 9] |
-| option (pair string nat) | Some (Pair "Tezos" 8)  | "Tezos", 8   |
-| option (or string nat)   | Some (Left "Tezos")    | 0, "Tezos"   |
+| Michelson type           | Michelson value        | Taquito `methods`   | Taquito `methodsObject`                          |
+| ------------------------ | ---------------------- | ------------------- | ------------------------------------------------ |
+| option nat               | None                   | null                | null                                             |
+| option nat               | Some 6                 | 6                   | 6 or [6] or {Some: 5}                            |
+| option string            | Some "Tezos"           | "Tezos"             | "Tezos" or {Some: "Tezos"}                       |
+| option (list nat)        | Some { 6 ; 7 ; 8 ; 9 } | [6, 7, 8, 9]        | [6, 7, 8, 9] or {Some: [6, 7, 8, 9]}             |
+| option (pair string nat) | Some (Pair "Tezos" 8)  | "Tezos", 8          | {0: "Tezos", 1: 8} or {Some: {0: "Tezos", 1: 5}} |
+| option (or string nat)   | Some (Left "Tezos")    | 0, "Tezos"          | {0: "Tezos"} or {Some: {0: "Tezos"}}             |
+| option (option nat)      | Some(None)             | not supported       | {Some: null}                                     |
 
 There is nothing special to do to pass an option with Taquito, Taquito will assume that passing `null` means that you want to pass `None` and any other value will be `Some`. You can then pass the value following the format corresponding to its type.
 
 ## Union
 
-| Michelson type                             | Michelson value         | Taquito           |
-| ------------------------------------------ | ----------------------- | ----------------- |
-| or int string                              | Left 5                  | 0, 5              |
-| or int string                              | Right "Tezos            | 1, "Tezos"        |
-| or (pair int nat) string                   | Left (Pair 6 7)         | 0, { 0: 6, 1: 7 } |
-| or (or string (pair nat int) (or int nat)) | Left (Right (Pair 6 7)) | see below         |
+| Michelson type                             | Michelson value         | Taquito `methods`         | Taquito `methodsObject` |
+| ------------------------------------------ | ----------------------- | ------------------------- | ----------------------- |
+| or int string                              | Left 5                  | 0, 5                      | {0: 5}                  |
+| or int string                              | Right "Tezos            | 1, "Tezos"                | {1: "Tezos"}            |
+| or (pair int nat) string                   | Left (Pair 6 7)         | 0, { 0: 6, 1: 7 }         | {0: { 0: 6, 1: 7 }}     |
+| or (or string (pair nat int) (or int nat)) | Left (Right (Pair 6 7)) | see below                 | see below               |
 
 For nested unions, Taquito will parse it as an entrypoint, so any nested union is going to be available under its index on the `methods` object.
 In non-nested unions, you target the `Left` side of the union with `0` and the `Right` side with `1`.
 
 ## List
 
-| Michelson type                  | Michelson value                           | Taquito                                         |
+| Michelson type                  | Michelson value                           | Taquito `methods & methodsObject`               |
 | ------------------------------- | ----------------------------------------- | ----------------------------------------------- |
 | list nat                        | { 5 ; 6 ; 7 ; 8 }                         | [5, 6, 7, 8]                                    |
 | list (pair int string)          | { (Pair 5 "Tezos") ; (Pair 6 "Taquito") } | [ { 0: 5, 1: "Tezos" }, { 0: 6, 1: "Taquito" }] |

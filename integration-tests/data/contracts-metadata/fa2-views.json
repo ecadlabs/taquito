@@ -1,0 +1,714 @@
+{
+  "name": "Test Taquito FA2 token_metadata view",
+  "description": "This is a test to retrieve tokens metadata from a view %token_metadata",
+  "interfaces": [
+    "TZIP-012"
+  ],
+  "source": {
+    "location": "https://gitlab.com/smondet/fa2-smartpy"
+  },
+  "views": [
+    {
+      "name": "get_balance",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "parameter": {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%owner"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token_id"
+                  ]
+                }
+              ]
+            },
+            "returnType": {
+              "prim": "nat"
+            },
+            "code": [
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "DUG",
+                "args": [
+                  {
+                    "int": "2"
+                  }
+                ]
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "DUG",
+                "args": [
+                  {
+                    "int": "2"
+                  }
+                ]
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "MEM"
+              },
+              {
+                "prim": "IF",
+                "args": [
+                  [],
+                  [
+                    {
+                      "prim": "PUSH",
+                      "args": [
+                        {
+                          "prim": "string"
+                        },
+                        {
+                          "string": "FA2_TOKEN_UNDEFINED"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "FAILWITH"
+                    }
+                  ]
+                ]
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "GET"
+              },
+              {
+                "prim": "IF_NONE",
+                "args": [
+                  [
+                    {
+                      "prim": "PUSH",
+                      "args": [
+                        {
+                          "prim": "int"
+                        },
+                        {
+                          "int": "475"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "FAILWITH"
+                    }
+                  ],
+                  []
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "token_metadata",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "parameter": {
+              "prim": "nat"
+            },
+            "returnType": {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat"
+                },
+                {
+                  "prim": "map",
+                  "args": [
+                    {
+                      "prim": "string"
+                    },
+                    {
+                      "prim": "bytes"
+                    }
+                  ]
+                }
+              ]
+            },
+            "code": [
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "DUG",
+                "args": [
+                  {
+                    "int": "2"
+                  }
+                ]
+              },
+              {
+                "prim": "GET"
+              },
+              {
+                "prim": "IF_NONE",
+                "args": [
+                  [
+                    {
+                      "prim": "PUSH",
+                      "args": [
+                        {
+                          "prim": "int"
+                        },
+                        {
+                          "int": "573"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "FAILWITH"
+                    }
+                  ],
+                  []
+                ]
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "PUSH",
+                "args": [
+                  {
+                    "prim": "nat"
+                  },
+                  {
+                    "int": "0"
+                  }
+                ]
+              },
+              {
+                "prim": "DIG",
+                "args": [
+                  {
+                    "int": "2"
+                  }
+                ]
+              },
+              {
+                "prim": "ADD"
+              },
+              {
+                "prim": "PAIR"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "does_token_exist",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "parameter": {
+              "prim": "nat"
+            },
+            "returnType": {
+              "prim": "bool"
+            },
+            "code": [
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "MEM"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "count_tokens",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "returnType": {
+              "prim": "nat"
+            },
+            "code": [
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CAR"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "all_tokens",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "returnType": {
+              "prim": "list",
+              "args": [
+                {
+                  "prim": "nat"
+                }
+              ]
+            },
+            "code": [
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "NIL",
+                "args": [
+                  {
+                    "prim": "nat"
+                  }
+                ]
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "PUSH",
+                "args": [
+                  {
+                    "prim": "nat"
+                  },
+                  {
+                    "int": "0"
+                  }
+                ]
+              },
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "DIG",
+                "args": [
+                  {
+                    "int": "2"
+                  }
+                ]
+              },
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "DUG",
+                "args": [
+                  {
+                    "int": "3"
+                  }
+                ]
+              },
+              {
+                "prim": "COMPARE"
+              },
+              {
+                "prim": "GT"
+              },
+              {
+                "prim": "LOOP",
+                "args": [
+                  [
+                    {
+                      "prim": "DUP"
+                    },
+                    {
+                      "prim": "DIG",
+                      "args": [
+                        {
+                          "int": "3"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "SWAP"
+                    },
+                    {
+                      "prim": "CONS"
+                    },
+                    {
+                      "prim": "DUG",
+                      "args": [
+                        {
+                          "int": "2"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "PUSH",
+                      "args": [
+                        {
+                          "prim": "nat"
+                        },
+                        {
+                          "int": "1"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "ADD"
+                    },
+                    {
+                      "prim": "DUP"
+                    },
+                    {
+                      "prim": "DIG",
+                      "args": [
+                        {
+                          "int": "2"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "DUP"
+                    },
+                    {
+                      "prim": "DUG",
+                      "args": [
+                        {
+                          "int": "3"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "COMPARE"
+                    },
+                    {
+                      "prim": "GT"
+                    }
+                  ]
+                ]
+              },
+              {
+                "prim": "DROP",
+                "args": [
+                  {
+                    "int": "2"
+                  }
+                ]
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "DROP"
+              },
+              {
+                "prim": "NIL",
+                "args": [
+                  {
+                    "prim": "nat"
+                  }
+                ]
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "ITER",
+                "args": [
+                  [
+                    {
+                      "prim": "CONS"
+                    }
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "is_operator",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "parameter": {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%owner"
+                  ]
+                },
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "address",
+                      "annots": [
+                        "%operator"
+                      ]
+                    },
+                    {
+                      "prim": "nat",
+                      "annots": [
+                        "%token_id"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "returnType": {
+              "prim": "bool"
+            },
+            "code": [
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "DUG",
+                "args": [
+                  {
+                    "int": "3"
+                  }
+                ]
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "PAIR",
+                "annots": [
+                  "%operator",
+                  "%token_id"
+                ]
+              },
+              {
+                "prim": "DIG",
+                "args": [
+                  {
+                    "int": "2"
+                  }
+                ]
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "PAIR",
+                "annots": [
+                  "%owner"
+                ]
+              },
+              {
+                "prim": "MEM"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "total_supply",
+      "implementations": [
+        {
+          "michelsonStorageView": {
+            "parameter": {
+              "prim": "nat"
+            },
+            "returnType": {
+              "prim": "nat"
+            },
+            "code": [
+              {
+                "prim": "DUP"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "CDR"
+              },
+              {
+                "prim": "SWAP"
+              },
+              {
+                "prim": "CAR"
+              },
+              {
+                "prim": "GET"
+              },
+              {
+                "prim": "IF_NONE",
+                "args": [
+                  [
+                    {
+                      "prim": "PUSH",
+                      "args": [
+                        {
+                          "prim": "int"
+                        },
+                        {
+                          "int": "610"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "FAILWITH"
+                    }
+                  ],
+                  []
+                ]
+              },
+              {
+                "prim": "CDR"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
