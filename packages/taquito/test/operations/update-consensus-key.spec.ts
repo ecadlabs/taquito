@@ -111,27 +111,27 @@ describe('Update Consensus Key operation', () => {
   it('should return gasLimit of update consensus operation', () => {
     const op = new UpdateConsensusKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
-      { gas_limit: '1100' } as any,
+      { gas_limit: 1100 } as any,
       '',
       fakeForgedBytes,
       successfulResult,
       fakeContext
     );
 
-    expect(op.gasLimit).toEqual('1100');
+    expect(op.gasLimit).toEqual(1100);
   });
 
   it('should return storageLimit of update consensus operation', () => {
     const op = new UpdateConsensusKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
-      { storage_limit: '0' } as any,
+      { storage_limit: 0 } as any,
       '',
       fakeForgedBytes,
       successfulResult,
       fakeContext
     );
 
-    expect(op.storageLimit).toEqual('0');
+    expect(op.storageLimit).toEqual(0);
   });
 
   it('should return pk (public key) of update consensus operation', () => {

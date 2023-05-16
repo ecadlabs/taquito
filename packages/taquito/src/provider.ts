@@ -2,11 +2,11 @@ import { OperationContentsAndResult, RPCRunOperationParam, RpcClientInterface } 
 import { Context } from './context';
 import { ForgedBytes, ParamsWithKind, RPCOperation, isOpRequireReveal } from './operations/types';
 import {
+  InvalidEstimateValueError,
   TezosOperationError,
   TezosPreapplyFailureError,
   flattenErrors,
 } from './operations/operation-errors';
-
 import {
   createOriginationOperation,
   createRegisterGlobalConstantOperation,
@@ -17,9 +17,10 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
 } from './contract/prepare';
-
 import { OpKind } from '@taquito/rpc';
 import { InvalidOperationKindError } from '@taquito/utils';
+import { PreparedOperation } from './prepare';
+import { Estimate } from './estimate';
 
 export abstract class Provider {
   get rpc(): RpcClientInterface {
@@ -31,6 +32,64 @@ export abstract class Provider {
   }
 
   constructor(protected context: Context) {}
+
+  protected async forge({ opOb: { branch, contents, protocol }, counter }: PreparedOperation) {
+    const forgedBytes = await this.context.forger.forge({ branch, contents });
+    return {
+      opbytes: forgedBytes,
+      opOb: {
+        branch,
+        contents,
+        protocol,
+      },
+      counter,
+    };
+  }
+
+  protected async estimate<T extends { fee?: number; gasLimit?: number; storageLimit?: number }>(
+    { fee, gasLimit, storageLimit, ...rest }: T,
+    estimator: (param: T) => Promise<Estimate>
+  ) {
+    let calculatedFee = fee;
+    let calculatedGas = gasLimit;
+    let calculatedStorage = storageLimit;
+
+    if (calculatedFee && calculatedFee % 1 !== 0) {
+      throw new InvalidEstimateValueError(`Fee value must not be a decimal: ${calculatedFee}`);
+    }
+    if (calculatedGas && calculatedGas % 1 !== 0) {
+      throw new InvalidEstimateValueError(
+        `Gas Limit value must not be a decimal: ${calculatedGas}`
+      );
+    }
+    if (calculatedStorage && calculatedStorage % 1 !== 0) {
+      throw new InvalidEstimateValueError(
+        `Storage Limit value must not be a decimal: ${calculatedStorage}`
+      );
+    }
+
+    if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
+      const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
+
+      if (calculatedFee === undefined) {
+        calculatedFee = estimation.suggestedFeeMutez;
+      }
+
+      if (calculatedGas === undefined) {
+        calculatedGas = estimation.gasLimit;
+      }
+
+      if (calculatedStorage === undefined) {
+        calculatedStorage = estimation.storageLimit;
+      }
+    }
+
+    return {
+      fee: calculatedFee,
+      gasLimit: calculatedGas,
+      storageLimit: calculatedStorage,
+    };
+  }
 
   async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {

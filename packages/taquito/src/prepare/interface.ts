@@ -11,6 +11,7 @@ import {
   TransferParams,
   TransferTicketParams,
   UpdateConsensusKeyParams,
+  ActivationParams,
 } from '../operations/types';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -22,6 +23,14 @@ import { ForgeParams } from '@taquito/local-forging';
  * @description PrepareProvider is a utility class to output the prepared format of an operation
  */
 export interface PreparationProvider {
+  /**
+   * @description Method to prepare an activation operation
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  activate(params: ActivationParams): Promise<PreparedOperation>;
+
   /**
    *
    * @description Method to prepare a reveal operation
@@ -66,23 +75,6 @@ export interface PreparationProvider {
    * @returns a PreparedOperation object
    */
   registerGlobalConstant(params: RegisterGlobalConstantParams): Promise<PreparedOperation>;
-
-  // /**
-  //  * @description Method to prepare a tx_rollup_origination operation
-  //  * @param params txRollupOrigination operation parameters
-  //  * @param source string or undefined source pkh
-  //  * @returns a PreparedOperation object
-  //  */
-  // txRollupOrigination(params: TxRollupOriginateParams): Promise<PreparedOperation>;
-
-  // /**
-  //  *
-  //  * @description Method to prepare a tx_rollup_submit_batch operation
-  //  * @param params txRollupSubmitBatch operation parameters
-  //  * @param source string or undefined source pkh
-  //  * @returns a PreparedOperation object
-  //  */
-  // txRollupSubmitBatch(params: TxRollupBatchParams): Promise<PreparedOperation>;
 
   /**
    * @description Method to prepare an update_consensus_key operation

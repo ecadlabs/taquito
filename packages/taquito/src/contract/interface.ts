@@ -6,7 +6,6 @@ import { DelegateOperation } from '../operations/delegate-operation';
 import { OriginationOperation } from '../operations/origination-operation';
 import { RegisterGlobalConstantOperation } from '../operations/register-global-constant-operation';
 import { RevealOperation } from '../operations/reveal-operation';
-import { TxRollupOriginationOperation } from '../operations/tx-rollup-origination-operation';
 import { TransactionOperation } from '../operations/transaction-operation';
 import {
   DelegateParams,
@@ -16,8 +15,6 @@ import {
   ParamsWithKind,
   RevealParams,
   RegisterGlobalConstantParams,
-  TxRollupOriginateParams,
-  TxRollupBatchParams,
   IncreasePaidStorageParams,
   TransferTicketParams,
   DrainDelegateParams,
@@ -28,7 +25,6 @@ import {
   SmartRollupOriginateParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
-import { TxRollupBatchOperation } from '../operations/tx-rollup-batch-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { DrainDelegateOperation } from '../operations';
@@ -215,26 +211,6 @@ export interface ContractProvider extends StorageProvider {
    * @param params IncreasePaidStorage operation parameter
    */
   increasePaidStorage(params: IncreasePaidStorageParams): Promise<IncreasePaidStorageOperation>;
-
-  /**
-   *
-   * @description Originate a new tx rollup. Will sign and inject an operation using the current context
-   *
-   * @returns An operation handle with the result from the rpc node
-   *
-   * @param TxRollupOriginateParams Originate rollup operation parameter
-   */
-  txRollupOriginate(params?: TxRollupOriginateParams): Promise<TxRollupOriginationOperation>;
-
-  /**
-   *
-   * @description Submit a tx rollup batch. Will sign and inject an operation using the current context
-   *
-   * @returns An operation handle with the result from the rpc node
-   *
-   * @param TxRollupBatchParams Batch tx rollup operation parameter
-   */
-  txRollupSubmitBatch(params: TxRollupBatchParams): Promise<TxRollupBatchOperation>;
 
   /**
    *

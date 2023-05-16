@@ -131,6 +131,30 @@ describe('PrepareProvider test', () => {
     prepareProvider = new PrepareProvider(context);
   });
 
+  describe('activate', () => {
+    it('should return a prepared activation operation', async () => {
+      const prepared = await prepareProvider.activate({
+        pkh: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        secret: '123',
+      });
+
+      expect(prepared).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'activate_account',
+              pkh: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              secret: '123',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+      });
+    });
+  });
+
   describe('originate', () => {
     it('should return a prepared origination operation with a reveal operation', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(false);
@@ -187,11 +211,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -284,11 +308,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -350,11 +374,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -434,11 +458,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -507,11 +531,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -644,11 +668,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -810,11 +834,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -890,11 +914,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -1064,11 +1088,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '0',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '1040000',
-              storage_limit: '60000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
