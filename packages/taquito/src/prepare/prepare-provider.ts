@@ -1057,6 +1057,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         storage_limit: params.storageLimit ?? estimateLimits.storageLimit,
         amount: String(params.amount),
         destination: params.to,
+        parameters: params.parameter,
       },
     ] as RPCOperation[];
 
