@@ -1,7 +1,7 @@
 import { CONFIGS, sleep } from './config';
 
 CONFIGS().forEach(async ({ lib, protocol, setup }) => {
-  const Tezos = lib;
+  const Funder = lib;
 
   describe(`Ballot operation test (${protocol})`, () => {
     beforeAll(async () => {
@@ -10,11 +10,12 @@ CONFIGS().forEach(async ({ lib, protocol, setup }) => {
 
     it('Submit a proposal and inject ballot vote', async (done) => {
 
+      const delegatePkh = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"
       while (true) {
         await sleep(10000);
-        const proposal_period = await Tezos.rpc.getCurrentPeriod();
+        const proposal_period = await Funder.rpc.getCurrentPeriod();
         if (proposal_period.voting_period.kind === 'proposal') {
-          const proposalsOp = await Tezos.contract.proposals({
+          const proposalsOp = await Funder.contract.proposals({
             proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
           });
           await proposalsOp.confirmation();
@@ -24,9 +25,9 @@ CONFIGS().forEach(async ({ lib, protocol, setup }) => {
 
       while (true) {
         await sleep(10000);
-        const exploration_period = await Tezos.rpc.getCurrentPeriod();
+        const exploration_period = await Funder.rpc.getCurrentPeriod();
         if (exploration_period.voting_period.kind === 'exploration') {
-          const op = await Tezos.contract.ballot({
+          const op = await Funder.contract.ballot({
             proposal: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
             ballot: 'yay'
           });
