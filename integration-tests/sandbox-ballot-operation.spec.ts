@@ -10,8 +10,6 @@ CONFIGS().forEach(async ({ lib, protocol, setup }) => {
 
     it('Submit a proposal and inject ballot vote', async (done) => {
 
-      const period = await Tezos.rpc.getCurrentPeriod();
-
       while (true) {
         await sleep(10000);
         const proposal_period = await Tezos.rpc.getCurrentPeriod();
@@ -23,7 +21,7 @@ CONFIGS().forEach(async ({ lib, protocol, setup }) => {
           break;
         }
       }
-    
+
       while (true) {
         await sleep(10000);
         const exploration_period = await Tezos.rpc.getCurrentPeriod();
@@ -32,9 +30,9 @@ CONFIGS().forEach(async ({ lib, protocol, setup }) => {
             proposal: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
             ballot: 'yay'
           });
-    
+
           await op.confirmation();
-    
+
           expect(op.operationResults).toBeDefined();
           expect(op.operationResults?.proposal).toEqual('ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK');
           expect(op.operationResults?.ballot).toEqual('yay');
