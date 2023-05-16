@@ -8,6 +8,7 @@ import { noAnnotCode } from '../../../../integration-tests/data/token_without_an
 import { genericMultisig } from '../../../../integration-tests/data/multisig';
 import { entrypointsGenericMultisig } from './data';
 import { OnChainView } from '../../src/contract/contract-methods/contract-on-chain-view';
+import { mainContractWithEvents } from '../data/main-contract-with-events';
 
 describe('ContractAbstraction test', () => {
   let rpcContractProvider: RpcContractProvider;
@@ -479,6 +480,27 @@ describe('ContractAbstraction test', () => {
       const viewId = contratcAbs.contractViews.id();
       expect(viewId).toBeInstanceOf(OnChainView);
 
+      done();
+    });
+
+    it('contract events should be extracted properly', async (done) => {
+      const contratcAbs = new ContractAbstraction(
+        'contractAddress',
+        mainContractWithEvents,
+        rpcContractProvider,
+        rpcContractProvider,
+        { entrypoints: {} },
+        mockRpcClient as any,
+        mockReadProvider as any
+      );
+
+      expect(contratcAbs.eventSchema.length).toEqual(2);
+
+      expect(contratcAbs.eventSchema[0].tag).toEqual('%intFromMainContract');
+      expect(contratcAbs.eventSchema[0].type?.prim).toEqual('int');
+
+      expect(contratcAbs.eventSchema[1].tag).toEqual('%stringFromMainContract');
+      expect(contratcAbs.eventSchema[1].type?.prim).toEqual('string');
       done();
     });
   });
