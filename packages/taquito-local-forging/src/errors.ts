@@ -52,12 +52,13 @@ export class DecodeBallotValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates unexpected Michelson Value being passed or used
+ *  @description Error indicates unexpected Michelson Value being passed or used
  */
-export class UnexpectedMichelsonValueError extends Error {
-  public name = 'UnexpectedMichelsonValueError';
+export class UnexpectedMichelsonValueError extends ParameterValidationError {
   constructor(public value: string) {
-    super(`Failed to encode michelson value '${value}'`);
+    super();
+    this.name = 'UnexpectedMichelsonValueError';
+    this.message = `Invalid Michelson value "${value}", unalbe to encode.`;
   }
 }
 
