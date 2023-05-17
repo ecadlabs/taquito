@@ -118,11 +118,10 @@ export abstract class Provider {
         return createSmartRollupAddMessagesOperation({
           ...param,
         });
-      case OpKind.SMART_ROLLUP_ORIGINATE: {
+      case OpKind.SMART_ROLLUP_ORIGINATE:
         return createSmartRollupOriginateOperation({
           ...param,
         });
-      }
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }
