@@ -61,9 +61,12 @@ You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 ### Counter Contract Michelson source code
 
 ```
-{ parameter (or (int %decrement) (int %increment)) ;
+{ parameter (or (or (int %decrement) (int %increment)) (unit %reset)) ;
   storage int ;
-  code { UNPAIR ; IF_LEFT { SWAP ; SUB } { ADD } ; NIL operation ; PAIR } }
+  code { UNPAIR ;
+         IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { DROP 2 ; PUSH int 0 } ;
+         NIL operation ;
+         PAIR } }
 ```
 
 ## Loading the contract in Taquito
@@ -85,7 +88,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1RMvFVQ3TT2MWme6VwdsQgYR3BjKnWt5iZ')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -100,7 +103,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1RMvFVQ3TT2MWme6VwdsQgYR3BjKnWt5iZ')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -133,7 +136,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1RMvFVQ3TT2MWme6VwdsQgYR3BjKnWt5iZ')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -147,7 +150,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1RMvFVQ3TT2MWme6VwdsQgYR3BjKnWt5iZ')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -177,7 +180,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1RMvFVQ3TT2MWme6VwdsQgYR3BjKnWt5iZ')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((contract) => {
     const i = 7;
 
@@ -198,7 +201,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1RMvFVQ3TT2MWme6VwdsQgYR3BjKnWt5iZ')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((contract) => {
     const i = 7;
 
