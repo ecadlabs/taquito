@@ -9,6 +9,7 @@ import { genericMultisig } from '../../../../integration-tests/data/multisig';
 import { entrypointsGenericMultisig } from './data';
 import { OnChainView } from '../../src/contract/contract-methods/contract-on-chain-view';
 import { mainContractWithEvents } from '../data/main-contract-with-events';
+import { mainContractWithDuplicateEvents } from '../data/main-contract-with-duplicate-events';
 
 describe('ContractAbstraction test', () => {
   let rpcContractProvider: RpcContractProvider;
@@ -501,6 +502,30 @@ describe('ContractAbstraction test', () => {
 
       expect(contratcAbs.eventSchema[1].tag).toEqual('%stringFromMainContract');
       expect(contratcAbs.eventSchema[1].type?.prim).toEqual('string');
+      done();
+    });
+
+    it('contract events should be extracted properly even if there are duplicates', async (done) => {
+      const contratcAbs = new ContractAbstraction(
+        'contractAddress',
+        mainContractWithDuplicateEvents,
+        rpcContractProvider,
+        rpcContractProvider,
+        { entrypoints: {} },
+        mockRpcClient as any,
+        mockReadProvider as any
+      );
+
+      expect(contratcAbs.eventSchema.length).toEqual(3);
+
+      expect(contratcAbs.eventSchema[0].tag).toEqual('%tagOneOnlyIntRepeated');
+      expect(contratcAbs.eventSchema[0].type?.prim).toEqual('int');
+
+      expect(contratcAbs.eventSchema[1].tag).toEqual('%tagTwoIntAndString');
+      expect(contratcAbs.eventSchema[1].type?.prim).toEqual('string');
+
+      expect(contratcAbs.eventSchema[2].tag).toEqual('%tagTwoIntAndString');
+      expect(contratcAbs.eventSchema[2].type?.prim).toEqual('int');
       done();
     });
   });

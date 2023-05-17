@@ -3,6 +3,7 @@ import {
   MichelsonV1ExpressionExtended,
   ScriptResponse,
 } from '@taquito/rpc';
+import { deepEqual } from './storage';
 
 export class EventSchema {
   constructor(
@@ -30,22 +31,20 @@ export class EventSchema {
       }
       allEventSchema.push(...EventSchema.extractEventsRecursively(code.args));
     });
-    return allEventSchema;
+    return EventSchema.removeDuplicates(allEventSchema);
   }
 
-  static mergeEventsWithSameTag(events: EventSchema[]): EventSchema[] {
-    const mergedEvents: EventSchema[] = [];
+  static removeDuplicates(events: EventSchema[]): EventSchema[] {
+    const uniqueEvents: EventSchema[] = [];
     events.forEach((event) => {
-      const idx = mergedEvents.findIndex((e) => e.tag === event.tag);
+      const idx = uniqueEvents.findIndex(
+        (e) => e.tag === event.tag && deepEqual(e.type, event.type)
+      );
       if (idx === -1) {
-        mergedEvents.push(event);
-      } else {
-        if (event.type !== mergedEvents[idx].type) { // TODO: Should be replaced with a deep equality check
-          mergedEvents[idx] = new EventSchema(event.tag, undefined);
-        }
+        uniqueEvents.push(event);
       }
     });
-    return mergedEvents;
+    return uniqueEvents;
   }
 
   static extractEventsRecursively(code: MichelsonV1Expression): EventSchema[] {

@@ -61,7 +61,10 @@ function collapse(
   return extended;
 }
 
-function deepEqual(a: MichelsonV1Expression, b: MichelsonV1Expression): boolean {
+export function deepEqual(a: MichelsonV1Expression | undefined, b: MichelsonV1Expression | undefined): boolean {
+  if (a === undefined || b === undefined) {
+    return a === b;
+  }
   const ac = collapse(a);
   const bc = collapse(b);
   return (
