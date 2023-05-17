@@ -86,12 +86,13 @@ export class OperationEncodingError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an unsupported operation being passed or used
+ *  @description Error indicates an unsupported operation being passed or used
  */
-export class UnsupportedOperationError extends Error {
-  public name = 'UnsupportedOperationError';
+export class UnsupportedOperationError extends ParameterValidationError {
   constructor(public op: string) {
-    super(`The operation '${op}' is unsupported`);
+    super();
+    this.name = 'UnsupportedOperationError';
+    this.message = `Unsupported operation "${op}", can submit an issue on our github for feature request.`;
   }
 }
 

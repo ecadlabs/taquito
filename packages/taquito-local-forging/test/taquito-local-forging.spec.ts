@@ -152,7 +152,9 @@ describe('Forge and parse operations default protocol', () => {
         localForger.parse(invalidForged);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining("The operation '76' is unsupported"),
+          name: expect.stringContaining('UnsupportedOperationError'),
+          message: expect.stringContaining(`Unsupported operation "76"`),
+          op: expect.stringContaining('76'),
         })
       );
       expect(() => {
