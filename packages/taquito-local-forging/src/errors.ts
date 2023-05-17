@@ -40,12 +40,13 @@ export class InvalidBallotValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to decode ballot value
+ *  @description Error indicates a failure when trying to decode ballot value
  */
-export class DecodeBallotValueError extends Error {
-  public name = 'DecodeBallotValueError';
+export class DecodeBallotValueError extends ParameterValidationError {
   constructor(public ballotValue: string) {
-    super(`Failed to decode ballot value ${ballotValue}`);
+    super();
+    this.name = 'DecodeBallotValueError';
+    this.message = `Invalid ballot value "${ballotValue}", cannot be decoded.`;
   }
 }
 

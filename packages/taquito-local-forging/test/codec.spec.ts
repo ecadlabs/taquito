@@ -195,7 +195,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('Failed to decode ballot value 3'),
+        message: expect.stringContaining('Invalid ballot value "3"'),
         name: expect.stringMatching('DecodeBallotValueError'),
       })
     );
