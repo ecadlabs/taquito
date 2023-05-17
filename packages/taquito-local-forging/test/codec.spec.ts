@@ -30,7 +30,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
   test('Entrypoint encoder should throw if entrypoint is oversized', () => {
     expect(() => entrypointEncoder('this_entrypoint_is_way_too_long_for_the_spec')).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('this_entrypoint_is_way_too_long_for_the_spec'),
+        message: expect.stringContaining(`maximum length is "31".`),
       })
     );
   });
@@ -54,7 +54,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('_this_entrypoint_is_borderline__'),
+        message: expect.stringContaining(`maximum length is "31".`),
       })
     );
   });
@@ -233,7 +233,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('The maximum length of entrypoint is 31'),
+        message: expect.stringContaining('maximum length is "31"'),
         name: expect.stringMatching('OversizedEntryPointError'),
       })
     );

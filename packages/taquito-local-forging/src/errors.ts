@@ -10,20 +10,19 @@ import { ENTRYPOINT_MAX_LENGTH } from './constants';
     super();
     this.name = 'InvalidOperationSchemaError';
     this.message = `Invalid operation content recevied`;
-    errorDetail ? (this.message += ` ${errorDetail}`) : '';
+    errorDetail ? (this.message += ` ${errorDetail}.`) : '';
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates an entrypoint exceeding maximum size
+ *  @description Error indicates an entrypoint name exceeding maximum length
  */
-export class OversizedEntryPointError extends Error {
-  public name = 'OversizedEntryPointError';
+export class OversizedEntryPointError extends ParameterValidationError {
   constructor(public entrypoint: string) {
-    super(
-      `Oversized entrypoint: ${entrypoint}. The maximum length of entrypoint is ${ENTRYPOINT_MAX_LENGTH}`
-    );
+    super();
+    this.name = 'OversizedEntryPointError';
+    this.message = `Invalid entrypoint length "${entrypoint.length}", maximum length is "${ENTRYPOINT_MAX_LENGTH}".`;
   }
 }
 
