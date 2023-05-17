@@ -28,12 +28,13 @@ export class OversizedEntryPointError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid ballot value
+ *  @description Error indicates an invalid ballot value being used
  */
-export class InvalidBallotValueError extends Error {
-  public name = 'InvalidBallotValueError';
+export class InvalidBallotValueError extends ParameterValidationError {
   constructor(public ballotValue: string) {
-    super(`The ballot value '${ballotValue}' is invalid`);
+    super();
+    this.name = 'InvalidBallotValueError';
+    this.message = `Invalid ballot value "${ballotValue}" expecting one of the following: "yay", "nay", "pass".`;
   }
 }
 

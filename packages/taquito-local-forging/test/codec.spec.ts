@@ -151,8 +151,9 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() => ballotEncoder('foobar')).toThrow(InvalidBallotValueError);
     expect(() => ballotEncoder('foobar')).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining("The ballot value 'foobar' is invalid"),
+        message: expect.stringContaining(`Invalid ballot value "foobar"`),
         name: expect.stringMatching('InvalidBallotValueError'),
+        ballotValue: expect.stringMatching('foobar'),
       })
     );
   });
