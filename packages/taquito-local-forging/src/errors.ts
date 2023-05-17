@@ -110,12 +110,13 @@ export class UnsupportedPvmKindError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error that indicates an unsupported decoded pvm
+ * @description Error indicates an unsupported pvm to decode
  */
-export class DecodePvmKindError extends Error {
-  public name = 'DecodePvmKindError';
+export class DecodePvmKindError extends ParameterValidationError {
   constructor(public pvm: string) {
-    super(`The encoded Pvm ${pvm} is not supported`);
+    super();
+    this.name = 'DecodePvmKindError';
+    this.message = `Invalid Pvm kind "${pvm}", cannot be decoded.`;
   }
 }
 
@@ -134,11 +135,13 @@ export class InvalidSmartRollupAddressError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error that indicates an invalid Smart Rollup Contract Address (src1)
+ * @description Error indicates an invalid Smart Rollup commitment hash (src1)
  */
-export class InvalidSmartRollupContractAddressError extends Error {
-  public name = 'InvalidSmartRollupContractAddress';
-  constructor(public address: string) {
-    super(`The Smart Rollup Contract Address: ${address} is invalid`);
+export class InvalidSmartRollupCommitmentHashError extends ParameterValidationError {
+  constructor(public hash: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidSmartRollupCommitmentHashError'
+    this.message = `Invalid smart rollup commitment hash "${hash}"`
+    errorDetail ? (this.message += ` ${errorDetail}.`) : '';
   }
 }

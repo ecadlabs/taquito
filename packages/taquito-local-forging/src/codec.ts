@@ -16,7 +16,7 @@ import {
   DecodeBallotValueError,
   UnsupportedPvmKindError,
   DecodePvmKindError,
-  InvalidSmartRollupContractAddressError,
+  InvalidSmartRollupCommitmentHashError,
   InvalidSmartRollupAddressError,
 } from './errors';
 import BigNumber from 'bignumber.js';
@@ -289,12 +289,15 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
   }
 };
 
-export const smartRollupContractAddressEncoder = (val: string): string => {
+export const smartRollupCommitmentHashEncoder = (val: string): string => {
   const prefix = val.substring(0, 4);
   if (prefix === Prefix.SRC1) {
     return prefixEncoder(Prefix.SRC1)(val);
   }
-  throw new InvalidSmartRollupContractAddressError(val);
+  throw new InvalidSmartRollupCommitmentHashError(
+    val,
+    invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
+  );
 };
 
 export const addressDecoder = (val: Uint8ArrayConsumer) => {
@@ -339,7 +342,10 @@ export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
 export const smartRollupCommitmentHashDecoder = (val: Uint8ArrayConsumer) => {
   const address = prefixDecoder(Prefix.SRC1)(val);
   if (address.substring(0, 4) !== Prefix.SRC1) {
-    throw new InvalidSmartRollupContractAddressError(address);
+    throw new InvalidSmartRollupCommitmentHashError(
+      address,
+      invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
+    );
   }
   return address;
 };
