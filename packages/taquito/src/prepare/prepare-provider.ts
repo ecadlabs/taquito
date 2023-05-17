@@ -71,15 +71,9 @@ const mergeLimits = (
   defaultLimits: Required<Limits>
 ): Required<Limits> => {
   return {
-    fee: typeof userDefinedLimit.fee === 'undefined' ? defaultLimits.fee : userDefinedLimit.fee,
-    gasLimit:
-      typeof userDefinedLimit.gasLimit === 'undefined'
-        ? defaultLimits.gasLimit
-        : userDefinedLimit.gasLimit,
-    storageLimit:
-      typeof userDefinedLimit.storageLimit === 'undefined'
-        ? defaultLimits.storageLimit
-        : userDefinedLimit.storageLimit,
+    fee: userDefinedLimit.fee ?? defaultLimits.fee,
+    gasLimit: userDefinedLimit.gasLimit ?? defaultLimits.gasLimit,
+    storageLimit: userDefinedLimit.storageLimit ?? defaultLimits.storageLimit,
   };
 };
 

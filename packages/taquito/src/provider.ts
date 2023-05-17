@@ -70,18 +70,9 @@ export abstract class Provider {
 
     if (fee === undefined || gasLimit === undefined || storageLimit === undefined) {
       const estimation = await estimator({ fee, gasLimit, storageLimit, ...(rest as any) });
-
-      if (calculatedFee === undefined) {
-        calculatedFee = estimation.suggestedFeeMutez;
-      }
-
-      if (calculatedGas === undefined) {
-        calculatedGas = estimation.gasLimit;
-      }
-
-      if (calculatedStorage === undefined) {
-        calculatedStorage = estimation.storageLimit;
-      }
+      calculatedFee ??= estimation.suggestedFeeMutez;
+      calculatedGas ??= estimation.gasLimit;
+      calculatedStorage ??= estimation.storageLimit;
     }
 
     return {
