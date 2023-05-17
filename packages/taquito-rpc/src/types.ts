@@ -603,18 +603,6 @@ export type OperationContents =
   | OperationContentsSmartRollupRecoverBond
   | OperationContentsSmartRollupTimeout;
 
-export type OperationContentsWithFee =
-  | OperationContentsTransaction
-  | OperationContentsOrigination
-  | OperationContentsDelegation
-  | OperationContentsReveal
-  | OperationContentsRegisterGlobalConstant
-  | OperationContentsIncreasePaidStorage
-  | OperationContentsTransferTicket
-  | OperationContentsUpdateConsensusKey
-  | OperationContentsSmartRollupAddMessages
-  | OperationContentsSmartRollupOriginate;
-
 export interface OperationContentsAndResultMetadataExtended {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
