@@ -98,12 +98,13 @@ export class UnsupportedOperationError extends ParameterValidationError {
 
 /**
  * @cateogry Error
- * @description Error that indicates an unsupported pvm being passed or used
+ * @description Error indicates an unsupported pvm being passed or used
  */
-export class UnsupportedPvmKindError extends Error {
-  public name = 'UnsupportedPvmKindError';
+export class UnsupportedPvmKindError extends ParameterValidationError {
   constructor(public pvm: string) {
-    super(`The Pvm "${pvm}" is not supported`);
+    super();
+    this.name = 'UnsupportedPvmKindError';
+    this.message = `Invalid Pvm kind "${pvm}" expecting either "arith" or "wasm_2_0_0".`;
   }
 }
 
