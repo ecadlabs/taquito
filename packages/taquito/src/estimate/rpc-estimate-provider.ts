@@ -1,5 +1,7 @@
 import { PreapplyResponse, RPCRunOperationParam, ConstantsResponse } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
+import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { OperationEmitter } from '../operations/operation-emitter';
 import {
   flattenErrors,
   flattenOperationResult,
@@ -458,5 +460,26 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       estimateProperties.shift();
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  private async addRevealOp(op: RPCOperation[], pkh: string) {
+    const { publicKey } = await this.getKeys();
+    if (!publicKey) {
+      throw new RevealEstimateError();
+    }
+    op.unshift(
+      await createRevealOperation(
+        {
+          ...{
+            fee: undefined,
+            gasLimit: DEFAULT_GAS_LIMIT.REVEAL,
+            storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
+          },
+        },
+        pkh,
+        await this.signer.publicKey()
+      )
+    );
+    return op;
   }
 }

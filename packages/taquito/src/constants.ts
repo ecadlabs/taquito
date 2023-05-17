@@ -8,7 +8,11 @@ export enum DEFAULT_FEE {
   DELEGATION = 1257,
   ORIGINATION = 10000,
   TRANSFER = 10000,
-  REVEAL = 374,
+  REVEAL_PRE_N = 374,
+  REVEAL_TZ1 = 166,
+  REVEAL_TZ2 = 152,
+  REVEAL_TZ3 = 1091,
+  REVEAL_TZ4 = 1671,
 }
 export enum DEFAULT_STORAGE_LIMIT {
   DELEGATION = 0,
@@ -73,5 +77,5 @@ export enum ChainIds {
   LIMANET = 'NetXizpkH94bocH',
   MUMBAINET = 'NetXQw6nWSnrJ5t',
   MUMBAINET2 = 'NetXgbcrNtXD2yA',
-  NAIROBINET = 'NetXyuzvDo2Ugzb'
+  NAIROBINET = 'NetXyuzvDo2Ugzb',
 }
