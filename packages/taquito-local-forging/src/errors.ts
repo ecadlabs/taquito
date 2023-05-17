@@ -75,12 +75,12 @@ export class OperationDecodingError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to encode an operation
+ *  @description Error indicates a failure when trying to encode an operation
  */
-export class OperationEncodingError extends Error {
-  public name = 'OperationEncodingError';
+export class OperationEncodingError extends ParameterValidationError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'OperationEncodingError';
   }
 }
 
