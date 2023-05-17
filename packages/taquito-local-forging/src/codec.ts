@@ -252,7 +252,10 @@ export const addressEncoder = (val: string): string => {
 
 export const smartRollupAddressEncoder = (val: string): string => {
   if (val.substring(0, 3) !== Prefix.SR1) {
-    throw new InvalidSmartRollupAddressError(val);
+    throw new InvalidSmartRollupAddressError(
+      val,
+      invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+    );
   }
   return prefixEncoder(Prefix.SR1)(val);
 };
@@ -312,7 +315,7 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
 export const smartRollupAddressDecoder = (val: Uint8ArrayConsumer): string => {
   const address = prefixDecoder(Prefix.SR1)(val);
   if (address.substring(0, 3) !== Prefix.SR1) {
-    throw new InvalidAddressError(
+    throw new InvalidSmartRollupAddressError(
       address,
       invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
     );

@@ -121,12 +121,14 @@ export class DecodePvmKindError extends Error {
 
 /**
  * @category Error
- * @description Error that indicates an invalid Smart Rollup Address (sr1)
+ * @description Error indicates an invalid Smart Rollup Address (sr1)
  */
-export class InvalidSmartRollupAddressError extends Error {
-  public name = 'InvalidSmartRollupContractAddress';
-  constructor(public address: string) {
-    super(`The Smart Rollup Contract Address: ${address} is invalid`);
+export class InvalidSmartRollupAddressError extends ParameterValidationError {
+  constructor(public address: string, errorDetail?: string) {
+    super();
+    this.name = 'InvalidSmartRollupAddress';
+    this.message = `Invalid smart rollup address "${address}"`;
+    errorDetail ? (this.message += ` ${errorDetail}.`) : '';
   }
 }
 
