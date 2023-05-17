@@ -1,6 +1,6 @@
 import { PreapplyResponse, RPCRunOperationParam, OpKind, ConstantsResponse } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { OperationEmitter } from '../operations/operation-emitter';
 import {
   flattenErrors,
@@ -828,7 +828,7 @@ export class RPCEstimateProvider extends OperationEmitter implements EstimationP
       await createRevealOperation(
         {
           ...{
-            fee: DEFAULT_FEE.REVEAL,
+            fee: undefined,
             gasLimit: DEFAULT_GAS_LIMIT.REVEAL,
             storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
           },
