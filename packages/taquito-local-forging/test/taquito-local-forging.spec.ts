@@ -82,14 +82,9 @@ describe('Forge and parse operations default protocol', () => {
         localForger.forge(operation);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining('Missing properties: source'),
-        })
-      );
-      expect(() => {
-        localForger.forge(operation);
-      }).toThrow(
-        expect.objectContaining({
           name: expect.stringContaining('InvalidOperationSchemaError'),
+          message: expect.stringContaining('missing properties "source"'),
+          operation: expect.objectContaining({ kind: 'reveal' }),
         })
       );
     });

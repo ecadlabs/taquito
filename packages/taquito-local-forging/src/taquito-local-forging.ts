@@ -66,12 +66,10 @@ export class LocalForger implements Forger {
         ) {
           continue;
         } else {
-          throw new InvalidOperationSchemaError(
-            `Missing properties: ${diff.join(', ').toString()}`
-          );
+          throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);
         }
       } else if (diff.length > 1) {
-        throw new InvalidOperationSchemaError(`Missing properties: ${diff.join(', ').toString()}`);
+        throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);
       }
     }
     const forged = this.codec.encoder(params).toLowerCase();

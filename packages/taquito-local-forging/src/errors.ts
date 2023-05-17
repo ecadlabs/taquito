@@ -1,12 +1,16 @@
+import { ParameterValidationError } from '@taquito/core';
+import { OperationContents } from '@taquito/rpc';
 import { ENTRYPOINT_MAX_LENGTH } from './constants';
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid operation schema being passed or used
- */ export class InvalidOperationSchemaError extends Error {
-  public name = 'InvalidOperationSchemaError';
-  constructor(public message: string) {
-    super(message);
+ *  @description Error indicates an invalid operation content being passed or used
+ */ export class InvalidOperationSchemaError extends ParameterValidationError {
+  constructor(public operation: OperationContents, errorDetail?: string) {
+    super();
+    this.name = 'InvalidOperationSchemaError';
+    this.message = `Invalid operation content recevied`;
+    errorDetail ? (this.message += ` ${errorDetail}`) : '';
   }
 }
 
