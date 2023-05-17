@@ -64,12 +64,12 @@ export class UnexpectedMichelsonValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to decode an operation
+ *  @description Error indicates a failure when trying to decode an operation
  */
-export class OperationDecodingError extends Error {
-  public name = 'OperationDecodingError';
+export class OperationDecodingError extends ParameterValidationError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'OperationDecodingError';
   }
 }
 

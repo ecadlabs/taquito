@@ -213,7 +213,7 @@ export const operationDecoder =
     const decodedObj = decoders[operationName](value);
 
     if (typeof decodedObj !== 'object') {
-      throw new OperationDecodingError('Decoded invalid operation');
+      throw new OperationDecodingError('Invalid operation, cannot be decoded.');
     }
 
     return {
@@ -249,44 +249,44 @@ export const schemaEncoder =
 
 export const schemaDecoder =
   (decoders: { [key: string]: Decoder }) =>
-  (schema: { [key: string]: string | string[] }) =>
-  (value: Uint8ArrayConsumer) => {
-    const keys = Object.keys(schema);
-    return keys.reduce((prev, key) => {
-      const valueToEncode = schema[key];
+    (schema: { [key: string]: string | string[] }) =>
+      (value: Uint8ArrayConsumer) => {
+        const keys = Object.keys(schema);
+        return keys.reduce((prev, key) => {
+          const valueToEncode = schema[key];
 
-      if (Array.isArray(valueToEncode)) {
-        const decoder = decoders[valueToEncode[0]];
+          if (Array.isArray(valueToEncode)) {
+            const decoder = decoders[valueToEncode[0]];
 
-        const decoded = [];
-        const lastLength = value.length();
-        while (value.length() > 0) {
-          decoded.push(decoder(value));
+            const decoded = [];
+            const lastLength = value.length();
+            while (value.length() > 0) {
+              decoded.push(decoder(value));
 
-          if (lastLength === value.length()) {
-            throw new OperationDecodingError('Unable to decode value');
+              if (lastLength === value.length()) {
+                throw new OperationDecodingError('Unable to decode value');
+              }
+            }
+
+            return {
+              ...prev,
+              [key]: decoded,
+            };
+          } else {
+            const decoder = decoders[valueToEncode];
+
+            const result = decoder(value);
+
+            if (typeof result !== 'undefined') {
+              return {
+                ...prev,
+                [key]: result,
+              };
+            } else {
+              return {
+                ...prev,
+              };
+            }
           }
-        }
-
-        return {
-          ...prev,
-          [key]: decoded,
-        };
-      } else {
-        const decoder = decoders[valueToEncode];
-
-        const result = decoder(value);
-
-        if (typeof result !== 'undefined') {
-          return {
-            ...prev,
-            [key]: result,
-          };
-        } else {
-          return {
-            ...prev,
-          };
-        }
-      }
-    }, {});
-  };
+        }, {});
+      };
