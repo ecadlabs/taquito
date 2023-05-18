@@ -740,7 +740,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate[0]).toMatchObject({
         gasLimit: 1100,
         storageLimit: 0,
-        suggestedFeeMutez: 374,
+        suggestedFeeMutez: 166,
       });
       expect(estimate[1]).toMatchObject({
         gasLimit: 1330,

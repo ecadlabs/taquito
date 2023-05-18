@@ -5431,7 +5431,7 @@ export const pendingOperationsResponse = {
         {
           kind: 'reveal',
           source: 'tz2GeK37F1ThiGwamtxUykBuWqamWc7UcmHN',
-          fee: '374',
+          fee: '152',
           counter: '54971',
           gas_limit: '1100',
           storage_limit: '0',

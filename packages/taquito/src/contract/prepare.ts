@@ -179,16 +179,16 @@ export const createRevealOperation = async (
   } as RPCRevealOperation;
 };
 
-const getRevealFee = (source: string) => {
+export const getRevealFee = (source: string) => {
   switch (source.substring(0, 3)) {
     case 'tz1':
       return DEFAULT_FEE.REVEAL_TZ1;
     case 'tz2':
-      return DEFAULT_FEE.REVEAL_TZ1;
+      return DEFAULT_FEE.REVEAL_TZ2;
     case 'tz3':
-      return DEFAULT_FEE.REVEAL_TZ1;
+      return DEFAULT_FEE.REVEAL_TZ3;
     case 'tz4':
-      return DEFAULT_FEE.REVEAL_TZ1;
+      return DEFAULT_FEE.REVEAL_TZ4;
     default:
       throw new Error(
         `Cannot estimate reveal fee for ${source}`

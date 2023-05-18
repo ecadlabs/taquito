@@ -20,7 +20,7 @@ export const blockResponse = {
           {
             kind: 'reveal',
             source: 'tz29SSCBkTYXK4stSPosByHC4h26WDB3N11o',
-            fee: '374',
+            fee: '152',
             counter: '118358',
             gas_limit: '1100',
             storage_limit: '0',
@@ -30,13 +30,13 @@ export const blockResponse = {
                 {
                   kind: 'contract',
                   contract: 'tz29SSCBkTYXK4stSPosByHC4h26WDB3N11o',
-                  change: '-374',
+                  change: '-152',
                   origin: 'block',
                 },
                 {
                   kind: 'accumulator',
                   category: 'block fees',
-                  change: '374',
+                  change: '152',
                   origin: 'block',
                 },
               ],

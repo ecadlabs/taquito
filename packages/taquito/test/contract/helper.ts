@@ -1336,7 +1336,7 @@ export const txRollupOriginateWithReveal = {
     {
       kind: 'reveal',
       source: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
-      fee: '374',
+      fee: '152',
       counter: '236199',
       gas_limit: '1100',
       storage_limit: '0',
@@ -1346,13 +1346,13 @@ export const txRollupOriginateWithReveal = {
           {
             kind: 'contract',
             contract: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
-            change: '-374',
+            change: '-152',
             origin: 'block',
           },
           {
             kind: 'accumulator',
             category: 'block fees',
-            change: '374',
+            change: '152',
             origin: 'block',
           },
         ],
@@ -1455,7 +1455,7 @@ export const txRollupSubmitBatchWithReveal = {
     {
       kind: 'reveal',
       source: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
-      fee: '374',
+      fee: '152',
       counter: '236199',
       gas_limit: '1100',
       storage_limit: '0',
@@ -1465,13 +1465,13 @@ export const txRollupSubmitBatchWithReveal = {
           {
             kind: 'contract',
             contract: 'tz2SKhBYT6nADXviDrU2HK3nw2jDMfhRNv7P',
-            change: '-374',
+            change: '-152',
             origin: 'block',
           },
           {
             kind: 'accumulator',
             category: 'block fees',
-            change: '374',
+            change: '152',
             origin: 'block',
           },
         ],
