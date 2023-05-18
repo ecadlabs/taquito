@@ -42,7 +42,7 @@ There is nothing special to do to pass an option with Taquito, Taquito will assu
 | Michelson type                             | Michelson value         | Taquito `methods`         | Taquito `methodsObject` |
 | ------------------------------------------ | ----------------------- | ------------------------- | ----------------------- |
 | or int string                              | Left 5                  | 0, 5                      | {0: 5}                  |
-| or int string                              | Right "Tezos            | 1, "Tezos"                | {1: "Tezos"}            |
+| or int string                              | Right "Tezos"           | 1, "Tezos"                | {1: "Tezos"}            |
 | or (pair int nat) string                   | Left (Pair 6 7)         | 0, { 0: 6, 1: 7 }         | {0: { 0: 6, 1: 7 }}     |
 | or (or string (pair nat int) (or int nat)) | Left (Right (Pair 6 7)) | see below                 | see below               |
 
@@ -71,6 +71,54 @@ In a list, `pair` and `union` values are always represented as objects: a `pair`
 | pair (pair (int %one) (nat %two)) (pair (string %three) (mutez %four)) | Pair (Pair (6 %one) (7 %two)) (Pair ("Tezos" %three) (500000 %four)) | 6, 7, "Tezos", 50_0000 | { "one": 6, "two": 7, "three": "Tezos", "four": 50_000 } |
 
 The `methodsObject` method always takes a single object to represent the pair to be passed, while `methods` requires the pair fields to be spread. If annotations are present, they are used to identify the pair fielda in the corresponding properties of the JS object.
+
+## Bypassing the Michelson Encoder
+Users can bypass the `michelson-encoder` and `ContractAbstraction` by directly passing JSON Michelson in a `transfer` call. This eliminates the need to fetch and create a JS/TS contract abstraction using `tezos.wallet.at` or `tezos.contract.at` and also removes the requirement to create a local contract instance for interaction. As a result, the conversion of entrypoint parameters to the JSON Michelson format using the michelson-encoder is no longer necessary as used in the ContractAbstraction entrypoints as listed prior for `methods` and `methodsObject`.
+
+The `transfer` method can be used with both the `wallet` and `contract` providers. However, it is necessary to specify and set the provider accordingly, whether it is a `wallet` or `signer` provider.
+
+A brief example for `Pair int string` using a Wallet Provider would be:
+
+```ts
+let nested2SomeNone1 = await tezos.wallet.transfer({ 
+  to: 'KT1NhJvzVTfidU5oV1NM9W9uwA2RSxNZz5Ai', 
+  amount: 0, 
+  parameter: { 
+    entrypoint: 'default', 
+    value: {
+      prim: 'Pair',
+      args: [
+        {int: 6}, 
+        {string:"tez"}
+      ],
+    }
+  }
+}).send()
+```
+
+Another example of Michelson type `pair (pair int nat) (option nat)` using the Contract Provider.
+
+```ts
+const nested2SomeNone2 = await tezos.contract.transfer({ 
+  to: 'KT1NhJvzVTfidU5oV1NM9W9uwA2RSxNZz5Ai', 
+  amount: 0, 
+  parameter: { 
+    entrypoint: 'default', 
+    value: {
+      prim: 'Pair',
+      args: [{
+        prim: 'Pair',
+        args: [
+          {int: 6},
+          {int: 7}
+        ],
+        }, 
+        { prim: 'None' } // <- this || { "int": 10 }
+      ],
+    }
+  }
+})
+```
 
 ## Map and big_map
 
