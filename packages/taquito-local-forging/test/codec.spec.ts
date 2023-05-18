@@ -16,7 +16,7 @@ import {
   InvalidBallotValueError,
   OversizedEntryPointError,
   UnsupportedPvmKindError,
-} from '../src/error';
+} from '../src/errors';
 import { bytesEncoder } from '../src/michelson/codec';
 import { InvalidHexStringError, InvalidPublicKeyError, InvalidKeyHashError } from '@taquito/core';
 
@@ -30,7 +30,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
   test('Entrypoint encoder should throw if entrypoint is oversized', () => {
     expect(() => entrypointEncoder('this_entrypoint_is_way_too_long_for_the_spec')).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('this_entrypoint_is_way_too_long_for_the_spec'),
+        message: expect.stringContaining(`maximum length is "31".`),
       })
     );
   });
@@ -54,7 +54,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('_this_entrypoint_is_borderline__'),
+        message: expect.stringContaining(`maximum length is "31".`),
       })
     );
   });
@@ -151,8 +151,9 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() => ballotEncoder('foobar')).toThrow(InvalidBallotValueError);
     expect(() => ballotEncoder('foobar')).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining("The ballot value 'foobar' is invalid"),
+        message: expect.stringContaining(`Invalid ballot value "foobar"`),
         name: expect.stringMatching('InvalidBallotValueError'),
+        ballotValue: expect.stringMatching('foobar'),
       })
     );
   });
@@ -194,7 +195,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('Failed to decode ballot value 3'),
+        message: expect.stringContaining('Invalid ballot value "3"'),
         name: expect.stringMatching('DecodeBallotValueError'),
       })
     );
@@ -233,7 +234,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('The maximum length of entrypoint is 31'),
+        message: expect.stringContaining('maximum length is "31"'),
         name: expect.stringMatching('OversizedEntryPointError'),
       })
     );
