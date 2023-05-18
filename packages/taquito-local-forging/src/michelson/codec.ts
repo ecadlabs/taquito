@@ -4,7 +4,7 @@ import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { Encoder } from '../taquito-local-forging';
 import { opMappingReverse, opMapping } from '../constants';
 import { pad } from '../utils';
-import { UnexpectedMichelsonValueError } from '../error';
+import { UnexpectedMichelsonValueError } from '../errors';
 import { InvalidHexStringError } from '@taquito/core';
 
 export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };

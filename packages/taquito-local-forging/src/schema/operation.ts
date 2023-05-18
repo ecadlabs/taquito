@@ -6,7 +6,7 @@ import {
   OperationDecodingError,
   OperationEncodingError,
   UnsupportedOperationError,
-} from '../error';
+} from '../errors';
 
 export const ManagerOperationSchema = {
   branch: CODEC.BRANCH,
@@ -213,7 +213,7 @@ export const operationDecoder =
     const decodedObj = decoders[operationName](value);
 
     if (typeof decodedObj !== 'object') {
-      throw new OperationDecodingError('Decoded invalid operation');
+      throw new OperationDecodingError('Invalid operation, cannot be decoded.');
     }
 
     return {
@@ -236,7 +236,11 @@ export const schemaEncoder =
         const values = value[key];
 
         if (!Array.isArray(values)) {
-          throw new OperationEncodingError(`Expected value to be Array ${JSON.stringify(values)}`);
+          throw new OperationEncodingError(
+            `Invalid operation value "${JSON.stringify(
+              values
+            )}" of key "${key}, expected value to be Array.`
+          );
         }
 
         return prev + values.reduce((prevBytes, current) => prevBytes + encoder(current), '');
