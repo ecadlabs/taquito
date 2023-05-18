@@ -207,10 +207,6 @@ export class OperationBatch extends Provider {
         return createSetDelegateOperation({
           ...param,
         });
-      case OpKind.ACTIVATION:
-        return {
-          ...param,
-        };
       case OpKind.REGISTER_GLOBAL_CONSTANT:
         return createRegisterGlobalConstantOperation({
           ...param,
