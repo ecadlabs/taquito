@@ -3,6 +3,7 @@ import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { Context } from '../../src/context';
 import { Estimate } from '../../src/estimate/estimate';
 import { OpKind, ParamsWithKind } from '../../src/operations/types';
+import BigNumber from 'bignumber.js';
 
 /**
  * OperationBatch test
@@ -27,6 +28,16 @@ describe('OperationBatch test', () => {
     getChainId: jest.Mock<any, any>;
     getSaplingDiffById: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
+  };
+
+  let mockReadProvider: {
+    getBlockHash: jest.Mock<any, any>;
+    getNextProtocol: jest.Mock<any, any>;
+    getCounter: jest.Mock<any, any>;
+    getProtocolConstants: jest.Mock<any, any>;
+    getBalance: jest.Mock<any, any>;
+    isAccountRevealed: jest.Mock<any, any>;
+    getChainId: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -75,6 +86,16 @@ describe('OperationBatch test', () => {
       sign: jest.fn(),
     };
 
+    mockReadProvider = {
+      getBlockHash: jest.fn(),
+      getNextProtocol: jest.fn(),
+      getCounter: jest.fn(),
+      getProtocolConstants: jest.fn(),
+      getBalance: jest.fn(),
+      isAccountRevealed: jest.fn(),
+      getChainId: jest.fn(),
+    };
+
     mockEstimate = {
       originate: jest.fn(),
       transfer: jest.fn(),
@@ -111,7 +132,20 @@ describe('OperationBatch test', () => {
       'onwtjK2Q32ndjF9zbEPPtmifdBq5qB59wjMP2oCH22mARjyKnGP'
     );
 
+    mockReadProvider.getProtocolConstants.mockResolvedValue({
+      hard_gas_limit_per_operation: new BigNumber('1040000'),
+      hard_gas_limit_per_block: new BigNumber('5200000'),
+      cost_per_byte: new BigNumber('250'),
+      hard_storage_limit_per_operation: new BigNumber('60000'),
+      minimal_block_delay: new BigNumber('30'),
+      time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
+    });
+    mockReadProvider.getBalance.mockResolvedValue(new BigNumber('10000000000'));
+    mockReadProvider.getNextProtocol.mockResolvedValue('test_proto');
+    mockReadProvider.getBlockHash.mockResolvedValue('test');
+
     context = new Context(mockRpcClient as any, mockSigner as any);
+    context.readProvider = mockReadProvider as any;
     context.forger = mockForger;
     operationBatch = new OperationBatch(context, mockEstimate as any);
   });
@@ -120,18 +154,18 @@ describe('OperationBatch test', () => {
     it('should produce a batch operation which contains a registerGlobalConstant operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
-
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
       const batchOp = await operationBatch
         .withRegisterGlobalConstant({ value: { int: '2' } })
         .send();
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
             {
               value: { int: '2' },
-              counter: '123457',
+              counter: '1',
               fee: '475',
               gas_limit: '1330',
               kind: 'register_global_constant',
@@ -150,7 +184,7 @@ describe('OperationBatch test', () => {
     it('should produce a batch operation which contains a registerGlobalConstant operation where fee, gas limit and storage limit are specified by the user', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
-
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
       const batchOp = await operationBatch
         .withRegisterGlobalConstant({
           value: { int: '2' },
@@ -161,13 +195,13 @@ describe('OperationBatch test', () => {
         .send();
 
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
             {
               value: { int: '2' },
-              counter: '123457',
+              counter: '1',
               fee: '500',
               gas_limit: '1400',
               kind: 'register_global_constant',
@@ -193,12 +227,12 @@ describe('OperationBatch test', () => {
         .withRegisterGlobalConstant({ value: { int: '2' } })
         .send();
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
             {
-              counter: '123457',
+              counter: '1',
               fee: '374',
               gas_limit: '1100',
               kind: 'reveal',
@@ -208,233 +242,10 @@ describe('OperationBatch test', () => {
             },
             {
               value: { int: '2' },
-              counter: '123458',
+              counter: '2',
               fee: '475',
               gas_limit: '1330',
               kind: 'register_global_constant',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-  });
-
-  describe('withTxRollupOrigination', () => {
-    it('should produce a batch operation which contains an txRollupOriginate operation', async (done) => {
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimate]);
-
-      const batchOp = await operationBatch.withTxRollupOrigination().send();
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              tx_rollup_origination: {},
-              counter: '123457',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_origination',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should produce a batch operation which contains an txRollupOriginate operation where fee, gas limit and storage limit are specified by the user', async (done) => {
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimate]);
-
-      const batchOp = await operationBatch
-        .withTxRollupOrigination({
-          fee: 500,
-          gasLimit: 1400,
-          storageLimit: 100,
-        })
-        .send();
-
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              tx_rollup_origination: {},
-              counter: '123457',
-              fee: '500',
-              gas_limit: '1400',
-              kind: 'tx_rollup_origination',
-              source: 'test_pub_key_hash',
-              storage_limit: '100',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should produce a batch operation which contains a reveal and a txRollupOriginate operation', async (done) => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      const estimateReveal = new Estimate(1000000, 0, 64, 250);
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
-
-      const batchOp = await operationBatch.withTxRollupOrigination().send();
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              counter: '123457',
-              fee: '374',
-              gas_limit: '1100',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
-              storage_limit: '0',
-            },
-            {
-              tx_rollup_origination: {},
-              counter: '123458',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_origination',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-  });
-
-  describe('withTxRollupSubmitBatch', () => {
-    it('should produce a batch operation which contains a tx rollup submit batch operation', async (done) => {
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimate]);
-
-      const batchOp = await operationBatch
-        .withTxRollupSubmitBatch({
-          content: '00',
-          rollup: 'txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1',
-        })
-        .send();
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              content: '00',
-              rollup: 'txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1',
-              counter: '123457',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_submit_batch',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should produce a batch operation which contains a tx rollup submit batch operation where fee, gas limit and storage limit are specified by the user', async (done) => {
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimate]);
-
-      const batchOp = await operationBatch
-        .withTxRollupSubmitBatch({
-          content: '00',
-          rollup: 'txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1',
-          fee: 500,
-          gasLimit: 1400,
-          storageLimit: 100,
-        })
-        .send();
-
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              content: '00',
-              rollup: 'txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1',
-              counter: '123457',
-              fee: '500',
-              gas_limit: '1400',
-              kind: 'tx_rollup_submit_batch',
-              source: 'test_pub_key_hash',
-              storage_limit: '100',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should produce a batch operation which contains a reveal and a tx rollup submit batch operation', async (done) => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      const estimateReveal = new Estimate(1000000, 0, 64, 250);
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
-
-      const batchOp = await operationBatch
-        .withTxRollupSubmitBatch({
-          content: '00',
-          rollup: 'txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1',
-        })
-        .send();
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              counter: '123457',
-              fee: '374',
-              gas_limit: '1100',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
-              storage_limit: '0',
-            },
-            {
-              content: '00',
-              rollup: 'txr1RHjM395hdwNfgpM8GixQrPAimk7i2Tjy1',
-              counter: '123458',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_submit_batch',
               source: 'test_pub_key_hash',
               storage_limit: '93',
             },
@@ -452,6 +263,7 @@ describe('OperationBatch test', () => {
     it('should produce a batch operation which contains a registerGlobalConstant operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const opToBatch: ParamsWithKind[] = [
         {
@@ -462,13 +274,13 @@ describe('OperationBatch test', () => {
 
       const batchOp = await operationBatch.with(opToBatch).send();
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
             {
               value: { string: 'test' },
-              counter: '123457',
+              counter: '1',
               fee: '475',
               gas_limit: '1330',
               kind: 'register_global_constant',
@@ -485,6 +297,10 @@ describe('OperationBatch test', () => {
     });
 
     it('should produce a batch operation which contains a registerGlobalConstant operation where fee, gas limit and storage limit are specified by the user', async (done) => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       const opToBatch: ParamsWithKind[] = [
         {
           kind: OpKind.REGISTER_GLOBAL_CONSTANT,
@@ -497,13 +313,13 @@ describe('OperationBatch test', () => {
 
       const batchOp = await operationBatch.with(opToBatch).send();
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
             {
               value: { string: 'test' },
-              counter: '123457',
+              counter: '1',
               fee: '500',
               gas_limit: '1400',
               kind: 'register_global_constant',
@@ -535,12 +351,12 @@ describe('OperationBatch test', () => {
       const batchOp = await operationBatch.with(opToBatch).send();
 
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
             {
-              counter: '123457',
+              counter: '1',
               fee: '374',
               gas_limit: '1100',
               kind: 'reveal',
@@ -550,7 +366,7 @@ describe('OperationBatch test', () => {
             },
             {
               value: { string: 'test' },
-              counter: '123458',
+              counter: '2',
               fee: '475',
               gas_limit: '1330',
               kind: 'register_global_constant',
@@ -571,6 +387,7 @@ describe('OperationBatch test', () => {
     it('should produce an operation batch which contains an increasePaidStorage operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const opToBatch: ParamsWithKind[] = [
         {
@@ -582,7 +399,7 @@ describe('OperationBatch test', () => {
 
       const batchOp = await operationBatch.with(opToBatch).send();
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -594,7 +411,7 @@ describe('OperationBatch test', () => {
               storage_limit: '93',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-              counter: '123457',
+              counter: '1',
             },
           ],
           protocol: 'test_proto',
@@ -622,12 +439,12 @@ describe('OperationBatch test', () => {
       const batchOp = await operationBatch.with(opToBatch).send();
 
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
             {
-              counter: '123457',
+              counter: '1',
               fee: '374',
               gas_limit: '1100',
               kind: 'reveal',
@@ -643,7 +460,7 @@ describe('OperationBatch test', () => {
               storage_limit: '93',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-              counter: '123458',
+              counter: '2',
             },
           ],
           protocol: 'test_proto',
@@ -657,6 +474,7 @@ describe('OperationBatch test', () => {
     it('should produce a batch operation which contants an increasePaidStorage operation where fee, gas limit, and storage limit are specified by the user', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const opToBatch: ParamsWithKind[] = [
         {
@@ -671,7 +489,7 @@ describe('OperationBatch test', () => {
 
       const batchOp = await operationBatch.with(opToBatch).send();
       expect(batchOp.raw).toEqual({
-        counter: 123456,
+        counter: 0,
         opOb: {
           branch: 'test',
           contents: [
@@ -683,7 +501,7 @@ describe('OperationBatch test', () => {
               storage_limit: '100',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-              counter: '123457',
+              counter: '1',
             },
           ],
           protocol: 'test_proto',
@@ -699,6 +517,7 @@ describe('OperationBatch test', () => {
     it('should produce a batch op which contains a smartRollupAddMessages operation', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const opToBatch: ParamsWithKind[] = [
         {
@@ -725,13 +544,13 @@ describe('OperationBatch test', () => {
               message: [
                 '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
               ],
-              counter: '123457',
+              counter: '1',
             },
           ],
           protocol: 'test_proto',
           signature: 'test_sig',
         },
-        counter: 123456,
+        counter: 0,
       });
       done();
     });
@@ -739,6 +558,7 @@ describe('OperationBatch test', () => {
     it('should produce a batch op with estimate values overridden', async (done) => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const opToBatch: ParamsWithKind[] = [
         {
@@ -768,13 +588,13 @@ describe('OperationBatch test', () => {
               message: [
                 '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
               ],
-              counter: '123457',
+              counter: '1',
             },
           ],
           protocol: 'test_proto',
           signature: 'test_sig',
         },
-        counter: 123456,
+        counter: 0,
       });
       done();
     });
@@ -808,7 +628,7 @@ describe('OperationBatch test', () => {
               source: 'test_pub_key_hash',
               gas_limit: '1100',
               storage_limit: '0',
-              counter: '123457',
+              counter: '1',
             },
             {
               kind: 'smart_rollup_add_messages',
@@ -819,13 +639,13 @@ describe('OperationBatch test', () => {
               message: [
                 '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
               ],
-              counter: '123458',
+              counter: '2',
             },
           ],
           protocol: 'test_proto',
           signature: 'test_sig',
         },
-        counter: 123456,
+        counter: 0,
       });
 
       done();
@@ -836,6 +656,7 @@ describe('OperationBatch test', () => {
     it('should produce a batch op without reveal', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const opToBatch: ParamsWithKind[] = [
         {
@@ -863,19 +684,20 @@ describe('OperationBatch test', () => {
               origination_proof: '0987654321',
               parameters_ty: { prim: 'bytes' },
               pvm_kind: 'wasm_2_0_0',
-              counter: '123457',
+              counter: '1',
             },
           ],
           protocol: 'test_proto',
           signature: 'test_sig',
         },
-        counter: 123456,
+        counter: 0,
       });
     });
 
     it('should produce a batch op with estimate values overridden', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const opToBatch: ParamsWithKind[] = [
         {
@@ -906,13 +728,13 @@ describe('OperationBatch test', () => {
               origination_proof: '0987654321',
               parameters_ty: { prim: 'bytes' },
               pvm_kind: 'wasm_2_0_0',
-              counter: '123457',
+              counter: '1',
             },
           ],
           protocol: 'test_proto',
           signature: 'test_sig',
         },
-        counter: 123456,
+        counter: 0,
       });
     });
 
@@ -945,7 +767,7 @@ describe('OperationBatch test', () => {
               source: 'test_pub_key_hash',
               gas_limit: '1100',
               storage_limit: '0',
-              counter: '123457',
+              counter: '1',
             },
             {
               kind: 'smart_rollup_originate',
@@ -957,255 +779,14 @@ describe('OperationBatch test', () => {
               origination_proof: '0987654321',
               parameters_ty: { prim: 'bytes' },
               pvm_kind: 'wasm_2_0_0',
-              counter: '123458',
+              counter: '2',
             },
           ],
           protocol: 'test_proto',
           signature: 'test_sig',
         },
-        counter: 123456,
+        counter: 0,
       });
-    });
-  });
-
-  describe('with txRollupOriginate operation', () => {
-    it('should produce a batch operation which contains an txRollupOriginate operation', async (done) => {
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimate]);
-
-      const opToBatch: ParamsWithKind[] = [
-        {
-          kind: OpKind.TX_ROLLUP_ORIGINATION,
-        },
-      ];
-
-      const batchOp = await operationBatch.with(opToBatch).send();
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              tx_rollup_origination: {},
-              counter: '123457',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_origination',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should produce a batch operation which contains an txRollupOriginate operation where fee, gas limit and storage limit are specified by the user', async (done) => {
-      const opToBatch: ParamsWithKind[] = [
-        {
-          kind: OpKind.TX_ROLLUP_ORIGINATION,
-          fee: 500,
-          gasLimit: 1400,
-          storageLimit: 100,
-        },
-      ];
-
-      const batchOp = await operationBatch.with(opToBatch).send();
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              tx_rollup_origination: {},
-              counter: '123457',
-              fee: '500',
-              gas_limit: '1400',
-              kind: 'tx_rollup_origination',
-              source: 'test_pub_key_hash',
-              storage_limit: '100',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should produce a batch operation which contains a reveal and a txRollupOriginate operation', async (done) => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      const estimateReveal = new Estimate(1000000, 0, 64, 250);
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
-
-      const opToBatch: ParamsWithKind[] = [
-        {
-          kind: OpKind.TX_ROLLUP_ORIGINATION,
-        },
-      ];
-
-      const batchOp = await operationBatch.with(opToBatch).send();
-
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              counter: '123457',
-              fee: '374',
-              gas_limit: '1100',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
-              storage_limit: '0',
-            },
-            {
-              tx_rollup_origination: {},
-              counter: '123458',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_origination',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-  });
-
-  describe('with txRollupBatch operation', () => {
-    it('should produce a batch operation which contains a txRollupSubmitBatch operation', async (done) => {
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimate]);
-
-      const opToBatch: ParamsWithKind[] = [
-        {
-          kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
-          content: '1234',
-          rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-        },
-      ];
-
-      const batchOp = await operationBatch.with(opToBatch).send();
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              content: '1234',
-              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-              counter: '123457',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_submit_batch',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should produce a batch operation which contains a txRollupSubmitBatch operation where fee, gas limit and storage limit are specified by the user', async (done) => {
-      const opToBatch: ParamsWithKind[] = [
-        {
-          kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
-          content: '1234',
-          rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-          fee: 500,
-          gasLimit: 1400,
-          storageLimit: 100,
-        },
-      ];
-
-      const batchOp = await operationBatch.with(opToBatch).send();
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              content: '1234',
-              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-              counter: '123457',
-              fee: '500',
-              gas_limit: '1400',
-              kind: 'tx_rollup_submit_batch',
-              source: 'test_pub_key_hash',
-              storage_limit: '100',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should produce a batch operation which contains a reveal and a txRollupSubmitBatch operation', async (done) => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      const estimateReveal = new Estimate(1000000, 0, 64, 250);
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
-
-      const opToBatch: ParamsWithKind[] = [
-        {
-          kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
-          content: '1234',
-          rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-        },
-      ];
-
-      const batchOp = await operationBatch.with(opToBatch).send();
-
-      expect(batchOp.raw).toEqual({
-        counter: 123456,
-        opOb: {
-          branch: 'test',
-          contents: [
-            {
-              counter: '123457',
-              fee: '374',
-              gas_limit: '1100',
-              kind: 'reveal',
-              public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
-              storage_limit: '0',
-            },
-            {
-              content: '1234',
-              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-              counter: '123458',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_submit_batch',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
     });
   });
 });

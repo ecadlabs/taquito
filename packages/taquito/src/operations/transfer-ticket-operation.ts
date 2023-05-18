@@ -1,6 +1,7 @@
 import {
   OperationContentsAndResult,
   OperationContentsAndResultTransferTicket,
+  OperationContentsTransferTicket,
   OpKind,
 } from '@taquito/rpc';
 import { BigNumber } from 'bignumber.js';
@@ -11,7 +12,6 @@ import {
   StorageConsumingOperation,
   FeeConsumingOperation,
   ForgedBytes,
-  RPCTransferTicketOperation,
 } from './types';
 
 /**
@@ -26,7 +26,7 @@ export class TransferTicketOperation
 {
   constructor(
     hash: string,
-    private readonly params: RPCTransferTicketOperation,
+    private readonly params: OperationContentsTransferTicket,
     private readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -50,15 +50,15 @@ export class TransferTicketOperation
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   get consumedGas() {

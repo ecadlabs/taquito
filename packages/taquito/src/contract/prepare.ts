@@ -13,10 +13,6 @@ import {
   RevealParams,
   RegisterGlobalConstantParams,
   RPCRegisterGlobalConstantOperation,
-  TxRollupOriginateParams,
-  RPCTxRollupOriginationOperation,
-  TxRollupBatchParams,
-  RPCTxRollupBatchOperation,
   TransferTicketParams,
   RPCTransferTicketOperation,
   IncreasePaidStorageParams,
@@ -33,6 +29,8 @@ import {
   RPCSmartRollupAddMessagesOperation,
   RPCSmartRollupOriginateOperation,
   SmartRollupOriginateParamsWithProof,
+  ActivationParams,
+  RPCActivateOperation,
 } from '../operations/types';
 import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
 import { format } from '@taquito/utils';
@@ -42,6 +40,14 @@ import {
   OriginationParameterError,
   IntegerError,
 } from './errors';
+
+export const createActivationOperation = async ({ pkh, secret }: ActivationParams) => {
+  return {
+    kind: OpKind.ACTIVATION,
+    pkh,
+    secret,
+  } as RPCActivateOperation;
+};
 
 export const createOriginationOperation = async ({
   code,
@@ -196,41 +202,6 @@ export const createRegisterGlobalConstantOperation = async ({
   } as RPCRegisterGlobalConstantOperation;
 };
 
-export const createTxRollupOriginationOperation = async ({
-  source,
-  fee,
-  gasLimit,
-  storageLimit,
-}: TxRollupOriginateParams) => {
-  return {
-    kind: OpKind.TX_ROLLUP_ORIGINATION,
-    fee,
-    gas_limit: gasLimit,
-    storage_limit: storageLimit,
-    source,
-    tx_rollup_origination: {},
-  } as RPCTxRollupOriginationOperation;
-};
-
-export const createTxRollupBatchOperation = async ({
-  content,
-  rollup,
-  source,
-  fee,
-  gasLimit,
-  storageLimit,
-}: TxRollupBatchParams) => {
-  return {
-    kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
-    fee,
-    gas_limit: gasLimit,
-    storage_limit: storageLimit,
-    source,
-    content,
-    rollup,
-  } as RPCTxRollupBatchOperation;
-};
-
 export const createTransferTicketOperation = async ({
   ticketContents,
   ticketTy,
@@ -362,4 +333,4 @@ export const createSmartRollupOriginateOperation = async ({
     origination_proof: originationProof,
     parameters_ty: parametersType,
   } as RPCSmartRollupOriginateOperation;
-}
+};

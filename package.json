@@ -56,7 +56,8 @@
     ],
     "collectCoverageFrom": [
       "packages/**/src/**/*.{js,ts}"
-    ]
+    ],
+    "watchPathIgnorePatterns": ["/node_modules/", "/integration-tests/", "/example/"]
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.2",

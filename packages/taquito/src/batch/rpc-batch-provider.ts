@@ -6,31 +6,21 @@ import { ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
   createRegisterGlobalConstantOperation,
-  createRevealOperation,
-  createTxRollupOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
-  createTxRollupBatchOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
-import { OperationEmitter } from '../operations/operation-emitter';
 import {
   ActivationParams,
   DelegateParams,
   OriginateParams,
-  RPCOperation,
   TransferParams,
   ParamsWithKind,
-  isOpWithFee,
-  withKind,
-  RevealParams,
   RegisterGlobalConstantParams,
-  TxRollupOriginateParams,
-  TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
   SmartRollupAddMessagesParams,
@@ -47,6 +37,8 @@ import {
   InvalidOperationKindError,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
+import { Provider } from '../provider';
+import { PrepareProvider } from '../prepare';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -60,12 +52,14 @@ export type BatchKinds =
   | OpKind.TRANSACTION
   | OpKind.DELEGATION;
 
-export class OperationBatch extends OperationEmitter {
+export class OperationBatch extends Provider {
   private operations: ParamsWithKind[] = [];
 
   constructor(context: Context, private estimator: EstimationProvider) {
     super(context);
   }
+
+  private prepare = new PrepareProvider(this.context);
 
   /**
    *
@@ -177,17 +171,6 @@ export class OperationBatch extends OperationEmitter {
 
   /**
    *
-   * @description Add a tx rollup origination operation to the batch
-   *
-   * @param params Rollup origination operation parameter
-   */
-  withTxRollupOrigination(params?: TxRollupOriginateParams) {
-    this.operations.push({ kind: OpKind.TX_ROLLUP_ORIGINATION, ...params });
-    return this;
-  }
-
-  /**
-   *
    * @description Add a smart rollup add messages operation to the batch
    *
    * @param params Rollup origination operation parameter
@@ -208,17 +191,6 @@ export class OperationBatch extends OperationEmitter {
     return this;
   }
 
-  /**
-   *
-   * @description Add a tx rollup batch operation to the batch
-   *
-   * @param params Tx rollup batch operation parameter
-   */
-  withTxRollupSubmitBatch(params: TxRollupBatchParams) {
-    this.operations.push({ kind: OpKind.TX_ROLLUP_SUBMIT_BATCH, ...params });
-    return this;
-  }
-
   async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -235,24 +207,12 @@ export class OperationBatch extends OperationEmitter {
         return createSetDelegateOperation({
           ...param,
         });
-      case OpKind.ACTIVATION:
-        return {
-          ...param,
-        };
       case OpKind.REGISTER_GLOBAL_CONSTANT:
         return createRegisterGlobalConstantOperation({
           ...param,
         });
       case OpKind.INCREASE_PAID_STORAGE:
         return createIncreasePaidStorageOperation({
-          ...param,
-        });
-      case OpKind.TX_ROLLUP_ORIGINATION:
-        return createTxRollupOriginationOperation({
-          ...param,
-        });
-      case OpKind.TX_ROLLUP_SUBMIT_BATCH:
-        return createTxRollupBatchOperation({
           ...param,
         });
       case OpKind.TRANSFER_TICKET:
@@ -263,11 +223,10 @@ export class OperationBatch extends OperationEmitter {
         return createSmartRollupAddMessagesOperation({
           ...param,
         });
-      case OpKind.SMART_ROLLUP_ORIGINATE: {
+      case OpKind.SMART_ROLLUP_ORIGINATE:
         return createSmartRollupOriginateOperation({
           ...param,
         });
-      }
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }
@@ -300,12 +259,6 @@ export class OperationBatch extends OperationEmitter {
         case OpKind.INCREASE_PAID_STORAGE:
           this.withIncreasePaidStorage(param);
           break;
-        case OpKind.TX_ROLLUP_ORIGINATION:
-          this.withTxRollupOrigination(param);
-          break;
-        case OpKind.TX_ROLLUP_SUBMIT_BATCH:
-          this.withTxRollupSubmitBatch(param);
-          break;
         case OpKind.TRANSFER_TICKET:
           this.withTransferTicket(param);
           break;
@@ -323,33 +276,6 @@ export class OperationBatch extends OperationEmitter {
     return this;
   }
 
-  async toPrepare() {
-    const publicKeyHash = await this.signer.publicKeyHash();
-    const publicKey = await this.signer.publicKey();
-    const estimates = await this.estimator.batch(this.operations);
-
-    const revealNeeded = await this.isRevealOpNeeded(this.operations, publicKeyHash);
-    let i = revealNeeded ? 1 : 0;
-
-    const ops: RPCOperation[] = [];
-    for (const op of this.operations) {
-      if (isOpWithFee(op)) {
-        const estimated = await this.estimate(op, async () => estimates[i]);
-        ops.push(await this.getRPCOp({ ...op, ...estimated }));
-      } else {
-        ops.push({ ...op });
-      }
-      i++;
-    }
-    if (revealNeeded) {
-      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
-      const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
-      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
-    }
-
-    return ops;
-  }
-
   /**
    *
    * @description Forge and Inject the operation batch
@@ -358,36 +284,24 @@ export class OperationBatch extends OperationEmitter {
    */
   async send(params?: { source?: string }) {
     const publicKeyHash = await this.signer.publicKeyHash();
-    const publicKey = await this.signer.publicKey();
+    const source = (params && params.source) || publicKeyHash;
     const estimates = await this.estimator.batch(this.operations);
 
-    const revealNeeded = await this.isRevealOpNeeded(this.operations, publicKeyHash);
-    let i = revealNeeded ? 1 : 0;
-
-    const ops: RPCOperation[] = [];
-    for (const op of this.operations) {
-      if (isOpWithFee(op)) {
-        const estimated = await this.estimate(op, async () => estimates[i]);
-        ops.push(await this.getRPCOp({ ...op, ...estimated }));
-      } else {
-        ops.push({ ...op });
-      }
-      i++;
+    if (estimates.length !== this.operations.length) {
+      estimates.shift();
     }
-    if (revealNeeded) {
-      const reveal: withKind<RevealParams, OpKind.REVEAL> = { kind: OpKind.REVEAL };
-      const estimatedReveal = await this.estimate(reveal, async () => estimates[0]);
-      ops.unshift(await createRevealOperation({ ...estimatedReveal }, publicKeyHash, publicKey));
-    }
+    const preparedOp = await this.prepare.batch(this.operations, estimates);
 
-    const source = (params && params.source) || publicKeyHash;
-    const prepared = await this.prepareOperation({
-      operation: ops,
-      source,
-    });
-    const opBytes = await this.forge(prepared);
+    const opBytes = await this.forge(preparedOp);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new BatchOperation(hash, ops, source, forgedBytes, opResponse, context);
+    return new BatchOperation(
+      hash,
+      preparedOp.opOb.contents,
+      source,
+      forgedBytes,
+      opResponse,
+      context
+    );
   }
 }
 
