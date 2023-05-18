@@ -18,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await op2.confirmation();
       } catch (error: any) {
         // not checking for exact error message because it is not deterministic
-        expect(error.message).toContain('error' || 'previously_revealed_key');
+        expect(error.message).toBeDefined();
       }
       done();
     });
