@@ -19,24 +19,14 @@ import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
-import { InvalidMnemonicError } from './errors';
+import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import { InvalidKeyError } from '@taquito/core';
 
 export * from './import-key';
 export { VERSION } from './version';
 export * from './derivation-tools';
 export * from './helpers';
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid passphrase being passed or used
- */
-export class InvalidPassphraseError extends Error {
-  public name = 'InvalidPassphraseError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
+export { InvalidPassphraseError } from './errors';
 
 export interface FromMnemonicParams {
   mnemonic: string;
@@ -108,7 +98,7 @@ export class InMemorySigner {
 
     if (encrypted) {
       if (!passphrase) {
-        throw new InvalidPassphraseError('Encrypted key provided without a passphrase.');
+        throw new InvalidPassphraseError('No passphrase provided to decrypt encrypted key');
       }
 
       decrypt = (constructedKey: Uint8Array) => {

@@ -57,3 +57,14 @@ export class ToBeImplemented extends UnsupportedActionError {
     this.message = 'This feature is under developement';
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid passphrase being passed or used
+ */
+export class InvalidPassphraseError extends ParameterValidationError {
+  constructor(public message: string) {
+    super();
+    this.name = 'InvalidPassphraseError';
+  }
+}
