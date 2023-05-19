@@ -3,15 +3,13 @@
  * @module @taquito/http-utils
  */
 
+import fetchAdapter from './fetch-adapter';
 import { STATUS_CODE } from './status_code';
-import axios, { AxiosAdapter } from 'axios';
+import axios from 'axios';
 
-const isNode =
-  typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+const isNode = !!(process?.versions?.node);
 
-const adapterPromise = isNode
-  ? undefined
-  : import('@taquito/axios-fetch-adapter').then((mod) => mod.default).catch(() => undefined);
+const adapter = isNode ? undefined : fetchAdapter;
 
 export * from './status_code';
 export { VERSION } from './version';
@@ -124,7 +122,6 @@ export class HttpBackend {
     }
 
     try {
-      const adapter = adapterPromise && ((await adapterPromise) as AxiosAdapter);
       const response = await axios.request<T>({
         url: url + this.serialize(query),
         method: method ?? 'GET',

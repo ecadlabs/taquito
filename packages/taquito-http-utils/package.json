@@ -59,7 +59,6 @@
     ]
   },
   "dependencies": {
-    "@taquito/axios-fetch-adapter": "^0.3.1",
     "axios": "^0.26.0"
   },
   "devDependencies": {
