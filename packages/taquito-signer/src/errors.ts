@@ -35,9 +35,10 @@ export class InvalidCurveError extends ParameterValidationError {
 }
 
 export class InvalidSeedLengthError extends Error {
-  public name = 'InvalidSeedLengthError';
   constructor(public seedLength: number) {
-    super(`The seed has an invalid length: ${seedLength}`);
+    super();
+    this.name = 'InvalidSeedLengthError';
+    this.message = `Invalid seed length "${seedLength}" expecting length between 16 to 64.`;
   }
 }
 
