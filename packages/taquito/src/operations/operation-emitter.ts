@@ -170,8 +170,6 @@ export abstract class OperationEmitter {
           case OpKind.REVEAL:
           case OpKind.DELEGATION:
           case OpKind.REGISTER_GLOBAL_CONSTANT:
-          case OpKind.TX_ROLLUP_ORIGINATION:
-          case OpKind.TX_ROLLUP_SUBMIT_BATCH:
           case OpKind.UPDATE_CONSENSUS_KEY:
           case OpKind.SMART_ROLLUP_ADD_MESSAGES:
           case OpKind.SMART_ROLLUP_ORIGINATE:

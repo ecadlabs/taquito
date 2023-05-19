@@ -8,8 +8,6 @@ import {
 import {
   RevealParams,
   RegisterGlobalConstantParams,
-  TxRollupOriginateParams,
-  TxRollupBatchParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
   UpdateConsensusKeyParams,
@@ -104,26 +102,6 @@ export interface EstimationProvider {
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for a tx rollup origination operation
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation
-   *
-   * @param Estimate
-   */
-  txRollupOriginate(params: TxRollupOriginateParams): Promise<Estimate>;
-
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for a tx rollup batch operation
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation
-   *
-   * @param Estimate
-   */
-  txRollupSubmitBatch(params: TxRollupBatchParams): Promise<Estimate>;
-
-  /**
-   *
    * @description Estimate gasLimit, storageLimit and fees for an Update Consensus Key operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
@@ -161,5 +139,5 @@ export interface EstimationProvider {
    *
    * @param SmartRollupOrigianteParams
    */
-    smartRollupOriginate(params: SmartRollupOriginateParams): Promise<Estimate>;
+  smartRollupOriginate(params: SmartRollupOriginateParams): Promise<Estimate>;
 }

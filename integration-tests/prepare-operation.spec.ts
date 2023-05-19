@@ -124,15 +124,20 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       const receiver = await createAddress();
 
       const pkh = await receiver.signer.publicKeyHash();
-      const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: pkh });
+      const estimates = await Tezos.estimate.transfer({ to: pkh, amount: 1 });
+      const preparedTransfer = await Tezos.prepare.transaction({ 
+        amount: 1, 
+        to: pkh, 
+        fee: estimates.suggestedFeeMutez,
+        storageLimit: estimates.storageLimit,
+        gasLimit: estimates.gasLimit
+      });
 
       const preapplyParams = await Tezos.prepare.toPreapply(preparedTransfer)
-
       const preapply = await Tezos.rpc.preapplyOperations(preapplyParams);
 
       expect(preapplyParams[0].contents).toEqual(preparedTransfer.opOb.contents)
       expect(preapplyParams[0].branch).toEqual(preparedTransfer.opOb.branch)
-
 
       if (preapply[0].contents[0].kind === 'reveal') {
         expect(preapply[0].contents[0].kind).toEqual('reveal');

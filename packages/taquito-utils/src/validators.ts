@@ -68,6 +68,7 @@ const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK, Prefix.BLPK];
 const operationPrefix = [Prefix.O];
 const protocolPrefix = [Prefix.P];
 const blockPrefix = [Prefix.B];
+const smartRollupPrefix = [Prefix.SR1];
 
 /**
  * @description Used to check if an address or a contract address is valid.
@@ -85,7 +86,11 @@ const blockPrefix = [Prefix.B];
  * ```
  */
 export function validateAddress(value: string): ValidationResult {
-  return validatePrefixedValue(value, [...implicitPrefix, ...contractPrefix]);
+  return validatePrefixedValue(value, [
+    ...implicitPrefix,
+    ...contractPrefix,
+    ...smartRollupPrefix,
+  ]);
 }
 
 /**
@@ -260,4 +265,8 @@ export function invalidErrorDetail(validation: ValidationResult): string {
     default:
       return '';
   }
+}
+
+export function validateSmartRollupAddress(value: string): ValidationResult {
+  return validatePrefixedValue(value, [...smartRollupPrefix]);
 }

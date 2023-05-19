@@ -1,4 +1,8 @@
-import { OperationContentsAndResult, OperationContentsAndResultOrigination } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultOrigination,
+  OperationContentsOrigination,
+} from '@taquito/rpc';
 import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { DefaultContractType } from '../contract/contract';
@@ -10,7 +14,6 @@ import {
   ForgedBytes,
   GasConsumingOperation,
   hasMetadataWithResult,
-  RPCOriginationOperation,
   StorageConsumingOperation,
 } from './types';
 
@@ -30,7 +33,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
 
   constructor(
     hash: string,
-    private readonly params: RPCOriginationOperation,
+    private readonly params: OperationContentsOrigination,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
     context: Context,
@@ -63,15 +66,15 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   get consumedGas() {

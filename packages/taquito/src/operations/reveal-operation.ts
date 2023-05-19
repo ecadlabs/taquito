@@ -1,4 +1,8 @@
-import { OperationContentsAndResult, OperationContentsAndResultReveal } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultReveal,
+  OperationContentsReveal,
+} from '@taquito/rpc';
 import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult } from './operation-errors';
@@ -7,7 +11,6 @@ import {
   FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  RPCRevealOperation,
   StorageConsumingOperation,
 } from './types';
 
@@ -20,7 +23,7 @@ export class RevealOperation
 {
   constructor(
     hash: string,
-    private readonly params: RPCRevealOperation,
+    private readonly params: OperationContentsReveal,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -47,15 +50,15 @@ export class RevealOperation
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   get publicKey() {

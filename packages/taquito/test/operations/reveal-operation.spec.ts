@@ -28,9 +28,9 @@ describe('RevealOperation', () => {
     const op = new RevealOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {
-        fee: '2991',
-        gas_limit: '26260',
-        storage_limit: '257',
+        fee: 2991,
+        gas_limit: 26260,
+        storage_limit: 257,
         public_key: 'p2pk',
       } as any,
       'source',
@@ -43,11 +43,11 @@ describe('RevealOperation', () => {
     expect(op.consumedGas).toEqual('15953');
     expect(op.consumedMilliGas).toEqual('15952999');
     expect(op.errors).toEqual([]);
-    expect(op.fee).toEqual('2991');
-    expect(op.gasLimit).toEqual('26260');
+    expect(op.fee).toEqual(2991);
+    expect(op.gasLimit).toEqual(26260);
     expect(op.hash).toEqual('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj');
     expect(op.source).toEqual('source');
-    expect(op.storageLimit).toEqual('257');
+    expect(op.storageLimit).toEqual(257);
     expect(op.publicKey).toEqual('p2pk');
     expect(op.storageDiff).toEqual('0');
     expect(op.storageSize).toEqual('0');
