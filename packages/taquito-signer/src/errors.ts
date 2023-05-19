@@ -1,41 +1,70 @@
-export class InvalidMnemonicError extends Error {
-  public name = 'InvalidMnemonicError';
+import { ParameterValidationError, UnsupportedActionError } from '@taquito/core';
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid Mnemonic being passed or used
+ */
+export class InvalidMnemonicError extends ParameterValidationError {
+  constructor(public mnemonic: string) {
+    super();
+    this.name = 'InvalidMnemonicError';
+    this.message = `Invalid mnemonic "${mnemonic}"`;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates a curve with incorrect bit size being passed or used
+ */
+export class InvalidBitSize extends ParameterValidationError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'InvalidBitSize';
   }
 }
 
-export class InvalidBitSize extends Error {
-  public name = 'InvalidBitSize';
+/**
+ *  @category Error
+ *  @description Error indicates an unsupported cureve being passed or used
+ */
+export class InvalidCurveError extends ParameterValidationError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'InvalidCurveError';
   }
 }
 
-export class InvalidCurveError extends Error {
-  public name = 'InvalidCurveError';
-  constructor(public curve: string) {
-    super(`This Curve is not supported: ${curve}`);
-  }
-}
-
-export class InvalidSeedLengthError extends Error {
-  public name = 'InvalidSeedLengthError';
+/**
+ *  @category Error
+ *  @description Error indicates a seed with invalid length being passed or used
+ */
+export class InvalidSeedLengthError extends ParameterValidationError {
   constructor(public seedLength: number) {
-    super(`The seed has an invalid length: ${seedLength}`);
+    super();
+    this.name = 'InvalidSeedLengthError';
+    this.message = `Invalid seed length "${seedLength}" expecting length between 16 to 64.`;
   }
 }
 
-export class PrivateKeyError extends Error {
-  public name = 'PrivateKeyError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
-
-export class ToBeImplemented extends Error {
-  public name = 'ToBeImplemented';
+/**
+ *  @category Error
+ *  @description Error indicates a feature still under developement
+ */
+export class ToBeImplemented extends UnsupportedActionError {
   constructor() {
-    super('This feature is under developement');
+    super();
+    this.name = 'ToBeImplemented';
+    this.message = 'This feature is under developement';
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid passphrase being passed or used
+ */
+export class InvalidPassphraseError extends ParameterValidationError {
+  constructor(public message: string) {
+    super();
+    this.name = 'InvalidPassphraseError';
   }
 }

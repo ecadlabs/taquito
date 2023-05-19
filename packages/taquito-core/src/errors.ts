@@ -129,13 +129,13 @@ export class InvalidViewParameterError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid key being passed or used
+ *  @description Error indicates an invalid private key being passed or used
  */
 export class InvalidKeyError extends ParameterValidationError {
-  constructor(public key: string, public errorDetail?: string) {
+  constructor(public errorDetail?: string) {
     super();
     this.name = 'InvalidKeyError';
-    this.message = `Invalid key "${key}"`;
+    this.message = `Invalid private key`;
     errorDetail ? (this.message += `${errorDetail}`) : null;
   }
 }

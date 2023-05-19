@@ -5,7 +5,8 @@ import { HMAC } from '@stablelib/hmac';
 import { SHA512 } from '@stablelib/sha512';
 import BN from 'bn.js';
 import { parseHex } from './utils';
-import { InvalidBitSize, InvalidCurveError, InvalidSeedLengthError, PrivateKeyError } from '../errors';
+import { InvalidBitSize, InvalidCurveError, InvalidSeedLengthError } from '../errors';
+import { InvalidKeyError } from '@taquito/core';
 
 export type CurveName = 'p256' | 'secp256k1';
 
@@ -38,6 +39,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    * @param seedSrc result of Bip39.mnemonicToSeed
    * @param curve known supported curve p256 or secp256k1
    * @returns instance of PrivateKey non-HD keys derived
+   * @throws {@link InvalidBitSize} | {@link InvalidCurveError} | {@link InvalidSeedLengthError}
    */
   static fromSeed(seedSrc: Uint8Array | string, curve: CurveName): PrivateKey {
     let seed = typeof seedSrc === 'string' ? parseHex(seedSrc) : seedSrc;
@@ -45,11 +47,15 @@ export class PrivateKey implements ExtendedPrivateKey {
       throw new InvalidSeedLengthError(seed.length);
     }
     if (!Object.prototype.hasOwnProperty.call(seedKey, curve)) {
-      throw new InvalidCurveError(`unknown curve ${curve}`);
+      throw new InvalidCurveError(
+        `Unsupported curve "${curve}" expecting either "p256" or "secp256k1"`
+      );
     }
     const c = new ec(curve);
     if (c.n?.bitLength() !== 256) {
-      throw new InvalidBitSize(`invalid curve bit size ${c.n?.bitLength()}`);
+      throw new InvalidBitSize(
+        `Invalid curve "${curve}" with bit size "${c.n?.bitLength()}" expecting bit size "256"`
+      );
     }
 
     const key = new TextEncoder().encode(seedKey[curve]);
@@ -87,7 +93,7 @@ export class PrivateKey implements ExtendedPrivateKey {
     new DataView(data.buffer).setUint32(33, index);
 
     let d: BN = new BN(0);
-    let chain: Uint8Array = new Uint8Array;
+    let chain: Uint8Array = new Uint8Array();
     let i = 0;
     while (i === 0) {
       const sum = new HMAC(SHA512, this.chainCode).update(data).digest();
@@ -121,10 +127,11 @@ export class PrivateKey implements ExtendedPrivateKey {
   /**
    *
    * @returns Uint8Array (if contains a private key)
+   * @throws {@link InvalidKeyError}
    */
   bytes(): Uint8Array {
     if (!this.keyPair.priv) {
-      throw new PrivateKeyError('not a private key');
+      throw new InvalidKeyError('missing private key');
     }
     // pad to 32 bytes as toArray() length argument seems to be ignored (BN bug)
     const src = this.keyPair.priv.toArray();
@@ -133,4 +140,3 @@ export class PrivateKey implements ExtendedPrivateKey {
     return out;
   }
 }
-
