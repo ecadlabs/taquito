@@ -34,6 +34,10 @@ export class InvalidCurveError extends ParameterValidationError {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error indicates a seed with invalid length being passed or used
+ */
 export class InvalidSeedLengthError extends ParameterValidationError {
   constructor(public seedLength: number) {
     super();
@@ -42,6 +46,10 @@ export class InvalidSeedLengthError extends ParameterValidationError {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error indicates a feature still under developement
+ */
 export class ToBeImplemented extends UnsupportedActionError {
   constructor() {
     super();
