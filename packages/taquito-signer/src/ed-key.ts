@@ -1,6 +1,15 @@
 import { hash } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
-import { b58cencode, b58cdecode, prefix, buf2hex, isValidPrefix, Prefix } from '@taquito/utils';
+import {
+  b58cencode,
+  b58cdecode,
+  prefix,
+  buf2hex,
+  isValidPrefix,
+  Prefix,
+  invalidErrorDetail,
+  ValidationResult,
+} from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { InvalidKeyError } from '@taquito/core';
 
@@ -23,8 +32,9 @@ export class Tz1 {
     const keyPrefix = key.substring(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
       throw new InvalidKeyError(
-        key,
-        `With unsupported prefix expecting either '${Prefix.EDESK}' or '${Prefix.EDSK}'.`
+        `${invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting either '${
+          Prefix.EDESK
+        }' or '${Prefix.EDSK}'.`
       );
     }
 
@@ -32,7 +42,7 @@ export class Tz1 {
     this._publicKey = this._key.slice(32);
 
     if (!this._key) {
-      throw new InvalidKeyError(key, 'Unable to decode');
+      throw new InvalidKeyError('unable to decode');
     }
 
     this.isInit = this.init();

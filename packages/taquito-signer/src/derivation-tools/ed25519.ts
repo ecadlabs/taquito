@@ -26,6 +26,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    *
    * @param seedSrc result of Bip39.mnemonicToSeed
    * @returns instance of PrivateKey
+   * @throws {@link InvalidSeedLengthError}
    */
   static fromSeed(seedSrc: Uint8Array | string): PrivateKey {
     const seed = typeof seedSrc === 'string' ? parseHex(seedSrc) : seedSrc;
