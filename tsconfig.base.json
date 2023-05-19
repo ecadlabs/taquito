@@ -3,10 +3,7 @@
     "moduleResolution": "node",
     "target": "es6",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,
@@ -23,42 +20,35 @@
       "@taquito/core": [
         "taquito-core/src/taquito-core.ts"
       ],
-      "@taquito/rpc": [
-        "taquito-rpc/src/taquito-rpc.ts"
-      ],
-      "@taquito/michelson-encoder": [
-        "taquito-michelson-encoder/src/taquito-michelson-encoder.ts"
-      ],
-      "@taquito/utils": [
-        "taquito-utils/src/taquito-utils.ts"
-      ],
-      "@taquito/taquito": [
-        "taquito/src/taquito.ts"
-      ],
-      "@taquito/http-utils": [
-        "taquito-http-utils/src/taquito-http-utils.ts"
-      ],
-      "@taquito/signer": [
-        "taquito-signer/src/taquito-signer.ts"
-      ],
-      "@taquito/local-forging": [
-        "taquito-local-forging/src/taquito-local-forging.ts"
+      "@taquito/beacon-wallet": [
+        "taquito-beacon-wallet/src/taquito-beacon-wallet.ts"
       ],
       "@taquito/contracts-library": [
         "taquito-contracts-library/src/taquito-contracts-library.ts"
       ],
-      "@taquito/tzip12": [
-        "taquito-tzip12/src/taquito-tzip12.ts"
-      ],
-      "@taquito/tzip16": [
-        "taquito-tzip16/src/taquito-tzip16.ts"
-      ],
-      "@taquito/sapling": [
-        "taquito-sapling/src/taquito-sapling.ts"
-      ],
+      "@taquito/http-utils": ["taquito-http-utils/src/taquito-http-utils.ts"],
       "@taquito/ledger-signer": [
         "taquito-ledger-signer/src/taquito-ledger-signer.ts"
-      ]
+      ],
+      "@taquito/local-forging": [
+        "taquito-local-forging/src/taquito-local-forging.ts"
+      ],
+      "@taquito/michel-codec": [
+        "taquito-michelson-encoder/src/taquito-michel-codec.ts"
+      ],
+      "@taquito/michelson-encoder": [
+        "taquito-michelson-encoder/src/taquito-michelson-encoder.ts"
+      ],
+      "@taquito/remote-signer": [
+        "taquito-remote-signer/src/taquito-remote-signer.ts"
+      ],
+      "@taquito/rpc": ["taquito-rpc/src/taquito-rpc.ts"],
+      "@taquito/sapling": ["taquito-sapling/taquito-sapling.ts"],
+      "@taquito/signer": ["taquito-signer/src/taquito-signer.ts"],
+      "@taquito/taquito": ["taquito/src/taquito.ts"],
+      "@taquito/tzip12": ["taquito-tzip12/src/taquito-tzip12.ts"],
+      "@taquito/tzip16": ["taquito-tzip16/src/taquito-tzip16.ts"],
+      "@taquito/utils": ["taquito-utils/src/taquito-utils.ts"]
     }
   }
 }
