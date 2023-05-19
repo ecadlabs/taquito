@@ -1,7 +1,14 @@
-export class InvalidMnemonicError extends Error {
-  public name = 'InvalidMnemonicError';
-  constructor(public message: string) {
-    super(message);
+import { ParameterValidationError } from '@taquito/core';
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid Mnemonic being passed or used
+ */
+export class InvalidMnemonicError extends ParameterValidationError {
+  constructor(public mnemonic: string) {
+    super();
+    this.name = 'InvalidMnemonicError';
+    this.message = `Invalid mnemonic "${mnemonic}"`;
   }
 }
 
