@@ -12,17 +12,25 @@ export class InvalidMnemonicError extends ParameterValidationError {
   }
 }
 
-export class InvalidBitSize extends Error {
-  public name = 'InvalidBitSize';
+/**
+ *  @category Error
+ *  @description Error indicates a curve with incorrect bit size being passed or used
+ */
+export class InvalidBitSize extends ParameterValidationError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'InvalidBitSize';
   }
 }
 
-export class InvalidCurveError extends Error {
-  public name = 'InvalidCurveError';
-  constructor(public curve: string) {
-    super(`This Curve is not supported: ${curve}`);
+/**
+ *  @category Error
+ *  @description Error indicates an unsupported cureve being passed or used
+ */
+export class InvalidCurveError extends ParameterValidationError {
+  constructor(public message: string) {
+    super();
+    this.name = 'InvalidCurveError';
   }
 }
 
