@@ -5,12 +5,8 @@ import { HMAC } from '@stablelib/hmac';
 import { SHA512 } from '@stablelib/sha512';
 import BN from 'bn.js';
 import { parseHex } from './utils';
-import {
-  InvalidBitSize,
-  InvalidCurveError,
-  InvalidSeedLengthError,
-  PrivateKeyError,
-} from '../errors';
+import { InvalidBitSize, InvalidCurveError, InvalidSeedLengthError } from '../errors';
+import { InvalidKeyError } from '@taquito/core';
 
 export type CurveName = 'p256' | 'secp256k1';
 
@@ -131,10 +127,11 @@ export class PrivateKey implements ExtendedPrivateKey {
   /**
    *
    * @returns Uint8Array (if contains a private key)
+   * @throws {@link InvalidKeyError}
    */
   bytes(): Uint8Array {
     if (!this.keyPair.priv) {
-      throw new PrivateKeyError('not a private key');
+      throw new InvalidKeyError('missing private key');
     }
     // pad to 32 bytes as toArray() length argument seems to be ignored (BN bug)
     const src = this.keyPair.priv.toArray();
