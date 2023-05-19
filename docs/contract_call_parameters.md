@@ -77,6 +77,13 @@ Users can bypass the `michelson-encoder` and `ContractAbstraction` by directly p
 
 The `transfer` method can be used with both the `wallet` and `contract` providers. However, it is necessary to specify and set the provider accordingly, whether it is a `wallet` or `signer` provider.
 
+:::info
+Please Note:
+By using JSON Michelson directly in `transfer` calls with `Taquito`, developers can bypass potential edge cases that are not currently supported by the `michelson-encoder`. This is particularly useful when dealing with heavily nested entrypoint parameters involving multiple nest optional values.
+
+The michelson-encoder has limitations when encoding complex data structures with deep nesting in entrypoint parameters. By directly passing JSON Michelson, developers can freely construct and manipulate intricate entrypoint parameters without relying on the michelson-encoder to handle complex nesting. This approach provides more flexibility in working with complex data structures.
+:::
+
 A brief example for `Pair int string` using a Wallet Provider would be:
 
 ```ts
