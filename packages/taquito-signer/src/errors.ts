@@ -1,4 +1,4 @@
-import { ParameterValidationError } from '@taquito/core';
+import { ParameterValidationError, UnsupportedActionError } from '@taquito/core';
 
 /**
  *  @category Error
@@ -42,9 +42,10 @@ export class InvalidSeedLengthError extends ParameterValidationError {
   }
 }
 
-export class ToBeImplemented extends Error {
-  public name = 'ToBeImplemented';
+export class ToBeImplemented extends UnsupportedActionError {
   constructor() {
-    super('This feature is under developement');
+    super();
+    this.name = 'ToBeImplemented';
+    this.message = 'This feature is under developement';
   }
 }
