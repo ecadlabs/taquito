@@ -28,30 +28,7 @@ import { ContractMethod, ContractMethodObject, ContractProvider } from '../contr
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
-import { InvalidAddressError, InvalidOperationKindError } from '@taquito/core';
-
-interface Limits {
-  fee?: number;
-  storageLimit?: number;
-  gasLimit?: number;
-}
-
-const mergeLimits = (
-  userDefinedLimit: Limits,
-  defaultLimits: Required<Limits>
-): Required<Limits> => {
-  return {
-    fee: typeof userDefinedLimit.fee === 'undefined' ? defaultLimits.fee : userDefinedLimit.fee,
-    gasLimit:
-      typeof userDefinedLimit.gasLimit === 'undefined'
-        ? defaultLimits.gasLimit
-        : userDefinedLimit.gasLimit,
-    storageLimit:
-      typeof userDefinedLimit.storageLimit === 'undefined'
-        ? defaultLimits.storageLimit
-        : userDefinedLimit.storageLimit,
-  };
-};
+import { InvalidAddressError } from '@taquito/core';
 
 // RPC requires a signature but does not verify it
 const SIGNATURE_STUB =
@@ -281,7 +258,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees for a each operation in the batch
-   * @throws {@link InvalidOperationKindError}
+   *
    * @returns An array of Estimate objects. If a reveal operation is needed, the first element of the array is the Estimate for the reveal operation.
    */
   async batch(params: ParamsWithKind[]) {
