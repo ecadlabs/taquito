@@ -74,7 +74,7 @@
     "@taquito/taquito": "^16.1.2",
     "@taquito/utils": "^16.1.2",
     "bignumber.js": "^9.1.0",
-    "bip39": "^3.0.4",
+    "bip39": "3.0.4",
     "blakejs": "^1.2.1",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
