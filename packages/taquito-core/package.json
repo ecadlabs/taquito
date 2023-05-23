@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "16.1.2",
+  "version": "16.2.0-beta-RC.0",
   "description": "Classes, interfaces, and types shared across Taquito packages",
   "keywords": [
     "tezos",
@@ -59,9 +59,5 @@
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
     ]
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
   }
 }
