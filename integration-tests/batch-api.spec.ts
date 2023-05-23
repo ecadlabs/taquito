@@ -96,7 +96,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
         }
       ]).send()
       await batchOp.confirmation();
-      expect(op.status).toEqual('applied')
+      expect(batchOp.status).toEqual('applied')
       done();
     })
 

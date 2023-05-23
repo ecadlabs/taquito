@@ -1,6 +1,6 @@
 import { PreapplyResponse, RPCRunOperationParam, ConstantsResponse } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
-import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, getRevealFee } from '../constants';
 import {
   flattenErrors,
   flattenOperationResult,
@@ -100,7 +100,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
   private async calculateEstimates(
     op: PreparedOperation,
-    constants: Pick<ConstantsResponse, 'cost_per_byte' | 'smart_rollup_origination_size'>
+    constants: Pick<ConstantsResponse, 'cost_per_byte' | 'smart_rollup_origination_size'>,
+    source: string,
   ) {
     const {
       opbytes,
@@ -132,7 +133,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       return this.getEstimationPropertiesFromOperationContent(
         x,
         // TODO: Calculate a specific opSize for each operation.
-        x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : opbytes.length / 2 / numberOfOps,
+        x.kind === 'reveal' ? getRevealFee(source) : opbytes.length / 2 / numberOfOps,
         cost_per_byte
       );
     });
@@ -149,8 +150,9 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   async originate(params: OriginateParams) {
     const preparedOperation = await this.prepare.originate(params);
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    
+    const source = await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
@@ -182,7 +184,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       ...rest,
     });
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = rest.source ?? await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
@@ -215,7 +218,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       ...rest,
     });
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = rest.source ?? await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
@@ -249,7 +253,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     });
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = rest.source ?? await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
@@ -267,7 +272,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperations = await this.prepare.batch(params);
 
-    const estimateProperties = await this.calculateEstimates(preparedOperations, protocolConstants);
+    const source = await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperations, protocolConstants, source);
 
     return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
   }
@@ -293,7 +299,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       checkSource
     );
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, checkSource);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
@@ -322,7 +328,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
       const estimateProperties = await this.calculateEstimates(
         preparedOperation,
-        protocolConstants
+        protocolConstants,
+        publicKeyHash
       );
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
@@ -350,7 +357,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     });
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = rest.source ?? await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
@@ -375,7 +383,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       ...rest,
     });
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = rest.source ?? await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
@@ -395,7 +404,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.updateConsensusKey(params);
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = params.source ?? await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
     }
@@ -414,7 +424,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.smartRollupAddMessages(params);
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = params.source ?? await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
@@ -433,7 +444,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.smartRollupOriginate(params);
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = params.source ?? await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
     }
@@ -454,7 +466,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.contractCall(contractMethod);
 
-    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    const source = await this.context.signer.publicKeyHash();
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants, source);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();

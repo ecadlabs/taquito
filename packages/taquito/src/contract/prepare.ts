@@ -32,7 +32,7 @@ import {
   ActivationParams,
   RPCActivateOperation,
 } from '../operations/types';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, getRevealFee } from '../constants';
 import { format } from '@taquito/utils';
 import {
   InvalidCodeParameter,
@@ -183,23 +183,6 @@ export const createRevealOperation = async (
     gas_limit: gasLimit,
     storage_limit: storageLimit,
   } as RPCRevealOperation;
-};
-
-export const getRevealFee = (source: string) => {
-  switch (source.substring(0, 3)) {
-    case 'tz1':
-      return DEFAULT_FEE.REVEAL_TZ1;
-    case 'tz2':
-      return DEFAULT_FEE.REVEAL_TZ1;
-    case 'tz3':
-      return DEFAULT_FEE.REVEAL_TZ1;
-    case 'tz4':
-      return DEFAULT_FEE.REVEAL_TZ1;
-    default:
-      throw new Error(
-        `Cannot estimate reveal fee for ${source}`
-      );
-  }
 };
 
 export const createRegisterGlobalConstantOperation = async ({
