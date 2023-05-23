@@ -66,6 +66,9 @@
       "src/**/*.{js,ts}"
     ]
   },
+  "dependencies": {
+    "@taquito/core": "^16.1.2"
+  },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
     "@types/jest": "^26.0.23",

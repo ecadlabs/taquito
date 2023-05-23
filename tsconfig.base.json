@@ -17,6 +17,9 @@
     "baseUrl": "packages",
     "downlevelIteration": true,
     "paths": {
+      "@taquito/core": [
+        "taquito-core/src/taquito-core.ts"
+      ],
       "@taquito/beacon-wallet": [
         "taquito-beacon-wallet/src/taquito-beacon-wallet.ts"
       ],

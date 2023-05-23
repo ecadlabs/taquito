@@ -22,12 +22,13 @@ import {
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { validateAddress, InvalidAddressError, ValidationResult } from '@taquito/utils';
+import { validateAddress, ValidationResult, invalidErrorDetail } from '@taquito/utils';
 import { RevealEstimateError } from './error';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
+import { InvalidAddressError } from '@taquito/core';
 
 // RPC requires a signature but does not verify it
 const SIGNATURE_STUB =
@@ -164,11 +165,13 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param TransferOperation Originate operation parameter
    */
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
-    if (validateAddress(rest.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.to);
+    const toValidation = validateAddress(rest.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.to, invalidErrorDetail(toValidation));
     }
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source);
+    const srouceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && srouceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(srouceValidation));
     }
     const preparedOperation = await this.prepare.transaction({
       fee,
@@ -194,11 +197,13 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param TransferTicketParams operation parameter
    */
   async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
-    if (validateAddress(rest.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.destination, 'param destination');
+    const destinationValidation = validateAddress(rest.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.destination, invalidErrorDetail(destinationValidation));
     }
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source ?? '', 'param source');
+    const sourceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(sourceValidation));
     }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.transferTicket({
@@ -225,11 +230,13 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param Estimate
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
-    if (rest.source && validateAddress(rest.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source);
+    const sourceValidation = validateAddress(rest.source);
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(sourceValidation));
     }
-    if (rest.delegate && validateAddress(rest.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.delegate);
+    const delegateValidation = validateAddress(rest.delegate ?? '');
+    if (rest.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.delegate, invalidErrorDetail(delegateValidation));
     }
 
     const preparedOperation = await this.prepare.delegation({

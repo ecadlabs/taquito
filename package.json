@@ -38,6 +38,7 @@
       "js"
     ],
     "moduleNameMapper": {
+      "^@taquito/core$": "<rootDir>/packages/taquito-core/src/taquito-core.ts",
       "^pack-test-tool$": "<rootDir>/packages/taquito-michel-codec/pack-test-tool/src/pack-test-tool.js",
       "^@taquito-beacon-wallet$": "<rootDir>/packages/taquito-beacon-wallet/src/taquito-beacon-wallet.ts",
       "^@taquito/contracts-library$": "<rootDir>/packages/taquito-contracts-library/src/contracts-library.ts",

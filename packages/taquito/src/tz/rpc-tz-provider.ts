@@ -6,9 +6,10 @@ import {
   validateAddress,
   ValidationResult,
   validateKeyHash,
-  InvalidAddressError,
   InvalidKeyHashError,
+  invalidErrorDetail,
 } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 
@@ -20,22 +21,25 @@ export class RpcTzProvider extends Provider implements TzProvider {
   private prepare = new PrepareProvider(this.context);
 
   async getBalance(address: string): Promise<BigNumber> {
-    if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address);
+    const addressValidation = validateAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address, invalidErrorDetail(addressValidation));
     }
     return this.context.readProvider.getBalance(address, 'head');
   }
 
   async getDelegate(address: string): Promise<string | null> {
-    if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address);
+    const addressValidation = validateAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address, invalidErrorDetail(addressValidation));
     }
     return this.context.readProvider.getDelegate(address, 'head');
   }
 
   async activate(pkh: string, secret: string) {
-    if (validateKeyHash(pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(pkh);
+    const pkhValidation = validateKeyHash(pkh);
+    if (pkhValidation !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(pkh, invalidErrorDetail(pkhValidation));
     }
 
     const prepared = await this.prepare.activate({ pkh, secret });

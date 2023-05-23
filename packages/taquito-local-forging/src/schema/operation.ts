@@ -1,12 +1,12 @@
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { CODEC, kindMapping, kindMappingReverse } from '../constants';
-import { InvalidOperationKindError } from '@taquito/utils';
+import { InvalidOperationKindError } from '@taquito/core';
 import {
   OperationDecodingError,
   OperationEncodingError,
   UnsupportedOperationError,
-} from '../error';
+} from '../errors';
 
 export const ManagerOperationSchema = {
   branch: CODEC.BRANCH,
@@ -152,12 +152,12 @@ export const DrainDelegateSchema = {
 };
 
 export const SetDepositsLimitSchema = {
-	source: CODEC.PKH,
-	fee: CODEC.ZARITH,
-	counter: CODEC.ZARITH,
-	gas_limit: CODEC.ZARITH,
-	storage_limit: CODEC.ZARITH,
-	limit: CODEC.DEPOSITS_LIMIT,
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  limit: CODEC.DEPOSITS_LIMIT,
 };
 
 export const SmartRollupOriginateSchema = {
@@ -213,7 +213,7 @@ export const operationDecoder =
     const decodedObj = decoders[operationName](value);
 
     if (typeof decodedObj !== 'object') {
-      throw new OperationDecodingError('Decoded invalid operation');
+      throw new OperationDecodingError('Invalid operation, cannot be decoded.');
     }
 
     return {
@@ -236,7 +236,11 @@ export const schemaEncoder =
         const values = value[key];
 
         if (!Array.isArray(values)) {
-          throw new OperationEncodingError(`Expected value to be Array ${JSON.stringify(values)}`);
+          throw new OperationEncodingError(
+            `Invalid operation value "${JSON.stringify(
+              values
+            )}" of key "${key}, expected value to be Array.`
+          );
         }
 
         return prev + values.reduce((prevBytes, current) => prevBytes + encoder(current), '');

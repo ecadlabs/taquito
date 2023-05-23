@@ -17,7 +17,14 @@ import {
   OperationContentsUpdateConsensusKey,
   ScriptResponse,
 } from '@taquito/rpc';
-import { encodeExpr } from '@taquito/utils';
+import {
+  encodeExpr,
+  invalidErrorDetail,
+  validateAddress,
+  validateContractAddress,
+  ValidationResult,
+} from '@taquito/utils';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -46,13 +53,6 @@ import { DefaultContractType, ContractStorageType, ContractAbstraction } from '.
 import { InvalidDelegationSource, RevealOperationError } from './errors';
 import { ContractProvider, ContractSchema, StorageProvider } from './interface';
 import { smartContractAbstractionSemantic } from './semantic';
-import {
-  validateAddress,
-  validateContractAddress,
-  InvalidContractAddressError,
-  InvalidAddressError,
-  ValidationResult,
-} from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
@@ -78,12 +78,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @param contract contract address you want to get the storage from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
-   *
+   * @throws {@link InvalidContractAddressError}
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
-    if (validateContractAddress(contract) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(contract);
+    const contractValidation = validateContractAddress(contract);
+    if (contractValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(contract, invalidErrorDetail(contractValidation));
     }
     const script = await this.context.readProvider.getScript(contract, 'head');
     if (!schema) {
@@ -107,14 +108,15 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param contract contract address you want to get the storage from
    * @param key contract big map key to fetch value from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
-   *
+   * @throws {@link InvalidContractAddressError}
    * @deprecated Deprecated in favor of getBigMapKeyByID
    *
    * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
-    if (validateContractAddress(contract) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(contract);
+    const contractValidation = validateContractAddress(contract);
+    if (contractValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(contract, invalidErrorDetail(contractValidation));
     }
     if (!schema) {
       schema = (await this.rpc.getContract(contract)).script;
@@ -293,11 +295,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source);
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
-    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+    const delegateValidation = validateAddress(params.delegate ?? '');
+    if (params.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.delegate, invalidErrorDetail(delegateValidation));
     }
 
     // Since babylon delegation source cannot smart contract
@@ -354,11 +358,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param Transfer operation parameter
    */
   async transfer(params: TransferParams) {
-    if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidErrorDetail(toValidation));
     }
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -383,11 +389,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param TransferTicketParams operation parameter
    */
   async transferTicket(params: TransferTicketParams) {
-    if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, 'param destination');
+    const destinationValidation = validateAddress(params.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, invalidErrorDetail(destinationValidation));
     }
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, 'param source');
+    const srouceValidation = validateAddress(params.source ?? '');
+    if (params.source && srouceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(srouceValidation));
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -525,9 +533,9 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    */
   async ballot(params: BallotParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
-
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
     const source = params.source ?? publicKeyHash;
 
@@ -551,9 +559,9 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    */
   async proposals(params: ProposalsParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
-
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
     const source = params.source ?? publicKeyHash;
 
@@ -660,13 +668,20 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       context
     );
   }
-
+  /**
+   *
+   * @description Create an smart contract abstraction for the address specified.
+   *
+   * @param address Smart contract address
+   * @throws {@link InvalidContractAddressError}
+   */
   async at<T extends DefaultContractType = DefaultContractType>(
     address: string,
     contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
   ): Promise<T> {
-    if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address);
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, invalidErrorDetail(addressValidation));
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;

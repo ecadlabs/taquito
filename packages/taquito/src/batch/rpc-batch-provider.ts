@@ -31,12 +31,11 @@ import { ContractMethodObject } from '../contract/contract-methods/contract-meth
 import {
   validateAddress,
   validateKeyHash,
-  InvalidAddressError,
-  InvalidKeyHashError,
   ValidationResult,
-  InvalidOperationKindError,
+  invalidErrorDetail,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
+import { InvalidAddressError, InvalidKeyHashError, InvalidOperationKindError } from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 
@@ -68,8 +67,9 @@ export class OperationBatch extends Provider {
    * @param params Transfer operation parameter
    */
   withTransfer(params: TransferParams) {
-    if (validateAddress(params.to) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to);
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidErrorDetail(toValidation));
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -82,8 +82,9 @@ export class OperationBatch extends Provider {
    * @param params Transfer operation parameter
    */
   withTransferTicket(params: TransferTicketParams) {
-    if (validateAddress(params.destination) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, 'param destination');
+    const destinationValidation = validateAddress(params.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, invalidErrorDetail(destinationValidation));
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
@@ -110,11 +111,13 @@ export class OperationBatch extends Provider {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
-    if (params.source && validateAddress(params.source) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source);
+    const sourceValidation = validateAddress(params.source);
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
-    if (params.delegate && validateAddress(params.delegate) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate);
+    const delegateValidation = validateAddress(params.delegate ?? '');
+    if (params.delegate && delegateValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.delegate, invalidErrorDetail(delegateValidation));
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -125,10 +128,12 @@ export class OperationBatch extends Provider {
    * @description Add an activation operation to the batch
    *
    * @param params Activation operation parameter
+   * @throws {@link InvalidKeyHashError}
    */
   withActivation({ pkh, secret }: ActivationParams) {
-    if (validateKeyHash(pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(pkh);
+    const pkhValidation = validateKeyHash(pkh);
+    if (pkhValidation !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(pkh, invalidErrorDetail(pkhValidation));
     }
     this.operations.push({ kind: OpKind.ACTIVATION, pkh, secret });
     return this;
@@ -228,7 +233,7 @@ export class OperationBatch extends Provider {
           ...param,
         });
       default:
-        throw new InvalidOperationKindError((param as any).kind);
+        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
   }
 
@@ -237,6 +242,7 @@ export class OperationBatch extends Provider {
    * @description Add a group operation to the batch. Operation will be applied in the order they are in the params array
    *
    * @param params Operations parameter
+   * @throws {@link InvalidOperationKindError}
    */
   with(params: ParamsWithKind[]) {
     for (const param of params) {
@@ -269,7 +275,7 @@ export class OperationBatch extends Provider {
           this.withSmartRollupOriginate(param);
           break;
         default:
-          throw new InvalidOperationKindError((param as any).kind);
+          throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
       }
     }
 

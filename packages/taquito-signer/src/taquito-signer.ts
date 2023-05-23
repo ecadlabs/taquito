@@ -4,30 +4,29 @@
  */
 import { openSecretBox } from '@stablelib/nacl';
 import { hash } from '@stablelib/blake2b';
-import { hex2buf, mergebuf, b58cencode, prefix, InvalidKeyError } from '@taquito/utils';
+import {
+  hex2buf,
+  mergebuf,
+  b58cencode,
+  prefix,
+  Prefix,
+  invalidErrorDetail,
+  ValidationResult,
+} from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
-import { InvalidMnemonicError } from './errors';
+import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
+import { InvalidKeyError } from '@taquito/core';
 
 export * from './import-key';
 export { VERSION } from './version';
 export * from './derivation-tools';
 export * from './helpers';
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid passphrase being passed or used
- */
-export class InvalidPassphraseError extends Error {
-  public name = 'InvalidPassphraseError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
+export { InvalidPassphraseError } from './errors';
 
 export interface FromMnemonicParams {
   mnemonic: string;
@@ -40,14 +39,14 @@ export interface FromMnemonicParams {
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
  *
  * @warn If running in production and dealing with tokens that have real value, it is strongly recommended to use a HSM backed signer so that private key material is not stored in memory or on disk
- *
+ * @throws {@link InvalidMnemonicError}
  */
 export class InMemorySigner {
   private _key!: Tz1 | ECKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
     if (!Bip39.validateMnemonic(mnemonic)) {
-      throw new InvalidMnemonicError(`Invalid mnemonic: ${mnemonic}`);
+      throw new InvalidMnemonicError(mnemonic);
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58cencode(seed.slice(0, 32), prefix.edsk2);
@@ -66,12 +65,18 @@ export class InMemorySigner {
    * @param derivationPath default 44'/1729'/0'/0' (44'/1729' mandatory)
    * @param curve currently only supported for tz1, tz2, tz3 addresses. soon bip25519
    * @returns InMemorySigner
+   * @throws {@link InvalidMnemonicError}
    */
-  static fromMnemonic({ mnemonic, password = '', derivationPath = "44'/1729'/0'/0'", curve = 'ed25519' }: FromMnemonicParams) {
+  static fromMnemonic({
+    mnemonic,
+    password = '',
+    derivationPath = "44'/1729'/0'/0'",
+    curve = 'ed25519',
+  }: FromMnemonicParams) {
     // check if curve is defined if not default tz1
     if (!Bip39.validateMnemonic(mnemonic)) {
       // avoiding exposing mnemonic again in case of mistake making invalid
-      throw new InvalidMnemonicError('Mnemonic provided is invalid');
+      throw new InvalidMnemonicError(mnemonic);
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, password);
 
@@ -83,6 +88,7 @@ export class InMemorySigner {
    *
    * @param key Encoded private key
    * @param passphrase Passphrase to decrypt the private key if it is encrypted
+   * @throws {@link InvalidKeyError}
    *
    */
   constructor(key: string, passphrase?: string) {
@@ -92,7 +98,7 @@ export class InMemorySigner {
 
     if (encrypted) {
       if (!passphrase) {
-        throw new InvalidPassphraseError('Encrypted key provided without a passphrase.');
+        throw new InvalidPassphraseError('No passphrase provided to decrypt encrypted key');
       }
 
       decrypt = (constructedKey: Uint8Array) => {
@@ -108,7 +114,7 @@ export class InMemorySigner {
       };
     }
 
-    switch (key.substr(0, 4)) {
+    switch (key.substring(0, 4)) {
       case 'edes':
       case 'edsk':
         this._key = new Tz1(key, encrypted, decrypt);
@@ -122,7 +128,13 @@ export class InMemorySigner {
         this._key = new Tz3(key, encrypted, decrypt);
         break;
       default:
-        throw new InvalidKeyError(key, 'Unsupported key type');
+        throw new InvalidKeyError(
+          `${invalidErrorDetail(
+            ValidationResult.NO_PREFIX_MATCHED
+          )} expecting one of the following '${Prefix.EDESK}', '${Prefix.EDSK}', '${
+            Prefix.SPSK
+          }', '${Prefix.SPESK}', '${Prefix.P2SK}' or '${Prefix.P2ESK}'.`
+        );
     }
   }
 
