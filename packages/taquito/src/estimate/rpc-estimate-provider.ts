@@ -1,7 +1,6 @@
 import { PreapplyResponse, RPCRunOperationParam, ConstantsResponse } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
-import { OperationEmitter } from '../operations/operation-emitter';
 import {
   flattenErrors,
   flattenOperationResult,
@@ -21,12 +20,13 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  RPCOperation,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { validateAddress, ValidationResult, invalidErrorDetail } from '@taquito/utils';
 import { RevealEstimateError } from './error';
-import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
+import { ContractMethod, ContractMethodObject, ContractProvider, createRevealOperation } from '../contract';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';

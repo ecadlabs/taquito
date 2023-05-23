@@ -29,7 +29,7 @@ import {
   ActivationParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
+import { DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import { PublicKeyNotFoundError, RPCResponseError } from '../error';
 import { Context } from '../context';
@@ -54,6 +54,7 @@ import {
   createSmartRollupOriginateOperation,
   createRegisterDelegateOperation,
   createActivationOperation,
+  getRevealFee,
 } from '../contract';
 import { Estimate, RevealEstimateError } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
@@ -172,7 +173,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         ops.unshift(
           await createRevealOperation(
             {
-              fee: DEFAULT_FEE.REVEAL,
+              fee: getRevealFee(publicKeyHash),
               storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
               gasLimit: DEFAULT_GAS_LIMIT.REVEAL,
             },
@@ -985,7 +986,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops.unshift(
         await createRevealOperation(
           {
-            fee: DEFAULT_FEE.REVEAL,
+            fee: getRevealFee(pkh),
             storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
             gasLimit: DEFAULT_GAS_LIMIT.REVEAL,
           },
