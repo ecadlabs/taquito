@@ -1,6 +1,7 @@
 import {
   OperationContentsAndResult,
   OperationContentsAndResultRegisterGlobalConstant,
+  OperationContentsRegisterGlobalConstant,
 } from '@taquito/rpc';
 import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
@@ -9,7 +10,6 @@ import {
   FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  RPCRegisterGlobalConstantOperation,
   StorageConsumingOperation,
 } from './types';
 
@@ -26,7 +26,7 @@ export class RegisterGlobalConstantOperation
   public readonly globalConstantHash?: string;
   constructor(
     hash: string,
-    private readonly params: RPCRegisterGlobalConstantOperation,
+    private readonly params: OperationContentsRegisterGlobalConstant,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -59,15 +59,15 @@ export class RegisterGlobalConstantOperation
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   get errors() {

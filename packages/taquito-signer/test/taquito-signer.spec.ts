@@ -1,10 +1,6 @@
-import {
-  InvalidCurveError,
-  InvalidDerivationPathError,
-  InvalidMnemonicError,
-  ToBeImplemented,
-} from '../src/errors';
+import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
+import { InvalidDerivationPathError } from '@taquito/core';
 
 describe('inmemory-signer', () => {
   const mnemonic = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
@@ -65,7 +61,7 @@ describe('inmemory-signer', () => {
   it('Invalid key', (done) => {
     expect(function () {
       new InMemorySigner('test');
-    }).toThrow('Unsupported key type');
+    }).toThrow(`Invalid prefix`);
     done();
   });
 

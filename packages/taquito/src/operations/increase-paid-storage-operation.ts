@@ -1,6 +1,7 @@
 import {
   OperationContentsAndResult,
   OperationContentsAndResultIncreasePaidStorage,
+  OperationContentsIncreasePaidStorage,
 } from '@taquito/rpc';
 import { Context } from '../context';
 import { Operation } from './operations';
@@ -8,7 +9,6 @@ import {
   FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  RPCIncreasePaidStorageOperation,
   StorageConsumingOperation,
 } from './types';
 
@@ -24,7 +24,7 @@ export class IncreasePaidStorageOperation
 {
   constructor(
     hash: string,
-    private readonly params: RPCIncreasePaidStorageOperation,
+    private readonly params: OperationContentsIncreasePaidStorage,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -51,15 +51,15 @@ export class IncreasePaidStorageOperation
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   get errors() {

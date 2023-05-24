@@ -1,4 +1,8 @@
-import { OperationContentsAndResult, OperationContentsAndResultDelegation } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultDelegation,
+  OperationContentsDelegation,
+} from '@taquito/rpc';
 import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { Operation } from './operations';
@@ -6,7 +10,6 @@ import {
   FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  RPCDelegateOperation,
   StorageConsumingOperation,
 } from './types';
 
@@ -21,7 +24,7 @@ export class DelegateOperation
 {
   constructor(
     hash: string,
-    private readonly params: RPCDelegateOperation,
+    private readonly params: OperationContentsDelegation,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -51,15 +54,15 @@ export class DelegateOperation
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   get consumedGas() {

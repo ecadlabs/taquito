@@ -1,6 +1,6 @@
 {
   "name": "@taquito/michel-codec",
-  "version": "16.1.2",
+  "version": "16.2.0-beta-RC.0",
   "description": "Michelson parser/validator/formatter",
   "keywords": [
     "tezos",
@@ -65,6 +65,9 @@
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
     ]
+  },
+  "dependencies": {
+    "@taquito/core": "^16.2.0-beta-RC.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",

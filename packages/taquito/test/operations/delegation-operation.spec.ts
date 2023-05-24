@@ -84,9 +84,9 @@ describe('Delegation operation', () => {
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {
         delegate: 'delegate',
-        fee: '2991',
-        gas_limit: '26260',
-        storage_limit: '257',
+        fee: 2991,
+        gas_limit: 26260,
+        storage_limit: 257,
       } as any,
       'source',
       fakeForgedBytes,
@@ -99,13 +99,13 @@ describe('Delegation operation', () => {
     expect(op.consumedMilliGas).toEqual('15952999');
     expect(op.delegate).toEqual('delegate');
     expect(op.errors).toBeUndefined();
-    expect(op.fee).toEqual('2991');
-    expect(op.gasLimit).toEqual('26260');
+    expect(op.fee).toEqual(2991);
+    expect(op.gasLimit).toEqual(26260);
     expect(op.hash).toEqual('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj');
     expect(op.isRegisterOperation).toBeFalsy();
     expect(op.operationResults).toEqual({ consumed_milligas: '15952999', status: 'applied' });
     expect(op.revealOperation).toBeUndefined();
     expect(op.source).toEqual('source');
-    expect(op.storageLimit).toEqual('257');
+    expect(op.storageLimit).toEqual(257);
   });
 });

@@ -1,7 +1,11 @@
-import { OperationContentsAndResult, OperationContentsAndResultProposals } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultProposals,
+  OperationContentsProposals,
+} from '@taquito/rpc';
 import { Context } from '../context';
 import { Operation } from './operations';
-import { ForgedBytes, RPCProposalsOperation } from './types';
+import { ForgedBytes } from './types';
 
 /**
  *
@@ -11,7 +15,7 @@ import { ForgedBytes, RPCProposalsOperation } from './types';
 export class ProposalsOperation extends Operation {
   constructor(
     hash: string,
-    private readonly params: RPCProposalsOperation,
+    private readonly params: OperationContentsProposals,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],

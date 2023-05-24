@@ -10,13 +10,10 @@ import {
   Wallet,
   ViewSimulationError,
 } from '@taquito/taquito';
-import {
-  ForbiddenInstructionInViewCode,
-  InvalidViewParameterError,
-  NoParameterExpectedError,
-} from '../tzip16-errors';
+import { ForbiddenInstructionInViewCode, NoParameterExpectedError } from '../tzip16-errors';
 import { validateAndExtractFailwith, TzReadProvider } from '@taquito/taquito';
 import { View } from './interface';
+import { InvalidViewParameterError } from '@taquito/core';
 
 export class MichelsonStorageView implements View {
   constructor(

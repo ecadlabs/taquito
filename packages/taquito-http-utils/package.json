@@ -1,6 +1,6 @@
 {
   "name": "@taquito/http-utils",
-  "version": "16.1.2",
+  "version": "16.2.0-beta-RC.0",
   "description": "",
   "keywords": [
     "tezos"
@@ -59,7 +59,6 @@
     ]
   },
   "dependencies": {
-    "@taquito/axios-fetch-adapter": "^0.3.1",
     "axios": "^0.26.0"
   },
   "devDependencies": {

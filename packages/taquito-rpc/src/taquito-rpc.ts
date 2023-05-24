@@ -65,11 +65,12 @@ import {
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
-  InvalidAddressError,
   validateAddress,
   validateContractAddress,
   ValidationResult,
+  invalidErrorDetail,
 } from '@taquito/utils';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
 export { castToBigNumber } from './utils/utils';
 
@@ -113,14 +114,16 @@ export class RpcClient implements RpcClientInterface {
   }
 
   private validateAddress(address: string) {
-    if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address);
+    const addressValidation = validateAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address, invalidErrorDetail(addressValidation));
     }
   }
 
   private validateContract(address: string) {
-    if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address);
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, invalidErrorDetail(addressValidation));
     }
   }
 

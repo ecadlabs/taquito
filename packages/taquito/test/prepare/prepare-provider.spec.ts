@@ -3,13 +3,11 @@ import { Context } from '../../src/context';
 import { PrepareProvider } from '../../src/prepare/prepare-provider';
 import BigNumber from 'bignumber.js';
 import { preparedOriginationOpWithReveal, preparedOriginationOpNoReveal } from './data';
-import { Estimate } from '../../src/estimate';
 
 import { TransferTicketParams, OpKind } from '../../src/operations/types';
 import { PvmKind } from '@taquito/rpc';
 import { preparedTransactionMock } from '../helpers';
 import { PreparedOperation } from '../../src/prepare';
-
 
 describe('PrepareProvider test', () => {
   let prepareProvider: PrepareProvider;
@@ -45,7 +43,6 @@ describe('PrepareProvider test', () => {
     sign: jest.Mock<any, any>;
   };
 
-  let estimate: Estimate;
   let context: Context;
 
   beforeEach(() => {
@@ -131,26 +128,36 @@ describe('PrepareProvider test', () => {
 
     context.forger = mockForger;
 
-    estimate = new Estimate(1000, 1000, 180, 1000);
-    jest.spyOn(context.estimate, 'setDelegate').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'originate').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'transfer').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'transferTicket').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'registerDelegate').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'registerGlobalConstant').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'increasePaidStorage').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'txRollupOriginate').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'txRollupSubmitBatch').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'updateConsensusKey').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'smartRollupAddMessages').mockResolvedValue(estimate);
-    jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
-
     prepareProvider = new PrepareProvider(context);
+  });
+
+  describe('activate', () => {
+    it('should return a prepared activation operation', async () => {
+      const prepared = await prepareProvider.activate({
+        pkh: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        secret: '123',
+      });
+
+      expect(prepared).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'activate_account',
+              pkh: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              secret: '123',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+      });
+    });
   });
 
   describe('originate', () => {
     it('should return a prepared origination operation with a reveal operation', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.originate({
         balance: '1',
@@ -165,12 +172,11 @@ describe('PrepareProvider test', () => {
       });
 
       const res = JSON.parse(JSON.stringify(prepared));
-
       expect(res).toEqual(preparedOriginationOpWithReveal);
     });
 
-    it('should be able to prepare origination op without reveal op when reveal estimate returns undefined', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+    it('should be able to prepare origination op without reveal op', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.originate({
         balance: '1',
@@ -192,7 +198,7 @@ describe('PrepareProvider test', () => {
 
   describe('transaction', () => {
     it('should return a prepared Transaction operation with a reveal op', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.transaction({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -205,18 +211,18 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
               kind: 'transaction',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               amount: '2000000',
               destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               source: 'test_public_key_hash',
@@ -230,7 +236,7 @@ describe('PrepareProvider test', () => {
     });
 
     it('should be able to prepare transaction op without reveal op when estimate returns undefined', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.transaction({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -243,9 +249,9 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'transaction',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               amount: '2000000',
               destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               source: 'test_public_key_hash',
@@ -261,6 +267,8 @@ describe('PrepareProvider test', () => {
 
   describe('drainDelegate', () => {
     it('should return a prepared drain_delegate operation', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       const prepared = await prepareProvider.drainDelegate({
         consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
         delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
@@ -287,7 +295,7 @@ describe('PrepareProvider test', () => {
 
   describe('delegation', () => {
     it('should return a prepared delegation operation with reveal operation', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.delegation({
         source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -300,19 +308,19 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
               kind: 'delegation',
               source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
               counter: '2',
             },
@@ -324,7 +332,7 @@ describe('PrepareProvider test', () => {
     });
 
     it('should return a prepared delegation op without reveal operation when reveal Estimation returns undefined', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.delegation({
         source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -338,9 +346,9 @@ describe('PrepareProvider test', () => {
             {
               kind: 'delegation',
               source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
               counter: '1',
             },
@@ -353,8 +361,8 @@ describe('PrepareProvider test', () => {
   });
 
   describe('registerGlobalConstant', () => {
-    it('should return a prepared registerGlobalConstant operation', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+    it('should return a prepared registerGlobalConstant operation with reveal', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.registerGlobalConstant({
         value: { prim: 'Pair', args: [{ int: '999' }, { int: '999' }] },
@@ -366,11 +374,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -386,9 +394,9 @@ describe('PrepareProvider test', () => {
                   },
                 ],
               },
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               source: 'test_public_key_hash',
               counter: '2',
             },
@@ -399,8 +407,8 @@ describe('PrepareProvider test', () => {
       });
     });
 
-    it('should be able to prepare register_global_constant op ', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+    it('should be able to prepare register_global_constant op without reveal', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.registerGlobalConstant({
         value: { prim: 'Pair', args: [{ int: '999' }, { int: '999' }] },
@@ -423,9 +431,9 @@ describe('PrepareProvider test', () => {
                   },
                 ],
               },
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               source: 'test_public_key_hash',
               counter: '1',
             },
@@ -438,7 +446,7 @@ describe('PrepareProvider test', () => {
   });
   describe('updateConsensusKey', () => {
     it('should return a prepared udpateConsensusKey operation', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.updateConsensusKey({
         pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
@@ -450,19 +458,19 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
               kind: 'update_consensus_key',
               source: 'test_public_key_hash',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
               counter: '2',
             },
@@ -474,7 +482,7 @@ describe('PrepareProvider test', () => {
     });
 
     it('should be able to prepare update_consensus_key operation prepended with reveal op', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.updateConsensusKey({
         pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
@@ -487,9 +495,9 @@ describe('PrepareProvider test', () => {
             {
               kind: 'update_consensus_key',
               source: 'test_public_key_hash',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
               counter: '1',
             },
@@ -503,13 +511,10 @@ describe('PrepareProvider test', () => {
 
   describe('transferTicket', () => {
     it('should return a prepared transferTicket operation', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-        fee: 804,
-        gasLimit: 5009,
-        storageLimit: 130,
         ticketContents: { string: 'foobar' },
         ticketTy: { prim: 'string' },
         ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
@@ -526,18 +531,18 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
               kind: 'transfer_ticket',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
               ticket_contents: {
                 string: 'foobar',
@@ -559,7 +564,50 @@ describe('PrepareProvider test', () => {
     });
 
     it('should be able to prepare transfer_ticket operation prepended with reveal op', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const params: TransferTicketParams = {
+        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+        ticketContents: { string: 'foobar' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+        ticketAmount: 2,
+        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+        entrypoint: 'default',
+      };
+      const prepared = await prepareProvider.transferTicket(params);
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'transfer_ticket',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
+              source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+              ticket_contents: {
+                string: 'foobar',
+              },
+              ticket_ty: {
+                prim: 'string',
+              },
+              ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+              ticket_amount: '2',
+              destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+              entrypoint: 'default',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to prepare transfer_ticket op with estimates overriden', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
@@ -581,9 +629,9 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'transfer_ticket',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '804',
+              gas_limit: '5009',
+              storage_limit: '130',
               source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
               ticket_contents: {
                 string: 'foobar',
@@ -607,7 +655,7 @@ describe('PrepareProvider test', () => {
 
   describe('increasePaidStorage', () => {
     it('should return a prepared increasePaidStorage operation with reveal op', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.increasePaidStorage({
         amount: 1,
@@ -620,19 +668,19 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
               kind: 'increase_paid_storage',
               source: 'test_public_key_hash',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
               counter: '2',
@@ -645,7 +693,7 @@ describe('PrepareProvider test', () => {
     });
 
     it('should be able to prepare increase_paid_storage op without reveal op when estimate is undefined', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.increasePaidStorage({
         amount: 1,
@@ -659,9 +707,9 @@ describe('PrepareProvider test', () => {
             {
               kind: 'increase_paid_storage',
               source: 'test_public_key_hash',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
               counter: '1',
@@ -676,8 +724,6 @@ describe('PrepareProvider test', () => {
 
   describe('ballot', () => {
     it('should return a prepared ballot operation', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
-
       const prepared = await prepareProvider.ballot({
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
         ballot: 'yay',
@@ -772,139 +818,9 @@ describe('PrepareProvider test', () => {
     });
   });
 
-  describe('txRollupOriginate', () => {
-    it('should be able to prepare a txRollupOriginate op with reveal op', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
-
-      const prepared = await prepareProvider.txRollupOrigination();
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'reveal',
-              fee: '391',
-              public_key: 'test_pub_key',
-              source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
-              counter: '1',
-            },
-            {
-              kind: 'tx_rollup_origination',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
-              source: 'test_public_key_hash',
-              tx_rollup_origination: {},
-              counter: '2',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-
-    it('should be able to prepare a txRollupOriginate op without reveal op when estimate is undefined', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
-
-      const prepared = await prepareProvider.txRollupOrigination();
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'tx_rollup_origination',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
-              source: 'test_public_key_hash',
-              tx_rollup_origination: {},
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
-
-  describe('txRollupSubmitBatch', async () => {
-    it('should be able to prepare a txRollupSubmitBatch op with reveal op', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
-
-      const prepared = await prepareProvider.txRollupSubmitBatch({
-        content: '1234',
-        rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-      });
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'reveal',
-              fee: '391',
-              public_key: 'test_pub_key',
-              source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
-              counter: '1',
-            },
-            {
-              kind: 'tx_rollup_submit_batch',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
-              source: 'test_public_key_hash',
-              content: '1234',
-              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-              counter: '2',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-
-    it('should be able to prepare a txRollupSubmitBatch op without reveal op when estimate is undefined', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
-
-      const prepared = await prepareProvider.txRollupSubmitBatch({
-        content: '1234',
-        rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-      });
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'tx_rollup_submit_batch',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
-              source: 'test_public_key_hash',
-              content: '1234',
-              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
-
   describe('smartRollupAddMessages', () => {
     it('should be able to prepare a smartRollupAddMessages operation', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.smartRollupAddMessages({
         message: [
@@ -918,19 +834,19 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
               kind: 'smart_rollup_add_messages',
               source: 'test_public_key_hash',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               message: [
                 '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
               ],
@@ -944,7 +860,7 @@ describe('PrepareProvider test', () => {
     });
 
     it('should be able to prepare smartRollupAddMessages op without reveal when estimate is undefined', async () => {
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.smartRollupAddMessages({
         message: [
@@ -959,9 +875,9 @@ describe('PrepareProvider test', () => {
             {
               kind: 'smart_rollup_add_messages',
               source: 'test_public_key_hash',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               message: [
                 '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
               ],
@@ -977,7 +893,7 @@ describe('PrepareProvider test', () => {
 
   describe('batch', () => {
     it('should be able to prepare a batch operation', async () => {
-      jest.spyOn(context.estimate, 'batch').mockResolvedValue([estimate, estimate, estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.batch([
         {
@@ -998,18 +914,18 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
               kind: 'transaction',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               amount: '2000000',
               destination: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
               source: 'test_public_key_hash',
@@ -1017,9 +933,9 @@ describe('PrepareProvider test', () => {
             },
             {
               kind: 'transaction',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               amount: '2000000',
               destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               source: 'test_public_key_hash',
@@ -1034,8 +950,6 @@ describe('PrepareProvider test', () => {
 
     it('should be able to prepare a batch operation', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
-
-      jest.spyOn(context.estimate, 'batch').mockResolvedValue([estimate, estimate]);
 
       const prepared = await prepareProvider.batch([
         {
@@ -1056,9 +970,9 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'transaction',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               amount: '2000000',
               destination: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
               source: 'test_public_key_hash',
@@ -1066,9 +980,9 @@ describe('PrepareProvider test', () => {
             },
             {
               kind: 'transaction',
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               amount: '2000000',
               destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
               source: 'test_public_key_hash',
@@ -1104,6 +1018,7 @@ describe('PrepareProvider test', () => {
         },
       ]);
     });
+
     it('toForge should return the ForgeParams that can be forged', async () => {
       mockRpcClient.forgeOperations.mockResolvedValue('1234');
       const { contents, branch } = preparedTransactionMock.opOb;
@@ -1123,8 +1038,6 @@ describe('PrepareProvider test', () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
       mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
 
-      jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
-
       const prepared = await prepareProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,
         kernel: '123456789',
@@ -1144,9 +1057,9 @@ describe('PrepareProvider test', () => {
               parameters_ty: {
                 prim: 'bytes',
               },
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               counter: '1',
               source: 'test_public_key_hash',
             },
@@ -1159,10 +1072,8 @@ describe('PrepareProvider test', () => {
     });
 
     it('Should prepare smartRollupOriginate with reveal', async (done) => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
       mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
-
-      jest.spyOn(context.estimate, 'reveal').mockResolvedValue(estimate);
-      jest.spyOn(context.estimate, 'smartRollupOriginate').mockResolvedValue(estimate);
 
       const prepared = await prepareProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,
@@ -1177,11 +1088,11 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '391',
+              fee: '374',
               public_key: 'test_pub_key',
               source: 'test_public_key_hash',
-              gas_limit: '101',
-              storage_limit: '1000',
+              gas_limit: '1100',
+              storage_limit: '0',
               counter: '1',
             },
             {
@@ -1192,9 +1103,9 @@ describe('PrepareProvider test', () => {
               parameters_ty: {
                 prim: 'bytes',
               },
-              fee: '391',
-              gas_limit: '101',
-              storage_limit: '1000',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
               counter: '2',
               source: 'test_public_key_hash',
             },

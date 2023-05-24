@@ -1,6 +1,7 @@
 import {
   OperationContentsAndResult,
   OperationContentsAndResultSmartRollupAddMessages,
+  OperationContentsSmartRollupAddMessages,
 } from '@taquito/rpc';
 
 import { Context } from '../context';
@@ -10,7 +11,6 @@ import {
   ForgedBytes,
   GasConsumingOperation,
   StorageConsumingOperation,
-  RPCSmartRollupAddMessagesOperation,
 } from './types';
 
 /**
@@ -23,7 +23,7 @@ export class SmartRollupAddMessagesOperation
 {
   constructor(
     hash: string,
-    private readonly params: RPCSmartRollupAddMessagesOperation,
+    private readonly params: OperationContentsSmartRollupAddMessages,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -54,15 +54,15 @@ export class SmartRollupAddMessagesOperation
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   get consumedMilliGas() {

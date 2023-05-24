@@ -1,6 +1,6 @@
 {
   "name": "@taquito/rpc",
-  "version": "16.1.2",
+  "version": "16.2.0-beta-RC.0",
   "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
   "keywords": [
     "tezos",
@@ -67,8 +67,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/http-utils": "^16.1.2",
-    "@taquito/utils": "^16.1.2",
+    "@taquito/core": "^16.2.0-beta-RC.0",
+    "@taquito/http-utils": "^16.2.0-beta-RC.0",
+    "@taquito/utils": "^16.2.0-beta-RC.0",
     "bignumber.js": "^9.1.0"
   },
   "devDependencies": {

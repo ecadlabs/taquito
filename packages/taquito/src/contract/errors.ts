@@ -54,28 +54,6 @@ export class InvalidInitParameter extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates invalid view parameter of a smart contract
- */
-export class InvalidViewParameterError extends Error {
-  name = 'Invalid view parameters error';
-  cause: any;
-  constructor(
-    public smartContractViewName: string,
-    public sigs: any,
-    public args: any,
-    public originalError: any
-  ) {
-    super(
-      `Unable to encode the parameter of the view: ${smartContractViewName}. Received ${args} as parameter while expecting one of the following signatures (${JSON.stringify(
-        sigs
-      )})`
-    );
-    this.cause = originalError;
-  }
-}
-
-/**
- *  @category Error
  *  @description Error that indicates a failure when conducting a view simulation
  */
 export class ViewSimulationError extends Error {
