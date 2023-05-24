@@ -72,6 +72,11 @@ In a list, `pair` and `union` values are always represented as objects: a `pair`
 
 The `methodsObject` method always takes a single object to represent the pair to be passed, while `methods` requires the pair fields to be spread. If annotations are present, they are used to identify the pair fielda in the corresponding properties of the JS object.
 
+
+## Map and big_map
+
+See the [documentation about creating and updating maps and big_maps](https://tezostaquito.io/docs/michelsonmap/)
+
 ## Bypassing the Michelson Encoder
 Users can bypass the `michelson-encoder` and `ContractAbstraction` by directly passing JSON Michelson in a `transfer` call. This eliminates the need to fetch and create a JS/TS contract abstraction using `tezos.wallet.at` or `tezos.contract.at` and also removes the requirement to create a local contract instance for interaction. As a result, the conversion of entrypoint parameters to the JSON Michelson format using the michelson-encoder is no longer necessary as used in the ContractAbstraction entrypoints as listed prior for `methods` and `methodsObject`.
 
@@ -87,8 +92,8 @@ The michelson-encoder has limitations when encoding complex data structures with
 A brief example for `Pair int string` using a Wallet Provider would be:
 
 ```ts
-let nested2SomeNone1 = await tezos.wallet.transfer({ 
-  to: 'KT1NhJvzVTfidU5oV1NM9W9uwA2RSxNZz5Ai', 
+let opWithWallet = await tezos.wallet.transfer({ 
+  to: 'KT1...', 
   amount: 0, 
   parameter: { 
     entrypoint: 'default', 
@@ -106,8 +111,8 @@ let nested2SomeNone1 = await tezos.wallet.transfer({
 Another example of Michelson type `pair (pair int nat) (option nat)` using the Contract Provider.
 
 ```ts
-const nested2SomeNone2 = await tezos.contract.transfer({ 
-  to: 'KT1NhJvzVTfidU5oV1NM9W9uwA2RSxNZz5Ai', 
+const opWithSigner = await tezos.contract.transfer({ 
+  to: 'KT1...', 
   amount: 0, 
   parameter: { 
     entrypoint: 'default', 
@@ -127,6 +132,3 @@ const nested2SomeNone2 = await tezos.contract.transfer({
 })
 ```
 
-## Map and big_map
-
-See the [documentation about creating and updating maps and big_maps](https://tezostaquito.io/docs/michelsonmap/)
