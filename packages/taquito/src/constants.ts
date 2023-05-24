@@ -2,7 +2,10 @@ export enum DEFAULT_GAS_LIMIT {
   DELEGATION = 10600,
   ORIGINATION = 10600,
   TRANSFER = 10600,
-  REVEAL = 1100,
+  REVEAL_TZ1 = 2000,
+  REVEAL_TZ2 = 2000,
+  REVEAL_TZ3 = 2000,
+  REVEAL_TZ4 = 2000,
 }
 export enum DEFAULT_FEE {
   DELEGATION = 1257,
@@ -73,5 +76,23 @@ export enum ChainIds {
   LIMANET = 'NetXizpkH94bocH',
   MUMBAINET = 'NetXQw6nWSnrJ5t',
   MUMBAINET2 = 'NetXgbcrNtXD2yA',
-  NAIROBINET = 'NetXyuzvDo2Ugzb'
+  NAIROBINET = 'NetXyuzvDo2Ugzb',
 }
+
+export const getRevealGasLimit = (address: string) =>
+  Math.round((getRevealGasLimitInternal(address) * 11) / 10);
+
+const getRevealGasLimitInternal = (address: string) => {
+  switch (address.substring(0, 3)) {
+    case 'tz1':
+      return DEFAULT_GAS_LIMIT.REVEAL_TZ1;
+    case 'tz2':
+      return DEFAULT_GAS_LIMIT.REVEAL_TZ2;
+    case 'tz3':
+      return DEFAULT_GAS_LIMIT.REVEAL_TZ3;
+    case 'tz4':
+      return DEFAULT_GAS_LIMIT.REVEAL_TZ4;
+    default:
+      throw new Error(`Cannot estimate reveal fee for ${address}`);
+  }
+};
