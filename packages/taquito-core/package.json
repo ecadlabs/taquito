@@ -1,0 +1,63 @@
+{
+  "name": "@taquito/core",
+  "version": "16.2.0-beta-RC.0",
+  "description": "Classes, interfaces, and types shared across Taquito packages",
+  "keywords": [
+    "tezos",
+    "blockchain"
+  ],
+  "main": "dist/taquito-core.umd.js",
+  "module": "dist/taquito-core.es6.js",
+  "typings": "dist/types/taquito-core.d.ts",
+  "files": [
+    "dist",
+    "signature.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "huianyang <hui-an.yang@ecadlabs.com>",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "precommit": "lint-staged",
+    "prebuild": "rimraf dist",
+    "version-stamp": "node ../taquito/version-stamping.js",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+    "start": "rollup -c rollup.config.ts -w",
+    "test": "jest"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ]
+  }
+}

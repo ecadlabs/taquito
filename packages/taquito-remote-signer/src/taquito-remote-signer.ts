@@ -14,9 +14,7 @@ import {
   verifySignature,
   validateKeyHash,
   ValidationResult,
-  InvalidKeyHashError,
-  ProhibitedActionError,
-  InvalidSignatureError,
+  invalidErrorDetail,
 } from '@taquito/utils';
 import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
@@ -27,6 +25,7 @@ import {
   PublicKeyMismatch,
 } from './errors';
 import { Signer } from '@taquito/taquito';
+import { InvalidSignatureError, InvalidKeyHashError, ProhibitedActionError } from '@taquito/core';
 
 /**
  *  @category Error
@@ -37,7 +36,7 @@ export class SignatureVerificationFailedError extends Error {
   constructor(public bytes: string, public signature: string) {
     super(
       `
-        Signature failed verification against public key: 
+        Signature failed verification against public key:
         {
           bytes: ${bytes},
           signature: ${signature}
@@ -91,8 +90,9 @@ export class RemoteSigner implements Signer {
     private options: RemoteSignerOptions = {},
     private http = new HttpBackend()
   ) {
-    if (validateKeyHash(this.pkh) !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(this.pkh);
+    const pkhValidation = validateKeyHash(this.pkh);
+    if (pkhValidation !== ValidationResult.VALID) {
+      throw new InvalidKeyHashError(this.pkh, invalidErrorDetail(pkhValidation));
     }
   }
 
@@ -147,7 +147,10 @@ export class RemoteSigner implements Signer {
         : signature.substring(0, 5);
 
       if (!isValidPrefix(pref)) {
-        throw new InvalidSignatureError(signature, 'Unsupported signature given by remote signer');
+        throw new InvalidSignatureError(
+          signature,
+          invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` from a remote signer.`
+        );
       }
 
       const decoded = b58cdecode(signature, prefix[pref]);

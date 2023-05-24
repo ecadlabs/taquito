@@ -1,4 +1,8 @@
-import { OperationContentsAndResult, OperationContentsAndResultTransaction } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultTransaction,
+  OperationContentsTransaction,
+} from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult, MergedOperationResult } from './operation-errors';
@@ -7,7 +11,6 @@ import {
   FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  RPCTransferOperation,
   StorageConsumingOperation,
 } from './types';
 
@@ -22,7 +25,7 @@ export class TransactionOperation
 {
   constructor(
     hash: string,
-    private readonly params: RPCTransferOperation,
+    private readonly params: OperationContentsTransaction,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -59,15 +62,15 @@ export class TransactionOperation
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   private sumProp(arr: MergedOperationResult[], prop: keyof MergedOperationResult) {

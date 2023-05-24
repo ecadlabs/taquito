@@ -52,13 +52,12 @@ import {
   PendingOperations,
   OriginationProofParams,
 } from '../types';
-
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
-  InvalidAddressError,
-  InvalidContractAddressError,
   validateContractAddress,
   validateAddress,
   ValidationResult,
+  invalidErrorDetail,
 } from '@taquito/utils';
 
 interface CachedDataInterface {
@@ -76,7 +75,6 @@ type RpcMethodParam =
   | PendingOperationsQueryArguments
   | EndorsingRightsQueryArguments
   | OriginationProofParams;
-
 
 const defaultTtl = 1000;
 
@@ -148,14 +146,16 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   private validateAddress(address: string) {
-    if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address);
+    const addressValidation = validateAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address, invalidErrorDetail(addressValidation));
     }
   }
 
   private validateContract(address: string) {
-    if (validateContractAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address);
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, invalidErrorDetail(addressValidation));
     }
   }
   /**
@@ -231,7 +231,7 @@ export class RpcClientCache implements RpcClientInterface {
    *
    * @param address contract address from which we want to retrieve the storage
    * @param options contains generic configuration for rpc calls
-   *
+   * @throws {@link InvalidContractAddressError}
    * @description Access the data of the contract.
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-storage
@@ -258,7 +258,7 @@ export class RpcClientCache implements RpcClientInterface {
    *
    * @param address contract address from which we want to retrieve the script
    * @param options contains generic configuration for rpc calls
-   *
+   * @throws {@link InvalidContractAddressError}
    * @description Access the code and data of the contract.
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
@@ -286,7 +286,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param address contract address from which we want to retrieve the script
    * @param unparsingMode default is { unparsing_mode: "Readable" }
    * @param options contains generic configuration for rpc calls
-   *
+   * @throws {@link InvalidContractAddressError}
    * @description Access the script of the contract and normalize it using the requested unparsing mode.
    *
    */
@@ -826,7 +826,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param contract address of the contract we want to get the entrypoints of
    *
    * @description Return the list of entrypoints of the contract
-   *
+   * @throws {@link InvalidContractAddressError}
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-entrypoints
    *
    * @version 005_PsBABY5H
@@ -1237,22 +1237,22 @@ export class RpcClientCache implements RpcClientInterface {
    * @default args { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
    * @see https://tezos.gitlab.io/CHANGES.html?highlight=pending_operations#id4
    */
-    async getPendingOperations(
-      args: PendingOperationsQueryArguments = {}
-    ): Promise<PendingOperations> {
-      const key = this.formatCacheKey(
-        this.rpcClient.getRpcUrl(),
-        RPCMethodName.GET_PENDING_OPERATIONS,
-        [args]
-      );
-      if (this.has(key)) {
-        return this.get(key);
-      } else {
-        const response = this.rpcClient.getPendingOperations(args);
-        this.put(key, response);
-        return response;
-      }
+  async getPendingOperations(
+    args: PendingOperationsQueryArguments = {}
+  ): Promise<PendingOperations> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_PENDING_OPERATIONS,
+      [args]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getPendingOperations(args);
+      this.put(key, response);
+      return response;
     }
+  }
 
   /**
    *

@@ -1,5 +1,4 @@
 import { prefix, prefixLength, Prefix } from './constants';
-
 import bs58check from 'bs58check';
 
 export enum ValidationResult {
@@ -69,6 +68,7 @@ const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK, Prefix.BLPK];
 const operationPrefix = [Prefix.O];
 const protocolPrefix = [Prefix.P];
 const blockPrefix = [Prefix.B];
+const smartRollupPrefix = [Prefix.SR1];
 
 /**
  * @description Used to check if an address or a contract address is valid.
@@ -86,7 +86,11 @@ const blockPrefix = [Prefix.B];
  * ```
  */
 export function validateAddress(value: string): ValidationResult {
-  return validatePrefixedValue(value, [...implicitPrefix, ...contractPrefix]);
+  return validatePrefixedValue(value, [
+    ...implicitPrefix,
+    ...contractPrefix,
+    ...smartRollupPrefix,
+  ]);
 }
 
 /**
@@ -248,4 +252,21 @@ export function validateBlock(value: string): ValidationResult {
  */
 export function validateSpendingKey(value: any): ValidationResult {
   return validatePrefixedValue(value, [Prefix.SASK]);
+}
+
+export function invalidErrorDetail(validation: ValidationResult): string {
+  switch (validation) {
+    case ValidationResult.NO_PREFIX_MATCHED:
+      return ': Invalid prefix';
+    case ValidationResult.INVALID_CHECKSUM:
+      return ': Checksum failed';
+    case ValidationResult.INVALID_LENGTH:
+      return ': Invalid length';
+    default:
+      return '';
+  }
+}
+
+export function validateSmartRollupAddress(value: string): ValidationResult {
+  return validatePrefixedValue(value, [...smartRollupPrefix]);
 }

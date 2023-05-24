@@ -10,7 +10,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    test('Verify contract.originate for a simple contract', async (done) => {
+    it('Verify contract.originate for a simple contract', async (done) => {
+    
       const op = await Tezos.contract.originate({
         balance: "1",
         code: `parameter string;

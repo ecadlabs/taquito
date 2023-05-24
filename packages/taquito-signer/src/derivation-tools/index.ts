@@ -1,4 +1,4 @@
-import { InvalidDerivationPathError } from '../errors';
+import { InvalidDerivationPathError } from '@taquito/core';
 
 export * as ECDSA from './ecdsa';
 export * as Ed25519 from './ed25519';
@@ -36,7 +36,7 @@ export class Path extends Array<number> {
     }
     for (let p of parts) {
       if (p.length === 0) {
-        throw new InvalidDerivationPathError(`invalid BIP32 path: ${s}`);
+        throw new InvalidDerivationPathError(s, `: Invalid BIP32 path`);
       }
       let h = 0;
       const last = p[p.length - 1];

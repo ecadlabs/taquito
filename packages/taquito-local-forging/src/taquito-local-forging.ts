@@ -8,10 +8,11 @@ import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { validateBlock, ValidationResult, InvalidOperationKindError } from '@taquito/utils';
-import { InvalidBlockHashError, InvalidOperationSchemaError } from './error';
+import { validateBlock, ValidationResult, invalidErrorDetail } from '@taquito/utils';
+import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash } from './protocols';
+import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
@@ -39,8 +40,9 @@ export class LocalForger implements Forger {
   private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 
   forge(params: ForgeParams): Promise<string> {
-    if (validateBlock(params.branch) !== ValidationResult.VALID) {
-      throw new InvalidBlockHashError(`The block hash ${params.branch} is invalid`);
+    const branchValidation = validateBlock(params.branch);
+    if (branchValidation !== ValidationResult.VALID) {
+      throw new InvalidBlockHashError(params.branch, invalidErrorDetail(branchValidation));
     }
 
     for (const content of params.contents) {
@@ -57,19 +59,17 @@ export class LocalForger implements Forger {
         } else if (content.kind === 'transaction' && diff[0] === 'parameters') {
           continue;
         } else if (content.kind === 'set_deposits_limit' && diff[0] === 'limit') {
-          continue
+          continue;
         } else if (
           content.kind === ('tx_rollup_submit_batch' as unknown) &&
           diff[0] === 'burn_limit'
         ) {
           continue;
         } else {
-          throw new InvalidOperationSchemaError(
-            `Missing properties: ${diff.join(', ').toString()}`
-          );
+          throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);
         }
       } else if (diff.length > 1) {
-        throw new InvalidOperationSchemaError(`Missing properties: ${diff.join(', ').toString()}`);
+        throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);
       }
     }
     const forged = this.codec.encoder(params).toLowerCase();

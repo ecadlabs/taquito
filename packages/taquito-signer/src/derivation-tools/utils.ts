@@ -1,4 +1,4 @@
-import { InvalidHexStringError } from '@taquito/utils';
+import { InvalidHexStringError } from '@taquito/core';
 
 export function parseHex(s: string): Uint8Array {
   const res: number[] = [];
@@ -6,7 +6,7 @@ export function parseHex(s: string): Uint8Array {
     const ss = s.slice(i, i + 2);
     const x = parseInt(ss, 16);
     if (Number.isNaN(x)) {
-      throw new InvalidHexStringError(`invalid hexadecimal number ${ss}`);
+      throw new InvalidHexStringError(ss);
     }
     res.push(x);
   }

@@ -7,13 +7,8 @@ import {
   Uint8ArrayConsumer,
 } from '../src/taquito-local-forging';
 import { commonCases } from '../../../integration-tests/data/allTestsCases';
-import {
-  InvalidOperationSchemaError,
-  InvalidBlockHashError,
-  UnsupportedOperationError,
-} from '../src/error';
-
-import { InvalidOperationKindError } from '@taquito/utils';
+import { InvalidOperationSchemaError, UnsupportedOperationError } from '../src/errors';
+import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
 import { schemaDecoder, SeedNonceRevelationSchema } from '../src/schema/operation';
 import { ProtoInferiorTo } from '../src/protocols';
 
@@ -54,7 +49,7 @@ describe('Forge and parse operations default protocol', () => {
         localForger.forge(operation);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining("The operation kind 'invalid' is unsupported"),
+          message: expect.stringContaining(`Invalid operation kind "invalid"`),
         })
       );
       expect(() => {
@@ -87,14 +82,9 @@ describe('Forge and parse operations default protocol', () => {
         localForger.forge(operation);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining('Missing properties: source'),
-        })
-      );
-      expect(() => {
-        localForger.forge(operation);
-      }).toThrow(
-        expect.objectContaining({
           name: expect.stringContaining('InvalidOperationSchemaError'),
+          message: expect.stringContaining('missing properties "source"'),
+          operation: expect.objectContaining({ kind: 'reveal' }),
         })
       );
     });
@@ -121,7 +111,7 @@ describe('Forge and parse operations default protocol', () => {
         localForger.forge(operation);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining('The block hash Invalid_Block_Hash is invalid'),
+          message: expect.stringContaining(`Invalid block hash "Invalid_Block_Hash"`),
         })
       );
       expect(() => {
@@ -162,7 +152,9 @@ describe('Forge and parse operations default protocol', () => {
         localForger.parse(invalidForged);
       }).toThrow(
         expect.objectContaining({
-          message: expect.stringContaining("The operation '76' is unsupported"),
+          name: expect.stringContaining('UnsupportedOperationError'),
+          message: expect.stringContaining(`Unsupported operation "76"`),
+          op: expect.stringContaining('76'),
         })
       );
       expect(() => {

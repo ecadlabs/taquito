@@ -1,8 +1,9 @@
-import { ForgedBytes, RPCTransferTicketOperation } from '../../src/operations/types';
+import { ForgedBytes } from '../../src/operations/types';
 import {
   METADATA_BALANCE_UPDATES_CATEGORY,
   OperationContentsAndResult,
   OperationContentsAndResultTransferTicket,
+  OperationContentsTransferTicket,
   OpKind,
 } from '@taquito/rpc';
 import { defaultConfigConfirmation } from '../../src/context';
@@ -12,15 +13,17 @@ describe('Transfer Operation L2 Tx Rollup', () => {
   let fakeContext: any;
   const fakeForgedBytes = {} as ForgedBytes;
 
-  const params: RPCTransferTicketOperation = {
+  const params: OperationContentsTransferTicket = {
     kind: OpKind.TRANSFER_TICKET,
-    fee: 804,
-    gas_limit: 5009,
-    storage_limit: 130,
+    source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+    counter: '145',
+    fee: '804',
+    gas_limit: '5009',
+    storage_limit: '130',
     ticket_contents: { string: 'foobar' },
     ticket_ty: { prim: 'string' },
     ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-    ticket_amount: 2,
+    ticket_amount: '2',
     destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
     entrypoint: 'default',
   };

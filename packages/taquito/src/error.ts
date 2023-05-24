@@ -52,3 +52,16 @@ export class InvalidPrepareParamsError extends Error {
     super(`No '${opKind}' operation parameters have been passed`);
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error that indicates invalid Preparation parameters being passed
+ */
+export class PublicKeyNotFoundError extends Error {
+  public name = 'PublicKeyNotFoundError';
+  constructor() {
+    super(
+      `Unable to retrieve public key from signer. If you are using a wallet, make sure your account is revealed`
+    );
+  }
+}
