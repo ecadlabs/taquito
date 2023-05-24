@@ -1,4 +1,4 @@
-import { Protocols } from '@taquito/taquito';
+import { Protocols, isProtocolAtLeast } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import BigNumber from 'bignumber.js';
 import {
@@ -13,7 +13,7 @@ import {
 
 CONFIGS().forEach(({ lib, protocol, rpc }) => {
   const Tezos = lib;
-  const mumbainet = (protocol === Protocols.PtMumbai2) ? test : test.skip;
+  const mumbaiPlus = isProtocolAtLeast(protocol, Protocols.PtMumbai2) ? test : test.skip;
   const alpha = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
@@ -598,7 +598,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
   describe(`Fetch constants for testnet`, () => {
 
-    mumbainet(`successfully fetches all constants for mumbainet using ${rpc}`, async (done) => {
+    mumbaiPlus(`successfully fetches all constants for mumbainet using ${rpc}`, async (done) => {
       Tezos.setRpcProvider(rpc);
       const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
 
