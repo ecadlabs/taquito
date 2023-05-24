@@ -1,9 +1,9 @@
-import { TezosToolkit, Protocols } from "@taquito/taquito";
+import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS, sleep } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  const flextesanet =  rpc === 'http://localhost:20000' ? test : test.skip;
+  const flextesanet = rpc === 'http://localhost:20000' ? test : test.skip;
 
   describe(`Test Drain Delegate using: ${rpc}`, () => {
     let Delegate: TezosToolkit;
@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     let Destination: TezosToolkit;
     let destinationPkh: string;
     beforeAll(async (done) => {
-      await setup(true);
+      await setup();
 
       try {
         Delegate = await createAddress();
@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const constants = await Delegate.rpc.getConstants();
         await sleep(((constants.preserved_cycles + 2) * constants.blocks_per_cycle * (constants.minimal_block_delay!.toNumber())) * 1000);
 
-      } catch(e) {
+      } catch (e) {
         console.log(JSON.stringify(e));
       }
       done();

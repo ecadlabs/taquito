@@ -1293,9 +1293,9 @@ export interface BallotsResponse {
 
 export type PeriodKindResponse =
   | 'proposal'
-  | 'testing_vote'
+  // | 'testing_vote'
   | 'testing'
-  | 'promotion_vote'
+  // | 'promotion_vote'
   | 'exploration'
   | 'cooldown'
   | 'promotion'
