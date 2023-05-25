@@ -15,7 +15,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       let constants = await Funder.rpc.getConstants();
       blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!
       blockTime = constants.minimal_block_delay!.toNumber()
-
+      console.log(await Funder.signer.publicKeyHash())
       // checking what period it's in and sleep until next proposal period (sleep time calculation written explicitly for readability)
       currentPeriod = await Funder.rpc.getCurrentPeriod();
       switch (currentPeriod.voting_period.kind) {
@@ -64,15 +64,19 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       // make the test sleep passed proposal period to get into expoloration period to inject ballot operation
       currentPeriod = await Funder.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'proposal') {
+        console.log(currentPeriod)
         await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
+        console.log(await Funder.rpc.getCurrentPeriod())
       }
       currentPeriod = await Funder.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'exploration') {
+        console.log(currentPeriod)
         const explorationBallotOp = await Funder.contract.ballot({
           proposal: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
           ballot: 'yay'
         });
         await explorationBallotOp.confirmation();
+        console.log(await Funder.rpc.getCurrentPeriod())
 
         expect(explorationBallotOp.operationResults).toBeDefined();
         expect(explorationBallotOp.operationResults?.kind).toEqual('ballot');
