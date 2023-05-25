@@ -50,7 +50,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
         await proposalsOp.confirmation();
-
+        console.log(await Funder.rpc.getCurrentPeriod())
         expect(proposalsOp.operationResults).toBeDefined();
         expect(proposalsOp.operationResults?.kind).toEqual('proposals');
         expect(proposalsOp.operationResults?.proposals).toEqual(['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']);
@@ -61,16 +61,16 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
     });
 
     flextesanet('Should be able to inject ballot operation in exploration period', async (done) => {
-      // make the test sleep passed proposal period to get into expoloration period to inject ballot operation
+      // make the test sleep passed proposal period to get into exploration period to inject ballot operation
       currentPeriod = await Funder.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'proposal') {
-        console.log(currentPeriod)
+        console.log(await Funder.rpc.getCurrentPeriod())
         await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
         console.log(await Funder.rpc.getCurrentPeriod())
       }
       currentPeriod = await Funder.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'exploration') {
-        console.log(currentPeriod)
+        console.log(await Funder.rpc.getCurrentPeriod())
         const explorationBallotOp = await Funder.contract.ballot({
           proposal: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
           ballot: 'yay'
