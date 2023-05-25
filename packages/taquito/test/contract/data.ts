@@ -334,7 +334,7 @@ export const originateResults = {
   opOb: {
     branch: 'test',
     contents: [
-      revealOp('test_pub_key_hash'),
+      revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
       {
         kind: 'origination',
         fee: '10000',
@@ -343,7 +343,7 @@ export const originateResults = {
         balance: '200000000',
         script: scriptSample,
         delegate: 'test_delegate',
-        source: 'test_pub_key_hash',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         counter: '2',
       },
     ],
@@ -358,7 +358,7 @@ export const originateResultsMutezTrue = {
   opOb: {
     branch: 'test',
     contents: [
-      revealOp('test_pub_key_hash'),
+      revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
       {
         kind: 'origination',
         fee: '10000',
@@ -367,7 +367,7 @@ export const originateResultsMutezTrue = {
         balance: '200',
         script: scriptSample,
         delegate: 'test_delegate',
-        source: 'test_pub_key_hash',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         counter: '2',
       },
     ],
@@ -382,7 +382,7 @@ export const originateResultsEstimate = {
   opOb: {
     branch: 'test',
     contents: [
-      revealOp('test_pub_key_hash'),
+      revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
       {
         kind: 'origination',
         fee: '391',
@@ -391,7 +391,7 @@ export const originateResultsEstimate = {
         balance: '200000000',
         script: scriptSample,
         delegate: 'test_delegate',
-        source: 'test_pub_key_hash',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         counter: '2',
       },
     ],
