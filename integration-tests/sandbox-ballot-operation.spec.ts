@@ -16,7 +16,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!
       blockTime = constants.minimal_block_delay!.toNumber()
 
-      // checking what period it's in and sleep until next proposal period (sleep time calculation code written explicitly for readability)
+      // checking what period it's in and sleep until next proposal period (sleep time calculation written explicitly for readability)
       currentPeriod = await Funder.rpc.getCurrentPeriod();
       switch (currentPeriod.voting_period.kind) {
         case 'proposal':
