@@ -53,7 +53,7 @@ import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
 
-const tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com/');
+const tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
@@ -86,7 +86,7 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://kathmandunet.ecadinfra.com/'));
+const readProvider = new RpcReadAdapter(new RpcClient('https://ghostnet.ecadinfra.com/'));
 
 const saplingToolkit = new SaplingToolkit(
     { saplingSigner: inMemorySpendingKey }, 
@@ -119,7 +119,7 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://kathmandunet.ecadinfra.com/'));
+const readProvider = new RpcReadAdapter(new RpcClient('https://ghostnet.ecadinfra.com/'));
 
 const saplingToolkit = new SaplingToolkit(
     { saplingSigner: inMemorySpendingKey }, 
@@ -156,7 +156,7 @@ Here is an example of how to prepare and inject a shielded transaction using Taq
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd'
-const rpcUrl = 'https://kathmandunet.ecadinfra.com/';
+const rpcUrl = 'https://ghostnet.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -199,7 +199,7 @@ inMemorySpendingKey.getSaplingViewingKeyProvider()
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   })
   .catch((error) => println(`Error: ${(error)}`));
 ```
@@ -228,7 +228,7 @@ Here is an example of how to prepare and inject a Sapling transaction using Taqu
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd'
-const rpcUrl = 'https://kathmandunet.ecadinfra.com/';
+const rpcUrl = 'https://ghostnet.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -262,7 +262,7 @@ saplingToolkit.prepareSaplingTransaction([{
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
 })
 .catch((error) => println(`Error: ${(error)}`));
 ```
@@ -286,7 +286,7 @@ Here is an example of how to prepare and inject an unshielded transaction using 
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd'
-const rpcUrl = 'https://kathmandunet.ecadinfra.com/';
+const rpcUrl = 'https://ghostnet.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -319,7 +319,7 @@ saplingToolkit.prepareUnshieldedTransaction({
         println(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
 })
 .catch((error) => println(`Error: ${(error)}`));
 ```
@@ -342,7 +342,7 @@ import { InMemoryViewingKey } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
 
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
-const tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com/');
+const tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
 
 const saplingContract = await tezos.contract.at('KT1JMDxmQ4DAbzXpzAJmL6QeZ9HB7DTVnZYd');
 
