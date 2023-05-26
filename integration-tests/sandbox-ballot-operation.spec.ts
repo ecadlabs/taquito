@@ -23,19 +23,15 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
           break;
         case 'exploration':
           await sleep(((currentPeriod.remaining + (blocksPerVotingPeriod * 3) + 1) * constants.minimal_block_delay!.toNumber()) * 1000)
-          console.log(await Funder.rpc.getConstants())
           break;
         case 'cooldown':
           await sleep(((currentPeriod.remaining + (blocksPerVotingPeriod * 2) + 1) * constants.minimal_block_delay!.toNumber()) * 1000)
-          console.log(await Funder.rpc.getConstants())
           break;
         case 'promotion':
           await sleep(((currentPeriod.remaining + (blocksPerVotingPeriod * 1) + 1) * constants.minimal_block_delay!.toNumber()) * 1000)
-          console.log(await Funder.rpc.getConstants())
           break;
         case 'adoption':
           await sleep(((currentPeriod.remaining + (blocksPerVotingPeriod * 0) + 1) * constants.minimal_block_delay!.toNumber()) * 1000)
-          console.log(await Funder.rpc.getConstants())
           break;
       }
       done()
@@ -50,7 +46,6 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
         await proposalsOp.confirmation();
-        console.log(await Funder.rpc.getCurrentPeriod())
         expect(proposalsOp.operationResults).toBeDefined();
         expect(proposalsOp.operationResults?.kind).toEqual('proposals');
         expect(proposalsOp.operationResults?.proposals).toEqual(['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']);
@@ -64,20 +59,23 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       // make the test sleep passed proposal period to get into exploration period to inject ballot operation
       currentPeriod = await Funder.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'proposal') {
-        console.log(await Funder.rpc.getCurrentPeriod(), ((currentPeriod.remaining + 1) * blockTime))
-        console.log((await Funder.rpc.getBlockHeader({ block: 'head' })).level)
+        console.log(await Funder.rpc.getCurrentPeriod())
+        console.log('before block level: ', (await Funder.rpc.getBlockHeader({ block: 'head' })).level)
+        console.log('wait ', await Funder.rpc.getCurrentPeriod(), (currentPeriod.remaining + 1), 'blocks')
         await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
-        console.log((await Funder.rpc.getBlockHeader({ block: 'head' })).level)
+        console.log('after block level: ', (await Funder.rpc.getBlockHeader({ block: 'head' })).level)
         console.log(await Funder.rpc.getCurrentPeriod())
       }
       currentPeriod = await Funder.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'exploration') {
         console.log(await Funder.rpc.getCurrentPeriod())
+        console.log('before block level: ', (await Funder.rpc.getBlockHeader({ block: 'head' })).level)
         const explorationBallotOp = await Funder.contract.ballot({
           proposal: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
           ballot: 'yay'
         });
         await explorationBallotOp.confirmation();
+        console.log('after block level: ', (await Funder.rpc.getBlockHeader({ block: 'head' })).level)
         console.log(await Funder.rpc.getCurrentPeriod())
 
         expect(explorationBallotOp.operationResults).toBeDefined();
