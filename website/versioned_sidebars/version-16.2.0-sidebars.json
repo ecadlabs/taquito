@@ -11,8 +11,11 @@
         "react-template",
         "amendment_and_voting",
         "batch_API",
+        "ballot",
         "beaconwallet-singleton",
         "confirmation_event_stream",
+        "consensus_key",
+        "contract_call_parameters",
         "set_delegate",
         "dapp_prelaunch",
         "estimate",
@@ -22,11 +25,14 @@
         "increase_paid_storage",
         "lambda_view",
         "liquidity_baking",
+        "local_forger",
+        "manager_lambda",
         "maps_bigmaps",
         "michelsonmap",
         "multisig_doc",
         "on_chain_views",
         "originate",
+        "prepare",
         "rpc_nodes",
         "rpc_package",
         "signing",
@@ -42,7 +48,9 @@
         "validators",
         "wallet_API",
         "wallets",
-        "web3js_taquito"
+        "web3js_taquito",
+        "subscribe_event",
+        "smart_rollups"
       ]
     },
     {
@@ -53,7 +61,6 @@
       "collapsible": false,
       "items": [
         "inmemory_signer",
-        "tezbridge_signer",
         "ledger_signer"
       ]
     },
