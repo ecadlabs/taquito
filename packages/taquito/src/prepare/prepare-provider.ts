@@ -444,6 +444,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
+    console.log(`contents: ${JSON.stringify(contents)}`);
 
     return {
       opOb: {
@@ -1043,17 +1044,17 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       DEFAULT_PARAMS
     );
 
-    const ops = [
-      {
-        kind: OpKind.TRANSACTION,
-        fee: params.fee ?? estimateLimits.fee,
-        gas_limit: params.gasLimit ?? estimateLimits.gasLimit,
-        storage_limit: params.storageLimit ?? estimateLimits.storageLimit,
-        amount: String(params.amount),
-        destination: params.to,
-        parameters: params.parameter,
-      },
-    ] as RPCOperation[];
+    const op = await createTransferOperation({
+      fee: params.fee ?? estimateLimits.fee,
+      gasLimit: params.gasLimit ?? estimateLimits.gasLimit,
+      storageLimit: params.storageLimit ?? estimateLimits.storageLimit,
+      amount: params.amount,
+      to: params.to,
+      parameter: params.parameter,
+    });
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
 
