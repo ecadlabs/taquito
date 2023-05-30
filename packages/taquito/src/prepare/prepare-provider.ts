@@ -444,7 +444,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
-    console.log(`contents: ${JSON.stringify(contents)}`);
 
     return {
       opOb: {
