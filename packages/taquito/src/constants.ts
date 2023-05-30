@@ -104,11 +104,11 @@ export const isProtocolAtLeast = (protocol: Protocols, minimumProtocol: Protocol
 };
 
 const getProtocolNumber = (protocol: Protocols): number => {
-  const entry = Object.keys(Protocols).find(
-    (_version, _i, values) => values.indexOf(protocol) !== -1
+  const entry = Object.entries(protocols).find(
+    ([_version, list], _i) => list.indexOf(protocol) !== -1
   );
   if (!entry) {
     throw new Error(`Protocol ${protocol} is not defined.`);
   }
-  return Number(entry);
+  return Number(entry[0]);
 };

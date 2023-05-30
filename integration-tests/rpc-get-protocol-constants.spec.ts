@@ -656,7 +656,8 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
           page_size: 4096,
           redundancy_factor: 16,
           slot_size: 1048576,
-          availability_threshold: 50
+          attestation_threshold: 50,
+          blocks_per_epoch: 32,
         },
         minimal_stake: new BigNumber('6000000000'),
         cache_layout_size: 3,
