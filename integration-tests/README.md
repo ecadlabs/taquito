@@ -334,7 +334,7 @@ loop
 end
 
 Redis->>+Redis: Remove lease entry
-Redis->>+Keygen: Publich removal event
+Redis->>+Keygen: Publish removal event
 Keygen->>+Redis: Add key to pool if amount is smaller than spendable amount
 
 User->>+Keygen: 404 :[
