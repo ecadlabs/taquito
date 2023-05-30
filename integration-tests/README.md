@@ -75,7 +75,7 @@ To run tests against a node that is not pre-configured in Taquito, use:
 ## Using a Secret Key Instead of the Keygen API
 
 
-By default, the integration tests use an ephemeral key managed by the Keygen API, which requires internal access. However, to use a secret key of your own instead, use the CLI option `<testnet>-secret-key`, like this:
+By default, the integration tests use an ephemeral key managed by the Keygen API, which requires internal access (for detail on Keygen see the below). However, to use a secret key of your own instead, use the CLI option `<testnet>-secret-key`, like this:
 
 
 ```
@@ -304,4 +304,38 @@ You should see something like:
 May 11 20:14:39.014 - 016-PtMumbai.baker.transitions: received new head BLr6cAaj2oM2ibakFp8zZMNEbpcSAZ94WhzeV57njD7NrnaYrZU at
 May 11 20:14:39.014 - 016-PtMumbai.baker.transitions:   level 1152, round 0
 Block BLCjrRGMJxZEBoZaxafUHcTCNBnmGzRfX2Qf5qru2XtAhiNEsun (1153) injected
+```
+
+## The Keygen API
+
+The Keygen API in Taquito is specifically designed for testing purposes. It allows developers to generate and manage key pairs (public and private keys) for Tezos accounts during the testing phase of their applications. This is useful for simulating various scenarios, such as transactions, smart contract interactions, and other on-chain operations, without the need to use real Tezos accounts or real funds.
+
+The tool is presently used internally for Taquito Integration tests in the Continuous Integration and Continuous Delivery system.
+
+### How the Keygen API works
+
+```mermaid
+sequenceDiagram
+participant User
+participant Keygen
+participant Redis
+
+User->>+Keygen: Get Ephemeral Key
+Keygen->>+Redis: Pop Key from pool
+Keygen->>+Redis: Create lease entry in Redis (with expiry date)
+Keygen-->>+User: Return Ephemeral Key Lease ID
+User->>+User: Create a remote signer with Lease ID
+
+loop 
+    User->>+Keygen: Sign Operation
+    Keygen->>+Redis: Retrieve private key to sign based on Lease ID
+    Keygen->>+Keygen: Sign user data
+    Keygen-->>+User: Return Signed Operation
+end
+
+Redis->>+Redis: Remove lease entry
+Redis->>+Keygen: Publich removal event
+Keygen->>+Redis: Add key to pool if amount is smaller than spendable amount
+
+User->>+Keygen: 404 :[
 ```
