@@ -1043,17 +1043,18 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       DEFAULT_PARAMS
     );
 
-    const ops = [
-      {
-        kind: OpKind.TRANSACTION,
-        fee: params.fee ?? estimateLimits.fee,
-        gas_limit: params.gasLimit ?? estimateLimits.gasLimit,
-        storage_limit: params.storageLimit ?? estimateLimits.storageLimit,
-        amount: String(params.amount),
-        destination: params.to,
-        parameters: params.parameter,
-      },
-    ] as RPCOperation[];
+    const op = {
+      kind: OpKind.TRANSACTION,
+      fee: params.fee ?? estimateLimits.fee,
+      gas_limit: params.gasLimit ?? estimateLimits.gasLimit,
+      storage_limit: params.storageLimit ?? estimateLimits.storageLimit,
+      amount: String(params.amount),
+      destination: params.to,
+      parameters: params.parameter,
+    } as RPCOperation;
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
 
