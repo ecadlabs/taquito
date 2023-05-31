@@ -93,7 +93,7 @@ const getRevealGasLimitInternal = (address: string) => {
     case 'tz4':
       return DEFAULT_GAS_LIMIT.REVEAL_TZ4;
     default:
-      throw new Error(`Cannot estimate reveal fee for ${address}`);
+      throw new Error(`Cannot estimate reveal gas limit for ${address}`);
   }
 };
 
