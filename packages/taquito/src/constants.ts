@@ -96,19 +96,3 @@ const getRevealGasLimitInternal = (address: string) => {
       throw new Error(`Cannot estimate reveal gas limit for ${address}`);
   }
 };
-
-export const isProtocolAtLeast = (protocol: Protocols, minimumProtocol: Protocols): boolean => {
-  const protocolNumber = getProtocolNumber(protocol);
-  const minProtocolNumber = getProtocolNumber(minimumProtocol);
-  return protocolNumber >= minProtocolNumber;
-};
-
-const getProtocolNumber = (protocol: Protocols): number => {
-  const entry = Object.entries(protocols).find(
-    ([_version, list], _i) => list.indexOf(protocol) !== -1
-  );
-  if (!entry) {
-    throw new Error(`Protocol ${protocol} is not defined.`);
-  }
-  return Number(entry[0]);
-};
