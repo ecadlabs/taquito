@@ -8,7 +8,7 @@ import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { validateBlock, ValidationResult, invalidErrorDetail } from '@taquito/utils';
+import { validateBlock, ValidationResult, invalidDetail } from '@taquito/utils';
 import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash } from './protocols';
@@ -42,7 +42,7 @@ export class LocalForger implements Forger {
   forge(params: ForgeParams): Promise<string> {
     const branchValidation = validateBlock(params.branch);
     if (branchValidation !== ValidationResult.VALID) {
-      throw new InvalidBlockHashError(params.branch, invalidErrorDetail(branchValidation));
+      throw new InvalidBlockHashError(params.branch, invalidDetail(branchValidation));
     }
 
     for (const content of params.contents) {

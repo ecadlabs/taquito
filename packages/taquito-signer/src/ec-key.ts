@@ -4,7 +4,7 @@ import {
   b58cdecode,
   prefix,
   isValidPrefix,
-  invalidErrorDetail,
+  invalidDetail,
   Prefix,
   ValidationResult,
 } from '@taquito/utils';
@@ -51,7 +51,7 @@ export class ECKey {
     const keyPrefix = key.substring(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
       throw new InvalidKeyError(
-        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
           ` expecting one of the following prefix '${Prefix.SPSK}', '${Prefix.SPESK}', '${Prefix.P2SK}' or '${Prefix.P2ESK}'.`
       );
     }
