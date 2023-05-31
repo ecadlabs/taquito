@@ -62,14 +62,14 @@ export function verifySignature(
 
 function validateMessageNotEmpty(message: string) {
   if (message === '') {
-    throw new InvalidMessageError(message, ': Cannot be empty.');
+    throw new InvalidMessageError(message, `can't be empty`);
   }
   return message;
 }
 
 export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
   if (publicKey === '') {
-    throw new InvalidPublicKeyError(publicKey, ': Can not be empty');
+    throw new InvalidPublicKeyError(publicKey, `can't be empty`);
   }
   const pkPrefix = publicKey.substring(0, 4);
   const publicKeyValidation = validatePublicKey(publicKey);

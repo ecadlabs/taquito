@@ -143,7 +143,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidViewParameterError);
-      expect(error.message).toEqual(
+      expect(error.message).toContain(
         `Invalid view arguments "bar" received for name "foo" expecting one of the following signatures ${JSON.stringify(
           { parameter: 'nat', result: 'nat' }
         )}`

@@ -61,7 +61,7 @@ describe('inmemory-signer', () => {
   it('Invalid key', (done) => {
     expect(function () {
       new InMemorySigner('test');
-    }).toThrow(`Invalid prefix`);
+    }).toThrow(`unsupported prefix`);
     done();
   });
 
