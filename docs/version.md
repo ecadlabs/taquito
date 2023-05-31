@@ -2,6 +2,72 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v16.2.0
+
+**Potential Breaking Changes**:
+- Some error classes may have been moved to the `@taquito/core` package. Note to developers if they are exporting any error classes to capture errors, there might be a need to adjust the export path
+
+**Note**: There are significant (backwards compatible) changes to the `@taquito/taquito` package, largely regarding the flow of preparing, estimating, forging, and injecting operations into a node. No breaking changes are expected, but users are welcomed to reach out to the team if any issues arise.
+
+
+## Summary
+### New Features
+- Introduction of the new `@taquito/core` package, which will contain important types and shared classes #1992
+
+
+### Bug Fixes
+- Fixed contract calls with nested `option` with `Some None` #2344
+- Fixed a broken `isNode` check that checks whether the runtime environment is a Node environment or not [PR#2498](https://github.com/ecadlabs/taquito/pull/2498)
+
+### Improvement
+- `@taquito/taquito` - Tweaked the functionality of `PrepareProvider` to not have coupling with Estimation, it will now output `PreparedOperation` with default fees, gas limits and, storage limits #2257
+- `@taquito/taquito` - Added a filter for events listener to exclude failed events #2319
+- `@taquito/utils` - Updated address validation to include smart rollup addresses #2444
+- Removed duplicate error classes and did a small audit to streamline them across all packages #1993
+- Improved error messages and fix relevant error classes in `@taquito/local-forging` and `@taquito/signer` #1994
+
+
+### Documentation
+- Updated old Michelson code in our smart contract documentation #2482
+- Updated `README` to reference Mumbainet #2459
+- Updated wrong example in docs for Tezos domains #2436
+- Added extra detail on complex parameter calls in the docs #2443
+
+
+### Internals
+- `OperationEmitter` class in `@taquito/taquito` have been replaced with `PrepareProvider` and the `Provider` abstract class #2257
+    - RpcContractProvider, RpcEstimateProvider, RpcBatchProvider, and RpcTzProvider no longer extends `OperationEmitter`, and is replaced with a more lightweight abstract class `Provider` #2428, #2429, #2430, #2431
+- Removed the dependency `axios-fetch-adapter` and adapted the code directly into Taquito [PR#2457](https://github.com/ecadlabs/taquito/pull/2457)
+
+### `@taquito/taquito` - Added a filter for events listener to exclude failed events
+Introduces a new filter `excludeFailedOperations` to determine whether you'd want to filter out failed events or not
+```typescript
+const Tezos = new TezosToolkit(RPC_URL);
+
+Tezos.setStreamProvider(
+  Tezos.getFactory(PollingSubscribeProvider)({
+    shouldObservableSubscriptionRetry: true, 
+    pollingIntervalMilliseconds: 1500 
+  })
+);
+
+try {
+  const sub = Tezos.stream.subscribeEvent({
+    tag: 'tagName',
+    address: 'KT1_CONTRACT_ADDRESS',
+    excludeFailedOperations: true
+  });
+    
+  sub.on('data', console.log);
+    
+} catch (e) {
+  console.log(e);
+}
+```
+
+### `@taquito/taquito` - Tweaked the functionality of `PrepareProvider`
+The `PrepareProvider` is a somewhat new feature to Taquito that allows users to independently create a `PreparedOperation` object. It's behaviour is slightly changed so that it **does not** estimate directly when preparing. The estimation and the preparation process are now 2 separate process, removing the circular dependency it used to have.
+
 
 # Taquito v16.1.1
 ## Bug Fixes
