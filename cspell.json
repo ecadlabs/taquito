@@ -75,6 +75,7 @@
         "**/*.mdx",
         "**/*.yml",
         "**/*.yaml",
+        "**/*.sh",
         "**/*.svelte"
     ],
     "ignorePaths": [
