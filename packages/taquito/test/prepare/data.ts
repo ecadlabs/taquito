@@ -9,7 +9,7 @@ export const preparedOriginationOpWithReveal = {
         fee: '374',
         public_key: 'test_pub_key',
         source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-        gas_limit: '2200',
+        gas_limit: '249',
         storage_limit: '0',
         counter: '1',
       },
