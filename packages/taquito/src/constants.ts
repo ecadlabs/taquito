@@ -2,10 +2,10 @@ export enum DEFAULT_GAS_LIMIT {
   DELEGATION = 10600,
   ORIGINATION = 10600,
   TRANSFER = 10600,
-  REVEAL_TZ1 = 2000,
-  REVEAL_TZ2 = 2000,
-  REVEAL_TZ3 = 2000,
-  REVEAL_TZ4 = 2000,
+  REVEAL_TZ1 = 166,
+  REVEAL_TZ2 = 152,
+  REVEAL_TZ3 = 1091,
+  REVEAL_TZ4 = 1671,
 }
 export enum DEFAULT_FEE {
   DELEGATION = 1257,
@@ -80,7 +80,7 @@ export enum ChainIds {
 }
 
 export const getRevealGasLimit = (address: string) =>
-  Math.round((getRevealGasLimitInternal(address) * 11) / 10);
+  Math.round((getRevealGasLimitInternal(address) * 15) / 10);
 
 const getRevealGasLimitInternal = (address: string) => {
   switch (address.substring(0, 3)) {
