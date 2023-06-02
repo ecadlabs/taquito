@@ -79,7 +79,9 @@ export class ContractsLibrary implements Extension {
   private validateContractScriptFormat(script: ScriptedContracts, address: string) {
     if (!script.code) {
       throw new InvalidScriptFormatError(
-        `An invalid script property has been provided for ${address}. The script property can be retrieved from TezosToolkit.rpc.getNormalizedScript(${address}). Invalid script: ${script}`
+        `Invalid script format of ${address} missing property "code". Valid script can be retrieved from "TezosToolkit.rpc.getNormalizedScript(${address})".`,
+        script,
+        address
       );
     }
   }

@@ -151,7 +151,7 @@ describe('ContractsLibrary tests', () => {
       })
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('An invalid script property has been provided for'),
+        message: expect.stringContaining('Invalid script format'),
       })
     );
   });
