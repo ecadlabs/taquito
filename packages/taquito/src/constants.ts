@@ -2,7 +2,16 @@ export enum DEFAULT_GAS_LIMIT {
   DELEGATION = 10600,
   ORIGINATION = 10600,
   TRANSFER = 10600,
-  REVEAL = 1100,
+  /* This is used for gas_limit. There is no harm in setting a higher limit. 
+   Only if an account has a balance that is very close to the total gas consumption, 
+   then this margin can fail the operation.
+   Another benefit of this higher value is that then Dapps build with Taquito 17 can
+   still work with Mumbainet, as this value is higher than the reveal cost in Mumbai.
+  */
+  REVEAL_TZ1 = 2000,
+  REVEAL_TZ2 = 2000,
+  REVEAL_TZ3 = 2000,
+  REVEAL_TZ4 = 2000,
 }
 export enum DEFAULT_FEE {
   DELEGATION = 1257,
@@ -36,7 +45,7 @@ export enum Protocols {
   PtLimaPtL = 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   PtMumbaii = 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
-  PtNairob = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
+  PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -54,7 +63,7 @@ export const protocols = {
   '014': [Protocols.PtKathman],
   '015': [Protocols.PtLimaPtL],
   '016': [Protocols.PtMumbai2], // mumbai v2
-  '017': [Protocols.PtNairob],
+  '017': [Protocols.PtNairobi],
   '018': [Protocols.ProtoALpha],
 };
 
@@ -73,5 +82,23 @@ export enum ChainIds {
   LIMANET = 'NetXizpkH94bocH',
   MUMBAINET = 'NetXQw6nWSnrJ5t',
   MUMBAINET2 = 'NetXgbcrNtXD2yA',
-  NAIROBINET = 'NetXyuzvDo2Ugzb'
+  NAIROBINET = 'NetXyuzvDo2Ugzb',
 }
+
+export const getRevealGasLimit = (address: string) =>
+  Math.round((getRevealGasLimitInternal(address) * 11) / 10);
+
+const getRevealGasLimitInternal = (address: string) => {
+  switch (address.substring(0, 3)) {
+    case 'tz1':
+      return DEFAULT_GAS_LIMIT.REVEAL_TZ1;
+    case 'tz2':
+      return DEFAULT_GAS_LIMIT.REVEAL_TZ2;
+    case 'tz3':
+      return DEFAULT_GAS_LIMIT.REVEAL_TZ3;
+    case 'tz4':
+      return DEFAULT_GAS_LIMIT.REVEAL_TZ4;
+    default:
+      throw new Error(`Cannot estimate reveal gas limit for ${address}`);
+  }
+};

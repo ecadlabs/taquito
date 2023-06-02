@@ -83,7 +83,7 @@ const nairobinetEphemeral = {
   knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtNairobi,
   knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtNairobi,
   knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtNairobi,
-  protocol: Protocols.PtNairob,
+  protocol: Protocols.PtNairobi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/nairobinet',
@@ -119,7 +119,7 @@ const ghostnetEphemeral = {
   knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
   knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
   knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
-  protocol: Protocols.PtNairob,
+  protocol: Protocols.PtNairobi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ghostnet',
@@ -155,7 +155,7 @@ const nairobinetSecretKey = {
   knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtNairobi,
   knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtNairobi,
   knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtNairobi,
-  protocol: Protocols.PtNairob,
+  protocol: Protocols.PtNairobi,
   signerConfig: defaultSecretKey
 };
 
