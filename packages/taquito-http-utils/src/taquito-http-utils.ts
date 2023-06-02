@@ -6,6 +6,7 @@
 import fetchAdapter from './fetch-adapter';
 import { STATUS_CODE } from './status_code';
 import axios from 'axios';
+import { HttpRequestFailed, HttpResponseError } from './errors';
 
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
 
@@ -13,6 +14,7 @@ const adapter = isNode ? undefined : fetchAdapter;
 
 export * from './status_code';
 export { VERSION } from './version';
+export { HttpRequestFailed, HttpResponseError } from './errors';
 
 enum ResponseType {
   TEXT = 'text',
@@ -29,36 +31,6 @@ export interface HttpRequestOptions {
   query?: ObjectType;
   headers?: { [key: string]: string };
   mimeType?: string;
-}
-
-/**
- *  @category Error
- *  @description This error will be thrown when the endpoint returns an HTTP error to the client
- */
-export class HttpResponseError extends Error {
-  public name = 'HttpResponse';
-
-  constructor(
-    public message: string,
-    public status: STATUS_CODE,
-    public statusText: string,
-    public body: string,
-    public url: string
-  ) {
-    super(message);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates a general failure in making the HTTP request
- */
-export class HttpRequestFailed extends Error {
-  public name = 'HttpRequestFailed';
-
-  constructor(public message: string) {
-    super(message);
-  }
 }
 
 export class HttpBackend {
@@ -102,6 +74,7 @@ export class HttpBackend {
   /**
    *
    * @param options contains options to be passed for the HTTP request (url, method and timeout)
+   * @throws {@link HttpRequestFailed} | {@link HttpResponseError}
    */
   async createRequest<T>(
     { url, method, timeout = this.timeout, query, headers = {}, json = true }: HttpRequestOptions,
@@ -152,7 +125,7 @@ export class HttpBackend {
           url + this.serialize(query)
         );
       } else {
-        throw new HttpRequestFailed(`${method} ${url + this.serialize(query)} ${String(err)}`);
+        throw new HttpRequestFailed(String(method), url + this.serialize(query), err);
       }
     }
   }
