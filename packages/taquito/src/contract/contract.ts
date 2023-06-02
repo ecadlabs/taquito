@@ -1,4 +1,4 @@
-import { ParameterSchema, Schema, ViewSchema } from '@taquito/michelson-encoder';
+import { ParameterSchema, Schema, ViewSchema, EventSchema } from '@taquito/michelson-encoder';
 import {
   EntrypointsResponse,
   MichelsonV1Expression,
@@ -144,6 +144,7 @@ export class ContractAbstraction<
 
   public readonly parameterSchema: ParameterSchema;
   public readonly viewSchema: ViewSchema[];
+  public readonly eventSchema: EventSchema[];
 
   constructor(
     public readonly address: string,
@@ -162,6 +163,7 @@ export class ContractAbstraction<
     if (this.viewSchema.length !== 0) {
       this._initializeOnChainViews(this, rpc, this.readProvider, this.viewSchema);
     }
+    this.eventSchema = EventSchema.fromRPCResponse({ script: this.script });
     this._initializeMethods(this, this.entrypoints.entrypoints, this.rpc, this.readProvider);
   }
 
