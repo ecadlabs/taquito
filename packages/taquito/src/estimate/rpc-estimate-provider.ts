@@ -28,7 +28,7 @@ import { ContractMethod, ContractMethodObject, ContractProvider } from '../contr
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
-import { InvalidAddressError } from '@taquito/core';
+import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
 
 // RPC requires a signature but does not verify it
 const SIGNATURE_STUB =
@@ -169,10 +169,14 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (toValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.to, invalidErrorDetail(toValidation));
     }
-    const srouceValidation = validateAddress(rest.source ?? '');
-    if (rest.source && srouceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, invalidErrorDetail(srouceValidation));
+    const sourceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidErrorDetail(sourceValidation));
     }
+    if (rest.amount < 0) {
+      throw new InvalidAmountError(rest.amount.toString());
+    }
+
     const preparedOperation = await this.prepare.transaction({
       fee,
       storageLimit,
@@ -365,6 +369,9 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param params increasePaidStorage operation parameters
    */
   async increasePaidStorage({ fee, storageLimit, gasLimit, ...rest }: IncreasePaidStorageParams) {
+    if (rest.amount < 0) {
+      throw new InvalidAmountError(rest.amount.toString());
+    }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.increasePaidStorage({
       fee,

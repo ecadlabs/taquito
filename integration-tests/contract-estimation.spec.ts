@@ -4,6 +4,7 @@ import { CONFIGS } from "./config";
 import { originate, originate2, transferImplicit2 } from "./data/lambda";
 import { ligoSample } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
+import { InvalidAmountError } from "@taquito/core";
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
   const Tezos = lib;
@@ -155,6 +156,13 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
+      done();
+    });
+
+    it('should throw error when trying to estimate transfer with negative amount in param', async (done) => {
+      expect(async () => {
+        const est = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: -1 });
+      }).rejects.toThrowError(InvalidAmountError);
       done();
     });
   });

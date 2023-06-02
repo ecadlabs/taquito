@@ -35,7 +35,12 @@ import {
   invalidErrorDetail,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { InvalidAddressError, InvalidKeyHashError, InvalidOperationKindError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidAmountError,
+  InvalidKeyHashError,
+  InvalidOperationKindError,
+} from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 
@@ -71,6 +76,10 @@ export class OperationBatch extends Provider {
     if (toValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.to, invalidErrorDetail(toValidation));
     }
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
+
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
   }

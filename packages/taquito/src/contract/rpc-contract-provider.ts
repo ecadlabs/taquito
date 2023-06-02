@@ -24,7 +24,11 @@ import {
   validateContractAddress,
   ValidationResult,
 } from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidAmountError,
+  InvalidContractAddressError,
+} from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -366,6 +370,9 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidErrorDetail(sourceValidation));
     }
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
 
     const publicKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(params, this.estimator.transfer.bind(this.estimator));
@@ -483,6 +490,9 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param params increasePaidStorage operation parameter
    */
   async increasePaidStorage(params: IncreasePaidStorageParams) {
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
     const publicKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(
       params,

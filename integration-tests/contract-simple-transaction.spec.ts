@@ -1,3 +1,4 @@
+import { InvalidAmountError } from '@taquito/core';
 import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -20,5 +21,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
       done();
     });
+
+    it('should throw an error when trying to send negative amount', async (done) => {
+      expect(async () => {
+        const op = await Tezos.contract.transfer({
+          amount: -1,
+          to: 'tz4HQ8VeXAyrZMhES1qLMJAc9uAVXjbMpS8u'
+        });
+
+        await op.confirmation();
+      }).rejects.toThrowError(InvalidAmountError);     
+      
+      done();
+    })
   });
 });
