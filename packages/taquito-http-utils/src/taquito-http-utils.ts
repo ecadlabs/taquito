@@ -80,6 +80,7 @@ export class HttpBackend {
     { url, method, timeout = this.timeout, query, headers = {}, json = true }: HttpRequestOptions,
     data?: object | string
   ) {
+    const urlWithQuery = url + this.serialize(query);
     let resType: ResponseType;
     let transformResponse = undefined;
 
@@ -96,7 +97,7 @@ export class HttpBackend {
 
     try {
       const response = await axios.request<T>({
-        url: url + this.serialize(query),
+        url: urlWithQuery,
         method: method ?? 'GET',
         headers: headers,
         responseType: resType,
@@ -122,10 +123,10 @@ export class HttpBackend {
           err.response.status as STATUS_CODE,
           err.response.statusText,
           errorData,
-          url + this.serialize(query)
+          urlWithQuery
         );
       } else {
-        throw new HttpRequestFailed(String(method), url + this.serialize(query), err);
+        throw new HttpRequestFailed(String(method), urlWithQuery, err);
       }
     }
   }

@@ -1,11 +1,11 @@
-import { NetworkError, TaquitoError } from '@taquito/core';
+import { NetworkError } from '@taquito/core';
 import { STATUS_CODE } from './status_code';
 
 /**
  *  @category Error
  *  @description Error indicates a general failure in making the HTTP request
  */
-export class HttpRequestFailed extends TaquitoError {
+export class HttpRequestFailed extends NetworkError {
   constructor(public method: string, public url: string, public cause: Error) {
     super();
     this.name = 'HttpRequestFailed';
