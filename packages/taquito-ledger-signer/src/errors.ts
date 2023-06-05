@@ -1,32 +1,36 @@
+import { TaquitoError } from '@taquito/core';
+
 /**
  *  @category Error
- *  @description Error that indicates an invalid or unparseable ledger response
+ *  @description Error indicates an invalid or unparseable ledger response
  */
-export class InvalidLedgerResponseError extends Error {
-  public name = 'InvalidLedgerResponseError';
+export class InvalidLedgerResponseError extends TaquitoError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'InvalidLedgerResponseError';
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to retrieve a Public Key from Ledger signer
+ *  @description Error indicates a failure when trying to retrieve a Public Key from Ledger signer
  */
-export class PublicKeyRetrievalError extends Error {
-  public name = 'PublicKeyRetrievalError';
-  constructor() {
-    super(`Unable to retrieve Public Key from Ledger`);
+export class PublicKeyRetrievalError extends TaquitoError {
+  constructor(public cause: any) {
+    super();
+    this.name = 'PublicKeyRetrievalError';
+    this.message = `Unable to retrieve Public Key from Ledger`;
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to retrieve a Public Key Hash from Ledger signer
+ *  @description Error indicates a failure when trying to retrieve a Public Key Hash from Ledger signer
  */
-export class PublicKeyHashRetrievalError extends Error {
-  public name = 'PublicKeyHashRetrievalError';
+export class PublicKeyHashRetrievalError extends TaquitoError {
   constructor() {
-    super(`Unable to retrieve Public Key Hash from Ledger`);
+    super();
+    this.name = 'PublicKeyHashRetrievalError';
+    this.message = 'Unable to retrieve Public Key Hash from Ledger';
   }
 }

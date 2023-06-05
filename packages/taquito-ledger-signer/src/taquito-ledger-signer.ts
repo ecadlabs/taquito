@@ -152,7 +152,7 @@ export class LedgerSigner implements Signer {
       );
       return responseLedger;
     } catch (error) {
-      throw new PublicKeyRetrievalError();
+      throw new PublicKeyRetrievalError(error);
     }
   }
 
@@ -175,7 +175,9 @@ export class LedgerSigner implements Signer {
       signature = ledgerResponse.slice(0, ledgerResponse.length - 2).toString('hex');
     } else {
       if (!validateResponse(ledgerResponse)) {
-        throw new InvalidLedgerResponseError('Cannot parse ledger response');
+        throw new InvalidLedgerResponseError(
+          'Invalid signature return by ledger unable to parse the response'
+        );
       }
       const idxLengthRVal = 3; // Third element of response is length of r value
       const rValue = extractValue(idxLengthRVal, ledgerResponse);
