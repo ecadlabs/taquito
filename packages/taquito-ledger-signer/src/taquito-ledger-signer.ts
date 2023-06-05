@@ -19,7 +19,7 @@ import {
   PublicKeyHashRetrievalError,
   PublicKeyRetrievalError,
   InvalidLedgerResponseError,
-} from './error';
+} from './errors';
 import { InvalidDerivationPathError, ProhibitedActionError } from '@taquito/core';
 
 export { InvalidDerivationPathError } from '@taquito/core';
