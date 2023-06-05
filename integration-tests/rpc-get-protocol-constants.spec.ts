@@ -597,7 +597,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
     it(`successfully fetches Proto16 constants at level 3268600`, async (done) => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants({ block: '3268600' });
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
