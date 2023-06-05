@@ -46,7 +46,8 @@ export class ContractsLibrary implements Extension {
    * @param contract is an object where the key is a contract address and the value is an object having a script and an entrypoints properties.
    * Note: the expected format for the script and entrypoints properties are the same as the one respectivlely returned by
    * `TezosToolkit.rpc.getContract('contractAddress').script` and `TezosToolkit.rpc.getEntrypoints`
-   *
+   * @throws {@link InvalidAddressError} If the contract address is not valid
+   * @throws {@link InvalidScriptFormatError} If the script is not in the expected format
    */
   addContract(contract: ContractsData) {
     for (const contractAddress in contract) {
