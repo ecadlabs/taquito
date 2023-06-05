@@ -47,7 +47,6 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       // double check if it's proposal period so that we can inject proposal operation
       currentPeriod = await Alice.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'proposal') {
-
         const proposalsOp = await Alice.contract.proposals({
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
@@ -65,6 +64,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
         await CharlieOp.confirmation();
+        console.log(await Alice.rpc.getProposals())
         done();
       }
     });
@@ -75,7 +75,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       if (currentPeriod.voting_period.kind === 'proposal') {
         console.log(await Alice.rpc.getCurrentPeriod())
         console.log('before block level: ', (await Alice.rpc.getBlockHeader({ block: 'head' })).level)
-        console.log('wait ', await Alice.rpc.getCurrentPeriod(), (currentPeriod.remaining + 1), 'blocks')
+        console.log('wait ', (currentPeriod.remaining + 1), 'blocks')
         await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
         console.log('after block level: ', (await Alice.rpc.getBlockHeader({ block: 'head' })).level)
         console.log(await Alice.rpc.getCurrentPeriod())
