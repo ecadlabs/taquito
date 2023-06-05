@@ -1873,6 +1873,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto017 &
   ConstantsResponseProto016 &
   ConstantsResponseProto015 &
   ConstantsResponseProto014 &
@@ -1914,6 +1915,11 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto017 extends ConstantsResponseProto016 {
+  attestation_threshold: number;
+  blocks_per_epoch: number;
+}
 
 export interface ConstantsResponseProto016
   extends Omit<
