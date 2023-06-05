@@ -1,4 +1,3 @@
-
 import { VotingPeriodBlockResult } from '@taquito/rpc';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
@@ -42,7 +41,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         expect(proposalsOp.includedInBlock).toBeDefined();
         expect(proposalsOp.hash).toBeDefined();
 
-        // injecting 2 more proposals from baker bob and charlie to reach quorum
+        // injecting 2 more proposals from baker Bob and Charlie to reach above quorum
         const BobOp = await Bob.contract.proposals({
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });

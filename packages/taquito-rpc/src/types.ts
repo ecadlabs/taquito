@@ -1291,15 +1291,7 @@ export interface BallotsResponse {
   pass: BigNumber;
 }
 
-export type PeriodKindResponse =
-  | 'proposal'
-  // | 'testing_vote'
-  | 'testing'
-  // | 'promotion_vote'
-  | 'exploration'
-  | 'cooldown'
-  | 'promotion'
-  | 'adoption';
+export type PeriodKindResponse = 'proposal' | 'exploration' | 'cooldown' | 'promotion' | 'adoption';
 
 export type CurrentProposalResponse = string | null;
 
