@@ -1873,6 +1873,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto017 &
   ConstantsResponseProto016 &
   ConstantsResponseProto015 &
   ConstantsResponseProto014 &
@@ -1914,6 +1915,8 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
 export interface ConstantsResponseProto016
   extends Omit<
@@ -1975,11 +1978,13 @@ export interface DalParametric {
   feature_enable: boolean;
   number_of_slots: number;
   number_of_shards: number;
-  endorsement_lag: number;
+  endorsement_lag?: number;
   availability_threshold: number;
   slot_size?: number;
   redundancy_factor?: number;
   page_size?: number;
+  attestation_threshold?: number;
+  blocks_per_epoch?: number;
 }
 
 export interface ConstantsResponseProto014 extends ConstantsResponseProto013 {
