@@ -1615,6 +1615,7 @@ export interface OperationResultSmartRollupCement {
   status: OperationResultStatusEnum;
   consumed_milligas?: string;
   inbox_level?: number;
+  commitment_hash?: string;
   errors?: TezosGenericOperationError[];
 }
 
