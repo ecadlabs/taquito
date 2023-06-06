@@ -8,6 +8,8 @@ import { noAnnotCode } from '../../../../integration-tests/data/token_without_an
 import { genericMultisig } from '../../../../integration-tests/data/multisig';
 import { entrypointsGenericMultisig } from './data';
 import { OnChainView } from '../../src/contract/contract-methods/contract-on-chain-view';
+import { mainContractWithEvents } from '../data/main-contract-with-events';
+import { mainContractWithDuplicateEvents } from '../data/main-contract-with-duplicate-events';
 
 describe('ContractAbstraction test', () => {
   let rpcContractProvider: RpcContractProvider;
@@ -28,7 +30,7 @@ describe('ContractAbstraction test', () => {
 
   describe('Calling the `toTansferParams` method on a `ContractMethod` and a `ContractMethodObject` should return the same value', () => {
     it('calls the main method of a contract having annotations (genericMultisig where action is change_keys)', async (done) => {
-      const contratcAbs = new ContractAbstraction(
+      const contractAbs = new ContractAbstraction(
         'contractAddress',
         {
           code: genericMultisig,
@@ -42,7 +44,7 @@ describe('ContractAbstraction test', () => {
       );
 
       // Calling the smart contract main method using flat arguments
-      const methodMainChangeKeys = contratcAbs.methods.main(
+      const methodMainChangeKeys = contractAbs.methods.main(
         2,
         'change_keys',
         2,
@@ -64,7 +66,7 @@ describe('ContractAbstraction test', () => {
       ]);
 
       // Calling the smart contract main method using an object as a parameter where the keys are the annotations
-      const methodObjectMainChangeKeys = contratcAbs.methodsObject.main({
+      const methodObjectMainChangeKeys = contractAbs.methodsObject.main({
         payload: {
           counter: 2,
           action: {
@@ -158,7 +160,7 @@ describe('ContractAbstraction test', () => {
     });
 
     it('calls the main method of a contract having annotations (genericMultisig where action is operation)', async (done) => {
-      const contratcAbs = new ContractAbstraction(
+      const contractAbs = new ContractAbstraction(
         'contractAddress',
         {
           code: genericMultisig,
@@ -172,7 +174,7 @@ describe('ContractAbstraction test', () => {
       );
 
       // Calling the smart contract main method using flat arguments
-      const methodMainoperation = contratcAbs.methods.main(
+      const methodMainoperation = contractAbs.methods.main(
         '2', // Counter
         'operation', // Sub function
         MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 500), // Action
@@ -184,7 +186,7 @@ describe('ContractAbstraction test', () => {
       expect(methodMainoperation).toBeInstanceOf(ContractMethod);
 
       // Calling the smart contract main method using an object as a parameter where the keys are the annotations
-      const methodObjectMainoperation = contratcAbs.methodsObject.main({
+      const methodObjectMainoperation = contractAbs.methodsObject.main({
         payload: {
           counter: 2,
           action: {
@@ -290,7 +292,7 @@ describe('ContractAbstraction test', () => {
     });
 
     it('calls the first entry point (0) of a contract having no annotation', async (done) => {
-      const contratcAbs = new ContractAbstraction(
+      const contractAbs = new ContractAbstraction(
         'contractAddress',
         {
           code: noAnnotCode,
@@ -303,7 +305,7 @@ describe('ContractAbstraction test', () => {
         mockReadProvider as any
       );
 
-      const method0 = contratcAbs.methods[0](
+      const method0 = contractAbs.methods[0](
         'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
         'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
         '1'
@@ -311,7 +313,7 @@ describe('ContractAbstraction test', () => {
       expect(method0).toBeInstanceOf(ContractMethod);
       expect(method0.getSignature()).toEqual(['address', 'address', 'nat']);
 
-      const methodObject0 = contratcAbs.methodsObject[0]({
+      const methodObject0 = contractAbs.methodsObject[0]({
         0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
         1: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
         2: '1',
@@ -366,7 +368,7 @@ describe('ContractAbstraction test', () => {
     });
 
     it('calls the third entry point (2) of a contract having no annotation', async (done) => {
-      const contratcAbs = new ContractAbstraction(
+      const contractAbs = new ContractAbstraction(
         'contractAddress',
         {
           code: noAnnotCode,
@@ -379,10 +381,10 @@ describe('ContractAbstraction test', () => {
         mockReadProvider as any
       );
 
-      const method2 = contratcAbs.methods[2]('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', '1');
+      const method2 = contractAbs.methods[2]('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', '1');
       expect(method2).toBeInstanceOf(ContractMethod);
 
-      const methodObject2 = contratcAbs.methodsObject[2]({
+      const methodObject2 = contractAbs.methodsObject[2]({
         2: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
         3: '1',
       });
@@ -461,7 +463,7 @@ describe('ContractAbstraction test', () => {
     };
 
     it('populate the contractViews member with a function matching each view name from the script', async (done) => {
-      const contratcAbs = new ContractAbstraction(
+      const contractAbs = new ContractAbstraction(
         'contractAddress',
         fakeScriptWithViews,
         rpcContractProvider,
@@ -471,14 +473,59 @@ describe('ContractAbstraction test', () => {
         mockReadProvider as any
       );
 
-      expect(Object.keys(contratcAbs.contractViews).length).toEqual(2);
+      expect(Object.keys(contractAbs.contractViews).length).toEqual(2);
 
-      const viewAdd = contratcAbs.contractViews.add();
+      const viewAdd = contractAbs.contractViews.add();
       expect(viewAdd).toBeInstanceOf(OnChainView);
 
-      const viewId = contratcAbs.contractViews.id();
+      const viewId = contractAbs.contractViews.id();
       expect(viewId).toBeInstanceOf(OnChainView);
 
+      done();
+    });
+
+    it('contract events should be extracted properly', async (done) => {
+      const contractAbs = new ContractAbstraction(
+        'contractAddress',
+        mainContractWithEvents,
+        rpcContractProvider,
+        rpcContractProvider,
+        { entrypoints: {} },
+        mockRpcClient as any,
+        mockReadProvider as any
+      );
+
+      expect(contractAbs.eventSchema.length).toEqual(2);
+
+      expect(contractAbs.eventSchema[0].tag).toEqual('%intFromMainContract');
+      expect(contractAbs.eventSchema[0].type?.prim).toEqual('int');
+
+      expect(contractAbs.eventSchema[1].tag).toEqual('%stringFromMainContract');
+      expect(contractAbs.eventSchema[1].type?.prim).toEqual('string');
+      done();
+    });
+
+    it('contract events should be extracted properly even if there are duplicates', async (done) => {
+      const contractAbs = new ContractAbstraction(
+        'contractAddress',
+        mainContractWithDuplicateEvents,
+        rpcContractProvider,
+        rpcContractProvider,
+        { entrypoints: {} },
+        mockRpcClient as any,
+        mockReadProvider as any
+      );
+
+      expect(contractAbs.eventSchema.length).toEqual(3);
+
+      expect(contractAbs.eventSchema[0].tag).toEqual('%tagOneOnlyIntRepeated');
+      expect(contractAbs.eventSchema[0].type?.prim).toEqual('int');
+
+      expect(contractAbs.eventSchema[1].tag).toEqual('%tagTwoIntAndString');
+      expect(contractAbs.eventSchema[1].type?.prim).toEqual('string');
+
+      expect(contractAbs.eventSchema[2].tag).toEqual('%tagTwoIntAndString');
+      expect(contractAbs.eventSchema[2].type?.prim).toEqual('int');
       done();
     });
   });
