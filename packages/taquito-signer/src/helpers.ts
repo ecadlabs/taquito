@@ -39,7 +39,7 @@ export const generateSecretKey = (seed: Uint8Array, derivationPath: string, curv
     }
     default: {
       throw new InvalidCurveError(
-        `Unsupported curve "${curve}" expecting one of the following "ed25519", "secp256k1", "p256" or "bip25519"`
+        `Unsupported curve "${curve}" expecting one of the following "ed25519", "secp256k1", "p256"`
       );
     }
   }

@@ -137,7 +137,9 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining(`Invalid public key "[object Object]": Invalid prefix`),
+        message: expect.stringContaining(
+          `Invalid public key "[object Object]" with unsupported prefix`
+        ),
       })
     );
 

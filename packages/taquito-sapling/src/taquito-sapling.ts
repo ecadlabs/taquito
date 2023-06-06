@@ -12,7 +12,7 @@ import {
   Prefix,
   validateKeyHash,
   ValidationResult,
-  invalidErrorDetail,
+  invalidDetail,
 } from '@taquito/utils';
 import { InsufficientBalance, InvalidMemo } from './error';
 import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
@@ -279,7 +279,7 @@ export class SaplingToolkit {
       default: {
         throw new InvalidAddressError(
           destination,
-          invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
             ` expecting one of the following prefix '${Prefix.TZ1}', '${Prefix.TZ2}' or '${Prefix.TZ3}'.`
         );
       }
@@ -298,7 +298,7 @@ export class SaplingToolkit {
   private validateDestinationImplicitAddress(to: string) {
     const toValidation = validateKeyHash(to);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(to, invalidErrorDetail(toValidation));
+      throw new InvalidKeyHashError(to, invalidDetail(toValidation));
     }
   }
 
@@ -306,7 +306,7 @@ export class SaplingToolkit {
     if (!to.startsWith(Prefix.ZET1)) {
       throw new InvalidAddressError(
         to,
-        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix ${Prefix.ZET1}.`
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix ${Prefix.ZET1}.`
       );
     }
   }
