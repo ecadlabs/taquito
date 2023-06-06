@@ -5,24 +5,24 @@ import { CONFIGS, sleep } from './config';
 
 CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
   const flextesanet = rpc === 'http://localhost:20000' ? test : test.skip;
-  let blocksPerVotingPeriod: number
-  let blockTime: number
-  let currentPeriod: VotingPeriodBlockResult
+  let blocksPerVotingPeriod: number;
+  let blockTime: number;
+  let currentPeriod: VotingPeriodBlockResult;
 
   // Our ci flextesa script have 3 bakers Alice, Bob and Charlie (.github/workflows/main.yml)
   const Alice = lib; // Alice's secret key is passed through the command to run test is configured by integration-tests/config.ts
-  const Bob = new TezosToolkit(rpc)
-  Bob.setSignerProvider(new InMemorySigner('edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt'))
-  const Charlie = new TezosToolkit(rpc)
-  Charlie.setSignerProvider(new InMemorySigner('edsk3RgWvbKKA1atEUcaGwivge7QtckHkTL9nQJUXQKY5r8WKp4pF4'))
+  const Bob = new TezosToolkit(rpc);
+  Bob.setSignerProvider(new InMemorySigner('edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt'));
+  const Charlie = new TezosToolkit(rpc);
+  Charlie.setSignerProvider(new InMemorySigner('edsk3RgWvbKKA1atEUcaGwivge7QtckHkTL9nQJUXQKY5r8WKp4pF4'));
 
   describe(`Test Proposal and Ballot operation in ${protocol.substring(0, 8)} with flextesa`, () => {
     beforeAll(async (done) => {
       await setup();
       let constants = await Alice.rpc.getConstants();
-      blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!
-      blockTime = constants.minimal_block_delay!.toNumber()
-      done()
+      blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!;
+      blockTime = constants.minimal_block_delay!.toNumber();
+      done();
     });
 
     flextesanet('Should be able to inject proposal operation in proposal period', async (done) => {
@@ -59,7 +59,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       currentPeriod = await Alice.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'proposal') {
         await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
-      }
+      };
       currentPeriod = await Alice.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'exploration') {
         const explorationBallotOp = await Alice.contract.ballot({
