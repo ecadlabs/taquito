@@ -5,7 +5,7 @@
 
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
-import { b58cencode, prefix, Prefix } from '@taquito/utils';
+import { b58cencode, invalidDetail, prefix, Prefix, ValidationResult } from '@taquito/utils';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -102,7 +102,10 @@ export class LedgerSigner implements Signer {
   ) {
     this.transport.setScrambleKey('XTZ');
     if (!path.startsWith(`44'/1729'`)) {
-      throw new InvalidDerivationPathError(path, `: Invalid prefix expecting prefix "44'/1729'".`);
+      throw new InvalidDerivationPathError(
+        path,
+        `${invalidDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting prefix "44'/1729'".`
+      );
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
       throw new InvalidDerivationTypeError(derivationType.toString());

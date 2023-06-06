@@ -14,7 +14,7 @@ import {
   verifySignature,
   validateKeyHash,
   ValidationResult,
-  invalidErrorDetail,
+  invalidDetail,
 } from '@taquito/utils';
 import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
@@ -92,7 +92,7 @@ export class RemoteSigner implements Signer {
   ) {
     const pkhValidation = validateKeyHash(this.pkh);
     if (pkhValidation !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(this.pkh, invalidErrorDetail(pkhValidation));
+      throw new InvalidKeyHashError(this.pkh, invalidDetail(pkhValidation));
     }
   }
 
@@ -149,7 +149,7 @@ export class RemoteSigner implements Signer {
       if (!isValidPrefix(pref)) {
         throw new InvalidSignatureError(
           signature,
-          invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` from a remote signer.`
+          invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` from a remote signer.`
         );
       }
 

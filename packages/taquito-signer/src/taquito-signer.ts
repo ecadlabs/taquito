@@ -10,7 +10,7 @@ import {
   b58cencode,
   prefix,
   Prefix,
-  invalidErrorDetail,
+  invalidDetail,
   ValidationResult,
 } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
@@ -129,11 +129,11 @@ export class InMemorySigner {
         break;
       default:
         throw new InvalidKeyError(
-          `${invalidErrorDetail(
-            ValidationResult.NO_PREFIX_MATCHED
-          )} expecting one of the following '${Prefix.EDESK}', '${Prefix.EDSK}', '${
-            Prefix.SPSK
-          }', '${Prefix.SPESK}', '${Prefix.P2SK}' or '${Prefix.P2ESK}'.`
+          `${invalidDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting one of the following '${
+            Prefix.EDESK
+          }', '${Prefix.EDSK}', '${Prefix.SPSK}', '${Prefix.SPESK}', '${Prefix.P2SK}' or '${
+            Prefix.P2ESK
+          }'.`
         );
     }
   }

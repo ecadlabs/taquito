@@ -4,7 +4,7 @@ import {
   b58cdecode,
   buf2hex,
   hex2buf,
-  invalidErrorDetail,
+  invalidDetail,
   Prefix,
   prefix,
   validatePublicKey,
@@ -62,19 +62,19 @@ export function verifySignature(
 
 function validateMessageNotEmpty(message: string) {
   if (message === '') {
-    throw new InvalidMessageError(message, ': Cannot be empty.');
+    throw new InvalidMessageError(message, `can't be empty`);
   }
   return message;
 }
 
 export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
   if (publicKey === '') {
-    throw new InvalidPublicKeyError(publicKey, ': Can not be empty');
+    throw new InvalidPublicKeyError(publicKey, `can't be empty`);
   }
   const pkPrefix = publicKey.substring(0, 4);
   const publicKeyValidation = validatePublicKey(publicKey);
   if (publicKeyValidation !== ValidationResult.VALID) {
-    throw new InvalidPublicKeyError(publicKey, invalidErrorDetail(publicKeyValidation));
+    throw new InvalidPublicKeyError(publicKey, invalidDetail(publicKeyValidation));
   }
   return pkPrefix as PkPrefix;
 }
@@ -85,7 +85,7 @@ function validateSigAndExtractPrefix(signature: string): SigPrefix {
     : signature.substring(0, 5);
   const validation = validateSignature(signature);
   if (validation !== ValidationResult.VALID) {
-    throw new InvalidSignatureError(signature, invalidErrorDetail(validation));
+    throw new InvalidSignatureError(signature, invalidDetail(validation));
   }
   return signaturePrefix as SigPrefix;
 }

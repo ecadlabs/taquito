@@ -26,9 +26,7 @@ describe('Beacon Wallet tests', () => {
       const wallet = new BeaconWallet({ name: 'testWallet' });
       await wallet.getPKH();
     } catch (error: any) {
-      expect(error.message).toContain(
-        'You need to initialize BeaconWallet by calling beaconWallet.requestPermissions first'
-      );
+      expect(error.message).toContain('BeaconWallet needs to be initialized');
     }
   });
 
