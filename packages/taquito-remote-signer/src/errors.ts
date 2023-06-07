@@ -1,42 +1,41 @@
 /**
  *  @category Error
- *  @description Error that indicates a failure in grabbing the public key
+ *  @description Error indicates a failure in grabbing the public key
  */
 export class KeyNotFoundError extends Error {
-  public name = 'KeyNotFoundError';
   constructor(public message: string, public innerException: any) {
     super(message);
+    this.name = 'KeyNotFoundError';
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates an unauthorized operation being attempted
+ *  @description Error indicates an unauthorized operation being attempted
  */
 export class OperationNotAuthorizedError extends Error {
-  public name = 'OperationNotAuthorized';
   constructor(public message: string, public innerException: any) {
     super(message);
+    this.name = 'OperationNotAuthorized';
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates bad signing data
+ *  @description Error indicates bad signing data
  */
 export class BadSigningDataError extends Error {
-  public name = 'BadSigningData';
   constructor(public message: string, public innerException: any, public readonly data: any) {
     super(message);
+    this.name = 'BadSigningData';
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates a mismatch between the initialized and the requested public key
+ *  @description Error indicates a mismatch between the initialized and the requested public key
  */
 export class PublicKeyMismatch extends Error {
-  public name = 'PublicKeyMismatch';
   constructor(public requested: string, initialized: string) {
     super(
       `Requested public key hash does not match the initialized public key hash: {
@@ -44,5 +43,6 @@ export class PublicKeyMismatch extends Error {
         initialized: ${initialized}
       }`
     );
+    this.name = 'PublicKeyMismatch';
   }
 }
