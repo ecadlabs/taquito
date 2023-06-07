@@ -6,7 +6,6 @@ import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { knownBigMapContractProtoALph, knownContractProtoALph, knownOnChainViewContractAddressProtoALph, knownSaplingContractProtoALph, knownTzip12BigMapOffChainContractProtoALph } from './known-contracts-ProtoALph';
 import { knownContractPtGhostnet, knownBigMapContractPtGhostnet, knownTzip12BigMapOffChainContractPtGhostnet, knownSaplingContractPtGhostnet, knownOnChainViewContractAddressPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractPtMumbai2, knownBigMapContractPtMumbai2, knownTzip12BigMapOffChainContractPtMumbai2, knownSaplingContractPtMumbai2, knownOnChainViewContractAddressPtMumbai2 } from './known-contracts-PtMumbai2';
 import { knownContractPtNairobi, knownBigMapContractPtNairobi, knownTzip12BigMapOffChainContractPtNairobi, knownSaplingContractPtNairobi, knownOnChainViewContractAddressPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
@@ -83,28 +82,10 @@ const nairobinetEphemeral = {
   knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtNairobi,
   knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtNairobi,
   knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtNairobi,
-  protocol: Protocols.PtNairob,
+  protocol: Protocols.PtNairobi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/nairobinet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
-
-const mumbainetEphemeral = {
-  rpc: process.env['TEZOS_RPC_MUMBAINET'] || 'http://ecad-mumbainet-full.i.tez.ie:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_MUMBAINET_CONTRACT_ADDRESS'] || knownContractPtMumbai2,
-  knownBigMapContract: process.env['TEZOS_MUMBAINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtMumbai2,
-  knownTzip1216Contract: process.env['TEZOS_MUMBAINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtMumbai2,
-  knownSaplingContract: process.env['TEZOS_MUMBAINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtMumbai2,
-  knownViewContract: process.env['TEZOS_MUMBAINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtMumbai2,
-  protocol: Protocols.PtMumbai2,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/mumbainet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };
@@ -119,7 +100,7 @@ const ghostnetEphemeral = {
   knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
   knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
   knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
-  protocol: Protocols.PtNairob,
+  protocol: Protocols.PtNairobi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ghostnet',
@@ -155,21 +136,7 @@ const nairobinetSecretKey = {
   knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtNairobi,
   knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtNairobi,
   knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtNairobi,
-  protocol: Protocols.PtNairob,
-  signerConfig: defaultSecretKey
-};
-
-const mumbainetSecretKey = {
-  rpc: process.env['TEZOS_RPC_MUMBAINET'] || 'http://ecad-mumbainet-full:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_MUMBAINET_CONTRACT_ADDRESS'] || knownContractPtMumbai2,
-  knownBigMapContract: process.env['TEZOS_MUMBAINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtMumbai2,
-  knownTzip1216Contract: process.env['TEZOS_MUMBAINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtMumbai2,
-  knownSaplingContract: process.env['TEZOS_MUMBAINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtMumbai2,
-  knownViewContract: process.env['TEZOS_MUMBAINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtMumbai2,
-  protocol: Protocols.PtMumbai2,
+  protocol: Protocols.PtNairobi,
   signerConfig: defaultSecretKey
 };
 
@@ -207,16 +174,12 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
-} else if (process.env['RUN_MUMBAINET_WITH_SECRET_KEY']) {
-  providers.push(mumbainetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
   providers.push(mondaynetSecretKey);
 } else if (process.env['NAIROBINET']) {
   providers.push(nairobinetEphemeral);
-} else if (process.env['MUMBAINET']) {
-  providers.push(mumbainetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['MONDAYNET']) {

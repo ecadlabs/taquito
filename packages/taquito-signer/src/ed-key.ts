@@ -7,7 +7,7 @@ import {
   buf2hex,
   isValidPrefix,
   Prefix,
-  invalidErrorDetail,
+  invalidDetail,
   ValidationResult,
 } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
@@ -32,7 +32,7 @@ export class Tz1 {
     const keyPrefix = key.substring(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
       throw new InvalidKeyError(
-        `${invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting either '${
+        `${invalidDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting either '${
           Prefix.EDESK
         }' or '${Prefix.EDSK}'.`
       );

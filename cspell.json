@@ -46,7 +46,7 @@
         "precommit",
         "println",
         "Protofire",
-        "PtNairob",
+        "PtNairobi",
         "rollups",
         "Roxane",
         "SAPLINGCONTRACT",
@@ -75,6 +75,7 @@
         "**/*.mdx",
         "**/*.yml",
         "**/*.yaml",
+        "**/*.sh",
         "**/*.svelte"
     ],
     "ignorePaths": [

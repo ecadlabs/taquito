@@ -731,7 +731,7 @@ describe('RpcContractProvider test', () => {
       });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
       expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
       expect(result.methodsObject.mint({ 0: 'test', 1: 100 })).toBeInstanceOf(ContractMethodObject);

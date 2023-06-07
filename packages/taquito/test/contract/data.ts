@@ -4,7 +4,7 @@ import {
   MichelsonContractStorage,
   MichelsonType,
 } from '@taquito/michel-codec';
-import { DEFAULT_STORAGE_LIMIT, DEFAULT_FEE, DEFAULT_GAS_LIMIT } from '../../src/constants';
+import { DEFAULT_STORAGE_LIMIT, DEFAULT_FEE, getRevealGasLimit } from '../../src/constants';
 
 const scriptSample = {
   code: [
@@ -322,7 +322,7 @@ const scriptSample = {
 export const revealOp = (source: string) => ({
   counter: '1',
   fee: String(DEFAULT_FEE.REVEAL),
-  gas_limit: String(DEFAULT_GAS_LIMIT.REVEAL),
+  gas_limit: String(getRevealGasLimit(source)),
   kind: 'reveal',
   public_key: 'test_pub_key',
   source,
@@ -334,7 +334,7 @@ export const originateResults = {
   opOb: {
     branch: 'test',
     contents: [
-      revealOp('test_pub_key_hash'),
+      revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
       {
         kind: 'origination',
         fee: '10000',
@@ -343,7 +343,7 @@ export const originateResults = {
         balance: '200000000',
         script: scriptSample,
         delegate: 'test_delegate',
-        source: 'test_pub_key_hash',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         counter: '2',
       },
     ],
@@ -358,7 +358,7 @@ export const originateResultsMutezTrue = {
   opOb: {
     branch: 'test',
     contents: [
-      revealOp('test_pub_key_hash'),
+      revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
       {
         kind: 'origination',
         fee: '10000',
@@ -367,7 +367,7 @@ export const originateResultsMutezTrue = {
         balance: '200',
         script: scriptSample,
         delegate: 'test_delegate',
-        source: 'test_pub_key_hash',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         counter: '2',
       },
     ],
@@ -382,7 +382,7 @@ export const originateResultsEstimate = {
   opOb: {
     branch: 'test',
     contents: [
-      revealOp('test_pub_key_hash'),
+      revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
       {
         kind: 'origination',
         fee: '391',
@@ -391,7 +391,7 @@ export const originateResultsEstimate = {
         balance: '200000000',
         script: scriptSample,
         delegate: 'test_delegate',
-        source: 'test_pub_key_hash',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         counter: '2',
       },
     ],

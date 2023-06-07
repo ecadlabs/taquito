@@ -1,4 +1,4 @@
-import { ParameterSchema, Schema, ViewSchema } from '@taquito/michelson-encoder';
+import { ParameterSchema, Schema, ViewSchema, EventSchema } from '@taquito/michelson-encoder';
 import {
   EntrypointsResponse,
   MichelsonV1Expression,
@@ -6,7 +6,7 @@ import {
   ScriptResponse,
 } from '@taquito/rpc';
 import {
-  invalidErrorDetail,
+  invalidDetail,
   validateChain,
   validateContractAddress,
   ValidationResult,
@@ -45,7 +45,7 @@ export class ContractView {
         `Since version 12, the lambda view no longer depends on a lambda contract. The read method no longer accepts a contract address as a parameter.`
       );
     } else if (chainId && chainIdValidation !== ValidationResult.VALID) {
-      throw new InvalidChainIdError(chainId, invalidErrorDetail(chainIdValidation));
+      throw new InvalidChainIdError(chainId, invalidDetail(chainIdValidation));
     }
     const arg = this.parameterSchema.Encode(...this.args);
     const result = await this.rpc.runView({
@@ -144,6 +144,7 @@ export class ContractAbstraction<
 
   public readonly parameterSchema: ParameterSchema;
   public readonly viewSchema: ViewSchema[];
+  public readonly eventSchema: EventSchema[];
 
   constructor(
     public readonly address: string,
@@ -162,6 +163,7 @@ export class ContractAbstraction<
     if (this.viewSchema.length !== 0) {
       this._initializeOnChainViews(this, rpc, this.readProvider, this.viewSchema);
     }
+    this.eventSchema = EventSchema.fromRPCResponse({ script: this.script });
     this._initializeMethods(this, this.entrypoints.entrypoints, this.rpc, this.readProvider);
   }
 
