@@ -43,6 +43,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - testnet: mumbainet
+            testnet_uppercase: MUMBAINET
           - testnet: nairobinet
             testnet_uppercase: NAIROBINET
     steps:
@@ -69,10 +71,14 @@ jobs:
     strategy:
       matrix:
         include:
+          - protocol: Mumbai
+            testnet: mumbainet
+            testnet_uppercase: MUMBAINET
+            flextesa_docker_image: oxheadalpha/flextesa:20230313
           - protocol: Nairobi
             testnet: nairobinet
             testnet_uppercase: NAIROBINET
-            flextesa_docker_image: oxheadalpha/flextesa:latest
+            flextesa_docker_image: oxheadalpha/flextesa:20230502
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
