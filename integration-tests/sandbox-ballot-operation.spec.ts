@@ -22,6 +22,11 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       let constants = await Alice.rpc.getConstants();
       blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!;
       blockTime = constants.minimal_block_delay!.toNumber();
+      currentPeriod = await Alice.rpc.getCurrentPeriod();
+      if (currentPeriod.voting_period.kind !== 'proposal' || currentPeriod.remaining < 3) {
+        await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
+        console.log('28currentPeriod', await Alice.rpc.getCurrentPeriod())
+      }
       done();
     });
 
@@ -29,14 +34,12 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
 
       // double check if it's proposal period so that we can inject proposal operation
       currentPeriod = await Alice.rpc.getCurrentPeriod();
-      if (currentPeriod.voting_period.kind !== 'proposal' || currentPeriod.remaining < 3) {
-        await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
-      }
+      if (currentPeriod.voting_period.kind === 'proposal') {
         const proposalsOp = await Alice.contract.proposals({
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
         await proposalsOp.confirmation();
-
+        console.log('42currentPeriod', await Alice.rpc.getCurrentPeriod())
         expect(proposalsOp.operationResults).toBeDefined();
         expect(proposalsOp.operationResults?.kind).toEqual('proposals');
         expect(proposalsOp.operationResults?.proposals).toEqual(['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']);
@@ -52,17 +55,18 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         });
         const ops = Promise.all([BobOp.confirmation(), CharlieOp.confirmation()])
         console.log(await ops)
+        console.log('58currentPeriod', await Alice.rpc.getCurrentPeriod())
         done();
-
+      }
     });
 
     flextesanet('Should be able to inject ballot operation in exploration period', async (done) => {
       // if it's still proposal period make the test sleep to get into exploration period to inject ballot operation
       currentPeriod = await Alice.rpc.getCurrentPeriod();
-      console.log('64currentPeriod', currentPeriod)
+      console.log('66currentPeriod', currentPeriod)
       if (currentPeriod.voting_period.kind === 'proposal') {
         await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
-        console.log('67currentPeriod', await Alice.rpc.getCurrentPeriod())
+        console.log('69currentPeriod', await Alice.rpc.getCurrentPeriod())
       };
       currentPeriod = await Alice.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'exploration') {
