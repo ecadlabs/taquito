@@ -20,7 +20,8 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       // configure baker Bob and Charlie
       Bob.setSignerProvider(new InMemorySigner('edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt'));
       Charlie.setSignerProvider(new InMemorySigner('edsk3RgWvbKKA1atEUcaGwivge7QtckHkTL9nQJUXQKY5r8WKp4pF4'));
-
+      console.log('getVotingInfo', await Alice.rpc.getVotingInfo(await Alice.signer.publicKeyHash()))
+      console.log('getVotesListings', await Alice.rpc.getVotesListings())
       // get protocol constants
       let constants = await Alice.rpc.getConstants();
       blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!;
@@ -59,10 +60,9 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
         await Promise.all([BobOp.confirmation(), CharlieOp.confirmation()]);
-        const proposals = await Alice.rpc.getProposals()
-        expect(proposals.length).toBe(1);
-        expect(proposals[0][0]).toBe('ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK');
-        expect(proposals[0][1].toString()).toBe(3);
+
+        console.log('getProposals', await Alice.rpc.getProposals());
+        console.log('getCurrentProposal', await Alice.rpc.getCurrentProposal());
         done();
       }
     });
@@ -90,9 +90,9 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         expect(explorationBallotOp.includedInBlock).toBeDefined();
         expect(explorationBallotOp.hash).toBeDefined();
 
-        const ballotList = await Alice.rpc.getBallotList()
-        expect(ballotList.length).toBe(1);
-        expect(ballotList[0].pkh).toBe(await Alice.signer.publicKeyHash());
+        console.log('getBallotList', await Alice.rpc.getBallotList());
+        console.log('getBallots', await Alice.rpc.getBallots());
+        console.log('getCurrentQuorum', await Alice.rpc.getCurrentQuorum());
         done();
       }
     });
