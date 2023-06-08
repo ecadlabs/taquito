@@ -49,8 +49,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         expect(proposalsOp.operationResults?.proposals).toEqual(['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']);
         expect(proposalsOp.includedInBlock).toBeDefined();
         expect(proposalsOp.hash).toBeDefined();
-        console.log(currentPeriod)
-        console.log(proposalsOp.period);
+        expect(proposalsOp.period).toBe(currentPeriod.voting_period.index);
 
         // injecting 2 more proposals from baker Bob and Charlie to reach above quorum
         const BobOp = await Bob.contract.proposals({
@@ -63,7 +62,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         const proposals = await Alice.rpc.getProposals()
         expect(proposals.length).toBe(1);
         expect(proposals[0][0]).toBe('ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK');
-        expect(proposals[0][1].toNumber()).toBe(3);
+        expect(proposals[0][1].toString()).toBe(3);
         done();
       }
     });
@@ -94,7 +93,6 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         const ballotList = await Alice.rpc.getBallotList()
         expect(ballotList.length).toBe(1);
         expect(ballotList[0].pkh).toBe(await Alice.signer.publicKeyHash());
-        console.log(ballotList)
         done();
       }
     });
