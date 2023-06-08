@@ -29,8 +29,9 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
 
       // double check if it's proposal period so that we can inject proposal operation
       currentPeriod = await Alice.rpc.getCurrentPeriod();
-      console.log('32currentPeriod', currentPeriod)
-      if (currentPeriod.voting_period.kind === 'proposal') {
+      if (currentPeriod.voting_period.kind !== 'proposal' || currentPeriod.remaining < 3) {
+        await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
+      }
         const proposalsOp = await Alice.contract.proposals({
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
@@ -43,19 +44,16 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         expect(proposalsOp.hash).toBeDefined();
 
         // injecting 2 more proposals from baker Bob and Charlie to reach above quorum
-        console.log('47currentPeriod', await Alice.rpc.getCurrentPeriod())
         const BobOp = await Bob.contract.proposals({
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
-        await BobOp.confirmation();
-        console.log('53currentPeriod', await Alice.rpc.getCurrentPeriod())
         const CharlieOp = await Charlie.contract.proposals({
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
-        await CharlieOp.confirmation();
-        console.log('56currentPeriod', await Alice.rpc.getCurrentPeriod())
+        const ops = Promise.all([BobOp.confirmation(), CharlieOp.confirmation()])
+        console.log(await ops)
         done();
-      }
+
     });
 
     flextesanet('Should be able to inject ballot operation in exploration period', async (done) => {
