@@ -1,9 +1,10 @@
-import { DEFAULT_FEE, MANAGER_LAMBDA, TezosToolkit } from "@taquito/taquito";
-import { Contract } from "@taquito/taquito";
-import { CONFIGS } from "./config";
-import { originate, originate2, transferImplicit2 } from "./data/lambda";
-import { ligoSample } from "./data/ligo-simple-contract";
-import { managerCode } from "./data/manager_code";
+import { DEFAULT_FEE, MANAGER_LAMBDA, TezosToolkit } from '@taquito/taquito';
+import { Contract } from '@taquito/taquito';
+import { CONFIGS } from './config';
+import { originate, originate2, transferImplicit2 } from './data/lambda';
+import { ligoSample } from './data/ligo-simple-contract';
+import { managerCode } from './data/manager_code';
+import { InvalidAmountError } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
   const Tezos = lib;
@@ -21,9 +22,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         const transfer = await Tezos.contract.transfer({ to: pkh, mutez: true, amount: amt });
         await transfer.confirmation();
         const op = await Tezos.contract.originate({
-          balance: "1",
+          balance: '1',
           code: managerCode,
-          init: { "string": pkh },
+          init: { 'string': pkh },
         });
         contract = await op.contract();
         contract = await LowAmountTez.contract.at(contract.address);
@@ -64,7 +65,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Verify .estimate.originate simple contract', async (done) => {
       const estimate = await LowAmountTez.estimate.originate({
-        balance: "1",
+        balance: '1',
         code: ligoSample,
         storage: 0,
       });
@@ -157,6 +158,13 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       await op2.confirmation();
       done();
     });
+
+    it('should throw error when trying to estimate transfer with negative amount in param', async (done) => {
+      expect(async () => {
+        const est = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: -1 });
+      }).rejects.toThrowError(InvalidAmountError);
+      done();
+    });
   });
 
 
@@ -217,7 +225,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Estimate origination with insufficient balance to pay storage', async (done) => {
       await expect(LowAmountTez.estimate.originate({
-        balance: "0",
+        balance: '0',
         code: ligoSample,
         storage: 0,
       })).rejects.toEqual(

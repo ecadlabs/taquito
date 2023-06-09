@@ -73,6 +73,18 @@ export class InvalidBlockHashError extends ParameterValidationError {
 }
 
 /**
+ * @category Error
+ * @description Error indicates an invalid amount of tez being passed as a parameter
+ */
+export class InvalidAmountError extends ParameterValidationError {
+  constructor(public amount: string) {
+    super();
+    this.name = 'InvalidAmountError';
+    this.message = `Invalid amount "${amount}"`;
+  }
+}
+
+/**
  *  @category Error
  *  @description Error indicates an invalid derivation path being passed or used
  */

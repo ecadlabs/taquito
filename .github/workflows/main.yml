@@ -72,7 +72,7 @@ jobs:
           - protocol: Nairobi
             testnet: nairobinet
             testnet_uppercase: NAIROBINET
-            flextesa_docker_image: oxheadalpha/flextesa:latest
+            flextesa_docker_image: oxheadalpha/flextesa:20230607
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -113,18 +113,18 @@ jobs:
           --protocol-kind ${{ matrix.protocol }}
     - run: npm ci
     - run: npm run build
-    - run: npm -w integration-tests run test:${{ matrix.testnet }}-secret-key sandbox-ballot-operation.spec.ts
-      env:
-        RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
-        SECRET_KEY: edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
-        TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
-        POLLING_INTERVAL_MILLISECONDS: 100
-        RPC_CACHE_MILLISECONDS: 0
-        TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
     - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2
+        TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
+        POLLING_INTERVAL_MILLISECONDS: 100
+        RPC_CACHE_MILLISECONDS: 0
+        TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
+    - run: npm -w integration-tests run test:${{ matrix.testnet }}-secret-key sandbox-ballot-operation.spec.ts
+      env:
+        RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
+        SECRET_KEY: edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
         TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
         POLLING_INTERVAL_MILLISECONDS: 100
         RPC_CACHE_MILLISECONDS: 0
