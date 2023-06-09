@@ -6,7 +6,7 @@ import {
   ScriptResponse,
 } from '@taquito/rpc';
 import {
-  invalidErrorDetail,
+  invalidDetail,
   validateChain,
   validateContractAddress,
   ValidationResult,
@@ -45,7 +45,7 @@ export class ContractView {
         `Since version 12, the lambda view no longer depends on a lambda contract. The read method no longer accepts a contract address as a parameter.`
       );
     } else if (chainId && chainIdValidation !== ValidationResult.VALID) {
-      throw new InvalidChainIdError(chainId, invalidErrorDetail(chainIdValidation));
+      throw new InvalidChainIdError(chainId, invalidDetail(chainIdValidation));
     }
     const arg = this.parameterSchema.Encode(...this.args);
     const result = await this.rpc.runView({
