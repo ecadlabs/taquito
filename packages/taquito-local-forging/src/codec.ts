@@ -8,7 +8,7 @@ import {
   InvalidKeyHashError,
   InvalidPublicKeyError,
   ValidationResult,
-  invalidErrorDetail,
+  invalidDetail,
 } from '@taquito/utils';
 import {
   OversizedEntryPointError,
@@ -207,7 +207,7 @@ export const pkhEncoder = (val: string) => {
     default:
       throw new InvalidKeyHashError(
         val,
-        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
           ` expecting one for the following "${Prefix.TZ1}", "${Prefix.TZ2}", "${Prefix.TZ3}" or "${Prefix.TZ4}".`
       );
   }
@@ -225,7 +225,7 @@ export const publicKeyEncoder = (val: string) => {
     default:
       throw new InvalidPublicKeyError(
         val,
-        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
           ` expecting one of the following '${Prefix.EDPK}', '${Prefix.SPPK}', '${Prefix.P2PK}' or '${Prefix.BLPK}'.`
       );
   }
@@ -244,7 +244,7 @@ export const addressEncoder = (val: string): string => {
     default:
       throw new InvalidAddressError(
         val,
-        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) +
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
           ` expecting one of the following prefix '${Prefix.TZ1}', ${Prefix.TZ2}', '${Prefix.TZ3}', '${Prefix.TZ4}' or '${Prefix.KT1}'.`
       );
   }
@@ -254,7 +254,7 @@ export const smartRollupAddressEncoder = (val: string): string => {
   if (val.substring(0, 3) !== Prefix.SR1) {
     throw new InvalidSmartRollupAddressError(
       val,
-      invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
     );
   }
   return prefixEncoder(Prefix.SR1)(val);
@@ -268,7 +268,7 @@ export const smartContractAddressEncoder = (val: string): string => {
   }
   throw new InvalidContractAddressError(
     val,
-    invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.KT1}'.`
+    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.KT1}'.`
   );
 };
 
@@ -284,7 +284,7 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
     default:
       throw new InvalidPublicKeyError(
         val.toString(),
-        invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED)
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED)
       );
   }
 };
@@ -296,7 +296,7 @@ export const smartRollupCommitmentHashEncoder = (val: string): string => {
   }
   throw new InvalidSmartRollupCommitmentHashError(
     val,
-    invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
+    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
   );
 };
 
@@ -320,7 +320,7 @@ export const smartRollupAddressDecoder = (val: Uint8ArrayConsumer): string => {
   if (address.substring(0, 3) !== Prefix.SR1) {
     throw new InvalidSmartRollupAddressError(
       address,
-      invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
     );
   }
   return address;
@@ -335,7 +335,7 @@ export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
   }
   throw new InvalidContractAddressError(
     val.toString(),
-    invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED)
+    invalidDetail(ValidationResult.NO_PREFIX_MATCHED)
   );
 };
 
@@ -344,7 +344,7 @@ export const smartRollupCommitmentHashDecoder = (val: Uint8ArrayConsumer) => {
   if (address.substring(0, 4) !== Prefix.SRC1) {
     throw new InvalidSmartRollupCommitmentHashError(
       address,
-      invalidErrorDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
+      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
     );
   }
   return address;

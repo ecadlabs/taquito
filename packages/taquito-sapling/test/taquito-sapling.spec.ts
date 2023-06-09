@@ -265,7 +265,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      `Invalid address "tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z": Invalid prefix expecting prefix zet1.`
+      `Invalid address "tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z" with unsupported prefix expecting prefix zet1.`
     );
 
     done();
@@ -517,7 +517,7 @@ describe('SaplingToolkit', () => {
         amount: 8,
       })
     ).rejects.toThrowError(
-      `Invalid public key hash "zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y": Invalid prefix`
+      `Invalid public key hash "zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y" with unsupported prefix`
     );
 
     done();
@@ -654,7 +654,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      `Invalid address "tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh": Invalid prefix expecting prefix zet1`
+      `Invalid address "tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh" with unsupported prefix expecting prefix zet1`
     );
 
     done();

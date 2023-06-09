@@ -57,7 +57,7 @@ import {
   validateContractAddress,
   validateAddress,
   ValidationResult,
-  invalidErrorDetail,
+  invalidDetail,
 } from '@taquito/utils';
 
 interface CachedDataInterface {
@@ -148,14 +148,14 @@ export class RpcClientCache implements RpcClientInterface {
   private validateAddress(address: string) {
     const addressValidation = validateAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address, invalidErrorDetail(addressValidation));
+      throw new InvalidAddressError(address, invalidDetail(addressValidation));
     }
   }
 
   private validateContract(address: string) {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address, invalidErrorDetail(addressValidation));
+      throw new InvalidContractAddressError(address, invalidDetail(addressValidation));
     }
   }
   /**

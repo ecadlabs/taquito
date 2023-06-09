@@ -10,7 +10,7 @@ import {
   PermissionScope,
   getDAppClientInstance,
 } from '@airgap/beacon-dapp';
-
+import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import {
   createIncreasePaidStorageOperation,
   createOriginationOperation,
@@ -24,30 +24,7 @@ import {
 } from '@taquito/taquito';
 
 export { VERSION } from './version';
-
-/**
- *  @category Error
- *  @description Error that indicates the Beacon wallet not being initialized
- */
-export class BeaconWalletNotInitialized extends Error {
-  name = 'BeaconWalletNotInitialized';
-
-  constructor() {
-    super('You need to initialize BeaconWallet by calling beaconWallet.requestPermissions first');
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates missing required persmission scopes
- */
-export class MissingRequiredScopes extends Error {
-  name = 'MissingRequiredScopes';
-
-  constructor(public requiredScopes: PermissionScope[]) {
-    super(`Required permissions scopes were not granted: ${requiredScopes.join(',')}`);
-  }
-}
+export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
@@ -112,7 +89,7 @@ export class BeaconWallet implements WalletProvider {
     return this.removeDefaultParams(
       walletParams,
       await createIncreasePaidStorageOperation(this.formatParameters(walletParams))
-    )
+    );
   }
 
   async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
