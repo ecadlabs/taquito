@@ -25,9 +25,9 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       let constants = await Alice.rpc.getConstants();
       blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!;
       blockTime = constants.minimal_block_delay!.toNumber();
-      currentPeriod = await Alice.rpc.getCurrentPeriod();
 
       // if proposal period remaining blocks is less then 5 make the test sleep to get into next voting period
+      currentPeriod = await Alice.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'proposal' && currentPeriod.remaining < 5) {
         await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
       }
@@ -73,10 +73,11 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       if (currentPeriod.voting_period.kind === 'proposal') {
         await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
       };
+      currentPeriod = await Alice.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'exploration') {
         expect(await Alice.rpc.getCurrentProposal()).toBe('ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK')
+        done()
       }
-      done()
 
     });
 
@@ -96,6 +97,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         expect(explorationBallotOp.operationResults?.ballot).toEqual('yay');
         expect(explorationBallotOp.includedInBlock).toBeDefined();
         expect(explorationBallotOp.hash).toBeDefined();
+
         expect((await Alice.rpc.getBallotList())[0].pkh).toBe(await Alice.signer.publicKeyHash());
         expect((await Alice.rpc.getBallotList())[0].ballot).toBe('yay');
 
