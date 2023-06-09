@@ -157,7 +157,7 @@ docker run --rm --name flextesa_sandbox --detach -e block_time=8 -p 20000:20000 
 The idea behind Flextesa is to be able to use block times of 1 second. However, the tests as presently written do not always support that rate.
 
 
-Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local copy of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/). Several options are available for controlling block timings.
+Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local emulation of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/). Several options are available for controlling block timings.
 
 
 ### 3. Run the integration tests
@@ -256,8 +256,8 @@ PASS  ./contract-manager-scenario.spec.ts (6.167 s)
 
 ## Testing Baking and Governance Operations with Flextesa
 
-We provide a shell script `integration-tests/sandbox-bakers.sh` for setting up and runnng a mini net of bakers with Flextesa.
-The default vaues for the sandbox include
+We provide a shell script `integration-tests/sandbox-bakers.sh` for setting up and running a mini net of bakers with Flextesa.
+The default values for the sandbox include
   - blocks_per_voting_period=12 
   - extra_dummy_proposals_batch_size=2 
   - extra_dummy_proposals_batch_level=2,4 
