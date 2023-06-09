@@ -1,5 +1,9 @@
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
-import { BadSigningDataError, KeyNotFoundError, OperationNotAuthorizedError } from '../src/errors';
+import {
+  BadSigningDataError,
+  PublicKeyNotFoundError,
+  OperationNotAuthorizedError,
+} from '../src/errors';
 import { RemoteSigner } from '../src/taquito-remote-signer';
 
 /**
@@ -149,7 +153,7 @@ describe('RemoteSigner test', () => {
         signer.sign(
           '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000'
         )
-      ).rejects.toThrowError(/Signature failed verification against public key/);
+      ).rejects.toThrowError(/Invalid signature of bytes failed verification agaisnt public key/);
 
       done();
     });
@@ -240,7 +244,7 @@ describe('RemoteSigner test', () => {
       try {
         await signer.publicKey();
       } catch (error: any) {
-        expect(error).toBeInstanceOf(KeyNotFoundError);
+        expect(error).toBeInstanceOf(PublicKeyNotFoundError);
       }
       done();
     });

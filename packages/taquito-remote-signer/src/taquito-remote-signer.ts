@@ -20,31 +20,13 @@ import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
 import {
   BadSigningDataError,
-  KeyNotFoundError,
+  PublicKeyNotFoundError,
   OperationNotAuthorizedError,
-  PublicKeyMismatch,
+  PublicKeyVerificationError,
+  SignatureVerificationError,
 } from './errors';
 import { Signer } from '@taquito/taquito';
 import { InvalidSignatureError, InvalidKeyHashError, ProhibitedActionError } from '@taquito/core';
-
-/**
- *  @category Error
- *  @description Error
- */
-export class SignatureVerificationFailedError extends Error {
-  public name = 'SignatureVerificationFailedError';
-  constructor(public bytes: string, public signature: string) {
-    super(
-      `
-        Signature failed verification against public key:
-        {
-          bytes: ${bytes},
-          signature: ${signature}
-        }
-      `
-    );
-  }
-}
 
 interface PublicKeyResponse {
   public_key: string;
@@ -116,7 +98,7 @@ export class RemoteSigner implements Signer {
     } catch (ex) {
       if (ex instanceof HttpResponseError) {
         if (ex.status === STATUS_CODE.NOT_FOUND) {
-          throw new KeyNotFoundError(`Key not found: ${this.pkh}`, ex);
+          throw new PublicKeyNotFoundError(this.pkh, ex);
         }
       }
       throw ex;
@@ -159,7 +141,7 @@ export class RemoteSigner implements Signer {
       await this.verifyPublicKey(pk);
       const signatureVerified = verifySignature(watermarkedBytes, pk, signature);
       if (!signatureVerified) {
-        throw new SignatureVerificationFailedError(watermarkedBytes, signature);
+        throw new SignatureVerificationError(watermarkedBytes, signature);
       }
 
       return {
@@ -171,14 +153,11 @@ export class RemoteSigner implements Signer {
     } catch (ex) {
       if (ex instanceof HttpResponseError) {
         if (ex.status === STATUS_CODE.NOT_FOUND) {
-          throw new KeyNotFoundError(`Key not found: ${this.pkh}`, ex);
+          throw new PublicKeyNotFoundError(this.pkh, ex);
         } else if (ex.status === STATUS_CODE.FORBIDDEN) {
           throw new OperationNotAuthorizedError('Signing Operation not authorized', ex);
         } else if (ex.status === STATUS_CODE.BAD_REQUEST) {
-          throw new BadSigningDataError('Invalid data', ex, {
-            bytes,
-            watermark,
-          });
+          throw new BadSigningDataError(ex, bytes, watermark);
         }
       }
       throw ex;
@@ -191,7 +170,7 @@ export class RemoteSigner implements Signer {
 
     const publicKeyHash = b58cencode(hash(_publicKey, 20), pref[curve].pkh);
     if (publicKeyHash !== this.pkh) {
-      throw new PublicKeyMismatch(publicKeyHash, this.pkh);
+      throw new PublicKeyVerificationError(publicKey, publicKeyHash, this.pkh);
     }
   }
 }
