@@ -122,10 +122,10 @@ jobs:
         RPC_CACHE_MILLISECONDS: 0
         TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
     - run: npm -w integration-tests run test:${{ matrix.testnet }}-secret-key sandbox-ballot-operation.spec.ts
-          env:
-            RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
-            SECRET_KEY: edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
-            TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
-            POLLING_INTERVAL_MILLISECONDS: 100
-            RPC_CACHE_MILLISECONDS: 0
-            TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
+      env:
+        RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
+        SECRET_KEY: edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
+        TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
+        POLLING_INTERVAL_MILLISECONDS: 100
+        RPC_CACHE_MILLISECONDS: 0
+        TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
