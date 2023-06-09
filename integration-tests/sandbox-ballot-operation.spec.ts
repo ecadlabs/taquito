@@ -20,8 +20,10 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       // configure baker Bob and Charlie
       Bob.setSignerProvider(new InMemorySigner('edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt'));
       Charlie.setSignerProvider(new InMemorySigner('edsk3RgWvbKKA1atEUcaGwivge7QtckHkTL9nQJUXQKY5r8WKp4pF4'));
-      console.log('getVotingInfo', await Alice.rpc.getVotingInfo(await Alice.signer.publicKeyHash()))
-      console.log('getVotesListings', await Alice.rpc.getVotesListings())
+      console.log('getVotingInfoAlice', await Alice.rpc.getVotingInfo(await Alice.signer.publicKeyHash()))
+      console.log('getVotingInfoBob', await Bob.rpc.getVotingInfo(await Alice.signer.publicKeyHash()))
+      console.log('getVotingInfoCharlie', await Charlie.rpc.getVotingInfo(await Alice.signer.publicKeyHash()))
+      console.log('getVotesListings', JSON.stringify(await Alice.rpc.getVotesListings()))
       // get protocol constants
       let constants = await Alice.rpc.getConstants();
       blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!;
@@ -61,8 +63,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         });
         await Promise.all([BobOp.confirmation(), CharlieOp.confirmation()]);
 
-        console.log('getProposals', await Alice.rpc.getProposals());
-        console.log('getCurrentProposal', await Alice.rpc.getCurrentProposal());
+        console.log('getProposals', JSON.stringify(await Alice.rpc.getProposals()));
         done();
       }
     });
@@ -89,9 +90,9 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         expect(explorationBallotOp.operationResults?.ballot).toEqual('yay');
         expect(explorationBallotOp.includedInBlock).toBeDefined();
         expect(explorationBallotOp.hash).toBeDefined();
-
+        console.log('getCurrentProposal', await Alice.rpc.getCurrentProposal());
         console.log('getBallotList', await Alice.rpc.getBallotList());
-        console.log('getBallots', await Alice.rpc.getBallots());
+        console.log('getBallots', JSON.stringify(await Alice.rpc.getBallots()));
         console.log('getCurrentQuorum', await Alice.rpc.getCurrentQuorum());
         done();
       }
