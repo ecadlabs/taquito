@@ -1,48 +1,67 @@
+import { PermissionDeniedError, TaquitoError } from '@taquito/core';
+
 /**
  *  @category Error
- *  @description Error that indicates a failure in grabbing the public key
+ *  @description Error indicates a failure in grabbing the public key
  */
-export class KeyNotFoundError extends Error {
-  public name = 'KeyNotFoundError';
-  constructor(public message: string, public innerException: any) {
-    super(message);
+export class PublicKeyNotFoundError extends TaquitoError {
+  constructor(public pkh: string, public cause: any) {
+    super();
+    this.name = 'KeyNotFoundError';
+    this.message = `Public key not found of this address "${pkh}".`;
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates an unauthorized operation being attempted
+ *  @description Error indicates an unauthorized operation being attempted
  */
-export class OperationNotAuthorizedError extends Error {
-  public name = 'OperationNotAuthorized';
-  constructor(public message: string, public innerException: any) {
-    super(message);
+export class OperationNotAuthorizedError extends PermissionDeniedError {
+  constructor(public message: string, public cause: any) {
+    super();
+    this.name = 'OperationNotAuthorized';
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates bad signing data
+ *  @description Error indicates bad signing data
  */
-export class BadSigningDataError extends Error {
-  public name = 'BadSigningData';
-  constructor(public message: string, public innerException: any, public readonly data: any) {
-    super(message);
+export class BadSigningDataError extends TaquitoError {
+  constructor(public cause: any, public bytes: string, watermark?: Uint8Array) {
+    super();
+    this.name = 'BadSigningData';
+    this.message = watermark
+      ? `Invalid signing data with watermark`
+      : `Invalid signing data: "${bytes}"`;
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates a mismatch between the initialized and the requested public key
+ *  @description Error indicates a mismatch between the initialized and the requested public key
  */
-export class PublicKeyMismatch extends Error {
-  public name = 'PublicKeyMismatch';
-  constructor(public requested: string, initialized: string) {
-    super(
-      `Requested public key hash does not match the initialized public key hash: {
-        requested: ${requested},
-        initialized: ${initialized}
-      }`
-    );
+export class PublicKeyVerificationError extends TaquitoError {
+  constructor(
+    public requestedPk: string,
+    public requestedPkh: string,
+    public initializedPkh: string
+  ) {
+    super();
+    this.name = 'PublicKeyVerificationFailedError';
+    this.message = `Requested pk "${requestedPk}" has pkh "${requestedPkh}" deesn't match initialized pkh "${initializedPkh}."`;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error
+ */
+export class SignatureVerificationError extends TaquitoError {
+  public name = 'SignatureVerificationFailedError';
+  constructor(public bytes: string, public signature: string) {
+    super();
+    this.name = 'SignatureVerificationFailedError';
+    this.message = `Invalid signature of bytes failed verification agaisnt public key.`;
   }
 }
