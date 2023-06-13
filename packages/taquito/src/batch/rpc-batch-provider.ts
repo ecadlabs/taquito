@@ -30,7 +30,12 @@ import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { validateAddress, validateKeyHash, ValidationResult, invalidDetail } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { InvalidAddressError, InvalidKeyHashError, InvalidOperationKindError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidKeyHashError,
+  InvalidOperationKindError,
+  InvalidAmountError,
+} from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 
@@ -63,6 +68,9 @@ export class OperationBatch extends Provider {
    */
   withTransfer(params: TransferParams) {
     const toValidation = validateAddress(params.to);
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
     if (toValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.to, invalidDetail(toValidation));
     }

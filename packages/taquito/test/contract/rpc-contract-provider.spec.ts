@@ -185,7 +185,7 @@ describe('RpcContractProvider test', () => {
     mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
-    mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+    mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
     mockRpcClient.packData.mockResolvedValue({
       packed: '747a325542477245424b7a7a5736686a586a78786951464a4e6736575232626d3647454e',
     });
@@ -295,7 +295,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               balance: '200000000',
               counter: '2',
@@ -307,7 +307,7 @@ describe('RpcContractProvider test', () => {
                 code: ligoSample,
                 storage: { int: '0' },
               },
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '257',
             },
           ],
@@ -338,7 +338,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               balance: '200000000',
               counter: '2',
@@ -350,7 +350,7 @@ describe('RpcContractProvider test', () => {
                 code: miSample,
                 storage: { int: '0' },
               },
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '257',
             },
           ],
@@ -377,7 +377,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               amount: '2000000',
               counter: '2',
@@ -385,7 +385,7 @@ describe('RpcContractProvider test', () => {
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '300',
             },
           ],
@@ -410,7 +410,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               amount: '2000000',
               counter: '2',
@@ -418,7 +418,7 @@ describe('RpcContractProvider test', () => {
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
               kind: 'transaction',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: estimate.storageLimit.toString(),
             },
           ],
@@ -438,7 +438,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
       const result = await rpcContractProvider.transfer({
@@ -460,7 +460,7 @@ describe('RpcContractProvider test', () => {
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '300',
             },
           ],
@@ -487,7 +487,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
 
       try {
         await rpcContractProvider.transfer(params);
@@ -512,7 +512,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
 
       try {
         await rpcContractProvider.transfer(params);
@@ -540,7 +540,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
 
       try {
         await rpcContractProvider.transfer(params);
@@ -570,7 +570,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       await expect(rpcContractProvider.transfer(params)).rejects.toMatchObject({
         id: 'proto.006-PsCARTHA.contract.balance_too_low',
         message: '(temporary) proto.006-PsCARTHA.contract.balance_too_low',
@@ -595,7 +595,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       await expect(rpcContractProvider.transfer(params)).rejects.toMatchObject({
         id: 'proto.005-PsBabyM1.gas_exhausted.operation',
         message: '(temporary) proto.005-PsBabyM1.gas_exhausted.operation',
@@ -611,7 +611,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
@@ -634,7 +634,7 @@ describe('RpcContractProvider test', () => {
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '300',
             },
           ],
@@ -665,7 +665,7 @@ describe('RpcContractProvider test', () => {
       };
       const result = await rpcContractProvider.transferTicket(params);
 
-      const expectedReveal = revealOp('test_pub_key_hash');
+      const expectedReveal = revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
 
       const expectedReturn = {
         counter: '2',
@@ -751,7 +751,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               counter: '2',
               destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
@@ -799,7 +799,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               counter: '2',
               destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
@@ -842,7 +842,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
               counter: '2',
@@ -891,14 +891,14 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
-              delegate: 'test_pub_key_hash',
+              delegate: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               counter: '2',
               fee: '490',
               gas_limit: '1100',
               kind: 'delegation',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '1000',
             },
           ],
@@ -927,7 +927,7 @@ describe('RpcContractProvider test', () => {
               gas_limit: '1100',
               kind: 'reveal',
               public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '0',
             },
           ],
@@ -952,14 +952,14 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               value: { prim: 'Pair', args: [{ int: '999' }, { int: '999' }] },
               counter: '2',
               fee: '475',
               gas_limit: '1330',
               kind: 'register_global_constant',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
             },
           ],
@@ -974,7 +974,7 @@ describe('RpcContractProvider test', () => {
 
   describe('increasePaidStorage', () => {
     it('should produce an increasePaidStorage operation without reveal when account is revealed', async (done) => {
-      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
@@ -991,7 +991,7 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'increase_paid_storage',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '475',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1020,10 +1020,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'increase_paid_storage',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '475',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1053,10 +1053,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'increase_paid_storage',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '500',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1116,7 +1116,7 @@ describe('RpcContractProvider test', () => {
           branch: 'test',
           contents: [
             {
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               kind: 'ballot',
               period: 1,
               proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
@@ -1174,7 +1174,7 @@ describe('RpcContractProvider test', () => {
           branch: 'test',
           contents: [
             {
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               kind: 'proposals',
               period: 1,
               proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
@@ -1219,7 +1219,7 @@ describe('RpcContractProvider test', () => {
 
   describe('updateConsensusKey', () => {
     it('should produce an updateConsensusKey operation', async (done) => {
-      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
@@ -1236,7 +1236,7 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'update_consensus_key',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
               storage_limit: estimate.storageLimit.toString(),
@@ -1264,10 +1264,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'update_consensus_key',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
               storage_limit: estimate.storageLimit.toString(),
@@ -1296,10 +1296,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'update_consensus_key',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '500',
               gas_limit: estimate.gasLimit.toString(),
               storage_limit: estimate.storageLimit.toString(),
@@ -1318,7 +1318,7 @@ describe('RpcContractProvider test', () => {
 
   describe('smartRollupAddMessages', async () => {
     it('should produce a smartRollupAddMessages op', async (done) => {
-      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.smartRollupAddMessages.mockResolvedValue(estimate);
@@ -1337,7 +1337,7 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'smart_rollup_add_messages',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '475',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1370,10 +1370,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'smart_rollup_add_messages',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '475',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1515,7 +1515,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               pvm_kind: PvmKind.WASM2,
               kernel:
@@ -1529,7 +1529,7 @@ describe('RpcContractProvider test', () => {
               fee: '433',
               gas_limit: '1330',
               kind: 'smart_rollup_originate',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '10000',
             },
           ],
@@ -1565,7 +1565,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               pvm_kind: PvmKind.WASM2,
               kernel:
@@ -1579,7 +1579,7 @@ describe('RpcContractProvider test', () => {
               fee: '9999',
               gas_limit: '12345',
               kind: 'smart_rollup_originate',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '54321',
             },
           ],
@@ -1629,7 +1629,7 @@ describe('RpcContractProvider test', () => {
               fee: '433',
               gas_limit: '1330',
               kind: 'smart_rollup_originate',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '10000',
             },
           ],

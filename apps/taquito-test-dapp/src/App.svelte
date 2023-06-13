@@ -21,6 +21,7 @@
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
     { value: "mumbainet", label: "Mumbainet", group: "current testnets" },
+    { value: "nairobinet", label: "Nairobinet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
     { value: "mondaynet", label: "Mondaynet", group: "other testnets" },
@@ -49,6 +50,9 @@
         break;
       case "mumbainet":
         store.updateNetworkType(NetworkType.MUMBAINET);
+        break;
+      case "nairobinet":
+        store.updateNetworkType(NetworkType.NAIROBINET);
         break;
       case "custom":
         //TODO: input custom RPC URL
