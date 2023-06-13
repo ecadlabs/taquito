@@ -2,6 +2,44 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v17
+### Potential Breaking Changes
+Protocol Nairobi comes with a couple potential breaking changes for our users:
+- `@taquito/taquito` - Update gas limit changes that pertains to each different curve in Protocol N #2447
+- `@taquito/rpc` - Update operation result of `sc_rollup_cement_result` to have the newly added field #2448
+- Changed error class names #2505 :
+  - `@taquito/remote-signer` - `KeyNotFoundError` renamed to `PublicKeyNotFoundError`
+  - `@taquito/remote-signer` - `PublicKeyMismatch` renamed to `PublicKeyVerificationError`
+  - `@taquito/remote-signer` - `SignatureVerificationFailedError` renamed to `SignatureVerificationError`
+
+## Summary
+### Nairobi Support
+- `@taquito/taquito` - Update gas limit changes that pertains to each different curve in Protocol N #2447
+- `@taquito/rpc` - Update operation result of `sc_rollup_cement_result` to have the newly added field #2448
+
+### New Features
+- `@taquito/taquito` & `@taquito/michelson-encoder`- Introduced a new feature called `EventAbstraction` that provides an abstraction to Events, similar to `ContractAbstraction` #2128
+- 
+### Bug Fixes
+- `@taquito/taquito` - Fixed contract call estimation to check for unrevealed keys #2500
+
+### Testing
+- Fixed ballot operation testing to have a dynamic wait #2403
+
+### Improvement
+- Further improved error classes and updated error class hierarchy for the following packages #2509 & #2505:
+    - `@taquito/http-utils`
+    - `@taquito/contracts-library`
+    - `@taquito/beacon-wallet`
+    - `@taquito/ledger-signer`
+    - `@taquito/remote-signer`
+- Improved error capturing/validation for RPC calls #1996
+
+### Documentation
+- Added docs for making contract calls with JSON Michelson as a workaround to limitations that are introduced by complex contract call parameters #2443
+
+### Internals
+- Upgrade `netlify-cli` package to fix CI issues [PR#2496](https://github.com/ecadlabs/taquito/pull/2496)
 # Taquito v16.2.0
 
 **Potential Breaking Changes**:
@@ -67,7 +105,6 @@ try {
 
 ### `@taquito/taquito` - Tweaked the functionality of `PrepareProvider`
 The `PrepareProvider` is a somewhat new feature to Taquito that allows users to independently create a `PreparedOperation` object. It's behaviour is slightly changed so that it **does not** estimate directly when preparing. The estimation and the preparation process are now 2 separate process, removing the circular dependency it used to have.
-
 
 # Taquito v16.1.1
 ## Bug Fixes
