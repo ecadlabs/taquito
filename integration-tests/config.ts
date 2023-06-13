@@ -6,7 +6,6 @@ import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { knownBigMapContractProtoALph, knownContractProtoALph, knownOnChainViewContractAddressProtoALph, knownSaplingContractProtoALph, knownTzip12BigMapOffChainContractProtoALph } from './known-contracts-ProtoALph';
 import { knownContractPtGhostnet, knownBigMapContractPtGhostnet, knownTzip12BigMapOffChainContractPtGhostnet, knownSaplingContractPtGhostnet, knownOnChainViewContractAddressPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractPtMumbai2, knownBigMapContractPtMumbai2, knownTzip12BigMapOffChainContractPtMumbai2, knownSaplingContractPtMumbai2, knownOnChainViewContractAddressPtMumbai2 } from './known-contracts-PtMumbai2';
 import { knownContractPtNairobi, knownBigMapContractPtNairobi, knownTzip12BigMapOffChainContractPtNairobi, knownSaplingContractPtNairobi, knownOnChainViewContractAddressPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
@@ -73,24 +72,6 @@ const defaultSecretKey: SecretKeyConfig = {
   password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
-const mumbainetEphemeral = {
-  rpc: process.env['TEZOS_RPC_MUMBAINET'] || 'http://ecad-mumbainet-full.i.tez.ie:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_MUMBAINET_CONTRACT_ADDRESS'] || knownContractPtMumbai2,
-  knownBigMapContract: process.env['TEZOS_MUMBAINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtMumbai2,
-  knownTzip1216Contract: process.env['TEZOS_MUMBAINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtMumbai2,
-  knownSaplingContract: process.env['TEZOS_MUMBAINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtMumbai2,
-  knownViewContract: process.env['TEZOS_MUMBAINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtMumbai2,
-  protocol: Protocols.PtMumbai2,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/mumbainet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
-
 const nairobinetEphemeral = {
   rpc: process.env['TEZOS_RPC_NAIROBINET'] || 'http://ecad-nairobinet-full.i.tez.ie:8732',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
@@ -145,19 +126,6 @@ const mondaynetEphemeral = {
   },
 };
 
-const mumbainetSecretKey = {
-  rpc: process.env['TEZOS_RPC_MUMBAINET'] || 'http://ecad-mumbainet-full:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_MUMBAINET_CONTRACT_ADDRESS'] || knownContractPtMumbai2,
-  knownBigMapContract: process.env['TEZOS_MUMBAINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtMumbai2,
-  knownTzip1216Contract: process.env['TEZOS_MUMBAINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtMumbai2,
-  knownSaplingContract: process.env['TEZOS_MUMBAINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtMumbai2,
-  knownViewContract: process.env['TEZOS_MUMBAINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtMumbai2,
-  protocol: Protocols.PtMumbai2,
-  signerConfig: defaultSecretKey
-};
 
 const nairobinetSecretKey = {
   rpc: process.env['TEZOS_RPC_NAIROBINET'] || 'http://ecad-nairobinet-full:8732',
@@ -204,9 +172,6 @@ const mondaynetSecretKey = {
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(mumbainetSecretKey);
-} else if (process.env['RUN_MUMBAINET_WITH_SECRET_KEY']) {
-  providers.push(mumbainetSecretKey);
   providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
@@ -214,8 +179,6 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
   providers.push(mondaynetSecretKey);
-} else if (process.env['MUMBAINET']) {
-  providers.push(mumbainetEphemeral);
 } else if (process.env['NAIROBINET']) {
   providers.push(nairobinetEphemeral);
 } else if (process.env['GHOSTNET']) {

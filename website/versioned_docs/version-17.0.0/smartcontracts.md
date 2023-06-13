@@ -24,30 +24,35 @@ In this guide, we use a straightforward "counter" smart contract to illustrate h
 
 The counter contract has two entry points named `increment` and `decrement.` Taquito uses these entrypoints to generate corresponding javascript methods available to the developer.
 
-The counter contracts storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
+The counter contract's storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
 
-### Counter Contract in CameLIGO
+### Counter Contract in JSLIGO
 
-```ocaml
-type storage = int
+```
+type storage = int;
 
-(* variant defining pseudo multi-entrypoint actions *)
+type parameter =
+| ["Increment", int]
+| ["Decrement", int]
+| ["Reset"];
 
-type action =
-| Increment of int
-| Decrement of int
+type return_ = [list <operation>, storage];
 
-let add (a,b: int * int) : int = a + b
-let sub (a,b: int * int) : int = a - b
+/* Two entrypoints */
+const add = ([store, delta] : [storage, int]) : storage => store + delta;
+const sub = ([store, delta] : [storage, int]) : storage => store - delta;
 
-(* real entrypoint that re-routes the flow based on the action provided *)
-
-let main (p,s: action * storage) =
- let storage =
-   match p with
-   | Increment n -> add (s, n)
-   | Decrement n -> sub (s, n)
- in ([] : operation list), storage
+/* Main access point that dispatches to the entrypoints according to
+   the smart contract parameter. */
+const main = ([action, store] : [parameter, storage]) : return_ => {
+ return [
+   (list([]) as list <operation>),    // No operations
+   (match (action, {
+    Increment: (n: int) => add ([store, n]),
+    Decrement: (n: int) => sub ([store, n]),
+    Reset:     ()  => 0}))
+  ]
+};
 
 ```
 
@@ -56,35 +61,12 @@ You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 ### Counter Contract Michelson source code
 
 ```
-{ parameter (or (int %decrement) (int %increment)) ;
+{ parameter (or (or (int %decrement) (int %increment)) (unit %reset)) ;
   storage int ;
-  code { DUP ;
-         CDR ;
-         DIP { DUP } ;
-         SWAP ;
-         CAR ;
-         IF_LEFT
-           { DIP { DUP } ;
-             SWAP ;
-             DIP { DUP } ;
-             PAIR ;
-             DUP ;
-             CAR ;
-             DIP { DUP ; CDR } ;
-             SUB ;
-             DIP { DROP 2 } }
-           { DIP { DUP } ;
-             SWAP ;
-             DIP { DUP } ;
-             PAIR ;
-             DUP ;
-             CAR ;
-             DIP { DUP ; CDR } ;
-             ADD ;
-             DIP { DROP 2 } } ;
+  code { UNPAIR ;
+         IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { DROP 2 ; PUSH int 0 } ;
          NIL operation ;
-         PAIR ;
-         DIP { DROP 2 } } }
+         PAIR } }
 ```
 
 ## Loading the contract in Taquito
@@ -103,10 +85,10 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -118,10 +100,10 @@ Tezos.contract
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -151,10 +133,10 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -165,10 +147,10 @@ Tezos.contract
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -195,10 +177,10 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((contract) => {
     const i = 7;
 
@@ -209,17 +191,17 @@ Tezos.contract
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(3).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1GJ5dUyHiaj7Uuc8gqfsbdv5tTbEH3fiRP')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((contract) => {
     const i = 7;
 
@@ -230,7 +212,7 @@ Tezos.wallet
     println(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(3).then(() => op.opHash);
   })
-  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
   </TabItem>
@@ -259,10 +241,10 @@ values={[
 In the following example, a contract's `set_child_record` method will be called by passing the arguments using the flattened representation. The `methods` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow:
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
+  .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
     println(
@@ -280,12 +262,12 @@ The preceding example returns an array which contains the different possible sig
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com')
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, secretKey)
   .then((signer) => {
-    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz');
+    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
   })
   .then((contract) => {
     return contract.methods
@@ -303,7 +285,7 @@ importKey(Tezos, secretKey)
     println(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation().then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
@@ -313,10 +295,10 @@ importKey(Tezos, secretKey)
 In the following example, a contract's `set_child_record` method will be called by passing the parameter in an object format. The `methodsObject` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow:
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz')
+  .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
     println(
@@ -334,12 +316,12 @@ The preceding example returns an object giving indication on how to structure th
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://kathmandunet.ecadinfra.com')
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, secretKey)
   .then((signer) => {
-    return Tezos.contract.at('KT1Resnq6SvWRUXA9FaNczhJ278QzwPjWcGz');
+    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
   })
   .then((contract) => {
     return contract.methodsObject
@@ -356,7 +338,7 @@ importKey(Tezos, secretKey)
     println(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation().then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://kathmandu.tzstats.com/${hash}`))
+  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
   </TabItem>
