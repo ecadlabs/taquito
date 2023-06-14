@@ -29,7 +29,7 @@ import {
   ActivationParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT, Protocols } from '../constants';
+import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import { PublicKeyNotFoundError, RPCResponseError } from '../error';
 import { Context } from '../context';
@@ -164,7 +164,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   private async addRevealOperationIfNeeded(operation: RPCOperation, publicKeyHash: string) {
     if (isOpRequireReveal(operation)) {
       const ops: RPCOperation[] = [operation];
-      const { publicKey } = await this.getKeys();
+      const { publicKey, pkh } = await this.getKeys();
       if (await this.isAccountRevealRequired(publicKeyHash)) {
         if (!publicKey) {
           throw new RevealEstimateError();
@@ -174,7 +174,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
             {
               fee: DEFAULT_FEE.REVEAL,
               storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
-              gasLimit: DEFAULT_GAS_LIMIT.REVEAL,
+              gasLimit: getRevealGasLimit(pkh),
             },
             publicKeyHash,
             publicKey
@@ -987,7 +987,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           {
             fee: DEFAULT_FEE.REVEAL,
             storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
-            gasLimit: DEFAULT_GAS_LIMIT.REVEAL,
+            gasLimit: getRevealGasLimit(pkh),
           },
           pkh,
           publicKey

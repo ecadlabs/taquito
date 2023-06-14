@@ -401,6 +401,7 @@ export enum Protocol {
   PtLimaPtL = 'PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW',
   PtMumbaii = 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
+  PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
@@ -432,10 +433,11 @@ const protoLevel: Record<ProtocolID, number> = {
   PtLimaPtLMwfNinJi9rCfDPWea8dFgTZ1MeJ9f1m2SRic6ayiwW: 15,
   PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc: 16,
   PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1: 16,
-  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 17,
+  PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf: 17,
+  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 18,
 };
 
-export function ProtoGreaterOfEqual(a: ProtocolID, b: ProtocolID): boolean {
+export function ProtoGreaterOrEqual(a: ProtocolID, b: ProtocolID): boolean {
   return protoLevel[a] >= protoLevel[b];
 }
 
