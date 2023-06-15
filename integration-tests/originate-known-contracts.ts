@@ -1,4 +1,4 @@
-import { CONFIGS } from './config';
+import { CONFIGS, sleep } from './config';
 import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito/taquito';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
@@ -11,13 +11,17 @@ import * as fs from 'fs';
 
 const MUTEZ_UNIT = new BigNumber(1000000);
 
-CONFIGS().forEach(({ lib, setup, protocol }) => {
+CONFIGS().forEach(({ lib, setup, protocol, rpc }) => {
   const tezos = lib;
   let keyPkh: string = "";
   let keyInitialBalance: BigNumber = new BigNumber(0);
 
   (async () => {
     await setup(true);
+    // when running sandbox test need to wait till flextesa is ready
+    if(rpc.substring(0, 17) === 'http://localhost:') {
+      await sleep(15 * 1000)
+    }
     console.log(protocol)
     fs.writeFile(`known-contracts-${protocol.substring(0,9)}.ts`, '', (err: any) => {
       if (err) {
