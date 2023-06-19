@@ -1199,6 +1199,18 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupRecoverBond
   | OperationContentsAndResultSmartRollupTimeout;
 
+export type OperationContentsAndResultWithFee =
+  | OperationContentsAndResultTransaction
+  | OperationContentsAndResultOrigination
+  | OperationContentsAndResultDelegation
+  | OperationContentsAndResultReveal
+  | OperationContentsAndResultRegisterGlobalConstant
+  | OperationContentsAndResultSetDepositsLimit
+  | OperationContentsAndResultUpdateConsensusKey
+  | OperationContentsAndResultIncreasePaidStorage
+  | OperationContentsAndResultSmartRollupAddMessages
+  | OperationContentsAndResultSmartRollupOriginate;
+
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
 }
@@ -1666,6 +1678,45 @@ export interface TicketUpdates {
   }[];
 }
 export type TicketReceipt = TicketUpdates;
+
+export type BatchOperationResult =
+  | OperationResultTransaction
+  | OperationResultReveal
+  | OperationResultDelegation
+  | OperationResultOrigination
+  | OperationResultIncreasePaidStorage
+  | OperationResultRegisterGlobalConstant
+  | OperationResultTransferTicket
+  | OperationResultSmartRollupAddMessages
+  | OperationResultSmartRollupOriginate
+  | OperationResultUpdateConsensusKey;
+
+export type OperationResult =
+  | OperationResultOrigination
+  | OperationResultTransaction
+  | OperationResultReveal
+  | OperationResultDelegation
+  | OperationResultIncreasePaidStorage
+  | OperationResultRegisterGlobalConstant
+  | OperationResultTransferTicket
+  | OperationResultUpdateConsensusKey
+  | OperationResultSmartRollupOriginate
+  | OperationResultSmartRollupAddMessages
+  | OperationResultSetDepositsLimit
+  | OperationResultSmartRollupPublish
+  | OperationResultSmartRollupCement
+  | OperationResultSmartRollupRefute
+  | OperationResultSmartRollupRecoverBond
+  | OperationResultSmartRollupTimeout
+  | OperationResultSmartRollupExecuteOutboxMessage
+  | OperationResultTxRollupOrigination
+  | OperationResultTxRollupSubmitBatch
+  | OperationResultTxRollupDispatchTickets
+  | OperationResultTxRollupCommit
+  | OperationResultTxRollupReturnBond
+  | OperationResultTxRollupFinalizeCommitment
+  | OperationResultTxRollupRemoveCommitment
+  | OperationResultTxRollupRejection;
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;

@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expectedConfirmation: 1,
         currentConfirmation: 1,
         completed: true
-      }))
+      }));
 
       conf1 = await walletOp.confirmation();
       currentConf1 = await walletOp.getCurrentConfirmation();
@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expectedConfirmation: 1,
         currentConfirmation: 1,
         completed: true
-      }))
+      }));
 
       const conf2 = await walletOp.confirmation(2);
       const currentConf2 = await walletOp.getCurrentConfirmation();
@@ -47,10 +47,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expectedConfirmation: 2,
         currentConfirmation: 2,
         completed: true
-      }))
+      }));
 
-      done()
-    })
+      done();
+    });
 
     test('Test simple origination and wait for confirmation using observable', async (done) => {
       const walletOp = await Tezos.wallet.originate({
@@ -67,8 +67,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const events = await new Promise((resolve, reject) => {
         const evts: any[] = [];
-        walletOp.confirmationObservable(3).subscribe((event) => evts.push(event), reject, () => resolve(evts))
-      })
+        walletOp.confirmationObservable(3).subscribe((event: any) => evts.push(event), reject, () => resolve(evts))
+      });
 
       expect(events).toEqual(expect.arrayContaining([
         expect.objectContaining({
@@ -86,9 +86,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           expectedConfirmation: 3,
           completed: true
         })
-      ]))
+      ]));
 
-      done()
-    })
-  })
-})
+      done();
+    });
+  });
+});
