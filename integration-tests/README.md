@@ -1,309 +1,123 @@
 # Taquito Integration Tests
 
+This directory contains the integration test suites for Taquito. These tests are executed against live Tezos testnets, ensuring a comprehensive evaluation of various Taquito use cases.
 
-The `taquito/integration-tests` directory contains the integration test suite for Taquito. These tests are executed against live Tezos testnets, ensuring a comprehensive evaluation of various Taquito use cases. 
+There are two ways for our **external users** to run our integration tests on live testnets. One is to use their **own secret key** with sufficient balance to run against a live testnet in sequence. The other is to spin up a docker **flextesa sandbox** to point tests to run against local sandbox rpc url.
 
-The tests may also be run using Flextesa. This is useful for testing new features not in current test nets and for testing features around governance that benefit from shortened block processing times. As well Flextesa tests offer a secondary confirmation of the test net results.
+Internally Taquito runs tests in parallel. This is achieved using a keygen application that generates new keys and funds them as needed per test. This is not publicly available. We also run test with Flextesa internally specifically for some irreversible behavior and voting operations which need to be performed with controlled bakers. Also, Flextesa tests offer a secondary confirmation of the testnet results.
 
-Internally Taquito is tested with tests running in parallel. This is achieved using an application that generates new keys and funds them as needed per test. 
-The application is not publicly available. External users, therefore, must run the Taquito Integration Tests in sequence, one test at a time. 
-
-## Running Integration Tests Against a Tezos Testnet
-
+## Prerequisite to run integration test
 
 To run tests in this environment, make sure you have:
 
+- Taquito source code cloned to your local machine `git clone https://github.com/ecadlabs/taquito.git`
+- A compatible version of Node.js installed (see the top-level [README.md]( [README.md](https://github.com/ecadlabs/taquito#readme) )) )
+- Successfully compiled Taquito (see the top-level  [README.md](https://github.com/ecadlabs/taquito#setup-and-build-taquito) ) `npm clean-install && npm run build`
+- Get into integration-tests folder `cd integration-tests`
 
-- Taquito source code cloned to your local machine
-- A compatible version of Node.js installed (see the top-level README.md)
-- Successfully compiled Taquito (see the top-level README)
+## [External] Using a Secret Key toward a live testnet
 
-
-### Running all tests against all pre-configured testnets
-
-
-From the `taquito/integration-tests` directory, run the following:
-
+For example to run tests against ghostnet, we need to set up environmental variables `RUN_GHOSTNET_WITH_SECRET_KEY`, `SECRET_KEY`, `TEZOS_RPC_GHOSTNET` and if any `PASSWORD_SECRET_KEY`. This will configure our integration tests accordingly. (*note that secret key used will need sufficient balance for the tests to run successfully, here is a link of [faucet](https://teztnets.xyz/) to fund your account)
 
 ```
-npm run test # This runs all tests against all pre-configured testnets
+export RUN_GHOSTNET_WITH_SECRET_KEY=true &&
+export SECRET_KEY=edsk... &&
+export TEZOS_RPC_GHOSTNET=https://ghostnet.ecadinfra.com
+&& export PASSWORD_SECRET_KEY=undefined // optional
 ```
 
-
-### Running all tests against a specific testnet
-
-
-Depending on the current Tezos upgrade cycle, multiple testnet networks may be configured in the Taquito integration tests. To target a specific testnet, use environment variables found in `taquito/integration-tests/config.ts` (see the Configuration section below):
-
+ - To run entire integration test folder, we first originate known contract then run test like below. (*note that there will be some tests failed due to the assertion differ by rpc or node environment)
 
 ```
-NAIROBINET=true npm run test
+npm run originate-known-contracts &&
+npm run test:ghostnet-secret-key
 ```
 
-## Configuration
-
-Refer to the `taquito/integration-tests/config.ts` file for details on test configurations and target networks. Some configurations have default values that can be overridden using environment variables. Sometimes, you can use CLI commands to invoke a configuration instead of exporting it.
-
-
-## CLI Options
-
-
-If different testnets are configured in the `config.ts` file, you can run tests on a specific testnet using the command-line parameter for a test file:
-
+ - To run a single file that interact with known contract, we can run
 
 ```
-npm run test:nairobinet contract-with-bigmap-init.spec.ts
+npm run originate-known-contracts &&
+npm run test:ghostnet-secret-key contract-batch.spec.ts
 ```
 
-
-Or for a specific test within a test file:
-
+ - To run a single file that doesn't interact with known contract, we can simply run
 
 ```
-npm run test:nairobinet -- -t "Verify contract.originate for a contract and call deposit method with unit param"
+npm run test:ghostnet-secret-key contract-with-bigmap-init.spec.ts
 ```
 
-
-## Running Tests Against a Specific RPC URL
-
-
-To run tests against a node that is not pre-configured in Taquito, use:
-
-
-`export TEZOS_RPC_NAIROBINET='http://localhost:8732'`.
-
-## Using a Secret Key Instead of the Keygen API
-
-
-By default, the integration tests use an ephemeral key managed by the Keygen API, which requires internal access (for detail on Keygen see the below). However, to use a secret key of your own instead, use the CLI option `<testnet>-secret-key`, like this:
-
+ - To run a single test we can specify it's description like this
 
 ```
-npm run test:nairobinet-secret-key contract-with-bigmap-init.spec.ts
+npm run test:ghostnet-secret-key -- -t "Verify contract.originate for a contract and call deposit method with unit param"
 ```
 
+## [External] Using flextesa sandbox
 
-You can set your secret key (and password), or the `defaultSecretKey` from `config.ts` will be used:
+To run integration test against [flextesa](https://tezos.gitlab.io/flextesa/) sandbox will require [docker](https://docs.docker.com/get-docker/).
 
+We have written a flextesa nairobi sandbox script that can be run like this. (If this command failed because lacking execution permission run this `chmod +x sandbox-script.sh` and below command again)
 
 ```
-export SECRET_KEY='edsk...'
+npm run start-nairobibox
 ```
 
+- To run entire integration test folder, we have written a script to run
 
-If running the test with a configured secret key, ensure that the account balance is not zero.
+```
+npm run test:nairobibox
+```
 
+- To run a single file that interact with known contract, we can run
+
+```
+source ./sandbox-env.sh &&
+npm run originate-known-contracts &&
+RUN_NAIROBINET_WITH_SECRET_KEY=true jest contract-batch.spec.ts
+```
+
+- To run a single file that doesn't interact with known contract, we can run
+
+```
+source ./sandbox-env.sh &&
+RUN_NAIROBINET_WITH_SECRET_KEY=true jest contract-with-bigmap-init.spec.ts
+```
+
+- To run a single test we can specify it's description like this
+
+```
+RUN_NAIROBINET_WITH_SECRET_KEY=true jest -- -t "Verify contract.originate for a contract and call deposit method with unit param"
+```
+
+- To stop the flextesa sandbox
+
+```
+docker stop Nairobibox
+```
+
+- To test voting operations, can run
+
+```
+npm run start-nairobibox &&
+source ./sandbox-env.sh &&
+export SECRET_KEY=edsk... && // require a baker's secret_key
+RUN_NAIROBINET_WITH_SECRET_KEY=true jest sandbox-ballot-operation.spec.ts
+```
+## For more detail
+If you'd like to learn more, please reference these files for more commands to run test and how the tests are constructed.
+```
+integration-tests/package.json
+integration-tests/originate-known-contracts.ts
+integration-tests/config.ts
+integration-tests/sandbox-script.sh
+integration-tests/sandbox-env.sh
+```
 
 ## Test Report
 
-
-To review the graphical report of the test run, open the index.html file in ~/taquito/integration-tests/jest-stare after each test run.
-
-
-## Taquito Integration Tests with Flextesa
-
-
-> **Be sure to use a working NVM! such as lts/gallium or lts/hydrogen**
-
-> The recommended method to run tests is against testnets, not sandboxes. Running all tests against a sandbox can fail randomly, while individual tests usually pass.
-
-
-To prepare to run the integration tests against a local sandbox, perform the following steps:
-
-
-### 1. Set environment variables
-
-
-Execute
-
-
-```bash
-source integration-tests/sandbox-env.sh
+To review the graphical report of the test run
 ```
-
-
-from the top level. This will export the following environment variables:
-
-
-```sh
-RUN_NAIROBINET_WITH_SECRET_KEY=true
-SECRET_KEY=edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
-TEZOS_RPC_NAIROBINET=http://localhost:20000
-POLLING_INTERVAL_MILLISECONDS=100
-RPC_CACHE_MILLISECONDS=0
-TEZOS_BAKER=tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
-```
-
-
-### 2. Start a Flextesa sandbox to run a local Nairobi testnet
-
-
-Start the docker container, which encapsulates the flextesa_sandbox:
-
-
-```sh
-docker run --rm --name flextesa_sandbox --detach -p 20000:20000 oxheadalpha/flextesa:latest nairobibox start
-```
-
-
-The default block time is 5 seconds. If we want to simulate Nairobi block times, we could use
-
-
-```sh
-docker run --rm --name flextesa_sandbox --detach -e block_time=8 -p 20000:20000 oxheadalpha/flextesa:latest nairobibox start
-```
-
-
-The idea behind Flextesa is to be able to use block times of 1 second. However, the tests as presently written do not always support that rate.
-
-
-Flextesa is the "Flexible Tezos Sandbox" and effectively enables you to run a local emulation of the blockchain. Please find [more information about Flextesa here](https://tezos.gitlab.io/flextesa/). Several options are available for controlling block timings.
-
-
-### 3. Run the integration tests
-*Note: It is no longer necessary to `cd` into the `integration-tests/` directory*
-
-
-To run the integration tests, use the command `npm run integration-tests`. The integration test suite will execute all tests against the current Tezos protocol (Nairobi) sandbox and typically also against the previous and next protocol testnets. You can find specific test targets in the `scripts` property in the `integration-tests/package.json` file.
-
-
-Remember that the first time you run the integration tests, `docker` will download the required image, which might take some time. 
-
-
-Before running the tests, make sure the file `~/taquito/integration-tests/known-contracts-PtNairobi.ts` includes the following:
-
-
-```bash
-export const knownContractPtNairobi = "KT1GrzF7DSNc7LrLmS7RNaLrBQqyYHyoMzwR";
-export const knownBigMapContractPtNairobi = "KT1Twd6GBBqHEFhzvBDEn4JiUopttq2WjdnF";
-export const knownTzip12BigMapOffChainContractPtNairobi = "KT1WZUqEKZ4TMW75FKpqod4HwB4ts7wbnsFh";
-export const knownSaplingContractPtNairobi = "KT1VNnD8NWx9ep2gxsHbzrmahrWsKpZb3xGY";
-export const knownOnChainViewContractAddressPtNairobi = "KT19eNryXTuVgH6s6cUc1a5LyjSamdBw4JXo";
-```
-
-
-These contracts will be originated when the tests are first run, but the file will be emptied afterward. You'll need to repopulate it if you want to rerun the tests.
-
-
-Next, set the required environment variables for the Flextesa run:
-
-
-```bash
-source integration-tests/sandbox-env.sh
-```
-
-
-When running Flextesa tests, you must pass the Jest config `--runInBand`, as they only have one baking account, and tests must run sequentially.
-
-
-```bash
-npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:nairobinet-secret-key --runInBand
-```
-
-
-If you're running the tests for a second time in the same session, you don't need to originate the test contracts again. Instead, use the following:
-
-
-```bash
-npm -w --runInBand integration-tests run test:nairobinet-secret-key
-```
-
-
-Some tests might fail due to test data discrepancies, such as changes in RPC endpoints or estimated gas costs from one protocol to another. You can skip these tests using the following:
-
-
-```bash
-npm -w integration-tests run test:nairobinet-secret-key -- --runInBand --testPathIgnorePatterns='ledger-signer-failing-tests.spec.ts|ledger-signer.spec.ts|contract-estimation-tests.spec.ts|rpc-get-protocol-constants.spec.ts|'
-```
-
-
-You can also avoid slow-running tests. For example, if you want not to run the `sapling*.spec.ts` tests, run:
-
-
-```bash
-npm -w integration-tests run test:nairobinet-secret-key -- --runInBand --testPathIgnorePatterns='ledger-signer-failing-tests.spec.ts|ledger-signer.spec.ts|contract-estimation-tests.spec.ts|rpc-get-protocol-constants.spec.ts|sapling-batched-transactions.spec.ts| sapling-transactions-contract-with-multiple-sapling-states.spec.ts|sapling-transactions-contract-with-single-state.spec.ts|sapling-transactions-proof-using-proving-key.spec.ts'
-```
-
-
-Upon successfully starting the tests with contract origination, you should see the following output:
-
-
-```bash
-integration-tests@16.1.2 test:originate-known-contracts
-node -r ts-node/register originate-known-contracts.ts
-PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf
-knownContract address: KT1CX4Qbkfy4N9fgRD5L7RPZW9ByydfKxh5t
-::set-output name=knownContractAddress::KT1CX4Qbkfy4N9fgRD5L7RPZW9Byv2ycodEBUxHWoRkWHFBht
-knownBigMapContract address: KT1NN9wjEDzrpcXynvA1L97Y5JCT7ebyjPNj
-::set-output name=knownBigMapContractAddress::KT1NN9wjEDzrpcXynvA1L97Y5JCT7ebyjPNj
-knownTzip12BigMapOffChainContract address: KT1UXPQiyHR4AesmD4QYefprVXH21JrGefnQ
-::set-output name=knownTzip12BigMapOffChainContractAddress::KT1UXPQiyHR4AesmD4QYefprVXH21JrGefnQ
-knownSaplingContract address: KT1Hkdt7v2ycodEBUxHWoRkWHFBhtutgmVDU
-::set-output name=knownSaplingContractAddress::KT1Hkdt7v2ycodEBUxHWoRkWHFBhtutgmVDU
-knownOnChainViewContractAddress address: KT1JirmFdgjttrm6wgwRxFGfwrP3twT5Y7CT
-::set-output name=knownOnChainViewContractAddressAddress::KT1JirmFdgjttrm6wgwRxFGfwrP3twT5Y7CT
-
-Public Key Hash : tz1YPSCGWXwBdTncK2aCctSZAXWvGsGwVJqU
-Initial Balance : 90856887.13687 XTZ
-Final Balance : 90856909.589235 XTZ
-Total XTZ Spent : -22.452365 XTZ
-
-> integration-tests@16.1.2 test:nairobinet-secret-key
-> RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand
-RUNS  ./contract-manager-scenario.spec.ts
-PASS  ./contract-manager-scenario.spec.ts (6.167 s)
-```
-
-## Testing Baking and Governance Operations with Flextesa
-
-We provide a shell script `integration-tests/sandbox-bakers.sh` for setting up and running a mini net of bakers with Flextesa.
-The default values for the sandbox include
-  - blocks_per_voting_period=12 
-  - extra_dummy_proposals_batch_size=2 
-  - extra_dummy_proposals_batch_level=2,4 
-  - number_of_bootstrap_accounts=2
-
-Before running the script, make sure the file `~/taquito/integration-tests/known-contracts-PtNairobi.ts` is populated. Stop the `baking-sandbox` docker process before running the script again.
-
-To run this script, save it as `integration-tests/sandbox-bakers.sh` and execute it with the required arguments:
-
-```bash
-chmod +x sandbox-bakers.sh
-./sandbox-bakers.sh <flextesa_docker_image> <protocol> <testnet> <testnet_uppercase>
-```
-for example,
-```bash
-./sandbox-bakers.sh oxheadalpha/flextesa:20230313 Nairobi nairobinet NAIROBINET
-```
-
-Create an alias to make interacting with the flextesa node easier
-```bash!
-alias tcli='docker exec baking-sandbox octez-client'
-```
-Then, various commands are run like so
-```bash!
-tcli get balance for alice
-tcli --wait none transfer 10 from alice to bob   # Option `--wait` is IMPORTANT!
-tcli show address alice
-```
-
-For baking, check for baking rights
-```bash!
-tcli show address alice # get the pkh
-tcli rpc get /chains/main/blocks/head/metadata | jq .level_info,.protocol # get the cycle
-tcli  rpc get /chains/main/blocks/head/helpers/baking_rights\?cycle=<CYCLE>\&delegate=<PKH>\&max_round=7 
-```
-Since the cycles fly by in this setup, check for rights a few cycles ahead ..
-
-Then 
-```bash!
-tcli bake for alice
-```
-You should see something like:
-```bash!
-May 11 20:14:39.014 - 017-PtNairobi.baker.transitions: received new head BLr6cAaj2oM2ibakFp8zZMNEbpcSAZ94WhzeV57njD7NrnaYrZU at
-May 11 20:14:39.014 - 017-PtNairobi.baker.transitions:   level 1152, round 0
-Block BLCjrRGMJxZEBoZaxafUHcTCNBnmGzRfX2Qf5qru2XtAhiNEsun (1153) injected
+open jest-stare/index.html
 ```
 
 ## The Keygen API
@@ -326,7 +140,7 @@ Keygen->>+Redis: Create lease entry in Redis (with expiry date)
 Keygen-->>+User: Return Ephemeral Key Lease ID
 User->>+User: Create a remote signer with Lease ID
 
-loop 
+loop
     User->>+Keygen: Sign Operation
     Keygen->>+Redis: Retrieve private key to sign based on Lease ID
     Keygen->>+Keygen: Sign user data

@@ -1,15 +1,17 @@
 {
   "name": "integration-tests",
   "scripts": {
-    "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand",
+    "test": "jest",
     "test:nairobinet": "NAIROBINET=true jest",
-    "test:nairobinet-secret-key": "RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand",
-    "test:sandbox-test": "./sandbox-test-script.sh",
-    "test:originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
-    "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest",
+    "test:ghostnet": "GHOSTNET=true jest",
     "test:mondaynet": "MONDAYNET=true jest",
+    "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand ",
+    "test:nairobinet-secret-key": "RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand",
+    "test:ghostnet-secret-key": "RUN_GHOSTNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:mondaynet-secret-key": "RUN_MONDAYNET_WITH_SECRET_KEY=true jest --runInBand",
-    "test": "jest"
+    "originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
+    "start-nairobibox": "./sandbox-script.sh oxheadalpha/flextesa:latest Nairobi",
+    "test:nairobibox": "source ./sandbox-env.sh && node -r ts-node/register originate-known-contracts.ts && RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand --testPathIgnorePatterns contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts"
   },
   "version": "17.0.0",
   "dependencies": {

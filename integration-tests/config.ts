@@ -100,7 +100,7 @@ const ghostnetEphemeral = {
   knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
   knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
   knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
-  protocol: Protocols.PtMumbai2,
+  protocol: Protocols.PtNairobi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
     keyUrl: 'https://api.tez.ie/keys/ghostnet',
@@ -150,7 +150,7 @@ const ghostnetSecretKey = {
   knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
   knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
   knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
-  protocol: Protocols.PtMumbai2,
+  protocol: Protocols.PtNairobi,
   signerConfig: defaultSecretKey
 };
 
