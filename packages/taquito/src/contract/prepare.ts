@@ -32,7 +32,12 @@ import {
   ActivationParams,
   RPCActivateOperation,
 } from '../operations/types';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import {
+  DEFAULT_FEE,
+  DEFAULT_GAS_LIMIT,
+  DEFAULT_STORAGE_LIMIT,
+  getRevealGasLimit,
+} from '../constants';
 import { format } from '@taquito/utils';
 import {
   InvalidCodeParameter,
@@ -169,7 +174,7 @@ export const createRegisterDelegateOperation = async (
 export const createRevealOperation = async (
   {
     fee = DEFAULT_FEE.REVEAL,
-    gasLimit = DEFAULT_GAS_LIMIT.REVEAL,
+    gasLimit = undefined,
     storageLimit = DEFAULT_STORAGE_LIMIT.REVEAL,
   }: RevealParams,
   source: string,
@@ -180,7 +185,7 @@ export const createRevealOperation = async (
     fee,
     public_key: publicKey,
     source,
-    gas_limit: gasLimit,
+    gas_limit: gasLimit ?? getRevealGasLimit(source),
     storage_limit: storageLimit,
   } as RPCRevealOperation;
 };
