@@ -27,5 +27,3 @@ Here's a list of the Tezos wallets we know of. Wallets that support the [TZIP-10
 | **Trust Wallet**  |         Mobile          |                                         No                                          |        https://trustwallet.com         |         [![Github](images/github.png)](https://github.com/trustwallet/wallet-core/)          |
 |   **Coinbase**    | Mobile and Browser Ext. |                                         No                                          |      https://wallet.coinbase.com       |              [![Github](images/github.png)](https://github.com/CoinbaseWallet)               |
 |    **Trezor**     |     Hardware Wallet     |                                         No                                          |           https://trezor.io            |                  [![Github](images/github.png)](https://github.com/trezor/)                  |
-
-[TZIP-10](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-10/tzip-10.md)
