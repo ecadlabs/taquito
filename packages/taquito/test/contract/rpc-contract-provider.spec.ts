@@ -1316,7 +1316,7 @@ describe('RpcContractProvider test', () => {
     });
   });
 
-  describe('smartRollupAddMessages', async () => {
+  describe('smartRollupAddMessages', () => {
     it('should produce a smartRollupAddMessages op', async (done) => {
       mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);

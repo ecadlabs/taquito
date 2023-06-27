@@ -3,6 +3,7 @@ import { defer } from 'rxjs';
 import { Context } from '../../src/context';
 import { createNewPollingBasedHeadObservable } from '../../src/wallet/operation-factory';
 import { distinctUntilKeyChanged, switchMap } from 'rxjs/operators';
+
 describe('createNewPollingBasedHeadObservable', () => {
   const createFakeBlock = (level: number) => ({ hash: `test_${level}` });
 

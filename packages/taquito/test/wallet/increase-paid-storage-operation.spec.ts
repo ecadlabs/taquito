@@ -1,5 +1,5 @@
 import { BlockResponse } from '@taquito/rpc';
-import { rxSandbox } from 'rx-sandbox';
+import { TestScheduler } from 'rxjs/testing';
 import { Context } from '../../src/context';
 import { createIncreasePaidStorageOperation } from '../../src/contract';
 import { Wallet } from '../../src/wallet';
@@ -16,49 +16,49 @@ describe('WalletOperation', () => {
       },
       operations: [
         {
-          kind: "increase_paid_storage",
-          source: "tz2R5pfZ3LKopsjcoJqoKQJ7PExN9ucmDzbb",
-          fee: "397",
-          counter: "134341",
-          gas_limit: "1100",
-          storage_limit: "0",
-          amount: "1",
-          destination: "KT1QHMgTYHgzuVY2uzQJQ3hKtm9sbpWdenQy",
+          kind: 'increase_paid_storage',
+          source: 'tz2R5pfZ3LKopsjcoJqoKQJ7PExN9ucmDzbb',
+          fee: '397',
+          counter: '134341',
+          gas_limit: '1100',
+          storage_limit: '0',
+          amount: '1',
+          destination: 'KT1QHMgTYHgzuVY2uzQJQ3hKtm9sbpWdenQy',
           metadata: {
             balance_updates: [
               {
-                kind: "contract",
-                contract: "tz2R5pfZ3LKopsjcoJqoKQJ7PExN9ucmDzbb",
-                change: "-397",
-                origin: "block"
+                kind: 'contract',
+                contract: 'tz2R5pfZ3LKopsjcoJqoKQJ7PExN9ucmDzbb',
+                change: '-397',
+                origin: 'block',
               },
               {
-                kind: "accumulator",
-                category: "block fees",
-                change: "397",
-                origin: "block"
-              }
+                kind: 'accumulator',
+                category: 'block fees',
+                change: '397',
+                origin: 'block',
+              },
             ],
             operation_result: {
-              status: "applied",
+              status: 'applied',
               balance_updates: [
                 {
-                  kind: "contract",
-                  contract: "tz2R5pfZ3LKopsjcoJqoKQJ7PExN9ucmDzbb",
-                  change: "-250",
-                  origin: "block"
+                  kind: 'contract',
+                  contract: 'tz2R5pfZ3LKopsjcoJqoKQJ7PExN9ucmDzbb',
+                  change: '-250',
+                  origin: 'block',
                 },
                 {
-                  kind: "burned",
-                  category: "storage fees",
-                  change: "250",
-                  origin: "block"
-                }
+                  kind: 'burned',
+                  category: 'storage fees',
+                  change: '250',
+                  origin: 'block',
+                },
               ],
-              consumed_milligas: "1000000"
-            }
-          }
-        }
+              consumed_milligas: '1000000',
+            },
+          },
+        },
       ],
     } as unknown as BlockResponse;
 
@@ -87,7 +87,9 @@ describe('WalletOperation', () => {
       gasLimit: 1100,
       storageLimit: 0,
     });
-    mockContext.walletProvider.sendOperations.mockResolvedValue('ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE')
+    mockContext.walletProvider.sendOperations.mockResolvedValue(
+      'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE'
+    );
 
     mockContext.operationFactory.createIncreasePaidStorageOperation.mockResolvedValue({
       source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
@@ -96,7 +98,7 @@ describe('WalletOperation', () => {
       fee: 397,
       gas_limit: 1100,
       storage_limit: 0,
-    })
+    });
   });
 
   describe('increasePaidStorage format to operation reqs', () => {
@@ -120,35 +122,44 @@ describe('WalletOperation', () => {
   });
   describe('Operation should mock response class instance IncreasePaidStorageWalletOperation for operationFactory', () => {
     it('should return instance of IncreasePaidStorageWalletOperation ', async (done) => {
-      const { cold, flush } = rxSandbox.create();
-      const blockObs = cold<BlockResponse>('--a', {
-        a: createFakeBlock(1, 'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE')
+      const testScheduler = new TestScheduler((actual, expected) => {
+        expect(actual).toEqual(expected);
       });
-      const op = new IncreasePaidStorageWalletOperation(
-        'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
-        new Context('url'),
-        blockObs
-      );
 
-      expect(await op.getCurrentConfirmation()).toEqual(0);
+      testScheduler.run(async ({ cold, flush }) => {
+        const blockObs = cold<BlockResponse>('--a', {
+          a: createFakeBlock(1, 'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE'),
+        });
+        const op = new IncreasePaidStorageWalletOperation(
+          'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE',
+          new Context('url'),
+          blockObs
+        );
 
-      flush();
-      expect(op).toBeInstanceOf(IncreasePaidStorageWalletOperation);
+        expect(await op.getCurrentConfirmation()).toEqual(0);
+
+        flush();
+        expect(op).toBeInstanceOf(IncreasePaidStorageWalletOperation);
+      });
+
       done();
     });
   });
   describe('Wallet should run full method of operation', () => {
     it('should run increasePaidStorage method from start to finish with mock data', async (done) => {
       const wallet = new Wallet(mockContext);
-      const op = await wallet.increasePaidStorage({ amount: 1, destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7' }).send();
+      const op = await wallet
+        .increasePaidStorage({ amount: 1, destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7' })
+        .send();
       expect(op).toEqual({
         source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
         amount: 1,
         destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7',
         fee: 397,
         gas_limit: 1100,
-        storage_limit: 0
-      })
+        storage_limit: 0,
+      });
+
       done();
     });
   });
