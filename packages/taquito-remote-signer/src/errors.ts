@@ -2,18 +2,6 @@ import { PermissionDeniedError, TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates a failure in grabbing the public key
- */
-export class PublicKeyNotFoundError extends TaquitoError {
-  constructor(public pkh: string, public cause: any) {
-    super();
-    this.name = 'KeyNotFoundError';
-    this.message = `Public key not found of this address "${pkh}".`;
-  }
-}
-
-/**
- *  @category Error
  *  @description Error indicates an unauthorized operation being attempted
  */
 export class OperationNotAuthorizedError extends PermissionDeniedError {

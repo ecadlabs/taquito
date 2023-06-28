@@ -31,7 +31,8 @@ import {
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
-import { PublicKeyNotFoundError, RPCResponseError } from '../error';
+import { RPCResponseError } from '../error';
+import { PublicKeyNotFoundError } from '@taquito/core';
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -331,7 +332,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh, publicKey } = await this.getKeys();
 
     if (!publicKey) {
-      throw new PublicKeyNotFoundError();
+      throw new PublicKeyNotFoundError(pkh);
     }
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');

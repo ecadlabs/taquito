@@ -52,7 +52,12 @@ const destinationFilter = (x: OperationContent, filter: DestinationFilter) => {
   }
 };
 
-export const eventFilter = (result: InternalOperationResult, address?: string, tag?: string, excludeFailedOperations?: boolean) => {
+export const eventFilter = (
+  result: InternalOperationResult,
+  address?: string,
+  tag?: string,
+  excludeFailedOperations?: boolean
+) => {
   if (result.kind !== 'event') {
     return false;
   }
@@ -87,7 +92,7 @@ export const evaluateExpression = (op: OperationContent, exp: FilterExpression):
   } else if (Array.isArray(exp.or)) {
     return exp.or.some((x: OpFilter | FilterExpression) => evaluateFilter(op, x));
   } else {
-    throw new InvalidFilterExpressionError('Filter expression must contain either and/or property');
+    throw new InvalidFilterExpressionError(exp);
   }
 };
 

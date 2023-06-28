@@ -96,9 +96,7 @@ export abstract class OperationEmitter {
         try {
           currentVotingPeriodPromise = this.rpc.getCurrentPeriod();
         } catch (e) {
-          throw new RPCResponseError(
-            `Failed to get the current voting period index: ${JSON.stringify(e)}`
-          );
+          throw new RPCResponseError(`Failed to get the current voting period index`, e);
         }
       }
     });

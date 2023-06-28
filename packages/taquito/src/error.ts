@@ -1,67 +1,49 @@
+import { ParameterValidationError, TezosToolkitConfigError, RpcError } from '@taquito/core';
+import { FilterExpression } from './taquito';
+
 /**
  *  @category Error
- *  @description Error that indicates invalid confirmation count has been passed or configured
+ *  @description Error indicates invalid confirmation count has been passed or configured
  */
-export class InvalidConfirmationCountError extends Error {
-  public name = 'InvalidConfirmationCountError';
-  constructor(public message: string) {
-    super(message);
+export class InvalidConfirmationCountError extends ParameterValidationError {
+  constructor(invalidConfirmations: number) {
+    super();
+    this.name = 'InvalidConfirmationCountError';
+    this.message = `Invalid confirmation count ${invalidConfirmations} expecting at least 1`;
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates undefined confirmation has not been specified or configured
+ *  @description Error indicates undefined confirmation has not been specified or configured
  */
-export class ConfirmationUndefinedError extends Error {
-  public name = 'ConfirmationUndefinedError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid filter expression being passed or used
- */
-export class InvalidFilterExpressionError extends Error {
-  public name = 'InvalidFilterExpressionError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an error being returned from the RPC response
- */
-export class RPCResponseError extends Error {
-  public name = 'RPCResponseError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates invalid Preparation parameters being passed
- */
-export class InvalidPrepareParamsError extends Error {
-  public name = 'InvalidOperationParamsError';
-  constructor(public opKind: string) {
-    super(`No '${opKind}' operation parameters have been passed`);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates invalid Preparation parameters being passed
- */
-export class PublicKeyNotFoundError extends Error {
-  public name = 'PublicKeyNotFoundError';
+export class ConfirmationUndefinedError extends TezosToolkitConfigError {
   constructor() {
-    super(
-      `Unable to retrieve public key from signer. If you are using a wallet, make sure your account is revealed`
-    );
+    super();
+    this.name = 'ConfirmationUndefinedError';
+    this.message = 'Default confirmation count can not be undefined';
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an invalid filter expression being passed or used
+ */
+export class InvalidFilterExpressionError extends ParameterValidationError {
+  constructor(public invalidExp: FilterExpression) {
+    super();
+    this.name = 'InvalidFilterExpressionError';
+    this.message = `Invalid filter expression expecting the object to contain either and/or property`;
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error indicates an error being returned from the RPC response
+ */
+export class RPCResponseError extends RpcError {
+  constructor(public message: string, public cause?: any) {
+    super();
+    this.name = 'RPCResponseError';
   }
 }

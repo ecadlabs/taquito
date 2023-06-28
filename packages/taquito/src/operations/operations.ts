@@ -145,7 +145,7 @@ export class Operation {
    */
   async confirmation(confirmations?: number, timeout?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
-      throw new InvalidConfirmationCountError('Confirmation count must be at least 1');
+      throw new InvalidConfirmationCountError(confirmations);
     }
 
     const { defaultConfirmationCount, confirmationPollingTimeoutSecond } = this.context.config;
