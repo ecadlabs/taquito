@@ -9,8 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     beforeEach(async (done) => {
       await setup();
       timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
-      done()
-    })
+      timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
+      console.log('getConstants: ', await Tezos.rpc.getConstants());
+      console.log('timeBetweenBlocks: ', timeBetweenBlocks);
+      done();
+    });
 
     it('Verify a timeout error is thrown when an operation is never confirmed', async (done) => {
       const timeout = Number(timeBetweenBlocks.multipliedBy(2));
