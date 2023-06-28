@@ -21,15 +21,14 @@ export class BatchWalletOperation extends WalletOperation {
     super(opHash, context, newHead$);
   }
 
-  // TODO: update errors being thrown into a custom class
-  public async revealOperation(): Promise<OperationContentsAndResultReveal> {
+  public async revealOperation() {
     const operationResult = await this.operationResults();
     if (!operationResult) {
       throw new ObservableError('Unable to fetch operation results');
     } else {
-      return operationResult.find(
-        (x) => x.kind === OpKind.REVEAL
-      ) as OperationContentsAndResultReveal;
+      return operationResult.find((x) => x.kind === OpKind.REVEAL) as
+        | OperationContentsAndResultReveal
+        | undefined;
     }
   }
 

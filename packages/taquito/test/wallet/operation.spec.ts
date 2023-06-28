@@ -4,7 +4,7 @@ import { Context } from '../../src/context';
 import { WalletOperation } from '../../src/wallet';
 import { blockResponse } from './data';
 
-describe('increasePaidStorageOperation', () => {
+describe('WalletOperation', () => {
   let testScheduler: TestScheduler;
 
   const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
