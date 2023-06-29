@@ -1,4 +1,5 @@
 import {
+  BatchOperationResult,
   OperationContents,
   OperationContentsAndResult,
   OperationContentsAndResultOrigination,
@@ -58,7 +59,8 @@ export class BatchOperation
         .filter((result) => BATCH_KINDS.indexOf(result.kind) !== -1)
         .map((result) => {
           if (hasMetadataWithResult(result)) {
-            return result.metadata.operation_result.status;
+            const opResult = result.metadata.operation_result as BatchOperationResult;
+            return opResult.status;
           } else {
             return 'unknown';
           }

@@ -132,6 +132,7 @@ describe('RPCEstimateProvider test signer', () => {
         contents: [
           {
             kind: 'origination',
+            fee: 10000,
             metadata: {
               operation_result: {
                 consumed_milligas: 1000000,
@@ -158,6 +159,7 @@ describe('RPCEstimateProvider test signer', () => {
         contents: [
           {
             kind: 'origination',
+            fee: 10000,
             metadata: {
               operation_result: {
                 consumed_milligas: 1000000,
@@ -318,6 +320,7 @@ describe('RPCEstimateProvider test signer', () => {
         contents: [
           {
             kind: 'transaction',
+            fee: 10000,
             metadata: {
               operation_result: {
                 consumed_milligas: 1000000,
@@ -833,6 +836,7 @@ describe('RPCEstimateProvider test signer', () => {
     it('runOperation should be called with a gas_limit calculated with the hard_gas_limit_per_block constant and the number of operation in the batch', async (done) => {
       const transactionResult = {
         kind: 'transaction',
+        fee: 10000,
         metadata: {
           operation_result: {
             consumed_milligas: 1000000,
@@ -1098,6 +1102,7 @@ describe('RPCEstimateProvider test signer', () => {
         contents: [
           {
             kind: 'transaction',
+            fee: 10000,
             metadata: {
               operation_result: {
                 consumed_milligas: 1000000,
@@ -1234,6 +1239,7 @@ describe('RPCEstimateProvider test wallet', () => {
         contents: [
           {
             kind: 'origination',
+            fee: 10000,
             metadata: {
               operation_result: {
                 consumed_milligas: 1000000,
@@ -1263,7 +1269,7 @@ describe('RPCEstimateProvider test wallet', () => {
           code: ligoSample,
           storage: 0,
         });
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
         );
@@ -1296,7 +1302,7 @@ describe('RPCEstimateProvider test wallet', () => {
           to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           amount: 2,
         });
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
         );
@@ -1311,6 +1317,7 @@ describe('RPCEstimateProvider test wallet', () => {
         contents: [
           {
             kind: 'delegation',
+            fee: 10000,
             metadata: {
               operation_result: { status: 'applied', consumed_milligas: '10000000' },
             },
@@ -1338,7 +1345,7 @@ describe('RPCEstimateProvider test wallet', () => {
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         });
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
         );
@@ -1353,6 +1360,7 @@ describe('RPCEstimateProvider test wallet', () => {
         contents: [
           {
             kind: 'delegation',
+            fee: 10000,
             metadata: {
               operation_result: { status: 'applied', consumed_milligas: '10000000' },
             },
@@ -1374,7 +1382,7 @@ describe('RPCEstimateProvider test wallet', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       try {
         await estimateProvider.registerDelegate({});
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
         );
@@ -1455,7 +1463,7 @@ describe('RPCEstimateProvider test wallet', () => {
           { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
           { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
         ]);
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
         );
@@ -1492,7 +1500,7 @@ describe('RPCEstimateProvider test wallet', () => {
             args: [{ int: '998' }, { int: '999' }],
           },
         });
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
         );
@@ -1506,7 +1514,7 @@ describe('RPCEstimateProvider test wallet', () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       try {
         await estimateProvider.reveal({});
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
         );
@@ -1553,7 +1561,7 @@ describe('RPCEstimateProvider test wallet', () => {
             '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
           ],
         });
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual(
           'Unable to estimate the reveal operation, the public key is unknown'
         );

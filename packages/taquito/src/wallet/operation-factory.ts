@@ -7,18 +7,11 @@ import {
   Observable,
   of,
   range,
+  ReplaySubject,
   SchedulerLike,
   throwError,
 } from 'rxjs';
-import {
-  concatMap,
-  mergeMap,
-  publishReplay,
-  refCount,
-  startWith,
-  switchMap,
-  timeoutWith,
-} from 'rxjs/operators';
+import { concatMap, mergeMap, share, startWith, switchMap, timeout } from 'rxjs/operators';
 import { Context } from '../context';
 import { BlockIdentifier } from '../read-provider/interface';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
@@ -28,11 +21,16 @@ import { IncreasePaidStorageWalletOperation } from './increase-paid-storage-oper
 import { WalletOperation } from './operation';
 import { OriginationWalletOperation } from './origination-operation';
 import { TransactionWalletOperation } from './transaction-operation';
+import { ConfirmationTimeoutError } from '../error';
 
 export function timeoutAfter<T>(timeoutMillisec: number): (source: Observable<T>) => Observable<T> {
   return function inner(source: Observable<T>): Observable<T> {
     return new BehaviorSubject(null).pipe(
-      timeoutWith(timeoutMillisec, throwError(new Error('Confirmation polling timed out'))),
+      timeout({
+        each: timeoutMillisec,
+        with: () =>
+          throwError(() => new ConfirmationTimeoutError(`Confirmation polling timed out`)),
+      }),
       mergeMap(() => source)
     );
   };
@@ -45,8 +43,12 @@ export const createNewPollingBasedHeadObservable = (
 ): Observable<BlockResponse> => {
   return sharedHeadOb.pipe(
     timeoutAfter(context.config.confirmationPollingTimeoutSecond * 1000),
-    publishReplay(1),
-    refCount()
+    share({
+      connector: () => new ReplaySubject(1),
+      resetOnError: false,
+      resetOnComplete: false,
+      resetOnRefCountZero: false,
+    })
   );
 };
 
@@ -160,6 +162,6 @@ export class OperationFactory {
       hash,
       this.context.clone(),
       await this.createHeadObservableFromConfig(config)
-    )
+    );
   }
 }

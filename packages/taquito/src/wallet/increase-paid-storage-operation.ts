@@ -7,6 +7,7 @@ import {
   OperationContentsAndResultReveal,
   OperationContentsAndResultIncreasePaidStorage,
 } from '@taquito/rpc';
+import { ObservableError } from '../error';
 
 export class IncreasePaidStorageWalletOperation extends WalletOperation {
   constructor(
@@ -19,16 +20,24 @@ export class IncreasePaidStorageWalletOperation extends WalletOperation {
 
   public async revealOperation() {
     const operationResult = await this.operationResults();
-    return operationResult.find(x => x.kind === OpKind.REVEAL) as
-      | OperationContentsAndResultReveal
-      | undefined;
+    if (!operationResult) {
+      throw new ObservableError('Unable to fetch operation result');
+    } else {
+      return operationResult.find((x) => x.kind === OpKind.REVEAL) as
+        | OperationContentsAndResultReveal
+        | undefined;
+    }
   }
 
   public async increasePaidStorageOperation() {
     const operationResult = await this.operationResults();
-    return operationResult.find(x => x.kind === OpKind.INCREASE_PAID_STORAGE) as
-      | OperationContentsAndResultIncreasePaidStorage
-      | undefined;
+    if (!operationResult) {
+      throw new ObservableError('Unable to fetch operation result');
+    } else {
+      return operationResult.find((x) => x.kind === OpKind.INCREASE_PAID_STORAGE) as
+        | OperationContentsAndResultIncreasePaidStorage
+        | undefined;
+    }
   }
 
   public async status(): Promise<OperationStatus> {
@@ -36,7 +45,7 @@ export class IncreasePaidStorageWalletOperation extends WalletOperation {
       return 'pending';
     }
 
-    const op = await this.increasePaidStorageOperation()
+    const op = await this.increasePaidStorageOperation();
     if (!op) {
       return 'unknown';
     }
