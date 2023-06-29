@@ -122,7 +122,7 @@ describe('ContractView test', () => {
         'tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE',
         'test'
       );
-    } catch (e) {
+    } catch (e: any) {
       expect(e.message).toContain(
         `getAllowance Received 3 arguments while expecting one of the following signatures`
       );
@@ -160,7 +160,7 @@ describe('ContractView test', () => {
       await contractView.views
         .getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')
         .read('invalid' as any);
-    } catch (e) {
+    } catch (e: any) {
       expect(e).toBeInstanceOf(Error);
       expect(e.message).toContain(`Invalid chain id "invalid"`);
     }
@@ -173,7 +173,7 @@ describe('ContractView test', () => {
       await contractView.views
         .getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')
         .read('KT1H2a5vGkMLFGBPMs6oRRJshCvYeXSBSadn' as any);
-    } catch (e) {
+    } catch (e: any) {
       expect(e.message).toEqual(
         `Since version 12, the lambda view no longer depends on a lambda contract. The read method no longer accepts a contract address as a parameter.`
       );
