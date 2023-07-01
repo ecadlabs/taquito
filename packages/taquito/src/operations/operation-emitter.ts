@@ -3,7 +3,7 @@ import {
   OperationContentsAndResult,
   OpKind,
   RpcClientInterface,
-  RPCRunOperationParam,
+  RPCSimulateOperationParam,
   VotingPeriodBlockResult,
 } from '@taquito/rpc';
 import { Protocols } from '../constants';
@@ -237,9 +237,9 @@ export abstract class OperationEmitter {
     };
   }
 
-  protected async simulate(op: RPCRunOperationParam) {
+  protected async simulate(op: RPCSimulateOperationParam) {
     return {
-      opResponse: await this.rpc.runOperation(op),
+      opResponse: await this.rpc.simulateOperation(op),
       op,
       context: this.context.clone(),
     };

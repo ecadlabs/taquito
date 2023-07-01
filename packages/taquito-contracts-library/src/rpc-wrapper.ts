@@ -32,6 +32,7 @@ import {
   RPCOptions,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCSimulateOperationParam,
   RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
@@ -224,6 +225,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse> {
     return this.rpc.runOperation(op, { block });
+  }
+  async simulateOperation(
+    op: RPCSimulateOperationParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PreapplyResponse> {
+    return this.rpc.simulateOperation(op, { block });
   }
   async runCode(
     code: RPCRunCodeParam,

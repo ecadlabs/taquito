@@ -33,6 +33,7 @@ import {
   ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCSimulateOperationParam,
   RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
@@ -862,6 +863,21 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse> {
     return this.rpcClient.runOperation(op, { block });
+  }
+
+  /**
+   * @param op Operation to simulate
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate running an operation
+   *
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/nairobi-openapi.json
+   */
+  async simulateOperation(
+    op: RPCSimulateOperationParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PreapplyResponse> {
+    return this.rpcClient.simulateOperation(op, { block });
   }
 
   /**

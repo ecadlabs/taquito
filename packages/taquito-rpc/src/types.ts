@@ -2231,6 +2231,8 @@ export type RPCRunOperationParam = {
   chain_id: string;
 };
 
+export type RPCSimulateOperationParam = RPCRunOperationParam;
+
 export type RPCRunCodeParam = {
   script: MichelsonV1ExpressionExtended[];
   storage: MichelsonV1Expression;

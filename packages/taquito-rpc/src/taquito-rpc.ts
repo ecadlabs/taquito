@@ -44,6 +44,7 @@ import {
   ProtocolsResponse,
   RPCRunCodeParam,
   RPCRunOperationParam,
+  RPCSimulateOperationParam,
   RPCRunViewParam,
   RPCRunScriptViewParam,
   RunCodeResult,
@@ -829,6 +830,29 @@ export class RpcClient implements RpcClientInterface {
     const response = await this.httpBackend.createRequest<any>(
       {
         url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`),
+        method: 'POST',
+      },
+      op
+    );
+
+    return response;
+  }
+
+  /**
+   * @param op Operation to simulate
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate running an operation
+   *
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/nairobi-openapi.json
+   */
+  async simulateOperation(
+    op: RPCSimulateOperationParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PreapplyResponse> {
+    const response = await this.httpBackend.createRequest<any>(
+      {
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/simulate_operation`),
         method: 'POST',
       },
       op
