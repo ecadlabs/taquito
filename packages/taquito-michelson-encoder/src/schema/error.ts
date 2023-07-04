@@ -62,7 +62,7 @@ export class InvalidRpcResponseError extends TaquitoError {
  *  @description Error that indicates an invalid big map schema being passed or used
  */
 export class InvalidBigMapSchemaError extends TaquitoError {
-  public name = 'InvalidBigMapSchema';
+  public name = 'InvalidBigMapSchemaError';
   constructor(public message: string) {
     super(message);
   }
@@ -73,7 +73,7 @@ export class InvalidBigMapSchemaError extends TaquitoError {
  *  @description Error that indicates an invalid big map diff being passed or used
  */
 export class InvalidBigMapDiffError extends TaquitoError {
-  public name = 'InvalidBigMapDiff';
+  public name = 'InvalidBigMapDiffError';
   constructor(public message: string, public readonly value: any) {
     super(message);
   }
