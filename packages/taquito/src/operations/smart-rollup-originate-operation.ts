@@ -1,6 +1,7 @@
 import {
   OperationContentsAndResult,
   OperationContentsAndResultSmartRollupOriginate,
+  OperationContentsSmartRollupOriginate,
   OpKind,
 } from '@taquito/rpc';
 import { Context } from '../context';
@@ -9,7 +10,6 @@ import {
   FeeConsumingOperation,
   ForgedBytes,
   GasConsumingOperation,
-  RPCSmartRollupOriginateOperation,
   StorageConsumingOperation,
 } from './types';
 
@@ -24,7 +24,7 @@ export class SmartRollupOriginateOperation
 {
   constructor(
     hash: string,
-    private readonly params: RPCSmartRollupOriginateOperation,
+    private readonly params: OperationContentsSmartRollupOriginate,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -51,15 +51,15 @@ export class SmartRollupOriginateOperation
   }
 
   get fee() {
-    return this.params.fee;
+    return Number(this.params.fee);
   }
 
   get gasLimit() {
-    return this.params.gas_limit;
+    return Number(this.params.gas_limit);
   }
 
   get storageLimit() {
-    return this.params.storage_limit;
+    return Number(this.params.storage_limit);
   }
 
   get consumedMilliGas() {

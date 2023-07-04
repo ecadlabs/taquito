@@ -21,6 +21,7 @@
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
     { value: "mumbainet", label: "Mumbainet", group: "current testnets" },
+    { value: "nairobinet", label: "Nairobinet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
     { value: "mondaynet", label: "Mondaynet", group: "other testnets" },
@@ -42,13 +43,16 @@
     const walletComponent = layout.getSideBar().getWallet();
     switch (event.detail.value.toLocaleLowerCase()) {
       case "mainnet":
-        walletComponent.setWallet({networkType: NetworkType.MAINNET});
+        store.updateNetworkType(NetworkType.MAINNET);
         break;
       case "ghostnet":
-        walletComponent.setWallet({networkType: NetworkType.GHOSTNET});
+        store.updateNetworkType(NetworkType.GHOSTNET);
         break;
       case "mumbainet":
-        walletComponent.setWallet({networkType: NetworkType.MUMBAINET});
+        store.updateNetworkType(NetworkType.MUMBAINET);
+        break;
+      case "nairobinet":
+        store.updateNetworkType(NetworkType.NAIROBINET);
         break;
       case "custom":
         //TODO: input custom RPC URL

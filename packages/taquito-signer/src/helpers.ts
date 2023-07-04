@@ -1,8 +1,8 @@
-import { b58cencode, prefix } from "@taquito/utils";
-import { PrivateKey as PrivateKeyEd } from "./derivation-tools/ed25519";
-import { PrivateKey as PrivateKeyEc } from "./derivation-tools/ecdsa";
-import { Path } from "./derivation-tools";
-import { InvalidCurveError, ToBeImplemented } from "./errors";
+import { b58cencode, prefix } from '@taquito/utils';
+import { PrivateKey as PrivateKeyEd } from './derivation-tools/ed25519';
+import { PrivateKey as PrivateKeyEc } from './derivation-tools/ecdsa';
+import { Path } from './derivation-tools';
+import { InvalidCurveError, ToBeImplemented } from './errors';
 
 export type Curves = 'ed25519' | 'secp256k1' | 'p256' | 'bip25519';
 
@@ -13,6 +13,7 @@ export type Curves = 'ed25519' | 'secp256k1' | 'p256' | 'bip25519';
  * @param derivationPath Tezos Requirement 44'/1729' for HD key address default 44'/1729'/0'/0'
  * @param curve 'ed25519' | 'secp256k1' | 'p256''
  * @returns final Derivation of HD keys tezos Secret key
+ * @throws {@link InvalidCurveError} | {@link ToBeImplemented}
  */
 export const generateSecretKey = (seed: Uint8Array, derivationPath: string, curve: Curves) => {
   const path = Path.fromString(derivationPath);
@@ -37,7 +38,9 @@ export const generateSecretKey = (seed: Uint8Array, derivationPath: string, curv
       throw new ToBeImplemented();
     }
     default: {
-      throw new InvalidCurveError(curve);
+      throw new InvalidCurveError(
+        `Unsupported curve "${curve}" expecting one of the following "ed25519", "secp256k1", "p256"`
+      );
     }
   }
 };

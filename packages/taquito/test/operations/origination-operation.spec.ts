@@ -212,9 +212,9 @@ describe('Origination operation', () => {
     const op = new OriginationOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {
-        fee: '2991',
-        gas_limit: '26260',
-        storage_limit: '257',
+        fee: 2991,
+        gas_limit: 26260,
+        storage_limit: 257,
       } as any,
       fakeForgedBytes,
       [originationBuilder.withResult({ status: 'applied' }).build()],
@@ -228,8 +228,8 @@ describe('Origination operation', () => {
     expect(op.consumedMilliGas).toEqual('15952999');
     expect(op.contractAddress).toEqual('KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX');
     expect(op.errors).toBeUndefined();
-    expect(op.fee).toEqual('2991');
-    expect(op.gasLimit).toEqual('26260');
+    expect(op.fee).toEqual(2991);
+    expect(op.gasLimit).toEqual(26260);
     expect(op.hash).toEqual('ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj');
     expect(op.storageDiff).toBeFalsy();
     expect(op.operationResults).toEqual({
@@ -240,6 +240,6 @@ describe('Origination operation', () => {
     });
     expect(op.revealOperation).toBeUndefined();
     expect(op.storageSize).toEqual('62');
-    expect(op.storageLimit).toEqual('257');
+    expect(op.storageLimit).toEqual(257);
   });
 });

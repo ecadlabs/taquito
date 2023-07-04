@@ -4,6 +4,7 @@ import {
   b58cdecode,
   buf2hex,
   hex2buf,
+  invalidDetail,
   Prefix,
   prefix,
   validatePublicKey,
@@ -12,7 +13,7 @@ import {
 } from './taquito-utils';
 import elliptic from 'elliptic';
 import toBuffer from 'typedarray-to-buffer';
-import { InvalidMessageError, InvalidPublicKeyError, InvalidSignatureError } from './errors';
+import { InvalidPublicKeyError, InvalidMessageError, InvalidSignatureError } from '@taquito/core';
 
 type PkPrefix = Prefix.EDPK | Prefix.SPPK | Prefix.P2PK | Prefix.BLPK;
 type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
@@ -25,7 +26,7 @@ type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
  * @param publicKey The public key to verify the signature against
  * @param signature The signature to verify
  * @returns A boolean indicating if the signature matches
- *
+ * @throws {@link InvalidPublicKeyError} | {@link InvalidSignatureError} | {@link InvalidMessageError}
  * @example
  * ```
  * const message = '03d0c10e3ed11d7c6e3357f6ef335bab9e8f2bd54d0ce20c482e241191a6e4b8ce6c01be917311d9ac46959750e405d57e268e2ed9e174a80794fbd504e12a4a000141eb3781afed2f69679ff2bbe1c5375950b0e40d00ff000000005e05050505050507070100000024747a32526773486e74516b72794670707352466261313652546656503539684b72654a4d07070100000024747a315a6672455263414c42776d4171776f6e525859565142445439426a4e6a42484a750001';
@@ -61,48 +62,30 @@ export function verifySignature(
 
 function validateMessageNotEmpty(message: string) {
   if (message === '') {
-    throw new InvalidMessageError(
-      message,
-      'The message provided for verifying signature cannot be empty.'
-    );
+    throw new InvalidMessageError(message, `can't be empty`);
   }
   return message;
 }
 
 export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
   if (publicKey === '') {
-    throw new InvalidPublicKeyError(publicKey, 'Public key cannot be empty');
+    throw new InvalidPublicKeyError(publicKey, `can't be empty`);
   }
   const pkPrefix = publicKey.substring(0, 4);
-  const validation = validatePublicKey(publicKey);
-  if (validation !== ValidationResult.VALID) {
-    if (validation === ValidationResult.INVALID_CHECKSUM) {
-      throw new InvalidPublicKeyError(publicKey, 'The public key provided has an invalid checksum');
-    } else if (validation === ValidationResult.INVALID_LENGTH) {
-      throw new InvalidPublicKeyError(publicKey, 'The public key provided has an invalid length');
-    } else if (validation === ValidationResult.NO_PREFIX_MATCHED) {
-      throw new InvalidPublicKeyError(
-        publicKey,
-        `The public key provided has an unsupported prefix: ${pkPrefix}`
-      );
-    }
+  const publicKeyValidation = validatePublicKey(publicKey);
+  if (publicKeyValidation !== ValidationResult.VALID) {
+    throw new InvalidPublicKeyError(publicKey, invalidDetail(publicKeyValidation));
   }
   return pkPrefix as PkPrefix;
 }
 
 function validateSigAndExtractPrefix(signature: string): SigPrefix {
   const signaturePrefix = signature.startsWith('sig')
-    ? signature.substr(0, 3)
-    : signature.substr(0, 5);
+    ? signature.substring(0, 3)
+    : signature.substring(0, 5);
   const validation = validateSignature(signature);
   if (validation !== ValidationResult.VALID) {
-    if (validation === ValidationResult.INVALID_CHECKSUM) {
-      throw new InvalidSignatureError(signature, `invalid checksum`);
-    } else if (validation === ValidationResult.INVALID_LENGTH) {
-      throw new InvalidSignatureError(signature, 'invalid length');
-    } else if (validation === ValidationResult.NO_PREFIX_MATCHED) {
-      throw new InvalidSignatureError(signaturePrefix, 'unsupported prefix');
-    }
+    throw new InvalidSignatureError(signature, invalidDetail(validation));
   }
   return signaturePrefix as SigPrefix;
 }

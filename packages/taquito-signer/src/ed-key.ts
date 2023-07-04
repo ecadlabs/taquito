@@ -6,9 +6,12 @@ import {
   prefix,
   buf2hex,
   isValidPrefix,
-  InvalidKeyError,
+  Prefix,
+  invalidDetail,
+  ValidationResult,
 } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
+import { InvalidKeyError } from '@taquito/core';
 
 /**
  * @description Provide signing logic for ed25519 curve based key (tz1)
@@ -23,18 +26,23 @@ export class Tz1 {
    * @param key Encoded private key
    * @param encrypted Is the private key encrypted
    * @param decrypt Decrypt function
+   * @throws {@link InvalidKeyError}
    */
   constructor(private key: string, encrypted: boolean, decrypt: (k: any) => any) {
-    const keyPrefix = key.substr(0, encrypted ? 5 : 4);
+    const keyPrefix = key.substring(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
-      throw new InvalidKeyError(key, 'Key contains invalid prefix');
+      throw new InvalidKeyError(
+        `${invalidDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting either '${
+          Prefix.EDESK
+        }' or '${Prefix.EDSK}'.`
+      );
     }
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));
     this._publicKey = this._key.slice(32);
 
     if (!this._key) {
-      throw new InvalidKeyError(key, 'Unable to decode');
+      throw new InvalidKeyError('unable to decode');
     }
 
     this.isInit = this.init();

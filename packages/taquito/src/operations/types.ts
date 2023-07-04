@@ -557,8 +557,6 @@ export type RPCOperation =
   | RPCRevealOperation
   | RPCActivateOperation
   | RPCRegisterGlobalConstantOperation
-  | RPCTxRollupOriginationOperation
-  | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCIncreasePaidStorageOperation
   | RPCDrainDelegateOperation

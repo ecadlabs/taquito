@@ -4456,19 +4456,22 @@ describe('RpcClient test', () => {
         .contents[0] as OperationContentsAndResultSmartRollupCement;
 
       expect(content.kind).toEqual(OpKind.SMART_ROLLUP_CEMENT);
-      expect(content.source).toEqual('tz1gCe1sFpppbGGVwCt5jLRqDS9FD1W4Qca4');
-      expect(content.fee).toEqual('922');
-      expect(content.counter).toEqual('41267');
-      expect(content.gas_limit).toEqual('6432');
+      expect(content.source).toEqual('tz1d5inEKUnAChSgScYuaJrtVmAZ9L5cKGSW');
+      expect(content.fee).toEqual('977');
+      expect(content.counter).toEqual('150010');
+      expect(content.gas_limit).toEqual('6986');
       expect(content.storage_limit).toEqual('0');
-      expect(content.rollup).toEqual('sr1AE6U3GNzE8iKzj6sKS5wh1U32ogeULCoN');
-      expect(content.commitment).toEqual('src13w2EBEZmVg4jsDd5PfYNakBRZ6GqSGDgWLz7EHZGeeG1gm7HT5');
+      expect(content.rollup).toEqual('sr1CCHLfB1jjz4ikB2bm4XGPvTjafVgUzhLB');
+      expect(content.commitment).toEqual('src12mERNVEb3N1EVmbUbudctzajiezmd3q6EsgLexkgxNCHK8PNBi');
 
       const soruResult = content.metadata.operation_result;
 
       expect(soruResult.status).toEqual('applied');
-      expect(soruResult.consumed_milligas).toEqual('6331052');
-      expect(soruResult.inbox_level).toEqual(197111);
+      expect(soruResult.consumed_milligas).toEqual('6884964');
+      expect(soruResult.inbox_level).toEqual(337913);
+      expect(soruResult.commitment_hash).toEqual(
+        'src12wj4nwXiEkwYacLfkLR8X8Md76LNuMzwUgTwgLA9Y3DANaeRay'
+      );
       done();
     });
   });

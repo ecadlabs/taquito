@@ -6,18 +6,18 @@ export const preparedOriginationOpWithReveal = {
     contents: [
       {
         kind: 'reveal',
-        fee: '391',
+        fee: '374',
         public_key: 'test_pub_key',
-        source: 'test_public_key_hash',
-        gas_limit: '101',
-        storage_limit: '1000',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        gas_limit: '2200',
+        storage_limit: '0',
         counter: '1',
       },
       {
         kind: 'origination',
-        fee: '391',
-        gas_limit: '101',
-        storage_limit: '1000',
+        fee: '0',
+        gas_limit: '1040000',
+        storage_limit: '60000',
         balance: '1000000',
         script: {
           code: [
@@ -77,7 +77,7 @@ export const preparedOriginationOpWithReveal = {
             string: 'test',
           },
         },
-        source: 'test_public_key_hash',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         counter: '2',
       },
     ],
@@ -92,9 +92,9 @@ export const preparedOriginationOpNoReveal = {
     contents: [
       {
         kind: 'origination',
-        fee: '391',
-        gas_limit: '101',
-        storage_limit: '1000',
+        fee: '0',
+        gas_limit: '1040000',
+        storage_limit: '60000',
         balance: '1000000',
         script: {
           code: [
@@ -154,7 +154,7 @@ export const preparedOriginationOpNoReveal = {
             string: 'test',
           },
         },
-        source: 'test_public_key_hash',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
         counter: '1',
       },
     ],

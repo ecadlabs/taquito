@@ -5,7 +5,7 @@
 
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
-import { b58cencode, prefix, Prefix, ProhibitedActionError } from '@taquito/utils';
+import { b58cencode, invalidDetail, prefix, Prefix, ValidationResult } from '@taquito/utils';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -19,7 +19,11 @@ import {
   PublicKeyHashRetrievalError,
   PublicKeyRetrievalError,
   InvalidLedgerResponseError,
-} from './error';
+  InvalidDerivationTypeError,
+} from './errors';
+import { InvalidDerivationPathError, ProhibitedActionError } from '@taquito/core';
+
+export { InvalidDerivationPathError } from '@taquito/core';
 
 export type LedgerTransport = Pick<Transport, 'send' | 'decorateAppAPIMethods' | 'setScrambleKey'>;
 
@@ -30,31 +34,7 @@ export enum DerivationType {
   BIP32_ED25519 = 0x03, // tz1 BIP32
 }
 
-/**
- *  @category Error
- *  @description Error that indicates an invalid derivation type being passed or used
- */
-export class InvalidDerivationTypeError extends Error {
-  public name = 'InvalidDerivationTypeError';
-  constructor(public derivationType: string) {
-    super(
-      `The derivation type ${derivationType} is invalid. The derivation type must be DerivationType.ED25519, DerivationType.SECP256K1, DerivationType.P256 or DerivationType.BIP32_ED25519`
-    );
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates an invalid derivation path being passed or used
- */
-export class InvalidDerivationPathError extends Error {
-  public name = 'InvalidDerivationPathError';
-  constructor(public derivationPath: string) {
-    super(
-      `The derivation path ${derivationPath} is invalid. The derivation path must start with 44'/1729`
-    );
-  }
-}
+export { InvalidDerivationTypeError } from './errors';
 
 export const HDPathTemplate = (account: number) => {
   return `44'/1729'/${account}'/0'`;
@@ -111,8 +91,11 @@ export class LedgerSigner implements Signer {
     private derivationType: DerivationType = DerivationType.ED25519
   ) {
     this.transport.setScrambleKey('XTZ');
-    if (!path.startsWith("44'/1729'")) {
-      throw new InvalidDerivationPathError(path);
+    if (!path.startsWith(`44'/1729'`)) {
+      throw new InvalidDerivationPathError(
+        path,
+        `${invalidDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting prefix "44'/1729'".`
+      );
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
       throw new InvalidDerivationTypeError(derivationType.toString());
@@ -162,7 +145,7 @@ export class LedgerSigner implements Signer {
       );
       return responseLedger;
     } catch (error) {
-      throw new PublicKeyRetrievalError();
+      throw new PublicKeyRetrievalError(error);
     }
   }
 
@@ -185,7 +168,9 @@ export class LedgerSigner implements Signer {
       signature = ledgerResponse.slice(0, ledgerResponse.length - 2).toString('hex');
     } else {
       if (!validateResponse(ledgerResponse)) {
-        throw new InvalidLedgerResponseError('Cannot parse ledger response');
+        throw new InvalidLedgerResponseError(
+          'Invalid signature return by ledger unable to parse the response'
+        );
       }
       const idxLengthRVal = 3; // Third element of response is length of r value
       const rValue = extractValue(idxLengthRVal, ledgerResponse);

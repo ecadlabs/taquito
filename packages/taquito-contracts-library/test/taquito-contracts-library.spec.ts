@@ -1,8 +1,9 @@
-import { InvalidAddressError, InvalidScriptFormatError } from '../src/errors';
+import { InvalidScriptFormatError } from '../src/errors';
 import { ContractsLibrary } from '../src/taquito-contracts-library';
 import { entrypoints, entrypoints2 } from './data/contract-entrypoints';
 import { script, script2 } from './data/contract-script';
 import { VERSION } from '../src/version';
+import { InvalidAddressError } from '@taquito/core';
 
 describe('ContractsLibrary tests', () => {
   it('ContractsLibrary is instantiable', () => {
@@ -106,7 +107,7 @@ describe('ContractsLibrary tests', () => {
       })
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('Address is invalid: KTinvalid'),
+        message: expect.stringContaining(`Invalid address "KTinvalid" with unsupported prefix.`),
       })
     );
   });
@@ -150,7 +151,7 @@ describe('ContractsLibrary tests', () => {
       })
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('An invalid script property has been provided for'),
+        message: expect.stringContaining('Invalid script format'),
       })
     );
   });

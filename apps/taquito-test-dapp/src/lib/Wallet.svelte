@@ -4,7 +4,7 @@
   import { TezosToolkit } from "@taquito/taquito";
   import { BeaconWallet } from "@taquito/beacon-wallet";
   // import { BeaconEvent, defaultEventCallbacks } from "@airgap/beacon-sdk";
-  import { NetworkType } from "@airgap/beacon-sdk";
+  import type { DAppClientOptions, NetworkType } from "@airgap/beacon-sdk";
   import store from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
   import { defaultMatrixNode, rpcUrl, defaultNetworkType } from "../config";
@@ -16,41 +16,36 @@
   const createNewWallet = (config: {
     networkType: NetworkType,
   }) => {
-    return new BeaconWallet(
-      $store.disableDefaultEvents
-        ? {
-            name: "Taquito Test Dapp",
-            matrixNodes: [defaultMatrixNode] as any,
-            preferredNetwork: config.networkType,
-            // disableDefaultEvents: true // Disable all events / UI. This also disables the pairing alert.
-            // eventHandlers: {
-            //   // To keep the pairing alert, we have to add the following default event handlers back
-            //   [BeaconEvent.PAIR_INIT]: {
-            //     handler: defaultEventCallbacks.PAIR_INIT
-            //   },
-            //   [BeaconEvent.PAIR_SUCCESS]: {
-            //     handler: defaultEventCallbacks.PAIR_SUCCESS
-            //   }
-            // }
-          }
-        : {
-            name: "Taquito Test Dapp",
-            matrixNodes: [defaultMatrixNode] as any,
-            preferredNetwork: config.networkType,
-          }
-    );
+    const options: DAppClientOptions = {
+      name: "Taquito Test Dapp",
+      matrixNodes: [defaultMatrixNode] as any,
+      preferredNetwork: config.networkType,
+      walletConnectOptions: {
+        projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',
+      }
+    };
+    // if ($store.disableDefaultEvents) {
+    //   options.disableDefaultEvents = true;
+    //   options.eventHandlers = {
+    //     // To keep the pairing alert, we have to add the following default event handlers back
+    //     [BeaconEvent.PAIR_INIT]: {
+    //       handler: defaultEventCallbacks.PAIR_INIT
+    //     },
+    //     [BeaconEvent.PAIR_SUCCESS]: {
+    //       handler: defaultEventCallbacks.PAIR_SUCCESS
+    //     }
+    //   }
+    // }
+    return new BeaconWallet(options);
   };
 
   const connectWallet = async () => {
-    const wallet = (() => {
-      if (!$store.wallet) {
-        return createNewWallet({
+    setWallet({
+      networkType: $store.networkType
+    });
+    const wallet = createNewWallet({
           networkType: $store.networkType
         });
-      } else {
-        return $store.wallet;
-      }
-    })();
 
     try {
       await wallet.requestPermissions({
@@ -92,18 +87,27 @@
   export const setWallet = async (config: {
     networkType: NetworkType,
   }) => {
+    if (window && window.localStorage) {
+      // finds the Beacon keys
+      const beaconKeys = Object.keys(window.localStorage).filter((key) =>
+        key.toLowerCase().includes("beacon")
+      );
+      // deletes the keys
+      beaconKeys.forEach((key) => delete window.localStorage[key]);
+    }
+
     store.updateNetworkType(config.networkType);
 
     const wallet = createNewWallet(config);
     store.updateWallet(wallet);
+    const Tezos = new TezosToolkit(rpcUrl[config.networkType]);
+    Tezos.setWalletProvider(wallet);
+    store.updateTezos(Tezos);
+
     const activeAccount = await wallet.client.getActiveAccount();
     if (activeAccount) {
       const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
       store.updateUserAddress(userAddress);
-
-      const Tezos = new TezosToolkit(rpcUrl[config.networkType]);
-      Tezos.setWalletProvider(wallet);
-      store.updateTezos(Tezos);
 
       const balance = await Tezos.tz.getBalance(userAddress);
       if (balance) {
@@ -114,9 +118,7 @@
   }
 
   onMount(async () => {
-    await setWallet({
-      networkType: defaultNetworkType
-    });
+    store.updateNetworkType(defaultNetworkType);
   });
 
   afterUpdate(async () => {

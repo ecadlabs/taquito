@@ -1199,6 +1199,18 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupRecoverBond
   | OperationContentsAndResultSmartRollupTimeout;
 
+export type OperationContentsAndResultWithFee =
+  | OperationContentsAndResultTransaction
+  | OperationContentsAndResultOrigination
+  | OperationContentsAndResultDelegation
+  | OperationContentsAndResultReveal
+  | OperationContentsAndResultRegisterGlobalConstant
+  | OperationContentsAndResultSetDepositsLimit
+  | OperationContentsAndResultUpdateConsensusKey
+  | OperationContentsAndResultIncreasePaidStorage
+  | OperationContentsAndResultSmartRollupAddMessages
+  | OperationContentsAndResultSmartRollupOriginate;
+
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
 }
@@ -1291,15 +1303,7 @@ export interface BallotsResponse {
   pass: BigNumber;
 }
 
-export type PeriodKindResponse =
-  | 'proposal'
-  | 'testing_vote'
-  | 'testing'
-  | 'promotion_vote'
-  | 'exploration'
-  | 'cooldown'
-  | 'promotion'
-  | 'adoption';
+export type PeriodKindResponse = 'proposal' | 'exploration' | 'cooldown' | 'promotion' | 'adoption';
 
 export type CurrentProposalResponse = string | null;
 
@@ -1615,6 +1619,7 @@ export interface OperationResultSmartRollupCement {
   status: OperationResultStatusEnum;
   consumed_milligas?: string;
   inbox_level?: number;
+  commitment_hash?: string;
   errors?: TezosGenericOperationError[];
 }
 
@@ -1673,6 +1678,45 @@ export interface TicketUpdates {
   }[];
 }
 export type TicketReceipt = TicketUpdates;
+
+export type BatchOperationResult =
+  | OperationResultTransaction
+  | OperationResultReveal
+  | OperationResultDelegation
+  | OperationResultOrigination
+  | OperationResultIncreasePaidStorage
+  | OperationResultRegisterGlobalConstant
+  | OperationResultTransferTicket
+  | OperationResultSmartRollupAddMessages
+  | OperationResultSmartRollupOriginate
+  | OperationResultUpdateConsensusKey;
+
+export type OperationResult =
+  | OperationResultOrigination
+  | OperationResultTransaction
+  | OperationResultReveal
+  | OperationResultDelegation
+  | OperationResultIncreasePaidStorage
+  | OperationResultRegisterGlobalConstant
+  | OperationResultTransferTicket
+  | OperationResultUpdateConsensusKey
+  | OperationResultSmartRollupOriginate
+  | OperationResultSmartRollupAddMessages
+  | OperationResultSetDepositsLimit
+  | OperationResultSmartRollupPublish
+  | OperationResultSmartRollupCement
+  | OperationResultSmartRollupRefute
+  | OperationResultSmartRollupRecoverBond
+  | OperationResultSmartRollupTimeout
+  | OperationResultSmartRollupExecuteOutboxMessage
+  | OperationResultTxRollupOrigination
+  | OperationResultTxRollupSubmitBatch
+  | OperationResultTxRollupDispatchTickets
+  | OperationResultTxRollupCommit
+  | OperationResultTxRollupReturnBond
+  | OperationResultTxRollupFinalizeCommitment
+  | OperationResultTxRollupRemoveCommitment
+  | OperationResultTxRollupRejection;
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
@@ -1873,6 +1917,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto017 &
   ConstantsResponseProto016 &
   ConstantsResponseProto015 &
   ConstantsResponseProto014 &
@@ -1914,6 +1959,8 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
 export interface ConstantsResponseProto016
   extends Omit<
@@ -1975,11 +2022,13 @@ export interface DalParametric {
   feature_enable: boolean;
   number_of_slots: number;
   number_of_shards: number;
-  endorsement_lag: number;
+  endorsement_lag?: number;
   availability_threshold: number;
   slot_size?: number;
   redundancy_factor?: number;
   page_size?: number;
+  attestation_threshold?: number;
+  blocks_per_epoch?: number;
 }
 
 export interface ConstantsResponseProto014 extends ConstantsResponseProto013 {

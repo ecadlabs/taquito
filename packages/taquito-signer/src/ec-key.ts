@@ -1,7 +1,16 @@
 import { hash } from '@stablelib/blake2b';
-import { b58cencode, b58cdecode, prefix, isValidPrefix, InvalidKeyError } from '@taquito/utils';
+import {
+  b58cencode,
+  b58cdecode,
+  prefix,
+  isValidPrefix,
+  invalidDetail,
+  Prefix,
+  ValidationResult,
+} from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import elliptic from 'elliptic';
+import { InvalidKeyError } from '@taquito/core';
 
 const pref = {
   p256: {
@@ -31,6 +40,7 @@ export class ECKey {
    * @param key Encoded private key
    * @param encrypted Is the private key encrypted
    * @param decrypt Decrypt function
+   * @throws {@link InvalidKeyError}
    */
   constructor(
     private curve: 'p256' | 'secp256k1',
@@ -38,9 +48,12 @@ export class ECKey {
     encrypted: boolean,
     decrypt: (k: any) => any
   ) {
-    const keyPrefix = key.substr(0, encrypted ? 5 : 4);
+    const keyPrefix = key.substring(0, encrypted ? 5 : 4);
     if (!isValidPrefix(keyPrefix)) {
-      throw new InvalidKeyError(key, 'Key contains invalid prefix');
+      throw new InvalidKeyError(
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one of the following prefix '${Prefix.SPSK}', '${Prefix.SPESK}', '${Prefix.P2SK}' or '${Prefix.P2ESK}'.`
+      );
     }
 
     this._key = decrypt(b58cdecode(this.key, prefix[keyPrefix]));

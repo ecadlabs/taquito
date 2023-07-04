@@ -1,41 +1,29 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
-import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import {
   sample,
   sampleStorage,
-  sampleBigMapValue,
   miStr,
   miSample,
   ligoSample,
-  tokenInit,
-  tokenCode,
-  sampleBigMapAbstractionValue,
   miInit,
-  miStorage,
+  originateResults,
+  originateResultsMutezTrue,
+  revealOp,
+  originateResultsEstimate,
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
-import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
 import { Estimate } from '../../src/estimate/estimate';
-import {
-  Protocols,
-  DEFAULT_STORAGE_LIMIT,
-  DEFAULT_FEE,
-  DEFAULT_GAS_LIMIT,
-} from '../../src/constants';
+import { Protocols } from '../../src/constants';
 import {
   InvalidCodeParameter,
   InvalidDelegationSource,
   InvalidInitParameter,
 } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
-import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
-import { BigMapAbstraction } from '../../src/contract/big-map';
 import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operations/types';
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
-import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
-import { smallNestedMapTypecheck, ticketTokenTestMock } from '../helpers';
 import { PvmKind } from '@taquito/rpc';
 
 /**
@@ -62,6 +50,17 @@ describe('RpcContractProvider test', () => {
     getProtocols: jest.Mock<any, any>;
     getCurrentPeriod: jest.Mock<any, any>;
     getOriginationProof: jest.Mock<any, any>;
+    getConstants: jest.Mock<any, any>;
+  };
+
+  let mockReadProvider: {
+    getBlockHash: jest.Mock<any, any>;
+    getNextProtocol: jest.Mock<any, any>;
+    getCounter: jest.Mock<any, any>;
+    getProtocolConstants: jest.Mock<any, any>;
+    getBalance: jest.Mock<any, any>;
+    isAccountRevealed: jest.Mock<any, any>;
+    getChainId: jest.Mock<any, any>;
   };
 
   let mockSigner: {
@@ -92,16 +91,6 @@ describe('RpcContractProvider test', () => {
     smartRollupOriginate: jest.Mock<any, any>;
   };
 
-  const revealOp = (source: string) => ({
-    counter: '1',
-    fee: String(DEFAULT_FEE.REVEAL),
-    gas_limit: String(DEFAULT_GAS_LIMIT.REVEAL),
-    kind: 'reveal',
-    public_key: 'test_pub_key',
-    source,
-    storage_limit: String(DEFAULT_STORAGE_LIMIT.REVEAL),
-  });
-
   beforeEach(() => {
     mockRpcClient = {
       getBigMapExpr: jest.fn(),
@@ -122,10 +111,21 @@ describe('RpcContractProvider test', () => {
       getProtocols: jest.fn(),
       getCurrentPeriod: jest.fn(),
       getOriginationProof: jest.fn(),
+      getConstants: jest.fn(),
     };
 
     mockForger = {
       forge: jest.fn(),
+    };
+
+    mockReadProvider = {
+      getBlockHash: jest.fn(),
+      getNextProtocol: jest.fn(),
+      getCounter: jest.fn(),
+      getProtocolConstants: jest.fn(),
+      getBalance: jest.fn(),
+      isAccountRevealed: jest.fn(),
+      getChainId: jest.fn(),
     };
 
     mockSigner = {
@@ -170,14 +170,6 @@ describe('RpcContractProvider test', () => {
       remaining: 12,
     });
 
-    const context = new Context(mockRpcClient as any, mockSigner as any);
-    context.forger = mockForger;
-    rpcContractProvider = new RpcContractProvider(
-      // deepcode ignore no-any: any is good enough
-      context,
-      mockEstimate as any
-    );
-
     mockRpcClient.getBigMapExpr.mockResolvedValue({
       prim: 'Pair',
       args: [{ int: '100' }, []],
@@ -193,7 +185,7 @@ describe('RpcContractProvider test', () => {
     mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
     mockSigner.publicKey.mockResolvedValue('test_pub_key');
-    mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+    mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
     mockRpcClient.packData.mockResolvedValue({
       packed: '747a325542477245424b7a7a5736686a586a78786951464a4e6736575232626d3647454e',
     });
@@ -201,577 +193,42 @@ describe('RpcContractProvider test', () => {
     mockRpcClient.injectOperation.mockResolvedValue(
       'oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP'
     );
+
+    mockRpcClient.getConstants.mockResolvedValue({
+      hard_gas_limit_per_operation: new BigNumber(1040000),
+      hard_storage_limit_per_operation: new BigNumber(60000),
+      hard_gas_limit_per_block: new BigNumber(5200000),
+      cost_per_byte: new BigNumber(1000),
+    });
+
+    mockReadProvider.getProtocolConstants.mockResolvedValue({
+      hard_gas_limit_per_operation: new BigNumber('1040000'),
+      hard_gas_limit_per_block: new BigNumber('5200000'),
+      cost_per_byte: new BigNumber('250'),
+      hard_storage_limit_per_operation: new BigNumber('60000'),
+      minimal_block_delay: new BigNumber('30'),
+      time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
+    });
+    mockReadProvider.getBalance.mockResolvedValue(new BigNumber('10000000000'));
+    mockReadProvider.getNextProtocol.mockResolvedValue('test_proto');
+    mockReadProvider.getBlockHash.mockResolvedValue('test');
+
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
     const estimateReveal = new Estimate(1000000, 0, 64, 250);
     mockEstimate.reveal.mockResolvedValue(estimateReveal);
-  });
 
-  describe('getStorage', () => {
-    it('should call getStorage', async (done) => {
-      const result = await rpcContractProvider.getStorage('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
-      expect(result).toEqual({
-        '0': {},
-        '1': 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        '2': false,
-        '3': new BigNumber('200'),
-      });
-      done();
-    });
-  });
-
-  describe('getBigMapKey', () => {
-    it('should call getBigMapKey', async (done) => {
-      mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
-      const result = await rpcContractProvider.getBigMapKey(
-        'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
-      );
-      expect(result).toEqual({
-        '0': new BigNumber('261'),
-        '1': expect.objectContaining(
-          MichelsonMap.fromLiteral({
-            tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: new BigNumber('100'),
-            KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN: new BigNumber('100'),
-          })
-        ),
-      });
-      expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual(
-        'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'
-      );
-      expect(mockRpcClient.getBigMapKey.mock.calls[0][1]).toEqual({
-        key: { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
-        type: { prim: 'bytes' },
-      });
-      done();
-    });
-  });
-
-  describe('getBigMapKeyByID', () => {
-    it('should call getBigMapKeyByID', async (done) => {
-      mockRpcClient.packData.mockResolvedValue({
-        packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValue({ int: '3' });
-
-      const result = await rpcContractProvider.getBigMapKeyByID(
-        '133',
-        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        new Schema({
-          prim: 'big_map',
-          args: [{ prim: 'address' }, { prim: 'nat' }],
-        })
-      );
-      expect(result).toEqual(new BigNumber(3));
-      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
-        data: {
-          bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
-        'expruc6BZL8Lz2pipLAwGEqGwUjbdMzbVikNvD589fhVf4tKSG58ic'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toEqual({ block: 'head' });
-      done();
-    });
-
-    it('should call getBigMapKeyByID when a block level is specified', async (done) => {
-      mockRpcClient.packData.mockResolvedValue({
-        packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValue({ int: '3' });
-
-      const result = await rpcContractProvider.getBigMapKeyByID(
-        '133',
-        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        new Schema({
-          prim: 'big_map',
-          args: [{ prim: 'address' }, { prim: 'nat' }],
-        }),
-        123456
-      );
-      expect(result).toEqual(new BigNumber(3));
-      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
-        data: {
-          bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
-        'expruc6BZL8Lz2pipLAwGEqGwUjbdMzbVikNvD589fhVf4tKSG58ic'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toEqual({
-        block: '123456',
-      });
-      done();
-    });
-  });
-
-  describe('getBigMapKeysByID', () => {
-    it('should call getBigMapKeysByID', async (done) => {
-      mockRpcClient.getBlockHeader.mockResolvedValue({ level: 123456 });
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '3' });
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '7' });
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a00000016000002298c03ed7d454a101eb7022bc95f7e5f41ac78',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '6' });
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a000000160000eadc0855adb415fa69a76fc10397dc2fb37039a0',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '5' });
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a000000160000cf49f66b9ea137e11818f2a78b4b6fc9895b4e50',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '4' });
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a0000001600001bc28a6b8fb2fb6af99fe3bba054e614539e5f12',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '1' });
-
-      const result = await rpcContractProvider.getBigMapKeysByID(
-        '133',
-        [
-          'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          'tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN',
-          'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
-          'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
-          'tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh',
-          'tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw',
-        ],
-        new Schema({
-          prim: 'big_map',
-          args: [{ prim: 'address' }, { prim: 'nat' }],
-        })
-      );
-      expect(result.get('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toEqual(new BigNumber(3));
-      expect(result.get('tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN')).toEqual(new BigNumber(7));
-      expect(result.get('tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx')).toEqual(new BigNumber(6));
-      expect(result.get('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')).toEqual(new BigNumber(5));
-      expect(result.get('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh')).toEqual(new BigNumber(4));
-      expect(result.get('tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw')).toEqual(new BigNumber(1));
-
-      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
-        data: {
-          bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.packData.mock.calls[1][0]).toEqual({
-        data: {
-          bytes: '0000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.packData.mock.calls[2][0]).toEqual({
-        data: {
-          bytes: '000002298c03ed7d454a101eb7022bc95f7e5f41ac78',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.packData.mock.calls[3][0]).toEqual({
-        data: {
-          bytes: '0000eadc0855adb415fa69a76fc10397dc2fb37039a0',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.packData.mock.calls[4][0]).toEqual({
-        data: {
-          bytes: '0000cf49f66b9ea137e11818f2a78b4b6fc9895b4e50',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.packData.mock.calls[5][0]).toEqual({
-        data: {
-          bytes: '00001bc28a6b8fb2fb6af99fe3bba054e614539e5f12',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
-        'expruc6BZL8Lz2pipLAwGEqGwUjbdMzbVikNvD589fhVf4tKSG58ic'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toEqual({
-        block: '123456',
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][1]).toEqual(
-        'exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][2]).toEqual({
-        block: '123456',
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[2][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[2][1]).toEqual(
-        'expruH3qgknRBJVLVkwdzf6wfBxd7Y1uqNxr7zuMFxTC12e5PacLfv'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[2][2]).toEqual({
-        block: '123456',
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[3][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[3][1]).toEqual(
-        'exprvEVwRjW3or3tGBSmpyXeqxzzp6XSJGRiKdxV5W1m4s5CceC83b'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[3][2]).toEqual({
-        block: '123456',
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[4][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[4][1]).toEqual(
-        'exprvPo6agtDv551oeRrjSDcETVHBi8TkRvFy7W6f3fGvygU6Un8NX'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[4][2]).toEqual({
-        block: '123456',
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[5][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[5][1]).toEqual(
-        'exprtzAeDbQY935rEquwCdbZaaTYgXttwjkBNAVkRGck1EY6smmFUF'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[5][2]).toEqual({
-        block: '123456',
-      });
-
-      done();
-    });
-
-    it('getBigMapKeysByID should set value to undefined for key that does not exist', async (done) => {
-      mockRpcClient.getBlockHeader.mockResolvedValue({ level: 123456 });
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-      });
-      const expectedError = new HttpResponseError(
-        'fail',
-        STATUS_CODE.NOT_FOUND,
-        'err',
-        'test',
-        'https://test.com'
-      );
-      mockRpcClient.getBigMapExpr.mockRejectedValueOnce(expectedError);
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '3' });
-
-      const result = await rpcContractProvider.getBigMapKeysByID(
-        '133',
-        [
-          'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', // this is not a key of the big map
-          'tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN',
-        ],
-        new Schema({
-          prim: 'big_map',
-          args: [{ prim: 'address' }, { prim: 'nat' }],
-        })
-      );
-      expect(result.get('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toBeUndefined();
-      expect(result.get('tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN')).toEqual(new BigNumber(3));
-
-      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
-        data: {
-          bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.packData.mock.calls[1][0]).toEqual({
-        data: {
-          bytes: '0000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
-        'expruc6BZL8Lz2pipLAwGEqGwUjbdMzbVikNvD589fhVf4tKSG58ic'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toEqual({
-        block: '123456',
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][1]).toEqual(
-        'exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][2]).toEqual({
-        block: '123456',
-      });
-      done();
-    });
-
-    it("getBigMapKeysByID should accept a level has a parameter and don't fetch the level form the rpc", async (done) => {
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '34' });
-      mockRpcClient.packData.mockResolvedValueOnce({
-        packed: '050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValueOnce({ int: '3' });
-
-      const result = await rpcContractProvider.getBigMapKeysByID(
-        '133',
-        ['tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', 'tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN'],
-        new Schema({
-          prim: 'big_map',
-          args: [{ prim: 'address' }, { prim: 'nat' }],
-        }),
-        654321
-      );
-      expect(result.get('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toEqual(new BigNumber(34));
-      expect(result.get('tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN')).toEqual(new BigNumber(3));
-
-      expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
-      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
-        data: {
-          bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.packData.mock.calls[1][0]).toEqual({
-        data: {
-          bytes: '0000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
-        'expruc6BZL8Lz2pipLAwGEqGwUjbdMzbVikNvD589fhVf4tKSG58ic'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toEqual({
-        block: '654321',
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][1]).toEqual(
-        'exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7'
-      );
-      expect(mockRpcClient.getBigMapExpr.mock.calls[1][2]).toEqual({
-        block: '654321',
-      });
-      done();
-    });
-
-    it('getBigMapKeysByID should set value to undefined if only 1 key to fetch and that it does not exist', async (done) => {
-      mockRpcClient.packData.mockResolvedValue({
-        packed: '050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-      });
-      const expectedError = new HttpResponseError(
-        'fail',
-        STATUS_CODE.NOT_FOUND,
-        'err',
-        'test',
-        'https://test.com'
-      );
-      mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
-
-      const result = await rpcContractProvider.getBigMapKeysByID(
-        '133',
-        ['tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN'],
-        new Schema({
-          prim: 'big_map',
-          args: [{ prim: 'address' }, { prim: 'nat' }],
-        })
-      );
-
-      expect(result.get('tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN')).toBeUndefined();
-
-      expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
-      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
-        data: {
-          bytes: '0000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
-        'exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7'
-      );
-      done();
-    });
-
-    it('getBigMapKeysByID should not call getBlock when there is only 1 key to fetch', async (done) => {
-      mockRpcClient.packData.mockResolvedValue({
-        packed: '050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValue({ int: '3' });
-
-      const result = await rpcContractProvider.getBigMapKeysByID(
-        '133',
-        ['tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN'],
-        new Schema({
-          prim: 'big_map',
-          args: [{ prim: 'address' }, { prim: 'nat' }],
-        })
-      );
-
-      expect(result.get('tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN')).toEqual(new BigNumber(3));
-
-      expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
-      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
-        data: {
-          bytes: '0000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
-        },
-        type: {
-          prim: 'bytes',
-        },
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
-        'exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7'
-      );
-      done();
-    });
-
-    it('getBigMapKeysByID with a pair as key and a pair as value', async (done) => {
-      mockRpcClient.packData.mockResolvedValue({
-        packed: '0507070100000005746573743201000000057465737433',
-      });
-      mockRpcClient.getBigMapExpr.mockResolvedValue({
-        prim: 'Pair',
-        args: [{ int: '2' }, { string: '3' }],
-      });
-
-      const result = await rpcContractProvider.getBigMapKeysByID(
-        '133',
-        [{ test: 'test2', test2: 'test3' }],
-        new Schema({
-          prim: 'big_map',
-          args: [
-            {
-              prim: 'pair',
-              args: [
-                { prim: 'string', annots: ['%test'] },
-                { prim: 'string', annots: ['%test2'] },
-              ],
-            },
-            { prim: 'pair', args: [{ prim: 'int' }, { prim: 'int' }] },
-          ],
-        })
-      );
-      expect(result.has({ test: 'test2', test2: 'test3' })).toBeTruthy();
-      expect(result.get({ test: 'test2', test2: 'test3' })).toEqual({
-        0: new BigNumber(2),
-        1: new BigNumber(3),
-      });
-      expect(mockRpcClient.getBlock.mock.calls[0]).toBeUndefined();
-      expect(mockRpcClient.packData.mock.calls[0][0]).toEqual({
-        data: {
-          prim: 'Pair',
-          args: [{ string: 'test2' }, { string: 'test3' }],
-        },
-        type: {
-          prim: 'pair',
-          args: [{ prim: 'string' }, { prim: 'string' }],
-        },
-      });
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
-        'exprteZPr9h8pkyKKw9PMFEXqG1jbMBkj4A2KC9Mp5cAAjSrDWvfXs'
-      );
-      done();
-    });
-
-    it('getBigMapKeysByID unexpected exception', async (done) => {
-      mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
-      const expectedError = new HttpResponseError(
-        'fail',
-        STATUS_CODE.UNAUTHORIZED,
-        'err',
-        'test',
-        'https://test.com'
-      );
-      mockRpcClient.packData.mockRejectedValue(expectedError);
-
-      try {
-        await rpcContractProvider.getBigMapKeysByID(
-          '133',
-          ['tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', 'tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN'],
-          new Schema({
-            prim: 'big_map',
-            args: [{ prim: 'address' }, { prim: 'nat' }],
-          })
-        );
-      } catch (err) {
-        expect(err).toBeInstanceOf(HttpResponseError);
-      }
-      done();
-    });
-  });
-
-  describe('BigMapAbstraction', () => {
-    it('returns undefined on bad key in BigMap', async (done) => {
-      const expectedError = new HttpResponseError(
-        'fail',
-        STATUS_CODE.NOT_FOUND,
-        'err',
-        'test',
-        'https://test.com'
-      );
-      mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
-      const schema = new Schema(sampleBigMapAbstractionValue);
-      const bigMap = new BigMapAbstraction(
-        new BigNumber('tz2UBGrEBKzzW6hjXjxxiQFJNg6WR2bm6GEN'),
-        schema,
-        rpcContractProvider
-      );
-      const returnValue = await bigMap.get('test');
-      expect(returnValue).toEqual(undefined);
-      done();
-    });
-    it('returns error if error is not 404 from key lookup in BigMap', async (done) => {
-      const expectedError = new HttpResponseError(
-        'fail',
-        STATUS_CODE.FORBIDDEN,
-        'err',
-        'test',
-        'https://test.com'
-      );
-      mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
-      const schema = new Schema(sampleBigMapAbstractionValue);
-      const bigMap = new BigMapAbstraction(
-        new BigNumber('tz2UBGrEBKzzW6hjXjxxiQFJNg6WR2bm6GEN'),
-        schema,
-        rpcContractProvider
-      );
-      await expect(bigMap.get('test')).rejects.toEqual(expectedError);
-      done();
-    });
+    const context = new Context(mockRpcClient as any, mockSigner as any);
+    context.forger = mockForger;
+    context.readProvider = mockReadProvider as any;
+    rpcContractProvider = new RpcContractProvider(
+      // deepcode ignore no-any: any is good enough
+      context,
+      mockEstimate as any
+    );
   });
 
   describe('originate', () => {
     it('should produce a reveal and origination operation', async (done) => {
-      mockRpcClient.getProtocols.mockResolvedValue({
-        next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
-      });
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
@@ -782,40 +239,14 @@ describe('RpcContractProvider test', () => {
         gasLimit: 10600,
         storageLimit: 257,
       });
+
       const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
-      expect(res).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            revealOp('test_pub_key_hash'),
-            {
-              balance: '200000000',
-              counter: '2',
-              delegate: 'test_delegate',
-              fee: '10000',
-              gas_limit: '10600',
-              kind: 'origination',
-              script: {
-                code: miSample,
-                storage: miStorage,
-              },
-              source: 'test_pub_key_hash',
-              storage_limit: '257',
-            },
-          ],
-          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
+
+      expect(res).toEqual(originateResults);
       done();
     });
 
     it('should not convert balance to mutez when mutez flag is set to true', async (done) => {
-      mockRpcClient.getProtocols.mockResolvedValue({
-        next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
-      });
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
@@ -827,39 +258,12 @@ describe('RpcContractProvider test', () => {
         mutez: true,
       });
       const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
-      expect(res).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            revealOp('test_pub_key_hash'),
-            {
-              balance: '200',
-              counter: '2',
-              delegate: 'test_delegate',
-              fee: '10000',
-              gas_limit: '10600',
-              kind: 'origination',
-              script: {
-                code: miSample,
-                storage: miStorage,
-              },
-              source: 'test_pub_key_hash',
-              storage_limit: '257',
-            },
-          ],
-          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
+
+      expect(res).toEqual(originateResultsMutezTrue);
       done();
     });
 
     it('estimate when no fees are specified', async (done) => {
-      mockRpcClient.getProtocols.mockResolvedValue({
-        next_protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
-      });
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.originate.mockResolvedValue(estimate);
 
@@ -869,33 +273,10 @@ describe('RpcContractProvider test', () => {
         code: miStr,
         init: miInit,
       });
+
       const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
-      expect(res).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            revealOp('test_pub_key_hash'),
-            {
-              balance: '200000000',
-              counter: '2',
-              delegate: 'test_delegate',
-              fee: estimate.suggestedFeeMutez.toString(),
-              gas_limit: estimate.gasLimit.toString(),
-              kind: 'origination',
-              script: {
-                code: miSample,
-                storage: miStorage,
-              },
-              source: 'test_pub_key_hash',
-              storage_limit: estimate.storageLimit.toString(),
-            },
-          ],
-          protocol: 'PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
+
+      expect(res).toEqual(originateResultsEstimate);
       done();
     });
 
@@ -914,7 +295,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               balance: '200000000',
               counter: '2',
@@ -926,7 +307,7 @@ describe('RpcContractProvider test', () => {
                 code: ligoSample,
                 storage: { int: '0' },
               },
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '257',
             },
           ],
@@ -957,7 +338,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               balance: '200000000',
               counter: '2',
@@ -969,7 +350,7 @@ describe('RpcContractProvider test', () => {
                 code: miSample,
                 storage: { int: '0' },
               },
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '257',
             },
           ],
@@ -996,7 +377,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               amount: '2000000',
               counter: '2',
@@ -1004,7 +385,7 @@ describe('RpcContractProvider test', () => {
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '300',
             },
           ],
@@ -1029,7 +410,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               amount: '2000000',
               counter: '2',
@@ -1037,7 +418,7 @@ describe('RpcContractProvider test', () => {
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
               kind: 'transaction',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: estimate.storageLimit.toString(),
             },
           ],
@@ -1057,8 +438,9 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
       const result = await rpcContractProvider.transfer({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -1078,7 +460,7 @@ describe('RpcContractProvider test', () => {
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '300',
             },
           ],
@@ -1105,7 +487,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
 
       try {
         await rpcContractProvider.transfer(params);
@@ -1130,7 +512,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
 
       try {
         await rpcContractProvider.transfer(params);
@@ -1158,7 +540,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
 
       try {
         await rpcContractProvider.transfer(params);
@@ -1188,7 +570,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       await expect(rpcContractProvider.transfer(params)).rejects.toMatchObject({
         id: 'proto.006-PsCARTHA.contract.balance_too_low',
         message: '(temporary) proto.006-PsCARTHA.contract.balance_too_low',
@@ -1213,7 +595,7 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       await expect(rpcContractProvider.transfer(params)).rejects.toMatchObject({
         id: 'proto.005-PsBabyM1.gas_exhausted.operation',
         message: '(temporary) proto.005-PsBabyM1.gas_exhausted.operation',
@@ -1229,8 +611,10 @@ describe('RpcContractProvider test', () => {
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
       mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
+      mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       const result = await rpcContractProvider.transfer({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -1250,7 +634,7 @@ describe('RpcContractProvider test', () => {
               fee: '10000',
               gas_limit: '10600',
               kind: 'transaction',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '300',
             },
           ],
@@ -1281,7 +665,7 @@ describe('RpcContractProvider test', () => {
       };
       const result = await rpcContractProvider.transferTicket(params);
 
-      const expectedReveal = revealOp('test_pub_key_hash');
+      const expectedReveal = revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
 
       const expectedReturn = {
         counter: '2',
@@ -1309,7 +693,8 @@ describe('RpcContractProvider test', () => {
 
     it('validate that a reveal option wont be added when not needed', async (done) => {
       mockRpcClient.getManagerKey.mockReturnValue('test_pub_key');
-      mockEstimate.reveal.mockResolvedValue(undefined);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
         fee: 804,
@@ -1366,7 +751,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               counter: '2',
               destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
@@ -1414,7 +799,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               counter: '2',
               destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
@@ -1457,7 +842,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
               counter: '2',
@@ -1506,14 +891,14 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
-              delegate: 'test_pub_key_hash',
+              delegate: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               counter: '2',
               fee: '490',
               gas_limit: '1100',
               kind: 'delegation',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '1000',
             },
           ],
@@ -1542,7 +927,7 @@ describe('RpcContractProvider test', () => {
               gas_limit: '1100',
               kind: 'reveal',
               public_key: 'test_pub_key',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '0',
             },
           ],
@@ -1567,14 +952,14 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               value: { prim: 'Pair', args: [{ int: '999' }, { int: '999' }] },
               counter: '2',
               fee: '475',
               gas_limit: '1330',
               kind: 'register_global_constant',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
             },
           ],
@@ -1588,11 +973,13 @@ describe('RpcContractProvider test', () => {
   });
 
   describe('increasePaidStorage', () => {
-    it('should produce an increasePaidStorage operation', async (done) => {
-      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+    it('should produce an increasePaidStorage operation without reveal when account is revealed', async (done) => {
+      mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       const result = await rpcContractProvider.increasePaidStorage({
         amount: 1,
         destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
@@ -1604,7 +991,7 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'increase_paid_storage',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '475',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1633,10 +1020,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'increase_paid_storage',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '475',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1666,10 +1053,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'increase_paid_storage',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '500',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1729,7 +1116,7 @@ describe('RpcContractProvider test', () => {
           branch: 'test',
           contents: [
             {
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               kind: 'ballot',
               period: 1,
               proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
@@ -1787,7 +1174,7 @@ describe('RpcContractProvider test', () => {
           branch: 'test',
           contents: [
             {
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               kind: 'proposals',
               period: 1,
               proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
@@ -1832,10 +1219,12 @@ describe('RpcContractProvider test', () => {
 
   describe('updateConsensusKey', () => {
     it('should produce an updateConsensusKey operation', async (done) => {
-      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       const result = await rpcContractProvider.updateConsensusKey({
         pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
       });
@@ -1847,7 +1236,7 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'update_consensus_key',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
               storage_limit: estimate.storageLimit.toString(),
@@ -1875,10 +1264,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'update_consensus_key',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: estimate.suggestedFeeMutez.toString(),
               gas_limit: estimate.gasLimit.toString(),
               storage_limit: estimate.storageLimit.toString(),
@@ -1907,10 +1296,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'update_consensus_key',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '500',
               gas_limit: estimate.gasLimit.toString(),
               storage_limit: estimate.storageLimit.toString(),
@@ -1927,12 +1316,14 @@ describe('RpcContractProvider test', () => {
     });
   });
 
-  describe('smartRollupAddMessages', async () => {
+  describe('smartRollupAddMessages', () => {
     it('should produce a smartRollupAddMessages op', async (done) => {
-      mockRpcClient.getManagerKey.mockReturnValue('test_pub_key_hash');
+      mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.smartRollupAddMessages.mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       const op = await rpcContractProvider.smartRollupAddMessages({
         message: [
           '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
@@ -1946,7 +1337,7 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'smart_rollup_add_messages',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '475',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1979,10 +1370,10 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               kind: 'smart_rollup_add_messages',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               fee: '475',
               gas_limit: '1330',
               storage_limit: '93',
@@ -1998,162 +1389,6 @@ describe('RpcContractProvider test', () => {
         counter: 0,
       });
 
-      done();
-    });
-  });
-
-  describe('txRollupOriginate', () => {
-    it('should produce a reveal and txRollupOriginate operation', async (done) => {
-      const result = await rpcContractProvider.txRollupOriginate({
-        storageLimit: 6000,
-        gasLimit: 5000,
-        fee: 700,
-      });
-      expect(result.raw).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            revealOp('test_pub_key_hash'),
-            {
-              tx_rollup_origination: {},
-              counter: '2',
-              fee: '700',
-              gas_limit: '5000',
-              kind: 'tx_rollup_origination',
-              source: 'test_pub_key_hash',
-              storage_limit: '6000',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should estimate when no fee are specified', async (done) => {
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.txRollupOriginate.mockResolvedValue(estimate);
-      const result = await rpcContractProvider.txRollupOriginate();
-      expect(result.raw).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            revealOp('test_pub_key_hash'),
-            {
-              tx_rollup_origination: {},
-              counter: '2',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_origination',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-  });
-
-  describe('txRollupSubmitBatch', () => {
-    it('should produce a reveal and txRollupSubmitBatch operation', async (done) => {
-      const result = await rpcContractProvider.txRollupSubmitBatch({
-        content: '1234',
-        rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-        storageLimit: 6000,
-        gasLimit: 5000,
-        fee: 700,
-      });
-      expect(result.raw).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            revealOp('test_pub_key_hash'),
-            {
-              content: '1234',
-              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-              counter: '2',
-              fee: '700',
-              gas_limit: '5000',
-              kind: 'tx_rollup_submit_batch',
-              source: 'test_pub_key_hash',
-              storage_limit: '6000',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-
-    it('should estimate when no fee are specified', async (done) => {
-      const estimate = new Estimate(1230000, 93, 142, 250);
-      mockEstimate.txRollupSubmitBatch.mockResolvedValue(estimate);
-      const result = await rpcContractProvider.txRollupSubmitBatch({
-        content: '1234',
-        rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-      });
-      expect(result.raw).toEqual({
-        counter: 0,
-        opOb: {
-          branch: 'test',
-          contents: [
-            revealOp('test_pub_key_hash'),
-            {
-              content: '1234',
-              rollup: 'txr1ckoTVCU3FHdcW4VotdBha6pYCcA3wpCXi',
-              counter: '2',
-              fee: '475',
-              gas_limit: '1330',
-              kind: 'tx_rollup_submit_batch',
-              source: 'test_pub_key_hash',
-              storage_limit: '93',
-            },
-          ],
-          protocol: 'test_proto',
-          signature: 'test_sig',
-        },
-        opbytes: 'test',
-      });
-      done();
-    });
-  });
-
-  describe('at', () => {
-    it('should return contract method', async (done) => {
-      mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
-      mockRpcClient.getEntrypoints.mockResolvedValue({
-        entrypoints: {
-          mint: { prim: 'pair', args: [{ prim: 'key' }, { prim: 'nat' }] },
-        },
-      });
-      mockRpcClient.preapplyOperations.mockResolvedValue([]);
-      mockRpcClient.getContract.mockResolvedValue({
-        counter: 0,
-        script: {
-          code: tokenCode,
-          storage: tokenInit,
-        },
-      });
-      mockRpcClient.getBlockMetadata.mockResolvedValue({
-        next_protocol: 'PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU',
-      });
-      mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-      mockSigner.publicKey.mockResolvedValue('test_pub_key');
-      mockSigner.publicKeyHash.mockResolvedValue('test_pub_key_hash');
-      const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
-      expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
-      expect(result.methodsObject.mint({ 0: 'test', 1: 100 })).toBeInstanceOf(ContractMethodObject);
       done();
     });
   });
@@ -2259,78 +1494,6 @@ describe('RpcContractProvider test', () => {
     });
   });
 
-  describe('getSaplingDiffByID', () => {
-    it('should call getSaplingDiffById', async (done) => {
-      mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
-      mockRpcClient.getSaplingDiffById.mockResolvedValue({
-        root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
-        commitments_and_ciphertexts: [],
-        nullifiers: [],
-      });
-
-      const result = await rpcContractProvider.getSaplingDiffByID('133');
-      expect(result.root).toEqual(
-        'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e'
-      );
-      expect(result.commitments_and_ciphertexts).toEqual([]);
-      expect(result.nullifiers).toEqual([]);
-
-      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toEqual({ block: 'head' }); // no block specified
-      done();
-    });
-
-    it('should call getSaplingDiffById with a specified block level', async (done) => {
-      mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
-      mockRpcClient.getSaplingDiffById.mockResolvedValue({
-        root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
-        commitments_and_ciphertexts: [],
-        nullifiers: [],
-      });
-
-      const result = await rpcContractProvider.getSaplingDiffByID('133', 654321);
-      expect(result.root).toEqual(
-        'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e'
-      );
-      expect(result.commitments_and_ciphertexts).toEqual([]);
-      expect(result.nullifiers).toEqual([]);
-
-      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('133');
-      expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toEqual({ block: '654321' });
-      done();
-    });
-  });
-
-  describe('Storage', () => {
-    it('should have defined storage with TicketTokens without errors', async (done) => {
-      mockRpcClient.getEntrypoints.mockResolvedValue({
-        entrypoints: {},
-      });
-      mockRpcClient.getContract.mockResolvedValue(ticketTokenTestMock);
-      const rpcContract = await rpcContractProvider.at('KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq');
-      const storage = (await rpcContract.storage()) as any;
-      expect(rpcContract).toBeDefined();
-
-      const keyList = storage.keyMap;
-      expect(keyList.size).toEqual(3);
-      done();
-    });
-
-    it('Should have defined storage with Nested bigmap in multiple maps', async (done) => {
-      mockRpcClient.getEntrypoints.mockResolvedValue({
-        entrypoints: {},
-      });
-      mockRpcClient.getContract.mockResolvedValue(smallNestedMapTypecheck);
-      const rpcContract = await rpcContractProvider.at('KT1SpsNu3hGHN5T5Vt9g9GKUggzvBpxaLxq7');
-      expect(rpcContract).toBeDefined();
-      const storage = (await rpcContract.storage()) as any;
-
-      const keyList = storage.keyMap;
-      expect(keyList.size).toEqual(1);
-      done();
-    });
-  });
-
   describe('smartRollupOriginate', () => {
     it('Should have correct returned values with origination being estimated', async (done) => {
       const estimate = new Estimate(1230000, 10000, 100, 100);
@@ -2352,7 +1515,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               pvm_kind: PvmKind.WASM2,
               kernel:
@@ -2366,7 +1529,7 @@ describe('RpcContractProvider test', () => {
               fee: '433',
               gas_limit: '1330',
               kind: 'smart_rollup_originate',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '10000',
             },
           ],
@@ -2402,7 +1565,7 @@ describe('RpcContractProvider test', () => {
         opOb: {
           branch: 'test',
           contents: [
-            revealOp('test_pub_key_hash'),
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
             {
               pvm_kind: PvmKind.WASM2,
               kernel:
@@ -2416,7 +1579,7 @@ describe('RpcContractProvider test', () => {
               fee: '9999',
               gas_limit: '12345',
               kind: 'smart_rollup_originate',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '54321',
             },
           ],
@@ -2434,6 +1597,8 @@ describe('RpcContractProvider test', () => {
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 10000, 100, 100);
       mockEstimate.smartRollupOriginate.mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       mockRpcClient.getOriginationProof.mockResolvedValue(
         '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
       );
@@ -2464,7 +1629,7 @@ describe('RpcContractProvider test', () => {
               fee: '433',
               gas_limit: '1330',
               kind: 'smart_rollup_originate',
-              source: 'test_pub_key_hash',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '10000',
             },
           ],

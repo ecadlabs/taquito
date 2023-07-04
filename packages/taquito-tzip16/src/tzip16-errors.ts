@@ -1,3 +1,5 @@
+export { InvalidViewParameterError } from '@taquito/core';
+
 /**
  *  @category Error
  *  @description Error that indicates missing big map metadata (not compliant)
@@ -124,21 +126,5 @@ export class NoParameterExpectedError extends Error {
 
   constructor(public viewName: string, public args: any[]) {
     super(`${viewName} Received ${args.length} arguments while expecting no parameter or 'Unit'`);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates invalid view parameter being passed or used
- */
-export class InvalidViewParameterError extends Error {
-  name = 'InvalidViewParameterError';
-
-  constructor(public viewName: string, public sigs: any[], public args: any[]) {
-    super(
-      `${viewName} Received ${
-        args.length
-      } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`
-    );
   }
 }

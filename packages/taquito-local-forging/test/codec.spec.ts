@@ -9,17 +9,16 @@ import {
   paddedBytesDecoder,
 } from '../src/codec';
 import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
-import { InvalidKeyHashError, InvalidPublicKeyError } from '@taquito/utils';
 import { pkhEncoder, publicKeyDecoder, publicKeyEncoder } from '../src/codec';
 import {
   DecodeBallotValueError,
   DecodePvmKindError,
   InvalidBallotValueError,
-  InvalidHexStringError,
   OversizedEntryPointError,
   UnsupportedPvmKindError,
-} from '../src/error';
+} from '../src/errors';
 import { bytesEncoder } from '../src/michelson/codec';
+import { InvalidHexStringError, InvalidPublicKeyError, InvalidKeyHashError } from '@taquito/core';
 
 describe('Tests for Entrypoint functions and for encode and decoder error messages', () => {
   test('Entrypoint encoder', () => {
@@ -31,7 +30,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
   test('Entrypoint encoder should throw if entrypoint is oversized', () => {
     expect(() => entrypointEncoder('this_entrypoint_is_way_too_long_for_the_spec')).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('this_entrypoint_is_way_too_long_for_the_spec'),
+        message: expect.stringContaining(`maximum length is "31".`),
       })
     );
   });
@@ -55,7 +54,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('_this_entrypoint_is_borderline__'),
+        message: expect.stringContaining(`maximum length is "31".`),
       })
     );
   });
@@ -73,9 +72,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     try {
       pkhEncoder('tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5');
     } catch (e) {
-      expect(e.message).toEqual(
-        "The public key hash 'tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5' is invalid"
-      );
+      expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
     }
     done();
   });
@@ -95,7 +92,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     ).toThrow(
       expect.objectContaining({
         message: expect.stringContaining(
-          "The public key 'p4zzk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' is invalid."
+          `Invalid public key "p4zzk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV"`
         ),
       })
     );
@@ -140,7 +137,9 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining("The public key '[object Object]' is invalid."),
+        message: expect.stringContaining(
+          `Invalid public key "[object Object]" with unsupported prefix`
+        ),
       })
     );
 
@@ -154,8 +153,9 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() => ballotEncoder('foobar')).toThrow(InvalidBallotValueError);
     expect(() => ballotEncoder('foobar')).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining("The ballot value 'foobar' is invalid"),
+        message: expect.stringContaining(`Invalid ballot value "foobar"`),
         name: expect.stringMatching('InvalidBallotValueError'),
+        ballotValue: expect.stringMatching('foobar'),
       })
     );
   });
@@ -197,7 +197,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('Failed to decode ballot value 3'),
+        message: expect.stringContaining('Invalid ballot value "3"'),
         name: expect.stringMatching('DecodeBallotValueError'),
       })
     );
@@ -212,7 +212,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     ).toThrow(
       expect.objectContaining({
         message: expect.stringContaining(
-          "The hex string 'H05c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9' is invalid"
+          `Invalid hex string "H05c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9"`
         ),
         name: expect.stringMatching('InvalidHexStringError'),
       })
@@ -236,7 +236,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining('The maximum length of entrypoint is 31'),
+        message: expect.stringContaining('maximum length is "31"'),
         name: expect.stringMatching('OversizedEntryPointError'),
       })
     );

@@ -5,9 +5,10 @@
 
 import { EntrypointsResponse, ScriptedContracts } from '@taquito/rpc';
 import { Extension, Context } from '@taquito/taquito';
-import { validateAddress, ValidationResult } from '@taquito/utils';
-import { InvalidAddressError, InvalidScriptFormatError } from './errors';
+import { validateAddress, ValidationResult, invalidDetail } from '@taquito/utils';
+import { InvalidScriptFormatError } from './errors';
 import { ReadWrapperContractsLibrary } from './read-provider-wrapper';
+import { InvalidAddressError } from '@taquito/core';
 
 interface ContractsData {
   [contractAddress: string]: { script: ScriptedContracts; entrypoints: EntrypointsResponse };
@@ -45,7 +46,8 @@ export class ContractsLibrary implements Extension {
    * @param contract is an object where the key is a contract address and the value is an object having a script and an entrypoints properties.
    * Note: the expected format for the script and entrypoints properties are the same as the one respectivlely returned by
    * `TezosToolkit.rpc.getContract('contractAddress').script` and `TezosToolkit.rpc.getEntrypoints`
-   *
+   * @throws {@link InvalidAddressError} If the contract address is not valid
+   * @throws {@link InvalidScriptFormatError} If the script is not in the expected format
    */
   addContract(contract: ContractsData) {
     for (const contractAddress in contract) {
@@ -69,15 +71,18 @@ export class ContractsLibrary implements Extension {
   }
 
   private validateContractAddress(address: string) {
-    if (validateAddress(address) !== ValidationResult.VALID) {
-      throw new InvalidAddressError(`Address is invalid: ${address}`);
+    const addressValidation = validateAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address, invalidDetail(addressValidation));
     }
   }
 
   private validateContractScriptFormat(script: ScriptedContracts, address: string) {
     if (!script.code) {
       throw new InvalidScriptFormatError(
-        `An invalid script property has been provided for ${address}. The script property can be retrieved from TezosToolkit.rpc.getNormalizedScript(${address}). Invalid script: ${script}`
+        `Invalid script format of ${address} missing property "code". Valid script can be retrieved from "TezosToolkit.rpc.getNormalizedScript(${address})".`,
+        script,
+        address
       );
     }
   }

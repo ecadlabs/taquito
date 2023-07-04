@@ -22,6 +22,17 @@ export class ConfirmationUndefinedError extends Error {
 
 /**
  *  @category Error
+ *  @description Error that indicates that confirmation polling timed out
+ */
+export class ConfirmationTimeoutError extends Error {
+  public name = 'ConfirmationTimeoutError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
  *  @description Error that indicates an invalid filter expression being passed or used
  */
 export class InvalidFilterExpressionError extends Error {
@@ -50,5 +61,29 @@ export class InvalidPrepareParamsError extends Error {
   public name = 'InvalidOperationParamsError';
   constructor(public opKind: string) {
     super(`No '${opKind}' operation parameters have been passed`);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates invalid Preparation parameters being passed
+ */
+export class PublicKeyNotFoundError extends Error {
+  public name = 'PublicKeyNotFoundError';
+  constructor() {
+    super(
+      `Unable to retrieve public key from signer. If you are using a wallet, make sure your account is revealed`
+    );
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates a generic failure when trying to fetch an observable
+ */
+export class ObservableError extends Error {
+  public name = 'ObservableError';
+  constructor(public message: string) {
+    super(message);
   }
 }

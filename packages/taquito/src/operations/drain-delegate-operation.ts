@@ -1,7 +1,11 @@
-import { OperationContentsAndResult, OperationContentsAndResultDrainDelegate } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  OperationContentsAndResultDrainDelegate,
+  OperationContentsDrainDelegate,
+} from '@taquito/rpc';
 import { Context } from '../context';
 import { Operation } from './operations';
-import { ForgedBytes, RPCDrainDelegateOperation } from './types';
+import { ForgedBytes } from './types';
 
 /**
  *
@@ -12,7 +16,7 @@ import { ForgedBytes, RPCDrainDelegateOperation } from './types';
 export class DrainDelegateOperation extends Operation {
   constructor(
     hash: string,
-    private readonly params: RPCDrainDelegateOperation,
+    private readonly params: OperationContentsDrainDelegate,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
     context: Context

@@ -27,10 +27,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const account3 = await createAddress();
 
       const pkh = await Tezos.signer.publicKeyHash();
-      const op = await Tezos.contract.registerDelegate({});
-      await op.confirmation()
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
+      const delegateInfo = await Tezos.rpc.getDelegate(pkh);
+      
+      if (delegateInfo === null) {
+        const op = await Tezos.contract.registerDelegate({});
+        await op.confirmation();
+        expect(op.hash).toBeDefined();
+        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+      }
 
       const op2 = await Tezos.contract.originate({
         balance: "1",

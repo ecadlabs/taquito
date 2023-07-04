@@ -13,10 +13,6 @@ import {
   RevealParams,
   RegisterGlobalConstantParams,
   RPCRegisterGlobalConstantOperation,
-  TxRollupOriginateParams,
-  RPCTxRollupOriginationOperation,
-  TxRollupBatchParams,
-  RPCTxRollupBatchOperation,
   TransferTicketParams,
   RPCTransferTicketOperation,
   IncreasePaidStorageParams,
@@ -33,8 +29,15 @@ import {
   RPCSmartRollupAddMessagesOperation,
   RPCSmartRollupOriginateOperation,
   SmartRollupOriginateParamsWithProof,
+  ActivationParams,
+  RPCActivateOperation,
 } from '../operations/types';
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT, DEFAULT_STORAGE_LIMIT } from '../constants';
+import {
+  DEFAULT_FEE,
+  DEFAULT_GAS_LIMIT,
+  DEFAULT_STORAGE_LIMIT,
+  getRevealGasLimit,
+} from '../constants';
 import { format } from '@taquito/utils';
 import {
   InvalidCodeParameter,
@@ -42,6 +45,14 @@ import {
   OriginationParameterError,
   IntegerError,
 } from './errors';
+
+export const createActivationOperation = async ({ pkh, secret }: ActivationParams) => {
+  return {
+    kind: OpKind.ACTIVATION,
+    pkh,
+    secret,
+  } as RPCActivateOperation;
+};
 
 export const createOriginationOperation = async ({
   code,
@@ -163,7 +174,7 @@ export const createRegisterDelegateOperation = async (
 export const createRevealOperation = async (
   {
     fee = DEFAULT_FEE.REVEAL,
-    gasLimit = DEFAULT_GAS_LIMIT.REVEAL,
+    gasLimit = undefined,
     storageLimit = DEFAULT_STORAGE_LIMIT.REVEAL,
   }: RevealParams,
   source: string,
@@ -174,7 +185,7 @@ export const createRevealOperation = async (
     fee,
     public_key: publicKey,
     source,
-    gas_limit: gasLimit,
+    gas_limit: gasLimit ?? getRevealGasLimit(source),
     storage_limit: storageLimit,
   } as RPCRevealOperation;
 };
@@ -194,41 +205,6 @@ export const createRegisterGlobalConstantOperation = async ({
     storage_limit: storageLimit,
     source,
   } as RPCRegisterGlobalConstantOperation;
-};
-
-export const createTxRollupOriginationOperation = async ({
-  source,
-  fee,
-  gasLimit,
-  storageLimit,
-}: TxRollupOriginateParams) => {
-  return {
-    kind: OpKind.TX_ROLLUP_ORIGINATION,
-    fee,
-    gas_limit: gasLimit,
-    storage_limit: storageLimit,
-    source,
-    tx_rollup_origination: {},
-  } as RPCTxRollupOriginationOperation;
-};
-
-export const createTxRollupBatchOperation = async ({
-  content,
-  rollup,
-  source,
-  fee,
-  gasLimit,
-  storageLimit,
-}: TxRollupBatchParams) => {
-  return {
-    kind: OpKind.TX_ROLLUP_SUBMIT_BATCH,
-    fee,
-    gas_limit: gasLimit,
-    storage_limit: storageLimit,
-    source,
-    content,
-    rollup,
-  } as RPCTxRollupBatchOperation;
 };
 
 export const createTransferTicketOperation = async ({
@@ -362,4 +338,4 @@ export const createSmartRollupOriginateOperation = async ({
     origination_proof: originationProof,
     parameters_ty: parametersType,
   } as RPCSmartRollupOriginateOperation;
-}
+};
