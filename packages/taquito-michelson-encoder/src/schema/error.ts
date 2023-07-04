@@ -30,12 +30,13 @@ export class ParameterEncodingError extends InvalidViewParameterError {
 export class InvalidScriptError extends TaquitoError {
   name = 'InvalidScriptError';
   constructor(public readonly script: any, public readonly reason?: string) {
+    super();
     let message = `Invalid on-chain view found in the following script.`;
     if (reason) {
       message += ` Reason: ${reason}.`;
     }
     message += `Script: ${JSON.stringify(script)}`;
-    super(message);
+    this.message = message;
   }
 }
 
@@ -46,12 +47,13 @@ export class InvalidScriptError extends TaquitoError {
 export class InvalidRpcResponseError extends TaquitoError {
   public name = 'InvalidRpcResponseError';
   constructor(public readonly script: any, public readonly reason?: string) {
+    super();
     let message = `Invalid RPC response passed as argument(s).`;
     if (reason) {
       message += ` Reason: ${reason}.`;
     }
     message += ` Received: ${JSON.stringify(script)}`;
-    super(message);
+    this.message = message;
   }
 }
 
