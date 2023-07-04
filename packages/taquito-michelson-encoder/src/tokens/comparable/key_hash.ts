@@ -8,6 +8,10 @@ import {
 import { encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing Key Hash
+ */
 export class KeyHashValidationError extends TokenValidationError {
   name = 'KeyHashValidationError';
   constructor(public value: any, public token: KeyHashToken, message: string) {
@@ -34,30 +38,35 @@ export class KeyHashToken extends ComparableToken {
     return encodeKeyHash(val.bytes);
   }
 
-  private isValid(value: any): KeyHashValidationError | null {
+  /**
+   * @throws {@link KeyHashValidationError}
+   */
+  private validate(value: any) {
     if (validateKeyHash(value) !== ValidationResult.VALID) {
-      return new KeyHashValidationError(value, this, `KeyHash is not valid: ${value}`);
+      throw new KeyHashValidationError(
+        value,
+        this,
+        `KeyHash is not valid: ${JSON.stringify(value)}`
+      );
     }
-
-    return null;
   }
 
+  /**
+   * @throws {@link KeyHashValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return { string: val };
   }
 
+  /**
+   * @throws {@link KeyHashValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[KeyHashToken.prim]) {
       return semantic[KeyHashToken.prim](val);

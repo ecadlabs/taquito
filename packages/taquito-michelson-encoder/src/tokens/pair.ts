@@ -2,12 +2,13 @@ import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from
 import { OrToken } from './or';
 import { PairTokenSchema } from '../schema/types';
 import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
+import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
  *  @description Error that indicates in invalid token argument being passed
  */
-export class TokenArgumentValidationError extends Error {
+export class TokenArgumentValidationError extends TaquitoError {
   public name = 'TokenArgumentValidationError';
   constructor(public message: string) {
     super(message);
@@ -18,14 +19,17 @@ export class TokenArgumentValidationError extends Error {
  *  @category Error
  *  @description Error that indicates a failure occurring when doing a comparison of tokens
  */
-export class TokenComparisonError extends Error {
+export class TokenComparisonError extends TaquitoError {
   public name = 'TokenComparisonError';
   constructor(public val1: string, public val2: string) {
-    super(`Tokens ${val1} and ${val2} are not comparable`);
+    super(`Tokens ${JSON.stringify(val1)} and ${JSON.stringify(val2)} are not comparable`);
   }
 }
 
 // collapse comb pair
+/**
+ * @throws {@link TokenArgumentValidationError}
+ */
 function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [any, any] {
   if (Array.isArray(val)) {
     return collapse(
@@ -38,7 +42,9 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [an
   }
   if (val.args === undefined) {
     throw new TokenArgumentValidationError(
-      'Encountered an invalid PairToken with no arguments, a pair must have two or more arguments'
+      `The value ${JSON.stringify(
+        val
+      )} is an invalid PairToken with no arguments, a pair must have two or more arguments.`
     );
   }
   if (val.args.length > 2) {
@@ -228,6 +234,9 @@ export class PairToken extends ComparableToken {
     };
   }
 
+  /**
+   * @throws {@link TokenComparisonError}
+   */
   public compare(val1: any, val2: any) {
     const [leftToken, rightToken] = this.tokens();
 

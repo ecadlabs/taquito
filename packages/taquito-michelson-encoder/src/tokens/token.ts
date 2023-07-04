@@ -1,11 +1,12 @@
 import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
 import { TokenSchema } from '../schema/types';
+import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
  *  @description Error that indicates a failure when encoding invalid or incorrect data (e.g. if an address is expected but a number is received)
  */
-export abstract class TokenValidationError extends Error {
+export abstract class TokenValidationError extends TaquitoError {
   name = 'ValidationError';
 
   constructor(public value: any, public token: Token, baseMessage: string) {

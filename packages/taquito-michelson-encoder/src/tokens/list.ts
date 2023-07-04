@@ -1,6 +1,10 @@
 import { ListTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, TokenValidationError, SemanticEncoding } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a List
+ */
 export class ListValidationError extends TokenValidationError {
   name = 'ListValidationError';
   constructor(public value: any, public token: ListToken, message: string) {
@@ -23,21 +27,26 @@ export class ListToken extends Token {
     return this.createToken(this.val.args[0], this.idx);
   }
 
-  private isValid(value: any): ListValidationError | null {
-    if (Array.isArray(value)) {
-      return null;
+  /**
+   * @throws {@link ListValidationError}
+   */
+  private validate(value: any) {
+    if (!Array.isArray(value)) {
+      throw new ListValidationError(
+        value,
+        this,
+        `Value ${JSON.stringify(value)} is not a valid array`
+      );
     }
-
-    return new ListValidationError(value, this, 'Value must be an array');
   }
 
+  /**
+   * @throws {@link ListValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     const schema = this.createToken(this.val.args[0], 0);
     return val.reduce((prev: any, current: any) => {
@@ -45,26 +54,26 @@ export class ListToken extends Token {
     }, []);
   }
 
+  /**
+   * @throws {@link ListValidationError}
+   */
   public Execute(val: any, semantics?: Semantic) {
     const schema = this.createToken(this.val.args[0], 0);
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return val.reduce((prev: any, current: any) => {
       return [...prev, schema.Execute(current, semantics)];
     }, []);
   }
 
+  /**
+   * @throws {@link ListValidationError}
+   */
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const schema = this.createToken(this.val.args[0], 0);
 
-    const err = this.isValid(args);
-    if (err) {
-      throw err;
-    }
+    this.validate(args);
 
     if (semantic && semantic[ListToken.prim]) {
       return semantic[ListToken.prim](args);

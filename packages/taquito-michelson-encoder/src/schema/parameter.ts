@@ -3,7 +3,7 @@ import { Token, Semantic, TokenValidationError, SemanticEncoding } from '../toke
 import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
 import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
-import { Falsy, TokenSchema } from './types';
+import { TokenSchema } from './types';
 import { InvalidRpcResponseError, ParameterEncodingError } from './error';
 
 /**
@@ -12,19 +12,45 @@ import { InvalidRpcResponseError, ParameterEncodingError } from './error';
 export class ParameterSchema {
   private root: Token;
 
+  /**
+   *
+   * @description Create an instance of ParameterSchema from a contract script
+   *
+   * @param val contract script obtained from the RPC
+   * @returns ParameterSchema
+   * @throws {InvalidRpcResponseError} If the RPC response is invalid
+   */
   static fromRPCResponse(val: { script: ScriptResponse }) {
-    const parameter: Falsy<MichelsonV1ExpressionExtended> =
-      val &&
-      val.script &&
-      Array.isArray(val.script.code) &&
-      (val.script.code.find((x: any) => x.prim === 'parameter') as MichelsonV1ExpressionExtended);
-    if (!parameter || !Array.isArray(parameter.args)) {
-      throw new InvalidRpcResponseError(val.script);
+    if (!val) {
+      throw new InvalidRpcResponseError(val, 'the RPC response is empty');
     }
-
+    if (!val.script) {
+      throw new InvalidRpcResponseError(val, 'the RPC response has no script');
+    }
+    if (!Array.isArray(val.script.code)) {
+      throw new InvalidRpcResponseError(val, 'The response.script.code should be an array');
+    }
+    const parameter = val.script.code.find(
+      (x) => 'prim' in x && x.prim === 'parameter'
+    ) as MichelsonV1ExpressionExtended;
+    if (!parameter) {
+      throw new InvalidRpcResponseError(
+        val,
+        `The response.script.code should have an element of type {prim: "parameter"}`
+      );
+    }
+    if (!Array.isArray(parameter.args)) {
+      throw new InvalidRpcResponseError(
+        val,
+        `The response.script.code has an element of type {prim: "parameter"}, but its args is not an array`
+      );
+    }
     return new ParameterSchema(parameter.args[0]);
   }
 
+  /**
+   * @description Check if the Contract parameter is multiple entry point or not
+   */
   get isMultipleEntryPoint() {
     return (
       this.root instanceof OrToken ||
@@ -32,6 +58,9 @@ export class ParameterSchema {
     );
   }
 
+  /**
+   * @description Check if the Contract parameter has an annotation or not
+   */
   get hasAnnotation() {
     if (this.isMultipleEntryPoint) {
       return Object.keys(this.ExtractSchema())[0] !== '0';
@@ -40,14 +69,26 @@ export class ParameterSchema {
     }
   }
 
+  /**
+   * @description Return the schema of the parameter of a specific entry point
+   * @throws {@link InvalidTokenError}
+   */
   constructor(val: MichelsonV1Expression) {
     this.root = createToken(val, 0);
   }
 
+  /**
+   * @description Returns the javascript object equivalent of the Micheline value provided
+   */
   Execute(val: any, semantics?: Semantic) {
     return this.root.Execute(val, semantics);
   }
 
+  /**
+   * @description Returns a micheline formatted object for the values provided
+   * @throws {@link TokenValidationError}
+   * @throws {@link ParameterEncodingError}
+   */
   Encode(...args: any[]) {
     try {
       return this.root.Encode(args.reverse());
@@ -55,11 +96,15 @@ export class ParameterSchema {
       if (ex instanceof TokenValidationError) {
         throw ex;
       }
-
-      throw new ParameterEncodingError('Unable to encode parameter', args.toString(), ex);
+      throw new ParameterEncodingError('Unable to encode parameter', this.root, args, ex);
     }
   }
 
+  /**
+   * @description Returns a micheline formatted object for the javascript object provided
+   * @throws {@link TokenValidationError}
+   * @throws {@link ParameterEncodingError}
+   */
   EncodeObject(value?: any, semantics?: SemanticEncoding) {
     try {
       return this.root.EncodeObject(value, semantics);
@@ -67,8 +112,7 @@ export class ParameterSchema {
       if (ex instanceof TokenValidationError) {
         throw ex;
       }
-
-      throw new ParameterEncodingError('Unable to encode parameter object', value, ex);
+      throw new ParameterEncodingError('Unable to encode parameter object', this.root, value, ex);
     }
   }
 

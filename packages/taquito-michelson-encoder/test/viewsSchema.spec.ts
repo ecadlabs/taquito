@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { script } from '../data/contract_with_views';
 import { rpcContractResponse } from '../data/sample20';
-import { InvalidScriptError, ViewEncodingError } from '../src/schema/error';
+import { InvalidScriptError, ParameterEncodingError } from '../src/schema/error';
 import { ViewSchema } from '../src/schema/view-schema';
 
 describe('ViewSchema test', () => {
@@ -62,7 +62,7 @@ describe('ViewSchema test', () => {
         0: '12',
         1: 'notAnAddress',
       })
-    ).toThrowError(ViewEncodingError);
+    ).toThrowError(ParameterEncodingError);
   });
 
   it('Should decode view result properly', () => {

@@ -1,15 +1,16 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
 import { Schema } from './schema/storage';
 import stringify from 'fast-json-stable-stringify';
+import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
  *  @description Error that indicates an invalid map type being passed or used
  */
-export class InvalidMapTypeError extends Error {
-  public name = 'InvalidMapTypeError';
-  constructor(public mapType: string) {
-    super(`The map type '${mapType}' is invalid`);
+export class InvalidMapTypeError extends TaquitoError {
+  constructor(public readonly mapType: any, public readonly reason: string) {
+    super(`The map type '${JSON.stringify(mapType)}' is invalid. Reason: ${reason}.`);
+    this.name = 'InvalidMapTypeError';
   }
 }
 
@@ -19,21 +20,52 @@ const michelsonMapTypeSymbol = Symbol.for('taquito-michelson-map-type-symbol');
 
 export type MichelsonMapKey = Array<any> | object | string | boolean | number;
 
-const isMapType = (
-  value: MichelsonV1Expression
-): value is { prim: 'map' | 'big_map'; args: [MichelsonV1Expression, MichelsonV1Expression] } => {
-  return 'args' in value && Array.isArray(value.args) && value.args.length === 2;
-};
+/**
+ *
+ * @throws {@link InvalidMapTypeError} when the argument passed to mapType is not a valid map type
+ */
+function validateMapType(value: MichelsonV1Expression): asserts value is {
+  prim: 'map' | 'big_map';
+  args: [MichelsonV1Expression, MichelsonV1Expression];
+} {
+  if (!('prim' in value)) {
+    throw new InvalidMapTypeError(value, `Missing 'prim' field`);
+  }
+  if (!['map', 'big_map'].includes(value.prim)) {
+    throw new InvalidMapTypeError(value, `The prim field should be 'map' or 'big_map'`);
+  }
+  if (!('args' in value)) {
+    throw new InvalidMapTypeError(value, `Missing 'args' field`);
+  }
+  if (!Array.isArray(value.args)) {
+    throw new InvalidMapTypeError(value, `The 'args' field should be an array`);
+  }
+  if (value.args.length !== 2) {
+    throw new InvalidMapTypeError(value, `The 'args' field should have 2 elements`);
+  }
+}
 
 /**
  *  @category Error
  *  @description Error that indicates a map type mismatch, where an attempt to set a key or value in a Map doesn't match the defined type of the Map
  */
-export class MapTypecheckError extends Error {
+export class MapTypecheckError extends TaquitoError {
   name = 'MapTypecheckError';
 
-  constructor(public readonly value: any, public readonly type: any, errorType: 'key' | 'value') {
-    super(`${errorType} not compliant with underlying michelson type`);
+  constructor(
+    public readonly value: any,
+    public readonly type: any,
+    objectType: 'key' | 'value',
+    public readonly reason: any
+  ) {
+    super(
+      `The ${objectType} provided: ${JSON.stringify(
+        value
+      )} is not compatible with the expected michelson type: ${JSON.stringify(
+        type
+      )}. Reason: ${JSON.stringify(reason)}.`
+    );
+    this.name = 'MapTypecheckError';
   }
 }
 
@@ -68,9 +100,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
   }
 
   setType(mapType: MichelsonV1Expression) {
-    if (!isMapType(mapType)) {
-      throw new InvalidMapTypeError(mapType.toString());
-    }
+    validateMapType(mapType);
 
     this.keySchema = new Schema(mapType.args[0]);
     this.valueSchema = new Schema(mapType.args[1]);
@@ -90,30 +120,38 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
   }
 
   private typecheckKey(key: K) {
-    if (this.keySchema) {
-      return this.keySchema.Typecheck(key);
+    if (!this.keySchema) {
+      return;
     }
-
-    return true;
+    this.keySchema.Typecheck(key);
   }
 
   private typecheckValue(value: T) {
-    if (this.valueSchema) {
-      return this.valueSchema.Typecheck(value);
+    if (!this.valueSchema) {
+      return;
     }
-
-    return true;
+    this.valueSchema.Typecheck(value);
   }
 
+  /**
+   * @throws {@link MapTypecheckError} when the argument passed does not match the expected schema for value
+   */
   private assertTypecheckValue(value: T) {
-    if (!this.typecheckValue(value)) {
-      throw new MapTypecheckError(value, this.valueSchema, 'value');
+    try {
+      this.typecheckValue(value);
+    } catch (e) {
+      throw new MapTypecheckError(value, this.valueSchema, 'value', e);
     }
   }
 
+  /**
+   * @throws {@link MapTypecheckError} when the argument passed does not match the expected schema for key
+   */
   private assertTypecheckKey(key: K) {
-    if (!this.typecheckKey(key)) {
-      throw new MapTypecheckError(key, this.keySchema, 'key');
+    try {
+      this.typecheckKey(key);
+    } catch (e) {
+      throw new MapTypecheckError(key, this.keySchema, 'key', e);
     }
   }
 

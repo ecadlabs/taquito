@@ -1,7 +1,7 @@
 import { MichelsonV1Expression, MichelsonV1ExpressionExtended, ScriptResponse } from '@taquito/rpc';
 import { createToken } from '../tokens/createToken';
 import { Semantic, Token } from '../tokens/token';
-import { InvalidScriptError, ViewEncodingError } from './error';
+import { InvalidScriptError, ParameterEncodingError } from './error';
 
 export class ViewSchema {
   readonly viewName: string;
@@ -17,6 +17,7 @@ export class ViewSchema {
    *
    * @param val contract script obtained from the RPC
    * @returns array of ViewSchema or empty array if there is no view in the contract
+   * @throws {@link InvalidScriptError}
    */
   static fromRPCResponse(val: { script: ScriptResponse }) {
     const allViewSchema: ViewSchema[] = [];
@@ -29,26 +30,33 @@ export class ViewSchema {
 
     if (views) {
       views.forEach((view) => {
-        if (!view.args || view.args.length !== 4) {
-          throw new InvalidScriptError(
-            `Invalid on-chain view found in the script: ${JSON.stringify(view)}`
-          );
-        }
         allViewSchema.push(new ViewSchema(view.args));
       });
     }
     return allViewSchema;
   }
 
-  constructor(val: MichelsonV1Expression[]) {
-    if (val.length !== 4 || !('string' in val[0])) {
-      throw new InvalidScriptError(`Invalid on-chain view: ${JSON.stringify(val)}`);
+  /**
+   * @throws {@link InvalidScriptError}
+   */
+  constructor(viewArgs: MichelsonV1Expression[] | undefined) {
+    if (!viewArgs) {
+      throw new InvalidScriptError(viewArgs, 'the args are not defined');
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.viewName = val[0]['string']!;
-    this.viewArgsType = val[1] as MichelsonV1ExpressionExtended;
-    this.viewReturnType = val[2] as MichelsonV1ExpressionExtended;
-    this.instructions = val[3] as MichelsonV1ExpressionExtended[];
+    if (viewArgs.length !== 4) {
+      throw new InvalidScriptError(viewArgs, `there should be exactly 4 arguments`);
+    }
+    if (!('string' in viewArgs[0]) || !viewArgs[0]['string']) {
+      throw new InvalidScriptError(
+        viewArgs,
+        `The first argument should be a string, representing the view name. It should be in the form: { string: 'viewName' }`
+      );
+    }
+
+    this.viewName = viewArgs[0]['string'];
+    this.viewArgsType = viewArgs[1] as MichelsonV1ExpressionExtended;
+    this.viewReturnType = viewArgs[2] as MichelsonV1ExpressionExtended;
+    this.instructions = viewArgs[3] as MichelsonV1ExpressionExtended[];
 
     this.rootArgsType = createToken(this.viewArgsType, 0);
     this.rootReturnType = createToken(this.viewReturnType, 0);
@@ -60,12 +68,13 @@ export class ViewSchema {
    *
    * @param args parameter of the view in js format
    * @returns parameter of the view in Michelson
+   * @throws {@link ParameterEncodingError}
    */
   encodeViewArgs(args: any) {
     try {
       return this.rootArgsType.EncodeObject(args);
     } catch (ex) {
-      throw new ViewEncodingError(this.viewName, ex);
+      throw new ParameterEncodingError(this.viewName, undefined, args, ex);
     }
   }
 

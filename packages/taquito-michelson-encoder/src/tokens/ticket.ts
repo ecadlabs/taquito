@@ -1,3 +1,4 @@
+import { TaquitoError } from '@taquito/core';
 import { TicketTokenSchema } from '../schema/types';
 import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
@@ -7,7 +8,7 @@ import { Token, TokenFactory, Semantic, SemanticEncoding } from './token';
  *  @category Error
  *  @description Error that indicates a failure when encoding and sending a ticket to the blockchain
  */
-export class EncodeTicketError extends Error {
+export class EncodeTicketError extends TaquitoError {
   name = 'TicketEncodeError';
 
   constructor() {
@@ -33,10 +34,16 @@ export class TicketToken extends Token {
     return this.createToken(this.val.args[0], this.idx);
   }
 
+  /**
+   * @throws {@link EncodeTicketError}
+   */
   public Encode(_args: any[]): any {
     throw new EncodeTicketError();
   }
 
+  /**
+   * @throws {@link EncodeTicketError}
+   */
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     if (semantic && semantic[TicketToken.prim]) {
       return semantic[TicketToken.prim](args, this.val);
