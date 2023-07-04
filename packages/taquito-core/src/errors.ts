@@ -55,7 +55,7 @@ export class InvalidAddressError extends ParameterValidationError {
     super();
     this.name = 'InvalidAddressError';
     this.message = `Invalid address "${address}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -68,7 +68,7 @@ export class InvalidBlockHashError extends ParameterValidationError {
     super();
     this.name = 'InvalidBlockHashError';
     this.message = `Invalid block hash "${blockHash}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -93,7 +93,7 @@ export class InvalidDerivationPathError extends ParameterValidationError {
     super();
     this.name = 'InvalidDerivationPathError';
     this.message = `Invalid derivation path "${derivationPath}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -106,7 +106,7 @@ export class InvalidHexStringError extends ParameterValidationError {
     super();
     this.name = 'InvalidHexStringError';
     this.message = `Invalid hex string "${hexString}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -119,7 +119,7 @@ export class InvalidMessageError extends ParameterValidationError {
     super();
     this.name = 'InvalidMessageError';
     this.message = `Invalid message "${msg}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -148,7 +148,7 @@ export class InvalidKeyError extends ParameterValidationError {
     super();
     this.name = 'InvalidKeyError';
     this.message = `Invalid private key`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -161,7 +161,7 @@ export class InvalidPublicKeyError extends ParameterValidationError {
     super();
     this.name = 'InvalidPublicKeyError';
     this.message = `Invalid public key "${publicKey}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -174,7 +174,7 @@ export class InvalidSignatureError extends ParameterValidationError {
     super();
     this.name = 'InvalidSignatureError';
     this.message = `Invalid signature "${signature}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -187,7 +187,7 @@ export class InvalidContractAddressError extends ParameterValidationError {
     super();
     this.name = 'InvalidContractAddressError';
     this.message = `Invalid contract address "${contractAddress}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -200,7 +200,7 @@ export class InvalidChainIdError extends ParameterValidationError {
     super();
     this.name = 'InvalidChainIdError';
     this.message = `Invalid chain id "${chainId}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -213,7 +213,7 @@ export class InvalidKeyHashError extends ParameterValidationError {
     super();
     this.name = 'InvalidKeyHashError';
     this.message = `Invalid public key hash "${keyHash}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -226,7 +226,7 @@ export class InvalidOperationHashError extends ParameterValidationError {
     super();
     this.name = 'InvalidOperationHashError';
     this.message = `Invalid operation hash "${operationHash}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
@@ -239,7 +239,7 @@ export class InvalidOperationKindError extends ParameterValidationError {
     super();
     this.name = 'InvalidOperationKindError';
     this.message = `Invalid operation kind "${operationKind}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : null;
+    this.message += errorDetail ? ` ${errorDetail}.` : '.';
   }
 }
 
