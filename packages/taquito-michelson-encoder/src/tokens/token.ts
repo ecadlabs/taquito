@@ -9,7 +9,7 @@ import { TaquitoError } from '@taquito/core';
 export abstract class TokenValidationError extends TaquitoError {
   name = 'ValidationError';
 
-  constructor(public value: any, public token: Token, baseMessage: string) {
+  constructor(public readonly value: any, public readonly token: Token, baseMessage: string) {
     super();
     const annot = this.token.annot();
     const annotText = annot ? `[${annot}] ` : '';
