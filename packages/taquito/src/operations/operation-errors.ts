@@ -1,5 +1,6 @@
 import {
   MichelsonV1ExpressionBase,
+  OperationResult,
   OperationResultDelegation,
   OperationResultOrigination,
   OperationResultRegisterGlobalConstant,
@@ -92,7 +93,7 @@ export const flattenOperationResult = (response: PreapplyResponse | PreapplyResp
   for (let i = 0; i < results.length; i++) {
     for (let j = 0; j < results[i].contents.length; j++) {
       const content = results[i].contents[j];
-      if (hasMetadataWithResult(content)) {
+      if (hasMetadataWithResult(content) && 'fee' in content) {
         returnedResults.push({
           fee: content.fee,
           ...content.metadata.operation_result,
@@ -125,8 +126,13 @@ export const flattenErrors = (
     for (let j = 0; j < results[i].contents.length; j++) {
       const content = results[i].contents[j];
       if (hasMetadata(content)) {
-        if (hasMetadataWithResult(content) && content.metadata.operation_result.status === status) {
-          errors = errors.concat(content.metadata.operation_result.errors || []);
+        if (
+          hasMetadataWithResult(content) &&
+          (content.metadata.operation_result as OperationResult).status === status
+        ) {
+          errors = errors.concat(
+            (content.metadata.operation_result as OperationResult).errors || []
+          );
         }
         if (
           hasMetadataWithInternalOperationResult(content) &&

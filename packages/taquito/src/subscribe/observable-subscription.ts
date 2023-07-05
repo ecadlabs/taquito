@@ -17,7 +17,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
   private errorListeners: Array<(error: Error) => void> = [];
   private messageListeners: Array<(data: T) => void> = [];
   private closeListeners: Array<() => void> = [];
-  private completed$ = new Subject();
+  private completed$ = new Subject<void>();
 
   constructor(
     obs: Observable<T>,

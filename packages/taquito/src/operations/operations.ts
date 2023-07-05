@@ -2,6 +2,7 @@ import {
   BlockResponse,
   OperationContentsAndResult,
   OperationContentsAndResultReveal,
+  OperationResult,
 } from '@taquito/rpc';
 import { BehaviorSubject, defer, EMPTY, of, range, ReplaySubject, throwError } from 'rxjs';
 import {
@@ -14,13 +15,13 @@ import {
   shareReplay,
   switchMap,
   tap,
-  timeoutWith,
+  timeout,
 } from 'rxjs/operators';
 import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
 import { validateOperation, ValidationResult } from '@taquito/utils';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
-import { InvalidConfirmationCountError } from '../error';
+import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../error';
 import { InvalidOperationHashError } from '@taquito/core';
 
 interface PollingConfig {
@@ -38,7 +39,11 @@ export class Operation {
   private currentHead$ = this._pollingConfig$.pipe(
     switchMap((config) => {
       return new BehaviorSubject(config).pipe(
-        timeoutWith(config.timeout * 1000, throwError(new Error('Confirmation polling timed out')))
+        timeout({
+          each: config.timeout * 1000,
+          with: () =>
+            throwError(() => new ConfirmationTimeoutError(`Confirmation polling timed out`)),
+        })
       );
     }),
     switchMap(() => {
@@ -130,7 +135,7 @@ export class Operation {
     return (
       this.results.map((result) => {
         if (hasMetadataWithResult(result)) {
-          return result.metadata.operation_result.status;
+          return (result.metadata.operation_result as OperationResult).status;
         } else {
           return 'unknown';
         }
