@@ -1,4 +1,9 @@
-import { ParameterValidationError, TezosToolkitConfigError, RpcError } from '@taquito/core';
+import {
+  ParameterValidationError,
+  TezosToolkitConfigError,
+  RpcError,
+  NetworkError,
+} from '@taquito/core';
 import { FilterExpression } from './taquito';
 
 /**
@@ -29,10 +34,10 @@ export class ConfirmationUndefinedError extends TezosToolkitConfigError {
  *  @category Error
  *  @description Error that indicates that confirmation polling timed out
  */
-export class ConfirmationTimeoutError extends Error {
-  public name = 'ConfirmationTimeoutError';
+export class ConfirmationTimeoutError extends NetworkError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'ConfirmationTimeoutError';
   }
 }
 
@@ -41,7 +46,7 @@ export class ConfirmationTimeoutError extends Error {
  *  @description Error indicates an invalid filter expression being passed or used
  */
 export class InvalidFilterExpressionError extends ParameterValidationError {
-  constructor(public invalidExp: FilterExpression) {
+  constructor(public invalidExpression: FilterExpression) {
     super();
     this.name = 'InvalidFilterExpressionError';
     this.message = `Invalid filter expression expecting the object to contain either and/or property`;
@@ -63,33 +68,9 @@ export class RPCResponseError extends RpcError {
  *  @category Error
  *  @description Error that indicates a generic failure when trying to fetch an observable
  */
-export class InvalidPrepareParamsError extends Error {
-  public name = 'InvalidOperationParamsError';
-  constructor(public opKind: string) {
-    super(`No '${opKind}' operation parameters have been passed`);
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates invalid Preparation parameters being passed
- */
-export class PublicKeyNotFoundError extends Error {
-  public name = 'PublicKeyNotFoundError';
-  constructor() {
-    super(
-      `Unable to retrieve public key from signer. If you are using a wallet, make sure your account is revealed`
-    );
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates a generic failure when trying to fetch an observable
- */
-export class ObservableError extends Error {
-  public name = 'ObservableError';
+export class ObservableError extends NetworkError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'ObservableError';
   }
 }
