@@ -9,6 +9,7 @@ import { RPCEstimateProvider } from '../src/estimate/rpc-estimate-provider';
 import { OperationFactory } from '../src/wallet/operation-factory';
 import { NoopGlobalConstantsProvider } from '../src/global-constants/noop-global-constants-provider';
 import { TaquitoLocalForger } from '../src/forger/taquito-local-forger';
+import { RpcInjector } from '../src/taquito';
 
 describe('TezosToolkit test', () => {
   let mockRpcClient: any;
@@ -75,6 +76,7 @@ describe('TezosToolkit test', () => {
     'packer',
     'globalConstantsProvider',
     'readProvider',
+    'injectorProvider',
   ];
   providerKey
     .filter((x) => x !== 'rpc')
@@ -149,6 +151,17 @@ describe('TezosToolkit test', () => {
       expect(instance).toEqual('test');
       toolkit.setProvider({ [key]: 'test' as any });
       expect(toolkit['_context'].forger).toEqual(instance);
+    });
+  });
+
+  providerKey.forEach((key) => {
+    it(`setting ${key} provider should not override the injector provider`, () => {
+      expect(toolkit['_context'].injector).toBeInstanceOf(RpcInjector);
+      toolkit.setProvider({ injectorProvider: 'test' as any });
+      const instance = toolkit['_context'].injector;
+      expect(instance).toEqual('test');
+      toolkit.setProvider({ [key]: 'test' as any });
+      expect(toolkit['_context'].injector).toEqual(instance);
     });
   });
 

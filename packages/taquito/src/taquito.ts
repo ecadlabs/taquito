@@ -52,6 +52,8 @@ export { ObservableSubscription } from './subscribe/observable-subscription';
 export * from './tz/interface';
 export * from './wallet';
 export { Extension } from './extension/extension';
+export * from './injector/interface';
+export * from './injector/rpc-injector';
 export * from './parser/interface';
 export * from './parser/michel-codec-parser';
 export * from './parser/noop-parser';
@@ -344,7 +346,7 @@ export class TezosToolkit {
   /**
    * @description Sets injector provider on the Tezos Taquito instance
    *
-   * @param options parserProvider to use to interact with the Tezos network
+   * @param options Injector to use to interact with the Tezos network by default RpcInjector
    *
    */
   setInjectorProvider(injectorProvider?: SetProviderOptions['injectorProvider']) {
