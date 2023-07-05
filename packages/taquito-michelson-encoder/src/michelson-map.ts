@@ -9,7 +9,8 @@ import { TaquitoError } from '@taquito/core';
  */
 export class InvalidMapTypeError extends TaquitoError {
   constructor(public readonly mapType: any, public readonly reason: string) {
-    super(`The map type '${JSON.stringify(mapType)}' is invalid. Reason: ${reason}.`);
+    super();
+    this.message = `The map type '${JSON.stringify(mapType)}' is invalid. Reason: ${reason}.`;
     this.name = 'InvalidMapTypeError';
   }
 }

@@ -12,7 +12,8 @@ export class EncodeTicketError extends TaquitoError {
   name = 'TicketEncodeError';
 
   constructor() {
-    super('Tickets cannot be sent to the blockchain; they are created on-chain');
+    super();
+    this.message = 'Tickets cannot be sent to the blockchain; they are created on-chain';
   }
 }
 

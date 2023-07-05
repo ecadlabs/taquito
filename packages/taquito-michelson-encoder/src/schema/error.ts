@@ -91,11 +91,10 @@ export class BigMapEncodingError extends TaquitoError {
     public readonly schema: any,
     public readonly value: any
   ) {
-    super(
-      `Unable to encode the big map ${obj}. Schema is: ${JSON.stringify(
-        schema
-      )}. The ${obj} is: ${JSON.stringify(value)}. Error details: ${details}`
-    );
+    super();
+    this.message = `Unable to encode the big map ${obj}. Schema is: ${JSON.stringify(
+      schema
+    )}. The ${obj} is: ${JSON.stringify(value)}. Error details: ${details}`;
   }
 }
 
@@ -112,13 +111,12 @@ export class StorageEncodingError extends TaquitoError {
     public readonly value: any,
     public readonly semantics?: any
   ) {
-    super(
-      `Unable to encode ${obj}. The schema is: ${JSON.stringify(
-        schema
-      )}, the value is: ${JSON.stringify(value)}.${
-        semantics ? `And the semantic is: ${JSON.stringify(semantics)}` : ''
-      }. Error details: ${details}`
-    );
+    super();
+    this.message = `Unable to encode ${obj}. The schema is: ${JSON.stringify(
+      schema
+    )}, the value is: ${JSON.stringify(value)}.${
+      semantics ? `And the semantic is: ${JSON.stringify(semantics)}` : ''
+    }. Error details: ${details}`;
   }
 }
 

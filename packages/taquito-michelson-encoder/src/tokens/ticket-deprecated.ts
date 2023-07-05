@@ -12,7 +12,8 @@ export class EncodeTicketDeprecatedError extends TaquitoError {
   name = 'TicketDeprecatedEncodeError';
 
   constructor() {
-    super('Ticket_deprecated cannot be sent to the blockchain; they are created on-chain');
+    super();
+    this.message = 'Ticket_deprecated cannot be sent to the blockchain; they are created on-chain';
   }
 }
 
