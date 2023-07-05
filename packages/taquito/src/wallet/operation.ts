@@ -21,7 +21,7 @@ import {
   InvalidConfirmationCountError,
   ConfirmationUndefinedError,
   ObservableError,
-} from '../error';
+} from '../errors';
 import { InvalidOperationHashError } from '@taquito/core';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;

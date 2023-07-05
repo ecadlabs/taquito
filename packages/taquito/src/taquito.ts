@@ -57,7 +57,7 @@ export * from './packer/interface';
 export * from './packer/michel-codec-packer';
 export * from './packer/rpc-packer';
 export * from './global-constants/default-global-constants-provider';
-export * from './global-constants/error';
+export * from './global-constants/errors';
 export * from './global-constants/interface-global-constants-provider';
 export {
   BigMapQuery,

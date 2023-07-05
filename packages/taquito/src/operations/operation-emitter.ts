@@ -9,7 +9,7 @@ import {
 import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../estimate/estimate';
-import { RPCResponseError } from '../error';
+import { RPCResponseError } from '../errors';
 import {
   flattenErrors,
   TezosOperationError,

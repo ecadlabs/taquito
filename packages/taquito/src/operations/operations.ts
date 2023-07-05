@@ -21,7 +21,7 @@ import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
 import { validateOperation, ValidationResult } from '@taquito/utils';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
-import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../error';
+import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../errors';
 import { InvalidOperationHashError } from '@taquito/core';
 
 interface PollingConfig {

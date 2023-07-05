@@ -11,7 +11,7 @@ import {
 
 import { InternalOperationResult } from '@taquito/rpc';
 
-import { InvalidFilterExpressionError } from '../error';
+import { InvalidFilterExpressionError } from '../errors';
 
 const opHashFilter = (op: OperationContent, filter: OpHashFilter) => op.hash === filter.opHash;
 

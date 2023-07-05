@@ -23,7 +23,7 @@ import {
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { validateAddress, ValidationResult, invalidDetail } from '@taquito/utils';
-import { RevealEstimateError } from './error';
+import { RevealEstimateError } from './errors';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';

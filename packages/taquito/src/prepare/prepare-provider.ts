@@ -31,7 +31,7 @@ import {
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
 import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
-import { RPCResponseError } from '../error';
+import { RPCResponseError } from '../errors';
 import { PublicKeyNotFoundError } from '@taquito/core';
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
