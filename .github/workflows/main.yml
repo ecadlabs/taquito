@@ -103,7 +103,7 @@ jobs:
           --set-history-mode N000:archive \
           --number-of-b 1 \
           --balance-of-bootstrap-accounts tez:100_000_000 \
-          --time-b 1 \
+          --time-b 5 \
           --add-bootstrap-account="${alice}@2_000_000_000_000" \
           --add-bootstrap-account="${bob}@2_000_000_000_000" \
           --add-bootstrap-account="${charlie}@2_000_000_000_000" \
