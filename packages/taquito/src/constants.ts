@@ -2,14 +2,14 @@ export enum DEFAULT_GAS_LIMIT {
   DELEGATION = 10600,
   ORIGINATION = 10600,
   TRANSFER = 10600,
-  /* This is used for gas_limit. There is no harm in setting a higher limit. 
-   Only if an account has a balance that is very close to the total gas consumption, 
+  /* This is used for gas_limit. There is no harm in setting a higher limit.
+   Only if an account has a balance that is very close to the total gas consumption,
    then this margin can fail the operation.
    Another benefit of this higher value is that then Dapps build with Taquito 17 can
    still work with Mumbainet, as this value is higher than the reveal cost in Mumbai.
   */
-  REVEAL_TZ1 = 2000,
-  REVEAL_TZ2 = 2000,
+  REVEAL_TZ1 = 200,
+  REVEAL_TZ2 = 200,
   REVEAL_TZ3 = 2000,
   REVEAL_TZ4 = 2000,
 }
