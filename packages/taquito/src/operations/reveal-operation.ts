@@ -5,7 +5,7 @@ import {
 } from '@taquito/rpc';
 import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
-import { flattenErrors, flattenOperationResult } from './operation-errors';
+import { flattenErrors, flattenOperationResult } from './errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,

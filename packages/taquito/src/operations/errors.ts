@@ -1,3 +1,4 @@
+import { ParameterValidationError, RpcError, TaquitoError } from '@taquito/core';
 import {
   MichelsonV1ExpressionBase,
   OperationResult,
@@ -31,13 +32,13 @@ const isErrorWithMessage = (error: any): error is TezosOperationErrorWithMessage
  *  @category Error
  *  @description Generic tezos error that will be thrown when a mistake occurs when doing an operation; more details here https://tezos.gitlab.io/api/errors.html
  */
-export class TezosOperationError extends Error {
-  name = 'TezosOperationError';
+export class TezosOperationError extends RpcError {
   id: string;
   kind: string;
 
   constructor(public errors: TezosGenericOperationError[], public errorDetails?: string) {
     super();
+    this.name = 'TezosOperationError';
     // Last error is 'often' the one with more detail
     const lastError = errors[errors.length - 1];
     this.id = lastError.id;
@@ -153,22 +154,22 @@ export const flattenErrors = (
 
 /**
  *  @category Error
- *  @description Error that indicates a general failure happening during an origination operation
+ *  @description Error indicates a general failure happening during an origination operation
  */
-export class OriginationOperationError extends Error {
-  public name = 'OriginationOperationError';
+export class OriginationOperationError extends TaquitoError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'OriginationOperationError';
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid estimate value being passed
+ *  @description Error indicates an invalid estimate value being passed
  */
-export class InvalidEstimateValueError extends Error {
-  public name = 'InvalidEstimateValueError';
+export class InvalidEstimateValueError extends ParameterValidationError {
   constructor(public message: string) {
-    super(message);
+    super();
+    this.name = 'InvalidEstimateValueError';
   }
 }

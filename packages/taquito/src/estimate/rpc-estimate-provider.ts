@@ -1,10 +1,6 @@
 import { PreapplyResponse, RPCRunOperationParam, ConstantsResponse } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
-import {
-  flattenErrors,
-  flattenOperationResult,
-  TezosOperationError,
-} from '../operations/operation-errors';
+import { flattenErrors, flattenOperationResult, TezosOperationError } from '../operations/errors';
 import {
   DelegateParams,
   isOpWithFee,

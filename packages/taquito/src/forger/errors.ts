@@ -6,9 +6,9 @@ import { TaquitoError, TezosToolkitConfigError } from '@taquito/core';
  */
 export class ForgingMismatchError extends TaquitoError {
   constructor(public results: string[]) {
-    super('Forging mismatch error');
+    super();
     this.name = 'ForgingMismatchError';
-    this.message = `Mismatch forging result1: ${results[0]} result2: ${results[1]}}`;
+    this.message = `Forging mismatch error`;
   }
 }
 

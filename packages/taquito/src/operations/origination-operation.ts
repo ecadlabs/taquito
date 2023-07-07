@@ -7,7 +7,7 @@ import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
-import { OriginationOperationError } from './operation-errors';
+import { OriginationOperationError } from './errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,

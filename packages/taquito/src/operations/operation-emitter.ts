@@ -15,7 +15,7 @@ import {
   TezosOperationError,
   TezosPreapplyFailureError,
   InvalidEstimateValueError,
-} from './operation-errors';
+} from './errors';
 import {
   ForgedBytes,
   isOpRequireReveal,

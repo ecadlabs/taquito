@@ -273,6 +273,6 @@ export class PublicKeyNotFoundError extends TaquitoError {
   constructor(public pkh: string, public cause?: any) {
     super();
     this.name = 'KeyNotFoundError';
-    this.message = `Public key not found of this address "${pkh}".`;
+    this.message = `Public key not found of this address "${pkh}" in either wallet or contract API.`;
   }
 }
