@@ -4,7 +4,7 @@ import { OrToken } from '../tokens/or';
 import { OptionToken } from '../tokens/option';
 import { ScriptResponse, MichelsonV1ExpressionExtended, MichelsonV1Expression } from '@taquito/rpc';
 import { TokenSchema } from './types';
-import { InvalidRpcResponseError, ParameterEncodingError } from './error';
+import { InvalidRpcResponseError, ParameterEncodingError } from './errors';
 
 /**
  * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.

@@ -7,7 +7,7 @@ import { TaquitoError } from '@taquito/core';
  *  @description Error that indicates a failure when encoding invalid or incorrect data (e.g. if an address is expected but a number is received)
  */
 export abstract class TokenValidationError extends TaquitoError {
-  name = 'ValidationError';
+  name = 'TokenValidationError';
 
   constructor(public readonly value: any, public readonly token: Token, baseMessage: string) {
     super();

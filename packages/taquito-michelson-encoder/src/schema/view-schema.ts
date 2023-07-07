@@ -1,7 +1,7 @@
 import { MichelsonV1Expression, MichelsonV1ExpressionExtended, ScriptResponse } from '@taquito/rpc';
 import { createToken } from '../tokens/createToken';
 import { Semantic, Token } from '../tokens/token';
-import { InvalidScriptError, ParameterEncodingError } from './error';
+import { InvalidScriptError, ParameterEncodingError } from './errors';
 
 export class ViewSchema {
   readonly viewName: string;

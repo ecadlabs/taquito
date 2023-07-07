@@ -25,7 +25,7 @@ import {
   BigMapEncodingError,
   StorageEncodingError,
   MissingArgumentError,
-} from './error';
+} from './errors';
 import { RpcTransaction } from './model';
 import { TokenSchema } from './types';
 

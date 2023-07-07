@@ -1,5 +1,5 @@
 import { storage } from '../data/sample20';
-import { InvalidBigMapSchemaError, InvalidRpcResponseError } from '../src/schema/error';
+import { InvalidBigMapSchemaError, InvalidRpcResponseError } from '../src/schema/errors';
 
 import { Schema } from '../src/taquito-michelson-encoder';
 

@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { script } from '../data/contract_with_views';
 import { rpcContractResponse } from '../data/sample20';
-import { InvalidScriptError, ParameterEncodingError } from '../src/schema/error';
+import { InvalidScriptError, ParameterEncodingError } from '../src/schema/errors';
 import { ViewSchema } from '../src/schema/view-schema';
 
 describe('ViewSchema test', () => {

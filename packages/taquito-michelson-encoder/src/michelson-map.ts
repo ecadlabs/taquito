@@ -59,13 +59,12 @@ export class MapTypecheckError extends TaquitoError {
     objectType: 'key' | 'value',
     public readonly reason: any
   ) {
-    super(
-      `The ${objectType} provided: ${JSON.stringify(
-        value
-      )} is not compatible with the expected michelson type: ${JSON.stringify(
-        type
-      )}. Reason: ${JSON.stringify(reason)}.`
-    );
+    super();
+    this.message = `The ${objectType} provided: ${JSON.stringify(
+      value
+    )} is not compatible with the expected michelson type: ${JSON.stringify(
+      type
+    )}. Reason: ${JSON.stringify(reason)}.`;
     this.name = 'MapTypecheckError';
   }
 }
