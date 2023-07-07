@@ -104,6 +104,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
 
   /**
    * @description Provide the contract abstract of the newly originated contract
+   * @throws {@link OriginationOperationError}
    */
   async contract(confirmations?: number, timeout?: number) {
     if (!this.contractAddress) {

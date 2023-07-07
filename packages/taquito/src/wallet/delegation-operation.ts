@@ -7,7 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { Context } from '../context';
 import { WalletOperation, OperationStatus } from './operation';
-import { ObservableError } from '../errors';
+import { ObservableError } from './errors';
 
 export class DelegationWalletOperation extends WalletOperation {
   constructor(

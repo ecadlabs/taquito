@@ -9,7 +9,7 @@ import { Context } from '../context';
 import { DefaultWalletType } from '../contract/contract';
 import { findWithKind } from '../operations/types';
 import { WalletOperation, OperationStatus } from './operation';
-import { ObservableError } from '../errors';
+import { ObservableError } from './errors';
 
 export class OriginationWalletOperation<
   TWallet extends DefaultWalletType = DefaultWalletType

@@ -17,11 +17,8 @@ import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
 import { validateOperation, ValidationResult } from '@taquito/utils';
 import { BlockIdentifier } from '../read-provider/interface';
-import {
-  InvalidConfirmationCountError,
-  ConfirmationUndefinedError,
-  ObservableError,
-} from '../errors';
+import { InvalidConfirmationCountError } from '../errors';
+import { ConfirmationUndefinedError, ObservableError } from './errors';
 import { InvalidOperationHashError } from '@taquito/core';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;

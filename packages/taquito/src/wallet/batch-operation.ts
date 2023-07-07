@@ -10,7 +10,7 @@ import { BATCH_KINDS } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { hasMetadataWithResult } from '../operations/types';
 import { WalletOperation, OperationStatus } from './operation';
-import { ObservableError } from '../errors';
+import { ObservableError } from './errors';
 
 export class BatchWalletOperation extends WalletOperation {
   constructor(

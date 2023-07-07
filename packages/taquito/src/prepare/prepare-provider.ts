@@ -30,9 +30,8 @@ import {
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
-import { InvalidOperationKindError, DeprecationError } from '@taquito/utils';
 import { RPCResponseError } from '../errors';
-import { PublicKeyNotFoundError } from '@taquito/core';
+import { PublicKeyNotFoundError, InvalidOperationKindError, DeprecationError } from '@taquito/core';
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -56,7 +55,7 @@ import {
   createRegisterDelegateOperation,
   createActivationOperation,
 } from '../contract';
-import { Estimate, RevealEstimateError } from '../estimate';
+import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
 import BigNumber from 'bignumber.js';
@@ -168,7 +167,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       const { publicKey, pkh } = await this.getKeys();
       if (await this.isAccountRevealRequired(publicKeyHash)) {
         if (!publicKey) {
-          throw new RevealEstimateError();
+          throw new PublicKeyNotFoundError(pkh);
         }
         ops.unshift(
           await createRevealOperation(
@@ -981,7 +980,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     if (revealNeeded) {
       if (!publicKey) {
-        throw new RevealEstimateError();
+        throw new PublicKeyNotFoundError(pkh);
       }
       ops.unshift(
         await createRevealOperation(

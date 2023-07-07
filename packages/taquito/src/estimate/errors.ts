@@ -1,10 +1,13 @@
+import { TaquitoError } from '@taquito/core';
+
 /**
  *  @category Error
- *  @description Error that indicates invalid public key being passed when doing a reveal operation estimate
+ *  @description Error indicates unable to get public key to estimate reveal operation
  */
-export class RevealEstimateError extends Error {
-  name = 'Reveal Estimate Error';
+export class RevealEstimateError extends TaquitoError {
   constructor() {
-    super('Unable to estimate the reveal operation, the public key is unknown');
+    super();
+    this.name = 'RevealEstimateError';
+    this.message = 'Public key is unknown, unable to estimate the reveal operation.';
   }
 }
