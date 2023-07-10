@@ -1,5 +1,5 @@
 import { Handler, MetadataProvider } from '../src/metadata-provider';
-import { InvalidMetadata, InvalidUri } from '../src/tzip16-errors';
+import { InvalidContractMetadata, InvalidUri } from '../src/errors';
 
 describe('Metadata provider test', () => {
   let metadataProvider: MetadataProvider;
@@ -147,14 +147,14 @@ describe('Metadata provider test', () => {
     done();
   });
 
-  it('Should fail with InvalidMetadata when metadata are not a JSON object', async (done) => {
+  it('Should fail with InvalidContractMetadata when metadata are not a JSON object', async (done) => {
     mockHttpHandler.getMetadata.mockResolvedValue(
       `"description": "Invalid metadata, not in JSON format"`
     );
     try {
       await metadataProvider.provideMetadata(mockContractAbstraction, 'https://test', mockContext);
     } catch (ex) {
-      expect(ex).toBeInstanceOf(InvalidMetadata);
+      expect(ex).toBeInstanceOf(InvalidContractMetadata);
     }
     done();
   });

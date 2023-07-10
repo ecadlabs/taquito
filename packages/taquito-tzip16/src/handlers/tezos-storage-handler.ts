@@ -3,11 +3,11 @@ import { Context, ContractAbstraction, ContractProvider, Wallet } from '@taquito
 import { Handler, Tzip16Uri } from '../metadata-provider';
 import { bytes2Char } from '@taquito/utils';
 import {
-  InvalidMetadataType,
+  InvalidContractMetadataType,
   BigMapMetadataNotFound,
   InvalidUri,
-  MetadataNotFound,
-} from '../tzip16-errors';
+  ContractMetadataNotFound,
+} from '../errors';
 
 const typeOfValueToFind = {
   prim: 'big_map',
@@ -48,7 +48,7 @@ export class TezosStorageHandler implements Handler {
     );
 
     if (!bytes) {
-      throw new MetadataNotFound(
+      throw new ContractMetadataNotFound(
         `No '${parsedTezosStorageUri.path}' key found in the big map %metadata of the contract ${
           parsedTezosStorageUri.contractAddress || contractAbstraction.address
         }`
@@ -56,7 +56,7 @@ export class TezosStorageHandler implements Handler {
     }
 
     if (!/^[0-9a-fA-F]*$/.test(bytes)) {
-      throw new InvalidMetadataType();
+      throw new InvalidContractMetadataType();
     }
     return bytes2Char(bytes);
   }

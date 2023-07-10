@@ -8,11 +8,7 @@ import {
 } from '@taquito/taquito';
 import { bytes2Char } from '@taquito/utils';
 import { MetadataEnvelope, MetadataProviderInterface } from './metadata-provider';
-import {
-  BigMapMetadataNotFound,
-  UnconfiguredMetadataProviderError,
-  UriNotFound,
-} from './tzip16-errors';
+import { BigMapMetadataNotFound, UnconfiguredMetadataProviderError, UriNotFound } from './errors';
 import BigNumber from 'bignumber.js';
 import { Schema } from '@taquito/michelson-encoder';
 import { ViewFactory } from './viewKind/viewFactory';

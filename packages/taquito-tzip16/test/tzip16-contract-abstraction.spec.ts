@@ -1,5 +1,5 @@
 import { Tzip16ContractAbstraction } from '../src/tzip16-contract-abstraction';
-import { BigMapMetadataNotFound, UriNotFound } from '../src/tzip16-errors';
+import { BigMapMetadataNotFound, UriNotFound } from '../src/errors';
 
 describe('Tzip16 contract abstraction test', () => {
   let mockMetadataProvider: {

@@ -1,10 +1,10 @@
 import { TezosStorageHandler } from '../../src/handlers/tezos-storage-handler';
 import {
-  InvalidMetadataType,
+  InvalidContractMetadataType,
   InvalidUri,
   BigMapMetadataNotFound,
-  MetadataNotFound,
-} from '../../src/tzip16-errors';
+  ContractMetadataNotFound,
+} from '../../src/errors';
 
 describe('Parse Tezos storage URI test', () => {
   const tezosStorageHandler = new TezosStorageHandler();
@@ -161,7 +161,7 @@ describe('Tzip16 tezos storage handler test', () => {
     done();
   });
 
-  it('Should fail with MetadataNotFound when the path extracted from the URI is not a key of the big map %metadata', async (done) => {
+  it('Should fail with ContractMetadataNotFound when the path extracted from the URI is not a key of the big map %metadata', async (done) => {
     mockContractProvider.getBigMapKeyByID.mockResolvedValue(undefined);
 
     const tzip16Uri = {
@@ -176,12 +176,12 @@ describe('Tzip16 tezos storage handler test', () => {
         mockContext as any
       );
     } catch (ex) {
-      expect(ex).toBeInstanceOf(MetadataNotFound);
+      expect(ex).toBeInstanceOf(ContractMetadataNotFound);
     }
     done();
   });
 
-  it('Should fail with InvalidMetadataType when metadata type is not bytes', async (done) => {
+  it('Should fail with InvalidContractMetadataType when metadata type is not bytes', async (done) => {
     mockContractProvider.getBigMapKeyByID.mockResolvedValue('NOT-BYTES');
 
     const tzip16Uri = {
@@ -196,7 +196,7 @@ describe('Tzip16 tezos storage handler test', () => {
         mockContext as any
       );
     } catch (ex) {
-      expect(ex).toBeInstanceOf(InvalidMetadataType);
+      expect(ex).toBeInstanceOf(InvalidContractMetadataType);
     }
     done();
   });

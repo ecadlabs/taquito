@@ -7,7 +7,7 @@ import {
   bytes2Char,
   BigMapId,
 } from '@taquito/tzip16';
-import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './tzip12-errors';
+import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './errors';
 
 const tokenMetadataBigMapType = {
   prim: 'big_map',
@@ -80,6 +80,7 @@ export class Tzip12ContractAbstraction {
    * If there is no view, the function tries to find a `token_metadata` bigmap in the top-level pairs of the storage.
    * @param tokenId The ID of the token for which we want to retrieve token metadata
    * @returns An object of type `TokenMetadata`
+   * @throws {@link TokenIdNotFound, TokenMetadataNotFound, InvalidTokenMetadata}
    */
   async getTokenMetadata(tokenId: number) {
     const tokenMetadata = await this.retrieveTokenMetadataFromView(tokenId);

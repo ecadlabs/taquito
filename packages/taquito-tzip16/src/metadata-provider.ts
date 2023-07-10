@@ -1,7 +1,7 @@
 import { ContractAbstraction, ContractProvider, Wallet, Context } from '@taquito/taquito';
 import { MetadataInterface } from './metadata-interface';
 import { MetadataContext } from './tzip16-contract-abstraction';
-import { InvalidMetadata, InvalidUri, ProtocolNotSupported } from './tzip16-errors';
+import { InvalidContractMetadata, InvalidUri, ProtocolNotSupported } from './errors';
 import { calculateSHA256Hash } from './tzip16-utils';
 
 export interface MetadataProviderInterface {
@@ -68,7 +68,7 @@ export class MetadataProvider implements MetadataProviderInterface {
     try {
       metadataJSON = JSON.parse(metadata);
     } catch (ex) {
-      throw new InvalidMetadata(metadata);
+      throw new InvalidContractMetadata(metadata);
     }
 
     return {

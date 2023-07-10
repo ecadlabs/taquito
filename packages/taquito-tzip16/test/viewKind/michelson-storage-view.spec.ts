@@ -1,5 +1,5 @@
 import { RpcReadAdapter } from '@taquito/taquito';
-import { ForbiddenInstructionInViewCode, NoParameterExpectedError } from '../../src/tzip16-errors';
+import { ForbiddenInstructionInViewCode, NoParameterExpectedError } from '../../src/errors';
 import { MichelsonStorageView } from '../../src/viewKind/michelson-storage-view';
 
 describe('MichelsonStorageView test', () => {
