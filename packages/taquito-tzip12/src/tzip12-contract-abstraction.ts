@@ -135,7 +135,7 @@ export class Tzip12ContractAbstraction {
         );
         return metadataFromUri.metadata;
       } catch (e: any) {
-        if (e.name === 'InvalidUri') {
+        if (e.name === 'InvalidUriError') {
           console.warn(
             `The URI ${bytes2Char(uri)} is present in the token metadata, but is invalid.`
           );

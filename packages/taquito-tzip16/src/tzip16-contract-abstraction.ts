@@ -8,7 +8,11 @@ import {
 } from '@taquito/taquito';
 import { bytes2Char } from '@taquito/utils';
 import { MetadataEnvelope, MetadataProviderInterface } from './metadata-provider';
-import { BigMapMetadataNotFound, UnconfiguredMetadataProviderError, UriNotFound } from './errors';
+import {
+  BigMapContractMetadataNotFoundError,
+  UnconfiguredContractMetadataProviderError,
+  UriNotFoundError,
+} from './errors';
 import BigNumber from 'bignumber.js';
 import { Schema } from '@taquito/michelson-encoder';
 import { ViewFactory } from './viewKind/viewFactory';
@@ -44,7 +48,7 @@ export class Tzip16ContractAbstraction {
     );
 
     if (!metadataBigMapId || !metadataBigMapId.int) {
-      throw new BigMapMetadataNotFound();
+      throw new BigMapContractMetadataNotFoundError(metadataBigMapId);
     }
 
     return new BigMapAbstraction(
@@ -58,7 +62,7 @@ export class Tzip16ContractAbstraction {
     const metadataBigMap = await this.findMetadataBigMap();
     const uri = await metadataBigMap.get<string>('');
     if (!uri) {
-      throw new UriNotFound();
+      throw new UriNotFoundError();
     }
     return uri;
   }
@@ -68,7 +72,7 @@ export class Tzip16ContractAbstraction {
    */
   async getMetadata() {
     if (!this._metadataProvider) {
-      throw new UnconfiguredMetadataProviderError();
+      throw new UnconfiguredContractMetadataProviderError();
     }
     if (!this._metadataEnvelope) {
       const uri = await this.getUriOrFail();

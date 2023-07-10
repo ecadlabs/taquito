@@ -97,7 +97,7 @@ export const createOriginationOperation = async ({
   };
 
   if (isNaN(Number(balance))) {
-    throw new InvalidBalanceError(`Invalid Balance "${balance}", can't convert to a number`);
+    throw new InvalidBalanceError(`Invalid Balance "${balance}", cannot be converted to a number`);
   }
 
   const operation: RPCOriginationOperation = {

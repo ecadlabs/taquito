@@ -1,7 +1,7 @@
 import { ContractAbstraction, ContractProvider, Wallet, Context } from '@taquito/taquito';
 import { MetadataInterface } from './metadata-interface';
 import { MetadataContext } from './tzip16-contract-abstraction';
-import { InvalidContractMetadata, InvalidUri, ProtocolNotSupported } from './errors';
+import { InvalidContractMetadataError, InvalidUriError, ProtocolNotSupportedError } from './errors';
 import { calculateSHA256Hash } from './tzip16-utils';
 
 export interface MetadataProviderInterface {
@@ -54,12 +54,12 @@ export class MetadataProvider implements MetadataProviderInterface {
   ): Promise<MetadataEnvelope> {
     const uriInfo = this.extractProtocolInfo(uri);
     if (!uriInfo || !uriInfo.location) {
-      throw new InvalidUri(uri);
+      throw new InvalidUriError(uri);
     }
 
     const handler = this.handlers.get(uriInfo.protocol);
     if (!handler) {
-      throw new ProtocolNotSupported(uriInfo.protocol);
+      throw new ProtocolNotSupportedError(uriInfo.protocol);
     }
 
     const metadata = await handler.getMetadata(contractAbstraction, uriInfo, context);
@@ -68,7 +68,7 @@ export class MetadataProvider implements MetadataProviderInterface {
     try {
       metadataJSON = JSON.parse(metadata);
     } catch (ex) {
-      throw new InvalidContractMetadata(metadata);
+      throw new InvalidContractMetadataError(metadata);
     }
 
     return {

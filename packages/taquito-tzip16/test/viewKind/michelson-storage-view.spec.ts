@@ -1,5 +1,5 @@
 import { RpcReadAdapter } from '@taquito/taquito';
-import { ForbiddenInstructionInViewCode, NoParameterExpectedError } from '../../src/errors';
+import { ForbiddenInstructionInViewCodeError, NoParameterExpectedError } from '../../src/errors';
 import { MichelsonStorageView } from '../../src/viewKind/michelson-storage-view';
 
 describe('MichelsonStorageView test', () => {
@@ -97,7 +97,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: AMOUNT.'
       );
@@ -105,7 +105,7 @@ describe('MichelsonStorageView test', () => {
     done();
   });
 
-  it('Should throw ForbiddenInstructionInViewCode when code of the view contains the instruction CREATE_CONTRACT', async (done) => {
+  it('Should throw ForbiddenInstructionInViewCodeError when code of the view contains the instruction CREATE_CONTRACT', async (done) => {
     const viewCode = [
       { prim: 'CAR', args: [], annots: [] },
       { prim: 'CREATE_CONTRACT', args: [], annots: [] },
@@ -124,7 +124,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: CREATE_CONTRACT.'
       );
@@ -132,7 +132,7 @@ describe('MichelsonStorageView test', () => {
     done();
   });
 
-  it('Should throw ForbiddenInstructionInViewCode when code of the view contains the instruction SENDER', async (done) => {
+  it('Should throw ForbiddenInstructionInViewCodeError when code of the view contains the instruction SENDER', async (done) => {
     const viewCode = [
       { prim: 'CAR', args: [], annots: [] },
       { prim: 'SENDER', args: [], annots: [] },
@@ -150,7 +150,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: SENDER.'
       );
@@ -158,7 +158,7 @@ describe('MichelsonStorageView test', () => {
     done();
   });
 
-  it('Should throw ForbiddenInstructionInViewCode when code of the view contains the instruction SET_DELEGATE', async (done) => {
+  it('Should throw ForbiddenInstructionInViewCodeError when code of the view contains the instruction SET_DELEGATE', async (done) => {
     const viewCode = [{ prim: 'SET_DELEGATE', args: [], annots: [] }]; // code
     const michelsonStorageView = new MichelsonStorageView(
       'test',
@@ -172,7 +172,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: SET_DELEGATE.'
       );
@@ -180,7 +180,7 @@ describe('MichelsonStorageView test', () => {
     done();
   });
 
-  it('Should throw ForbiddenInstructionInViewCode when code of the view contains the instruction SOURCE', async (done) => {
+  it('Should throw ForbiddenInstructionInViewCodeError when code of the view contains the instruction SOURCE', async (done) => {
     const viewCode = [{ prim: 'SOURCE', args: [], annots: [] }]; // code
     const michelsonStorageView = new MichelsonStorageView(
       'test',
@@ -194,7 +194,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: SOURCE.'
       );
@@ -202,7 +202,7 @@ describe('MichelsonStorageView test', () => {
     done();
   });
 
-  it('Should throw ForbiddenInstructionInViewCode when code of the view contains the instruction TRANSFER_TOKENS', async (done) => {
+  it('Should throw ForbiddenInstructionInViewCodeError when code of the view contains the instruction TRANSFER_TOKENS', async (done) => {
     const viewCode = [{ prim: 'TRANSFER_TOKENS', args: [], annots: [] }]; // code
     const michelsonStorageView = new MichelsonStorageView(
       'test',
@@ -216,7 +216,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.'
       );
@@ -224,7 +224,7 @@ describe('MichelsonStorageView test', () => {
     done();
   });
 
-  it('Should throw ForbiddenInstructionInViewCode when code of the view contains a nested forbidden instruction', async (done) => {
+  it('Should throw ForbiddenInstructionInViewCodeError when code of the view contains a nested forbidden instruction', async (done) => {
     const viewCode = [
       { prim: 'test', args: [{ prim: 'test2', args: [{ prim: 'TRANSFER_TOKENS' }] }], annots: [] },
     ]; // code
@@ -240,7 +240,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.'
       );
@@ -248,7 +248,7 @@ describe('MichelsonStorageView test', () => {
     done();
   });
 
-  it('Should throw ForbiddenInstructionInViewCode when code of the view contains the instruction SELF which is not followed by an instruction ADDRESS', async (done) => {
+  it('Should throw ForbiddenInstructionInViewCodeError when code of the view contains the instruction SELF which is not followed by an instruction ADDRESS', async (done) => {
     const viewCode = [
       { prim: 'SELF', args: [], annots: [] },
       { prim: 'CONTRACT', args: [], annots: [] },
@@ -266,7 +266,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.'
       );
@@ -274,7 +274,7 @@ describe('MichelsonStorageView test', () => {
     done();
   });
 
-  it('Should throw ForbiddenInstructionInViewCode when code of the view contains the instruction SELF which is not followed by an instruction ADDRESS', async (done) => {
+  it('Should throw ForbiddenInstructionInViewCodeError when code of the view contains the instruction SELF which is not followed by an instruction ADDRESS', async (done) => {
     const viewCode = [{ prim: 'test', args: [{ prim: 'SELF' }, { prim: 'test2' }], annots: [] }]; // code
 
     const michelsonStorageView = new MichelsonStorageView(
@@ -289,7 +289,7 @@ describe('MichelsonStorageView test', () => {
     try {
       await michelsonStorageView.executeView();
     } catch (e) {
-      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCode);
+      expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
       expect(e.message).toEqual(
         'Error found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.'
       );

@@ -6,10 +6,10 @@ export { InvalidViewParameterError } from '@taquito/core';
  *  @category Error
  *  @description Error indicates missing big map metadata (non compliance to the TZIP-16 standard)
  */
-export class BigMapMetadataNotFound extends TaquitoError {
-  constructor() {
+export class BigMapContractMetadataNotFoundError extends TaquitoError {
+  constructor(public readonly invalidBigMapId: any) {
     super();
-    this.name = 'BigMapMetadataNotFound';
+    this.name = 'BigMapContractMetadataNotFoundError';
     this.message =
       'Non-compliance with the TZIP-016 standard. No big map named metadata was found in the contract storage.';
   }
@@ -19,10 +19,10 @@ export class BigMapMetadataNotFound extends TaquitoError {
  *  @category Error
  *  @description Error indicates missing metadata in storage
  */
-export class ContractMetadataNotFound extends TaquitoError {
+export class ContractMetadataNotFoundError extends TaquitoError {
   constructor(public readonly info: string) {
     super();
-    this.name = 'ContractMetadataNotFound';
+    this.name = 'ContractMetadataNotFoundError';
     this.message = `No metadata was found in the contract storage. ${info}`;
   }
 }
@@ -31,10 +31,10 @@ export class ContractMetadataNotFound extends TaquitoError {
  *  @category Error
  *  @description Error indicates missing URI (non compliance to the TZIP-16 standard)
  */
-export class UriNotFound extends TaquitoError {
+export class UriNotFoundError extends TaquitoError {
   constructor() {
     super();
-    this.name = 'UriNotFound';
+    this.name = 'UriNotFoundError';
     this.message =
       'Non-compliance with the TZIP-016 standard. No URI found in the contract storage.';
   }
@@ -44,10 +44,10 @@ export class UriNotFound extends TaquitoError {
  *  @category Error
  *  @description Error indicates an invalid URI (non compliance to the TZIP-16 standard)
  */
-export class InvalidUri extends TaquitoError {
+export class InvalidUriError extends TaquitoError {
   constructor(public readonly uri: string) {
     super();
-    this.name = 'InvalidUri';
+    this.name = 'InvalidUriError';
     this.message = `Non-compliance with the TZIP-016 standard. The URI is invalid: ${uri}.`;
   }
 }
@@ -56,10 +56,10 @@ export class InvalidUri extends TaquitoError {
  *  @category Error
  *  @description Error indicates invalid metadata (non compliance to the TZIP-16 standard)
  */
-export class InvalidContractMetadata extends TaquitoError {
+export class InvalidContractMetadataError extends TaquitoError {
   constructor(public readonly invalidMetadata: string) {
     super();
-    this.name = 'InvalidContractMetadata';
+    this.name = 'InvalidContractMetadataError';
     this.message = `The metadata found at the pointed ressource are not compliant with tzip16 standard: ${invalidMetadata}.`;
   }
 }
@@ -68,10 +68,10 @@ export class InvalidContractMetadata extends TaquitoError {
  *  @category Error
  *  @description Error indicates the uri protocol being passed or used is not supported
  */
-export class ProtocolNotSupported extends ParameterValidationError {
+export class ProtocolNotSupportedError extends ParameterValidationError {
   constructor(public readonly protocol: string) {
     super();
-    this.name = 'ProtocolNotSupported';
+    this.name = 'ProtocolNotSupportedError';
     this.message = `The protocol found in the URI is not supported: ${protocol}.`;
   }
 }
@@ -80,10 +80,10 @@ export class ProtocolNotSupported extends ParameterValidationError {
  *  @category Error
  *  @description Error indicates the metadata type is invalid (non compliance to the TZIP-16 standard)
  */
-export class InvalidContractMetadataType extends TaquitoError {
+export class InvalidContractMetadataTypeError extends TaquitoError {
   constructor() {
     super();
-    this.name = 'InvalidContractMetadataType';
+    this.name = 'InvalidContractMetadataTypeError';
     this.message =
       'Non-compliance with the TZIP-016 standard. The type of metadata should be bytes.';
   }
@@ -93,10 +93,10 @@ export class InvalidContractMetadataType extends TaquitoError {
  *  @category Error
  *  @description Error indicates metadata provider being unconfigured in the TezosToolkit instance
  */
-export class UnconfiguredMetadataProviderError extends TezosToolkitConfigError {
+export class UnconfiguredContractMetadataProviderError extends TezosToolkitConfigError {
   constructor() {
     super();
-    this.name = 'UnconfiguredMetadataProviderError';
+    this.name = 'UnconfiguredContractMetadataProviderError';
     this.message =
       'No metadata provider has been configured. The default one can be configured by calling addExtension(new Tzip16Module()) on your TezosToolkit instance.';
   }
@@ -106,10 +106,10 @@ export class UnconfiguredMetadataProviderError extends TezosToolkitConfigError {
  *  @category Error
  *  @description Error indicates a forbidden instruction being found inside the View code
  */
-export class ForbiddenInstructionInViewCode extends TaquitoError {
+export class ForbiddenInstructionInViewCodeError extends TaquitoError {
   constructor(public readonly instruction: string) {
     super();
-    this.name = 'ForbiddenInstructionInViewCode';
+    this.name = 'ForbiddenInstructionInViewCodeError';
     this.message = `Error found in the code of the view. It contains a forbidden instruction: ${instruction}.`;
   }
 }

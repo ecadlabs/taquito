@@ -1,5 +1,5 @@
 import { Tzip16ContractAbstraction } from '../src/tzip16-contract-abstraction';
-import { BigMapMetadataNotFound, UriNotFound } from '../src/errors';
+import { BigMapContractMetadataNotFoundError, UriNotFoundError } from '../src/errors';
 
 describe('Tzip16 contract abstraction test', () => {
   let mockMetadataProvider: {
@@ -102,7 +102,7 @@ describe('Tzip16 contract abstraction test', () => {
     done();
   });
 
-  it('Should fail with BigMapMetadataNotFound', async (done) => {
+  it('Should fail with BigMapContractMetadataNotFoundError', async (done) => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue(undefined);
 
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
@@ -110,12 +110,12 @@ describe('Tzip16 contract abstraction test', () => {
     try {
       await tzip16Abs.getMetadata();
     } catch (e) {
-      expect(e).toBeInstanceOf(BigMapMetadataNotFound);
+      expect(e).toBeInstanceOf(BigMapContractMetadataNotFoundError);
     }
     done();
   });
 
-  it('Should fail with UriNotFound', async (done) => {
+  it('Should fail with UriNotFoundError', async (done) => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue(undefined);
 
@@ -124,7 +124,7 @@ describe('Tzip16 contract abstraction test', () => {
     try {
       await tzip16Abs.getMetadata();
     } catch (e) {
-      expect(e).toBeInstanceOf(UriNotFound);
+      expect(e).toBeInstanceOf(UriNotFoundError);
     }
     done();
   });
