@@ -351,9 +351,9 @@ export class TezosToolkit {
    */
   setInjectorProvider(injectorProvider?: SetProviderOptions['injectorProvider']) {
     if (!this._options.injectorProvider && typeof injectorProvider === 'undefined') {
-      const p = new RpcInjector(this._context);
-      this._context.injector = p;
-      this._options.injectorProvider = p;
+      const i = new RpcInjector(this._context);
+      this._context.injector = i;
+      this._options.injectorProvider = i;
     } else if (typeof injectorProvider !== 'undefined') {
       this._context.injector = injectorProvider;
       this._options.injectorProvider = injectorProvider;
