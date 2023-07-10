@@ -22,6 +22,17 @@ export class ConfirmationUndefinedError extends Error {
 
 /**
  *  @category Error
+ *  @description Error that indicates that confirmation polling timed out
+ */
+export class ConfirmationTimeoutError extends Error {
+  public name = 'ConfirmationTimeoutError';
+  constructor(public message: string) {
+    super(message);
+  }
+}
+
+/**
+ *  @category Error
  *  @description Error that indicates an invalid filter expression being passed or used
  */
 export class InvalidFilterExpressionError extends Error {
@@ -63,5 +74,16 @@ export class PublicKeyNotFoundError extends Error {
     super(
       `Unable to retrieve public key from signer. If you are using a wallet, make sure your account is revealed`
     );
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates a generic failure when trying to fetch an observable
+ */
+export class ObservableError extends Error {
+  public name = 'ObservableError';
+  constructor(public message: string) {
+    super(message);
   }
 }

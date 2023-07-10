@@ -9,8 +9,11 @@ import { Context } from '../context';
 import { DefaultWalletType } from '../contract/contract';
 import { findWithKind } from '../operations/types';
 import { WalletOperation, OperationStatus } from './operation';
+import { ObservableError } from '../error';
 
-export class OriginationWalletOperation<TWallet extends DefaultWalletType = DefaultWalletType> extends WalletOperation {
+export class OriginationWalletOperation<
+  TWallet extends DefaultWalletType = DefaultWalletType
+> extends WalletOperation {
   constructor(
     public readonly opHash: string,
     protected readonly context: Context,
@@ -21,16 +24,24 @@ export class OriginationWalletOperation<TWallet extends DefaultWalletType = Defa
 
   public async originationOperation() {
     const operationResult = await this.operationResults();
-    return findWithKind(operationResult, OpKind.ORIGINATION) as
-      | OperationContentsAndResultOrigination
-      | undefined;
+    if (operationResult) {
+      return findWithKind(operationResult, OpKind.ORIGINATION) as
+        | OperationContentsAndResultOrigination
+        | undefined;
+    } else {
+      throw new ObservableError('Unable to fetch operation result');
+    }
   }
 
   public async revealOperation() {
     const operationResult = await this.operationResults();
-    return findWithKind(operationResult, OpKind.REVEAL) as
-      | OperationContentsAndResultReveal
-      | undefined;
+    if (operationResult) {
+      return findWithKind(operationResult, OpKind.REVEAL) as
+        | OperationContentsAndResultReveal
+        | undefined;
+    } else {
+      throw new ObservableError('Unable to fetch operation result');
+    }
   }
 
   public async status(): Promise<OperationStatus> {

@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract with lambda view trough contract api using: ${rpc}`, () => {
     beforeEach(async done => {
       await setup();
-      done()
+      done();
     });
 
     test('Verify contract.originate for FA1.2 contract and then fetch data from view entrypoints', async (done) => {
@@ -56,11 +56,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(getAllowance.toString()).toEqual('25');
 
       done();
-    })
-
+    });
 
     test('Verify contract.originate for a contract and then fetch data from view entrypoints', async (done) => {
-
       const mapAccount2 = new MichelsonMap();
       mapAccount2.set('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', '25');
       mapAccount2.set('tz1bmyy6QX9HVf7EnBJ6avmWZJbPYGAgXhbH', '25');
@@ -99,9 +97,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-
     test('Verify contract.originate for a FA2 contract and then fetch data from view entrypoints', async (done) => {
-
       const bigMapLedger = new MichelsonMap();
       bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
         allowances: ['tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'],
@@ -136,7 +132,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           token_metadata: tokenMetadataBigMap,
           total_supply: '100'
         },
-      })
+      });
 
       await op.confirmation()
       const contract = await op.contract();
