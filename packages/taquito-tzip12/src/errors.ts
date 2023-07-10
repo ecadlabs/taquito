@@ -5,7 +5,7 @@ import { TaquitoError } from '@taquito/core';
  *  @description Error indicates the metadata not being found on the contract
  */
 export class TokenMetadataNotFound extends TaquitoError {
-  constructor(public address: string) {
+  constructor(public readonly address: string) {
     super();
     this.name = 'TokenMetadataNotFound';
     this.message = `No token metadata was found for the contract: ${address}`;
@@ -17,7 +17,7 @@ export class TokenMetadataNotFound extends TaquitoError {
  *  @description Error indicates the token ID not being found
  */
 export class TokenIdNotFound extends TaquitoError {
-  constructor(public tokenId: number) {
+  constructor(public readonly tokenId: number) {
     super(`Could not find token metadata for the token ID: ${tokenId}`);
     this.name = 'TokenIdNotFound';
   }
@@ -28,7 +28,7 @@ export class TokenIdNotFound extends TaquitoError {
  *  @description Error indicates that the token metadata is invalid (not compliant with the TZIP-12 standard)
  */
 export class InvalidTokenMetadata extends TaquitoError {
-  constructor() {
+  constructor(public readonly invalidMetadata: any) {
     super();
     this.name = 'InvalidTokenMetadata';
     this.message =

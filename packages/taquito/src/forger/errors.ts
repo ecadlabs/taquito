@@ -5,7 +5,7 @@ import { TaquitoError, TezosToolkitConfigError } from '@taquito/core';
  *  @description Error indicates CompositeForger.forge() results doesn't match each other
  */
 export class ForgingMismatchError extends TaquitoError {
-  constructor(public results: string[]) {
+  constructor(public readonly results: string[]) {
     super();
     this.name = 'ForgingMismatchError';
     this.message = `Forging mismatch error`;

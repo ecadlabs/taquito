@@ -36,7 +36,10 @@ export class TezosOperationError extends RpcError {
   id: string;
   kind: string;
 
-  constructor(public errors: TezosGenericOperationError[], public errorDetails?: string) {
+  constructor(
+    public readonly errors: TezosGenericOperationError[],
+    public readonly errorDetails?: string
+  ) {
     super();
     this.name = 'TezosOperationError';
     // Last error is 'often' the one with more detail
@@ -63,10 +66,10 @@ export class TezosOperationError extends RpcError {
  *  @description Tezos error that will be thrown when a mistake happens during the preapply stage
  */
 export class TezosPreapplyFailureError extends Error {
-  name = 'TezosPreapplyFailureError';
-
-  constructor(public result: any) {
-    super('Preapply returned an unexpected result');
+  constructor(public readonly result: any) {
+    super();
+    this.name = 'TezosPreapplyFailureError';
+    this.message = 'Preapply returned an unexpected result';
   }
 }
 
@@ -157,7 +160,7 @@ export const flattenErrors = (
  *  @description Error indicates a general failure happening during an origination operation
  */
 export class OriginationOperationError extends TaquitoError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'OriginationOperationError';
   }
@@ -168,7 +171,7 @@ export class OriginationOperationError extends TaquitoError {
  *  @description Error indicates an invalid estimate value being passed
  */
 export class InvalidEstimateValueError extends ParameterValidationError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'InvalidEstimateValueError';
   }

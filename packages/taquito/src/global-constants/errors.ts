@@ -5,7 +5,7 @@ import { TaquitoError, TezosToolkitConfigError } from '@taquito/core';
  *  @description Error indicates that a global constant does not exist
  */
 export class GlobalConstantNotFound extends TaquitoError {
-  constructor(public hash: string) {
+  constructor(public readonly hash: string) {
     super();
     this.name = 'GlobalConstantNotFound';
     this.message = `Please load the value associated with the constant ${hash} using the loadGlobalConstant method of the DefaultGlobalConstantsProvider.`;

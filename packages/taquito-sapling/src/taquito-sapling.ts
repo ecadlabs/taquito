@@ -14,7 +14,7 @@ import {
   ValidationResult,
   invalidDetail,
 } from '@taquito/utils';
-import { InsufficientBalance, InvalidMemo } from './error';
+import { InsufficientBalance, InvalidMemo } from './errors';
 import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
 import { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
 import { SaplingForger } from './sapling-forger/sapling-forger';

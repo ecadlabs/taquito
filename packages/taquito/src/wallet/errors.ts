@@ -17,7 +17,7 @@ export class ConfirmationUndefinedError extends TezosToolkitConfigError {
  *  @description Error that indicates a generic failure when trying to fetch an observable
  */
 export class ObservableError extends NetworkError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'ObservableError';
   }
