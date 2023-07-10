@@ -147,7 +147,7 @@ describe('Metadata provider test', () => {
     done();
   });
 
-  it('Should fail with InvalidContractMetadata when metadata are not a JSON object', async (done) => {
+  it('Should fail with InvalidContractMetadata when metadata is not a JSON object', async (done) => {
     mockHttpHandler.getMetadata.mockResolvedValue(
       `"description": "Invalid metadata, not in JSON format"`
     );
