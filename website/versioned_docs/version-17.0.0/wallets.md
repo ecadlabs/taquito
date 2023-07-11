@@ -5,9 +5,9 @@ author: Michael Kernaghan
 
 ## Wallets available for use with Tezos
 
-Here's a list of the Tezos wallets we know of. Wallets that support the TZIP-10: Wallet Interaction standard should work with Tezos dApps.
+Here's a list of the Tezos wallets we know of. Wallets that support the [TZIP-10](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-10/tzip-10.md): Wallet Interaction standard should work with Tezos dApps.
 
-|       Name        |          Type           | [TZIP-10](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-10/tzip-10.md) |            Product web site             |                                         Source code                                          |
+|       Name        |          Type           | TZIP-10 |            Product web site             |                                         Source code                                          |
 | :---------------: | :---------------------: | :---------------------------------------------------------------------------------: | :-------------------------------------: | :------------------------------------------------------------------------------------------: |
 |    **Temple**     |    Browser Extension    |                                         Yes                                         |        https://templewallet.com        | [![Github](images/github.png)](https://github.com/madfish-solutions/templewallet-extension/) |
 |     **Kukai**     |           Web           |                                         Yes                                         |        https://wallet.kukai.app        |            [![Github](images/github.png)](https://github.com/kukai-wallet/kukai/)            |
