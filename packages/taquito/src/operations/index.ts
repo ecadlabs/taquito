@@ -32,7 +32,7 @@ export {
   TezosOperationErrorWithMessage,
   TezosPreapplyFailureError,
   InvalidEstimateValueError,
-} from './operation-errors';
+} from './errors';
 export { BatchOperation } from './batch-operation';
 export { DelegateOperation } from './delegate-operation';
 export { OriginationOperation } from './origination-operation';

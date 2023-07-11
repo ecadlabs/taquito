@@ -1,26 +1,5 @@
 import { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
-
-/**
- *  @category Error
- *  @description Error that indicates a value mismatch when forging
- */
-export class ForgingMismatchError extends Error {
-  name = 'ForgingMismatchError';
-  constructor(public results: string[]) {
-    super('Forging mismatch error');
-  }
-}
-
-/**
- *  @category Error
- *  @description Error that indicates a forger not being specified in TezosToolkit
- */
-export class UnspecifiedForgerError extends Error {
-  name = 'UnspecifiedForgerError';
-  constructor() {
-    super('At least one forger must be specified');
-  }
-}
+import { UnspecifiedForgerError, ForgingMismatchError } from './errors';
 
 export class CompositeForger implements Forger {
   constructor(private forgers: Forger[]) {

@@ -21,7 +21,7 @@ import { IncreasePaidStorageWalletOperation } from './increase-paid-storage-oper
 import { WalletOperation } from './operation';
 import { OriginationWalletOperation } from './origination-operation';
 import { TransactionWalletOperation } from './transaction-operation';
-import { ConfirmationTimeoutError } from '../error';
+import { ConfirmationTimeoutError } from '../errors';
 
 export function timeoutAfter<T>(timeoutMillisec: number): (source: Observable<T>) => Observable<T> {
   return function inner(source: Observable<T>): Observable<T> {

@@ -7,7 +7,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { BATCH_KINDS } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
-import { flattenErrors, flattenOperationResult } from './operation-errors';
+import { flattenErrors, flattenOperationResult } from './errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,

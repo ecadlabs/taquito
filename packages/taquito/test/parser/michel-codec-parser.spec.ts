@@ -147,7 +147,8 @@ describe('MichelCodec parser', () => {
         await parser.prepareCodeOrigination(originateParams);
       } catch (err: any) {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
-        expect(err.message).toBe('Invalid code parameter');
+        expect(err.message).toContain('Unable to parse');
+        console.log(err.data);
       }
 
       done();

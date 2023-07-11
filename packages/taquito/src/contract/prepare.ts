@@ -43,7 +43,7 @@ import {
   InvalidCodeParameter,
   InvalidInitParameter,
   OriginationParameterError,
-  IntegerError,
+  InvalidBalanceError,
 } from './errors';
 
 export const createActivationOperation = async ({ pkh, secret }: ActivationParams) => {
@@ -97,7 +97,7 @@ export const createOriginationOperation = async ({
   };
 
   if (isNaN(Number(balance))) {
-    throw new IntegerError(`Unexpected Invalid Integer ${balance}`);
+    throw new InvalidBalanceError(`Invalid Balance "${balance}", cannot be converted to a number`);
   }
 
   const operation: RPCOriginationOperation = {

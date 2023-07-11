@@ -9,13 +9,13 @@ import {
 import { Protocols } from '../constants';
 import { Context } from '../context';
 import { Estimate } from '../estimate/estimate';
-import { RPCResponseError } from '../error';
+import { RPCResponseError } from '../errors';
 import {
   flattenErrors,
   TezosOperationError,
   TezosPreapplyFailureError,
   InvalidEstimateValueError,
-} from './operation-errors';
+} from './errors';
 import {
   ForgedBytes,
   isOpRequireReveal,
@@ -96,9 +96,7 @@ export abstract class OperationEmitter {
         try {
           currentVotingPeriodPromise = this.rpc.getCurrentPeriod();
         } catch (e) {
-          throw new RPCResponseError(
-            `Failed to get the current voting period index: ${JSON.stringify(e)}`
-          );
+          throw new RPCResponseError(`Failed to get the current voting period index`, e);
         }
       }
     });
