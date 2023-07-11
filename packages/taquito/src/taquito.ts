@@ -30,6 +30,8 @@ import { TaquitoLocalForger } from './forger/taquito-local-forger';
 import { EstimationProvider } from './estimate/estimate-provider-interface';
 import { ParserProvider } from './parser/interface';
 import { MichelCodecParser } from './parser/michel-codec-parser';
+import { Injector } from './injector/interface';
+import { RpcInjector } from './injector/rpc-injector';
 
 export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
@@ -50,6 +52,8 @@ export { ObservableSubscription } from './subscribe/observable-subscription';
 export * from './tz/interface';
 export * from './wallet';
 export { Extension } from './extension/extension';
+export * from './injector/interface';
+export * from './injector/rpc-injector';
 export * from './parser/interface';
 export * from './parser/michel-codec-parser';
 export * from './parser/noop-parser';
@@ -57,7 +61,7 @@ export * from './packer/interface';
 export * from './packer/michel-codec-packer';
 export * from './packer/rpc-packer';
 export * from './global-constants/default-global-constants-provider';
-export * from './global-constants/error';
+export * from './global-constants/errors';
 export * from './global-constants/interface-global-constants-provider';
 export {
   BigMapQuery,
@@ -82,6 +86,7 @@ export interface SetProviderOptions {
   packer?: Packer;
   globalConstantsProvider?: GlobalConstantsProvider;
   parserProvider?: ParserProvider;
+  injectorProvider?: Injector;
 }
 
 export interface VersionInfo {
@@ -141,6 +146,7 @@ export class TezosToolkit {
     globalConstantsProvider,
     readProvider,
     parserProvider,
+    injectorProvider,
   }: SetProviderOptions) {
     this.setRpcProvider(rpc);
     this.setStreamProvider(stream);
@@ -151,6 +157,7 @@ export class TezosToolkit {
     this.setGlobalConstantsProvider(globalConstantsProvider);
     this.setReadProvider(readProvider);
     this.setParserProvider(parserProvider);
+    this.setInjectorProvider(injectorProvider);
 
     this._context.proto = protocol;
     if (config) {
@@ -333,6 +340,23 @@ export class TezosToolkit {
     } else if (typeof parserProvider !== 'undefined') {
       this._context.parser = parserProvider;
       this._options.parserProvider = parserProvider;
+    }
+  }
+
+  /**
+   * @description Sets injector provider on the Tezos Taquito instance
+   *
+   * @param options Injector to use to interact with the Tezos network by default RpcInjector
+   *
+   */
+  setInjectorProvider(injectorProvider?: SetProviderOptions['injectorProvider']) {
+    if (!this._options.injectorProvider && typeof injectorProvider === 'undefined') {
+      const i = new RpcInjector(this._context);
+      this._context.injector = i;
+      this._options.injectorProvider = i;
+    } else if (typeof injectorProvider !== 'undefined') {
+      this._context.injector = injectorProvider;
+      this._options.injectorProvider = injectorProvider;
     }
   }
 

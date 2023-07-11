@@ -1,6 +1,10 @@
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a Chest Key
+ */
 export class ChestKeyValidationError extends TokenValidationError {
   name = 'ChestKeyValidationError';
   constructor(public value: any, public token: ChestKeyToken, message: string) {
@@ -18,34 +22,36 @@ export class ChestKeyToken extends Token {
     super(val, idx, fac);
   }
 
-  private isValid(val: any): ChestKeyValidationError | null {
+  /**
+   * @throws {@link ChestKeyValidationError}
+   */
+  private validate(val: any) {
     if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
-      return null;
-    } else {
-      return new ChestKeyValidationError(val, this, `Invalid bytes: ${val}`);
+      return;
     }
+    throw new ChestKeyValidationError(val, this, `Invalid bytes: ${JSON.stringify(val)}`);
   }
 
   private convertUint8ArrayToHexString(val: any) {
     return val.constructor === Uint8Array ? Buffer.from(val).toString('hex') : val;
   }
 
+  /**
+   * @throws {@link ChestKeyValidationError}
+   */
   Encode(args: any[]) {
     let val = args.pop();
     val = this.convertUint8ArrayToHexString(val);
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
     return { bytes: val };
   }
 
+  /**
+   * @throws {@link ChestKeyValidationError}
+   */
   EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[ChestKeyToken.prim]) {
       return semantic[ChestKeyToken.prim](val);

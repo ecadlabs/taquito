@@ -9,6 +9,10 @@ import {
   TokenValidationError,
 } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a Map
+ */
 export class MapValidationError extends TokenValidationError {
   name = 'MapValidationError';
   constructor(public value: any, public token: MapToken, message: string) {
@@ -35,12 +39,17 @@ export class MapToken extends Token {
     return this.createToken(this.val.args[0], 0) as any;
   }
 
-  private isValid(value: any): MapValidationError | null {
-    if (MichelsonMap.isMichelsonMap(value)) {
-      return null;
+  /**
+   * @throws {@link MapValidationError}
+   */
+  validate(value: any) {
+    if (!MichelsonMap.isMichelsonMap(value)) {
+      throw new MapValidationError(
+        value,
+        this,
+        `Value ${JSON.stringify(value)} is not a valid MichelsonMap`
+      );
     }
-
-    return new MapValidationError(value, this, 'Value must be a MichelsonMap');
   }
 
   public Execute(val: any[], semantics?: Semantic): { [key: string]: any } {
@@ -67,13 +76,13 @@ export class MapToken extends Token {
     return val;
   }
 
+  /**
+   * @throws {@link MapValidationError}
+   */
   public Encode(args: any[]): any {
     const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args.pop());
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return Array.from(val.keys())
       .sort((a: any, b: any) => this.KeySchema.compare(a, b))
@@ -85,13 +94,13 @@ export class MapToken extends Token {
       });
   }
 
+  /**
+   * @throws {@link MapValidationError}
+   */
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args);
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[MapToken.prim]) {
       return semantic[MapToken.prim](val);

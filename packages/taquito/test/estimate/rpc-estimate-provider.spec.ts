@@ -1270,9 +1270,7 @@ describe('RPCEstimateProvider test wallet', () => {
           storage: 0,
         });
       } catch (e: any) {
-        expect(e.message).toEqual(
-          'Unable to estimate the reveal operation, the public key is unknown'
-        );
+        expect(e.message).toContain('Public key not found of this address');
       }
       done();
     });
@@ -1303,9 +1301,7 @@ describe('RPCEstimateProvider test wallet', () => {
           amount: 2,
         });
       } catch (e: any) {
-        expect(e.message).toEqual(
-          'Unable to estimate the reveal operation, the public key is unknown'
-        );
+        expect(e.message).toContain('Public key not found of this address');
       }
       done();
     });
@@ -1346,9 +1342,7 @@ describe('RPCEstimateProvider test wallet', () => {
           delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         });
       } catch (e: any) {
-        expect(e.message).toEqual(
-          'Unable to estimate the reveal operation, the public key is unknown'
-        );
+        expect(e.message).toContain('Public key not found of this address');
       }
       done();
     });
@@ -1383,9 +1377,7 @@ describe('RPCEstimateProvider test wallet', () => {
       try {
         await estimateProvider.registerDelegate({});
       } catch (e: any) {
-        expect(e.message).toEqual(
-          'Unable to estimate the reveal operation, the public key is unknown'
-        );
+        expect(e.message).toContain('Public key not found of this address');
       }
       done();
     });
@@ -1464,9 +1456,7 @@ describe('RPCEstimateProvider test wallet', () => {
           { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
         ]);
       } catch (e: any) {
-        expect(e.message).toEqual(
-          'Unable to estimate the reveal operation, the public key is unknown'
-        );
+        expect(e.message).toContain('Public key not found of this address');
       }
 
       done();
@@ -1501,9 +1491,7 @@ describe('RPCEstimateProvider test wallet', () => {
           },
         });
       } catch (e: any) {
-        expect(e.message).toEqual(
-          'Unable to estimate the reveal operation, the public key is unknown'
-        );
+        expect(e.message).toContain('Public key not found of this address');
       }
       done();
     });
@@ -1515,9 +1503,7 @@ describe('RPCEstimateProvider test wallet', () => {
       try {
         await estimateProvider.reveal({});
       } catch (e: any) {
-        expect(e.message).toEqual(
-          'Unable to estimate the reveal operation, the public key is unknown'
-        );
+        expect(e.message).toContain('Public key is unknown');
       }
       done();
     });
@@ -1562,9 +1548,7 @@ describe('RPCEstimateProvider test wallet', () => {
           ],
         });
       } catch (e: any) {
-        expect(e.message).toEqual(
-          'Unable to estimate the reveal operation, the public key is unknown'
-        );
+        expect(e.message).toContain('Public key not found of this address');
       }
       done();
     });

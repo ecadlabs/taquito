@@ -1,4 +1,4 @@
-import { InvalidSpendingKey } from '../error';
+import { InvalidSpendingKey } from '../errors';
 import toBuffer from 'typedarray-to-buffer';
 import { openSecretBox } from '@stablelib/nacl';
 import pbkdf2 from 'pbkdf2';

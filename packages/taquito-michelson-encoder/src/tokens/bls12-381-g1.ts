@@ -1,6 +1,10 @@
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a BLS12-381 curve G1
+ */
 export class Bls12381g1ValidationError extends TokenValidationError {
   name = 'Bls12381g1ValidationError';
   constructor(public value: any, public token: Bls12381g1Token, message: string) {
@@ -20,34 +24,36 @@ export class Bls12381g1Token extends Token {
     super(val, idx, fac);
   }
 
-  private isValid(val: any): Bls12381g1ValidationError | null {
+  /**
+   * @throws {@link Bls12381g1ValidationError}
+   */
+  private validate(val: any) {
     if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
-      return null;
-    } else {
-      return new Bls12381g1ValidationError(val, this, `Invalid bytes: ${val}`);
+      return;
     }
+    throw new Bls12381g1ValidationError(val, this, `Invalid bytes: ${JSON.stringify(val)}`);
   }
 
   private convertUint8ArrayToHexString(val: any) {
     return val.constructor === Uint8Array ? Buffer.from(val).toString('hex') : val;
   }
 
+  /**
+   * @throws {@link Bls12381g1ValidationError}
+   */
   Encode(args: any[]) {
     let val = args.pop();
     val = this.convertUint8ArrayToHexString(val);
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
     return { bytes: val };
   }
 
+  /**
+   * @throws {@link Bls12381g1ValidationError}
+   */
   EncodeObject(val: string | Uint8Array, semantic?: SemanticEncoding) {
     val = this.convertUint8ArrayToHexString(val);
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
     if (semantic && semantic[Bls12381g1Token.prim]) {
       return semantic[Bls12381g1Token.prim](val);
     }

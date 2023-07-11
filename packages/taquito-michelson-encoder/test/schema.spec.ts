@@ -1,5 +1,5 @@
 import { storage } from '../data/sample20';
-import { InvalidBigMapSchema, InvalidRpcResponseError } from '../src/schema/error';
+import { InvalidBigMapSchemaError, InvalidRpcResponseError } from '../src/schema/errors';
 
 import { Schema } from '../src/taquito-michelson-encoder';
 
@@ -29,7 +29,7 @@ describe('Errors releated to Schemas', () => {
         value: {},
       },
     ];
-    expect(() => schema.ExecuteOnBigMapDiff(bigMap)).toThrow(InvalidBigMapSchema);
+    expect(() => schema.ExecuteOnBigMapDiff(bigMap)).toThrow(InvalidBigMapSchemaError);
     expect.objectContaining({
       message: expect.stringContaining('Big map schema is undefined'),
     });
