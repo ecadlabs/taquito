@@ -8,6 +8,10 @@ import {
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing an Address
+ */
 export class AddressValidationError extends TokenValidationError {
   name = 'AddressValidationError';
   constructor(public value: any, public token: AddressToken, message: string) {
@@ -34,30 +38,35 @@ export class AddressToken extends ComparableToken {
     };
   }
 
-  private isValid(value: any): AddressValidationError | null {
+  /**
+   * @throws {@link AddressValidationError}
+   */
+  private validate(value: any) {
     if (validateAddress(value) !== ValidationResult.VALID) {
-      return new AddressValidationError(value, this, `Address is not valid: ${value}`);
+      throw new AddressValidationError(
+        value,
+        this,
+        `Address is not valid: ${JSON.stringify(value)}`
+      );
     }
-
-    return null;
   }
 
+  /**
+   * @throws {@link AddressValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return { string: val };
   }
 
+  /**
+   * @throws {@link AddressValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[AddressToken.prim]) {
       return semantic[AddressToken.prim](val);
@@ -66,6 +75,9 @@ export class AddressToken extends ComparableToken {
     return { string: val };
   }
 
+  /**
+   * @throws {@link AddressValidationError}
+   */
   public Execute(val: { bytes: string; string: string }): string {
     if (val.string) {
       return val.string;
@@ -74,7 +86,7 @@ export class AddressToken extends ComparableToken {
       throw new AddressValidationError(
         val,
         this,
-        `cannot be missing both string and bytes: ${val}`
+        `cannot be missing both string and bytes: ${JSON.stringify(val)}`
       );
     }
 
@@ -96,6 +108,9 @@ export class AddressToken extends ComparableToken {
     };
   }
 
+  /**
+   * @throws {@link AddressValidationError}
+   */
   public ToKey({ bytes, string }: any) {
     if (string) {
       return string;
@@ -104,7 +119,7 @@ export class AddressToken extends ComparableToken {
       throw new AddressValidationError(
         { bytes, string },
         this,
-        `cannot be missing both string and bytes ${{ string, bytes }}`
+        `cannot be missing both string and bytes ${JSON.stringify({ string, bytes })}`
       );
     }
 
