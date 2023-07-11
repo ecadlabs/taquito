@@ -1,4 +1,4 @@
-import { DEFAULT_FEE, MANAGER_LAMBDA, TezosToolkit } from '@taquito/taquito';
+import { DEFAULT_FEE, MANAGER_LAMBDA, TezosToolkit, Protocols } from '@taquito/taquito';
 import { Contract } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { originate, originate2, transferImplicit2 } from './data/lambda';
@@ -6,8 +6,10 @@ import { ligoSample } from './data/ligo-simple-contract';
 import { managerCode } from './data/manager_code';
 import { InvalidAmountError } from '@taquito/core';
 
-CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
+CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => {
   const Tezos = lib;
+  const Nairobi = protocol === Protocols.PtNairobi ? it : it.skip;
+  const OxfordAndAlpha = protocol === Protocols.ProtoALpha ? it : it.skip;
 
   describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -194,7 +196,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       done();
     });
 
-    it('Estimate transfer to regular address with a fixed fee', async (done) => {
+    Nairobi('Estimate transfer to regular address with a fixed fee', async (done) => {
 
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
 
@@ -204,11 +206,30 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       done();
     });
 
-    it('Estimate transfer to regular address with insufficient balance', async (done) => {
+    OxfordAndAlpha('Estimate transfer to regular address with a fixed fee', async (done) => {
+
+      const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
+
+      await expect(LowAmountTez.estimate.transfer(params)).rejects.toMatchObject({
+        id: 'proto.alpha.implicit.empty_implicit_contract',
+      });
+      done();
+    });
+
+    Nairobi('Estimate transfer to regular address with insufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toMatchObject({
         id: 'proto.017-PtNairob.tez.subtraction_underflow',
+      });
+      done();
+    });
+
+    OxfordAndAlpha('Estimate transfer to regular address with insufficient balance', async (done) => {
+      await expect(
+        LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
+      ).rejects.toMatchObject({
+        id: 'proto.alpha.tez.subtraction_underflow',
       });
       done();
     });
