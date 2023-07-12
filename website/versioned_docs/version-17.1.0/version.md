@@ -2,6 +2,285 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v17.1.0
+**Potential Breaking Changes**
+- Updated RxJS version from v6.6.3 to v7.8.1
+- Updated TS version into  v4.2.4
+- Please be wary due to the RxJS version upgrade, we've been seeing intermittent timeouts when testing against a Flextesa sandbox. This behaviour is **not** present when using it against a regular node (Mainnet, Nairobinet, etc). We are still investigating what the cause might be. #2261
+
+## Summary
+### New Features
+- Exposed the injector to be customizable from the TezosToolkit class #1344 
+
+### Improvement
+- Simplified generated Lambda for `transferToContract` [PR#2404](https://github.com/ecadlabs/taquito/pull/2404)
+- Improved error classes for these following packages:
+    - `@taquito/taquito` [PR#2559](https://github.com/ecadlabs/taquito/pull/2559)
+    - `@taquito/michelson-encoder` #1995
+    - `@taquito/tzip12` [PR#2559](https://github.com/ecadlabs/taquito/pull/2559)
+    - `@taquito/tzip16` [PR#2559](https://github.com/ecadlabs/taquito/pull/2559)
+
+### Internals
+- Updated version dependencies for `Sass` and `Dotenv` in `/website` [PR#2560](https://github.com/ecadlabs/taquito/pull/2560)
+
+# Taquito v17
+### Potential Breaking Changes
+Protocol Nairobi comes with a couple potential breaking changes for our users:
+- `@taquito/taquito` - Update gas limit changes that pertains to each different curve in Protocol N #2447
+- `@taquito/rpc` - Update operation result of `sc_rollup_cement_result` to have the newly added field #2448
+- Changed error class names #2505 :
+  - `@taquito/remote-signer` - `KeyNotFoundError` renamed to `PublicKeyNotFoundError`
+  - `@taquito/remote-signer` - `PublicKeyMismatch` renamed to `PublicKeyVerificationError`
+  - `@taquito/remote-signer` - `SignatureVerificationFailedError` renamed to `SignatureVerificationError`
+
+## Summary
+### Nairobi Support
+- `@taquito/taquito` - Update gas limit changes that pertains to each different curve in Protocol N #2447
+- `@taquito/rpc` - Update operation result of `sc_rollup_cement_result` to have the newly added field #2448
+
+### New Features
+- `@taquito/taquito` & `@taquito/michelson-encoder`- Introduced a new feature called `EventAbstraction` that provides an abstraction to Events, similar to `ContractAbstraction` #2128
+- 
+### Bug Fixes
+- `@taquito/taquito` - Fixed contract call estimation to check for unrevealed keys #2500
+
+### Testing
+- Fixed ballot operation testing to have a dynamic wait #2403
+
+### Improvement
+- Further improved error classes and updated error class hierarchy for the following packages #2509 & #2505:
+    - `@taquito/http-utils`
+    - `@taquito/contracts-library`
+    - `@taquito/beacon-wallet`
+    - `@taquito/ledger-signer`
+    - `@taquito/remote-signer`
+- Improved error capturing/validation for RPC calls #1996
+
+### Documentation
+- Added docs for making contract calls with JSON Michelson as a workaround to limitations that are introduced by complex contract call parameters #2443
+
+### Internals
+- Upgrade `netlify-cli` package to fix CI issues [PR#2496](https://github.com/ecadlabs/taquito/pull/2496)
+# Taquito v16.2.0
+
+**Potential Breaking Changes**:
+- Some error classes may have been moved to the `@taquito/core` package. Note to developers if they are exporting any error classes to capture errors, there might be a need to adjust the export path
+
+**Note**: There are significant (backwards compatible) changes to the `@taquito/taquito` package, largely regarding the flow of preparing, estimating, forging, and injecting operations into a node. No breaking changes are expected, but users are welcomed to reach out to the team if any issues arise.
+
+
+## Summary
+### New Features
+- Introduction of the new `@taquito/core` package, which will contain important types and shared classes #1992
+
+
+### Bug Fixes
+- Fixed contract calls with nested `option` with `Some None` #2344
+- Fixed a broken `isNode` check that checks whether the runtime environment is a Node environment or not [PR#2498](https://github.com/ecadlabs/taquito/pull/2498)
+
+### Improvement
+- `@taquito/taquito` - Tweaked the functionality of `PrepareProvider` to not have coupling with Estimation, it will now output `PreparedOperation` with default fees, gas limits and, storage limits #2257
+- `@taquito/taquito` - Added a filter for events listener to exclude failed events #2319
+- `@taquito/utils` - Updated address validation to include smart rollup addresses #2444
+- Removed duplicate error classes and did a small audit to streamline them across all packages #1993
+- Improved error messages and fix relevant error classes in `@taquito/local-forging` and `@taquito/signer` #1994
+
+
+### Documentation
+- Updated old Michelson code in our smart contract documentation #2482
+- Updated `README` to reference Mumbainet #2459
+- Updated wrong example in docs for Tezos domains #2436
+- Added extra detail on complex parameter calls in the docs #2443
+
+
+### Internals
+- `OperationEmitter` class in `@taquito/taquito` have been replaced with `PrepareProvider` and the `Provider` abstract class #2257
+    - RpcContractProvider, RpcEstimateProvider, RpcBatchProvider, and RpcTzProvider no longer extends `OperationEmitter`, and is replaced with a more lightweight abstract class `Provider` #2428, #2429, #2430, #2431
+- Removed the dependency `axios-fetch-adapter` and adapted the code directly into Taquito [PR#2457](https://github.com/ecadlabs/taquito/pull/2457)
+
+### `@taquito/taquito` - Added a filter for events listener to exclude failed events
+Introduces a new filter `excludeFailedOperations` to determine whether you'd want to filter out failed events or not
+```typescript
+const Tezos = new TezosToolkit(RPC_URL);
+
+Tezos.setStreamProvider(
+  Tezos.getFactory(PollingSubscribeProvider)({
+    shouldObservableSubscriptionRetry: true, 
+    pollingIntervalMilliseconds: 1500 
+  })
+);
+
+try {
+  const sub = Tezos.stream.subscribeEvent({
+    tag: 'tagName',
+    address: 'KT1_CONTRACT_ADDRESS',
+    excludeFailedOperations: true
+  });
+    
+  sub.on('data', console.log);
+    
+} catch (e) {
+  console.log(e);
+}
+```
+
+### `@taquito/taquito` - Tweaked the functionality of `PrepareProvider`
+The `PrepareProvider` is a somewhat new feature to Taquito that allows users to independently create a `PreparedOperation` object. It's behaviour is slightly changed so that it **does not** estimate directly when preparing. The estimation and the preparation process are now 2 separate process, removing the circular dependency it used to have.
+
+# Taquito v16.1.1
+## Bug Fixes
+- Fixed an issue where the package forked from `vespaiach/axios-fetch-adapter` was not able to be resolved by some package managers. We have since published the fork on NPM as `@taquito/axios-fetch-adapter` [PR #2427](https://github.com/ecadlabs/taquito/pull/2427)
+
+# Taquito v16.1.0
+## Summary
+- `@taquito/rpc` - Added RPC endpoint to add pending transactions in mempool #2382
+- `@taquito/rpc` - Added support for types of smart rollup operations in the RPC package #2409
+    - `smart_rollup_publish`
+    - `smart_rollup_cement`
+    - `smart_rollup_recover_bond`
+    - `smart_rollup_refute`
+    - `smart_rollup_timeout`
+- `@taquito/taquito` - Added support for `contractCall()` in the estimate provider #2019
+- `@taquito/taquito` - Added support for `smart_rollup_originate` operation #2306
+- `@taquito/taquito` - Added utility functions in prepare provider to accomodate forging and operation pre-apply (dry runs) #2256
+- `@taquito/local-forging` - Added support for `set_deposits_limit` in the local forger [PR #2237](https://github.com/ecadlabs/taquito/pull/2237)
+
+### Bug Fixes
+- Fixed a bug with the Prepare Provider where operation counters get carried over in subsequent method calls #2425
+
+### Documentation
+- Fixed typo in Taquito README [PR #2275](https://github.com/ecadlabs/taquito/pull/2275)
+- Updated example in signing documentation [PR #2399](https://github.com/ecadlabs/taquito/pull/2399)
+- Added Exaion node as a commercial provider [PR #2401](https://github.com/ecadlabs/taquito/pull/2401)
+
+### `@taquito/rpc` - Added RPC endpoint to add pending transactions in mempool
+
+This RPC endpoint returns the list of prevalidated operations in the mempool. Note that accessibility of the mempool depends on each Node.
+
+```typescript
+await rpcClient.getPendingOperations();
+```
+
+### `@taquito/taquito` - Added support for `contractCall()` in the estimate provider
+
+The estimate provider now supports estimates for contract calls directly, and is usable as such:
+```typescript
+const contract = await Tezos.contract.at(contractAddress!);
+const opEntrypoint = contract.methods.default(5);
+const estimate = await Tezos.estimate.contractCall(opEntrypoint);
+```
+
+### `@taquito/taquito` - Added `smart_rollup_originate` operation support
+Added support in the contract provider to inject `smart_rollup_originate` operations
+
+```typescript
+const op = await Tezos.contract.smartRollupOriginate({
+  pvmKind: PvmKind.WASM2,
+  kernel: ${KERNEL_VALUE} ,
+  parametersType: { prim: 'bytes' }
+});
+```
+
+### `@taquito/taquito` - Added utility functions in prepare provider to accomodate forging and operation pre-apply (dry runs)
+Provided 2 utility functions to convert results from the `PrepareProvider` (`PreparedOperation` type objects) into `ForgeParams` and `PreapplyParams`
+```typescript!
+// pre-apply 
+const prepared = await Tezos.prepare.transaction({
+  amount: 1,
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+});
+const params = await Tezos.prepare.toPreapply(prepared);
+const preapplyOp = await Tezos.rpc.preapplyOperations(params);
+
+// forge
+const prepared = await Tezos.prepare.transaction({
+  amount: 1,
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+});
+const params = Tezos.prepare.toForge(prepared);
+const forgedBytes = await forger.forge(params);
+```
+
+# Taquito v16.0.0
+## Summary
+
+### Mumbai Support
+- `@taquito/taquito` Support new operation `smart_rollup_add_messages` #2309
+- `@taquito/taquito` Updated `transferTicket` operation in the contract API to support ticket transfers between implicit accounts #2320
+- `@taquito/local-forging` Support new Mumbai operations #2308
+    - `smart_rollup_originate`, 
+    - `smart_rollup_add_messages`, 
+    - `smart_rollup_execute_outbox_message`
+- `@taquito/local-forging` updated validation to allow tz4 addresses #2350
+- `@taquito/rpc` support Mumbai operation types in the RPC package #2307
+- `@taquito/rpc` added Mumbai protocol constants in the RPC package #2375
+- `@taquito/rpc` removed `consumed_gas` property in `update_consensus_key` return type in the RPC package #2273
+- `@taquito/rpc` added new RPC endpoints #2270:
+    - `getTicketBalance`
+    - `getAllTicketBalances`
+- `@taquito/michel-codec` Added support for `bytes` in these following Michelson instructions #2267:
+    - `AND`, `OR`, `XOR`, `NOT`, `LSL`, `LSR`
+- `@taquito/michel-codec` added support for bytes-nat conversion in Michelson #2268
+
+### Bug Fixes
+- Fixed broken website live examples #2305
+- Updated estimation to validate against decimal values to prevent unwanted errors #2318
+
+### Documentation
+- Removed Cryptonomic links from the commercial RPC list on the website #2332
+- Added documentation on `MANAGER_LAMBDA` #1718
+- Added documentation on ~100 most popular contract entrypoint parameter examples on Tezos #2153
+- Fixed broken link on Dapp pre-launch checklist page #2293
+- Fixed broken link on smart contract collection page #2295
+- Fixed broken live code examples on the `tezostaquito.io` website #2305
+- Removed invalid links and duplicate entries #2332
+- Added documentation for contract entrypoints parameters in JS/TS #2153
+- Fixed broken link on Smart Contract collection page #2295
+- Fixed broken link on DApp pre-launch checklist page #2293
+- Added documentation on MANAGER_LAMBDA #1718
+- Updated Ledger examples to point to Ghostnet [PR](https://github.com/ecadlabs/taquito/pull/2365)
+- Updated README to include cases for specific Linux distros [PR](https://github.com/ecadlabs/taquito/pull/2330)
+
+
+### Internals
+- Removed Kathmandu references from local-forger #2131
+- Bumped Node versions to 16 [PR](https://github.com/ecadlabs/taquito/pull/2359) #1845
+- Delete TezEdge workflows [PR](https://github.com/ecadlabs/taquito/pull/2364)
+- Updated Docusaurus version to it's latest stable release (v2.3.1) [PR](https://github.com/ecadlabs/taquito/pull/2381)
+- Removed references to older protocols in Taquito and updated integration tests and examples #485
+
+## `@taquito/taquito` - Support for new operation `smart_rollup_add_messages`
+Support for a new manager operation to add messages to a smart rollup inbox have been added, and can be used as follows:
+```typescript
+const op = await Tezos.contract.smartRollupAddMessages({
+  message: [
+    '0000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74'
+  ]
+});
+```
+
+## `@taquito/rpc` - Support for new Mumbai operation types in the RPC package
+Added a few new types to accommodate for Mumbai protocol changes:
+- `OperationContentsAndResultSmartRollupOriginate`
+- `OperationContentsAndResultSmartRollupAddMessages`
+- `OperationContentsAndResultSmartRollupExecuteOutboxMessage`
+- `OperationResultSmartRollupOriginate`
+- `OperationResultSmartRollupAddMessages`
+- `OperationResultSmartRollupExecuteOutboxMessage`
+- `OperationContentsAndResultMetadataSmartRollupOriginate`
+- `OperationContentsAndResultMetadataSmartRollupAddMessages`
+- `OperationContentsAndResultMetadataSmartRollupExecuteOutboxMessage`
+
+## `@taquito/michel-codec` - Added support for `bytes`
+The Mumbai protocol update introduces a change where the following Michelson instructions support `bytes`: `AND`, `OR`, `XOR`, `NOT`, `LSL`, `LSR`
+
+These instructions now have bytes support of the opcodes. For more information, refer to [this document](https://gitlab.com/tezos/tezos/-/merge_requests/6055)
+
+
+## `@taquito/michel-codec` - Added support for bytes-nat conversion in Michelson
+The Mumbai protocol update now supports conversion between `bytes` and `nat` as well as `bytes` and `int`
+
+For more information, refer to [this page](https://gitlab.com/tezos/tezos/-/merge_requests/6681)
 # Taquito v15.1.0
 ## Summary
 
