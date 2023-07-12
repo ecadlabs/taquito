@@ -7,7 +7,7 @@ import {
   OperationContentsAndResultReveal,
   OperationContentsAndResultIncreasePaidStorage,
 } from '@taquito/rpc';
-import { ObservableError } from '../error';
+import { ObservableError } from './errors';
 
 export class IncreasePaidStorageWalletOperation extends WalletOperation {
   constructor(

@@ -93,7 +93,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidAddressError);
-      expect(error.message).toEqual(`Invalid address "foo"`);
+      expect(error.message).toContain(`Invalid address "foo"`);
     }
   });
 
@@ -103,7 +103,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidBlockHashError);
-      expect(error.message).toEqual(`Invalid block hash "foo"`);
+      expect(error.message).toContain(`Invalid block hash "foo"`);
     }
   });
 
@@ -113,7 +113,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidDerivationPathError);
-      expect(error.message).toEqual(`Invalid derivation path "foo"`);
+      expect(error.message).toContain(`Invalid derivation path "foo"`);
     }
   });
 
@@ -123,7 +123,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidHexStringError);
-      expect(error.message).toEqual(`Invalid hex string "0x12"`);
+      expect(error.message).toContain(`Invalid hex string "0x12"`);
     }
   });
 
@@ -133,7 +133,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidMessageError);
-      expect(error.message).toEqual(`Invalid message "foo"`);
+      expect(error.message).toContain(`Invalid message "foo"`);
     }
   });
 
@@ -157,7 +157,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidKeyError);
-      expect(error.message).toEqual(`Invalid private key`);
+      expect(error.message).toContain(`Invalid private key`);
     }
   });
 
@@ -167,7 +167,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidPublicKeyError);
-      expect(error.message).toEqual(`Invalid public key "foo"`);
+      expect(error.message).toContain(`Invalid public key "foo"`);
     }
   });
 
@@ -177,7 +177,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidSignatureError);
-      expect(error.message).toEqual(`Invalid signature "foo"`);
+      expect(error.message).toContain(`Invalid signature "foo"`);
     }
   });
 
@@ -187,7 +187,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidContractAddressError);
-      expect(error.message).toEqual(`Invalid contract address "foo"`);
+      expect(error.message).toContain(`Invalid contract address "foo"`);
     }
   });
 
@@ -197,7 +197,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidChainIdError);
-      expect(error.message).toEqual(`Invalid chain id "foo"`);
+      expect(error.message).toContain(`Invalid chain id "foo"`);
     }
   });
 
@@ -207,7 +207,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidKeyHashError);
-      expect(error.message).toEqual(`Invalid public key hash "foo"`);
+      expect(error.message).toContain(`Invalid public key hash "foo"`);
     }
   });
 
@@ -217,7 +217,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidOperationHashError);
-      expect(error.message).toEqual(`Invalid operation hash "foo"`);
+      expect(error.message).toContain(`Invalid operation hash "foo"`);
     }
   });
 
@@ -227,7 +227,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidOperationKindError);
-      expect(error.message).toEqual(`Invalid operation kind "foo"`);
+      expect(error.message).toContain(`Invalid operation kind "foo"`);
     }
   });
 
@@ -237,7 +237,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(UnsupportedActionError);
       expect(error).toBeInstanceOf(DeprecationError);
-      expect(error.message).toEqual(`foo`);
+      expect(error.message).toContain(`foo`);
     }
   });
 
@@ -247,7 +247,7 @@ describe('common error classes', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(UnsupportedActionError);
       expect(error).toBeInstanceOf(ProhibitedActionError);
-      expect(error.message).toEqual(`foo`);
+      expect(error.message).toContain(`foo`);
     }
   });
 });

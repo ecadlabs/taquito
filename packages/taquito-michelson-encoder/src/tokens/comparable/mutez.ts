@@ -8,6 +8,10 @@ import {
 import BigNumber from 'bignumber.js';
 import { BaseTokenSchema } from '../../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing Mutez
+ */
 export class MutezValidationError extends TokenValidationError {
   name = 'MutezValidationError';
   constructor(public value: any, public token: MutezToken, message: string) {
@@ -45,31 +49,32 @@ export class MutezToken extends ComparableToken {
     };
   }
 
-  private isValid(val: any): MutezValidationError | null {
+  /**
+   * @throws {@link MutezValidationError}
+   */
+  private validate(val: any) {
     const bigNumber = new BigNumber(val);
     if (bigNumber.isNaN()) {
-      return new MutezValidationError(val, this, `Value is not a number: ${val}`);
-    } else {
-      return null;
+      throw new MutezValidationError(val, this, `Value is not a number: ${val}`);
     }
   }
 
+  /**
+   * @throws {@link MutezValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return { int: String(val).toString() };
   }
 
+  /**
+   * @throws {@link MutezValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[MutezToken.prim]) {
       return semantic[MutezToken.prim](val);

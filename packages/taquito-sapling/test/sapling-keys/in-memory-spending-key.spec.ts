@@ -1,4 +1,4 @@
-import { InvalidSpendingKey } from '../../src/error';
+import { InvalidSpendingKey } from '../../src/errors';
 import { InMemorySpendingKey } from '../../src/sapling-keys/in-memory-spending-key';
 
 describe('InMemorySpendingKey', () => {

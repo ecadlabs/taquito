@@ -3,11 +3,11 @@ import { Context, ContractAbstraction, ContractProvider, Wallet } from '@taquito
 import { Handler, Tzip16Uri } from '../metadata-provider';
 import { bytes2Char } from '@taquito/utils';
 import {
-  InvalidMetadataType,
-  BigMapMetadataNotFound,
-  InvalidUri,
-  MetadataNotFound,
-} from '../tzip16-errors';
+  InvalidContractMetadataTypeError,
+  BigMapContractMetadataNotFoundError,
+  InvalidUriError,
+  ContractMetadataNotFoundError,
+} from '../errors';
 
 const typeOfValueToFind = {
   prim: 'big_map',
@@ -27,7 +27,7 @@ export class TezosStorageHandler implements Handler {
   ) {
     const parsedTezosStorageUri = this.parseTezosStorageUri(location);
     if (!parsedTezosStorageUri) {
-      throw new InvalidUri(`tezos-storage:${location}`);
+      throw new InvalidUriError(`tezos-storage:${location}`);
     }
     const script = await context.readProvider.getScript(
       parsedTezosStorageUri.contractAddress || contractAbstraction.address,
@@ -39,7 +39,7 @@ export class TezosStorageHandler implements Handler {
     );
 
     if (!bigMapId || !bigMapId.int) {
-      throw new BigMapMetadataNotFound();
+      throw new BigMapContractMetadataNotFoundError(bigMapId);
     }
     const bytes = await context.contract.getBigMapKeyByID<string>(
       bigMapId.int.toString(),
@@ -48,7 +48,7 @@ export class TezosStorageHandler implements Handler {
     );
 
     if (!bytes) {
-      throw new MetadataNotFound(
+      throw new ContractMetadataNotFoundError(
         `No '${parsedTezosStorageUri.path}' key found in the big map %metadata of the contract ${
           parsedTezosStorageUri.contractAddress || contractAbstraction.address
         }`
@@ -56,7 +56,7 @@ export class TezosStorageHandler implements Handler {
     }
 
     if (!/^[0-9a-fA-F]*$/.test(bytes)) {
-      throw new InvalidMetadataType();
+      throw new InvalidContractMetadataTypeError();
     }
     return bytes2Char(bytes);
   }

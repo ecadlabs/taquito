@@ -20,13 +20,17 @@ import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
 import {
   BadSigningDataError,
-  PublicKeyNotFoundError,
   OperationNotAuthorizedError,
   PublicKeyVerificationError,
   SignatureVerificationError,
 } from './errors';
 import { Signer } from '@taquito/taquito';
-import { InvalidSignatureError, InvalidKeyHashError, ProhibitedActionError } from '@taquito/core';
+import {
+  InvalidSignatureError,
+  InvalidKeyHashError,
+  ProhibitedActionError,
+  PublicKeyNotFoundError,
+} from '@taquito/core';
 
 interface PublicKeyResponse {
   public_key: string;

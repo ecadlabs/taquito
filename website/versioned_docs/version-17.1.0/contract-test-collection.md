@@ -49,8 +49,6 @@ Each contract description will include the storage in Michelson and the storage 
 
 ## IncrementContract
 
-[KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2](https://better-call.dev/jakartanet/KT1Hn49LVCTemdbkPpZEZnzXGm1rqtQs2HH2/code)
-
 This contract serves as the default introductory example on the [Ligo-WEB-IDE](https://ide.ligolang.org/p/CelcoaDRK5mLFDmr5rSWug)
 It has two endpoints, %decrement and %increment. The contract is used to demo addition and subtraction by a smart contract. This contract has neither an FA1.2 nor an FA2 interface.
 
@@ -83,8 +81,6 @@ storage: 1;
 
 ## MichelsonMapContract
 
-[KT1NASCf1Dr3SZu4RewZSRjd4mHvh8uADxf2](https://better-call.dev/jakartanet/KT1NASCf1Dr3SZu4RewZSRjd4mHvh8uADxf2/code)
-
 The contract supports a [Michelson Tutorial](https://tezostaquito.io/docs/michelsonmap). It has a default endpoint that takes a pair of an address and an amount of tez.
 
 - [See the full tutorial](https://claudebarde.medium.com/?p=8d8be9930662)
@@ -116,8 +112,6 @@ storage: MichelsonMap<string, BigNumber>
 </Tabs>
 
 ## GenericMultisigContract
-
-[KT1L3hwPB7M5GrvXW7CY3DV65JYBcTSyWVv4](https://better-call.dev/jakartanet/KT1L3hwPB7M5GrvXW7CY3DV65JYBcTSyWVv4/code)
 
 This contact has a stored counter. The contract is used in some Taquito Integration Tests for generic tests of such features as transfers.
 
@@ -154,13 +148,11 @@ storage (pair (nat %stored_counter) (pair (nat %threshold) (list %keys key)));
 
 # Lambda Contracts
 
-Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, jakartanet, or Hangzhounet. Taquito will detect the current network and use the appropriate lambda contract.
+Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, Ghostnet or another testnet. Taquito will detect the current network and use the appropriate lambda contract.
 
 Lambda views are introduced in [Tzip4](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints).
 
 ## LambdaViewContract
-
-[KT1Kmu8xRvMsJs3zMvgoCdv7Da2twfZ2qTEg](https://better-call.dev/jakartanet/KT1Kmu8xRvMsJs3zMvgoCdv7Da2twfZ2qTEg/code)
 
 Not a supported FA1.2 contract. Almost an Fa2 interface but it is missing update_operators.
 
@@ -211,8 +203,6 @@ const allowances = new MichelsonMap();
 </Tabs>
 
 ## LambdaViewWithTokenContract
-
-[KT1Ff5pAQ9PT8kBgcDuKU6daRbEhnfWb9TY7](https://better-call.dev/jakartanet/KT1Ff5pAQ9PT8kBgcDuKU6daRbEhnfWb9TY7/code)
 
 This contact is another example of a Lambda contract, this time involving a token. It is not a supported FA1.2 contract. The contract does have the three entry points that define an FA2 interface - .
 
@@ -292,8 +282,6 @@ const op = await tezos.contract.originate({
 
 ## MapWithPairasMapContract
 
-[KT1ASaoLYgdJBz3mWUic6e6n6f3RFn5u9uAP](https://better-call.dev/jakartanet/KT1ASaoLYgdJBz3mWUic6e6n6f3RFn5u9uAP/code)
-
 A simple contract with a default entrypoint that takes unit. Not a supported FA1.2 contract.
 
 The contract is used to demonstrate the `get` method of the `MichelsonMap` class, which accesses values of the map for a specified key. If the storage does not annotate its properties, the caller must use numeric indexes instead. This contract does not annotate the pairs of the key pair either so numeric indexes are used for this also.
@@ -358,8 +346,6 @@ const op = await tezos.contract.originate({
 </Tabs>
 
 ## MapWithComplexKeysContract
-
-[KT1G9UQsSbBej2PKpPHcs9su4ywCe3jcX7ED](https://better-call.dev/jakartanet/KT1G9UQsSbBej2PKpPHcs9su4ywCe3jcX7ED/code)
 
 This contract has a single default entrypoint that takes unit and produces a map:
 
@@ -441,8 +427,6 @@ Note the lack of annotations in the Michelson for the storage. If the storage do
 
 ## MapWithInitialStorageContract
 
-[KT1Na57o4VNiX1dFP2ookfRBFnQLboLwV4u5](https://better-call.dev/jakartanet/KT1Na57o4VNiX1dFP2ookfRBFnQLboLwV4u5/code)
-
 Taquito provides a get method of the MichelsonMap on storage of type Map. We can only change contract storage by calling the function provided by the contract. The main function on this Smart Contract is decreasing the value of the current_stock associated with the key 1.
 
 #### Entrypoints:
@@ -475,8 +459,6 @@ storageMap.set('3', { current_stock: '50', max_price: '60' });
 </Tabs>
 
 ## MapWithMapandBigmapContract
-
-[KT1Na57o4VNiX1dFP2ookfRBFnQLboLwV4u5](https://better-call.dev/jakartanet/KT1Na57o4VNiX1dFP2ookfRBFnQLboLwV4u5/code)
 
 The get method of the MichelsonMap class accesses the values of the map and values of the bigMap. The difference is that the value gets returned directly for a map while the get method on a bigMap returns a promise.
 
@@ -537,8 +519,6 @@ Tezos.contract
 
 ## BigMapsMultipleValuesContract
 
-[KT1CcxnvcSm1SdSHUv2KptECfJ97ZMNbTPu6](https://better-call.dev/jakartanet/KT1CcxnvcSm1SdSHUv2KptECfJ97ZMNbTPu6/code)
-
 This contract has an FA1.2 interface.
 
 It is possible to fetch multiple big map values using Taquito with one call using the getMultipleValues method of the BigMapAbstraction class. Taquito will ensure that all fetched big maps come from the same block to ensure a consistent state.
@@ -594,8 +574,6 @@ const op = await tezos.contract.originate({
 </Tabs>
 
 ## BigMapsComplexStorageContract
-
-[KT1GhkZzKSBjMxY4kKURNhhYiSVuTyBaGspe](https://better-call.dev/jakartanet/KT1GhkZzKSBjMxY4kKURNhhYiSVuTyBaGspe/code)
 
 This contract is used in many Taquito documentation Live Code Examples to demonstrate how to get data from a complex storage. Not a supported FA1.2 contract.
 
@@ -681,8 +659,6 @@ const op = await tezos.contract.originate({
 
 ## BigMapsWithLedgerContract
 
-[KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9](https://better-call.dev/jakartanet/KT1AbzoXYgGXjCD3Msi3spuqa5r5MP3rkvM9/code)
-
 This contract is used in Taquito integration tests. It is not a FA1.2 contract, since Entrypoint "transfer" has type (pair (pair (address %0) (address %1)) (nat %2)), but should have type (pair address address nat). Also not an FA2 contract as it does not have an entrypoint for update_operators.
 
 #### Entrypoints
@@ -737,8 +713,6 @@ const opknownBigMapContract = await tezos.contract.originate({
 
 ## BigMapPackContract
 
-[KT1Hrp5i3P5BUATvkP7scdqY5PHBmYyz3CNA](https://better-call.dev/jakartanet/KT1Hrp5i3P5BUATvkP7scdqY5PHBmYyz3CNA/code)
-
 By default, a call to an RPC node is used to pack data when fetching values from a big map. Big map keys need to be serialized or packed and Taquito relies on the PACK functionality of a Tezos RPC node to pack the big map keys. This may be considered inefficient as it adds a request to a remote node to fetch data.
 
 Now, Taquito allows you to pack the required data locally to fetch values from a big map. By relying on the local pack implementation, Taquito eliminates one RPC roundtrip when fetching big map values.
@@ -792,8 +766,6 @@ Views are meant to be called by a contract using the Michelson Instruction View 
 
 This contract is used to demonstrate On Chain views. It calls the view 'fib' in another contract called contractTopLevelViews.
 
-[KT1VzRnJRGx6uuvKur9AejKZmiY2eTDrTwVy](https://better-call.dev/jakartanet/KT1VzRnJRGx6uuvKur9AejKZmiY2eTDrTwVy/code)
-
 #### Entrypoints
 
 - default
@@ -830,8 +802,6 @@ view "add" nat nat { UNPAIR ; ADD } ;
 
 which can be called by other contracts to calculate and return some value.
 
-[KT1CpgZcWr45Arc2p6q4axM2f23N3Aujyv1D](https://better-call.dev/jakartanet/KT1CpgZcWr45Arc2p6q4axM2f23N3Aujyv1D/code)
-
 #### Entrypoints
 
 - default
@@ -863,8 +833,6 @@ storage: 1;
 Tzip-7 introduced the approvable ledger: [Tzip-7](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-7/tzip-7.md)
 
 ## TokenContract
-
-[KT1AhKTHfwKvEQeJ13X9M1TSF6pGJnZZCCau](https://better-call.dev/jakartanet/KT1AhKTHfwKvEQeJ13X9M1TSF6pGJnZZCCau/code)
 
 - [A Beginner's Guide to Tezos Tzip-7 Proposal](https://claudebarde.medium.com/a-beginners-guide-to-tezos-tzip-7-proposal-90a8b816af7e)
 
@@ -929,8 +897,6 @@ The @taquito/tzip12 package allows retrieving metadata associated with tokens of
 A contract has an FA2 interface if it has entrypoints: transfer, balance_of, and update_operators
 
 ## Tzip12BigMapOffChainContract
-
-[KT1MPzoNmHvDfGpUupVyKVhPkz5iasdT7tZA](https://better-call.dev/jakartanet/KT1MPzoNmHvDfGpUupVyKVhPkz5iasdT7tZA/code)
 
 This contract has an FA2 interface.
 
@@ -1061,8 +1027,6 @@ Each of the following contracts is used to demonstrate an aspect of getMetadata.
 
 In this example the storage holds the metadata in a bigmap.
 
-[KT1UCrgZ3xpuMQaHGgZv5FmYVL1ST6sACSsa](https://better-call.dev/jakartanet/KT1UCrgZ3xpuMQaHGgZv5FmYVL1ST6sACSsa/code)
-
 #### Entrypoints:
 
 - default
@@ -1126,8 +1090,6 @@ homepage: https://tezostaquito.io/
 
 ## Tzip16HTTPSContract
 
-[KT1C1EJh8zizUjEyRJ1BunqL58w2u4Zwv6o7](https://better-call.dev/jakartanet/KT1C1EJh8zizUjEyRJ1BunqL58w2u4Zwv6o7/code)
-
 In this example the storage holds a URL that refers to the metadata.
 
 #### Entrypoints:
@@ -1185,8 +1147,6 @@ homepage: https://github.com/ecadlabs/taquito
 </Tabs>
 
 ## Tzip16SHA256Contract
-
-[KT1TUufULv5wbZeTRxEzdR7eBzGu6kXBMinS](https://better-call.dev/jakartanet/KT1TUufULv5wbZeTRxEzdR7eBzGu6kXBMinS/code)
 
 In this example the storage holds a URL encrypted with SHA 256 that refers to the metadata.
 
@@ -1250,8 +1210,6 @@ homepage: https://github.com/ecadlabs/taquito
 
 ## Tzip16IPFSContract
 
-[KT1BJLSSAzTBMVWKbTnGE3UYWMopW2VZ8Mb3](https://better-call.dev/jakartanet/KT1BJLSSAzTBMVWKbTnGE3UYWMopW2VZ8Mb3/code)
-
 In this example the storage holds an IPFS location that refers to the metadata.
 
 #### Entrypoints:
@@ -1309,8 +1267,6 @@ homepage: https://github.com/ecadlabs/taquitoj
 
 ## Tzip16OffChainContractJSON
 
-[KT1JJm8dr4JzCMZRN31ccoWL2K49q1oQAd1Q](https://better-call.dev/jakartanet/KT1JJm8dr4JzCMZRN31ccoWL2K49q1oQAd1Q/code)
-
 This contract has a view named `someJson` that can be found in the metadata. When we inspect those metadata, we can see that this view takes no parameter and has a returnType of bytes.
 
 #### Entrypoints:
@@ -1359,8 +1315,6 @@ license: MIT
 </Tabs>
 
 ## Tzip16OffChainContractMultiply
-
-[KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR](https://better-call.dev/jakartanet/KT1H3ZyFYochQdjZ29ed3yBfPRy6ga4WdZXR/code)
 
 This contract has a view named `multiply-the-nat-in-storage` that can be found in the metadata. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
 
@@ -1411,8 +1365,6 @@ license: MIT
 
 ## WalletContract
 
-[KT1T1KsEcVvsVGoHYrzjCzuJjviUDM3uyGmh](https://better-call.dev/jakartanet/KT1T1KsEcVvsVGoHYrzjCzuJjviUDM3uyGmh/code)
-
 Transactions to smart contracts operate in the same fashion as transactions to an implicit account, the only difference being the `KT1...` address. You will also receive a transaction hash and have to wait for the transaction to be confirmed. Once confirmed, it can be the right time to update the user's/contract's balance, for example.
 
 Sending a transaction to a smart contract to update its storage will be a different type of action as it implies targetting a specific entrypoint and formatting correctly the data to be sent.
@@ -1455,8 +1407,6 @@ storage: 1;
 
 ## WalletAreYouThereContract
 
-[KT1C9Vjt3p3whEst9h1ykmNMFiQ36QfkYdDW](https://better-call.dev/jakartanet/KT1C9Vjt3p3whEst9h1ykmNMFiQ36QfkYdDW/code)
-
 This is a simple smart contract with two methods: `areYouThere` expects a value of type `boolean` to update the `areYouThere` value in the storage of the same type, and `addName` expects a value of type `string` to add it to the map in the contract.
 
 #### Entrypoints:
@@ -1494,8 +1444,6 @@ storage (pair (pair (bool %areyouthere) (int %integer))
 </Tabs>
 
 ## SaplingContract
-
-[KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC](https://better-call.dev/jakartanet/KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC/code)
 
 Sapling is a protocol enabling privacy-preserving transactions of fungible tokens in a decentralised environment. The example contract used
 in Taquito Integration Tests is a single-state sapling contract. It features the Michelson instruction "SAPLING_VERIFY_UPDATE".

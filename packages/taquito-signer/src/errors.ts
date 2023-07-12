@@ -5,7 +5,7 @@ import { ParameterValidationError, UnsupportedActionError } from '@taquito/core'
  *  @description Error indicates an invalid Mnemonic being passed or used
  */
 export class InvalidMnemonicError extends ParameterValidationError {
-  constructor(public mnemonic: string) {
+  constructor(public readonly mnemonic: string) {
     super();
     this.name = 'InvalidMnemonicError';
     this.message = `Invalid mnemonic "${mnemonic}"`;
@@ -17,7 +17,7 @@ export class InvalidMnemonicError extends ParameterValidationError {
  *  @description Error indicates a curve with incorrect bit size being passed or used
  */
 export class InvalidBitSize extends ParameterValidationError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'InvalidBitSize';
   }
@@ -28,7 +28,7 @@ export class InvalidBitSize extends ParameterValidationError {
  *  @description Error indicates an unsupported cureve being passed or used
  */
 export class InvalidCurveError extends ParameterValidationError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'InvalidCurveError';
   }
@@ -39,7 +39,7 @@ export class InvalidCurveError extends ParameterValidationError {
  *  @description Error indicates a seed with invalid length being passed or used
  */
 export class InvalidSeedLengthError extends ParameterValidationError {
-  constructor(public seedLength: number) {
+  constructor(public readonly seedLength: number) {
     super();
     this.name = 'InvalidSeedLengthError';
     this.message = `Invalid seed length "${seedLength}" expecting length between 16 to 64.`;
@@ -63,7 +63,7 @@ export class ToBeImplemented extends UnsupportedActionError {
  *  @description Error indicates an invalid passphrase being passed or used
  */
 export class InvalidPassphraseError extends ParameterValidationError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'InvalidPassphraseError';
   }

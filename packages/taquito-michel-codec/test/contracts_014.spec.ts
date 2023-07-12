@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { inspect } from 'util';
-import { InvalidDataExpressionError, InvalidTypeExpressionError } from '../src/error';
+import { InvalidDataExpressionError, InvalidTypeExpressionError } from '../src/errors';
 import { Contract, ContractOptions } from '../src/michelson-contract';
 import { Protocol } from '../src/michelson-types';
 import { MichelsonValidationError } from '../src/michelson-validator';
