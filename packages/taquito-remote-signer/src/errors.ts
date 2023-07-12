@@ -2,22 +2,10 @@ import { PermissionDeniedError, TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates a failure in grabbing the public key
- */
-export class PublicKeyNotFoundError extends TaquitoError {
-  constructor(public pkh: string, public cause: any) {
-    super();
-    this.name = 'KeyNotFoundError';
-    this.message = `Public key not found of this address "${pkh}".`;
-  }
-}
-
-/**
- *  @category Error
  *  @description Error indicates an unauthorized operation being attempted
  */
 export class OperationNotAuthorizedError extends PermissionDeniedError {
-  constructor(public message: string, public cause: any) {
+  constructor(public readonly message: string, public readonly cause: any) {
     super();
     this.name = 'OperationNotAuthorized';
   }
@@ -28,7 +16,11 @@ export class OperationNotAuthorizedError extends PermissionDeniedError {
  *  @description Error indicates bad signing data
  */
 export class BadSigningDataError extends TaquitoError {
-  constructor(public cause: any, public bytes: string, watermark?: Uint8Array) {
+  constructor(
+    public readonly cause: any,
+    public readonly bytes: string,
+    readonly watermark?: Uint8Array
+  ) {
     super();
     this.name = 'BadSigningData';
     this.message = watermark
@@ -43,9 +35,9 @@ export class BadSigningDataError extends TaquitoError {
  */
 export class PublicKeyVerificationError extends TaquitoError {
   constructor(
-    public requestedPk: string,
-    public requestedPkh: string,
-    public initializedPkh: string
+    public readonly requestedPk: string,
+    public readonly requestedPkh: string,
+    public readonly initializedPkh: string
   ) {
     super();
     this.name = 'PublicKeyVerificationFailedError';
@@ -59,7 +51,7 @@ export class PublicKeyVerificationError extends TaquitoError {
  */
 export class SignatureVerificationError extends TaquitoError {
   public name = 'SignatureVerificationFailedError';
-  constructor(public bytes: string, public signature: string) {
+  constructor(public readonly bytes: string, public readonly signature: string) {
     super();
     this.name = 'SignatureVerificationFailedError';
     this.message = `Invalid signature of bytes failed verification agaisnt public key.`;

@@ -3,6 +3,10 @@ import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils'
 import { ContractTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a Contract
+ */
 export class ContractValidationError extends TokenValidationError {
   name = 'ContractValidationError';
   constructor(public value: any, public token: ContractToken, message: string) {
@@ -21,40 +25,56 @@ export class ContractToken extends Token {
     super(val, idx, fac);
   }
 
-  private isValid(value: any): ContractValidationError | null {
+  /**
+   * @throws {@link ContractValidationError}
+   */
+  private validate(value: any) {
     // tz1,tz2 and tz3 seems to be valid contract values (for Unit contract)
     if (validateAddress(value) !== ValidationResult.VALID) {
-      return new ContractValidationError(value, this, 'Contract address is not valid');
+      throw new ContractValidationError(
+        value,
+        this,
+        `Value ${JSON.stringify(value)} is not a valid contract address.`
+      );
     }
 
     return null;
   }
 
+  /**
+   * @throws {@link ContractValidationError}
+   */
   public Execute(val: { bytes: string; string: string }) {
     if (val.string) {
       return val.string;
     }
     if (!val.bytes) {
-      throw new ContractValidationError(val, this, 'must contain bytes or string');
+      throw new ContractValidationError(
+        val,
+        this,
+        `Value ${JSON.stringify(
+          val
+        )} is not a valid contract address. must contain bytes or string.`
+      );
     }
 
     return encodePubKey(val.bytes);
   }
 
+  /**
+   * @throws {@link ContractValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
     return { string: val };
   }
 
+  /**
+   * @throws {@link ContractValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
     if (semantic && semantic[ContractToken.prim]) {
       return semantic[ContractToken.prim](val);
     }

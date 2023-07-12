@@ -8,6 +8,10 @@ import {
 import BigNumber from 'bignumber.js';
 import { BaseTokenSchema } from '../../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing Nat
+ */
 export class NatValidationError extends TokenValidationError {
   name = 'NatValidationError';
   constructor(public value: any, public token: NatToken, message: string) {
@@ -30,33 +34,35 @@ export class NatToken extends ComparableToken {
     return new BigNumber(val[Object.keys(val)[0]]);
   }
 
+  /**
+   * @throws {@link NatValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return { int: new BigNumber(val).toFixed() };
   }
 
-  private isValid(val: any): NatValidationError | null {
+  /**
+   * @throws {@link NatValidationError}
+   */
+  private validate(val: any) {
     const bigNumber = new BigNumber(val);
     if (bigNumber.isNaN()) {
-      return new NatValidationError(val, this, `Value is not a number: ${val}`);
-    } else if (bigNumber.isNegative()) {
-      return new NatValidationError(val, this, `Value cannot be negative: ${val}`);
-    } else {
-      return null;
+      throw new NatValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
+    }
+    if (bigNumber.isNegative()) {
+      throw new NatValidationError(val, this, `Value cannot be negative: ${JSON.stringify(val)}`);
     }
   }
 
+  /**
+   * @throws {@link NatValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[NatToken.prim]) {
       return semantic[NatToken.prim](val);

@@ -8,6 +8,10 @@ import {
 import { validateSignature, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a Signature
+ */
 export class SignatureValidationError extends TokenValidationError {
   name = 'SignatureValidationError';
   constructor(public value: any, public token: SignatureToken, message: string) {
@@ -34,30 +38,31 @@ export class SignatureToken extends ComparableToken {
     return val.bytes;
   }
 
-  private isValid(value: any): SignatureValidationError | null {
+  /**
+   * @throws {@link SignatureValidationError}
+   */
+  private validate(value: any) {
     if (validateSignature(value) !== ValidationResult.VALID) {
-      return new SignatureValidationError(value, this, 'Signature is not valid');
+      throw new SignatureValidationError(value, this, 'Signature is not valid');
     }
-
-    return null;
   }
 
+  /**
+   * @throws {@link SignatureValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return { string: val };
   }
 
+  /**
+   * @throws {@link SignatureValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[SignatureToken.prim]) {
       return semantic[SignatureToken.prim](val);

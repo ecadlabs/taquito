@@ -1,4 +1,4 @@
-import { IntegerError, MichelCodecParser, NoopParser, Context, InvalidCodeParameter } from '@taquito/taquito';
+import { InvalidBalanceError, MichelCodecParser, NoopParser, Context, InvalidCodeParameter } from '@taquito/taquito';
 import { CONFIGS } from "./config";
 import { idMichelsonCode, idInitData } from "./data/id-contract"
 
@@ -89,7 +89,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         balance: "asdf",
         code: idMichelsonCode,
         init: idInitData
-      })).rejects.toThrowError(IntegerError)
+      })).rejects.toThrowError(InvalidBalanceError)
       done();
     });
   });

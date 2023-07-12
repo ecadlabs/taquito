@@ -1,3 +1,4 @@
+import { TaquitoError } from '@taquito/core';
 import { OrTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 
@@ -5,7 +6,7 @@ import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from
  *  @category Error
  *  @description Error that indicates a failure when decoding OR Token methods
  */
-export class OrTokenDecodingError extends Error {
+export class OrTokenDecodingError extends TaquitoError {
   public name = 'OrTokenDecodingError';
   constructor(public message: string) {
     super(message);
@@ -121,6 +122,9 @@ export class OrToken extends ComparableToken {
     }
   }
 
+  /**
+   * @throws {@link OrTokenDecodingError}
+   */
   public Execute(val: any, semantics?: Semantic): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;
@@ -145,7 +149,9 @@ export class OrToken extends ComparableToken {
         [leftToken.annot()]: leftToken.Execute(val.args[0], semantics),
       };
     } else {
-      throw new OrTokenDecodingError(`Was expecting Left or Right prim but got: ${val.prim}`);
+      throw new OrTokenDecodingError(
+        `Was expecting Left or Right prim but got: ${JSON.stringify(val.prim)}`
+      );
     }
   }
 

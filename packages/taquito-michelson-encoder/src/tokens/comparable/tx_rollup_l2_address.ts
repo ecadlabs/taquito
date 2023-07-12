@@ -13,6 +13,10 @@ import {
   TokenValidationError,
 } from '../token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a Tx Rollup L2 Address
+ */
 export class TxRollupL2AddressValidationError extends TokenValidationError {
   name = 'TxRollupL2AddressValidationError';
   constructor(public value: unknown, public token: TxRollupL2AddressToken, message: string) {
@@ -39,35 +43,41 @@ export class TxRollupL2AddressToken extends ComparableToken {
     };
   }
 
-  private isValid(value: any): null {
+  /**
+   * @throws {@link TxRollupL2AddressValidationError}
+   */
+  private validate(value: any) {
     if (validateAddress(value) !== ValidationResult.VALID) {
       throw new TxRollupL2AddressValidationError(
         value,
         this,
-        `tx_rollup_l2_address is not valid: ${value}`
+        `tx_rollup_l2_address is not valid: ${JSON.stringify(value)}`
       );
     }
-    return null;
   }
 
+  /**
+   * @throws {@link TxRollupL2AddressValidationError}
+   */
   public Encode(args: string[]): any {
     const val = args.pop();
     if (!val) {
       throw new TxRollupL2AddressValidationError(
         val,
         this,
-        `arg missing to encode: this -> "${val}"`
+        `arg missing to encode: this -> "${JSON.stringify(val)}"`
       );
     }
-    // no need to test since method throws
-    this.isValid(val);
+    this.validate(val);
 
     return { string: val };
   }
 
+  /**
+   * @throws {@link TxRollupL2AddressValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    // no need to test since method throws
-    this.isValid(val);
+    this.validate(val);
 
     if (semantic && semantic[TxRollupL2AddressToken.prim]) {
       return semantic[TxRollupL2AddressToken.prim](val);
@@ -75,6 +85,9 @@ export class TxRollupL2AddressToken extends ComparableToken {
     return { string: val };
   }
 
+  /**
+   * @throws {@link TxRollupL2AddressValidationError}
+   */
   public Execute(val: { bytes?: string; string?: string }): string {
     if (val.string) {
       return val.string;
@@ -99,6 +112,9 @@ export class TxRollupL2AddressToken extends ComparableToken {
     };
   }
 
+  /**
+   * @throws {@link TxRollupL2AddressValidationError}
+   */
   public ToKey({ bytes, string }: { bytes?: string; string?: string }) {
     if (string) {
       return string;
@@ -107,7 +123,9 @@ export class TxRollupL2AddressToken extends ComparableToken {
       throw new TxRollupL2AddressValidationError(
         bytes,
         this,
-        `value cannot be missing string and byte value. must have one: bytes = ${bytes}`
+        `value cannot be missing string and byte value. must have one: bytes = ${JSON.stringify(
+          bytes
+        )}`
       );
     }
     return encodeL2Address(bytes);

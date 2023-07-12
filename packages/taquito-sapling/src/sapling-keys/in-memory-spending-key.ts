@@ -1,4 +1,4 @@
-import { InvalidSpendingKey } from '../error';
+import { InvalidSpendingKey } from '../errors';
 import { InMemoryViewingKey } from './in-memory-viewing-key';
 import * as sapling from '@airgap/sapling-wasm';
 import { Prefix, prefix, b58cencode, ValidationResult } from '@taquito/utils';

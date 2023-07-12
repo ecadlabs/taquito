@@ -794,6 +794,9 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
           d,
           (function* () {
             const dd = d;
+            // TODO: refactor and remove ts-ignore
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             if (dd.prim === 'Some') {
               yield getWriteTransformFunc(t.args[0]);
             }
@@ -1126,6 +1129,9 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
             throw new MichelsonTypeError(t, d, `option expected: ${JSON.stringify(d)}`);
           }
           return (function* () {
+            // TODO: refactor and remove ts-ignore
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             if (d.prim === 'Some') {
               yield getReadTransformFuncs(t.args[0]);
             }

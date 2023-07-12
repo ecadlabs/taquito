@@ -50,12 +50,10 @@ const transferToContract = (key: string, amount: number) => {
       args: [{ prim: 'address' }, { string: key }],
     },
     { prim: 'CONTRACT', args: [{ prim: 'unit' }] },
-    [
-      {
-        prim: 'IF_NONE',
-        args: [[[{ prim: 'UNIT' }, { prim: 'FAILWITH' }]], []],
-      },
-    ],
+    {
+      prim: 'IF_NONE',
+      args: [[{ prim: 'UNIT' }, { prim: 'FAILWITH' }], []],
+    },
     {
       prim: 'PUSH',
       args: [{ prim: 'mutez' }, { int: `${amount}` }],

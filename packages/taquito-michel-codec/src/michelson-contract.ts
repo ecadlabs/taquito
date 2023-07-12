@@ -29,7 +29,7 @@ import {
   InvalidEntrypointError,
   InvalidMichelsonError,
   InvalidTypeExpressionError,
-} from './error';
+} from './errors';
 
 export interface ContractOptions extends ParserOptions {
   traceCallback?: (t: InstructionTrace) => void;

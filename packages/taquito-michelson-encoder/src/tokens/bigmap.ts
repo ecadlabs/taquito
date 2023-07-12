@@ -61,12 +61,17 @@ export class BigMapToken extends Token {
     };
   }
 
-  private isValid(value: any): BigMapValidationError | null {
-    if (MichelsonMap.isMichelsonMap(value)) {
-      return null;
+  /**
+   * @throws {@link BigMapValidationError}
+   */
+  private validate(value: any) {
+    if (!MichelsonMap.isMichelsonMap(value)) {
+      throw new BigMapValidationError(
+        value,
+        this,
+        `Value ${JSON.stringify(value)} is not a MichelsonMap`
+      );
     }
-
-    return new BigMapValidationError(value, this, 'Value must be a MichelsonMap');
   }
 
   private objLitToMichelsonMap(val: any): any {
@@ -81,13 +86,13 @@ export class BigMapToken extends Token {
     return val;
   }
 
+  /**
+   * @throws {@link BigMapValidationError}
+   */
   public Encode(args: any[]): any {
     const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args.pop());
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return Array.from(val.keys())
       .sort((a: any, b: any) => this.KeySchema.compare(a, b))
@@ -99,13 +104,13 @@ export class BigMapToken extends Token {
       });
   }
 
+  /**
+   * @throws {@link BigMapValidationError}
+   */
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     const val: MichelsonMap<any, any> = this.objLitToMichelsonMap(args);
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[BigMapToken.prim]) {
       return semantic[BigMapToken.prim](val, this.val);
@@ -121,6 +126,10 @@ export class BigMapToken extends Token {
       });
   }
 
+  /**
+   * @throws {@link InvalidMapTypeError} when the argument passed to val is an array but not a valid map type
+   * @throws {@link BigMapValidationError} when the value is invalid
+   */
   public Execute(val: any[] | { int: string }, semantic?: Semantic) {
     if (semantic && semantic[BigMapToken.prim]) {
       return semantic[BigMapToken.prim](val as any, this.val);

@@ -8,6 +8,10 @@ import {
 import BigNumber from 'bignumber.js';
 import { BaseTokenSchema } from '../../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing Int
+ */
 export class IntValidationError extends TokenValidationError {
   name = 'IntValidationError';
   constructor(public value: any, public token: IntToken, message: string) {
@@ -45,31 +49,32 @@ export class IntToken extends ComparableToken {
     };
   }
 
-  private isValid(val: any): IntValidationError | null {
+  /**
+   * @throws {@link IntValidationError}
+   */
+  private validate(val: any) {
     const bigNumber = new BigNumber(val);
     if (bigNumber.isNaN()) {
-      return new IntValidationError(val, this, `Value is not a number: ${val}`);
-    } else {
-      return null;
+      throw new IntValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }
   }
 
+  /**
+   * @throws {@link IntValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return { int: new BigNumber(val).toFixed() };
   }
 
+  /**
+   * @throws {@link IntValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[IntToken.prim]) {
       return semantic[IntToken.prim](val);

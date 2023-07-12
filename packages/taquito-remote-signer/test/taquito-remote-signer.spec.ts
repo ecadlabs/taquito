@@ -1,9 +1,6 @@
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
-import {
-  BadSigningDataError,
-  PublicKeyNotFoundError,
-  OperationNotAuthorizedError,
-} from '../src/errors';
+import { BadSigningDataError, OperationNotAuthorizedError } from '../src/errors';
+import { PublicKeyNotFoundError } from '@taquito/core';
 import { RemoteSigner } from '../src/taquito-remote-signer';
 
 /**

@@ -1,4 +1,5 @@
 import {
+  BatchOperationResult,
   OperationContents,
   OperationContentsAndResult,
   OperationContentsAndResultOrigination,
@@ -6,7 +7,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { BATCH_KINDS } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
-import { flattenErrors, flattenOperationResult } from './operation-errors';
+import { flattenErrors, flattenOperationResult } from './errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -58,7 +59,8 @@ export class BatchOperation
         .filter((result) => BATCH_KINDS.indexOf(result.kind) !== -1)
         .map((result) => {
           if (hasMetadataWithResult(result)) {
-            return result.metadata.operation_result.status;
+            const opResult = result.metadata.operation_result as BatchOperationResult;
+            return opResult.status;
           } else {
             return 'unknown';
           }

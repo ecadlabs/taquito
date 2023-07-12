@@ -10,7 +10,7 @@ import {
   Wallet,
   ViewSimulationError,
 } from '@taquito/taquito';
-import { ForbiddenInstructionInViewCode, NoParameterExpectedError } from '../tzip16-errors';
+import { ForbiddenInstructionInViewCodeError, NoParameterExpectedError } from '../errors';
 import { validateAndExtractFailwith, TzReadProvider } from '@taquito/taquito';
 import { View } from './interface';
 import { InvalidViewParameterError } from '@taquito/core';
@@ -31,7 +31,7 @@ export class MichelsonStorageView implements View {
    * 'AMOUNT', 'CREATE_CONTRACT', 'SENDER', 'SET_DELEGATE', 'SOURCE', and 'TRANSFER_TOKENS'
    * The method throw an error if an illegal instruction is found
    */
-  private findForbiddenInstructionInViewCode(code: MichelsonV1ExpressionExtended[]) {
+  private findForbiddenInstructionInViewCodeError(code: MichelsonV1ExpressionExtended[]) {
     const illegalInstructions = [
       'AMOUNT',
       'CREATE_CONTRACT',
@@ -44,10 +44,10 @@ export class MichelsonStorageView implements View {
     for (const forbiddenInstruction of illegalInstructions) {
       for (const instruction of code) {
         if (instruction.prim === forbiddenInstruction) {
-          throw new ForbiddenInstructionInViewCode(forbiddenInstruction);
+          throw new ForbiddenInstructionInViewCodeError(forbiddenInstruction);
         }
         if (instruction.args && instruction.args.length !== 0) {
-          this.findForbiddenInstructionInViewCode(instruction.args as any);
+          this.findForbiddenInstructionInViewCodeError(instruction.args as any);
         }
       }
     }
@@ -63,7 +63,7 @@ export class MichelsonStorageView implements View {
         const index = code.indexOf(instruction);
         const nextInstruction = code[index + 1] ? code[index + 1].prim : undefined;
         if (nextInstruction !== 'ADDRESS') {
-          throw new ForbiddenInstructionInViewCode(
+          throw new ForbiddenInstructionInViewCodeError(
             'the instruction SELF should only be used before ADDRESS'
           );
         }
@@ -138,7 +138,7 @@ export class MichelsonStorageView implements View {
 
   async executeView(...args: any[]) {
     // validate view code against tzip-16 specifications
-    this.findForbiddenInstructionInViewCode(this.code);
+    this.findForbiddenInstructionInViewCodeError(this.code);
     this.illegalUseOfSelfInstruction(this.code);
 
     const { arg, viewParameterType } = this.formatArgsAndParameter(args);
