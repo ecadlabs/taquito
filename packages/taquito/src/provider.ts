@@ -6,7 +6,7 @@ import {
   TezosOperationError,
   TezosPreapplyFailureError,
   flattenErrors,
-} from './operations/operation-errors';
+} from './operations/errors';
 import {
   createOriginationOperation,
   createRegisterGlobalConstantOperation,

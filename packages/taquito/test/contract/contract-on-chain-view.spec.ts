@@ -144,7 +144,7 @@ describe('OnChainView test on K protocol', () => {
       );
       expect(error.viewName).toEqual('add');
       expect(error.failWith).toEqual({ prim: 'Unit' });
-      expect(error.originalError).toEqual(httpError);
+      expect(error.cause).toEqual(httpError);
     }
 
     done();

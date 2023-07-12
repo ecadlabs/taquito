@@ -21,7 +21,7 @@ import { Context } from '../context';
 import { ForgedBytes, hasMetadataWithResult } from './types';
 import { validateOperation, ValidationResult } from '@taquito/utils';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
-import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../error';
+import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../errors';
 import { InvalidOperationHashError } from '@taquito/core';
 
 interface PollingConfig {
@@ -150,7 +150,7 @@ export class Operation {
    */
   async confirmation(confirmations?: number, timeout?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
-      throw new InvalidConfirmationCountError('Confirmation count must be at least 1');
+      throw new InvalidConfirmationCountError(confirmations);
     }
 
     const { defaultConfirmationCount, confirmationPollingTimeoutSecond } = this.context.config;

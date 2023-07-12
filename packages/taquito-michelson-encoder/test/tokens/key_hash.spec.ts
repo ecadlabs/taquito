@@ -16,7 +16,7 @@ describe('KeyHash token', () => {
     it('Should throw a validation error when address is not valid', () => {
       expect(() => token.EncodeObject('test')).toThrowError(KeyHashValidationError);
       expect(() => token.EncodeObject('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D')).toThrowError(
-        'KeyHash is not valid: KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'
+        `KeyHash is not valid: "KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D"`
       );
       expect(() => token.EncodeObject(0)).toThrowError(KeyHashValidationError);
       expect(() => token.EncodeObject([])).toThrowError(KeyHashValidationError);
@@ -45,7 +45,7 @@ describe('KeyHash token', () => {
     it('Should generate the schema properly', () => {
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'key_hash',
-        schema: 'key_hash'
+        schema: 'key_hash',
       });
     });
   });

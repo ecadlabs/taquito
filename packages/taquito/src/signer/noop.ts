@@ -1,21 +1,8 @@
 import { Signer } from './interface';
-
-/**
- *  @category Error
- *  @description Error that indicates the signer has been unconfigured in the TezosToolkit instance
- */
-export class UnconfiguredSignerError extends Error {
-  name = 'UnconfiguredSignerError';
-
-  constructor() {
-    super(
-      'No signer has been configured. Please configure one by calling setProvider({signer}) on your TezosToolkit instance.'
-    );
-  }
-}
-
+import { UnconfiguredSignerError } from './errors';
 /**
  * @description Default signer implementation which does nothing and produce invalid signature
+ * @throw {@link UnconfiguredSignerError}
  */
 export class NoopSigner implements Signer {
   async publicKey(): Promise<string> {
