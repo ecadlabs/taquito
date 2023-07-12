@@ -1,6 +1,6 @@
 {
   "name": "@taquito/http-utils",
-  "version": "17.1.0-beta-RC.1",
+  "version": "17.1.0",
   "description": "",
   "keywords": [
     "tezos"
@@ -59,7 +59,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^17.1.0-beta-RC.1",
+    "@taquito/core": "^17.1.0",
     "axios": "0.26.0"
   },
   "devDependencies": {
