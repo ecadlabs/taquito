@@ -12,6 +12,7 @@ import {
   createIncreasePaidStorageOperation,
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
+  createFailingNoOpOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import {
@@ -25,6 +26,7 @@ import {
   IncreasePaidStorageParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParamsWithProof,
+  FailingNoOpParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -199,6 +201,17 @@ export class OperationBatch extends Provider {
     return this;
   }
 
+  /**
+   *
+   * @description Add a failing noop operation to the batch
+   *
+   * @param params FailingNoOp operation parameter
+   */
+  withFailingNoOp(params: FailingNoOpParams) {
+    this.operations.push({ kind: OpKind.FAILING_NOOP, ...params });
+    return this;
+  }
+
   async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -233,6 +246,10 @@ export class OperationBatch extends Provider {
         });
       case OpKind.SMART_ROLLUP_ORIGINATE:
         return createSmartRollupOriginateOperation({
+          ...param,
+        });
+      case OpKind.FAILING_NOOP:
+        return createFailingNoOpOperation({
           ...param,
         });
       default:
@@ -276,6 +293,9 @@ export class OperationBatch extends Provider {
           break;
         case OpKind.SMART_ROLLUP_ORIGINATE:
           this.withSmartRollupOriginate(param);
+          break;
+        case OpKind.FAILING_NOOP:
+          this.withFailingNoOp(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));

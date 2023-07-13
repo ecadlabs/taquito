@@ -53,6 +53,7 @@ import {
   SmartRollupOriginateSchema,
   SmartRollupExecuteOutboxMessageSchema,
   SmartRollupAddMessagesSchema,
+  FailingNoOpSchema,
 } from './schema/operation';
 
 export type Encoder<T> = (val: T) => string;
@@ -123,3 +124,4 @@ encoders[CODEC.OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE] = (val: any) =>
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);
 encoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val) =>
   schemaEncoder(encoders)(SetDepositsLimitSchema)(val);
+encoders[CODEC.OP_FAILING_NOOP] = (val: any) => schemaEncoder(encoders)(FailingNoOpSchema)(val);

@@ -31,6 +31,8 @@ import {
   SmartRollupOriginateParamsWithProof,
   ActivationParams,
   RPCActivateOperation,
+  FailingNoOpParams,
+  RPCFailingNoOpOperation,
 } from '../operations/types';
 import {
   DEFAULT_FEE,
@@ -205,6 +207,13 @@ export const createRegisterGlobalConstantOperation = async ({
     storage_limit: storageLimit,
     source,
   } as RPCRegisterGlobalConstantOperation;
+};
+
+export const createFailingNoOpOperation = async ({ value }: FailingNoOpParams) => {
+  return {
+    kind: OpKind.FAILING_NOOP,
+    value,
+  } as RPCFailingNoOpOperation;
 };
 
 export const createTransferTicketOperation = async ({

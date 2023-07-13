@@ -15,6 +15,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  FailingNoOpParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -449,6 +450,31 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   ) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.contractCall(contractMethod);
+
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an failingNoOp operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param params failingNoOp operation parameter
+   */
+  async failingNoOp({ fee, storageLimit, gasLimit, ...rest }: FailingNoOpParams) {
+    const preparedOperation = await this.prepare.failingNoOp({
+      fee,
+      storageLimit,
+      gasLimit,
+      ...rest,
+    });
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
 

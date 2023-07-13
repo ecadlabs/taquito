@@ -27,6 +27,7 @@ import {
   isOpWithFee,
   RegisterDelegateParams,
   ActivationParams,
+  FailingNoOpParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
@@ -54,6 +55,7 @@ import {
   createSmartRollupOriginateOperation,
   createRegisterDelegateOperation,
   createActivationOperation,
+  createFailingNoOpOperation,
 } from '../contract';
 import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
@@ -1057,6 +1059,51 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const ops = this.convertIntoArray(operation);
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare a failing_noop operation
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  async failingNoOp({
+    fee,
+    storageLimit,
+    gasLimit,
+    ...rest
+  }: FailingNoOpParams): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
+
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+
+    const op = await createFailingNoOpOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+
+    // TODO: is the next line needed?
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    this.#counters = {};
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
     return {
       opOb: {

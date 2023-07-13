@@ -24,6 +24,7 @@ export type ParamsWithKind =
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
   | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
+  | withKind<FailingNoOpParams, OpKind.FAILING_NOOP>
   | withKind<SmartRollupOriginateParamsWithProof, OpKind.SMART_ROLLUP_ORIGINATE>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
@@ -64,6 +65,7 @@ export type RPCOpWithFee =
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
+  | RPCFailingNoOpOperation
   | RPCSmartRollupOriginateOperation;
 
 export type RPCOpWithSource =
@@ -78,6 +80,7 @@ export type RPCOpWithSource =
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
+  | RPCFailingNoOpOperation
   | RPCSmartRollupOriginateOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
@@ -550,6 +553,29 @@ export interface RPCSmartRollupOriginateOperation {
   parameters_ty: MichelsonV1Expression;
 }
 
+/**
+ * @description RPC failing noop operation
+ */
+export interface RPCFailingNoOpOperation {
+  kind: OpKind.FAILING_NOOP;
+  value: MichelsonV1Expression;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  source: string;
+}
+
+/**
+ * @description Parameters for the `failingNoOp` method
+ */
+export interface FailingNoOpParams {
+  value: MichelsonV1Expression;
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -564,6 +590,7 @@ export type RPCOperation =
   | RPCProposalsOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
+  | RPCFailingNoOpOperation
   | RPCSmartRollupOriginateOperation;
 
 export type PrepareOperationParams = {

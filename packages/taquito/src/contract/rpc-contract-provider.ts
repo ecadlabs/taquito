@@ -5,6 +5,7 @@ import {
   OperationContentsBallot,
   OperationContentsDelegation,
   OperationContentsDrainDelegate,
+  OperationContentsFailingNoOp,
   OperationContentsIncreasePaidStorage,
   OperationContentsOrigination,
   OperationContentsProposals,
@@ -52,6 +53,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  FailingNoOpParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -68,6 +70,7 @@ import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
+import { FailingNoOpOperation } from '../operations/failing-noop-operation';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -677,6 +680,28 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       context
     );
   }
+
+  /**
+   *
+   * @description A failing_noop operation that is guaranteed to fail.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params failingNoOp operation parameter
+   */
+  async failingNoOp(params: FailingNoOpParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(params, this.estimator.failingNoOp.bind(this.estimator));
+
+    const prepared = await this.prepare.failingNoOp({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.FAILING_NOOP
+    ) as OperationContentsFailingNoOp;
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new FailingNoOpOperation(hash, content, publicKeyHash, forgedBytes, opResponse, context);
+  }
+
   /**
    *
    * @description Create an smart contract abstraction for the address specified.

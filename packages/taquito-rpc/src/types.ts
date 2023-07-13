@@ -264,6 +264,16 @@ export interface OperationContentsActivateAccount {
   secret: string;
 }
 
+export interface OperationContentsFailingNoOp {
+  kind: OpKind.FAILING_NOOP;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  value: MichelsonV1Expression;
+}
+
 export interface OperationContentsProposals {
   kind: OpKind.PROPOSALS;
   source: string;
@@ -581,6 +591,7 @@ export type OperationContents =
   | OperationContentsDelegation
   | OperationContentsEndorsementWithSlot
   | OperationContentsFailingNoop
+  | OperationContentsFailingNoOp
   | OperationContentsRegisterGlobalConstant
   | OperationContentsSetDepositsLimit
   | OperationContentsTxRollupOrigination
@@ -639,6 +650,12 @@ export interface OperationContentsAndResultMetadataDelegation {
 export interface OperationContentsAndResultMetadataRegisterGlobalConstant {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultRegisterGlobalConstant;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataFailingNoOp {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationContentsAndResultFailingNoOp;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -1160,6 +1177,17 @@ export interface OperationContentsAndResultSmartRollupTimeout {
   metadata: OperationContentsAndResultMetadataSmartRollupTimeout;
 }
 
+export interface OperationContentsAndResultFailingNoOp {
+  kind: OpKind.FAILING_NOOP;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  value: MichelsonV1Expression;
+  metadata: OperationContentsAndResultMetadataRegisterGlobalConstant;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -1197,6 +1225,7 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupCement
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupRecoverBond
+  | OperationContentsAndResultFailingNoOp
   | OperationContentsAndResultSmartRollupTimeout;
 
 export type OperationContentsAndResultWithFee =
@@ -1739,6 +1768,15 @@ export interface OperationResultTransaction {
 export interface OperationResultReveal {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
+  errors?: TezosGenericOperationError[];
+  consumed_milligas?: string;
+}
+
+export interface OperationResultFailingNoOp {
+  status: OperationResultStatusEnum;
+  balance_updates?: OperationBalanceUpdates;
+  consumed_gas?: string;
+  storage_size?: string;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
 }

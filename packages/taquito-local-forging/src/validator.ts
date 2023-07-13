@@ -21,6 +21,7 @@ import {
   SmartRollupOriginateSchema,
   SmartRollupAddMessagesSchema,
   SmartRollupExecuteOutboxMessageSchema,
+  FailingNoOpSchema,
 } from './schema/operation';
 
 type OperationKind =
@@ -66,6 +67,7 @@ const OperationKindMapping = {
   smart_rollup_originate: SmartRollupOriginateSchema,
   smart_rollup_add_messages: SmartRollupAddMessagesSchema,
   smart_rollup_execute_outbox_message: SmartRollupExecuteOutboxMessageSchema,
+  failing_noop: FailingNoOpSchema,
 };
 
 // Asymmetric difference: only account for things in arr2 that are not present in arr1, not vice versa
