@@ -250,6 +250,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         case OpKind.UPDATE_CONSENSUS_KEY:
         case OpKind.SMART_ROLLUP_ADD_MESSAGES:
         case OpKind.SMART_ROLLUP_ORIGINATE:
+        case OpKind.FAILING_NOOP:
           return {
             ...op,
             ...this.getSource(op, pkh, source),

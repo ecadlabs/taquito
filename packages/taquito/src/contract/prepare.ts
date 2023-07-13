@@ -209,10 +209,20 @@ export const createRegisterGlobalConstantOperation = async ({
   } as RPCRegisterGlobalConstantOperation;
 };
 
-export const createFailingNoOpOperation = async ({ value }: FailingNoOpParams) => {
+export const createFailingNoOpOperation = async ({
+  arbitrary,
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+}: FailingNoOpParams) => {
   return {
     kind: OpKind.FAILING_NOOP,
-    value,
+    arbitrary,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    source,
   } as RPCFailingNoOpOperation;
 };
 

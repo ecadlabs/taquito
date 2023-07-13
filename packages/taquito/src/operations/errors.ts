@@ -78,10 +78,10 @@ export type MergedOperationResult = OperationResultTransaction &
   OperationResultOrigination &
   OperationResultDelegation &
   OperationResultRegisterGlobalConstant &
-  OperationResultFailingNoOp &
   OperationResultTxRollupOrigination &
   OperationResultTxRollupSubmitBatch &
   OperationResultTransferTicket &
+  OperationResultFailingNoOp &
   Partial<OperationResultSmartRollupOriginate> &
   OperationResultReveal & {
     fee?: string;

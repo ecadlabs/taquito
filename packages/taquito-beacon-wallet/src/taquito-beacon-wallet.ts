@@ -12,11 +12,13 @@ import {
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import {
+  createFailingNoOpOperation,
   createIncreasePaidStorageOperation,
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
   WalletDelegateParams,
+  WalletFailingNoOpParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
@@ -119,6 +121,21 @@ export class BeaconWallet implements WalletProvider {
     return this.removeDefaultParams(
       walletParams,
       await createSetDelegateOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapFailingNoOpParamsToWalletParams(params: () => Promise<WalletFailingNoOpParams>) {
+    let walletParams: WalletFailingNoOpParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI();
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createFailingNoOpOperation(this.formatParameters(walletParams))
     );
   }
 

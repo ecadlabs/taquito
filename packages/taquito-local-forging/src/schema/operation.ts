@@ -193,7 +193,12 @@ export const SmartRollupExecuteOutboxMessageSchema = {
 };
 
 export const FailingNoOpSchema = {
-  value: CODEC.VALUE,
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  arbitrary: CODEC.PADDED_BYTES,
 };
 
 export const operationEncoder =

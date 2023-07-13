@@ -11,6 +11,7 @@ import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
   WalletDelegateParams,
+  WalletFailingNoOpParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
@@ -250,6 +251,24 @@ export class Wallet {
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createDelegationOperation(opHash);
+    });
+  }
+
+  /**
+   *
+   * @description failing_noop operation that is guaranteed to fail.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param delegateParams operation parameter
+   */
+  failingNoOp(params: WalletFailingNoOpParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapFailingNoOpParamsToWalletParams(
         async () => params
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);

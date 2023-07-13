@@ -48,7 +48,7 @@ export class FailingNoOpOperation
   }
 
   get payloadExpression() {
-    return this.params.value;
+    return this.params.arbitrary;
   }
 
   get fee() {

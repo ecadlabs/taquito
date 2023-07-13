@@ -229,11 +229,6 @@ export interface OperationContentsEndorsementWithSlot {
   slot: number;
 }
 
-export interface OperationContentsFailingNoop {
-  kind: OpKind.FAILING_NOOP;
-  arbitrary: string;
-}
-
 export interface OperationContentsRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
@@ -271,7 +266,7 @@ export interface OperationContentsFailingNoOp {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  value: MichelsonV1Expression;
+  arbitrary: string;
 }
 
 export interface OperationContentsProposals {
@@ -590,7 +585,6 @@ export type OperationContents =
   | OperationContentsOrigination
   | OperationContentsDelegation
   | OperationContentsEndorsementWithSlot
-  | OperationContentsFailingNoop
   | OperationContentsFailingNoOp
   | OperationContentsRegisterGlobalConstant
   | OperationContentsSetDepositsLimit
@@ -655,7 +649,7 @@ export interface OperationContentsAndResultMetadataRegisterGlobalConstant {
 
 export interface OperationContentsAndResultMetadataFailingNoOp {
   balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationContentsAndResultFailingNoOp;
+  operation_result: OperationResultFailingNoOp;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -1184,8 +1178,8 @@ export interface OperationContentsAndResultFailingNoOp {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  value: MichelsonV1Expression;
-  metadata: OperationContentsAndResultMetadataRegisterGlobalConstant;
+  arbitrary: string;
+  metadata: OperationContentsAndResultMetadataFailingNoOp;
 }
 
 export type OperationContentsAndResult =

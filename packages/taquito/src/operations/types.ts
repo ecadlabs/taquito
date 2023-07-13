@@ -558,7 +558,7 @@ export interface RPCSmartRollupOriginateOperation {
  */
 export interface RPCFailingNoOpOperation {
   kind: OpKind.FAILING_NOOP;
-  value: MichelsonV1Expression;
+  arbitrary: string;
   fee: number;
   gas_limit: number;
   storage_limit: number;
@@ -569,7 +569,7 @@ export interface RPCFailingNoOpOperation {
  * @description Parameters for the `failingNoOp` method
  */
 export interface FailingNoOpParams {
-  value: MichelsonV1Expression;
+  arbitrary: string;
   source?: string;
   fee?: number;
   gasLimit?: number;
