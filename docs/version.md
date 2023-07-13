@@ -2,6 +2,27 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v17.1.0
+**Potential Breaking Changes**
+- Updated RxJS version from v6.6.3 to v7.8.1
+- Updated TS version into  v4.2.4
+- Please be wary due to the RxJS version upgrade, we've been seeing intermittent timeouts when testing against a Flextesa sandbox. This behaviour is **not** present when using it against a regular node (Mainnet, Nairobinet, etc). We are still investigating what the cause might be. #2261
+
+## Summary
+### New Features
+- Exposed the injector to be customizable from the TezosToolkit class #1344 
+
+### Improvement
+- Simplified generated Lambda for `transferToContract` [PR#2404](https://github.com/ecadlabs/taquito/pull/2404)
+- Improved error classes for these following packages:
+    - `@taquito/taquito` [PR#2559](https://github.com/ecadlabs/taquito/pull/2559)
+    - `@taquito/michelson-encoder` #1995
+    - `@taquito/tzip12` [PR#2559](https://github.com/ecadlabs/taquito/pull/2559)
+    - `@taquito/tzip16` [PR#2559](https://github.com/ecadlabs/taquito/pull/2559)
+
+### Internals
+- Updated version dependencies for `Sass` and `Dotenv` in `/website` [PR#2560](https://github.com/ecadlabs/taquito/pull/2560)
+
 # Taquito v17
 ### Potential Breaking Changes
 Protocol Nairobi comes with a couple potential breaking changes for our users:

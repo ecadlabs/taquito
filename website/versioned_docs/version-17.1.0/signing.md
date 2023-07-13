@@ -108,7 +108,10 @@ const formattedInput: string = [
 
 // The bytes to sign
 const bytes = char2Bytes(formattedInput);
-const payloadBytes = '05' + '0100' + char2Bytes(bytes.length) + bytes;
+const bytesLength = (bytes.length / 2).toString(16);
+const addPadding = `00000000${bytesLength}`;
+const paddedBytesLength = addPadding.slice(addPadding.length - 8);
+const payloadBytes = '05' + '01' + paddedBytesLength + bytes;
 
 // The payload to send to the wallet
 const payload: RequestSignPayloadInput = {
