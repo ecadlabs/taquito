@@ -133,10 +133,7 @@ export class BeaconWallet implements WalletProvider {
       await this.client.hideUI();
       throw err;
     }
-    return this.removeDefaultParams(
-      walletParams,
-      await createFailingNoOpOperation(this.formatParameters(walletParams))
-    );
+    return await createFailingNoOpOperation(this.formatParameters(walletParams));
   }
 
   formatParameters(params: any) {

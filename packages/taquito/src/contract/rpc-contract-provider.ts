@@ -691,9 +691,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    */
   async failingNoOp(params: FailingNoOpParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
-    const estimate = await this.estimate(params, this.estimator.failingNoOp.bind(this.estimator));
 
-    const prepared = await this.prepare.failingNoOp({ ...params, ...estimate });
+    const prepared = await this.prepare.failingNoOp({ ...params });
     const content = prepared.opOb.contents.find(
       (op) => op.kind === OpKind.FAILING_NOOP
     ) as OperationContentsFailingNoOp;

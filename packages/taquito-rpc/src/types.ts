@@ -261,11 +261,6 @@ export interface OperationContentsActivateAccount {
 
 export interface OperationContentsFailingNoOp {
   kind: OpKind.FAILING_NOOP;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
   arbitrary: string;
 }
 

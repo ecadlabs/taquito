@@ -250,7 +250,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         case OpKind.UPDATE_CONSENSUS_KEY:
         case OpKind.SMART_ROLLUP_ADD_MESSAGES:
         case OpKind.SMART_ROLLUP_ORIGINATE:
-        case OpKind.FAILING_NOOP:
           return {
             ...op,
             ...this.getSource(op, pkh, source),
@@ -285,6 +284,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           return {
             ...op,
             period: currentVotingPeriod?.voting_period.index,
+          };
+        case OpKind.FAILING_NOOP:
+          return {
+            ...op,
           };
         default:
           throw new InvalidOperationKindError((op as RPCOperation).kind);
@@ -1078,20 +1081,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async failingNoOp({
-    fee,
-    storageLimit,
-    gasLimit,
-    ...rest
-  }: FailingNoOpParams): Promise<PreparedOperation> {
+  async failingNoOp({ ...rest }: FailingNoOpParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
-
-    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createFailingNoOpOperation({
       ...rest,
-      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     // TODO: is the next line needed?
@@ -1104,7 +1098,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
-    const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
+    const contents = this.constructOpContents(ops, headCounter, pkh);
 
     return {
       opOb: {

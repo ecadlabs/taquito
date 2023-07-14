@@ -65,7 +65,6 @@ export type RPCOpWithFee =
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
-  | RPCFailingNoOpOperation
   | RPCSmartRollupOriginateOperation;
 
 export type RPCOpWithSource =
@@ -80,12 +79,11 @@ export type RPCOpWithSource =
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
-  | RPCFailingNoOpOperation
   | RPCSmartRollupOriginateOperation;
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
-): op is withKind<T, Exclude<OpKind, OpKind.ACTIVATION>> => {
+): op is withKind<T, Exclude<Exclude<OpKind, OpKind.ACTIVATION>, OpKind.FAILING_NOOP>> => {
   return (
     [
       'transaction',
@@ -559,10 +557,6 @@ export interface RPCSmartRollupOriginateOperation {
 export interface RPCFailingNoOpOperation {
   kind: OpKind.FAILING_NOOP;
   arbitrary: string;
-  fee: number;
-  gas_limit: number;
-  storage_limit: number;
-  source: string;
 }
 
 /**
@@ -570,10 +564,6 @@ export interface RPCFailingNoOpOperation {
  */
 export interface FailingNoOpParams {
   arbitrary: string;
-  source?: string;
-  fee?: number;
-  gasLimit?: number;
-  storageLimit?: number;
 }
 
 export type RPCOperation =

@@ -276,7 +276,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Send arbitrary data inside a Failin_noop operation that's guaranteed to fail.
+   * @description Send arbitrary data inside a failing_noop operation that's guaranteed to fail.
    *
    * @returns An operation handle with the result from the rpc node
    *

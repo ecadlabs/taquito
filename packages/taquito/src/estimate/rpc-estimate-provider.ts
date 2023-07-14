@@ -467,11 +467,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    *
    * @param params failingNoOp operation parameter
    */
-  async failingNoOp({ fee, storageLimit, gasLimit, ...rest }: FailingNoOpParams) {
+  async failingNoOp({ ...rest }: FailingNoOpParams) {
     const preparedOperation = await this.prepare.failingNoOp({
-      fee,
-      storageLimit,
-      gasLimit,
       ...rest,
     });
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');

@@ -7,20 +7,12 @@ import {
 import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { Operation } from './operations';
-import {
-  FeeConsumingOperation,
-  ForgedBytes,
-  GasConsumingOperation,
-  StorageConsumingOperation,
-} from './types';
+import { ForgedBytes } from './types';
 
 /**
  * @description FailingNoOpOperation provides utility functions to fetch a newly issued operation of kind failing_noop
  */
-export class FailingNoOpOperation
-  extends Operation
-  implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
-{
+export class FailingNoOpOperation extends Operation {
   constructor(
     hash: string,
     private readonly params: OperationContentsFailingNoOp,
@@ -49,18 +41,6 @@ export class FailingNoOpOperation
 
   get payloadExpression() {
     return this.params.arbitrary;
-  }
-
-  get fee() {
-    return Number(this.params.fee);
-  }
-
-  get gasLimit() {
-    return Number(this.params.gas_limit);
-  }
-
-  get storageLimit() {
-    return Number(this.params.storage_limit);
   }
 
   get errors() {
