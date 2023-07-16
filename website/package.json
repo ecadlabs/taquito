@@ -52,7 +52,7 @@
     "docusaurus-plugin-sass": "^0.2.3",
     "dotenv": "^16.3.0",
     "file-loader": "^6.2.0",
-    "firebase": "^9.22.0",
+    "firebase": "^9.23.0",
     "html-react-parser": "^3.0.16",
     "lerna": "^6.6.2",
     "lottie-web": "^5.11.0",
