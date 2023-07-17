@@ -1,3 +1,4 @@
+import { TaquitoError } from '@taquito/core';
 import { TicketDeprecatedTokenSchema } from '../schema/types';
 import { IntToken } from './comparable/int';
 import { ContractToken } from './contract';
@@ -7,11 +8,12 @@ import { Token, TokenFactory, Semantic, SemanticEncoding } from './token';
  *  @category Error
  *  @description Error that indicates a failure when encoding and sending a ticket to the blockchain
  */
-export class EncodeTicketDeprecatedError extends Error {
+export class EncodeTicketDeprecatedError extends TaquitoError {
   name = 'TicketDeprecatedEncodeError';
 
   constructor() {
-    super('Ticket_deprecated cannot be sent to the blockchain; they are created on-chain');
+    super();
+    this.message = 'Ticket_deprecated cannot be sent to the blockchain; they are created on-chain';
   }
 }
 
@@ -33,10 +35,16 @@ export class TicketDeprecatedToken extends Token {
     return this.createToken(this.val.args[0], this.idx);
   }
 
+  /**
+   * @throws {@link EncodeTicketDeprecatedError}
+   */
   public Encode(_args: any[]): any {
     throw new EncodeTicketDeprecatedError();
   }
 
+  /**
+   * @throws {@link EncodeTicketDeprecatedError}
+   */
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     if (semantic && semantic[TicketDeprecatedToken.prim]) {
       return semantic[TicketDeprecatedToken.prim](args, this.val);

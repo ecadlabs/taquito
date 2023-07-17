@@ -1,6 +1,10 @@
 import { ConstantTokenSchema } from '../schema/types';
 import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding a Global Constant
+ */
 export class GlobalConstantEncodingError extends TokenValidationError {
   name = 'GlobalConstantEncodingError';
   constructor(public value: any, public token: GlobalConstantToken, message: string) {
@@ -8,6 +12,10 @@ export class GlobalConstantEncodingError extends TokenValidationError {
   }
 }
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing executing a Global Constant
+ */
 export class GlobalConstantDecodingError extends TokenValidationError {
   name = 'GlobalConstantDecodingError';
   constructor(public value: any, public token: GlobalConstantToken, message: string) {
@@ -26,6 +34,9 @@ export class GlobalConstantToken extends Token {
     super(val, idx, fac);
   }
 
+  /**
+   * @throws {@link GlobalConstantDecodingError}
+   */
   public Execute(val: any, semantic?: Semantic) {
     if (semantic && semantic[GlobalConstantToken.prim]) {
       return semantic[GlobalConstantToken.prim](val as any, this.val);
@@ -38,6 +49,9 @@ export class GlobalConstantToken extends Token {
     }
   }
 
+  /**
+   * @throws {@link GlobalConstantEncodingError}
+   */
   public Encode(args: any[]): any {
     throw new GlobalConstantEncodingError(
       args,
@@ -46,6 +60,9 @@ export class GlobalConstantToken extends Token {
     );
   }
 
+  /**
+   * @throws {@link GlobalConstantEncodingError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
     if (semantic && semantic[GlobalConstantToken.prim]) {
       return semantic[GlobalConstantToken.prim](val);

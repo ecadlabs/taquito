@@ -587,8 +587,8 @@ Tezos.wallet
 
 The `get` method of the `MichelsonMap` class accesses values of the map for a specified key.
 
-:::caution Warning
-** This example is under migration to a different testnet **
+:::caution Reminder
+** Taquito will handle timestamps with the milliseconds as 2019-09-06T15:08:29.000Z rather than 2019-09-06T15:08:29Z which is crucial when accessing maps with complex keys **
 :::
 
 <Tabs

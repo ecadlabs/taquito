@@ -8,7 +8,7 @@ import { InMemoryViewingKey } from '../sapling-keys/in-memory-viewing-key';
 import { bufToUint8Array, convertValueToBigNumber, readableFormat } from './helpers';
 import { KDF_KEY, OCK_KEY } from '../constants';
 import { Input, SaplingContractId, SaplingIncomingAndOutgoingTransaction } from '../types';
-import { InvalidParameter } from '../error';
+import { InvalidParameter } from '../errors';
 import { TzReadProvider } from '@taquito/taquito';
 
 /**

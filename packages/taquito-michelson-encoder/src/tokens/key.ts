@@ -17,6 +17,10 @@ import { BaseTokenSchema } from '../schema/types';
 
 const publicKeyPrefixLength = 4;
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a Key
+ */
 export class KeyValidationError extends TokenValidationError {
   name = 'KeyValidationError';
   constructor(public value: any, public token: KeyToken, message: string) {
@@ -43,30 +47,31 @@ export class KeyToken extends ComparableToken {
     return encodeKey(val.bytes);
   }
 
-  private isValid(value: any): KeyValidationError | null {
+  /**
+   * @throws {@link KeyValidationError}
+   */
+  private validate(value: any) {
     if (validatePublicKey(value) !== ValidationResult.VALID) {
-      return new KeyValidationError(value, this, 'Key is not valid');
+      throw new KeyValidationError(value, this, 'Key is not valid');
     }
-
-    return null;
   }
 
+  /**
+   * @throws {@link KeyValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return { string: val };
   }
 
+  /**
+   * @throws {@link KeyValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[KeyToken.prim]) {
       return semantic[KeyToken.prim](val);

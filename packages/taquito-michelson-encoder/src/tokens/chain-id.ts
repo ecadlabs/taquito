@@ -8,6 +8,10 @@ import {
 import { validateChain, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a ChainID
+ */
 export class ChainIDValidationError extends TokenValidationError {
   name = 'ChainIDValidationError';
   constructor(public value: any, public token: ChainIDToken, message: string) {
@@ -26,12 +30,17 @@ export class ChainIDToken extends ComparableToken {
     super(val, idx, fac);
   }
 
-  private isValid(value: any): ChainIDValidationError | null {
+  /**
+   * @throws {@link ChainIDValidationError}
+   */
+  private validate(value: any) {
     if (validateChain(value) !== ValidationResult.VALID) {
-      return new ChainIDValidationError(value, this, 'ChainID is not valid');
+      throw new ChainIDValidationError(
+        value,
+        this,
+        `Value ${JSON.stringify(value)} is not a valid ChainID`
+      );
     }
-
-    return null;
   }
 
   public Execute(val: any): string {
@@ -53,22 +62,22 @@ export class ChainIDToken extends ComparableToken {
     };
   }
 
+  /**
+   * @throws {@link ChainIDValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return { string: val };
   }
 
+  /**
+   * @throws {@link ChainIDValidationError}
+   */
   public EncodeObject(val: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     if (semantic && semantic[ChainIDToken.prim]) {
       return semantic[ChainIDToken.prim](val);

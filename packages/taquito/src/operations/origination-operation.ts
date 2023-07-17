@@ -7,7 +7,7 @@ import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
-import { OriginationOperationError } from './operation-errors';
+import { OriginationOperationError } from './errors';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -104,6 +104,7 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
 
   /**
    * @description Provide the contract abstract of the newly originated contract
+   * @throws {@link OriginationOperationError}
    */
   async contract(confirmations?: number, timeout?: number) {
     if (!this.contractAddress) {

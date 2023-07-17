@@ -1,5 +1,5 @@
 import { GlobalConstantHashAndValue } from '@taquito/michel-codec';
-import { GlobalConstantNotFound } from './error';
+import { GlobalConstantNotFound } from './errors';
 import { GlobalConstantHash, GlobalConstantsProvider } from './interface-global-constants-provider';
 
 export class DefaultGlobalConstantsProvider implements GlobalConstantsProvider {

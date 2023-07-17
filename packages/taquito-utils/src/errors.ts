@@ -23,7 +23,7 @@ export {
  */
 export class InvalidProtocolHashError extends ParameterValidationError {
   public name = 'InvalidProtocolHashError';
-  constructor(public protocolHash: string, errorDetails?: string) {
+  constructor(public readonly protocolHash: string, public readonly errorDetails?: string) {
     super();
     this.name = 'InvalidProtocolHashError';
     this.message = `The protocol hash '${protocolHash}' is invalid`;
@@ -36,7 +36,7 @@ export class InvalidProtocolHashError extends ParameterValidationError {
  *  @description Error indicates unable to convert data type from one to another
  */
 export class ValueConversionError extends UnsupportedActionError {
-  constructor(public value: string, public desiredType: string) {
+  constructor(public readonly value: string, public readonly desiredType: string) {
     super();
     this.name = 'ValueConversionError';
     this.message = `Unable to convert ${value} to a ${desiredType}`;

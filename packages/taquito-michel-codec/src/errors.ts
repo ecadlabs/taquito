@@ -4,8 +4,8 @@
  */
 export class InvalidContractError extends Error {
   public name = 'InvalidContractError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public readonly message: string) {
+    super();
   }
 }
 
@@ -15,8 +15,8 @@ export class InvalidContractError extends Error {
  */
 export class InvalidTypeExpressionError extends Error {
   public name = 'InvalidTypeExpressionError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public readonly message: string) {
+    super();
   }
 }
 
@@ -26,8 +26,8 @@ export class InvalidTypeExpressionError extends Error {
  */
 export class InvalidDataExpressionError extends Error {
   public name = 'InvalidDataExpressionError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public readonly message: string) {
+    super();
   }
 }
 
@@ -36,9 +36,10 @@ export class InvalidDataExpressionError extends Error {
  *  @description Error that indicates an invalid contract entrypoint being referenced or passed
  */
 export class InvalidEntrypointError extends Error {
-  public name = 'InvalidEntrypointError';
-  constructor(public entrypoint?: string) {
-    super(`Contract has no entrypoint named: '${entrypoint}'`);
+  constructor(public readonly entrypoint?: string) {
+    super();
+    this.name = 'InvalidEntrypointError';
+    this.message = `Contract has no entrypoint named: '${entrypoint}'`;
   }
 }
 
@@ -48,8 +49,8 @@ export class InvalidEntrypointError extends Error {
  */
 export class TezosIdEncodeError extends Error {
   public name = 'TezosIdEncodeError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public readonly message: string) {
+    super();
   }
 }
 
@@ -59,8 +60,8 @@ export class TezosIdEncodeError extends Error {
  */
 export class LongIntegerError extends Error {
   public name = 'LongIntegerError';
-  constructor(public message: string) {
-    super(message);
+  constructor(public readonly message: string) {
+    super();
   }
 }
 
@@ -69,8 +70,9 @@ export class LongIntegerError extends Error {
  *  @description Error that indicates a failure occurring when trying to parse a hex byte
  */
 export class HexParseError extends Error {
-  public name = 'HexParseError';
-  constructor(public hexByte: string) {
-    super(`Unable to parse hex byte: ${hexByte}`);
+  constructor(public readonly hexByte: string) {
+    super();
+    this.name = 'HexParseError';
+    this.message = `Unable to parse hex byte: ${hexByte}`;
   }
 }
