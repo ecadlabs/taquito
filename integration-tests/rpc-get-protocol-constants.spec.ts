@@ -964,7 +964,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
           baking_reward_bonus_weight: 5120,
           baking_reward_fixed_portion_weight: 5120,
           base_total_rewards_per_minute: "85007812",
-          endorsing_reward_weight: 10240,
+          attesting_reward_weight: 10240,
           liquidity_baking_subsidy_weight: 1280,
           seed_nonce_revelation_tip_weight: 1,
           vdf_revelation_tip_weight: 1,
