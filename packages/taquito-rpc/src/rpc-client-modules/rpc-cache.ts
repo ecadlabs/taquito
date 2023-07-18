@@ -88,7 +88,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param rpcClient rpcClient responsible of the interaction with Tezos network through an rpc node
    * @param ttl number representing the time to live (default 1000 milliseconds)
    *
-   * @example new RpcClientCache(new RpcClient('https://mainnet.api.tez.ie/'))
+   * @example new RpcClientCache(new RpcClient('https://mainnet.ecadinfra.com/'))
    */
   constructor(private rpcClient: RpcClientInterface, private ttl = defaultTtl) {}
 

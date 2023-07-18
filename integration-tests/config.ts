@@ -85,7 +85,7 @@ const nairobinetEphemeral = {
   protocol: Protocols.PtNairobi,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/nairobinet',
+    keyUrl: 'https://keygen.ecadinfra.com/nairobinet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };
@@ -103,7 +103,7 @@ const ghostnetEphemeral = {
   protocol: Protocols.PtMumbai2,
   signerConfig: {
     type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://api.tez.ie/keys/ghostnet',
+    keyUrl: 'https://keygen.ecadinfra.com/ghostnet',
     requestHeaders: { Authorization: 'Bearer taquito-example' },
   },
 };

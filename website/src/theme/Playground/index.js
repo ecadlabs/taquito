@@ -49,7 +49,7 @@ class SemiLiveProvider extends LiveProvider {
       } else if (this.props.noConfig) {
         return this.code
       } else {
-        return `fetch('https://api.tez.ie/keys/ghostnet', {
+        return `fetch('https://keygen.ecadinfra.com/ghostnet', {
           method: 'POST',
           headers: { Authorization: 'Bearer taquito-example' },
         })

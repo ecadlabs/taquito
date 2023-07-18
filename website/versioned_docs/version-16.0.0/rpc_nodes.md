@@ -23,7 +23,7 @@ values={[
 
 | Provider         | Net          | URL                                      | Header                                                                          |
 |------------------|--------------|------------------------------------------|---------------------------------------------------------------------------------|
-| ECAD Labs        | Mainnet      | https://mainnet.api.tez.ie               | [Check](https://mainnet.api.tez.ie/chains/main/blocks/head/header)              |
+| ECAD Labs        | Mainnet      | https://mainnet.ecadinfra.com               | [Check](https://mainnet.ecadinfra.com/chains/main/blocks/head/header)              |
 | ECAD Labs        | Kathmandunet | https://kathmandunet.ecadinfra.com       | [Check](https://kathmandunet.ecadinfra.com/chains/main/blocks/head/header)      |
 | ECAD Labs        | Limanet      | https://limanet.ecadinfra.com            | [Check](https://limanet.ecadinfra.com/chains/main/blocks/head/header)           |
 | ECAD Labs        | Ghostnet     | https://ghostnet.ecadinfra.com           | [Check](https://ghostnet.ecadinfra.com/chains/main/blocks/head/header)          |

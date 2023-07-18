@@ -18,7 +18,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
 
-    const rpcUrl = 'https://mainnet-archive.api.tez.ie/';
+    const rpcUrl = 'https://mainnet-archive.ecadinfra.com/';
     Tezos.setRpcProvider(rpcUrl);
     it('successfully fails at fetching constants for level 0', async (done) => {
       try {
@@ -799,7 +799,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         zk_rollup_min_pending_to_process: 10,
         zk_rollup_origination_size: 4000,
       });
-      
+
       done();
     });
 

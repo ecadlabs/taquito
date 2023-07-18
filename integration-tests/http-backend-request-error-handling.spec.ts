@@ -6,12 +6,12 @@ describe('HttpBackend request', () => {
             const http: HttpBackend = new HttpBackend(1);
             await http.createRequest<string>({
               method: 'GET',
-              url: 'https://mainnet.api.tez.ie/chains/main/blocks/head/hash'
+              url: 'https://mainnet.ecadinfra.com/chains/main/blocks/head/hash'
             });
         } catch (err: any) {
             expect(err.name).toEqual('HttpRequestFailed')
             expect(err.message).toContain('GET')
-            expect(err.message).toContain('https://mainnet.api.tez.ie/chains/main/blocks/head/hash')
+            expect(err.message).toContain('https://mainnet.ecadinfra.com/chains/main/blocks/head/hash')
             expect(err.message).toContain('Error: timeout of 1ms exceeded')
         }
         done()
@@ -21,7 +21,7 @@ describe('HttpBackend request', () => {
             const http: HttpBackend = new HttpBackend(1);
             await http.createRequest<string>({
               method: 'GET',
-              url: 'https://mainnet.api.tez.ie/chains/main/blocks/head/helpers/baking_rights',
+              url: 'https://mainnet.ecadinfra.com/chains/main/blocks/head/helpers/baking_rights',
               query: {
                 level: 0
               }
@@ -29,7 +29,7 @@ describe('HttpBackend request', () => {
         } catch (err: any) {
             expect(err.name).toEqual('HttpRequestFailed')
             expect(err.message).toContain('GET')
-            expect(err.message).toContain('https://mainnet.api.tez.ie/chains/main/blocks/head/helpers/baking_rights')
+            expect(err.message).toContain('https://mainnet.ecadinfra.com/chains/main/blocks/head/helpers/baking_rights')
             expect(err.message).toContain('Error: timeout of 1ms exceeded')
         }
         done()
