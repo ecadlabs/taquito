@@ -280,7 +280,9 @@ describe('SaplingToolkit', () => {
           memo: 'Taquitoooo',
         },
       ])
-    ).rejects.toThrowError("The memo 'Taquitoooo' is invalid. The memo is too long.");
+    ).rejects.toThrowError(
+      `Invalid memo "Taquitoooo" with length 10 expecting length to be less than 8`
+    );
 
     done();
   });
@@ -530,7 +532,7 @@ describe('SaplingToolkit', () => {
         amount: 10,
       })
     ).rejects.toThrowError(
-      'Unable to spend 10000000 mutez while the balance is only 8000000 mutez.'
+      'Unable to spend "10000000" mutez while the balance is only 8000000 mutez.'
     );
 
     done();
@@ -669,7 +671,9 @@ describe('SaplingToolkit', () => {
           memo: 'test1234566789',
         },
       ])
-    ).rejects.toThrowError("The memo 'test1234566789' is invalid. The memo is too long.");
+    ).rejects.toThrowError(
+      `Invalid memo "test1234566789" with length 14 expecting length to be less than 8`
+    );
 
     done();
   });
@@ -684,7 +688,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrowError(
-      'Unable to spend 10000000 mutez while the balance is only 8000000 mutez.'
+      'Unable to spend "10000000" mutez while the balance is only 8000000 mutez.'
     );
 
     done();

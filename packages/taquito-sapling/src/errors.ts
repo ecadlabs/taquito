@@ -1,69 +1,73 @@
+import { ParameterValidationError, TaquitoError } from '@taquito/core';
+
 /**
  *  @category Error
- *  @description Error indicating that the spending key is invalid
+ *  @description Error indicates that the spending key is invalid
  */
-export class InvalidSpendingKey extends Error {
-  constructor(public readonly sk: string, public readonly reason = 'The spending key is invalid') {
+export class InvalidSpendingKey extends ParameterValidationError {
+  constructor(public readonly sk: string, public readonly errorDetail: string) {
     super();
     this.name = 'InvalidSpendingKey';
-    this.message = `${reason}: ${sk}`;
+    this.message = `Invalid spending key "${sk}" ${errorDetail}.`;
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid Merkle root being passed
+ *  @description Error indicates an invalid Merkle tree being passed
  */
-export class InvalidMerkleRootError extends Error {
+export class InvalidMerkleTreeError extends ParameterValidationError {
   constructor(public readonly root: string) {
     super();
-    this.name = 'InvalidMerkleRootError';
-    this.message = `The following Merkle tree is invalid: ${JSON.stringify(root)}`;
+    this.name = 'InvalidMerkleTreeError';
+    this.message = `Invalid merkle tree has root "${JSON.stringify(
+      root
+    )}" different from expected root.`;
   }
 }
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to construct the Merkle tree
+ *  @description Error indicates a failure when trying to construct the Merkle tree
  */
-export class TreeConstructionFailure extends Error {
-  public name = 'TreeConstructionFailure';
+export class TreeConstructionFailure extends TaquitoError {
   constructor(public readonly message: string) {
     super();
+    this.name = 'TreeConstructionFailure';
   }
 }
 
 /**
  *  @category Error
- *  @description Error indicating that the memo is invalid
+ *  @description Error indicates that the memo is invalid
  */
-export class InvalidMemo extends Error {
-  constructor(public readonly memo: string, public readonly errorDetail: string) {
+export class InvalidMemo extends ParameterValidationError {
+  constructor(public readonly memo: string, public readonly errorDetails: string) {
     super();
     this.name = 'InvalidMemo';
-    this.message = `The memo '${memo}' is invalid. ${errorDetail}`;
+    this.message = `Invalid memo "${memo}" with length ${memo.length} ${errorDetails}`;
   }
 }
 
 /**
  *  @category Error
- *  @description Error indicating that there is not enough balance to prepare the sapling transaction
+ *  @description Error indicates that there is not enough balance to prepare the sapling transaction
  */
-export class InsufficientBalance extends Error {
+export class InsufficientBalance extends TaquitoError {
   constructor(public readonly realBalance: string, public readonly amountToSpend: string) {
     super();
     this.name = 'InsufficientBalance';
-    this.message = `Unable to spend ${amountToSpend} mutez while the balance is only ${realBalance} mutez.`;
+    this.message = `Unable to spend "${amountToSpend}" mutez while the balance is only ${realBalance} mutez.`;
   }
 }
 
 /**
  *  @category Error
- *  @description Error indicating that a parameter is invalid
+ *  @description Error indicates SaplingTransactionViewer failure
  */
-export class InvalidParameter extends Error {
-  public name = 'InvalidParameter';
+export class SaplingTransactionViewerError extends TaquitoError {
   constructor(public readonly message: string) {
     super();
+    this.name = 'SaplingTransactionViewerError';
   }
 }
