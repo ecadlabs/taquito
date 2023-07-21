@@ -2,7 +2,7 @@ import { ParameterValidationError, TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates that the spending key is invalid
+ *  @description Error indicates the spending key is invalid
  */
 export class InvalidSpendingKey extends ParameterValidationError {
   constructor(public readonly sk: string, public readonly errorDetail: string) {
@@ -39,7 +39,7 @@ export class TreeConstructionFailure extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates that the memo is invalid
+ *  @description Error indicates the memo is invalid
  */
 export class InvalidMemo extends ParameterValidationError {
   constructor(public readonly memo: string, public readonly errorDetails: string) {
@@ -51,7 +51,7 @@ export class InvalidMemo extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates that there is not enough balance to prepare the sapling transaction
+ *  @description Error indicates not enough balance to prepare the sapling transaction
  */
 export class InsufficientBalance extends TaquitoError {
   constructor(public readonly realBalance: string, public readonly amountToSpend: string) {
