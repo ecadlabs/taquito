@@ -4,7 +4,7 @@ import { ParameterValidationError, TaquitoError } from '@taquito/core';
  *  @description Error indicates an invalid Michelson being passed or used
  */
 export class InvalidMichelsonError extends ParameterValidationError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'InvalidMichelsonError';
   }
@@ -15,7 +15,7 @@ export class InvalidMichelsonError extends ParameterValidationError {
  *  @description Error indicates an invalid type expression being passed or used
  */
 export class InvalidTypeExpressionError extends ParameterValidationError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'InvalidTypeExpressionError';
   }
@@ -26,7 +26,7 @@ export class InvalidTypeExpressionError extends ParameterValidationError {
  *  @description Error indicates an invalid data expression being passed or used
  */
 export class InvalidDataExpressionError extends ParameterValidationError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'InvalidDataExpressionError';
   }
@@ -37,10 +37,10 @@ export class InvalidDataExpressionError extends ParameterValidationError {
  *  @description Error indicates an invalid contract entrypoint being referenced or passed
  */
 export class InvalidEntrypointError extends ParameterValidationError {
-  constructor(public entrypoint?: string) {
+  constructor(public readonly entrypoint?: string) {
     super();
     this.name = 'InvalidEntrypointError';
-    this.message = `Contract has no entrypoint named: '${entrypoint}'`;
+    this.message = `Contract has no entrypoint named: "${entrypoint}"`;
   }
 }
 
@@ -49,7 +49,7 @@ export class InvalidEntrypointError extends ParameterValidationError {
  *  @description Error indicates a failure happening when trying to encode Tezos ID
  */
 export class TezosIdEncodeError extends ParameterValidationError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'TezosIdEncodeError';
   }
@@ -60,7 +60,7 @@ export class TezosIdEncodeError extends ParameterValidationError {
  *  @description Error indicates a general error happening when trying to create a LongInteger
  */
 export class LongIntegerError extends TaquitoError {
-  constructor(public message: string) {
+  constructor(public readonly message: string) {
     super();
     this.name = 'LongIntegerError';
   }
@@ -71,9 +71,9 @@ export class LongIntegerError extends TaquitoError {
  *  @description Error indicates a failure occurring when trying to parse a hex byte
  */
 export class HexParseError extends TaquitoError {
-  constructor(public hexByte: string) {
+  constructor(public readonly hexByte: string) {
     super();
     this.name = 'HexParseError';
-    this.message = `Unable to parse hex byte: ${hexByte}`;
+    this.message = `Unable to parse hex byte "${hexByte}"`;
   }
 }
