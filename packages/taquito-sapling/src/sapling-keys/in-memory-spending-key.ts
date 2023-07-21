@@ -1,7 +1,6 @@
-import { InvalidSpendingKey } from '../errors';
 import { InMemoryViewingKey } from './in-memory-viewing-key';
 import * as sapling from '@airgap/sapling-wasm';
-import { Prefix, prefix, b58cencode, ValidationResult } from '@taquito/utils';
+import { Prefix, prefix, b58cencode } from '@taquito/utils';
 import * as bip39 from 'bip39';
 import {
   ParametersSpendProof,
@@ -48,10 +47,6 @@ export class InMemorySpendingKey {
     );
 
     const spendingKey = b58cencode(spendingKeyArr, prefix[Prefix.SASK]);
-
-    if (ValidationResult.VALID !== 3) {
-      throw new InvalidSpendingKey(spendingKey);
-    }
 
     return new InMemorySpendingKey(spendingKey);
   }
