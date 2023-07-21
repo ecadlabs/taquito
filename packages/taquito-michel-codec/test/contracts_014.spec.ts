@@ -51,7 +51,7 @@ describe('PtKathmandu', () => {
             protocol: protocol,
           };
           const src = '';
-          expect(() => Contract.parse(src, options)).toThrow('empty michelson');
+          expect(() => Contract.parse(src, options)).toThrow('empty Michelson');
           expect(() => Contract.parse(src, options)).toThrow(
             expect.objectContaining({
               name: expect.stringContaining('InvalidMichelsonError'),
@@ -59,7 +59,7 @@ describe('PtKathmandu', () => {
           );
           expect(() => Contract.parse(src, options)).toThrow(
             expect.objectContaining({
-              message: expect.stringContaining('empty michelson'),
+              message: expect.stringContaining('empty Michelson'),
             })
           );
         });

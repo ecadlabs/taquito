@@ -48,7 +48,7 @@ export class Contract {
     const p = new Parser(opt);
     const expr = typeof src === 'string' ? p.parseScript(src) : p.parseJSON(src);
     if (expr === null) {
-      throw new InvalidMichelsonError('empty michelson');
+      throw new InvalidMichelsonError('empty Michelson');
     }
     if (assertMichelsonContract(expr)) {
       return new Contract(expr, opt);
@@ -124,7 +124,7 @@ export class Contract {
   }
 }
 
-// dummyContract not used anywhere in the codebase can be deleted?
+// TODO: dummyContract not used anywhere in the codebase can be deleted?
 export const dummyContract = new Contract([
   { prim: 'parameter', args: [{ prim: 'unit' }] },
   { prim: 'storage', args: [{ prim: 'unit' }] },
