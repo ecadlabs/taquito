@@ -206,12 +206,11 @@ export const hex2buf = (hex: string): Uint8Array => {
   const out = new Uint8Array(hex.length / 2);
   let j = 0;
   for (let i = 0; i < hex.length; i += 2) {
-    const hi = parseInt(hex[i], 16);
-    const lo = parseInt(hex[i + 1], 16);
-    if (Number.isNaN(hi) || Number.isNaN(lo)) {
+    const v = parseInt(hex.slice(i, i + 2), 16);
+    if (Number.isNaN(v)) {
       throw new ValueConversionError(hex, 'Uint8Array');
     }
-    out[j++] = (hi << 4) | lo;
+    out[j++] = v;
   }
   return out;
 };
