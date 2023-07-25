@@ -197,7 +197,7 @@ export function encodeKeyHash(value: string) {
  * @throws {@link ValueConversionError}
  */
 export const hex2buf = (hex: string): Uint8Array => {
-  if ((hex.length & 1) !== 0) {
+  if ((hex.length % 2) !== 0) {
     // odd length
     throw new ValueConversionError(hex, 'Uint8Array');
   }
