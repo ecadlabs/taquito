@@ -209,8 +209,8 @@ export const hex2buf = (hex: string): Uint8Array => {
   }
   const out = new Uint8Array(hexDigits.length / 2);
   let j = 0;
-  for (let i = 0; i < hex.length; i += 2) {
-    const v = parseInt(hex.slice(i, i + 2), 16);
+  for (let i = 0; i < hexDigits.length; i += 2) {
+    const v = parseInt(hexDigits.slice(i, i + 2), 16);
     if (Number.isNaN(v)) {
       throw new ValueConversionError(hex, 'Uint8Array');
     }
