@@ -200,10 +200,14 @@ export const hex2buf = (hex: string): Uint8Array => {
   if (hex.length % 2 !== 0) {
     throw new InvalidHexStringError(hex, `: Expecting even number of characters`);
   }
-  if (!hex.match(/^([\da-f]{2})*$/gi)) {
-    throw new InvalidHexStringError(hex, `: Only characters 0-9, a-f and A-F are expected`);
+  const hexDigits = stripHexPrefix(hex);
+  if (!hexDigits.match(/^([\da-f]{2})*$/gi)) {
+    throw new InvalidHexStringError(
+      hex,
+      `: Only characters 0-9, a-f and A-F are expected. Optionally, it can be prefixed with '0x'`
+    );
   }
-  const out = new Uint8Array(hex.length / 2);
+  const out = new Uint8Array(hexDigits.length / 2);
   let j = 0;
   for (let i = 0; i < hex.length; i += 2) {
     const v = parseInt(hex.slice(i, i + 2), 16);
@@ -361,10 +365,14 @@ export function bytes2Char(hex: string): string {
  * @param hex String value to convert to bytes
  */
 export function hex2Bytes(hex: string): Buffer {
-  if (!hex.match(/^([\da-f]{2})*$/gi)) {
-    throw new InvalidHexStringError(hex, `: Expecting even number of characters`);
+  const hexDigits = stripHexPrefix(hex);
+  if (!hexDigits.match(/^(0x)?([\da-f]{2})*$/gi)) {
+    throw new InvalidHexStringError(
+      hex,
+      `: Expecting even number of characters: 0-9, a-z, A-Z, optionally prefixed with 0x`
+    );
   }
-  return Buffer.from(hex, 'hex');
+  return Buffer.from(hexDigits, 'hex');
 }
 
 /**

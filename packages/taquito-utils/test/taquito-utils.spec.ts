@@ -252,6 +252,13 @@ describe('Hex conversions', () => {
     expect(result).toEqual(Buffer.from('abcd', 'hex'));
   });
 
+  it('Should be able to convert hex with 0x prefix to bytes', () => {
+    const result: Buffer = hex2Bytes('0xabcd');
+
+    expect(result).toBeDefined();
+    expect(result).toEqual(Buffer.from('abcd', 'hex'));
+  });
+
   it('Should throw an exception because of an odd number of characters', () => {
     expect(() => hex2Bytes('abcda')).toThrow();
   });
@@ -262,6 +269,13 @@ describe('Hex conversions', () => {
 
   it('Should be able to convert hex to buffer', () => {
     const result: Uint8Array = hex2buf('412D74657374');
+
+    expect(result).toBeDefined();
+    expect(result).toEqual(Uint8Array.from([65, 45, 116, 101, 115, 116]));
+  });
+
+  it('Should be able to convert hex with 0x prefix to buffer', () => {
+    const result: Uint8Array = hex2buf('0x412D74657374');
 
     expect(result).toBeDefined();
     expect(result).toEqual(Uint8Array.from([65, 45, 116, 101, 115, 116]));
