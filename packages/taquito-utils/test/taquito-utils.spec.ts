@@ -251,6 +251,14 @@ describe('Hex conversions', () => {
     expect(result).toEqual(Buffer.from('abcd', 'hex'));
   });
 
+  it('Should throw an exception because of an odd number of characters', () => {
+    expect(() => hex2Bytes('abcda')).toThrow();
+  });
+
+  it('Should throw an exception because of invalid character', () => {
+    expect(() => hex2Bytes('abcq')).toThrow();
+  });
+
   it('should be able to get phk from tz4 Public key', () => {
     const publicKey =
       'BLpk1w1wkESXN91Ry39ZMRAhaaHJsDaMZ8wBax5QsKPEKPWTjDBk6dgKMDkoejxxPWJf52cm2osh';
