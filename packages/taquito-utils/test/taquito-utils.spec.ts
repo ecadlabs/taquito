@@ -15,6 +15,7 @@ import {
   hex2Bytes,
   b58decodeL2Address,
   encodeL2Address,
+  hex2buf,
 } from '../src/taquito-utils';
 import BigNumber from 'bignumber.js';
 
@@ -257,6 +258,21 @@ describe('Hex conversions', () => {
 
   it('Should throw an exception because of invalid character', () => {
     expect(() => hex2Bytes('abcq')).toThrow();
+  });
+
+  it('Should be able to convert hex to buffer', () => {
+    const result: Uint8Array = hex2buf('412D74657374');
+
+    expect(result).toBeDefined();
+    expect(result).toEqual(Uint8Array.from([65, 45, 116, 101, 115, 116]));
+  });
+
+  it('Should throw an exception because of an odd number of characters (hex2buf)', () => {
+    expect(() => hex2buf('abcda')).toThrow();
+  });
+
+  it('Should throw an exception because of invalid character (hex2buf)', () => {
+    expect(() => hex2buf('abcq')).toThrow();
   });
 
   it('should be able to get phk from tz4 Public key', () => {
