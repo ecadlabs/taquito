@@ -72,7 +72,7 @@ jobs:
           - protocol: Nairobi
             testnet: nairobinet
             testnet_uppercase: NAIROBINET
-            flextesa_docker_image: oxheadalpha/flextesa:20230607
+            flextesa_docker_image: oxheadalpha/flextesa:20230502
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3

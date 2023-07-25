@@ -8,6 +8,10 @@ import {
   SemanticEncoding,
 } from './token';
 
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing a Set
+ */
 export class SetValidationError extends TokenValidationError {
   name = 'SetValidationError';
   constructor(public value: any, public token: SetToken, message: string) {
@@ -30,21 +34,22 @@ export class SetToken extends Token {
     return this.createToken(this.val.args[0], 0) as any;
   }
 
-  private isValid(value: any): SetValidationError | null {
-    if (Array.isArray(value)) {
-      return null;
+  /**
+   * @throws {@link SetValidationError}
+   */
+  private validate(value: any) {
+    if (!Array.isArray(value)) {
+      throw new SetValidationError(value, this, `Value ${JSON.stringify(value)} is not an array`);
     }
-
-    return new SetValidationError(value, this, 'Value must be an array');
   }
 
+  /**
+   * @throws {@link SetValidationError}
+   */
   public Encode(args: any[]): any {
     const val = args.pop();
 
-    const err = this.isValid(val);
-    if (err) {
-      throw err;
-    }
+    this.validate(val);
 
     return val
       .sort((a: any, b: any) => this.KeySchema.compare(a, b))
@@ -59,11 +64,11 @@ export class SetToken extends Token {
     }, []);
   }
 
+  /**
+   * @throws {@link SetValidationError}
+   */
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
-    const err = this.isValid(args);
-    if (err) {
-      throw err;
-    }
+    this.validate(args);
 
     if (semantic && semantic[SetToken.prim]) {
       return semantic[SetToken.prim](args);

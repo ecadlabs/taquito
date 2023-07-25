@@ -8,7 +8,7 @@ import { InMemoryViewingKey } from '../sapling-keys/in-memory-viewing-key';
 import { bufToUint8Array, convertValueToBigNumber, readableFormat } from './helpers';
 import { KDF_KEY, OCK_KEY } from '../constants';
 import { Input, SaplingContractId, SaplingIncomingAndOutgoingTransaction } from '../types';
-import { InvalidParameter } from '../error';
+import { SaplingTransactionViewerError } from '../errors';
 import { TzReadProvider } from '@taquito/taquito';
 
 /**
@@ -128,7 +128,7 @@ export class SaplingTransactionViewer {
         'head'
       );
     } else {
-      throw new InvalidParameter(
+      throw new SaplingTransactionViewerError(
         'A contract address or a sapling id was expected in the SaplingTransactionViewer constructor.'
       );
     }

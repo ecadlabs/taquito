@@ -8,8 +8,7 @@ import {
   filter,
   first,
   map,
-  publishReplay,
-  refCount,
+  share,
   switchMap,
   takeWhile,
   tap,
@@ -18,7 +17,8 @@ import { Context } from '../context';
 import { Receipt, receiptFromOperation } from './receipt';
 import { validateOperation, ValidationResult } from '@taquito/utils';
 import { BlockIdentifier } from '../read-provider/interface';
-import { InvalidConfirmationCountError, ConfirmationUndefinedError } from '../error';
+import { InvalidConfirmationCountError } from '../errors';
+import { ConfirmationUndefinedError, ObservableError } from './errors';
 import { InvalidOperationHashError } from '@taquito/core';
 
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
@@ -43,8 +43,12 @@ export class WalletOperation {
       );
     }),
     tap((newHead) => (this.lastHead = newHead)),
-    publishReplay(1),
-    refCount()
+    share({
+      connector: () => new ReplaySubject(1),
+      resetOnError: false,
+      resetOnComplete: false,
+      resetOnRefCountZero: false,
+    })
   );
 
   // Observable that emit once operation is seen in a block
@@ -67,8 +71,12 @@ export class WalletOperation {
       return typeof x !== 'undefined';
     }),
     first(),
-    publishReplay(1),
-    refCount()
+    share({
+      connector: () => new ReplaySubject(1),
+      resetOnError: false,
+      resetOnComplete: false,
+      resetOnRefCountZero: false,
+    })
   );
 
   async operationResults() {
@@ -80,7 +88,11 @@ export class WalletOperation {
    * The promise returned by receipt will resolve only once the transaction is included
    */
   async receipt(): Promise<Receipt> {
-    return receiptFromOperation(await this.operationResults());
+    const results = await this.operationResults();
+    if (!results) {
+      throw new ObservableError('Unable to get operation results');
+    }
+    return receiptFromOperation(results);
   }
 
   /**
@@ -129,8 +141,10 @@ export class WalletOperation {
 
     const tipBlockHeaderLevel = await this.context.readProvider.getBlockLevel(tipBlockIdentifier);
     const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
-
-    const levelDiff = tipBlockHeaderLevel - inclusionBlock.header.level;
+    if (!inclusionBlock) {
+      throw new ObservableError('Inclusion block is undefined');
+    }
+    const levelDiff = (tipBlockHeaderLevel - inclusionBlock.header.level) as number;
 
     // Block produced before the operation is included are assumed to be part of the current branch
     if (levelDiff <= 0) {
@@ -148,7 +162,7 @@ export class WalletOperation {
 
   confirmationObservable(confirmations?: number) {
     if (typeof confirmations !== 'undefined' && confirmations < 1) {
-      throw new InvalidConfirmationCountError('Confirmation count must be at least 1');
+      throw new InvalidConfirmationCountError(confirmations);
     }
 
     const { defaultConfirmationCount } = this.context.config;
@@ -156,7 +170,7 @@ export class WalletOperation {
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
     if (conf === undefined) {
-      throw new ConfirmationUndefinedError('Default confirmation count can not be undefined!');
+      throw new ConfirmationUndefinedError();
     }
 
     return combineLatest([this._includedInBlock, this.newHead$]).pipe(

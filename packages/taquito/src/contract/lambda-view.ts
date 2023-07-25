@@ -1,6 +1,6 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
 import { Contract, ContractAbstraction, WalletContract } from './contract';
-import { TezosOperationError } from '../operations/operation-errors';
+import { TezosOperationError } from '../operations/errors';
 import { ContractProvider } from './interface';
 import { Wallet } from '../wallet';
 

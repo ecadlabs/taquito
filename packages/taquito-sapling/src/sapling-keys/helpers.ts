@@ -1,4 +1,4 @@
-import { InvalidSpendingKey } from '../error';
+import { InvalidSpendingKey } from '../errors';
 import toBuffer from 'typedarray-to-buffer';
 import { openSecretBox } from '@stablelib/nacl';
 import pbkdf2 from 'pbkdf2';
@@ -8,7 +8,7 @@ export function decryptKey(spendingKey: string, password?: string) {
   const keyArr = b58cdecode(spendingKey, prefix[Prefix.SASK]);
   // exit first if no password and key is encrypted
   if (!password && spendingKey.slice(0, 4) !== 'sask') {
-    throw new InvalidSpendingKey(spendingKey, 'no password Provided to decrypt');
+    throw new InvalidSpendingKey(spendingKey, 'no password provided to decrypt');
   }
 
   if (password && spendingKey.slice(0, 4) !== 'sask') {
@@ -22,7 +22,7 @@ export function decryptKey(spendingKey: string, password?: string) {
       new Uint8Array(encryptedSk)
     );
     if (!decrypted) {
-      throw new InvalidSpendingKey(spendingKey, 'Encrypted Spending Key or Password Incorrect');
+      throw new InvalidSpendingKey(spendingKey, 'incorrect password or unable to decrypt');
     }
 
     return toBuffer(decrypted);

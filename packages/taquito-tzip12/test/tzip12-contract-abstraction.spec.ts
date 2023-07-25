@@ -1,7 +1,7 @@
 import { MichelsonMap, ViewSimulationError } from '@taquito/taquito';
-import { char2Bytes, InvalidUri } from '@taquito/tzip16';
+import { char2Bytes, InvalidUriError } from '@taquito/tzip16';
 import { Tzip12ContractAbstraction } from '../src/tzip12-contract-abstraction';
-import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from '../src/tzip12-errors';
+import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from '../src/errors';
 
 describe('Tzip12 contract abstraction test', () => {
   const mockContractAbstraction: any = {};
@@ -223,11 +223,11 @@ describe('Tzip12 contract abstraction test', () => {
   it('Test 1 for fetchTokenMetadataFromUri(): Should warn that the URI is invalid and return undefined', async (done) => {
     const tokenMap = new MichelsonMap();
     tokenMap.set('test', char2Bytes('test'));
-    tokenMap.set('', char2Bytes('invalidURI'));
+    tokenMap.set('', char2Bytes('InvalidUriError'));
     tokenMap.set('testtest', char2Bytes('testtest'));
 
     mockMetadataProvider.provideMetadata.mockImplementation(() => {
-      throw new InvalidUri(char2Bytes('invalidURI'));
+      throw new InvalidUriError(char2Bytes('InvalidUriError'));
     });
 
     const tokenMetadata = await tzip12Abs['fetchTokenMetadataFromUri'](

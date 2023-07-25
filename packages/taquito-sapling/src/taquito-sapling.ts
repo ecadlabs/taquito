@@ -14,7 +14,7 @@ import {
   ValidationResult,
   invalidDetail,
 } from '@taquito/utils';
-import { InsufficientBalance, InvalidMemo } from './error';
+import { InsufficientBalance, InvalidMemo } from './errors';
 import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
 import { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
 import { SaplingForger } from './sapling-forger/sapling-forger';
@@ -238,7 +238,7 @@ export class SaplingToolkit {
       totalAmount = totalAmount.plus(new BigNumber(amountMutez));
       const memo = param.memo ?? DEFAULT_MEMO;
       if (memo.length > this.#memoSize) {
-        throw new InvalidMemo(memo, 'The memo is too long.');
+        throw new InvalidMemo(memo, `expecting length to be less than ${this.#memoSize}`);
       }
 
       formatedParams.push({ to: param.to, amount: amountMutez, memo });

@@ -3,62 +3,49 @@ title: Local Forging Package
 id: local_forger
 author: Michael Kernaghan
 ---
+`@taquito/local-forging` allows developers to forge transactions locally without having to interact with a node. This document will outline some use cases and usage examples.
 
-# How to Use the Taquito Local Forging Package
-
-One of the tools offered by Taquito is the local forging package, which allows you to forge transactions locally without interacting with a node. Here is a step-by-step guide on how to use the Taquito local forging package:
-
-## Step 1: Import the Local Forger
-
-You will need to import the LocalForger class from Taquito to use the local forging package. You can do this by adding the following line to your code:
-
-```
+## Importing the Local Forger
+The `LocalForger` package can be imported to your code like so:
+```typescript
 import { LocalForger } from '@taquito/local-forging';
-
 ```
 
-## Step 2: Create a Transaction
+## Forging a transaction
+In order to forge the operation you must first prepare an operation. 
 
-Next, you must create a transaction you want to forge. You can do this using the Taquito library as you normally would. Here is an example of creating a transaction to transfer 1 XTZ from one address to another:
+### Preparing a Transaction Operation
+```typescript
+import { TezosToolkit } from '@taquito/taquito'
 
+const Tezos = new TezosToolkit(RPC_URL);
+
+// The PrepareProvider returns a 'PreparedOperation' type object
+const prepared = await Tezos.prepare.transaction({
+  source: SOURCE_PKH,
+  to: DESTINATION_PKH,
+  amount: 5
+});
+
+// The PreparedOperation type object needs to be converted into a forgeable type (ForgeParams)
+const forgeable = await Tezos.prepare.toForge(prepared);
 ```
-import { TezosToolkit } from '@taquito/taquito';
 
-const tezos = new TezosToolkit('<https://rpc.tezrpc.me>');
-const from = 'tz1abc...xyz';
-const to = 'tz1def...uvw';
-const amount = 1;
-
-const transferOperation = await tezos.contract.transfer({ to, amount }).send({ from });
-
-```
-
-## Step 3: Forge the Transaction
-
-Once you have created your transaction, you can use the LocalForger class. Here is an example of how to do this:
-
-```
+### Forging the Transaction Operation
+```typescript
 const forger = new LocalForger();
-const forgedBytes = await forger.forge(transferOperation);
-
+const forgedBytes = await forger.forge(forgeable);
 ```
 
-## Step 4: Sign the Transaction
-
-After the transaction has been forged, you can sign it using your private key. Here is an example of how to sign the transaction:
-
-```
-const { bytes: signatureBytes } = await tezos.signer.sign(forgedBytes, from);
-
+### Signing the Operation
+After the transaction operation has been forged, it can be signed as such:
+```typescript
+const signed = await Tezos.signer.sign(forgedBytes, new Uint8Array([3]))
 ```
 
-## Step 5: Broadcast the Transaction
+### Injecting the Operation
+Finally after signing, you can inject your operation to the blockchain.
 
-Finally, you can broadcast the signed transaction to the blockchain. Here is an example of how to do this using the Taquito library:
-
+```typescript
+const op = await Tezos.rpc.injectOperation(signed.sbytes);
 ```
-const operation = await tezos.rpc.sendOperation({ operation: signatureBytes });
-
-```
-
-That's it! You have now successfully used the Taquito local forging package to simulate the forging and signing of a transaction locally. This can be useful for testing and development, as it allows you to experiment with the transaction process without interacting with the blockchain.

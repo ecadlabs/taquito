@@ -6,7 +6,7 @@ import {
   MichelsonType,
   MichelsonTypePair,
 } from './michelson-types';
-import { HexParseError, LongIntegerError, TezosIdEncodeError } from './error';
+import { HexParseError, LongIntegerError, TezosIdEncodeError } from './errors';
 
 export type Tuple<N extends number, T> = N extends 1
   ? [T]

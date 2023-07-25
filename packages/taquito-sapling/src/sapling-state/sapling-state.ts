@@ -5,7 +5,7 @@
  */
 
 import { SaplingDiffResponse, SaplingTransactionCiphertext } from '@taquito/rpc';
-import { InvalidMerkleRootError, TreeConstructionFailure } from '../error';
+import { InvalidMerkleTreeError, TreeConstructionFailure } from '../errors';
 import { merkleHash } from '@airgap/sapling-wasm';
 import { Lazy, pairNodes, changeEndianness } from './utils';
 import { hex2Bytes, num2PaddedHex } from '@taquito/utils';
@@ -145,12 +145,13 @@ export class SaplingState {
    *
    * @param tree Merkle tree to validate
    * @param expectedRoot the expected merkle root to validate against
+   * @throws {@link InvalidMerkleTreeError}
    */
   private async validateMerkleTree(tree: MerkleTree, expectedRoot: string) {
     const root: Buffer = await this.getMerkleHash(tree, this.height - 1);
 
     if (root.toString('hex') !== expectedRoot) {
-      throw new InvalidMerkleRootError(root.toString('hex'));
+      throw new InvalidMerkleTreeError(root.toString('hex'));
     }
   }
 

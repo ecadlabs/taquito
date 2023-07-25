@@ -19,7 +19,7 @@ export class BeaconWalletNotInitialized extends PermissionDeniedError {
  *  @description Error indicates missing required persmission scopes
  */
 export class MissingRequiredScopes extends PermissionDeniedError {
-  constructor(public requiredScopes: PermissionScope[]) {
+  constructor(public readonly requiredScopes: PermissionScope[]) {
     super();
     this.name = 'MissingRequiredScopes';
     this.message = `Required permissions scopes: ${requiredScopes.join(',')} were not granted.`;
