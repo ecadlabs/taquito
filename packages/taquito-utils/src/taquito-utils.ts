@@ -197,12 +197,26 @@ export function encodeKeyHash(value: string) {
  * @throws {@link ValueConversionError}
  */
 export const hex2buf = (hex: string): Uint8Array => {
-  const match = hex.match(/[\da-f]{2}/gi);
-  if (match) {
-    return new Uint8Array(match.map((h) => parseInt(h, 16)));
-  } else {
-    throw new ValueConversionError(hex, 'Uint8Array');
+  if (hex.length % 2 !== 0) {
+    throw new InvalidHexStringError(hex, `: Expecting even number of characters`);
   }
+  const hexDigits = stripHexPrefix(hex);
+  if (!hexDigits.match(/^([\da-f]{2})*$/gi)) {
+    throw new InvalidHexStringError(
+      hex,
+      `: Only characters 0-9, a-f and A-F are expected. Optionally, it can be prefixed with '0x'`
+    );
+  }
+  const out = new Uint8Array(hexDigits.length / 2);
+  let j = 0;
+  for (let i = 0; i < hexDigits.length; i += 2) {
+    const v = parseInt(hexDigits.slice(i, i + 2), 16);
+    if (Number.isNaN(v)) {
+      throw new ValueConversionError(hex, 'Uint8Array');
+    }
+    out[j++] = v;
+  }
+  return out;
 };
 
 /**
@@ -351,10 +365,14 @@ export function bytes2Char(hex: string): string {
  * @param hex String value to convert to bytes
  */
 export function hex2Bytes(hex: string): Buffer {
-  if (!hex.match(/[\da-f]{2}/gi)) {
-    throw new InvalidHexStringError(hex, `: Expecting even number of characters`);
+  const hexDigits = stripHexPrefix(hex);
+  if (!hexDigits.match(/^(0x)?([\da-f]{2})*$/gi)) {
+    throw new InvalidHexStringError(
+      hex,
+      `: Expecting even number of characters: 0-9, a-z, A-Z, optionally prefixed with 0x`
+    );
   }
-  return Buffer.from(hex, 'hex');
+  return Buffer.from(hexDigits, 'hex');
 }
 
 /**
