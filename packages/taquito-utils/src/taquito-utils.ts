@@ -197,12 +197,20 @@ export function encodeKeyHash(value: string) {
  * @throws {@link ValueConversionError}
  */
 export const hex2buf = (hex: string): Uint8Array => {
-  const match = hex.match(/[\da-f]{2}/gi);
-  if (match) {
-    return new Uint8Array(match.map((h) => parseInt(h, 16)));
-  } else {
+  if ((hex.length & 1) !== 0) {
+    // odd length
     throw new ValueConversionError(hex, 'Uint8Array');
   }
+  const out = new Uint8Array(hex.length / 2);
+  let j = 0;
+  for (let i = 0; i < hex.length; i += 2) {
+    const v = parseInt(hex.slice(i, i + 2), 16);
+    if (Number.isNaN(v)) {
+      throw new ValueConversionError(hex, 'Uint8Array');
+    }
+    out[j++] = v;
+  }
+  return out;
 };
 
 /**
