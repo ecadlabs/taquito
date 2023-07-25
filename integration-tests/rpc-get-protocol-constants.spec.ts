@@ -955,9 +955,10 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         proof_of_work_threshold: new BigNumber(-1),
         origination_size: 257,
         percentage_of_frozen_deposits_slashed_per_double_baking: 10,
-        percentage_of_frozen_deposits_slashed_per_double_endorsement: 50,
+        percentage_of_frozen_deposits_slashed_per_double_attestation: 50,
         cost_per_byte: new BigNumber(250),
         hard_storage_limit_per_operation: new BigNumber(60000),
+        limit_of_delegation_over_baking: 9,
         quorum_min: 2000,
         quorum_max: 7000,
         reward_weights: {
@@ -986,7 +987,8 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         max_slashing_period: 2,
         minimal_block_delay: new BigNumber(15),
         delay_increment_per_round: new BigNumber(15),
-        delegation_over_baking_limit: 9,
+        edge_of_staking_over_delegation: 2,
+        global_limit_of_staking_over_baking: 5,
         dal_parametric: {
           attestation_lag: 4,
           attestation_threshold: 50,
@@ -1019,7 +1021,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         smart_rollup_number_of_sections_in_dissection: 32,
         smart_rollup_origination_size: 6314,
         smart_rollup_reveal_activation_level: {
-          dal_page: 0,
+          dal_page: 513,
           metadata: 0,
           raw_data: {
             Blake2B: 0,
@@ -1027,8 +1029,6 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         },
         smart_rollup_stake_amount: "32000000",
         smart_rollup_timeout_period_in_blocks: 500,
-        staking_over_baking_global_limit: 5,
-        staking_over_delegation_edge: 2,
         vdf_difficulty: new BigNumber('10000000'),
         zk_rollup_enable: true,
         zk_rollup_max_ticket_payload_size: 2048,
