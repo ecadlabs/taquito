@@ -1,4 +1,4 @@
-import { PreapplyResponse, RPCRunOperationParam, ConstantsResponse } from '@taquito/rpc';
+import { PreapplyResponse, ConstantsResponse, RPCSimulateOperationParam } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { flattenErrors, flattenOperationResult, TezosOperationError } from '../operations/errors';
 import {
@@ -100,7 +100,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       opbytes,
       opOb: { branch, contents },
     } = await this.forge(op);
-    const operation: RPCRunOperationParam = {
+    const operation: RPCSimulateOperationParam = {
       operation: { branch, contents, signature: SIGNATURE_STUB },
       chain_id: await this.context.readProvider.getChainId(),
     };

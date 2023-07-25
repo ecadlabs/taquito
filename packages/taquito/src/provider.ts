@@ -1,4 +1,9 @@
-import { OperationContentsAndResult, RPCRunOperationParam, RpcClientInterface } from '@taquito/rpc';
+import {
+  OperationContentsAndResult,
+  RPCRunOperationParam,
+  RPCSimulateOperationParam,
+  RpcClientInterface,
+} from '@taquito/rpc';
 import { Context } from './context';
 import { ForgedBytes, ParamsWithKind, RPCOperation, isOpRequireReveal } from './operations/types';
 import {
@@ -123,9 +128,17 @@ export abstract class Provider {
     }
   }
 
-  protected async simulate(op: RPCRunOperationParam) {
+  protected async runOperation(op: RPCRunOperationParam) {
     return {
       opResponse: await this.rpc.runOperation(op),
+      op,
+      context: this.context.clone(),
+    };
+  }
+
+  protected async simulate(op: RPCSimulateOperationParam) {
+    return {
+      opResponse: await this.rpc.simulateOperation(op),
       op,
       context: this.context.clone(),
     };

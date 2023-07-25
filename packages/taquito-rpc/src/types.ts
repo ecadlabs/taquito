@@ -2231,6 +2231,11 @@ export type RPCRunOperationParam = {
   chain_id: string;
 };
 
+export interface RPCSimulateOperationParam extends RPCRunOperationParam {
+  blocks_before_activation?: number;
+  latency?: number;
+}
+
 export type RPCRunCodeParam = {
   script: MichelsonV1ExpressionExtended[];
   storage: MichelsonV1Expression;

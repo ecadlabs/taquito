@@ -99,6 +99,7 @@ export interface RpcClientInterface {
   preapplyOperations(ops: PreapplyParams, options?: RPCOptions): Promise<PreapplyResponse[]>;
   getEntrypoints(contract: string, options?: RPCOptions): Promise<EntrypointsResponse>;
   runOperation(op: RPCRunOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
+  simulateOperation(op: RPCRunOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   runCode(code: RPCRunCodeParam, options?: RPCOptions): Promise<RunCodeResult>;
   runScriptView(
     viewScriptParams: RPCRunScriptViewParam,
