@@ -28,6 +28,7 @@ import {
   ValidationResult,
   invalidDetail,
 } from '@taquito/utils';
+import { LocalForger, ProtocolsHash } from '@taquito/local-forging';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -262,18 +263,22 @@ export class Wallet {
    *
    * @description failing_noop operation that is guaranteed to fail.
    *
-   * @returns An operation handle with the result from the rpc node
+   * @returns Signature for a failing_noop
    *
-   * @param delegateParams operation parameter
+   * @param params operation parameter
    */
-  failingNoOp(params: WalletFailingNoOpParams) {
-    return this.walletCommand(async () => {
-      const mappedParams = await this.walletProvider.mapFailingNoOpParamsToWalletParams(
-        async () => params
-      );
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createDelegationOperation(opHash);
+  async signFailingNoOp(params: WalletFailingNoOpParams) {
+    const failingOperation = await this.context.prepare.failingNoOp({
+      ...params,
     });
+    const forgeable = this.context.prepare.toForge(failingOperation);
+    const forger = new LocalForger(this.context.proto as unknown as ProtocolsHash);
+    const forgedBytes = await forger.forge(forgeable);
+    const signature = await this.walletProvider.sign({ payload: forgedBytes });
+    return {
+      bytes: forgedBytes,
+      sbytes: signature,
+    };
   }
 
   /**

@@ -60,4 +60,6 @@ export interface WalletProvider {
    * @description Request the wallet to send an operation batch
    */
   sendOperations: (params: any[]) => Promise<string>;
+
+  sign(signingRequest: { payload: string }): Promise<string>;
 }

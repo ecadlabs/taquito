@@ -9,6 +9,7 @@ import {
   RequestPermissionInput,
   PermissionScope,
   getDAppClientInstance,
+  SigningType,
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import {
@@ -195,5 +196,13 @@ export class BeaconWallet implements WalletProvider {
    */
   async clearActiveAccount() {
     await this.client.setActiveAccount();
+  }
+
+  async sign(signingRequest: { payload: string }) {
+    const response = await this.client.requestSignPayload({
+      payload: signingRequest.payload,
+      signingType: SigningType.OPERATION,
+    });
+    return response.signature;
   }
 }
