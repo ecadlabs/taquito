@@ -18,6 +18,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       });
       const pk = await Tezos.wallet.getPublicKey();
       // expect(verifySignature(signed.bytes, pk, signed.sbytes)).toBe(true);
+      expect(async () => {
+        await Tezos.rpc.injectOperation(signed.sbytes);
+      }).rejects.toThrow(`A failing_noop operation can never be validated.`);
       done();
     });
 
@@ -32,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(forgedBytes).toEqual(rpcForgedBytes);
 
       const signed = await Tezos.signer.sign(forgedBytes, new Uint8Array([3]));
-      console.log(signed);
+      // console.log(signed);
       // expect(verifySignature(signed.bytes, await Tezos.signer.publicKey(), signed.prefixSig)).toBe(true);
       expect(async () => {
         await Tezos.rpc.injectOperation(signed.sbytes);
