@@ -5,7 +5,7 @@ import { Tuple, NoArgs, ReqArgs, NoAnnots } from './utils';
 
 /**
  *  @category Error
- *  @description Error indicates macros failed to be expanded
+ *  @description Error that indicates macros failed to be expanded
  */
 export class MacroError extends TaquitoError {
   constructor(public readonly prim: Prim, public readonly message: string) {

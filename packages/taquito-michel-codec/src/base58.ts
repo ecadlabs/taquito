@@ -80,7 +80,7 @@ const K = [
 
 /**
  *  @category Error
- *  @description Error indicates a failure when decoding a base58 encoding
+ *  @description Error that indicates a failure when decoding a base58 encoding
  */
 export class Base58DecodingError extends TaquitoError {
   constructor(public readonly message: string) {

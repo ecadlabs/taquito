@@ -4,7 +4,7 @@ import { MichelsonV1Expression } from '@taquito/rpc';
 
 /**
  *  @category Error
- *  @description Error indicates invalid smart contract parameters being passed or used
+ *  @description Error that indicates invalid smart contract parameters being passed or used
  */
 export class InvalidParameterError extends ParameterValidationError {
   constructor(
@@ -22,7 +22,7 @@ export class InvalidParameterError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid delegation source contract address being passed or used
+ *  @description Error that indicates an invalid delegation source contract address being passed or used
  */
 export class InvalidDelegationSource extends ParameterValidationError {
   constructor(public readonly source: string) {
@@ -34,7 +34,7 @@ export class InvalidDelegationSource extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid smart contract code parameter being passed or used
+ *  @description Error that indicates an invalid smart contract code parameter being passed or used
  */
 export class InvalidCodeParameter extends ParameterValidationError {
   constructor(public readonly message: string, public readonly data: any) {
@@ -45,7 +45,7 @@ export class InvalidCodeParameter extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates invalid smart contract init parameter being passed or used
+ *  @description Error that indicates invalid smart contract init parameter being passed or used
  */
 export class InvalidInitParameter extends ParameterValidationError {
   constructor(public readonly message: string, public readonly data: any) {
@@ -56,7 +56,7 @@ export class InvalidInitParameter extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure when conducting a view simulation
+ *  @description Error that indicates a failure when conducting a view simulation
  */
 export class ViewSimulationError extends RpcError {
   constructor(
@@ -92,7 +92,7 @@ const isJsonString = (str: string) => {
 
 /**
  *  @category Error
- *  @description Error indicates invalid or unconfigured context when executing a view
+ *  @description Error that indicates invalid or unconfigured context when executing a view
  */
 export class InvalidViewSimulationContext extends ParameterValidationError {
   constructor(public readonly info: string) {
@@ -104,7 +104,7 @@ export class InvalidViewSimulationContext extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates a mistake happening during the reveal operation
+ *  @description Error that indicates a mistake happening during the reveal operation
  */
 export class RevealOperationError extends RpcError {
   constructor(public readonly message: string) {
@@ -115,7 +115,7 @@ export class RevealOperationError extends RpcError {
 
 /**
  *  @category Error
- *  @description Error indicates a mistake in the parameters in the preparation of an Origination operation
+ *  @description Error that indicates a mistake in the parameters in the preparation of an Origination operation
  */
 export class OriginationParameterError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -126,7 +126,7 @@ export class OriginationParameterError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid balance being passed or used
+ *  @description Error that indicates an invalid balance being passed or used
  */
 export class InvalidBalanceError extends ParameterValidationError {
   constructor(public readonly message: string) {

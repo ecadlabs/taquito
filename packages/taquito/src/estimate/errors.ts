@@ -2,7 +2,7 @@ import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates unable to get public key to estimate reveal operation in Wallet API
+ *  @description Error that indicates unable to get public key to estimate reveal operation in Wallet API
  */
 export class RevealEstimateError extends TaquitoError {
   constructor() {

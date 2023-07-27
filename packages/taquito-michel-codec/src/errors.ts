@@ -1,7 +1,7 @@
 import { ParameterValidationError, TaquitoError } from '@taquito/core';
 /**
  *  @category Error
- *  @description Error indicates an invalid Michelson being passed or used
+ *  @description Error that indicates an invalid Michelson being passed or used
  */
 export class InvalidMichelsonError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -12,7 +12,7 @@ export class InvalidMichelsonError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid type expression being passed or used
+ *  @description Error that indicates an invalid type expression being passed or used
  */
 export class InvalidTypeExpressionError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -23,7 +23,7 @@ export class InvalidTypeExpressionError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid data expression being passed or used
+ *  @description Error that indicates an invalid data expression being passed or used
  */
 export class InvalidDataExpressionError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -34,7 +34,7 @@ export class InvalidDataExpressionError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid contract entrypoint being referenced or passed
+ *  @description Error that indicates an invalid contract entrypoint being referenced or passed
  */
 export class InvalidEntrypointError extends ParameterValidationError {
   constructor(public readonly entrypoint?: string) {
@@ -46,7 +46,7 @@ export class InvalidEntrypointError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure happening when trying to encode Tezos ID
+ *  @description Error that indicates a failure happening when trying to encode Tezos ID
  */
 export class TezosIdEncodeError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -57,7 +57,7 @@ export class TezosIdEncodeError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates a general error happening when trying to create a LongInteger
+ *  @description Error that indicates a general error happening when trying to create a LongInteger
  */
 export class LongIntegerError extends TaquitoError {
   constructor(public readonly message: string) {
@@ -68,7 +68,7 @@ export class LongIntegerError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure occurring when trying to parse a hex byte
+ *  @description Error that indicates a failure occurring when trying to parse a hex byte
  */
 export class HexParseError extends TaquitoError {
   constructor(public readonly hexByte: string) {

@@ -4,7 +4,7 @@ export { InvalidViewParameterError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates missing big map metadata (non compliance to the TZIP-16 standard)
+ *  @description Error that indicates missing big map metadata (non compliance to the TZIP-16 standard)
  */
 export class BigMapContractMetadataNotFoundError extends TaquitoError {
   constructor(public readonly invalidBigMapId: any) {
@@ -17,7 +17,7 @@ export class BigMapContractMetadataNotFoundError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates missing metadata in storage
+ *  @description Error that indicates missing metadata in storage
  */
 export class ContractMetadataNotFoundError extends TaquitoError {
   constructor(public readonly info: string) {
@@ -29,7 +29,7 @@ export class ContractMetadataNotFoundError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates missing URI (non compliance to the TZIP-16 standard)
+ *  @description Error that indicates missing URI (non compliance to the TZIP-16 standard)
  */
 export class UriNotFoundError extends TaquitoError {
   constructor() {
@@ -42,7 +42,7 @@ export class UriNotFoundError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid URI (non compliance to the TZIP-16 standard)
+ *  @description Error that indicates an invalid URI (non compliance to the TZIP-16 standard)
  */
 export class InvalidUriError extends TaquitoError {
   constructor(public readonly uri: string) {
@@ -54,7 +54,7 @@ export class InvalidUriError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates invalid metadata (non compliance to the TZIP-16 standard)
+ *  @description Error that indicates invalid metadata (non compliance to the TZIP-16 standard)
  */
 export class InvalidContractMetadataError extends TaquitoError {
   constructor(public readonly invalidMetadata: string) {
@@ -66,7 +66,7 @@ export class InvalidContractMetadataError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates the uri protocol being passed or used is not supported
+ *  @description Error that indicates the uri protocol being passed or used is not supported
  */
 export class ProtocolNotSupportedError extends ParameterValidationError {
   constructor(public readonly protocol: string) {
@@ -78,7 +78,7 @@ export class ProtocolNotSupportedError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates the metadata type is invalid (non compliance to the TZIP-16 standard)
+ *  @description Error that indicates the metadata type is invalid (non compliance to the TZIP-16 standard)
  */
 export class InvalidContractMetadataTypeError extends TaquitoError {
   constructor() {
@@ -91,7 +91,7 @@ export class InvalidContractMetadataTypeError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates metadata provider being unconfigured in the TezosToolkit instance
+ *  @description Error that indicates metadata provider being unconfigured in the TezosToolkit instance
  */
 export class UnconfiguredContractMetadataProviderError extends TezosToolkitConfigError {
   constructor() {
@@ -104,7 +104,7 @@ export class UnconfiguredContractMetadataProviderError extends TezosToolkitConfi
 
 /**
  *  @category Error
- *  @description Error indicates a forbidden instruction being found inside the View code
+ *  @description Error that indicates a forbidden instruction being found inside the View code
  */
 export class ForbiddenInstructionInViewCodeError extends TaquitoError {
   constructor(public readonly instruction: string) {
@@ -116,7 +116,7 @@ export class ForbiddenInstructionInViewCodeError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates parameters are being passed when it is not required
+ *  @description Error that indicates parameters are being passed when it is not required
  */
 export class NoParameterExpectedError extends ParameterValidationError {
   constructor(public readonly viewName: string, public readonly args: any[]) {
