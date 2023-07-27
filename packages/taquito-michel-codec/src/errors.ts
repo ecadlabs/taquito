@@ -1,11 +1,12 @@
+import { ParameterValidationError, TaquitoError } from '@taquito/core';
 /**
  *  @category Error
- *  @description Error that indicates an invalid contract being passed or used
+ *  @description Error that indicates an invalid Michelson being passed or used
  */
-export class InvalidContractError extends Error {
-  public name = 'InvalidContractError';
+export class InvalidMichelsonError extends ParameterValidationError {
   constructor(public readonly message: string) {
     super();
+    this.name = 'InvalidMichelsonError';
   }
 }
 
@@ -13,10 +14,10 @@ export class InvalidContractError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid type expression being passed or used
  */
-export class InvalidTypeExpressionError extends Error {
-  public name = 'InvalidTypeExpressionError';
+export class InvalidTypeExpressionError extends ParameterValidationError {
   constructor(public readonly message: string) {
     super();
+    this.name = 'InvalidTypeExpressionError';
   }
 }
 
@@ -24,10 +25,10 @@ export class InvalidTypeExpressionError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid data expression being passed or used
  */
-export class InvalidDataExpressionError extends Error {
-  public name = 'InvalidDataExpressionError';
+export class InvalidDataExpressionError extends ParameterValidationError {
   constructor(public readonly message: string) {
     super();
+    this.name = 'InvalidDataExpressionError';
   }
 }
 
@@ -35,11 +36,11 @@ export class InvalidDataExpressionError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid contract entrypoint being referenced or passed
  */
-export class InvalidEntrypointError extends Error {
+export class InvalidEntrypointError extends ParameterValidationError {
   constructor(public readonly entrypoint?: string) {
     super();
     this.name = 'InvalidEntrypointError';
-    this.message = `Contract has no entrypoint named: '${entrypoint}'`;
+    this.message = `Contract has no entrypoint named: "${entrypoint}"`;
   }
 }
 
@@ -47,10 +48,10 @@ export class InvalidEntrypointError extends Error {
  *  @category Error
  *  @description Error that indicates a failure happening when trying to encode Tezos ID
  */
-export class TezosIdEncodeError extends Error {
-  public name = 'TezosIdEncodeError';
+export class TezosIdEncodeError extends ParameterValidationError {
   constructor(public readonly message: string) {
     super();
+    this.name = 'TezosIdEncodeError';
   }
 }
 
@@ -58,10 +59,10 @@ export class TezosIdEncodeError extends Error {
  *  @category Error
  *  @description Error that indicates a general error happening when trying to create a LongInteger
  */
-export class LongIntegerError extends Error {
-  public name = 'LongIntegerError';
+export class LongIntegerError extends TaquitoError {
   constructor(public readonly message: string) {
     super();
+    this.name = 'LongIntegerError';
   }
 }
 
@@ -69,10 +70,10 @@ export class LongIntegerError extends Error {
  *  @category Error
  *  @description Error that indicates a failure occurring when trying to parse a hex byte
  */
-export class HexParseError extends Error {
+export class HexParseError extends TaquitoError {
   constructor(public readonly hexByte: string) {
     super();
     this.name = 'HexParseError';
-    this.message = `Unable to parse hex byte: ${hexByte}`;
+    this.message = `Unable to parse hex byte "${hexByte}"`;
   }
 }

@@ -2,7 +2,7 @@ import { TaquitoError, TezosToolkitConfigError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates CompositeForger.forge() results doesn't match each other
+ *  @description Error that indicates CompositeForger.forge() results doesn't match each other
  */
 export class ForgingMismatchError extends TaquitoError {
   constructor(public readonly results: string[]) {
@@ -14,7 +14,7 @@ export class ForgingMismatchError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates no forger has been configured for CompositeForger
+ *  @description Error that indicates no forger has been configured for CompositeForger
  */
 export class UnspecifiedForgerError extends TezosToolkitConfigError {
   constructor() {

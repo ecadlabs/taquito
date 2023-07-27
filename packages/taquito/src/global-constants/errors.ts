@@ -2,7 +2,7 @@ import { TaquitoError, TezosToolkitConfigError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates that a global constant does not exist
+ *  @description Error that indicates that a global constant does not exist
  */
 export class GlobalConstantNotFound extends TaquitoError {
   constructor(public readonly hash: string) {
@@ -14,7 +14,7 @@ export class GlobalConstantNotFound extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates the global constant provider not being configured under TezosToolkit
+ *  @description Error that indicates the global constant provider not being configured under TezosToolkit
  */
 export class UnconfiguredGlobalConstantsProviderError extends TezosToolkitConfigError {
   constructor() {
