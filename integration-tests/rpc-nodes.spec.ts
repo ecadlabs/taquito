@@ -386,8 +386,6 @@ CONFIGS().forEach(
                     },
                   },
                 ],
-                signature:
-                  'edsigtcagjMz6xtr45ummgsxgj7V6tQGRMerspzSVLJuE2bmBv6dGffCXYqokNgymY7uY7c97kpFrzMr5dhjqwKGsUb6kSP3B97',
               },
             };
 
