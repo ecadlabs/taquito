@@ -393,4 +393,8 @@ export class Wallet {
     );
     return contractAbstractionComposer(abs, this.context);
   }
+
+  getPublicKey() {
+    return this.walletProvider.getPublicKey();
+  }
 }

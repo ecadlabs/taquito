@@ -205,4 +205,9 @@ export class BeaconWallet implements WalletProvider {
     });
     return response.signature;
   }
+
+  async getPublicKey(): Promise<string> {
+    const response = await this.client.requestPermissions();
+    return response.publicKey;
+  }
 }

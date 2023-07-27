@@ -61,5 +61,13 @@ export interface WalletProvider {
    */
   sendOperations: (params: any[]) => Promise<string>;
 
+  /**
+   * @description Request the wallet to sign a payload
+   */
   sign(signingRequest: { payload: string }): Promise<string>;
+
+  /**
+   * @description Get the public key from the wallet
+   */
+  getPublicKey(): Promise<string>;
 }

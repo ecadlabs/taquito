@@ -46,4 +46,8 @@ export class LegacyWalletProvider implements WalletProvider {
     const response = await this.context.signer.sign(signingRequest.payload);
     return response.sbytes;
   }
+
+  getPublicKey(): Promise<string> {
+    return this.context.signer.publicKey();
+  }
 }
