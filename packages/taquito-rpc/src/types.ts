@@ -259,7 +259,7 @@ export interface OperationContentsActivateAccount {
   secret: string;
 }
 
-export interface OperationContentsFailingNoOp {
+export interface OperationContentsFailingNoop {
   kind: OpKind.FAILING_NOOP;
   arbitrary: string;
 }
@@ -580,7 +580,7 @@ export type OperationContents =
   | OperationContentsOrigination
   | OperationContentsDelegation
   | OperationContentsEndorsementWithSlot
-  | OperationContentsFailingNoOp
+  | OperationContentsFailingNoop
   | OperationContentsRegisterGlobalConstant
   | OperationContentsSetDepositsLimit
   | OperationContentsTxRollupOrigination
@@ -642,9 +642,9 @@ export interface OperationContentsAndResultMetadataRegisterGlobalConstant {
   internal_operation_results?: InternalOperationResult[];
 }
 
-export interface OperationContentsAndResultMetadataFailingNoOp {
+export interface OperationContentsAndResultMetadataFailingNoop {
   balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultFailingNoOp;
+  operation_result: OperationResultFailingNoop;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -1166,7 +1166,7 @@ export interface OperationContentsAndResultSmartRollupTimeout {
   metadata: OperationContentsAndResultMetadataSmartRollupTimeout;
 }
 
-export interface OperationContentsAndResultFailingNoOp {
+export interface OperationContentsAndResultFailingNoop {
   kind: OpKind.FAILING_NOOP;
   source: string;
   fee: string;
@@ -1174,7 +1174,7 @@ export interface OperationContentsAndResultFailingNoOp {
   gas_limit: string;
   storage_limit: string;
   arbitrary: string;
-  metadata: OperationContentsAndResultMetadataFailingNoOp;
+  metadata: OperationContentsAndResultMetadataFailingNoop;
 }
 
 export type OperationContentsAndResult =
@@ -1214,7 +1214,7 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupCement
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupRecoverBond
-  | OperationContentsAndResultFailingNoOp
+  | OperationContentsAndResultFailingNoop
   | OperationContentsAndResultSmartRollupTimeout;
 
 export type OperationContentsAndResultWithFee =
@@ -1761,7 +1761,7 @@ export interface OperationResultReveal {
   consumed_milligas?: string;
 }
 
-export interface OperationResultFailingNoOp {
+export interface OperationResultFailingNoop {
   status: OperationResultStatusEnum;
   balance_updates?: OperationBalanceUpdates;
   consumed_gas?: string;

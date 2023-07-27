@@ -13,9 +13,10 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     });
 
     it('Verify that the failing_noop signs an int', async (done) => {
-      const signed = await Tezos.wallet.signFailingNoOp({
+      const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "2736475837593756",
       });
+      // console.log(signed);
       const pk = await Tezos.wallet.getPublicKey();
       // expect(verifySignature(signed.bytes, pk, signed.sbytes)).toBe(true);
       expect(async () => {
@@ -25,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     });
 
     it('Verify that the local forger can forge the failing_noop operation', async (done) => {
-      const failingOperation = await Tezos.prepare.failingNoOp({arbitrary: "2736475837593756"});
+      const failingOperation = await Tezos.prepare.failingNoop({arbitrary: "2736475837593756"});
       const forgeable = Tezos.prepare.toForge(failingOperation);
       const forger = new LocalForger(protocol as unknown as ProtocolsHash);
       const forgedBytes = await forger.forge(forgeable);

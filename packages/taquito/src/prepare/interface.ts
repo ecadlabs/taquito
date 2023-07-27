@@ -12,7 +12,7 @@ import {
   TransferTicketParams,
   UpdateConsensusKeyParams,
   ActivationParams,
-  FailingNoOpParams,
+  FailingNoopParams,
 } from '../operations/types';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -143,10 +143,10 @@ export interface PreparationProvider {
 
   /**
    * @description Method to prepare a failing_noop operation
-   * @param params failingNoOp operation parameters
+   * @param params failingNoop operation parameters
    * @returns a PreparedOperation object
    */
-  failingNoOp(params: FailingNoOpParams): Promise<PreparedOperation>;
+  failingNoop(params: FailingNoopParams): Promise<PreparedOperation>;
 
   /**
    *

@@ -15,7 +15,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
-  FailingNoOpParams,
+  FailingNoopParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -461,14 +461,14 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an failingNoOp operation
+   * @description Estimate gasLimit, storageLimit and fees for an failingNoop operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param params failingNoOp operation parameter
+   * @param params failingNoop operation parameter
    */
-  async failingNoOp({ ...rest }: FailingNoOpParams) {
-    const preparedOperation = await this.prepare.failingNoOp({
+  async failingNoop({ ...rest }: FailingNoopParams) {
+    const preparedOperation = await this.prepare.failingNoop({
       ...rest,
     });
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');

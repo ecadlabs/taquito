@@ -192,7 +192,7 @@ export const SmartRollupExecuteOutboxMessageSchema = {
   output_proof: CODEC.PADDED_BYTES,
 };
 
-export const FailingNoOpSchema = {
+export const FailingNoopSchema = {
   arbitrary: CODEC.PADDED_BYTES,
 };
 

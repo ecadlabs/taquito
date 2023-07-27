@@ -11,7 +11,7 @@ import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
   WalletDelegateParams,
-  WalletFailingNoOpParams,
+  WalletFailingNoopParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
@@ -267,8 +267,8 @@ export class Wallet {
    *
    * @param params operation parameter
    */
-  async signFailingNoOp(params: WalletFailingNoOpParams) {
-    const failingOperation = await this.context.prepare.failingNoOp({
+  async signFailingNoop(params: WalletFailingNoopParams) {
+    const failingOperation = await this.context.prepare.failingNoop({
       ...params,
     });
     const forgeable = this.context.prepare.toForge(failingOperation);

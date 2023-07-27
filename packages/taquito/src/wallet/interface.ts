@@ -1,6 +1,6 @@
 import {
   DelegateParams,
-  FailingNoOpParams,
+  FailingNoopParams,
   IncreasePaidStorageParams,
   OriginateParams,
   TransferParams,
@@ -17,7 +17,7 @@ export type WalletOriginateParams<TStorage = any> = Omit<
 
 export type WalletDelegateParams = Omit<DelegateParams, WalletDefinedFields>;
 
-export type WalletFailingNoOpParams = Omit<FailingNoOpParams, WalletDefinedFields>;
+export type WalletFailingNoopParams = Omit<FailingNoopParams, WalletDefinedFields>;
 
 export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, WalletDefinedFields>;
 
@@ -50,10 +50,10 @@ export interface WalletProvider {
   ) => Promise<any>;
 
   /**
-   * @description Transform WalletFailingNoOpParams into a format compliant with the underlying wallet
+   * @description Transform WalletFailingNoopParams into a format compliant with the underlying wallet
    */
-  mapFailingNoOpParamsToWalletParams: (
-    params: () => Promise<WalletFailingNoOpParams>
+  mapFailingNoopParamsToWalletParams: (
+    params: () => Promise<WalletFailingNoopParams>
   ) => Promise<any>;
 
   /**

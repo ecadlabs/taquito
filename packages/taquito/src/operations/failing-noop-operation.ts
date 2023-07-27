@@ -1,8 +1,8 @@
 import {
   OpKind,
   OperationContentsAndResult,
-  OperationContentsAndResultFailingNoOp,
-  OperationContentsFailingNoOp,
+  OperationContentsAndResultFailingNoop,
+  OperationContentsFailingNoop,
 } from '@taquito/rpc';
 import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
@@ -10,12 +10,12 @@ import { Operation } from './operations';
 import { ForgedBytes } from './types';
 
 /**
- * @description FailingNoOpOperation provides utility functions to fetch a newly issued operation of kind failing_noop
+ * @description FailingNoopOperation provides utility functions to fetch a newly issued operation of kind failing_noop
  */
-export class FailingNoOpOperation extends Operation {
+export class FailingNoopOperation extends Operation {
   constructor(
     hash: string,
-    private readonly params: OperationContentsFailingNoOp,
+    private readonly params: OperationContentsFailingNoop,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -25,13 +25,13 @@ export class FailingNoOpOperation extends Operation {
   }
 
   get operationResults() {
-    const failingNoOpOp =
+    const failingNoopOp =
       Array.isArray(this.results) &&
       (this.results.find(
         (op) => op.kind === OpKind.FAILING_NOOP
-      ) as OperationContentsAndResultFailingNoOp);
+      ) as OperationContentsAndResultFailingNoop);
     const result =
-      failingNoOpOp && failingNoOpOp.metadata && failingNoOpOp.metadata.operation_result;
+      failingNoopOp && failingNoopOp.metadata && failingNoopOp.metadata.operation_result;
     return result ? result : undefined;
   }
 

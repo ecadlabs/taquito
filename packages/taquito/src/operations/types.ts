@@ -24,7 +24,7 @@ export type ParamsWithKind =
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
   | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
-  | withKind<FailingNoOpParams, OpKind.FAILING_NOOP>
+  | withKind<FailingNoopParams, OpKind.FAILING_NOOP>
   | withKind<SmartRollupOriginateParamsWithProof, OpKind.SMART_ROLLUP_ORIGINATE>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
@@ -554,15 +554,15 @@ export interface RPCSmartRollupOriginateOperation {
 /**
  * @description RPC failing noop operation
  */
-export interface RPCFailingNoOpOperation {
+export interface RPCFailingNoopOperation {
   kind: OpKind.FAILING_NOOP;
   arbitrary: string;
 }
 
 /**
- * @description Parameters for the `failingNoOp` method
+ * @description Parameters for the `failingNoop` method
  */
-export interface FailingNoOpParams {
+export interface FailingNoopParams {
   arbitrary: string;
 }
 
@@ -580,7 +580,7 @@ export type RPCOperation =
   | RPCProposalsOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
-  | RPCFailingNoOpOperation
+  | RPCFailingNoopOperation
   | RPCSmartRollupOriginateOperation;
 
 export type PrepareOperationParams = {

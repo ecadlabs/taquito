@@ -53,7 +53,7 @@ import {
   SmartRollupOriginateSchema,
   SmartRollupAddMessagesSchema,
   SmartRollupExecuteOutboxMessageSchema,
-  FailingNoOpSchema,
+  FailingNoopSchema,
 } from './schema/operation';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { toHexString } from './utils';
@@ -97,7 +97,7 @@ decoders[CODEC.OPERATION] = operationDecoder(decoders);
 decoders[CODEC.OP_ACTIVATE_ACCOUNT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(ActivationSchema)(val);
 decoders[CODEC.OP_FAILING_NOOP] = (val: Uint8ArrayConsumer) =>
-  schemaDecoder(decoders)(FailingNoOpSchema)(val);
+  schemaDecoder(decoders)(FailingNoopSchema)(val);
 decoders[CODEC.OP_DELEGATION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(DelegationSchema)(val);
 decoders[CODEC.OP_TRANSACTION] = (val: Uint8ArrayConsumer) =>

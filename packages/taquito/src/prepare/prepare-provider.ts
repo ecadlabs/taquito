@@ -27,7 +27,7 @@ import {
   isOpWithFee,
   RegisterDelegateParams,
   ActivationParams,
-  FailingNoOpParams,
+  FailingNoopParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
@@ -55,7 +55,7 @@ import {
   createSmartRollupOriginateOperation,
   createRegisterDelegateOperation,
   createActivationOperation,
-  createFailingNoOpOperation,
+  createFailingNoopOperation,
 } from '../contract';
 import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
@@ -1081,10 +1081,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async failingNoOp({ ...rest }: FailingNoOpParams): Promise<PreparedOperation> {
+  async failingNoop({ ...rest }: FailingNoopParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
-    const op = await createFailingNoOpOperation({
+    const op = await createFailingNoopOperation({
       ...rest,
     });
 

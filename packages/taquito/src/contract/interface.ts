@@ -23,7 +23,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
-  FailingNoOpParams,
+  FailingNoopParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
@@ -34,7 +34,7 @@ import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
-import { FailingNoOpOperation } from '../operations/failing-noop-operation';
+import { FailingNoopOperation } from '../operations/failing-noop-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -280,7 +280,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param params FailingNoOp operation parameter
+   * @param params FailingNoop operation parameter
    */
-  failingNoOp(params: FailingNoOpParams): Promise<FailingNoOpOperation>;
+  failingNoop(params: FailingNoopParams): Promise<FailingNoopOperation>;
 }

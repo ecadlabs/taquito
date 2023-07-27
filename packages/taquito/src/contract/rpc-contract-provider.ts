@@ -5,7 +5,7 @@ import {
   OperationContentsBallot,
   OperationContentsDelegation,
   OperationContentsDrainDelegate,
-  OperationContentsFailingNoOp,
+  OperationContentsFailingNoop,
   OperationContentsIncreasePaidStorage,
   OperationContentsOrigination,
   OperationContentsProposals,
@@ -53,7 +53,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
-  FailingNoOpParams,
+  FailingNoopParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -70,7 +70,7 @@ import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
-import { FailingNoOpOperation } from '../operations/failing-noop-operation';
+import { FailingNoopOperation } from '../operations/failing-noop-operation';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -687,18 +687,18 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param params failingNoOp operation parameter
+   * @param params failingNoop operation parameter
    */
-  async failingNoOp(params: FailingNoOpParams) {
+  async failingNoop(params: FailingNoopParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
 
-    const prepared = await this.prepare.failingNoOp({ ...params });
+    const prepared = await this.prepare.failingNoop({ ...params });
     const content = prepared.opOb.contents.find(
       (op) => op.kind === OpKind.FAILING_NOOP
-    ) as OperationContentsFailingNoOp;
+    ) as OperationContentsFailingNoop;
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new FailingNoOpOperation(hash, content, publicKeyHash, forgedBytes, opResponse, context);
+    return new FailingNoopOperation(hash, content, publicKeyHash, forgedBytes, opResponse, context);
   }
 
   /**
