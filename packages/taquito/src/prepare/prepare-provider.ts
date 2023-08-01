@@ -1085,15 +1085,13 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   async failingNoop({ ...rest }: FailingNoopParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
-    const op = await createFailingNoopOperation({
+    const operation = await createFailingNoopOperation({
       ...rest,
     });
 
-    // TODO: is the next line needed?
-    const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);
 
-    const hash = await this.getBlockHash();
+    const hash = await this.getBlockHash(rest.basedOnBlock);
     const protocol = await this.getProtocolHash();
 
     this.#counters = {};

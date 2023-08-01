@@ -7,6 +7,7 @@ import {
   BallotVote,
   PvmKind,
 } from '@taquito/rpc';
+import { BlockIdentifier } from '../read-provider/interface';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -564,6 +565,7 @@ export interface RPCFailingNoopOperation {
  */
 export interface FailingNoopParams {
   arbitrary: string;
+  basedOnBlock: BlockIdentifier;
 }
 
 export type RPCOperation =

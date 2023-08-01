@@ -43,7 +43,7 @@ export class LegacyWalletProvider implements WalletProvider {
   }
 
   async sign(signingRequest: { payload: string }): Promise<string> {
-    const response = await this.context.signer.sign(signingRequest.payload);
+    const response = await this.context.signer.sign(signingRequest.payload, new Uint8Array([3]));
     return response.sbytes;
   }
 

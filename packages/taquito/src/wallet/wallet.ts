@@ -268,11 +268,12 @@ export class Wallet {
    * @param params operation parameter
    */
   async signFailingNoop(params: WalletFailingNoopParams) {
-    const failingOperation = await this.context.prepare.failingNoop({
-      ...params,
-    });
+    const failingOperation = await this.context.prepare.failingNoop(params);
     const forgeable = this.context.prepare.toForge(failingOperation);
-    const forger = new LocalForger(this.context.proto as unknown as ProtocolsHash);
+    const protocolHash =
+      (this.context.proto as unknown as ProtocolsHash) ??
+      (await this.context.readProvider.getNextProtocol('head'));
+    const forger = new LocalForger(protocolHash);
     const forgedBytes = await forger.forge(forgeable);
     const signature = await this.walletProvider.sign({ payload: forgedBytes });
     return {
