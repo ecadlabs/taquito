@@ -91,7 +91,7 @@ const nairobinetEphemeral = {
 };
 
 const ghostnetEphemeral = {
-  rpc: process.env['TEZOS_RPC_GHOSTNET'] || 'ecad-ghostnet-rolling:8732',
+  rpc: process.env['TEZOS_RPC_GHOSTNET'] || 'http://ecad-ghostnet-rolling:8732/',
   pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
   rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
   knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
@@ -247,13 +247,13 @@ const setupWithSecretKey = async (Tezos: TezosToolkit, signerConfig: SecretKeyCo
 };
 
 const configurePollingInterval = (Tezos: TezosToolkit, pollingIntervalMilliseconds: string | undefined) => {
-  if(pollingIntervalMilliseconds) {
+  if (pollingIntervalMilliseconds) {
     Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: Number(pollingIntervalMilliseconds) }));
   }
 }
 
 const configureRpcCache = (rpc: string, rpcCacheMilliseconds: string) => {
-  if(rpcCacheMilliseconds === '0') {
+  if (rpcCacheMilliseconds === '0') {
     return new TezosToolkit(rpc);
   } else {
     return new TezosToolkit(new RpcClientCache(new RpcClient(rpc), Number(rpcCacheMilliseconds)));
