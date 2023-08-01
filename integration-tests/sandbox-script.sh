@@ -25,3 +25,6 @@ docker run \
   --no-daemons-for=dave \
   --until-level 200_000_000 \
   --protocol-kind "${protocol}"
+
+sleep 3
+docker exec "${flextesa_name}" octez-client rpc get chains/main/is_bootstrapped
