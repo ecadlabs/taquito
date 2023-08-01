@@ -3,7 +3,6 @@ import {
   MichelsonV1ExpressionBase,
   OperationResult,
   OperationResultDelegation,
-  OperationResultFailingNoop,
   OperationResultOrigination,
   OperationResultRegisterGlobalConstant,
   OperationResultReveal,
@@ -81,7 +80,6 @@ export type MergedOperationResult = OperationResultTransaction &
   OperationResultTxRollupOrigination &
   OperationResultTxRollupSubmitBatch &
   OperationResultTransferTicket &
-  OperationResultFailingNoop &
   Partial<OperationResultSmartRollupOriginate> &
   OperationResultReveal & {
     fee?: string;

@@ -13,7 +13,6 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
-  FailingNoopParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
@@ -141,14 +140,4 @@ export interface EstimationProvider {
    * @param SmartRollupOrigianteParams
    */
   smartRollupOriginate(params: SmartRollupOriginateParams): Promise<Estimate>;
-
-  /**
-   *
-   * @description Estimate gasLimit, storageLimit and fees for a failing noop (failingNoop operation)
-   *
-   * @returns An estimation of gasLimit, storageLimit and fees for the operation
-   *
-   * @param params failingNoop operation parameter
-   */
-  failingNoop(params: FailingNoopParams): Promise<Estimate>;
 }

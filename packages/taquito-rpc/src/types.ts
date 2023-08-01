@@ -642,12 +642,6 @@ export interface OperationContentsAndResultMetadataRegisterGlobalConstant {
   internal_operation_results?: InternalOperationResult[];
 }
 
-export interface OperationContentsAndResultMetadataFailingNoop {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultFailingNoop;
-  internal_operation_results?: InternalOperationResult[];
-}
-
 export interface OperationContentsAndResultMetadataSetDepositsLimit {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultSetDepositsLimit;
@@ -1166,17 +1160,6 @@ export interface OperationContentsAndResultSmartRollupTimeout {
   metadata: OperationContentsAndResultMetadataSmartRollupTimeout;
 }
 
-export interface OperationContentsAndResultFailingNoop {
-  kind: OpKind.FAILING_NOOP;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  arbitrary: string;
-  metadata: OperationContentsAndResultMetadataFailingNoop;
-}
-
 export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsement
   | OperationContentsAndResultPreEndorsement
@@ -1214,7 +1197,6 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupCement
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupRecoverBond
-  | OperationContentsAndResultFailingNoop
   | OperationContentsAndResultSmartRollupTimeout;
 
 export type OperationContentsAndResultWithFee =
@@ -1757,15 +1739,6 @@ export interface OperationResultTransaction {
 export interface OperationResultReveal {
   status: OperationResultStatusEnum;
   consumed_gas?: string;
-  errors?: TezosGenericOperationError[];
-  consumed_milligas?: string;
-}
-
-export interface OperationResultFailingNoop {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  storage_size?: string;
   errors?: TezosGenericOperationError[];
   consumed_milligas?: string;
 }
