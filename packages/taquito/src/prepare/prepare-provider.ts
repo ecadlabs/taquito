@@ -1093,7 +1093,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);
 
-    const hash = await this.getBlockHash(0);
+    const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
 
     this.#counters = {};
