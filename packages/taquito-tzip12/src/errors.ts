@@ -2,7 +2,7 @@ import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates the metadata not being found on the contract
+ *  @description Error that indicates the metadata not being found on the contract
  */
 export class TokenMetadataNotFound extends TaquitoError {
   constructor(public readonly address: string) {
@@ -14,7 +14,7 @@ export class TokenMetadataNotFound extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates the token ID not being found
+ *  @description Error that indicates the token ID not being found
  */
 export class TokenIdNotFound extends TaquitoError {
   constructor(public readonly tokenId: number) {
@@ -25,7 +25,7 @@ export class TokenIdNotFound extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates that the token metadata is invalid (not compliant with the TZIP-12 standard)
+ *  @description Error that indicates that the token metadata is invalid (not compliant with the TZIP-12 standard)
  */
 export class InvalidTokenMetadata extends TaquitoError {
   constructor(public readonly invalidMetadata: any) {

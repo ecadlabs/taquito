@@ -7,6 +7,7 @@ import {
   MichelsonTypePair,
 } from './michelson-types';
 import { HexParseError, LongIntegerError, TezosIdEncodeError } from './errors';
+import { TaquitoError } from '@taquito/core';
 
 export type Tuple<N extends number, T> = N extends 1
   ? [T]
@@ -39,15 +40,15 @@ export type Nullable<T> = { [P in keyof T]: T[P] | null };
  *  @category Error
  *  @description Error that indicates a Michelson failure occurring
  */
-export class MichelsonError<T extends Expr = Expr> extends Error {
+export class MichelsonError<T extends Expr = Expr> extends TaquitoError {
   /**
    * @param val Value of a AST node caused the error
    * @param path Path to a node caused the error
    * @param message An error message
    */
-  constructor(public val: T, message?: string) {
-    super(message);
-    Object.setPrototypeOf(this, MichelsonError.prototype);
+  constructor(public readonly val: T, public readonly message: string) {
+    super();
+    this.name = 'MichelsonError';
   }
 }
 
@@ -63,12 +64,16 @@ export class MichelsonTypeError extends MichelsonError<MichelsonType | Michelson
    * @param data Value of a data node caused the error
    * @param message An error message
    */
-  constructor(val: MichelsonType | MichelsonType[], data?: Expr, message?: string) {
+  constructor(
+    public readonly val: MichelsonType | MichelsonType[],
+    public readonly message: string,
+    data?: Expr
+  ) {
     super(val, message);
+    this.name = 'MichelsonTypeError';
     if (data !== undefined) {
       this.data = data;
     }
-    Object.setPrototypeOf(this, MichelsonTypeError.prototype);
   }
 }
 
@@ -97,7 +102,7 @@ export class LongInteger {
           this.neg = true;
         } else {
           if (c < 0x30 || c > 0x39) {
-            throw new LongIntegerError(`unexpected character in integer constant: ${arg[i]}`);
+            throw new LongIntegerError(`unexpected character in integer constant "${arg[i]}"`);
           }
           this.append(c - 0x30);
         }

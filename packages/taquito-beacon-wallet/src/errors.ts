@@ -3,7 +3,7 @@ import { PermissionDeniedError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates the Beacon wallet not being initialized
+ *  @description Error that indicates the Beacon wallet not being initialized
  */
 export class BeaconWalletNotInitialized extends PermissionDeniedError {
   constructor() {
@@ -16,7 +16,7 @@ export class BeaconWalletNotInitialized extends PermissionDeniedError {
 
 /**
  *  @category Error
- *  @description Error indicates missing required persmission scopes
+ *  @description Error that indicates missing required persmission scopes
  */
 export class MissingRequiredScopes extends PermissionDeniedError {
   constructor(public readonly requiredScopes: PermissionScope[]) {

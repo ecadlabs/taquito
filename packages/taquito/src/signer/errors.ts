@@ -2,7 +2,7 @@ import { TezosToolkitConfigError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates no signer has been configured in the TezosToolkit instance
+ *  @description Error that indicates no signer has been configured in the TezosToolkit instance
  */
 export class UnconfiguredSignerError extends TezosToolkitConfigError {
   constructor() {

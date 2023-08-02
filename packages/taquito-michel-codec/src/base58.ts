@@ -1,4 +1,4 @@
-import { InvalidMessageError } from '@taquito/core';
+import { InvalidMessageError, TaquitoError } from '@taquito/core';
 
 const H = [
   0x6a09e667 | 0,
@@ -82,10 +82,10 @@ const K = [
  *  @category Error
  *  @description Error that indicates a failure when decoding a base58 encoding
  */
-export class Base58DecodingError extends Error {
-  public name = 'Base58DecodingError';
-  constructor(public message: string) {
-    super(message);
+export class Base58DecodingError extends TaquitoError {
+  constructor(public readonly message: string) {
+    super();
+    this.name = 'Base58DecodingError';
   }
 }
 

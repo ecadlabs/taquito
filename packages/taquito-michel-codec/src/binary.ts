@@ -754,7 +754,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
   if (isPairType(t)) {
     return (d: Expr) => {
       if (!isPairData(d)) {
-        throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
+        throw new MichelsonTypeError(t, `pair expected: ${JSON.stringify(d)}`, d);
       }
       assertDataListIfAny(d);
       // combs aren't used in pack format
@@ -775,7 +775,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'or':
       return (d: Expr) => {
         if (!isOrData(d)) {
-          throw new MichelsonTypeError(t, d, `or expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `or expected: ${JSON.stringify(d)}`, d);
         }
         return [
           d,
@@ -788,7 +788,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'option':
       return (d: Expr) => {
         if (!isOptionData(d)) {
-          throw new MichelsonTypeError(t, d, `option expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `option expected: ${JSON.stringify(d)}`, d);
         }
         return [
           d,
@@ -808,7 +808,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'set':
       return (d: Expr) => {
         if (!Array.isArray(d)) {
-          throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `${t.prim} expected: ${JSON.stringify(d)}`, d);
         }
         return [
           d,
@@ -823,7 +823,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'map':
       return (d: Expr) => {
         if (!Array.isArray(d)) {
-          throw new MichelsonTypeError(t, d, `map expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `map expected: ${JSON.stringify(d)}`, d);
         }
         return [
           d,
@@ -833,8 +833,8 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
                 if (!('prim' in elt) || elt.prim !== 'Elt') {
                   throw new MichelsonTypeError(
                     t,
-                    elt,
-                    `map element expected: ${JSON.stringify(elt)}`
+                    `map element expected: ${JSON.stringify(elt)}`,
+                    elt
                   );
                 }
                 return [
@@ -854,13 +854,13 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'chain_id':
       return (d: Expr) => {
         if (!('bytes' in d) && !('string' in d)) {
-          throw new MichelsonTypeError(t, d, `chain id expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `chain id expected: ${JSON.stringify(d)}`, d);
         }
         let bytes: BytesLiteral;
         if ('string' in d) {
           const id = checkDecodeTezosID(d.string, 'ChainID');
           if (id === null) {
-            throw new MichelsonTypeError(t, d, `chain id base58 expected: ${d.string}`);
+            throw new MichelsonTypeError(t, `chain id base58 expected: ${d.string}`, d);
           }
           bytes = { bytes: hexBytes(id[1]) };
         } else {
@@ -872,7 +872,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'signature':
       return (d: Expr) => {
         if (!('bytes' in d) && !('string' in d)) {
-          throw new MichelsonTypeError(t, d, `signature expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `signature expected: ${JSON.stringify(d)}`, d);
         }
         let bytes: BytesLiteral;
         if ('string' in d) {
@@ -884,7 +884,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'GenericSignature'
           );
           if (sig === null) {
-            throw new MichelsonTypeError(t, d, `signature base58 expected: ${d.string}`);
+            throw new MichelsonTypeError(t, `signature base58 expected: ${d.string}`, d);
           }
           bytes = { bytes: hexBytes(sig[1]) };
         } else {
@@ -896,7 +896,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'key_hash':
       return (d: Expr) => {
         if (!('bytes' in d) && !('string' in d)) {
-          throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `key hash expected: ${JSON.stringify(d)}`, d);
         }
         let bytes: BytesLiteral;
         if ('string' in d) {
@@ -907,7 +907,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'P256PublicKeyHash'
           );
           if (pkh === null) {
-            throw new MichelsonTypeError(t, d, `key hash base58 expected: ${d.string}`);
+            throw new MichelsonTypeError(t, `key hash base58 expected: ${d.string}`, d);
           }
           const w = new Writer();
           writePublicKeyHash({ type: pkh[0], hash: pkh[1] }, w);
@@ -921,7 +921,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'key':
       return (d: Expr) => {
         if (!('bytes' in d) && !('string' in d)) {
-          throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `public key expected: ${JSON.stringify(d)}`, d);
         }
         let bytes: BytesLiteral;
         if ('string' in d) {
@@ -932,7 +932,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'P256PublicKey'
           );
           if (key === null) {
-            throw new MichelsonTypeError(t, d, `public key base58 expected: ${d.string}`);
+            throw new MichelsonTypeError(t, `public key base58 expected: ${d.string}`, d);
           }
           const w = new Writer();
           writePublicKey({ type: key[0], publicKey: key[1] }, w);
@@ -946,7 +946,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'address':
       return (d: Expr) => {
         if (!('bytes' in d) && !('string' in d)) {
-          throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `address expected: ${JSON.stringify(d)}`, d);
         }
         let bytes: BytesLiteral;
         if ('string' in d) {
@@ -959,7 +959,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'ContractHash'
           );
           if (address === null) {
-            throw new MichelsonTypeError(t, d, `address base58 expected: ${d.string}`);
+            throw new MichelsonTypeError(t, `address base58 expected: ${d.string}`, d);
           }
           const w = new Writer();
           writeAddress(
@@ -976,13 +976,13 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'timestamp':
       return (d: Expr) => {
         if (!('string' in d) && !('int' in d)) {
-          throw new MichelsonTypeError(t, d, `timestamp expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `timestamp expected: ${JSON.stringify(d)}`, d);
         }
         let int: IntLiteral;
         if ('string' in d) {
           const p = parseDate(d);
           if (p === null) {
-            throw new MichelsonTypeError(t, d, `can't parse date: ${d.string}`);
+            throw new MichelsonTypeError(t, `can't parse date: ${d.string}`, d);
           }
           int = { int: String(Math.floor(p.getTime() / 1000)) };
         } else {
@@ -1095,7 +1095,7 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
     return [
       (d: Expr) => {
         if (!isPairData(d)) {
-          throw new MichelsonTypeError(t, d, `pair expected: ${JSON.stringify(d)}`);
+          throw new MichelsonTypeError(t, `pair expected: ${JSON.stringify(d)}`, d);
         }
         const tc = unpackComb('pair', t);
         return (function* () {
@@ -1113,7 +1113,7 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
       return [
         (d: Expr) => {
           if (!isOrData(d)) {
-            throw new MichelsonTypeError(t, d, `or expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `or expected: ${JSON.stringify(d)}`, d);
           }
           return (function* () {
             yield getReadTransformFuncs(t.args[d.prim === 'Left' ? 0 : 1]);
@@ -1126,7 +1126,7 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
       return [
         (d: Expr) => {
           if (!isOptionData(d)) {
-            throw new MichelsonTypeError(t, d, `option expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `option expected: ${JSON.stringify(d)}`, d);
           }
           return (function* () {
             // TODO: refactor and remove ts-ignore
@@ -1145,7 +1145,7 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
       return [
         (d: Expr) => {
           if (!Array.isArray(d)) {
-            throw new MichelsonTypeError(t, d, `${t.prim} expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `${t.prim} expected: ${JSON.stringify(d)}`, d);
           }
           return (function* () {
             while (true) {
@@ -1160,7 +1160,7 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
       return [
         (d: Expr): IterableIterator<ReadTransformFuncs> => {
           if (!Array.isArray(d)) {
-            throw new MichelsonTypeError(t, d, `map expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `map expected: ${JSON.stringify(d)}`, d);
           }
           return (function* (): Generator<ReadTransformFuncs> {
             while (true) {
@@ -1169,8 +1169,8 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
                   if (!('prim' in elt) || elt.prim !== 'Elt') {
                     throw new MichelsonTypeError(
                       t,
-                      elt,
-                      `map element expected: ${JSON.stringify(elt)}`
+                      `map element expected: ${JSON.stringify(elt)}`,
+                      elt
                     );
                   }
                   return (function* () {
@@ -1192,14 +1192,14 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
         () => [][Symbol.iterator](),
         (d: Expr) => {
           if (!('bytes' in d) && !('string' in d)) {
-            throw new MichelsonTypeError(t, d, `chain id expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `chain id expected: ${JSON.stringify(d)}`, d);
           }
           if ('string' in d) {
             return d;
           }
           const bytes = parseBytes(d.bytes);
           if (bytes === null) {
-            throw new MichelsonTypeError(t, d, `can't parse bytes: ${d.bytes}`);
+            throw new MichelsonTypeError(t, `can't parse bytes: ${d.bytes}`, d);
           }
           return { string: encodeTezosID('ChainID', bytes) };
         },
@@ -1210,14 +1210,14 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
         () => [][Symbol.iterator](),
         (d: Expr) => {
           if (!('bytes' in d) && !('string' in d)) {
-            throw new MichelsonTypeError(t, d, `signature expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `signature expected: ${JSON.stringify(d)}`, d);
           }
           if ('string' in d) {
             return d;
           }
           const bytes = parseBytes(d.bytes);
           if (bytes === null) {
-            throw new MichelsonTypeError(t, d, `can't parse bytes: ${d.bytes}`);
+            throw new MichelsonTypeError(t, `can't parse bytes: ${d.bytes}`, d);
           }
           return { string: encodeTezosID('GenericSignature', bytes) };
         },
@@ -1228,14 +1228,14 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
         () => [][Symbol.iterator](),
         (d: Expr) => {
           if (!('bytes' in d) && !('string' in d)) {
-            throw new MichelsonTypeError(t, d, `key hash expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `key hash expected: ${JSON.stringify(d)}`, d);
           }
           if ('string' in d) {
             return d;
           }
           const bytes = parseBytes(d.bytes);
           if (bytes === null) {
-            throw new MichelsonTypeError(t, d, `can't parse bytes: ${d.bytes}`);
+            throw new MichelsonTypeError(t, `can't parse bytes: ${d.bytes}`, d);
           }
           const rd = new Reader(new Uint8Array(bytes));
           const addr = readPublicKeyHash(rd);
@@ -1251,14 +1251,14 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
         () => [][Symbol.iterator](),
         (d: Expr) => {
           if (!('bytes' in d) && !('string' in d)) {
-            throw new MichelsonTypeError(t, d, `public key expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `public key expected: ${JSON.stringify(d)}`, d);
           }
           if ('string' in d) {
             return d;
           }
           const bytes = parseBytes(d.bytes);
           if (bytes === null) {
-            throw new MichelsonTypeError(t, d, `can't parse bytes: ${d.bytes}`);
+            throw new MichelsonTypeError(t, `can't parse bytes: ${d.bytes}`, d);
           }
           const rd = new Reader(new Uint8Array(bytes));
           const pk = readPublicKey(rd);
@@ -1271,14 +1271,14 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
         () => [][Symbol.iterator](),
         (d: Expr) => {
           if (!('bytes' in d) && !('string' in d)) {
-            throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `address expected: ${JSON.stringify(d)}`, d);
           }
           if ('string' in d) {
             return d;
           }
           const bytes = parseBytes(d.bytes);
           if (bytes === null) {
-            throw new MichelsonTypeError(t, d, `can't parse bytes: ${d.bytes}`);
+            throw new MichelsonTypeError(t, `can't parse bytes: ${d.bytes}`, d);
           }
           const rd = new Reader(new Uint8Array(bytes));
           const addr = readAddress(rd);
@@ -1294,7 +1294,7 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
         () => [][Symbol.iterator](),
         (d: Expr) => {
           if (!('int' in d) && !('string' in d)) {
-            throw new MichelsonTypeError(t, d, `address expected: ${JSON.stringify(d)}`);
+            throw new MichelsonTypeError(t, `address expected: ${JSON.stringify(d)}`, d);
           }
           if ('string' in d) {
             return d;
