@@ -920,24 +920,24 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
       const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
-        adaptive_inflation_launch_ema_threshold: 1600000000,
+        adaptive_issuance_launch_ema_threshold: 100000000,
         adaptive_rewards_params: {
           center_dz: {
             denominator: "2",
             numerator: "1",
           },
           growth_rate: "115740740",
+          issuance_ratio_max: {
+            denominator: "20",
+            numerator: "1",
+          },
+          issuance_ratio_min: {
+            denominator: "2000",
+            numerator: "1",
+          },
           max_bonus: "50000000000000",
           radius_dz: {
             denominator: "50",
-            numerator: "1",
-          },
-          reward_ratio_max: {
-            denominator: "10",
-            numerator: "1",
-          },
-          reward_ratio_min: {
-            denominator: "200",
             numerator: "1",
           },
         },
@@ -958,18 +958,18 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         percentage_of_frozen_deposits_slashed_per_double_attestation: 50,
         cost_per_byte: new BigNumber(250),
         hard_storage_limit_per_operation: new BigNumber(60000),
-        limit_of_delegation_over_baking: 9,
-        quorum_min: 2000,
-        quorum_max: 7000,
-        reward_weights: {
+        issuance_weights: {
+          attesting_reward_weight: 10240,
           baking_reward_bonus_weight: 5120,
           baking_reward_fixed_portion_weight: 5120,
-          base_total_rewards_per_minute: "85007812",
-          attesting_reward_weight: 10240,
+          base_total_issued_per_minute: "85007812",
           liquidity_baking_subsidy_weight: 1280,
           seed_nonce_revelation_tip_weight: 1,
           vdf_revelation_tip_weight: 1,
         },
+        limit_of_delegation_over_baking: 9,
+        quorum_min: 2000,
+        quorum_max: 7000,
         min_proposal_quorum: 500,
         liquidity_baking_toggle_ema_threshold: 100000,
         max_allowed_global_constants_depth: 10000,
@@ -986,6 +986,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         },
         max_slashing_period: 2,
         minimal_block_delay: new BigNumber(15),
+        minimal_frozen_stake: "600000000",
         delay_increment_per_round: new BigNumber(15),
         edge_of_staking_over_delegation: 2,
         global_limit_of_staking_over_baking: 5,
@@ -1020,6 +1021,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         smart_rollup_message_size_limit: 4096,
         smart_rollup_number_of_sections_in_dissection: 32,
         smart_rollup_origination_size: 6314,
+        smart_rollup_private_enable: false,
         smart_rollup_reveal_activation_level: {
           dal_page: 513,
           metadata: 0,
