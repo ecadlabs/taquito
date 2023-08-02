@@ -120,7 +120,7 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 // const wallet = new BeaconWallet(options);
 
 wallet
-  .requestPermissions()
+  .requestPermissions({ network: { type: 'ghostnet' } })
   .then((_) => wallet.getPKH())
   .then((address) => println(`Your address: ${address}`));
 
