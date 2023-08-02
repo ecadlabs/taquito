@@ -2,7 +2,7 @@ import { ParameterValidationError } from '@taquito/core';
 import { ScriptedContracts } from '@taquito/rpc';
 /**
  *  @category Error
- *  @description Error indicates invalid script format being useed or passed
+ *  @description Error that indicates invalid script format being useed or passed
  */
 export class InvalidScriptFormatError extends ParameterValidationError {
   constructor(

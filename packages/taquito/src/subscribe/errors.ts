@@ -15,7 +15,7 @@ export class UnsupportedEventError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid filter expression being passed or used
+ *  @description Error that indicates an invalid filter expression being passed or used
  */
 export class InvalidFilterExpressionError extends ParameterValidationError {
   constructor(public readonly invalidExpression: FilterExpression) {
