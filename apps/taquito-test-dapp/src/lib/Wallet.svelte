@@ -19,7 +19,7 @@
     const options: DAppClientOptions = {
       name: "Taquito Test Dapp",
       matrixNodes: [defaultMatrixNode] as any,
-      preferredNetwork: config.networkType,
+      network: { type: config.networkType },
       walletConnectOptions: {
         projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',
       }
@@ -48,12 +48,7 @@
         });
 
     try {
-      await wallet.requestPermissions({
-        network: {
-          type: $store.networkType,
-          rpcUrl: rpcUrl[$store.networkType],
-        },
-      });
+      await wallet.requestPermissions();
 
       const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
       store.updateUserAddress(userAddress);

@@ -66,7 +66,7 @@ Then, you can start initializing the wallet:
 const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://tezostaquito.io/img/favicon.svg',
-  preferredNetwork: 'ghostnet',
+  network: { type: 'ghostnet' },
   eventHandlers: {
     PERMISSION_REQUEST_SUCCESS: {
       handler: async (data) => {
@@ -78,19 +78,17 @@ const options = {
 const wallet = new BeaconWallet(options);
 ```
 
-The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
+The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp and the network you want it to point to. In this case, we choose to point it to `ghostnet`. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
 
-> Note: if you want to use the Kukai wallet for testing on ghostnet, you must use the optional property `preferredNetwork` and set it to `ghostnet`, otherwise the mainnet version of the Kukai wallet will open.
+> Note: Previous versions of Beacon used to have a `preferredNetwork` property instead of `network`. This property has been removed in the latest version of Beacon, and you must now use the `network` property.
 
 The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
 
 ```js
-await wallet.requestPermissions({
-  network: {
-    type: 'mainnet' | 'ghostnet' | 'jakartanet' | 'custom',
-  },
-});
+await wallet.requestPermissions();
 ```
+
+In previous versions of Beacon, you were able to set the `network` property when doing `requestPermissions()`. This behaviour was removed from Beacon, and you must now set the network when instantiating the wallet.
 
 You can choose among `mainnet`, `jakartanet` `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
@@ -120,7 +118,7 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 // const wallet = new BeaconWallet(options);
 
 wallet
-  .requestPermissions({ network: { type: 'ghostnet' } })
+  .requestPermissions()
   .then((_) => wallet.getPKH())
   .then((address) => println(`Your address: ${address}`));
 
