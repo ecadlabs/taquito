@@ -8,8 +8,8 @@ export enum DEFAULT_GAS_LIMIT {
    Another benefit of this higher value is that then Dapps build with Taquito 17 can
    still work with Mumbainet, as this value is higher than the reveal cost in Mumbai.
   */
-  REVEAL_TZ1 = 2000,
-  REVEAL_TZ2 = 2000,
+  REVEAL_TZ1 = 1000,
+  REVEAL_TZ2 = 1000,
   REVEAL_TZ3 = 2000,
   REVEAL_TZ4 = 2000,
 }

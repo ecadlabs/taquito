@@ -1,4 +1,4 @@
-import { PreapplyResponse, RPCRunOperationParam, ConstantsResponse } from '@taquito/rpc';
+import { PreapplyResponse, ConstantsResponse, RPCSimulateOperationParam } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { flattenErrors, flattenOperationResult, TezosOperationError } from '../operations/errors';
 import {
@@ -25,10 +25,6 @@ import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
 import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
-
-// RPC requires a signature but does not verify it
-const SIGNATURE_STUB =
-  'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
 export class RPCEstimateProvider extends Provider implements EstimationProvider {
   private readonly ALLOCATION_STORAGE = 257;
@@ -100,8 +96,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       opbytes,
       opOb: { branch, contents },
     } = await this.forge(op);
-    const operation: RPCRunOperationParam = {
-      operation: { branch, contents, signature: SIGNATURE_STUB },
+    const operation: RPCSimulateOperationParam = {
+      operation: { branch, contents },
       chain_id: await this.context.readProvider.getChainId(),
     };
 
