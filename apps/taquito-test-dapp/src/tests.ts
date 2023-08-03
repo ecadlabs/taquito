@@ -316,6 +316,30 @@ const signPayloadAndSend = async (
   }
 };
 
+const signFailingNoop = async (
+  input: string,
+  tezos: TezosToolkit,
+  wallet: BeaconWallet,
+): Promise<TestResult> => {
+  const bytes = char2Bytes(input);
+  try {
+    const signedPayload = await tezos.wallet.signFailingNoop({
+      arbitrary: bytes,
+      basedOnBlock: 'head'
+    });
+
+    return {
+      success: true,
+      opHash: "",
+      output: signedPayload.prefixSig,
+      sigDetails: { input, bytes: signedPayload.bytes, formattedInput: input }
+    };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "", output: JSON.stringify(error) };
+  }
+};
+
 const verifySignatureWithTaquito = async (
   input: string,
   wallet: BeaconWallet,
@@ -535,6 +559,7 @@ export const list = [
   "Use the Batch API for contract calls",
   "Sign the provided payload",
   "Sign and send the signature to the contract",
+  "Sign the provided payload in a failing noop",
   "Verify a provided signature",
   "Set the transaction limits",
   "Subscribe to confirmations",
@@ -673,6 +698,18 @@ export const init = (
       documentation: 'https://tezostaquito.io/docs/signing/#sending-the-signature-to-a-smart-contract',
       keyword: 'check_signature',
     run: input => signPayloadAndSend(input.text, wallet, contract),
+    showExecutionTime: false,
+    inputRequired: true,
+    inputType: "string",
+    lastResult: { option: "none", val: false }
+  },
+  {
+    id: "sign-failingNoop",
+    name: "Sign the provided payload in a failing noop",
+    description: "This test signs the payload provided by the user wrapped in a failing noop",
+    documentation: 'https://tezostaquito.io/docs/signing/#generating-a-signature-with-beacon-sdk',
+    keyword: 'failingNoop',
+    run: input => signFailingNoop(input.text, Tezos, wallet),
     showExecutionTime: false,
     inputRequired: true,
     inputType: "string",

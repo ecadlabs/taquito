@@ -25,6 +25,19 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
+import {
+  InvalidSignatureError,
+  ValidationResult,
+  b58cdecode,
+  b58cencode,
+  buf2hex,
+  invalidDetail,
+  isValidPrefix,
+  prefix,
+  verifySignature,
+} from '@taquito/utils';
+import { SignatureVerificationError } from '@taquito/core';
+import toBuffer from 'typedarray-to-buffer';
 
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
@@ -199,11 +212,36 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async sign(signingRequest: { payload: string }) {
-    const response = await this.client.requestSignPayload({
-      payload: signingRequest.payload,
+    const watermarkedBytes = '03' + signingRequest.payload;
+    const { signature } = await this.client.requestSignPayload({
+      payload: watermarkedBytes,
       signingType: SigningType.OPERATION,
     });
-    return response.signature;
+    const pref = signature.startsWith('sig')
+      ? signature.substring(0, 3)
+      : signature.substring(0, 5);
+
+    if (!isValidPrefix(pref)) {
+      throw new InvalidSignatureError(
+        signature,
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` from the wallet.`
+      );
+    }
+
+    const decoded = b58cdecode(signature, prefix[pref]);
+
+    const pk = await this.getPublicKey();
+    const signatureVerified = verifySignature(watermarkedBytes, pk, signature);
+    if (!signatureVerified) {
+      throw new SignatureVerificationError(watermarkedBytes, signature);
+    }
+
+    return {
+      bytes: signingRequest.payload,
+      sig: b58cencode(decoded, prefix.sig),
+      prefixSig: signature,
+      sbytes: signingRequest.payload + buf2hex(toBuffer(decoded)),
+    };
   }
 
   async getPublicKey(): Promise<string> {
