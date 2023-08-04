@@ -42,11 +42,22 @@ export class LegacyWalletProvider implements WalletProvider {
     return op.hash;
   }
 
-  async sign(signingRequest: { payload: string }) {
-    const { prefixSig } = await this.context.signer.sign(
-      signingRequest.payload,
-      new Uint8Array([3])
-    );
+  async sign(signingRequest: { payload: string; signingType: 'operation' | 'micheline' | 'raw' }) {
+    let magicByte: Uint8Array | undefined;
+    switch (signingRequest.signingType) {
+      case 'micheline':
+        magicByte = new Uint8Array([5]);
+        break;
+      case 'operation':
+        magicByte = new Uint8Array([3]);
+        break;
+      case 'raw':
+        magicByte = undefined;
+        break;
+      default:
+        throw new Error(`Invalid signing type ${signingRequest.signingType}`);
+    }
+    const { prefixSig } = await this.context.signer.sign(signingRequest.payload, magicByte);
     return prefixSig;
   }
 

@@ -220,6 +220,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return ops.map((op: RPCOperation) => {
       switch (op.kind) {
         case OpKind.ACTIVATION:
+        case OpKind.FAILING_NOOP:
         case OpKind.DRAIN_DELEGATE:
           return {
             ...op,
@@ -285,10 +286,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           return {
             ...op,
             period: currentVotingPeriod?.voting_period.index,
-          };
-        case OpKind.FAILING_NOOP:
-          return {
-            ...op,
           };
         default:
           throw new InvalidOperationKindError((op as RPCOperation).kind);

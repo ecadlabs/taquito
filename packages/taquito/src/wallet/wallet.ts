@@ -28,7 +28,6 @@ import {
   ValidationResult,
   invalidDetail,
 } from '@taquito/utils';
-import { LocalForger, ProtocolsHash } from '@taquito/local-forging';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -270,12 +269,11 @@ export class Wallet {
   async signFailingNoop(params: WalletFailingNoopParams) {
     const failingOperation = await this.context.prepare.failingNoop(params);
     const forgeable = this.context.prepare.toForge(failingOperation);
-    const protocolHash =
-      (this.context.proto as unknown as ProtocolsHash) ??
-      (await this.context.readProvider.getNextProtocol('head'));
-    const forger = new LocalForger(protocolHash);
-    const forgedBytes = await forger.forge(forgeable);
-    const signature = await this.walletProvider.sign({ payload: forgedBytes });
+    const forgedBytes = await this.context.forger.forge(forgeable);
+    const signature = await this.walletProvider.sign({
+      payload: forgedBytes,
+      signingType: 'operation',
+    });
     return {
       signature,
       bytes: forgedBytes,

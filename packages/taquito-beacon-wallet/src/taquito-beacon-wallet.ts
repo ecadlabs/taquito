@@ -198,11 +198,28 @@ export class BeaconWallet implements WalletProvider {
     await this.client.setActiveAccount();
   }
 
-  async sign(signingRequest: { payload: string }) {
-    const watermarkedBytes = '03' + signingRequest.payload;
+  async sign(signingRequest: { payload: string; signingType: 'operation' | 'micheline' | 'raw' }) {
+    let payload: string;
+    let signingType: SigningType;
+    switch (signingRequest.signingType) {
+      case 'micheline':
+        payload = '05' + signingRequest.payload;
+        signingType = SigningType.MICHELINE;
+        break;
+      case 'operation':
+        payload = '03' + signingRequest.payload;
+        signingType = SigningType.OPERATION;
+        break;
+      case 'raw':
+        payload = signingRequest.payload;
+        signingType = SigningType.RAW;
+        break;
+      default:
+        throw new Error(`Invalid signing type ${signingRequest.signingType}`);
+    }
     const { signature } = await this.client.requestSignPayload({
-      payload: watermarkedBytes,
-      signingType: SigningType.OPERATION,
+      payload,
+      signingType,
     });
     return signature;
   }

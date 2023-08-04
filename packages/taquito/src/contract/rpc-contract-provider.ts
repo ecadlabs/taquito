@@ -684,7 +684,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @description A failing_noop operation that is guaranteed to fail.
    *
-   * @returns An operation handle with the result from the rpc node
+   * @returns A FailingNoopOperation object representing the signed failing_noop operation
    *
    * @param params failingNoop operation parameter
    */

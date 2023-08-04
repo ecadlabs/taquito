@@ -331,7 +331,7 @@ const signFailingNoop = async (
       success: true,
       opHash: "",
       output: signedPayload.signature,
-      sigDetails: { input, bytes: signedPayload.bytes, formattedInput: input }
+      sigDetails: { input, bytes: signedPayload.bytes, formattedInput: JSON.stringify(signedPayload.signedContent) },
     };
   } catch (error) {
     console.log(error);

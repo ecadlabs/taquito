@@ -44,6 +44,7 @@
         if (
           test.id === "sign-payload" ||
           test.id === "sign-payload-and-send" ||
+          test.id === "sign-failingNoop" ||
           test.id === "verify-signature"
         ) {
           testResult = {
