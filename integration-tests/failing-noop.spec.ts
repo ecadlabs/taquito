@@ -1,6 +1,6 @@
 import { LocalForger, ProtocolsHash } from "@taquito/local-forging";
 import { CONFIGS } from "./config";
-import { RpcForger } from "@taquito/taquito";
+import { OpKind, RpcForger } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
@@ -12,28 +12,65 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    it('Verify that the failing_noop signs a text on the genesis block', async (done) => {
+    it('Verify that the wallet.signFailingNoop signs a text on the genesis block', async (done) => {
       const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
       });
-      expect(signed.bytes).toBe('df2788eed43ab680c8a2b79969ce4de93b9768cd2786a85ebdfba90ca7612638110000000b48656c6c6f20576f726c64');
-      expect(signed.sbytes).toBe('df2788eed43ab680c8a2b79969ce4de93b9768cd2786a85ebdfba90ca7612638110000000b48656c6c6f20576f726c648ecac9a2652af8de58f675f336f0105227b408af3ba7c6361aeeb8c0be50b8693e931ba83af2086da963d5380e633de6c68f75a23685d4cd07deb7e4b7b5e03e');
-      // const pk = await Tezos.wallet.getPublicKey();
-      // expect(verifySignature(signed.bytes, pk, signed.sbytes, new Uint8Array([3]))).toBe(true);
+      expect(signed).toEqual({
+        bytes: 'df2788eed43ab680c8a2b79969ce4de93b9768cd2786a85ebdfba90ca7612638110000000b48656c6c6f20576f726c64',
+        signature: 'spsig1QVVCiQ6aN2zmut2wKTg4zWLoP9ia4qUY2hBo21odA7P25gqfieFWJMyntaJWmyrd6v3mgjKF5n4d2wcaB3LxkLmd1MoJQ',
+        signedContent: {
+          branch: await Tezos.rpc.getBlockHash({block: 'genesis'}),
+          contents: [{
+            kind: OpKind.FAILING_NOOP,
+            arbitrary: '48656C6C6F20576F726C64'
+          }]
+        }
+      });
+      const pk = await Tezos.wallet.getPublicKey();
+      expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
       done();
     });
 
-    it('Verify that the failing_noop signs a text', async (done) => {
+    it('Verify that the wallet.signFailingNoop signs a text', async (done) => {
       const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 'head',
       });
       const pk = await Tezos.wallet.getPublicKey();
-      // expect(verifySignature(signed.bytes, pk, signed.sbytes, new Uint8Array([3]))).toBe(true);
-      expect(async () => {
-        await Tezos.rpc.injectOperation(signed.sbytes);
-      }).rejects.toThrow(`A failing_noop operation can never be validated.`);
+      expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
+      done();
+    });
+
+    it('Verify that the contract.failingNoop signs a text on the genesis block', async (done) => {
+      const signed = await Tezos.contract.failingNoop({
+        arbitrary: "48656C6C6F20576F726C64", // Hello World
+        basedOnBlock: 0,
+      });
+      expect(signed).toEqual({
+        bytes: 'df2788eed43ab680c8a2b79969ce4de93b9768cd2786a85ebdfba90ca7612638110000000b48656c6c6f20576f726c64',
+        signature: 'spsig1QVVCiQ6aN2zmut2wKTg4zWLoP9ia4qUY2hBo21odA7P25gqfieFWJMyntaJWmyrd6v3mgjKF5n4d2wcaB3LxkLmd1MoJQ',
+        signedContent: {
+          branch: await Tezos.rpc.getBlockHash({block: 'genesis'}),
+          contents: [{
+            kind: OpKind.FAILING_NOOP,
+            arbitrary: '48656C6C6F20576F726C64'
+          }]
+        }
+      });
+      const pk = await Tezos.wallet.getPublicKey();
+      expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
+      done();
+    });
+
+    it('Verify that the contract.failingNoop signs a text', async (done) => {
+      const signed = await Tezos.contract.failingNoop({
+        arbitrary: "48656C6C6F20576F726C64", // Hello World
+        basedOnBlock: 'head',
+      });
+      const pk = await Tezos.wallet.getPublicKey();
+      expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
       done();
     });
 

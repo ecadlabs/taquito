@@ -275,7 +275,20 @@ export class Wallet {
       (await this.context.readProvider.getNextProtocol('head'));
     const forger = new LocalForger(protocolHash);
     const forgedBytes = await forger.forge(forgeable);
-    return await this.walletProvider.sign({ payload: forgedBytes });
+    const signature = await this.walletProvider.sign({ payload: forgedBytes });
+    return {
+      signature,
+      bytes: forgedBytes,
+      signedContent: {
+        branch: failingOperation.opOb.branch,
+        contents: [
+          {
+            kind: OpKind.FAILING_NOOP,
+            arbitrary: params.arbitrary,
+          },
+        ],
+      },
+    };
   }
 
   /**

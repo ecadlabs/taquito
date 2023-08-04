@@ -22,6 +22,7 @@ import {
   BadSigningDataError,
   OperationNotAuthorizedError,
   PublicKeyVerificationError,
+  SignatureVerificationError,
 } from './errors';
 import { Signer } from '@taquito/taquito';
 import {
@@ -29,7 +30,6 @@ import {
   InvalidKeyHashError,
   ProhibitedActionError,
   PublicKeyNotFoundError,
-  SignatureVerificationError,
 } from '@taquito/core';
 
 interface PublicKeyResponse {

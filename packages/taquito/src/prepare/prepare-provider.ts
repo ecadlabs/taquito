@@ -1078,20 +1078,17 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a failing_noop operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * @param params failingNoop operation parameters
    * @returns a PreparedOperation object
    */
-  async failingNoop({ ...rest }: FailingNoopParams): Promise<PreparedOperation> {
+  async failingNoop(params: FailingNoopParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
-    const operation = await createFailingNoopOperation({
-      ...rest,
-    });
+    const operation = await createFailingNoopOperation(params);
 
     const ops = this.convertIntoArray(operation);
 
-    const hash = await this.getBlockHash(rest.basedOnBlock);
+    const hash = await this.getBlockHash(params.basedOnBlock);
     const protocol = await this.getProtocolHash();
 
     this.#counters = {};

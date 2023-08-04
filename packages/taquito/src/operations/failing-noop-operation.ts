@@ -1,24 +1,18 @@
-import { OperationContentsAndResult, OperationContentsFailingNoop } from '@taquito/rpc';
-import { Context } from '../context';
-import { Operation } from './operations';
-import { ForgedBytes } from './types';
+import { OpKind } from '@taquito/rpc';
 
 /**
- * @description FailingNoopOperation provides utility functions to fetch a newly issued operation of kind failing_noop
+ * @description FailingNoopOperation interface that contains information about a signed failing_noop operation
  */
-export class FailingNoopOperation extends Operation {
-  constructor(
-    hash: string,
-    private readonly params: OperationContentsFailingNoop,
-    public readonly source: string,
-    raw: ForgedBytes,
-    results: OperationContentsAndResult[],
-    context: Context
-  ) {
-    super(hash, raw, results, context);
-  }
-
-  get payloadExpression() {
-    return this.params.arbitrary;
-  }
+export interface FailingNoopOperation {
+  signedContent: {
+    branch: string;
+    contents: [
+      {
+        kind: OpKind.FAILING_NOOP;
+        arbitrary: string;
+      }
+    ];
+  };
+  bytes: string;
+  signature: string;
 }

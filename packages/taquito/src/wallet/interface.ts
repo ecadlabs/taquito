@@ -64,15 +64,10 @@ export interface WalletProvider {
   /**
    * @description Request the wallet to sign a payload
    */
-  sign(signingRequest: { payload: string }): Promise<{
-    bytes: string;
-    sig: string;
-    prefixSig: string;
-    sbytes: string;
-  }>;
+  sign(signingRequest: { payload: string }): Promise<string>;
 
   /**
    * @description Get the public key from the wallet
    */
-  getPublicKey(): Promise<string>;
+  getPublicKey(): Promise<string | undefined>;
 }

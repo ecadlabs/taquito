@@ -44,3 +44,16 @@ export class PublicKeyVerificationError extends TaquitoError {
     this.message = `Requested pk "${requestedPk}" has pkh "${requestedPkh}" deesn't match initialized pkh "${initializedPkh}."`;
   }
 }
+
+/**
+ *  @category Error
+ *  @description Error
+ */
+export class SignatureVerificationError extends TaquitoError {
+  public name = 'SignatureVerificationFailedError';
+  constructor(public readonly bytes: string, public readonly signature: string) {
+    super();
+    this.name = 'SignatureVerificationFailedError';
+    this.message = `Invalid signature of bytes failed verification agaisnt public key.`;
+  }
+}

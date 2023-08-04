@@ -281,16 +281,3 @@ export class PublicKeyNotFoundError extends TaquitoError {
     this.message = `Public key not found of this address "${pkh}" in either wallet or contract API.`;
   }
 }
-
-/**
- *  @category Error
- *  @description Error
- */
-export class SignatureVerificationError extends TaquitoError {
-  public name = 'SignatureVerificationFailedError';
-  constructor(public readonly bytes: string, public readonly signature: string) {
-    super();
-    this.name = 'SignatureVerificationFailedError';
-    this.message = `Invalid signature of bytes failed verification agaisnt public key.`;
-  }
-}

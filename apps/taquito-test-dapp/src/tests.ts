@@ -319,7 +319,6 @@ const signPayloadAndSend = async (
 const signFailingNoop = async (
   input: string,
   tezos: TezosToolkit,
-  wallet: BeaconWallet,
 ): Promise<TestResult> => {
   const bytes = char2Bytes(input);
   try {
@@ -331,7 +330,7 @@ const signFailingNoop = async (
     return {
       success: true,
       opHash: "",
-      output: signedPayload.prefixSig,
+      output: signedPayload.signature,
       sigDetails: { input, bytes: signedPayload.bytes, formattedInput: input }
     };
   } catch (error) {
@@ -709,7 +708,7 @@ export const init = (
     description: "This test signs the payload provided by the user wrapped in a failing noop",
     documentation: 'https://tezostaquito.io/docs/signing/#generating-a-signature-with-beacon-sdk',
     keyword: 'failingNoop',
-    run: input => signFailingNoop(input.text, Tezos, wallet),
+    run: input => signFailingNoop(input.text, Tezos),
     showExecutionTime: false,
     inputRequired: true,
     inputType: "string",
