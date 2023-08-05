@@ -15,7 +15,7 @@
     "@ledgerhq/devices": "6.20.0",
     "@ledgerhq/hw-transport": "6.20.0",
     "@ledgerhq/hw-transport-node-hid": "6.20.0",
-    "@ledgerhq/hw-transport-node-hid-noevents": "6.20.0",
+    "@ledgerhq/hw-transport-node-hid-noevents": "6.27.16",
     "@taquito/contracts-library": "^17.1.1",
     "@taquito/http-utils": "^17.1.1",
     "@taquito/local-forging": "^17.1.1",
