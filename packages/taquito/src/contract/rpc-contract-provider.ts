@@ -694,7 +694,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       kind: OpKind.FAILING_NOOP,
       arbitrary: params.arbitrary,
     };
-    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock);
+    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock ?? 0);
 
     const forged = await this.context.forger.forge({
       branch: hash,

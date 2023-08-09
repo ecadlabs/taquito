@@ -22,6 +22,7 @@ import {
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
+  PayloadSigningType,
 } from '@taquito/taquito';
 
 export { VERSION } from './version';
@@ -184,7 +185,7 @@ export class BeaconWallet implements WalletProvider {
     await this.client.setActiveAccount();
   }
 
-  async sign(signingRequest: { payload: string; signingType: 'operation' | 'micheline' | 'raw' }) {
+  async sign(signingRequest: { payload: string; signingType: PayloadSigningType }) {
     let payload: string;
     let signingType: SigningType;
     switch (signingRequest.signingType) {
