@@ -1,11 +1,11 @@
 import { InMemorySigner } from "@taquito/signer";
-import { CONFIGS } from "./config";
+import { CONFIGS, defaultSecretKey } from "./config";
 import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
 
 CONFIGS().forEach(({ rpc, setup}) => {
   const Tezos = new TezosToolkit(rpc);
-  Tezos.setSignerProvider(new InMemorySigner('edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2'));
+  Tezos.setSignerProvider(new InMemorySigner(defaultSecretKey.secret_key));
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
 
     beforeEach(async (done) => {

@@ -65,7 +65,7 @@ interface SecretKeyConfig {
   password?: string
 }
 
-const defaultSecretKey: SecretKeyConfig = {
+export const defaultSecretKey: SecretKeyConfig = {
   // pkh is tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD
   type: SignerType.SECRET_KEY,
   secret_key: process.env['SECRET_KEY'] || 'spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN',
