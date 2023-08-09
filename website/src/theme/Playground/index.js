@@ -38,8 +38,8 @@ class SemiLiveProvider extends LiveProvider {
 
     const template = () => {
       if (this.props.wallet) {
-        return `const network = {type:"ghostnet"};
-        wallet.requestPermissions({network})
+        return `
+        wallet.requestPermissions()
         .then(permission => {
           return Tezos.setWalletProvider(wallet);
         })

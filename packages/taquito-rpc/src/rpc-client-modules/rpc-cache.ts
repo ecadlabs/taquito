@@ -51,6 +51,7 @@ import {
   PendingOperationsQueryArguments,
   PendingOperations,
   OriginationProofParams,
+  RPCSimulateOperationParam,
 } from '../types';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
@@ -862,6 +863,21 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse> {
     return this.rpcClient.runOperation(op, { block });
+  }
+
+  /**
+   * @param op Operation to simulate
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Simulate an operation
+   *
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/nairobi-openapi.json
+   */
+  async simulateOperation(
+    op: RPCSimulateOperationParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PreapplyResponse> {
+    return this.rpcClient.simulateOperation(op, { block });
   }
 
   /**
