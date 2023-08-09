@@ -10,7 +10,6 @@ import { ContractMethodObject } from '../contract/contract-methods/contract-meth
 import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
-  PayloadSigningType,
   WalletDelegateParams,
   WalletFailingNoopParams,
   WalletIncreasePaidStorageParams,
@@ -273,14 +272,14 @@ export class Wallet {
       kind: OpKind.FAILING_NOOP,
       arbitrary: params.arbitrary,
     };
-    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock ?? 0);
+    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock);
     const forgedBytes = await this.context.forger.forge({
       branch: hash,
       contents: [op],
     });
     const signature = await this.walletProvider.sign({
       payload: forgedBytes,
-      signingType: PayloadSigningType.OPERATION,
+      signingType: 'operation',
     });
     return {
       signature,

@@ -1,7 +1,6 @@
 import { Context } from '../context';
 import { attachKind, OpKind } from '../operations/types';
 import {
-  PayloadSigningType,
   WalletDelegateParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
@@ -38,7 +37,7 @@ export class LegacyWalletProvider implements WalletProvider {
     return op.hash;
   }
 
-  async sign(signingRequest: { payload: string; signingType: PayloadSigningType }) {
+  async sign(signingRequest: { payload: string; signingType: 'raw' | 'micheline' | 'operation' }) {
     let magicByte: Uint8Array | undefined;
     switch (signingRequest.signingType) {
       case 'micheline':

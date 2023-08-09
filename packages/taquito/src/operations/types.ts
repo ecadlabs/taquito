@@ -565,7 +565,7 @@ export interface RPCFailingNoopOperation {
  */
 export interface FailingNoopParams {
   arbitrary: string;
-  basedOnBlock?: BlockIdentifier;
+  basedOnBlock: BlockIdentifier;
 }
 
 export type RPCOperation =
