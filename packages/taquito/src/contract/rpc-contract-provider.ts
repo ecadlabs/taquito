@@ -5,6 +5,7 @@ import {
   OperationContentsBallot,
   OperationContentsDelegation,
   OperationContentsDrainDelegate,
+  OperationContentsFailingNoop,
   OperationContentsIncreasePaidStorage,
   OperationContentsOrigination,
   OperationContentsProposals,
@@ -689,14 +690,24 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param params failingNoop operation parameter
    */
   async failingNoop(params: FailingNoopParams): Promise<FailingNoopOperation> {
-    const prepared = await this.prepare.failingNoop(params);
-    const opBytes = await this.forge(prepared);
-    const { prefixSig } = await this.signer.sign(opBytes.opbytes, new Uint8Array([3]));
+    const ops = [
+      {
+        kind: OpKind.FAILING_NOOP,
+        arbitrary: params.arbitrary,
+      } as OperationContentsFailingNoop,
+    ];
+    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock);
+
+    const forged = await this.context.forger.forge({
+      branch: hash,
+      contents: ops,
+    });
+    const { prefixSig } = await this.signer.sign(forged, new Uint8Array([3]));
     return {
       signature: prefixSig,
-      bytes: opBytes.opbytes,
+      bytes: forged,
       signedContent: {
-        branch: prepared.opOb.branch,
+        branch: hash,
         contents: [
           {
             kind: OpKind.FAILING_NOOP,

@@ -1,9 +1,8 @@
-import { LocalForger, ProtocolsHash } from "@taquito/local-forging";
 import { CONFIGS } from "./config";
-import { OpKind, RpcForger } from "@taquito/taquito";
+import { OpKind } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup}) => {
   const Tezos = lib;
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
 
@@ -74,44 +73,5 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       done();
     });
 
-    it('Verify that the local forger can forge the failing_noop operation on the genesis block', async (done) => {
-      const failingOperation = await Tezos.prepare.failingNoop({
-        arbitrary: "48656C6C6F20576F726C64",
-        basedOnBlock: 0,
-      });
-      const forgeable = Tezos.prepare.toForge(failingOperation);
-      const forger = new LocalForger(protocol as unknown as ProtocolsHash);
-      const forgedBytes = await forger.forge(forgeable);
-
-      const rpcForger = Tezos.getFactory(RpcForger)();
-      const rpcForgedBytes = await rpcForger.forge(forgeable);
-      expect(forgedBytes).toEqual(rpcForgedBytes);
-      const signed = await Tezos.signer.sign(forgedBytes, new Uint8Array([3]));
-
-      expect(signed.prefixSig).toBe('spsig1QVVCiQ6aN2zmut2wKTg4zWLoP9ia4qUY2hBo21odA7P25gqfieFWJMyntaJWmyrd6v3mgjKF5n4d2wcaB3LxkLmd1MoJQ');
-      expect(verifySignature(signed.bytes, await Tezos.signer.publicKey(), signed.prefixSig, new Uint8Array([3]))).toBe(true);
-      done();
-    });
-
-    it('Verify that the local forger can forge the failing_noop operation', async (done) => {
-      const failingOperation = await Tezos.prepare.failingNoop({
-        arbitrary: "48656C6C6F20576F726C64", 
-        basedOnBlock: 'head',
-      });
-      const forgeable = Tezos.prepare.toForge(failingOperation);
-      const forger = new LocalForger(protocol as unknown as ProtocolsHash);
-      const forgedBytes = await forger.forge(forgeable);
-
-      const rpcForger = Tezos.getFactory(RpcForger)();
-      const rpcForgedBytes = await rpcForger.forge(forgeable);
-      expect(forgedBytes).toEqual(rpcForgedBytes);
-      const signed = await Tezos.signer.sign(forgedBytes, new Uint8Array([3]));
-
-      expect(verifySignature(signed.bytes, await Tezos.signer.publicKey(), signed.prefixSig, new Uint8Array([3]))).toBe(true);
-      expect(async () => {
-        await Tezos.rpc.injectOperation(signed.sbytes);
-      }).rejects.toThrow(`A failing_noop operation can never be validated.`);
-      done();
-    });
   });
 })

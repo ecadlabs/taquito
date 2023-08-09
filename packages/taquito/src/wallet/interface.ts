@@ -50,13 +50,6 @@ export interface WalletProvider {
   ) => Promise<any>;
 
   /**
-   * @description Transform WalletFailingNoopParams into a format compliant with the underlying wallet
-   */
-  mapFailingNoopParamsToWalletParams: (
-    params: () => Promise<WalletFailingNoopParams>
-  ) => Promise<any>;
-
-  /**
    * @description Request the wallet to send an operation batch
    */
   sendOperations: (params: any[]) => Promise<string>;

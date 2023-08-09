@@ -27,7 +27,6 @@ import {
   isOpWithFee,
   RegisterDelegateParams,
   ActivationParams,
-  FailingNoopParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
@@ -55,7 +54,6 @@ import {
   createSmartRollupOriginateOperation,
   createRegisterDelegateOperation,
   createActivationOperation,
-  createFailingNoopOperation,
 } from '../contract';
 import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
@@ -220,7 +218,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return ops.map((op: RPCOperation) => {
       switch (op.kind) {
         case OpKind.ACTIVATION:
-        case OpKind.FAILING_NOOP:
         case OpKind.DRAIN_DELEGATE:
           return {
             ...op,
@@ -1059,37 +1056,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);
-
-    const contents = this.constructOpContents(ops, headCounter, pkh);
-
-    return {
-      opOb: {
-        branch: hash,
-        contents,
-        protocol,
-      },
-      counter: headCounter,
-    };
-  }
-
-  /**
-   *
-   * @description Method to prepare a failing_noop operation
-   * @param params failingNoop operation parameters
-   * @returns a PreparedOperation object
-   */
-  async failingNoop(params: FailingNoopParams): Promise<PreparedOperation> {
-    const { pkh } = await this.getKeys();
-
-    const operation = await createFailingNoopOperation(params);
-
-    const ops = this.convertIntoArray(operation);
-
-    const hash = await this.getBlockHash(params.basedOnBlock);
-    const protocol = await this.getProtocolHash();
-
-    this.#counters = {};
-    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
 

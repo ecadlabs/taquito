@@ -21,7 +21,6 @@ import {
   createIncreasePaidStorageOperation,
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
-  createFailingNoopOperation,
 } from './contract/prepare';
 import { OpKind } from '@taquito/rpc';
 import { InvalidOperationKindError } from '@taquito/utils';
@@ -122,10 +121,6 @@ export abstract class Provider {
         });
       case OpKind.SMART_ROLLUP_ORIGINATE:
         return createSmartRollupOriginateOperation({
-          ...param,
-        });
-      case OpKind.FAILING_NOOP:
-        return createFailingNoopOperation({
           ...param,
         });
       default:

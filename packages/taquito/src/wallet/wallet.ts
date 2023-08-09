@@ -28,6 +28,7 @@ import {
   ValidationResult,
   invalidDetail,
 } from '@taquito/utils';
+import { OperationContentsFailingNoop } from '@taquito/rpc';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -267,9 +268,17 @@ export class Wallet {
    * @param params operation parameter
    */
   async signFailingNoop(params: WalletFailingNoopParams) {
-    const failingOperation = await this.context.prepare.failingNoop(params);
-    const forgeable = this.context.prepare.toForge(failingOperation);
-    const forgedBytes = await this.context.forger.forge(forgeable);
+    const ops = [
+      {
+        kind: OpKind.FAILING_NOOP,
+        arbitrary: params.arbitrary,
+      } as OperationContentsFailingNoop,
+    ];
+    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock);
+    const forgedBytes = await this.context.forger.forge({
+      branch: hash,
+      contents: ops,
+    });
     const signature = await this.walletProvider.sign({
       payload: forgedBytes,
       signingType: 'operation',
@@ -278,7 +287,7 @@ export class Wallet {
       signature,
       bytes: forgedBytes,
       signedContent: {
-        branch: failingOperation.opOb.branch,
+        branch: hash,
         contents: [
           {
             kind: OpKind.FAILING_NOOP,
