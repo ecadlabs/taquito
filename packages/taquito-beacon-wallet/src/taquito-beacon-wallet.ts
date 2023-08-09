@@ -214,8 +214,11 @@ export class BeaconWallet implements WalletProvider {
     return signature;
   }
 
-  async getPublicKey(): Promise<string | undefined> {
-    const response = await this.client.getActiveAccount();
-    return response?.publicKey;
+  async getPublicKey() {
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    return account?.publicKey;
   }
 }

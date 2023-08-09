@@ -49,7 +49,7 @@ CONFIGS().forEach(({ rpc, setup}) => {
       done();
     });
 
-    it('Verify that the wallet.signFailingNoop signs a text', async (done) => {
+    it('Verify that the wallet.signFailingNoop signs a text based on head block', async (done) => {
       const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 'head',

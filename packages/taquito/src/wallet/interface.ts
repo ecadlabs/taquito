@@ -62,5 +62,5 @@ export interface WalletProvider {
   /**
    * @description Get the public key from the wallet
    */
-  getPublicKey(): Promise<string | undefined>;
+  getPublicKey(): Promise<string>;
 }

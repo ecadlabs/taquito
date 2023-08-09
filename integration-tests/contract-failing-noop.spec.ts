@@ -49,7 +49,7 @@ CONFIGS().forEach(({ rpc, setup}) => {
       done();
     });
 
-    it('Verify that the contract.failingNoop signs a text', async (done) => {
+    it('Verify that the contract.failingNoop signs a text base on head block', async (done) => {
       const signed = await Tezos.contract.failingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 'head',
