@@ -65,8 +65,8 @@ const sidebars = {
         'wallet_API',
         'wallets',
         'web3js_taquito',
-        'subscribe_event',
-        'smart_rollups'
+        'smart_rollups',
+        'failing_noop'
       ],
     },
     {

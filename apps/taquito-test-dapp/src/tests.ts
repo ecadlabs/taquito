@@ -706,7 +706,7 @@ export const init = (
     id: "sign-failingNoop",
     name: "Sign the provided payload in a failing noop",
     description: "This test signs the payload provided by the user wrapped in a failing noop",
-    documentation: 'https://tezostaquito.io/docs/signing/#generating-a-signature-with-beacon-sdk',
+    documentation: 'https://tezostaquito.io/docs/failing_noop',
     keyword: 'failingNoop',
     run: input => signFailingNoop(input.text, Tezos),
     showExecutionTime: false,
