@@ -273,7 +273,7 @@ export class Wallet {
       kind: OpKind.FAILING_NOOP,
       arbitrary: params.arbitrary,
     };
-    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock || 0);
+    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock);
     const forgedBytes = await this.context.forger.forge({
       branch: hash,
       contents: [op],
