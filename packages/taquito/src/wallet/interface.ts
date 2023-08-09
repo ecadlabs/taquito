@@ -21,12 +21,6 @@ export type WalletFailingNoopParams = Omit<FailingNoopParams, WalletDefinedField
 
 export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, WalletDefinedFields>;
 
-export enum PayloadSigningType {
-  RAW = 'raw',
-  MICHELINE = 'micheline',
-  OPERATION = 'operation',
-}
-
 export interface WalletProvider {
   /**
    * @description Request the public key hash from the wallet
@@ -63,7 +57,7 @@ export interface WalletProvider {
   /**
    * @description Request the wallet to sign a payload
    */
-  sign(signingRequest: { payload: string; signingType: PayloadSigningType }): Promise<string>;
+  sign(signingRequest: { payload: string; watermark?: Uint8Array }): Promise<string>;
 
   /**
    * @description Get the public key from the wallet

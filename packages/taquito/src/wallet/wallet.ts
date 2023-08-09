@@ -10,7 +10,6 @@ import { ContractMethodObject } from '../contract/contract-methods/contract-meth
 import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
-  PayloadSigningType,
   WalletDelegateParams,
   WalletFailingNoopParams,
   WalletIncreasePaidStorageParams,
@@ -280,7 +279,7 @@ export class Wallet {
     });
     const signature = await this.walletProvider.sign({
       payload: forgedBytes,
-      signingType: PayloadSigningType.OPERATION,
+      watermark: Uint8Array.from([3]),
     });
     return {
       signature,

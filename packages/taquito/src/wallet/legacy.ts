@@ -1,7 +1,6 @@
 import { Context } from '../context';
 import { attachKind, OpKind } from '../operations/types';
 import {
-  PayloadSigningType,
   WalletDelegateParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
@@ -38,22 +37,11 @@ export class LegacyWalletProvider implements WalletProvider {
     return op.hash;
   }
 
-  async sign(signingRequest: { payload: string; signingType: PayloadSigningType }) {
-    let magicByte: Uint8Array | undefined;
-    switch (signingRequest.signingType) {
-      case 'micheline':
-        magicByte = new Uint8Array([5]);
-        break;
-      case 'operation':
-        magicByte = new Uint8Array([3]);
-        break;
-      case 'raw':
-        magicByte = undefined;
-        break;
-      default:
-        throw new Error(`Invalid signing type ${signingRequest.signingType}`);
-    }
-    const { prefixSig } = await this.context.signer.sign(signingRequest.payload, magicByte);
+  async sign(signingRequest: { payload: string; watermark?: Uint8Array }) {
+    const { prefixSig } = await this.context.signer.sign(
+      signingRequest.payload,
+      signingRequest.watermark
+    );
     return prefixSig;
   }
 

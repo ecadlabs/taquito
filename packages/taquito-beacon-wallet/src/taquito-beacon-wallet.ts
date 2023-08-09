@@ -12,18 +12,19 @@ import {
   SigningType,
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+import toBuffer from 'typedarray-to-buffer';
 import {
   createIncreasePaidStorageOperation,
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
-  PayloadSigningType,
   WalletDelegateParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
+import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
@@ -185,27 +186,29 @@ export class BeaconWallet implements WalletProvider {
     await this.client.setActiveAccount();
   }
 
-  async sign(signingRequest: { payload: string; signingType: PayloadSigningType }) {
-    let payload: string;
+  async sign(signingRequest: { payload: string; watermark?: Uint8Array }) {
+    let bb = hex2buf(signingRequest.payload);
+    if (typeof signingRequest.watermark !== 'undefined') {
+      bb = mergebuf(signingRequest.watermark, bb);
+    }
+    const watermarkedBytes = buf2hex(toBuffer(bb));
+
     let signingType: SigningType;
-    switch (signingRequest.signingType) {
-      case 'micheline':
-        payload = '05' + signingRequest.payload;
+    switch (signingRequest.watermark) {
+      case new Uint8Array([5]):
         signingType = SigningType.MICHELINE;
         break;
-      case 'operation':
-        payload = '03' + signingRequest.payload;
+      case new Uint8Array([3]):
         signingType = SigningType.OPERATION;
         break;
-      case 'raw':
-        payload = signingRequest.payload;
+      case undefined:
         signingType = SigningType.RAW;
         break;
       default:
-        throw new Error(`Invalid signing type ${signingRequest.signingType}`);
+        throw new Error(`Invalid watermark ${JSON.stringify(signingRequest.watermark)}`);
     }
     const { signature } = await this.client.requestSignPayload({
-      payload,
+      payload: watermarkedBytes,
       signingType,
     });
     return signature;
