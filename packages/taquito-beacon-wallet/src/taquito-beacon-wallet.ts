@@ -17,6 +17,7 @@ import {
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  PayloadSigningType,
   WalletDelegateParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
@@ -184,7 +185,7 @@ export class BeaconWallet implements WalletProvider {
     await this.client.setActiveAccount();
   }
 
-  async sign(signingRequest: { payload: string; signingType: 'raw' | 'micheline' | 'operation' }) {
+  async sign(signingRequest: { payload: string; signingType: PayloadSigningType }) {
     let payload: string;
     let signingType: SigningType;
     switch (signingRequest.signingType) {
