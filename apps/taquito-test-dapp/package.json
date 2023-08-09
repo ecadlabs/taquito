@@ -1,5 +1,5 @@
 {
-  "name": "taquito-test-dapp",
+  "name": "taquito-test-dapp-vite",
   "private": true,
   "version": "17.1.1",
   "type": "module",
