@@ -1,6 +1,7 @@
 {
   "words": [
     "airgap",
+    "Alireza",
     "Annot",
     "annots",
     "beaconwallet",
@@ -29,6 +30,7 @@
     "granadanet",
     "Guarda",
     "Hackathon",
+    "Haghshenas",
     "inmemory",
     "IPFS",
     "ithacanet",
@@ -90,7 +92,6 @@
     "**/node_modules/**",
     "**/dist/**",
     "**/coverage/**",
-    "**/docs/**",
     "**/build/**",
     "**/scripts/**",
     "**/examples/**",

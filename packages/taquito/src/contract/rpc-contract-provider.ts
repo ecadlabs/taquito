@@ -690,17 +690,15 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param params failingNoop operation parameter
    */
   async failingNoop(params: FailingNoopParams): Promise<FailingNoopOperation> {
-    const ops = [
-      {
-        kind: OpKind.FAILING_NOOP,
-        arbitrary: params.arbitrary,
-      } as OperationContentsFailingNoop,
-    ];
+    const op: OperationContentsFailingNoop = {
+      kind: OpKind.FAILING_NOOP,
+      arbitrary: params.arbitrary,
+    };
     const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock);
 
     const forged = await this.context.forger.forge({
       branch: hash,
-      contents: ops,
+      contents: [op],
     });
     const { prefixSig } = await this.signer.sign(forged, new Uint8Array([3]));
     return {
