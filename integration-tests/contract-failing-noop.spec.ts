@@ -7,8 +7,8 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
 
   const Tezos = new TezosToolkit(rpc);
   Tezos.setSignerProvider(new InMemorySigner(defaultSecretKey.secret_key));
-  
-  describe(`Test failing_noop through contract api using: ${rpc}`, () => {  
+
+  describe(`Test failing_noop through contract api, based on head, and secret_key using: ${rpc}`, () => {  
     beforeEach(async (done) => {
       await setup();
       done();
@@ -16,7 +16,7 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
 
     const runOnNairobinet = !isSandbox({ rpc }) && protocol === Protocols.PtNairobi ? it : it.skip;
 
-    runOnNairobinet('Verify that the contract.failingNoop result is as expected when the block and private key are kept constant', async (done) => {
+    runOnNairobinet('Verify that the contract.failingNoop result is as expected when the block and secret key are kept constant', async (done) => {
       const signed = await Tezos.contract.failingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
@@ -32,6 +32,13 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
           }]
         }
       });
+      done();
+    });
+  });
+
+  describe(`Test failing_noop through contract api using: ${rpc}`, () => {  
+    beforeEach(async (done) => {
+      await setup();
       done();
     });
 
