@@ -7,6 +7,7 @@ import {
   BallotVote,
   PvmKind,
 } from '@taquito/rpc';
+import { BlockIdentifier } from '../read-provider/interface';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -24,6 +25,7 @@ export type ParamsWithKind =
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
   | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
+  | withKind<FailingNoopParams, OpKind.FAILING_NOOP>
   | withKind<SmartRollupOriginateParamsWithProof, OpKind.SMART_ROLLUP_ORIGINATE>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
@@ -82,7 +84,7 @@ export type RPCOpWithSource =
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
-): op is withKind<T, Exclude<OpKind, OpKind.ACTIVATION>> => {
+): op is withKind<T, Exclude<Exclude<OpKind, OpKind.ACTIVATION>, OpKind.FAILING_NOOP>> => {
   return (
     [
       'transaction',
@@ -550,6 +552,22 @@ export interface RPCSmartRollupOriginateOperation {
   parameters_ty: MichelsonV1Expression;
 }
 
+/**
+ * @description RPC failing noop operation
+ */
+export interface RPCFailingNoopOperation {
+  kind: OpKind.FAILING_NOOP;
+  arbitrary: string;
+}
+
+/**
+ * @description Parameters for the `failingNoop` method
+ */
+export interface FailingNoopParams {
+  arbitrary: string;
+  basedOnBlock: BlockIdentifier;
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -564,6 +582,7 @@ export type RPCOperation =
   | RPCProposalsOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
+  | RPCFailingNoopOperation
   | RPCSmartRollupOriginateOperation;
 
 export type PrepareOperationParams = {

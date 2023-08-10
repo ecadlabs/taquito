@@ -36,4 +36,16 @@ export class LegacyWalletProvider implements WalletProvider {
     const op = await this.context.batch.batch(params as any).send();
     return op.hash;
   }
+
+  async sign(signingRequest: { payload: string; watermark?: Uint8Array }) {
+    const { prefixSig } = await this.context.signer.sign(
+      signingRequest.payload,
+      signingRequest.watermark
+    );
+    return prefixSig;
+  }
+
+  getPublicKey() {
+    return this.context.signer.publicKey();
+  }
 }

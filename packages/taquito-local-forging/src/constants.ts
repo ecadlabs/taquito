@@ -40,6 +40,7 @@ export enum CODEC {
   OP_TRANSACTION = 'transaction',
   OP_ORIGINATION = 'origination',
   OP_BALLOT = 'ballot',
+  OP_FAILING_NOOP = 'failing_noop',
   OP_ENDORSEMENT = 'endorsement',
   OP_SEED_NONCE_REVELATION = 'seed_nonce_revelation',
   OP_REVEAL = 'reveal',
@@ -254,6 +255,7 @@ export const kindMapping: { [key: number]: string } = {
   0xc8: 'smart_rollup_originate',
   0xc9: 'smart_rollup_add_messages',
   0xce: 'smart_rollup_execute_outbox_message',
+  0x11: 'failing_noop',
 };
 
 export const kindMappingReverse = (() => {

@@ -229,11 +229,6 @@ export interface OperationContentsEndorsementWithSlot {
   slot: number;
 }
 
-export interface OperationContentsFailingNoop {
-  kind: OpKind.FAILING_NOOP;
-  arbitrary: string;
-}
-
 export interface OperationContentsRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
@@ -262,6 +257,11 @@ export interface OperationContentsActivateAccount {
   kind: OpKind.ACTIVATION;
   pkh: string;
   secret: string;
+}
+
+export interface OperationContentsFailingNoop {
+  kind: OpKind.FAILING_NOOP;
+  arbitrary: string;
 }
 
 export interface OperationContentsProposals {
