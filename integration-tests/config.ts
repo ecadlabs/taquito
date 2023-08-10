@@ -22,6 +22,10 @@ enum ForgerType {
   COMPOSITE = 'composite',
 }
 
+export const isSandbox = (config: {rpc: string}) => {
+  return config.rpc.includes('localhost') || config.rpc.includes('0.0.0.0');
+}
+
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 interface Config {

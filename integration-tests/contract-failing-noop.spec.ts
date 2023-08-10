@@ -1,5 +1,5 @@
 import { InMemorySigner } from "@taquito/signer";
-import { CONFIGS, defaultSecretKey } from "./config";
+import { CONFIGS, defaultSecretKey, isSandbox } from "./config";
 import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
 
@@ -19,7 +19,7 @@ CONFIGS().forEach(({ rpc, setup}) => {
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
       });
-      if (rpc === 'http://0.0.0.0:20000') {
+      if (isSandbox({rpc})) {
         expect(signed).toEqual({
           bytes: 'e05b338df1b65370c74ca04e600a526b029abd2827b0c7c71389fb542a8ed9dc110000000b48656c6c6f20576f726c64',
           signature: 'edsigteDrJhTBCX8cX8swZPEeT7N96wjUxWfFPJSEFL5s5pUT2C3C2FDNF169zYYKktrZHwpHcWan6uyKj89tK43fqY2hbbKoxT',
