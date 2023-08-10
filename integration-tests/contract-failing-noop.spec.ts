@@ -7,6 +7,7 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
 
   const Tezos = new TezosToolkit(rpc);
   Tezos.setSignerProvider(new InMemorySigner(defaultSecretKey.secret_key));
+  const nairobinet = !isSandbox({ rpc }) && protocol === Protocols.PtNairobi ? it : it.skip;
 
   describe(`Test failing_noop through contract api, based on head, and secret_key using: ${rpc}`, () => {  
     beforeEach(async (done) => {
@@ -14,13 +15,15 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
       done();
     });
 
-    const runOnNairobinet = !isSandbox({ rpc }) && protocol === Protocols.PtNairobi ? it : it.skip;
-
-    runOnNairobinet('Verify that the contract.failingNoop result is as expected when the block and secret key are kept constant', async (done) => {
+    nairobinet('Verify that the contract.failingNoop result is as expected when the block and secret key are kept constant', async (done) => {
       const signed = await Tezos.contract.failingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
       });
+      // This test is skipped from flextesa because the genesis block hash is not guaranteed to stay the same
+      // The signature will change if the hash of the genesis block changes (maybe when switching to a testnet based on a new protocol).
+      // Also it depends on the signing key.
+      // So if any of them changes, the expected values need to be adjusted
       expect(signed).toEqual({
         bytes: 'df2788eed43ab680c8a2b79969ce4de93b9768cd2786a85ebdfba90ca7612638110000000b48656c6c6f20576f726c64',
         signature: 'spsig1QVVCiQ6aN2zmut2wKTg4zWLoP9ia4qUY2hBo21odA7P25gqfieFWJMyntaJWmyrd6v3mgjKF5n4d2wcaB3LxkLmd1MoJQ',
@@ -61,6 +64,5 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
       expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
       done();
     });
-
   });
 })
