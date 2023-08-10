@@ -53,6 +53,7 @@ import {
   SmartRollupOriginateSchema,
   SmartRollupAddMessagesSchema,
   SmartRollupExecuteOutboxMessageSchema,
+  FailingNoopSchema,
 } from './schema/operation';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { toHexString } from './utils';
@@ -95,6 +96,8 @@ export const decoders: { [key: string]: Decoder } = {
 decoders[CODEC.OPERATION] = operationDecoder(decoders);
 decoders[CODEC.OP_ACTIVATE_ACCOUNT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(ActivationSchema)(val);
+decoders[CODEC.OP_FAILING_NOOP] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(FailingNoopSchema)(val);
 decoders[CODEC.OP_DELEGATION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(DelegationSchema)(val);
 decoders[CODEC.OP_TRANSACTION] = (val: Uint8ArrayConsumer) =>
@@ -130,4 +133,5 @@ decoders[CODEC.OP_SMART_ROLLUP_ADD_MESSAGES] = (val: Uint8ArrayConsumer) =>
 decoders[CODEC.OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(SmartRollupExecuteOutboxMessageSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
-decoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(SetDepositsLimitSchema)(val);
+decoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(SetDepositsLimitSchema)(val);

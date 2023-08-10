@@ -192,6 +192,10 @@ export const SmartRollupExecuteOutboxMessageSchema = {
   output_proof: CODEC.PADDED_BYTES,
 };
 
+export const FailingNoopSchema = {
+  arbitrary: CODEC.PADDED_BYTES,
+};
+
 export const operationEncoder =
   (encoders: { [key: string]: (val: object) => string }) => (operation: { kind: string }) => {
     if (!(operation.kind in encoders) || !(operation.kind in kindMappingReverse)) {

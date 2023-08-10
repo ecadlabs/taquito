@@ -23,6 +23,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  FailingNoopParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
@@ -33,6 +34,7 @@ import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
+import { FailingNoopOperation } from '../operations/failing-noop-operation';
 
 export type ContractSchema = Schema | unknown;
 
@@ -271,4 +273,14 @@ export interface ContractProvider extends StorageProvider {
    * @param SmartRollupOriginateParams smartRollupOriginate operation parameter
    */
   smartRollupOriginate(params: SmartRollupOriginateParams): Promise<SmartRollupOriginateOperation>;
+
+  /**
+   *
+   * @description Send arbitrary data inside a failing_noop operation that's guaranteed to fail.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param params FailingNoop operation parameter
+   */
+  failingNoop(params: FailingNoopParams): Promise<FailingNoopOperation>;
 }

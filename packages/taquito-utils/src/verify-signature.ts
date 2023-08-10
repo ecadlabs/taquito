@@ -5,6 +5,7 @@ import {
   buf2hex,
   hex2buf,
   invalidDetail,
+  mergebuf,
   Prefix,
   prefix,
   validatePublicKey,
@@ -40,14 +41,19 @@ type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
 export function verifySignature(
   messageBytes: string,
   publicKey: string,
-  signature: string
+  signature: string,
+  watermark?: Uint8Array
 ): boolean {
   const pkPrefix = validatePkAndExtractPrefix(publicKey);
   const sigPrefix = validateSigAndExtractPrefix(signature);
 
   const decodedPublicKey = b58cdecode(publicKey, prefix[pkPrefix]);
   const decodedSig = b58cdecode(signature, prefix[sigPrefix]);
-  const bytesHash = hash(hex2buf(validateMessageNotEmpty(messageBytes)), 32);
+  let messageBuf = hex2buf(validateMessageNotEmpty(messageBytes));
+  if (typeof watermark !== 'undefined') {
+    messageBuf = mergebuf(watermark, messageBuf);
+  }
+  const bytesHash = hash(messageBuf, 32);
 
   if (pkPrefix === Prefix.EDPK) {
     return verifyEdSignature(decodedSig, bytesHash, decodedPublicKey);
