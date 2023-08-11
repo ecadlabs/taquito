@@ -186,32 +186,33 @@ export class BeaconWallet implements WalletProvider {
     await this.client.setActiveAccount();
   }
 
-  async sign(signingRequest: { payload: string; watermark?: Uint8Array }) {
-    let bb = hex2buf(signingRequest.payload);
-    if (typeof signingRequest.watermark !== 'undefined') {
-      bb = mergebuf(signingRequest.watermark, bb);
+  async sign({ payload, watermark }: { payload: string; watermark?: Uint8Array }) {
+    let bb = hex2buf(payload);
+    if (typeof watermark !== 'undefined') {
+      bb = mergebuf(watermark, bb);
     }
     const watermarkedBytes = buf2hex(toBuffer(bb));
-
-    let signingType: SigningType;
-    switch (signingRequest.watermark) {
-      case new Uint8Array([5]):
-        signingType = SigningType.MICHELINE;
-        break;
-      case new Uint8Array([3]):
-        signingType = SigningType.OPERATION;
-        break;
-      case undefined:
-        signingType = SigningType.RAW;
-        break;
-      default:
-        throw new Error(`Invalid watermark ${JSON.stringify(signingRequest.watermark)}`);
-    }
+    const signingType = this.getSigningType(watermark);
     const { signature } = await this.client.requestSignPayload({
       payload: watermarkedBytes,
       signingType,
     });
     return signature;
+  }
+
+  private getSigningType(watermark?: Uint8Array) {
+    if (!watermark || watermark.length === 0) {
+      return SigningType.RAW;
+    }
+    if (watermark.length === 1) {
+      if (watermark[0] === 5) {
+        return SigningType.MICHELINE;
+      }
+      if (watermark[0] === 3) {
+        return SigningType.OPERATION;
+      }
+    }
+    throw new Error(`Invalid watermark ${JSON.stringify(watermark)}`);
   }
 
   async getPublicKey() {
