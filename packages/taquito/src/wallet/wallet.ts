@@ -277,10 +277,7 @@ export class Wallet {
       branch: hash,
       contents: [op],
     });
-    const signature = await this.walletProvider.sign({
-      payload: forgedBytes,
-      watermark: Uint8Array.from([3]),
-    });
+    const signature = await this.walletProvider.sign(forgedBytes, Uint8Array.from([3]));
     return {
       signature,
       bytes: forgedBytes,
@@ -409,7 +406,7 @@ export class Wallet {
     return contractAbstractionComposer(abs, this.context);
   }
 
-  getPublicKey() {
-    return this.walletProvider.getPublicKey();
+  getPK() {
+    return this.walletProvider.getPK();
   }
 }

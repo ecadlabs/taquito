@@ -186,8 +186,8 @@ export class BeaconWallet implements WalletProvider {
     await this.client.setActiveAccount();
   }
 
-  async sign({ payload, watermark }: { payload: string; watermark?: Uint8Array }) {
-    let bb = hex2buf(payload);
+  async sign(bytes: string, watermark?: Uint8Array) {
+    let bb = hex2buf(bytes);
     if (typeof watermark !== 'undefined') {
       bb = mergebuf(watermark, bb);
     }
@@ -215,7 +215,7 @@ export class BeaconWallet implements WalletProvider {
     throw new Error(`Invalid watermark ${JSON.stringify(watermark)}`);
   }
 
-  async getPublicKey() {
+  async getPK() {
     const account = await this.client.getActiveAccount();
     if (!account) {
       throw new BeaconWalletNotInitialized();
