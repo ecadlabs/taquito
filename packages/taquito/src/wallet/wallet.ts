@@ -261,7 +261,7 @@ export class Wallet {
 
   /**
    *
-   * @description failing_noop operation that is guaranteed to fail.
+   * @description failing_noop operation that is guaranteed to fail. DISCLAIMER: Not all wallets support signing failing_noop operations.
    *
    * @returns Signature for a failing_noop
    *
