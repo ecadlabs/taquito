@@ -59,6 +59,7 @@ import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
 import BigNumber from 'bignumber.js';
+import { BlockIdentifier } from '../read-provider/interface';
 
 interface Limits {
   fee?: number;
@@ -88,8 +89,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     this.#counters = {};
   }
 
-  private async getBlockHash() {
-    return this.context.readProvider.getBlockHash('head~2');
+  private async getBlockHash(block?: BlockIdentifier) {
+    return this.context.readProvider.getBlockHash(block ?? 'head~2');
   }
 
   private async getProtocolHash() {

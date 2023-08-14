@@ -9,8 +9,10 @@ import {
   RequestPermissionInput,
   PermissionScope,
   getDAppClientInstance,
+  SigningType,
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+import toBuffer from 'typedarray-to-buffer';
 import {
   createIncreasePaidStorageOperation,
   createOriginationOperation,
@@ -22,6 +24,7 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
+import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
@@ -181,5 +184,41 @@ export class BeaconWallet implements WalletProvider {
    */
   async clearActiveAccount() {
     await this.client.setActiveAccount();
+  }
+
+  async sign(signingRequest: { payload: string; watermark?: Uint8Array }) {
+    let bb = hex2buf(signingRequest.payload);
+    if (typeof signingRequest.watermark !== 'undefined') {
+      bb = mergebuf(signingRequest.watermark, bb);
+    }
+    const watermarkedBytes = buf2hex(toBuffer(bb));
+
+    let signingType: SigningType;
+    switch (signingRequest.watermark) {
+      case new Uint8Array([5]):
+        signingType = SigningType.MICHELINE;
+        break;
+      case new Uint8Array([3]):
+        signingType = SigningType.OPERATION;
+        break;
+      case undefined:
+        signingType = SigningType.RAW;
+        break;
+      default:
+        throw new Error(`Invalid watermark ${JSON.stringify(signingRequest.watermark)}`);
+    }
+    const { signature } = await this.client.requestSignPayload({
+      payload: watermarkedBytes,
+      signingType,
+    });
+    return signature;
+  }
+
+  async getPublicKey() {
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    return account?.publicKey;
   }
 }

@@ -8,8 +8,7 @@ import {
 import type { ContractProvider } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { char2Bytes, verifySignature } from "@taquito/utils";
-import type { RequestSignPayloadInput } from "@airgap/beacon-sdk";
-import { SigningType } from "./types";
+import { SigningType, type RequestSignPayloadInput } from "@airgap/beacon-sdk";
 import { get } from "svelte/store";
 import type { TestSettings, TestResult } from "./types";
 import store from "./store";
@@ -316,6 +315,29 @@ const signPayloadAndSend = async (
   }
 };
 
+const signFailingNoop = async (
+  input: string,
+  tezos: TezosToolkit,
+): Promise<TestResult> => {
+  const bytes = char2Bytes(input);
+  try {
+    const signedPayload = await tezos.wallet.signFailingNoop({
+      arbitrary: bytes,
+      basedOnBlock: 'head'
+    });
+
+    return {
+      success: true,
+      opHash: "",
+      output: signedPayload.signature,
+      sigDetails: { input, bytes: signedPayload.bytes, formattedInput: JSON.stringify(signedPayload.signedContent) },
+    };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "", output: JSON.stringify(error) };
+  }
+};
+
 const verifySignatureWithTaquito = async (
   input: string,
   wallet: BeaconWallet,
@@ -535,6 +557,7 @@ export const list = [
   "Use the Batch API for contract calls",
   "Sign the provided payload",
   "Sign and send the signature to the contract",
+  "Sign the provided payload in a failing noop",
   "Verify a provided signature",
   "Set the transaction limits",
   "Subscribe to confirmations",
@@ -673,6 +696,18 @@ export const init = (
       documentation: 'https://tezostaquito.io/docs/signing/#sending-the-signature-to-a-smart-contract',
       keyword: 'check_signature',
     run: input => signPayloadAndSend(input.text, wallet, contract),
+    showExecutionTime: false,
+    inputRequired: true,
+    inputType: "string",
+    lastResult: { option: "none", val: false }
+  },
+  {
+    id: "sign-failingNoop",
+    name: "Sign the provided payload in a failing noop",
+    description: "This test signs the payload provided by the user wrapped in a failing noop",
+    documentation: 'https://tezostaquito.io/docs/failing_noop',
+    keyword: 'failingNoop',
+    run: input => signFailingNoop(input.text, Tezos),
     showExecutionTime: false,
     inputRequired: true,
     inputType: "string",

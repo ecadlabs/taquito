@@ -1408,6 +1408,18 @@ export const commonCases: TestCase[] = [
         }
       ]
     }
+  },
+  {
+    name: 'A failing_noop operation',
+    operation: {
+      branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
+      contents: [
+        {
+          kind: OpKind.FAILING_NOOP,
+          arbitrary: '48656c6c6f20576f726c64'
+        }
+      ]
+    }
   }
 ];
 

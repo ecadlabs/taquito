@@ -49,6 +49,7 @@ import {
   PendingOperations,
   PendingOperationsQueryArguments,
   OriginationProofParams,
+  RPCSimulateOperationParam,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -224,6 +225,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse> {
     return this.rpc.runOperation(op, { block });
+  }
+  async simulateOperation(
+    op: RPCSimulateOperationParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PreapplyResponse> {
+    return this.rpc.simulateOperation(op, { block });
   }
   async runCode(
     code: RPCRunCodeParam,
