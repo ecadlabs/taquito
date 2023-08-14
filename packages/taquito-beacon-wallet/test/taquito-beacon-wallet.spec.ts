@@ -113,4 +113,16 @@ describe('Beacon Wallet tests', () => {
     expect(() => wallet['getSigningType'](new Uint8Array([5, 3]))).toThrow();
     expect(() => wallet['getSigningType'](new Uint8Array([7]))).toThrow();
   });
+
+  it('Verify sign throws for Micheline', async () => {
+    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
+    expect(
+      async () => await wallet.sign('48656C6C6F20576F726C64', new Uint8Array([5]))
+    ).rejects.toThrow();
+  });
+
+  it('Verify sign throws for Raw', async () => {
+    const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
+    expect(async () => await wallet.sign('48656C6C6F20576F726C64')).rejects.toThrow();
+  });
 });

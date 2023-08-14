@@ -25,6 +25,7 @@ import {
   WalletTransferParams,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
+import { UnsupportedActionError } from '@taquito/core';
 
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
@@ -193,6 +194,11 @@ export class BeaconWallet implements WalletProvider {
     }
     const watermarkedBytes = buf2hex(toBuffer(bb));
     const signingType = this.getSigningType(watermark);
+    if (signingType !== SigningType.OPERATION) {
+      throw new UnsupportedActionError(
+        `Taquito Beacon Wallet currently only supports signing operations, not ${signingType}`
+      );
+    }
     const { signature } = await this.client.requestSignPayload({
       payload: watermarkedBytes,
       signingType,
