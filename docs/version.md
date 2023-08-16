@@ -2,6 +2,81 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v17.2.0
+
+**Potential Breaking Changes** : 
+Further improved error classes
+ - In `@taquito/sapling` `InvalidMerkleRootError` is renamed to `InvalidMerkleTreeError`
+ - In `@taquito/sapling` `InvalidParameter` is renamed to `SaplingTransactionViewerError`
+ - In `@taquito/michel-codec` `InvalidContractError` is renamed to `InvalidMichelsonError`
+
+## Summary
+
+### New Features
+ - Added new RPC endpoint `simulateOperation` #2548
+ - Added support for signing `failingNoop` operation in `Contract API` and `Wallet API` #952 #2507
+
+### Bug Fixes
+- Updated sapling live code example contract on website #2542
+
+### Improvement
+ Improved error classes for the following packages:
+  - `@taquito-sapling` #2568
+  - `@taquito-michel-codec` #2568
+
+### Documentation
+ - Updated local forger documentation #2571
+ - Adjusted website wallet page design and removed website lambda view page broken link #1652
+
+### Internals
+ - Updated beacon dependency to v4.0.6 #2584
+ - Updated estimation process to use `simulateOperation()` instead of `runOperation()` #2548
+ - Updated website dependencies [PR#2587](https://github.com/ecadlabs/taquito/pull/2587)
+
+## `@taquito/taquito` - Add support of failing_noop operation in Contract and Wallet API
+Taquito now supports the `failing_noop` operation
+
+```
+const Tezos = new TezosToolkit(rpcUrl);
+
+Tezos.setWalletProvider(wallet)
+const signedW = await Tezos.wallet.signFailingNoop({
+arbitrary: char2Bytes("Hello World"),
+basedOnBlock: 0,
+});
+
+Tezos.setSignerProvider(signer)
+const signedC = await Tezos.contract.signFailingNoop({
+arbitrary: char2Bytes("Hello World"),
+basedOnBlock: 'genesis',
+});
+```
+
+## `@taquito/rpc` - Add support of simulateOperation RPC call
+
+```
+const Tezos = new TezosToolkit(rpcUrl)
+let account ='tz1...'
+let counter = Number((await Tezos.rpc.getContract(account, {block: 'head'})).counter)
+const op = {
+  chain_id: await Tezos.rpc.getChainId(),
+  operation: {
+    branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+    contents: [{
+      kind: OpKind.TRANSACTION,
+      counter: (counter + 1).toString(),
+      source: account,
+      destination: account,
+      fee: '0',
+      gas_limit: '1100',
+      storage_limit: '600',
+      amount: '1',
+    }]
+  }
+};
+
+let simulate = await Tezos.rpc.simulateOperation(op)).contents[0]
+```
 # Taquito v17.1.1
 ## Summary
 This is a patch release to fix a potential issue with `verifySignature()` and `hex2buf()` util method. 

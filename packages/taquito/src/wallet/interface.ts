@@ -57,10 +57,10 @@ export interface WalletProvider {
   /**
    * @description Request the wallet to sign a payload
    */
-  sign(signingRequest: { payload: string; watermark?: Uint8Array }): Promise<string>;
+  sign(bytes: string, watermark?: Uint8Array): Promise<string>;
 
   /**
    * @description Get the public key from the wallet
    */
-  getPublicKey(): Promise<string>;
+  getPK(): Promise<string>;
 }

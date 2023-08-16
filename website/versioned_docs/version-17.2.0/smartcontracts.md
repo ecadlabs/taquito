@@ -24,30 +24,35 @@ In this guide, we use a straightforward "counter" smart contract to illustrate h
 
 The counter contract has two entry points named `increment` and `decrement.` Taquito uses these entrypoints to generate corresponding javascript methods available to the developer.
 
-The counter contracts storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
+The counter contract's storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
 
-### Counter Contract in CameLIGO
+### Counter Contract in JSLIGO
 
-```ocaml
-type storage = int
+```
+type storage = int;
 
-(* variant defining pseudo multi-entrypoint actions *)
+type parameter =
+| ["Increment", int]
+| ["Decrement", int]
+| ["Reset"];
 
-type action =
-| Increment of int
-| Decrement of int
+type return_ = [list <operation>, storage];
 
-let add (a,b: int * int) : int = a + b
-let sub (a,b: int * int) : int = a - b
+/* Two entrypoints */
+const add = ([store, delta] : [storage, int]) : storage => store + delta;
+const sub = ([store, delta] : [storage, int]) : storage => store - delta;
 
-(* real entrypoint that re-routes the flow based on the action provided *)
-
-let main (p,s: action * storage) =
- let storage =
-   match p with
-   | Increment n -> add (s, n)
-   | Decrement n -> sub (s, n)
- in ([] : operation list), storage
+/* Main access point that dispatches to the entrypoints according to
+   the smart contract parameter. */
+const main = ([action, store] : [parameter, storage]) : return_ => {
+ return [
+   (list([]) as list <operation>),    // No operations
+   (match (action, {
+    Increment: (n: int) => add ([store, n]),
+    Decrement: (n: int) => sub ([store, n]),
+    Reset:     ()  => 0}))
+  ]
+};
 
 ```
 
@@ -56,35 +61,12 @@ You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 ### Counter Contract Michelson source code
 
 ```
-{ parameter (or (int %decrement) (int %increment)) ;
+{ parameter (or (or (int %decrement) (int %increment)) (unit %reset)) ;
   storage int ;
-  code { DUP ;
-         CDR ;
-         DIP { DUP } ;
-         SWAP ;
-         CAR ;
-         IF_LEFT
-           { DIP { DUP } ;
-             SWAP ;
-             DIP { DUP } ;
-             PAIR ;
-             DUP ;
-             CAR ;
-             DIP { DUP ; CDR } ;
-             SUB ;
-             DIP { DROP 2 } }
-           { DIP { DUP } ;
-             SWAP ;
-             DIP { DUP } ;
-             PAIR ;
-             DUP ;
-             CAR ;
-             DIP { DUP ; CDR } ;
-             ADD ;
-             DIP { DROP 2 } } ;
+  code { UNPAIR ;
+         IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { DROP 2 ; PUSH int 0 } ;
          NIL operation ;
-         PAIR ;
-         DIP { DROP 2 } } }
+         PAIR } }
 ```
 
 ## Loading the contract in Taquito
@@ -106,7 +88,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -121,7 +103,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
     println(JSON.stringify(methods, null, 2));
@@ -154,7 +136,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -168,7 +150,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
@@ -198,7 +180,7 @@ values={[
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((contract) => {
     const i = 7;
 
@@ -219,7 +201,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
+  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((contract) => {
     const i = 7;
 
