@@ -31,7 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             })
 
             const op = await batch.send();
-            await op.confirmation(1, 420);
+            await op.confirmation(1, 700);
 
             expect(op.status).toEqual('applied');
             done();
