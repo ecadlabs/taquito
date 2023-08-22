@@ -50,7 +50,7 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
       });
-      const pk = await Tezos.wallet.getPublicKey();
+      const pk = await Tezos.wallet.getPK();
       expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
       done();
     });
@@ -60,7 +60,7 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 'head',
       });
-      const pk = await Tezos.wallet.getPublicKey();
+      const pk = await Tezos.wallet.getPK();
       expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
       done();
     });
