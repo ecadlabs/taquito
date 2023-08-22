@@ -90,6 +90,16 @@ export class OrToken extends ComparableToken {
   }
 
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
+    if (
+      typeof args !== 'object' ||
+      Array.isArray(args) ||
+      args === null ||
+      Object.keys(args).length !== 1
+    ) {
+      throw new OrTokenDecodingError(
+        `EncodeObject expectes an object with a single key but got: ${JSON.stringify(args)}`
+      );
+    }
     const label = Object.keys(args)[0];
 
     const leftToken = this.createToken(this.val.args[0], this.idx);
