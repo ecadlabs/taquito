@@ -10,6 +10,8 @@ import {
   PermissionScope,
   getDAppClientInstance,
   SigningType,
+  BeaconEvent,
+  AccountInfo,
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
@@ -32,9 +34,38 @@ export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
+  // public pkh: string | undefined;
+  // public publickey: string | undefined;
+
+  public account: AccountInfo | undefined;
 
   constructor(options: DAppClientOptions) {
     this.client = getDAppClientInstance(options);
+
+    this.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
+      console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, data);
+      this.account = data;
+    });
+
+    this.client.subscribeToEvent(BeaconEvent.ACTIVE_TRANSPORT_SET, (data) => {
+      console.log(`${BeaconEvent.ACTIVE_TRANSPORT_SET} triggered: `, data);
+    });
+
+    this.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_SENT, (data) => {
+      console.log(`${BeaconEvent.BROADCAST_REQUEST_SENT} triggered: `, data);
+    });
+
+    this.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_SENT, (data) => {
+      console.log(`${BeaconEvent.OPERATION_REQUEST_SENT} triggered: `, data);
+    });
+
+    this.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_SENT, (data) => {
+      console.log(`${BeaconEvent.PERMISSION_REQUEST_SENT} triggered: `, data);
+    });
+
+    this.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_SENT, (data) => {
+      console.log(`${BeaconEvent.SIGN_REQUEST_SENT} triggered: `, data);
+    });
   }
 
   private validateRequiredScopesOrFail(
@@ -59,11 +90,15 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async getPKH() {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
+    // const account = await this.client.getActiveAccount();
+
+    if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
-    return account.address;
+    // if (!account) {
+    //   throw new BeaconWalletNotInitialized();
+    // }
+    return this.account.address;
   }
 
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
@@ -159,11 +194,18 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async sendOperations(params: any[]) {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
+    // const account = await this.client.getActiveAccount();
+    // if (!account) {
+    //   throw new BeaconWalletNotInitialized();
+    // }
+    // const permissions = account.scopes;
+
+    if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
-    const permissions = account.scopes;
+
+    const permissions = this.account.scopes;
+
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
     const { transactionHash } = await this.client.requestOperation({ operationDetails: params });
@@ -222,10 +264,16 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async getPK() {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
+    // const account = await this.client.getActiveAccount();
+    // if (!account) {
+    //   throw new BeaconWalletNotInitialized();
+    // }
+    // return account?.publicKey;
+
+    if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
-    return account?.publicKey;
+
+    return this.account.publicKey;
   }
 }
