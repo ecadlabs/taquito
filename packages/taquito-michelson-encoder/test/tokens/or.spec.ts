@@ -8,6 +8,8 @@ describe('Or token', () => {
   let tokenComplex: OrToken;
   let tokenComplexNoAnnots: OrToken;
   let tokenNestedOr: OrToken;
+  let token2LevelOrMixedAnnots: OrToken;
+  let token3LevelOrMixedAnnots: OrToken;
   let tokenNestedOrWithoutAnnot: OrToken;
   let tokenOrWithOption: OrToken;
   beforeEach(() => {
@@ -37,7 +39,10 @@ describe('Or token', () => {
                 prim: 'pair',
                 args: [
                   { prim: 'nat' },
-                  { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'timestamp' }] },
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'nat' }, { prim: 'timestamp' }],
+                  },
                 ],
                 annots: ['%option0'],
               },
@@ -45,7 +50,10 @@ describe('Or token', () => {
                 prim: 'pair',
                 args: [
                   { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'mutez' }] },
-                  { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'timestamp' }] },
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'nat' }, { prim: 'timestamp' }],
+                  },
                 ],
                 annots: ['%option1'],
               },
@@ -66,7 +74,10 @@ describe('Or token', () => {
                     prim: 'pair',
                     args: [
                       { prim: 'nat' },
-                      { prim: 'pair', args: [{ prim: 'mutez' }, { prim: 'timestamp' }] },
+                      {
+                        prim: 'pair',
+                        args: [{ prim: 'mutez' }, { prim: 'timestamp' }],
+                      },
                     ],
                     annots: ['%option3'],
                   },
@@ -90,14 +101,20 @@ describe('Or token', () => {
                 prim: 'pair',
                 args: [
                   { prim: 'nat' },
-                  { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'timestamp' }] },
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'nat' }, { prim: 'timestamp' }],
+                  },
                 ],
               },
               {
                 prim: 'pair',
                 args: [
                   { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'mutez' }] },
-                  { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'timestamp' }] },
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'nat' }, { prim: 'timestamp' }],
+                  },
                 ],
               },
             ],
@@ -113,7 +130,10 @@ describe('Or token', () => {
                     prim: 'pair',
                     args: [
                       { prim: 'nat' },
-                      { prim: 'pair', args: [{ prim: 'mutez' }, { prim: 'timestamp' }] },
+                      {
+                        prim: 'pair',
+                        args: [{ prim: 'mutez' }, { prim: 'timestamp' }],
+                      },
                     ],
                   },
                   { prim: 'nat' },
@@ -154,11 +174,52 @@ describe('Or token', () => {
               {
                 prim: 'or',
                 args: [
-                  { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'int' }], annots: ['%myPair'] },
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'nat' }, { prim: 'int' }],
+                    annots: ['%myPair'],
+                  },
                   { prim: 'string', annots: ['%myString'] },
                 ],
               },
               { prim: 'mutez', annots: ['%myTez'] },
+            ],
+          },
+        ],
+      },
+      0
+    ) as OrToken;
+    token2LevelOrMixedAnnots = createToken(
+      {
+        prim: 'or',
+        args: [
+          {
+            prim: 'or',
+            args: [{ prim: 'int' }, { prim: 'nat', annots: ['%A'] }],
+          },
+          {
+            prim: 'bool',
+          },
+        ],
+      },
+      0
+    ) as OrToken;
+    token3LevelOrMixedAnnots = createToken(
+      {
+        prim: 'or',
+        args: [
+          {
+            prim: 'bytes',
+          },
+          {
+            prim: 'or',
+            annots: ['A'],
+            args: [
+              {
+                prim: 'or',
+                args: [{ prim: 'int' }, { prim: 'nat' }],
+              },
+              { prim: 'bool' },
             ],
           },
         ],
@@ -208,7 +269,13 @@ describe('Or token', () => {
                   { prim: 'mutez' },
                   {
                     prim: 'option',
-                    args: [{ prim: 'or', args: [{ prim: 'int' }, { prim: 'string' }], annots: [] }],
+                    args: [
+                      {
+                        prim: 'or',
+                        args: [{ prim: 'int' }, { prim: 'string' }],
+                        annots: [],
+                      },
+                    ],
                     annots: [],
                   },
                 ],
@@ -246,8 +313,98 @@ describe('Or token', () => {
       );
     });
 
+    it('For nested or with mixed annots, generateSchema, encodeObject and execute should be consistent', () => {
+      const schema2LevelMixedannots = token2LevelOrMixedAnnots.generateSchema();
+      expect(schema2LevelMixedannots).toEqual({
+        __michelsonType: 'or',
+        schema: {
+          '0': { __michelsonType: 'int', schema: 'int' },
+          '2': { __michelsonType: 'bool', schema: 'bool' },
+          A: { __michelsonType: 'nat', schema: 'nat' },
+        },
+      });
+      const leftLeft = {
+        prim: 'Left',
+        args: [{ prim: 'Left', args: [{ int: '10' }] }],
+      };
+      const leftRight = {
+        prim: 'Left',
+        args: [{ prim: 'Right', args: [{ int: '10' }] }],
+      };
+      const right = {
+        prim: 'Right',
+        args: [{ prim: 'True' }],
+      };
+      expect(token2LevelOrMixedAnnots.EncodeObject({ 0: 10 })).toEqual(leftLeft);
+      expect(token2LevelOrMixedAnnots.Execute(leftLeft)).toEqual({
+        0: BigNumber(10),
+      });
+
+      expect(token2LevelOrMixedAnnots.EncodeObject({ A: 10 })).toEqual(leftRight);
+      expect(token2LevelOrMixedAnnots.Execute(leftRight)).toEqual({
+        A: BigNumber(10),
+      });
+      expect(token2LevelOrMixedAnnots.EncodeObject({ 2: true })).toEqual(right);
+      expect(token2LevelOrMixedAnnots.Execute(right)).toEqual({ 2: true });
+
+      let schema3LevelMixedannots = token3LevelOrMixedAnnots.generateSchema();
+      expect(schema3LevelMixedannots).toEqual({
+        __michelsonType: 'or',
+        schema: {
+          0: { __michelsonType: 'bytes', schema: 'bytes' },
+          1: { __michelsonType: 'int', schema: 'int' },
+          2: { __michelsonType: 'nat', schema: 'nat' },
+          3: { __michelsonType: 'bool', schema: 'bool' },
+        },
+      });
+      schema3LevelMixedannots = token3LevelOrMixedAnnots.ExtractSchema();
+      expect(schema3LevelMixedannots).toEqual({
+        0: 'bytes',
+        1: 'int',
+        2: 'nat',
+        3: 'bool',
+      });
+      schema3LevelMixedannots = token3LevelOrMixedAnnots.ExtractSignature();
+      expect(schema3LevelMixedannots).toEqual([
+        ['0', 'bytes'],
+        ['1', 'int'],
+        ['2', 'nat'],
+        ['3', 'bool'],
+      ]);
+      const leftLeftLeft = { prim: 'Left', args: [{ bytes: '5674' }] };
+      expect(token3LevelOrMixedAnnots.EncodeObject({ 0: '5674' })).toEqual(leftLeftLeft);
+      expect(token3LevelOrMixedAnnots.Execute(leftLeftLeft)).toEqual({
+        0: '5674',
+      });
+      const rightLeftLeft = {
+        prim: 'Right',
+        args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ int: '10' }] }] }],
+      };
+      expect(token3LevelOrMixedAnnots.EncodeObject({ 1: 10 })).toEqual(rightLeftLeft);
+      expect(token3LevelOrMixedAnnots.Execute(rightLeftLeft)).toEqual({
+        1: BigNumber(10),
+      });
+      const rightLeftRight = {
+        prim: 'Right',
+        args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ int: '10' }] }] }],
+      };
+      expect(token3LevelOrMixedAnnots.EncodeObject({ 2: 10 })).toEqual(rightLeftRight);
+      expect(token3LevelOrMixedAnnots.Execute(rightLeftRight)).toEqual({
+        2: BigNumber(10),
+      });
+      const righRigh = {
+        prim: 'Right',
+        args: [{ prim: 'Right', args: [{ prim: 'True' }] }],
+      };
+      expect(token3LevelOrMixedAnnots.EncodeObject({ 3: true })).toEqual(righRigh);
+      expect(token3LevelOrMixedAnnots.Execute(righRigh)).toEqual({ 3: true });
+    });
+
     it('Should encode properly', () => {
-      expect(token.EncodeObject({ intTest: 10 })).toEqual({ prim: 'Left', args: [{ int: '10' }] });
+      expect(token.EncodeObject({ intTest: 10 })).toEqual({
+        prim: 'Left',
+        args: [{ int: '10' }],
+      });
       expect(token.EncodeObject({ stringTest: '10' })).toEqual({
         prim: 'Right',
         args: [{ string: '10' }],
@@ -263,7 +420,9 @@ describe('Or token', () => {
       });
 
       expect(
-        tokenComplexNoAnnots.EncodeObject({ 0: { 0: 4, 1: 3, 2: '2019-09-06T15:08:29.000Z' } })
+        tokenComplexNoAnnots.EncodeObject({
+          0: { 0: 4, 1: 3, 2: '2019-09-06T15:08:29.000Z' },
+        })
       ).toEqual({
         prim: 'Left',
         args: [
@@ -274,7 +433,10 @@ describe('Or token', () => {
                 prim: 'Pair',
                 args: [
                   { int: '4' },
-                  { prim: 'Pair', args: [{ int: '3' }, { string: '2019-09-06T15:08:29.000Z' }] },
+                  {
+                    prim: 'Pair',
+                    args: [{ int: '3' }, { string: '2019-09-06T15:08:29.000Z' }],
+                  },
                 ],
               },
             ],
@@ -295,7 +457,10 @@ describe('Or token', () => {
                 prim: 'Pair',
                 args: [
                   { prim: 'Pair', args: [{ int: '3' }, { int: '4' }] },
-                  { prim: 'Pair', args: [{ int: '31' }, { string: '2019-09-06T15:08:29.000Z' }] },
+                  {
+                    prim: 'Pair',
+                    args: [{ int: '31' }, { string: '2019-09-06T15:08:29.000Z' }],
+                  },
                 ],
               },
             ],
@@ -305,11 +470,16 @@ describe('Or token', () => {
       expect(tokenComplexNoAnnots.EncodeObject({ 2: { 2: 3, 3: 'test' } })).toEqual({
         prim: 'Right',
         args: [
-          { prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }] },
+          {
+            prim: 'Left',
+            args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }],
+          },
         ],
       });
       expect(
-        tokenComplexNoAnnots.EncodeObject({ 3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' } })
+        tokenComplexNoAnnots.EncodeObject({
+          3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' },
+        })
       ).toEqual({
         prim: 'Right',
         args: [
@@ -341,7 +511,9 @@ describe('Or token', () => {
       });
 
       expect(
-        tokenComplex.EncodeObject({ option0: { 0: 4, 1: 3, 2: '2019-09-06T15:08:29.000Z' } })
+        tokenComplex.EncodeObject({
+          option0: { 0: 4, 1: 3, 2: '2019-09-06T15:08:29.000Z' },
+        })
       ).toEqual({
         prim: 'Left',
         args: [
@@ -352,7 +524,10 @@ describe('Or token', () => {
                 prim: 'Pair',
                 args: [
                   { int: '4' },
-                  { prim: 'Pair', args: [{ int: '3' }, { string: '2019-09-06T15:08:29.000Z' }] },
+                  {
+                    prim: 'Pair',
+                    args: [{ int: '3' }, { string: '2019-09-06T15:08:29.000Z' }],
+                  },
                 ],
               },
             ],
@@ -360,7 +535,9 @@ describe('Or token', () => {
         ],
       });
       expect(
-        tokenComplex.EncodeObject({ option1: { 1: 3, 2: 4, 3: 31, 4: '2019-09-06T15:08:29.000Z' } })
+        tokenComplex.EncodeObject({
+          option1: { 1: 3, 2: 4, 3: 31, 4: '2019-09-06T15:08:29.000Z' },
+        })
       ).toEqual({
         prim: 'Left',
         args: [
@@ -371,7 +548,10 @@ describe('Or token', () => {
                 prim: 'Pair',
                 args: [
                   { prim: 'Pair', args: [{ int: '3' }, { int: '4' }] },
-                  { prim: 'Pair', args: [{ int: '31' }, { string: '2019-09-06T15:08:29.000Z' }] },
+                  {
+                    prim: 'Pair',
+                    args: [{ int: '31' }, { string: '2019-09-06T15:08:29.000Z' }],
+                  },
                 ],
               },
             ],
@@ -381,11 +561,16 @@ describe('Or token', () => {
       expect(tokenComplex.EncodeObject({ option2: { 2: 3, 3: 'test' } })).toEqual({
         prim: 'Right',
         args: [
-          { prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }] },
+          {
+            prim: 'Left',
+            args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }],
+          },
         ],
       });
       expect(
-        tokenComplex.EncodeObject({ option3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' } })
+        tokenComplex.EncodeObject({
+          option3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' },
+        })
       ).toEqual({
         prim: 'Right',
         args: [
@@ -424,7 +609,12 @@ describe('Or token', () => {
             args: [
               {
                 prim: 'Right',
-                args: [{ prim: 'Some', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }],
+                args: [
+                  {
+                    prim: 'Some',
+                    args: [{ prim: 'Right', args: [{ string: 'test' }] }],
+                  },
+                ],
               },
             ],
           },
@@ -435,14 +625,23 @@ describe('Or token', () => {
 
   describe('Encode', () => {
     it('Should encode properly', () => {
-      expect(token.Encode([10, 'intTest'])).toEqual({ prim: 'Left', args: [{ int: '10' }] });
+      expect(token.Encode([10, 'intTest'])).toEqual({
+        prim: 'Left',
+        args: [{ int: '10' }],
+      });
       expect(token.Encode(['10', 'stringTest'])).toEqual({
         prim: 'Right',
         args: [{ string: '10' }],
       });
 
-      expect(tokenNoAnnots.Encode([10, 0])).toEqual({ prim: 'Left', args: [{ int: '10' }] });
-      expect(tokenNoAnnots.Encode(['10', 1])).toEqual({ prim: 'Right', args: [{ string: '10' }] });
+      expect(tokenNoAnnots.Encode([10, 0])).toEqual({
+        prim: 'Left',
+        args: [{ int: '10' }],
+      });
+      expect(tokenNoAnnots.Encode(['10', 1])).toEqual({
+        prim: 'Right',
+        args: [{ string: '10' }],
+      });
 
       //last element of the array is the index
       expect(tokenComplexNoAnnots.Encode(['2019-09-06T15:08:29.000Z', 3, 4, 0])).toEqual({
@@ -455,7 +654,10 @@ describe('Or token', () => {
                 prim: 'Pair',
                 args: [
                   { int: '4' },
-                  { prim: 'Pair', args: [{ int: '3' }, { string: '2019-09-06T15:08:29.000Z' }] },
+                  {
+                    prim: 'Pair',
+                    args: [{ int: '3' }, { string: '2019-09-06T15:08:29.000Z' }],
+                  },
                 ],
               },
             ],
@@ -472,7 +674,10 @@ describe('Or token', () => {
                 prim: 'Pair',
                 args: [
                   { prim: 'Pair', args: [{ int: '3' }, { int: '4' }] },
-                  { prim: 'Pair', args: [{ int: '31' }, { string: '2019-09-06T15:08:29.000Z' }] },
+                  {
+                    prim: 'Pair',
+                    args: [{ int: '31' }, { string: '2019-09-06T15:08:29.000Z' }],
+                  },
                 ],
               },
             ],
@@ -482,7 +687,10 @@ describe('Or token', () => {
       expect(tokenComplexNoAnnots.Encode(['test', 3, 2])).toEqual({
         prim: 'Right',
         args: [
-          { prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }] },
+          {
+            prim: 'Left',
+            args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }],
+          },
         ],
       });
       expect(tokenComplexNoAnnots.Encode(['2019-09-06T15:08:29.000Z', 3, 4, 3])).toEqual({
@@ -526,7 +734,10 @@ describe('Or token', () => {
                 prim: 'Pair',
                 args: [
                   { int: '4' },
-                  { prim: 'Pair', args: [{ int: '3' }, { string: '2019-09-06T15:08:29.000Z' }] },
+                  {
+                    prim: 'Pair',
+                    args: [{ int: '3' }, { string: '2019-09-06T15:08:29.000Z' }],
+                  },
                 ],
               },
             ],
@@ -543,7 +754,10 @@ describe('Or token', () => {
                 prim: 'Pair',
                 args: [
                   { prim: 'Pair', args: [{ int: '3' }, { int: '4' }] },
-                  { prim: 'Pair', args: [{ int: '31' }, { string: '2019-09-06T15:08:29.000Z' }] },
+                  {
+                    prim: 'Pair',
+                    args: [{ int: '31' }, { string: '2019-09-06T15:08:29.000Z' }],
+                  },
                 ],
               },
             ],
@@ -553,7 +767,10 @@ describe('Or token', () => {
       expect(tokenComplex.Encode(['test', 3, 'option2'])).toEqual({
         prim: 'Right',
         args: [
-          { prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }] },
+          {
+            prim: 'Left',
+            args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }],
+          },
         ],
       });
       expect(tokenComplex.Encode(['2019-09-06T15:08:29.000Z', 3, 4, 'option3'])).toEqual({
@@ -589,7 +806,10 @@ describe('Or token', () => {
 
     describe('ExtractSchema', () => {
       it('Should extract schema properly', () => {
-        expect(token.ExtractSchema()).toEqual({ intTest: 'int', stringTest: 'string' });
+        expect(token.ExtractSchema()).toEqual({
+          intTest: 'int',
+          stringTest: 'string',
+        });
 
         expect(token.generateSchema()).toEqual({
           __michelsonType: 'or',
@@ -605,7 +825,10 @@ describe('Or token', () => {
           },
         });
 
-        expect(tokenNoAnnots.ExtractSchema()).toEqual({ 0: 'int', 1: 'string' });
+        expect(tokenNoAnnots.ExtractSchema()).toEqual({
+          0: 'int',
+          1: 'string',
+        });
 
         expect(tokenNoAnnots.generateSchema()).toEqual({
           __michelsonType: 'or',
@@ -857,19 +1080,34 @@ describe('Or token', () => {
         expect(
           tokenNestedOr.Execute({
             prim: 'Left',
-            args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }],
+            args: [
+              {
+                prim: 'Left',
+                args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }],
+              },
+            ],
           })
         ).toEqual({ myBytes: 'aaaa' }); // { 0: { 0: 'aaaa' } }
         expect(
           tokenNestedOr.Execute({
             prim: 'Left',
-            args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '34' }] }] }],
+            args: [
+              {
+                prim: 'Right',
+                args: [{ prim: 'Left', args: [{ int: '34' }] }],
+              },
+            ],
           })
         ).toEqual({ myInt: new BigNumber(34) }); // { 0: { "myInt": new BigNumber(34) } }
         expect(
           tokenNestedOr.Execute({
             prim: 'Left',
-            args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '6' }] }] }],
+            args: [
+              {
+                prim: 'Right',
+                args: [{ prim: 'Right', args: [{ int: '6' }] }],
+              },
+            ],
           })
         ).toEqual({ myNat: new BigNumber(6) }); // { 0: '6'  }
         expect(
@@ -879,7 +1117,10 @@ describe('Or token', () => {
               {
                 prim: 'Left',
                 args: [
-                  { prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '3' }, { int: '4' }] }] },
+                  {
+                    prim: 'Left',
+                    args: [{ prim: 'Pair', args: [{ int: '3' }, { int: '4' }] }],
+                  },
                 ],
               },
             ],
@@ -888,11 +1129,19 @@ describe('Or token', () => {
         expect(
           tokenNestedOr.Execute({
             prim: 'Right',
-            args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }],
+            args: [
+              {
+                prim: 'Left',
+                args: [{ prim: 'Right', args: [{ string: 'test' }] }],
+              },
+            ],
           })
         ).toEqual({ myString: 'test' }); // { 4: 'test' }
         expect(
-          tokenNestedOr.Execute({ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '4' }] }] })
+          tokenNestedOr.Execute({
+            prim: 'Right',
+            args: [{ prim: 'Right', args: [{ int: '4' }] }],
+          })
         ).toEqual({ myTez: new BigNumber(4) }); // '4'
 
         expect(
@@ -914,19 +1163,34 @@ describe('Or token', () => {
         expect(
           tokenNestedOrWithoutAnnot.Execute({
             prim: 'Left',
-            args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }] }],
+            args: [
+              {
+                prim: 'Left',
+                args: [{ prim: 'Right', args: [{ bytes: 'aaaa' }] }],
+              },
+            ],
           })
         ).toEqual({ 1: 'aaaa' }); // { 0: { 0: 'aaaa' } }
         expect(
           tokenNestedOrWithoutAnnot.Execute({
             prim: 'Left',
-            args: [{ prim: 'Right', args: [{ prim: 'Left', args: [{ int: '34' }] }] }],
+            args: [
+              {
+                prim: 'Right',
+                args: [{ prim: 'Left', args: [{ int: '34' }] }],
+              },
+            ],
           })
         ).toEqual({ 2: new BigNumber(34) }); // { 0: { "myInt": new BigNumber(34) } }
         expect(
           tokenNestedOrWithoutAnnot.Execute({
             prim: 'Left',
-            args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '6' }] }] }],
+            args: [
+              {
+                prim: 'Right',
+                args: [{ prim: 'Right', args: [{ int: '6' }] }],
+              },
+            ],
           })
         ).toEqual({ 3: new BigNumber(6) }); // { 0: '6'  }
         expect(
@@ -936,7 +1200,10 @@ describe('Or token', () => {
               {
                 prim: 'Left',
                 args: [
-                  { prim: 'Left', args: [{ prim: 'Pair', args: [{ int: '3' }, { int: '4' }] }] },
+                  {
+                    prim: 'Left',
+                    args: [{ prim: 'Pair', args: [{ int: '3' }, { int: '4' }] }],
+                  },
                 ],
               },
             ],
@@ -945,7 +1212,12 @@ describe('Or token', () => {
         expect(
           tokenNestedOrWithoutAnnot.Execute({
             prim: 'Right',
-            args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ string: 'test' }] }] }],
+            args: [
+              {
+                prim: 'Left',
+                args: [{ prim: 'Right', args: [{ string: 'test' }] }],
+              },
+            ],
           })
         ).toEqual({ 5: 'test' }); // { 4: 'test' }
         expect(

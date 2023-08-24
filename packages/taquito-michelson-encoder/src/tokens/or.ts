@@ -90,16 +90,7 @@ export class OrToken extends ComparableToken {
   }
 
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
-    if (
-      typeof args !== 'object' ||
-      Array.isArray(args) ||
-      args === null ||
-      Object.keys(args).length !== 1
-    ) {
-      throw new OrTokenDecodingError(
-        `EncodeObject expectes an object with a single key but got: ${JSON.stringify(args)}`
-      );
-    }
+    this.validateJavascriptObject(args);
     const label = Object.keys(args)[0];
 
     const leftToken = this.createToken(this.val.args[0], this.idx);
@@ -129,6 +120,19 @@ export class OrToken extends ComparableToken {
         }
       }
       return null;
+    }
+  }
+
+  private validateJavascriptObject(args: any): asserts args is Record<string, any> {
+    if (
+      typeof args !== 'object' ||
+      Array.isArray(args) ||
+      args === null ||
+      Object.keys(args).length !== 1
+    ) {
+      throw new OrTokenDecodingError(
+        `EncodeObject expectes an object with a single key but got: ${JSON.stringify(args)}`
+      );
     }
   }
 
@@ -173,7 +177,7 @@ export class OrToken extends ComparableToken {
     const leftToken = this.createToken(this.val.args[0], this.idx);
     let keyCount = 1;
     let leftValue;
-    if (leftToken instanceof OrToken && !leftToken.hasAnnotations()) {
+    if (leftToken instanceof OrToken) {
       leftValue = getLeftValue(leftToken);
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     } else {
@@ -182,7 +186,7 @@ export class OrToken extends ComparableToken {
 
     const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
     let rightValue;
-    if (rightToken instanceof OrToken && !rightToken.hasAnnotations()) {
+    if (rightToken instanceof OrToken) {
       rightValue = getRightValue(rightToken);
     } else {
       rightValue = { [rightToken.annot()]: getRightValue(rightToken) };
@@ -213,14 +217,14 @@ export class OrToken extends ComparableToken {
       __michelsonType: OrToken.prim,
       schema: this.traversal(
         (leftToken) => {
-          if (leftToken instanceof OrToken && !leftToken.hasAnnotations()) {
+          if (leftToken instanceof OrToken) {
             return leftToken.generateSchema().schema;
           } else {
             return leftToken.generateSchema();
           }
         },
         (rightToken) => {
-          if (rightToken instanceof OrToken && !rightToken.hasAnnotations()) {
+          if (rightToken instanceof OrToken) {
             return rightToken.generateSchema().schema;
           } else {
             return rightToken.generateSchema();
