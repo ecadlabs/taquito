@@ -920,7 +920,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
       const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
-        adaptive_issuance_launch_ema_threshold: 10000000,
+        adaptive_issuance_launch_ema_threshold: 100000000,
         adaptive_rewards_params: {
           center_dz: {
             denominator: "2",
@@ -928,11 +928,11 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
           },
           growth_rate: "115740740",
           issuance_ratio_max: {
-            denominator: "10",
+            denominator: "20",
             numerator: "1",
           },
           issuance_ratio_min: {
-            denominator: "200",
+            denominator: "2000",
             numerator: "1",
           },
           max_bonus: "50000000000000",
@@ -954,7 +954,7 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(-1),
         origination_size: 257,
-        percentage_of_frozen_deposits_slashed_per_double_baking: 11,
+        percentage_of_frozen_deposits_slashed_per_double_baking: 10,
         percentage_of_frozen_deposits_slashed_per_double_attestation: 50,
         cost_per_byte: new BigNumber(250),
         hard_storage_limit_per_operation: new BigNumber(60000),
@@ -985,9 +985,9 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
           numerator: 2,
         },
         max_slashing_period: 2,
-        minimal_block_delay: new BigNumber(7),
+        minimal_block_delay: new BigNumber(15),
         minimal_frozen_stake: "600000000",
-        delay_increment_per_round: new BigNumber(7),
+        delay_increment_per_round: new BigNumber(15),
         edge_of_staking_over_delegation: 2,
         global_limit_of_staking_over_baking: 5,
         dal_parametric: {
@@ -1021,9 +1021,9 @@ CONFIGS().forEach(({ lib, protocol, rpc }) => {
         smart_rollup_message_size_limit: 4096,
         smart_rollup_number_of_sections_in_dissection: 32,
         smart_rollup_origination_size: 6314,
-        smart_rollup_private_enable: true,
+        smart_rollup_private_enable: false,
         smart_rollup_reveal_activation_level: {
-          dal_page: 0,
+          dal_page: 513,
           metadata: 0,
           raw_data: {
             Blake2B: 0,
