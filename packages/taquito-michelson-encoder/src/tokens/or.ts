@@ -24,8 +24,8 @@ export class OrTokenDecodingError extends TaquitoError {
  *  @category Error
  *  @description Error that indicates a failure happening when parsing encoding/executing an OrToken
  */
-export class OrTokenValidationError extends TokenValidationError {
-  name = 'OrTokenValidationError';
+export class OrValidationError extends TokenValidationError {
+  name = 'OrValidationError';
   constructor(public value: any, public token: OrToken, message: string) {
     super(value, token, message);
   }
@@ -108,7 +108,7 @@ export class OrToken extends ComparableToken {
   }
 
   /**
-   * @throws {@link OrTokenValidationError}
+   * @throws {@link OrValidationError}
    */
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     this.validateJavascriptObject(args);
@@ -145,7 +145,7 @@ export class OrToken extends ComparableToken {
   }
 
   /**
-   * @throws {@link OrTokenValidationError}
+   * @throws {@link OrValidationError}
    */
   private validateJavascriptObject(args: any): asserts args is Record<string, any> {
     if (
@@ -154,7 +154,7 @@ export class OrToken extends ComparableToken {
       args === null ||
       Object.keys(args).length !== 1
     ) {
-      throw new OrTokenValidationError(
+      throw new OrValidationError(
         args,
         this,
         `EncodeObject expectes an object with a single key but got: ${JSON.stringify(args)}`
