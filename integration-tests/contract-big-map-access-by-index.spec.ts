@@ -8,12 +8,11 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
 
     // In this scenario the code of the contract doesn't have annotation in its storage, so Taquito references element by indexes. 
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
 
-    it('Verify origination of a contract having a bigMap in its storage using contract.originate and the Storage/BigMap can be fetched', async (done) => {
+    it('Verify origination of a contract having a bigMap in its storage using contract.originate and the Storage/BigMap can be fetched', async () => {
       // Deploy a contract with a big map
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -32,19 +31,17 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       const bigMapValue = await bigMap.get(await Tezos.signer.publicKeyHash())
       expect(bigMapValue['0'].toString()).toEqual("2")
       expect(bigMapValue['1']).toEqual(expect.objectContaining(new MichelsonMap()))
-      done();
     })
 
 
-    it('Verify that it returns undefined when BigMap key is not found', async (done) => {
+    it('Verify that it returns undefined when BigMap key is not found', async () => {
       const myContract = await Tezos.contract.at(knownBigMapContract);
       const contractStorage: any = await myContract.storage();
       const value = await contractStorage.ledger.get("tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB")
       expect(value).toBeUndefined();
-      done()
     })
 
-    it('Verify contract.originate with BigMap and the value in the BigMap can be fetched using local packing', async (done) => {
+    it('Verify contract.originate with BigMap and the value in the BigMap can be fetched using local packing', async () => {
 
       // Configure the Tezostoolkit to use the MichelCodecPacker (the data will be packed locally instead of using the rpc)
       Tezos.setPackerProvider(new MichelCodecPacker());
@@ -67,7 +64,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       const bigMapValue = await bigMap.get(await Tezos.signer.publicKeyHash())
       expect(bigMapValue['0'].toString()).toEqual("2")
       expect(bigMapValue['1']).toEqual(expect.objectContaining(new MichelsonMap()))
-      done();
     })
   });
 })

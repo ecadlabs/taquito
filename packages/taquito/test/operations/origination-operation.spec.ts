@@ -145,7 +145,7 @@ describe('Origination operation', () => {
   });
 
   describe('Contract', () => {
-    it('should return proper confirmation head', async (done) => {
+    it('should return proper confirmation head', async () => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };
@@ -161,10 +161,9 @@ describe('Origination operation', () => {
       );
       const confirmation = await op.confirmation();
       expect(confirmation).toEqual(200);
-      done();
     });
 
-    it('should create a contract given a successful result', async (done) => {
+    it('should create a contract given a successful result', async () => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };
@@ -181,10 +180,9 @@ describe('Origination operation', () => {
       const contract = await op.contract();
       expect(contract).toBe('contract');
       expect(fakeContractProvider.at).toHaveBeenCalledWith('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD');
-      done();
     });
 
-    it('should throw an error if no contract is available', async (done) => {
+    it('should throw an error if no contract is available', async () => {
       const fakeContractProvider: any = {
         at: jest.fn(),
       };
@@ -202,7 +200,6 @@ describe('Origination operation', () => {
       await expect(op.contract()).rejects.toEqual(
         new Error('No contract was originated in this operation')
       );
-      done();
     });
   });
 

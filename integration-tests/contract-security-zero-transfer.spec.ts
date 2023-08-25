@@ -8,10 +8,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-
-      done();
     });
 
     mondaynet('Verify that Transactions of 0ꜩ towards a contract without code are forbidden', async () => {

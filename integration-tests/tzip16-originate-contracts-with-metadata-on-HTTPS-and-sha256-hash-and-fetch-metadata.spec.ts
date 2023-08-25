@@ -13,9 +13,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     describe(`Test contract origination having a sha256 hash in URI through contract api using: ${rpc}`, () => {
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup()
-            done()
         })
 
         test('Verify contract.originate for a contract having a sha256 hash in URI', 2, async (done: () => void) => {
@@ -46,7 +45,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             contractAddress = (await op.contract()).address;
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-            done();
         });
 
         test('Verify that the metadata for the contract having a sha256 hash in URI can be fetched', 2, async (done: () => void) => {
@@ -94,8 +92,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataViews()).toEqual({});
-
-            done();
         });
 
         test('Verify contract.originate for a contract having an invalid sha256 hash in URI', 2, async (done: () => void) => {
@@ -126,7 +122,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             contractAddressInvalidHash = (await op.contract()).address;
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-            done();
         });
 
         test('Verify that the metadata for the contract having an invalid sha256 hash in URI can be fetched', 2, async (done: () => void) => {
@@ -174,8 +169,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataViews()).toEqual({});
-
-            done();
         });
     });
 })

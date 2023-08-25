@@ -4,12 +4,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test injecting more than one manager operation in a block: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    it('Verify that doing transfers without awaiting the confirmation after each will fail', async (done) => {
+    it('Verify that doing transfers without awaiting the confirmation after each will fail', async () => {
       try {
         const op1 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 1 });
         const op2 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 });
@@ -20,7 +19,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         // not checking for exact error message because it is not deterministic
         expect(error.message).toBeDefined();
       }
-      done();
     });
   });
 });

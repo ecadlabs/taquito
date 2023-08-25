@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, setup }) => {
   const Tezos = lib;
   describe(`Test nested options contract`, () => {
     let nestedOptionsContract: DefaultContractType;
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup();
       const nestedOptionsOriginate = await Tezos.contract.originate({
         code: `{
@@ -37,9 +37,8 @@ CONFIGS().forEach(({ lib, setup }) => {
       });
       await nestedOptionsOriginate.confirmation();
       nestedOptionsContract = await nestedOptionsOriginate.contract();
-      done()
     })
-    it('making contract calls with methodsObject', async (done)=>{
+    it('making contract calls with methodsObject', async () =>{
       const nested2None1 = await nestedOptionsContract.methodsObject.default(null).send();
       await nested2None1.confirmation();
       expect(await nestedOptionsContract.storage()).toEqual('nested2 null');
@@ -55,7 +54,6 @@ CONFIGS().forEach(({ lib, setup }) => {
       const nested2SomeNone = await nestedOptionsContract.methodsObject.default({Some: null}).send();
       await nested2SomeNone.confirmation();
       expect(await nestedOptionsContract.storage()).toEqual('nested1 null');
-      done();
     });
   });
 });

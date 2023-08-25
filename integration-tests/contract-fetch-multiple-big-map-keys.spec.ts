@@ -9,12 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     describe(`Test contract origination with multiple BigMap variations through contract api using: ${rpc}`, () => {
         /**  The contract code doesn't have annotations, so the keys of the storage and of the bigmap are indexes. */
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup();
-            done();
         });
 
-        test('Verify contract.originate for a contract with a BigMap with multiple values to be indexed (also fetching the Storage/BigMap)', async (done) => {
+        test('Verify contract.originate for a contract with a BigMap with multiple values to be indexed (also fetching the Storage/BigMap)', async () => {
 
             const signer = await Tezos.signer.publicKeyHash();
 
@@ -77,8 +76,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             expect(bigMapValuesWithLevel.get('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')!['0'].toString()).toEqual('3');
             expect(bigMapValuesWithLevel.get('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
-
-            done();
         });
     });
 });

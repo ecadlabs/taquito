@@ -14,15 +14,14 @@ CONFIGS().forEach(({ lib, setup }) => {
     describe('Test LedgerSigner declining operations to verify that Ledger throw a proper error', () => {
         let transport: LedgerTransport;
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             transport = await TransportNodeHid.create();
             await setup();
-            done();
         });
 
         describe('Test to verify that user can decline all prompts on the ledger device', () => {
             
-            it('Verify that Ledger will throw an error when public key is declined', async (done) => {
+            it('Verify that Ledger will throw an error when public key is declined', async () => {
                 const signer = new LedgerSigner(
                     transport,
                     "44'/1729'/0'/0'",
@@ -35,10 +34,9 @@ CONFIGS().forEach(({ lib, setup }) => {
                 catch (error: any) {
                     expect(error.message).toBe(`Unable to retrieve public key from Ledger`);
                 }
-                done();
             });
 
-            it('Verify that Ledger will throw an error when signing is declined', async (done) => {
+            it('Verify that Ledger will throw an error when signing is declined', async () => {
                 const signer = new LedgerSigner(
                     transport,
                     "44'/1729'/0'/0'",
@@ -53,14 +51,13 @@ CONFIGS().forEach(({ lib, setup }) => {
                 catch (error: any) {
                     expect(error.message).toBe("Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)")
                 }
-                done();
             });
 
             describe('Test that Ledger can be used with wallet API', () => {
                 
                 jest.setTimeout(60000)
 
-                it('Verify that Ledger will throw an error when a transaction is declined', async (done) => {
+                it('Verify that Ledger will throw an error when a transaction is declined', async () => {
                     const signer = new LedgerSigner(
                         transport,
                         "44'/1729'/0'/0'",
@@ -75,13 +72,12 @@ CONFIGS().forEach(({ lib, setup }) => {
                     catch (error: any) {
                         expect(error.message).toBe("Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)")
                     }
-                    done();
                 });
             });
 
             describe('Should be able to use Ledger with contract API', () => {
                 jest.setTimeout(60000)
-                it('Should throw error when user declines to originate contract with Ledger', async (done) => {
+                it('Should throw error when user declines to originate contract with Ledger', async () => {
                     const signer = new LedgerSigner(
                         transport,
                         "44'/1729'/0'/0'",
@@ -100,7 +96,6 @@ CONFIGS().forEach(({ lib, setup }) => {
                     catch (error: any) {
                         expect(error.message).toBe("Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)")
                     }
-                    done();
                 });
             })
         });

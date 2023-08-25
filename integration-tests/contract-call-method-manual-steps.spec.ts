@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
     describe(`Test obtain operation hash before sending the operation to the node ${rpc}`, () => {
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup(true);
-            done();
         });
-        test('Estimates, forges, signs, obtains the operation hash and injects the operation', async (done) => {
+        test('Estimates, forges, signs, obtains the operation hash and injects the operation', async () => {
             // We deploy a simple contract that will be used in the next steps
             const code = `parameter nat; storage nat; code { CAR ; NIL operation ; PAIR }`;
             const opOrigination = await Tezos.contract.originate({
@@ -72,7 +71,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const opHashFromRpc = await Tezos.rpc.injectOperation(signOp.sbytes)
 
             expect(opHash).toEqual(opHashFromRpc);
-            done();
         });
     });
 

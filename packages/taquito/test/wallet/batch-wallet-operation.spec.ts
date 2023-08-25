@@ -28,7 +28,7 @@ describe('BatchWalletOperation', () => {
   let testScheduler: TestScheduler;
   // TODO: investigate how expectSubscription() works
 
-  it('should emit confirmation after receiving seeing operation in block ', async (done) => {
+  it('should emit confirmation after receiving seeing operation in block ', async () => {
     testScheduler = new TestScheduler((actual, expected) => {
       expect(actual[0]).toMatchObject(expected[0]);
     });
@@ -57,11 +57,9 @@ describe('BatchWalletOperation', () => {
         },
       });
     });
-
-    done();
   });
 
-  it('should emit complete false confirmation when given 2 confirmations', async (done) => {
+  it('should emit complete false confirmation when given 2 confirmations', async () => {
     testScheduler = new TestScheduler((actual, expected) => {
       expect(actual[0]).toMatchObject(expected[0]);
     });
@@ -90,11 +88,9 @@ describe('BatchWalletOperation', () => {
         },
       });
     });
-
-    done();
   });
 
-  it('should emit 2 confirmations given the operation is included in the 1st block and a new head is applied on top', async (done) => {
+  it('should emit 2 confirmations given the operation is included in the 1st block and a new head is applied on top', async () => {
     testScheduler = new TestScheduler((actual, expected) => {
       // TODO: expectObservable() only receives the last value of the observable, investigate why
       expect(actual[0]).toMatchObject(expected[1]);
@@ -131,12 +127,10 @@ describe('BatchWalletOperation', () => {
         },
       });
     });
-
-    done();
   });
 
   describe('Receipt', () => {
-    it('should return operation result after the operation is included in a block', async (done) => {
+    it('should return operation result after the operation is included in a block', async () => {
       testScheduler.run(async ({ cold, flush }) => {
         const blockObs = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -153,13 +147,11 @@ describe('BatchWalletOperation', () => {
 
         expect(result).toEqual([]);
       });
-
-      done();
     });
   });
 
   describe('getCurrentConfirmation', () => {
-    it('should return 0 when operation is not included', async (done) => {
+    it('should return 0 when operation is not included', async () => {
       testScheduler.run(async ({ cold, flush }) => {
         const blockObs = cold<BlockResponse>('--a', {
           a: createFakeBlock(1),
@@ -175,11 +167,9 @@ describe('BatchWalletOperation', () => {
 
         expect(await op.getCurrentConfirmation()).toEqual(0);
       });
-
-      done();
     });
 
-    it('should return 1 when there is 1 confirmation', async (done) => {
+    it('should return 1 when there is 1 confirmation', async () => {
       testScheduler.run(async ({ cold, flush }) => {
         const blockObs = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -198,11 +188,9 @@ describe('BatchWalletOperation', () => {
         flush();
         expect(await op.getCurrentConfirmation()).toEqual(1);
       });
-
-      done();
     });
 
-    it('should return 2 when there is 2 confirmation', async (done) => {
+    it('should return 2 when there is 2 confirmation', async () => {
       testScheduler.run(async ({ cold, flush }) => {
         const blockObs = cold<BlockResponse>('--a--b', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -222,13 +210,11 @@ describe('BatchWalletOperation', () => {
         flush();
         expect(await op.getCurrentConfirmation()).toEqual(2);
       });
-
-      done();
     });
   });
 
   describe('getOriginatedContractAddresses', () => {
-    it('should be able to retrieve originated contract addresses', async (done) => {
+    it('should be able to retrieve originated contract addresses', async () => {
       testScheduler.run(async ({ cold, flush }) => {
         const blockObs = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -251,11 +237,9 @@ describe('BatchWalletOperation', () => {
           'KT1Em8ALyerHtZd1s5s6quJDZrTRxnmdKcKd',
         ]);
       });
-
-      done();
     });
 
-    it('should be able to retrieve multiple originated contract addresses', async (done) => {
+    it('should be able to retrieve multiple originated contract addresses', async () => {
       testScheduler.run(async ({ cold, flush }) => {
         const blockObs = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -277,11 +261,10 @@ describe('BatchWalletOperation', () => {
           'KT1Wr1xjQAzb44AcPRV9F9oyPurkFz7y2otC',
           'KT1SG1LfkoMoEqR5srtiYeYcciaZfBTGzTgY',
         ]);
-        done();
       });
     });
 
-    it('should be able to handle empty undefined originated_contracts elegantly', async (done) => {
+    it('should be able to handle empty undefined originated_contracts elegantly', async () => {
       testScheduler.run(async ({ cold, flush }) => {
         const blockObs = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -301,8 +284,6 @@ describe('BatchWalletOperation', () => {
         expect(result).toEqual(resultWithoutOrigination);
         expect(await op.getOriginatedContractAddresses()).toEqual([]);
       });
-
-      done();
     });
   });
 });

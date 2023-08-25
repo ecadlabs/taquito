@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Sapling transactions: ${rpc}`, () => {
 
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup();
 
       const saplingContractOrigination = await Tezos.contract.originate({
@@ -68,11 +68,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       paymentAddress3Index0 = (await inMemoryViewingKey3.getAddress(0)).address;
       paymentAddress3Index5 = (await inMemoryViewingKey3.getAddress(5)).address;
       paymentAddress3Index8 = (await inMemoryViewingKey3.getAddress(8)).address;
-
-      done();
     });
 
-    it('Prepare and inject 3 batched shielded transactions', async (done) => {
+    it('Prepare and inject 3 batched shielded transactions', async () => {
 
       const shieldedTx = await saplingToolkit1.prepareShieldedTransaction([{
         to: paymentAddress1Index0,
@@ -96,11 +94,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      done();
     });
 
-    it('Verify balances after the shielded tx', async (done) => {
+    it('Verify balances after the shielded tx', async () => {
       const balance1 = await txViewer1.getBalance();
       const inputs1 = await txViewer1.getIncomingAndOutgoingTransactions();
 
@@ -148,10 +144,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         ],
         outgoing: []
       })
-      done();
     });
 
-    it('Prepare and inject batched sapling transactions', async (done) => {
+    it('Prepare and inject batched sapling transactions', async () => {
 
       const tx = await saplingToolkit1.prepareSaplingTransaction([{
         to: paymentAddress2Index0,
@@ -196,11 +191,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      done();
     });
 
-    it('Verify balances after the sapling transactions', async (done) => {
+    it('Verify balances after the sapling transactions', async () => {
       const balance1 = await txViewer1.getBalance();
       const inputs1 = await txViewer1.getIncomingAndOutgoingTransactions();
 
@@ -326,7 +319,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         ],
         "outgoing": []
       })
-      done();
     });
 
   });

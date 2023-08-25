@@ -18,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test producing proofs with a proving key rather than a spending key: ${rpc}`, () => {
 
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup();
 
       // Deploy the sapling contract
@@ -36,11 +36,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Instantiate an InMemorySpendingKey from a spending key for Alice
       aliceInMemorySpendingKey = new InMemorySpendingKey('sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L')
       aliceInMemoryProvingKey = new InMemoryProvingKey('44259fd700dc80120d3c9ca65d698f6064043b048b079caa4f198aed962717403f80bf8cb9a8da8deb290913e9302be00c56f4565d917a6170be1880f42bb709');
-      
-      done();
     });
 
-    it('Verify that Alice can shield tokens', async (done) => {
+    it('Verify that Alice can shield tokens', async () => {
 
       const amountToAlice = 3;
       const aliceSaplingToolkit = new SaplingToolkit(
@@ -66,11 +64,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      done();
     });
 
-    it("Verify that Alice's balance in the sapling pool updated after the shielded tx", async (done) => {
+    it("Verify that Alice's balance in the sapling pool updated after the shielded tx", async () => {
       const aliceSaplingToolkit = new SaplingToolkit(
         { saplingSigner: aliceInMemorySpendingKey, saplingProver: aliceInMemoryProvingKey }, 
         { contractAddress: saplingContract.address, memoSize }, 
@@ -94,10 +90,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         ],
         outgoing: []
       })
-      done();
     });
 
-    it('Verify that Alice can do a shielded transaction to Bob', async (done) => {
+    it('Verify that Alice can do a shielded transaction to Bob', async () => {
       const amountToBob = 2;
       // Bob needs to give a payment address (zet) to Alice
       const bobInMemoryViewingKey = await bobInmemorySpendingKey.getSaplingViewingKeyProvider();
@@ -121,11 +116,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
-      done();
     });
 
-    it("Verify that Alice's balance in the sapling pool updated after the sapling tx", async (done) => {
+    it("Verify that Alice's balance in the sapling pool updated after the sapling tx", async () => {
       const aliceSaplingToolkit = new SaplingToolkit(
         { saplingSigner: aliceInMemorySpendingKey, saplingProver: aliceInMemoryProvingKey }, 
         { contractAddress: saplingContract.address, memoSize }, 
@@ -187,10 +180,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         ],
         outgoing: []
       })
-      done();
     });
 
-    it('Verify that Alice can unshield tokens', async (done) => {
+    it('Verify that Alice can unshield tokens', async () => {
 
       const amount = 1;
       const aliceSaplingToolkit = new SaplingToolkit(
@@ -215,11 +207,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const tezosUpdatedBalance = await Tezos.tz.getBalance(tezosAddress);
       expect(tezosUpdatedBalance).toEqual(tezosInitialBalance.plus(new BigNumber(1000000)));
-
-      done();
     });
 
-    it("Verify that Alice's balance in the sapling pool updated after the unshielded tx", async (done) => {
+    it("Verify that Alice's balance in the sapling pool updated after the unshielded tx", async () => {
       const aliceSaplingToolkit = new SaplingToolkit(
         { saplingSigner: aliceInMemorySpendingKey, saplingProver: aliceInMemoryProvingKey }, 
         { contractAddress: saplingContract.address, memoSize }, 
@@ -270,8 +260,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           }
         ]
       })
-
-      done();
     });
 
   });

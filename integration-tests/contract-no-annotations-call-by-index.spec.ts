@@ -5,11 +5,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test call to an entrypoint with no annotations calling methods by index through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify contract.originate for a contract without annotation and call entry points', async (done) => {
+    it('Verify contract.originate for a contract without annotation and call entry points', async () => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
       const BALANCE = '0';
@@ -51,7 +50,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Verify that the allowance was done as expected
       account1 = await storage[ACCOUNTS].get(ACCOUNT1_ADDRESS)
       expect(account1[ALLOWANCES].get(ACCOUNT2_ADDRESS).toString()).toEqual('1')
-      done();
     })
   });
 })

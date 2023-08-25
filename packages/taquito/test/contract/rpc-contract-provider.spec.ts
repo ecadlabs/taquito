@@ -228,7 +228,7 @@ describe('RpcContractProvider test', () => {
   });
 
   describe('originate', () => {
-    it('should produce a reveal and origination operation', async (done) => {
+    it('should produce a reveal and origination operation', async () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
@@ -243,10 +243,9 @@ describe('RpcContractProvider test', () => {
       const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResults);
-      done();
     });
 
-    it('should not convert balance to mutez when mutez flag is set to true', async (done) => {
+    it('should not convert balance to mutez when mutez flag is set to true', async () => {
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
@@ -260,10 +259,9 @@ describe('RpcContractProvider test', () => {
       const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResultsMutezTrue);
-      done();
     });
 
-    it('estimate when no fees are specified', async (done) => {
+    it('estimate when no fees are specified', async () => {
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.originate.mockResolvedValue(estimate);
 
@@ -277,10 +275,9 @@ describe('RpcContractProvider test', () => {
       const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResultsEstimate);
-      done();
     });
 
-    it('should not alter code and init object when they are array and object', async (done) => {
+    it('should not alter code and init object when they are array and object', async () => {
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
         balance: '200',
@@ -316,10 +313,9 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should deal with code properties in atypical order', async (done) => {
+    it('should deal with code properties in atypical order', async () => {
       const order1 = ['storage', 'code', 'parameter'];
       const result = await rpcContractProvider.originate({
         delegate: 'test_delegate',
@@ -359,12 +355,11 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
   });
 
   describe('transfer', () => {
-    it('should produce a reveal and transaction operation', async (done) => {
+    it('should produce a reveal and transaction operation', async () => {
       const result = await rpcContractProvider.transfer({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -394,10 +389,9 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should estimate when no fee are specified', async (done) => {
+    it('should estimate when no fee are specified', async () => {
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.transfer.mockResolvedValue(estimate);
 
@@ -427,10 +421,9 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should omit reveal operation if manager is defined (BABY)', async (done) => {
+    it('should omit reveal operation if manager is defined (BABY)', async () => {
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
@@ -469,10 +462,9 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should return parsed "with" error with string type', async (done) => {
+    it('should return parsed "with" error with string type', async () => {
       const params = {
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -494,10 +486,9 @@ describe('RpcContractProvider test', () => {
       } catch (e: any) {
         expect(e.message).toEqual('test');
       }
-      done();
     });
 
-    it('should return parsed "with" error with int type', async (done) => {
+    it('should return parsed "with" error with int type', async () => {
       const params = {
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -519,11 +510,9 @@ describe('RpcContractProvider test', () => {
       } catch (e: any) {
         expect(e.message).toEqual(5);
       }
-
-      done();
     });
 
-    it('should return parsed "with" error with pair type', async (done) => {
+    it('should return parsed "with" error with pair type', async () => {
       const params = {
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -550,10 +539,9 @@ describe('RpcContractProvider test', () => {
           prim: 'Pair',
         });
       }
-      done();
     });
 
-    it('should return parsed error from RPC result', async (done) => {
+    it('should return parsed error from RPC result', async () => {
       const params = {
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -575,10 +563,9 @@ describe('RpcContractProvider test', () => {
         id: 'proto.006-PsCARTHA.contract.balance_too_low',
         message: '(temporary) proto.006-PsCARTHA.contract.balance_too_low',
       });
-      done();
     });
 
-    it('should return internal error when received from preapply', async (done) => {
+    it('should return internal error when received from preapply', async () => {
       const params = {
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
@@ -600,10 +587,9 @@ describe('RpcContractProvider test', () => {
         id: 'proto.005-PsBabyM1.gas_exhausted.operation',
         message: '(temporary) proto.005-PsBabyM1.gas_exhausted.operation',
       });
-      done();
     });
 
-    it('should omit reveal operation if manager is defined', async (done) => {
+    it('should omit reveal operation if manager is defined', async () => {
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
@@ -643,12 +629,11 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
   });
 
   describe('transferTicket', () => {
-    it('validate that a reveal operation will be added when needed', async (done) => {
+    it('validate that a reveal operation will be added when needed', async () => {
       mockRpcClient.getManagerKey.mockReturnValue(null);
 
       const params: TransferTicketParams = {
@@ -688,10 +673,9 @@ describe('RpcContractProvider test', () => {
       const actual = result.raw.opOb.contents ?? [];
       expect(actual[0]).toEqual(expectedReveal);
       expect(actual[1]).toEqual(expectedReturn);
-      done();
     });
 
-    it('validate that a reveal option wont be added when not needed', async (done) => {
+    it('validate that a reveal option wont be added when not needed', async () => {
       mockRpcClient.getManagerKey.mockReturnValue('test_pub_key');
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
@@ -729,10 +713,9 @@ describe('RpcContractProvider test', () => {
       const actual = result.raw.opOb.contents ?? [];
 
       expect(actual[0]).toEqual(expectedReturn);
-      done();
     });
 
-    it('validate that the user-specified fees will be taken into account when specified', async (done) => {
+    it('validate that the user-specified fees will be taken into account when specified', async () => {
       const params: TransferTicketParams = {
         source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
         fee: 804,
@@ -777,10 +760,9 @@ describe('RpcContractProvider test', () => {
         opbytes: 'test',
       };
       expect(result.raw).toEqual(expectedReveal);
-      done();
     });
 
-    it('validate that the fees taken from the estimate will be taken when there is no user-specified fees', async (done) => {
+    it('validate that the fees taken from the estimate will be taken when there is no user-specified fees', async () => {
       const estimate = new Estimate(10000, 1000, 180, 1000);
       mockEstimate.transferTicket.mockResolvedValue(estimate);
 
@@ -825,12 +807,11 @@ describe('RpcContractProvider test', () => {
         opbytes: 'test',
       };
       expect(result.raw).toEqual(expected);
-      done();
     });
   });
 
   describe('setDelegate', () => {
-    it('should produce a reveal and delegation operation', async (done) => {
+    it('should produce a reveal and delegation operation', async () => {
       const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.setDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.setDelegate({
@@ -858,10 +839,9 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should throw InvalidDelegationSource when setting a KT1 address in babylon', async (done) => {
+    it('should throw InvalidDelegationSource when setting a KT1 address in babylon', async () => {
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.setDelegate.mockResolvedValue(estimate);
       mockRpcClient.getBlockMetadata.mockResolvedValue({
@@ -877,12 +857,11 @@ describe('RpcContractProvider test', () => {
         error = ex;
       }
       expect(error).toBeInstanceOf(InvalidDelegationSource);
-      done();
     });
   });
 
   describe('registerDelegate', () => {
-    it('should produce a reveal and delegation operation', async (done) => {
+    it('should produce a reveal and delegation operation', async () => {
       const estimate = new Estimate(1000000, 1000, 180, 1000);
       mockEstimate.registerDelegate.mockResolvedValue(estimate);
       const result = await rpcContractProvider.registerDelegate({});
@@ -907,12 +886,11 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
   });
 
   describe('reveal', () => {
-    it('should produce a reveal operation', async (done) => {
+    it('should produce a reveal operation', async () => {
       const estimate = new Estimate(1000000, 0, 64, 250);
       mockEstimate.reveal.mockResolvedValue(estimate);
       const result = await rpcContractProvider.reveal({});
@@ -936,12 +914,11 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
   });
 
   describe('registerGlobalConstant', () => {
-    it('should produce a reveal and registerGlobalConstant operation', async (done) => {
+    it('should produce a reveal and registerGlobalConstant operation', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.registerGlobalConstant.mockResolvedValue(estimate);
       const result = await rpcContractProvider.registerGlobalConstant({
@@ -968,12 +945,11 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
   });
 
   describe('increasePaidStorage', () => {
-    it('should produce an increasePaidStorage operation without reveal when account is revealed', async (done) => {
+    it('should produce an increasePaidStorage operation without reveal when account is revealed', async () => {
       mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
@@ -1005,10 +981,9 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-      done();
     });
 
-    it('should produce a reveal and an increasePaidStorage operation', async (done) => {
+    it('should produce a reveal and an increasePaidStorage operation', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
       const result = await rpcContractProvider.increasePaidStorage({
@@ -1037,10 +1012,9 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-      done();
     });
 
-    it('should produce a reveal and increasePaidStorageOperation with fees specified', async (done) => {
+    it('should produce a reveal and increasePaidStorageOperation with fees specified', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.increasePaidStorage.mockResolvedValue(estimate);
       const result = await rpcContractProvider.increasePaidStorage({
@@ -1070,12 +1044,11 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-      done();
     });
   });
 
   describe('drainDelegate', () => {
-    it('should produce a drain operation', async (done) => {
+    it('should produce a drain operation', async () => {
       const result = await rpcContractProvider.drainDelegate({
         consensus_key: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
         delegate: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
@@ -1098,13 +1071,11 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-
-      done();
     });
   });
 
   describe('ballot', () => {
-    it('should produce a ballot operation', async (done) => {
+    it('should produce a ballot operation', async () => {
       const result = await rpcContractProvider.ballot({
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
         ballot: 'yay',
@@ -1128,11 +1099,9 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-
-      done();
     });
 
-    it('should override when source is passed in the params', async (done) => {
+    it('should override when source is passed in the params', async () => {
       const result = await rpcContractProvider.ballot({
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
         ballot: 'yay',
@@ -1157,13 +1126,11 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-
-      done();
     });
   });
 
   describe('proposals', () => {
-    it('should produce a proposals operation', async (done) => {
+    it('should produce a proposals operation', async () => {
       const result = await rpcContractProvider.proposals({
         proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
       });
@@ -1185,11 +1152,9 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-
-      done();
     });
 
-    it('should override when source is passed in params', async (done) => {
+    it('should override when source is passed in params', async () => {
       const result = await rpcContractProvider.proposals({
         proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
         source: 'tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN',
@@ -1212,13 +1177,11 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-
-      done();
     });
   });
 
   describe('updateConsensusKey', () => {
-    it('should produce an updateConsensusKey operation', async (done) => {
+    it('should produce an updateConsensusKey operation', async () => {
       mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
@@ -1249,10 +1212,9 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-      done();
     });
 
-    it('should produce an updateConsensusKey operation and reveal op', async (done) => {
+    it('should produce an updateConsensusKey operation and reveal op', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
       const result = await rpcContractProvider.updateConsensusKey({
@@ -1280,10 +1242,9 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-      done();
     });
 
-    it('should produce an updateConsensusKey operation and reveal op with fees specified', async (done) => {
+    it('should produce an updateConsensusKey operation and reveal op with fees specified', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
       const result = await rpcContractProvider.updateConsensusKey({
@@ -1312,12 +1273,11 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-      done();
     });
   });
 
   describe('smartRollupAddMessages', () => {
-    it('should produce a smartRollupAddMessages op', async (done) => {
+    it('should produce a smartRollupAddMessages op', async () => {
       mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 93, 142, 250);
@@ -1352,11 +1312,9 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-
-      done();
     });
 
-    it('should produce a smartRollupAddMessages op with reveal', async (done) => {
+    it('should produce a smartRollupAddMessages op with reveal', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.smartRollupAddMessages.mockResolvedValue(estimate);
       const op = await rpcContractProvider.smartRollupAddMessages({
@@ -1388,13 +1346,11 @@ describe('RpcContractProvider test', () => {
         },
         counter: 0,
       });
-
-      done();
     });
   });
 
   describe('originate with noop parser', () => {
-    it('should throw InvalidCodeParameter', async (done) => {
+    it('should throw InvalidCodeParameter', async () => {
       rpcContractProvider['context'].parser = new NoopParser();
       try {
         await rpcContractProvider.originate({
@@ -1410,10 +1366,9 @@ describe('RpcContractProvider test', () => {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toEqual('Wrong code parameter type, expected an array');
       }
-      done();
     });
 
-    it('should throw InvalidCodeParameter when missing storage part', async (done) => {
+    it('should throw InvalidCodeParameter when missing storage part', async () => {
       rpcContractProvider['context'].parser = new NoopParser();
       try {
         await rpcContractProvider.originate({
@@ -1435,10 +1390,9 @@ describe('RpcContractProvider test', () => {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toEqual('The storage section is missing from the script');
       }
-      done();
     });
 
-    it('should throw InvalidInitParameter', async (done) => {
+    it('should throw InvalidInitParameter', async () => {
       rpcContractProvider['context'].parser = new NoopParser();
       try {
         await rpcContractProvider.originate({
@@ -1464,11 +1418,10 @@ describe('RpcContractProvider test', () => {
         expect(err).toBeInstanceOf(InvalidInitParameter);
         expect(err.message).toEqual('Wrong init parameter type, expected JSON Michelson');
       }
-      done();
     });
 
     describe('batch', () => {
-      it('should produce a batch operation', async (done) => {
+      it('should produce a batch operation', async () => {
         const opToBatch: ParamsWithKind[] = [
           {
             kind: OpKind.TRANSACTION,
@@ -1488,14 +1441,12 @@ describe('RpcContractProvider test', () => {
         expect(rpcContractProvider.batch()).toEqual(opBatch);
 
         expect(rpcContractProvider.batch(opToBatch)).toEqual(opBatch.with(opToBatch));
-
-        done();
       });
     });
   });
 
   describe('smartRollupOriginate', () => {
-    it('Should have correct returned values with origination being estimated', async (done) => {
+    it('Should have correct returned values with origination being estimated', async () => {
       const estimate = new Estimate(1230000, 10000, 100, 100);
       mockEstimate.smartRollupOriginate.mockResolvedValue(estimate);
       mockRpcClient.getOriginationProof.mockResolvedValue(
@@ -1538,11 +1489,9 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-
-      done();
     });
 
-    it('Should have correct returned values with origination with reveal with specified values for estimate', async (done) => {
+    it('Should have correct returned values with origination with reveal with specified values for estimate', async () => {
       const estimate = new Estimate(1230000, 10000, 100, 100);
       mockEstimate.smartRollupOriginate.mockResolvedValue(estimate);
       mockRpcClient.getOriginationProof.mockResolvedValue(
@@ -1588,11 +1537,9 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-
-      done();
     });
 
-    it('Should have correct returned values with origination without reveal', async (done) => {
+    it('Should have correct returned values with origination without reveal', async () => {
       mockRpcClient.getManagerKey.mockReturnValue('test_pub_key');
       mockEstimate.reveal.mockResolvedValue(undefined);
       const estimate = new Estimate(1230000, 10000, 100, 100);
@@ -1638,8 +1585,6 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
-
-      done();
     });
   });
 });

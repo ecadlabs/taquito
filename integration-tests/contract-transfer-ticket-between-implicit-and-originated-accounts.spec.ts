@@ -17,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   describe(`Test transfer ticket between implicit and originated accounts, in ${rpc}`, () => {
 
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup(true);
       try {
         Tezos2 = await createAddress();
@@ -43,20 +43,18 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       } catch (error) {
         console.error(error);
       }
-      done();
     });
 
-    it('will send 3 tickets from an originated to an implicit account', async (done) => {
+    it('will send 3 tickets from an originated to an implicit account', async () => {
       const ticketSendToImplicitOp = await ticketSendContract.methods.default(tezos1Pkh, '3').send();
       await ticketSendToImplicitOp.confirmation();
       expect(ticketSendToImplicitOp.status).toEqual('applied');
 
       let tezos1TicketBalance = await client.getTicketBalance(tezos1Pkh, ticketToken);
       expect(tezos1TicketBalance).toBe('3');
-      done();
     });
 
-    it('will transfer 1 tickets from an implicit to another implicit account', async (done) => {
+    it('will transfer 1 tickets from an implicit to another implicit account', async () => {
       let tezos2TicketBalanceBefore = await client.getTicketBalance(tezos2Pkh, ticketToken);
       expect(tezos2TicketBalanceBefore).toBe('0');
 
@@ -75,10 +73,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(tezos1TicketBalanceAfter).toBe('2');
       let tezos2TicketBalanceAfter = await client.getTicketBalance(await Tezos2.signer.publicKeyHash(), ticketToken);
       expect(tezos2TicketBalanceAfter).toBe('1');
-      done();
     });
 
-    it('will transfer 1 ticket from an implicit to an originated account', async (done) => {
+    it('will transfer 1 ticket from an implicit to an originated account', async () => {
       const implicitToOriginatedOp = await Tezos1.contract.transferTicket({
         ticketContents: { string: "Ticket" },
         ticketTy: { prim: "string" },
@@ -92,17 +89,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       let contractBagTicketBalance = await client.getTicketBalance(ticketBagContract.address, ticketToken);
       expect(contractBagTicketBalance).toBe('1');
-      done();
     });
 
-    it('will send 1 ticket from an origianted to another originated account to dispose', async (done) => {
+    it('will send 1 ticket from an origianted to another originated account to dispose', async () => {
       const ticketSendOriginatedOp = await ticketBagContract.methods.send(ticketBlackholeContract.address).send();
       await ticketSendOriginatedOp.confirmation();
       expect(ticketSendOriginatedOp.status).toEqual('applied');
 
       let contractBagTicketBalance = await client.getTicketBalance(ticketBagContract.address, ticketToken);
       expect(contractBagTicketBalance).toBe('0');
-      done();
     });
   });
 });

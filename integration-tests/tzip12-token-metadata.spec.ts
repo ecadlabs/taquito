@@ -11,12 +11,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 	let contractAddress2: string;
 
  	 describe(`Test contract origination for a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata) through contract api using: ${rpc}`, () => {
-		beforeEach(async (done) => {
+		beforeEach(async () => {
 			await setup();
-			done();
 		});
 
-		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and token metadata inside a bigmap %token_metadata', async (done) => {
+		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and token metadata inside a bigmap %token_metadata', async () => {
 			const LocalTez1 = await createAddress();
 			const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
 			const LocalTez2 = await createAddress();
@@ -98,10 +97,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			expect(op.hash).toBeDefined();
 			expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-			done();
 		});
 
-		it('Verify contractAbstraction composition, fetch contract and token metadata of the a Fa2 contract having metadata on HTTPS and token metadata inside a bigmap %token_metadata', async (done) => {
+		it('Verify contractAbstraction composition, fetch contract and token metadata of the a Fa2 contract having metadata on HTTPS and token metadata inside a bigmap %token_metadata', async () => {
 
 			Tezos.addExtension(new Tzip12Module());
 			// Tezos.addExtension(new Tzip16Module())... one extension is sufficient as they use the same MetadataProvider
@@ -154,17 +152,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			} catch (err) {
 				expect(err).toBeInstanceOf(TokenIdNotFound);
 			}
-			done();
 		});
 	});
 
  	describe(`Test originating a Fa2 contract and fetch metadata (token metadata are obtained from a view %token_metadata) through contract api using: ${rpc}`, () => {
-		beforeEach(async (done) => {
+		beforeEach(async () => {
 			await setup();
-			done();
 		});
 
- 		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and a view %token_metadata', async (done) => {
+ 		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and a view %token_metadata', async () => {
 			const LocalTez1 = await createAddress();
 			const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
 			const LocalTez2 = await createAddress();
@@ -237,10 +233,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			expect(op.hash).toBeDefined();
 			expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-			done();
 		});
 
-		it('Verify contractAbstraction composition, fetch contract and token metadata of the Fa2 contract having metadata on HTTPS and a view %token_metadata', async (done) => {
+		it('Verify contractAbstraction composition, fetch contract and token metadata of the Fa2 contract having metadata on HTTPS and a view %token_metadata', async () => {
 			Tezos.addExtension(new Tzip16Module());
 
 			// Use the compose function
@@ -286,7 +281,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			} catch (err) {
 				expect(err).toBeInstanceOf(ViewSimulationError);
 			}
-			done();
 		});
 	});
 });

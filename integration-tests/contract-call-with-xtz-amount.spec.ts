@@ -9,14 +9,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true);
-      done();
     });
 
     it(
       'originates a contract with SUB MUTEZ and sends base layer tokens when calling contract methods',
-      async (done) => {
+      async () => {
         const op = await Tezos.contract.originate({
           balance: '0',
           code: depositContractCode,
@@ -37,7 +36,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(operationMutez.status).toEqual('applied');
         balance = await Tezos.tz.getBalance(contract.address);
         expect(balance.toString()).toEqual('1000001');
-        done();
       }
     );
 

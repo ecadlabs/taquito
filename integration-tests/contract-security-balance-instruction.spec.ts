@@ -9,12 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    mondaynet("Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code", async (done) => {
+    mondaynet("Verify Obtained balance of a smart contract using the BALANCE instruction does not change during the execution of the entrypoint's own code", async () => {
       const opTezTransferA = await Tezos.contract.originate({
         balance: '0.00001',
         code: `        { parameter (option address) ;
@@ -108,7 +107,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       const storageB: any = await TezTransferBContract.storage();
       expect(storageB.at_start.toString()).toEqual("5");
       expect(storageB.at_end.toString()).toEqual("5");
-      done();
     });
   });
 });

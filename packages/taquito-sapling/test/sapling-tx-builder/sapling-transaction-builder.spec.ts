@@ -110,7 +110,7 @@ describe('Sapling transactions builder', () => {
     );
   });
 
-  it('should be instantiable', async (done) => {
+  it('should be instantiable', async () => {
     expect(
       new SaplingTransactionBuilder(
         { saplingSigner: mockInMemorySpendingKey as any },
@@ -120,10 +120,9 @@ describe('Sapling transactions builder', () => {
         mockSaplingWrapper as any
       )
     ).toBeDefined();
-    done();
   });
 
-  it('should prepare a shielded transaction of 8 tez', async (done) => {
+  it('should prepare a shielded transaction of 8 tez', async () => {
     mockSaplingWrapper.randR.mockResolvedValue(
       Buffer.from('66222a13e6050a18325b63e0beaed5a864c33a34cdcf7c53a74fb53e4be3a202', 'hex')
     );
@@ -156,10 +155,9 @@ describe('Sapling transactions builder', () => {
       signature,
       balance: new BigNumber(-8000000),
     });
-    done();
   });
 
-  it('should prepare an unshielded transaction of 1 tez', async (done) => {
+  it('should prepare an unshielded transaction of 1 tez', async () => {
     mockSaplingWrapper.randR.mockResolvedValue(
       Buffer.from('8b038b981085a1af8cb209216873a4f43dd0059ca9dd29390e8af1e2fdffc604', 'hex')
     );
@@ -208,16 +206,14 @@ describe('Sapling transactions builder', () => {
         'hex'
       ),
     });
-    done();
   });
 
-  it('calculateTransactionBalance', async (done) => {
+  it('calculateTransactionBalance', async () => {
     const balance = saplingTransactionBuilder.calculateTransactionBalance('0', '2');
     expect(balance).toEqual(new BigNumber(-2));
-    done();
   });
 
-  it('prepareSaplingOutputDescription', async (done) => {
+  it('prepareSaplingOutputDescription', async () => {
     mockSaplingWrapper.randR.mockResolvedValue(
       Buffer.from('f4a2b699ba09ffc666d2f1cc41e630ed5877ca4788ce081df97729bb10f3ee07', 'hex')
     );
@@ -302,10 +298,9 @@ describe('Sapling transactions builder', () => {
         ),
       },
     });
-    done();
   });
 
-  it('prepareSaplingSpendDescription with spending key', async (done) => {
+  it('prepareSaplingSpendDescription with spending key', async () => {
     mockSaplingWrapper.randR.mockResolvedValue(
       Buffer.from('b924bc77666de1189d3f904ab5a6332c371d9f3bd9aa188579e9da60ce270f0a', 'hex')
     );
@@ -405,10 +400,9 @@ describe('Sapling transactions builder', () => {
         ),
       },
     ]);
-    done();
   });
 
-  it('prepareSaplingSpendDescription with prooving key', async (done) => {
+  it('prepareSaplingSpendDescription with prooving key', async () => {
     const saplingTransactionBuilder2 = new SaplingTransactionBuilder(
       {
         saplingSigner: mockInMemorySpendingKey as any,
@@ -519,10 +513,9 @@ describe('Sapling transactions builder', () => {
         ),
       },
     ]);
-    done();
   });
 
-  it('createPaybackOutput', async (done) => {
+  it('createPaybackOutput', async () => {
     mockSaplingWrapper.randR.mockResolvedValue(
       Buffer.from('ae2a0d1d3aa056c3171643544016d33de2e080c0681a7a30687bea6dfc53d00a', 'hex')
     );
@@ -614,10 +607,9 @@ describe('Sapling transactions builder', () => {
       },
       payBackAmount: '5000000',
     });
-    done();
   });
 
-  it('createBindingSignature', async (done) => {
+  it('createBindingSignature', async () => {
     const signature = Buffer.from(
       '4891e3ec8afcc06675c39a67e95080e0b0ef67c51fde929da938020611480528a33595d0f21b3a087fb3d1e71d4de944ff6e5ba35e9a32a8a034be12d53a1507',
       'hex'
@@ -686,10 +678,9 @@ describe('Sapling transactions builder', () => {
     });
 
     expect(bindingSignature).toEqual(signature);
-    done();
   });
 
-  it('getAntiReplay', async (done) => {
+  it('getAntiReplay', async () => {
     const antiReplay = await saplingTransactionBuilder.getAntiReplay();
     expect(antiReplay).toEqual(
       Buffer.from(
@@ -697,6 +688,5 @@ describe('Sapling transactions builder', () => {
         'hex'
       )
     );
-    done();
   });
 });

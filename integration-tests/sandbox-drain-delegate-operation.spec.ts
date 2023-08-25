@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
     let delegatePkh: string;
     let Destination: TezosToolkit;
     let destinationPkh: string;
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup();
 
       try {
@@ -38,9 +38,8 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
       } catch (e) {
         console.log(JSON.stringify(e));
       }
-      done();
     })
-    flextesanet('Should be able to inject drain_delegate operation', async (done) => {
+    flextesanet('Should be able to inject drain_delegate operation', async () => {
       expect((await Delegate.rpc.getBalance(delegatePkh)).toNumber()).toBeGreaterThan(0);
       let destinationBalanceBefore = (await Destination.rpc.getBalance(destinationPkh)).toNumber();
 
@@ -54,7 +53,6 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
       expect(drainOp.includedInBlock).toBeDefined()
       expect((await Delegate.rpc.getBalance(delegatePkh)).toNumber()).toEqual(0);
       expect((await Destination.rpc.getBalance(destinationPkh)).toNumber()).toBeGreaterThan(destinationBalanceBefore);
-      done();
     });
   });
 })

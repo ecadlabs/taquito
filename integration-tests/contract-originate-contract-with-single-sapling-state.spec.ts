@@ -5,12 +5,11 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
   const Tezos = lib;
 
   describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    test('Originates a contract with a single sapling state in its storage', async (done) => {
+    test('Originates a contract with a single sapling state in its storage', async () => {
        const op = await Tezos.contract.originate({
         code: singleSaplingStateContractJProtocol(),
          init: '{}'
@@ -19,7 +18,6 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
        expect(op.hash).toBeDefined();
        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
        const contract = await op.contract();
-       done();
      });
   });
 });

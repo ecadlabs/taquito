@@ -10,12 +10,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    mondaynet('Verify failed batch', async (done) => {
+    mondaynet('Verify failed batch', async () => {
       const op = await Tezos.contract.originate({
         code: `        { parameter (or (nat %add) (nat %sub)) ;
               storage nat ;
@@ -45,7 +44,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('substraction_below_zero'); 
       }
-      done();
     });
   });
 });

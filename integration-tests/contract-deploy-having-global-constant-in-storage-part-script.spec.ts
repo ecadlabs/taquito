@@ -49,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
             },
         }
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup(true);
 
             // We need to set up a global constants provider on the TezosToolkit
@@ -61,9 +61,8 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
                 [constantHash2]: globalConstant2,
             })
             Tezos.setGlobalConstantsProvider(globalConstantProvider);
-            done()
         })
-        test('deploy a voting contract having global constants in the storage part of its code using the contract API', async (done) => {
+        test('deploy a voting contract having global constants in the storage part of its code using the contract API', async () => {
             try {
                 // First, we need to register the expression (globalConstant1) as global constants
                 const op = await Tezos.contract.registerGlobalConstant({
@@ -100,10 +99,9 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
 
             const storage: any = await contract.storage();
             expect(storage).toEqual(storageArg);
-            done();
         });
 
-        test('deploy a voting contract having global constants in the storage part of its code using the wallet API', async (done) => {
+        test('deploy a voting contract having global constants in the storage part of its code using the wallet API', async () => {
 
             const op = await Tezos.wallet.originate({
                 balance: "1",
@@ -119,10 +117,9 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
 
             const storage: any = await contract.storage();
             expect(storage).toEqual(storageArg);
-            done();
         });
 
-        test('deploy a voting contract having global constants in the storage part of its code using the batch method of the contract API', async (done) => {
+        test('deploy a voting contract having global constants in the storage part of its code using the batch method of the contract API', async () => {
             const op = await Tezos.contract.batch().withOrigination({
                 balance: "1",
                 code: voteSampleGlobalConstants,
@@ -131,10 +128,9 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
 
             await op.confirmation()
             expect(op.hash).toBeDefined();
-            done();
         });
 
-        test('deploy a voting contract having global constants in the storage part of its code using the batch method of the wallet API', async (done) => {
+        test('deploy a voting contract having global constants in the storage part of its code using the batch method of the wallet API', async () => {
             const op = await Tezos.wallet.batch().withOrigination({
                 balance: "1",
                 code: voteSampleGlobalConstants,
@@ -143,7 +139,6 @@ CONFIGS().forEach(({ lib, rpc, setup}) => {
 
             await op.confirmation()
             expect(op.opHash).toBeDefined();
-            done();
         });
     });
 });

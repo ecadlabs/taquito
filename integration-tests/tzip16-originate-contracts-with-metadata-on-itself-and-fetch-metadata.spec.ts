@@ -11,11 +11,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     describe(`Test contract origination having metadata stored on chain through contract api using: ${rpc}`, () => {
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup()
-            done()
         })
-        it('Verify contract.originate for a contract having metadata inside its own storage', async (done) => {
+        it('Verify contract.originate for a contract having metadata inside its own storage', async () => {
 
             const metadataJSON = {
                 "name": "test",
@@ -48,10 +47,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             contractAddress = (await op.contract()).address;
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-            done();
         });
 
-        it('Verify the metadata for a contract having metadata inside its own storage can be fetched', async (done) => {
+        it('Verify the metadata for a contract having metadata inside its own storage can be fetched', async () => {
 
             const contract = await Tezos.wallet.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -80,11 +78,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataViews()).toEqual({});
-
-            done();
         });
 
-        it('Verify contract.originate for a contract having metadata inside another contract same network', async (done) => {
+        it('Verify contract.originate for a contract having metadata inside another contract same network', async () => {
 
             const metadataBigMap = new MichelsonMap();
             metadataBigMap.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
@@ -102,10 +98,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             contractMetadataInAnotherContract = (await op.contract()).address;
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-            done();
         });
 
-        it('Verify that metadata for contract having metadata inside another contract on the same network can be fetched', async (done) => {
+        it('Verify that metadata for contract having metadata inside another contract on the same network can be fetched', async () => {
 
             const contract = await Tezos.wallet.at(contractMetadataInAnotherContract, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -134,8 +129,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
             expect(await (await contract.tzip16()).metadataViews()).toEqual({});
-
-            done();
         });
 
     });

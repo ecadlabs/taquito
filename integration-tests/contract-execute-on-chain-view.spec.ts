@@ -8,11 +8,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true)
-      done()
     })
-    it(`as a user I want to originate a smart contract having top level views and simulate the views execution`, async (done) => {
+    it(`as a user I want to originate a smart contract having top level views and simulate the views execution`, async () => {
       // Contract origination
       const op = await Tezos.contract.originate({
         code: codeViewsTopLevel,
@@ -98,8 +97,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         result: 'nat'
       });
       expect(viewFibResult).toEqual(new BigNumber(55));
-
-      done();
     });
   });
 });

@@ -16,6 +16,7 @@
     "jsx": "react",
     "baseUrl": "packages",
     "downlevelIteration": true,
+    "useUnknownInCatchVariables": false,
     "paths": {
       "@taquito/core": [
         "taquito-core/src/taquito-core.ts"

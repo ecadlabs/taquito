@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
   let contractAddress: string;
 
   describe(`Test Preparation of operations using the PrepareProvider`, () => {
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup();
 
       try {
@@ -28,15 +28,12 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       } catch(e: any) {
         console.log('Unable to originate contract: ', JSON.stringify(e));
       }
-
-      done();
     })
 
-    beforeEach(async (done) => {
-      done();
+    beforeEach(async () => {
     });
 
-    it('should be able to prepare a transaction operation', async (done) => {
+    it('should be able to prepare a transaction operation', async () => {
       const prepared = await Tezos.prepare.transaction({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 5
@@ -53,11 +50,9 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(content.kind).toEqual('transaction');
       expect(content.destination).toEqual('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')
       expect(content.amount).toEqual('5000000');
-
-      done();
     });
 
-    it('should be able to prepare a batch operation', async (done) => {
+    it('should be able to prepare a batch operation', async () => {
       const prepared = await Tezos.prepare.batch([
         {
           kind: OpKind.TRANSACTION,
@@ -79,11 +74,9 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(prepared.opOb.contents.length).toEqual(2);
       expect(prepared.opOb.contents[0].kind).toEqual('transaction');
       expect(prepared.opOb.contents[1].kind).toEqual('transaction');
-
-      done();
     });
 
-    it('should be able to prepare a ballot operation', async (done) => {
+    it('should be able to prepare a ballot operation', async () => {
       const prepared = await Tezos.prepare.ballot({
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
         ballot: 'yay'
@@ -101,10 +94,9 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(content.proposal).toEqual('PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg');
       expect(content.ballot).toEqual('yay');
       expect(prepared.opOb.protocol).toEqual(protocol);
-      done();
     });
 
-    it('should be able to prepare a contractCall', async (done) => {
+    it('should be able to prepare a contractCall', async () => {
       const contractAbs = await Tezos.contract.at(contractAddress);
       const method = await contractAbs.methods.increment(1);
       const prepared = await Tezos.prepare.contractCall(method);
@@ -114,13 +106,11 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(prepared.opOb.branch).toBeDefined();
       expect(prepared.opOb.contents).toBeDefined();
       expect(prepared.opOb.protocol).toBeDefined();
-
-      done();
     });
   });
 
   describe('toPreapply conversion method', () => {
-    it('Verify toPreaplyParams returns executable params for preapplyOperations', async (done) => {
+    it('Verify toPreaplyParams returns executable params for preapplyOperations', async () => {
       const receiver = await createAddress();
 
       const pkh = await receiver.signer.publicKeyHash();
@@ -145,14 +135,12 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       } else {
         expect(preapply[0].contents[0].kind).toEqual('transaction');
       }
-
-      done();
     });
   });
 
   describe('toForge conversion method', () => {
 
-    it('Verify that toForge is executable for both local forger and rpc.forgeOperations', async (done) => {
+    it('Verify that toForge is executable for both local forger and rpc.forgeOperations', async () => {
       const receiver = await createAddress();
       const pkh = await receiver.signer.publicKeyHash();
       const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: pkh });
@@ -162,8 +150,6 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       const rpcForged = await Tezos.rpc.forgeOperations(Tezos.prepare.toForge(preparedTransfer));
 
       expect(forged).toEqual(rpcForged);
-
-      done();
     });
   });
 

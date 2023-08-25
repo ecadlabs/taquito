@@ -4,11 +4,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
   describe(`Test account delegation with estimation through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true)
-      done()
     })
-    it('Verify that an address can be delegated to a known baker with an automatic estimate', async (done) => {
+    it('Verify that an address can be delegated to a known baker with an automatic estimate', async () => {
       const delegate = knownBaker
       const pkh = await Tezos.signer.publicKeyHash();
       try {
@@ -29,7 +28,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
           expect(ex.message).toMatch('delegate.unchanged')
         }
       }
-      done();
     });
   });
 })

@@ -61,26 +61,24 @@ describe('Tzip12 contract abstraction test', () => {
     tzip12Abs['_tzip16ContractAbstraction'] = mockTzip16ContractAbstraction;
   });
 
-  it('Test 1 for getContractMetadata(): Should return the `Tzip-016` contract metadata', async (done) => {
+  it('Test 1 for getContractMetadata(): Should return the `Tzip-016` contract metadata', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: { name: 'Taquito test' },
     });
 
     expect(await tzip12Abs['getContractMetadata']()).toEqual({ name: 'Taquito test' });
-    done();
   });
 
-  it('Test 2 for getContractMetadata(): Should return undefined when the contract has no `Tzip-016` metadata', async (done) => {
+  it('Test 2 for getContractMetadata(): Should return undefined when the contract has no `Tzip-016` metadata', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockImplementation(() => {
       throw new Error();
     });
 
     expect(await tzip12Abs['getContractMetadata']()).toBeUndefined();
-    done();
   });
 
-  it('Test 1 for isTzip12Compliant(): Should return true', async (done) => {
+  it('Test 1 for isTzip12Compliant(): Should return true', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: {
@@ -90,10 +88,9 @@ describe('Tzip12 contract abstraction test', () => {
     });
 
     expect(await tzip12Abs.isTzip12Compliant()).toEqual(true);
-    done();
   });
 
-  it('Test 2 for isTzip12Compliant(): Should return true', async (done) => {
+  it('Test 2 for isTzip12Compliant(): Should return true', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: {
@@ -103,10 +100,9 @@ describe('Tzip12 contract abstraction test', () => {
     });
 
     expect(await tzip12Abs.isTzip12Compliant()).toEqual(true);
-    done();
   });
 
-  it('Test 3 for isTzip12Compliant(): Should return false when no interfaces property', async (done) => {
+  it('Test 3 for isTzip12Compliant(): Should return false when no interfaces property', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: {
@@ -115,10 +111,9 @@ describe('Tzip12 contract abstraction test', () => {
     });
 
     expect(await tzip12Abs.isTzip12Compliant()).toEqual(false);
-    done();
   });
 
-  it('Test 4 for isTzip12Compliant(): Should return false when no TZIP-012 in interfaces property', async (done) => {
+  it('Test 4 for isTzip12Compliant(): Should return false when no TZIP-012 in interfaces property', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: {
@@ -128,10 +123,9 @@ describe('Tzip12 contract abstraction test', () => {
     });
 
     expect(await tzip12Abs.isTzip12Compliant()).toEqual(false);
-    done();
   });
 
-  it('Test 1 for executeTokenMetadataView(): Should properly return the TokenMetadata', async (done) => {
+  it('Test 1 for executeTokenMetadataView(): Should properly return the TokenMetadata', async () => {
     const tokenMap = new MichelsonMap({
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
@@ -153,10 +147,9 @@ describe('Tzip12 contract abstraction test', () => {
       symbol: 'XTZ',
       decimals: 3,
     });
-    done();
   });
 
-  it('Test 2 for executeTokenMetadataView(): Should throw ViewSimulationError', async (done) => {
+  it('Test 2 for executeTokenMetadataView(): Should throw ViewSimulationError', async () => {
     mockMichelsonStorageView.executeView.mockImplementation(() => {
       throw new ViewSimulationError('view simulation failed', 'test');
     });
@@ -164,10 +157,9 @@ describe('Tzip12 contract abstraction test', () => {
     expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(
       new ViewSimulationError('view simulation failed', 'test')
     );
-    done();
   });
 
-  it('Test 3 for executeTokenMetadataView(): should throw TokenMetadataNotFound if the type of the view result is wrong (no map)', async (done) => {
+  it('Test 3 for executeTokenMetadataView(): should throw TokenMetadataNotFound if the type of the view result is wrong (no map)', async () => {
     mockMichelsonStorageView.executeView.mockResolvedValue({
       '0': '0',
       '1': 'I am not a map',
@@ -176,19 +168,17 @@ describe('Tzip12 contract abstraction test', () => {
     expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(
       new TokenMetadataNotFound(mockContractAbstraction.address)
     );
-    done();
   });
 
-  it('Test 4 for executeTokenMetadataView(): should throw TokenMetadataNotFound if the type of the view result is wrong', async (done) => {
+  it('Test 4 for executeTokenMetadataView(): should throw TokenMetadataNotFound if the type of the view result is wrong', async () => {
     mockMichelsonStorageView.executeView.mockResolvedValue('wrong type');
 
     expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(
       new TokenMetadataNotFound(mockContractAbstraction.address)
     );
-    done();
   });
 
-  it('Test 5 for executeTokenMetadataView(): Should properly return the TokenMetadata when the map contains a URI', async (done) => {
+  it('Test 5 for executeTokenMetadataView(): Should properly return the TokenMetadata when the map contains a URI', async () => {
     mockMetadataProvider.provideMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: {
@@ -217,10 +207,9 @@ describe('Tzip12 contract abstraction test', () => {
       symbol: 'XTZ!',
       more: 'more data',
     });
-    done();
   });
 
-  it('Test 1 for fetchTokenMetadataFromUri(): Should warn that the URI is invalid and return undefined', async (done) => {
+  it('Test 1 for fetchTokenMetadataFromUri(): Should warn that the URI is invalid and return undefined', async () => {
     const tokenMap = new MichelsonMap();
     tokenMap.set('test', char2Bytes('test'));
     tokenMap.set('', char2Bytes('InvalidUriError'));
@@ -234,10 +223,9 @@ describe('Tzip12 contract abstraction test', () => {
       tokenMap as MichelsonMap<string, string>
     );
     expect(tokenMetadata).toBeUndefined();
-    done();
   });
 
-  it('Test 2 for fetchTokenMetadataFromUri(): Should return undefined when no URI', async (done) => {
+  it('Test 2 for fetchTokenMetadataFromUri(): Should return undefined when no URI', async () => {
     const tokenMap = new MichelsonMap();
     tokenMap.set('test', char2Bytes('test'));
     tokenMap.set('testtest', char2Bytes('testtest'));
@@ -246,10 +234,9 @@ describe('Tzip12 contract abstraction test', () => {
       tokenMap as MichelsonMap<string, string>
     );
     expect(tokenMetadata).toBeUndefined();
-    done();
   });
 
-  it('Test 1 for retrieveTokenMetadataFromView(): Should properly return token metadata from token_metadata view', async (done) => {
+  it('Test 1 for retrieveTokenMetadataFromView(): Should properly return token metadata from token_metadata view', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: { name: 'Taquito test' },
@@ -280,16 +267,14 @@ describe('Tzip12 contract abstraction test', () => {
       symbol: 'XTZ',
       decimals: 3,
     });
-    done();
   });
 
-  it('Test 2 for retrieveTokenMetadataFromView(): Should return undefined when there is no contract metadata', async (done) => {
+  it('Test 2 for retrieveTokenMetadataFromView(): Should return undefined when there is no contract metadata', async () => {
     const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
     expect(tokenMetadata).toBeUndefined();
-    done();
   });
 
-  it('Test 3 for retrieveTokenMetadataFromView(): Should return undefined when there is no token_metadata view', async (done) => {
+  it('Test 3 for retrieveTokenMetadataFromView(): Should return undefined when there is no token_metadata view', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: { name: 'Taquito test' },
@@ -299,10 +284,9 @@ describe('Tzip12 contract abstraction test', () => {
 
     const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
     expect(tokenMetadata).toBeUndefined();
-    done();
   });
 
-  it('Test 1 for retrieveTokenMetadataFromBigMap(): Should succeed to return the token metadata', async (done) => {
+  it('Test 1 for retrieveTokenMetadataFromBigMap(): Should succeed to return the token metadata', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     const tokenMap = new MichelsonMap({
       prim: 'map',
@@ -323,39 +307,34 @@ describe('Tzip12 contract abstraction test', () => {
       symbol: 'XTZ',
       decimals: 3,
     });
-    done();
   });
 
-  it('Test 2 for retrieveTokenMetadataFromBigMap(): Should throw TokenMetadataNotFound', async (done) => {
+  it('Test 2 for retrieveTokenMetadataFromBigMap(): Should throw TokenMetadataNotFound', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue(undefined);
     try {
       await tzip12Abs['retrieveTokenMetadataFromBigMap'](0);
     } catch (err) {
       expect(err).toBeInstanceOf(TokenMetadataNotFound);
     }
-    done();
   });
 
-  it('Test 3 for retrieveTokenMetadataFromBigMap(): Should throw TokenIdNotFound', async (done) => {
+  it('Test 3 for retrieveTokenMetadataFromBigMap(): Should throw TokenIdNotFound', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     mockRpcContractProvider.getBigMapKeyByID.mockImplementation(() => {
       throw new Error();
     });
 
     expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](0)).rejects.toEqual(new TokenIdNotFound(0));
-
-    done();
   });
 
-  it('Test 4 for retrieveTokenMetadataFromBigMap(): Should throw TokenIdNotFound', async (done) => {
+  it('Test 4 for retrieveTokenMetadataFromBigMap(): Should throw TokenIdNotFound', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('I am not a pair');
 
     expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](0)).rejects.toEqual(new TokenIdNotFound(0));
-    done();
   });
 
-  it('Test 1 for getTokenMetadata(): Should succeed to fetch the token metadata', async (done) => {
+  it('Test 1 for getTokenMetadata(): Should succeed to fetch the token metadata', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockImplementation(() => {
       throw new Error();
     });
@@ -379,10 +358,9 @@ describe('Tzip12 contract abstraction test', () => {
       symbol: 'XTZ',
       decimals: 3,
     });
-    done();
   });
 
-  it('Test 2 for getTokenMetadata(): Should succeed to fetch the token metadata from URI and token_info map', async (done) => {
+  it('Test 2 for getTokenMetadata(): Should succeed to fetch the token metadata from URI and token_info map', async () => {
     mockMetadataProvider.provideMetadata.mockResolvedValue({
       uri: 'https://test',
       metadata: { name: 'Taquito test' },
@@ -409,10 +387,9 @@ describe('Tzip12 contract abstraction test', () => {
       symbol: 'XTZ',
       decimals: 3,
     });
-    done();
   });
 
-  it('Test 3 for getTokenMetadata(): Should succeed to fetch the token metadata from URI and token_info map', async (done) => {
+  it('Test 3 for getTokenMetadata(): Should succeed to fetch the token metadata from URI and token_info map', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockResolvedValue({
       uri: 'https://contractMetadata',
       metadata: { name: 'Contract metadata' },
@@ -450,10 +427,9 @@ describe('Tzip12 contract abstraction test', () => {
       symbol: 'XTZ',
       decimals: 3,
     });
-    done();
   });
 
-  it('Test 4 for getTokenMetadata(): Should throw InvalidTokenMetadata', async (done) => {
+  it('Test 4 for getTokenMetadata(): Should throw InvalidTokenMetadata', async () => {
     mockTzip16ContractAbstraction.getMetadata.mockImplementation(() => {
       throw new Error();
     });
@@ -474,6 +450,5 @@ describe('Tzip12 contract abstraction test', () => {
     } catch (err) {
       expect(err).toBeInstanceOf(InvalidTokenMetadata);
     }
-    done();
   });
 });

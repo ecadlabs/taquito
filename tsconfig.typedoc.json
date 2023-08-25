@@ -21,5 +21,6 @@
     "emitDecoratorMetadata": true,
     "jsx": "react",
     "skipLibCheck": true,
+    "useUnknownInCatchVariables": false,
   }
 }
