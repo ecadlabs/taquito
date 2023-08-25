@@ -1,6 +1,13 @@
 import { TaquitoError } from '@taquito/core';
 import { OrTokenSchema } from '../schema/types';
-import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
+import {
+  Token,
+  TokenFactory,
+  Semantic,
+  ComparableToken,
+  SemanticEncoding,
+  TokenValidationError,
+} from './token';
 
 /**
  *  @category Error
@@ -10,6 +17,17 @@ export class OrTokenDecodingError extends TaquitoError {
   public name = 'OrTokenDecodingError';
   constructor(public message: string) {
     super(message);
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error that indicates a failure happening when parsing encoding/executing an OrToken
+ */
+export class OrTokenValidationError extends TokenValidationError {
+  name = 'OrTokenValidationError';
+  constructor(public value: any, public token: OrToken, message: string) {
+    super(value, token, message);
   }
 }
 
@@ -89,6 +107,9 @@ export class OrToken extends ComparableToken {
     return newSig;
   }
 
+  /**
+   * @throws {@link OrTokenValidationError}
+   */
   public EncodeObject(args: any, semantic?: SemanticEncoding): any {
     this.validateJavascriptObject(args);
     const label = Object.keys(args)[0];
@@ -123,6 +144,9 @@ export class OrToken extends ComparableToken {
     }
   }
 
+  /**
+   * @throws {@link OrTokenValidationError}
+   */
   private validateJavascriptObject(args: any): asserts args is Record<string, any> {
     if (
       typeof args !== 'object' ||
@@ -130,7 +154,9 @@ export class OrToken extends ComparableToken {
       args === null ||
       Object.keys(args).length !== 1
     ) {
-      throw new OrTokenDecodingError(
+      throw new OrTokenValidationError(
+        args,
+        this,
         `EncodeObject expectes an object with a single key but got: ${JSON.stringify(args)}`
       );
     }
