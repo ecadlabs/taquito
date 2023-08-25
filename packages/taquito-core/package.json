@@ -10,8 +10,7 @@
   "module": "dist/taquito-core.es6.js",
   "typings": "dist/types/taquito-core.d.ts",
   "files": [
-    "dist",
-    "signature.json"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"

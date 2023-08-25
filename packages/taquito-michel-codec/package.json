@@ -11,8 +11,7 @@
   "module": "./dist/taquito-michel-codec.es6.js",
   "typings": "./dist/types/taquito-michel-codec.d.ts",
   "files": [
-    "dist",
-    "signature.json"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"

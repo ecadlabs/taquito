@@ -10,7 +10,6 @@
   "module": "dist/taquito-sapling.es6.js",
   "typings": "dist/types/taquito-sapling.d.ts",
   "files": [
-    "signature.json",
     "dist",
     "fetch-sapling-params.js"
   ],

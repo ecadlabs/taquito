@@ -11,8 +11,7 @@
   "module": "dist/taquito-tzip12.es6.js",
   "typings": "dist/types/taquito-tzip12.d.ts",
   "files": [
-    "dist",
-    "signature.json"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
