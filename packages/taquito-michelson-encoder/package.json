@@ -12,7 +12,6 @@
   "module": "dist/taquito-michelson-encoder.es6.js",
   "typings": "dist/types/taquito-michelson-encoder.d.ts",
   "files": [
-    "signature.json",
     "dist"
   ],
   "publishConfig": {

@@ -9,7 +9,6 @@
   "module": "dist/taquito-contracts-library.es6.js",
   "typings": "dist/types/taquito-contracts-library.d.ts",
   "files": [
-    "signature.json",
     "dist"
   ],
   "author": "Roxane Letourneau <roxane@ecadlabs.com>",

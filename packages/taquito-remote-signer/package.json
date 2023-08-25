@@ -10,7 +10,6 @@
   "module": "dist/taquito-remote-signer.es6.js",
   "typings": "dist/types/taquito-remote-signer.d.ts",
   "files": [
-    "signature.json",
     "dist"
   ],
   "publishConfig": {
