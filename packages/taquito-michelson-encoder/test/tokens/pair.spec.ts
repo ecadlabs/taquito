@@ -1,5 +1,7 @@
+import { Schema } from '../../src/taquito-michelson-encoder';
 import { createToken } from '../../src/tokens/createToken';
 import { PairToken } from '../../src/tokens/pair';
+import BigNumber from 'bignumber.js';
 
 describe('Pair token', () => {
   const token = createToken(
@@ -162,7 +164,7 @@ describe('Complexe pair token', () => {
         optional: {
           __michelsonType: 'pair',
           schema: {
-            '3': {
+            '2': {
               __michelsonType: 'or',
               schema: {
                 int: {
@@ -175,7 +177,7 @@ describe('Complexe pair token', () => {
                 },
               },
             },
-            '4': {
+            '3': {
               __michelsonType: 'or',
               schema: {
                 int: {
@@ -310,5 +312,47 @@ describe('Complexe pair token', () => {
         },
       ],
     });
+  });
+});
+
+describe('PairToken mixed with and without annotations', () => {
+  const schema = {
+    prim: 'pair',
+    args: [
+      {
+        prim: 'pair',
+        args: [
+          {
+            prim: 'pair',
+            args: [{ prim: 'int' }, { prim: 'int' }],
+            annots: ['%A3'],
+          },
+          { prim: 'int' },
+        ],
+      },
+      { prim: 'bool' },
+    ],
+  };
+
+  const michelineJson = {
+    prim: 'Pair',
+    args: [
+      {
+        prim: 'Pair',
+        args: [{ prim: 'Pair', args: [{ int: '11' }, { int: '22' }] }, { int: '33' }],
+      },
+      { prim: 'True' },
+    ],
+  };
+
+  const javaScriptObject = new Schema(schema).Execute(michelineJson);
+
+  expect(javaScriptObject).toEqual({
+    1: new BigNumber(33),
+    2: true,
+    A3: {
+      0: new BigNumber(11),
+      1: new BigNumber(22),
+    },
   });
 });
