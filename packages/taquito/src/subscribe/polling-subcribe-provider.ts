@@ -68,7 +68,9 @@ const applyEventFilter = (filter?: EventFilter) =>
             const internalOpResults = tx.metadata.internal_operation_results;
             if (internalOpResults) {
               for (const event of internalOpResults) {
-                if (eventFilter(event, filter?.address, filter?.tag, filter?.excludeFailedOperations)) {
+                if (
+                  eventFilter(event, filter?.address, filter?.tag, filter?.excludeFailedOperations)
+                ) {
                   sub.next({
                     opHash: op.hash,
                     blockHash: block.hash,
@@ -126,7 +128,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   private async getConfirmationPollingInterval() {
     if (!this.config.pollingIntervalMilliseconds) {
       const defaultIntervalTestnetsMainnet = 5000;
-      const defaultIntervalSandbox = 1000;
+      const defaultIntervalSandbox = 2000;
       try {
         const constants = await this.context.readProvider.getProtocolConstants('head');
         const blockTime = constants.minimal_block_delay
