@@ -19,7 +19,7 @@ export class InvalidMapTypeError extends TaquitoError {
 // Used in order to identify all object that are of type MichelsonMap even if they come from different module
 const michelsonMapTypeSymbol = Symbol.for('taquito-michelson-map-type-symbol');
 
-export type MichelsonMapKey = Array<any> | object | string | boolean | number;
+export type MichelsonMapKey = Array<any> | object | string | boolean | number | null;
 
 /**
  *

@@ -79,7 +79,7 @@ describe('Global constant token', () => {
       } catch (e: any) {
         expect(e).toBeInstanceOf(GlobalConstantDecodingError);
         expect(e.message).toEqual(
-          `[2] Unable to decode a value represented by a global constants. Please provide an expanded script to the Michelson-Encoder or semantics for the decoding. The following global constant hash was encountered: expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb.`
+          `[1] Unable to decode a value represented by a global constants. Please provide an expanded script to the Michelson-Encoder or semantics for the decoding. The following global constant hash was encountered: expru5X5fvCer8tbRkSAtwyVCs9FUCq46JQG7QCAkhZSumjbZBUGzb.`
         );
       }
     });
