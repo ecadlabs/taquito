@@ -1,5 +1,5 @@
-export const knownContractProtoALph = "KT1PHTgSyvmvYNpm4WjpcNGEq6aDjJuqfcbW";
-export const knownBigMapContractProtoALph = "KT1F6htQNZzV8VSX12s13aE7J4dRzz3Q46et";
-export const knownTzip12BigMapOffChainContractProtoALph = "KT1PvgZct7T3qcaLjyKsCjQRtcWSUnrdsPfd";
-export const knownSaplingContractProtoALph = "KT1WkqYWcKhMHidqQ9D39dNA8Zsw3taDz5fL";
-export const knownOnChainViewContractAddressProtoALph = "KT1MCZn4ieGTGa5zVEnNhNMtGCgVaHmYe3PR";
+export const knownContractProtoALph = "KT1TGdP7hRhYvb5QfxkNZ8FiTnGJ9vb7MYyw";
+export const knownBigMapContractProtoALph = "KT1NRh5rR9PcR26y6w5RuE5swSBcj1zcPySp";
+export const knownTzip12BigMapOffChainContractProtoALph = "KT1W1WGc1QrqptPkahCtZ5yvssQeeSGWp5eT";
+export const knownSaplingContractProtoALph = "KT1Q3EwWWkkjAZjFBjZyirwKQDMy1KZ4nqG5";
+export const knownOnChainViewContractAddressProtoALph = "KT19ypS4rLqxRoJsPBMchQrHgaFTgcom9kWg";
