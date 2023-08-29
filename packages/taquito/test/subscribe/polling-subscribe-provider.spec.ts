@@ -97,7 +97,7 @@ describe('Configurations for the PollingSubscribeProvider', () => {
       time_between_blocks: [new BigNumber('0'), new BigNumber('0')],
     });
     await pollingSubscribeProvider['getConfirmationPollingInterval']();
-    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(2000);
+    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(500);
     expect(pollingSubscribeProvider.config.shouldObservableSubscriptionRetry).toBeFalsy();
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype

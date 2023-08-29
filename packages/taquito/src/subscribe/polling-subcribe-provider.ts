@@ -128,7 +128,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   private async getConfirmationPollingInterval() {
     if (!this.config.pollingIntervalMilliseconds) {
       const defaultIntervalTestnetsMainnet = 5000;
-      const defaultIntervalSandbox = 2000;
+      const defaultIntervalSandbox = 500;
       try {
         const constants = await this.context.readProvider.getProtocolConstants('head');
         const blockTime = constants.minimal_block_delay
