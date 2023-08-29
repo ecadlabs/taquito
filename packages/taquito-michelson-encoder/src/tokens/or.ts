@@ -1,4 +1,3 @@
-import { TaquitoError } from '@taquito/core';
 import { OrTokenSchema } from '../schema/types';
 import {
   Token,
@@ -8,17 +7,6 @@ import {
   SemanticEncoding,
   TokenValidationError,
 } from './token';
-
-/**
- *  @category Error
- *  @description Error that indicates a failure when decoding OR Token methods
- */
-export class OrTokenDecodingError extends TaquitoError {
-  public name = 'OrTokenDecodingError';
-  constructor(public message: string) {
-    super(message);
-  }
-}
 
 /**
  *  @category Error
@@ -157,7 +145,7 @@ export class OrToken extends ComparableToken {
       throw new OrValidationError(
         args,
         this,
-        `EncodeObject expectes an object with a single key but got: ${JSON.stringify(args)}`
+        `EncodeObject expects an object with a single key but got: ${JSON.stringify(args)}`
       );
     }
   }
@@ -189,7 +177,9 @@ export class OrToken extends ComparableToken {
         [leftToken.annot()]: leftToken.Execute(val.args[0], semantics),
       };
     } else {
-      throw new OrTokenDecodingError(
+      throw new OrValidationError(
+        val,
+        this,
         `Was expecting Left or Right prim but got: ${JSON.stringify(val.prim)}`
       );
     }
