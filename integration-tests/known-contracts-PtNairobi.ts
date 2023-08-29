@@ -1,5 +1,5 @@
-export const knownContractPtNairobi = "KT1GrzF7DSNc7LrLmS7RNaLrBQqyYHyoMzwR";
-export const knownBigMapContractPtNairobi = "KT1Twd6GBBqHEFhzvBDEn4JiUopttq2WjdnF";
-export const knownTzip12BigMapOffChainContractPtNairobi = "KT1WZUqEKZ4TMW75FKpqod4HwB4ts7wbnsFh";
-export const knownSaplingContractPtNairobi = "KT1VNnD8NWx9ep2gxsHbzrmahrWsKpZb3xGY";
-export const knownOnChainViewContractAddressPtNairobi = "KT19eNryXTuVgH6s6cUc1a5LyjSamdBw4JXo";
+export const knownContractPtNairobi = "KT1GaTG1E8knCGNGrpnhd7M27MvTjzTEJHGv";
+export const knownBigMapContractPtNairobi = "KT1VVgKD8gNHhxrNioZyb9HAmVbYryEnAw19";
+export const knownTzip12BigMapOffChainContractPtNairobi = "KT1RjUcT5JdFMQWB371ofRXyDW5sXueqLWvH";
+export const knownSaplingContractPtNairobi = "KT1BLuP7JezCxLosrAosH1LW7frCqFXzx5nK";
+export const knownOnChainViewContractAddressPtNairobi = "KT1Lvh3K6mUoBXnoi4w1hmHC4L4nsu4J88d4";
