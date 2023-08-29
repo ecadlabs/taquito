@@ -30,6 +30,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         batch.withTransfer({ to: pkh, amount: 0.001 });
       })
       try {
+        let res = (await Tezos.rpc.getConstants()!).minimal_block_delay;
+        console.log('minimal_block_delay', res?.toNumber())
         const op = await batch.send();
         await op.confirmation(1, 300);
         expect(op.status).toEqual('applied');

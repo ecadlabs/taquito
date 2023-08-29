@@ -8,7 +8,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     beforeEach(async (done) => {
       await setup();
-      timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
+      timeBetweenBlocks = (await Tezos.rpc.getConstants()).minimal_block_delay ?? new BigNumber(15);
+      console.log('timeBetweenBlocks', timeBetweenBlocks.toNumber())
       done();
     });
 

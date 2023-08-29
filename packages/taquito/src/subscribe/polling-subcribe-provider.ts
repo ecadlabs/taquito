@@ -133,8 +133,6 @@ export class PollingSubscribeProvider implements SubscribeProvider {
         const constants = await this.context.readProvider.getProtocolConstants('head');
         const blockTime = constants.minimal_block_delay
           ? constants.minimal_block_delay.multipliedBy(1000)
-          : constants.time_between_blocks
-          ? constants.time_between_blocks[0].multipliedBy(1000)
           : new BigNumber(defaultIntervalTestnetsMainnet);
         const confirmationPollingInterval = blockTime.dividedBy(3);
 
