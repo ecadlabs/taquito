@@ -151,7 +151,7 @@ export class OrToken extends ComparableToken {
   }
 
   /**
-   * @throws {@link OrTokenDecodingError}
+   * @throws {@link OrValidationError}
    */
   public Execute(val: any, semantics?: Semantic): any {
     const leftToken = this.createToken(this.val.args[0], this.idx);
