@@ -70,7 +70,7 @@ describe('Configurations for the PollingSubscribeProvider', () => {
       time_between_blocks: [new BigNumber('30'), new BigNumber('20')],
     });
     await pollingSubscribeProvider['getConfirmationPollingInterval']();
-    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(10000);
+    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(2000);
     expect(pollingSubscribeProvider.config.shouldObservableSubscriptionRetry).toBeFalsy();
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype
@@ -82,7 +82,7 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
     mockReadProvider.getProtocolConstants.mockRejectedValue(new Error());
     const pollingInterval = await pollingSubscribeProvider['getConfirmationPollingInterval']();
-    expect(pollingInterval).toEqual(5000);
+    expect(pollingInterval).toEqual(6000);
     expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toBeUndefined();
     expect(pollingSubscribeProvider.config.shouldObservableSubscriptionRetry).toBeFalsy();
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
@@ -97,7 +97,7 @@ describe('Configurations for the PollingSubscribeProvider', () => {
       time_between_blocks: [new BigNumber('0'), new BigNumber('0')],
     });
     await pollingSubscribeProvider['getConfirmationPollingInterval']();
-    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(500);
+    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(2000);
     expect(pollingSubscribeProvider.config.shouldObservableSubscriptionRetry).toBeFalsy();
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype

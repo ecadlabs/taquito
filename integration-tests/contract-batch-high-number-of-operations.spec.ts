@@ -33,7 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         let res = (await Tezos.rpc.getConstants()!).minimal_block_delay;
         console.log('minimal_block_delay', res?.toNumber())
         const op = await batch.send();
-        await op.confirmation(1, 300);
+        await op.confirmation(1);
         expect(op.status).toEqual('applied');
       } catch (e) { console.log(JSON.stringify(e)) }
       done();
