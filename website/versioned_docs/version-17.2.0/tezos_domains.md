@@ -58,7 +58,8 @@ const fetchAddressFromTezosDomain = async (domainName: string): Promise<string> 
     const storage: any = await contract.storage();
     const domain = await storage.store.records.get(char2Bytes(domainName));
     if (domain) {
-      return domain.owner;
+      return domain.address; // address that the domain points to
+      // return domain.owner; // address that owns the domainName
     } else {
       return domainName;
     }
@@ -93,4 +94,4 @@ const fetchExpiryDate = async (domainName: string): Promise<string> => {
 }
 ```
 
-If you provide `taquito.tez` as a parameter, the function will return `2022-04-30T00:00:00Z`, meaning that the domain name expires in June 9th, 2022.
+If you provide `taquito.tez` as a parameter, the function will return `2024-08-21T18:51:28.000Z`, meaning that the domain name expires in August 21st, 2023.

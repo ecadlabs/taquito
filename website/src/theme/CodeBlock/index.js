@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2017-present, Facebook, Inc.
  *
- * This source code is licensed under the MIT license found in the
+ * This source code is licensed under the Apache 2.0 License found in the
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -89,7 +89,7 @@ export default ({
       if (typeof window !== 'undefined') {
         // solve localStorage is not defined Error when building server
         // can use localStorage on the browser, not on the server
-        wallet = new BeaconWallet({ name:"exampleWallet" });
+        wallet = new BeaconWallet({ name:"exampleWallet", network: { type: 'ghostnet'}});
       }      
       const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
       setDependencies({

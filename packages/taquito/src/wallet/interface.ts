@@ -1,12 +1,23 @@
-import { DelegateParams, IncreasePaidStorageParams, OriginateParams, TransferParams } from '../operations/types';
+import {
+  DelegateParams,
+  FailingNoopParams,
+  IncreasePaidStorageParams,
+  OriginateParams,
+  TransferParams,
+} from '../operations/types';
 
 export type WalletDefinedFields = 'source';
 
 export type WalletTransferParams = Omit<TransferParams, WalletDefinedFields>;
 
-export type WalletOriginateParams<TStorage = any> = Omit<OriginateParams<TStorage>, WalletDefinedFields>;
+export type WalletOriginateParams<TStorage = any> = Omit<
+  OriginateParams<TStorage>,
+  WalletDefinedFields
+>;
 
 export type WalletDelegateParams = Omit<DelegateParams, WalletDefinedFields>;
+
+export type WalletFailingNoopParams = Omit<FailingNoopParams, WalletDefinedFields>;
 
 export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, WalletDefinedFields>;
 
@@ -34,10 +45,22 @@ export interface WalletProvider {
   /**
    * @description Transform WalletIncreasePaidStorageParams into a format compliant with the underlying wallet
    */
-  mapIncreasePaidStorageWalletParams: (params: () => Promise<WalletIncreasePaidStorageParams>) => Promise<any>;
+  mapIncreasePaidStorageWalletParams: (
+    params: () => Promise<WalletIncreasePaidStorageParams>
+  ) => Promise<any>;
 
   /**
    * @description Request the wallet to send an operation batch
    */
   sendOperations: (params: any[]) => Promise<string>;
+
+  /**
+   * @description Request the wallet to sign a payload
+   */
+  sign(bytes: string, watermark?: Uint8Array): Promise<string>;
+
+  /**
+   * @description Get the public key from the wallet
+   */
+  getPK(): Promise<string>;
 }

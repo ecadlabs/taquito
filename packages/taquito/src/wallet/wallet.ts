@@ -11,6 +11,7 @@ import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
   WalletDelegateParams,
+  WalletFailingNoopParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
@@ -27,6 +28,7 @@ import {
   ValidationResult,
   invalidDetail,
 } from '@taquito/utils';
+import { OperationContentsFailingNoop } from '@taquito/rpc';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -259,6 +261,40 @@ export class Wallet {
 
   /**
    *
+   * @description failing_noop operation that is guaranteed to fail. DISCLAIMER: Not all wallets support signing failing_noop operations.
+   *
+   * @returns Signature for a failing_noop
+   *
+   * @param params operation parameter
+   */
+  async signFailingNoop(params: WalletFailingNoopParams) {
+    const op: OperationContentsFailingNoop = {
+      kind: OpKind.FAILING_NOOP,
+      arbitrary: params.arbitrary,
+    };
+    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock);
+    const forgedBytes = await this.context.forger.forge({
+      branch: hash,
+      contents: [op],
+    });
+    const signature = await this.walletProvider.sign(forgedBytes, Uint8Array.from([3]));
+    return {
+      signature,
+      bytes: forgedBytes,
+      signedContent: {
+        branch: hash,
+        contents: [
+          {
+            kind: OpKind.FAILING_NOOP,
+            arbitrary: params.arbitrary,
+          },
+        ],
+      },
+    };
+  }
+
+  /**
+   *
    * @description Register the current address as delegate.
    *
    * @returns An operation handle with the result from the rpc node
@@ -368,5 +404,9 @@ export class Wallet {
       readProvider
     );
     return contractAbstractionComposer(abs, this.context);
+  }
+
+  getPK() {
+    return this.walletProvider.getPK();
   }
 }

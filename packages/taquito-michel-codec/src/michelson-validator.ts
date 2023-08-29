@@ -177,9 +177,9 @@ export class MichelsonValidationError extends MichelsonError {
    * @param val Value of a node caused the error
    * @param message An error message
    */
-  constructor(public val: Expr, message?: string) {
+  constructor(public readonly val: Expr, public readonly message: string) {
     super(val, message);
-    Object.setPrototypeOf(this, MichelsonValidationError.prototype);
+    this.name = 'MichelsonValidationError';
   }
 }
 

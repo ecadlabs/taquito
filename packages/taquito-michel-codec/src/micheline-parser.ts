@@ -12,34 +12,35 @@ import {
 import { expandMacros } from './macros';
 import { ProtocolOptions } from './michelson-types';
 import { expandGlobalConstants } from './global-constants';
+import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicating a failure when parsing Micheline expressions
+ *  @description Error that indicates a failure when parsing Micheline expressions
  */
-export class MichelineParseError extends Error {
+export class MichelineParseError extends TaquitoError {
   /**
    * @param token A token caused the error
    * @param message An error message
    */
-  constructor(public token: Token | null, message?: string) {
-    super(message);
-    Object.setPrototypeOf(this, MichelineParseError.prototype);
+  constructor(public readonly token: Token | null, public readonly message: string) {
+    super();
+    this.name = 'MichelineParseError';
   }
 }
 
 /**
  *  @category Error
- *  @description Error that inidicates a failure when parsing Micheline JSON
+ *  @description Error inidicates a failure when parsing Micheline JSON
  */
-export class JSONParseError extends Error {
+export class JSONParseError extends TaquitoError {
   /**
    * @param node A node caused the error
    * @param message An error message
    */
-  constructor(public node: unknown, message?: string) {
-    super(message);
-    Object.setPrototypeOf(this, JSONParseError.prototype);
+  constructor(public readonly node: unknown, public readonly message: string) {
+    super();
+    this.name = 'JSONParseError';
   }
 }
 

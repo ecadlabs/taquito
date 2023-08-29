@@ -48,6 +48,7 @@ import {
   OperationContentsAndResultSmartRollupTimeout,
   SmartRollupRefutationStart,
   SmartRollupRefutationOptions,
+  RPCSimulateOperationParam,
 } from '../src/types';
 import {
   blockIthacanetResponse,
@@ -3936,6 +3937,67 @@ describe('RpcClient test', () => {
         ],
       });
       const response = await client.runOperation(testData as RPCRunOperationParam);
+
+      const balanceUpdate =
+        'metadata' in response.contents[0]
+          ? (response.contents[0]['metadata'][
+              'balance_updates'
+            ] as OperationMetadataBalanceUpdates[])
+          : [];
+      expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
+      expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
+      expect(balanceUpdate![2]['category']).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.LEGACY_REWARDS
+      );
+
+      done();
+    });
+  });
+
+  describe('simulateOperation', () => {
+    it('should query the right url and data', async (done) => {
+      const testData = {};
+
+      httpBackend.createRequest.mockResolvedValue({ content: {} });
+      await client.simulateOperation(testData as any);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'POST',
+        url: 'root/chains/test/blocks/head/helpers/scripts/simulate_operation',
+      });
+
+      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
+      done();
+    });
+
+    it('should use enum for property category to avoid space in name', async (done) => {
+      const testData = {};
+
+      httpBackend.createRequest.mockResolvedValue({
+        contents: [
+          {
+            metadata: {
+              balance_updates: [
+                {
+                  category: 'storage fees',
+                  kind: 'burned',
+                  origin: 'block',
+                },
+                {
+                  category: 'block fees',
+                  change: '374',
+                  kind: 'accumulator',
+                  origin: 'block',
+                },
+                {
+                  category: 'legacy_rewards',
+                },
+              ],
+            },
+          },
+        ],
+      });
+      const response = await client.simulateOperation(testData as RPCSimulateOperationParam);
 
       const balanceUpdate =
         'metadata' in response.contents[0]

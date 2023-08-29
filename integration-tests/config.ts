@@ -22,6 +22,10 @@ enum ForgerType {
   COMPOSITE = 'composite',
 }
 
+export const isSandbox = (config: {rpc: string}) => {
+  return config.rpc.includes('localhost') || config.rpc.includes('0.0.0.0') || config.rpc.includes('127.0.0.1');
+}
+
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 interface Config {
@@ -65,7 +69,7 @@ interface SecretKeyConfig {
   password?: string
 }
 
-const defaultSecretKey: SecretKeyConfig = {
+export const defaultSecretKey: SecretKeyConfig = {
   // pkh is tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD
   type: SignerType.SECRET_KEY,
   secret_key: process.env['SECRET_KEY'] || 'spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN',

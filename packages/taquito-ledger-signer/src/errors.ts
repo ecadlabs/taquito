@@ -2,7 +2,7 @@ import { ParameterValidationError, TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates an invalid or unparseable ledger response
+ *  @description Error that indicates an invalid or unparseable ledger response
  */
 export class InvalidLedgerResponseError extends TaquitoError {
   constructor(public readonly message: string) {
@@ -13,7 +13,7 @@ export class InvalidLedgerResponseError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure when trying to retrieve a Public Key from Ledger signer
+ *  @description Error that indicates a failure when trying to retrieve a Public Key from Ledger signer
  */
 export class PublicKeyRetrievalError extends TaquitoError {
   constructor(public readonly cause: any) {
@@ -25,7 +25,7 @@ export class PublicKeyRetrievalError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure when trying to retrieve a Public Key Hash from Ledger signer
+ *  @description Error that indicates a failure when trying to retrieve a Public Key Hash from Ledger signer
  */
 export class PublicKeyHashRetrievalError extends TaquitoError {
   constructor() {
@@ -37,7 +37,7 @@ export class PublicKeyHashRetrievalError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid derivation type being passed or used
+ *  @description Error that indicates an invalid derivation type being passed or used
  */
 export class InvalidDerivationTypeError extends ParameterValidationError {
   constructor(public readonly derivationType: string) {

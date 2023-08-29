@@ -9,8 +9,10 @@ import {
   RequestPermissionInput,
   PermissionScope,
   getDAppClientInstance,
+  SigningType,
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+import toBuffer from 'typedarray-to-buffer';
 import {
   createIncreasePaidStorageOperation,
   createOriginationOperation,
@@ -22,6 +24,8 @@ import {
   WalletProvider,
   WalletTransferParams,
 } from '@taquito/taquito';
+import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
+import { UnsupportedActionError } from '@taquito/core';
 
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
@@ -181,5 +185,47 @@ export class BeaconWallet implements WalletProvider {
    */
   async clearActiveAccount() {
     await this.client.setActiveAccount();
+  }
+
+  async sign(bytes: string, watermark?: Uint8Array) {
+    let bb = hex2buf(bytes);
+    if (typeof watermark !== 'undefined') {
+      bb = mergebuf(watermark, bb);
+    }
+    const watermarkedBytes = buf2hex(toBuffer(bb));
+    const signingType = this.getSigningType(watermark);
+    if (signingType !== SigningType.OPERATION) {
+      throw new UnsupportedActionError(
+        `Taquito Beacon Wallet currently only supports signing operations, not ${signingType}`
+      );
+    }
+    const { signature } = await this.client.requestSignPayload({
+      payload: watermarkedBytes,
+      signingType,
+    });
+    return signature;
+  }
+
+  private getSigningType(watermark?: Uint8Array) {
+    if (!watermark || watermark.length === 0) {
+      return SigningType.RAW;
+    }
+    if (watermark.length === 1) {
+      if (watermark[0] === 5) {
+        return SigningType.MICHELINE;
+      }
+      if (watermark[0] === 3) {
+        return SigningType.OPERATION;
+      }
+    }
+    throw new Error(`Invalid watermark ${JSON.stringify(watermark)}`);
+  }
+
+  async getPK() {
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    return account?.publicKey;
   }
 }

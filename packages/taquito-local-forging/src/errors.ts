@@ -4,7 +4,7 @@ import { ENTRYPOINT_MAX_LENGTH } from './constants';
 
 /**
  *  @category Error
- *  @description Error indicates an invalid operation content being passed or used
+ *  @description Error that indicates an invalid operation content being passed or used
  */ export class InvalidOperationSchemaError extends ParameterValidationError {
   constructor(public readonly operation: OperationContents, public readonly errorDetail?: string) {
     super();
@@ -16,7 +16,7 @@ import { ENTRYPOINT_MAX_LENGTH } from './constants';
 
 /**
  *  @category Error
- *  @description Error indicates an entrypoint name exceeding maximum length
+ *  @description Error that indicates an entrypoint name exceeding maximum length
  */
 export class OversizedEntryPointError extends ParameterValidationError {
   constructor(public readonly entrypoint: string) {
@@ -28,7 +28,7 @@ export class OversizedEntryPointError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid ballot value being used
+ *  @description Error that indicates an invalid ballot value being used
  */
 export class InvalidBallotValueError extends ParameterValidationError {
   constructor(public readonly ballotValue: string) {
@@ -40,7 +40,7 @@ export class InvalidBallotValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure when trying to decode ballot value
+ *  @description Error that indicates a failure when trying to decode ballot value
  */
 export class DecodeBallotValueError extends ParameterValidationError {
   constructor(public readonly ballotValue: string) {
@@ -52,7 +52,7 @@ export class DecodeBallotValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates unexpected Michelson Value being passed or used
+ *  @description Error that indicates unexpected Michelson Value being passed or used
  */
 export class UnexpectedMichelsonValueError extends ParameterValidationError {
   constructor(public readonly value: string) {
@@ -64,7 +64,7 @@ export class UnexpectedMichelsonValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure when trying to decode an operation
+ *  @description Error that indicates a failure when trying to decode an operation
  */
 export class OperationDecodingError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -75,7 +75,7 @@ export class OperationDecodingError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure when trying to encode an operation
+ *  @description Error that indicates a failure when trying to encode an operation
  */
 export class OperationEncodingError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -86,7 +86,7 @@ export class OperationEncodingError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an unsupported operation being passed or used
+ *  @description Error that indicates an unsupported operation being passed or used
  */
 export class UnsupportedOperationError extends ParameterValidationError {
   constructor(public readonly op: string) {
@@ -98,7 +98,7 @@ export class UnsupportedOperationError extends ParameterValidationError {
 
 /**
  * @cateogry Error
- * @description Error indicates an unsupported pvm being passed or used
+ * @description Error that indicates an unsupported pvm being passed or used
  */
 export class UnsupportedPvmKindError extends ParameterValidationError {
   constructor(public readonly pvm: string) {
@@ -110,7 +110,7 @@ export class UnsupportedPvmKindError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error indicates an unsupported pvm to decode
+ * @description Error that indicates an unsupported pvm to decode
  */
 export class DecodePvmKindError extends ParameterValidationError {
   constructor(public readonly pvm: string) {
@@ -122,7 +122,7 @@ export class DecodePvmKindError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error indicates an invalid Smart Rollup Address (sr1)
+ * @description Error that indicates an invalid Smart Rollup Address (sr1)
  */
 export class InvalidSmartRollupAddressError extends ParameterValidationError {
   constructor(public readonly address: string, public readonly errorDetail?: string) {
@@ -135,7 +135,7 @@ export class InvalidSmartRollupAddressError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error indicates an invalid Smart Rollup commitment hash (src1)
+ * @description Error that indicates an invalid Smart Rollup commitment hash (src1)
  */
 export class InvalidSmartRollupCommitmentHashError extends ParameterValidationError {
   constructor(public readonly hash: string, public readonly errorDetail?: string) {

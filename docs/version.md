@@ -2,11 +2,105 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v17.2.0
+
+**Potential Breaking Changes** : 
+Further improved error classes
+ - In `@taquito/sapling` `InvalidMerkleRootError` is renamed to `InvalidMerkleTreeError`
+ - In `@taquito/sapling` `InvalidParameter` is renamed to `SaplingTransactionViewerError`
+ - In `@taquito/michel-codec` `InvalidContractError` is renamed to `InvalidMichelsonError`
+
+## Summary
+
+### New Features
+ - Added new RPC endpoint `simulateOperation` #2548
+ - Added support for signing `failingNoop` operation in `Contract API` and `Wallet API` #952 #2507
+
+### Bug Fixes
+- Updated sapling live code example contract on website #2542
+
+### Improvement
+ Improved error classes for the following packages:
+  - `@taquito-sapling` #2568
+  - `@taquito-michel-codec` #2568
+
+### Documentation
+ - Updated local forger documentation #2571
+ - Adjusted website wallet page design and removed website lambda view page broken link #1652
+
+### Internals
+ - Updated beacon dependency to v4.0.6 #2584
+ - Updated estimation process to use `simulateOperation()` instead of `runOperation()` #2548
+ - Updated website dependencies [PR#2587](https://github.com/ecadlabs/taquito/pull/2587)
+
+## `@taquito/taquito` - Add support of failing_noop operation in Contract and Wallet API
+Taquito now supports the `failing_noop` operation
+
+```
+const Tezos = new TezosToolkit(rpcUrl);
+
+Tezos.setWalletProvider(wallet)
+const signedW = await Tezos.wallet.signFailingNoop({
+arbitrary: char2Bytes("Hello World"),
+basedOnBlock: 0,
+});
+
+Tezos.setSignerProvider(signer)
+const signedC = await Tezos.contract.signFailingNoop({
+arbitrary: char2Bytes("Hello World"),
+basedOnBlock: 'genesis',
+});
+```
+
+## `@taquito/rpc` - Add support of simulateOperation RPC call
+
+```
+const Tezos = new TezosToolkit(rpcUrl)
+let account ='tz1...'
+let counter = Number((await Tezos.rpc.getContract(account, {block: 'head'})).counter)
+const op = {
+  chain_id: await Tezos.rpc.getChainId(),
+  operation: {
+    branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+    contents: [{
+      kind: OpKind.TRANSACTION,
+      counter: (counter + 1).toString(),
+      source: account,
+      destination: account,
+      fee: '0',
+      gas_limit: '1100',
+      storage_limit: '600',
+      amount: '1',
+    }]
+  }
+};
+
+let simulate = await Tezos.rpc.simulateOperation(op)).contents[0]
+```
+# Taquito v17.1.1
+## Summary
+This is a patch release to fix a potential issue with `verifySignature()` and `hex2buf()` util method. 
+### Bug Fixes
+- Fixed a potentially exploitable behaviour where `verifySignature()` was allowing an appended character to a message payload and still verify the signature correctly. It has now been fixed to validate against odd length characters #2578
+
 # Taquito v17.1.0
 **Potential Breaking Changes**
 - Updated RxJS version from v6.6.3 to v7.8.1
 - Updated TS version into  v4.2.4
 - Please be wary due to the RxJS version upgrade, we've been seeing intermittent timeouts when testing against a Flextesa sandbox. This behaviour is **not** present when using it against a regular node (Mainnet, Nairobinet, etc). We are still investigating what the cause might be. #2261
+
+Some other subtle changes that might affect some developers:
+- In `@taquito/taquito` - `IntegerError` is renamed to `InvalidBalanceError`
+- In `@taquito/taquito` - `PrepareProvider` used to throw `RevealEstimateError` now will throw `PublicKeyNotFoundError`
+- In `@taquito/tzip-16` - `MetadataNotFound` is renamed to `ContractMetadataNotFoundError`
+- In `@taquito/tzip-16` - `InvalidMetadata` is renamed to `InvalidContractMetadataError`
+- In `@taquito/tzip-16` - `InvalidMetadataType` is renamed to `InvalidContractMetadataTypeError`
+- In `@taquito/tzip-16` - `BigMapMetadataNotFound` is renamed to `BigMapContractMetadataNotFoundError`
+- In `@taquito/tzip-16` - `UriNotFound` is renamed to `UriNotFoundError`
+- In `@taquito/tzip-16` - `InvalidUri` is renamed to `InvalidUriError`
+- In `@taquito/tzip-16` - `ProtocolNotSupported` is renamed to `ProtocolNotSupportedError`
+- In `@taquito/tzip-16` - `UnconfiguredMetadataProviderError` is renamed to `UnconfiguredContractMetadataProviderError`
+- In `@taquito/tzip-16` - `ForbiddenInstructionInViewCode` is renamed to `ForbiddenInstructionInViewCodeError`
 
 ## Summary
 ### New Features
@@ -62,12 +156,21 @@ Protocol Nairobi comes with a couple potential breaking changes for our users:
 ### Internals
 - Upgrade `netlify-cli` package to fix CI issues [PR#2496](https://github.com/ecadlabs/taquito/pull/2496)
 # Taquito v16.2.0
+## **Potential Breaking Changes**:
+- Some error classes may have been moved to the `@taquito/core` package. Note to developers if they are exporting any error classes to capture errors, there might be a need to adjust the export path. 
+- We have an ongoing error class refactoring which includes ticket #1992 (create an error class hierarchy), #1993 (consolidate duplicate errors in Taquito) and #1994 (improve error classes in individual packages, namely `@taquito/utils`, `@taquito/local-forging` and `@taquito/signer`). Here are a list of notable changes: 
+    1. `@taquito/sapling` Class SaplingToolkit function prepareUnshieldedTransaction used to throw InvalidKeyError now throw a InvalidAddressError instead 
+    2. `@taquito/rpc` when validateContractAddress used to throw InvalidAddressError will now throw InvalidContractAddressError. 
+    3. `@taquito/sapling` prepareUnshieldedTransaction function when validateDestinationImplicitAddress used to throw InvalidAddressError now throw InvalidKeyHashError 
+    4. `@taquito/local-forging` smartRollupAddressDecoder used to throw InvalidAddressError now throw InvalidSmartRollupAddressError
+    5. `@taquito/local-forging` used to have class InvalidSmartRollupContractAddressError now is InvalidSmartRollupCommitmentHashError  
+    6. `@taquito/local-forging` function smartRollupContractAddressEncoder rename to smartRollupCommitmentHashEncoder 
+    7. `@taquito/signer` PrivateKeyError is replaced by common error InvalidKeyError from `@taquito/core`
 
-**Potential Breaking Changes**:
-- Some error classes may have been moved to the `@taquito/core` package. Note to developers if they are exporting any error classes to capture errors, there might be a need to adjust the export path
+- In `@taquito/michelson-encoder` we introduced a new semantic `{ Some: null}`  to EncodeObject() for nested options type like (option (option nat)). The old semantic still works when making contract calls but will look to deprecated them in the future as table below. And the corresponding `Execute()` will now return new semantic `{ Some: 1 }` as previously return `1` will be deprecated soon. #2344 
+![image](https://github.com/ecadlabs/taquito/assets/106410553/455e7f9f-9d6a-4503-bb89-8f337c322063)
 
-**Note**: There are significant (backwards compatible) changes to the `@taquito/taquito` package, largely regarding the flow of preparing, estimating, forging, and injecting operations into a node. No breaking changes are expected, but users are welcomed to reach out to the team if any issues arise.
-
+**Note**: There are also significant (backwards compatible) changes to the `@taquito/taquito` package, largely regarding the flow of preparing, estimating, forging, and injecting operations into a node. No breaking changes are expected, but users are welcomed to reach out to the team if any issues arise.
 
 ## Summary
 ### New Features

@@ -5,6 +5,7 @@ import {
   OperationContentsBallot,
   OperationContentsDelegation,
   OperationContentsDrainDelegate,
+  OperationContentsFailingNoop,
   OperationContentsIncreasePaidStorage,
   OperationContentsOrigination,
   OperationContentsProposals,
@@ -52,6 +53,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  FailingNoopParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -68,6 +70,7 @@ import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
+import { FailingNoopOperation } from '../operations/failing-noop-operation';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
   constructor(context: Context, private estimator: EstimationProvider) {
@@ -677,6 +680,42 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       context
     );
   }
+
+  /**
+   *
+   * @description A failing_noop operation that is guaranteed to fail.
+   *
+   * @returns A FailingNoopOperation object representing the signed failing_noop operation
+   *
+   * @param params failingNoop operation parameter
+   */
+  async failingNoop(params: FailingNoopParams): Promise<FailingNoopOperation> {
+    const op: OperationContentsFailingNoop = {
+      kind: OpKind.FAILING_NOOP,
+      arbitrary: params.arbitrary,
+    };
+    const hash = await this.context.readProvider.getBlockHash(params.basedOnBlock);
+
+    const forged = await this.context.forger.forge({
+      branch: hash,
+      contents: [op],
+    });
+    const { prefixSig } = await this.signer.sign(forged, new Uint8Array([3]));
+    return {
+      signature: prefixSig,
+      bytes: forged,
+      signedContent: {
+        branch: hash,
+        contents: [
+          {
+            kind: OpKind.FAILING_NOOP,
+            arbitrary: params.arbitrary,
+          },
+        ],
+      },
+    };
+  }
+
   /**
    *
    * @description Create an smart contract abstraction for the address specified.

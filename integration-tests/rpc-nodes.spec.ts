@@ -362,6 +362,41 @@ CONFIGS().forEach(
           done();
         });
 
+        it('Verify that rpcClient.simulateOperation simulates an operation without signature checks', async (done) => {
+          try {
+            const chainId = await rpcClient.getChainId();
+            expect(chainId).toBeDefined();
+
+            const operation: any = {
+              chain_id: chainId,
+              operation: {
+                branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+                contents: [
+                  {
+                    kind: 'origination',
+                    counter: '1',
+                    source: await Tezos.signer.publicKeyHash(),
+                    fee: '10000',
+                    gas_limit: '10',
+                    storage_limit: '10',
+                    balance: '0',
+                    script: {
+                      code: tokenBigmapCode,
+                      storage: tokenBigmapStorage,
+                    },
+                  },
+                ],
+              },
+            };
+
+            await rpcClient.simulateOperation(operation);
+          } catch (e: any) {
+            expect(e.message).toMatch('contract.counter_in_the_past');
+          }
+
+          done();
+        });
+
         it('Verify that rpcClient.runView executes tzip4 views', async (done) => {
 
           const chainId = await Tezos.rpc.getChainId();
@@ -438,7 +473,7 @@ CONFIGS().forEach(
         });
 
         it('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async (done) => {
-          const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } } );
+          const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } });
           expect(ticketBalance).toBeDefined();
           done();
         });

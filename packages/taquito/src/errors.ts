@@ -2,7 +2,7 @@ import { ParameterValidationError, RpcError, NetworkError } from '@taquito/core'
 
 /**
  *  @category Error
- *  @description Error indicates invalid confirmation count has been passed or configured
+ *  @description Error that indicates invalid confirmation count has been passed or configured
  */
 export class InvalidConfirmationCountError extends ParameterValidationError {
   constructor(public readonly invalidConfirmations: number) {
@@ -25,7 +25,7 @@ export class ConfirmationTimeoutError extends NetworkError {
 
 /**
  *  @category Error
- *  @description Error indicates an error being returned from the RPC response
+ *  @description Error that indicates an error being returned from the RPC response
  */
 export class RPCResponseError extends RpcError {
   constructor(public readonly message: string, public readonly cause?: any) {

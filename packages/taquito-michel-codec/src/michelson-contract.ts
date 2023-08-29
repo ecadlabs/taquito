@@ -27,7 +27,7 @@ import {
 import {
   InvalidDataExpressionError,
   InvalidEntrypointError,
-  InvalidContractError,
+  InvalidMichelsonError,
   InvalidTypeExpressionError,
 } from './errors';
 
@@ -48,7 +48,7 @@ export class Contract {
     const p = new Parser(opt);
     const expr = typeof src === 'string' ? p.parseScript(src) : p.parseJSON(src);
     if (expr === null) {
-      throw new InvalidContractError('empty contract');
+      throw new InvalidMichelsonError('empty Michelson');
     }
     if (assertMichelsonContract(expr)) {
       return new Contract(expr, opt);
@@ -124,6 +124,7 @@ export class Contract {
   }
 }
 
+// TODO: dummyContract not used anywhere in the codebase can be deleted?
 export const dummyContract = new Contract([
   { prim: 'parameter', args: [{ prim: 'unit' }] },
   { prim: 'storage', args: [{ prim: 'unit' }] },

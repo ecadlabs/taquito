@@ -157,7 +157,7 @@ export const flattenErrors = (
 
 /**
  *  @category Error
- *  @description Error indicates a general failure happening during an origination operation
+ *  @description Error that indicates a general failure happening during an origination operation
  */
 export class OriginationOperationError extends TaquitoError {
   constructor(public readonly message: string) {
@@ -168,7 +168,7 @@ export class OriginationOperationError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid estimate value being passed
+ *  @description Error that indicates an invalid estimate value being passed
  */
 export class InvalidEstimateValueError extends ParameterValidationError {
   constructor(public readonly message: string) {

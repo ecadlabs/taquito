@@ -229,11 +229,6 @@ export interface OperationContentsEndorsementWithSlot {
   slot: number;
 }
 
-export interface OperationContentsFailingNoop {
-  kind: OpKind.FAILING_NOOP;
-  arbitrary: string;
-}
-
 export interface OperationContentsRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
@@ -262,6 +257,11 @@ export interface OperationContentsActivateAccount {
   kind: OpKind.ACTIVATION;
   pkh: string;
   secret: string;
+}
+
+export interface OperationContentsFailingNoop {
+  kind: OpKind.FAILING_NOOP;
+  arbitrary: string;
 }
 
 export interface OperationContentsProposals {
@@ -2230,6 +2230,11 @@ export type RPCRunOperationParam = {
   operation: OperationObject;
   chain_id: string;
 };
+
+export interface RPCSimulateOperationParam extends RPCRunOperationParam {
+  blocks_before_activation?: number;
+  latency?: number;
+}
 
 export type RPCRunCodeParam = {
   script: MichelsonV1ExpressionExtended[];
