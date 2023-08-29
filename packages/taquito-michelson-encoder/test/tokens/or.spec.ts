@@ -13,120 +13,6 @@ import {
 
 describe('Or token', () => {
   describe('EncodeObject', () => {
-    it('Should throw unless input is an object with single key', () => {
-      expect(() => tokenNoAnnots.EncodeObject(undefined)).toThrow(
-        'EncodeObject expects an object with a single key but got:'
-      );
-      expect(() => tokenNoAnnots.EncodeObject(null)).toThrow(
-        'EncodeObject expects an object with a single key but got:'
-      );
-      expect(() => tokenNoAnnots.EncodeObject([])).toThrow(
-        'EncodeObject expects an object with a single key but got:'
-      );
-      expect(() => tokenNoAnnots.EncodeObject([10, 0])).toThrow(
-        'EncodeObject expects an object with a single key but got:'
-      );
-      expect(() => tokenNoAnnots.EncodeObject({})).toThrow(
-        'EncodeObject expects an object with a single key but got:'
-      );
-      expect(() => tokenNoAnnots.EncodeObject({ '0': 10, '1': '10' })).toThrow(
-        'EncodeObject expects an object with a single key but got:'
-      );
-    });
-
-    it('For nested or with mixed annots, generateSchema, encodeObject and execute should be consistent', () => {
-      const schema2LevelMixedAnnots = token2LevelOrMixedAnnots.generateSchema();
-      expect(schema2LevelMixedAnnots).toEqual({
-        __michelsonType: 'or',
-        schema: {
-          '0': { __michelsonType: 'int', schema: 'int' },
-          '2': { __michelsonType: 'bool', schema: 'bool' },
-          A: { __michelsonType: 'nat', schema: 'nat' },
-        },
-      });
-
-      const leftLeft = {
-        prim: 'Left',
-        args: [{ prim: 'Left', args: [{ int: '10' }] }],
-      };
-      expect(token2LevelOrMixedAnnots.EncodeObject({ 0: 10 })).toEqual(leftLeft);
-      expect(token2LevelOrMixedAnnots.Execute(leftLeft)).toEqual({
-        0: BigNumber(10),
-      });
-
-      const leftRight = {
-        prim: 'Left',
-        args: [{ prim: 'Right', args: [{ int: '10' }] }],
-      };
-      expect(token2LevelOrMixedAnnots.EncodeObject({ A: 10 })).toEqual(leftRight);
-      expect(token2LevelOrMixedAnnots.Execute(leftRight)).toEqual({
-        A: BigNumber(10),
-      });
-
-      const right = {
-        prim: 'Right',
-        args: [{ prim: 'True' }],
-      };
-      expect(token2LevelOrMixedAnnots.EncodeObject({ 2: true })).toEqual(right);
-      expect(token2LevelOrMixedAnnots.Execute(right)).toEqual({ 2: true });
-
-      let schema3LevelMixedAnnots = token3LevelOrMixedAnnots.generateSchema();
-      expect(schema3LevelMixedAnnots).toEqual({
-        __michelsonType: 'or',
-        schema: {
-          0: { __michelsonType: 'bytes', schema: 'bytes' },
-          1: { __michelsonType: 'int', schema: 'int' },
-          2: { __michelsonType: 'nat', schema: 'nat' },
-          3: { __michelsonType: 'bool', schema: 'bool' },
-        },
-      });
-      schema3LevelMixedAnnots = token3LevelOrMixedAnnots.ExtractSchema();
-      expect(schema3LevelMixedAnnots).toEqual({
-        0: 'bytes',
-        1: 'int',
-        2: 'nat',
-        3: 'bool',
-      });
-      schema3LevelMixedAnnots = token3LevelOrMixedAnnots.ExtractSignature();
-      expect(schema3LevelMixedAnnots).toEqual([
-        ['0', 'bytes'],
-        ['1', 'int'],
-        ['2', 'nat'],
-        ['3', 'bool'],
-      ]);
-
-      const left = { prim: 'Left', args: [{ bytes: '5674' }] };
-      expect(token3LevelOrMixedAnnots.EncodeObject({ 0: '5674' })).toEqual(left);
-      expect(token3LevelOrMixedAnnots.Execute(left)).toEqual({
-        0: '5674',
-      });
-
-      const rightLeftLeft = {
-        prim: 'Right',
-        args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ int: '10' }] }] }],
-      };
-      expect(token3LevelOrMixedAnnots.EncodeObject({ 1: 10 })).toEqual(rightLeftLeft);
-      expect(token3LevelOrMixedAnnots.Execute(rightLeftLeft)).toEqual({
-        1: BigNumber(10),
-      });
-
-      const rightLeftRight = {
-        prim: 'Right',
-        args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ int: '10' }] }] }],
-      };
-      expect(token3LevelOrMixedAnnots.EncodeObject({ 2: 10 })).toEqual(rightLeftRight);
-      expect(token3LevelOrMixedAnnots.Execute(rightLeftRight)).toEqual({
-        2: BigNumber(10),
-      });
-
-      const rightRight = {
-        prim: 'Right',
-        args: [{ prim: 'Right', args: [{ prim: 'True' }] }],
-      };
-      expect(token3LevelOrMixedAnnots.EncodeObject({ 3: true })).toEqual(rightRight);
-      expect(token3LevelOrMixedAnnots.Execute(rightRight)).toEqual({ 3: true });
-    });
-
     it('Should encode properly', () => {
       expect(token.EncodeObject({ intTest: 10 })).toEqual({
         prim: 'Left',
@@ -347,6 +233,120 @@ describe('Or token', () => {
           },
         ],
       });
+    });
+
+    it('Should throw with invalid argument', () => {
+      expect(() => tokenNoAnnots.EncodeObject(undefined)).toThrow(
+        'EncodeObject expects an object with a single key but got:'
+      );
+      expect(() => tokenNoAnnots.EncodeObject(null)).toThrow(
+        'EncodeObject expects an object with a single key but got:'
+      );
+      expect(() => tokenNoAnnots.EncodeObject([])).toThrow(
+        'EncodeObject expects an object with a single key but got:'
+      );
+      expect(() => tokenNoAnnots.EncodeObject([10, 0])).toThrow(
+        'EncodeObject expects an object with a single key but got:'
+      );
+      expect(() => tokenNoAnnots.EncodeObject({})).toThrow(
+        'EncodeObject expects an object with a single key but got:'
+      );
+      expect(() => tokenNoAnnots.EncodeObject({ '0': 10, '1': '10' })).toThrow(
+        'EncodeObject expects an object with a single key but got:'
+      );
+    });
+
+    it('For nested or with mixed annots, generateSchema, encodeObject and execute should be consistent', () => {
+      const schema2LevelMixedAnnots = token2LevelOrMixedAnnots.generateSchema();
+      expect(schema2LevelMixedAnnots).toEqual({
+        __michelsonType: 'or',
+        schema: {
+          '0': { __michelsonType: 'int', schema: 'int' },
+          '2': { __michelsonType: 'bool', schema: 'bool' },
+          A: { __michelsonType: 'nat', schema: 'nat' },
+        },
+      });
+
+      const leftLeft = {
+        prim: 'Left',
+        args: [{ prim: 'Left', args: [{ int: '10' }] }],
+      };
+      expect(token2LevelOrMixedAnnots.EncodeObject({ 0: 10 })).toEqual(leftLeft);
+      expect(token2LevelOrMixedAnnots.Execute(leftLeft)).toEqual({
+        0: BigNumber(10),
+      });
+
+      const leftRight = {
+        prim: 'Left',
+        args: [{ prim: 'Right', args: [{ int: '10' }] }],
+      };
+      expect(token2LevelOrMixedAnnots.EncodeObject({ A: 10 })).toEqual(leftRight);
+      expect(token2LevelOrMixedAnnots.Execute(leftRight)).toEqual({
+        A: BigNumber(10),
+      });
+
+      const right = {
+        prim: 'Right',
+        args: [{ prim: 'True' }],
+      };
+      expect(token2LevelOrMixedAnnots.EncodeObject({ 2: true })).toEqual(right);
+      expect(token2LevelOrMixedAnnots.Execute(right)).toEqual({ 2: true });
+
+      let schema3LevelMixedAnnots = token3LevelOrMixedAnnots.generateSchema();
+      expect(schema3LevelMixedAnnots).toEqual({
+        __michelsonType: 'or',
+        schema: {
+          0: { __michelsonType: 'bytes', schema: 'bytes' },
+          1: { __michelsonType: 'int', schema: 'int' },
+          2: { __michelsonType: 'nat', schema: 'nat' },
+          3: { __michelsonType: 'bool', schema: 'bool' },
+        },
+      });
+      schema3LevelMixedAnnots = token3LevelOrMixedAnnots.ExtractSchema();
+      expect(schema3LevelMixedAnnots).toEqual({
+        0: 'bytes',
+        1: 'int',
+        2: 'nat',
+        3: 'bool',
+      });
+      schema3LevelMixedAnnots = token3LevelOrMixedAnnots.ExtractSignature();
+      expect(schema3LevelMixedAnnots).toEqual([
+        ['0', 'bytes'],
+        ['1', 'int'],
+        ['2', 'nat'],
+        ['3', 'bool'],
+      ]);
+
+      const left = { prim: 'Left', args: [{ bytes: '5674' }] };
+      expect(token3LevelOrMixedAnnots.EncodeObject({ 0: '5674' })).toEqual(left);
+      expect(token3LevelOrMixedAnnots.Execute(left)).toEqual({
+        0: '5674',
+      });
+
+      const rightLeftLeft = {
+        prim: 'Right',
+        args: [{ prim: 'Left', args: [{ prim: 'Left', args: [{ int: '10' }] }] }],
+      };
+      expect(token3LevelOrMixedAnnots.EncodeObject({ 1: 10 })).toEqual(rightLeftLeft);
+      expect(token3LevelOrMixedAnnots.Execute(rightLeftLeft)).toEqual({
+        1: BigNumber(10),
+      });
+
+      const rightLeftRight = {
+        prim: 'Right',
+        args: [{ prim: 'Left', args: [{ prim: 'Right', args: [{ int: '10' }] }] }],
+      };
+      expect(token3LevelOrMixedAnnots.EncodeObject({ 2: 10 })).toEqual(rightLeftRight);
+      expect(token3LevelOrMixedAnnots.Execute(rightLeftRight)).toEqual({
+        2: BigNumber(10),
+      });
+
+      const rightRight = {
+        prim: 'Right',
+        args: [{ prim: 'Right', args: [{ prim: 'True' }] }],
+      };
+      expect(token3LevelOrMixedAnnots.EncodeObject({ 3: true })).toEqual(rightRight);
+      expect(token3LevelOrMixedAnnots.Execute(rightRight)).toEqual({ 3: true });
     });
   });
 
