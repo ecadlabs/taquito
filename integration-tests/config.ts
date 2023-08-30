@@ -139,7 +139,7 @@ const nairobinetEphemeral: Config =
     protocol: Protocols.PtNairobi,
     defaultRpc: 'http://ecad-nairobinet-full.i.tez.ie:8732',
     knownContracts: knownContractsPtNairobi,
-    signerConfig: defaultEphemeralConfig('https://api.tez.ie/keys/nairobinet')
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/nairobinet')
   });
 
 const nairobinetSecretKey: Config =
@@ -151,7 +151,7 @@ const ghostnetEphemeral: Config =
     protocol: Protocols.PtMumbai2,
     defaultRpc: 'ecad-ghostnet-rolling:8732',
     knownContracts: knownContractsPtGhostnet,
-    signerConfig: defaultEphemeralConfig('https://api.tez.ie/keys/ghostnet')
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
   });
 
 const ghostnetSecretKey: Config =
