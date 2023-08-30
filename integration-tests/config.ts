@@ -4,9 +4,10 @@ import { HttpBackend } from '@taquito/http-utils';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
-import { knownBigMapContractProtoALph, knownContractProtoALph, knownOnChainViewContractAddressProtoALph, knownSaplingContractProtoALph, knownTzip12BigMapOffChainContractProtoALph } from './known-contracts-ProtoALph';
-import { knownContractPtGhostnet, knownBigMapContractPtGhostnet, knownTzip12BigMapOffChainContractPtGhostnet, knownSaplingContractPtGhostnet, knownOnChainViewContractAddressPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractPtNairobi, knownBigMapContractPtNairobi, knownTzip12BigMapOffChainContractPtNairobi, knownSaplingContractPtNairobi, knownOnChainViewContractAddressPtNairobi } from './known-contracts-PtNairobi';
+import { KnownContracts } from './known-contracts';
+import { knownContractsProtoALph } from './known-contracts-ProtoALph';
+import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
+import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
 
@@ -28,6 +29,17 @@ export const isSandbox = (config: {rpc: string}) => {
 
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
+// A network type. TESTNETs corresponds to a pre-existing set of test
+// networks, such as Jakartanet, Kathmanet, Mondaynet etc.  Some
+// integration test cases are hardcoded against such networks.  A
+// SANDBOX is a local, ephemeral sandboxed network. When the
+// integration test suite runs against such network, the test
+// network-specific test cases are disabled.
+export enum NetworkType {
+  TESTNET,
+  SANDBOX,
+}
+
 interface Config {
   rpc: string;
   pollingIntervalMilliseconds?: string;
@@ -40,6 +52,7 @@ interface Config {
   knownViewContract: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | SecretKeyConfig;
+  networkType: NetworkType;
 }
 /**
  * SignerType specifies the different signer options used in the integration test suite. EPHEMERAL_KEY relies on a the [tezos-key-get-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -76,102 +89,85 @@ export const defaultSecretKey: SecretKeyConfig = {
   password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
-const nairobinetEphemeral = {
-  rpc: process.env['TEZOS_RPC_NAIROBINET'] || 'http://ecad-nairobinet-full.i.tez.ie:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_NAIROBINET_CONTRACT_ADDRESS'] || knownContractPtNairobi,
-  knownBigMapContract: process.env['TEZOS_NAIROBINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtNairobi,
-  knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtNairobi,
-  knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtNairobi,
-  knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtNairobi,
-  protocol: Protocols.PtNairobi,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://keygen.ecadinfra.com/nairobinet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
+const defaultEphemeralConfig = (keyUrl: string): EphemeralConfig => ({
+  type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
+  keyUrl: keyUrl,
+  requestHeaders: { Authorization: 'Bearer taquito-example' },
+});
 
-const ghostnetEphemeral = {
-  rpc: process.env['TEZOS_RPC_GHOSTNET'] || 'ecad-ghostnet-rolling:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_GHOSTNET_CONTRACT_ADDRESS'] || knownContractPtGhostnet,
-  knownBigMapContract: process.env['TEZOS_GHOSTNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtGhostnet,
-  knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
-  knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
-  knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
-  protocol: Protocols.PtMumbai2,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'https://keygen.ecadinfra.com/ghostnet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
+// Named parameters for defaultConfig below
+interface DefaultConfiguration {
+  networkName: string;
+  protocol: Protocols;
+  defaultRpc: string;
+  knownContracts: KnownContracts;
+  signerConfig: EphemeralConfig | SecretKeyConfig;
+}
 
-const mondaynetEphemeral = {
-  rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
-  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractProtoALph,
-  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractProtoALph,
-  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractProtoALph,
-  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractProtoALph,
-  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressProtoALph,
-  protocol: Protocols.ProtoALpha,
-  signerConfig: {
-    type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-    keyUrl: 'http://key-gen-1.i.tez.ie:3010/mondaynet',
-    requestHeaders: { Authorization: 'Bearer taquito-example' },
-  },
-};
+// Creates a default Config for the given networkName, running
+// protocol, available on defaultRpc, a set of knownContracts and
+// signerConfig.
+const defaultConfig = ({
+  networkName,
+  protocol,
+  defaultRpc,
+  knownContracts,
+  signerConfig
+}: DefaultConfiguration): Config => {
+  const networkType = (process.env['TEZOS_NETWORK_TYPE'] === 'sandbox')
+    ? NetworkType.SANDBOX
+    : NetworkType.TESTNET;
+  return {
+    rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
+    pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
+    rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
+    knownBaker: process.env[`TEZOS_BAKER`] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+    knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
+    knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
+    knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
+    knownSaplingContract: process.env[`TEZOS_${networkName}_SAPLINGCONTRACT_ADDRESS`] || knownContracts.saplingContract,
+    knownViewContract: process.env[`TEZOS_${networkName}_ON_CHAIN_VIEW_CONTRACT`] || knownContracts.onChainViewContractAddress,
+    protocol: protocol,
+    signerConfig: signerConfig,
+    networkType: networkType
+  }
+}
 
+const nairobinetEphemeral: Config =
+  defaultConfig({
+    networkName: 'NAIROBINET',
+    protocol: Protocols.PtNairobi,
+    defaultRpc: 'http://ecad-nairobinet-full.i.tez.ie:8732',
+    knownContracts: knownContractsPtNairobi,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/nairobinet')
+  });
 
-const nairobinetSecretKey = {
-  rpc: process.env['TEZOS_RPC_NAIROBINET'] || 'http://ecad-nairobinet-full:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_NAIROBINET_CONTRACT_ADDRESS'] || knownContractPtNairobi,
-  knownBigMapContract: process.env['TEZOS_NAIROBINET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtNairobi,
-  knownTzip1216Contract: process.env['TEZOS_NAIROBINET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtNairobi,
-  knownSaplingContract: process.env['TEZOS_NAIROBINET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtNairobi,
-  knownViewContract: process.env['TEZOS_NAIROBINET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtNairobi,
-  protocol: Protocols.PtNairobi,
-  signerConfig: defaultSecretKey
-};
+const nairobinetSecretKey: Config =
+  { ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey },  ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
 
-const ghostnetSecretKey = {
-  rpc: process.env['TEZOS_RPC_GHOSTNET'] || 'http://ecad-ghostnet-rolling:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_BAKER'] || 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
-  knownContract: process.env['TEZOS_GHOSTNET_CONTRACT_ADDRESS'] || knownContractPtGhostnet,
-  knownBigMapContract: process.env['TEZOS_GHOSTNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractPtGhostnet,
-  knownTzip1216Contract: process.env['TEZOS_GHOSTNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractPtGhostnet,
-  knownSaplingContract: process.env['TEZOS_GHOSTNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractPtGhostnet,
-  knownViewContract: process.env['TEZOS_GHOSTNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressPtGhostnet,
-  protocol: Protocols.PtMumbai2,
-  signerConfig: defaultSecretKey
-};
+const ghostnetEphemeral: Config =
+  defaultConfig({
+    networkName: 'GHOSTNET',
+    protocol: Protocols.PtMumbai2,
+    defaultRpc: 'ecad-ghostnet-rolling:8732',
+    knownContracts: knownContractsPtGhostnet,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
+  });
 
-const mondaynetSecretKey = {
-  rpc: process.env['TEZOS_RPC_MONDAYNET'] || 'http://mondaynet.ecadinfra.com:8732',
-  pollingIntervalMilliseconds: process.env['POLLING_INTERVAL_MILLISECONDS'] || undefined,
-  rpcCacheMilliseconds: process.env['RPC_CACHE_MILLISECONDS'] || '1000',
-  knownBaker: process.env['TEZOS_MONDAYNET_BAKER'] || 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH',
-  knownContract: process.env['TEZOS_MONDAYNET_CONTRACT_ADDRESS'] || knownContractProtoALph,
-  knownBigMapContract: process.env['TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS'] || knownBigMapContractProtoALph,
-  knownTzip1216Contract: process.env['TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS'] || knownTzip12BigMapOffChainContractProtoALph,
-  knownSaplingContract: process.env['TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS'] || knownSaplingContractProtoALph,
-  knownViewContract: process.env['TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT'] || knownOnChainViewContractAddressProtoALph,
-  protocol: Protocols.ProtoALpha,
-  signerConfig: defaultSecretKey
-};
+const ghostnetSecretKey: Config =
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling:8732' } };
+
+const mondaynetEphemeral: Config =
+  defaultConfig({
+    networkName: 'MONDAYNET',
+    protocol: Protocols.ProtoALpha,
+    defaultRpc: 'http://mondaynet.ecadinfra.com:8732',
+    knownContracts: knownContractsProtoALph,
+    signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
+  });
+
+const mondaynetSecretKey: Config =
+  { ...mondaynetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
 const providers: Config[] = [];
 
@@ -280,6 +276,7 @@ export const CONFIGS = () => {
         knownSaplingContract,
         knownViewContract,
         signerConfig,
+        networkType
       }) => {
         const Tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
 
@@ -301,6 +298,7 @@ export const CONFIGS = () => {
           knownSaplingContract,
           knownViewContract,
           signerConfig,
+          networkType,
           setup: async (preferFreshKey: boolean = false) => {
             if (signerConfig.type === SignerType.SECRET_KEY) {
               setupWithSecretKey(Tezos, signerConfig);

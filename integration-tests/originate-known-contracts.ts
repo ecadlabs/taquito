@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 import { codeViewsTopLevel } from './data/contract_views_top_level';
 import { knownBigMapContract } from './data/knownBigMapContract';
 import { knownContract } from './data/knownContract';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 
 const MUTEZ_UNIT = new BigNumber(1000000);
 
@@ -15,21 +15,60 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
   const tezos = lib;
   let keyPkh: string = "";
   let keyInitialBalance: BigNumber = new BigNumber(0);
+  let protocolShort = protocol.substring(0, 9);
 
   (async () => {
     await setup(true);
     console.log(protocol)
-    fs.writeFile(`known-contracts-${protocol.substring(0,9)}.ts`, '', (err: any) => {
-      if (err) {
-        console.error(err);
+
+    let outputFile = await fs.open(`known-contracts-${protocolShort}.ts`, 'w');
+    let writeOutput = async (line: string): Promise<void> => {
+      return fs
+        .writeFile(outputFile, line + '\n')
+        .catch((err: any) => {
+          console.error(err);
+        });
+    };
+    let appendOutput = async (line: string): Promise<void> => {
+      return fs
+        .appendFile(outputFile, line + '\n')
+        .catch((err: any) => {
+          console.error(err);
+        });
+    };
+    let originateKnownContract = async (contractName: string, tezos: TezosToolkit, contractOriginateParams: OriginateParams): Promise<void> => {
+      try {
+        const operation = await tezos.contract.originate(contractOriginateParams);
+        const contract = await operation.contract();
+        console.log(`known ${contractName} address:  ${contract.address}`);
+        // Set the contract's address for subsequent GitHub actions
+        const contractNameCapitalized = contractName.charAt(0).toUpperCase() + contractName.slice(1);
+        const outputAddressVariableName: string = `known${contractNameCapitalized}Address`;
+        console.log(`::set-output name=${outputAddressVariableName}::${contract.address}\n`);
+        appendOutput(`  ${contractName}: "${contract.address}",`);
+      } catch (e: any) {
+        console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
+
+        if (e.name === "ForgingMismatchError") {
+          console.log(`Composite forger failed to originate ${contractName}. Trying to originate the contract by using RPC forger...`);
+
+          tezos.setForgerProvider(tezos.getFactory(RpcForger)());
+
+          originateKnownContract(contractName, tezos, contractOriginateParams);
+        } else {
+          appendOutput(`  ${contractName}: "",`);
+        }
       }
-    });
+    };
+
+    await writeOutput("import { KnownContracts } from './known-contracts';")
+    await appendOutput("export const knownContracts" + protocolShort + ": KnownContracts = {");
 
     keyPkh = await tezos.signer.publicKeyHash();
     keyInitialBalance = await tezos.tz.getBalance(keyPkh);
 
     // KnownContract
-    await originateKnownContract('Contract', tezos, {
+    await originateKnownContract('contract', tezos, {
       balance: '0',
       code: knownContract,
       init: {
@@ -51,7 +90,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     const allowancesBigMap = new MichelsonMap();
     const ledgerBigMap = new MichelsonMap();
     ledgerBigMap.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances: allowancesBigMap, balance: '100' });
-    await originateKnownContract('BigMapContract', tezos, {
+    await originateKnownContract('bigMapContract', tezos, {
       code: knownBigMapContract,
       storage: {
         ledger: ledgerBigMap,
@@ -109,7 +148,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
       total_supply: '20000',
     });
 
-    await originateKnownContract('Tzip12BigMapOffChainContract', tezos, {
+    await originateKnownContract('tzip12BigMapOffChainContract', tezos, {
       code: fa2ForTokenMetadataView,
       storage: {
         administrator: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
@@ -123,16 +162,19 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     });
 
     // KnownSaplingContract
-    await originateKnownContract('SaplingContract', tezos, {
+    await originateKnownContract('saplingContract', tezos, {
       code: singleSaplingStateContractJProtocol(),
       init: '{}'
     });
 
     // knownOnChainViewContract
-    await originateKnownContract('OnChainViewContractAddress', tezos, {
+    await originateKnownContract('onChainViewContractAddress', tezos, {
       code: codeViewsTopLevel,
       storage: 2
     });
+
+    await appendOutput('};');
+    await outputFile.close();
 
     console.log(`
 ################################################################################
@@ -144,30 +186,6 @@ Total XTZ Spent : ${keyInitialBalance.minus(await tezos.tz.getBalance(keyPkh)).d
 `)
   })();
 
-
-  async function originateKnownContract(contractName: string, tezos: TezosToolkit, contractOriginateParams: OriginateParams): Promise<void> {
-    try {
-      const operation = await tezos.contract.originate(contractOriginateParams);
-      const contract = await operation.contract();
-      console.log(`known${contractName} address:  ${contract.address}`);
-      console.log(`::set-output name=known${contractName}Address::${contract.address}\n`);
-      fs.appendFile(`known-contracts-${protocol.substring(0,9)}.ts`, `export const known${contractName}${protocol.substring(0,9)} = "${contract.address}";\n`, (err: any) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    } catch (e: any) {
-      console.error(`Failed to deploy ${contractName} known contract | Error: ${e.stack}`);
-
-      if (e.name === "ForgingMismatchError") {
-        console.log(`Composite forger failed to originate ${contractName}. Trying to originate the contract by using RPC forger...`);
-
-        tezos.setForgerProvider(tezos.getFactory(RpcForger)());
-
-        await originateKnownContract(contractName, tezos, contractOriginateParams);
-      }
-    }
-  }
 
   async function printBalance(pkh: string, tezos: TezosToolkit): Promise<void> {
     let balance = await tezos.tz.getBalance(pkh);
