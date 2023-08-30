@@ -4170,8 +4170,8 @@ describe('RpcClient test', () => {
       const url = 'https://mainnet.ecadinfra.com/';
       const rpcUrlMainnet = new RpcClient(url).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://mainnet.ecadinfra.com/');
-      const rpcUrlCarthagenet = new RpcClient('https://api.tez.ie/rpc/carthagenet').getRpcUrl();
-      expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
+      const rpcUrlCarthagenet = new RpcClient('https://ghostnet.ecadinfra.com').getRpcUrl();
+      expect(rpcUrlCarthagenet).toEqual('https://ghostnet.ecadinfra.com');
     });
   });
 
