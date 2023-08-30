@@ -95,8 +95,7 @@
     "**/coverage/**",
     "**/build/**",
     "**/scripts/**",
-    "**/examples/**",
-    "**/packages/**"
+    "**/examples/**"
   ],
   "ignoreRegExpList": [
     "KT1[a-zA-Z0-9]{33}",
