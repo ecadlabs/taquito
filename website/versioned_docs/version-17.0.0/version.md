@@ -1766,7 +1766,7 @@ In version 9.2.0-beta of Taquito, the ability to send more than one operation in
 The default streamer set on the `TezosToolkit` used a hardcoded polling interval of 20 seconds, and there was no easy way to change this. To reduce the probability of missing blocks, it is now possible to configure the interval as follow:
 
 ```ts
-const tezos = new TezosToolkit('https://api.tez.ie/rpc/mainnet')
+const tezos = new TezosToolkit('https://mainnet.ecadinfra.com')
 tezos.setProvider({ config: { streamerPollingIntervalMilliseconds: 15000 } });
 
 const sub = tezos.stream.subscribeOperation(filter)

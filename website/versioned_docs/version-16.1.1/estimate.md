@@ -131,7 +131,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.api.tez.ie');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
       
 Tezos.wallet
   .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')

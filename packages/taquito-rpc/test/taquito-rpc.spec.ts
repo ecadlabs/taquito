@@ -4167,11 +4167,11 @@ describe('RpcClient test', () => {
 
   describe('getRpcUrl', () => {
     it('should return the RPC Url', () => {
-      const url = 'https://mainnet.api.tez.ie/';
+      const url = 'https://mainnet.ecadinfra.com/';
       const rpcUrlMainnet = new RpcClient(url).getRpcUrl();
-      expect(rpcUrlMainnet).toEqual('https://mainnet.api.tez.ie/');
-      const rpcUrlCarthagenet = new RpcClient('https://api.tez.ie/rpc/carthagenet').getRpcUrl();
-      expect(rpcUrlCarthagenet).toEqual('https://api.tez.ie/rpc/carthagenet');
+      expect(rpcUrlMainnet).toEqual('https://mainnet.ecadinfra.com/');
+      const rpcUrlCarthagenet = new RpcClient('https://ghostnet.ecadinfra.com').getRpcUrl();
+      expect(rpcUrlCarthagenet).toEqual('https://ghostnet.ecadinfra.com');
     });
   });
 
