@@ -175,12 +175,16 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
+} else if (process.env['RUN_OXFORDNET_WITH_SECRET_KEY']) {
+  providers.push(oxfordnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
   providers.push(mondaynetSecretKey);
 } else if (process.env['NAIROBINET']) {
   providers.push(nairobinetEphemeral);
+} else if (process.env['OXFORDNET']) {
+  providers.push(oxfordnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['MONDAYNET']) {
