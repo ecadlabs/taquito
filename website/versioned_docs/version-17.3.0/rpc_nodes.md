@@ -23,16 +23,16 @@ values={[
 
 | Provider         | Net          | URL                                      | Header                                                                          |
 |------------------|--------------|------------------------------------------|---------------------------------------------------------------------------------|
-| ECAD Labs        | Mainnet      | https://mainnet.api.tez.ie               | [Check](https://mainnet.api.tez.ie/chains/main/blocks/head/header)              |
+| ECAD Labs        | Mainnet      | https://mainnet.ecadinfra.com               | [Check](https://mainnet.ecadinfra.com/chains/main/blocks/head/header)              |
 | ECAD Labs        | Ghostnet     | https://ghostnet.ecadinfra.com           | [Check](https://ghostnet.ecadinfra.com/chains/main/blocks/head/header)          |
+| ECAD Labs        | Nairobinet   | https://nairobinet.ecadinfra.com         | [Check](https://nairobinet.ecadinfra.com/chains/main/blocks/head/header)        |
 | ECAD Labs        | Mumbainet    | https://mumbainet.ecadinfra.com          | [Check](https://mumbainet.ecadinfra.com/chains/main/blocks/head/header)         |
-| ECAD Labs        | Limanet      | https://limanet.ecadinfra.com            | [Check](https://limanet.ecadinfra.com/chains/main/blocks/head/header)           |
 | SmartPy          | Mainnet      | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header)              |
 | SmartPy          | Ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header)             |
-| SmartPy          | Limanet      | https://limanet.smartpy.io/              | [Check](https://limanet.smartpy.io/chains/main/blocks/head/header)              |
 | Tezos Foundation | Mainnet      | https://rpc.tzbeta.net/                  | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)                  |
 | Marigold         | Mainnet      | https://mainnet.tezos.marigold.dev/      | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)      |
 | Marigold         | Ghostnet     | https://ghostnet.tezos.marigold.dev/     | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
+| Marigold         | Nairobinet   | https://nairobinet.tezos.marigold.dev/   | [Check](https://nairobinet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 | Marigold         | Mumbainet    | https://mumbainet.tezos.marigold.dev/    | [Check](https://mumbainet.tezos.marigold.dev/chains/main/blocks/head/header)    |
 | TezTools         | Mainnet      | https://eu01-node.teztools.net/          | [Check](https://eu01-node.teztools.net/chains/main/blocks/head/header)          |
 

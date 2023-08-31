@@ -5,7 +5,7 @@ export const rpcUrl = {
   nairobinet: "https://nairobinet.ecadinfra.com/",
   ghostnet: "https://ghostnet.ecadinfra.com/",
   ithacanet: "https://ithacanet.ecadinfra.com/",
-  mainnet: "https://mainnet.api.tez.ie", //"https://mainnet-tezos.giganode.io"
+  mainnet: "https://mainnet.ecadinfra.com", //"https://mainnet-tezos.giganode.io"
   custom: "https://ghostnet.ecadinfra.com/"
 };
 
