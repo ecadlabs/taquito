@@ -1,4 +1,4 @@
-import { CONFIGS } from './config';
+import { CONFIGS, isSandbox } from './config';
 import { Protocols } from '@taquito/taquito';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
@@ -6,7 +6,7 @@ const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const nairobinet = protocol === Protocols.PtNairobi ? it : it.skip;
-  const flextesanet = rpc === 'http://localhost:20000' ? test : test.skip;
+  const flextesanet = isSandbox({ rpc }) ? test : test.skip;
   const Tezos = lib;
 
   describe(`Test contract.batch containing a high number of operations through contract api using: ${rpc}`, () => {
@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
       const batch = Tezos.contract.batch()
       dests.forEach(({ pkh }) => {
-        batch.withTransfer({ to: pkh, amount: 0.001, fee: 450 });
+        batch.withTransfer({ to: pkh, amount: 0.001, fee: 350 });
       })
       try {
         const op = await batch.send();
