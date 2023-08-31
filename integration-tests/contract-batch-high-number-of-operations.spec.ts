@@ -1,9 +1,11 @@
 import { CONFIGS } from './config';
+import { Protocols } from '@taquito/taquito';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
 const crypto = require('crypto');
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+  const nairobinet = protocol === Protocols.PtNairobi ? it : it.skip;
   const flextesanet = rpc === 'http://localhost:20000' ? test : test.skip;
   const Tezos = lib;
 
@@ -13,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       done();
     });
 
-    it('Verify contract.batch with 150 operations', async (done) => {
+    nairobinet('Verify contract.batch with 150 operations', async (done) => {
       const dests: { key: string, pkh: string }[] = [];
       const batchSize = 150;
 
