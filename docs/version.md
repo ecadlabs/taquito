@@ -2,9 +2,169 @@
 title: Versions
 author: Jev Bjorsell
 ---
+
+# Taquito v17.3.0
+
+**A change in Licensing**:
+Taquito has moved from `MIT` to `Apache 2.0`.
+
+**Potential Breaking Changes**:
+
+- Previously, an `OrToken`'s `EncodeObject` method would accept an object with multiple fields. It now only accepts an object with a single field.
+- The `generateSchema` method in an `OrToken` with nested `OrToken`s (as well as `ExtractSchema`) would generate a schema object that was misleading and did not match what `Execute` created or `EncodeObject` accepted. This is now fixed and the behavior is consistent across all methods.
+- `OrToken.Execute()` used to throw `OrTokenDecodingError` in case of failure, but now will throw `OrValidationError`
+
+## Summary
+
+### New Features
+
+- `@taquito/michelson-encoder` - The `OrToken`'s `EncodeObject` method now only accepts an object with a single field #2544
+
+### Bug Fixes
+
+- `@taquito/michelson-encoder` - A nested `PairToken` with a mix of fields with `annots` and fields without `annots` could generate the wrong javascript object with `Execute` [#2540](https://github.com/ecadlabs/taquito/issues/2540)
+- `@taquito/michelson-encoder` - the `generateSchema` method in a nested `OrToken` now generates a schema that is consistent with `Execute` and `EncodeObject` [#2543](https://github.com/ecadlabs/taquito/issues/2543)
+
+```
+const schema = {
+    prim: 'pair',
+    args: [
+      {
+        prim: 'pair',
+        args: [
+          {
+            prim: 'pair',
+            args: [{ prim: 'int' }, { prim: 'int' }],
+            annots: ['%A3'],
+          },
+          { prim: 'int' },
+        ],
+      },
+      { prim: 'bool' },
+    ],
+  };
+
+  const michelineJson = {
+    prim: 'Pair',
+    args: [
+      {
+        prim: 'Pair',
+        args: [{ prim: 'Pair', args: [{ int: '11' }, { int: '22' }] }, { int: '33' }],
+      },
+      { prim: 'True' },
+    ],
+  };
+  const javaScriptObject = new Schema(schema).Execute(michelineJson);
+```
+
+Previously, this `javaScriptObject` would be equal to:
+
+```
+{
+    2: true,
+    A3: {
+      0: 11,
+      1: 22,
+    },
+}
+```
+
+But now it returns:
+
+```
+{
+    1: 33,
+    2: true,
+    A3: {
+      0: 11,
+      1: 22,
+    },
+}
+```
+### Internals
+ * `integration-tests` config improvement [#2163](https://github.com/ecadlabs/taquito/issues/2163)
+ * update RPC urls to align with the updated infrastructure [PR#2576](https://github.com/ecadlabs/taquito/pull/2576) [#2633](https://github.com/ecadlabs/taquito/pull/2633)
+
+## `@taquito/michelson-encoder` - Validate that an `OrToken`'s `EncodeObject` method only accepts an object with a single field
+
+Previously, an `OrToken`'s `EncodeObject` method would accept an object with multiple fields. It now only accepts an object with a single field.
+
+```
+    const token = createToken({
+        prim: 'or',
+        args: [{ prim: 'int' }, { prim: 'string' }], annots: []
+        }, 0) as OrToken;
+    const javascriptObject = token.EncodeObject({ '0': 10, '1': '10' }));
+```
+
+Previously, this would return work and the result was the same as `token.EncodeObject({ '0': 10, '1': '10' }))`. Now, this throws an error.
+
+## `@taquito/michelson-encoder` - For an `OrToken` with nested `OrToken`s, `generateSchema` behaved inconsistently with `Execute` and `EncodeObject`
+
+Previously, `generateSchema` would generate a schema object that was misleading and did not match what `Execute` created or `EncodeObject` accepted. This is now fixed and the behavior is consistent across all methods.
+
+```
+const token = createToken(
+  {
+    prim: 'or',
+    args: [
+      {
+        prim: 'bytes',
+      },
+      {
+        prim: 'or',
+        annots: ['A'],
+        args: [
+          {
+            prim: 'or',
+            args: [{ prim: 'int' }, { prim: 'nat' }],
+          },
+          { prim: 'bool' },
+        ],
+      },
+    ],
+  },
+  0
+) as OrToken;
+const schema = token.generateSchema();
+```
+
+Previously, `schema` would be equal to:
+
+```
+{
+    __michelsonType: "or",
+    schema: {
+        "0": { __michelsonType: "bytes", schema: "bytes" },
+        "A": {
+            __michelsonType: "or",
+            schema: {
+                "1": { __michelsonType: "int", schema: "int" },
+                "2": { __michelsonType: "nat", schema: "nat" },
+                "3": { __michelsonType: "bool", schema: "bool" }
+            }
+        }
+    }
+}
+```
+Which was inconsistent with what `Execute` created and what `EncodeObject` accepted.
+Now it is:
+
+```
+{
+    __michelsonType: 'or',
+    schema: {
+        0: { __michelsonType: 'bytes', schema: 'bytes' },
+        1: { __michelsonType: 'int', schema: 'int' },
+        2: { __michelsonType: 'nat', schema: 'nat' },
+        3: { __michelsonType: 'bool', schema: 'bool' },
+    },
+}
+```
+
 # Taquito v17.2.0
 
-**Potential Breaking Changes** : 
+**Potential Breaking Changes** :
 Further improved error classes
  - In `@taquito/sapling` `InvalidMerkleRootError` is renamed to `InvalidMerkleTreeError`
  - In `@taquito/sapling` `InvalidParameter` is renamed to `SaplingTransactionViewerError`
@@ -79,7 +239,7 @@ let simulate = await Tezos.rpc.simulateOperation(op)).contents[0]
 ```
 # Taquito v17.1.1
 ## Summary
-This is a patch release to fix a potential issue with `verifySignature()` and `hex2buf()` util method. 
+This is a patch release to fix a potential issue with `verifySignature()` and `hex2buf()` util method.
 ### Bug Fixes
 - Fixed a potentially exploitable behaviour where `verifySignature()` was allowing an appended character to a message payload and still verify the signature correctly. It has now been fixed to validate against odd length characters #2578
 
@@ -104,7 +264,7 @@ Some other subtle changes that might affect some developers:
 
 ## Summary
 ### New Features
-- Exposed the injector to be customizable from the TezosToolkit class #1344 
+- Exposed the injector to be customizable from the TezosToolkit class #1344
 
 ### Improvement
 - Simplified generated Lambda for `transferToContract` [PR#2404](https://github.com/ecadlabs/taquito/pull/2404)
@@ -134,7 +294,7 @@ Protocol Nairobi comes with a couple potential breaking changes for our users:
 
 ### New Features
 - `@taquito/taquito` & `@taquito/michelson-encoder`- Introduced a new feature called `EventAbstraction` that provides an abstraction to Events, similar to `ContractAbstraction` #2128
-- 
+-
 ### Bug Fixes
 - `@taquito/taquito` - Fixed contract call estimation to check for unrevealed keys #2500
 
@@ -157,17 +317,17 @@ Protocol Nairobi comes with a couple potential breaking changes for our users:
 - Upgrade `netlify-cli` package to fix CI issues [PR#2496](https://github.com/ecadlabs/taquito/pull/2496)
 # Taquito v16.2.0
 ## **Potential Breaking Changes**:
-- Some error classes may have been moved to the `@taquito/core` package. Note to developers if they are exporting any error classes to capture errors, there might be a need to adjust the export path. 
-- We have an ongoing error class refactoring which includes ticket #1992 (create an error class hierarchy), #1993 (consolidate duplicate errors in Taquito) and #1994 (improve error classes in individual packages, namely `@taquito/utils`, `@taquito/local-forging` and `@taquito/signer`). Here are a list of notable changes: 
-    1. `@taquito/sapling` Class SaplingToolkit function prepareUnshieldedTransaction used to throw InvalidKeyError now throw a InvalidAddressError instead 
-    2. `@taquito/rpc` when validateContractAddress used to throw InvalidAddressError will now throw InvalidContractAddressError. 
-    3. `@taquito/sapling` prepareUnshieldedTransaction function when validateDestinationImplicitAddress used to throw InvalidAddressError now throw InvalidKeyHashError 
+- Some error classes may have been moved to the `@taquito/core` package. Note to developers if they are exporting any error classes to capture errors, there might be a need to adjust the export path.
+- We have an ongoing error class refactoring which includes ticket #1992 (create an error class hierarchy), #1993 (consolidate duplicate errors in Taquito) and #1994 (improve error classes in individual packages, namely `@taquito/utils`, `@taquito/local-forging` and `@taquito/signer`). Here are a list of notable changes:
+    1. `@taquito/sapling` Class SaplingToolkit function prepareUnshieldedTransaction used to throw InvalidKeyError now throw a InvalidAddressError instead
+    2. `@taquito/rpc` when validateContractAddress used to throw InvalidAddressError will now throw InvalidContractAddressError.
+    3. `@taquito/sapling` prepareUnshieldedTransaction function when validateDestinationImplicitAddress used to throw InvalidAddressError now throw InvalidKeyHashError
     4. `@taquito/local-forging` smartRollupAddressDecoder used to throw InvalidAddressError now throw InvalidSmartRollupAddressError
-    5. `@taquito/local-forging` used to have class InvalidSmartRollupContractAddressError now is InvalidSmartRollupCommitmentHashError  
-    6. `@taquito/local-forging` function smartRollupContractAddressEncoder rename to smartRollupCommitmentHashEncoder 
+    5. `@taquito/local-forging` used to have class InvalidSmartRollupContractAddressError now is InvalidSmartRollupCommitmentHashError
+    6. `@taquito/local-forging` function smartRollupContractAddressEncoder rename to smartRollupCommitmentHashEncoder
     7. `@taquito/signer` PrivateKeyError is replaced by common error InvalidKeyError from `@taquito/core`
 
-- In `@taquito/michelson-encoder` we introduced a new semantic `{ Some: null}`  to EncodeObject() for nested options type like (option (option nat)). The old semantic still works when making contract calls but will look to deprecated them in the future as table below. And the corresponding `Execute()` will now return new semantic `{ Some: 1 }` as previously return `1` will be deprecated soon. #2344 
+- In `@taquito/michelson-encoder` we introduced a new semantic `{ Some: null}`  to EncodeObject() for nested options type like (option (option nat)). The old semantic still works when making contract calls but will look to deprecated them in the future as table below. And the corresponding `Execute()` will now return new semantic `{ Some: 1 }` as previously return `1` will be deprecated soon. #2344
 ![image](https://github.com/ecadlabs/taquito/assets/106410553/455e7f9f-9d6a-4503-bb89-8f337c322063)
 
 **Note**: There are also significant (backwards compatible) changes to the `@taquito/taquito` package, largely regarding the flow of preparing, estimating, forging, and injecting operations into a node. No breaking changes are expected, but users are welcomed to reach out to the team if any issues arise.
@@ -208,8 +368,8 @@ const Tezos = new TezosToolkit(RPC_URL);
 
 Tezos.setStreamProvider(
   Tezos.getFactory(PollingSubscribeProvider)({
-    shouldObservableSubscriptionRetry: true, 
-    pollingIntervalMilliseconds: 1500 
+    shouldObservableSubscriptionRetry: true,
+    pollingIntervalMilliseconds: 1500
   })
 );
 
@@ -219,9 +379,9 @@ try {
     address: 'KT1_CONTRACT_ADDRESS',
     excludeFailedOperations: true
   });
-    
+
   sub.on('data', console.log);
-    
+
 } catch (e) {
   console.log(e);
 }
@@ -287,7 +447,7 @@ const op = await Tezos.contract.smartRollupOriginate({
 ### `@taquito/taquito` - Added utility functions in prepare provider to accomodate forging and operation pre-apply (dry runs)
 Provided 2 utility functions to convert results from the `PrepareProvider` (`PreparedOperation` type objects) into `ForgeParams` and `PreapplyParams`
 ```typescript!
-// pre-apply 
+// pre-apply
 const prepared = await Tezos.prepare.transaction({
   amount: 1,
   to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
@@ -311,8 +471,8 @@ const forgedBytes = await forger.forge(params);
 - `@taquito/taquito` Support new operation `smart_rollup_add_messages` #2309
 - `@taquito/taquito` Updated `transferTicket` operation in the contract API to support ticket transfers between implicit accounts #2320
 - `@taquito/local-forging` Support new Mumbai operations #2308
-    - `smart_rollup_originate`, 
-    - `smart_rollup_add_messages`, 
+    - `smart_rollup_originate`,
+    - `smart_rollup_add_messages`,
     - `smart_rollup_execute_outbox_message`
 - `@taquito/local-forging` updated validation to allow tz4 addresses #2350
 - `@taquito/rpc` support Mumbai operation types in the RPC package #2307
@@ -458,11 +618,11 @@ const op = await Tezos.wallet.increasePaidStorage({
 - `@taquito/michelson-encoder` fix MapTypecheck bug triggered by nested maps ending with a big_map #1762
 
 ### Documentation
-- Auto hide sticky navbar for mobile view to increase readability on mobile devices. 
+- Auto hide sticky navbar for mobile view to increase readability on mobile devices.
 PR: https://github.com/ecadlabs/taquito/pull/2236
 
 ### Internals
-- Start running integration tests against testnets for external PRs. 
+- Start running integration tests against testnets for external PRs.
 PR: https://github.com/ecadlabs/taquito/pull/2221
 
 ## `@taquito/taquito` drain_delegate operation support
@@ -640,9 +800,9 @@ try {
     tag: 'tagName',
     address: 'KT1_CONTRACT_ADDRESS'
   });
-    
+
   sub.on('data', console.log);
-    
+
 } catch (e) {
   console.log(e);
 }
@@ -665,7 +825,7 @@ VotingInfoResponse = {
 
 ## `@taquito/ledger-signer` - Add support for bip25519 curve
 
-We added support for the bip32-ed25519 derivation scheme in the ledger package. It can be used as follows: 
+We added support for the bip32-ed25519 derivation scheme in the ledger package. It can be used as follows:
 
 ```typescript
 const transport = await TransportNodeHid.create();
@@ -705,7 +865,7 @@ Before version 14.1.0, it was impossible to specify the amount, the fee, the `ga
 const contract = Tezos.contract.at('contactAddress');
 const batch = Tezos.contract.batch()
     .withContractCall(contract.methods.entrypointName("entrypointParam", { fee: 100, gasLimit: 1000, storageLimit: 10 })
-    .withContractCall(...)                  
+    .withContractCall(...)
 
 const batchOp = await batch.send();
 await batchOp.confirmation();
@@ -790,7 +950,7 @@ const op = await Tezos.contract.increasePaidStorage({
 
 ## `@taquito/local-forger` - Support the `increase_paid_storage` operation and the `Emit` instruction
 
-We added support to forge and parse the new operation kind `increase_paid_storage`. 
+We added support to forge and parse the new operation kind `increase_paid_storage`.
 
 We added support for the new Michelson instruction `Emit`, which can emit contract events when part of a contract script.
 
@@ -800,9 +960,9 @@ We added support for the new Michelson instruction `Emit`, which can emit contra
 
 ## `@taquito/taquito` - Replace `consumed_gas` with `consumed_milligas`
 
-In Kathmandu, the property `consumed_gas` that was previously deprecated in favor of `consumed_milligas` has been removed. 
+In Kathmandu, the property `consumed_gas` that was previously deprecated in favor of `consumed_milligas` has been removed.
 
-In Taquito (Contract API), the classes that extend the `Operation` class like `BatchOperation`,  `DelegateOperation`, `OriginationOperation`, `TransactionOperation`, and so on, have a `consumedGas` getter. We did an internal change to calculate the consumed gas based on the consumed milligas, so there is no breaking change for the users. We also implemented a new `consumedMilligas` getter which returns the consumed milligas. 
+In Taquito (Contract API), the classes that extend the `Operation` class like `BatchOperation`,  `DelegateOperation`, `OriginationOperation`, `TransactionOperation`, and so on, have a `consumedGas` getter. We did an internal change to calculate the consumed gas based on the consumed milligas, so there is no breaking change for the users. We also implemented a new `consumedMilligas` getter which returns the consumed milligas.
 
 On the wallet API side, the `WalletOperation` class has a `receipt` method that returns a `Receipt` object containing a `totalGas` property. It is now calculated based on the consumed milligas, and we added an additional `totalMilliGas` property.
 
@@ -838,18 +998,18 @@ RunScriptViewResult = {
 };
 ```
 
-## Sapling package 
+## Sapling package
 
 We implemented a package `@taquito/sapling` providing functionality for Sapling. For documentation, please refer to the following link: https://tezostaquito.io/docs/next/sapling
 
 We added a post-install script that fetches the z cash parameters required to initialize the sapling state. Excluding the files from the package avoids having an unsustainable bundle size.
 The files `saplingOutputParams.js` and `saplingSpendParams.js` will be created in the users `node_modules/@taquito/sapling` folder and avoid them having to download and inject those files.
 
-As the next steps for the sapling package, we will provide interfaces for the key providers, making it easier to generate the proof and produced signature from a remote signer or a ledger. We currently offer an `InMemorySpendingKey` that must be used appropriately, given your risk profile. We will be looking for integration with wallets as well. 
+As the next steps for the sapling package, we will provide interfaces for the key providers, making it easier to generate the proof and produced signature from a remote signer or a ledger. We currently offer an `InMemorySpendingKey` that must be used appropriately, given your risk profile. We will be looking for integration with wallets as well.
 
 ## `@taquito/taquito` - Added support for the `transfer_ticket` operation
 
-The `transfer_ticket` operation allows transferring tickets from an implicit account to a smart contract. 
+The `transfer_ticket` operation allows transferring tickets from an implicit account to a smart contract.
 
 ```typescript
 const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
@@ -871,7 +1031,7 @@ const op = await Tezos.contract.transferTicket({
 
 ## `@taquito/michelson-encoder` - Display contract storage properly when it contains a `ticket` inside a `map`
 
-We fixed a bug in the michelson-encoder package that prevented displaying the contract storage when it contained tickets inside a map. 
+We fixed a bug in the michelson-encoder package that prevented displaying the contract storage when it contained tickets inside a map.
 
 ## `@taquito/michelson-encoder` - `Schema.generateSchema()` fails for `sapling_transaction_deprecated`
 
@@ -903,7 +1063,7 @@ We are now using the beacon-dapp's `getDAppClientInstance` method instead of the
 
 ## `@taquito/local-forging` - Pure JS implementation
 
-To accommodate users working in native mobile development, we added a separate pure JS bundle that can be imported. 
+To accommodate users working in native mobile development, we added a separate pure JS bundle that can be imported.
 The bundle wraps functions in the `@taquito/local-forging` package into a single variable called `taquito_local_forging`.
 To use the JS bundle for your project, download the zip file under `Assets` on the [release page](https://github.com/ecadlabs/taquito/releases).
 
@@ -962,7 +1122,7 @@ The `liquidity_baking_escape_vote` property in `BlockFullHeader` is replaced wit
 
 The `OperationBalanceUpdatesItem` can now contain a `bond_id` property of type `BondId`. `BondId` has a `tx_rollup` property.
 
-The `OperationResultTxRollupOrigination` can now contain a `ticket_hash` property. 
+The `OperationResultTxRollupOrigination` can now contain a `ticket_hash` property.
 
 The `METADATA_BALANCE_UPDATES_CATEGORY` enum contains an additional `BONDS` category.
 
@@ -978,8 +1138,8 @@ Added support to forge and unforge the new operation kinds `transfer_ticket`, `t
 
 ## `@taquito/michelson-encoder` - Added support for the the new type`tx_rollup_l2_address`
 
-We created a new class `TxRollupL2AddressToken` in the michelson-encoder to support the new Michelson type `tx_rollup_l2_address`. This type is used to identify accounts on transaction rollups' ledgers. Those accounts are prefixed with `tz4`. 
-The `TxRollupL2AddressToken` class allows users of Taquito to pass `tz4` addresses in storage or smart contract entry points using the Taquito JS abstraction.  
+We created a new class `TxRollupL2AddressToken` in the michelson-encoder to support the new Michelson type `tx_rollup_l2_address`. This type is used to identify accounts on transaction rollups' ledgers. Those accounts are prefixed with `tz4`.
+The `TxRollupL2AddressToken` class allows users of Taquito to pass `tz4` addresses in storage or smart contract entry points using the Taquito JS abstraction.
 
 ## `@taquito/michel-codec` - Added support for the new type`tx_rollup_l2_address` and the new instruction `MIN_BLOCK_TIME`
 
@@ -1023,7 +1183,7 @@ await op.confirmation();
 The `txRollupSubmitBatch` method also takes optional `storageLimit`, `gasLimit` and `fee` as parameters.
 
 ## Known Issues
-- Version stamp is out of date, resulting in `getVersionInfo()` to return the older version (12.1.0) instead of the current release candidate. This will be fixed in the full release. 
+- Version stamp is out of date, resulting in `getVersionInfo()` to return the older version (12.1.0) instead of the current release candidate. This will be fixed in the full release.
 
 # Taquito v12.1.0-beta
 
@@ -1043,10 +1203,10 @@ The `txRollupSubmitBatch` method also takes optional `storageLimit`, `gasLimit` 
 
 
 ## Compatibility with the Jakarta protocol
-We addressed the Jakarta protocol's breaking changes, making this version of Taquito compatible with the Jakarta protocol. This early integration has been possible by using the Mondaynet testnet. 
+We addressed the Jakarta protocol's breaking changes, making this version of Taquito compatible with the Jakarta protocol. This early integration has been possible by using the Mondaynet testnet.
 
 The Jakarta protocol addresses the [malleability issue](https://tezos.gitlab.io/alpha/sapling.html#preventing-malleability) discovered in Sapling. It introduces changes around the sapling related types and instructions that are now supported in Taquito:
-- The encoding of `sapling_transaction` has changed; we added support for it in the `@taquito/local-forging` package and support for `sapling_transaction_deprecated`. 
+- The encoding of `sapling_transaction` has changed; we added support for it in the `@taquito/local-forging` package and support for `sapling_transaction_deprecated`.
 
 - The optional type returned by the `SAPLING_VERIFY_UPDATE` instruction contains an additional property named `bound_data`. We added support for it in the `@taquito/michel-codec` package.
 
@@ -1096,10 +1256,10 @@ new RpcClient('url', 'chain', new HttpBackend(50000));
 
 
 ## Compatibility with the Jakarta protocol
-We addressed the Jakarta protocol's breaking changes, making this version of Taquito compatible with the Jakarta protocol. This early integration has been possible by using the Mondaynet testnet. 
+We addressed the Jakarta protocol's breaking changes, making this version of Taquito compatible with the Jakarta protocol. This early integration has been possible by using the Mondaynet testnet.
 
 The Jakarta protocol addresses the [malleability issue](https://tezos.gitlab.io/alpha/sapling.html#preventing-malleability) discovered in Sapling. It introduces changes around the sapling related types and instructions that are now supported in Taquito:
-- The encoding of `sapling_transaction` has changed; we added support for it in the `@taquito/local-forging` package and support for `sapling_transaction_deprecated`. 
+- The encoding of `sapling_transaction` has changed; we added support for it in the `@taquito/local-forging` package and support for `sapling_transaction_deprecated`.
 
 - The optional type returned by the `SAPLING_VERIFY_UPDATE` instruction contains an additional property named `bound_data`. We added support for it in the `@taquito/michel-codec` package.
 
@@ -1164,10 +1324,10 @@ new RpcClient('url', 'chain', new HttpBackend(50000));
 - @taquito/taquito - Allow estimating operations using a wallet #1387
 
 ### Documentation
-- Examples of using the BeaconWallet instance as a singleton #1045: https://tezostaquito.io/docs/beaconwallet-singleton 
+- Examples of using the BeaconWallet instance as a singleton #1045: https://tezostaquito.io/docs/beaconwallet-singleton
 - Fixed link to Tezos faucet #1383
 - Updated all website examples to show contract and wallet API example variants #493
-- Algolia improvements - Fixed search bar returning dead links and duplicates #1411 
+- Algolia improvements - Fixed search bar returning dead links and duplicates #1411
 
 
 
@@ -1196,19 +1356,19 @@ Example of an endorsement before Ithaca:
 }
 ```
 
-## @taquito/local-forging - Support for the new instruction `SUB_MUTEZ` 
+## @taquito/local-forging - Support for the new instruction `SUB_MUTEZ`
 
 We added support to forge and parse operations containing the new `SUB_MUTEZ` instruction in the `Localforger` class.
 
-> [SUB_MUTEZ] is similar to the mutez case of the SUB instruction but its return type is option mutez instead of mutez. This allows subtracting mutez values without failing in case of underflow. 
+> [SUB_MUTEZ] is similar to the mutez case of the SUB instruction but its return type is option mutez instead of mutez. This allows subtracting mutez values without failing in case of underflow.
 
 *source: https://tezos.gitlab.io/protocols/012ithaca.html#michelson*
 
 ## @taquito/rpc - Updated the `RpcClient` types based on the changes to the balance updates and the new type of operations
 
-Support has been added to represent the new operations `Preendorsement`, `Double_preendorsement_evidence`, `Set_deposits_limit`, and the new properties in operations result for `Endorsement` operations. 
+Support has been added to represent the new operations `Preendorsement`, `Double_preendorsement_evidence`, `Set_deposits_limit`, and the new properties in operations result for `Endorsement` operations.
 
-We also support balance updates' new "kinds" and "type". 
+We also support balance updates' new "kinds" and "type".
 
 The new balance update kinds are `accumulator`, `minted`, `burned`, and `commitment`.
 
@@ -1299,7 +1459,7 @@ Another change has been made regarding the confirmation method of the operations
 
 The change to the `confirmation` methods includes a breaking change. The polling interval for the confirmation and the streamer configuration has been moved from the `TezosToolkit` to the `PollingSubscribeProvider` class, where they belong logically.
 
-**BREAKING CHANGE:** 
+**BREAKING CHANGE:**
 
 The `confirmationPollingIntervalSecond` and the `ConfigStreamer` are removed from the
 `TezosToolkit`. Configuration for the PollingSubscribeProvider needs to be specified in its constructor:
@@ -1328,12 +1488,12 @@ Reduction of the bundle size:
 
 ## @taquito/taquito - Use the RPC `run_view` to execute lambda views
 
-Before version 12, we used a constantly failing lambda contract to execute the tzip4 (lambda) views. The result of the view was retrieved in the returned error. This implementation was a workaround, and since the Hangzhou protocol, the RPC exposes an endpoint (`helpers/scripts/run_view`) allowing us to execute that kind of view. 
+Before version 12, we used a constantly failing lambda contract to execute the tzip4 (lambda) views. The result of the view was retrieved in the returned error. This implementation was a workaround, and since the Hangzhou protocol, the RPC exposes an endpoint (`helpers/scripts/run_view`) allowing us to execute that kind of view.
 We implemented a method called `runView` in the `@taquito/rpc` package, and we now use this method to execute the tzip4 views.
 
 Before version 12, the lambda view was only enabled on the "contract" and not the "wallet" API as it relied on getting the result from an error. The feature is now enabled on the "wallet" API too.
 
-**Breaking change** (primarily for sandbox users): There is no need to deploy a lambda contract anymore. The `read` method of the `ContractView` class no longer takes an optional lambda contract address as a parameter. 
+**Breaking change** (primarily for sandbox users): There is no need to deploy a lambda contract anymore. The `read` method of the `ContractView` class no longer takes an optional lambda contract address as a parameter.
 
 Before version 12, when calling the `at` method to instantiate a `Contractabstraction`, a call was made to the RPC to fetch the chain id. The chain id was needed to select the right lambda contract to execute the view. As a performance improvement, we removed this call from the `at` method, removing one call to the RPC on each ContractAbstraction instantiation. The chain id can now be passed as a parameter of the `read` method or it will be fetched when calling this method.
 
@@ -1353,7 +1513,7 @@ The Taquito codebase is doing different calls to the RPC to construct the variou
 
 ## @taquito/taquito - Use the LocalForger by default instead of the RpcForger
 
-Before version 12, the default forger set on the `TezosToolkit` was the `RpcForger`. It is important to ensure that the node is trusted when forging with the RPC and users can change the forger implementation by calling the `setForgerProvider` method. 
+Before version 12, the default forger set on the `TezosToolkit` was the `RpcForger`. It is important to ensure that the node is trusted when forging with the RPC and users can change the forger implementation by calling the `setForgerProvider` method.
 As the Taquito local forging implementation provided in the `@taquito/local-forger` package has been battle-tested in the past month, we decided to change the default forger configured in the `TezosToolkit` in favor of the local one.
 
 
@@ -1385,7 +1545,7 @@ await contact.methods.methodName().send();
 
 ## @taquito/taquito - Allow estimating operations using a wallet
 
-The estimate API only worked with a configured signer and not a wallet. It has been fixed to allow estimation of operations using a configured wallet. 
+The estimate API only worked with a configured signer and not a wallet. It has been fixed to allow estimation of operations using a configured wallet.
 Note that the wallet account needs to be revealed to conduct any estimate as Taquito has no access to the wallet's public key required to simulate a reveal operation.
 
 # Taquito v11.2.0-beta
@@ -1556,7 +1716,7 @@ Here is an example where a contract contains a view named `myView`, it can be si
 ```typescript=
 const contract = Tezos.contract.at('KT1...');
 const res = contract.contractViews.myView(param).executeView({
-    viewCaller: 'KT1...' 
+    viewCaller: 'KT1...'
 });
 ```
 
@@ -1581,7 +1741,7 @@ const p = new Parser(parserOptions);
 
 In the release note v11.0.0-beta, there was a note about the following limitation:
 > Only the 'init' property can be used if you want to originate a contract having a global constant in the storage section of its code. Do not use the `storage` property, which depends on the `Michelson-Encoder`.
-> 
+>
 > Here is an example:
 > ```typescript=
 > const op = await Tezos.contract.originate({
@@ -1648,13 +1808,13 @@ We encourage all developers to update their projects to use version Taquito v11 
 
 ### New features - Hangzhou protocol
 - `@taquito/taquito` - Support for the new operation kind `register_global_constant` on the contract, batch and estimate APIs #1075
-- ``@taquito/local-forging` 
+- ``@taquito/local-forging`
     - Support the new types and instructions related to operations-on-timelock #1070
     - Support the new `constant` primitive #1077
     - Support the new operation kind `register_global_constant` #1077
     - Support the new high-level section `view` and the `VIEW` instruction #1074
 - `@taquito/michelson-encoder` - Support new types related to operations-on-timelock #1071
-- `@taquito/michel-codec` 
+- `@taquito/michel-codec`
     - Support the new types and instruction related to operations-on-timelock #1072
     - Support the new high-level section `view` and the `VIEW` instruction #1073
 
@@ -1691,7 +1851,7 @@ const op = await Tezos.contract.originate({
 
 ## `@taquito/taquito` - Support the new operation kind `register_global_constant` on the contract, batch and estimate APIs
 
-The new manager operation `register_global_constant` has been added to the contract, batch, and estimate APIs.  This new operation allows users to register Micheline expressions in a global table of constants. 
+The new manager operation `register_global_constant` has been added to the contract, batch, and estimate APIs.  This new operation allows users to register Micheline expressions in a global table of constants.
 
 A `registerGlobalConstant` method is available on the `ContractProvider` class. A `value` representing the Micheline expression to register in its JSON format is required as a parameter. The `registerGlobalConstant` method returns an instance of `RegisterGlobalConstantOperation` containing a `globalConstantHash` member that corresponds to the index(hash) of the newly registered constant.
 
@@ -1706,15 +1866,15 @@ await op.confirmation();
 const hash = op.globalConstantHash; // expr...
 ```
 
-After registering an expression as a global constant, the occurrences of this expression in a smart contract code can be replaced by its corresponding hash, allowing users to originate larger contracts. More details about the new `global constant` feature and examples using the batch API are available on the following documentation page: https://tezostaquito.io/docs/global_constant 
-    
+After registering an expression as a global constant, the occurrences of this expression in a smart contract code can be replaced by its corresponding hash, allowing users to originate larger contracts. More details about the new `global constant` feature and examples using the batch API are available on the following documentation page: https://tezostaquito.io/docs/global_constant
+
 ## `@taquito/michelson-encoder` - Support new types related to operations-on-timelock
 
 New tokens (ChestToken and ChestKeyToken) have been implemented in the Michelson-encoder package to support the new types `chest` and `chest_key` and allow data conversion between Michelson and js.
 
 ## `@taquito/utils` - Provide utility to verify signatures
 
-Taquito provides a function named `verifySignature` that allows verifying signatures of payloads. The function takes a message, a public key, and a signature as parameters and returns a boolean indicating if the signature matches. 
+Taquito provides a function named `verifySignature` that allows verifying signatures of payloads. The function takes a message, a public key, and a signature as parameters and returns a boolean indicating if the signature matches.
 The crypto library [stablelib](https://www.npmjs.com/package/@stablelib/ed25519) is used instead of [libsodium](https://www.npmjs.com/package/libsodium) in order not to drastically increase the bundle size of the `@taquito/utils` package.
 
 Here is an example of use:
@@ -1731,9 +1891,9 @@ await verifySignature(message, pk, sig);
 
 ## `@taquito/rpc` - Support for the RPC endpoint`context/contracts/{contract}/script/normalized`
 
-A new method on the RpcClient named `getNormalizedScript` is available. If global constants are present in the code of a smart contract, `getNormalizedScript` returns the expanded script. In contrast, the global constants are not expanded in the response provided by the `getScript` method. 
+A new method on the RpcClient named `getNormalizedScript` is available. If global constants are present in the code of a smart contract, `getNormalizedScript` returns the expanded script. In contrast, the global constants are not expanded in the response provided by the `getScript` method.
 
-Internally in Taquito, the usage of `getScript` has been replaced by `getNormalizedScript` to ensure that all script passed to the Michelson-Encoder won't contain global constant because the `Michelson-Encoder` does not support the global constant in this current release (11.0.0-beta). 
+Internally in Taquito, the usage of `getScript` has been replaced by `getNormalizedScript` to ensure that all script passed to the Michelson-Encoder won't contain global constant because the `Michelson-Encoder` does not support the global constant in this current release (11.0.0-beta).
 
 ## Preliminary support for Idiazabalnet protocol
 
@@ -1752,7 +1912,7 @@ If you have feature or issue requests, please create an issue on http://github.c
 # Taquito v10.2.1-beta
 
 - Updated beacon-sdk to version 2.3.5: https://github.com/airgap-it/beacon-sdk/releases/tag/v2.3.5
-- RpcClientCache - Store the Promises instead of the resolved values in the cache: 
+- RpcClientCache - Store the Promises instead of the resolved values in the cache:
 When requests were done in parallel to the same RPC endpoint, they were not hitting the cache. This is solved by storing the promise in the cache as soon as the first request is made. If another request tries to reach the same URL, during the configured TTL, the cached promise is returned.
 More details can be found here: https://github.com/ecadlabs/taquito/discussions/916
 # Taquito v10.2.0-beta
@@ -1771,7 +1931,7 @@ More details can be found here: https://github.com/ecadlabs/taquito/discussions/
 
 ## @taquito/contract-library - Ability to bundle smart-contract scripts and entrypoints for ContractAbstration instantiation
 
-A new package named `@taquito/contract-library` has been added to the Taquito library. 
+A new package named `@taquito/contract-library` has been added to the Taquito library.
 
 To improve (d)App performance, we aim to provide ways to reduce the number of calls made by Taquito to the RPC. The `@taquito/contracts-library` package allows developers to embed the smart-contract scripts into the application, preventing Taquito from loading this data from the RPC for every user.
 
@@ -1944,7 +2104,7 @@ A fix has been made to change the behavior of the `PollingSubscribeProvider`, wh
 
 ### Enhancements
 
-- **Breaking changes** - @taquito/michelson-encoder - Improvement to the `Schema.ExtractSchema()` method #960 and #933 
+- **Breaking changes** - @taquito/michelson-encoder - Improvement to the `Schema.ExtractSchema()` method #960 and #933
 
 
 
@@ -1961,7 +2121,7 @@ The support for the new `liquidity_baking_escape_ema` and `implicit_operations_r
 
 ## @taquito/taquito - Drain an unrevealed account
 
-Since v9.1.0-beta, the fees associated with a reveal operation are estimated using the RPC instead of using the old 1420 default value. When draining an unrevealed account, the fees associated with the reveal operation needs to be subtracted from the initial balance (as well as the fees related to the actual transaction operation). The reveal fee has changed from 1420 to 374 (based on the simulation using the RPC). However, the constants file was still using the 1420 value, leading to a remaining amount of 1046 in the account when trying to empty it. The default value has been adjusted on the constants file to match this change. 
+Since v9.1.0-beta, the fees associated with a reveal operation are estimated using the RPC instead of using the old 1420 default value. When draining an unrevealed account, the fees associated with the reveal operation needs to be subtracted from the initial balance (as well as the fees related to the actual transaction operation). The reveal fee has changed from 1420 to 374 (based on the simulation using the RPC). However, the constants file was still using the 1420 value, leading to a remaining amount of 1046 in the account when trying to empty it. The default value has been adjusted on the constants file to match this change.
 
 ## @taquito/rpc - Type ContractBigMapDiffItem has BigNumber's but values are string's
 
@@ -2071,7 +2231,7 @@ println(JSON.stringify(extractSchema, null, 2));
 Based on the information returned by the `ExtractSchema` method, the storage can be writen as follow:
 ```typescript=
 const bigMap = new MichelsonMap();
-bigMap.set('tz1...', { // address 
+bigMap.set('tz1...', { // address
         0: 'tz1...', // address
         1:10 // nat
     });
@@ -2116,7 +2276,7 @@ If you have feature or issue requests, please create an issue on http://github.c
 
 ## @taquito/michelson-encoder - Accept bytes in Uint8Array
 
-The only format accepted in the Michelson-encoder for the type bytes was the hexadecimal string. We added support for the type Uint8Array. It is now possible to call an entry point or originate a contract using a Uint8Array or a hexadecimal string. 
+The only format accepted in the Michelson-encoder for the type bytes was the hexadecimal string. We added support for the type Uint8Array. It is now possible to call an entry point or originate a contract using a Uint8Array or a hexadecimal string.
 
 ## @taquito/http-utils - Make http requests cancelable
 
@@ -2129,7 +2289,7 @@ The `bls12_381_fr`, `bls12_381_g1`, and `bls12_381_g2` tokens were missing in th
 
 ## @taquito/michelson-encoder - Added sapling_state and sapling_transaction tokens
 
-The `sapling_state` and `sapling_transaction` tokens were missing in the Michelson-Encoder since the Edo protocol and have been added. 
+The `sapling_state` and `sapling_transaction` tokens were missing in the Michelson-Encoder since the Edo protocol and have been added.
 
 Note that no additional abstractions or ability to decrypt Sapling transactions have been implemented so far.
 
@@ -2241,7 +2401,7 @@ If you have feature or issue requests, please create an issue on http://github.c
 ### Enhancements
 
 - Florence compatibility support
-- Allows fetching big map with a key of type string, number, or object. 
+- Allows fetching big map with a key of type string, number, or object.
 - Accept an operator for the retry strategy of the `ObservableSubscription` class
 - Updated beacon-sdk version to v2.2.5 which includes several performance improvements for p2p pairing.
 
@@ -2253,7 +2413,7 @@ If you have feature or issue requests, please create an issue on http://github.c
 
 This version ships with official support for the new Florence protocol which will come into effect on Mainnet in May.
 
-## @taquito/taquito - Allows fetching big map with a key of type string, number, or object. 
+## @taquito/taquito - Allows fetching big map with a key of type string, number, or object.
 
 In the precedent versions, fetching a value in a big map required the parameter to be a string, even in such cases when the key of the big map was a number. The `get` and `getMultipleValues` methods of the `BigMapAbstraction` and `getBigMapKeyByID` and `getBigMapKeysByID` methods of the `RpcContractProvider` class now accept a string, a number or an object for the key we want to fetch.
 
@@ -2344,9 +2504,9 @@ A note on how to use the Kukai wallet for testing on Edonet has been added to th
 
 ### Documentation updates
 
-- [Tickets](https://tezostaquito.io/docs/tickets) 
+- [Tickets](https://tezostaquito.io/docs/tickets)
 - [Local pack/unpack, including bigmaps.](https://tezostaquito.io/docs/maps_bigmaps#local-packing-for-big-maps)
-- Rename Thanos to Temple wallet. 
+- Rename Thanos to Temple wallet.
 - Build time pre-requisites for Taquito.
 - Documentation website examples now uses the edonet testnet
 
@@ -2362,7 +2522,7 @@ This feature is _opt-in_, meaning that the Taquito user must enable it to benefi
 
 Developers can now test and evaluate new features and bug fixes as soon as possible without having to clone and locally link Taquito. Preview builds are published to our npm preview registry from all pull requests (except PR's from forks).
 
-IMPORTANT NOTE: Preview builds are not official releases. They are helpful for testing and evaluating new features in Taquito. Preview builds may contain incomplete features or features that have not been fully tested. 
+IMPORTANT NOTE: Preview builds are not official releases. They are helpful for testing and evaluating new features in Taquito. Preview builds may contain incomplete features or features that have not been fully tested.
 
 ## Fetch multiple bigmaps at once.
 
@@ -2382,21 +2542,21 @@ v8.1 supports Florence net. All the Taquito integration tests are run against th
 
 ## Documentation Additions and Improvments
 
-Documentation on the Taquito website continues to grow and be refined. Developers can now read docs explaining what tickets are, their use cases, and example code reading tickets with various data values. 
+Documentation on the Taquito website continues to grow and be refined. Developers can now read docs explaining what tickets are, their use cases, and example code reading tickets with various data values.
 
-Live code examples on the website now use Edonet. 
+Live code examples on the website now use Edonet.
 
 CodeBlock and Playground folders, along with contracts that work with live code, now rely on the Edonet testnet.
 
-For enabling local pack (MichelCodecPacker()) for big map values, there are now instructions and documentation about the benefits of doing so. 
+For enabling local pack (MichelCodecPacker()) for big map values, there are now instructions and documentation about the benefits of doing so.
 
-Developers can now opt in to use Taquito's local pack implementation when fetching Big Map values. This feature makes fetching Big Map values 50% faster. Big Map keys need to be serialized or PACK'ed, and Taquito relied on the Tezos PACK RPC to PACK the bigmap keys. 
+Developers can now opt in to use Taquito's local pack implementation when fetching Big Map values. This feature makes fetching Big Map values 50% faster. Big Map keys need to be serialized or PACK'ed, and Taquito relied on the Tezos PACK RPC to PACK the bigmap keys.
 
-By relying on the local pack implementation, we eliminate one RPC roundtrip when fetching Big Map Values. To enable this feature, developers must call the `tezos. setPackerProvider(new MichelCodecPacker());` on the program's TezosToolkit instance. 
+By relying on the local pack implementation, we eliminate one RPC roundtrip when fetching Big Map Values. To enable this feature, developers must call the `tezos. setPackerProvider(new MichelCodecPacker());` on the program's TezosToolkit instance.
 
-## Website now uses Netlify 
+## Website now uses Netlify
 
-Netlify provides the deployment/hosting of the Taquito website. The primary motivation is so that we get full preview deployments of the website from PRs. 
+Netlify provides the deployment/hosting of the Taquito website. The primary motivation is so that we get full preview deployments of the website from PRs.
 
 ## More RPC endpoints added to Taquito
 
@@ -2414,7 +2574,7 @@ We will soon be working on integrating Florence, the next Tezos protocol update 
 
 Developer Experience is our high-priority item, and we have improvements in our backlog that we plan to start work. We are improving the `michelson-encoder implementation to open the door for Type generation from contracts and to provide easier discoverability of what parameters endpoints and initial storage take. Stay tuned!
 
-We have a good practice of Continuous Delivery in Taquito, but we plan to take this to the next level. Stay tuned! 
+We have a good practice of Continuous Delivery in Taquito, but we plan to take this to the next level. Stay tuned!
 
 If you have feature or issue requests, please create an issue on http://github.com/ecadlabs/taquito/issues or join us on the Taquito community support channel on Telegram https://t.me/tezostaquito
 
