@@ -26,7 +26,7 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 render(`Fetching a private key...`);
-fetch('https://api.tez.ie/keys/ghostnet/', {
+fetch('https://keygen.ecadinfra.com/ghostnet/', {
   method: 'POST',
   headers: { Authorization: 'Bearer taquito-example' },
 })
