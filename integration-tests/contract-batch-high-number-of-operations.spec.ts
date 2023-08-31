@@ -1,4 +1,4 @@
-import { CONFIGS, isSandbox } from './config';
+import { CONFIGS, isSandbox, sleep } from './config';
 import { Protocols } from '@taquito/taquito';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
@@ -60,6 +60,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       try {
         const op = await batch.send();
         await op.confirmation();
+        sleep(5000);
+        console.log((await Tezos.rpc.getPendingOperations({})).refused)
         expect(op.status).toEqual('applied');
       } catch (e) { console.log(JSON.stringify(e)) }
       done();
