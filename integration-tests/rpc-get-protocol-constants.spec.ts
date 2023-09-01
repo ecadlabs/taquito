@@ -12,10 +12,10 @@ import {
   ConstantsResponseProto017,
 } from '@taquito/rpc';
 
-CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
+CONFIGS().forEach(({ lib, protocol, rpc }) => {
   const Tezos = lib;
   const nairobinet = (protocol === Protocols.PtNairobi) ? test : test.skip;
-  const alpha = (protocol === Protocols.ProtoALpha) ? test : test.skip;
+  const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
 
@@ -915,12 +915,12 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
       done();
     });
 
-    alpha(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
+    mondaynet(`successfully fetches all constants for mondaynet using ${rpc}`, async (done) => {
       Tezos.setRpcProvider(rpc);
       const constants: ConstantsResponseProto016 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
-        adaptive_issuance_launch_ema_threshold: 100000000,
+        adaptive_issuance_launch_ema_threshold: 10000000,
         adaptive_rewards_params: {
           center_dz: {
             denominator: "2",
@@ -928,11 +928,11 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
           },
           growth_rate: "115740740",
           issuance_ratio_max: {
-            denominator: "20",
+            denominator: "10",
             numerator: "1",
           },
           issuance_ratio_min: {
-            denominator: "2000",
+            denominator: "200",
             numerator: "1",
           },
           max_bonus: "50000000000000",
@@ -954,7 +954,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         hard_gas_limit_per_block: new BigNumber(5200000),
         proof_of_work_threshold: new BigNumber(-1),
         origination_size: 257,
-        percentage_of_frozen_deposits_slashed_per_double_baking: 10,
+        percentage_of_frozen_deposits_slashed_per_double_baking: 11,
         percentage_of_frozen_deposits_slashed_per_double_attestation: 50,
         cost_per_byte: new BigNumber(250),
         hard_storage_limit_per_operation: new BigNumber(60000),
@@ -985,9 +985,9 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
           numerator: 2,
         },
         max_slashing_period: 2,
-        minimal_block_delay: new BigNumber(15),
+        minimal_block_delay: new BigNumber(7),
         minimal_frozen_stake: "600000000",
-        delay_increment_per_round: new BigNumber(15),
+        delay_increment_per_round: new BigNumber(7),
         edge_of_staking_over_delegation: 2,
         global_limit_of_staking_over_baking: 5,
         dal_parametric: {
@@ -1021,9 +1021,9 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         smart_rollup_message_size_limit: 4096,
         smart_rollup_number_of_sections_in_dissection: 32,
         smart_rollup_origination_size: 6314,
-        smart_rollup_private_enable: false,
+        smart_rollup_private_enable: true,
         smart_rollup_reveal_activation_level: {
-          dal_page: 513,
+          dal_page: 0,
           metadata: 0,
           raw_data: {
             Blake2B: 0,

@@ -8,8 +8,8 @@ import { InvalidAmountError } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => {
   const Tezos = lib;
-  const Nairobi = protocol === Protocols.PtNairobi ? it : it.skip;
-  const OxfordAndAlpha = protocol === Protocols.ProtoALpha ? it : it.skip;
+  const nairobinet = protocol === Protocols.PtNairobi ? it : it.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? it : it.skip;
 
   describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
@@ -196,7 +196,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Nairobi('Estimate transfer to regular address with a fixed fee', async (done) => {
+    nairobinet('Estimate transfer to regular address with a fixed fee', async (done) => {
 
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
 
@@ -206,7 +206,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    OxfordAndAlpha('Estimate transfer to regular address with a fixed fee', async (done) => {
+    mondaynet('Estimate transfer to regular address with a fixed fee', async (done) => {
 
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
 
@@ -216,7 +216,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    Nairobi('Estimate transfer to regular address with insufficient balance', async (done) => {
+    nairobinet('Estimate transfer to regular address with insufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toMatchObject({
@@ -225,7 +225,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       done();
     });
 
-    OxfordAndAlpha('Estimate transfer to regular address with insufficient balance', async (done) => {
+    mondaynet('Estimate transfer to regular address with insufficient balance', async (done) => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toMatchObject({
