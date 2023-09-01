@@ -1,5 +1,5 @@
-import { Protocols } from '@taquito/taquito';
-import { CONFIGS } from './config';
+import { Protocols } from "@taquito/taquito";
+import { CONFIGS, NetworkType } from "./config";
 import BigNumber from 'bignumber.js';
 import {
   ConstantsResponseProto009,
@@ -12,14 +12,14 @@ import {
   ConstantsResponseProto017,
 } from '@taquito/rpc';
 
-CONFIGS().forEach(({ lib, protocol, rpc }) => {
+CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
   const nairobinet = (protocol === Protocols.PtNairobi) ? test : test.skip;
   const alpha = (protocol === Protocols.ProtoALpha) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
 
-    const rpcUrl = 'https://mainnet-archive.api.tez.ie/';
+    const rpcUrl = 'https://mainnet-archive.ecadinfra.com/';
     Tezos.setRpcProvider(rpcUrl);
     it('successfully fails at fetching constants for level 0', async (done) => {
       try {
