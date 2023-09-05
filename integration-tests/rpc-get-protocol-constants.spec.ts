@@ -12,11 +12,10 @@ import {
   ConstantsResponseProto017,
 } from '@taquito/rpc';
 
-CONFIGS().forEach(({ lib, protocol, rpc }) => {
+CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
-  const nairobinet = (protocol === Protocols.PtNairobi) ? test : test.skip;
-  const mondaynet = (protocol === Protocols.ProtoALpha) ? test : test.skip;
-
+  const nairobinet = (networkType == NetworkType.TESTNET && protocol === Protocols.PtNairobi) ? test : test.skip;
+  const mondaynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
   describe('Test fetching constants for all protocols on Mainnet', () => {
 
     const rpcUrl = 'https://mainnet-archive.ecadinfra.com/';
