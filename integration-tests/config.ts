@@ -8,6 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
+import { knownContractsProxford } from './known-contracts-Proxford';
 
 const nodeCrypto = require('crypto');
 
@@ -145,6 +146,18 @@ const nairobinetEphemeral: Config =
 const nairobinetSecretKey: Config =
   { ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey },  ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
 
+const oxfordnetEphemeral: Config =
+  defaultConfig({
+    networkName: 'OXFORDNET',
+    protocol: Protocols.Proxford,
+    defaultRpc: 'http://ecad-oxfordnet-full.i.tez.ie:8732',
+    knownContracts: knownContractsProxford,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/oxfordnet')
+  });
+
+const oxfordnetSecretKey: Config =
+  { ...oxfordnetEphemeral, ...{ signerConfig: defaultSecretKey } };
+
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
@@ -175,12 +188,16 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
+} else if (process.env['RUN_OXFORDNET_WITH_SECRET_KEY']) {
+  providers.push(oxfordnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
   providers.push(mondaynetSecretKey);
 } else if (process.env['NAIROBINET']) {
   providers.push(nairobinetEphemeral);
+} else if (process.env['OXFORDNET']) {
+  providers.push(oxfordnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['MONDAYNET']) {
