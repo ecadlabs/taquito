@@ -46,6 +46,7 @@ export enum Protocols {
   PtMumbaii = 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
+  Proxford = 'ProxfordSW2S7fvchT1Zgj2avb5UES194neRyYVXoaDGvF9egt8',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -64,7 +65,8 @@ export const protocols = {
   '015': [Protocols.PtLimaPtL],
   '016': [Protocols.PtMumbai2], // mumbai v2
   '017': [Protocols.PtNairobi],
-  '018': [Protocols.ProtoALpha],
+  '018': [Protocols.Proxford],
+  '019': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {
@@ -83,6 +85,7 @@ export enum ChainIds {
   MUMBAINET = 'NetXQw6nWSnrJ5t',
   MUMBAINET2 = 'NetXgbcrNtXD2yA',
   NAIROBINET = 'NetXyuzvDo2Ugzb',
+  OXFORDNET = 'NetXH6zDyMzRsUy',
 }
 
 export const getRevealGasLimit = (address: string) =>
