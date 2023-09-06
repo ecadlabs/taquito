@@ -30,29 +30,21 @@ The counter contract's storage is a simple integer that gets increased or decrea
 
 ```
 type storage = int;
+type ret = [list<operation>, storage];
 
-type parameter =
-| ["Increment", int]
-| ["Decrement", int]
-| ["Reset"];
+// Three entrypoints
 
-type return_ = [list <operation>, storage];
+@entry
+const increment = (delta : int, store : storage) : ret =>
+  [list([]), store + delta];
 
-/* Two entrypoints */
-const add = ([store, delta] : [storage, int]) : storage => store + delta;
-const sub = ([store, delta] : [storage, int]) : storage => store - delta;
+@entry
+const decrement = (delta : int, store : storage) : ret =>
+  [list([]), store - delta];
 
-/* Main access point that dispatches to the entrypoints according to
-   the smart contract parameter. */
-const main = ([action, store] : [parameter, storage]) : return_ => {
- return [
-   (list([]) as list <operation>),    // No operations
-   (match (action, {
-    Increment: (n: int) => add ([store, n]),
-    Decrement: (n: int) => sub ([store, n]),
-    Reset:     ()  => 0}))
-  ]
-};
+@entry
+const reset = (_ : unit, _ : storage) : ret =>
+  [list([]), 0];
 
 ```
 
