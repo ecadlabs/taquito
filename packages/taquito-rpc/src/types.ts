@@ -1917,6 +1917,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto018 &
   ConstantsResponseProto017 &
   ConstantsResponseProto016 &
   ConstantsResponseProto015 &
@@ -1960,6 +1961,66 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
+export interface ConstantsResponseProto018
+  extends Omit<
+    ConstantsResponseProto017,
+    | 'baking_reward_bonus_per_slot'
+    | 'baking_reward_fixed_portion'
+    | 'double_baking_punishment'
+    | 'endorsing_reward_per_slot'
+    | 'frozen_deposits_percentage'
+    | 'liquidity_baking_subsidy'
+    | 'ratio_of_frozen_deposits_slashed_per_double_endorsement'
+    | 'seed_nonce_revelation_tip'
+    | 'tx_rollup_commitment_bond'
+    | 'tx_rollup_cost_per_byte_ema_factor'
+    | 'tx_rollup_enable'
+    | 'tx_rollup_finality_period'
+    | 'tx_rollup_hard_size_limit_per_inbox'
+    | 'tx_rollup_hard_size_limit_per_message'
+    | 'tx_rollup_max_commitments_count'
+    | 'tx_rollup_max_inboxes_count'
+    | 'tx_rollup_max_messages_per_inbox'
+    | 'tx_rollup_max_ticket_payload_size'
+    | 'tx_rollup_max_withdrawals_per_batch'
+    | 'tx_rollup_origination_size'
+    | 'tx_rollup_rejection_max_proof_size'
+    | 'tx_rollup_sunset_level'
+    | 'tx_rollup_withdraw_period'
+  > {
+  adaptive_issuance_launch_ema_threshold: number;
+  adaptive_rewards_params: {
+    center_dz: Ratio;
+    growth_rate: string;
+    issuance_ratio_max: Ratio;
+    issuance_ratio_min: Ratio;
+    max_bonus: string;
+    radius_dz: Ratio;
+  };
+  edge_of_staking_over_delegation: number;
+  global_limit_of_staking_over_baking: number;
+  issuance_weights: {
+    attesting_reward_weight: number;
+    baking_reward_bonus_weight: number;
+    baking_reward_fixed_portion_weight: number;
+    base_total_issued_per_minute: string;
+    liquidity_baking_subsidy_weight: number;
+    seed_nonce_revelation_tip_weight: number;
+    vdf_revelation_tip_weight: number;
+  };
+  limit_of_delegation_over_baking: number;
+  minimal_frozen_stake: string;
+  percentage_of_frozen_deposits_slashed_per_double_attestation: number;
+  percentage_of_frozen_deposits_slashed_per_double_baking: number;
+  smart_rollup_reveal_activation_level: {
+    dal_page: number;
+    metadata: number;
+    raw_data: {
+      Blake2B: number;
+    };
+  };
+  zk_rollup_max_ticket_payload_size: number;
+}
 export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
 export interface ConstantsResponseProto016
