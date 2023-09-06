@@ -24,44 +24,38 @@ type action =
 | Fail_with_pair
 | Check_signature of sig_params
 
-let simple_param (p, s: int * storage): storage = { s with simple = p + s.simple }
+[@entry]
+let simple_param (p, s: int * storage): operation list * storage =
+  [], { s with simple = p + s.simple }
 
-let complex_param (p, s: (nat * string) * storage): storage = 
+[@entry]
+let complex_param (p, s: (nat * string) * storage): operation list * storage =
   let num = abs (s.simple + p.0) in
-  { s with complex = num, p.1 }
+  [], { s with complex = num, p.1 }
 
-let complex_optional_param (p, s: (optional_param * optional_param) * storage): storage = 
-  { s with optional = p }
+[@entry]
+let complex_optional_param (p, s: (optional_param * optional_param) * storage): operation list * storage =
+  [], { s with optional = p }
 
-let fail (s: storage): storage = (failwith "Fail entrypoint": storage)
+[@entry]
+let fail (_, _: unit * storage): operation list * storage = failwith "Fail entrypoint"
 
-let fail_with_int (s: storage): storage = 
-    [%Michelson ({| { PUSH int 5 ; FAILWITH } |}: storage -> storage )] s
+[@entry]
+let fail_with_int (_, _: unit * storage): operation list * storage = failwith 5
 
-let fail_with_pair (s: storage): storage = 
-    [%Michelson ({| { PUSH (pair int string) (Pair 6 "taquito") ; FAILWITH } |}: storage -> storage )] s
+[@entry]
+let fail_with_pair (_, _: unit * storage): operation list * storage = failwith (6, "taquito")
 
-let check_signature (sig_params, s: sig_params * storage): storage =
+[@entry]
+let check_signature (sig_params, s: sig_params * storage): operation list * storage =
     let (signer, (sig_, msg)) = sig_params in
     (* casts the provided key to a key hash *)
     let k_hash: key_hash = Crypto.hash_key signer in
     if (Tezos.address (Tezos.implicit_account k_hash)) <> Tezos.get_sender()
-    then (failwith "DIFFERENT_SIGNER_SENDER": storage)
+    then failwith "DIFFERENT_SIGNER_SENDER"
     else
         (* verifies the signature *)
         if Crypto.check signer sig_ msg
-        then { s with last_checked_sig = Some { sender = Tezos.get_sender(); sig_ = sig_; msg = msg } }
+        then ([], { s with last_checked_sig = Some { sender = Tezos.get_sender(); sig_ = sig_; msg = msg } })
         else
-            (failwith "DIFFERENT_SIGNER": storage)
-
-let main (p,s: action * storage) =
- let storage =
-   match p with
-   | Simple_param n -> simple_param (n, s)
-   | Complex_param n -> complex_param (n, s)
-   | Complex_optional_param n -> complex_optional_param (n, s)
-   | Fail -> fail s
-   | Fail_with_int -> fail_with_int s
-   | Fail_with_pair -> fail_with_pair s
-   | Check_signature n -> check_signature (n, s)
- in ([] : operation list), storage
+            failwith "DIFFERENT_SIGNER"
