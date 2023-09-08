@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { mainContractWithDuplicateEvents } from "./main-contract-with-duplicate-events";
+import { mainContractWithDuplicateEvents } from "./data/main-contract-with-duplicate-events";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
