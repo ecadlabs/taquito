@@ -8,7 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
-import { knownContractsProxford } from './known-contracts-Proxford';
+import { knownContractsProxfordS } from './known-contracts-ProxfordS';
 
 const nodeCrypto = require('crypto');
 
@@ -24,7 +24,7 @@ enum ForgerType {
   COMPOSITE = 'composite',
 }
 
-export const isSandbox = (config: {rpc: string}) => {
+export const isSandbox = (config: { rpc: string }) => {
   return config.rpc.includes('localhost') || config.rpc.includes('0.0.0.0') || config.rpc.includes('127.0.0.1');
 }
 
@@ -144,14 +144,14 @@ const nairobinetEphemeral: Config =
   });
 
 const nairobinetSecretKey: Config =
-  { ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey },  ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
+  { ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
 
 const oxfordnetEphemeral: Config =
   defaultConfig({
     networkName: 'OXFORDNET',
     protocol: Protocols.Proxford,
     defaultRpc: 'http://ecad-oxfordnet-full.i.tez.ie:8732',
-    knownContracts: knownContractsProxford,
+    knownContracts: knownContractsProxfordS,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/oxfordnet')
   });
 
@@ -161,7 +161,7 @@ const oxfordnetSecretKey: Config =
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
-    protocol: Protocols.PtMumbai2,
+    protocol: Protocols.Proxford,
     defaultRpc: 'ecad-ghostnet-rolling:8732',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
@@ -265,13 +265,13 @@ const setupWithSecretKey = async (Tezos: TezosToolkit, signerConfig: SecretKeyCo
 };
 
 const configurePollingInterval = (Tezos: TezosToolkit, pollingIntervalMilliseconds: string | undefined) => {
-  if(pollingIntervalMilliseconds) {
+  if (pollingIntervalMilliseconds) {
     Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: Number(pollingIntervalMilliseconds) }));
   }
 }
 
 const configureRpcCache = (rpc: string, rpcCacheMilliseconds: string) => {
-  if(rpcCacheMilliseconds === '0') {
+  if (rpcCacheMilliseconds === '0') {
     return new TezosToolkit(rpc);
   } else {
     return new TezosToolkit(new RpcClientCache(new RpcClient(rpc), Number(rpcCacheMilliseconds)));
