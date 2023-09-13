@@ -83,7 +83,9 @@
     "tzip",
     "Umami",
     "unopt",
-    "UNPAIR"
+    "UNPAIR",
+    "unstake",
+    "zarith"
   ],
   "files": [
     "**/*.ts",

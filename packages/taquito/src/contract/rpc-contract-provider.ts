@@ -54,6 +54,8 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   FailingNoopParams,
+  StakeParams,
+  UnstakeParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -758,6 +760,75 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     }
 
     return batch;
+  }
+
+  /**
+   *
+   * @description Stake founds. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param stake operation parameter
+   */
+  async stake(params: StakeParams) {
+    const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
+    const source = await this.signer.publicKeyHash();
+
+    const prepared = await this.prepare.stake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Unstake founds. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param unstake operation parameter
+   */
+  async unstake(params: UnstakeParams) {
+    const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
+    const source = await this.signer.publicKeyHash();
+
+    const prepared = await this.prepare.unstake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Unstake founds. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param unstake operation parameter
+   */
+  async finalizeUnstake(params: UnstakeParams) {
+    const estimate = await this.estimate(
+      params,
+      this.estimator.finalizeUnstake.bind(this.estimator)
+    );
+    const source = await this.signer.publicKeyHash();
+
+    const prepared = await this.prepare.finalizeUnstake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
   }
 }
 

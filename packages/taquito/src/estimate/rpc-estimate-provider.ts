@@ -15,6 +15,9 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -449,6 +452,66 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   ) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.contractCall(contractMethod);
+
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for stake operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the stake operation
+   *
+   * @param Estimate
+   */
+  async stake(params: StakeParams) {
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const preparedOperation = await this.prepare.stake(params);
+
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for unstake operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the unstake operation
+   *
+   * @param Estimate
+   */
+  async unstake(params: UnstakeParams) {
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const preparedOperation = await this.prepare.unstake(params);
+
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for finalize_unstake operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the finalize_unstake operation
+   *
+   * @param Estimate
+   */
+  async finalizeUnstake(params: FinalizeUnstakeParams) {
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const preparedOperation = await this.prepare.finalizeUnstake(params);
 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
 

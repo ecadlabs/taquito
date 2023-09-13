@@ -563,6 +563,84 @@ export interface FailingNoopParams {
   basedOnBlock: BlockIdentifier;
 }
 
+export interface StakeParams {
+  baker: string;
+  amount: number;
+  fee?: number;
+  parameter?: TransactionOperationParameter;
+  gasLimit?: number;
+  storageLimit?: number;
+  mutez?: boolean;
+}
+
+export interface RPCStakeOperation {
+  kind: OpKind.TRANSACTION;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  amount: string;
+  source: string;
+  destination: string;
+  parameters: {
+    entrypoint: 'stake';
+    value: {
+      prim: 'Unit';
+    };
+  };
+}
+
+export interface UnstakeParams {
+  baker: string;
+  amount: number;
+  fee?: number;
+  parameter?: TransactionOperationParameter;
+  gasLimit?: number;
+  storageLimit?: number;
+  mutez?: boolean;
+}
+
+export interface RPCUnstakeOperation {
+  kind: OpKind.TRANSACTION;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  amount: string;
+  source: string;
+  destination: string;
+  parameters: {
+    entrypoint: 'unstake';
+    value: {
+      prim: 'Unit';
+    };
+  };
+}
+
+export interface FinalizeUnstakeParams {
+  baker: string;
+  amount: number;
+  fee?: number;
+  parameter?: TransactionOperationParameter;
+  gasLimit?: number;
+  storageLimit?: number;
+  mutez?: boolean;
+}
+
+export interface RPCFinalizeUnstakeOperation {
+  kind: OpKind.TRANSACTION;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  amount: string;
+  source: string;
+  destination: string;
+  parameters: {
+    entrypoint: 'finalize_unstake';
+    value: {
+      prim: 'Unit';
+    };
+  };
+}
+
 export type RPCOperation =
   | RPCOriginationOperation
   | RPCTransferOperation
@@ -578,7 +656,10 @@ export type RPCOperation =
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
   | RPCFailingNoopOperation
-  | RPCSmartRollupOriginateOperation;
+  | RPCSmartRollupOriginateOperation
+  | RPCStakeOperation
+  | RPCUnstakeOperation
+  | RPCFinalizeUnstakeOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];
