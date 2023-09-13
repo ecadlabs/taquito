@@ -27,6 +27,9 @@ import {
   isOpWithFee,
   RegisterDelegateParams,
   ActivationParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
@@ -54,6 +57,9 @@ import {
   createSmartRollupOriginateOperation,
   createRegisterDelegateOperation,
   createActivationOperation,
+  createStakeOperation,
+  createUnstakeOperation,
+  createFinalizeUnstakeOperation,
 } from '../contract';
 import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
@@ -1096,6 +1102,135 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return {
       branch,
       contents,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare a stake operation
+   * @param operation RPCOperation object
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  async stake(
+    { fee, storageLimit, gasLimit, ...rest }: StakeParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
+
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
+
+    const op = await createStakeOperation({
+      ...rest,
+      ...mergedEstimates,
+    });
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    this.#counters = {};
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare an unstake operation
+   * @param operation RPCOperation object
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  async unstake(
+    { fee, storageLimit, gasLimit, ...rest }: UnstakeParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
+
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
+
+    const op = await createUnstakeOperation({
+      ...rest,
+      ...mergedEstimates,
+    });
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    this.#counters = {};
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare an unstake operation
+   * @param operation RPCOperation object
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  async finalizeUnstake(
+    { fee, storageLimit, gasLimit, ...rest }: FinalizeUnstakeParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
+
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
+
+    const op = await createFinalizeUnstakeOperation({
+      ...rest,
+      ...mergedEstimates,
+    });
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    this.#counters = {};
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
     };
   }
 }
