@@ -7,7 +7,13 @@ import {
 } from '../contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import { OpKind, withKind } from '../operations/types';
+import {
+  FinalizeUnstakeParams,
+  OpKind,
+  StakeParams,
+  UnstakeParams,
+  withKind,
+} from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
   WalletDelegateParams,
@@ -408,5 +414,62 @@ export class Wallet {
 
   getPK() {
     return this.walletProvider.getPK();
+  }
+
+  /**
+   *
+   * @description Stake funds.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Stake operation parameter
+   */
+  stake(params: StakeParams) {
+    // TODO: validate the baker
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapStakeParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   *
+   * @description Unstake funds.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Unstake operation parameter
+   */
+  unstake(params: UnstakeParams) {
+    // TODO: validate the baker
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapUnstakeParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   *
+   * @description FinalizeUnstake funds.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Unstake operation parameter
+   */
+  finalizeUnstake(params: FinalizeUnstakeParams) {
+    // TODO: validate the baker
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapFinalizeUnstakeParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createTransactionOperation(opHash);
+    });
   }
 }
