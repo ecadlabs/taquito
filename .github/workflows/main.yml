@@ -74,7 +74,7 @@ jobs:
           - protocol: Nairobi
             testnet: nairobinet
             testnet_uppercase: NAIROBINET
-            flextesa_docker_image: oxheadalpha/flextesa:20230502
+            flextesa_docker_image: oxheadalpha/flextesa:20230607
           - protocol: Oxford
             testnet: oxfordnet
             testnet_uppercase: OXFORDNET
