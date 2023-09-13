@@ -24,6 +24,9 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   FailingNoopParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
@@ -283,4 +286,34 @@ export interface ContractProvider extends StorageProvider {
    * @param params FailingNoop operation parameter
    */
   failingNoop(params: FailingNoopParams): Promise<FailingNoopOperation>;
+
+  /**
+   *
+   * @description Stake founds. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param stake operation parameter
+   */
+  stake(params: StakeParams): Promise<TransactionOperation>;
+
+  /**
+   *
+   * @description Unstake founds. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param unstake operation parameter
+   */
+  unstake(params: UnstakeParams): Promise<TransactionOperation>;
+
+  /**
+   *
+   * @description Finalize unstake founds. Will sign and inject an operation using the current context
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param finalizeUnstake operation parameter
+   */
+  unstake(params: FinalizeUnstakeParams): Promise<TransactionOperation>;
 }
