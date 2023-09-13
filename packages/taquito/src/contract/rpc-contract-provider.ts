@@ -808,7 +808,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Unstake founds. Will sign and inject an operation using the current context
+   * @description Finalize unstake founds. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
