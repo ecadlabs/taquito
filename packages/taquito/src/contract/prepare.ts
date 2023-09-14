@@ -31,12 +31,7 @@ import {
   SmartRollupOriginateParams,
   ActivationParams,
   RPCActivateOperation,
-  RPCStakeOperation,
-  RPCUnstakeOperation,
-  RPCFinalizeUnstakeOperation,
-  StakeParams,
-  UnstakeParams,
-  FinalizeUnstakeParams,
+  StakingParams,
 } from '../operations/types';
 import {
   DEFAULT_FEE,
@@ -344,76 +339,27 @@ export const createSmartRollupOriginateOperation = async ({
   } as RPCSmartRollupOriginateOperation;
 };
 
-export const createStakeOperation = async ({
-  baker,
-  amount,
-  fee = DEFAULT_FEE.TRANSFER,
-  gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
-  storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
-  mutez = false,
-}: StakeParams) => {
-  const operation: RPCStakeOperation = {
+export const createStakingOperation = async (
+  {
+    amount,
+    fee = DEFAULT_FEE.TRANSFER,
+    gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
+    storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
+    mutez = false,
+  }: StakingParams,
+  pkh: string,
+  entrypoint: 'stake' | 'unstake' | 'finalize_unstake'
+) => {
+  const operation: RPCTransferOperation = {
+    source: pkh,
+    destination: pkh,
     kind: OpKind.TRANSACTION,
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
-    source: baker,
-    destination: baker,
     parameters: {
-      entrypoint: 'stake',
-      value: {
-        prim: 'Unit',
-      },
-    },
-  };
-  return operation;
-};
-
-export const createUnstakeOperation = async ({
-  baker,
-  amount,
-  fee = DEFAULT_FEE.TRANSFER,
-  gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
-  storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
-  mutez = false,
-}: UnstakeParams) => {
-  const operation: RPCUnstakeOperation = {
-    kind: OpKind.TRANSACTION,
-    fee,
-    gas_limit: gasLimit,
-    storage_limit: storageLimit,
-    amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
-    source: baker,
-    destination: baker,
-    parameters: {
-      entrypoint: 'unstake',
-      value: {
-        prim: 'Unit',
-      },
-    },
-  };
-  return operation;
-};
-
-export const createFinalizeUnstakeOperation = async ({
-  baker,
-  amount,
-  fee = DEFAULT_FEE.TRANSFER,
-  gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
-  storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
-  mutez = false,
-}: FinalizeUnstakeParams) => {
-  const operation: RPCFinalizeUnstakeOperation = {
-    kind: OpKind.TRANSACTION,
-    fee,
-    gas_limit: gasLimit,
-    storage_limit: storageLimit,
-    amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
-    source: baker,
-    destination: baker,
-    parameters: {
-      entrypoint: 'finalize_unstake',
+      entrypoint,
       value: {
         prim: 'Unit',
       },

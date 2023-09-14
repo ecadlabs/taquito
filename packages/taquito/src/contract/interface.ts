@@ -24,9 +24,7 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   FailingNoopParams,
-  StakeParams,
-  UnstakeParams,
-  FinalizeUnstakeParams,
+  StakingParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
@@ -295,7 +293,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param stake operation parameter
    */
-  stake(params: StakeParams): Promise<TransactionOperation>;
+  stake(params: StakingParams): Promise<TransactionOperation>;
 
   /**
    *
@@ -305,7 +303,7 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param unstake operation parameter
    */
-  unstake(params: UnstakeParams): Promise<TransactionOperation>;
+  unstake(params: StakingParams): Promise<TransactionOperation>;
 
   /**
    *
@@ -315,5 +313,5 @@ export interface ContractProvider extends StorageProvider {
    *
    * @param finalizeUnstake operation parameter
    */
-  unstake(params: FinalizeUnstakeParams): Promise<TransactionOperation>;
+  unstake(params: StakingParams): Promise<TransactionOperation>;
 }

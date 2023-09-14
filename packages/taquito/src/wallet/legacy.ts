@@ -2,13 +2,11 @@ import { Context } from '../context';
 import { attachKind, OpKind } from '../operations/types';
 import {
   WalletDelegateParams,
-  WalletFinalizeUnstakeParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
-  WalletStakeParams,
+  WalletStakingParams,
   WalletTransferParams,
-  WalletUnstakeParams,
 } from './interface';
 import { WalletParamsWithKind } from './wallet';
 
@@ -49,15 +47,7 @@ export class LegacyWalletProvider implements WalletProvider {
     return this.context.signer.publicKey();
   }
 
-  async mapStakeParamsToWalletParams(params: () => Promise<WalletStakeParams>) {
-    return attachKind(await params(), OpKind.TRANSACTION);
-  }
-
-  async mapUnstakeParamsToWalletParams(params: () => Promise<WalletUnstakeParams>) {
-    return attachKind(await params(), OpKind.TRANSACTION);
-  }
-
-  async mapFinalizeUnstakeParamsToWalletParams(params: () => Promise<WalletFinalizeUnstakeParams>) {
+  async mapStakingParamsToWalletParams(params: () => Promise<WalletStakingParams>) {
     return attachKind(await params(), OpKind.TRANSACTION);
   }
 }

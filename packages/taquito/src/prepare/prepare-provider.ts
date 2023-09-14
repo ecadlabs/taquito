@@ -27,9 +27,7 @@ import {
   isOpWithFee,
   RegisterDelegateParams,
   ActivationParams,
-  StakeParams,
-  UnstakeParams,
-  FinalizeUnstakeParams,
+  StakingParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
@@ -57,9 +55,7 @@ import {
   createSmartRollupOriginateOperation,
   createRegisterDelegateOperation,
   createActivationOperation,
-  createStakeOperation,
-  createUnstakeOperation,
-  createFinalizeUnstakeOperation,
+  createStakingOperation,
 } from '../contract';
 import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
@@ -1107,7 +1103,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async stake(
-    { fee, storageLimit, gasLimit, ...rest }: StakeParams,
+    { fee, storageLimit, gasLimit, ...rest }: StakingParams,
     source?: string
   ): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
@@ -1116,10 +1112,14 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
 
-    const op = await createStakeOperation({
-      ...rest,
-      ...mergedEstimates,
-    });
+    const op = await createStakingOperation(
+      {
+        ...rest,
+        ...mergedEstimates,
+      },
+      pkh,
+      'stake'
+    );
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);
@@ -1150,7 +1150,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async unstake(
-    { fee, storageLimit, gasLimit, ...rest }: UnstakeParams,
+    { fee, storageLimit, gasLimit, ...rest }: StakingParams,
     source?: string
   ): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
@@ -1159,10 +1159,14 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
 
-    const op = await createUnstakeOperation({
-      ...rest,
-      ...mergedEstimates,
-    });
+    const op = await createStakingOperation(
+      {
+        ...rest,
+        ...mergedEstimates,
+      },
+      pkh,
+      'unstake'
+    );
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);
@@ -1193,7 +1197,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async finalizeUnstake(
-    { fee, storageLimit, gasLimit, ...rest }: FinalizeUnstakeParams,
+    { fee, storageLimit, gasLimit, ...rest }: StakingParams,
     source?: string
   ): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
@@ -1202,10 +1206,14 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
 
-    const op = await createFinalizeUnstakeOperation({
-      ...rest,
-      ...mergedEstimates,
-    });
+    const op = await createStakingOperation(
+      {
+        ...rest,
+        ...mergedEstimates,
+      },
+      pkh,
+      'finalize_unstake'
+    );
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);

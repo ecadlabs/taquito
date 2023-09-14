@@ -13,9 +13,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
-  StakeParams,
-  UnstakeParams,
-  FinalizeUnstakeParams,
+  StakingParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
@@ -150,7 +148,7 @@ export interface EstimationProvider {
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the stake operation
    */
-  stake(params: StakeParams): Promise<Estimate>;
+  stake(params: StakingParams): Promise<Estimate>;
 
   /**
    *
@@ -158,7 +156,7 @@ export interface EstimationProvider {
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the unstake operation
    */
-  unstake(params: UnstakeParams): Promise<Estimate>;
+  unstake(params: StakingParams): Promise<Estimate>;
 
   /**
    *
@@ -166,5 +164,5 @@ export interface EstimationProvider {
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the finalize_unstake operation
    */
-  finalizeUnstake(params: FinalizeUnstakeParams): Promise<Estimate>;
+  finalizeUnstake(params: StakingParams): Promise<Estimate>;
 }

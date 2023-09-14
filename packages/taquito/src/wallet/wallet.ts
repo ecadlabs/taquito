@@ -7,13 +7,7 @@ import {
 } from '../contract';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import {
-  FinalizeUnstakeParams,
-  OpKind,
-  StakeParams,
-  UnstakeParams,
-  withKind,
-} from '../operations/types';
+import { OpKind, StakingParams, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
   WalletDelegateParams,
@@ -424,10 +418,10 @@ export class Wallet {
    *
    * @param Stake operation parameter
    */
-  stake(params: StakeParams) {
+  stake(params: StakingParams) {
     // TODO: validate the baker
     return this.walletCommand(async () => {
-      const mappedParams = await this.walletProvider.mapStakeParamsToWalletParams(
+      const mappedParams = await this.walletProvider.mapStakingParamsToWalletParams(
         async () => params
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
@@ -443,10 +437,10 @@ export class Wallet {
    *
    * @param Unstake operation parameter
    */
-  unstake(params: UnstakeParams) {
+  unstake(params: StakingParams) {
     // TODO: validate the baker
     return this.walletCommand(async () => {
-      const mappedParams = await this.walletProvider.mapUnstakeParamsToWalletParams(
+      const mappedParams = await this.walletProvider.mapStakingParamsToWalletParams(
         async () => params
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
@@ -462,10 +456,10 @@ export class Wallet {
    *
    * @param Unstake operation parameter
    */
-  finalizeUnstake(params: FinalizeUnstakeParams) {
+  finalizeUnstake(params: StakingParams) {
     // TODO: validate the baker
     return this.walletCommand(async () => {
-      const mappedParams = await this.walletProvider.mapFinalizeUnstakeParamsToWalletParams(
+      const mappedParams = await this.walletProvider.mapStakingParamsToWalletParams(
         async () => params
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);

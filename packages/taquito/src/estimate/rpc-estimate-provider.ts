@@ -15,9 +15,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
-  StakeParams,
-  UnstakeParams,
-  FinalizeUnstakeParams,
+  StakingParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -469,7 +467,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    *
    * @param Estimate
    */
-  async stake(params: StakeParams) {
+  async stake(params: StakingParams) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.stake(params);
 
@@ -489,7 +487,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    *
    * @param Estimate
    */
-  async unstake(params: UnstakeParams) {
+  async unstake(params: StakingParams) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.unstake(params);
 
@@ -509,7 +507,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    *
    * @param Estimate
    */
-  async finalizeUnstake(params: FinalizeUnstakeParams) {
+  async finalizeUnstake(params: StakingParams) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.finalizeUnstake(params);
 

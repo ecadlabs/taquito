@@ -19,13 +19,11 @@ import {
   createSetDelegateOperation,
   createTransferOperation,
   WalletDelegateParams,
-  WalletFinalizeUnstakeParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
-  WalletStakeParams,
+  WalletStakingParams,
   WalletTransferParams,
-  WalletUnstakeParams,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
@@ -129,38 +127,8 @@ export class BeaconWallet implements WalletProvider {
     );
   }
 
-  async mapStakeParamsToWalletParams(params: () => Promise<WalletStakeParams>) {
-    let walletParams: WalletStakeParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI();
-      throw err;
-    }
-    return this.removeDefaultParams(
-      walletParams,
-      await createTransferOperation(this.formatParameters(walletParams))
-    );
-  }
-
-  async mapUnstakeParamsToWalletParams(params: () => Promise<WalletUnstakeParams>) {
-    let walletParams: WalletUnstakeParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI();
-      throw err;
-    }
-    return this.removeDefaultParams(
-      walletParams,
-      await createTransferOperation(this.formatParameters(walletParams))
-    );
-  }
-
-  async mapFinalizeUnstakeParamsToWalletParams(params: () => Promise<WalletFinalizeUnstakeParams>) {
-    let walletParams: WalletFinalizeUnstakeParams;
+  async mapStakingParamsToWalletParams(params: () => Promise<WalletStakingParams>) {
+    let walletParams: WalletStakingParams;
     await this.client.showPrepare();
     try {
       walletParams = await params();

@@ -1,12 +1,10 @@
 import {
   DelegateParams,
   FailingNoopParams,
-  FinalizeUnstakeParams,
   IncreasePaidStorageParams,
   OriginateParams,
-  StakeParams,
+  StakingParams,
   TransferParams,
-  UnstakeParams,
 } from '../operations/types';
 
 export type WalletDefinedFields = 'source';
@@ -22,9 +20,7 @@ export type WalletDelegateParams = Omit<DelegateParams, WalletDefinedFields>;
 
 export type WalletFailingNoopParams = Omit<FailingNoopParams, WalletDefinedFields>;
 
-export type WalletStakeParams = Omit<StakeParams, WalletDefinedFields>;
-export type WalletUnstakeParams = Omit<UnstakeParams, WalletDefinedFields>;
-export type WalletFinalizeUnstakeParams = Omit<FinalizeUnstakeParams, WalletDefinedFields>;
+export type WalletStakingParams = Omit<StakingParams, WalletDefinedFields>;
 
 export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, WalletDefinedFields>;
 
@@ -72,19 +68,7 @@ export interface WalletProvider {
   getPK(): Promise<string>;
 
   /**
-   * @description Transform WalletStakeParams into a format compliant with the underlying wallet
+   * @description Transform WalletStakingParams into a format compliant with the underlying wallet
    */
-  mapStakeParamsToWalletParams: (params: () => Promise<WalletStakeParams>) => Promise<any>;
-
-  /**
-   * @description Transform WalletUnstakeParams into a format compliant with the underlying wallet
-   */
-  mapUnstakeParamsToWalletParams: (params: () => Promise<WalletUnstakeParams>) => Promise<any>;
-
-  /**
-   * @description Transform WalletFinalizeUnstakeParams into a format compliant with the underlying wallet
-   */
-  mapFinalizeUnstakeParamsToWalletParams: (
-    params: () => Promise<WalletFinalizeUnstakeParams>
-  ) => Promise<any>;
+  mapStakingParamsToWalletParams: (params: () => Promise<WalletStakingParams>) => Promise<any>;
 }

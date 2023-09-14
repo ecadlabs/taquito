@@ -54,8 +54,7 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   FailingNoopParams,
-  StakeParams,
-  UnstakeParams,
+  StakingParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -770,7 +769,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @param stake operation parameter
    */
-  async stake(params: StakeParams) {
+  async stake(params: StakingParams) {
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
     const source = await this.signer.publicKeyHash();
 
@@ -792,7 +791,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @param unstake operation parameter
    */
-  async unstake(params: UnstakeParams) {
+  async unstake(params: StakingParams) {
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
     const source = await this.signer.publicKeyHash();
 
@@ -814,7 +813,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @param unstake operation parameter
    */
-  async finalizeUnstake(params: UnstakeParams) {
+  async finalizeUnstake(params: StakingParams) {
     const estimate = await this.estimate(
       params,
       this.estimator.finalizeUnstake.bind(this.estimator)
