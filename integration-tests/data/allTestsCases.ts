@@ -48,6 +48,43 @@ interface TestCase {
   expected?: object;
 }
 
+export const nairobiCases: TestCase[] = [
+
+  {
+    name: 'Set deposits limit 1000000',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          limit: '1000000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Unset deposits limit',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10'
+        },
+      ],
+    },
+  },
+]
+
 export const commonCases: TestCase[] = [
   {
     name: 'Delegation',
@@ -94,39 +131,6 @@ export const commonCases: TestCase[] = [
           period: -300,
           ballot: 'yay',
           proposal: 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
-        },
-      ],
-    },
-  },
-  {
-    name: 'Set deposits limit 1000000',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.SET_DEPOSITS_LIMIT,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          limit: '1000000',
-        },
-      ],
-    },
-  },
-  {
-    name: 'Unset deposits limit',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.SET_DEPOSITS_LIMIT,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10'
         },
       ],
     },
