@@ -28,6 +28,7 @@ import {
   RegisterDelegateParams,
   ActivationParams,
   StakingParams,
+  StakingEntrypoint,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
@@ -1102,44 +1103,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async stake(
-    { fee, storageLimit, gasLimit, ...rest }: StakingParams,
-    source?: string
-  ): Promise<PreparedOperation> {
-    const { pkh } = await this.getKeys();
-
-    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
-    const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
-
-    const op = await createStakingOperation(
-      {
-        ...rest,
-        ...mergedEstimates,
-      },
-      pkh,
-      'stake'
-    );
-
-    const operation = await this.addRevealOperationIfNeeded(op, pkh);
-    const ops = this.convertIntoArray(operation);
-
-    const hash = await this.getBlockHash();
-    const protocol = await this.getProtocolHash();
-
-    this.#counters = {};
-    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
-
-    const contents = this.constructOpContents(ops, headCounter, pkh, source);
-
-    return {
-      opOb: {
-        branch: hash,
-        contents,
-        protocol,
-      },
-      counter: headCounter,
-    };
+  stake(operation: StakingParams, source?: string): Promise<PreparedOperation> {
+    return this.staking(operation, 'stake', source);
   }
 
   /**
@@ -1149,55 +1114,24 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async unstake(
-    { fee, storageLimit, gasLimit, ...rest }: StakingParams,
-    source?: string
-  ): Promise<PreparedOperation> {
-    const { pkh } = await this.getKeys();
-
-    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
-    const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
-
-    const op = await createStakingOperation(
-      {
-        ...rest,
-        ...mergedEstimates,
-      },
-      pkh,
-      'unstake'
-    );
-
-    const operation = await this.addRevealOperationIfNeeded(op, pkh);
-    const ops = this.convertIntoArray(operation);
-
-    const hash = await this.getBlockHash();
-    const protocol = await this.getProtocolHash();
-
-    this.#counters = {};
-    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
-
-    const contents = this.constructOpContents(ops, headCounter, pkh, source);
-
-    return {
-      opOb: {
-        branch: hash,
-        contents,
-        protocol,
-      },
-      counter: headCounter,
-    };
+  async unstake(operation: StakingParams, source?: string): Promise<PreparedOperation> {
+    return this.staking(operation, 'unstake', source);
   }
 
   /**
    *
-   * @description Method to prepare an unstake operation
+   * @description Method to prepare a finalize_unstake operation
    * @param operation RPCOperation object
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async finalizeUnstake(
+  async finalizeUnstake(operation: StakingParams, source?: string): Promise<PreparedOperation> {
+    return this.staking(operation, 'finalize_unstake', source);
+  }
+
+  private async staking(
     { fee, storageLimit, gasLimit, ...rest }: StakingParams,
+    entrypoint: StakingEntrypoint,
     source?: string
   ): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
@@ -1212,7 +1146,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         ...mergedEstimates,
       },
       pkh,
-      'finalize_unstake'
+      entrypoint
     );
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);

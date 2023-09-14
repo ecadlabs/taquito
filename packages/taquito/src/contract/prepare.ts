@@ -32,6 +32,7 @@ import {
   ActivationParams,
   RPCActivateOperation,
   StakingParams,
+  StakingEntrypoint,
 } from '../operations/types';
 import {
   DEFAULT_FEE,
@@ -348,7 +349,7 @@ export const createStakingOperation = async (
     mutez = false,
   }: StakingParams,
   pkh: string,
-  entrypoint: 'stake' | 'unstake' | 'finalize_unstake'
+  entrypoint: StakingEntrypoint
 ) => {
   const operation: RPCTransferOperation = {
     source: pkh,

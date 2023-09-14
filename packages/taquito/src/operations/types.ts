@@ -571,21 +571,7 @@ export interface StakingParams {
   mutez?: boolean;
 }
 
-// export interface RPCStakingOperation {
-//   kind: OpKind.TRANSACTION;
-//   fee: number;
-//   gas_limit: number;
-//   storage_limit: number;
-//   amount: string;
-//   source?: string;
-//   destination?: string;
-//   parameters: {
-//     entrypoint: 'stake' | 'unstake' | 'finalize_unstake';
-//     value: {
-//       prim: 'Unit';
-//     };
-//   };
-// }
+export type StakingEntrypoint = 'stake' | 'unstake' | 'finalize_unstake';
 
 export type RPCOperation =
   | RPCOriginationOperation
