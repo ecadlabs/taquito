@@ -3,7 +3,6 @@ import {
   FailingNoopParams,
   IncreasePaidStorageParams,
   OriginateParams,
-  StakingParams,
   TransferParams,
 } from '../operations/types';
 
@@ -19,8 +18,6 @@ export type WalletOriginateParams<TStorage = any> = Omit<
 export type WalletDelegateParams = Omit<DelegateParams, WalletDefinedFields>;
 
 export type WalletFailingNoopParams = Omit<FailingNoopParams, WalletDefinedFields>;
-
-export type WalletStakingParams = Omit<StakingParams, WalletDefinedFields>;
 
 export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, WalletDefinedFields>;
 
@@ -66,9 +63,4 @@ export interface WalletProvider {
    * @description Get the public key from the wallet
    */
   getPK(): Promise<string>;
-
-  /**
-   * @description Transform WalletStakingParams into a format compliant with the underlying wallet
-   */
-  mapStakingParamsToWalletParams: (params: () => Promise<WalletStakingParams>) => Promise<any>;
 }

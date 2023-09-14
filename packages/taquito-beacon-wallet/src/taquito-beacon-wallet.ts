@@ -22,7 +22,6 @@ import {
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
-  WalletStakingParams,
   WalletTransferParams,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
@@ -124,21 +123,6 @@ export class BeaconWallet implements WalletProvider {
     return this.removeDefaultParams(
       walletParams,
       await createSetDelegateOperation(this.formatParameters(walletParams))
-    );
-  }
-
-  async mapStakingParamsToWalletParams(params: () => Promise<WalletStakingParams>) {
-    let walletParams: WalletStakingParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI();
-      throw err;
-    }
-    return this.removeDefaultParams(
-      walletParams,
-      await createTransferOperation(this.formatParameters(walletParams))
     );
   }
 

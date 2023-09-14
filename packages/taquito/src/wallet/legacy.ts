@@ -5,7 +5,6 @@ import {
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
-  WalletStakingParams,
   WalletTransferParams,
 } from './interface';
 import { WalletParamsWithKind } from './wallet';
@@ -45,9 +44,5 @@ export class LegacyWalletProvider implements WalletProvider {
 
   getPK() {
     return this.context.signer.publicKey();
-  }
-
-  async mapStakingParamsToWalletParams(params: () => Promise<WalletStakingParams>) {
-    return attachKind(await params(), OpKind.TRANSACTION);
   }
 }
