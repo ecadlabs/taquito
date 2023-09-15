@@ -8,12 +8,13 @@ CONFIGS().forEach(({ rpc, protocol }) => {
   const nairobinet = protocol === Protocols.PtNairobi ? it : it.skip;
 
   describe(`Test local forger: ${rpc}`, () => {
-    nairobiCases.forEach(({ name, operation }) => {
-      nairobinet(`Verify that .forge for local forge will return same result as for network forge for rpc: ${name} (${rpc})`, async done => {
+    nairobiCases.forEach(({ name, operation, expected }) => {
+      // Oxford has removed to forge set and unset deposit limit ops in rpcForger.
+      // We removed them in localForger .forge, but keep the .parse logic for now.
+      nairobinet(`Verify that .parse for local forge will return same operation that rpc forge for rpc: ${name} (${rpc})`, async done => {
         const localForger = new LocalForger(protocol as unknown as ProtocolsHash);
-        const result = await localForger.forge(operation);
         const rpcResult = await Tezos.rpc.forgeOperations(operation);
-        expect(result).toEqual(rpcResult);
+        expect(await localForger.parse(rpcResult)).toEqual(expected || operation);
 
         done();
       });
