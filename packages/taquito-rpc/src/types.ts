@@ -93,13 +93,9 @@ export interface TxRollupTicketsInfo {
   claimer: string;
 }
 export interface DelegatesResponse {
-  balance?: BigNumber;
   full_balance?: BigNumber;
   current_frozen_deposits?: BigNumber;
   frozen_deposits?: BigNumber;
-  frozen_balance?: BigNumber;
-  frozen_balance_by_cycle?: Frozenbalancebycycle[];
-  frozen_deposits_limit?: BigNumber;
   staking_balance: BigNumber;
   delegated_contracts: string[];
   delegated_balance: BigNumber;
@@ -107,10 +103,14 @@ export interface DelegatesResponse {
   grace_period: number;
   voting_power?: BigNumber;
   current_ballot?: BallotVote;
-  current_proposals?: string[];
   remaining_proposals?: number;
   active_consensus_key?: string;
   pending_consensus_keys?: PendingConsensusKey[];
+  balance?: BigNumber;
+  frozen_balance?: BigNumber;
+  frozen_balance_by_cycle?: Frozenbalancebycycle[];
+  frozen_deposits_limit?: BigNumber;
+  current_proposals?: string[];
 }
 
 export type PendingConsensusKey = {
@@ -1303,7 +1303,15 @@ export interface BallotsResponse {
   pass: BigNumber;
 }
 
-export type PeriodKindResponse = 'proposal' | 'exploration' | 'cooldown' | 'promotion' | 'adoption';
+export type PeriodKindResponse =
+  | 'proposal'
+  | 'exploration'
+  | 'cooldown'
+  | 'promotion'
+  | 'adoption'
+  | 'testing_vote'
+  | 'testing'
+  | 'promotion_vote';
 
 export type CurrentProposalResponse = string | null;
 
@@ -2394,47 +2402,15 @@ export type ProtocolsResponse = {
   next_protocol: string;
 };
 
-export type Next =
-  | {
-      next: number;
-    }
-  | {
-      newest: number;
-      oldest: number;
-    };
-
-export type LastRemovedCommitmentHashes = {
-  last_message_hash: string;
-  commitment_hash: string;
-};
-export interface TxRollupStateResponse {
-  last_removed_commitment_hashes?: LastRemovedCommitmentHashes;
-  finalized_commitments: Next;
-  unfinalized_commitments: Next;
-  uncommitted_inboxes: Next;
-  commitment_newest_hash?: string;
-  tezos_head_level?: number;
-  burn_per_byte: string;
-  allocated_storage: string;
-  occupied_storage: string;
-  inbox_ema: number;
-  commitments_watermark?: number;
-}
-
-export interface TxRollupInboxResponse {
-  inbox_length: number;
-  cumulated_size: number;
-  merkle_root: string;
-}
-
 export interface PendingOperationsQueryArguments {
-  version?: '1';
-  applied?: boolean;
+  version?: '1' | '2';
+  validated?: boolean;
   refused?: boolean;
   outdated?: boolean;
   branchRefused?: boolean;
   branchDelayed?: boolean;
   validationPass?: '0' | '1' | '2' | '3';
+  applied?: boolean;
 }
 
 type FailedProcessedOperation = Pick<
@@ -2444,8 +2420,17 @@ type FailedProcessedOperation = Pick<
   error: TezosGenericOperationError[];
 };
 
-export interface PendingOperations {
+export interface PendingOperationsV1 {
   applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
+  refused: FailedProcessedOperation[];
+  outdated: FailedProcessedOperation[];
+  branch_refused: FailedProcessedOperation[];
+  branch_delayed: FailedProcessedOperation[];
+  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
+}
+
+export interface PendingOperationsV2 {
+  validated: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
   refused: FailedProcessedOperation[];
   outdated: FailedProcessedOperation[];
   branch_refused: FailedProcessedOperation[];

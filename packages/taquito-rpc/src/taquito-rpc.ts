@@ -55,12 +55,11 @@ import {
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
-  TxRollupStateResponse,
-  TxRollupInboxResponse,
   TicketTokenParams,
   AllTicketBalances,
   PendingOperationsQueryArguments,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   OriginationProofParams,
   RPCSimulateOperationParam,
 } from './types';
@@ -130,7 +129,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Get the block's hash, its unique identifier.
    *
@@ -146,7 +145,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description List the ancestors of the given block which, if referred to as the branch in an operation header, are recent enough for that operation to be included in the current block.
    *
@@ -163,7 +162,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param address address from which we want to retrieve the balance
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the balance of a contract.
    *
@@ -186,7 +185,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param address contract address from which we want to retrieve the storage
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the data of the contract.
    *
@@ -231,7 +230,7 @@ export class RpcClient implements RpcClientInterface {
    *
    * @param address contract address from which we want to retrieve the script
    * @param unparsingMode default is { unparsing_mode: "Readable" }
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the script of the contract and normalize it using the requested unparsing mode.
    *
@@ -256,7 +255,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param address contract address from which we want to retrieve
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the complete status of a contract.
    *
@@ -280,7 +279,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param address contract address from which we want to retrieve the manager
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the manager key of a contract.
    *
@@ -302,7 +301,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param address contract address from which we want to retrieve the delegate (baker)
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the delegate of a contract, if any.
    *
@@ -334,7 +333,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param address contract address from which we want to retrieve the big map key
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the value associated with a key in the big map storage of the contract.
    *
@@ -363,7 +362,7 @@ export class RpcClient implements RpcClientInterface {
    *
    * @param id Big Map ID
    * @param expr Expression hash to query (A b58check encoded Blake2b hash of the expression (The expression can be packed using the pack_data method))
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the value associated with a key in a big map.
    *
@@ -383,7 +382,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param address delegate address which we want to retrieve
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Fetches information about a delegate from RPC.
    *
@@ -400,15 +399,15 @@ export class RpcClient implements RpcClientInterface {
     });
 
     const castedResponse: any = castToBigNumber(response, [
-      'balance',
       'full_balance',
       'current_frozen_deposits',
       'frozen_deposits',
-      'frozen_balance',
-      'frozen_deposits_limit',
       'staking_balance',
       'delegated_balance',
       'voting_power',
+      'balance',
+      'frozen_balance',
+      'frozen_deposits_limit',
     ]);
 
     return {
@@ -437,7 +436,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param address delegate address which we want to retrieve
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Returns the delegate info (e.g. voting power) found in the listings of the current voting period.
    *
@@ -459,7 +458,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description All constants
    *
@@ -509,19 +508,20 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls. See examples for various available sytaxes.
+   * @param options contains generic configuration for rpc calls to specify block and version.
    *
    * @description All the information about a block
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id
-   * @example getBlock() will default to /main/chains/block/head.
-   * @example getBlock({ block: head~2 }) will return an offset of 2 blocks.
-   * @example getBlock({ block: BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2 }) will return an offset of 2 blocks from given block hash..
+   * @example getBlock() will default to /main/chains/block/head?version=0. version=0 shows { kind: endorsement }
+   * @example getBlock({ version: 1 }) will return /main/chains/block/head?version=1. version=1 shows { kind: attestation }
+   * @example getBlock({ block: head~2 }) will return an offset of 2 blocks and default version 0.
    */
-  async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
+  async getBlock({ block, version }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
     const response = await this.httpBackend.createRequest<BlockResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}`),
       method: 'GET',
+      query: { version },
     });
 
     return response;
@@ -529,7 +529,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description The whole block header
    *
@@ -546,16 +546,20 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block and version.
    *
    * @description All the metadata associated to the block
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-metadata
    */
-  async getBlockMetadata({ block }: RPCOptions = defaultRPCOptions): Promise<BlockMetadata> {
+  async getBlockMetadata({
+    block,
+    version,
+  }: RPCOptions = defaultRPCOptions): Promise<BlockMetadata> {
     const response = await this.httpBackend.createRequest<BlockMetadata>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/metadata`),
       method: 'GET',
+      query: { version },
     });
 
     return response;
@@ -564,7 +568,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param args contains optional query arguments
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Retrieves the list of delegates allowed to bake a block.
    *
@@ -586,7 +590,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param args contains optional query arguments
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Retrieves the list of delegates allowed to bake a block.
    *
@@ -606,7 +610,7 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Ballots casted so far during a voting period
    *
@@ -623,7 +627,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Sum of ballots casted so far during a voting period.
    *
@@ -641,7 +645,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Current proposal under evaluation.
    *
@@ -660,7 +664,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Current expected quorum.
    *
@@ -679,7 +683,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description List of delegates with their voting weight, in number of rolls.
    *
@@ -705,7 +709,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description List of proposals with number of supporters.
    *
@@ -727,7 +731,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param data operation contents to forge
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Forge an operation returning the unsigned bytes
    *
@@ -767,7 +771,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param ops Operations to apply
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block and version
    *
    * @description Simulate the validation of an operation
    *
@@ -775,12 +779,13 @@ export class RpcClient implements RpcClientInterface {
    */
   async preapplyOperations(
     ops: PreapplyParams,
-    { block }: RPCOptions = defaultRPCOptions
+    { block, version }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse[]> {
     const response = await this.httpBackend.createRequest<PreapplyResponse[]>(
       {
         url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/preapply/operations`),
         method: 'POST',
+        query: { version },
       },
       ops
     );
@@ -791,9 +796,8 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param contract address of the contract we want to get the entrypoints of
-   *
+   * @param options contains generic configuration for rpc calls to specify block
    * @description Return the list of entrypoints of the contract
-   *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-entrypoints
    *
    * @version 005_PsBABY5H
@@ -817,7 +821,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    * @param op Operation to run
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block and version
    *
    * @description Run an operation without signature checks
    *
@@ -825,12 +829,13 @@ export class RpcClient implements RpcClientInterface {
    */
   async runOperation(
     op: RPCRunOperationParam,
-    { block }: RPCOptions = defaultRPCOptions
+    { block, version }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse> {
     const response = await this.httpBackend.createRequest<any>(
       {
         url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`),
         method: 'POST',
+        query: { version },
       },
       op
     );
@@ -840,7 +845,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    * @param op Operation to simulate
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block and version
    *
    * @description Simulate an operation on the blockchain
    *
@@ -848,7 +853,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async simulateOperation(
     op: RPCSimulateOperationParam,
-    { block }: RPCOptions = defaultRPCOptions
+    { block, version }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse> {
     const response = await this.httpBackend.createRequest<any>(
       {
@@ -856,6 +861,7 @@ export class RpcClient implements RpcClientInterface {
           `/chains/${this.chain}/blocks/${block}/helpers/scripts/simulate_operation`
         ),
         method: 'POST',
+        query: { version },
       },
       op
     );
@@ -865,7 +871,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    * @param code Code to run
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Run a piece of code in the current context
    *
@@ -888,7 +894,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    * @param viewScriptParams Parameters of the script view to run
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Simulate a call to a michelson view
    *
@@ -913,7 +919,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    * @param viewParams Parameters of the view to run
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Simulate a call to a view following the TZIP-4 standard. See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints.
    *
@@ -944,7 +950,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param data Data to pack
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Computes the serialized version of a data expression using the same algorithm as script instruction PACK
    * Note: You should always verify the packed bytes before signing or requesting that they be signed when using the the RPC to pack.
@@ -986,7 +992,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Voting period of current block.
    *
@@ -1007,7 +1013,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Voting period of next block.
    *
@@ -1029,7 +1035,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param id Sapling state ID
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the value associated with a sapling state ID.
    *
@@ -1048,7 +1054,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param contract address of the contract we want to get the sapling diff
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the value associated with a sapling state.
    *
@@ -1075,54 +1081,8 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param tx_rollup_id the transaction rollup ID
-   * @param options contains generic configuration for rpc calls
-   *
-   * @description Access the state of a rollup
-   *
-   * @see https://tezos.gitlab.io/jakarta/rpc.html#get-block-id-context-tx-rollup-tx-rollup-id-state
-   */
-
-  async getTxRollupState(
-    txRollupId: string,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<TxRollupStateResponse> {
-    return this.httpBackend.createRequest<TxRollupStateResponse>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/tx_rollup/${txRollupId}/state`
-      ),
-      method: 'GET',
-    });
-  }
-
-  /**
-   *
-   * @param tx_rollup_id the transaction rollup ID
-   * @param block_level the block level
-   * @param options contains generic configuration for rpc calls
-   *
-   * @description Access the inbox of a transaction rollup
-   *
-   * @see https://tezos.gitlab.io/jakarta/rpc.html#get-block-id-context-tx-rollup-tx-rollup-id-inbox-block-level
-   */
-
-  async getTxRollupInbox(
-    txRollupId: string,
-    blockLevel: string,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<TxRollupInboxResponse | null> {
-    return this.httpBackend.createRequest<TxRollupInboxResponse>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/tx_rollup/${txRollupId}/inbox/${blockLevel}`
-      ),
-      method: 'GET',
-    });
-  }
-
-  /**
-   *
    * @param contract address of the contract we want to retrieve storage information of
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the amount of used space in a contract's storage
    *
@@ -1143,7 +1103,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param contract address of the contract we want to retrieve storage information of
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    *
    * @description Access the amount of paid space in a contract's storage
    *
@@ -1165,7 +1125,7 @@ export class RpcClient implements RpcClientInterface {
    *
    * @param contract implicit or originated address we want to retrieve ticket balance of
    * @param ticket object to specify a ticket by ticketer, content type and content
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    * @description Access the contract's balance of ticket with specified ticketer, content type, and content.
    * @example ticket { ticketer: 'address', content_type: { prim: "string" }, content: { string: 'ticket1' } }
    * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
@@ -1189,7 +1149,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    *
    * @param contract originated address we want to retrieve ticket balances of
-   * @param options contains generic configuration for rpc calls
+   * @param options contains generic configuration for rpc calls to specify block
    * @description Access the complete list of tickets owned by the given contract by scanning the contract's storage.
    * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
    */
@@ -1207,14 +1167,14 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
-   * @param args has 5 optional properties. We support version 1 with new encoding as version 0 will be deprecated soon. The rest of the properties is to filter pending operations response
+   * @param args has 5 optional properties. We support version 1 as default will output { applied: { kind: endorsement} } version 2 will output { validated: { kind: attestation} }. The rest of the properties is to filter pending operations response
    * @default args { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
    * @see https://tezos.gitlab.io/CHANGES.html?highlight=pending_operations#id4
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
-  ): Promise<PendingOperations> {
-    return this.httpBackend.createRequest<PendingOperations>({
+  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
+    return this.httpBackend.createRequest<PendingOperationsV1 | PendingOperationsV2>({
       url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
       method: 'GET',
       query: args,
