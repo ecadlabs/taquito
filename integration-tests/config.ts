@@ -144,7 +144,7 @@ const nairobinetEphemeral: Config =
   });
 
 const nairobinetSecretKey: Config =
-{ ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
+  { ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
 
 const oxfordnetEphemeral: Config =
   defaultConfig({
