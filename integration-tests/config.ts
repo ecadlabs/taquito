@@ -161,8 +161,8 @@ const oxfordnetSecretKey: Config =
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
-    protocol: Protocols.Proxford,
-    defaultRpc: 'ecad-ghostnet-rolling:8732',
+    protocol: Protocols.PtNairobi,
+    defaultRpc: 'http://ecad-ghostnet-rolling:8732',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
   });
