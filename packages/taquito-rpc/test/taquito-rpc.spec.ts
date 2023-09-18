@@ -39,7 +39,8 @@ import {
   OperationContentsAndResultSmartRollupExecuteOutboxMessage,
   RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   OperationContentsAndResultSmartRollupCement,
   OperationContentsAndResultSmartRollupPublish,
   OperationContentsAndResultSmartRollupRefute,
@@ -489,6 +490,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
         url: 'root/chains/test/blocks/head/helpers/preapply/operations',
+        query: { version: '0' },
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({});
@@ -611,6 +613,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head/metadata',
+        query: { version: '0' },
       });
 
       expect(result).toEqual({
@@ -1505,6 +1508,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
       const endorsement = response.operations[0][0]
         .contents[0] as OperationContentsAndResultEndorsement;
@@ -1748,6 +1752,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
       const transaction = response.operations[0][0]
         .contents[0] as OperationContentsAndResultTransaction;
@@ -1837,6 +1842,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
       const endorsementWithSlot = response.operations[0][0]
         .contents[0] as OperationContentsAndResultEndorsementWithSlot;
@@ -2395,6 +2401,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
 
       const transaction = response.operations[0][0]
@@ -2541,6 +2548,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
 
       const origination = response.operations[3][0]
@@ -3902,6 +3910,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
         url: 'root/chains/test/blocks/head/helpers/scripts/run_operation',
+        query: { version: '0' },
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
@@ -3964,6 +3973,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
         url: 'root/chains/test/blocks/head/helpers/scripts/simulate_operation',
+        query: { version: '0' },
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
@@ -4291,73 +4301,6 @@ describe('RpcClient test', () => {
         'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
       );
       expect(protocols.protocol).toEqual('PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx');
-
-      done();
-    });
-  });
-
-  describe('getTxRollupState', () => {
-    it('should query the correct url and return a rollup state response', async (done) => {
-      const mockResponse = {
-        last_removed_commitment_hashes: null,
-        finalized_commitments: {
-          next: 0,
-        },
-        unfinalized_commitments: {
-          next: 0,
-        },
-        uncommitted_inboxes: {
-          newest: 0,
-          oldest: 0,
-        },
-        commitment_newest_hash: null,
-        tezos_head_level: 63691,
-        burn_per_byte: '0',
-        allocated_storage: '4000',
-        occupied_storage: '40',
-        inbox_ema: 0,
-        commitments_watermark: null,
-      };
-
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockResponse));
-
-      const txRollupState = await client.getTxRollupState('txrID');
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/state`,
-      });
-
-      expect(txRollupState).toBeDefined();
-      expect(txRollupState).toEqual(mockResponse);
-
-      done();
-    });
-  });
-
-  describe('getTxRollupInbox', () => {
-    it('should query the correct url and return a rollup inbox response', async (done) => {
-      httpBackend.createRequest.mockReturnValue(
-        Promise.resolve({
-          inbox_length: 1,
-          cumulated_size: 4,
-          merkle_root: 'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm',
-        })
-      );
-
-      const txRollupInbox = await client.getTxRollupInbox('txrID', '0');
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        url: `root/chains/test/blocks/head/context/tx_rollup/txrID/inbox/0`,
-      });
-
-      expect(txRollupInbox).toBeDefined();
-      expect(txRollupInbox!.inbox_length).toEqual(1);
-      expect(txRollupInbox!.cumulated_size).toEqual(4);
-      expect(txRollupInbox!.merkle_root).toEqual(
-        'txi3Ef5CSsBWRaqQhWj2zg51J3tUqHFD47na6ex7zcboTG5oXEFrm'
-      );
 
       done();
     });
@@ -4717,7 +4660,8 @@ describe('RpcClient test', () => {
   describe('getPendingOperations', () => {
     it('should query the correct url and retrun pending operations in mempool', async (done) => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
-      const response: PendingOperations = await client.getPendingOperations();
+      const response: PendingOperationsV1 | PendingOperationsV2 =
+        await client.getPendingOperations();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
