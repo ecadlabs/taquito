@@ -39,14 +39,13 @@ import {
   RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
-  TxRollupInboxResponse,
-  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   PendingOperationsQueryArguments,
   OriginationProofParams,
   RPCSimulateOperationParam,
@@ -293,19 +292,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   async getProtocols({ block }: RPCOptions = defaultRPCOptions): Promise<ProtocolsResponse> {
     return this.rpc.getProtocols({ block });
   }
-  async getTxRollupState(
-    txRollupId: string,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<TxRollupStateResponse> {
-    return this.rpc.getTxRollupState(txRollupId, { block });
-  }
-  async getTxRollupInbox(
-    txRollupId: string,
-    blockLevel: string,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<TxRollupInboxResponse | null> {
-    return this.rpc.getTxRollupInbox(txRollupId, blockLevel, { block });
-  }
   async getStorageUsedSpace(
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
@@ -331,7 +317,9 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
   }
-  async getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperations> {
+  async getPendingOperations(
+    args: PendingOperationsQueryArguments
+  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
   }
   async getOriginationProof(

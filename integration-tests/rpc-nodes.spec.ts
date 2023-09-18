@@ -1,6 +1,6 @@
-import { CONFIGS } from './config';
-import { DefaultContractType } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperations, PvmKind } from '@taquito/rpc';
+import { CONFIGS, NetworkType } from './config';
+import { DefaultContractType, Protocols } from "@taquito/taquito";
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2, PvmKind } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
@@ -20,6 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
+    const oxfordnetAndAlpha = protocol === Protocols.Proxford || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -488,16 +489,27 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Verify that rpcClient.getPendingOperations will retrieve the pending operations in mempool', async (done) => {
-          const pendingOperations: PendingOperations = await rpcClient.getPendingOperations();
-          expect(pendingOperations).toBeDefined();
-          expect(pendingOperations.applied).toBeInstanceOf(Array);
-          expect(pendingOperations.refused).toBeInstanceOf(Array);
-          expect(pendingOperations.outdated).toBeInstanceOf(Array);
-          expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
-          expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
+        it('Verify that rpcClient.getPendingOperations version1 will retrieve the pending operations in mempool with property applied', async (done) => {
+          const pendingOperations1 = await rpcClient.getPendingOperations() as PendingOperationsV1;
+          expect(pendingOperations1).toBeDefined();
+          expect(pendingOperations1.applied).toBeInstanceOf(Array);
+          expect(pendingOperations1.refused).toBeInstanceOf(Array);
+          expect(pendingOperations1.outdated).toBeInstanceOf(Array);
+          expect(pendingOperations1.branch_delayed).toBeInstanceOf(Array);
+          expect(pendingOperations1.branch_refused).toBeInstanceOf(Array);
           done();
         });
+
+        oxfordnetAndAlpha('Verify that rpcClient.getPendingOperations version2 will retrieve the pending operations in mempool with property validated', async (done) => {
+          const pendingOperations2 = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;
+          expect(pendingOperations2).toBeDefined();
+          expect(pendingOperations2.validated).toBeInstanceOf(Array);
+          expect(pendingOperations2.refused).toBeInstanceOf(Array);
+          expect(pendingOperations2.outdated).toBeInstanceOf(Array);
+          expect(pendingOperations2.branch_delayed).toBeInstanceOf(Array);
+          expect(pendingOperations2.branch_refused).toBeInstanceOf(Array);
+          done();
+        })
 
         it('Verify that rpcClient.getOriginationProof will retrieve the proof needed for smart rollup originate', async (done) => {
           const proof = await rpcClient.getOriginationProof({
