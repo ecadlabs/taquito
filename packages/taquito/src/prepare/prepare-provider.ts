@@ -1099,40 +1099,38 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a stake operation
-   * @param operation RPCOperation object
+   * @param params RPCOperation object
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  stake(operation: StakingParams, source?: string): Promise<PreparedOperation> {
-    return this.staking(operation, 'stake', source);
+  stake(params: StakingParams): Promise<PreparedOperation> {
+    return this.staking(params, 'stake');
   }
 
   /**
    *
    * @description Method to prepare an unstake operation
-   * @param operation RPCOperation object
+   * @param params RPCOperation object
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async unstake(operation: StakingParams, source?: string): Promise<PreparedOperation> {
-    return this.staking(operation, 'unstake', source);
+  async unstake(params: StakingParams): Promise<PreparedOperation> {
+    return this.staking(params, 'unstake');
   }
 
   /**
    *
    * @description Method to prepare a finalize_unstake operation
-   * @param operation RPCOperation object
-   * @param source string or undefined source pkh
+   * @param params RPCOperation object
    * @returns a PreparedOperation object
    */
-  async finalizeUnstake(operation: StakingParams, source?: string): Promise<PreparedOperation> {
-    return this.staking(operation, 'finalize_unstake', source);
+  async finalizeUnstake(params: StakingParams): Promise<PreparedOperation> {
+    return this.staking(params, 'finalize_unstake');
   }
 
   private async staking(
-    { fee, storageLimit, gasLimit, ...rest }: StakingParams,
-    entrypoint: StakingEntrypoint,
-    source?: string
+    { fee, storageLimit, gasLimit, sourceAndDestination, ...rest }: StakingParams,
+    entrypoint: StakingEntrypoint
   ): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
@@ -1145,7 +1143,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         ...rest,
         ...mergedEstimates,
       },
-      pkh,
       entrypoint
     );
 
@@ -1158,7 +1155,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
-    const contents = this.constructOpContents(ops, headCounter, pkh, source);
+    const contents = this.constructOpContents(ops, headCounter, pkh, sourceAndDestination);
 
     return {
       opOb: {

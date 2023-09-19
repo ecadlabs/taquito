@@ -287,7 +287,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Stake founds. Will sign and inject an operation using the current context
+   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance. Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over, the operation "finalize unstake" must be called for the funds to appear in the liquid balance. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -297,7 +297,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Unstake founds. Will sign and inject an operation using the current context
+   * @description  Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance. Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over, the operation "finalize unstake" must be called for the funds to appear in the liquid balance. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -307,11 +307,11 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Finalize unstake founds. Will sign and inject an operation using the current context
+   * @description Transfer all the finalizable unstaked funds of the source to their liquid balance. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
    * @param finalizeUnstake operation parameter
    */
-  unstake(params: StakingParams): Promise<TransactionOperation>;
+  finalizeUnstake(params: StakingParams): Promise<TransactionOperation>;
 }

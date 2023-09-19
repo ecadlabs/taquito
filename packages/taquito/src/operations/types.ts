@@ -8,6 +8,7 @@ import {
   PvmKind,
 } from '@taquito/rpc';
 import { BlockIdentifier } from '../read-provider/interface';
+import { InvalidAmountError } from '@taquito/core';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -564,12 +565,26 @@ export interface FailingNoopParams {
 }
 
 export interface StakingParams {
+  sourceAndDestination?: string;
   amount: number;
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
   mutez?: boolean;
 }
+
+/**
+ *
+ * @throws {@link InvalidAmountError}
+ */
+export const validateStakingParams = (params: StakingParams, entrypoint: StakingEntrypoint) => {
+  if (params.amount <= 0) {
+    throw new InvalidAmountError(
+      params.amount.toString(),
+      `The 'amount' field in ${entrypoint} should be positive, but ${params.amount} was provided.`
+    );
+  }
+};
 
 export type StakingEntrypoint = 'stake' | 'unstake' | 'finalize_unstake';
 

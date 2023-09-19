@@ -55,6 +55,7 @@ import {
   SmartRollupOriginateParams,
   FailingNoopParams,
   StakingParams,
+  validateStakingParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -768,10 +769,14 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @returns An operation handle with the result from the rpc node
    *
    * @param stake operation parameter
+   *
+   * @throws {@link InvalidAmountError}
    */
   async stake(params: StakingParams) {
+    validateStakingParams(params, 'stake');
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
-    const source = await this.signer.publicKeyHash();
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const source = params.sourceAndDestination ?? publicKeyHash;
 
     const prepared = await this.prepare.stake({ ...params, ...estimate });
     const content = prepared.opOb.contents.find(
@@ -790,10 +795,14 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @returns An operation handle with the result from the rpc node
    *
    * @param unstake operation parameter
+   *
+   * @throws {@link InvalidAmountError}
    */
   async unstake(params: StakingParams) {
+    validateStakingParams(params, 'unstake');
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
-    const source = await this.signer.publicKeyHash();
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const source = params.sourceAndDestination ?? publicKeyHash;
 
     const prepared = await this.prepare.unstake({ ...params, ...estimate });
     const content = prepared.opOb.contents.find(
@@ -812,13 +821,17 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @returns An operation handle with the result from the rpc node
    *
    * @param unstake operation parameter
+   *
+   * @throws {@link InvalidAmountError}
    */
   async finalizeUnstake(params: StakingParams) {
+    validateStakingParams(params, 'finalize_unstake');
     const estimate = await this.estimate(
       params,
       this.estimator.finalizeUnstake.bind(this.estimator)
     );
-    const source = await this.signer.publicKeyHash();
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const source = params.sourceAndDestination ?? publicKeyHash;
 
     const prepared = await this.prepare.finalizeUnstake({ ...params, ...estimate });
     const content = prepared.opOb.contents.find(

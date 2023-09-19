@@ -47,6 +47,7 @@ import {
   OriginationParameterError,
   InvalidBalanceError,
 } from './errors';
+import { ParameterValidationError } from '@taquito/core';
 
 export const createActivationOperation = async ({ pkh, secret }: ActivationParams) => {
   return {
@@ -342,18 +343,21 @@ export const createSmartRollupOriginateOperation = async ({
 
 export const createStakingOperation = async (
   {
+    sourceAndDestination,
     amount,
     fee = DEFAULT_FEE.TRANSFER,
     gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
     storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
     mutez = false,
   }: StakingParams,
-  pkh: string,
   entrypoint: StakingEntrypoint
 ) => {
+  if (!sourceAndDestination) {
+    throw new ParameterValidationError('The parameter sourceAndDestination is missing');
+  }
   const operation: RPCTransferOperation = {
-    source: pkh,
-    destination: pkh,
+    source: sourceAndDestination,
+    destination: sourceAndDestination,
     kind: OpKind.TRANSACTION,
     fee,
     gas_limit: gasLimit,

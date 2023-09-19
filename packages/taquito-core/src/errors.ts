@@ -77,10 +77,10 @@ export class InvalidBlockHashError extends ParameterValidationError {
  * @description Error that indicates an invalid amount of tez being passed as a parameter
  */
 export class InvalidAmountError extends ParameterValidationError {
-  constructor(public readonly amount: string) {
+  constructor(public readonly amount: string, message?: string) {
     super();
     this.name = 'InvalidAmountError';
-    this.message = `Invalid amount "${amount}"`;
+    this.message = message ?? `Invalid amount "${amount}"`;
   }
 }
 
