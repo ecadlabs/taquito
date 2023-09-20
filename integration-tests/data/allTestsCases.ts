@@ -49,7 +49,6 @@ interface TestCase {
 }
 
 export const nairobiCases: TestCase[] = [
-
   {
     name: 'Set deposits limit 1000000',
     operation: {

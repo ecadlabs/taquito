@@ -199,7 +199,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
 
       await expect(LowAmountTez.estimate.transfer(params)).rejects.toMatchObject({
-        id: expect.stringContaining('implicit_contract'),
+        id: expect.stringContaining('empty_implicit_contract'),
       });
       done();
     });
