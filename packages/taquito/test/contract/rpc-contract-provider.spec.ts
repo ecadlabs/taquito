@@ -88,6 +88,9 @@ describe('RpcContractProvider test', () => {
     smartRollupAddMessages: jest.Mock<any, any>;
     contractCall: jest.Mock<any, any>;
     smartRollupOriginate: jest.Mock<any, any>;
+    stake: jest.Mock<any, any>;
+    unstake: jest.Mock<any, any>;
+    finalizeUnstake: jest.Mock<any, any>;
   };
 
   beforeEach(() => {
@@ -148,6 +151,9 @@ describe('RpcContractProvider test', () => {
       smartRollupAddMessages: jest.fn(),
       contractCall: jest.fn(),
       smartRollupOriginate: jest.fn(),
+      stake: jest.fn(),
+      unstake: jest.fn(),
+      finalizeUnstake: jest.fn(),
     };
 
     // Required for operations confirmation polling

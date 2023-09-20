@@ -23,6 +23,7 @@
     "Ejara",
     "entrypoints",
     "FAILWITH",
+    "finalizable",
     "flextesa",
     "florencenet",
     "forgeable",
@@ -85,6 +86,8 @@
     "unopt",
     "UNPAIR",
     "unstake",
+    "unstaked",
+    "unstakes",
     "zarith"
   ],
   "files": [
