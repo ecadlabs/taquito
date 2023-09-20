@@ -5893,7 +5893,6 @@ export const smartRollupCementResponse = {
             gas_limit: '6986',
             storage_limit: '0',
             rollup: 'sr1CCHLfB1jjz4ikB2bm4XGPvTjafVgUzhLB',
-            commitment: 'src12mERNVEb3N1EVmbUbudctzajiezmd3q6EsgLexkgxNCHK8PNBi',
             metadata: {
               balance_updates: [
                 {

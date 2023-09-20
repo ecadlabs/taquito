@@ -3950,8 +3950,8 @@ describe('RpcClient test', () => {
       const balanceUpdate =
         'metadata' in response.contents[0]
           ? (response.contents[0]['metadata'][
-              'balance_updates'
-            ] as OperationMetadataBalanceUpdates[])
+            'balance_updates'
+          ] as OperationMetadataBalanceUpdates[])
           : [];
       expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
       expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
@@ -4012,8 +4012,8 @@ describe('RpcClient test', () => {
       const balanceUpdate =
         'metadata' in response.contents[0]
           ? (response.contents[0]['metadata'][
-              'balance_updates'
-            ] as OperationMetadataBalanceUpdates[])
+            'balance_updates'
+          ] as OperationMetadataBalanceUpdates[])
           : [];
       expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
       expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
@@ -4464,7 +4464,6 @@ describe('RpcClient test', () => {
       expect(content.gas_limit).toEqual('6986');
       expect(content.storage_limit).toEqual('0');
       expect(content.rollup).toEqual('sr1CCHLfB1jjz4ikB2bm4XGPvTjafVgUzhLB');
-      expect(content.commitment).toEqual('src12mERNVEb3N1EVmbUbudctzajiezmd3q6EsgLexkgxNCHK8PNBi');
 
       const soruResult = content.metadata.operation_result;
 
