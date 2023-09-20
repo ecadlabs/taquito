@@ -331,6 +331,72 @@ export const commonCases: TestCase[] = [
     },
   },
   {
+    name: 'Transaction with stake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'stake',
+            value: { prim: 'Unit' },
+          },
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'unstake',
+            value: { prim: 'Unit' },
+          },
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '1000000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with finalize_unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'finalize_unstake',
+            value: { prim: 'Unit' },
+          },
+          destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          amount: '0',
+        },
+      ],
+    },
+  },
+  {
     name: 'Transaction with remove_delegate entrypoint',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
