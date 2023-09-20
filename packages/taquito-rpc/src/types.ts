@@ -19,27 +19,27 @@ interface INodeExtender {
 
 type OtherEltsInner =
   | {
-    value: any;
-  }
+      value: any;
+    }
   | {
-    inode_extender: INodeExtender;
-  };
+      inode_extender: INodeExtender;
+    };
 
 export type OtherElts =
   | {
-    node: [string, { value: string } | { node: string }][];
-  }
+      node: [string, { value: string } | { node: string }][];
+    }
   | {
-    other_elts: OtherEltsInner;
-  };
+      other_elts: OtherEltsInner;
+    };
 
 type State =
   | {
-    inode: Inode;
-  }
+      inode: Inode;
+    }
   | {
-    other_elts: OtherElts;
-  };
+      other_elts: OtherElts;
+    };
 
 export interface Inode {
   length: string;
@@ -48,11 +48,11 @@ export interface Inode {
 
 type TxRollupProofContextHash =
   | {
-    value: string;
-  }
+      value: string;
+    }
   | {
-    node: string;
-  };
+      node: string;
+    };
 
 export interface TxRollupProof {
   version: number;
@@ -159,32 +159,14 @@ export interface BlockFullHeader {
   signature: string;
 }
 
-export type InlinedAttestationKindEnum = OpKind.ATTESTATION;
-
 export type InlinedEndorsementKindEnum = OpKind.ENDORSEMENT;
-
-export interface InlinedAttestationContents {
-  kind: InlinedAttestationKindEnum;
-  slot: number;
-  level: number;
-  round: number;
-  block_payload_hash: string;
-}
 
 export interface InlinedEndorsementContents {
   kind: InlinedEndorsementKindEnum;
-  slot: number;
+  slot?: number;
+  round?: number;
+  block_payload_hash?: string;
   level: number;
-  round: number;
-  block_payload_hash: string;
-}
-
-export interface InlinedPreattestationContents {
-  kind: OpKind.PREATTESTATION;
-  slot: number;
-  level: number;
-  round: number;
-  block_payload_hash: string;
 }
 
 export interface InlinedPreEndorsementContents {
@@ -195,21 +177,9 @@ export interface InlinedPreEndorsementContents {
   block_payload_hash: string;
 }
 
-export interface InlinedAttestation {
-  branch: string;
-  operations: InlinedAttestationContents;
-  signature?: string;
-}
-
 export interface InlinedEndorsement {
   branch: string;
   operations: InlinedEndorsementContents;
-  signature?: string;
-}
-
-export interface InlinedPreattestation {
-  branch: string;
-  operations: InlinedPreattestationContents;
   signature?: string;
 }
 
@@ -221,14 +191,6 @@ export interface InlinedPreEndorsement {
 
 export type BallotVote = 'nay' | 'yay' | 'pass';
 
-export interface OperationContentsAttestation {
-  kind: OpKind.ATTESTATION;
-  slot: number;
-  level: number;
-  round: number;
-  block_payload_hash?: string;
-}
-
 export interface OperationContentsEndorsement {
   kind: OpKind.ENDORSEMENT;
   level: number;
@@ -237,26 +199,12 @@ export interface OperationContentsEndorsement {
   block_payload_hash?: string;
 }
 
-export interface OperationContentsPreattestation {
-  kind: OpKind.PREATTESTATION;
-  slot: number;
-  level: number;
-  round: number;
-  block_payload_hash: string;
-}
-
 export interface OperationContentsPreEndorsement {
   kind: OpKind.PREENDORSEMENT;
   slot: number;
   level: number;
   round: number;
   block_payload_hash: string;
-}
-
-export interface OperationContentsDoublePreattestation {
-  kind: OpKind.DOUBLE_PREATTESTATION_EVIDENCE;
-  op1: InlinedPreattestation;
-  op2: InlinedPreattestation;
 }
 
 export interface OperationContentsDoublePreEndorsement {
@@ -275,6 +223,12 @@ export interface OperationContentsSetDepositsLimit {
   limit?: string;
 }
 
+export interface OperationContentsEndorsementWithSlot {
+  kind: OpKind.ENDORSEMENT_WITH_SLOT;
+  endorsement: InlinedEndorsement;
+  slot: number;
+}
+
 export interface OperationContentsRevelation {
   kind: OpKind.SEED_NONCE_REVELATION;
   level: number;
@@ -286,16 +240,11 @@ export interface OperationContentsVdfRevelation {
   solution: string[];
 }
 
-export interface OperationContentsDoubleAttestation {
-  kind: OpKind.DOUBLE_ATTESTATION_EVIDENCE;
-  op1: InlinedAttestation;
-  op2: InlinedAttestation;
-}
-
 export interface OperationContentsDoubleEndorsement {
   kind: OpKind.DOUBLE_ENDORSEMENT_EVIDENCE;
   op1: InlinedEndorsement;
   op2: InlinedEndorsement;
+  slot?: number;
 }
 
 export interface OperationContentsDoubleBaking {
@@ -616,15 +565,11 @@ export interface OperationContentsSmartRollupTimeout {
 }
 
 export type OperationContents =
-  | OperationContentsAttestation
   | OperationContentsEndorsement
-  | OperationContentsPreattestation
   | OperationContentsPreEndorsement
-  | OperationContentsDoublePreattestation
   | OperationContentsDoublePreEndorsement
   | OperationContentsRevelation
   | OperationContentsVdfRevelation
-  | OperationContentsDoubleAttestation
   | OperationContentsDoubleEndorsement
   | OperationContentsDoubleBaking
   | OperationContentsActivateAccount
@@ -634,6 +579,7 @@ export type OperationContents =
   | OperationContentsTransaction
   | OperationContentsOrigination
   | OperationContentsDelegation
+  | OperationContentsEndorsementWithSlot
   | OperationContentsFailingNoop
   | OperationContentsRegisterGlobalConstant
   | OperationContentsSetDepositsLimit
@@ -657,14 +603,7 @@ export type OperationContents =
   | OperationContentsSmartRollupRecoverBond
   | OperationContentsSmartRollupTimeout;
 
-export interface OperationContentsAndResultMetadataExtended1 {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  delegate: string;
-  consensus_power: number;
-  consensus_key: string;
-}
-
-export interface OperationContentsAndResultMetadataExtended0 {
+export interface OperationContentsAndResultMetadataExtended {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
   slots?: number[];
@@ -672,18 +611,11 @@ export interface OperationContentsAndResultMetadataExtended0 {
   consensus_key?: string;
 }
 
-export interface OperationContentsAndResultMetadataPreattestation {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  delegate: string;
-  consensus_power: number;
-  consensus_key: string;
-}
-
 export interface OperationContentsAndResultMetadataPreEndorsement {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
   preendorsement_power: number;
-  consensus_key: string;
+  consensus_key?: string;
 }
 
 export interface OperationContentsAndResultMetadataReveal {
@@ -839,31 +771,13 @@ export interface OperationContentsAndResultMetadataSmartRollupTimeout {
   internal_operation_results?: InternalOperationResult[];
 }
 
-export interface OperationContentsAndResultAttestation {
-  kind: OpKind.ATTESTATION;
-  slot: number;
-  level: number;
-  round: number;
-  block_payload_hash: string;
-  metadata: OperationContentsAndResultMetadataExtended1;
-}
-
 export interface OperationContentsAndResultEndorsement {
   kind: OpKind.ENDORSEMENT;
-  slot: number;
+  block_payload_hash?: string;
   level: number;
-  round: number;
-  block_payload_hash: string;
-  metadata: OperationContentsAndResultMetadataExtended0;
-}
-
-export interface OperationContentsAndResultPreattestation {
-  kind: OpKind.PREATTESTATION;
-  slot: number;
-  level: number;
-  round: number;
-  block_payload_hash: string;
-  metadata: OperationContentsAndResultMetadataPreattestation;
+  round?: number;
+  slot?: number;
+  metadata: OperationContentsAndResultMetadataExtended;
 }
 
 export interface OperationContentsAndResultPreEndorsement {
@@ -875,24 +789,17 @@ export interface OperationContentsAndResultPreEndorsement {
   metadata: OperationContentsAndResultMetadataPreEndorsement;
 }
 
-export interface OperationContentsAndResultDoublePreattestation {
-  kind: OpKind.DOUBLE_PREATTESTATION_EVIDENCE;
-  op1: InlinedPreattestation;
-  op2: InlinedPreattestation;
-  metadata: OperationContentsAndResultMetadata;
-}
 export interface OperationContentsAndResultDoublePreEndorsement {
   kind: OpKind.DOUBLE_PREENDORSEMENT_EVIDENCE;
   op1: InlinedPreEndorsement;
   op2: InlinedPreEndorsement;
   metadata: OperationContentsAndResultMetadata;
 }
-
 export interface OperationContentsAndResultEndorsementWithSlot {
   kind: OpKind.ENDORSEMENT_WITH_SLOT;
   endorsement: InlinedEndorsement;
   slot: number;
-  metadata: OperationContentsAndResultMetadataExtended0;
+  metadata: OperationContentsAndResultMetadataExtended;
 }
 
 export interface OperationContentsAndResultRevelation {
@@ -902,17 +809,11 @@ export interface OperationContentsAndResultRevelation {
   metadata: OperationContentsAndResultMetadata;
 }
 
-export interface OperationContentsAndResultDoubleAttestation {
-  kind: OpKind.DOUBLE_ATTESTATION_EVIDENCE;
-  op1: InlinedAttestation;
-  op2: InlinedAttestation;
-  metadata: OperationContentsAndResultMetadata;
-}
-
 export interface OperationContentsAndResultDoubleEndorsement {
   kind: OpKind.DOUBLE_ENDORSEMENT_EVIDENCE;
   op1: InlinedEndorsement;
   op2: InlinedEndorsement;
+  slot?: number;
   metadata: OperationContentsAndResultMetadata;
 }
 
@@ -1260,14 +1161,10 @@ export interface OperationContentsAndResultSmartRollupTimeout {
 }
 
 export type OperationContentsAndResult =
-  | OperationContentsAndResultAttestation
   | OperationContentsAndResultEndorsement
-  | OperationContentsAndResultPreattestation
   | OperationContentsAndResultPreEndorsement
-  | OperationContentsAndResultDoublePreattestation
   | OperationContentsAndResultDoublePreEndorsement
   | OperationContentsAndResultRevelation
-  | OperationContentsAndResultDoubleAttestation
   | OperationContentsAndResultDoubleEndorsement
   | OperationContentsAndResultDoubleBaking
   | OperationContentsAndResultActivateAccount
@@ -1364,19 +1261,9 @@ export interface BakingRightsResponseItem {
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
 
-export type AttestationRightsArgumentsDelegate = string | string[];
-export type AttestationRightsArgumentsCycle = number | number[];
-export type AttestationRightsArgumentsLevel = number | number[];
 export type EndorsingRightsArgumentsDelegate = string | string[];
 export type EndorsingRightsArgumentsCycle = number | number[];
 export type EndorsingRightsArgumentsLevel = number | number[];
-
-export interface AttestationRightsQueryArguments {
-  level?: AttestationRightsArgumentsLevel;
-  cycle?: AttestationRightsArgumentsCycle;
-  delegate?: AttestationRightsArgumentsDelegate;
-  consensus_key?: string;
-}
 
 export interface EndorsingRightsQueryArguments {
   level?: EndorsingRightsArgumentsLevel;
@@ -1385,35 +1272,19 @@ export interface EndorsingRightsQueryArguments {
   consensus_key?: string;
 }
 
-export interface AttestationRightsResponseItemDelegates {
-  delegate: string;
-  first_slot: number;
-  attestation_power: number;
-  consensus_key: string;
-}
-
 export interface EndorsingRightsResponseItemDelegates {
   delegate: string;
   first_slot: number;
   endorsing_power: number;
-  consensus_key: string;
+  consensus_key?: string;
 }
-
-export interface AttestationRightsResponseItem {
-  level: number;
-  delegates: AttestationRightsResponseItemDelegates[];
-  estimated_time?: Date;
-}
-
 export interface EndorsingRightsResponseItem {
   level: number;
-  delegates: EndorsingRightsResponseItemDelegates[];
-  estimated_time?: Date;
   delegate?: string;
+  delegates?: EndorsingRightsResponseItemDelegates[];
   slots?: number[];
+  estimated_time?: Date;
 }
-
-export type AttestationRightsResponse = AttestationRightsResponseItem[];
 
 export type EndorsingRightsResponse = EndorsingRightsResponseItem[];
 
@@ -1552,13 +1423,13 @@ export interface ScriptedContracts {
 
 export type BondId =
   | {
-    smart_rollup?: never;
-    tx_rollup: string;
-  }
+      smart_rollup?: never;
+      tx_rollup: string;
+    }
   | {
-    smart_rollup: string;
-    tx_rollup?: never;
-  };
+      smart_rollup: string;
+      tx_rollup?: never;
+    };
 
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
@@ -1926,11 +1797,17 @@ export type MetadataBalanceUpdatesKindEnum =
   | 'minted';
 
 export enum METADATA_BALANCE_UPDATES_CATEGORY {
-  BLOCK_FEES = 'block fees',
-  DEPOSITS = 'deposits',
-  NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
-  ENDORSING_REWARDS = 'endorsing rewards',
   BAKING_REWARDS = 'baking rewards',
+  REWARDS = 'rewards',
+  FEES = 'fees',
+  DEPOSITS = 'deposits',
+  LEGACY_REWARDS = 'legacy_rewards',
+  LEGACY_FEES = 'legacy_fees',
+  LEGACY_DEPOSITS = 'legacy_deposits',
+  BLOCK_FEES = 'block fees',
+  NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
+  DOUBLE_SIGNING_EVIDENCE_REWARDS = 'double signing evidence rewards',
+  ENDORSING_REWARDS = 'endorsing rewards',
   BAKING_BONUSES = 'baking bonuses',
   STORAGE_FEES = 'storage fees',
   PUNISHMENTS = 'punishments',
@@ -1941,18 +1818,9 @@ export enum METADATA_BALANCE_UPDATES_CATEGORY {
   BOOTSTRAP = 'bootstrap',
   INVOICE = 'invoice',
   MINTED = 'minted',
-  BONDS = 'bonds',
-  SMART_ROLLUP_REFUTATION_PUNISHMENTS = 'smart_rollup_refutation_punishments',
-  SMART_ROLLUP_REFUTATION_REWARDS = 'smart_rollup_refutation_rewards',
-  UNSTAKED_DEPOSITS = 'unstaked_deposits',
-  REWARDS = 'rewards',
-  FEES = 'fees',
-  LEGACY_REWARDS = 'legacy_rewards',
-  LEGACY_FEES = 'legacy_fees',
-  LEGACY_DEPOSITS = 'legacy_deposits',
-  DOUBLE_SIGNING_EVIDENCE_REWARDS = 'double signing evidence rewards',
   TX_ROLLUP_REJECTION_REWARDS = 'tx_rollup_rejection_rewards',
   TX_ROLLUP_REJECTION_PUNISHMENTS = 'tx_rollup_rejection_punishments',
+  BONDS = 'bonds',
 }
 export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
 
@@ -2325,10 +2193,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto009 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto008 { }
+export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto008 extends ConstantsResponseProto007 { }
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
 export interface ConstantsResponseProto007
   extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
