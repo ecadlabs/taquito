@@ -1,5 +1,5 @@
 {
-  "exclude": ["website", "integration-tests", "apps"],
+  "exclude": ["website", "integration-tests", "apps", "**/test/**", "**/*.spec.ts"],
   "compilerOptions": {
     "moduleResolution": "node",
     "target": "es6",
