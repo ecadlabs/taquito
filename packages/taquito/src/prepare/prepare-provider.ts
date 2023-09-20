@@ -1129,7 +1129,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   }
 
   private async staking(
-    { fee, storageLimit, gasLimit, sourceAndDestination, ...rest }: StakingParams,
+    { fee, storageLimit, gasLimit, source, ...rest }: StakingParams,
     entrypoint: StakingEntrypoint
   ): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
@@ -1155,7 +1155,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
-    const contents = this.constructOpContents(ops, headCounter, pkh, sourceAndDestination);
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
     return {
       opOb: {

@@ -764,7 +764,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Stake founds. Will sign and inject an operation using the current context
+   * @description Stake the given amount for the source. The source must be a delegator to be allowed to stake
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -776,7 +776,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     validateStakingParams(params, 'stake');
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
     const publicKeyHash = await this.signer.publicKeyHash();
-    const source = params.sourceAndDestination ?? publicKeyHash;
+    const source = params.source ?? publicKeyHash;
 
     const prepared = await this.prepare.stake({ ...params, ...estimate });
     const content = prepared.opOb.contents.find(
@@ -790,7 +790,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Unstake founds. Will sign and inject an operation using the current context
+   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance. Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over, the operation "finalize unstake" must be called for the funds to appear in the liquid balance.
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -802,7 +802,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     validateStakingParams(params, 'unstake');
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
     const publicKeyHash = await this.signer.publicKeyHash();
-    const source = params.sourceAndDestination ?? publicKeyHash;
+    const source = params.source ?? publicKeyHash;
 
     const prepared = await this.prepare.unstake({ ...params, ...estimate });
     const content = prepared.opOb.contents.find(
@@ -816,7 +816,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Finalize unstake founds. Will sign and inject an operation using the current context
+   * @description Transfer all the finalizable unstaked funds of the source to their liquid balance
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -831,7 +831,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       this.estimator.finalizeUnstake.bind(this.estimator)
     );
     const publicKeyHash = await this.signer.publicKeyHash();
-    const source = params.sourceAndDestination ?? publicKeyHash;
+    const source = params.source ?? publicKeyHash;
 
     const prepared = await this.prepare.finalizeUnstake({ ...params, ...estimate });
     const content = prepared.opOb.contents.find(

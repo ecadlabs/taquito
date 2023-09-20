@@ -287,7 +287,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance. Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over, the operation "finalize unstake" must be called for the funds to appear in the liquid balance. Will sign and inject an operation using the current context
+   * @description Stake the given amount for the source. The source must be a delegator to be allowed to stake. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -297,7 +297,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description  Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance. Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over, the operation "finalize unstake" must be called for the funds to appear in the liquid balance. Will sign and inject an operation using the current context
+   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance. Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over, the operation "finalize unstake" must be called for the funds to appear in the liquid balance. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *

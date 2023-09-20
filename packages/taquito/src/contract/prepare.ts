@@ -343,7 +343,7 @@ export const createSmartRollupOriginateOperation = async ({
 
 export const createStakingOperation = async (
   {
-    sourceAndDestination,
+    source,
     amount,
     fee = DEFAULT_FEE.TRANSFER,
     gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
@@ -352,12 +352,12 @@ export const createStakingOperation = async (
   }: StakingParams,
   entrypoint: StakingEntrypoint
 ) => {
-  if (!sourceAndDestination) {
+  if (!source) {
     throw new ParameterValidationError('The parameter sourceAndDestination is missing');
   }
   const operation: RPCTransferOperation = {
-    source: sourceAndDestination,
-    destination: sourceAndDestination,
+    source,
+    destination: source,
     kind: OpKind.TRANSACTION,
     fee,
     gas_limit: gasLimit,

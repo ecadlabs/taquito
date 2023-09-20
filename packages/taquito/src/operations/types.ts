@@ -9,6 +9,7 @@ import {
 } from '@taquito/rpc';
 import { BlockIdentifier } from '../read-provider/interface';
 import { InvalidAmountError } from '@taquito/core';
+import { validateAddress } from '@taquito/utils';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -565,7 +566,7 @@ export interface FailingNoopParams {
 }
 
 export interface StakingParams {
-  sourceAndDestination?: string;
+  source?: string;
   amount: number;
   fee?: number;
   gasLimit?: number;
@@ -581,8 +582,11 @@ export const validateStakingParams = (params: StakingParams, entrypoint: Staking
   if (params.amount <= 0) {
     throw new InvalidAmountError(
       params.amount.toString(),
-      `The 'amount' field in ${entrypoint} should be positive, but ${params.amount} was provided.`
+      `The 'amount' field in ${entrypoint} should be a positive number.`
     );
+  }
+  if (params.source !== undefined) {
+    validateAddress(params.source);
   }
 };
 
