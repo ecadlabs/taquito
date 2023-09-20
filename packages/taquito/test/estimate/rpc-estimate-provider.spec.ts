@@ -1167,7 +1167,6 @@ describe('RPCEstimateProvider test wallet', () => {
     getChainId: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
-    getOriginationProof: jest.Mock<any, any>;
   };
 
   let mockForger: {
@@ -1195,7 +1194,6 @@ describe('RPCEstimateProvider test wallet', () => {
       getChainId: jest.fn(),
       getConstants: jest.fn(),
       getProtocols: jest.fn(),
-      getOriginationProof: jest.fn(),
     };
 
     mockForger = {
@@ -1568,7 +1566,6 @@ describe('RPCEstimateProvider test wallet', () => {
         smart_rollup_origination_size: new BigNumber(6314),
       });
       mockRpcClient.simulateOperation.mockResolvedValue(smartRollupOriginateWithReveal);
-      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
 
       const estimate = await estimateProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,

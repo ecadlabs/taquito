@@ -1,6 +1,6 @@
 ---
 title: Smart Rollups
-author: Davis Sawali 
+author: Davis Sawali
 ---
 
 # Smart Optimistic Rollups
@@ -28,8 +28,7 @@ await op.confirmation();
 ##### please note
 - `pvmKind` at this time the only PVM supported is `wasm_2_0_0`
 - `kernel` is passed as a hexadecimal string examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/mumbai/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
-- `parametersType` is a MichelsonV1Expression to define the type. 
--  **Please note** `originationProof` is needed origination in `batch` which can be obtained with the `rpc.getOriginationProof({kernel, kind: PVMKind})`
+- `parametersType` is a MichelsonV1Expression to define the type.
 
 For more information in regards to Smart Rollup Origination please refer to the this [link](https://tezos.gitlab.io/mumbai/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
 
@@ -43,9 +42,9 @@ The main use case of sending messages, is usually to denote contract calls. Thes
 MESSAGE='[{\
   "destination" : "${CONTRACT}", \
   "parameters" : "\"Hello world\"", \
-  "entrypoint" : "default" 
+  "entrypoint" : "default"
   }]'
-``` 
+```
 
 If you read closely, the message includes a `destination`, a `parameter`, and an `entrypoint` property. All components needed to **call an entrypoint** of a contract.
 
