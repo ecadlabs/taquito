@@ -118,7 +118,7 @@ jobs:
           --no-daemons-for=donald \
           --until-level 200_000_000 \
           --protocol-kind ${{ matrix.protocol }} \
-          ${{ matrix.protocol == 'Oxford' && 'start_adaptive_issuance' || '' }}
+          ${{ matrix.protocol == 'Oxford' && '--adaptive-issuance-vote "on"' || '' }}
     - run: npm ci
     - run: npm run build
     - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts
