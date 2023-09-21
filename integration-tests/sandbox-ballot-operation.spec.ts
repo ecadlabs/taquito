@@ -1,10 +1,10 @@
 import { VotingPeriodBlockResult } from '@taquito/rpc';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-import { CONFIGS, sleep } from './config';
+import { CONFIGS, isSandbox, sleep } from './config';
 
 CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
-  const flextesanet = rpc === 'http://localhost:20000' ? test : test.skip;
+  const flextesaNet = isSandbox({rpc}) ? test : test.skip;
   let blocksPerVotingPeriod: number;
   let blockTime: number;
   let currentPeriod: VotingPeriodBlockResult;
@@ -25,7 +25,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       done();
     });
 
-    flextesanet('Should be able to inject proposal operation in proposal period', async (done) => {
+    flextesaNet('Should be able to inject proposal operation in proposal period', async (done) => {
 
       // double check if it's proposal period so that we can inject proposal operation
       currentPeriod = await Alice.rpc.getCurrentPeriod();
@@ -54,7 +54,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
       }
     });
 
-    flextesanet('Should be able to inject ballot operation in exploration period', async (done) => {
+    flextesaNet('Should be able to inject ballot operation in exploration period', async (done) => {
       // if it's still proposal period make the test sleep to get into exploration period to inject ballot operation
       currentPeriod = await Alice.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'proposal') {
