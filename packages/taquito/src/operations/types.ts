@@ -8,8 +8,8 @@ import {
   PvmKind,
 } from '@taquito/rpc';
 import { BlockIdentifier } from '../read-provider/interface';
-import { InvalidAmountError } from '@taquito/core';
-import { validateAddress } from '@taquito/utils';
+import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
+import { ValidationResult, invalidDetail, validateAddress } from '@taquito/utils';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -565,8 +565,8 @@ export interface FailingNoopParams {
   basedOnBlock: BlockIdentifier;
 }
 
-export interface StakingParams {
-  source?: string;
+export interface StakingParamsWithSource {
+  source: string;
   amount: number;
   fee?: number;
   gasLimit?: number;
@@ -574,19 +574,33 @@ export interface StakingParams {
   mutez?: boolean;
 }
 
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type StakingParams = PartialBy<StakingParamsWithSource, 'source'>;
+export type StakeParams = StakingParams;
+export type UnstakeParams = StakingParams;
+export type FinalizeUnstakeParams = Omit<StakingParams, `amount`>;
+
 /**
  *
  * @throws {@link InvalidAmountError}
  */
-export const validateStakingParams = (params: StakingParams, entrypoint: StakingEntrypoint) => {
-  if (params.amount <= 0) {
-    throw new InvalidAmountError(
-      params.amount.toString(),
-      `The 'amount' field in ${entrypoint} should be a positive number.`
-    );
+export const validateStakingParams = (
+  params: PartialBy<StakingParams, 'amount'>,
+  entrypoint: StakingEntrypoint
+) => {
+  if (entrypoint !== 'finalize_unstake') {
+    if (!params.amount || params.amount <= 0) {
+      throw new InvalidAmountError(
+        params.amount?.toString() ?? '',
+        `The 'amount' field in ${entrypoint} should be a positive number.`
+      );
+    }
   }
   if (params.source !== undefined) {
-    validateAddress(params.source);
+    const sourceValidation = validateAddress(params.source);
+    if (sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
   }
 };
 

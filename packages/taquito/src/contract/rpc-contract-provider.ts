@@ -54,8 +54,10 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   FailingNoopParams,
-  StakingParams,
   validateStakingParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -772,7 +774,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @throws {@link InvalidAmountError}
    */
-  async stake(params: StakingParams) {
+  async stake(params: StakeParams) {
     validateStakingParams(params, 'stake');
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -798,7 +800,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @throws {@link InvalidAmountError}
    */
-  async unstake(params: StakingParams) {
+  async unstake(params: UnstakeParams) {
     validateStakingParams(params, 'unstake');
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -824,7 +826,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @throws {@link InvalidAmountError}
    */
-  async finalizeUnstake(params: StakingParams) {
+  async finalizeUnstake(params: FinalizeUnstakeParams) {
     validateStakingParams(params, 'finalize_unstake');
     const estimate = await this.estimate(
       params,

@@ -13,7 +13,20 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             });
             await op.confirmation()
             expect(op.hash).toBeDefined();
-            console.log(op);
+            done();
+          });
+          it('Should be able to unstake', async (done) => {
+            const op = await Tezos.contract.unstake({
+              amount: 0.1,
+            });
+            await op.confirmation()
+            expect(op.hash).toBeDefined();
+            done();
+          });
+          it('Should be able to finalizeUnstake', async (done) => {
+            const op = await Tezos.contract.finalizeUnstake({});
+            await op.confirmation()
+            expect(op.hash).toBeDefined();
             done();
           });
     });

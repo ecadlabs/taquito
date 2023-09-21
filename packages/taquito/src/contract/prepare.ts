@@ -31,8 +31,8 @@ import {
   SmartRollupOriginateParams,
   ActivationParams,
   RPCActivateOperation,
-  StakingParams,
   StakingEntrypoint,
+  StakingParamsWithSource,
 } from '../operations/types';
 import {
   DEFAULT_FEE,
@@ -47,7 +47,6 @@ import {
   OriginationParameterError,
   InvalidBalanceError,
 } from './errors';
-import { ParameterValidationError } from '@taquito/core';
 
 export const createActivationOperation = async ({ pkh, secret }: ActivationParams) => {
   return {
@@ -349,12 +348,9 @@ export const createStakingOperation = async (
     gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
     storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
     mutez = false,
-  }: StakingParams,
+  }: StakingParamsWithSource,
   entrypoint: StakingEntrypoint
 ) => {
-  if (!source) {
-    throw new ParameterValidationError('The parameter sourceAndDestination is missing');
-  }
   const operation: RPCTransferOperation = {
     source,
     destination: source,

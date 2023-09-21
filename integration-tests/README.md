@@ -142,7 +142,7 @@ Start the docker container, which encapsulates the flextesa_sandbox:
 
 
 ```sh
-docker run --rm --name flextesa_sandbox --detach -p 20000:20000 oxheadalpha/flextesa:latest oxfordbox start
+docker run --pull always --rm --name flextesa_sandbox --detach -p 20000:20000 oxheadalpha/flextesa:latest oxfordbox start
 ```
 
 
@@ -150,7 +150,7 @@ The default block time is 5 seconds. If we want to simulate Oxford block times, 
 
 
 ```sh
-docker run --rm --name flextesa_sandbox --detach -e block_time=8 -p 20000:20000 oxheadalpha/flextesa:latest oxfordbox start
+docker run --pull always --rm --name flextesa_sandbox --detach -e block_time=8 -p 20000:20000 oxheadalpha/flextesa:latest oxfordbox start
 ```
 
 
@@ -275,7 +275,7 @@ chmod +x sandbox-bakers.sh
 ```
 for example,
 ```bash
-./sandbox-bakers.sh oxheadalpha/flextesa:20230313 Oxford oxfordnet OXFORDNET
+./sandbox-bakers.sh oxheadalpha/flextesa:latest Oxford oxfordnet OXFORDNET
 ```
 
 Create an alias to make interacting with the flextesa node easier

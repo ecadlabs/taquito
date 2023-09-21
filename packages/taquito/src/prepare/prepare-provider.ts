@@ -29,6 +29,9 @@ import {
   ActivationParams,
   StakingParams,
   StakingEntrypoint,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
@@ -1103,7 +1106,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  stake(params: StakingParams): Promise<PreparedOperation> {
+  stake(params: StakeParams): Promise<PreparedOperation> {
     return this.staking(params, 'stake');
   }
 
@@ -1114,7 +1117,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async unstake(params: StakingParams): Promise<PreparedOperation> {
+  async unstake(params: UnstakeParams): Promise<PreparedOperation> {
     return this.staking(params, 'unstake');
   }
 
@@ -1124,8 +1127,14 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param params RPCOperation object
    * @returns a PreparedOperation object
    */
-  async finalizeUnstake(params: StakingParams): Promise<PreparedOperation> {
-    return this.staking(params, 'finalize_unstake');
+  async finalizeUnstake(params: FinalizeUnstakeParams): Promise<PreparedOperation> {
+    return this.staking(
+      {
+        amount: 0,
+        ...params,
+      },
+      'finalize_unstake'
+    );
   }
 
   private async staking(
@@ -1140,6 +1149,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const op = await createStakingOperation(
       {
+        source: source ?? pkh,
         ...rest,
         ...mergedEstimates,
       },
@@ -1155,7 +1165,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     this.#counters = {};
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
-    const contents = this.constructOpContents(ops, headCounter, pkh, source);
+    const contents = this.constructOpContents(ops, headCounter, pkh, source ?? pkh);
 
     return {
       opOb: {
