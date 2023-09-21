@@ -565,27 +565,28 @@ export interface FailingNoopParams {
   basedOnBlock: BlockIdentifier;
 }
 
-export interface StakingParamsWithSource {
+export interface InternalStakingParams {
   source: string;
   amount: number;
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
   mutez?: boolean;
+  parameter: TransactionOperationParameter;
 }
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-export type StakingParams = PartialBy<StakingParamsWithSource, 'source'>;
-export type StakeParams = StakingParams;
-export type UnstakeParams = StakingParams;
-export type FinalizeUnstakeParams = Omit<StakingParams, `amount`>;
+export type StakingParams = PartialBy<InternalStakingParams, 'source'>;
+export type StakeParams = Omit<StakingParams, 'parameter'>;
+export type UnstakeParams = Omit<StakingParams, 'parameter'>;
+export type FinalizeUnstakeParams = Omit<StakingParams, 'parameter' | `amount`>;
 
 /**
  *
  * @throws {@link InvalidAmountError}
  */
 export const validateStakingParams = (
-  params: PartialBy<StakingParams, 'amount'>,
+  params: Omit<PartialBy<StakingParams, 'amount'>, 'parameter'>,
   entrypoint: StakingEntrypoint
 ) => {
   if (entrypoint !== 'finalize_unstake') {

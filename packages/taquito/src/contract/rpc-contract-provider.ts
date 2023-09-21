@@ -802,7 +802,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    */
   async unstake(params: UnstakeParams) {
     validateStakingParams(params, 'unstake');
-    const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
+    const estimate = await this.estimate(params, this.estimator.unstake.bind(this.estimator));
     const publicKeyHash = await this.signer.publicKeyHash();
     const source = params.source ?? publicKeyHash;
 

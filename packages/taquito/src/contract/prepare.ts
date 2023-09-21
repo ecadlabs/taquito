@@ -31,8 +31,7 @@ import {
   SmartRollupOriginateParams,
   ActivationParams,
   RPCActivateOperation,
-  StakingEntrypoint,
-  StakingParamsWithSource,
+  InternalStakingParams,
 } from '../operations/types';
 import {
   DEFAULT_FEE,
@@ -340,17 +339,15 @@ export const createSmartRollupOriginateOperation = async ({
   } as RPCSmartRollupOriginateOperation;
 };
 
-export const createStakingOperation = async (
-  {
-    source,
-    amount,
-    fee = DEFAULT_FEE.TRANSFER,
-    gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
-    storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
-    mutez = false,
-  }: StakingParamsWithSource,
-  entrypoint: StakingEntrypoint
-) => {
+export const createStakingOperation = async ({
+  source,
+  amount,
+  parameter,
+  fee = DEFAULT_FEE.TRANSFER,
+  gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
+  storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
+  mutez = false,
+}: InternalStakingParams) => {
   const operation: RPCTransferOperation = {
     source,
     destination: source,
@@ -359,12 +356,7 @@ export const createStakingOperation = async (
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
-    parameters: {
-      entrypoint,
-      value: {
-        prim: 'Unit',
-      },
-    },
+    parameters: parameter,
   };
   return operation;
 };

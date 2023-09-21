@@ -27,11 +27,10 @@ import {
   isOpWithFee,
   RegisterDelegateParams,
   ActivationParams,
-  StakingParams,
-  StakingEntrypoint,
   StakeParams,
   UnstakeParams,
   FinalizeUnstakeParams,
+  StakingParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
 import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
@@ -66,6 +65,7 @@ import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
 import BigNumber from 'bignumber.js';
 import { BlockIdentifier } from '../read-provider/interface';
+import { format } from '@taquito/utils';
 
 interface Limits {
   fee?: number;
@@ -1107,7 +1107,13 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   stake(params: StakeParams): Promise<PreparedOperation> {
-    return this.staking(params, 'stake');
+    return this.staking({
+      ...params,
+      parameter: {
+        entrypoint: 'stake',
+        value: { prim: 'Unit' },
+      },
+    });
   }
 
   /**
@@ -1117,8 +1123,15 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async unstake(params: UnstakeParams): Promise<PreparedOperation> {
-    return this.staking(params, 'unstake');
+  async unstake({ amount, mutez, ...rest }: UnstakeParams): Promise<PreparedOperation> {
+    return this.staking({
+      parameter: {
+        entrypoint: 'unstake',
+        value: { int: mutez ? amount.toString() : format('tz', 'mutez', amount).toString() },
+      },
+      ...rest,
+      amount: 0,
+    });
   }
 
   /**
@@ -1128,33 +1141,34 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async finalizeUnstake(params: FinalizeUnstakeParams): Promise<PreparedOperation> {
-    return this.staking(
-      {
-        amount: 0,
-        ...params,
+    return this.staking({
+      parameter: {
+        entrypoint: 'finalize_unstake',
+        value: { prim: 'Unit' },
       },
-      'finalize_unstake'
-    );
+      ...params,
+      amount: 0,
+    });
   }
 
-  private async staking(
-    { fee, storageLimit, gasLimit, source, ...rest }: StakingParams,
-    entrypoint: StakingEntrypoint
-  ): Promise<PreparedOperation> {
+  private async staking({
+    fee,
+    storageLimit,
+    gasLimit,
+    source,
+    ...rest
+  }: StakingParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
 
-    const op = await createStakingOperation(
-      {
-        source: source ?? pkh,
-        ...rest,
-        ...mergedEstimates,
-      },
-      entrypoint
-    );
+    const op = await createStakingOperation({
+      source: source ?? pkh,
+      ...rest,
+      ...mergedEstimates,
+    });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
     const ops = this.convertIntoArray(operation);
