@@ -366,10 +366,10 @@ export const commonCases: TestCase[] = [
           storage_limit: '10',
           parameters: {
             entrypoint: 'unstake',
-            value: { prim: 'Unit' },
+            value: { int: '1000000' },
           },
           destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          amount: '1000000',
+          amount: '0',
         },
       ],
     },
