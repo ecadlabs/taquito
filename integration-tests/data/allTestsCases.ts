@@ -1172,12 +1172,12 @@ export const commonCases: TestCase[] = [
     },
   },
   {
-    name: 'Endorsement',
+    name: 'Attestation',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: OpKind.ENDORSEMENT,
+          kind: OpKind.ATTESTATION,
           slot: 0,
           level: 66299,
           round: 5,
