@@ -28,7 +28,7 @@ import {
   SmartRollupAddMessagesParams,
   RPCSmartRollupAddMessagesOperation,
   RPCSmartRollupOriginateOperation,
-  SmartRollupOriginateParamsWithProof,
+  SmartRollupOriginateParams,
   ActivationParams,
   RPCActivateOperation,
 } from '../operations/types';
@@ -324,9 +324,8 @@ export const createSmartRollupOriginateOperation = async ({
   storageLimit,
   pvmKind,
   kernel,
-  originationProof,
   parametersType,
-}: SmartRollupOriginateParamsWithProof) => {
+}: SmartRollupOriginateParams) => {
   return {
     kind: OpKind.SMART_ROLLUP_ORIGINATE,
     source,
@@ -335,7 +334,6 @@ export const createSmartRollupOriginateOperation = async ({
     storage_limit: storageLimit,
     pvm_kind: pvmKind,
     kernel,
-    origination_proof: originationProof,
     parameters_ty: parametersType,
   } as RPCSmartRollupOriginateOperation;
 };

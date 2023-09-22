@@ -3,6 +3,14 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v17.3.1
+
+## Summary
+- This is a patch release to upgrade `@airgap/beacon-sdk` and `@airgap/beacon-dapp` packages to `v4.0.10` [PR#2649](https://github.com/ecadlabs/taquito/pull/2649)
+- Updating license to `Apache-2.0` in `package.json` files  [PR#2636](https://github.com/ecadlabs/taquito/pull/2636)
+- Updated the ledger dependencies [PR#2645](https://github.com/ecadlabs/taquito/pull/2645)
+- Applied dependency upgrades in website suggested by dependabot [PR#2645](https://github.com/ecadlabs/taquito/pull/2645)
+
 # Taquito v17.3.0
 
 **A change in Licensing**:

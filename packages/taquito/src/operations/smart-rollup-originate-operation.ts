@@ -74,10 +74,6 @@ export class SmartRollupOriginateOperation
     return this.params.kernel;
   }
 
-  get originationProof() {
-    return this.params.origination_proof;
-  }
-
   get errors() {
     return this.operationResults?.errors;
   }

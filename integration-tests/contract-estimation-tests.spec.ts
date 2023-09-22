@@ -106,7 +106,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(472);
       expect(estimate.totalCost).toEqual(472);
       expect(estimate.usingBaseFeeMutez).toEqual(472);
-      expect(estimate.consumedMilligas).toEqual(1356379);
+      expect(estimate.consumedMilligas).toEqual(1356465);
       done();
     });
 
@@ -124,7 +124,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(543);
       expect(estimate.totalCost).toEqual(129043);
       expect(estimate.usingBaseFeeMutez).toEqual(543);
-      expect(estimate.consumedMilligas).toEqual(1470914);
+      expect(estimate.consumedMilligas).toEqual(1471000);
       done();
     });
 
@@ -138,7 +138,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(519);
       expect(estimate.totalCost).toEqual(79769);
       expect(estimate.usingBaseFeeMutez).toEqual(519);
-      expect(estimate.consumedMilligas).toEqual(1767492);
+      expect(estimate.consumedMilligas).toEqual(1767578);
       done();
     });
 
@@ -152,7 +152,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(637);
       expect(estimate.totalCost).toEqual(159137);
       expect(estimate.usingBaseFeeMutez).toEqual(637);
-      expect(estimate.consumedMilligas).toEqual(2293140);
+      expect(estimate.consumedMilligas).toEqual(2293226);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();
@@ -199,7 +199,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
 
       await expect(LowAmountTez.estimate.transfer(params)).rejects.toMatchObject({
-        id: expect.stringContaining('implicit_contract'),
+        id: expect.stringContaining('empty_implicit_contract'),
       });
       done();
     });

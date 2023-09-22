@@ -78,7 +78,7 @@ jobs:
           - protocol: Oxford
             testnet: oxfordnet
             testnet_uppercase: OXFORDNET
-            flextesa_docker_image: oxheadalpha/flextesa:20230901
+            flextesa_docker_image: oxheadalpha/flextesa:20230915
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
