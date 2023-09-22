@@ -42,8 +42,7 @@ export const metadataViewsExample1 = {
 					michelsonStorageView: {
 						returnType: {
 							prim: 'bytes',
-							args: [],
-							annots: [ '%returnedBytes' ]
+							args: []
 						},
 						code: [
 							{
@@ -66,12 +65,7 @@ export const metadataViewsExample1 = {
 								annots: []
 							}
 						],
-						annotations: [
-							{
-								name: '%returnedBytes',
-								description: 'A bytes constant.'
-							}
-						]
+						annotations: []
 					}
 				}
 			]
@@ -83,8 +77,7 @@ export const metadataViewsExample1 = {
 					michelsonStorageView: {
 						returnType: {
 							prim: 'bytes',
-							args: [],
-							annots: [ '%returnedBytes' ]
+							args: []
 						},
 						code: [
 							{
@@ -108,12 +101,7 @@ export const metadataViewsExample1 = {
 								annots: []
 							}
 						],
-						annotations: [
-							{
-								name: '%returnedBytes',
-								description: 'A bytes constant.'
-							}
-						]
+						annotations: []
 					}
 				}
 			]
@@ -126,7 +114,6 @@ export const metadataViewsExample1 = {
 						returnType: {
 							prim: 'bytes',
 							args: [],
-							annots: [ '%returnedBytes' ]
 						},
 						code: [
 							{
@@ -150,12 +137,7 @@ export const metadataViewsExample1 = {
 								annots: []
 							}
 						],
-						annotations: [
-							{
-								name: '%returnedBytes',
-								description: 'A bytes constant.'
-							}
-						]
+						annotations: []
 					}
 				}
 			]
@@ -168,7 +150,6 @@ export const metadataViewsExample1 = {
 						returnType: {
 							prim: 'bytes',
 							args: [],
-							annots: [ '%returnedBytes' ]
 						},
 						code: [
 							{
@@ -192,12 +173,7 @@ export const metadataViewsExample1 = {
 								annots: []
 							}
 						],
-						annotations: [
-							{
-								name: '%returnedBytes',
-								description: 'A bytes constant.'
-							}
-						]
+						annotations: []
 					}
 				}
 			]
@@ -210,7 +186,6 @@ export const metadataViewsExample1 = {
 						returnType: {
 							prim: 'bytes',
 							args: [],
-							annots: [ '%returnedBytes' ]
 						},
 						code: [
 							{
@@ -234,12 +209,7 @@ export const metadataViewsExample1 = {
 								annots: []
 							}
 						],
-						annotations: [
-							{
-								name: '%returnedBytes',
-								description: 'A bytes constant.'
-							}
-						]
+						annotations: []
 					}
 				}
 			]
@@ -276,7 +246,7 @@ export const metadataViewsExample2 = {
 				{
 					michelsonStorageView: {
 						parameter: { prim: 'int', args: [], annots: [ '%the_decisive_argument' ] },
-						returnType: { prim: 'int', args: [], annots: [ '%negative_even_number' ] },
+						returnType: { prim: 'int', args: [] },
 						code: [
 							{ prim: 'CAR', args: [], annots: [] },
 							{ prim: 'DUP', args: [], annots: [] },
@@ -303,10 +273,6 @@ export const metadataViewsExample2 = {
 							{
 								name: '%the_decisive_argument',
 								description: 'The integer argument if >0 this will fail.'
-							},
-							{
-								name: '%negative_even_number',
-								description: 'The result, if any, is twice the argument (%the_decisive_argument).'
 							}
 						]
 					}
@@ -602,18 +568,13 @@ export const metadataViewsExample2 = {
 			implementations: [
 				{
 					michelsonStorageView: {
-						returnType: { prim: 'address', args: [], annots: [ '%ret' ] },
+						returnType: { prim: 'address', args: [] },
 						code: [
 							{ prim: 'DROP', args: [], annots: [] },
 							{ prim: 'SELF', args: [], annots: [] },
 							{ prim: 'ADDRESS', args: [], annots: [] }
 						],
-						annotations: [
-							{
-								name: '%ret',
-								description: 'The address of the (any) contract, re-obtained in Michelson.'
-							}
-						]
+						annotations: []
 					}
 				}
 			]
