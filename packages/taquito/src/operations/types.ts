@@ -10,6 +10,7 @@ import {
 import { BlockIdentifier } from '../read-provider/interface';
 import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
 import { ValidationResult, invalidDetail, validateAddress } from '@taquito/utils';
+import { InvalidStakingSource } from '../contract/errors';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -584,6 +585,8 @@ export type FinalizeUnstakeParams = Omit<StakingParams, 'parameter' | `amount`>;
 /**
  *
  * @throws {@link InvalidAmountError}
+ * @throws {@link InvalidAddressError}
+ * @throws {@link InvalidStakingSource}
  */
 export const validateStakingParams = (
   params: Omit<PartialBy<StakingParams, 'amount'>, 'parameter'>,
@@ -601,6 +604,9 @@ export const validateStakingParams = (
     const sourceValidation = validateAddress(params.source);
     if (sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+    if (/kt/i.test(params.source)) {
+      throw new InvalidStakingSource(params.source);
     }
   }
 };

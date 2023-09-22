@@ -19,12 +19,15 @@ import {
   InvalidCodeParameter,
   InvalidDelegationSource,
   InvalidInitParameter,
+  InvalidStakingSource,
 } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
 import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operations/types';
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { PvmKind } from '@taquito/rpc';
+import { InvalidAddressError } from '@taquito/utils';
+import { InvalidAmountError } from '@taquito/core';
 
 /**
  * RPCContractProvider test
@@ -1630,6 +1633,235 @@ describe('RpcContractProvider test', () => {
         opbytes: 'test',
       });
 
+      done();
+    });
+  });
+
+  describe('stake', () => {
+    it('should produce a reveal and stake operation', async (done) => {
+      const estimate = new Estimate(1240000, 94, 145, 249);
+      mockEstimate.stake.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.stake({
+        amount: 100,
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
+            {
+              amount: '100000000',
+              counter: '2',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '479',
+              gas_limit: '1340',
+              kind: 'transaction',
+              parameters: {
+                entrypoint: 'stake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              storage_limit: '94',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should throw InvalidAmountError when passed a negative amount', async (done) => {
+      const estimate = new Estimate(1240000, 94, 145, 249);
+      mockEstimate.stake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.stake({
+          amount: -100,
+        });
+      }).rejects.toThrowError(InvalidAmountError);
+      done();
+    });
+
+    it('should throw InvalidAmountError when passed zero for amount', async (done) => {
+      const estimate = new Estimate(1240000, 94, 145, 249);
+      mockEstimate.stake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.stake({
+          amount: 0,
+        });
+      }).rejects.toThrowError(InvalidAmountError);
+      done();
+    });
+
+    it('should throw InvalidAddressError when passed a malformed address as source', async (done) => {
+      const estimate = new Estimate(1240000, 94, 145, 249);
+      mockEstimate.stake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.stake({
+          source: 'someInvalidAddress',
+          amount: 100,
+        });
+      }).rejects.toThrowError(InvalidAddressError);
+      done();
+    });
+
+    it('should throw InvalidStakingSource when passed a contract address as source', async (done) => {
+      const estimate = new Estimate(1240000, 94, 145, 249);
+      mockEstimate.stake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.stake({
+          source: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+          amount: 100,
+        });
+      }).rejects.toThrowError(InvalidStakingSource);
+      done();
+    });
+  });
+
+  describe('unstake', () => {
+    it('should produce a reveal and unstake operation', async (done) => {
+      const estimate = new Estimate(1240001, 95, 146, 248);
+      mockEstimate.unstake.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.unstake({
+        amount: 100,
+      });
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
+            {
+              amount: '0',
+              counter: '2',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '481',
+              gas_limit: '1341',
+              kind: 'transaction',
+              parameters: {
+                entrypoint: 'unstake',
+                value: {
+                  int: '100000000',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              storage_limit: '95',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should throw InvalidAmountError when passed a negative amount', async (done) => {
+      const estimate = new Estimate(1240001, 95, 146, 248);
+      mockEstimate.unstake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.unstake({
+          amount: -100,
+        });
+      }).rejects.toThrowError(InvalidAmountError);
+      done();
+    });
+
+    it('should throw InvalidAmountError when passed zero for amount', async (done) => {
+      const estimate = new Estimate(1240001, 95, 146, 248);
+      mockEstimate.unstake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.unstake({
+          amount: 0,
+        });
+      }).rejects.toThrowError(InvalidAmountError);
+      done();
+    });
+
+    it('should throw InvalidAddressError when passed a malformed address as source', async (done) => {
+      const estimate = new Estimate(1240001, 95, 146, 248);
+      mockEstimate.unstake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.unstake({
+          source: 'someInvalidAddress',
+          amount: 100,
+        });
+      }).rejects.toThrowError(InvalidAddressError);
+      done();
+    });
+
+    it('should throw InvalidStakingSource when passed a contract address as source', async (done) => {
+      const estimate = new Estimate(1240001, 95, 146, 248);
+      mockEstimate.unstake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.unstake({
+          source: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+          amount: 100,
+        });
+      }).rejects.toThrowError(InvalidStakingSource);
+      done();
+    });
+  });
+
+  describe('finalizeUnstake', () => {
+    it('should produce a reveal and finalizeUnstake operation', async (done) => {
+      const estimate = new Estimate(1240002, 96, 147, 247);
+      mockEstimate.finalizeUnstake.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.finalizeUnstake({});
+      expect(result.raw).toEqual({
+        counter: 0,
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
+            {
+              amount: '0',
+              counter: '2',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '482',
+              gas_limit: '1341',
+              kind: 'transaction',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              storage_limit: '96',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        opbytes: 'test',
+      });
+      done();
+    });
+
+    it('should throw InvalidAddressError when passed a malformed address as source', async (done) => {
+      const estimate = new Estimate(1240002, 96, 147, 247);
+      mockEstimate.finalizeUnstake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.finalizeUnstake({
+          source: 'someInvalidAddress',
+        });
+      }).rejects.toThrowError(InvalidAddressError);
+      done();
+    });
+
+    it('should throw InvalidStakingSource when passed a contract address as source', async (done) => {
+      const estimate = new Estimate(1240002, 96, 147, 247);
+      mockEstimate.finalizeUnstake.mockResolvedValue(estimate);
+      expect(async () => {
+        await rpcContractProvider.finalizeUnstake({
+          source: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+        });
+      }).rejects.toThrowError(InvalidStakingSource);
       done();
     });
   });
