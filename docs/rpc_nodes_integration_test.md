@@ -5,10 +5,10 @@ author: Roxane Letourneau
 
 ## Steps to run the tests
 
-1. The RPC nodes' integration tests are disabled by default.  
+1. The RPC nodes' integration tests are disabled by default.
 Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
 
- **nairobinet**: `npm run test:nairobinet rpc-nodes.spec.ts`
+ **oxfordnet**: `npm run test:oxfordnet rpc-nodes.spec.ts`
 
 **When all endpoints are accessible for a node, you will obtain:**
 
@@ -45,7 +45,7 @@ Test calling all methods from RPC node: https://a-node
     ✓ Run an operation without signature checks (948 ms)
 ```
 
-**Otherwise, you will see which endpoints do not work for a specific node:**  
+**Otherwise, you will see which endpoints do not work for a specific node:**
 
 ```
 Test calling all methods from RPC node: https://another-node

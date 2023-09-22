@@ -870,7 +870,7 @@ export class RpcClientCache implements RpcClientInterface {
    *
    * @description Simulate an operation
    *
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/nairobi-openapi.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/oxford-openapi.json
    */
   async simulateOperation(
     op: RPCSimulateOperationParam,

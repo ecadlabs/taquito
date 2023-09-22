@@ -1,13 +1,13 @@
 ---
 title: Smart Rollups
-author: Davis Sawali 
+author: Davis Sawali
 ---
 
 # Smart Optimistic Rollups
 
 Rollups are a permissionless scaling implementation for the Tezos blockchain. The idea is that anyone can originate and operate one or more rollups, increasing the overall throughput of the Tezos blockchain.
 
-In Taquito, we have implemented some of the operations included in Mumbai protocol update in regards to smart rollups. In this document, we will go through the operations we support. We also won't go too detailed on how rollups work behind the scenes, if you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html).
+In Taquito, we have implemented some of the operations included in Mumbai protocol update in regards to smart rollups. In this document, we will go through the operations we support. We also won't go too detailed on how rollups work behind the scenes, if you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/oxford/smart_rollups.html).
 
 ## `smart_rollup_originate`
 
@@ -27,11 +27,11 @@ await op.confirmation();
 
 ##### please note
 - `pvmKind` at this time the only PVM supported is `wasm_2_0_0`
-- `kernel` is passed as a hexadecimal string examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/mumbai/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
-- `parametersType` is a MichelsonV1Expression to define the type. 
+- `kernel` is passed as a hexadecimal string examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/oxford/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
+- `parametersType` is a MichelsonV1Expression to define the type.
 -  **Please note** `originationProof` is needed origination in `batch` which can be obtained with the `rpc.getOriginationProof({kernel, kind: PVMKind})`
 
-For more information in regards to Smart Rollup Origination please refer to the this [link](https://tezos.gitlab.io/mumbai/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
+For more information in regards to Smart Rollup Origination please refer to the this [link](https://tezos.gitlab.io/oxford/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
 
 
 ## `smart_rollup_add_messages`
@@ -43,15 +43,15 @@ The main use case of sending messages, is usually to denote contract calls. Thes
 MESSAGE='[{\
   "destination" : "${CONTRACT}", \
   "parameters" : "\"Hello world\"", \
-  "entrypoint" : "default" 
+  "entrypoint" : "default"
   }]'
-``` 
+```
 
 If you read closely, the message includes a `destination`, a `parameter`, and an `entrypoint` property. All components needed to **call an entrypoint** of a contract.
 
 These messages can then be claimed back into L1 as a legitimate contract call using the `smart_rollup_execute_outbox_message` operation which we will go over in another section of this doc.
 
-for more information, refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html#sending-an-external-inbox-message)
+for more information, refer to [this document](https://tezos.gitlab.io/oxford/smart_rollups.html#sending-an-external-inbox-message)
 
 ### Example
 ```typescript
@@ -64,4 +64,4 @@ const op = await Tezos.contract.smartRollupAddMessages({
 await op.confirmation();
 ```
 
-- `message` property receives an array of encoded outbox messages. For more information on how to encode or what message gets encoded, refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html#sending-an-external-inbox-message)
+- `message` property receives an array of encoded outbox messages. For more information on how to encode or what message gets encoded, refer to [this document](https://tezos.gitlab.io/oxford/smart_rollups.html#sending-an-external-inbox-message)
