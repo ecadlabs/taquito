@@ -19,7 +19,6 @@ import { InvalidKeyError } from '@taquito/core';
 export class Tz1 {
   private _key: Uint8Array;
   private _publicKey: Uint8Array;
-  private isInit: Promise<boolean>;
 
   /**
    *
@@ -45,16 +44,11 @@ export class Tz1 {
       throw new InvalidKeyError('unable to decode');
     }
 
-    this.isInit = this.init();
-  }
-
-  private async init() {
     if (this._key.length !== 64) {
       const { publicKey, secretKey } = generateKeyPairFromSeed(new Uint8Array(this._key));
       this._publicKey = publicKey;
       this._key = secretKey;
     }
-    return true;
   }
 
   /**
@@ -62,8 +56,7 @@ export class Tz1 {
    * @param bytes Bytes to sign
    * @param bytesHash Blake2b hash of the bytes to sign
    */
-  async sign(bytes: string, bytesHash: Uint8Array) {
-    await this.isInit;
+  sign(bytes: string, bytesHash: Uint8Array) {
     const signature = sign(new Uint8Array(this._key), new Uint8Array(bytesHash));
     const signatureBuffer = toBuffer(signature);
     const sbytes = bytes + buf2hex(signatureBuffer);
@@ -79,24 +72,21 @@ export class Tz1 {
   /**
    * @returns Encoded public key
    */
-  async publicKey(): Promise<string> {
-    await this.isInit;
+  publicKey(): string {
     return b58cencode(this._publicKey, prefix['edpk']);
   }
 
   /**
    * @returns Encoded public key hash
    */
-  async publicKeyHash(): Promise<string> {
-    await this.isInit;
+  publicKeyHash(): string {
     return b58cencode(hash(new Uint8Array(this._publicKey), 20), prefix.tz1);
   }
 
   /**
    * @returns Encoded private key
    */
-  async secretKey(): Promise<string> {
-    await this.isInit;
+  secretKey(): string {
     let key = this._key;
     const { secretKey } = generateKeyPairFromSeed(new Uint8Array(key).slice(0, 32));
     key = toBuffer(secretKey);

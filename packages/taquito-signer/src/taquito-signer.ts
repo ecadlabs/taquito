@@ -53,7 +53,7 @@ export class InMemorySigner {
     return new InMemorySigner(key);
   }
 
-  static async fromSecretKey(key: string, passphrase?: string) {
+  static fromSecretKey(key: string, passphrase?: string) {
     return new InMemorySigner(key, passphrase);
   }
 
@@ -143,7 +143,7 @@ export class InMemorySigner {
    * @param bytes Bytes to sign
    * @param watermark Watermark to append to the bytes
    */
-  async sign(bytes: string, watermark?: Uint8Array) {
+  sign(bytes: string, watermark?: Uint8Array) {
     let bb = hex2buf(bytes);
     if (typeof watermark !== 'undefined') {
       bb = mergebuf(watermark, bb);
@@ -157,21 +157,21 @@ export class InMemorySigner {
   /**
    * @returns Encoded public key
    */
-  async publicKey(): Promise<string> {
+  publicKey(): string {
     return this._key.publicKey();
   }
 
   /**
    * @returns Encoded public key hash
    */
-  async publicKeyHash(): Promise<string> {
+  publicKeyHash(): string {
     return this._key.publicKeyHash();
   }
 
   /**
    * @returns Encoded private key
    */
-  async secretKey(): Promise<string> {
+  secretKey(): string {
     return this._key.secretKey();
   }
 }
