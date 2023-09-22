@@ -26,7 +26,7 @@ export type ParamsWithKind =
   | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
   | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
   | withKind<FailingNoopParams, OpKind.FAILING_NOOP>
-  | withKind<SmartRollupOriginateParamsWithProof, OpKind.SMART_ROLLUP_ORIGINATE>;
+  | withKind<SmartRollupOriginateParams, OpKind.SMART_ROLLUP_ORIGINATE>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
 
@@ -536,10 +536,6 @@ export interface SmartRollupOriginateParams {
   parametersType: MichelsonV1Expression;
 }
 
-export interface SmartRollupOriginateParamsWithProof extends SmartRollupOriginateParams {
-  originationProof: string;
-}
-
 export interface RPCSmartRollupOriginateOperation {
   kind: OpKind.SMART_ROLLUP_ORIGINATE;
   source: string;
@@ -548,7 +544,6 @@ export interface RPCSmartRollupOriginateOperation {
   storage_limit: number;
   pvm_kind: PvmKind;
   kernel: string;
-  origination_proof: string;
   parameters_ty: MichelsonV1Expression;
 }
 

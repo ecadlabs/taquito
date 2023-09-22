@@ -49,7 +49,6 @@ describe('RpcContractProvider test', () => {
     getSaplingDiffById: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
     getCurrentPeriod: jest.Mock<any, any>;
-    getOriginationProof: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
   };
 
@@ -110,7 +109,6 @@ describe('RpcContractProvider test', () => {
       getSaplingDiffById: jest.fn(),
       getProtocols: jest.fn(),
       getCurrentPeriod: jest.fn(),
-      getOriginationProof: jest.fn(),
       getConstants: jest.fn(),
     };
 
@@ -1498,9 +1496,7 @@ describe('RpcContractProvider test', () => {
     it('Should have correct returned values with origination being estimated', async (done) => {
       const estimate = new Estimate(1230000, 10000, 100, 100);
       mockEstimate.smartRollupOriginate.mockResolvedValue(estimate);
-      mockRpcClient.getOriginationProof.mockResolvedValue(
-        '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
-      );
+
       const smartRollupOriginate = await rpcContractProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,
         kernel:
@@ -1523,8 +1519,6 @@ describe('RpcContractProvider test', () => {
               parameters_ty: {
                 prim: 'bytes',
               },
-              origination_proof:
-                '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9',
               counter: '2',
               fee: '433',
               gas_limit: '1330',
@@ -1545,9 +1539,7 @@ describe('RpcContractProvider test', () => {
     it('Should have correct returned values with origination with reveal with specified values for estimate', async (done) => {
       const estimate = new Estimate(1230000, 10000, 100, 100);
       mockEstimate.smartRollupOriginate.mockResolvedValue(estimate);
-      mockRpcClient.getOriginationProof.mockResolvedValue(
-        '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
-      );
+
       const smartRollupOriginate = await rpcContractProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,
         kernel:
@@ -1573,8 +1565,6 @@ describe('RpcContractProvider test', () => {
               parameters_ty: {
                 prim: 'bytes',
               },
-              origination_proof:
-                '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9',
               counter: '2',
               fee: '9999',
               gas_limit: '12345',
@@ -1599,9 +1589,6 @@ describe('RpcContractProvider test', () => {
       mockEstimate.smartRollupOriginate.mockResolvedValue(estimate);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-      mockRpcClient.getOriginationProof.mockResolvedValue(
-        '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
-      );
       const smartRollupOriginate = await rpcContractProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,
         kernel:
@@ -1623,8 +1610,6 @@ describe('RpcContractProvider test', () => {
               parameters_ty: {
                 prim: 'bytes',
               },
-              origination_proof:
-                '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea180467070f4682a44b982768d522ec6380982f446488c0176ed7c13aa1d6c12a03a810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9',
               counter: '1',
               fee: '433',
               gas_limit: '1330',
