@@ -19,27 +19,27 @@ interface INodeExtender {
 
 type OtherEltsInner =
   | {
-    value: any;
-  }
+      value: any;
+    }
   | {
-    inode_extender: INodeExtender;
-  };
+      inode_extender: INodeExtender;
+    };
 
 export type OtherElts =
   | {
-    node: [string, { value: string } | { node: string }][];
-  }
+      node: [string, { value: string } | { node: string }][];
+    }
   | {
-    other_elts: OtherEltsInner;
-  };
+      other_elts: OtherEltsInner;
+    };
 
 type State =
   | {
-    inode: Inode;
-  }
+      inode: Inode;
+    }
   | {
-    other_elts: OtherElts;
-  };
+      other_elts: OtherElts;
+    };
 
 export interface Inode {
   length: string;
@@ -48,11 +48,11 @@ export interface Inode {
 
 type TxRollupProofContextHash =
   | {
-    value: string;
-  }
+      value: string;
+    }
   | {
-    node: string;
-  };
+      node: string;
+    };
 
 export interface TxRollupProof {
   version: number;
@@ -1548,13 +1548,13 @@ export interface ScriptedContracts {
 
 export type BondId =
   | {
-    smart_rollup?: never;
-    tx_rollup: string;
-  }
+      smart_rollup?: never;
+      tx_rollup: string;
+    }
   | {
-    smart_rollup: string;
-    tx_rollup?: never;
-  };
+      smart_rollup: string;
+      tx_rollup?: never;
+    };
 
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
@@ -1915,11 +1915,11 @@ export interface SuccessfulManagerOperationResult {
 
 export type MetadataBalanceUpdatesKindEnum =
   | 'contract'
-  | 'freezer'
   | 'accumulator'
+  | 'freezer'
+  | 'minted'
   | 'burned'
-  | 'commitment'
-  | 'minted';
+  | 'commitment';
 
 export enum METADATA_BALANCE_UPDATES_CATEGORY {
   BLOCK_FEES = 'block fees',
@@ -1956,15 +1956,16 @@ export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration' | 'subsidy'
 
 export interface OperationMetadataBalanceUpdates {
   kind: MetadataBalanceUpdatesKindEnum;
-  category?: MetadataBalanceUpdatesCategoryEnum;
   contract?: string;
+  change: string;
+  origin: MetadataBalanceUpdatesOriginEnum;
+  category?: MetadataBalanceUpdatesCategoryEnum;
+  staker?: { contract?: string, delegate: string };
   delegate?: string;
   participation?: boolean;
   revelation?: boolean;
   committer?: string;
   cycle?: number;
-  change: string;
-  origin?: MetadataBalanceUpdatesOriginEnum;
 }
 
 export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'backtracked';
@@ -2321,10 +2322,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto009 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto008 { }
+export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto008 extends ConstantsResponseProto007 { }
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
 export interface ConstantsResponseProto007
   extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
