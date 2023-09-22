@@ -47,7 +47,6 @@ import {
   PendingOperationsV1,
   PendingOperationsV2,
   PendingOperationsQueryArguments,
-  OriginationProofParams,
   RPCSimulateOperationParam,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
@@ -321,11 +320,5 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     args: PendingOperationsQueryArguments
   ): Promise<PendingOperationsV1 | PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
-  }
-  async getOriginationProof(
-    params: OriginationProofParams,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<string> {
-    return this.rpc.getOriginationProof(params, { block });
   }
 }

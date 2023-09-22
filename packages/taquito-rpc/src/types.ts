@@ -19,27 +19,27 @@ interface INodeExtender {
 
 type OtherEltsInner =
   | {
-      value: any;
-    }
+    value: any;
+  }
   | {
-      inode_extender: INodeExtender;
-    };
+    inode_extender: INodeExtender;
+  };
 
 export type OtherElts =
   | {
-      node: [string, { value: string } | { node: string }][];
-    }
+    node: [string, { value: string } | { node: string }][];
+  }
   | {
-      other_elts: OtherEltsInner;
-    };
+    other_elts: OtherEltsInner;
+  };
 
 type State =
   | {
-      inode: Inode;
-    }
+    inode: Inode;
+  }
   | {
-      other_elts: OtherElts;
-    };
+    other_elts: OtherElts;
+  };
 
 export interface Inode {
   length: string;
@@ -48,11 +48,11 @@ export interface Inode {
 
 type TxRollupProofContextHash =
   | {
-      value: string;
-    }
+    value: string;
+  }
   | {
-      node: string;
-    };
+    node: string;
+  };
 
 export interface TxRollupProof {
   version: number;
@@ -482,7 +482,6 @@ export interface OperationContentsSmartRollupOriginate {
   storage_limit: string;
   pvm_kind: PvmKind;
   kernel: string;
-  origination_proof: string;
   parameters_ty: MichelsonV1Expression;
 }
 
@@ -527,7 +526,6 @@ export interface OperationContentsSmartRollupCement {
   gas_limit: string;
   storage_limit: string;
   rollup: string;
-  commitment: string;
 }
 
 export interface OperationContentsSmartRollupRefute {
@@ -1070,7 +1068,6 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   storage_limit: string;
   pvm_kind: PvmKind;
   kernel: string;
-  origination_proof: string;
   parameters_ty: MichelsonV1Expression;
   metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
 }
@@ -1119,7 +1116,6 @@ export interface OperationContentsAndResultSmartRollupCement {
   gas_limit: string;
   storage_limit: string;
   rollup: string;
-  commitment: string;
   metadata: OperationContentsAndResultMetadataSmartRollupCement;
 }
 
@@ -1423,13 +1419,13 @@ export interface ScriptedContracts {
 
 export type BondId =
   | {
-      smart_rollup?: never;
-      tx_rollup: string;
-    }
+    smart_rollup?: never;
+    tx_rollup: string;
+  }
   | {
-      smart_rollup: string;
-      tx_rollup?: never;
-    };
+    smart_rollup: string;
+    tx_rollup?: never;
+  };
 
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
@@ -2193,10 +2189,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto009 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
+export interface ConstantsResponseProto009 extends ConstantsResponseProto008 { }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 { }
 
 export interface ConstantsResponseProto007
   extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
@@ -2441,11 +2437,6 @@ export interface PendingOperationsV2 {
 export enum PvmKind {
   WASM2 = 'wasm_2_0_0',
   ARITH = 'arith',
-}
-
-export interface OriginationProofParams {
-  kind: PvmKind;
-  kernel: string;
 }
 
 export interface SmartRollupPublishCommitment {
