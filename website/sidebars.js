@@ -57,6 +57,7 @@ const sidebars = {
         'signing',
         'smart_rollups',
         'smartcontracts',
+        'staking',
         'subscribe_event',
         'tezos_domains',
         'tickets',
