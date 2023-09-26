@@ -149,7 +149,7 @@ const nairobinetSecretKey: Config =
 const oxfordnetEphemeral: Config =
   defaultConfig({
     networkName: 'OXFORDNET',
-    protocol: Protocols.Proxford,
+    protocol: Protocols.ProxfordS,
     defaultRpc: 'http://ecad-oxfordnet-full.i.tez.ie:8732',
     knownContracts: knownContractsProxfordS,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/oxfordnet')

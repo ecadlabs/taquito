@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const oxfordnetAndAlpha = protocol === Protocols.Proxford || protocol === Protocols.ProtoALpha ? test : test.skip;
+    const oxfordnetAndAlpha = protocol === Protocols.ProxfordS || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
