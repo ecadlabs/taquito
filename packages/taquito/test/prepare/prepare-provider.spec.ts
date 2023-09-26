@@ -1114,4 +1114,237 @@ describe('PrepareProvider test', () => {
       done();
     });
   });
+
+  describe('stake', () => {
+    it('should return a prepared stake operation with reveal operation', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+
+      const prepared = await prepareProvider.stake({
+        amount: 10000,
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '1100',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              amount: '10000000000',
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+              parameters: {
+                entrypoint: 'stake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should return a prepared stake op without reveal operation when account is revealed', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const prepared = await prepareProvider.stake({
+        amount: 10000,
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              amount: '10000000000',
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '1',
+              parameters: {
+                entrypoint: 'stake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+  });
+
+  describe('unstake', () => {
+    it('should return a prepared unstake operation with reveal operation', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+
+      const prepared = await prepareProvider.unstake({
+        amount: 10000,
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '1100',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              amount: '0',
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+              parameters: {
+                entrypoint: 'unstake',
+                value: {
+                  int: '10000000000',
+                },
+              },
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should return a prepared unstake op without reveal operation when account is revealed', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const prepared = await prepareProvider.unstake({
+        amount: 10000,
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              amount: '0',
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '1',
+              parameters: {
+                entrypoint: 'unstake',
+                value: {
+                  int: '10000000000',
+                },
+              },
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+  });
+
+  describe('finalizeUnstake', () => {
+    it('should return a prepared finalize_unstake operation with reveal operation', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+
+      const prepared = await prepareProvider.finalizeUnstake({});
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '374',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '1100',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              amount: '0',
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should return a prepared finalize_unstake op without reveal operation when account is revealed', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const prepared = await prepareProvider.finalizeUnstake({});
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              amount: '0',
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '1',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+  });
 });

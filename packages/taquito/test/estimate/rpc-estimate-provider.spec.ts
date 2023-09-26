@@ -1588,4 +1588,101 @@ describe('RPCEstimateProvider test wallet', () => {
       done();
     });
   });
+
+  describe('stake', () => {
+    it('return the correct estimate for stake', async (done) => {
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            fee: 10017,
+            metadata: {
+              operation_result: { status: 'applied', consumed_milligas: '10013000' },
+            },
+            parameters: {
+              entrypoint: 'stake',
+              value: {
+                prim: 'Unit',
+              },
+            },
+          },
+        ],
+      });
+      // Simulate real op size
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      const estimate = await estimateProvider.stake({
+        amount: 10000,
+      });
+      expect(estimate).toMatchObject({
+        gasLimit: 10113,
+        storageLimit: 0,
+        suggestedFeeMutez: 1361,
+      });
+      done();
+    });
+  });
+
+  describe('unstake', () => {
+    it('return the correct estimate for unstake', async (done) => {
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            fee: 10018,
+            metadata: {
+              operation_result: { status: 'applied', consumed_milligas: '10014000' },
+            },
+            parameters: {
+              entrypoint: 'unstake',
+              value: {
+                prim: 'Unit',
+              },
+            },
+          },
+        ],
+      });
+      // Simulate real op size
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      const estimate = await estimateProvider.unstake({
+        amount: 10000,
+      });
+      expect(estimate).toMatchObject({
+        gasLimit: 10114,
+        storageLimit: 0,
+        suggestedFeeMutez: 1361,
+      });
+      done();
+    });
+  });
+
+  describe('finalizeUnstake', () => {
+    it('return the correct estimate for finalizeUnstake', async (done) => {
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            fee: 10018,
+            metadata: {
+              operation_result: { status: 'applied', consumed_milligas: '10014000' },
+            },
+            parameters: {
+              entrypoint: 'finalize_unstake',
+              value: {
+                prim: 'Unit',
+              },
+            },
+          },
+        ],
+      });
+      // Simulate real op size
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      const estimate = await estimateProvider.finalizeUnstake({});
+      expect(estimate).toMatchObject({
+        gasLimit: 10114,
+        storageLimit: 0,
+        suggestedFeeMutez: 1361,
+      });
+      done();
+    });
+  });
 });
