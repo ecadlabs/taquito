@@ -115,11 +115,11 @@ describe('RpcReadAdapter test', () => {
       const result = await readProvider.getProtocolConstants(block);
       expect(result).toEqual({
         hard_gas_limit_per_operation: new BigNumber('1040000'),
-        hard_gas_limit_per_block: new BigNumber('5200000'),
+        hard_gas_limit_per_block: new BigNumber('2600000'),
         cost_per_byte: new BigNumber('250'),
         hard_storage_limit_per_operation: new BigNumber('60000'),
-        minimal_block_delay: new BigNumber('30'),
-        time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
+        minimal_block_delay: new BigNumber('8'),
+        smart_rollup_origination_size: 6314,
       });
 
       expect(mockRpcClient.getConstants.mock.calls[0][0]).toEqual({ block: `${block}` });

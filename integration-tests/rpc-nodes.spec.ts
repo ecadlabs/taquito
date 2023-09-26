@@ -53,61 +53,61 @@ CONFIGS().forEach(
       const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
       describe(`Test calling all methods from RPC node: ${rpc}`, () => {
-        it('Verify rpcClient.getBlockHash returns the head block hash', async (done) => {
+        it('Verify that rpcClient.getBlockHash returns the head block hash', async (done) => {
           const blockHash = await rpcClient.getBlockHash();
           expect(blockHash).toBeDefined();
           done();
         });
 
-        it('Verify rpcClient.getLiveBlocks returns the ancestors of the head block', async (done) => {
+        it('Verify that rpcClient.getLiveBlocks returns the ancestors of the head block', async (done) => {
           const liveBlocks = await rpcClient.getLiveBlocks();
           expect(liveBlocks).toBeDefined();
           done();
         });
 
-        it(`Verify rpcClient.getBalance for known baker returns the balance of the address`, async (done) => {
+        it(`Verify that rpcClient.getBalance returns the spendable balance of knownBaker, excluding frozen bonds`, async (done) => {
           const balance = await rpcClient.getBalance(knownBaker);
           expect(balance).toBeDefined();
           done();
         });
 
-        it(`Verify that rpcClient.getStorage for know contract returns the data of a contract`, async (done) => {
+        it(`Verify that rpcClient.getStorage returns the storage data of knowContract`, async (done) => {
           const storage = await rpcClient.getStorage(knownContract);
           expect(storage).toBeDefined();
           done();
         });
 
-        it(`Verify that rpcClient.getScript for know contract returns the code and data of a contract`, async (done) => {
+        it(`Verify that rpcClient.getScript returns the script data of knownContract`, async (done) => {
           const script = await rpcClient.getScript(knownContract);
           expect(script).toBeDefined();
           done();
         });
 
-        it(`Verify that rpcClient.getNormalizedScript for known contract returns the script of the contract and normalize it using the requested unparsing mode`, async (done) => {
+        it(`Verify that rpcClient.getNormalizedScript returns the script of the knownContract and normalize it using the requested unparsing mode`, async (done) => {
           const script = await rpcClient.getNormalizedScript(knownContract);
           expect(script).toBeDefined();
           done();
         });
 
-        it(`Verify that rpcClient.getContract returns the complete status of a contract`, async (done) => {
+        it(`Verify that rpcClient.getContract returns the complete status of knownContract`, async (done) => {
           const contract = await rpcClient.getContract(knownContract);
           expect(contract).toBeDefined();
           done();
         });
 
-        it(`Verify that rpcClient.getManagerKey for known baker returns the manager key of the contract`, async (done) => {
+        it(`Verify that rpcClient.getManagerKey returns the manager key of the knownBaker`, async (done) => {
           const managerKey = await rpcClient.getManagerKey(knownBaker);
           expect(managerKey).toBeDefined();
           done();
         });
 
-        it(`Verify that rpcClient.getDelegate for known baker returns the delegate of the contract`, async (done) => {
+        it(`Verify that rpcClient.getDelegate returns the delegate of the knownBaker`, async (done) => {
           const delegate = await rpcClient.getDelegate(knownBaker);
           expect(delegate).toBeDefined();
           done();
         });
 
-        it(`Verify that rpcClient.getBigMapExpr for encoded expression returns the value associated with a key in a big map`, async (done) => {
+        it(`Verify that rpcClient.getBigMapExpr(deprecated) returns the value associated with encoded expression in a big map`, async (done) => {
           const schema = new Schema({
             prim: 'big_map',
             args: [
@@ -137,13 +137,13 @@ CONFIGS().forEach(
           done();
         });
 
-        it(`Verify that rpcClient.getDelegates for known baker returns information about a delegate from RPC`, async (done) => {
+        it(`Verify that rpcClient.getDelegates returns everything about a delegate`, async (done) => {
           const delegates = await rpcClient.getDelegates(knownBaker);
           expect(delegates).toBeDefined();
           done();
         });
 
-        it(`Fetches voting information about a delegate from RPC`, async (done) => {
+        it(`verify that rpcClient.getVotingInfo returns the knownBaker voting power found in the listings of the current voting period`, async (done) => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
           done();
@@ -161,7 +161,7 @@ CONFIGS().forEach(
           done();
         });
 
-        it('Verify that rpcClient.getBlockHeader returns whole block header', async (done) => {
+        it('Verify that rpcClient.getBlockHeader returns the whole block header', async (done) => {
           const blockHeader = await rpcClient.getBlockHeader();
           expect(blockHeader).toBeDefined();
           done();
@@ -183,7 +183,20 @@ CONFIGS().forEach(
           done();
         });
 
-        unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async (done) => {
+        unrestrictedRPCNode('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async (done) => {
+          const attestRights = await rpcClient.getAttestationRights();
+          expect(attestRights).toBeDefined();
+          expect(attestRights[0].delegates).toBeDefined();
+          expect(attestRights[0].delegates![0].delegate).toBeDefined();
+          expect(typeof attestRights[0].delegates![0].delegate).toEqual('string');
+          expect(attestRights[0].delegates![0].attestation_power).toBeDefined();
+          expect(typeof attestRights[0].delegates![0].attestation_power).toEqual('number');
+          expect(attestRights[0].delegates![0].first_slot).toBeDefined();
+          expect(typeof attestRights[0].delegates![0].first_slot).toEqual('number');
+          done();
+        });
+
+        unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights(deprecated) retrieves the list of delegates allowed to endorse a block', async (done) => {
           const endorsingRights = await rpcClient.getEndorsingRights();
           expect(endorsingRights).toBeDefined();
           expect(endorsingRights[0].delegates).toBeDefined();
