@@ -1,34 +1,30 @@
 import { InMemorySigner } from "@taquito/signer";
-import { CONFIGS, defaultSecretKey, isSandbox } from "./config";
-import { OpKind, Protocols, TezosToolkit } from "@taquito/taquito";
+import { CONFIGS, defaultSecretKey } from "./config";
+import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ rpc, setup, protocol}) => {
-
+CONFIGS().forEach(({ setup }) => {
+  let rpc = 'https://mainnet-archive.ecadinfra.com/'
   const Tezos = new TezosToolkit(rpc);
   Tezos.setSignerProvider(new InMemorySigner(defaultSecretKey.secret_key));
-  const nairobinet = !isSandbox({ rpc }) && protocol === Protocols.PtNairobi ? it : it.skip;
 
-  describe(`Test failing_noop through contract api, based on head, and secret_key using: ${rpc}`, () => {  
+  describe(`Test failing_noop through contract api, based on head, and secret_key using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();
     });
 
-    nairobinet('Verify that the contract.failingNoop result is as expected when the block and secret key are kept constant', async (done) => {
+    it('Verify that the contract.failingNoop result is as expected when the block and secret key are kept constant', async (done) => {
       const signed = await Tezos.contract.failingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
       });
-      // This test is skipped from flextesa because the genesis block hash is not guaranteed to stay the same
-      // The signature will change if the hash of the genesis block changes (maybe when switching to a testnet based on a new protocol).
-      // Also it depends on the signing key.
-      // So if any of them changes, the expected values need to be adjusted
+
       expect(signed).toEqual({
-        bytes: 'df2788eed43ab680c8a2b79969ce4de93b9768cd2786a85ebdfba90ca7612638110000000b48656c6c6f20576f726c64',
-        signature: 'spsig1QVVCiQ6aN2zmut2wKTg4zWLoP9ia4qUY2hBo21odA7P25gqfieFWJMyntaJWmyrd6v3mgjKF5n4d2wcaB3LxkLmd1MoJQ',
+        bytes: '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed8424c7ccd00b110000000b48656c6c6f20576f726c64',
+        signature: 'spsig1Q6oLPX3mTUpUJJAFKhFdvrc8HwNBABjFpKWLfs91uDtSsLLWgbSLZpZFA7BsTPabYxghXQkKx1ogDTRcRQoKYaFX6aGLt',
         signedContent: {
-          branch: 'BMQZWtQjSpyJZBVHbABEmVP9VG8yEZPZ3wNftwZdXt6A33ZYatj',
+          branch: 'BLockGenesisGenesisGenesisGenesisGenesisf79b5d1CoW2',
           contents: [{
             kind: OpKind.FAILING_NOOP,
             arbitrary: '48656C6C6F20576F726C64'
@@ -39,7 +35,7 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
     });
   });
 
-  describe(`Test failing_noop through contract api using: ${rpc}`, () => {  
+  describe(`Test failing_noop through contract api using: ${rpc}`, () => {
     beforeEach(async (done) => {
       await setup();
       done();

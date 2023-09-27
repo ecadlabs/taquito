@@ -15,7 +15,7 @@ export enum ProtocolsHash {
   PtMumbaii = 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
-  Proxford = 'ProxfordSW2S7fvchT1Zgj2avb5UES194neRyYVXoaDGvF9egt8',
+  ProxfordS = 'ProxfordSW2S7fvchT1Zgj2avb5UES194neRyYVXoaDGvF9egt8',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 

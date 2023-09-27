@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const oxfordnetAndAlpha = protocol === Protocols.Proxford || protocol === Protocols.ProtoALpha ? test : test.skip;
+    const oxfordnetAndAlpha = protocol === Protocols.ProxfordS || protocol === Protocols.ProtoALpha ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -183,7 +183,7 @@ CONFIGS().forEach(
           done();
         });
 
-        unrestrictedRPCNode('Verify that rpcClient.getAttestationRights(deprecated) retrieves the list of delegates allowed to attest a block', async (done) => {
+        unrestrictedRPCNode('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async (done) => {
           const attestRights = await rpcClient.getAttestationRights();
           expect(attestRights).toBeDefined();
           expect(attestRights[0].delegates).toBeDefined();

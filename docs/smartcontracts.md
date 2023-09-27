@@ -58,7 +58,7 @@ const main = ([action, store] : [parameter, storage]) : return_ => {
 
 You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 
-### Counter Contract Michelson source code
+### Counter Contract Michelson code
 
 ```
 { parameter (or (or (int %decrement) (int %increment)) (unit %reset)) ;

@@ -149,7 +149,7 @@ const nairobinetSecretKey: Config =
 const oxfordnetEphemeral: Config =
   defaultConfig({
     networkName: 'OXFORDNET',
-    protocol: Protocols.Proxford,
+    protocol: Protocols.ProxfordS,
     defaultRpc: 'http://ecad-oxfordnet-full.i.tez.ie:8732',
     knownContracts: knownContractsProxfordS,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/oxfordnet')
@@ -185,7 +185,7 @@ const mondaynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(nairobinetSecretKey);
+  providers.push(oxfordnetSecretKey);
 } else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_OXFORDNET_WITH_SECRET_KEY']) {
@@ -203,7 +203,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['MONDAYNET']) {
   providers.push(mondaynetEphemeral);
 } else {
-  providers.push(nairobinetEphemeral);
+  providers.push(oxfordnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
