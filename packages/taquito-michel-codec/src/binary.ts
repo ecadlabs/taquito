@@ -187,7 +187,6 @@ const primitives: PrimID[] = [
   'view',
   'constant',
   'SUB_MUTEZ',
-  'tx_rollup_l2_address',
   'MIN_BLOCK_TIME',
   'sapling_transaction',
   'EMIT',

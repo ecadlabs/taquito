@@ -12,8 +12,6 @@ import { MapToken } from './map';
 
 import { BoolToken } from './comparable/bool';
 
-import { TxRollupL2AddressToken } from './comparable/tx_rollup_l2_address';
-
 import { OrToken } from './or';
 
 import { ContractToken } from './contract';
@@ -51,7 +49,6 @@ export const tokens = [
   StringToken,
   BigMapToken,
   AddressToken,
-  TxRollupL2AddressToken,
   MapToken,
   BoolToken,
   OrToken,

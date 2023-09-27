@@ -16,8 +16,6 @@ import {
   registerGlobalConstantNoReveal,
   registerGlobalConstantWithReveal,
   registerGlobalConstantWithError,
-  txRollupOriginateNoReveal,
-  txRollupSubmitBatchNoReveal,
   TransferTicketNoReveal,
   TransferTicketWithReveal,
   updateConsensusKeyNoReveal,
@@ -1420,8 +1418,6 @@ describe('RPCEstimateProvider test wallet', () => {
             },
           },
           registerGlobalConstantNoReveal.contents[0],
-          txRollupOriginateNoReveal.contents[0],
-          txRollupSubmitBatchNoReveal.contents[0],
         ],
       });
       const estimate = await estimateProvider.batch([

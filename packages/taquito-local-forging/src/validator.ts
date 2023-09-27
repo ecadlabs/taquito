@@ -13,8 +13,6 @@ import {
   AttestationSchema,
   EndorsementSchema,
   TransferTicketSchema,
-  TxRollupOriginationSchema,
-  TxRollupSubmitBatchSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
   DrainDelegateSchema,
@@ -38,8 +36,6 @@ type OperationKind =
   | OpKind.PROPOSALS
   | OpKind.REGISTER_GLOBAL_CONSTANT
   | OpKind.TRANSFER_TICKET
-  | OpKind.TX_ROLLUP_ORIGINATION
-  | OpKind.TX_ROLLUP_SUBMIT_BATCH
   | OpKind.INCREASE_PAID_STORAGE
   | OpKind.UPDATE_CONSENSUS_KEY
   | OpKind.DRAIN_DELEGATE
@@ -61,8 +57,6 @@ const OperationKindMapping = {
   proposals: ProposalsSchema,
   register_global_constant: RegisterGlobalConstantSchema,
   transfer_ticket: TransferTicketSchema,
-  tx_rollup_origination: TxRollupOriginationSchema,
-  tx_rollup_submit_batch: TxRollupSubmitBatchSchema,
   increase_paid_storage: IncreasePaidStorageSchema,
   update_consensus_key: UpdateConsensusKeySchema,
   drain_delegate: DrainDelegateSchema,

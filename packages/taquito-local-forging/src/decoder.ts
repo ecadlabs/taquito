@@ -20,9 +20,6 @@ import {
   smartContractAddressDecoder,
   smartRollupAddressDecoder,
   smartRollupCommitmentHashDecoder,
-  txRollupBatchContentDecoder,
-  txRollupIdDecoder,
-  txRollupOriginationParamDecoder,
   tz1Decoder,
   valueParameterDecoder,
   zarithDecoder,
@@ -48,8 +45,6 @@ import {
   SeedNonceRevelationSchema,
   TransactionSchema,
   TransferTicketSchema,
-  TxRollupOriginationSchema,
-  TxRollupSubmitBatchSchema,
   SetDepositsLimitSchema,
   SmartRollupOriginateSchema,
   SmartRollupAddMessagesSchema,
@@ -84,9 +79,6 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.INT16]: int16Decoder,
   [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashDecoder,
   [CODEC.ENTRYPOINT]: entrypointNameDecoder,
-  [CODEC.TX_ROLLUP_ORIGINATION_PARAM]: txRollupOriginationParamDecoder,
-  [CODEC.TX_ROLLUP_ID]: txRollupIdDecoder,
-  [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentDecoder,
   [CODEC.BURN_LIMIT]: burnLimitDecoder,
   [CODEC.DEPOSITS_LIMIT]: depositsLimitDecoder,
   [CODEC.PVM_KIND]: pvmKindDecoder,
@@ -119,10 +111,6 @@ decoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(RegisterGlobalConstantSchema)(val);
 decoders[CODEC.OP_TRANSFER_TICKET] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(TransferTicketSchema)(val);
-decoders[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: Uint8ArrayConsumer) =>
-  schemaDecoder(decoders)(TxRollupOriginationSchema)(val);
-decoders[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: Uint8ArrayConsumer) =>
-  schemaDecoder(decoders)(TxRollupSubmitBatchSchema)(val);
 decoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(IncreasePaidStorageSchema)(val);
 decoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: Uint8ArrayConsumer) =>

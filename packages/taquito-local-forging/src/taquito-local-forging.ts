@@ -58,11 +58,6 @@ export class LocalForger implements Forger {
           continue;
         } else if (content.kind === 'transaction' && diff[0] === 'parameters') {
           continue;
-        } else if (
-          content.kind === ('tx_rollup_submit_batch' as unknown) &&
-          diff[0] === 'burn_limit'
-        ) {
-          continue;
         } else {
           throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);
         }

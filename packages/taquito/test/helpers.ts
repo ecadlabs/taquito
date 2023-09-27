@@ -6,8 +6,6 @@ import {
   OperationContentsAndResultOrigination,
   OperationContentsAndResultDelegation,
   OperationContentsAndResultRegisterGlobalConstant,
-  OperationContentsAndResultTxRollupOrigination,
-  OperationContentsAndResultTxRollupSubmitBatch,
   OperationContentsAndResultTransferTicket,
   OperationContentsAndResultIncreasePaidStorage,
   OperationContentsAndResultUpdateConsensusKey,
@@ -67,27 +65,6 @@ const defaultRegisterGlobalConstantData = {
   gas_limit: '26260',
   storage_limit: '257',
   value: { int: '0' },
-};
-
-const defaultTxRollupOriginateData = {
-  kind: OpKind.TX_ROLLUP_ORIGINATION as OpKind.TX_ROLLUP_ORIGINATION,
-  source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-  fee: '2991',
-  counter: '121619',
-  gas_limit: '26260',
-  storage_limit: '257',
-  tx_rollup_origination: {},
-};
-
-const defaultTxSubmitBatchData = {
-  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH as OpKind.TX_ROLLUP_SUBMIT_BATCH,
-  source: 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-  fee: '2991',
-  counter: '121619',
-  gas_limit: '26260',
-  storage_limit: '257',
-  rollup: 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w',
-  content: '626c6f62',
 };
 
 const defaultTransferTicketData = {
@@ -323,64 +300,6 @@ export class UpdateConsensusKeyOperationBuilder {
   }
 
   build(): OperationContentsAndResultUpdateConsensusKey {
-    return {
-      ...this.data,
-      metadata: {
-        balance_updates: [],
-        operation_result: this.result,
-      },
-    };
-  }
-}
-
-export class TxRollupOriginationOperationBuilder {
-  private result: OperationContentsAndResultTxRollupOrigination['metadata']['operation_result'] =
-    defaultResult;
-  private data: Omit<OperationContentsAndResultTxRollupOrigination, 'metadata'>;
-
-  constructor(
-    private _data: Partial<Omit<OperationContentsAndResultTxRollupOrigination, 'metadata'>> = {}
-  ) {
-    this.data = { ...defaultTxRollupOriginateData, ...this._data };
-  }
-
-  withResult(
-    result: Partial<OperationContentsAndResultTxRollupOrigination['metadata']['operation_result']>
-  ) {
-    this.result = { ...defaultResult, ...result };
-    return this;
-  }
-
-  build(): OperationContentsAndResultTxRollupOrigination {
-    return {
-      ...this.data,
-      metadata: {
-        balance_updates: [],
-        operation_result: this.result,
-      },
-    };
-  }
-}
-
-export class TxRollupSubmitBatchOperationBuilder {
-  private result: OperationContentsAndResultTxRollupSubmitBatch['metadata']['operation_result'] =
-    defaultResult;
-  private data: Omit<OperationContentsAndResultTxRollupSubmitBatch, 'metadata'>;
-
-  constructor(
-    private _data: Partial<Omit<OperationContentsAndResultTxRollupSubmitBatch, 'metadata'>> = {}
-  ) {
-    this.data = { ...defaultTxSubmitBatchData, ...this._data };
-  }
-
-  withResult(
-    result: Partial<OperationContentsAndResultTxRollupSubmitBatch['metadata']['operation_result']>
-  ) {
-    this.result = { ...defaultResult, ...result };
-    return this;
-  }
-
-  build(): OperationContentsAndResultTxRollupSubmitBatch {
     return {
       ...this.data,
       metadata: {

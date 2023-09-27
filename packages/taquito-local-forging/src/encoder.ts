@@ -19,9 +19,6 @@ import {
   smartContractAddressEncoder,
   smartRollupAddressEncoder,
   smartRollupCommitmentHashEncoder,
-  txRollupBatchContentEncoder,
-  txRollupIdEncoder,
-  txRollupOriginationParamEncoder,
   tz1Encoder,
   valueParameterEncoder,
   zarithEncoder,
@@ -47,8 +44,6 @@ import {
   SeedNonceRevelationSchema,
   TransactionSchema,
   TransferTicketSchema,
-  TxRollupOriginationSchema,
-  TxRollupSubmitBatchSchema,
   SmartRollupOriginateSchema,
   SmartRollupExecuteOutboxMessageSchema,
   SmartRollupAddMessagesSchema,
@@ -80,9 +75,6 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.INT16]: int16Encoder,
   [CODEC.BLOCK_PAYLOAD_HASH]: blockPayloadHashEncoder,
   [CODEC.ENTRYPOINT]: entrypointNameEncoder,
-  [CODEC.TX_ROLLUP_ORIGINATION_PARAM]: txRollupOriginationParamEncoder,
-  [CODEC.TX_ROLLUP_ID]: txRollupIdEncoder,
-  [CODEC.TX_ROLLUP_BATCH_CONTENT]: txRollupBatchContentEncoder,
   [CODEC.BURN_LIMIT]: burnLimitEncoder,
   [CODEC.PVM_KIND]: pvmKindEncoder,
   [CODEC.PADDED_BYTES]: paddedBytesEncoder,
@@ -105,10 +97,6 @@ encoders[CODEC.OP_REGISTER_GLOBAL_CONSTANT] = (val: any) =>
   schemaEncoder(encoders)(RegisterGlobalConstantSchema)(val);
 encoders[CODEC.OP_TRANSFER_TICKET] = (val: any) =>
   schemaEncoder(encoders)(TransferTicketSchema)(val);
-encoders[CODEC.OP_TX_ROLLUP_ORIGINATION] = (val: any) =>
-  schemaEncoder(encoders)(TxRollupOriginationSchema)(val);
-encoders[CODEC.OP_TX_ROLLUP_SUBMIT_BATCH] = (val: any) =>
-  schemaEncoder(encoders)(TxRollupSubmitBatchSchema)(val);
 encoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
   schemaEncoder(encoders)(IncreasePaidStorageSchema)(val);
 encoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: any) =>

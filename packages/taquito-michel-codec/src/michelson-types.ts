@@ -166,8 +166,7 @@ export type MichelsonSimpleComparableTypeID =
   | 'key'
   | 'unit'
   | 'signature'
-  | 'chain_id'
-  | 'tx_rollup_l2_address';
+  | 'chain_id';
 
 export type MichelsonTypeID =
   | MichelsonSimpleComparableTypeID

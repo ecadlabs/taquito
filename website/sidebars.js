@@ -98,14 +98,6 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Optimistic Rollups',
-      className: 'sidebarHeader',
-      collapsed: false,
-      collapsible: false,
-      items: ['tx_rollups'],
-    },
-    {
-      type: 'category',
       label: 'Advanced Examples',
       className: 'sidebarHeader',
       collapsed: false,
