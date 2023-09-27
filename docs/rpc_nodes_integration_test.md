@@ -8,7 +8,7 @@ author: Roxane Letourneau
 1. The RPC nodes' integration tests are disabled by default.
 Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
 
- **nairobinet**: `npm run test:oxfordnet rpc-nodes.spec.ts`
+ **oxfordnet**: `npm run test:oxfordnet rpc-nodes.spec.ts`
 
 **When all endpoints are accessible for a node, you will obtain:**
 

@@ -15,7 +15,7 @@ import {
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
-  const oxfordnet = (networkType == NetworkType.TESTNET && protocol === Protocols.Proxford) ? test : test.skip;
+  const oxfordnet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProxfordS) ? test : test.skip;
   const alpha = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {

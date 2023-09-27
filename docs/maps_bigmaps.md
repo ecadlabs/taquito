@@ -28,7 +28,7 @@ Michelson offers two variants of `Maps` that are semantically the same but have 
 
 This example builds on the Ligo Lang Taco Shop learning resources.
 
-The storage of the contract used in the following example is a map where a key is a natural number (a `nat`), and a value is a pair composed of two values representing the quantity of stock and `tez` tokens, respectively. The contract's source code is available [here](https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-smart-contract#making-sure-we-get-paid-for-our-tacos). In the example, the contract is originated with initial values using the `MichelsonMap` class' `set` method.
+The storage of the contract used in the following example is a map where the key is a natural number (nat), and the value is a pair composed of two values representing the quantity of stock and `tez` tokens, respectively. The contract code is available [here](https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-smart-contract#making-sure-we-get-paid-for-our-tacos). In the example, the contract is originated with initial values using the `MichelsonMap` class' `set` method.
 
 <Tabs
 defaultValue="contractAPI"
@@ -48,7 +48,7 @@ storageMap.set('1', { current_stock: '10000', max_price: '50' });
 storageMap.set('2', { current_stock: '120', max_price: '20' });
 storageMap.set('3', { current_stock: '50', max_price: '60' });
 
-// contractMapTacoShop variable contains the Michelson Smart Contract source code, and is not shown for brevity
+// contractMapTacoShop variable contains the Michelson Smart Contract code, and is not shown for brevity
 Tezos.contract
   .originate({
     code: contractMapTacoShop,
@@ -77,7 +77,7 @@ storageMap.set('1', { current_stock: '10000', max_price: '50' });
 storageMap.set('2', { current_stock: '120', max_price: '20' });
 storageMap.set('3', { current_stock: '50', max_price: '60' });
 
-// contractMapTacoShop variable contains the Michelson Smart Contract source code, and is not shown for brevity
+// contractMapTacoShop variable contains the Michelson Smart Contract code, and is not shown for brevity
 Tezos.wallet
   .originate({
     code: contractMapTacoShop,

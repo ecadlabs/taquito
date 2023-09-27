@@ -2,8 +2,8 @@ export enum DEFAULT_GAS_LIMIT {
   DELEGATION = 10600,
   ORIGINATION = 10600,
   TRANSFER = 10600,
-  /* This is used for gas_limit. There is no harm in setting a higher limit. 
-   Only if an account has a balance that is very close to the total gas consumption, 
+  /* This is used for gas_limit. There is no harm in setting a higher limit.
+   Only if an account has a balance that is very close to the total gas consumption,
    then this margin can fail the operation.
    Another benefit of this higher value is that then Dapps build with Taquito 17 can
    still work with Mumbainet, as this value is higher than the reveal cost in Mumbai.
@@ -46,7 +46,7 @@ export enum Protocols {
   PtMumbaii = 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
-  Proxford = 'ProxfordSW2S7fvchT1Zgj2avb5UES194neRyYVXoaDGvF9egt8',
+  ProxfordS = 'ProxfordSW2S7fvchT1Zgj2avb5UES194neRyYVXoaDGvF9egt8',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -65,7 +65,7 @@ export const protocols = {
   '015': [Protocols.PtLimaPtL],
   '016': [Protocols.PtMumbai2], // mumbai v2
   '017': [Protocols.PtNairobi],
-  '018': [Protocols.Proxford],
+  '018': [Protocols.ProxfordS],
   '019': [Protocols.ProtoALpha],
 };
 
