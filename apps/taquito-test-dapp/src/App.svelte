@@ -11,16 +11,14 @@
   let layout: Layout;
 
   // https://ide.ligolang.org/p/RL93C86hftTTCNGU0ykLMw | https://ide.ligolang.org/p/61ENTorA4PSfQg-jhpu0jA
-  // https://better-call.dev/florencenet/KT1PzUGbdKaN332Smfd1ExpdKQ7BSzzJRqJ4/operations
-  // https://better-call.dev/granadanet/KT1T836HqhBu9waqmknStVDCXu2WogZtzsNz/operations
-  // https://better-call.dev/hangzhounet/KT1T2gL26SwYMxpkR5SZT1pHRBF84knfw8Cg/operations
-  // https://better-call.dev/ithacanet/KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5/operations
-  // https://better-call.dev/mumbainet/KT1Tkm7U3NS9JWgeCGywrRTSQdLZJvDSgD5Z/operations
+  // https://better-call.dev/ghostnet/KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5/operations
+  // https://better-call.dev/nairobinet/KT1WoyF3wpUGRm6fbmmm1qKmpfneq1iijMT8/operations
+  // https://better-call.dev/oxfordnet/KT1A2o9bDfzfmZW9npuWD5UtjUTqqZwDf24x/operations
 
   let browser = "";
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
-    { value: "mumbainet", label: "Mumbainet", group: "current testnets" },
+    { value: "oxfordnet", label: "Oxfordnet", group: "current testnets" },
     { value: "nairobinet", label: "Nairobinet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
@@ -48,8 +46,8 @@
       case "ghostnet":
         store.updateNetworkType(NetworkType.GHOSTNET);
         break;
-      case "mumbainet":
-        store.updateNetworkType(NetworkType.MUMBAINET);
+      case "oxfordnet":
+        store.updateNetworkType(NetworkType.OXFORDNET);
         break;
       case "nairobinet":
         store.updateNetworkType(NetworkType.NAIROBINET);

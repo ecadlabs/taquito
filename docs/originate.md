@@ -88,7 +88,7 @@ values={[
 // const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
-// generic.json is referring to Michelson source code in JSON representation
+// generic.json is referring to Michelson code in JSON representation
 
 Tezos.contract
   .originate({
@@ -117,7 +117,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
-// generic.json is referring to Michelson source code in JSON representation
+// generic.json is referring to Michelson code in JSON representation
 
 Tezos.wallet
   .originate({
@@ -159,7 +159,7 @@ values={[
 // const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
-// generic.json is referring to Michelson source code in JSON representation
+// generic.json is referring to Michelson code in JSON representation
 
 Tezos.contract
   .originate({
@@ -184,7 +184,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
-// generic.json is referring to Michelson source code in JSON representation
+// generic.json is referring to Michelson code in JSON representation
 
 Tezos.wallet
   .originate({
@@ -220,7 +220,7 @@ values={[
 // const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
-// generic.json is referring to Michelson source code in JSON representation
+// generic.json is referring to Michelson code in JSON representation
 
 Tezos.contract
   .originate({
@@ -257,7 +257,7 @@ Tezos.contract
 // const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
-// generic.json is referring to Michelson source code in JSON representation
+// generic.json is referring to Michelson code in JSON representation
 
 Tezos.wallet
   .originate({

@@ -6,7 +6,7 @@ import { Protocols, TezosToolkit } from "@taquito/taquito";
 CONFIGS().forEach(({ rpc, protocol }) => {
   const Tezos = new TezosToolkit(rpc);
   const nairobinet = protocol === Protocols.PtNairobi ? it : it.skip;
-  const oxfordnet = protocol === Protocols.Proxford ? it : it.skip;
+  const oxfordnet = protocol === Protocols.ProxfordS ? it : it.skip;
 
   describe(`Test local forger: ${rpc}`, () => {
     nairobiCases.forEach(({ name, operation, expected }) => {
