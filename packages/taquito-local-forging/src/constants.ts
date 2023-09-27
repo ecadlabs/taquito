@@ -268,7 +268,7 @@ export const kindMappingReverse = (() => {
   return result;
 })();
 
-// See https://tezos.gitlab.io/protocols/005_babylon.html#transactions-now-have-an-entrypoint
+// See https://tezos.gitlab.io/shell/p2p_api.html?highlight=transaction%20entrypoint#alpha-entrypoint-determined-from-data-8-bit-tag
 export const entrypointMapping: { [key: string]: string } = {
   '00': 'default',
   '01': 'root',
