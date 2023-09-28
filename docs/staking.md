@@ -7,7 +7,7 @@ author: Alireza Haghshenas
 Since the first Tezos protocol, Tez owners could participate in baking, endorsement (now renamed to attestation), and voting by `delegating` their tez to bakers.
 Starting with Oxford, there is now an additional way of participating which is called `staking`. You can read more about it (here)[https://tezos.gitlab.io/protocols/018_oxford.html#adaptive-issuance-ongoing] and (here)[https://spotlight.tezos.com/announcing-oxford-tezos-15th-protocol-upgrade-proposal/] (under "Adaptive Issuance and Staking").
 
-In Taquito, we support three new operations: `stake`, `unstake`, and `finalize_unstake`.
+In Taquito, we support three new operations: `stake`, `unstake`, and `finalize_unstake` implemented as pseudo operations (entrypoints on implicit accounts).
 
 ## stake
 By `stake`ing your tez to a baker that accepts staking, your tez will be frozen. Also, unlike delegation, your tez is subject to slashing in case the baker misbehaves. In return, you can receive more rewards for baking and attestation (formerly endorsement).

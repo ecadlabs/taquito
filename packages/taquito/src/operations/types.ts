@@ -9,8 +9,7 @@ import {
 } from '@taquito/rpc';
 import { BlockIdentifier } from '../read-provider/interface';
 import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
-import { ValidationResult, invalidDetail, validateAddress } from '@taquito/utils';
-import { InvalidStakingSource } from '../contract/errors';
+import { ValidationResult, invalidDetail, validateKeyHash } from '@taquito/utils';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -576,6 +575,7 @@ export interface InternalStakingParams {
   parameter: TransactionOperationParameter;
 }
 
+// Helper type to make a field optional
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type StakingParams = PartialBy<InternalStakingParams, 'source'>;
 export type StakeParams = Omit<StakingParams, 'parameter'>;
@@ -601,12 +601,9 @@ export const validateStakingParams = (
     }
   }
   if (params.source !== undefined) {
-    const sourceValidation = validateAddress(params.source);
+    const sourceValidation = validateKeyHash(params.source);
     if (sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
-    }
-    if (/kt/i.test(params.source)) {
-      throw new InvalidStakingSource(params.source);
     }
   }
 };

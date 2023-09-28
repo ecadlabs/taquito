@@ -26,7 +26,7 @@ import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operatio
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { PvmKind } from '@taquito/rpc';
-import { InvalidAddressError } from '@taquito/utils';
+import { InvalidAddressError } from '@taquito/core';
 import { InvalidAmountError } from '@taquito/core';
 
 /**

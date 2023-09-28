@@ -22,13 +22,13 @@ export class InvalidParameterError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid delegation source contract address being passed or used
+ *  @description Error that indicates an invalid delegation source originated address being passed or used
  */
 export class InvalidDelegationSource extends ParameterValidationError {
   constructor(public readonly source: string) {
     super();
     this.name = `InvalidDelegationSource`;
-    this.message = `Since Babylon delegation source can no longer be a contract address ${source}. Please use the smart contract abstraction to set your delegate.`;
+    this.message = `Since Babylon delegation source can no longer be an originated address ${source}. Please use the smart contract abstraction to set your delegate.`;
   }
 }
 
