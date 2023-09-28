@@ -495,6 +495,7 @@ export class RpcClient implements RpcClientInterface {
       'endorsing_reward_per_slot',
       'double_baking_punishment',
       'delay_increment_per_round',
+      'tx_rollup_commitment_bond',
       'vdf_difficulty',
       'sc_rollup_stake_amount',
       'minimal_stake',

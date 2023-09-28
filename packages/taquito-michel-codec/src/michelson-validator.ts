@@ -147,6 +147,7 @@ const simpleComparableTypeIDs: Record<MichelsonSimpleComparableTypeID, true> = {
   signature: true,
   timestamp: true,
   address: true,
+  tx_rollup_l2_address: true,
 };
 
 const typeIDs: Record<MichelsonTypeID, true> = Object.assign({}, simpleComparableTypeIDs, {
