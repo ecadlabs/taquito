@@ -54,10 +54,11 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   FailingNoopParams,
-  validateStakingParams,
   StakeParams,
   UnstakeParams,
   FinalizeUnstakeParams,
+  validateStakeOrUnstakeParams,
+  validateFinalizeUnstakeParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -775,7 +776,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @throws {@link InvalidAmountError}
    */
   async stake(params: StakeParams) {
-    validateStakingParams(params, 'stake');
+    validateStakeOrUnstakeParams(params, 'stake');
     const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
     const publicKeyHash = await this.signer.publicKeyHash();
     const source = params.source ?? publicKeyHash;
@@ -801,7 +802,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @throws {@link InvalidAmountError}
    */
   async unstake(params: UnstakeParams) {
-    validateStakingParams(params, 'unstake');
+    validateStakeOrUnstakeParams(params, 'unstake');
     const estimate = await this.estimate(params, this.estimator.unstake.bind(this.estimator));
     const publicKeyHash = await this.signer.publicKeyHash();
     const source = params.source ?? publicKeyHash;
@@ -827,7 +828,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @throws {@link InvalidAmountError}
    */
   async finalizeUnstake(params: FinalizeUnstakeParams) {
-    validateStakingParams(params, 'finalize_unstake');
+    validateFinalizeUnstakeParams(params);
     const estimate = await this.estimate(
       params,
       this.estimator.finalizeUnstake.bind(this.estimator)

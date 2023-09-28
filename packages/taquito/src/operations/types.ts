@@ -589,18 +589,33 @@ export type FinalizeUnstakeParams = Omit<StakingParams, 'parameter' | `amount`>;
  * @throws {@link InvalidAddressError}
  * @throws {@link InvalidStakingSource}
  */
-export const validateStakingParams = (
-  params: Omit<PartialBy<StakingParams, 'amount'>, 'parameter'>,
+export const validateStakeOrUnstakeParams = (
+  params: StakeParams | UnstakeParams,
   entrypoint: StakingEntrypoint
 ) => {
-  if (entrypoint !== 'finalize_unstake') {
-    if (!params.amount || params.amount <= 0) {
-      throw new InvalidAmountError(
-        params.amount?.toString() ?? '',
-        `The 'amount' field in ${entrypoint} should be a positive number.`
-      );
+  if (!params.amount || params.amount <= 0) {
+    throw new InvalidAmountError(
+      params.amount?.toString() ?? '',
+      `The 'amount' field in ${entrypoint} should be a positive number.`
+    );
+  }
+  if (params.source !== undefined) {
+    const sourceValidation = validateAddress(params.source);
+    if (sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+    if (/kt/i.test(params.source)) {
+      throw new InvalidStakingSource(params.source);
     }
   }
+};
+
+/**
+ *
+ * @throws {@link InvalidAddressError}
+ * @throws {@link InvalidStakingSource}
+ */
+export const validateFinalizeUnstakeParams = (params: FinalizeUnstakeParams) => {
   if (params.source !== undefined) {
     const sourceValidation = validateAddress(params.source);
     if (sourceValidation !== ValidationResult.VALID) {

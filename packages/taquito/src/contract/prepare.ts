@@ -339,24 +339,9 @@ export const createSmartRollupOriginateOperation = async ({
   } as RPCSmartRollupOriginateOperation;
 };
 
-export const createStakingOperation = async ({
-  source,
-  amount,
-  parameter,
-  fee = DEFAULT_FEE.TRANSFER,
-  gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
-  storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
-  mutez = false,
-}: InternalStakingParams) => {
-  const operation: RPCTransferOperation = {
-    source,
-    destination: source,
-    kind: OpKind.TRANSACTION,
-    fee,
-    gas_limit: gasLimit,
-    storage_limit: storageLimit,
-    amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
-    parameters: parameter,
-  };
-  return operation;
+export const createStakingOperation = async (params: InternalStakingParams) => {
+  return createTransferOperation({
+    to: params.source,
+    ...params,
+  });
 };
