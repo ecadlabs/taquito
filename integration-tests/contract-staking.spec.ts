@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           expect(op.hash).toBeDefined();
           done();
         });
-        flextesaOxford.skip('Should fail with unstake amount too large, could not produce: gets proto.018-Proxford.tez.subtraction_underflow when the amount is too high', async (done) => {
+        it.skip('Should fail with unstake amount too large, could not produce: gets proto.018-Proxford.tez.subtraction_underflow when the amount is too high', async (done) => {
           expect(async () => {
             const op = await Tezos.contract.stake({
               amount: 1000000000000,
