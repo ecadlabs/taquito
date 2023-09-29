@@ -1635,7 +1635,7 @@ describe('RPCEstimateProvider test wallet', () => {
             parameters: {
               entrypoint: 'unstake',
               value: {
-                prim: 'Unit',
+                int: '100000000',
               },
             },
           },
