@@ -1,20 +1,22 @@
 import { InMemorySigner } from "@taquito/signer";
-import { CONFIGS, defaultSecretKey } from "./config";
+import { CONFIGS, defaultSecretKey, isSandbox } from "./config";
 import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ setup }) => {
-  let rpc = 'https://mainnet-archive.ecadinfra.com/'
-  const Tezos = new TezosToolkit(rpc);
-  Tezos.setSignerProvider(new InMemorySigner(defaultSecretKey.secret_key));
+CONFIGS().forEach(({ setup, rpc, lib }) => {
+  const testnet = isSandbox({ rpc }) ? it.skip : it;
+  let Tezos: TezosToolkit
+  let signer = new InMemorySigner(defaultSecretKey.secret_key)
 
-  describe(`Test failing_noop through wallet api, based on head, and secret_key using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+  describe(`Test failing_noop through wallet api, based on head, and secret_key`, () => {
+    beforeAll(async (done) => {
       await setup();
+      Tezos = new TezosToolkit('https://mainnet-archive.ecadinfra.com/');
+      Tezos.setSignerProvider(signer);
       done();
     });
 
-    it('Verify that the wallet.signFailingNoop result is as expected when the block and private key are kept constant', async done => {
+    testnet('Verify that the wallet.signFailingNoop result is as expected when the block and private key are kept constant', async done => {
       const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
@@ -37,8 +39,10 @@ CONFIGS().forEach(({ setup }) => {
   });
 
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeAll(async (done) => {
       await setup();
+      Tezos = lib;
+      Tezos.setSignerProvider(signer);
       done();
     });
 
