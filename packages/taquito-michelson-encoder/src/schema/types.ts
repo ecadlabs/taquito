@@ -21,8 +21,7 @@ export type BaseTokenSchema = {
     | 'chest'
     | 'chest_key'
     | 'signature'
-    | 'unit'
-    | 'tx_rollup_l2_address';
+    | 'unit';
   schema: string;
 };
 export type OrTokenSchema = { __michelsonType: 'or'; schema: Record<string, TokenSchema> };
