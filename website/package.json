@@ -28,6 +28,7 @@
     "@ledgerhq/hw-transport-webhid": "^6.27.19",
     "@mdx-js/react": "^1.6.22",
     "@svgr/webpack": "^8.1.0",
+    "@taquito/core": "file:../packages/taquito-core",
     "@taquito/beacon-wallet": "file:../packages/taquito-beacon-wallet",
     "@taquito/http-utils": "file:../packages/taquito-http-utils",
     "@taquito/ledger-signer": "file:../packages/taquito-ledger-signer",

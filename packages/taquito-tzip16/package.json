@@ -62,6 +62,7 @@
     ]
   },
   "dependencies": {
+    "@taquito/core": "^17.3.1",
     "@taquito/http-utils": "^17.3.1",
     "@taquito/michelson-encoder": "^17.3.1",
     "@taquito/rpc": "^17.3.1",

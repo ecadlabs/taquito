@@ -63,6 +63,7 @@
     ]
   },
   "dependencies": {
+    "@taquito/core": "^17.3.1",
     "@taquito/michelson-encoder": "^17.3.1",
     "@taquito/taquito": "^17.3.1",
     "@taquito/tzip16": "^17.3.1"
