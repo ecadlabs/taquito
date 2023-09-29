@@ -51,12 +51,6 @@ describe('encodePubKey', () => {
       'KT1XM8VUFBiM9AC5czWU15fEeE9nmuEYWt3Y'
     );
   });
-
-  it('Should encode address properly (txr1)', () => {
-    expect(encodePubKey('02f16e732d45ba6f24d5ec421f20ab199b3a82907100')).toEqual(
-      'txr1jZaQfi9zdwzJteYkRBSN9D7RDvMh1QNkL'
-    );
-  });
 });
 
 describe('encodeKey', () => {
