@@ -16,8 +16,6 @@ import {
   registerGlobalConstantNoReveal,
   registerGlobalConstantWithReveal,
   registerGlobalConstantWithError,
-  txRollupOriginateNoReveal,
-  txRollupSubmitBatchNoReveal,
   TransferTicketNoReveal,
   TransferTicketWithReveal,
   updateConsensusKeyNoReveal,
@@ -1420,8 +1418,6 @@ describe('RPCEstimateProvider test wallet', () => {
             },
           },
           registerGlobalConstantNoReveal.contents[0],
-          txRollupOriginateNoReveal.contents[0],
-          txRollupSubmitBatchNoReveal.contents[0],
         ],
       });
       const estimate = await estimateProvider.batch([
@@ -1435,7 +1431,7 @@ describe('RPCEstimateProvider test wallet', () => {
           },
         },
       ]);
-      expect(estimate.length).toEqual(5);
+      expect(estimate.length).toEqual(3);
       expect(estimate[0].gasLimit).toEqual(1100);
       expect(estimate[1].gasLimit).toEqual(1100);
       expect(estimate[2].gasLimit).toEqual(1330);

@@ -78,11 +78,6 @@
     },
     {
       "type": "category",
-      "label": "Optimistic Rollups",
-      "items": ["tx_rollups"]
-    },
-    {
-      "type": "category",
       "label": "Modules customization",
       "items": ["forger", "rpc-cache", "cancel_http_requests"]
     },

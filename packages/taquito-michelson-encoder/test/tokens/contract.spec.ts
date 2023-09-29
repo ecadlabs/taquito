@@ -1,4 +1,3 @@
-import { b58decode } from '@taquito/utils';
 import { ContractToken, ContractValidationError } from './../../src/tokens/contract';
 
 describe('Contract Token Tests', () => {
@@ -13,46 +12,18 @@ describe('Contract Token Tests', () => {
   });
 
   describe('EncodeObject', () => {
-    it('should encode address to string', () => {
-      expect(token.EncodeObject('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL')).toEqual({
-        string: 'txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL',
-      });
-    });
-
     it('should throw error when improper args', () => {
       expect(() => token.EncodeObject('test')).toThrowError(ContractValidationError);
       expect(() => token.EncodeObject(0)).toThrowError(ContractValidationError);
       expect(() => token.EncodeObject([])).toThrowError(ContractValidationError);
     });
-
-    it('should handle semantics', () => {
-      expect(
-        token.EncodeObject('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL', {
-          contract: () => ({ string: 'test' }),
-        }).string
-      ).toEqual('test');
-    });
   });
   describe('execute', () => {
-    const decoded = b58decode('txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL');
-    it('should return contract address', () => {
-      expect(token.Execute({ bytes: '', string: 'txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL' })).toEqual(
-        'txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL'
-      );
-      expect(token.Execute({ bytes: decoded, string: '' })).toEqual(
-        'txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL'
-      );
-    });
     it('should throw error', () => {
       expect(() => token.Execute({ bytes: '', string: '' })).toThrowError(ContractValidationError);
     });
   });
   describe('Encode', () => {
-    it('should return string', () => {
-      expect(token.Encode(['txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL'])).toEqual({
-        string: 'txr1XHHx4KH3asGN5CMpdqzQA3c7HkfniPRxL',
-      });
-    });
     it('should throw error', () => {
       expect(() => token.Encode(['test'])).toThrowError(ContractValidationError);
       expect(() => token.Encode([1])).toThrowError(ContractValidationError);
