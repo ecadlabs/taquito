@@ -9,8 +9,7 @@ import {
 } from '@taquito/rpc';
 import { BlockIdentifier } from '../read-provider/interface';
 import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
-import { ValidationResult, invalidDetail, validateAddress } from '@taquito/utils';
-import { InvalidStakingSource } from '../contract';
+import { ValidationResult, invalidDetail, validateAddress, validateKeyHash } from '@taquito/utils';
 
 export { OpKind } from '@taquito/rpc';
 
@@ -597,12 +596,9 @@ export const validateStakeOrUnstakeParams = (
     );
   }
   if (params.source !== undefined) {
-    const sourceValidation = validateAddress(params.source);
+    const sourceValidation = validateKeyHash(params.source);
     if (sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
-    }
-    if (/kt/i.test(params.source)) {
-      throw new InvalidStakingSource(params.source);
     }
   }
 };
@@ -617,9 +613,6 @@ export const validateFinalizeUnstakeParams = (params: FinalizeUnstakeParams) => 
     const sourceValidation = validateAddress(params.source);
     if (sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
-    }
-    if (/kt/i.test(params.source)) {
-      throw new InvalidStakingSource(params.source);
     }
   }
 };

@@ -19,7 +19,6 @@ import {
   InvalidCodeParameter,
   InvalidDelegationSource,
   InvalidInitParameter,
-  InvalidStakingSource,
 } from '../../src/contract/errors';
 import { preapplyResultFrom } from './helper';
 import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operations/types';
@@ -1709,7 +1708,7 @@ describe('RpcContractProvider test', () => {
       done();
     });
 
-    it('should throw InvalidStakingSource when passed a contract address as source', async (done) => {
+    it('should throw InvalidAddressError when passed a contract address as source', async (done) => {
       const estimate = new Estimate(1240000, 94, 145, 249);
       mockEstimate.stake.mockResolvedValue(estimate);
       expect(async () => {
@@ -1717,7 +1716,7 @@ describe('RpcContractProvider test', () => {
           source: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
           amount: 100,
         });
-      }).rejects.toThrowError(InvalidStakingSource);
+      }).rejects.toThrowError(InvalidAddressError);
       done();
     });
   });
@@ -1794,7 +1793,7 @@ describe('RpcContractProvider test', () => {
       done();
     });
 
-    it('should throw InvalidStakingSource when passed a contract address as source', async (done) => {
+    it('should throw InvalidAddressError when passed a contract address as source', async (done) => {
       const estimate = new Estimate(1240001, 95, 146, 248);
       mockEstimate.unstake.mockResolvedValue(estimate);
       expect(async () => {
@@ -1802,7 +1801,7 @@ describe('RpcContractProvider test', () => {
           source: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
           amount: 100,
         });
-      }).rejects.toThrowError(InvalidStakingSource);
+      }).rejects.toThrowError(InvalidAddressError);
       done();
     });
   });
@@ -1854,14 +1853,14 @@ describe('RpcContractProvider test', () => {
       done();
     });
 
-    it('should throw InvalidStakingSource when passed a contract address as source', async (done) => {
+    it('should throw InvalidAddressError when passed a contract address as source', async (done) => {
       const estimate = new Estimate(1240002, 96, 147, 247);
       mockEstimate.finalizeUnstake.mockResolvedValue(estimate);
       expect(async () => {
         await rpcContractProvider.finalizeUnstake({
           source: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
         });
-      }).rejects.toThrowError(InvalidStakingSource);
+      }).rejects.toThrowError(InvalidAddressError);
       done();
     });
   });

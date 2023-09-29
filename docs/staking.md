@@ -17,23 +17,23 @@ Assuming a backer with address `baker0` is set to accept staking (and after the 
 ```javascript
 const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 const op = await Tezos.contract.stake({
-    amount: 1000,
+    amount: 100000000,
 });
 await op.confirmation();
 ```
 
-Now if you delegate to baker0, the amount you have staked will staked instead of the normal delegation. The 1000 tez you staked will be frozen and can be slashed if the baker misbehaves. You can also unstake your funds by calling `unstake`:
+Now if you delegate to `baker0`, the amount you have staked will participate in Adaptive Issuance through the mechanism of staking instead of the normal delegation. The 100 tez you staked will be frozen and can be slashed if the baker misbehaves. You can also unstake your funds by calling `unstake`:
 
 ```javascript
 const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 const op = await Tezos.contract.unstake({
-    amount: 1000,
+    amount: 100000000,
 });
 await op.confirmation();
 ```
 
-Which moves the 1000tez from `frozen` to `unstaked` balance. You can pass a larger amount to `unstake` than the amount you have staked, and that will unstake all your funds.
-After 5 cycles on testnet or 7 cycles on mainnet, the stake moves to `finalizable` balance, and you can use `finalizeUnstake` to move the funds to your `free` balance:
+Which moves the 100tez from `staked` to `unstaked frozen` balance. You can pass a larger amount to `unstake` than the amount you have staked, and that will unstake all your funds.
+After 5 cycles on testnet or 7 cycles on mainnet, the stake moves to `unstaked and finalizable` balance, and you can use `finalizeUnstake` to move the funds to your `spendable` balance:
 
 ```javascript
 const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');

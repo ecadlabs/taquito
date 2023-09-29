@@ -793,7 +793,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Unstake the given amount. If `amount` is larger than the currently staked amount, unstakes everything from the staking balance. Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over, the operation "finalize unstake" must be called for the funds to appear in the liquid balance.
+   * @description Unstake the given amount. If `amount` is larger than the currently staked amount, unstakes everything from the staking balance. Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over, the operation "finalize unstake" must be called for the funds to appear in the spendable balance.
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -819,7 +819,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Transfer all the finalizable unstaked funds of the source to their liquid balance
+   * @description Transfer all the finalizable unstaked funds of the source to their spendable balance
    *
    * @returns An operation handle with the result from the rpc node
    *

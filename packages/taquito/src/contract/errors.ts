@@ -34,18 +34,6 @@ export class InvalidDelegationSource extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid staking source contract address being passed or used
- */
-export class InvalidStakingSource extends ParameterValidationError {
-  constructor(public readonly source: string) {
-    super();
-    this.name = `InvalidStakingSource`;
-    this.message = `The source for staking operations can not be a contract address ${source}.`;
-  }
-}
-
-/**
- *  @category Error
  *  @description Error that indicates an invalid smart contract code parameter being passed or used
  */
 export class InvalidCodeParameter extends ParameterValidationError {
