@@ -566,8 +566,8 @@ export interface FailingNoopParams {
   basedOnBlock: BlockIdentifier;
 }
 
-export interface InternalStakingParams {
-  source: string;
+export interface StakingParams {
+  source?: string;
   amount: number;
   fee?: number;
   gasLimit?: number;
@@ -576,9 +576,6 @@ export interface InternalStakingParams {
   parameter: TransactionOperationParameter;
 }
 
-// Helper type to make a field optional
-type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-export type StakingParams = PartialBy<InternalStakingParams, 'source'>;
 export type StakeParams = Omit<StakingParams, 'parameter'>;
 export type UnstakeParams = Omit<StakingParams, 'parameter'>;
 export type FinalizeUnstakeParams = Omit<StakingParams, 'parameter' | `amount`>;

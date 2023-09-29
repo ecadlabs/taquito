@@ -58,7 +58,6 @@ import {
   createSmartRollupOriginateOperation,
   createRegisterDelegateOperation,
   createActivationOperation,
-  createStakingOperation,
 } from '../contract';
 import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
@@ -1151,43 +1150,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     });
   }
 
-  private async staking({
-    fee,
-    storageLimit,
-    gasLimit,
-    source,
-    ...rest
-  }: StakingParams): Promise<PreparedOperation> {
+  private async staking(params: StakingParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
-
-    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
-    const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
-
-    const op = await createStakingOperation({
-      source: source ?? pkh,
-      ...rest,
-      ...mergedEstimates,
+    return this.transaction({
+      to: params.source ?? pkh,
+      source: params.source ?? pkh,
+      ...params,
     });
-
-    const operation = await this.addRevealOperationIfNeeded(op, pkh);
-    const ops = this.convertIntoArray(operation);
-
-    const hash = await this.getBlockHash();
-    const protocol = await this.getProtocolHash();
-
-    this.#counters = {};
-    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
-
-    const contents = this.constructOpContents(ops, headCounter, pkh, source ?? pkh);
-
-    return {
-      opOb: {
-        branch: hash,
-        contents,
-        protocol,
-      },
-      counter: headCounter,
-    };
   }
 }

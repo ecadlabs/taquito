@@ -31,7 +31,6 @@ import {
   SmartRollupOriginateParams,
   ActivationParams,
   RPCActivateOperation,
-  InternalStakingParams,
 } from '../operations/types';
 import {
   DEFAULT_FEE,
@@ -337,11 +336,4 @@ export const createSmartRollupOriginateOperation = async ({
     kernel,
     parameters_ty: parametersType,
   } as RPCSmartRollupOriginateOperation;
-};
-
-export const createStakingOperation = async (params: InternalStakingParams) => {
-  return createTransferOperation({
-    to: params.source,
-    ...params,
-  });
 };
