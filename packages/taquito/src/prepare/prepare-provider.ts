@@ -1151,10 +1151,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   }
 
   private async staking(params: StakingParams): Promise<PreparedOperation> {
-    const { pkh } = await this.getKeys();
+    const pkh = params.source ?? (await this.getKeys()).pkh;
     return this.transaction({
-      to: params.source ?? pkh,
-      source: params.source ?? pkh,
+      to: pkh,
+      source: pkh,
       ...params,
     });
   }
