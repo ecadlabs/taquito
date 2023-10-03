@@ -26,7 +26,7 @@ import { RpcClient } from '@taquito/rpc';
 
 const client = new RpcClient('https://YOUR_PREFERRED_RPC_URL');
 
-// Fetching the balance of an account
+// Fetching the balance of an account in mutez (micro ꜩ)
 const balance = await client.getBalance('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
 ```
 
