@@ -13,7 +13,7 @@
     "@sveltejs/vite-plugin-svelte": "^1.1.0",
     "@tsconfig/svelte": "^2.0.1",
     "events": "^3.3.0",
-    "lerna": "^6.0.3",
+    "lerna": "^7.3.0",
     "prettier-plugin-svelte": "^2.7.0",
     "sass": "^1.51.0",
     "svelte": "^3.52.0",

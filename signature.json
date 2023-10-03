@@ -2519,7 +2519,7 @@
             "prettier": "^2.1.2",
             "prompt": "^1.0.0",
             "replace-in-file": "^6.1.0",
-            "rimraf": "^3.0.2",
+            "rimraf": "^5.0.5",
             "rollup-plugin-json": "^4.0.0",
             "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
