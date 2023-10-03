@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "17.3.0-beta.1",
+  "version": "17.3.1",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -22,7 +22,7 @@
     "type": "git",
     "url": ""
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">=16"
   },
@@ -67,9 +67,9 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "4.0.6",
-    "@taquito/core": "^17.3.0-beta.1",
-    "@taquito/taquito": "^17.3.0-beta.1"
+    "@airgap/beacon-dapp": "4.0.10",
+    "@taquito/core": "^17.3.1",
+    "@taquito/taquito": "^17.3.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",

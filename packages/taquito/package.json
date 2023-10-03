@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "17.3.0-beta.1",
+  "version": "17.3.1",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/ecadlabs/taquito/issues"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">=16"
   },
@@ -77,13 +77,13 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^17.3.0-beta.1",
-    "@taquito/http-utils": "^17.3.0-beta.1",
-    "@taquito/local-forging": "^17.3.0-beta.1",
-    "@taquito/michel-codec": "^17.3.0-beta.1",
-    "@taquito/michelson-encoder": "^17.3.0-beta.1",
-    "@taquito/rpc": "^17.3.0-beta.1",
-    "@taquito/utils": "^17.3.0-beta.1",
+    "@taquito/core": "^17.3.1",
+    "@taquito/http-utils": "^17.3.1",
+    "@taquito/local-forging": "^17.3.1",
+    "@taquito/michel-codec": "^17.3.1",
+    "@taquito/michelson-encoder": "^17.3.1",
+    "@taquito/rpc": "^17.3.1",
+    "@taquito/utils": "^17.3.1",
     "bignumber.js": "^9.1.0",
     "rxjs": "^7.8.1"
   },

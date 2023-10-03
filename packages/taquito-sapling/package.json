@@ -1,6 +1,6 @@
 {
   "name": "@taquito/sapling",
-  "version": "17.3.0-beta.1",
+  "version": "17.3.1",
   "description": "Allows reading and preparing sapling transactions",
   "keywords": [
     "tezos",
@@ -22,7 +22,7 @@
     "type": "git",
     "url": ""
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">=16"
   },
@@ -69,10 +69,10 @@
     "@airgap/sapling-wasm": "0.0.9",
     "@stablelib/nacl": "^1.0.3",
     "@stablelib/random": "^1.0.1",
-    "@taquito/core": "^17.3.0-beta.1",
-    "@taquito/rpc": "^17.3.0-beta.1",
-    "@taquito/taquito": "^17.3.0-beta.1",
-    "@taquito/utils": "^17.3.0-beta.1",
+    "@taquito/core": "^17.3.1",
+    "@taquito/rpc": "^17.3.1",
+    "@taquito/taquito": "^17.3.1",
+    "@taquito/utils": "^17.3.1",
     "bignumber.js": "^9.1.0",
     "bip39": "3.0.4",
     "blakejs": "^1.2.1",
