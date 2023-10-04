@@ -16,15 +16,6 @@ npm install @taquito/taquito
 
 ```
 
-or
-
-```
-yarn add @taquito/taquito
-
-```
-
-Make sure you have the latest version (`7.1.0` when this article was written, but the API became available from `6.3.2-beta.0`).
-
 Once the package is downloaded, you can install the wallet of your choice. The wallet API supports different kinds of wallets. The _Beacon_ and _Temple_ wallets are available to use at the moment. You can install one or both wallets, depending on your requirements:
 
 ```

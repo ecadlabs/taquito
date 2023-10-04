@@ -1,5 +1,5 @@
 ---
-title: Local Forging Package
+title: Local Forger
 id: local_forger
 author: Michael Kernaghan
 ---

@@ -6,7 +6,6 @@
       "items": [
         "quick_start",
         "amendment_and_voting",
-        "ballot",
         "batch_API",
         "beaconwallet-singleton",
         "boilerplate",
@@ -48,6 +47,38 @@
         "wallet_API",
         "wallets",
         "web3js_taquito"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Taquito Public API",
+      "items": [
+        "batch_API",
+        "wallet_API",
+        "contract_API",
+        {
+          "type": "category",
+          "label": "Taquito Providers",
+          "collapsed": false,
+          "collapsible": false,
+          "items": [
+            "prepare",
+            "estimate"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Tezos Operations",
+      "items": [
+        "amendment_and_voting",
+        "consensus_key",
+        "global_constant",
+        "increase_paid_storage",
+        "making_transfers",
+        "originate",
+        "set_delegate"
       ]
     },
     {
