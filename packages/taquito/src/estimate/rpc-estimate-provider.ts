@@ -161,9 +161,9 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (toValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.to, invalidDetail(toValidation));
     }
-    const srouceValidation = validateAddress(rest.source ?? '');
-    if (rest.source && srouceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, invalidDetail(srouceValidation));
+    const sourceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
     }
     if (rest.amount < 0) {
       throw new InvalidAmountError(rest.amount.toString());
