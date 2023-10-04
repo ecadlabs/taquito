@@ -1,3 +1,4 @@
+import { stringify } from '@taquito/core';
 import { RpcClientCache } from '../src/rpc-client-modules/rpc-cache';
 import {
   rpcUrl,
@@ -277,7 +278,7 @@ describe('RpcClientCache test', () => {
     ).toEqual(txRollupState);
     expect(
       rpcCache.getAllCachedData()[
-        `rpcTest/getTicketBalance/head/${contractAddress}/${JSON.stringify(ticketToken)}/`
+        `rpcTest/getTicketBalance/head/${contractAddress}/${stringify(ticketToken)}/`
       ].response
     ).toEqual('3');
     expect(
@@ -454,7 +455,7 @@ describe('RpcClientCache test', () => {
     ).toEqual(txRollupState);
     expect(
       rpcCache.getAllCachedData()[
-        `rpcTest/getTicketBalance/${block.block}/${contractAddress}/${JSON.stringify(ticketToken)}/`
+        `rpcTest/getTicketBalance/${block.block}/${contractAddress}/${stringify(ticketToken)}/`
       ].response
     ).toEqual('3');
     expect(

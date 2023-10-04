@@ -1,4 +1,4 @@
-import { ParameterValidationError, RpcError, TaquitoError } from '@taquito/core';
+import { ParameterValidationError, RpcError, TaquitoError, stringify } from '@taquito/core';
 import {
   MichelsonV1ExpressionBase,
   OperationResult,
@@ -55,7 +55,7 @@ export class TezosOperationError extends RpcError {
       } else if (lastError.with.int) {
         this.message = lastError.with.int;
       } else {
-        this.message = JSON.stringify(lastError.with);
+        this.message = stringify(lastError.with);
       }
     }
   }

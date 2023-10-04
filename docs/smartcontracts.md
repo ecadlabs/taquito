@@ -91,7 +91,7 @@ Tezos.contract
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
-    println(JSON.stringify(methods, null, 2));
+    println(stringify(methods, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
 ```
@@ -106,7 +106,7 @@ Tezos.wallet
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
-    println(JSON.stringify(methods, null, 2));
+    println(stringify(methods, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
 ```
@@ -139,7 +139,7 @@ Tezos.contract
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
-    println(JSON.stringify(incrementParams, null, 2));
+    println(stringify(incrementParams, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
 ```
@@ -153,7 +153,7 @@ Tezos.wallet
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methods.increment(2).toTransferParams();
-    println(JSON.stringify(incrementParams, null, 2));
+    println(stringify(incrementParams, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
 ```
@@ -192,7 +192,7 @@ Tezos.contract
     return op.confirmation(3).then(() => op.hash);
   })
   .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -213,7 +213,7 @@ Tezos.wallet
     return op.confirmation(3).then(() => op.opHash);
   })
   .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
   </TabItem>
 </Tabs>
@@ -248,14 +248,14 @@ Tezos.contract
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
     println(
-      `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
+      `Inspect the signature of the 'set_child_record' contract method: ${stringify(
         contract.methods.set_child_record().getSignature(),
         null,
         2
       )}`
     );
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 The preceding example returns an array which contains the different possible signatures. Different signatures are possible as the `set_child_record` method contains some optional arguments. In the following example the `set_child_record` method is called by passing the arguments in the flattened way:
@@ -286,7 +286,7 @@ importKey(Tezos, secretKey)
     return op.confirmation().then(() => op.hash);
   })
   .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -302,14 +302,14 @@ Tezos.contract
   .then((contract) => {
     println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
     println(
-      `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
+      `Inspect the signature of the 'set_child_record' contract method: ${stringify(
         contract.methodsObject.set_child_record().getSignature(),
         null,
         2
       )}`
     );
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 The preceding example returns an object giving indication on how to structure the parameter when calling the`set_child_record` method. Here is an example where the `set_child_record` method is called by passing the parameter in an object format:
@@ -339,7 +339,7 @@ importKey(Tezos, secretKey)
     return op.confirmation().then(() => op.hash);
   })
   .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
   </TabItem>
 </Tabs>

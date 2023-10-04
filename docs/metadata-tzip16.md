@@ -108,9 +108,9 @@ Tezos.contract
     return contract.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    println(stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -132,9 +132,9 @@ Tezos.wallet
     return wallet.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    println(stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -166,9 +166,9 @@ Tezos.contract
     return contract.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    println(stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -189,9 +189,9 @@ Tezos.wallet
     return wallet.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    println(stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
   </TabItem>
 </Tabs>
@@ -222,9 +222,9 @@ Tezos.contract
     return contract.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    println(stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -246,9 +246,9 @@ Tezos.wallet
     return wallet.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    println(stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -280,9 +280,9 @@ Tezos.contract
     return contract.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    println(stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -304,9 +304,9 @@ Tezos.wallet
     return wallet.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    println(stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -377,7 +377,7 @@ Tezos.contract
     println(`Result of the view someJson: ${result}`);
     println(`Transform result to char: ${bytes2Char(result)}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -406,7 +406,7 @@ Tezos.wallet
     println(`Result of the view someJson: ${result}`);
     println(`Transform result to char: ${bytes2Char(result)}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -449,7 +449,7 @@ Tezos.contract
   .then((result) => {
     println(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -480,7 +480,7 @@ Tezos.wallet
   .then((result) => {
     println(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -529,7 +529,7 @@ Tezos.contract
       println(`Result of the custom view: ${result}`);
     });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -566,7 +566,7 @@ Tezos.wallet
       println(`Result of the custom view: ${result}`);
     });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
   </TabItem>
 </Tabs>

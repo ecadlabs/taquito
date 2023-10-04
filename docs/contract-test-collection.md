@@ -509,7 +509,7 @@ Tezos.contract
         println(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
       });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -1060,7 +1060,7 @@ const metadataJSON = {
 
 const metadataBigMap = new MichelsonMap();
 metadataBigMap.set('', char2Bytes('tezos-storage:here'));
-metadataBigMap.set('here', char2Bytes(JSON.stringify(metadataJSON)));
+metadataBigMap.set('here', char2Bytes(stringify(metadataJSON)));
 
 const tacoShopStorageMap = new MichelsonMap();
 
@@ -1292,7 +1292,7 @@ storage (pair nat (big_map %metadata string bytes));
 ```js
 const metadataBigMAp = new MichelsonMap();
 metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample1)));
+metadataBigMAp.set('here', char2Bytes(stringify(metadataViewsExample1)));
 
 const op = await tezos.contract.originate({
   code: contractCode,
@@ -1341,7 +1341,7 @@ storage (pair nat (big_map %metadata string bytes));
 ```js
 const metadataBigMAp = new MichelsonMap();
 metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample2)));
+metadataBigMAp.set('here', char2Bytes(stringify(metadataViewsExample2)));
 
 const op = await tezos.contract.originate({
   code: contractCode,

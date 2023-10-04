@@ -25,7 +25,7 @@ InMemoryViewingKey.fromSpendingKey(
     const viewingKey = inMemoryViewingKey.getFullViewingKey()
     println(`The viewing key is ${viewingKey.toString('hex')}`);
 })
-.catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+.catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 
 ```
 
@@ -41,7 +41,7 @@ InMemoryViewingKey.fromSpendingKey(
     const viewingKey = inMemoryViewingKey.getFullViewingKey()
     println(`The viewing key is ${viewingKey.toString('hex')}`);
 })
-.catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+.catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 
 ```
 
@@ -57,6 +57,6 @@ const inMemoryViewingKey = new InMemoryViewingKey(
 );
 
 inMemoryViewingKey.getAddress()
-.then((address) => println(`The address is ${JSON.stringify(address, null, 2)}`))
-.catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+.then((address) => println(`The address is ${stringify(address, null, 2)}`))
+.catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```

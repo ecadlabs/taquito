@@ -54,7 +54,7 @@ Tezos.estimate
     totalCost : ${est.totalCost}, 
     usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
   })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.table(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -79,7 +79,7 @@ Tezos.estimate
     totalCost : ${est.totalCost}, 
     usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
   })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.table(`Error: ${stringify(error, null, 2)}`));
 ``` 
 
   </TabItem>
@@ -122,7 +122,7 @@ Tezos.contract
     totalCost : ${estimate.totalCost}, 
     usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
   })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.table(`Error: ${stringify(error, null, 2)}`));
 ```
 
 
@@ -151,7 +151,7 @@ Tezos.wallet
     totalCost : ${estimate.totalCost}, 
     usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
   })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.table(`Error: ${stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -193,7 +193,7 @@ Tezos.estimate
     totalCost : ${originationOp.totalCost},
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -223,7 +223,7 @@ Tezos.estimate
     totalCost : ${originationOp.totalCost},
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```  
 
   </TabItem>

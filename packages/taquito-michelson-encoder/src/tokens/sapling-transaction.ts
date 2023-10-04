@@ -1,3 +1,4 @@
+import { stringify } from '@taquito/core';
 import { SaplingTransactionTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -30,7 +31,7 @@ export class SaplingTransactionToken extends Token {
     throw new SaplingTransactionValidationError(
       _val,
       this,
-      `There is no literal value for the sapling_transaction type. Got: ${JSON.stringify(_val)}.`
+      `There is no literal value for the sapling_transaction type. Got: ${stringify(_val)}.`
     );
   }
 
@@ -42,11 +43,7 @@ export class SaplingTransactionToken extends Token {
     if (bytes && bytes[2].length % 2 === 0) {
       return bytes[2];
     } else {
-      throw new SaplingTransactionValidationError(
-        val,
-        this,
-        `Invalid bytes: ${JSON.stringify(val)}`
-      );
+      throw new SaplingTransactionValidationError(val, this, `Invalid bytes: ${stringify(val)}`);
     }
   }
 

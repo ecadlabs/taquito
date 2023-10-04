@@ -146,7 +146,7 @@ Tezos.contract.at(contractCallFib)
           })
       })
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -175,7 +175,7 @@ Tezos.wallet.at(contractCallFib)
           })
       })
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```  
   </TabItem>
 </Tabs>
@@ -218,7 +218,7 @@ Tezos.contract.at(contractTopLevelViews)
         println(`The result of the view simulation is ${viewResult}.`);
       })
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -236,7 +236,7 @@ Tezos.wallet.at(contractTopLevelViews)
         println(`The result of the view simulation is ${viewResult}.`);
       })
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```  
   </TabItem>
 </Tabs>

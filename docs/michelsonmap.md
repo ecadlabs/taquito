@@ -132,7 +132,7 @@ const entries = storage.entries();
 for (let entry of entries) {
   entriesPairs.push({ address: entry[0], amount: entry[1].toNumber() / 10 ** 6 });
 }
-console.log('entries => ' + JSON.stringify(entriesPairs) + '\n');
+console.log('entries => ' + stringify(entriesPairs) + '\n');
 ```
 
 This code will yield the same result as the one above. A generator may be preferable according to your use case.

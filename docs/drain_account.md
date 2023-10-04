@@ -75,7 +75,7 @@ Tezos.signer
                 });
         });
     })
-    .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+    .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 ## Draining originated accounts (KT1)
@@ -156,5 +156,5 @@ Tezos.signer
         });
       });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```

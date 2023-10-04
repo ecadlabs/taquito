@@ -100,7 +100,7 @@ saplingToolkit.getSaplingTransactionViewer()
     return txViewer.getBalance();
   })
   .then((balance) => println(`Alice's balance is ${balance.toString()} mutez`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 ## How to retrieve my transaction history?
@@ -132,8 +132,8 @@ saplingToolkit.getSaplingTransactionViewer()
     println(`Fetching Alice's history of transactions in the shielded pool...`);
     return txViewer.getIncomingAndOutgoingTransactions();
   })
-  .then((history) => println(`Alice's transaction history is ${JSON.stringify(history, null, 2)}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((history) => println(`Alice's transaction history is ${stringify(history, null, 2)}`))
+  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
 ```
 
 ## How to prepare a shielded transaction?
