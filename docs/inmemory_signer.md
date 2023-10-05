@@ -52,7 +52,7 @@ InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGR
   .then((publicKeyHash) => {
     println(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ```js live noInline
@@ -69,7 +69,7 @@ InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNF
   .then((publicKeyHash) => {
     println(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 When required, Taquito offers the `b58cencode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
@@ -97,7 +97,7 @@ InMemorySigner.fromSecretKey(b58encodedSecret)
   .then((publicKeyHash) => {
     println(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Loading an encrypted private key with a passphrase
@@ -133,7 +133,7 @@ InMemorySigner.fromSecretKey(
   .then((publicKeyHash) => {
     println(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ```js live noInline
@@ -153,7 +153,7 @@ InMemorySigner.fromSecretKey(
   .then((publicKeyHash) => {
     println(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ```js live noInline
@@ -173,7 +173,7 @@ InMemorySigner.fromSecretKey(
   .then((publicKeyHash) => {
     println(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 

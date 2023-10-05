@@ -82,7 +82,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(stringify(extractSchema, null, 2));
+println(JSON.stringify(extractSchema, null, 2));
 ```
 
 When there is no annotation, the keys of the object are indexes starting from 0.
@@ -103,7 +103,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(stringify(extractSchema, null, 2));
+println(JSON.stringify(extractSchema, null, 2));
 ```
 
 Here is another example using a complex storage:
@@ -245,7 +245,7 @@ const storageType =
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(stringify(extractSchema, null, 2));
+println(JSON.stringify(extractSchema, null, 2));
 ```
 
 ### The Typecheck method
@@ -300,7 +300,7 @@ const michelsonData = storageSchema.Encode({
     threshold: 5,
     keys: ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g', 'edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
 })
-println(stringify(michelsonData, null, 2));
+println(JSON.stringify(michelsonData, null, 2));
 ```
 
 ### The Execute method
@@ -348,7 +348,7 @@ const dataMichelson = {
   ]
 }
 const data = storageSchema.Execute(dataMichelson)
-println(stringify(data, null, 2));
+println(JSON.stringify(data, null, 2));
 ```
 
 The `Execute` method takes an optional parameter of type `Semantic`. It allows overriding the default representation returned by the Michelson Encoder for specific types.
@@ -362,12 +362,12 @@ const schema = new Schema({ prim: 'big_map', args: [{ prim: 'address' }, { prim:
 const dataMichelson = { int: 123456 }
 
 const data = schema.Execute(dataMichelson)
-println(`Default value returned by the Michelson Encoder for big_map: ${stringify(data, null, 2)}`);
+println(`Default value returned by the Michelson Encoder for big_map: ${JSON.stringify(data, null, 2)}`);
 
 // instead of returning the big map id, we can override it
 // we return an object in this case
 const dataCustom = schema.Execute(dataMichelson, { big_map: (val) => Object({ id: val.int })})
-println(`Customised representation of the big_map value: ${stringify(dataCustom)}`);
+println(`Customised representation of the big_map value: ${JSON.stringify(dataCustom)}`);
 ```
 
 Here is an example for the `ticket` type: 
@@ -377,10 +377,10 @@ const schema = new Schema({"prim":"ticket","args":[{"prim":"string"}]});
 const dataMichelson = {"prim":"Pair","args":[{"string":"KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw"},{"string":"test"},{"int":"2"}]}
 
 const data = schema.Execute(dataMichelson)
-println(`Default representation of the ticket value returned by the Michelson Encoder: ${stringify(data, null, 2)}`);
+println(`Default representation of the ticket value returned by the Michelson Encoder: ${JSON.stringify(data, null, 2)}`);
 
 const dataCustom = schema.Execute(dataMichelson, { ticket: (val) => val.args[1].string})
-println(`Customised representation of the ticket value: ${stringify(dataCustom)}`);
+println(`Customised representation of the ticket value: ${JSON.stringify(dataCustom)}`);
 ```
 
 ### How the Schema class is used inside Taquito
@@ -407,7 +407,7 @@ const michelsonData = parameterSchema.Encode(
     'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
     '12'
 )
-println(stringify(michelsonData, null, 2));
+println(JSON.stringify(michelsonData, null, 2));
 ```
 
 ### How the ParameterSchema class is used inside Taquito

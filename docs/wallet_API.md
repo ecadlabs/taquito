@@ -248,7 +248,7 @@ Tezos.wallet
     return op.confirmation().then(() => op.opHash);
   })
   .then(() => println(`Operation injected!`))
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 Transactions to smart contracts operate in the same fashion as transactions to an implicit account, the only difference being the `KT1...` address. You will also receive a transaction hash and have to wait for the transaction to be confirmed. Once confirmed, it can be the right time to update the user's/contract's balance, for example.

@@ -84,7 +84,6 @@ export default ({
       const { Parser, packDataBytes } = await import('@taquito/michel-codec');
       const { RpcClient } = await import('@taquito/rpc');
       const { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } = await import('@taquito/sapling');
-      const { stringify } = await import('@taquito/core');
   
       let wallet;
       if (typeof window !== 'undefined') {
@@ -136,7 +135,6 @@ export default ({
         ECDSA,
         Path,
         generateSecretKey,
-        stringify,
       });
     }
     if (!dependencies) {
@@ -191,7 +189,6 @@ export default ({
           ECDSA: dependencies?.ECDSA,
           Path: dependencies?.Path,
           generateSecretKey: dependencies?.generateSecretKey,
-          stringify: dependencies?.stringify,
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

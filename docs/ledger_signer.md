@@ -117,7 +117,7 @@ Tezos.contract
     return op.confirmation(1).then(() => op.hash);
   })
   .then((hash) => console.log(`Operation injected: https://jakarta.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -136,7 +136,7 @@ Tezos.wallet
     return op.confirmation(1).then(() => op.opHash);
   })
   .then((hash) => console.log(`Operation injected: https://jakarta.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>

@@ -60,7 +60,7 @@ Tezos.setProvider({
 Tezos.tz
   .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')
   .then((balance) => println(`${balance.toNumber() / 1000000} ꜩ`))
-  .catch((error) => println(stringify(error)));
+  .catch((error) => println(JSON.stringify(error)));
 ```
 
 ### Using the inMemory Signer and Importing a key
@@ -110,7 +110,7 @@ Tezos.contract
     return op.confirmation(1).then(() => op.hash);
   })
   .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -129,7 +129,7 @@ Tezos.wallet
     return op.confirmation(1).then(() => op.opHash);
   })
     .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -161,7 +161,7 @@ Tezos.contract
     return op.confirmation(1).then(() => op.hash);
   })
   .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -181,7 +181,7 @@ Tezos.wallet
     return op.confirmation(1).then(() => op.opHash);
   })
   .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 

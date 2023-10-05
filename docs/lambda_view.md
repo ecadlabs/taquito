@@ -59,7 +59,7 @@ Tezos.contract
   .then((response) => {
     println(response);
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 <!-- ```js live noInline
@@ -71,7 +71,7 @@ Tezos.contract
   .then((response) => {
     println(response);
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ``` -->
 
 **More examples:**
@@ -85,9 +85,9 @@ Tezos.contract
       .read();
   })
   .then((response) => {
-    println(stringify(response, null, 2));
+    println(JSON.stringify(response, null, 2));
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 <!-- ```js live noInline
@@ -97,7 +97,7 @@ Tezos.contract
     return contract.views.getBalance('tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5').read();
   })
   .then((response) => {
-    println(stringify(response, null, 2));
+    println(JSON.stringify(response, null, 2));
   })
-  .catch((error) => println(`Error: ${error} ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ``` -->

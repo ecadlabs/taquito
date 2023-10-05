@@ -45,10 +45,10 @@ class CancellableHttpBackend extends HttpBackend {
       });
     } catch (err: any) {
       throw new HttpResponseError(
-        `Http error response: (${err.response.status}) ${stringify(err.response.data)}`,
+        `Http error response: (${err.response.status}) ${JSON.stringify(err.response.data)}`,
         err.response.status as STATUS_CODE,
         err.response.statusText,
-        stringify(err.response.data),
+        JSON.stringify(err.response.data),
         url + this.serialize(query)
       )
     }

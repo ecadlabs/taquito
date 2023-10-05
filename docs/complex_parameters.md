@@ -97,7 +97,7 @@ importKey(Tezos, secretKey)
   return contractOriginated.contract();
 }).then((contract) => {
   println(`Origination completed.`);
-}).catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+}).catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## Calling the function of a contract having a complex object as a parameter
@@ -139,8 +139,8 @@ importKey(Tezos, secretKey)
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
     let inspect = myContract.methods.set_child_record('tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', dataMap, 'EEEE', 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', 'FFFF', '10').toTransferParams(); 
-    println(stringify(inspect, null, 2))
-}).catch(error => println(`Error: ${stringify(error, null, 2)}`));
+    println(JSON.stringify(inspect, null, 2))
+}).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 #### Call the set_child_record function when all the arguments are defined
@@ -170,7 +170,7 @@ importKey(Tezos, secretKey)
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
     println(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
-}).catch(error => println(`Error: ${stringify(error, null, 2)}`));
+}).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
 
@@ -201,5 +201,5 @@ importKey(Tezos, secretKey)
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
     println(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
-}).catch(error => println(`Error: ${stringify(error, null, 2)}`));
+}).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

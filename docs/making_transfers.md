@@ -47,7 +47,7 @@ fetch('https://keygen.ecadinfra.com/ghostnet/', {
     return op.confirmation(1).then(() => op.hash);
   })
   .then((hash) => render(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => render(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## Transfers involving "originated" KT1 addresses

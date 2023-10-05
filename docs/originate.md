@@ -106,7 +106,7 @@ Tezos.contract
   .then((contract) => {
     println(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -136,7 +136,7 @@ Tezos.wallet
   .then((contract) => {
     println(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -173,7 +173,7 @@ Tezos.contract
   .then((contract) => {
     println(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -199,7 +199,7 @@ Tezos.wallet
   .then((contract) => {
     println(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -246,7 +246,7 @@ Tezos.contract
   .then((contract) => {
     println(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -284,7 +284,7 @@ Tezos.wallet
   .then((contract) => {
     println(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${stringify(error, null, 2)}`));
+  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>

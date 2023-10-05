@@ -2163,7 +2163,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(stringify(extractSchema, null, 2));
+println(JSON.stringify(extractSchema, null, 2));
 ```
 *before version 10.0.0-beta, the returned value was:*
 ```typescript=
@@ -2213,7 +2213,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(stringify(extractSchema, null, 2));
+println(JSON.stringify(extractSchema, null, 2));
 ```
 *before version 10.0.0-beta the returned value was:*
 ```json=

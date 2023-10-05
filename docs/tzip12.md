@@ -101,9 +101,9 @@ Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
   return contract.tzip12().getTokenMetadata(tokenId);
 })
 .then (tokenMetadata => {
-  println(stringify(tokenMetadata, null, 2));
+  println(JSON.stringify(tokenMetadata, null, 2));
 })
-.catch(error => println(`Error: ${stringify(error, null, 2)}`));
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -125,9 +125,9 @@ Tezos.wallet.at(contractAddress, compose(tzip12, tzip16))
   return wallet.tzip12().getTokenMetadata(tokenId);
 })
 .then (tokenMetadata => {
-  println(stringify(tokenMetadata, null, 2));
+  println(JSON.stringify(tokenMetadata, null, 2));
 })
-.catch(error => println(`Error: ${stringify(error, null, 2)}`));
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```   
   </TabItem>
 </Tabs>
@@ -166,7 +166,7 @@ Tezos.contract.at(contractAddress, tzip16)
   println(`symbol: ${bytes2Char((Object.values(result)[1]).get('symbol'))}`);
   println(`extra: ${bytes2Char((Object.values(result)[1]).get('extra'))}`);
 })
-.catch(error => println(`Error: ${stringify(error, null, 2)}`));
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -195,7 +195,7 @@ Tezos.wallet.at(contractAddress, tzip16)
   println(`symbol: ${bytes2Char((Object.values(result)[1]).get('symbol'))}`);
   println(`extra: ${bytes2Char((Object.values(result)[1]).get('extra'))}`);
 })
-.catch(error => println(`Error: ${stringify(error, null, 2)}`));
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```    
   </TabItem>
 </Tabs>
@@ -266,9 +266,9 @@ Tezos.contract.at(contractAddress, tzip12)
   return contract.tzip12().getTokenMetadata(tokenId);
 })
 .then (tokenMetadata => {
-  println(stringify(tokenMetadata, null, 2));
+  println(JSON.stringify(tokenMetadata, null, 2));
 })
-.catch(error => println(`Error: ${stringify(error, null, 2)}`));
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -289,9 +289,9 @@ Tezos.wallet.at(contractAddress, tzip12)
   return wallet.tzip12().getTokenMetadata(tokenId);
 })
 .then (tokenMetadata => {
-  println(stringify(tokenMetadata, null, 2));
+  println(JSON.stringify(tokenMetadata, null, 2));
 })
-.catch(error => println(`Error: ${stringify(error, null, 2)}`));
+.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```   
   </TabItem>
 </Tabs>
