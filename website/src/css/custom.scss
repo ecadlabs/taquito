@@ -721,6 +721,10 @@ aside {
   }
 }
 
+.menu__link {
+  padding: 0.275rem 0.75rem !important;
+}
+
 .menu__link .menu__link--sublist-caret .menu__link--active:hover {
   background-color: transparent !important;
   color: rgb(10, 2, 3) !important;

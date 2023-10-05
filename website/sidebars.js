@@ -24,11 +24,9 @@ const sidebars = {
       collapsible: false,
       items: [
         'quick_start',
-        'react-template',
         'local_forger',
         'rpc_nodes',
         'web3js_taquito',
-        'dapp_prelaunch',
       ],
     },
     {
@@ -61,12 +59,12 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
+        'making_transfers',
+        'originate',
         'amendment_and_voting',
         'consensus_key',
         'global_constant',
         'increase_paid_storage',
-        'making_transfers',
-        'originate',
         'set_delegate',
         'smart_rollups',
         'failing_noop',
@@ -85,6 +83,18 @@ const sidebars = {
         'manager_lambda',
         'multisig_doc',
         'validators',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Wallets',
+      className: 'sidebarHeader',
+      collapsed: false,
+      collapsible: false,
+      items: [
+        'beaconwallet-singleton',
+        'wallets',
+        'transaction_limits',
       ],
     },
     {
@@ -108,18 +118,6 @@ const sidebars = {
       items: [
         'lambda_view',
         'on_chain_views',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Wallets',
-      className: 'sidebarHeader',
-      collapsed: false,
-      collapsible: false,
-      items: [
-        'beaconwallet-singleton',
-        'wallets',
-        'transaction_limits',
       ],
     },
     {
@@ -199,11 +197,16 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Native Mobile Development',
+      label: 'Dapp Development',
       className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
-      items: ['mobile_bundle'],
+      items: [
+        'mobile_bundle',
+        'dapp_template',
+        'dapp_prelaunch',
+
+      ],
     },
     {
       type: 'category',
@@ -216,9 +219,8 @@ const sidebars = {
         'contracts_collection',
       ],
     },
-    {
-      'Upgrading Guide': ['upgrading_guide'],
-    },
+
+
     {
       type: 'link',
       label: 'TypeDoc Reference',
