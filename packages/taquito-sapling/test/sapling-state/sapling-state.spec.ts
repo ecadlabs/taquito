@@ -1,3 +1,4 @@
+import { stringify } from '@taquito/core';
 import { SaplingState } from '../../src/sapling-state/sapling-state';
 import { sapling_state_diff, witnessString, stateTree } from '../data/sapling_test_data';
 import { BigNumber } from 'bignumber.js';
@@ -20,7 +21,7 @@ describe('Sapling State Tree tests', () => {
     const result = await state.getStateTree(sapling_state_diff);
 
     expect(result).toBeDefined();
-    expect(JSON.stringify(result)).toEqual(stateTree);
+    expect(stringify(result)).toEqual(stateTree);
   });
 
   it('Should be able to get witness from Sapling state diff', async () => {

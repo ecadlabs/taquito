@@ -7,6 +7,7 @@ import {
 } from '../token';
 import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
+import { stringify } from '@taquito/core';
 
 /**
  *  @category Error
@@ -43,11 +44,7 @@ export class AddressToken extends ComparableToken {
    */
   private validate(value: any) {
     if (validateAddress(value) !== ValidationResult.VALID) {
-      throw new AddressValidationError(
-        value,
-        this,
-        `Address is not valid: ${JSON.stringify(value)}`
-      );
+      throw new AddressValidationError(value, this, `Address is not valid: ${stringify(value)}`);
     }
   }
 
@@ -86,7 +83,7 @@ export class AddressToken extends ComparableToken {
       throw new AddressValidationError(
         val,
         this,
-        `cannot be missing both string and bytes: ${JSON.stringify(val)}`
+        `cannot be missing both string and bytes: ${stringify(val)}`
       );
     }
 
@@ -119,7 +116,7 @@ export class AddressToken extends ComparableToken {
       throw new AddressValidationError(
         { bytes, string },
         this,
-        `cannot be missing both string and bytes ${JSON.stringify({ string, bytes })}`
+        `cannot be missing both string and bytes ${stringify({ string, bytes })}`
       );
     }
 

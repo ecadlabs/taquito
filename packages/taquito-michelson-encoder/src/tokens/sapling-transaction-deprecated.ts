@@ -1,3 +1,4 @@
+import { stringify } from '@taquito/core';
 import { SaplingTransactionDeprecatedTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -30,7 +31,7 @@ export class SaplingTransactionDeprecatedToken extends Token {
     throw new SaplingTransactionDeprecatedValidationError(
       _val,
       this,
-      `There is no literal value for the sapling_transaction_deprecated type. Got: ${JSON.stringify(
+      `There is no literal value for the sapling_transaction_deprecated type. Got: ${stringify(
         _val
       )}.`
     );
@@ -47,7 +48,7 @@ export class SaplingTransactionDeprecatedToken extends Token {
       throw new SaplingTransactionDeprecatedValidationError(
         val,
         this,
-        `Invalid bytes: ${JSON.stringify(val)}`
+        `Invalid bytes: ${stringify(val)}`
       );
     }
   }
