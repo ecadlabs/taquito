@@ -7,6 +7,7 @@ import {
 } from './token';
 import { validateChain, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
+import { stringify } from '@taquito/core';
 
 /**
  *  @category Error
@@ -38,7 +39,7 @@ export class ChainIDToken extends ComparableToken {
       throw new ChainIDValidationError(
         value,
         this,
-        `Value ${JSON.stringify(value)} is not a valid ChainID`
+        `Value ${stringify(value)} is not a valid ChainID`
       );
     }
   }

@@ -2,6 +2,7 @@ import { CONFIGS } from './config';
 import { MichelsonMap } from '@taquito/taquito';
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { contractCode, metadataViewsExample1, metadataViewsExample2 } from './data/metadataViews';
+import { stringify } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 	const Tezos = lib;
@@ -17,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 			const metadataBigMAp = new MichelsonMap();
 			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-			metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample1)))
+			metadataBigMAp.set("here", char2Bytes(stringify(metadataViewsExample1)))
 
 			const op = await Tezos.contract.originate({
 				code: contractCode,
@@ -62,7 +63,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 			const metadataBigMAp = new MichelsonMap();
 			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-			metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample2)))
+			metadataBigMAp.set("here", char2Bytes(stringify(metadataViewsExample2)))
 
 			const op = await Tezos.contract.originate({
 				code: contractCode,
@@ -92,7 +93,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			expect(viewCallBalanceResult.toString()).toEqual('0');
 
 			const viewIdentityResult = await metadataViews['the-identity']().executeView(1, 'test', 200000);
-			expect(JSON.stringify(viewIdentityResult)).toEqual(`{"arg_zero":"1","arg_one_result":"test","arg_two":"200000"}`);
+			expect(stringify(viewIdentityResult)).toEqual(`{"arg_zero":"1","arg_one_result":"test","arg_two":"200000"}`);
 
 			const viewContractAddressResult = await metadataViews['get-contract-address']().executeView();
 			expect(viewContractAddressResult.toString()).toEqual(contractAddress);

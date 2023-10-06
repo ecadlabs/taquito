@@ -1,7 +1,7 @@
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { CODEC, kindMapping, kindMappingReverse } from '../constants';
-import { InvalidOperationKindError } from '@taquito/core';
+import { InvalidOperationKindError, stringify } from '@taquito/core';
 import {
   OperationDecodingError,
   OperationEncodingError,
@@ -241,7 +241,7 @@ export const schemaEncoder =
 
         if (!Array.isArray(values)) {
           throw new OperationEncodingError(
-            `Invalid operation value "${JSON.stringify(
+            `Invalid operation value "${stringify(
               values
             )}" of key "${key}, expected value to be Array.`
           );

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { InvalidViewParameterError, TaquitoError } from '@taquito/core';
+import { InvalidViewParameterError, TaquitoError, stringify } from '@taquito/core';
 
 /**
  *  @category Error
@@ -15,9 +15,9 @@ export class ParameterEncodingError extends InvalidViewParameterError {
   ) {
     super(viewName, sigs, args, cause);
     this.name = 'ParameterEncodingError';
-    this.message = `Could not encode parameter ${JSON.stringify(
+    this.message = `Could not encode parameter ${stringify(
       args
-    )} received for name "${viewName}" expecting one of the following signatures ${JSON.stringify(
+    )} received for name "${viewName}" expecting one of the following signatures ${stringify(
       sigs
     )}`;
   }
@@ -35,7 +35,7 @@ export class InvalidScriptError extends TaquitoError {
     if (reason) {
       message += ` Reason: ${reason}.`;
     }
-    message += `Script: ${JSON.stringify(script)}`;
+    message += `Script: ${stringify(script)}`;
     this.message = message;
   }
 }
@@ -52,7 +52,7 @@ export class InvalidRpcResponseError extends TaquitoError {
     if (reason) {
       message += ` Reason: ${reason}.`;
     }
-    message += ` Received: ${JSON.stringify(script)}`;
+    message += ` Received: ${stringify(script)}`;
     this.message = message;
   }
 }
@@ -92,9 +92,9 @@ export class BigMapEncodingError extends TaquitoError {
     public readonly value: any
   ) {
     super();
-    this.message = `Unable to encode the big map ${obj}. Schema is: ${JSON.stringify(
+    this.message = `Unable to encode the big map ${obj}. Schema is: ${stringify(
       schema
-    )}. The ${obj} is: ${JSON.stringify(value)}. Error details: ${details}`;
+    )}. The ${obj} is: ${stringify(value)}. Error details: ${details}`;
   }
 }
 
@@ -112,10 +112,10 @@ export class StorageEncodingError extends TaquitoError {
     public readonly semantics?: any
   ) {
     super();
-    this.message = `Unable to encode ${obj}. The schema is: ${JSON.stringify(
+    this.message = `Unable to encode ${obj}. The schema is: ${stringify(
       schema
-    )}, the value is: ${JSON.stringify(value)}.${
-      semantics ? `And the semantic is: ${JSON.stringify(semantics)}` : ''
+    )}, the value is: ${stringify(value)}.${
+      semantics ? `And the semantic is: ${stringify(semantics)}` : ''
     }. Error details: ${details}`;
   }
 }

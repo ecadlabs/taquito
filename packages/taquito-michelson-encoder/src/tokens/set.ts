@@ -1,3 +1,4 @@
+import { stringify } from '@taquito/core';
 import { SetTokenSchema } from '../schema/types';
 import {
   Token,
@@ -39,7 +40,7 @@ export class SetToken extends Token {
    */
   private validate(value: any) {
     if (!Array.isArray(value)) {
-      throw new SetValidationError(value, this, `Value ${JSON.stringify(value)} is not an array`);
+      throw new SetValidationError(value, this, `Value ${stringify(value)} is not an array`);
     }
   }
 

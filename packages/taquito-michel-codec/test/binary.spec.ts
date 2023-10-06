@@ -4,6 +4,7 @@ import path from 'path';
 import { MichelsonData, MichelsonType, ProtocolID } from '../src/michelson-types';
 import { packData, unpackData } from '../src/binary';
 import { parseHex } from '../src/utils';
+import { stringify } from '@taquito/core';
 
 interface TypedTestData {
   type?: MichelsonType;
@@ -22,7 +23,7 @@ describe('Binary', () => {
 
   describe('pack', () => {
     for (const s of src) {
-      it(JSON.stringify(s.data), () => {
+      it(stringify(s.data), () => {
         const p = packData(s.data, s.type);
         expect(p).toEqual(parseHex(s.packed));
       });
@@ -30,7 +31,7 @@ describe('Binary', () => {
   });
   describe('unpack', () => {
     for (const s of src) {
-      it(JSON.stringify(s.data), () => {
+      it(stringify(s.data), () => {
         const ex = unpackData(parseHex(s.packed), s.type);
         expect(ex).toEqual(s.expect || s.data);
       });

@@ -22,6 +22,7 @@ import {
   InvalidOperationKindError,
   DeprecationError,
   ProhibitedActionError,
+  stringify,
 } from '../src/taquito-core';
 
 describe('parent errors classes', () => {
@@ -144,7 +145,7 @@ describe('common error classes', () => {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidViewParameterError);
       expect(error.message).toContain(
-        `Invalid view arguments "bar" received for name "foo" expecting one of the following signatures ${JSON.stringify(
+        `Invalid view arguments "bar" received for name "foo" expecting one of the following signatures ${stringify(
           { parameter: 'nat', result: 'nat' }
         )}`
       );

@@ -11,6 +11,7 @@ import {
   MichelsonTypeID,
   MichelsonSimpleComparableTypeID,
 } from './michelson-types';
+import { stringify } from '@taquito/core';
 
 // Michelson validator
 
@@ -886,9 +887,9 @@ export function assertDataListIfAny(d: MichelsonData): d is MichelsonData[] {
   for (const v of d) {
     if ('prim' in v) {
       if (isInstruction(v)) {
-        throw new MichelsonError(d, `Instruction outside of a lambda: ${JSON.stringify(d)}`);
+        throw new MichelsonError(d, `Instruction outside of a lambda: ${stringify(d)}`);
       } else if (v.prim === 'Elt') {
-        throw new MichelsonError(d, `Elt item outside of a map literal: ${JSON.stringify(d)}`);
+        throw new MichelsonError(d, `Elt item outside of a map literal: ${stringify(d)}`);
       }
     }
   }

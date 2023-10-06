@@ -25,6 +25,7 @@ import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operatio
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { PvmKind } from '@taquito/rpc';
+import { stringify } from '@taquito/core';
 
 /**
  * RPCContractProvider test
@@ -240,7 +241,7 @@ describe('RpcContractProvider test', () => {
         storageLimit: 257,
       });
 
-      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      const res = JSON.parse(stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResults);
       done();
@@ -257,7 +258,7 @@ describe('RpcContractProvider test', () => {
         storageLimit: 257,
         mutez: true,
       });
-      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      const res = JSON.parse(stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResultsMutezTrue);
       done();
@@ -274,7 +275,7 @@ describe('RpcContractProvider test', () => {
         init: miInit,
       });
 
-      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      const res = JSON.parse(stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResultsEstimate);
       done();

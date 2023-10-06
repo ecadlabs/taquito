@@ -1,3 +1,4 @@
+import { stringify } from '@taquito/core';
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -31,7 +32,7 @@ export class Bls12381g1Token extends Token {
     if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
       return;
     }
-    throw new Bls12381g1ValidationError(val, this, `Invalid bytes: ${JSON.stringify(val)}`);
+    throw new Bls12381g1ValidationError(val, this, `Invalid bytes: ${stringify(val)}`);
   }
 
   private convertUint8ArrayToHexString(val: any) {

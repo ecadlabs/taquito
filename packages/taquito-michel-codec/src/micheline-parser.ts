@@ -108,7 +108,7 @@ export interface ParserOptions extends ProtocolOptions {
  * const p = new Parser();
  *
  * const exp = p.parseMichelineExpression(src);
- * console.log(JSON.stringify(exp));
+ * console.log(stringify(exp));
  * ```
  */
 export class Parser {

@@ -1,4 +1,4 @@
-import { ParameterValidationError, RpcError } from '@taquito/core';
+import { ParameterValidationError, RpcError, stringify } from '@taquito/core';
 import { HttpResponseError } from '@taquito/http-utils';
 import { MichelsonV1Expression } from '@taquito/rpc';
 
@@ -16,7 +16,7 @@ export class InvalidParameterError extends ParameterValidationError {
     this.name = 'InvalidParameterError';
     this.message = `${smartContractMethodName} Received ${
       invalidParams.length
-    } arguments while expecting one of the following signatures (${JSON.stringify(sigs)})`;
+    } arguments while expecting one of the following signatures (${stringify(sigs)})`;
   }
 }
 
