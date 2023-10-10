@@ -8,7 +8,6 @@ export default ({ command }) => {
   return defineConfig({
     plugins: [svelte()],
     define: {
-      global: {}
     },
     build: {
       target: "es6",

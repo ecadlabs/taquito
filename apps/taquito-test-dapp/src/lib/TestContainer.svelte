@@ -4,6 +4,7 @@
   import type { TestSettings, TestResult } from "../types";
   import { shortenHash } from "../utils";
   import { NetworkType } from "@airgap/beacon-sdk";
+  import { stringify } from "@taquito/core";
 
   let test: TestSettings | undefined;
   let executionTime = 0;
