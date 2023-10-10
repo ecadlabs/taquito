@@ -83,7 +83,7 @@ export const b58cdecode = (enc: string, prefixArg: Uint8Array): Uint8Array =>
  * @param value Value to base58 decode
  */
 export function b58decode(payload: string) {
-  const buf: Buffer = bs58check.decode(payload);
+  const buf = bs58check.decode(payload);
 
   const prefixMap = {
     [prefix.tz1.toString()]: '0000',
@@ -117,7 +117,7 @@ export function b58decode(payload: string) {
  * @returns string of bytes
  */
 export function b58decodeL2Address(payload: string) {
-  const buf: Buffer = bs58check.decode(payload);
+  const buf = bs58check.decode(payload);
 
   // tz4 address currently
   return buf2hex(buf.slice(3, 42));
@@ -289,7 +289,7 @@ export const mic2arr = function me2(s: any): any {
  *
  * @param buffer Buffer to convert
  */
-export const buf2hex = (buffer: Buffer): string => {
+export const buf2hex = (buffer: Uint8Array): string => {
   const byteArray = new Uint8Array(buffer);
   const hexParts: string[] = [];
   byteArray.forEach((byte) => {
@@ -397,7 +397,7 @@ export function num2PaddedHex(val: number | BigNumber, bitLength = 8): string {
     const nibbleLength: number = Math.ceil(bitLength / 4);
     const hex: string = val.toString(16);
 
-    // check whether nibble (4 bits) length is higher or lowerthan the current hex string length
+    // check whether nibble (4 bits) length is higher or lower than the current hex string length
     let targetLength: number = hex.length >= nibbleLength ? hex.length : nibbleLength;
 
     // make sure the hex string target length is even

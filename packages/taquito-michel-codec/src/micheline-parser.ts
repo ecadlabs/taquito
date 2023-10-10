@@ -23,7 +23,10 @@ export class MichelineParseError extends TaquitoError {
    * @param token A token caused the error
    * @param message An error message
    */
-  constructor(public readonly token: Token | null, public readonly message: string) {
+  constructor(
+    public readonly token: Token | null,
+    public readonly message: string
+  ) {
     super();
     this.name = 'MichelineParseError';
   }
@@ -31,14 +34,17 @@ export class MichelineParseError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error inidicates a failure when parsing Micheline JSON
+ *  @description Error indicates a failure when parsing Micheline JSON
  */
 export class JSONParseError extends TaquitoError {
   /**
    * @param node A node caused the error
    * @param message An error message
    */
-  constructor(public readonly node: unknown, public readonly message: string) {
+  constructor(
+    public readonly node: unknown,
+    public readonly message: string
+  ) {
     super();
     this.name = 'JSONParseError';
   }
@@ -97,7 +103,7 @@ export interface ParserOptions extends ProtocolOptions {
  * console.log(emitMicheline(storage, {indent:"    ", newline: "\n",}));
  * ```
  *
- * Encode a Michelson expression for inital storage of a smart contract
+ * Encode a Michelson expression for initial storage of a smart contract
  * ```
  * const src = `(Pair (Pair { Elt 1
  *                (Pair (Pair "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN" "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx")
@@ -413,7 +419,7 @@ export class Parser {
               throw new JSONParseError(a, `string expected: ${a}`);
             }
           }
-          ret.annots = p.annots;
+          ret.annots = p.annots as string[];
         }
 
         if (p.args !== undefined) {
