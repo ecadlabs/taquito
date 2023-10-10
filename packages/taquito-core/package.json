@@ -23,15 +23,15 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
-    "start": "rollup -c rollup.config.ts -w",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript",
+    "start": "rollup -c rollup.config.ts --configPlugin typescript -w",
     "test": "jest"
   },
   "lint-staged": {

@@ -128,14 +128,14 @@
           },
           "license": "MIT",
           "engines": {
-            "node": ">=16"
+            "node": ">=18"
           },
           "scripts": {
             "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
             "precommit": "lint-staged",
             "prebuild": "rimraf dist",
-            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
-            "start": "rollup -c rollup.config.ts -w"
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript",
+            "start": "rollup -c rollup.config.ts --configPlugin typescript -w"
           },
           "lint-staged": {
             "{src,test}/**/*.ts": [
@@ -170,7 +170,7 @@
           },
           "devDependencies": {
             "@types/jest": "^26.0.16",
-            "@types/node": "^16",
+            "@types/node": "^18",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",

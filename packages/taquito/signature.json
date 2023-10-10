@@ -769,7 +769,7 @@
           },
           "license": "MIT",
           "engines": {
-            "node": ">=16"
+            "node": ">=18"
           },
           "scripts": {
             "test": "jest --coverage",
@@ -778,10 +778,10 @@
             "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
             "precommit": "lint-staged",
             "prebuild": "rimraf dist",
-            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
-            "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript",
+            "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript && npm run build:web",
             "build:web": "webpack && node update-readme.js",
-            "start": "rollup -c rollup.config.ts -w",
+            "start": "rollup -c rollup.config.ts --configPlugin typescript -w",
             "postinstall": "node patch.js"
           },
           "lint-staged": {
@@ -830,7 +830,7 @@
           "devDependencies": {
             "@babel/types": "7.11.5",
             "@types/jest": "^26.0.16",
-            "@types/node": "^16",
+            "@types/node": "^18",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
