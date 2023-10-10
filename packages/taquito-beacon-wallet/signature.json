@@ -111,8 +111,7 @@
           "lint-staged": {
             "{src,test}/**/*.ts": [
               "prettier --write",
-              "tslint --fix",
-              "git add"
+              "tslint --fix"
             ]
           },
           "jest": {

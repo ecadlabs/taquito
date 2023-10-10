@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          await setup()
          })
 
-      test('Verify contract.originate for a Fa2 contract having metadata on HTTPS', 2, async (done: () => void) => {
+      test('Verify contract.originate for a Fa2 contract having metadata on HTTPS', 2, async () => {
 
          const LocalTez1 = await createAddress();
          const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
@@ -66,7 +66,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          expect(op.opHash).toBeDefined();
          });
 
-      test('Verify that metadata for a Fa2 contract can be fetched', 2, async (done: () => void) => {
+      test('Verify that metadata for a Fa2 contract can be fetched', 2, async () => {
          const contract = await Tezos.wallet.at(contractAddress, tzip16);
          const metadata = await contract.tzip16().getMetadata();
 
@@ -583,7 +583,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          ])
          });
 
-      test('Verify that Fa2 contract view can be executed', 2, async (done: () => void) => {
+      test('Verify that Fa2 contract view can be executed', 2, async () => {
          // edonet: KT1XKs56Z8iXpYAD3pzfyXC3B4maJciob74X
 
          const contractAbstraction = await Tezos.wallet.at(contractAddress, tzip16);

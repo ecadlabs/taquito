@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup();
     });
 
-    test('Originates a contract having various types of bigmaps', async (done: () => void) => {
+    test('Originates a contract having various types of bigmaps', async () => {
       const op = await Tezos.contract.originate({
         code: ` parameter (or (or (nat %compoundKey) (nat %compoundKeyCompoundValue))
                     (or (nat %compoundValue) (mutez %singleValue)));

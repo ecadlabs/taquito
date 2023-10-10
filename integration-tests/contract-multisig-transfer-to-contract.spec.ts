@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
     beforeEach(async () => {
       await setup()
     })
-    test('test manager transfers scenarios', async (done: () => void) => {
+    test('test manager transfers scenarios', async () => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();

@@ -7,9 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup();
     });
 
-    it('Verify contract.originate for a contract with a hex string matching type bls12_381_fr in initial storage and update the storage value via default method call', async (
-      done
-    ) => {
+    it('Verify contract.originate for a contract with a hex string matching type bls12_381_fr in initial storage and update the storage value via default method call', async () => {
       const op = await Tezos.contract.originate({
         code: `
         parameter (pair bls12_381_fr bls12_381_fr);
@@ -39,9 +37,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify contract.originate for a contract with a hex string matching type bls12_381_g1 in initial storage and update storage value via default method call', async (
-      done
-    ) => {
+    it('Verify contract.originate for a contract with a hex string matching type bls12_381_g1 in initial storage and update storage value via default method call', async () => {
       const op = await Tezos.contract.originate({
         code: `
         parameter (pair bls12_381_g1 bls12_381_fr);

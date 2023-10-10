@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     beforeEach(async () => {
       await setup()
     })
-    test('Verify contract.originate for a token contract with BigMap and with initialized Storage/BigMap',2, async (done: () => void) => {
+    test('Verify contract.originate for a token contract with BigMap and with initialized Storage/BigMap',2, async () => {
       const addr = await Tezos.signer.publicKeyHash();
       const initialStorage = {
         owner: addr,

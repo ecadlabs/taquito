@@ -8,7 +8,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 	describe(`Test contract origination with type never through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
 			await setup();
-			done();
 		});
 
 		it('Verify contract.originate for a contract and then try to call its %admin entry-point of type never, expect the method call to fail', async () => {
@@ -35,7 +34,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 				expect(e.message).toContain('Assigning a value to the type never is forbidden.');
 			}
 
-			done();
 		});
 
 
@@ -68,7 +66,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			const contract = await op.contract();
 			expect(contract).toBeDefined();
 
-			done();
 		});
 	});
 });

@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     beforeEach(async () => {
       await setup()
     })
-    test('Verify wallet.originate for a contract and init the BigMap to empty map', 2, async (done: () => void) => {
+    test('Verify wallet.originate for a contract and init the BigMap to empty map', 2, async () => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: tokenBigmapCode,

@@ -252,7 +252,7 @@
             "start": "rollup -c rollup.config.ts --configPlugin typescript -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
+            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix"]
           },
           "jest": {
             "transform": {
