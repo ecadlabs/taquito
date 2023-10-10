@@ -8,12 +8,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with key collections through contract api using: ${rpc}`, () => {
     type Storage = { keySet: string[], keyMap: MichelsonMap<string, number>; }
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    it('Verify contract.originate for a contract with set and map of keys and change them using corresponding methods', async (done) => {
+    it('Verify contract.originate for a contract with set and map of keys and change them using corresponding methods', async () => {
       const initialStorage: Storage = {
         keySet: [
           'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
@@ -71,7 +70,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(storage['keyMap'].get('p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi')?.toString()).toEqual('201');
       expect(storage['keyMap'].get('p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV')).toBeUndefined();
 
-      done();
     });
   });
 });

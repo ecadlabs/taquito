@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   describe(`Test Update Consensus Key using: ${rpc}`, () => {
     let pk: string;
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup(true);
 
       try {
@@ -24,16 +24,14 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         console.log(JSON.stringify(e));
       }
       
-      done();
     });
 
-    it('should be able to inject update_consensus_key operation', async (done) => {
+    it('should be able to inject update_consensus_key operation', async () => {
       const op = await Tezos.contract.updateConsensusKey({ pk });
       await op.confirmation();
 
       expect(op.status).toBe('applied');
       expect(op.includedInBlock).toBeDefined();
-      done();
     });
   });
 })

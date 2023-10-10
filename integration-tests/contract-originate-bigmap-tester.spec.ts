@@ -5,9 +5,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test origination of contract with various types of bigmaps using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
     test('Originates a contract having various types of bigmaps', async (done: () => void) => {
@@ -62,7 +61,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
-      done();
     });
   });
 });

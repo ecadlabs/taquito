@@ -49,7 +49,7 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     );
   });
 
-  it('should set the pollingIntervalMilliseconds property based on the minimal_block_delay constant', async (done) => {
+  it('should set the pollingIntervalMilliseconds property based on the minimal_block_delay constant', async () => {
     const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
     mockReadProvider.getProtocolConstants.mockResolvedValue({
       time_between_blocks: [new BigNumber('30'), new BigNumber('20')],
@@ -61,10 +61,9 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype
     );
-    done();
   });
 
-  it('should set the pollingIntervalMilliseconds property based on the time_between_blocks constant', async (done) => {
+  it('should set the pollingIntervalMilliseconds property based on the time_between_blocks constant', async () => {
     const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
     mockReadProvider.getProtocolConstants.mockResolvedValue({
       time_between_blocks: [new BigNumber('30'), new BigNumber('20')],
@@ -75,10 +74,9 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype
     );
-    done();
   });
 
-  it('should use default polling interval on error fetching the constants', async (done) => {
+  it('should use default polling interval on error fetching the constants', async () => {
     const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
     mockReadProvider.getProtocolConstants.mockRejectedValue(new Error());
     const pollingInterval = await pollingSubscribeProvider['getConfirmationPollingInterval']();
@@ -88,10 +86,9 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype
     );
-    done();
   });
 
-  it('should use default polling interval if time_between_blocks is 0 (sandbox)', async (done) => {
+  it('should use default polling interval if time_between_blocks is 0 (sandbox)', async () => {
     const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
     mockReadProvider.getProtocolConstants.mockResolvedValue({
       time_between_blocks: [new BigNumber('0'), new BigNumber('0')],
@@ -102,6 +99,5 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype
     );
-    done();
   });
 });

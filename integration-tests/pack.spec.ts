@@ -29,12 +29,11 @@ CONFIGS().forEach(({ rpc, protocol }) => {
         describe("Test pack", () => {
             for (const s of src) {
                 const def = (s.proto === undefined || s.proto === protocol) ? test : test.skip;
-                def(`Verify that .pack for local pack will return same result as for network pack: ${JSON.stringify(s.data)} (${rpc})`, async done => {
+                def(`Verify that .pack for local pack will return same result as for network pack: ${JSON.stringify(s.data)} (${rpc})`, async () => {
                     const local = packDataBytes(s.data, s.type);
                     const rpcResult = await Tezos.rpc.packData({ data: s.data, type: s.type as MichelsonV1Expression }, { block: "head" })
                     expect(local.bytes).toEqual(rpcResult.packed);
-                    done();
-                });
+                              });
             }
         });
     });

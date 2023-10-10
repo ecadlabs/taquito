@@ -19,25 +19,23 @@ describe('RpcWrapperContractsLibrary tests', () => {
     ).toBeInstanceOf(RpcWrapperContractsLibrary);
   });
 
-  it('get script from RPC when contract is not in the library', async (done) => {
+  it('get script from RPC when contract is not in the library', async () => {
     mockRpcClient.getNormalizedScript.mockResolvedValue('script-from-rpc');
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const rpcWrapper = new RpcWrapperContractsLibrary(mockRpcClient as any, new ContractsLibrary());
     const script = await rpcWrapper.getNormalizedScript(contractAddress);
     expect(script).toEqual('script-from-rpc');
-    done();
   });
 
-  it('get entrypoints from RPC when contract is not in the library', async (done) => {
+  it('get entrypoints from RPC when contract is not in the library', async () => {
     mockRpcClient.getEntrypoints.mockResolvedValue('entrypoints-from-http');
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const rpcWrapper = new RpcWrapperContractsLibrary(mockRpcClient as any, new ContractsLibrary());
     const entrypoints = await rpcWrapper.getEntrypoints(contractAddress);
     expect(entrypoints).toEqual('entrypoints-from-http');
-    done();
   });
 
-  it('get script and entrypoints from library when contract is in the library', async (done) => {
+  it('get script and entrypoints from library when contract is in the library', async () => {
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const contractLib = new ContractsLibrary();
 
@@ -51,6 +49,5 @@ describe('RpcWrapperContractsLibrary tests', () => {
     expect((await rpcWrapper.getContract(contractAddress)).script).toBeDefined;
     expect((await rpcWrapper.getContract(contractAddress)).script).toEqual(script);
     expect(await rpcWrapper.getEntrypoints(contractAddress)).toEqual(entrypoints);
-    done();
   });
 });

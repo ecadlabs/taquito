@@ -4,11 +4,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   describe(`Test emptying a revealed implicit account through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify that a new revealed implicit account can be created, funded and emptied', async (done) => {
+    it('Verify that a new revealed implicit account can be created, funded and emptied', async () => {
       const LocalTez = await createAddress();
       const op = await Tezos.wallet.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 }).send();
       await op.confirmation();
@@ -30,7 +29,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       //expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toEqual("0")
       expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toBeDefined
-      done();
     });
   });
 })

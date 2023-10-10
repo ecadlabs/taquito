@@ -5,11 +5,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination that throws FAILWITH api through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify contract.originate a contract with FAILWITH instruction and verify an error is thrown when calling the contract entrypoint', async (done) => {
+    it('Verify contract.originate a contract with FAILWITH instruction and verify an error is thrown when calling the contract entrypoint', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: failwithContractCode,
@@ -32,7 +31,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       } catch (ex: any) {
         expect(ex.message).toMatch('test')
       }
-      done();
     });
   });
 })

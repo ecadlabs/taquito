@@ -108,7 +108,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   let secondUser: TezosToolkit;
 
   describe(`Polling Subscribe Provider using ${rpc}`, () => {
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup();
 
       secondUser = await createAddress();
@@ -140,10 +140,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       } catch (e) {
         console.log(e);
       }
-      done();
     });
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       const contract = await Tezos.contract.at(mainContractAddress!);
       const resetStorageOperation = await contract.methodsObject
         .default({
@@ -154,10 +153,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         })
         .send();
       await resetStorageOperation.confirmation();
-      done();
     });
 
-    it('should be able to subscribe to events with tag and address params given', async (done) => {
+    it('should be able to subscribe to events with tag and address params given', async () => {
       const data: any = [];
 
       const eventSub = Tezos.stream.subscribeEvent({
@@ -196,10 +194,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(data[0].payload).toBeDefined();
       expect(data[0].result).toBeDefined();
 
-      done();
     });
 
-    it.skip('should include events from failed operations when filter does not exclude events from failed operations', async (done) => {
+    it.skip('should include events from failed operations when filter does not exclude events from failed operations', async () => {
       const data: any = [];
 
       const eventSub = Tezos.stream.subscribeEvent({
@@ -251,10 +248,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       expect(data.length).toEqual(3);
       expect(data.filter((x: any) => x.event.result.status === 'backtracked').length).toEqual(2);
-      done();
     });
 
-    it.skip('should properly filter events from failed operations', async (done) => {
+    it.skip('should properly filter events from failed operations', async () => {
       const data: any = [];
 
       const eventSub = Tezos.stream.subscribeEvent({
@@ -307,7 +303,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       expect(data.length).toEqual(1);
       expect(data[0].event.result.status).toEqual('applied');
-      done();
     });
   });
 });

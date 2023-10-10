@@ -35,10 +35,9 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
   describe('Verify LedgerSigner', () => {
     let transport: LedgerTransport;
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       transport = await TransportNodeHid.create();
       await setup(true);
-      done();
     });
 
     it('Verify that LedgerSigner is instantiable with default parameters', () => {
@@ -61,7 +60,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     });
 
     describe('Verify retrieving the public key from the Ledger', () => {
-      it('Verify that Ledger will provide correct public key and public key hash for tz1 curve and default path', async (done) => {
+      it('Verify that Ledger will provide correct public key and public key hash for tz1 curve and default path', async () => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -76,10 +75,9 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         expect(pkh).toEqual(
           'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY'
         );
-        done();
-      });
+        });
 
-      it('Verify that Ledger will provide correct public key and public key hash for tz2 curve and default path', async (done) => {
+      it('Verify that Ledger will provide correct public key and public key hash for tz2 curve and default path', async () => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -94,10 +92,9 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         expect(pkh).toEqual(
           'tz2SxDTGnT3mHzaHf6mwy6Wtw1qUX1hzm1Sw'
         );
-        done();
-      });
+        });
 
-      it('Verify that that Ledger will provide correct public key and public key hash for tz3 curve and path having 1 as account value', async (done) => {
+      it('Verify that that Ledger will provide correct public key and public key hash for tz3 curve and path having 1 as account value', async () => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/1'/0'",
@@ -112,14 +109,13 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         expect(pkh).toEqual(
           'tz3PX4M9x9N7oXp2WWxNcQNK6GtaGdCdesK9'
         );
-        done();
-      });
+        });
     });
 
     describe('Verify signing operation with Ledger Device', () => {
       jest.setTimeout(30000);
 
-      it('Verify that Ledger returns the correct signature', async (done) => {
+      it('Verify that Ledger returns the correct signature', async () => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -139,13 +135,12 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
           sbytes:
             '03281e35275248696304421740804c13f1434162474ee9449f70fb0f02cfd178f26c00c9fc72e8491bd2973e196f04ec6918ad5bcee22daa0abeb98d01c35000c09a0c0000eadc0855adb415fa69a76fc10397dc2fb37039a000e029a32d628fe101d9c07f82bfd34c86c0b04ee7e3bbe317420ea098944464f18d701857c42fae94ff81bfaf838b6c16df1188ca462bd78b5dd1a2b7371f3108'
         });
-        done();
-      });
+        });
     })
 
     describe('Verify the use of a Ledger Device with contract api', () => {
       jest.setTimeout(240000)
-      it('Verify that a contract can be originated with Ledger', async (done) => {
+      it('Verify that a contract can be originated with Ledger', async () => {
 
         const fundAccountFirst = await tezos.contract.transfer({ to: 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY', amount: 9 });
         await fundAccountFirst.confirmation();
@@ -166,14 +161,13 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         await op.confirmation()
         expect(op.hash).toBeDefined();
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-        done();
-      });
+        });
     })
 
     describe('Verify the use of a Ledger Device with wallet api', () => {
       jest.setTimeout(120000)
 
-      it('Verify signing and injecting a transaction with Ledger', async (done) => {
+      it('Verify signing and injecting a transaction with Ledger', async () => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/0'/0'",
@@ -185,13 +179,12 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
         await op.confirmation()
         expect(op.opHash).toBeDefined();
-        done();
-      });
+        });
     })
 
     describe('Verify that use of a ledger device works with bip32_ed25519', () => {
       jest.setTimeout(60000);
-      it('Verify that the pk and pkh is correct', async (done) => {
+      it('Verify that the pk and pkh is correct', async () => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/1'/0'",
@@ -207,13 +200,12 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         expect(pk).toEqual('edpkujVjFVJtb9Z1D7jpSpPMrKzdTRZSRT8E3L26T42vvA6VSv7jND');
         expect(pkh).toEqual('tz1UpizQ6AGjMeCZCLpuyuL4BSzoUC4XD1QE');
 
-        done();
-      })
+        })
     })
 
     describe('Verify bip32 signature', () => {
       jest.setTimeout(60000);
-      it('Verify that the signature is correctly prefixed with originated contract', async (done) => {
+      it('Verify that the signature is correctly prefixed with originated contract', async () => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/1'/0'",
@@ -230,11 +222,10 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
         expect(contract.status).toEqual('applied')
 
         expect(contract.raw.opOb.signature?.slice(0, 5)).toEqual('edsig')
-        done();
-      })
+        })
 
       jest.setTimeout(60000);
-      it('Verify that the signature is correct with set forged payload', async (done) => {
+      it('Verify that the signature is correct with set forged payload', async () => {
         const signer = new LedgerSigner(
           transport,
           "44'/1729'/1'/0'",
@@ -248,8 +239,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
 
         expect(sig.prefixSig).toEqual('edsigtfJQi7mj7Lxbt4pt9U8LG6YU9pCCjxqR6qWyhGGorZ1iWJBCd9Wvhg8mFJKZfqhRSEnKoTEAbxNXaUvMAUeXdNYDp2PC5K')
         expect(sig.bytes).toEqual('5a64ae05e0014c3a7936c2b09a51517116a1b1e47063319affade059baa45a7e6d0064beee4178338ea816d4e6e41eb7df5285b5fd318304b1e214fd0b990300000000007a02000000750500096500000008036803620394036e000000000501036c050202000000560316057a000403880342034c0655076505870368039400000008256465706f7369740200000015072f02000000090200000004034f03270200000000034c0743036a0000034c034d034f053d036d05700002031b034200000002030b')
-        done();
-      })
+        })
     })
   });
 })

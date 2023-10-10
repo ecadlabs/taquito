@@ -8,9 +8,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination with empty BigMap origination scenario through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
     test('Verify wallet.originate for a contract and init the BigMap to empty map', 2, async (done: () => void) => {
       const op = await Tezos.wallet.originate({
@@ -24,7 +23,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send()
       await op.confirmation()
       expect(op.opHash).toBeDefined();
-      done();
     });
   });
 })

@@ -102,7 +102,7 @@ describe('WalletOperation', () => {
   });
 
   describe('increasePaidStorage format to operation reqs', () => {
-    it('should return format for operation to be sent', async (done) => {
+    it('should return format for operation to be sent', async () => {
       const op = await createIncreasePaidStorageOperation({
         source: 'tz2WyYB6AfhX3vHozXgo8kUK443Znv6Fv8D3',
         amount: 1,
@@ -117,11 +117,10 @@ describe('WalletOperation', () => {
       expect(op.fee).toEqual(397);
       expect(op.gas_limit).toEqual(1100);
       expect(op.storage_limit).toEqual(0);
-      done();
     });
   });
   describe('Operation should mock response class instance IncreasePaidStorageWalletOperation for operationFactory', () => {
-    it('should return instance of IncreasePaidStorageWalletOperation ', async (done) => {
+    it('should return instance of IncreasePaidStorageWalletOperation ', async () => {
       const testScheduler = new TestScheduler((actual, expected) => {
         expect(actual).toEqual(expected);
       });
@@ -141,12 +140,10 @@ describe('WalletOperation', () => {
         flush();
         expect(op).toBeInstanceOf(IncreasePaidStorageWalletOperation);
       });
-
-      done();
     });
   });
   describe('Wallet should run full method of operation', () => {
-    it('should run increasePaidStorage method from start to finish with mock data', async (done) => {
+    it('should run increasePaidStorage method from start to finish with mock data', async () => {
       const wallet = new Wallet(mockContext);
       const op = await wallet
         .increasePaidStorage({ amount: 1, destination: 'KT1P1w5D61s69zfYNubLzonUkgC7zEkXTbY7' })
@@ -159,8 +156,6 @@ describe('WalletOperation', () => {
         gas_limit: 1100,
         storage_limit: 0,
       });
-
-      done();
     });
   });
 });

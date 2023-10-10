@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@taquito/core": "^17.3.2",
-    "axios": "1.5.1"
+    "axios": "^0.27.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.39",

@@ -3,7 +3,7 @@ import { CompositeForger, Forger } from '../../src/taquito';
 describe('Composite forger', () => {
   const mockForgerThatReturn = (val: string): Forger => ({ forge: () => Promise.resolve(val) });
 
-  it('Should throw if forgers give different result', async done => {
+  it('Should throw if forgers give different result', async () => {
     const composite = new CompositeForger([mockForgerThatReturn('a'), mockForgerThatReturn('b')]);
 
     await expect(composite.forge({} as any)).rejects.toEqual(
@@ -12,11 +12,9 @@ describe('Composite forger', () => {
         results: expect.arrayContaining([expect.stringMatching('a'), expect.stringMatching('b')]),
       })
     );
-
-    done();
   });
 
-  it('Should throw if forgers give different result', async done => {
+  it('Should throw if forgers give different result', async () => {
     const composite = new CompositeForger([
       mockForgerThatReturn('a'),
       mockForgerThatReturn('a'),
@@ -29,11 +27,9 @@ describe('Composite forger', () => {
         results: expect.arrayContaining([expect.stringMatching('a'), expect.stringMatching('c')]),
       })
     );
-
-    done();
   });
 
-  it('Should return result if all forger return the same', async done => {
+  it('Should return result if all forger return the same', async () => {
     const composite = new CompositeForger([
       mockForgerThatReturn('a'),
       mockForgerThatReturn('a'),
@@ -41,21 +37,15 @@ describe('Composite forger', () => {
     ]);
 
     await expect(composite.forge({} as any)).resolves.toEqual('a');
-
-    done();
   });
 
-  it('Should return result if all forger return the same', async done => {
+  it('Should return result if all forger return the same', async () => {
     const composite = new CompositeForger([mockForgerThatReturn('a')]);
 
     await expect(composite.forge({} as any)).resolves.toEqual('a');
-
-    done();
   });
 
-  it('Should throw if forger list is empty', async done => {
+  it('Should throw if forger list is empty', async () => {
     expect(() => new CompositeForger([])).toThrow();
-
-    done();
   });
 });

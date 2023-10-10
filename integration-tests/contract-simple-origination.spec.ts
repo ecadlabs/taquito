@@ -5,12 +5,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination of a simple contract through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    it('Verify contract.originate for a simple contract', async (done) => {
+    it('Verify contract.originate for a simple contract', async () => {
     
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -31,7 +30,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
       expect(op.storageDiff).toEqual('62');
 
-      done();
     });
   });
 });

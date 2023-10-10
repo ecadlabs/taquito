@@ -59,7 +59,7 @@ describe('LambdaView test', () => {
     toolkitLambda = new TezosToolkit(mockRpcClientLambda);
   });
 
-  it('LambdaView is instantiable with parameters', async (done) => {
+  it('LambdaView is instantiable with parameters', async () => {
     mockRpcClientView.getEntrypoints.mockResolvedValue(entrypoints);
     const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
     const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
@@ -75,11 +75,9 @@ describe('LambdaView test', () => {
         ],
       })
     ).toBeInstanceOf(LambdaView);
-
-    done();
   });
 
-  it('Should create a valid voidLambda', async (done) => {
+  it('Should create a valid voidLambda', async () => {
     mockRpcClientView.getEntrypoints.mockResolvedValue(entrypoints);
     const viewContract = await toolkitView.contract.at('KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto');
     const lambdaContract = await toolkitLambda.contract.at('KT1VAy1o1FGiXYfD3YT7x7k5eF5HSHhmc1u6');
@@ -305,11 +303,9 @@ describe('LambdaView test', () => {
       { prim: 'DIP', args: [[{ prim: 'UNIT' }]] },
       { prim: 'PAIR' },
     ]);
-
-    done();
   });
 
-  it(`Should fail to create a LambdaView instance if entrypoints[this.viewMethod].prim !== 'pair'`, async (done) => {
+  it(`Should fail to create a LambdaView instance if entrypoints[this.viewMethod].prim !== 'pair'`, async () => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
@@ -334,11 +330,9 @@ describe('LambdaView test', () => {
           ],
         })
     ).toThrow(`Expected {'prim': 'pair', ..} but found {'prim': nat, ..}`);
-
-    done();
   });
 
-  it(`Should fail to create a LambdaView instance if length of args entrypoint !== 2`, async (done) => {
+  it(`Should fail to create a LambdaView instance if length of args entrypoint !== 2`, async () => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
@@ -364,11 +358,9 @@ describe('LambdaView test', () => {
           ],
         })
     ).toThrowError(/Expected an Array of length 2, but found:/);
-
-    done();
   });
 
-  it(`Should fail to create a LambdaView instance if callbackContract.prim !== 'contract'`, async (done) => {
+  it(`Should fail to create a LambdaView instance if callbackContract.prim !== 'contract'`, async () => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
@@ -393,11 +385,9 @@ describe('LambdaView test', () => {
           ],
         })
     ).toThrowError(/Expected a {prim: 'contract', ...}, but found:/);
-
-    done();
   });
 
-  it(`Should fail to create a LambdaView instance if callbackContract.args.length !== 1`, async (done) => {
+  it(`Should fail to create a LambdaView instance if callbackContract.args.length !== 1`, async () => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
@@ -422,11 +412,9 @@ describe('LambdaView test', () => {
           ],
         })
     ).toThrowError(/Expected a single argument to 'contract', but found:/);
-
-    done();
   });
 
-  it(`Should fail to create a LambdaView instance if the view entrypoint does not exist`, async (done) => {
+  it(`Should fail to create a LambdaView instance if the view entrypoint does not exist`, async () => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
@@ -444,11 +432,9 @@ describe('LambdaView test', () => {
     expect(() => new LambdaView(lambdaContract, viewContract, 'test')).toThrowError(
       'Contract at KT1A87ZZL8mBKcWGr34BVsERPCJjfX82iBto does not have entrypoint: test'
     );
-
-    done();
   });
 
-  it(`Should fail to create a LambdaView instance if the callback has no args`, async (done) => {
+  it(`Should fail to create a LambdaView instance if the callback has no args`, async () => {
     mockRpcClientView.getEntrypoints.mockResolvedValue({
       entrypoints: {
         getAllowance: {
@@ -470,7 +456,5 @@ describe('LambdaView test', () => {
     expect(() => new LambdaView(lambdaContract, viewContract, 'getAllowance')).toThrowError(
       'Callback contract args undefined'
     );
-
-    done();
   });
 });

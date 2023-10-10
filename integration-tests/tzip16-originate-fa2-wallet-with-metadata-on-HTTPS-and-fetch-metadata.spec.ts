@@ -10,10 +10,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
    let contractAddress: string;
    describe(`Test contract origination of a fa2 contract having Tzip16 metadata and view through wallet api using: ${rpc}`, () => {
 
-      beforeEach(async (done) => {
+      beforeEach(async () => {
          await setup()
-         done()
-      })
+         })
 
       test('Verify contract.originate for a Fa2 contract having metadata on HTTPS', 2, async (done: () => void) => {
 
@@ -65,8 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          await op.confirmation();
          contractAddress = (await op.contract()).address;
          expect(op.opHash).toBeDefined();
-         done();
-      });
+         });
 
       test('Verify that metadata for a Fa2 contract can be fetched', 2, async (done: () => void) => {
          const contract = await Tezos.wallet.at(contractAddress, tzip16);
@@ -583,8 +581,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
                ]
             }
          ])
-         done();
-      });
+         });
 
       test('Verify that Fa2 contract view can be executed', 2, async (done: () => void) => {
          // edonet: KT1XKs56Z8iXpYAD3pzfyXC3B4maJciob74X
@@ -598,7 +595,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          const viewGetDefaultExpiryResult = await metadataViews.GetDefaultExpiry().executeView();
          expect(viewGetDefaultExpiryResult.toString()).toEqual('1000');
 
-         done();
-      });
+         });
    });
 })

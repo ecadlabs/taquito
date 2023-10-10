@@ -8,12 +8,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 	Tezos.addExtension(new Tzip16Module());
 
 	describe(`Test contract origination with metadata having views that return bytes and calls the views from TZComet through contract api using: ${rpc}`, () => {
-		beforeEach(async (done) => {
+		beforeEach(async () => {
 			await setup();
 			done();
 		});
 
-		test('Verify contract.originate for a contract with metadata having views that return bytes (example taken from TZComet) and then call the views', async (done) => {
+		test('Verify contract.originate for a contract with metadata having views that return bytes (example taken from TZComet) and then call the views', async () => {
 
 			const metadataBigMAp = new MichelsonMap();
 			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
@@ -58,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			done();
 		});
 
-	test('Verify contract.originate for a contract with metadata having a couple of views (example taken from TZComet) and then call the views', async (done) => {
+	test('Verify contract.originate for a contract with metadata having a couple of views (example taken from TZComet) and then call the views', async () => {
 
 			const metadataBigMAp = new MichelsonMap();
 			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));

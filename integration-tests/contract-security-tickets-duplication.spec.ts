@@ -10,12 +10,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    mondaynet('Verify creating ticket is not possible with duplicate transaction operation - fail with internal_operation_replay', async (done) => {
+    mondaynet('Verify creating ticket is not possible with duplicate transaction operation - fail with internal_operation_replay', async () => {
       try {
         const opJoin = await Tezos.contract.originate({
           code: `   {   parameter (ticket string);
@@ -83,10 +82,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('internal_operation_replay');
       }
-      done();
     });
 
-    mondaynet('Verify contract for ticket is not created with duplicate map containing tickets - fail with unexpected ticket', async (done) => {
+    mondaynet('Verify contract for ticket is not created with duplicate map containing tickets - fail with unexpected ticket', async () => {
       try {
         const opMapDup = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -119,10 +117,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
-      done();
     });
 
-    mondaynet('Verify contract for ticket is not created with a duplicate big_map containing tickets - fail with unexpected_ticket', async (done) => {
+    mondaynet('Verify contract for ticket is not created with a duplicate big_map containing tickets - fail with unexpected_ticket', async () => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -155,7 +152,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
-      done();
     });
   });
 });

@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Funder = lib;
   let Tezos: TezosToolkit;
   describe(`Generic Multisig set delegate: ${rpc}`, () => {
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup(true);
       // Checks if test is being run in Flextesa or not
       // If it is, fund the signer account using using 'Funder', which is the flextesa_bootstrap account
@@ -18,7 +18,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       } else {
         Tezos = Funder;
       }
-      done()
     })
     test('test manager transfers set delegate scenarios', async () => {
 

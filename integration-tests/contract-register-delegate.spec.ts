@@ -5,11 +5,10 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   describe(`Test register delegate through contract api: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true)
-      done()
     })
-    it('As a User I want to verify that I can register the current address as delegate using contract.registerDelegate', async (done) => {
+    it('As a User I want to verify that I can register the current address as delegate using contract.registerDelegate', async () => {
       try {
         const pkh = await Tezos.signer.publicKeyHash();
         const op = await Tezos.contract.registerDelegate({});
@@ -27,7 +26,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
           expect(ex.message).toMatch('delegate.already_active')
         }
       }
-      done();
     });
   });
 })

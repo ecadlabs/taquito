@@ -9,12 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
    let contractAddress: string;
    describe(`Test contract origination of a fa2 contract having Tzip16 metadata and view through contract api using: ${rpc}`, () => {
 
-      beforeEach(async (done) => {
+      beforeEach(async () => {
          await setup()
-         done()
-      })
+         })
 
-      it('Verify contract.originate for a Fa2 contract having metadata on HTTPS', async (done) => {
+      it('Verify contract.originate for a Fa2 contract having metadata on HTTPS', async () => {
 
          const LocalTez1 = await createAddress();
          const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
@@ -65,10 +64,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          contractAddress = (await op.contract()).address;
          expect(op.hash).toBeDefined();
          expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-         done();
-      });
+         });
 
-      it('Verify that metadata for a Fa2 contract can be fetched', async (done) => {
+      it('Verify that metadata for a Fa2 contract can be fetched', async () => {
 
          const contract = await Tezos.contract.at(contractAddress, tzip16);
          const metadata = await contract.tzip16().getMetadata();
@@ -584,10 +582,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
                ]
             }
          ])
-         done();
-      });
+         });
 
-      it('Verify that Fa2 contract view can be executed', async (done) => {
+      it('Verify that Fa2 contract view can be executed', async () => {
 
          const contractAbstraction = await Tezos.contract.at(contractAddress, tzip16);
          const metadataViews = await contractAbstraction.tzip16().metadataViews();
@@ -598,7 +595,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          const viewGetDefaultExpiryResult = await metadataViews.GetDefaultExpiry().executeView();
          expect(viewGetDefaultExpiryResult.toString()).toEqual('1000');
 
-         done();
-      });
+         });
    });
 })

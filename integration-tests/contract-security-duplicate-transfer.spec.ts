@@ -10,14 +10,13 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
     mondaynet(
       'Verify Type "operation" is not duplicable with error internal_operation_replay.',
-      async (done) => {
+      async () => {
         try {
           const publicKeyHash = await Tezos.signer.publicKeyHash();
           const op = await Tezos.contract.originate({
@@ -60,8 +59,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         } catch (error: any) {
           expect(error.message).toContain('internal_operation_replay');
         }
-        done();
-      }
+        }
     );
   });
 });

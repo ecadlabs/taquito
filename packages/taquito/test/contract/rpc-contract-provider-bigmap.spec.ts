@@ -108,7 +108,7 @@ describe('RpcContractProvider test', () => {
   });
 
   describe('getStorage', () => {
-    it('should call getStorage', async (done) => {
+    it('should call getStorage', async () => {
       const result = await rpcContractProvider.getStorage('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
       expect(result).toEqual({
         '0': {},
@@ -116,12 +116,11 @@ describe('RpcContractProvider test', () => {
         '2': false,
         '3': new BigNumber('200'),
       });
-      done();
     });
   });
 
   describe('getBigMapKey', () => {
-    it('should call getBigMapKey', async (done) => {
+    it('should call getBigMapKey', async () => {
       mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
       const result = await rpcContractProvider.getBigMapKey(
         'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
@@ -143,12 +142,11 @@ describe('RpcContractProvider test', () => {
         key: { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
         type: { prim: 'bytes' },
       });
-      done();
     });
   });
 
   describe('getBigMapKeyByID', () => {
-    it('should call getBigMapKeyByID', async (done) => {
+    it('should call getBigMapKeyByID', async () => {
       mockRpcClient.packData.mockResolvedValue({
         packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
       });
@@ -176,10 +174,9 @@ describe('RpcContractProvider test', () => {
         'expruc6BZL8Lz2pipLAwGEqGwUjbdMzbVikNvD589fhVf4tKSG58ic'
       );
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toEqual({ block: 'head' });
-      done();
     });
 
-    it('should call getBigMapKeyByID when a block level is specified', async (done) => {
+    it('should call getBigMapKeyByID when a block level is specified', async () => {
       mockRpcClient.packData.mockResolvedValue({
         packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
       });
@@ -210,12 +207,11 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][2]).toEqual({
         block: '123456',
       });
-      done();
     });
   });
 
   describe('getBigMapKeysByID', () => {
-    it('should call getBigMapKeysByID', async (done) => {
+    it('should call getBigMapKeysByID', async () => {
       mockRpcClient.getBlockHeader.mockResolvedValue({ level: 123456 });
       mockRpcClient.packData.mockResolvedValueOnce({
         packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
@@ -354,11 +350,9 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[5][2]).toEqual({
         block: '123456',
       });
-
-      done();
     });
 
-    it('getBigMapKeysByID should set value to undefined for key that does not exist', async (done) => {
+    it('getBigMapKeysByID should set value to undefined for key that does not exist', async () => {
       mockRpcClient.getBlockHeader.mockResolvedValue({ level: 123456 });
       mockRpcClient.packData.mockResolvedValueOnce({
         packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
@@ -420,10 +414,9 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[1][2]).toEqual({
         block: '123456',
       });
-      done();
     });
 
-    it("getBigMapKeysByID should accept a level has a parameter and don't fetch the level form the rpc", async (done) => {
+    it("getBigMapKeysByID should accept a level has a parameter and don't fetch the level form the rpc", async () => {
       mockRpcClient.packData.mockResolvedValueOnce({
         packed: '050a00000016000035e993d8c7aaa42b5e3ccd86a33390ececc73abd',
       });
@@ -476,10 +469,9 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[1][2]).toEqual({
         block: '654321',
       });
-      done();
     });
 
-    it('getBigMapKeysByID should set value to undefined if only 1 key to fetch and that it does not exist', async (done) => {
+    it('getBigMapKeysByID should set value to undefined if only 1 key to fetch and that it does not exist', async () => {
       mockRpcClient.packData.mockResolvedValue({
         packed: '050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
       });
@@ -516,10 +508,9 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
         'exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7'
       );
-      done();
     });
 
-    it('getBigMapKeysByID should not call getBlock when there is only 1 key to fetch', async (done) => {
+    it('getBigMapKeysByID should not call getBlock when there is only 1 key to fetch', async () => {
       mockRpcClient.packData.mockResolvedValue({
         packed: '050a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c',
       });
@@ -549,10 +540,9 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
         'exprvPCPwzweu2FnFYTpZJoAM2vEWmPtHDXvsvNsrsKM6ZHMzeahE7'
       );
-      done();
     });
 
-    it('getBigMapKeysByID with a pair as key and a pair as value', async (done) => {
+    it('getBigMapKeysByID with a pair as key and a pair as value', async () => {
       mockRpcClient.packData.mockResolvedValue({
         packed: '0507070100000005746573743201000000057465737433',
       });
@@ -598,10 +588,9 @@ describe('RpcContractProvider test', () => {
       expect(mockRpcClient.getBigMapExpr.mock.calls[0][1]).toEqual(
         'exprteZPr9h8pkyKKw9PMFEXqG1jbMBkj4A2KC9Mp5cAAjSrDWvfXs'
       );
-      done();
     });
 
-    it('getBigMapKeysByID unexpected exception', async (done) => {
+    it('getBigMapKeysByID unexpected exception', async () => {
       mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
       const expectedError = new HttpResponseError(
         'fail',
@@ -624,12 +613,11 @@ describe('RpcContractProvider test', () => {
       } catch (err) {
         expect(err).toBeInstanceOf(HttpResponseError);
       }
-      done();
     });
   });
 
   describe('BigMapAbstraction', () => {
-    it('returns undefined on bad key in BigMap', async (done) => {
+    it('returns undefined on bad key in BigMap', async () => {
       const expectedError = new HttpResponseError(
         'fail',
         STATUS_CODE.NOT_FOUND,
@@ -646,9 +634,8 @@ describe('RpcContractProvider test', () => {
       );
       const returnValue = await bigMap.get('test');
       expect(returnValue).toEqual(undefined);
-      done();
     });
-    it('returns error if error is not 404 from key lookup in BigMap', async (done) => {
+    it('returns error if error is not 404 from key lookup in BigMap', async () => {
       const expectedError = new HttpResponseError(
         'fail',
         STATUS_CODE.FORBIDDEN,
@@ -664,12 +651,11 @@ describe('RpcContractProvider test', () => {
         rpcContractProvider
       );
       await expect(bigMap.get('test')).rejects.toEqual(expectedError);
-      done();
     });
   });
 
   describe('getSaplingDiffByID', () => {
-    it('should call getSaplingDiffById', async (done) => {
+    it('should call getSaplingDiffById', async () => {
       mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
       mockRpcClient.getSaplingDiffById.mockResolvedValue({
         root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
@@ -686,10 +672,9 @@ describe('RpcContractProvider test', () => {
 
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('133');
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toEqual({ block: 'head' }); // no block specified
-      done();
     });
 
-    it('should call getSaplingDiffById with a specified block level', async (done) => {
+    it('should call getSaplingDiffById with a specified block level', async () => {
       mockRpcClient.getBlock.mockResolvedValue({ header: { level: 123456 } });
       mockRpcClient.getSaplingDiffById.mockResolvedValue({
         root: 'fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e',
@@ -706,12 +691,11 @@ describe('RpcContractProvider test', () => {
 
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][0]).toEqual('133');
       expect(mockRpcClient.getSaplingDiffById.mock.calls[0][1]).toEqual({ block: '654321' });
-      done();
     });
   });
 
   describe('at', () => {
-    it('should return contract method', async (done) => {
+    it('should return contract method', async () => {
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
       mockRpcClient.getEntrypoints.mockResolvedValue({
         entrypoints: {
@@ -735,12 +719,11 @@ describe('RpcContractProvider test', () => {
       const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
       expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
       expect(result.methodsObject.mint({ 0: 'test', 1: 100 })).toBeInstanceOf(ContractMethodObject);
-      done();
     });
   });
 
   describe('Storage', () => {
-    it('should have defined storage with TicketTokens without errors', async (done) => {
+    it('should have defined storage with TicketTokens without errors', async () => {
       mockRpcClient.getEntrypoints.mockResolvedValue({
         entrypoints: {},
       });
@@ -751,10 +734,9 @@ describe('RpcContractProvider test', () => {
 
       const keyList = storage.keyMap;
       expect(keyList.size).toEqual(3);
-      done();
     });
 
-    it('Should have defined storage with Nested bigmap in multiple maps', async (done) => {
+    it('Should have defined storage with Nested bigmap in multiple maps', async () => {
       mockRpcClient.getEntrypoints.mockResolvedValue({
         entrypoints: {},
       });
@@ -765,7 +747,6 @@ describe('RpcContractProvider test', () => {
 
       const keyList = storage.keyMap;
       expect(keyList.size).toEqual(1);
-      done();
     });
   });
 });

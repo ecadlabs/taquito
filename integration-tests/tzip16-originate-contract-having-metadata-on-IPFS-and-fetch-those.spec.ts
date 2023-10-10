@@ -17,12 +17,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddress: string;
 
     describe(`Test contract origination having metadata stored at IPFS URL through contract api using: ${rpc}`, () => {
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup();
-            done();
-        });
+              });
 
-        it('Verify contract.originate for a contract having metadata stored on IPFS', async (done) => {
+        it('Verify contract.originate for a contract having metadata stored on IPFS', async () => {
 
             // location of the contract metadata
             const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
@@ -47,10 +46,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             contractAddress = (await op.contract()).address;
             expect(op.hash).toBeDefined();
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-            done();
-        });
+              });
 
-        it('Verify that the metadata for the contract having metadata stored on IPFS can be fetched', async (done) => {
+        it('Verify that the metadata for the contract having metadata stored on IPFS can be fetched', async () => {
 
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -90,7 +88,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined();
             expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined();
             expect(await (await contract.tzip16()).metadataViews()).toEqual({});
-            done();
-        });
+              });
     });
 });

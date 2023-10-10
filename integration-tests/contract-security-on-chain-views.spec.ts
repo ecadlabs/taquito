@@ -17,12 +17,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    mondaynet("Verify we can access the stack of the caller by using the instruction add.", async (done) => {
+    mondaynet("Verify we can access the stack of the caller by using the instruction add.", async () => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -61,10 +60,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.bad_stack');
       }
-      done();
     });
 
-    mondaynet("Verify we can access the stack of the caller by using the instruction dig n", async (done) => {
+    mondaynet("Verify we can access the stack of the caller by using the instruction dig n", async () => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -99,10 +97,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.bad_stack');
       }
-      done();
     });
 
-    mondaynet("Verify we can access the stack of the caller by using the instruction dup.", async (done) => {
+    mondaynet("Verify we can access the stack of the caller by using the instruction dup.", async () => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -136,7 +133,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.bad_stack');
       }
-      done();
     }); 
   });
 });

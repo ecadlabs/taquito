@@ -87,7 +87,7 @@
     "@types/typedarray-to-buffer": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
-    "axios": "^1.5.1",
+    "axios": "^0.27.2",
     "colors": "^1.4.0",
     "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",

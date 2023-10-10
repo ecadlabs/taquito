@@ -5,11 +5,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
 
   describe(`Test emptying a delegated implicit account through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    test('Verify that new Account can be created, delegated and attempt to empty, it should fail despite delegation', async (done) => {
+    test('Verify that new Account can be created, delegated and attempt to empty, it should fail despite delegation', async () => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 0.02 });
       await op.confirmation();
@@ -31,7 +30,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       } catch (ex: any) {
           expect(ex.message).toMatch('empty_implicit_delegated_contract')
       }
-      done();
     });
   });
 })

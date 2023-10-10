@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Events using contract API: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true)
-      done()
     })
-    it(`We should be able to access events of an originated contract`, async (done) => {
+    it(`We should be able to access events of an originated contract`, async () => {
       // Contract origination
       const op = await Tezos.contract.originate({
         code: mainContractWithDuplicateEvents,
@@ -29,7 +28,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       expect(contract.eventSchema[2].tag).toEqual('%tagTwoIntAndString');
       expect(contract.eventSchema[2].type?.prim).toEqual('int');
-      done();
     });
   });
 });

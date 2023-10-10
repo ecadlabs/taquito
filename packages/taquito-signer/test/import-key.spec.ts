@@ -66,16 +66,14 @@ describe('ImportKey', () => {
     toolkit['_options'].forger = mockLocalForger;
   });
 
-  it('should use InMemorySigner when importKey is called', async (done) => {
+  it('should use InMemorySigner when importKey is called', async () => {
     expect(toolkit.signer).toEqual({});
     await importKey(toolkit, 'p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
     expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
     expect(await toolkit.signer.publicKeyHash()).toEqual('tz3Lfm6CyfSTZ7EgMckptZZGiPxzs9GK59At');
-
-    done();
   });
 
-  it('should use InMemorySigner and activate faucet account when called with {privateKeyOrEmail, passphrase, mnemonic, secret} parameters', async (done) => {
+  it('should use InMemorySigner and activate faucet account when called with {privateKeyOrEmail, passphrase, mnemonic, secret} parameters', async () => {
     // Mock fake operation hash
     mockRpcClient.injectOperation.mockResolvedValue(
       'oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP'
@@ -101,10 +99,9 @@ describe('ImportKey', () => {
     });
     expect(mockRpcClient.injectOperation).toHaveBeenCalled();
     expect(await toolkit.signer.publicKeyHash()).toEqual('tz1gaD8adax6qAST1a79sj78XfyPs5k9Nj78');
-    done();
   });
 
-  it('should use InMemorySigner and skip activate faucet account when called with already activated account', async (done) => {
+  it('should use InMemorySigner and skip activate faucet account when called with already activated account', async () => {
     // Mock RPC error when activation is already done
     mockRpcClient.injectOperation.mockRejectedValue({ body: 'Invalid activation' });
     expect(toolkit.signer).toEqual({});
@@ -117,6 +114,5 @@ describe('ImportKey', () => {
     );
     expect(toolkit.signer).toBeInstanceOf(InMemorySigner);
     expect(await toolkit.signer.publicKeyHash()).toEqual('tz1bg7HTLJxHrDcivFUSTx8TLNsJcty7j9r5');
-    done();
   });
 });

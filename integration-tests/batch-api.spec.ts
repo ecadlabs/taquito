@@ -7,11 +7,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
   const Tezos = lib;
   describe(`Test the Taquito batch api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify simple batch transfers with origination', async (done) => {
+    it('Verify simple batch transfers with origination', async () => {
       const batch = await Tezos.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -25,10 +24,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const op = await batch.send();
       await op.confirmation();
       expect(op.status).toEqual('applied')
-      done();
     })
 
-    it('Verify a batch of transfers and origination operations using a combination of the two notations (array of operation with kind mixed with withTransfer method)', async (done) => {
+    it('Verify a batch of transfers and origination operations using a combination of the two notations (array of operation with kind mixed with withTransfer method)', async () => {
       /** Tests the usage of a mix of the 2 possible notations for batched operations
        *  See for details on the 2 notations: 
        *  https://tezostaquito.io/docs/batch_API#--the-array-of-transactions-method 
@@ -52,10 +50,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
         .send();
       await op.confirmation();
       expect(op.status).toEqual('applied')
-      done();
     })
 
-    it('Verify simple batch transfer with origination fails when storage_exhausted', async (done) => {
+    it('Verify simple batch transfer with origination fails when storage_exhausted', async () => {
       expect.assertions(1);
       try {
         await Tezos.batch()
@@ -74,10 +71,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
           message: expect.stringContaining('storage_exhausted.operation')
         }))
       }
-      done();
     })
 
-    it('Verify batch transfer and origination from an account with a low balance', async (done) => {
+    it('Verify batch transfer and origination from an account with a low balance', async () => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();
@@ -97,10 +93,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       ]).send()
       await batchOp.confirmation();
       expect(op.status).toEqual('applied')
-      done();
     })
 
-    it('Verify batch transfer with chained contract calls', async (done) => {
+    it('Verify batch transfer with chained contract calls', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,
@@ -121,10 +116,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       await batchOp.confirmation();
 
       expect(batchOp.status).toEqual('applied')
-      done();
     });
 
-    it('Verify batch transfer with chained contract calls using the `methodsObject` method', async (done) => {
+    it('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,
@@ -145,10 +139,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       await batchOp.confirmation();
 
       expect(batchOp.status).toEqual('applied')
-      done();
     });
 
-    it('Verify simple batch transfers with origination from code in Michelson format', async (done) => {
+    it('Verify simple batch transfers with origination from code in Michelson format', async () => {
       const batch = Tezos.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -162,7 +155,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const op = await batch.send();
       await op.confirmation();
       expect(op.status).toEqual('applied')
-      done();
     })
   });
 })

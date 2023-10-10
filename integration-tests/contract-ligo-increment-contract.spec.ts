@@ -5,11 +5,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination with simple ligo origination scenario through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify contract.originate for a contract in JSON Michelson format produced by LIGO (also increments a counter in the storage)', async (done) => {
+    it('Verify contract.originate for a contract in JSON Michelson format produced by LIGO (also increments a counter in the storage)', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: ligoSample,
@@ -29,7 +28,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const storage2: any = await contract.storage()
       expect(storage2.toString()).toEqual("2")
-      done();
     });
   });
 })

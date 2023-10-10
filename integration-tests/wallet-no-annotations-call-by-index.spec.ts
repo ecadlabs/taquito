@@ -5,11 +5,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test calling methods by index through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
-    test('Verify calls to the methods of the contract that have no annotations and must be referred to using indexes.', async (done) => {
+    test('Verify calls to the methods of the contract that have no annotations and must be referred to using indexes.', async () => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
       const BALANCE = '0';
@@ -52,7 +51,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Verify that the allowance was done as expected
       account1 = await storage[ACCOUNTS].get(ACCOUNT1_ADDRESS);
       expect(account1[ALLOWANCES].get(ACCOUNT2_ADDRESS).toString()).toEqual('1');
-      done();
     });
   });
 });
