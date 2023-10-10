@@ -30,8 +30,8 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript",
-    "start": "rollup -c rollup.config.ts --configPlugin typescript -w",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript --bundleConfigAsCjs",
+    "start": "rollup -c rollup.config.ts --configPlugin typescript --bundleConfigAsCjs -w",
     "test": "jest"
   },
   "lint-staged": {
@@ -59,5 +59,16 @@
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
     ]
+  },
+  "dependencies": {
+    "json-stringify-safe": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/json-stringify-safe": "^5.0.1",
+    "rollup": "^4.0.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "@rollup/plugin-typescript": "^11.1.5"
   }
 }

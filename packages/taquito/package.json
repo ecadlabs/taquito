@@ -38,10 +38,10 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ./version-stamping.js",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript",
-    "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript && npm run build:web",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript --bundleConfigAsCjs",
+    "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript --bundleConfigAsCjs && npm run build:web",
     "build:web": "webpack && node update-readme.js",
-    "start": "rollup -c rollup.config.ts --configPlugin typescript -w",
+    "start": "rollup -c rollup.config.ts --configPlugin typescript --bundleConfigAsCjs -w",
     "postinstall": "node patch.js"
   },
   "lint-staged": {
@@ -113,6 +113,7 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.36.0",
+    "@rollup/plugin-typescript": "^11.1.5",
     "rx-sandbox": "^2.0.5",
     "shelljs": "^0.8.5",
     "stream-browserify": "^3.0.0",

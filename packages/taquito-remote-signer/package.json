@@ -31,8 +31,8 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript",
-    "start": "rollup -c rollup.config.ts --configPlugin typescript -w"
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript --bundleConfigAsCjs",
+    "start": "rollup -c rollup.config.ts --configPlugin typescript --bundleConfigAsCjs -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -92,6 +92,7 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.36.0",
+    "@rollup/plugin-typescript": "^11.1.5",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
