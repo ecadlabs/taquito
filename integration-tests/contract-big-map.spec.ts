@@ -9,9 +9,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;
 
   describe(`Test contract origination with initialized Maps with variants of data through contract api using: ${rpc}`, () => {
-     /** The purpose of the test is to make sure that the keys in the map are properly ordered by Taquito before injection of the operation, 
-     *   If the keys are not ordered, the node will reject the operation. */
-    
+    /** The purpose of the test is to make sure that the keys in the map are properly ordered by Taquito before injection of the operation, 
+    *   If the keys are not ordered, the node will reject the operation. */
+
     beforeEach(async () => {
       await setup()
     })
@@ -167,7 +167,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
           expect.objectContaining(new MichelsonMap())
         );
 
-        }
+      }
     );
     it('Originate contract and init bigmap to empty map', async () => {
       const op = await Tezos.contract.originate({

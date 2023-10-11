@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: timeout } })
       expect(async () => {
 
-          const op = await Tezos.wallet.originate({
+        const op = await Tezos.wallet.originate({
           code: `parameter string;
           storage string;
           code {CAR;

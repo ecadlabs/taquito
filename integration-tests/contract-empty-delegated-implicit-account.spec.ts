@@ -28,7 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
       try {
         await LocalTez.contract.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount, fee: estimate.suggestedFeeMutez, gasLimit: estimate.gasLimit, storageLimit: 0 })
       } catch (ex: any) {
-          expect(ex.message).toMatch('empty_implicit_delegated_contract')
+        expect(ex.message).toMatch('empty_implicit_delegated_contract')
       }
     });
   });

@@ -60,8 +60,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const contract = await op.contract()
       // file deepcode ignore no-any: any is good enough
       const storage: any = await contract.storage()
-      const got = (await storage.accounts.get(addr) ).allowances.get(addr).toString()
-      const want = (initialStorage.accounts.get(addr) as {balance: string, allowances: MichelsonMap<string, string> }).allowances.get(addr)
+      const got = (await storage.accounts.get(addr)).allowances.get(addr).toString()
+      const want = (initialStorage.accounts.get(addr) as { balance: string, allowances: MichelsonMap<string, string> }).allowances.get(addr)
       expect(got).toEqual(want)
     });
   });

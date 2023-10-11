@@ -24,11 +24,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await op.confirmation();
 
         simpleContractAddress = (await op.contract()).address
-      } catch(e) {
+      } catch (e) {
         console.log(JSON.stringify(e));
       }
     });
-  
+
     it(`should be able to increase the paid storage of a contract successfully: ${rpc}`, async () => {
       const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 

@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     describe(`Test delegate registration through wallet api: ${rpc}`, () => {
         beforeEach(async () => {
             await setup(true);
-              });
+        });
         it('Verify that the current address can be registered as a delegate using wallet.registerDelegate', async () => {
             try {
                 const pkh = await Tezos.wallet.pkh();
@@ -34,6 +34,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                     expect(ex.message).toMatch('delegate.already_active')
                 }
             }
-              });
+        });
     });
 });

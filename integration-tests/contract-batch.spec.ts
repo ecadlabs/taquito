@@ -201,7 +201,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
       const batchOp = await batch.send();
 
       await batchOp.confirmation();
-     
+
       // The sum of fee is slightly different from estimates above due to the size of the operation length varying slightly when forged (default value of estimates have higher values than actual estimates, making the variable length smaller than initially estimated)
       expect(batchOp.fee).toEqual(estimateOp[0].suggestedFeeMutez + estimateOp[1].suggestedFeeMutez + estimateOp[2].suggestedFeeMutez);
       expect(batchOp.gasLimit).toEqual(estimateOp[0].gasLimit + estimateOp[1].gasLimit + estimateOp[2].gasLimit)

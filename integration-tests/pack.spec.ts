@@ -33,7 +33,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
                     const local = packDataBytes(s.data, s.type);
                     const rpcResult = await Tezos.rpc.packData({ data: s.data, type: s.type as MichelsonV1Expression }, { block: "head" })
                     expect(local.bytes).toEqual(rpcResult.packed);
-                              });
+                });
             }
         });
     });

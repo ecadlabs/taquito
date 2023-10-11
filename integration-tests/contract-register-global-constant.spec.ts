@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         expect(op.status).toEqual('applied');
 
-        }
+      }
     );
 
   });

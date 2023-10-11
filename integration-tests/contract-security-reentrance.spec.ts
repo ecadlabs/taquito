@@ -110,7 +110,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       /** If the reentry had succeeded the vesting contract would have had less than 5 remaining
        * Since there are still 5 the reentry failed
        */
-      
+
       Tezos.tz.getBalance(vestingContract.address).then((vbalance) => {
         let result = vbalance.toNumber();
         expect((result = 5000000));

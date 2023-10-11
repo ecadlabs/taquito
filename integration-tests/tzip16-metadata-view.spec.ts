@@ -56,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 		});
 
-	test('Verify contract.originate for a contract with metadata having a couple of views (example taken from TZComet) and then call the views', async () => {
+		test('Verify contract.originate for a contract with metadata having a couple of views (example taken from TZComet) and then call the views', async () => {
 
 			const metadataBigMAp = new MichelsonMap();
 			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
@@ -76,7 +76,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 			try {
 				await metadataViews['an-empty-useless-view']().executeView();
-			} catch (e:any) {
+			} catch (e: any) {
 				expect(e.message).toContain('Http error response');
 			}
 

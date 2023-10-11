@@ -43,7 +43,10 @@ export type WalletParamsWithKind =
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
 
-  constructor(private walletProvider: WalletProvider, private context: Context) {}
+  constructor(
+    private walletProvider: WalletProvider,
+    private context: Context
+  ) {}
 
   /**
    *

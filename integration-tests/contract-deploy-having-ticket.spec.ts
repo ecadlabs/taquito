@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     it('Originates a contract having ticket with init in JSON and the contract api', async () => {
       const op = await Tezos.contract.originate({
         code: ticketCode,
-        init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }
+        init: { prim: 'Pair', args: [{ prim: 'None' }, { prim: 'None' }] }
       });
 
       await op.confirmation();

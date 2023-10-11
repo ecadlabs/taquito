@@ -277,7 +277,9 @@
             </div>
             {#if test.documentation}
               <div class="learn-more">
-                <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+                <a href={test.documentation} target="_blank" rel="noopener noreferrer"
+                  >Learn more about <b>{test.keyword}</b> with Taquito</a
+                >
               </div>
             {/if}
           </div>
@@ -386,7 +388,9 @@
       </div>
       {#if test.documentation}
         <div class="learn-more">
-          <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+          <a href={test.documentation} target="_blank" rel="noopener noreferrer"
+            >Learn more about <b>{test.keyword}</b> with Taquito</a
+          >
         </div>
       {/if}
     {/if}

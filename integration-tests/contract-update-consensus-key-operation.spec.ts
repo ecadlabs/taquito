@@ -20,10 +20,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const register = await Tezos.contract.registerDelegate({});
         await register.confirmation();
 
-      } catch(e) {
+      } catch (e) {
         console.log(JSON.stringify(e));
       }
-      
+
     });
 
     it('should be able to inject update_consensus_key operation', async () => {

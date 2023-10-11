@@ -49,7 +49,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
         await CharlieOp.confirmation();
-        }
+      }
     });
 
     flextesanet('Should be able to inject ballot operation in exploration period', async () => {
@@ -72,7 +72,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         expect(explorationBallotOp.operationResults?.ballot).toEqual('yay');
         expect(explorationBallotOp.includedInBlock).toBeDefined();
         expect(explorationBallotOp.hash).toBeDefined();
-        }
+      }
     });
   });
 });

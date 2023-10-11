@@ -33,7 +33,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       catch (ex: any) {
         fail(ex.message);
       } finally {
-        }
+      }
     });
 
     it('Verify .estimate.transfer with allocated destination', async () => {

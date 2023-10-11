@@ -36,7 +36,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const contract = await op.contract();
         expect(await contract.storage()).toBeTruthy();
-        
+
         const opSend = await contract.methods.default(0).send();
         await opSend.confirmation();
 

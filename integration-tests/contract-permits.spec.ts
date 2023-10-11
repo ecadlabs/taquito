@@ -245,7 +245,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     describe(`Verify contract having a permit for tzip-17: ${rpc}`, () => {
       beforeEach(async () => {
         await setup(true);
-        });
+      });
 
       test('Verify that the permit hash can be submitted to an entrypoint', async () => {
         //following https://github.com/EGuenz/smartpy-permits
@@ -372,7 +372,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         expect(successful_transfer.hash).toBeDefined();
         expect(successful_transfer.status).toEqual('applied');
 
-        });
+      });
     });
   });
 });

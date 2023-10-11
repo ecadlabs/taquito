@@ -28,6 +28,7 @@
     "@taquito/beacon-wallet": "^17.3.2",
     "@taquito/taquito": "^17.3.2",
     "@taquito/utils": "^17.3.2",
+    "@taquito/core": "^17.3.1",
     "buffer": "^6.0.3",
     "svelte-select": "^5.7.0",
     "vite-compatible-readable-stream": "^3.6.1"

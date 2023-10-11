@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
         }
       })
       const contract = await op.contract();
-      expect(op.status).toEqual('applied')  
+      expect(op.status).toEqual('applied')
 
       // Utility function that mimics the PAIR operation of michelson
       // file deepcode ignore no-any: any is good enough
@@ -127,7 +127,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
 
       const end_balance = await Tezos.tz.getBalance(knownContract)
       expect(end_balance.toNumber()).toEqual((start_balance.toNumber() + 1))
-      
+
     })
   })
 });

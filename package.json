@@ -64,7 +64,11 @@
     "collectCoverageFrom": [
       "packages/**/src/**/*.{js,ts}"
     ],
-    "watchPathIgnorePatterns": ["/node_modules/", "/integration-tests/", "/example/"]
+    "watchPathIgnorePatterns": [
+      "/node_modules/",
+      "/integration-tests/",
+      "/example/"
+    ]
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.2",
@@ -85,7 +89,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
     "gh-pages": "^6.0.0",
     "husky": "^8.0.3",
     "jest": "^29.7.0",

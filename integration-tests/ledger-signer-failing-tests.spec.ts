@@ -17,10 +17,10 @@ CONFIGS().forEach(({ lib, setup }) => {
         beforeEach(async () => {
             transport = await TransportNodeHid.create();
             await setup();
-              });
+        });
 
         describe('Test to verify that user can decline all prompts on the ledger device', () => {
-            
+
             it('Verify that Ledger will throw an error when public key is declined', async () => {
                 const signer = new LedgerSigner(
                     transport,
@@ -34,7 +34,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                 catch (error: any) {
                     expect(error.message).toBe(`Unable to retrieve public key from Ledger`);
                 }
-                      });
+            });
 
             it('Verify that Ledger will throw an error when signing is declined', async () => {
                 const signer = new LedgerSigner(
@@ -51,10 +51,10 @@ CONFIGS().forEach(({ lib, setup }) => {
                 catch (error: any) {
                     expect(error.message).toBe("Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)")
                 }
-                      });
+            });
 
             describe('Test that Ledger can be used with wallet API', () => {
-                
+
                 jest.setTimeout(60000)
 
                 it('Verify that Ledger will throw an error when a transaction is declined', async () => {
@@ -72,7 +72,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                     catch (error: any) {
                         expect(error.message).toBe("Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)")
                     }
-                              });
+                });
             });
 
             describe('Should be able to use Ledger with contract API', () => {
@@ -96,7 +96,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                     catch (error: any) {
                         expect(error.message).toBe("Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)")
                     }
-                              });
+                });
             })
         });
     });

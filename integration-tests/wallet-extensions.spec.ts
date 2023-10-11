@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract
     describe(`Test extensions TezosToolkit through wallet api: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
-              });
+        });
 
         it('Verify configuration of a ContractsLibrary and a Tzip16Module on the TezosToolkit instance', async () => {
             const contractsLibrary = new ContractsLibrary();
@@ -64,6 +64,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract
             const c = await Tezos.wallet.at(knownBigMapContract);
             expect(c.script).toEqual(erroneousScript);
 
-              });
+        });
     });
 });

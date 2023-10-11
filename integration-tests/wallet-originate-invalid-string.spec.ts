@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           init: `"Copyright ©"`
         }).send()
       } catch (ex) {
-          expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('non_printable_character') }))
+        expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('non_printable_character') }))
       }
     });
   });

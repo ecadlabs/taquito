@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       beforeEach(async () => {
          await setup()
-         })
+      })
 
       it('Verify contract.originate for a Fa2 contract having metadata on HTTPS', async () => {
 
@@ -64,7 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          contractAddress = (await op.contract()).address;
          expect(op.hash).toBeDefined();
          expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-         });
+      });
 
       it('Verify that metadata for a Fa2 contract can be fetched', async () => {
 
@@ -582,7 +582,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
                ]
             }
          ])
-         });
+      });
 
       it('Verify that Fa2 contract view can be executed', async () => {
 
@@ -595,6 +595,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          const viewGetDefaultExpiryResult = await metadataViews.GetDefaultExpiry().executeView();
          expect(viewGetDefaultExpiryResult.toString()).toEqual('1000');
 
-         });
+      });
    });
 })

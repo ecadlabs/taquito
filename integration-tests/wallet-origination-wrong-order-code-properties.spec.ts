@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
     })
 
-  test('Verify wallet.originate for a contract despite the code storage, parameter, code props being in wrong order', async () => {
+    test('Verify wallet.originate for a contract despite the code storage, parameter, code props being in wrong order', async () => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: smartpySample,

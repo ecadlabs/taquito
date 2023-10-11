@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       await nestedOptionsOriginate.confirmation();
       nestedOptionsContract = await nestedOptionsOriginate.contract();
     })
-    it('making contract calls with methodsObject', async ()=>{
+    it('making contract calls with methodsObject', async () => {
       const nested2None1 = await nestedOptionsContract.methodsObject.default(null).send();
       await nested2None1.confirmation();
       expect(await nestedOptionsContract.storage()).toEqual('nested2 null');
@@ -47,11 +47,11 @@ CONFIGS().forEach(({ lib, setup }) => {
       await nested2Some1.confirmation();
       expect(await nestedOptionsContract.storage()).toEqual('nested1 some');
 
-      const nested2Some2 = await nestedOptionsContract.methodsObject.default({Some: 1}).send();
+      const nested2Some2 = await nestedOptionsContract.methodsObject.default({ Some: 1 }).send();
       await nested2Some2.confirmation();
       expect(await nestedOptionsContract.storage()).toEqual('nested1 some');
 
-      const nested2SomeNone = await nestedOptionsContract.methodsObject.default({Some: null}).send();
+      const nested2SomeNone = await nestedOptionsContract.methodsObject.default({ Some: null }).send();
       await nested2SomeNone.confirmation();
       expect(await nestedOptionsContract.storage()).toEqual('nested1 null');
     });

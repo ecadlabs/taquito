@@ -3,13 +3,13 @@ import { CONFIGS, defaultSecretKey, isSandbox } from "./config";
 import { OpKind, Protocols, TezosToolkit } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ rpc, setup, protocol}) => {
+CONFIGS().forEach(({ rpc, setup, protocol }) => {
 
   const Tezos = new TezosToolkit(rpc);
   Tezos.setSignerProvider(new InMemorySigner(defaultSecretKey.secret_key));
   const nairobinet = !isSandbox({ rpc }) && protocol === Protocols.PtNairobi ? it : it.skip;
 
-  describe(`Test failing_noop through wallet api, based on head, and secret_key using: ${rpc}`, () => {  
+  describe(`Test failing_noop through wallet api, based on head, and secret_key using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
@@ -37,7 +37,7 @@ CONFIGS().forEach(({ rpc, setup, protocol}) => {
     });
   });
 
-  describe(`Test failing_noop through wallet api using: ${rpc}`, () => {  
+  describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

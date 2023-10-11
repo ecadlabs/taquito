@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         beforeEach(async () => {
             await setup()
-              })
+        })
 
         it('originates a contract and call its method using bytes as Uint8Array', async () => {
             const value = new Uint8Array([202, 254]);
@@ -37,6 +37,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(operation.status).toEqual('applied');
             expect(storage).toEqual('cafecafe');
 
-              })
+        })
     });
 })

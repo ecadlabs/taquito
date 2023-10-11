@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with no annotations calling methods by index using methodObjects through contract api: ${rpc}`, () => {
     /** The goal of the test is to verify a contract entrypoint call using the methodsObject method (contract.methodsObject) 
      *  in case of a contract having no annotation in its code. */
-    
+
     beforeEach(async () => {
       await setup()
     })
@@ -34,10 +34,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Make a transfer
 
       const operation = await contract.methodsObject[TRANSFER]({
-          0: ACCOUNT1_ADDRESS,
-          1: ACCOUNT2_ADDRESS,
-          2:"1"
-        }).send();
+        0: ACCOUNT1_ADDRESS,
+        1: ACCOUNT2_ADDRESS,
+        2: "1"
+      }).send();
 
       await operation.confirmation();
       expect(operation.status).toEqual('applied')
@@ -52,9 +52,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       // Approve
       const operation2 = await contract.methodsObject[APPROVE]({
-          2: ACCOUNT2_ADDRESS,
-          3: "1"
-        }).send();
+        2: ACCOUNT2_ADDRESS,
+        3: "1"
+      }).send();
 
       await operation2.confirmation();
       expect(operation2.status).toEqual('applied')

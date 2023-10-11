@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     beforeEach(async () => {
       await setup()
     })
-    test('Verify contract.originate for a token contract with BigMap and with initialized Storage/BigMap',2, async () => {
+    test('Verify contract.originate for a token contract with BigMap and with initialized Storage/BigMap', 2, async () => {
       const addr = await Tezos.signer.publicKeyHash();
       const initialStorage = {
         owner: addr,
@@ -61,8 +61,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
       const contract = await op.contract()
       const storage: any = await contract.storage()
-      const got = (await storage.accounts.get(addr) ).allowances.get(addr).toString()
-      const want = (initialStorage.accounts.get(addr) as {balance: string, allowances: MichelsonMap<string, string> }).allowances.get(addr)
+      const got = (await storage.accounts.get(addr)).allowances.get(addr).toString()
+      const want = (initialStorage.accounts.get(addr) as { balance: string, allowances: MichelsonMap<string, string> }).allowances.get(addr)
       expect(got).toEqual(want)
     });
   });

@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     describe(`Test contract origination with UNPAIR through contract api using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
-              });
+        });
 
         test('Verify contract.originate for a contract having UNPAIR with code and init in Michelson', async () => {
             const op = await Tezos.contract.originate({
@@ -26,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 
             expect(instUnpair).toBeDefined();
-              });
+        });
 
         test('Verify contract.originate for a contract having UNPAIR with code in Michelson and init in JSON Michelson', async () => {
             const op = await Tezos.contract.originate({
@@ -44,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-              });
+        });
 
         test('Verify contract.originate for a contract having UNPAIR with code in Michelson and storage', async () => {
             const op = await Tezos.contract.originate({
@@ -65,7 +65,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-              });
+        });
 
         test('Verify contract.originate for a contract having UNPAIR with code in JSON Michelson and init in Michelson', async () => {
             const op = await Tezos.contract.originate({
@@ -83,7 +83,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-              });
+        });
 
         test('Verify contract.originate for a contract having UNPAIR with code and init in JSON Michelson', async () => {
             const op = await Tezos.contract.originate({
@@ -101,7 +101,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-              });
+        });
 
         test('Verify contract.originate for a contract having UNPAIR with code in JSON Michelson and storage', async () => {
             const op = await Tezos.contract.originate({
@@ -122,7 +122,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-      
-              });
+
+        });
     });
 });

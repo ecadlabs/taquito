@@ -36,8 +36,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(operationMutez.status).toEqual('applied');
         balance = await Tezos.tz.getBalance(contract.address);
         expect(balance.toString()).toEqual('1000001');
-        }
+      }
     );
-
   });
 });

@@ -28,7 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
 
         await op.confirmation();
-      }).rejects.toThrowError(InvalidAmountError);     
+      }).rejects.toThrowError(InvalidAmountError);
 
     })
   });

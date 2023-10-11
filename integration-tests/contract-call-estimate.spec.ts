@@ -1,12 +1,12 @@
 import { Estimate } from '@taquito/taquito';
 import { CONFIGS } from './config';
-CONFIGS().forEach(({ lib, rpc, setup} ) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test estimation of contractCalls using ${rpc}`, () => {
     let op;
     let contractAddress: string | undefined;
-    
+
     beforeEach(async () => {
       await setup(true);
 

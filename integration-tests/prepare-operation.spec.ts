@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
         contractAddress = op.contractAddress!;
 
-      } catch(e: any) {
+      } catch (e: any) {
         console.log('Unable to originate contract: ', JSON.stringify(e));
       }
 
@@ -119,9 +119,9 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
       const pkh = await receiver.signer.publicKeyHash();
       const estimates = await Tezos.estimate.transfer({ to: pkh, amount: 1 });
-      const preparedTransfer = await Tezos.prepare.transaction({ 
-        amount: 1, 
-        to: pkh, 
+      const preparedTransfer = await Tezos.prepare.transaction({
+        amount: 1,
+        to: pkh,
         fee: estimates.suggestedFeeMutez,
         storageLimit: estimates.storageLimit,
         gasLimit: estimates.gasLimit

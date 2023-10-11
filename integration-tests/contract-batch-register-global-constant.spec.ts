@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const randomAnnots = () => crypto.randomBytes(3).toString('hex');
         beforeEach(async () => {
             await setup(true);
-              });
+        });
 
         test('Verify the contract.batch transfer and register global constant operations', async () => {
             const isAccountRevealed = await Tezos.rpc.getManagerKey(await Tezos.signer.publicKeyHash());
@@ -71,6 +71,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 expect(batchOp.results[4].kind).toEqual(OpKind.REGISTER_GLOBAL_CONSTANT);
             }
 
-              });
+        });
     });
 });

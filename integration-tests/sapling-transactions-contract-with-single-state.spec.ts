@@ -15,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const memoSize = 8;
 
   describe(`Test interaction with sapling contract having a single sapling state using: ${rpc}`, () => {
-        
+
     beforeAll(async () => {
       await setup();
 
@@ -187,7 +187,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const newAddress = await createAddress();
       const opToFundNewAddress = await Tezos.contract.transfer({ to: await newAddress.signer.publicKeyHash(), amount: 2 });
       await opToFundNewAddress.confirmation();
-			const tezosAddress1 = await newAddress.signer.publicKeyHash();
+      const tezosAddress1 = await newAddress.signer.publicKeyHash();
 
       const amount = 1;
       const aliceSaplingToolkit = new SaplingToolkit({ saplingSigner: aliceInMemorySpendingKey }, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));

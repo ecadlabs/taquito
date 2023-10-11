@@ -75,9 +75,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         left: shieldedTxLeft,
         right: shieldedTxRight
       }).send({ amount: 3 * 2 });
-      
+
       await op.confirmation();
-      
+
       expect(op.status).toEqual('applied');
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);

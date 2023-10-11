@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         beforeEach(async () => {
             await setup();
-              });
+        });
 
         test('Verify contract.originate for a contract with a BigMap with multiple values to be indexed (also fetching the Storage/BigMap)', async () => {
 
@@ -77,6 +77,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(bigMapValuesWithLevel.get('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')!['0'].toString()).toEqual('3');
             expect(bigMapValuesWithLevel.get('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD')!['1']).toEqual(expect.objectContaining(new MichelsonMap()));
 
-              });
+        });
     });
 });

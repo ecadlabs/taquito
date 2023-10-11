@@ -7,7 +7,7 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
@@ -42,7 +42,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         const batchOp = await batch.send();
         await batchOp.confirmation();
       } catch (error: any) {
-        expect(error.message).toContain('substraction_below_zero'); 
+        expect(error.message).toContain('substraction_below_zero');
       }
     });
   });

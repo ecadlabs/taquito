@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       beforeEach(async () => {
          await setup()
-         })
+      })
 
       test('Verify contract.originate for a Fa2 contract having metadata on HTTPS', 2, async () => {
 
@@ -64,7 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          await op.confirmation();
          contractAddress = (await op.contract()).address;
          expect(op.opHash).toBeDefined();
-         });
+      });
 
       test('Verify that metadata for a Fa2 contract can be fetched', 2, async () => {
          const contract = await Tezos.wallet.at(contractAddress, tzip16);
@@ -581,7 +581,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
                ]
             }
          ])
-         });
+      });
 
       test('Verify that Fa2 contract view can be executed', 2, async () => {
          // edonet: KT1XKs56Z8iXpYAD3pzfyXC3B4maJciob74X
@@ -595,6 +595,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          const viewGetDefaultExpiryResult = await metadataViews.GetDefaultExpiry().executeView();
          expect(viewGetDefaultExpiryResult.toString()).toEqual('1000');
 
-         });
+      });
    });
 })

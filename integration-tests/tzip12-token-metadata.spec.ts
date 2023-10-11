@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 	let contractAddress: string;
 	let contractAddress2: string;
 
- 	 describe(`Test contract origination for a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata) through contract api using: ${rpc}`, () => {
+	describe(`Test contract origination for a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata) through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
 			await setup();
 		});
@@ -133,7 +133,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			// Fetch token metadata
 			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(1);
 			expect(tokenMetadata1).toEqual({
-				token_id:1,
+				token_id: 1,
 				decimals: 6,
 				name: 'wToken',
 				symbol: 'wTK'
@@ -155,12 +155,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 		});
 	});
 
- 	describe(`Test originating a Fa2 contract and fetch metadata (token metadata are obtained from a view %token_metadata) through contract api using: ${rpc}`, () => {
+	describe(`Test originating a Fa2 contract and fetch metadata (token metadata are obtained from a view %token_metadata) through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
 			await setup();
 		});
 
- 		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and a view %token_metadata', async () => {
+		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and a view %token_metadata', async () => {
 			const LocalTez1 = await createAddress();
 			const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
 			const LocalTez2 = await createAddress();

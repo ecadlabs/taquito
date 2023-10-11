@@ -126,5 +126,5 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(saplingDiff.commitments_and_ciphertexts.length).toEqual(0);
     });
 
-    });
+  });
 });

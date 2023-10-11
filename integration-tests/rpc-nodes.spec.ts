@@ -54,47 +54,47 @@ CONFIGS().forEach(
         it('Verify rpcClient.getBlockHash returns the head block hash', async () => {
           const blockHash = await rpcClient.getBlockHash();
           expect(blockHash).toBeDefined();
-            });
+        });
 
         it('Verify rpcClient.getLiveBlocks returns the ancestors of the head block', async () => {
           const liveBlocks = await rpcClient.getLiveBlocks();
           expect(liveBlocks).toBeDefined();
-            });
+        });
 
         it(`Verify rpcClient.getBalance for known baker returns the balance of the address`, async () => {
           const balance = await rpcClient.getBalance(knownBaker);
           expect(balance).toBeDefined();
-            });
+        });
 
         it(`Verify that rpcClient.getStorage for know contract returns the data of a contract`, async () => {
           const storage = await rpcClient.getStorage(knownContract);
           expect(storage).toBeDefined();
-            });
+        });
 
         it(`Verify that rpcClient.getScript for know contract returns the code and data of a contract`, async () => {
           const script = await rpcClient.getScript(knownContract);
           expect(script).toBeDefined();
-            });
+        });
 
         it(`Verify that rpcClient.getNormalizedScript for known contract returns the script of the contract and normalize it using the requested unparsing mode`, async () => {
           const script = await rpcClient.getNormalizedScript(knownContract);
           expect(script).toBeDefined();
-            });
+        });
 
         it(`Verify that rpcClient.getContract returns the complete status of a contract`, async () => {
           const contract = await rpcClient.getContract(knownContract);
           expect(contract).toBeDefined();
-            });
+        });
 
         it(`Verify that rpcClient.getManagerKey for known baker returns the manager key of the contract`, async () => {
           const managerKey = await rpcClient.getManagerKey(knownBaker);
           expect(managerKey).toBeDefined();
-            });
+        });
 
         it(`Verify that rpcClient.getDelegate for known baker returns the delegate of the contract`, async () => {
           const delegate = await rpcClient.getDelegate(knownBaker);
           expect(delegate).toBeDefined();
-            });
+        });
 
         it(`Verify that rpcClient.getBigMapExpr for encoded expression returns the value associated with a key in a big map`, async () => {
           const schema = new Schema({
@@ -123,37 +123,37 @@ CONFIGS().forEach(
           const encodedExpr = encodeExpr(packed);
           const bigMapValue = await rpcClient.getBigMapExpr(id.toString(), encodedExpr);
           expect(bigMapValue).toBeDefined();
-            });
+        });
 
         it(`Verify that rpcClient.getDelegates for known baker returns information about a delegate from RPC`, async () => {
           const delegates = await rpcClient.getDelegates(knownBaker);
           expect(delegates).toBeDefined();
-            });
+        });
 
         it(`Fetches voting information about a delegate from RPC`, async () => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getConstants returns all constants from RPC', async () => {
           const constants = await rpcClient.getConstants();
           expect(constants).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getBlock returns all the information about a block', async () => {
           const blockInfo = await rpcClient.getBlock();
           expect(blockInfo).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getBlockHeader returns whole block header', async () => {
           const blockHeader = await rpcClient.getBlockHeader();
           expect(blockHeader).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getBlockMetadata returns all metadata associated to the block', async () => {
           const blockMetadata = await rpcClient.getBlockMetadata();
           expect(blockMetadata).toBeDefined();
-            });
+        });
 
         unrestrictedRPCNode('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async () => {
           const bakingRights = await rpcClient.getBakingRights({
@@ -162,7 +162,7 @@ CONFIGS().forEach(
           expect(bakingRights).toBeDefined();
           expect(bakingRights[0].round).toBeDefined();
           expect(bakingRights[0].priority).toBeUndefined();
-            });
+        });
 
         unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async () => {
           const endorsingRights = await rpcClient.getEndorsingRights();
@@ -175,42 +175,42 @@ CONFIGS().forEach(
           expect(endorsingRights[0].delegates![0].first_slot).toBeDefined();
           expect(typeof endorsingRights[0].delegates![0].first_slot).toEqual('number');
           expect(endorsingRights[0].delegate).toBeUndefined();
-            });
+        });
 
         it('Verify that rpcClient.getBallotList returns ballots casted so far during a voting period', async () => {
           const ballotList = await rpcClient.getBallotList();
           expect(ballotList).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getBallots returns sum of ballots casted so far during a voting period', async () => {
           const ballot = await rpcClient.getBallots();
           expect(ballot).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getCurrentPeriod returns current period kind', async () => {
           const currentPeriodKind = await rpcClient.getCurrentPeriod();
           expect(currentPeriodKind).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getCurrentProposal returns current proposal under evaluation', async () => {
           const currentProposalUnderEvaluation = await rpcClient.getCurrentProposal();
           expect(currentProposalUnderEvaluation).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getCurrentQuorum returns current expected quorum', async () => {
           const currentQuorum = await rpcClient.getCurrentQuorum();
           expect(currentQuorum).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getVotesListings returns list of delegates with their voting weight, in number of rolls', async () => {
           const voteListings = await rpcClient.getVotesListings();
           expect(voteListings).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getProposals returns list of proposals with number of supporters', async () => {
           const proposals = await rpcClient.getProposals();
           expect(proposals).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.forgeOperations forges an operation and returns the unsigned bytes', async () => {
           const operation: any = {
@@ -234,7 +234,7 @@ CONFIGS().forEach(
 
           const forgeOrigination = await rpcClient.forgeOperations(operation);
           expect(forgeOrigination).toBeDefined();
-            });
+        });
 
         // We will send invalid signedOpBytes and see if the node returns the expected error message
         it('Verify that rpcClient.injectOperation injects an operation in node and broadcast it', async () => {
@@ -243,7 +243,7 @@ CONFIGS().forEach(
           } catch (ex: any) {
             expect(ex.message).toContain('112 is an invalid char');
           }
-            });
+        });
 
         it('Verify that rpcClient.preapplyOperations simulates the validation of an operation', async () => {
           try {
@@ -283,17 +283,17 @@ CONFIGS().forEach(
           } catch (ex: any) {
             expect(ex.message).toMatch('contract.counter_in_the_past');
           }
-            });
+        });
 
         it('Verify that rpcClient.getEntrypoints for known contract returns list of entrypoints of the contract', async () => {
           const entrypoints = await rpcClient.getEntrypoints(knownContract);
           expect(entrypoints).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getChainId returns chain ID', async () => {
           const chainId = await rpcClient.getChainId();
           expect(chainId).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.runOperation runs an operation without signature checks', async () => {
           try {
@@ -328,7 +328,7 @@ CONFIGS().forEach(
           } catch (ex: any) {
             expect(ex.message).toMatch('contract.counter_in_the_past');
           }
-            });
+        });
 
         it('Verify that rpcClient.simulateOperation simulates an operation without signature checks', async () => {
           try {
@@ -362,7 +362,7 @@ CONFIGS().forEach(
             expect(e.message).toMatch('contract.counter_in_the_past');
           }
 
-            });
+        });
 
         it('Verify that rpcClient.runView executes tzip4 views', async () => {
 
@@ -380,7 +380,7 @@ CONFIGS().forEach(
           const views = await Tezos.rpc.runView(params);
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "100" } });
-            });
+        });
 
         it('Verify that rpcClient.runScriptView executes michelson view', async () => {
           const chainId = await Tezos.rpc.getChainId();
@@ -396,45 +396,45 @@ CONFIGS().forEach(
           const views = await Tezos.rpc.runScriptView(params);
           expect(views).toBeDefined();
           expect(views).toEqual({ "data": { "int": "2" } });
-            });
+        });
 
         it('Verify that rpcClient.getSuccessorPeriod will get the voting period of next block', async () => {
           const successorPeriod = await rpcClient.getSuccessorPeriod();
           expect(successorPeriod).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getSaplingDiffById will access the value associated with a sapling state ID', async () => {
           const saplingStateId = (await rpcClient.getStorage(knownSaplingContract) as any)['int'];
           const saplingDiffById = await rpcClient.getSaplingDiffById(saplingStateId);
           expect(saplingDiffById).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getSaplingDiffByContract will access the value associated with a sapling state', async () => {
           const saplingDiffByContract = await rpcClient.getSaplingDiffByContract(
             knownSaplingContract
           );
           expect(saplingDiffByContract).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getProtocols will list past and present Tezos protocols', async () => {
           const protocols = await rpcClient.getProtocols();
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
-            });
+        });
 
         it('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async () => {
           const usedSpace = await rpcClient.getStorageUsedSpace(knownContract);
           expect(usedSpace).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage', async () => {
           const paidSpace = await rpcClient.getStoragePaidSpace(knownContract);
           expect(paidSpace).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract', async () => {
           const ticketBalance = await rpcClient.getTicketBalance(ticketContract.address, { ticketer: ticketContract.address, content_type: { prim: 'string' }, content: { string: 'abc' } });
           expect(ticketBalance).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async () => {
           const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
@@ -443,7 +443,7 @@ CONFIGS().forEach(
           expect(ticketBalances[0].content_type).toBeDefined();
           expect(ticketBalances[0].content).toBeDefined();
           expect(ticketBalances[0].amount).toBeDefined();
-            });
+        });
 
         it('Verify that rpcClient.getPendingOperations will retrieve the pending operations in mempool', async () => {
           const pendingOperations: PendingOperations = await rpcClient.getPendingOperations();
@@ -453,7 +453,7 @@ CONFIGS().forEach(
           expect(pendingOperations.outdated).toBeInstanceOf(Array);
           expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
           expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
-            });
+        });
 
         it('Verify that rpcClient.getOriginationProof will retrieve the proof needed for smart rollup originate', async () => {
           const proof = await rpcClient.getOriginationProof({
@@ -463,7 +463,7 @@ CONFIGS().forEach(
           const hexRegex = RegExp('^[a-fA-F0-9]+$');
           expect(proof).toBeDefined();
           expect(hexRegex.test(proof)).toEqual(true);
-            })
+        })
       });
     });
   }

@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it('Verify wallet.originate with initialized Map with variants of data', async () => {
 
-        const op = await Tezos.wallet.originate({
+      const op = await Tezos.wallet.originate({
         balance: "1",
         code: storageContract,
         storage: {
@@ -61,7 +61,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             "2015-04-23T10:26:00.996Z": 3,
           }),
         }
-    }).send();
+      }).send();
 
       await op.confirmation();
       expect(op.opHash).toBeDefined();

@@ -4,12 +4,12 @@ CONFIGS().forEach(({ lib, rpc, setup, signerConfig }) => {
     const Tezos = lib;
     describe(`Test reveal of account through contract API using: ${rpc}`, () => {
 
-        const testWithKeyGen = signerConfig.type === SignerType.SECRET_KEY? test.skip: test;
+        const testWithKeyGen = signerConfig.type === SignerType.SECRET_KEY ? test.skip : test;
 
         beforeEach(async () => {
             await setup(true)
-              })
-        
+        })
+
         testWithKeyGen('verify that contract.reveal reveals the current account', async () => {
 
             const pkh = await Tezos.signer.publicKeyHash()
@@ -28,6 +28,6 @@ CONFIGS().forEach(({ lib, rpc, setup, signerConfig }) => {
             // if the account is revealed, it has a manager
             expect(await Tezos.rpc.getManagerKey(pkh)).toEqual(pk)
 
-              });
+        });
     });
 })

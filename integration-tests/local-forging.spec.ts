@@ -17,7 +17,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
         expect(result).toEqual(rpcResult);
         expect(await localForger.parse(result)).toEqual(expected || operation);
 
-        });
+      });
     });
 
     commonCases.forEach(({ name, operation, expected }) => {
@@ -28,7 +28,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
         expect(result).toEqual(rpcResult);
         expect(await localForger.parse(result)).toEqual(expected || operation);
 
-        });
+      });
     });
   });
 });

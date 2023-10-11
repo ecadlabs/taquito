@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         expect(op.isRegisterOperation).toBeFalsy();
         expect(op.source).toEqual(pkh);
         expect(op.status).toEqual('applied');
-        
+
         const account = await Tezos.rpc.getDelegate(pkh)
         expect(account).toEqual(delegate)
       } catch (ex: any) {

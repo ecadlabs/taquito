@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     it('Verify wallet.originate having ticket with init in JSON', async () => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
-        init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }
+        init: { prim: 'Pair', args: [{ prim: 'None' }, { prim: 'None' }] }
       }).send();
 
       await op.confirmation();

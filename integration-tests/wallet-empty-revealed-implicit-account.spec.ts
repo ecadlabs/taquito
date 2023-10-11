@@ -18,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await op2.confirmation();
 
       const balance = await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())
-      const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: balance.toNumber(), mutez : true });
+      const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: balance.toNumber(), mutez: true });
 
       // Emptying the account
       // The max amount that can be sent now is the total balance minus the fees (no need for reveal fees)

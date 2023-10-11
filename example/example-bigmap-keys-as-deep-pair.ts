@@ -16,7 +16,7 @@ const example = async () => {
         (pair (big_map %permits (big_map address (pair address bytes)) timestamp)
         (pair (nat %totalSupply) (big_map %user_expiries address (option nat))))))`
         const p = new Parser()
-        const parsed_storage: any = p.parseMichelineExpression(example_storage_in_michelson )
+        const parsed_storage: any = p.parseMichelineExpression(example_storage_in_michelson)
 
         const schema = new Schema(parsed_storage);
         console.log(JSON.stringify(schema.ExtractSchema(), null, 2))

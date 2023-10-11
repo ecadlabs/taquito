@@ -9,10 +9,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup()
     });
 
-    
+
     it('should originate contract correctly with number passed into timestamp storage', async () => {
       const date = Date.now();
-      
+
       const op = await Tezos.contract.originate({
         code: `{ parameter timestamp ;
           storage timestamp ;

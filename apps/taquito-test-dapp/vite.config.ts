@@ -25,8 +25,7 @@ export default ({ command }) => {
         "@airgap/beacon-dapp": path.resolve(
           path.resolve(),
           // "./src/walletbeacon.dapp.min.js"
-          `../../node_modules/@airgap/beacon-dapp/dist/${
-            isBuild ? "esm" : "cjs"
+          `../../node_modules/@airgap/beacon-dapp/dist/${isBuild ? "esm" : "cjs"
           }/index.js`
           // `../../node_modules/@airgap/beacon-dapp/dist/walletbeacon.dapp.min.js`
         ),

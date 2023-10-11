@@ -12,7 +12,7 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
@@ -70,7 +70,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                                 SWAP;
                                 PAIR;
                               };}`,
-              init: 'Unit'
+          init: 'Unit'
         });
 
         await opGetter.confirmation();
@@ -142,7 +142,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                             SWAP;
                             PAIR;
                           };}`,
-              init: 'Unit'
+          init: 'Unit'
         });
 
         await opGetter.confirmation();
@@ -150,7 +150,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const opGetterContract = await opGetter.contract();
         expect(await opGetterContract.storage()).toBeTruthy();
-        const opSend = await opCallerContract.methods.init( `${opGetterContract.address}`, `${opGetterContract.address}`).send();
+        const opSend = await opCallerContract.methods.init(`${opGetterContract.address}`, `${opGetterContract.address}`).send();
         await opSend.confirmation()
       } catch (error: any) {
         expect(error.message).toContain('{\"prim\":\"Unit\"}');
@@ -212,7 +212,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                             SWAP;
                             PAIR;
                           }}`,
-              init: 'Unit'
+          init: 'Unit'
         });
 
         await opGetter.confirmation();
@@ -221,12 +221,12 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         const opGetterContract = await opGetter.contract();
         expect(await opGetterContract.storage()).toBeTruthy();
 
-        const opSend = await opCallerContract.methods.init( `${opGetterContract.address}`, `${opCallerContract.address}`).send();
+        const opSend = await opCallerContract.methods.init(`${opGetterContract.address}`, `${opCallerContract.address}`).send();
         await opSend.confirmation()
       } catch (error: any) {
         expect(error.message).toContain('{\"prim\":\"Unit\"}');
       }
-    });  
+    });
   });
 });
 

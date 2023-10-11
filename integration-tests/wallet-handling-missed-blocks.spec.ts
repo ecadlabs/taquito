@@ -3,7 +3,7 @@ import { CONFIGS } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-   describe(`Test handling of missed blocks through wallet api using: ${rpc}`, () => {
+  describe(`Test handling of missed blocks through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

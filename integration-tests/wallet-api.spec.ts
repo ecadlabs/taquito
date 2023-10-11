@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   })
 
   describe(`Test wallet api using: ${rpc}`, () => {
-    test('Test simple origination and wait for confirmation using promise',  async () => {
+    test('Test simple origination and wait for confirmation using promise', async () => {
       const walletOp = await Tezos.wallet.originate({
         balance: "1",
         code: `parameter string;

@@ -14,7 +14,7 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
@@ -51,7 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                         PUSH nat 1;
                       };
                   }`,
-                  init: 'Unit'
+          init: 'Unit'
         });
 
         await opGetter.confirmation();
@@ -133,7 +133,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.bad_stack');
       }
-    }); 
+    });
   });
 });
 

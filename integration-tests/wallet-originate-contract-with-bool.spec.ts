@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         balance: "1",
         code: booleanCode,
         storage: true,
-        }).send();
+      }).send();
       await op.confirmation()
       expect(op.opHash).toBeDefined();
       expect(op.status).toBeTruthy

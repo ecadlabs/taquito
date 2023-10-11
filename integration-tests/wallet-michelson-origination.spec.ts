@@ -70,6 +70,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toBeDefined();
     });
   });
-  
-  
+
+
 })

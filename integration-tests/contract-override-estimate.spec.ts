@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       try {
         const account = await createAddress();
         pkh = await account.signer.publicKeyHash();
-      } catch(e) {
+      } catch (e) {
         console.log(JSON.stringify(e));
       }
 
@@ -47,7 +47,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         });
         await op.confirmation();
       }).rejects.toThrowError(InvalidEstimateValueError);
-     
+
     });
   });
 });
