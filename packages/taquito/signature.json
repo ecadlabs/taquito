@@ -778,10 +778,10 @@
             "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
             "precommit": "lint-staged",
             "prebuild": "rimraf dist",
-            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript",
-            "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript && npm run build:web",
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+            "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts && npm run build:web",
             "build:web": "webpack && node update-readme.js",
-            "start": "rollup -c rollup.config.ts --configPlugin typescript -w",
+            "start": "rollup -c rollup.config.ts -w",
             "postinstall": "node patch.js"
           },
           "lint-staged": {

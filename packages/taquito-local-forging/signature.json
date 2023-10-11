@@ -208,8 +208,8 @@
             "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
             "precommit": "lint-staged",
             "prebuild": "rimraf dist",
-            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --configPlugin typescript",
-            "start": "rollup -c rollup.config.ts --configPlugin typescript -w"
+            "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
+            "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
             "{src,test}/**/*.ts": [
