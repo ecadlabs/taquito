@@ -1,5 +1,6 @@
 ---
 title: Wallet API
+id: wallet_API
 author: Claude Barde
 ---
 

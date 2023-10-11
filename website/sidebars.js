@@ -24,33 +24,21 @@ const sidebars = {
       collapsible: false,
       items: [
         'quick_start',
-        'local_forger',
+        'operation_flow',
         'rpc_nodes',
         'web3js_taquito',
       ],
     },
     {
       type: 'category',
-      label: 'Taquito Public API',
+      label: 'Taquito Providers',
       className: 'sidebarHeader',
       collapsed: false,
       collapsible: false,
       items: [
-        'batch_API',
-        'wallet_API',
-        'contract_API',
-        { 
-          type: 'category',
-          label: 'Taquito Providers',
-          className: 'sidebarHeader',
-          collapsed: false,
-          collapsible: false,
-          items: [
-            'prepare',
-            'estimate',
-          ]
-        },
-      ]
+        'prepare',
+        'estimate',
+      ],
     },
     {
       type: 'category',
@@ -61,12 +49,12 @@ const sidebars = {
       items: [
         'making_transfers',
         'originate',
-        'amendment_and_voting',
         'consensus_key',
         'global_constant',
         'increase_paid_storage',
         'set_delegate',
         'smart_rollups',
+        'proposal_and_ballot',
         'failing_noop',
       ]
     },
@@ -82,7 +70,6 @@ const sidebars = {
         'fa2_parameters',
         'manager_lambda',
         'multisig_doc',
-        'validators',
       ],
     },
     {
@@ -207,6 +194,17 @@ const sidebars = {
         'dapp_prelaunch',
 
       ],
+    },
+    {
+      type: 'category',
+      label: 'Taquito Public API',
+      className: 'sidebarHeader',
+      collapsed: false,
+      collapsible: false,
+      items: [
+        'wallet_API',
+        'batch_API',
+      ]
     },
     {
       type: 'category',
