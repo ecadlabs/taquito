@@ -2,7 +2,9 @@
   "exclude": [
     "website",
     "integration-tests",
-    "apps"
+    "apps",
+    "**/test/**",
+    "**/*.spec.ts"
   ],
   "compilerOptions": {
     "moduleResolution": "node",

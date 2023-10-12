@@ -1,10 +1,5 @@
-import Link from '@docusaurus/Link';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { faLaughBeam, faSuitcase, faTools } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Layout from '@theme/Layout';
-import classnames from 'classnames';
 import React from 'react';
 import CardsGrid from '../components/CardsGrid/CardsGrid';
 import FooterTop from '../components/FooterTop/FooterTop';
