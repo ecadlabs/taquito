@@ -367,7 +367,7 @@ println(`Default value returned by the Michelson Encoder for big_map: ${JSON.str
 // instead of returning the big map id, we can override it
 // we return an object in this case
 const dataCustom = schema.Execute(dataMichelson, { big_map: (val) => Object({ id: val.int })})
-println(`Customised representation of the big_map value: ${JSON.stringify(dataCustom)}`);
+println(`Customized representation of the big_map value: ${JSON.stringify(dataCustom)}`);
 ```
 
 Here is an example for the `ticket` type: 
@@ -380,7 +380,7 @@ const data = schema.Execute(dataMichelson)
 println(`Default representation of the ticket value returned by the Michelson Encoder: ${JSON.stringify(data, null, 2)}`);
 
 const dataCustom = schema.Execute(dataMichelson, { ticket: (val) => val.args[1].string})
-println(`Customised representation of the ticket value: ${JSON.stringify(dataCustom)}`);
+println(`Customized representation of the ticket value: ${JSON.stringify(dataCustom)}`);
 ```
 
 ### How the Schema class is used inside Taquito
@@ -415,3 +415,135 @@ println(JSON.stringify(michelsonData, null, 2));
 The `ParameterSchema` class is internally used in Taquito:
 - When we call a method, or a view of a contract using the `ContractAbstraction` class, the `Encode` method is used to transform the parameters into Michelson data.
 - In the `tzip16` package, when we execute a Michelson view, the `Encode` method is used to transform the parameters into Michelson data.
+
+## Flattening nested tokens (pair/union)
+
+In the Michelson language, we can have nested `pair`s or unions (`or`). For example, the following Michelson type is a nested `pair`:
+
+```js live noInline
+const storageSchema = new Schema({
+	prim: 'pair',
+	args: [
+		{ prim: 'nat', annots: [ '%stored_counter' ] },
+		{
+			prim: 'pair',
+			args: [
+				{ prim: 'nat', annots: [ '%threshold' ] },
+				{ prim: 'list', args: [ { prim: 'key' } ], annots: [ '%keys' ] }
+			]
+		}
+	]
+});
+const annotatedSchema = storageSchema.ExtractSchema();
+println(JSON.stringify(annotatedSchema, null, 2));
+```
+
+We can also have a similar definition without the annotations:
+
+```js live noInline
+const storageSchema = new Schema({
+	prim: 'pair',
+	args: [
+		{ prim: 'nat' },
+		{
+			prim: 'pair',
+			args: [
+				{ prim: 'nat' },
+				{ prim: 'list', args: [ { prim: 'key' } ] }
+			]
+		}
+	]
+});
+const noAnnotationsSchema = storageSchema.ExtractSchema();
+println(JSON.stringify(noAnnotationsSchema, null, 2));
+```
+
+In Taquito, we will flatten these nested `pair`s to make it easier to use them in typescript dApps. Please note how the result of `generateSchema` is different in the annotated vs non-annotated cases:
+
+```js
+//annotatedSchema:
+{
+  "stored_counter": "nat",
+  "threshold": "nat",
+  "keys": {
+    "list": "key"
+  }
+}
+
+//noAnnotationsSchema:
+{
+  "0": "nat",
+  "1": "nat",
+  "2": {
+    "list": "key"
+  }
+}
+```
+
+Here, Taquito developers have made two decisions:
+1. The elements of the nested `pair`s are flattened into a single object.
+2. The keys of the object are:
+   1. the annotations, if they exist
+   1. the index of the element otherwise.
+
+Formally speaking, the fields are the leaves of the three, ordered by traversing the tree (because we omit inner nodes of the tree, there is no difference between pre-order, in-order, or post-order traversal).
+Also, in case you have a mixture of annotated and non-annotated fields, the fields numbers will keep increasing, even though annotated fields are named.
+
+```js live noInline
+const storageSchema = new Schema({
+	prim: 'pair',
+	args: [
+		{ prim: 'nat' },
+		{
+			prim: 'pair',
+			args: [
+				{ prim: 'nat', annots: [ '%threshold' ] },
+				{ prim: 'list', args: [ { prim: 'key' } ] }
+			]
+		}
+	]
+});
+const mixedSchema = storageSchema.ExtractSchema();
+println(JSON.stringify(mixedSchema, null, 2));
+```
+This results in:
+```
+{
+  "0": "nat",
+  "2": {
+    "list": "key"
+  },
+  "threshold": "nat"
+}
+```
+
+### Unions
+For unions (`or`), we flatten them similarly, so instead of having `left` and `right` to refer to fields, you use the field number or annotation.
+
+```js live noInline
+const storageSchema = new Schema({
+	prim: 'or',
+	args: [
+		{ prim: 'nat' },
+		{
+			prim: 'or',
+			args: [
+				{ prim: 'nat', annots: [ '%threshold' ] },
+				{ prim: 'list', args: [ { prim: 'key' } ] }
+			]
+		}
+	]
+});
+const mixedSchema = storageSchema.ExtractSchema();
+println(JSON.stringify(mixedSchema, null, 2));
+```
+This creates:
+```
+{
+  "0": "nat",
+  "2": {
+    "list": "key"
+  },
+  "threshold": "nat"
+}
+```
