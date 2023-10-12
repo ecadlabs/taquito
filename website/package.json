@@ -17,7 +17,7 @@
     "netlify:publish": "netlify deploy --json --prod --message \"Deployment for $(git branch --show-current)\""
   },
   "dependencies": {
-    "@docusaurus/core": "2.4.1",
+    "@docusaurus/core": "2.4.3",
     "@docusaurus/plugin-google-gtag": "2.4.1",
     "@docusaurus/preset-classic": "2.4.1",
     "@docusaurus/theme-live-codeblock": "2.4.1",
