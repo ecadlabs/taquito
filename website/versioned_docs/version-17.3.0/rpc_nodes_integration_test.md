@@ -1,5 +1,5 @@
 ---
-title: RPC nodes
+title: RPC tests
 author: Roxane Letourneau
 ---
 

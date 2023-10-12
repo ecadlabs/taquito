@@ -1,5 +1,5 @@
 ---
-title: Transfers
+title: Transfers (Transaction)
 author: Simon Boissonneault-Robert
 ---
 

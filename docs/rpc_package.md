@@ -1,5 +1,5 @@
 ---
-title: RPC Package
+title: RPC
 author: Claude Barde
 ---
 
