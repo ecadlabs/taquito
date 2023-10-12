@@ -80,6 +80,10 @@ main {
   right: 0;
 }
 
+.menu__link {
+  padding: var(--ifm-menu-link-padding-vertical) var(--ifm-menu-link-padding-horizontal);
+}
+
 .waysButtonContainer {
   position: -webkit-sticky;
   position: sticky;
