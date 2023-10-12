@@ -82,7 +82,6 @@
     "rimraf": "^5.0.5",
     "rollup": "^4.0.2",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.1.1",
