@@ -55,13 +55,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
       const batch = Tezos.contract.batch()
       dests.forEach(({ pkh }) => {
-        batch.withTransfer({ to: pkh, amount: 0.001, fee: 350 });
+        batch.withTransfer({ to: pkh, amount: 0.001 });
       })
       try {
         const op = await batch.send();
         await op.confirmation();
-        sleep(5000);
-        console.log((await Tezos.rpc.getPendingOperations({})).refused)
         expect(op.status).toEqual('applied');
       } catch (e) { console.log(JSON.stringify(e)) }
       done();
