@@ -8,58 +8,108 @@
       "collapsible": false,
       "items": [
         "quick_start",
-        "amendment_and_voting",
-        "ballot",
-        "batch_API",
-        "beaconwallet-singleton",
-        "confirmation_event_stream",
-        "consensus_key",
-        "contract_call_parameters",
-        "contracts_collection",
-        "dapp_prelaunch",
-        "estimate",
-        "fa2_parameters",
-        "failing_noop",
-        "global_constant",
-        "increase_paid_storage",
-        "lambda_view",
-        "liquidity_baking",
-        "local_forger",
-        "making_transfers",
-        "manager_lambda",
-        "maps_bigmaps",
-        "metadata-tzip16",
-        "michelsonmap",
-        "multisig_doc",
-        "on_chain_views",
-        "originate",
-        "prepare",
-        "react-template",
+        "operation_flow",
         "rpc_nodes",
-        "rpc_package",
-        "set_delegate",
-        "signing",
-        "smart_rollups",
-        "smartcontracts",
-        "subscribe_event",
-        "tezos_domains",
-        "tickets",
-        "transaction_limits",
-        "tutorial_links",
-        "tzip12",
-        "validators",
-        "wallet_API",
-        "wallets",
         "web3js_taquito"
       ]
     },
     {
       "type": "category",
-      "label": "Signer",
+      "label": "Taquito Providers",
       "className": "sidebarHeader",
       "collapsed": false,
       "collapsible": false,
       "items": [
+        "prepare",
+        "estimate"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Operations",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "making_transfers",
+        "originate",
+        "consensus_key",
+        "global_constant",
+        "increase_paid_storage",
+        "set_delegate",
+        "smart_rollups",
+        "proposal_and_ballot",
+        "failing_noop"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Smart Contracts",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "smartcontracts",
+        "contract_call_parameters",
+        "fa2_parameters",
+        "manager_lambda",
+        "multisig_doc"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Wallets",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "beaconwallet-singleton",
+        "wallets",
+        "transaction_limits"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Michelson",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "maps_bigmaps",
+        "michelsonmap",
+        "tickets"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Views",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "lambda_view",
+        "on_chain_views"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Contract and Token Metadata",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "tzip12",
+        "metadata-tzip16"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Signers",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "signing",
         "inmemory_signer",
         "ledger_signer"
       ]
@@ -71,14 +121,15 @@
       "collapsed": false,
       "collapsible": false,
       "items": [
+        "rpc_package",
         "michelson_encoder",
         "contracts-library",
         "taquito_utils",
         {
           "type": "category",
           "label": "Sapling",
-          "collapsed": true,
-          "collapsible": true,
+          "collapsed": false,
+          "collapsible": false,
           "items": [
             "sapling",
             "sapling_in_memory_spending_key",
@@ -89,24 +140,18 @@
     },
     {
       "type": "category",
-      "label": "Optimistic Rollups",
+      "label": "Advanced Scenarios",
       "className": "sidebarHeader",
       "collapsed": false,
       "collapsible": false,
       "items": [
-        "tx_rollups"
-      ]
-    },
-    {
-      "type": "category",
-      "label": "Advanced Examples",
-      "className": "sidebarHeader",
-      "collapsed": false,
-      "collapsible": false,
-      "items": [
+        "drain_account",
         "complex_parameters",
+        "confirmation_event_stream",
+        "subscribe_event",
+        "liquidity_baking",
         "storage_annotations",
-        "drain_account"
+        "tezos_domains"
       ]
     },
     {
@@ -134,17 +179,36 @@
     },
     {
       "type": "category",
-      "label": "Native Mobile Development",
+      "label": "Dapp Development",
       "className": "sidebarHeader",
       "collapsed": false,
       "collapsible": false,
       "items": [
-        "mobile_bundle"
+        "mobile_bundle",
+        "dapp_template",
+        "dapp_prelaunch"
       ]
     },
     {
-      "Upgrading Guide": [
-        "upgrading_guide"
+      "type": "category",
+      "label": "Taquito Public API",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "wallet_API",
+        "batch_API"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Misc",
+      "className": "sidebarHeader",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "tutorial_links",
+        "contracts_collection"
       ]
     },
     {

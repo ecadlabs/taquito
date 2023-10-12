@@ -1,5 +1,5 @@
 ---
-title: Web3js/Taquito differences
+title: web3js vs Taquito
 id: web3js_taquito
 author: Claude Barde
 ---
