@@ -7,7 +7,6 @@ import {
 } from '../token';
 import BigNumber from 'bignumber.js';
 import { BaseTokenSchema } from '../../schema/types';
-import { stringify } from '@taquito/core';
 
 /**
  *  @category Error
@@ -56,7 +55,7 @@ export class IntToken extends ComparableToken {
   private validate(val: any) {
     const bigNumber = new BigNumber(val);
     if (bigNumber.isNaN()) {
-      throw new IntValidationError(val, this, `Value is not a number: ${stringify(val)}`);
+      throw new IntValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }
   }
 

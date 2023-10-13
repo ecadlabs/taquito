@@ -53,7 +53,7 @@ import {
   OriginationProofParams,
   RPCSimulateOperationParam,
 } from '../types';
-import { InvalidAddressError, InvalidContractAddressError, stringify } from '@taquito/core';
+import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
   validateContractAddress,
   validateAddress,
@@ -116,11 +116,11 @@ export class RpcClientCache implements RpcClientInterface {
     rpcMethodParams.forEach((param) => {
       paramsToString =
         typeof param === 'object'
-          ? paramsToString + stringify(param) + '/'
+          ? paramsToString + JSON.stringify(param) + '/'
           : paramsToString + param + '/';
     });
     return rpcMethodData
-      ? `${rpcUrl}/${rpcMethodName}/${paramsToString}${stringify(rpcMethodData)}/`
+      ? `${rpcUrl}/${rpcMethodName}/${paramsToString}${JSON.stringify(rpcMethodData)}/`
       : `${rpcUrl}/${rpcMethodName}/${paramsToString}`;
   }
 

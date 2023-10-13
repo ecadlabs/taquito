@@ -1,6 +1,5 @@
 import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS, sleep } from "./config";
-import { stringify } from "@taquito/core";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
   const Tezos = lib;
@@ -37,7 +36,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
         await sleep(((constants.preserved_cycles + 2) * constants.blocks_per_cycle * (constants.minimal_block_delay!.toNumber())) * 1000);
 
       } catch (e) {
-        console.log(stringify(e));
+        console.log(JSON.stringify(e));
       }
       done();
     })

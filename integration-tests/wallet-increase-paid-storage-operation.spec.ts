@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -26,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         simpleContractAddress = (await op.contract()).address
       } catch(e) {
-        console.log(stringify(e));
+        console.log(JSON.stringify(e));
       }
       done();
     });

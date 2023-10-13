@@ -12,7 +12,6 @@ import {
   TokenFactory,
   TokenValidationError,
 } from '../token';
-import { stringify } from '@taquito/core';
 
 /**
  *  @category Error
@@ -52,7 +51,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
       throw new TxRollupL2AddressValidationError(
         value,
         this,
-        `tx_rollup_l2_address is not valid: ${stringify(value)}`
+        `tx_rollup_l2_address is not valid: ${JSON.stringify(value)}`
       );
     }
   }
@@ -66,7 +65,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
       throw new TxRollupL2AddressValidationError(
         val,
         this,
-        `arg missing to encode: this -> "${stringify(val)}"`
+        `arg missing to encode: this -> "${JSON.stringify(val)}"`
       );
     }
     this.validate(val);
@@ -97,7 +96,7 @@ export class TxRollupL2AddressToken extends ComparableToken {
       throw new TxRollupL2AddressValidationError(
         val,
         this,
-        `value cannot be missing string and byte value. must have one ${stringify(val)}`
+        `value cannot be missing string and byte value. must have one ${JSON.stringify(val)}`
       );
     }
     return encodeL2Address(val.bytes);
@@ -124,7 +123,9 @@ export class TxRollupL2AddressToken extends ComparableToken {
       throw new TxRollupL2AddressValidationError(
         bytes,
         this,
-        `value cannot be missing string and byte value. must have one: bytes = ${stringify(bytes)}`
+        `value cannot be missing string and byte value. must have one: bytes = ${JSON.stringify(
+          bytes
+        )}`
       );
     }
     return encodeL2Address(bytes);

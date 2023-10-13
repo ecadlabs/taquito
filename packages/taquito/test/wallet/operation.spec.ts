@@ -3,12 +3,11 @@ import { BlockResponse } from '@taquito/rpc';
 import { Context } from '../../src/context';
 import { WalletOperation } from '../../src/wallet';
 import { blockResponse } from './data';
-import { stringify } from '@taquito/core';
 
 describe('WalletOperation', () => {
   let testScheduler: TestScheduler;
 
-  const toJSON = (x: any) => JSON.parse(stringify(x));
+  const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
   const createFakeBlock = (level: number, opHash?: string) => {
     const op = {
       hash: `block_hash_${level}`,

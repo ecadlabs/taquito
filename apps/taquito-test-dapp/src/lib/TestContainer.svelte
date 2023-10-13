@@ -325,7 +325,7 @@
             <div style="word-break:break-word;">
               <p>{testResult.title}</p>
               {#each Object.entries(testResult.body) as [name, res]}
-                <p>{name}: {stringify(res)}</p>
+                <p>{name}: {JSON.stringify(res)}</p>
               {/each}
             </div>
           {/if}

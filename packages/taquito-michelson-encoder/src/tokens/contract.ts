@@ -2,7 +2,6 @@ import { TokenSchema } from './../schema/types';
 import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
 import { ContractTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
-import { stringify } from '@taquito/core';
 
 /**
  *  @category Error
@@ -35,7 +34,7 @@ export class ContractToken extends Token {
       throw new ContractValidationError(
         value,
         this,
-        `Value ${stringify(value)} is not a valid contract address.`
+        `Value ${JSON.stringify(value)} is not a valid contract address.`
       );
     }
 
@@ -53,7 +52,9 @@ export class ContractToken extends Token {
       throw new ContractValidationError(
         val,
         this,
-        `Value ${stringify(val)} is not a valid contract address. must contain bytes or string.`
+        `Value ${JSON.stringify(
+          val
+        )} is not a valid contract address. must contain bytes or string.`
       );
     }
 

@@ -281,7 +281,7 @@ const signPayload = async (
     };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "", output: stringify(error) };
+    return { success: false, opHash: "", output: JSON.stringify(error) };
   }
 };
 
@@ -311,7 +311,7 @@ const signPayloadAndSend = async (
       sigDetails: { input, formattedInput, bytes: payload.payload }
     };
   } catch (error) {
-    return { success: false, opHash: "", output: stringify(error) };
+    return { success: false, opHash: "", output: JSON.stringify(error) };
   }
 };
 
@@ -330,11 +330,11 @@ const signFailingNoop = async (
       success: true,
       opHash: "",
       output: signedPayload.signature,
-      sigDetails: { input, bytes: '03' + signedPayload.bytes, formattedInput: stringify(signedPayload.signedContent) },
+      sigDetails: { input, bytes: '03' + signedPayload.bytes, formattedInput: JSON.stringify(signedPayload.signedContent) },
     };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "", output: stringify(error) };
+    return { success: false, opHash: "", output: JSON.stringify(error) };
   }
 };
 
@@ -369,7 +369,7 @@ const verifySignatureWithTaquito = async (
       throw "Forged signature is incorrect";
     }
   } catch (error) {
-    return { success: false, opHash: "", output: stringify(error) };
+    return { success: false, opHash: "", output: JSON.stringify(error) };
   }
 };
 

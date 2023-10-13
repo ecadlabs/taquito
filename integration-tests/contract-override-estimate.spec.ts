@@ -1,4 +1,3 @@
-import { stringify } from "@taquito/core";
 import { CONFIGS } from "./config";
 import { InvalidEstimateValueError } from '@taquito/taquito';
 
@@ -15,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const account = await createAddress();
         pkh = await account.signer.publicKeyHash();
       } catch(e) {
-        console.log(stringify(e));
+        console.log(JSON.stringify(e));
       }
 
       done();

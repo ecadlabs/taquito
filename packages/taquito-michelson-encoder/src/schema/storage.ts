@@ -28,7 +28,6 @@ import {
 } from './errors';
 import { RpcTransaction } from './model';
 import { TokenSchema } from './types';
-import { stringify } from '@taquito/core';
 
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
 
@@ -193,7 +192,7 @@ export class Schema {
 
     if (!Array.isArray(diff)) {
       throw new InvalidBigMapDiffError(
-        `Big map diff must be an array, got: ${stringify(diff)}`,
+        `Big map diff must be an array, got: ${JSON.stringify(diff)}`,
         diff
       );
     }

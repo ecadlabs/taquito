@@ -8,7 +8,6 @@ import { TransferTicketParams, OpKind } from '../../src/operations/types';
 import { PvmKind } from '@taquito/rpc';
 import { preparedTransactionMock } from '../helpers';
 import { PreparedOperation } from '../../src/prepare';
-import { stringify } from '@taquito/core';
 
 describe('PrepareProvider test', () => {
   let prepareProvider: PrepareProvider;
@@ -172,7 +171,7 @@ describe('PrepareProvider test', () => {
         init: `"test"`,
       });
 
-      const res = JSON.parse(stringify(prepared));
+      const res = JSON.parse(JSON.stringify(prepared));
       expect(res).toEqual(preparedOriginationOpWithReveal);
     });
 
@@ -191,7 +190,7 @@ describe('PrepareProvider test', () => {
         init: `"test"`,
       });
 
-      const res = JSON.parse(stringify(prepared));
+      const res = JSON.parse(JSON.stringify(prepared));
 
       expect(res).toEqual(preparedOriginationOpNoReveal);
     });

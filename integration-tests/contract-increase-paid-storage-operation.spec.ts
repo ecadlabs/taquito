@@ -1,7 +1,6 @@
 import { CONFIGS } from './config';
 import { OpKind } from '@taquito/taquito';
 import { ligoSample } from './data/ligo-simple-contract';
-import { stringify } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 
@@ -28,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         simpleContractAddress = op.contractAddress!;
       } catch(e) {
-        console.log(stringify(e));
+        console.log(JSON.stringify(e));
       }
       done();
     });

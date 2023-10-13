@@ -35,7 +35,6 @@ import {
   InvalidKeyHashError,
   InvalidOperationKindError,
   InvalidAmountError,
-  stringify,
 } from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
@@ -237,7 +236,7 @@ export class OperationBatch extends Provider {
           ...param,
         });
       default:
-        throw new InvalidOperationKindError(stringify((param as any).kind));
+        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
   }
 
@@ -279,7 +278,7 @@ export class OperationBatch extends Provider {
           this.withSmartRollupOriginate(param);
           break;
         default:
-          throw new InvalidOperationKindError(stringify((param as any).kind));
+          throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
       }
     }
 

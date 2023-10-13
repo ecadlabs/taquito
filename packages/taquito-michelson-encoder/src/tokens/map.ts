@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { MichelsonMap } from '../michelson-map';
 import { MapTokenSchema } from '../schema/types';
 import {
@@ -48,7 +47,7 @@ export class MapToken extends Token {
       throw new MapValidationError(
         value,
         this,
-        `Value ${stringify(value)} is not a valid MichelsonMap`
+        `Value ${JSON.stringify(value)} is not a valid MichelsonMap`
       );
     }
   }

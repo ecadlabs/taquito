@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { Parser } from '@taquito/michel-codec'
 import { Schema } from '@taquito/michelson-encoder';
 
@@ -20,7 +19,7 @@ const example = async () => {
         const parsed_storage: any = p.parseMichelineExpression(example_storage_in_michelson )
 
         const schema = new Schema(parsed_storage);
-        console.log(stringify(schema.ExtractSchema(), null, 2))
+        console.log(JSON.stringify(schema.ExtractSchema(), null, 2))
     } catch (ex) {
         console.log(ex)
     }

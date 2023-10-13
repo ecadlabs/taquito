@@ -2,7 +2,6 @@ import { OperationContentsBallot, OperationContentsTransaction } from '@taquito/
 import { OpKind } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { LocalForger } from '@taquito/local-forging';
-import { stringify } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
   const Tezos = lib;
@@ -27,7 +26,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
         contractAddress = op.contractAddress!;
 
       } catch(e: any) {
-        console.log('Unable to originate contract: ', stringify(e));
+        console.log('Unable to originate contract: ', JSON.stringify(e));
       }
 
       done();

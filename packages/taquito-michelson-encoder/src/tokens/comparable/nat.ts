@@ -7,7 +7,6 @@ import {
 } from '../token';
 import BigNumber from 'bignumber.js';
 import { BaseTokenSchema } from '../../schema/types';
-import { stringify } from '@taquito/core';
 
 /**
  *  @category Error
@@ -52,10 +51,10 @@ export class NatToken extends ComparableToken {
   private validate(val: any) {
     const bigNumber = new BigNumber(val);
     if (bigNumber.isNaN()) {
-      throw new NatValidationError(val, this, `Value is not a number: ${stringify(val)}`);
+      throw new NatValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }
     if (bigNumber.isNegative()) {
-      throw new NatValidationError(val, this, `Value cannot be negative: ${stringify(val)}`);
+      throw new NatValidationError(val, this, `Value cannot be negative: ${JSON.stringify(val)}`);
     }
   }
 
