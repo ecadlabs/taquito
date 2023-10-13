@@ -2,6 +2,18 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v17.3.2
+
+## Summary
+- Updated Beacon version to v4.0.12
+
+## Documentation
+- Updated website documentation to group sections by logical order instead of alphabetical #2665
+- Added detail for `getBalance()` method documentation that it returns balances in mutez #2495
+
+## Internals
+- Minor typo fix on variable name in `RpcEstimateProvider` [PR#2669](https://github.com/ecadlabs/taquito/pull/2669)
+- Added `@taquito/core` as an explicit dependency on other packages [PR#2673](https://github.com/ecadlabs/taquito/pull/2673)
 
 # Taquito v17.3.1
 
