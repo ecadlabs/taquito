@@ -4,7 +4,8 @@
     "integration-tests",
     "apps",
     "**/test/**",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "example/**"
   ],
   "compilerOptions": {
     "moduleResolution": "node",
