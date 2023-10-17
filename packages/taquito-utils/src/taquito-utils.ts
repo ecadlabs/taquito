@@ -285,14 +285,13 @@ export const mic2arr = function me2(s: any): any {
 
 /**
  *
- * @description Convert a buffer to an hex string
+ * @description Convert a Uint8Array to an hex string
  *
- * @param buffer Buffer to convert
+ * @param buffer Uint8Array to convert
  */
 export const buf2hex = (buffer: Uint8Array): string => {
-  const byteArray = new Uint8Array(buffer);
   const hexParts: string[] = [];
-  byteArray.forEach((byte) => {
+  buffer.forEach((byte) => {
     const hex = byte.toString(16);
     const paddedHex = `00${hex}`.slice(-2);
     hexParts.push(paddedHex);
