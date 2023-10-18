@@ -5,7 +5,7 @@ import { Encoder } from '../taquito-local-forging';
 import { opMappingReverse, opMapping } from '../constants';
 import { pad } from '../utils';
 import { UnexpectedMichelsonValueError } from '../errors';
-import { InvalidHexStringError, stringify } from '@taquito/core';
+import { InvalidHexStringError } from '@taquito/core';
 
 export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
 export type BytesValue = { bytes: string };
@@ -67,7 +67,7 @@ export const valueEncoder: Encoder<MichelsonValue> = (value: MichelsonValue) => 
     return intEncoder(value);
   }
 
-  throw new UnexpectedMichelsonValueError(stringify(value));
+  throw new UnexpectedMichelsonValueError(JSON.stringify(value));
 };
 
 export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {

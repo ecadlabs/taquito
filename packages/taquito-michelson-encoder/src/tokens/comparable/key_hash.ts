@@ -7,7 +7,6 @@ import {
 } from '../token';
 import { encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
-import { stringify } from '@taquito/core';
 
 /**
  *  @category Error
@@ -44,7 +43,11 @@ export class KeyHashToken extends ComparableToken {
    */
   private validate(value: any) {
     if (validateKeyHash(value) !== ValidationResult.VALID) {
-      throw new KeyHashValidationError(value, this, `KeyHash is not valid: ${stringify(value)}`);
+      throw new KeyHashValidationError(
+        value,
+        this,
+        `KeyHash is not valid: ${JSON.stringify(value)}`
+      );
     }
   }
 

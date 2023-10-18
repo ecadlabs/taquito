@@ -13,7 +13,7 @@ import {
   ViewSimulationError,
   validateAndExtractFailwith,
 } from '../errors';
-import { InvalidViewParameterError, stringify } from '@taquito/core';
+import { InvalidViewParameterError } from '@taquito/core';
 
 export interface ExecutionContextParams {
   source?: string;
@@ -141,7 +141,7 @@ export class OnChainView {
         ? new ViewSimulationError(
             `The simulation of the on-chain view named ${
               this._smartContractViewSchema.viewName
-            } failed with: ${stringify(failWith)}`,
+            } failed with: ${JSON.stringify(failWith)}`,
             this._smartContractViewSchema.viewName,
             failWith,
             error

@@ -3,7 +3,6 @@ import { char2Bytes } from '@taquito/utils';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 import { InMemorySigner } from '@taquito/signer';
-import { stringify } from '@taquito/core';
 
 async function example() {
   const provider = 'https://ghostnet.ecadinfra.com';
@@ -35,7 +34,7 @@ async function example() {
 
     const metadataBigMAp = new MichelsonMap();
     metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set("here", char2Bytes(stringify(metadataJSON)))
+    metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataJSON)))
 
     const tacoShopStorageMap = new MichelsonMap();
 

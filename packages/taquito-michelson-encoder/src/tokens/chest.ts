@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -30,7 +29,7 @@ export class ChestToken extends Token {
     if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 == 0) {
       return;
     }
-    throw new ChestValidationError(val, this, `Invalid bytes: ${stringify(val)}`);
+    throw new ChestValidationError(val, this, `Invalid bytes: ${JSON.stringify(val)}`);
   }
 
   private convertUint8ArrayToHexString(val: any) {

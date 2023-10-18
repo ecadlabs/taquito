@@ -10,7 +10,7 @@ import { TaquitoError } from '@taquito/core';
 export class InvalidMapTypeError extends TaquitoError {
   constructor(public readonly mapType: any, public readonly reason: string) {
     super();
-    this.message = `The map type '${stringify(mapType)}' is invalid. Reason: ${reason}.`;
+    this.message = `The map type '${JSON.stringify(mapType)}' is invalid. Reason: ${reason}.`;
     this.name = 'InvalidMapTypeError';
   }
 }
@@ -60,11 +60,11 @@ export class MapTypecheckError extends TaquitoError {
     public readonly reason: any
   ) {
     super();
-    this.message = `The ${objectType} provided: ${stringify(
+    this.message = `The ${objectType} provided: ${JSON.stringify(
       value
-    )} is not compatible with the expected michelson type: ${stringify(type)}. Reason: ${stringify(
-      reason
-    )}.`;
+    )} is not compatible with the expected michelson type: ${JSON.stringify(
+      type
+    )}. Reason: ${JSON.stringify(reason)}.`;
     this.name = 'MapTypecheckError';
   }
 }

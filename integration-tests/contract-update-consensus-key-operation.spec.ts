@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
@@ -22,7 +21,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await register.confirmation();
 
       } catch(e) {
-        console.log(stringify(e));
+        console.log(JSON.stringify(e));
       }
       
       done();

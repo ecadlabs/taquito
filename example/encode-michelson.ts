@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { Parser } from '@taquito/michel-codec'
 
 const example = async () => {
@@ -16,11 +15,11 @@ const example = async () => {
 
     console.log('Example 1')
     const exp1 = p.parseMichelineExpression(ex1)
-    console.log(stringify(exp1))
+    console.log(JSON.stringify(exp1))
 
     console.log('Example 2')
     const exp2 = p.parseMichelineExpression(ex2)
-    console.log(stringify(exp2))
+    console.log(JSON.stringify(exp2))
 
   } catch (ex) {
     console.log(ex)

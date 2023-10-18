@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "17.3.1",
+  "version": "17.3.2",
   "description": "Classes, interfaces, and types shared across Taquito packages",
   "keywords": [
     "tezos",
@@ -59,11 +59,5 @@
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
     ]
-  },
-  "dependencies": {
-    "json-stringify-safe": "^5.0.1"
-  },
-  "devDependencies": {
-    "@types/json-stringify-safe": "^5.0.1"
   }
 }

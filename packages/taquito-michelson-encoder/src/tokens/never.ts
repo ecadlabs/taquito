@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -31,7 +30,7 @@ export class NeverToken extends Token {
     throw new NeverTokenError(
       val,
       this,
-      `Assigning a value to the type never is forbidden. Trying to assign ${stringify(val)}.`
+      `Assigning a value to the type never is forbidden. Trying to assign ${JSON.stringify(val)}.`
     );
   }
 
@@ -45,7 +44,7 @@ export class NeverToken extends Token {
     throw new NeverTokenError(
       val,
       this,
-      `Assigning a value to the type never is forbidden. Trying to assign ${stringify(val)}.`
+      `Assigning a value to the type never is forbidden. Trying to assign ${JSON.stringify(val)}.`
     );
   }
 
@@ -56,7 +55,7 @@ export class NeverToken extends Token {
     throw new NeverTokenError(
       val,
       this,
-      `There is no literal value for the type never. Trying to execute ${stringify(val)}.`
+      `There is no literal value for the type never. Trying to execute ${JSON.stringify(val)}.`
     );
   }
 

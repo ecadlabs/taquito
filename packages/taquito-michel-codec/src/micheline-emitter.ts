@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { Expr, Prim, sourceReference } from './micheline';
 
 export interface FormatOptions {
@@ -66,7 +65,7 @@ function emitExpr(node: Expr, f: Formatter, foldMacros: boolean): string {
   if (Array.isArray(node)) {
     return emitSeq(node, f, foldMacros);
   } else if ('string' in node) {
-    return stringify(node.string);
+    return JSON.stringify(node.string);
   } else if ('int' in node) {
     return node.int;
   } else if ('bytes' in node) {

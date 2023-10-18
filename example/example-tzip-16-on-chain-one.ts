@@ -2,7 +2,6 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { contractCode, metadataViewsExample1 } from '../integration-tests/data/metadataViews';
 import { char2Bytes } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
-import { stringify } from '@taquito/core';
 
 async function example() {
   const provider = 'https://ghostnet.ecadinfra.com';
@@ -15,7 +14,7 @@ async function example() {
 
     const metadataBigMAp = new MichelsonMap();
     metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set("here", char2Bytes(stringify(metadataViewsExample1)))
+    metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample1)))
 
     const op = await tezos.contract.originate({
       code: contractCode,

@@ -1,4 +1,4 @@
-import { ParameterValidationError, TaquitoError, stringify } from '@taquito/core';
+import { ParameterValidationError, TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
@@ -20,7 +20,7 @@ export class InvalidMerkleTreeError extends ParameterValidationError {
   constructor(public readonly root: string) {
     super();
     this.name = 'InvalidMerkleTreeError';
-    this.message = `Invalid merkle tree has root "${stringify(
+    this.message = `Invalid merkle tree has root "${JSON.stringify(
       root
     )}" different from expected root.`;
   }

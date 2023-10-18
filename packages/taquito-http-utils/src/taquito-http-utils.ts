@@ -7,7 +7,6 @@ import fetchAdapter from './fetch-adapter';
 import { STATUS_CODE } from './status_code';
 import axios from 'axios';
 import { HttpRequestFailed, HttpResponseError } from './errors';
-import { stringify } from '@taquito/core';
 
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
 
@@ -114,7 +113,7 @@ export class HttpBackend {
         let errorData;
 
         if (typeof err.response.data === 'object') {
-          errorData = stringify(err.response.data);
+          errorData = JSON.stringify(err.response.data);
         } else {
           errorData = err.response.data;
         }

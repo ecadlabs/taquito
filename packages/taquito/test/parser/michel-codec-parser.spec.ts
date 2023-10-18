@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { OriginateParams } from '../../src/operations/types';
 import { Context, MichelCodecParser, Protocols, InvalidCodeParameter } from '../../src/taquito';
 
@@ -35,8 +34,8 @@ describe('MichelCodec parser', () => {
       const parser = new MichelCodecParser(new Context(mockRpcClient as any));
       const result = await parser.prepareCodeOrigination(originateParams);
 
-      expect(stringify(result)).toEqual(
-        stringify({
+      expect(JSON.stringify(result)).toEqual(
+        JSON.stringify({
           code: [
             { prim: 'parameter', args: [{ prim: 'int' }] },
             {
@@ -75,8 +74,8 @@ describe('MichelCodec parser', () => {
       const parser = new MichelCodecParser(new Context(mockRpcClient as any));
       const result = await parser.prepareCodeOrigination(originateParams);
 
-      expect(stringify(result)).toEqual(
-        stringify({
+      expect(JSON.stringify(result)).toEqual(
+        JSON.stringify({
           code: [
             { prim: 'parameter', args: [{ prim: 'int' }] },
             {
@@ -115,8 +114,8 @@ describe('MichelCodec parser', () => {
       const parser = new MichelCodecParser(new Context(mockRpcClient as any));
       const result = await parser.prepareCodeOrigination(originateParams);
 
-      expect(stringify(result)).toEqual(
-        stringify({
+      expect(JSON.stringify(result)).toEqual(
+        JSON.stringify({
           code: [
             { prim: 'parameter', args: [{ prim: 'int' }] },
             {

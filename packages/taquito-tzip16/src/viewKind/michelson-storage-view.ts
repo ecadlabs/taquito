@@ -13,7 +13,7 @@ import {
 import { ForbiddenInstructionInViewCodeError, NoParameterExpectedError } from '../errors';
 import { validateAndExtractFailwith, TzReadProvider } from '@taquito/taquito';
 import { View } from './interface';
-import { InvalidViewParameterError, stringify } from '@taquito/core';
+import { InvalidViewParameterError } from '@taquito/core';
 
 export class MichelsonStorageView implements View {
   constructor(
@@ -191,7 +191,7 @@ export class MichelsonStorageView implements View {
       const failWith = validateAndExtractFailwith(error);
       throw failWith
         ? new ViewSimulationError(
-            `The simulation of the Michelson view failed with: ${stringify(failWith)}`,
+            `The simulation of the Michelson view failed with: ${JSON.stringify(failWith)}`,
             this.viewName,
             failWith,
             error

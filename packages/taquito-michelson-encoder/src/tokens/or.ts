@@ -1,4 +1,3 @@
-import { stringify } from '@taquito/core';
 import { OrTokenSchema } from '../schema/types';
 import {
   Token,
@@ -146,7 +145,7 @@ export class OrToken extends ComparableToken {
       throw new OrValidationError(
         args,
         this,
-        `EncodeObject expects an object with a single key but got: ${stringify(args)}`
+        `EncodeObject expects an object with a single key but got: ${JSON.stringify(args)}`
       );
     }
   }
@@ -181,7 +180,7 @@ export class OrToken extends ComparableToken {
       throw new OrValidationError(
         val,
         this,
-        `Was expecting Left or Right prim but got: ${stringify(val.prim)}`
+        `Was expecting Left or Right prim but got: ${JSON.stringify(val.prim)}`
       );
     }
   }
@@ -304,8 +303,8 @@ export class OrToken extends ComparableToken {
         return token.compare(val1[labelVal1], val2[labelVal1]);
       }
     } else {
-      const encoded1 = stringify(this.EncodeObject(val1));
-      const encoded2 = stringify(this.EncodeObject(val2));
+      const encoded1 = JSON.stringify(this.EncodeObject(val1));
+      const encoded2 = JSON.stringify(this.EncodeObject(val2));
       return encoded1 < encoded2 ? -1 : 1;
     }
   }

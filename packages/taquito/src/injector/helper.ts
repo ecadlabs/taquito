@@ -1,10 +1,9 @@
-import { stringify } from '@taquito/core';
 import { HttpResponseError } from '@taquito/http-utils';
 
 export function formatErrorMessage(error: HttpResponseError, stringToReplace: string) {
   const body = JSON.parse(error.body);
   if (body[0] && body[0].kind && body[0].msg) {
-    const newBody = stringify({
+    const newBody = JSON.stringify({
       kind: body[0].kind,
       id: body[0].id,
       msg: body[0].msg.replace(stringToReplace, ''),
