@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     beforeEach(async (done) => {
       await setup();
-      minimal_block_delay = (await Tezos.rpc.getConstants()).minimal_block_delay ?? new BigNumber(15);
+      minimal_block_delay = (await Tezos.rpc.getConstants()).minimal_block_delay ?? new BigNumber(8);
       done();
     });
 
