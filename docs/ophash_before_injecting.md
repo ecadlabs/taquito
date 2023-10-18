@@ -20,7 +20,7 @@ Here is a simple example on getting the operation hash of a transaction (transfe
 
 // import { TezosToolkit } from '@taquito/taquito';
 // import { encodeOpHash } from '@taquito/utils';
-// import { forger } from '@taquito/local-forging';
+// import { LocalForger } from '@taquito/local-forging';
 
 // const Tezos = new TezosToolkit('RPC_ENDPOINT');
 
@@ -30,10 +30,11 @@ const preparedTransfer = await Tezos.prepare.transaction({
 });
 
 
-// forge the transaction operation
-const forgeParams = await Tezos.prepare.transaction(prepared);
+// convert prepared operation into a forgeable object
+const forgeParams = await Tezos.prepare.toForge(preparedTransfer);
 
-// sign the transaction operation
+// forge the transaction operation
+const forger = new LocalForger();
 const forgedBytes = await forger.forge(forgeParams);
 
 // sign the transaction operation
