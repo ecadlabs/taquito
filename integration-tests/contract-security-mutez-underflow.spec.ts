@@ -12,12 +12,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    mondaynet('Verify mutez underflow example', async (done) => {
+    mondaynet('Verify mutez underflow example', async () => {
       try {
         const op = await Tezos.contract.originate({
           code: `        { parameter unit ;
@@ -37,14 +36,13 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const contract = await op.contract();
         expect(await contract.storage()).toBeTruthy();
-        
+
         const opSend = await contract.methods.default(0).send();
         await opSend.confirmation();
 
       } catch (error: any) {
         expect(error.message).toContain('{"prim":"Unit"}');
       }
-      done();
     });
   });
 });

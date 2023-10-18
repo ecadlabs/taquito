@@ -111,7 +111,13 @@ export class RpcClient implements RpcClientInterface {
 
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
-    return `${this.url.replace(/\/+$/g, '')}${path}`;
+    // the regex solution is prone to ReDoS. Please see: https://stackoverflow.com/questions/6680825/return-string-without-trailing-slash#comment124306698_6680877
+    // We also got a CodeQL error for the regex based solution
+    let rootUrl = this.url;
+    while (rootUrl.endsWith('/')) {
+      rootUrl = rootUrl.slice(0, -1);
+    }
+    return `${rootUrl}${path}`;
   }
 
   private validateAddress(address: string) {
@@ -509,7 +515,7 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    *
-   * @param options contains generic configuration for rpc calls. See examples for various available sytaxes.
+   * @param options contains generic configuration for rpc calls. See examples for various available syntaxes.
    *
    * @description All the information about a block
    *

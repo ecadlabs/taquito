@@ -224,11 +224,18 @@
           "name": "@taquito/michel-codec",
           "version": "8.0.4-beta.0",
           "description": "Michelson parser/validator/formatter",
-          "keywords": ["tezos", "blockchain", "signer"],
+          "keywords": [
+            "tezos",
+            "blockchain",
+            "signer"
+          ],
           "main": "./dist/taquito-michel-codec.umd.js",
           "module": "./dist/taquito-michel-codec.es5.js",
           "typings": "./dist/types/taquito-michel-codec.d.ts",
-          "files": ["dist", "signature.json"],
+          "files": [
+            "dist",
+            "signature.json"
+          ],
           "publishConfig": {
             "access": "public"
           },
@@ -239,7 +246,7 @@
           },
           "license": "MIT",
           "engines": {
-            "node": ">=16"
+            "node": ">=18"
           },
           "scripts": {
             "test": "jest --coverage",
@@ -252,7 +259,10 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix", "git add"]
+            "{src,test}/**/*.ts": [
+              "prettier --write",
+              "tslint --fix"
+            ]
           },
           "jest": {
             "transform": {
@@ -260,16 +270,25 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": ["ts", "tsx", "js"],
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
             "moduleNameMapper": {
               "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
             },
-            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-            "collectCoverageFrom": ["src/**/*.{js,ts}"]
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "src/**/*.{js,ts}"
+            ]
           },
           "devDependencies": {
             "@types/jest": "^26.0.16",
-            "@types/node": "^16",
+            "@types/node": "^18",
             "jest": "^26.6.3",
             "jest-extended": "^0.11.5",
             "lint-staged": "^10.4.0",
@@ -278,7 +297,6 @@
             "rimraf": "^3.0.2",
             "rollup": "^2.28.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "ts-jest": "^26.4.4",
             "ts-node": "^9.1.1",

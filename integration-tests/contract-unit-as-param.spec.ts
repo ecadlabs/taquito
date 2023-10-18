@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination with unit as params through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true)
-      done()
     })
-    test('Verify contract.originate for a contract and call deposit method with unit param', async (done) => {
+    test('Verify contract.originate for a contract and call deposit method with unit param', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: depositContractCode,
@@ -21,7 +20,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const operation = await contract.methods.deposit(null).send({ amount: 1, });
       await operation.confirmation();
       expect(operation.status).toEqual('applied')
-      done();
     })
 
   });

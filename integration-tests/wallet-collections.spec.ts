@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination with collection through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify wallet.originate for a contract with set, list, map and then exercise all collections', async (done) => {
+    it('Verify wallet.originate for a contract with set, list, map and then exercise all collections', async () => {
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {
@@ -43,7 +42,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const mapOp = await contract.methods['setMap'](MichelsonMap.fromLiteral({ "2": "2" })).send()
       await mapOp.confirmation();
 
-      done();
     });
   });
 })

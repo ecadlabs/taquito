@@ -5,12 +5,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test contract.batch with smart rollup add messages using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true);
-      done();
     });
 
-    it('should be able to batch smart rollup add messages with other operations', async (done) => {
+    it('should be able to batch smart rollup add messages with other operations', async () => {
       const batch = Tezos.contract
         .batch()
         .withSmartRollupAddMessages({
@@ -28,7 +27,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
       expect(op.includedInBlock).toBeDefined();
 
-      done();
     });
   });
 });

@@ -1,12 +1,12 @@
 import { CONFIGS } from "./config";
-import { MANAGER_LAMBDA, TezosToolkit  } from "@taquito/taquito";
+import { MANAGER_LAMBDA, TezosToolkit } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Funder = lib;
   let Tezos: TezosToolkit;
   describe(`Generic Multisig set delegate: ${rpc}`, () => {
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup(true);
       // Checks if test is being run in Flextesa or not
       // If it is, fund the signer account using using 'Funder', which is the flextesa_bootstrap account
@@ -18,7 +18,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       } else {
         Tezos = Funder;
       }
-      done()
     })
     test('test manager transfers set delegate scenarios', async () => {
 
@@ -28,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       const pkh = await Tezos.signer.publicKeyHash();
       const delegateInfo = await Tezos.rpc.getDelegate(pkh);
-      
+
       if (delegateInfo === null) {
         const op = await Tezos.contract.registerDelegate({});
         await op.confirmation();
@@ -49,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op2.status).toEqual('applied')
 
       const delegate = await Tezos.rpc.getDelegate(contract.address)
-      expect(delegate).toEqual(null)  
+      expect(delegate).toEqual(null)
 
       const pair = ({ data, type }: any, value: any) => {
         return {
@@ -136,7 +135,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await op3.confirmation();
 
       const check_the_delegate = await Tezos.rpc.getDelegate(contract.address)
-      expect(check_the_delegate).toEqual(pkh)  
+      expect(check_the_delegate).toEqual(pkh)
 
       const packed2 = await Tezos.rpc.packData(pair({
         data: {
@@ -200,7 +199,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       const signature3 = await account1.signer.sign(packed2.packed, new Uint8Array())
       const signature4 = await account2.signer.sign(packed2.packed, new Uint8Array())
-      
+
       const op4 = await contract.methods.main(
         "1",
         'operation',
@@ -210,7 +209,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       await op4.confirmation();
       const check_the_delegate_again = await Tezos.rpc.getDelegate(contract.address)
-      expect(check_the_delegate_again).toEqual(null)  
+      expect(check_the_delegate_again).toEqual(null)
 
     })
   })

@@ -1,4 +1,3 @@
-import sourceMaps from 'rollup-plugin-sourcemaps';
 import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
@@ -22,8 +21,5 @@ export default {
     json(),
     // Compile TypeScript files
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
-
-    // Resolve source maps to the original source
-    sourceMaps(),
   ],
 };

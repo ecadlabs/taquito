@@ -6,12 +6,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const test = require('jest-retries');
 
     describe(`Test contract origination with UNPAIR through wallet api using: ${rpc}`, () => {
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup();
-            done();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code and init in Michelson', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract having UNPAIR with code and init in Michelson', 2, async () => {
             const op = await Tezos.wallet.originate({
                 code: miStr,
                 init: '(Pair 0 "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn")'
@@ -26,10 +25,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-            done();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code in Michelson and init in JSON Michelson', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract having UNPAIR with code in Michelson and init in JSON Michelson', 2, async () => {
             const op = await Tezos.wallet.originate({
                 code: miStr,
                 init: { prim: 'Pair', args: [{ int: '0' }, { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }] }
@@ -44,10 +42,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-            done();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code in Michelson and storage', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract having UNPAIR with code in Michelson and storage', 2, async () => {
             const op = await Tezos.wallet.originate({
                 code: miStr,
                 storage: {
@@ -65,10 +62,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-            done();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code in JSON Michelson and init in Michelson', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract having UNPAIR with code in JSON Michelson and init in Michelson', 2, async () => {
             const op = await Tezos.wallet.originate({
                 code: miObject,
                 init: '(Pair 0 "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn")'
@@ -83,10 +79,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-            done();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code and init in JSON Michelson', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract having UNPAIR with code and init in JSON Michelson', 2, async () => {
             const op = await Tezos.wallet.originate({
                 code: miObject,
                 init: { prim: 'Pair', args: [{ int: '0' }, { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }] }
@@ -101,10 +96,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-            done();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code in JSON Michelson and storage', 2, async (done: () => void) => {
+        test('Verify wallet.originate for a contract having UNPAIR with code in JSON Michelson and storage', 2, async () => {
             const op = await Tezos.wallet.originate({
                 code: miObject,
                 storage: {
@@ -122,7 +116,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const instUnpair = code.args[0].find((x: any) => x.prim === 'UNPAIR');
 
             expect(instUnpair).toBeDefined();
-            done();
         });
     });
 });

@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
 
   describe(`Test TZ Manager through wallet api: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    test('Verify wallet.transfer scenarios: implicit transfer to and from contracts, set and remove delegate, and transfer from a contract to a contract.', async (done) => {
+    test('Verify wallet.transfer scenarios: implicit transfer to and from contracts, set and remove delegate, and transfer from a contract to a contract.', async () => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: managerCode,
@@ -55,7 +54,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       } catch (ex: any) {
         expect(ex.message).toContain('tez.subtraction_underflow')
       }
-      done();
     })
   })
 });

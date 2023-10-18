@@ -5,15 +5,14 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    mondaynet('Verify type ticket string cannot be used with "dup" here because it is not duplicable', async (done) => {
+    mondaynet('Verify type ticket string cannot be used with "dup" here because it is not duplicable', async () => {
       try {
         const opTicketsDup = await Tezos.contract.originate({
           code: `{ parameter unit;
@@ -40,10 +39,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
-      done();
     });
 
-    mondaynet('Verify type ticket string cannot be used with "dup n" here because it is not duplicable', async (done) => {
+    mondaynet('Verify type ticket string cannot be used with "dup n" here because it is not duplicable', async () => {
       try {
         const opTicketsDup = await Tezos.contract.originate({
           code: `{ parameter unit;
@@ -72,10 +70,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
-      done();
     });
 
-    mondaynet('Verify type list (ticket string) cannot be used here because it is not duplicable', async (done) => {
+    mondaynet('Verify type list (ticket string) cannot be used here because it is not duplicable', async () => {
       try {
         const opTicketsDup = await Tezos.contract.originate({
           code: `{ parameter unit;
@@ -105,10 +102,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
-      done();
     });
 
-    mondaynet('Verify Packing a ticket is not possible', async (done) => {
+    mondaynet('Verify Packing a ticket is not possible', async () => {
       try {
         const opTicketsDup = await Tezos.contract.originate({
           code: `{ parameter unit;
@@ -134,10 +130,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
-      done();
     });
 
-    mondaynet('Verify pack a ticket stored within a pair structure is not possible', async (done) => {
+    mondaynet('Verify pack a ticket stored within a pair structure is not possible', async () => {
       try {
         const opTicketsDup = await Tezos.contract.originate({
           code: `{ parameter unit;
@@ -163,10 +158,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
-      done();
     });
 
-    mondaynet('Verify returning a ticket in an on-chain view is not possible', async (done) => {
+    mondaynet('Verify returning a ticket in an on-chain view is not possible', async () => {
       try {
         const opTicketsDup = await Tezos.contract.originate({
           code: `{ parameter unit;
@@ -192,7 +186,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       } catch (error: any) {
         expect(error.message).toContain('michelson_v1.unexpected_ticket');
       }
-      done();
     });
 
   });

@@ -13,10 +13,9 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
   const Tezos = new TezosToolkit(new RpcClient(rpc));
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
 
-      done();
     });
 
     mondaynet('Verify that you cannot prefund a non existent smart contract', async () => {

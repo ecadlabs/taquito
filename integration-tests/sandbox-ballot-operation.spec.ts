@@ -17,15 +17,14 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
   Charlie.setSignerProvider(new InMemorySigner('edsk3RgWvbKKA1atEUcaGwivge7QtckHkTL9nQJUXQKY5r8WKp4pF4'));
 
   describe(`Test Proposal and Ballot operation in ${protocol.substring(0, 8)} with flextesa`, () => {
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup();
       let constants = await Alice.rpc.getConstants();
       blocksPerVotingPeriod = constants.blocks_per_cycle * constants.cycles_per_voting_period!;
       blockTime = constants.minimal_block_delay!.toNumber();
-      done();
     });
 
-    flextesanet('Should be able to inject proposal operation in proposal period', async (done) => {
+    flextesanet('Should be able to inject proposal operation in proposal period', async () => {
 
       // double check if it's proposal period so that we can inject proposal operation
       currentPeriod = await Alice.rpc.getCurrentPeriod();
@@ -50,11 +49,10 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
           proposals: ['ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK']
         });
         await CharlieOp.confirmation();
-        done();
       }
     });
 
-    flextesanet('Should be able to inject ballot operation in exploration period', async (done) => {
+    flextesanet('Should be able to inject ballot operation in exploration period', async () => {
       // if it's still proposal period make the test sleep to get into exploration period to inject ballot operation
       currentPeriod = await Alice.rpc.getCurrentPeriod();
       if (currentPeriod.voting_period.kind === 'proposal') {
@@ -74,7 +72,6 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
         expect(explorationBallotOp.operationResults?.ballot).toEqual('yay');
         expect(explorationBallotOp.includedInBlock).toBeDefined();
         expect(explorationBallotOp.hash).toBeDefined();
-        done();
       }
     });
   });

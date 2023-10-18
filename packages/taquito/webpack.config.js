@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
 const pkg = require('./package.json');
-var SriPlugin = require('webpack-subresource-integrity');
+var { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 var WebpackAssetsManifest = require('webpack-assets-manifest');
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
     minimizer: [new TerserPlugin()],
   },
   plugins: [
-    new SriPlugin({
+    new SubresourceIntegrityPlugin({
       hashFuncNames: ['sha384'],
       enabled: true
     }),

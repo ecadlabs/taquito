@@ -64,7 +64,7 @@ describe('Tzip16 contract abstraction test', () => {
     });
   });
 
-  it('Should get the metadata', async (done) => {
+  it('Should get the metadata', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('cafe');
 
@@ -79,10 +79,9 @@ describe('Tzip16 contract abstraction test', () => {
       authors: ['Test <https://test/>'],
       homepage: 'https://test/',
     });
-    done();
   });
 
-  it('Should get metadata by each property', async (done) => {
+  it('Should get metadata by each property', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('cafe');
 
@@ -98,11 +97,9 @@ describe('Tzip16 contract abstraction test', () => {
     expect(await tzip16Abs.metadataInterfaces()).toBeUndefined();
     expect(await tzip16Abs.metadataErrors()).toBeUndefined();
     expect(await tzip16Abs.metadataViews()).toEqual({});
-
-    done();
   });
 
-  it('Should fail with BigMapContractMetadataNotFoundError', async (done) => {
+  it('Should fail with BigMapContractMetadataNotFoundError', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue(undefined);
 
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
@@ -112,10 +109,9 @@ describe('Tzip16 contract abstraction test', () => {
     } catch (e) {
       expect(e).toBeInstanceOf(BigMapContractMetadataNotFoundError);
     }
-    done();
   });
 
-  it('Should fail with UriNotFoundError', async (done) => {
+  it('Should fail with UriNotFoundError', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue(undefined);
 
@@ -126,10 +122,9 @@ describe('Tzip16 contract abstraction test', () => {
     } catch (e) {
       expect(e).toBeInstanceOf(UriNotFoundError);
     }
-    done();
   });
 
-  it('Should properly add a valid view to the _metadataViewsObject property', async (done) => {
+  it('Should properly add a valid view to the _metadataViewsObject property', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     // Act as we already fetched metadata; it contains one view
     tzip16Abs['_metadataEnvelope'] = {
@@ -163,10 +158,9 @@ describe('Tzip16 contract abstraction test', () => {
     expect(Object.keys(metadataView)[0]).toEqual('multiply-the-nat-in-storage');
     expect(typeof Object.values(metadataView)[0]).toBe('function');
     expect(tzip16Abs['_metadataViewsObject']).toEqual(metadataView);
-    done();
   });
 
-  it('The _metadataViewsObject property should be empty when there is no view in metadata', async (done) => {
+  it('The _metadataViewsObject property should be empty when there is no view in metadata', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     // Act as we already fetched metadata; it contains no view
     tzip16Abs['_metadataEnvelope'] = {
@@ -179,10 +173,9 @@ describe('Tzip16 contract abstraction test', () => {
     const metadataView = await tzip16Abs.metadataViews();
     expect(metadataView).toEqual({});
     expect(tzip16Abs['_metadataViewsObject']).toEqual(metadataView);
-    done();
   });
 
-  it('The _metadataViewsObject property should be empty when there is no view property in metadata', async (done) => {
+  it('The _metadataViewsObject property should be empty when there is no view property in metadata', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     // Act as we already fetched metadata; it contains no view
     tzip16Abs['_metadataEnvelope'] = {
@@ -192,10 +185,9 @@ describe('Tzip16 contract abstraction test', () => {
     // Return an empty object
     const metadataView = await tzip16Abs.metadataViews();
     expect(metadataView).toEqual({});
-    done();
   });
 
-  it('Should ignore view having an unsupported type', async (done) => {
+  it('Should ignore view having an unsupported type', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     (tzip16Abs['_metadataEnvelope'] as any) = {
       uri: '',
@@ -218,10 +210,9 @@ describe('Tzip16 contract abstraction test', () => {
     const metadataView = await tzip16Abs.metadataViews();
     expect(metadataView).toEqual({});
     expect(tzip16Abs['_metadataViewsObject']).toEqual(metadataView);
-    done();
   });
 
-  it('Should ignore the unsupported type of view and add the supported one to the _metadataViewsObject property', async (done) => {
+  it('Should ignore the unsupported type of view and add the supported one to the _metadataViewsObject property', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     // Act as we already fetched metadata; it contains a view having an unsupported type and a valid view
     (tzip16Abs['_metadataEnvelope'] as any) = {
@@ -265,10 +256,9 @@ describe('Tzip16 contract abstraction test', () => {
     expect(Object.keys(metadataView)[0]).toEqual('multiply-the-nat-in-storage');
     expect(Object.keys(metadataView)[1]).toBeUndefined();
     expect(tzip16Abs['_metadataViewsObject']).toEqual(metadataView);
-    done();
   });
 
-  it('Should ignore view having no code property', async (done) => {
+  it('Should ignore view having no code property', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     (tzip16Abs['_metadataEnvelope'] as any) = {
       uri: '',
@@ -290,10 +280,9 @@ describe('Tzip16 contract abstraction test', () => {
     };
     const metadataView = await tzip16Abs.metadataViews();
     expect(metadataView).toEqual({});
-    done();
   });
 
-  it('Should ignore view having no returnType property', async (done) => {
+  it('Should ignore view having no returnType property', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     (tzip16Abs['_metadataEnvelope'] as any) = {
       uri: '',
@@ -315,10 +304,9 @@ describe('Tzip16 contract abstraction test', () => {
     };
     const metadataView = await tzip16Abs.metadataViews();
     expect(metadataView).toEqual({});
-    done();
   });
 
-  it('Should ignore view having no implementation', async (done) => {
+  it('Should ignore view having no implementation', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     (tzip16Abs['_metadataEnvelope'] as any) = {
       uri: '',
@@ -333,10 +321,9 @@ describe('Tzip16 contract abstraction test', () => {
     };
     const metadataView = await tzip16Abs.metadataViews();
     expect(metadataView).toEqual({});
-    done();
   });
 
-  it('Should ignore view having no implementation property', async (done) => {
+  it('Should ignore view having no implementation property', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     (tzip16Abs['_metadataEnvelope'] as any) = {
       uri: '',
@@ -350,10 +337,9 @@ describe('Tzip16 contract abstraction test', () => {
     };
     const metadataView = await tzip16Abs.metadataViews();
     expect(metadataView).toEqual({});
-    done();
   });
 
-  it('Should ignore view having no name property', async (done) => {
+  it('Should ignore view having no name property', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     (tzip16Abs['_metadataEnvelope'] as any) = {
       uri: '',
@@ -375,10 +361,9 @@ describe('Tzip16 contract abstraction test', () => {
     };
     const metadataView = await tzip16Abs.metadataViews();
     expect(metadataView).toEqual({});
-    done();
   });
 
-  it('Should properly add a valid view to the _metadataViewsObject property', async (done) => {
+  it('Should properly add a valid view to the _metadataViewsObject property', async () => {
     const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
     // Act as we already fetched metadata; it contains one view
     tzip16Abs['_metadataEnvelope'] = {
@@ -429,6 +414,5 @@ describe('Tzip16 contract abstraction test', () => {
     expect(Object.keys(metadataView)[1]).toEqual('multiply-the-nat-in-storage1');
     expect(Object.keys(metadataView)[2]).toEqual('multiply-the-nat-in-storage2');
     expect(Object.keys(metadataView)[3]).toBeUndefined();
-    done();
   });
 });

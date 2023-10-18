@@ -7,12 +7,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
     describe(`Test contract.batch containing a high number of operations through contract api using: ${rpc}`, () => {
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup(true);
-            done();
         });
 
-        it('Verify contract.batch with 150 operations', async (done) => {
+        it('Verify contract.batch with 150 operations', async () => {
             const dests: { key: string, pkh: string }[] = [];
             const batchSize = 150;
 
@@ -27,14 +26,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             const batch = Tezos.contract.batch()
             dests.forEach(({ pkh }) => {
-                batch.withTransfer({ to: pkh, amount: 0.001});
+                batch.withTransfer({ to: pkh, amount: 0.001 });
             })
 
             const op = await batch.send();
             await op.confirmation(1, 300);
 
             expect(op.status).toEqual('applied');
-            done();
         });
     });
 });

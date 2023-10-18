@@ -570,220 +570,220 @@ export const init = (
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>,
   wallet: BeaconWallet | undefined
 ): TestSettings[] => [
-  {
-    id: "send-tez",
-    name: "Send tez",
-    description: "This test sends 0.1 tez to Alice's address",
-    documentation: 'https://tezostaquito.io/docs/wallet_API#making-transfers',
-    keyword: 'transfer',
-    run: () => sendTez(Tezos),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "contract-call-simple-type",
-    name: "Contract call with int",
-    description: "This test calls a contract entrypoint and passes an int",
-    documentation: 'https://tezostaquito.io/docs/smartcontracts',
-    keyword: 'methods',
-    run: () => sendInt(contract),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "contract-call-complex-type",
-    name: "Contract call with (pair nat string)",
-    description:
-      "This test calls a contract entrypoint and passes a pair holding a nat and a string",
-    documentation: 'https://tezostaquito.io/docs/smartcontracts/#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts',
-    keyword: 'methodsObject',
-    run: () => sendComplexParam(contract),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "contract-call-fail",
-    name: "Contract call that fails",
-    description:
-      'This test calls a contract entrypoint that fails with the message "Fail entrypoint"',
-    documentation: 'https://tezostaquito.io/docs/failwith_errors/',
-    keyword: 'failwith',
-    run: () => callFail(contract),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "contract-call-fail-with-int",
-    name: "Contract call that fails with int",
-    description: "This test calls a contract entrypoint that fails with an int",
-    documentation: 'https://tezostaquito.io/docs/failwith_errors/',
-    keyword: 'failwith',
-    run: () => callFaiWithInt(contract),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "contract-call-fail-with-pair",
-    name: "Contract call that fails with (pair int string)",
-    description: "This test calls a contract entrypoint that fails with a pair",
-    documentation: 'https://tezostaquito.io/docs/failwith_errors/',
-    keyword: 'failwith',
-    run: () => callFaiWithPair(contract),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "originate-success",
-    name: "Originate smart contract with success",
-    description: "This test successfully originates a smart contract",
-    documentation: 'https://tezostaquito.io/docs/originate/#originate-the-contract-using-taquito',
-    keyword: 'originate',
-    run: () => originateSuccess(Tezos),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "batch-api",
-    name: "Use the Batch API with a wallet",
-    description: "This test sends 0.3 tez to 3 different addresses",
-    documentation: 'https://tezostaquito.io/docs/batch_api/#--the-withtransfer-method',
-    keyword: 'withTransfer',
-    run: () => batchApiTest(Tezos),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "batch-api-contract-call",
-    name: "Use the Batch API for contract calls",
-    description: "This test calls the same entrypoint 3 times in 1 transaction",
-    documentation: 'https://tezostaquito.io/docs/batch_api/#--the-withcontractcall-method',
-    keyword: 'withcontractcall',
-    run: () =>
-      batchApiContractCallsTest(
-        Tezos,
-        contract,
-        wallet ? Tezos.wallet : Tezos.contract
-      ),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "sign-payload",
-    name: "Sign the provided payload",
-    description: "This test signs the payload provided by the user",
-    documentation: 'https://tezostaquito.io/docs/signing/#generating-a-signature-with-beacon-sdk',
-    keyword: 'requestSignPayload',
-    run: input => signPayload(input.text, wallet),
-    showExecutionTime: false,
-    inputRequired: true,
-    inputType: "string",
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "sign-payload-and-send",
-    name: "Sign and send the signature to the contract",
-    description:
-      "This test signs the provided payload and sends it to the contract to check it",
+    {
+      id: "send-tez",
+      name: "Send tez",
+      description: "This test sends 0.1 tez to Alice's address",
+      documentation: 'https://tezostaquito.io/docs/wallet_API#making-transfers',
+      keyword: 'transfer',
+      run: () => sendTez(Tezos),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "contract-call-simple-type",
+      name: "Contract call with int",
+      description: "This test calls a contract entrypoint and passes an int",
+      documentation: 'https://tezostaquito.io/docs/smartcontracts',
+      keyword: 'methods',
+      run: () => sendInt(contract),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "contract-call-complex-type",
+      name: "Contract call with (pair nat string)",
+      description:
+        "This test calls a contract entrypoint and passes a pair holding a nat and a string",
+      documentation: 'https://tezostaquito.io/docs/smartcontracts/#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts',
+      keyword: 'methodsObject',
+      run: () => sendComplexParam(contract),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "contract-call-fail",
+      name: "Contract call that fails",
+      description:
+        'This test calls a contract entrypoint that fails with the message "Fail entrypoint"',
+      documentation: 'https://tezostaquito.io/docs/failwith_errors/',
+      keyword: 'failwith',
+      run: () => callFail(contract),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "contract-call-fail-with-int",
+      name: "Contract call that fails with int",
+      description: "This test calls a contract entrypoint that fails with an int",
+      documentation: 'https://tezostaquito.io/docs/failwith_errors/',
+      keyword: 'failwith',
+      run: () => callFaiWithInt(contract),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "contract-call-fail-with-pair",
+      name: "Contract call that fails with (pair int string)",
+      description: "This test calls a contract entrypoint that fails with a pair",
+      documentation: 'https://tezostaquito.io/docs/failwith_errors/',
+      keyword: 'failwith',
+      run: () => callFaiWithPair(contract),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "originate-success",
+      name: "Originate smart contract with success",
+      description: "This test successfully originates a smart contract",
+      documentation: 'https://tezostaquito.io/docs/originate/#originate-the-contract-using-taquito',
+      keyword: 'originate',
+      run: () => originateSuccess(Tezos),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "batch-api",
+      name: "Use the Batch API with a wallet",
+      description: "This test sends 0.3 tez to 3 different addresses",
+      documentation: 'https://tezostaquito.io/docs/batch_api/#--the-withtransfer-method',
+      keyword: 'withTransfer',
+      run: () => batchApiTest(Tezos),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "batch-api-contract-call",
+      name: "Use the Batch API for contract calls",
+      description: "This test calls the same entrypoint 3 times in 1 transaction",
+      documentation: 'https://tezostaquito.io/docs/batch_api/#--the-withcontractcall-method',
+      keyword: 'withcontractcall',
+      run: () =>
+        batchApiContractCallsTest(
+          Tezos,
+          contract,
+          wallet ? Tezos.wallet : Tezos.contract
+        ),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "sign-payload",
+      name: "Sign the provided payload",
+      description: "This test signs the payload provided by the user",
+      documentation: 'https://tezostaquito.io/docs/signing/#generating-a-signature-with-beacon-sdk',
+      keyword: 'requestSignPayload',
+      run: input => signPayload(input.text, wallet),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "string",
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "sign-payload-and-send",
+      name: "Sign and send the signature to the contract",
+      description:
+        "This test signs the provided payload and sends it to the contract to check it",
       documentation: 'https://tezostaquito.io/docs/signing/#sending-the-signature-to-a-smart-contract',
       keyword: 'check_signature',
-    run: input => signPayloadAndSend(input.text, wallet, contract),
-    showExecutionTime: false,
-    inputRequired: true,
-    inputType: "string",
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "sign-failingNoop",
-    name: "Sign the provided payload in a failing noop",
-    description: "This test signs the payload provided by the user wrapped in a failing noop",
-    documentation: 'https://tezostaquito.io/docs/failing_noop',
-    keyword: 'failingNoop',
-    run: input => signFailingNoop(input.text, Tezos),
-    showExecutionTime: false,
-    inputRequired: true,
-    inputType: "string",
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "verify-signature",
-    name: "Verify a provided signature",
-    description:
-      "This test signs the provided payload and uses Taquito to verify the signature",
+      run: input => signPayloadAndSend(input.text, wallet, contract),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "string",
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "sign-failingNoop",
+      name: "Sign the provided payload in a failing noop",
+      description: "This test signs the payload provided by the user wrapped in a failing noop",
+      documentation: 'https://tezostaquito.io/docs/failing_noop',
+      keyword: 'failingNoop',
+      run: input => signFailingNoop(input.text, Tezos),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "string",
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "verify-signature",
+      name: "Verify a provided signature",
+      description:
+        "This test signs the provided payload and uses Taquito to verify the signature",
       documentation: 'https://tezostaquito.io/docs/signing/#verifying-a-signature',
       keyword: 'verifySignature',
-    run: input => verifySignatureWithTaquito(input.text, wallet, contract),
-    showExecutionTime: false,
-    inputRequired: true,
-    inputType: "string",
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "set-transaction-limits",
-    name: "Set the transaction limits",
-    description:
-      "This test allows you to set the fee, storage limit and gas limit manually",
+      run: input => verifySignatureWithTaquito(input.text, wallet, contract),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "string",
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "set-transaction-limits",
+      name: "Set the transaction limits",
+      description:
+        "This test allows you to set the fee, storage limit and gas limit manually",
       documentation: 'https://tezostaquito.io/docs/transaction_limits/#setting-the-limits',
       keyword: 'transaction limits',
-    run: input =>
-      setTransactionLimits(
-        contract,
-        input.fee,
-        input.storageLimit,
-        input.gasLimit
-      ),
-    showExecutionTime: false,
-    inputRequired: true,
-    inputType: "set-limits",
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "confirmation-observable",
-    name: "Subscribe to confirmations",
-    description:
-      "This test updates the underlying contract and subscribes to 3 confirmations",
+      run: input =>
+        setTransactionLimits(
+          contract,
+          input.fee,
+          input.storageLimit,
+          input.gasLimit
+        ),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "set-limits",
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "confirmation-observable",
+      name: "Subscribe to confirmations",
+      description:
+        "This test updates the underlying contract and subscribes to 3 confirmations",
       documentation: 'https://tezostaquito.io/docs/confirmation_event_stream/#setting-up-the-observable',
       keyword: 'confirmationObservable',
-    run: () =>
-      tryConfirmationObservable(contract as ContractAbstraction<Wallet>),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "permit",
-    name: "Permit contract",
-    description: "This test implements TZIP-17",
-    keyword: 'permit',
-    run: () => permit(Tezos, wallet),
-    showExecutionTime: false,
-    inputRequired: false,
-    lastResult: { option: "none", val: false }
-  },
-  {
-    id: "sapling-shielded",
-    name: "Sapling shielded transaction",
-    description: "This test prepares and sends a shielded transaction to a Sapling pool",
-    documentation: 'https://tezostaquito.io/docs/sapling/',
-    keyword: 'sapling',
-    run: () => saplingShielded(contract as ContractAbstraction<Wallet>),
-    showExecutionTime: false,
-    inputRequired: true,
-    inputType: "sapling",
-    lastResult: { option: "none", val: false }
-  }
-  /*{
-        id: "originate-fail",
-        name: "Originate smart contract that fails",
-        description: "This test originates a smart contract that fails",
-        run: () => console.log("originate-fail")
-      }*/
-];
+      run: () =>
+        tryConfirmationObservable(contract as ContractAbstraction<Wallet>),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "permit",
+      name: "Permit contract",
+      description: "This test implements TZIP-17",
+      keyword: 'permit',
+      run: () => permit(Tezos, wallet),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "sapling-shielded",
+      name: "Sapling shielded transaction",
+      description: "This test prepares and sends a shielded transaction to a Sapling pool",
+      documentation: 'https://tezostaquito.io/docs/sapling/',
+      keyword: 'sapling',
+      run: () => saplingShielded(contract as ContractAbstraction<Wallet>),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "sapling",
+      lastResult: { option: "none", val: false }
+    }
+    /*{
+          id: "originate-fail",
+          name: "Originate smart contract that fails",
+          description: "This test originates a smart contract that fails",
+          run: () => console.log("originate-fail")
+        }*/
+  ];

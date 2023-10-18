@@ -1,5 +1,12 @@
 {
-  "exclude": ["website", "integration-tests", "apps"],
+  "exclude": [
+    "website",
+    "integration-tests",
+    "apps",
+    "**/test/**",
+    "**/*.spec.ts",
+    "example/**"
+  ],
   "compilerOptions": {
     "moduleResolution": "node",
     "target": "es6",
@@ -21,5 +28,6 @@
     "emitDecoratorMetadata": true,
     "jsx": "react",
     "skipLibCheck": true,
+    "useUnknownInCatchVariables": false,
   }
 }

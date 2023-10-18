@@ -59,7 +59,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     );
   });
 
-  test(`Verify pkhEncoder`, async (done) => {
+  test(`Verify pkhEncoder`, async () => {
     const tz1 = pkhEncoder('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY');
     expect(tz1).toEqual('00c9fc72e8491bd2973e196f04ec6918ad5bcee22d');
     const tz2 = pkhEncoder('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD');
@@ -74,10 +74,9 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     } catch (e) {
       expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
     }
-    done();
   });
 
-  test(`Verify publicKeyEncoder`, async (done) => {
+  test(`Verify publicKeyEncoder`, async () => {
     const edpk = publicKeyEncoder('edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t');
     expect(edpk).toEqual('005c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9');
     const sppk = publicKeyEncoder('sppk7aVdgAmezMCRTcHciVkVZoGNnhSdKEYcn5pYaqt4PvLjgFbLRxo');
@@ -96,11 +95,9 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
         ),
       })
     );
-
-    done();
   });
 
-  test(`Verify publicKeyDecoder`, async (done) => {
+  test(`Verify publicKeyDecoder`, async () => {
     const edpk = publicKeyDecoder(
       Uint8ArrayConsumer.fromHexString(
         '005c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
@@ -142,8 +139,6 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
         ),
       })
     );
-
-    done();
   });
 
   test('Verify that ballotEncoder functions correctly and returns InvalidBallotValueError on unknown case ', () => {

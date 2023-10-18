@@ -142,7 +142,7 @@ describe('RpcClientCache test', () => {
     expect(rpcCache).toBeInstanceOf(RpcClientCache);
   });
 
-  it('getAllCachedData', async (done) => {
+  it('getAllCachedData', async () => {
     await rpcCache.getBlockHash();
     await rpcCache.getBlock();
     await rpcCache.getLiveBlocks();
@@ -288,10 +288,9 @@ describe('RpcClientCache test', () => {
     );
 
     rpcCache.deleteAllCachedData();
-    done();
   });
 
-  it('getAllCachedData when block level is different from head', async (done) => {
+  it('getAllCachedData when block level is different from head', async () => {
     const block = { block: '1111' };
     await rpcCache.getBlockHash(block);
     await rpcCache.getBlock(block);
@@ -463,10 +462,9 @@ describe('RpcClientCache test', () => {
     ).toEqual(ticketBalancesResponse);
 
     rpcCache.deleteAllCachedData();
-    done();
   });
 
-  it('deleteAllCachedData', async (done) => {
+  it('deleteAllCachedData', async () => {
     await rpcCache.getBlockHash();
     await rpcCache.getBlock();
     await rpcCache.getLiveBlocks();
@@ -509,25 +507,22 @@ describe('RpcClientCache test', () => {
     rpcCache.deleteAllCachedData();
 
     expect(rpcCache.getAllCachedData()).toEqual({});
-    done();
   });
 
-  it('retrieves the block hash by calling the mocked RpcClient, not from the cache', async (done) => {
+  it('retrieves the block hash by calling the mocked RpcClient, not from the cache', async () => {
     mockRpcClient.getBlockHash.mockReturnValue('BlockHash');
     const blockHash = await rpcCache.getBlockHash();
     expect(mockRpcClient.getBlockHash).toHaveBeenCalledTimes(1);
     expect(blockHash).toEqual('BlockHash');
     rpcCache.deleteAllCachedData();
-    done();
   });
 
-  it('The first call to getBlockHash retrieves the block hash by calling the mocked RpcClient, the second request hits the cache', async (done) => {
+  it('The first call to getBlockHash retrieves the block hash by calling the mocked RpcClient, the second request hits the cache', async () => {
     mockRpcClient.getBlockHash.mockReturnValue('BlockHash');
     await rpcCache.getBlockHash();
     await rpcCache.getBlockHash();
     // mockRpcClient should only be called once
     expect(mockRpcClient.getBlockHash).toHaveBeenCalledTimes(1);
     rpcCache.deleteAllCachedData();
-    done();
   });
 });

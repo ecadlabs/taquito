@@ -12,7 +12,10 @@ export interface FormatOptions {
 }
 
 class Formatter {
-  constructor(private opt?: FormatOptions, private lev: number = 0) {}
+  constructor(
+    private opt?: FormatOptions,
+    private lev: number = 0
+  ) {}
 
   indent(n = 0): string {
     let ret = '';

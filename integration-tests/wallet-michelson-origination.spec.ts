@@ -7,11 +7,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination in a plain Michelson contract through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify wallet.originate for an ID contract written in plain Michelson', async (done) => {
+    it('Verify wallet.originate for an ID contract written in plain Michelson', async () => {
       const op = await Tezos.wallet.originate({
         balance: "0",
         code: idMichelsonCode,
@@ -20,17 +19,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       expect(op.opHash).toBeDefined();
       expect(op.status).toBeDefined();
-      done();
     });
   });
 
   describe(`Test contract origination to configure parserProvider to parse plain Michelson`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('uses noopParser to originate Michelson code and fails', async (done) => {
+    it('uses noopParser to originate Michelson code and fails', async () => {
       // Configure the Tezostoolkit to use the NoopParser (the Michelson won't be parsed)
       Tezos.setParserProvider(new NoopParser());
 
@@ -45,10 +42,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(error).toBeInstanceOf(InvalidCodeParameter);
         expect(error.message).toEqual('Wrong code parameter type, expected an array');
       }
-      done();
     });
 
-    it('uses MichelCodecParser to originate Michelson code and succeeds', async (done) => {
+    it('uses MichelCodecParser to originate Michelson code and succeeds', async () => {
       // Configure the Tezostoolkit to use the MichelCodecParser (the Michelson will be parsed to JSONMichelson)
       Tezos.setParserProvider(new MichelCodecParser(new Context(rpc)));
 
@@ -60,10 +56,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       expect(op.opHash).toBeDefined();
       expect(op.status).toBeDefined();
-      done();
     });
 
-    it('no parser configured will use MichelCodecParser by default to originate Michelson code and succeeds', async (done) => {
+    it('no parser configured will use MichelCodecParser by default to originate Michelson code and succeeds', async () => {
       // No parserProvider configured will use MichelCodecParser by default (the Michelson will be parsed to JSONMichelson)
       const op = await Tezos.wallet.originate({
         balance: "0",
@@ -73,9 +68,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       expect(op.opHash).toBeDefined();
       expect(op.status).toBeDefined();
-      done();
     });
   });
-  
-  
+
+
 })

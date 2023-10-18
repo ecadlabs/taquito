@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
 
   describe(`Test multisig contract through wallet api for origination, contract interaction, and tranfer to an implicit account with: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    test('Verify contract.originate, contract interaction, and transfer to an implicit account for a contract with multiple signatures', async (done) => {
+    test('Verify contract.originate, contract interaction, and transfer to an implicit account for a contract with multiple signatures', async () => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
@@ -55,7 +54,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
               args: [MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 500)]
             }
           ]
-        // deepcode ignore no-any: any is good enough
+          // deepcode ignore no-any: any is good enough
         } as any,
         type: {
           "prim": "pair",
@@ -122,7 +121,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       ).send()
 
       await op2.confirmation();
-      done();
     })
   })
 });

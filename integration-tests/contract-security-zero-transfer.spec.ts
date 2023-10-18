@@ -5,19 +5,18 @@ import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test: test.skip;
+  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
 
-      done();
     });
 
     mondaynet('Verify that Transactions of 0ꜩ towards a contract without code are forbidden', async () => {
-      try{
-      const op = await Tezos.contract.originate({
-        code: `{ parameter address ;
+      try {
+        const op = await Tezos.contract.originate({
+          code: `{ parameter address ;
                       storage unit ;
                       code { UNPAIR ;
                              CONTRACT unit ;
@@ -31,23 +30,23 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                              CONS ;
                              PAIR } }
                           `,
-        init: { prim: 'Unit' },
-      });
+          init: { prim: 'Unit' },
+        });
 
-      await op.confirmation();
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      const contract = await op.contract();
-      expect(await contract.storage()).toBeTruthy();
+        await op.confirmation();
+        expect(op.hash).toBeDefined();
+        expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+        const contract = await op.contract();
+        expect(await contract.storage()).toBeTruthy();
 
-      const publicKeyHash = await Tezos.signer.publicKeyHash();
+        const publicKeyHash = await Tezos.signer.publicKeyHash();
 
-      const opSend = await contract.methods.default(publicKeyHash).send();
-      await opSend.confirmation();
+        const opSend = await contract.methods.default(publicKeyHash).send();
+        await opSend.confirmation();
 
-    } catch (error: any) {
-      expect(error.message).toContain('contract.empty_transaction');
-    }
+      } catch (error: any) {
+        expect(error.message).toContain('contract.empty_transaction');
+      }
     });
   });
 });

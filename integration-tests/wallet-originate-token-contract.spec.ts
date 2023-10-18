@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination of a token contract through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    test('Verify wallet.originate for a token contract and mints some tokens', async (done) => {
+    test('Verify wallet.originate for a token contract and mints some tokens', async () => {
       // TODO: Fails when using ephemeral keys
       const op = await Tezos.wallet.originate({
         balance: "1",
@@ -25,7 +24,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await opMethod.confirmation();
       expect(op.opHash).toBeDefined();
-      done();
     });
   });
 })

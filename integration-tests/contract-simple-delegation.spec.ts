@@ -5,11 +5,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
   describe(`Test delegation of account through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true)
-      done()
     })
-    it('Verify that account can be delegated to a known baker using contract.setDelegate', async (done) => {
+    it('Verify that account can be delegated to a known baker using contract.setDelegate', async () => {
       const delegate = knownBaker
       const pkh = await Tezos.signer.publicKeyHash()
       try {
@@ -30,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         expect(op.isRegisterOperation).toBeFalsy();
         expect(op.source).toEqual(pkh);
         expect(op.status).toEqual('applied');
-        
+
         const account = await Tezos.rpc.getDelegate(pkh)
         expect(account).toEqual(delegate)
       } catch (ex: any) {
@@ -42,7 +41,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
           expect(ex.message).toMatch('delegate.unchanged')
         }
       }
-      done();
     });
   });
 })

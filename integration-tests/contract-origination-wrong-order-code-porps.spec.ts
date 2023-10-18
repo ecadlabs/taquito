@@ -5,11 +5,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination with code properties in atypical order through contract api: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify contract.originate for a contract despite the code storage,parameter,code props are in wrong order', async (done) => {
+    it('Verify contract.originate for a contract despite the code storage,parameter,code props are in wrong order', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: smartpySample,
@@ -20,7 +19,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       })
       await op.confirmation()
       expect(op.hash).toBeDefined();
-      done();
     });
   });
 })

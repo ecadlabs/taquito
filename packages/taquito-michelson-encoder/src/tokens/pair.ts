@@ -21,7 +21,10 @@ export class TokenArgumentValidationError extends TaquitoError {
  */
 export class TokenComparisonError extends TaquitoError {
   public name = 'TokenComparisonError';
-  constructor(public val1: string, public val2: string) {
+  constructor(
+    public val1: string,
+    public val2: string
+  ) {
     super();
     this.message = `Tokens ${JSON.stringify(val1)} and ${JSON.stringify(val2)} are not comparable`;
   }

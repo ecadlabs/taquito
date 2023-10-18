@@ -37,7 +37,10 @@ export class InvalidDelegationSource extends ParameterValidationError {
  *  @description Error that indicates an invalid smart contract code parameter being passed or used
  */
 export class InvalidCodeParameter extends ParameterValidationError {
-  constructor(public readonly message: string, public readonly data: any) {
+  constructor(
+    public readonly message: string,
+    public readonly data: any
+  ) {
     super();
     this.name = 'InvalidCodeParameter';
   }
@@ -48,7 +51,10 @@ export class InvalidCodeParameter extends ParameterValidationError {
  *  @description Error that indicates invalid smart contract init parameter being passed or used
  */
 export class InvalidInitParameter extends ParameterValidationError {
-  constructor(public readonly message: string, public readonly data: any) {
+  constructor(
+    public readonly message: string,
+    public readonly data: any
+  ) {
     super();
     this.name = 'InvalidInitParameter';
   }

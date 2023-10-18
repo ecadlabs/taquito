@@ -135,7 +135,7 @@
           },
           "license": "MIT",
           "engines": {
-            "node": ">=16"
+            "node": ">=18"
           },
           "scripts": {
             "test": "jest --coverage",
@@ -150,8 +150,7 @@
           "lint-staged": {
             "{src,test}/**/*.ts": [
               "prettier --write",
-              "tslint --fix",
-              "git add"
+              "tslint --fix"
             ]
           },
           "jest": {
@@ -190,7 +189,7 @@
             "@types/elliptic": "^6.4.12",
             "@types/jest": "^26.0.16",
             "@types/libsodium-wrappers": "^0.7.8",
-            "@types/node": "^16",
+            "@types/node": "^18",
             "@types/pbkdf2": "^3.1.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
@@ -205,7 +204,6 @@
             "rimraf": "^3.0.2",
             "rollup": "^2.28.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "shelljs": "^0.8.4",
             "ts-jest": "^26.4.4",

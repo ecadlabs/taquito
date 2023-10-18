@@ -7,11 +7,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination of a vote contract through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify contract.originate for a voting contract and init the storage', async (done) => {
+    it('Verify contract.originate for a voting contract and init the storage', async () => {
       // TODO: probably remove this as very expensive
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -30,7 +29,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-      done();
     });
   });
 })

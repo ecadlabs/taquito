@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination with empty BigMap origination scenario through contract api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify contract.originate for a contract and init the BigMap to empty map', async (done) => {
+    it('Verify contract.originate for a contract and init the BigMap to empty map', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: tokenBigmapCode,
@@ -23,7 +22,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-      done();
     });
   });
 })

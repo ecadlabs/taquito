@@ -6,14 +6,13 @@ describe('MichelCodecPacker test', () => {
   });
 
   describe('packData', () => {
-    it('calls packDataBytes from the michel-codec package', async done => {
+    it('calls packDataBytes from the michel-codec package', async () => {
       const localPacker = new MichelCodecPacker();
       const result = await localPacker.packData({
-          data: { string: "2019-09-26T10:59:51Z" },
-          type: { prim: "timestamp" }
+        data: { string: '2019-09-26T10:59:51Z' },
+        type: { prim: 'timestamp' },
       });
-      expect(result).toEqual({ packed: "0500a7e8e4d80b" });
-      done();
+      expect(result).toEqual({ packed: '0500a7e8e4d80b' });
     });
   });
 });

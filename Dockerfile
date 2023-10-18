@@ -1,5 +1,5 @@
 # Docker to run Taquito integration tests
-FROM node:16
+FROM node:18
 
 COPY tsconfig.base.json /taquito/
 COPY ./integration-tests /taquito/integration-tests/

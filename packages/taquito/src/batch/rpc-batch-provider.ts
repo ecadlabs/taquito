@@ -54,7 +54,10 @@ export type BatchKinds =
 export class OperationBatch extends Provider {
   private operations: ParamsWithKind[] = [];
 
-  constructor(context: Context, private estimator: EstimationProvider) {
+  constructor(
+    context: Context,
+    private estimator: EstimationProvider
+  ) {
     super(context);
   }
 
@@ -315,7 +318,10 @@ export class OperationBatch extends Provider {
 }
 
 export class RPCBatchProvider {
-  constructor(private context: Context, private estimator: EstimationProvider) {}
+  constructor(
+    private context: Context,
+    private estimator: EstimationProvider
+  ) {}
 
   /***
    *

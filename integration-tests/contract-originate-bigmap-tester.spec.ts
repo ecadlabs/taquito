@@ -5,12 +5,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test origination of contract with various types of bigmaps using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    test('Originates a contract having various types of bigmaps', async (done: () => void) => {
+    test('Originates a contract having various types of bigmaps', async () => {
       const op = await Tezos.contract.originate({
         code: ` parameter (or (or (nat %compoundKey) (nat %compoundKeyCompoundValue))
                     (or (nat %compoundValue) (mutez %singleValue)));
@@ -62,7 +61,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
-      done();
     });
   });
 });
