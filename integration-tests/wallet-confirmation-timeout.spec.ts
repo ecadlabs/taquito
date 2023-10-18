@@ -3,16 +3,16 @@ import { CONFIGS, sleep } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  let timeBetweenBlocks: BigNumber;
+  let minimalBlockDelay: BigNumber;
   describe(`Test confirmationPollingTimeoutSecond with wallet API using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup();
-      timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
+      minimalBlockDelay = (await Tezos.rpc.getConstants()).minimal_block_delay ?? new BigNumber(8);
     });
 
     it('Verify a timeout error is thrown when an operation is never confirmed', async () => {
-      const timeout = Number(timeBetweenBlocks.multipliedBy(2));
+      const timeout = Number(minimalBlockDelay.multipliedBy(2));
       Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: timeout } })
       expect(async () => {
 

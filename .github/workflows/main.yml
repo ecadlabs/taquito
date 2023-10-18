@@ -98,9 +98,9 @@ jobs:
         -p 20000:20000 \
         ${{ matrix.flextesa_docker_image }} \
         flextesa mini-net \
-          --root /tmp/mini-box --size 2 \
+          --root /tmp/mini-box --size 4 \
           --set-history-mode N000:archive \
-          --number-of-b 1 \
+          --number-of-b 4 \
           --balance-of-bootstrap-accounts tez:100_000_000 \
           --time-b 1 \
           --add-bootstrap-account="${alice}@2_000_000_000_000" \
