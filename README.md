@@ -107,9 +107,7 @@ We encourage you to update older versions of Taquito, and you are encouraged to 
 
 ## Releases
 
-Releases are pushed to npmjs.org and the Github releases page. The maintainers sign all official releases.
-
-Releases (git tags and npm packages) are signed either by [keybase/jevonearth][2] or [keybase/simrob][3]. Releases that are not signed, or signed by other keys, should be [brought to our attention](TODO) *immediately* please.
+Releases are pushed to npmjs.org and the Github releases page.
 
 ## Contributors Getting Started
 
