@@ -100,7 +100,7 @@ describe('ContractView test', () => {
     });
   });
 
-  it('should create instances of ContractView for the entry points that match the tzip4 view signature', async (done) => {
+  it('should create instances of ContractView for the entry points that match the tzip4 view signature', async () => {
     // The tzip4 view signature is a pair where its second arguments is a contract.
     const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
 
@@ -129,10 +129,9 @@ describe('ContractView test', () => {
       expect(e).toBeInstanceOf(Error);
       expect(e).toBeInstanceOf(InvalidParameterError);
     }
-    done();
   });
 
-  it('Should be able to execute tzip4 views by calling the read method (without passing chainId)', async (done) => {
+  it('Should be able to execute tzip4 views by calling the read method (without passing chainId)', async () => {
     mockRpcClient.getChainId.mockResolvedValue('NetXnHfVqm9iesp');
 
     const contractView = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
@@ -141,20 +140,18 @@ describe('ContractView test', () => {
       .read();
 
     expect(result.toString()).toEqual('100');
-    done();
   });
 
-  it('Should be able to execute tzip4 views by calling the read method (with passing chainId)', async (done) => {
+  it('Should be able to execute tzip4 views by calling the read method (with passing chainId)', async () => {
     const contractView = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
     const result = await contractView.views
       .getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')
       .read(ChainIds.ITHACANET2);
 
     expect(result.toString()).toEqual('100');
-    done();
   });
 
-  it('Should throw InvalidChainIdError', async (done) => {
+  it('Should throw InvalidChainIdError', async () => {
     const contractView = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
     try {
       await contractView.views
@@ -164,10 +161,9 @@ describe('ContractView test', () => {
       expect(e).toBeInstanceOf(Error);
       expect(e.message).toContain(`Invalid chain id "invalid"`);
     }
-    done();
   });
 
-  it('Should throw if a contract address is passed as a parameter of the read method (breaking change version 12)', async (done) => {
+  it('Should throw if a contract address is passed as a parameter of the read method (breaking change version 12)', async () => {
     const contractView = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
     try {
       await contractView.views
@@ -178,6 +174,5 @@ describe('ContractView test', () => {
         `Since version 12, the lambda view no longer depends on a lambda contract. The read method no longer accepts a contract address as a parameter.`
       );
     }
-    done();
   });
 });

@@ -1037,7 +1037,7 @@ describe('PrepareProvider test', () => {
   });
 
   describe('SmartRollupOriginate', () => {
-    it('Should prepare smartRollupOriginate without reveal', async (done) => {
+    it('Should prepare smartRollupOriginate without reveal', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
       mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
 
@@ -1071,10 +1071,9 @@ describe('PrepareProvider test', () => {
         },
         counter: 0,
       });
-      done();
     });
 
-    it('Should prepare smartRollupOriginate with reveal', async (done) => {
+    it('Should prepare smartRollupOriginate with reveal', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(false);
       mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
 
@@ -1117,7 +1116,6 @@ describe('PrepareProvider test', () => {
         },
         counter: 0,
       });
-      done();
     });
   });
 });

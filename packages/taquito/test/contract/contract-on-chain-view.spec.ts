@@ -61,7 +61,7 @@ describe('OnChainView test on K protocol', () => {
     });
   });
 
-  it('should execute of the view', async (done) => {
+  it('should execute of the view', async () => {
     expect(
       await view.executeView({
         viewCaller: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
@@ -75,11 +75,9 @@ describe('OnChainView test on K protocol', () => {
       chain_id: 'test_chain_id',
       source: 'KT1TRHzT3HdLe3whe35q6rNxavGx8WVFHSpH',
     });
-
-    done();
   });
 
-  it('should throw an error if the caller of the view is an invalid contract address', async (done) => {
+  it('should throw an error if the caller of the view is an invalid contract address', async () => {
     try {
       await view.executeView({
         viewCaller: 'notAnAddress',
@@ -87,10 +85,9 @@ describe('OnChainView test on K protocol', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(InvalidViewSimulationContext);
     }
-    done();
   });
 
-  it('should throw an error if an invalid address is set as the source of the view', async (done) => {
+  it('should throw an error if an invalid address is set as the source of the view', async () => {
     try {
       await view.executeView({
         source: 'notAnAddress',
@@ -99,10 +96,9 @@ describe('OnChainView test on K protocol', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(InvalidViewSimulationContext);
     }
-    done();
   });
 
-  it('should throw the original error when it does not contain a "with" property', async (done) => {
+  it('should throw the original error when it does not contain a "with" property', async () => {
     const httpError = new HttpResponseError(
       'fail',
       STATUS_CODE.FORBIDDEN,
@@ -119,11 +115,9 @@ describe('OnChainView test on K protocol', () => {
     } catch (error: any) {
       expect(error).toBeInstanceOf(HttpResponseError);
     }
-
-    done();
   });
 
-  it('should throw a ViewSimulationError error with a detailed message if the view simulation reaches a failwith instruction', async (done) => {
+  it('should throw a ViewSimulationError error with a detailed message if the view simulation reaches a failwith instruction', async () => {
     const httpError = new HttpResponseError(
       'fail',
       STATUS_CODE.FORBIDDEN,
@@ -146,11 +140,9 @@ describe('OnChainView test on K protocol', () => {
       expect(error.failWith).toEqual({ prim: 'Unit' });
       expect(error.cause).toEqual(httpError);
     }
-
-    done();
   });
 
-  it('should throw a InvalidViewParameterError error if the parameter of the view is invalid', async (done) => {
+  it('should throw a InvalidViewParameterError error if the parameter of the view is invalid', async () => {
     view = new OnChainView(
       mockRpcClient as any,
       mockReadProvider,
@@ -171,6 +163,5 @@ describe('OnChainView test on K protocol', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(InvalidViewParameterError);
     }
-    done();
   });
 });

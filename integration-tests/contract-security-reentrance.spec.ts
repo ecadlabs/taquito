@@ -15,12 +15,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const address = 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys';
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup(true);
-      done();
     });
 
-    mondaynet('Reentrance attack test', async (done) => {
+    mondaynet('Reentrance attack test', async () => {
       const vestingContractOp = await Tezos.contract.originate({
         balance: '8',
         code: `{ parameter
@@ -111,12 +110,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       /** If the reentry had succeeded the vesting contract would have had less than 5 remaining
        * Since there are still 5 the reentry failed
        */
-      
+
       Tezos.tz.getBalance(vestingContract.address).then((vbalance) => {
         let result = vbalance.toNumber();
         expect((result = 5000000));
       });
-      done();
     });
   });
 });

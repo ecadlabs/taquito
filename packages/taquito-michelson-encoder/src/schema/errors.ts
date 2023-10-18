@@ -29,7 +29,10 @@ export class ParameterEncodingError extends InvalidViewParameterError {
  */
 export class InvalidScriptError extends TaquitoError {
   name = 'InvalidScriptError';
-  constructor(public readonly script: any, public readonly reason?: string) {
+  constructor(
+    public readonly script: any,
+    public readonly reason?: string
+  ) {
     super();
     let message = `Invalid on-chain view found in the following script.`;
     if (reason) {
@@ -46,7 +49,10 @@ export class InvalidScriptError extends TaquitoError {
  */
 export class InvalidRpcResponseError extends TaquitoError {
   public name = 'InvalidRpcResponseError';
-  constructor(public readonly script: any, public readonly reason?: string) {
+  constructor(
+    public readonly script: any,
+    public readonly reason?: string
+  ) {
     super();
     let message = `Invalid RPC response passed as argument(s).`;
     if (reason) {
@@ -74,7 +80,10 @@ export class InvalidBigMapSchemaError extends TaquitoError {
  */
 export class InvalidBigMapDiffError extends TaquitoError {
   public name = 'InvalidBigMapDiffError';
-  constructor(public message: string, public readonly value: any) {
+  constructor(
+    public message: string,
+    public readonly value: any
+  ) {
     super(message);
   }
 }

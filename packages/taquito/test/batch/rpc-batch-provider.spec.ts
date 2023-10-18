@@ -151,7 +151,7 @@ describe('OperationBatch test', () => {
   });
 
   describe('withRegisterGlobalConstant', () => {
-    it('should produce a batch operation which contains a registerGlobalConstant operation', async (done) => {
+    it('should produce a batch operation which contains a registerGlobalConstant operation', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
@@ -178,10 +178,9 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should produce a batch operation which contains a registerGlobalConstant operation where fee, gas limit and storage limit are specified by the user', async (done) => {
+    it('should produce a batch operation which contains a registerGlobalConstant operation where fee, gas limit and storage limit are specified by the user', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
@@ -214,10 +213,9 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should produce a batch operation which contains a reveal and a registerGlobalConstant operation', async (done) => {
+    it('should produce a batch operation which contains a reveal and a registerGlobalConstant operation', async () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const estimateReveal = new Estimate(1000000, 0, 64, 250);
       const estimate = new Estimate(1230000, 93, 142, 250);
@@ -255,12 +253,11 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
   });
 
   describe('with registerGlobalConstant operation', () => {
-    it('should produce a batch operation which contains a registerGlobalConstant operation', async (done) => {
+    it('should produce a batch operation which contains a registerGlobalConstant operation', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
@@ -293,10 +290,9 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should produce a batch operation which contains a registerGlobalConstant operation where fee, gas limit and storage limit are specified by the user', async (done) => {
+    it('should produce a batch operation which contains a registerGlobalConstant operation where fee, gas limit and storage limit are specified by the user', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
@@ -332,10 +328,9 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should produce a batch operation which contains a reveal and a registerGlobalConstant operation', async (done) => {
+    it('should produce a batch operation which contains a reveal and a registerGlobalConstant operation', async () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const estimateReveal = new Estimate(1000000, 0, 64, 250);
       const estimate = new Estimate(1230000, 93, 142, 250);
@@ -379,12 +374,11 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
   });
 
   describe('withIncreasePaidStorage batch operation', () => {
-    it('should produce an operation batch which contains an increasePaidStorage operation', async (done) => {
+    it('should produce an operation batch which contains an increasePaidStorage operation', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
@@ -419,10 +413,9 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should produce an operation batch which contains a reveal and an increasePaidStorage operation', async (done) => {
+    it('should produce an operation batch which contains a reveal and an increasePaidStorage operation', async () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const estimateReveal = new Estimate(1000000, 0, 64, 250);
       const estimate = new Estimate(1230000, 93, 142, 250);
@@ -468,10 +461,9 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
 
-    it('should produce a batch operation which contants an increasePaidStorage operation where fee, gas limit, and storage limit are specified by the user', async (done) => {
+    it('should produce a batch operation which contants an increasePaidStorage operation where fee, gas limit, and storage limit are specified by the user', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
@@ -509,12 +501,11 @@ describe('OperationBatch test', () => {
         },
         opbytes: 'test',
       });
-      done();
     });
   });
 
   describe('withSmartRollupAddMessage op', () => {
-    it('should produce a batch op which contains a smartRollupAddMessages operation', async (done) => {
+    it('should produce a batch op which contains a smartRollupAddMessages operation', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
@@ -552,10 +543,9 @@ describe('OperationBatch test', () => {
         },
         counter: 0,
       });
-      done();
     });
 
-    it('should produce a batch op with estimate values overridden', async (done) => {
+    it('should produce a batch op with estimate values overridden', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
@@ -596,10 +586,9 @@ describe('OperationBatch test', () => {
         },
         counter: 0,
       });
-      done();
     });
 
-    it('should produce a batch op with reveal operation', async (done) => {
+    it('should produce a batch op with reveal operation', async () => {
       mockRpcClient.getManagerKey.mockResolvedValue(null);
       const estimateReveal = new Estimate(1000000, 0, 64, 250);
       const estimate = new Estimate(1230000, 93, 142, 250);
@@ -647,8 +636,6 @@ describe('OperationBatch test', () => {
         },
         counter: 0,
       });
-
-      done();
     });
   });
 

@@ -30,7 +30,7 @@ describe('WalletOperation', () => {
   });
 
   describe('confirmationObservable', () => {
-    it('should emit confirmation after seeing operation in block', async (done) => {
+    it('should emit confirmation after seeing operation in block', async () => {
       testScheduler.run((helpers) => {
         const { cold, flush, expectObservable } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
@@ -55,10 +55,9 @@ describe('WalletOperation', () => {
           },
         });
       });
-      done();
     });
 
-    it('should emit a false completed confirmation when given 2 confirmation', async (done) => {
+    it('should emit a false completed confirmation when given 2 confirmation', async () => {
       testScheduler.run((helpers) => {
         const { cold, flush, expectObservable } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
@@ -83,11 +82,9 @@ describe('WalletOperation', () => {
           },
         });
       });
-
-      done();
     });
 
-    it('should emit 2 confirmations given that operation is included in the first block and a new head is applied on top', async (done) => {
+    it('should emit 2 confirmations given that operation is included in the first block and a new head is applied on top', async () => {
       testScheduler = new TestScheduler((actual, expected) => {
         // TODO: expectObservable() only receives the last value of the observable, investigate why
         expect(actual[0]).toMatchObject(expected[1]);
@@ -124,8 +121,6 @@ describe('WalletOperation', () => {
           },
         });
       });
-
-      done();
     });
   });
 
@@ -140,7 +135,7 @@ describe('WalletOperation', () => {
       };
     });
 
-    it('should find operation in the missed block when 1 block was skipped', async (done) => {
+    it('should find operation in the missed block when 1 block was skipped', async () => {
       mockRpcClient.getBlock.mockResolvedValueOnce(
         createFakeBlock(2, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
       );
@@ -173,11 +168,9 @@ describe('WalletOperation', () => {
         expect(mockRpcClient.getBlock).toHaveBeenCalledTimes(1);
         expect(mockRpcClient.getBlock).toHaveBeenCalledWith({ block: '2' });
       });
-
-      done();
     });
 
-    it('should find operation in the first missed block when 2 blocks were skipped', async (done) => {
+    it('should find operation in the first missed block when 2 blocks were skipped', async () => {
       mockRpcClient.getBlock.mockResolvedValueOnce(
         createFakeBlock(2, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
       );
@@ -210,11 +203,9 @@ describe('WalletOperation', () => {
 
       expect(mockRpcClient.getBlock).toHaveBeenCalledTimes(1);
       expect(mockRpcClient.getBlock).toHaveBeenCalledWith({ block: '2' });
-
-      done();
     });
 
-    it('should find operation in the second missed block when 2 blocks were skipped', async (done) => {
+    it('should find operation in the second missed block when 2 blocks were skipped', async () => {
       mockRpcClient.getBlock.mockResolvedValueOnce(createFakeBlock(2));
       mockRpcClient.getBlock.mockResolvedValueOnce(
         createFakeBlock(3, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
@@ -248,13 +239,11 @@ describe('WalletOperation', () => {
         expect(mockRpcClient.getBlock).toHaveBeenCalledWith({ block: '2' });
         expect(mockRpcClient.getBlock).toHaveBeenLastCalledWith({ block: '3' });
       });
-
-      done();
     });
   });
 
   describe('receipt', () => {
-    it('should return a receipt after the operation is included in block', async (done) => {
+    it('should return a receipt after the operation is included in block', async () => {
       testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
 
@@ -282,11 +271,9 @@ describe('WalletOperation', () => {
           totalStorageBurn: '0',
         });
       });
-
-      done();
     });
 
-    it('should return a receipt from actual case values after including the operation in a block', async (done) => {
+    it('should return a receipt from actual case values after including the operation in a block', async () => {
       testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
 
@@ -314,13 +301,11 @@ describe('WalletOperation', () => {
           totalAllocationBurn: '0',
         });
       });
-
-      done();
     });
   });
 
   describe('operationResults', () => {
-    it('should return operation result after the operation is included in a block', async (done) => {
+    it('should return operation result after the operation is included in a block', async () => {
       testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
@@ -338,13 +323,11 @@ describe('WalletOperation', () => {
 
         expect(result).toEqual([]);
       });
-
-      done();
     });
   });
 
   describe('getCurrentConfirmation', () => {
-    it('should return 0 when operation is not included', async (done) => {
+    it('should return 0 when operation is not included', async () => {
       testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
@@ -360,11 +343,9 @@ describe('WalletOperation', () => {
         flush();
         expect(await op.getCurrentConfirmation()).toEqual(0);
       });
-
-      done();
     });
 
-    it('should return 1 when there is 1 confirmation', async (done) => {
+    it('should return 1 when there is 1 confirmation', async () => {
       testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
@@ -383,12 +364,10 @@ describe('WalletOperation', () => {
         flush();
 
         expect(await op.getCurrentConfirmation()).toEqual(1);
-
-        done();
       });
     });
 
-    it('should return 2 when there is 2 confirmation', async (done) => {
+    it('should return 2 when there is 2 confirmation', async () => {
       testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
@@ -408,8 +387,6 @@ describe('WalletOperation', () => {
 
         flush();
         expect(await op.getCurrentConfirmation()).toEqual(2);
-
-        done();
       });
     });
   });

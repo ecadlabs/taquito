@@ -8,11 +8,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination of a contract that calls 2nd contract that FAILs through wallet api: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    test('Verify that transferring token from the manager contract to a contract having a FAILWITH instruction will fail.', async (done: () => void) => {
+    test('Verify that transferring token from the manager contract to a contract having a FAILWITH instruction will fail.', async () => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: failwithContractCode,
@@ -34,10 +33,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       try {
         await managerContract.methods.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
         fail('Expected transfer operation to throw error')
-      } catch (ex:any) {
+      } catch (ex: any) {
         expect(ex.message).toMatch('test')
       }
-      done();
     });
   });
 })

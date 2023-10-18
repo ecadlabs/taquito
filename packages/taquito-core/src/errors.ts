@@ -51,7 +51,10 @@ export class PermissionDeniedError extends TaquitoError {}
  *  @description Error that indicates an invalid originated or implicit address being passed or used
  */
 export class InvalidAddressError extends ParameterValidationError {
-  constructor(public readonly address: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly address: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidAddressError';
     this.message = `Invalid address "${address}"`;
@@ -64,7 +67,10 @@ export class InvalidAddressError extends ParameterValidationError {
  *  @description Error that indicates an invalid block hash being passed or used
  */
 export class InvalidBlockHashError extends ParameterValidationError {
-  constructor(public readonly blockHash: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly blockHash: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidBlockHashError';
     this.message = `Invalid block hash "${blockHash}"`;
@@ -89,7 +95,10 @@ export class InvalidAmountError extends ParameterValidationError {
  *  @description Error that indicates an invalid derivation path being passed or used
  */
 export class InvalidDerivationPathError extends ParameterValidationError {
-  constructor(public readonly derivationPath: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly derivationPath: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidDerivationPathError';
     this.message = `Invalid derivation path "${derivationPath}"`;
@@ -102,7 +111,10 @@ export class InvalidDerivationPathError extends ParameterValidationError {
  *  @description Error that indicates an invalid hex string have been passed or used
  */
 export class InvalidHexStringError extends ParameterValidationError {
-  constructor(public readonly hexString: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly hexString: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidHexStringError';
     this.message = `Invalid hex string "${hexString}"`;
@@ -115,7 +127,10 @@ export class InvalidHexStringError extends ParameterValidationError {
  *  @description Error that indicates an invalid message being passed or used
  */
 export class InvalidMessageError extends ParameterValidationError {
-  constructor(public readonly msg: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly msg: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidMessageError';
     this.message = `Invalid message "${msg}"`;
@@ -162,7 +177,10 @@ export class InvalidKeyError extends ParameterValidationError {
  *  @description Error that indicates an Invalid Public Key being passed or used
  */
 export class InvalidPublicKeyError extends ParameterValidationError {
-  constructor(public readonly publicKey: string, readonly errorDetail?: string) {
+  constructor(
+    public readonly publicKey: string,
+    readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidPublicKeyError';
     this.message = `Invalid public key "${publicKey}"`;
@@ -175,7 +193,10 @@ export class InvalidPublicKeyError extends ParameterValidationError {
  *  @description Error that indicates an invalid signature being passed or used
  */
 export class InvalidSignatureError extends ParameterValidationError {
-  constructor(public readonly signature: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly signature: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidSignatureError';
     this.message = `Invalid signature "${signature}"`;
@@ -188,7 +209,10 @@ export class InvalidSignatureError extends ParameterValidationError {
  *  @description Error that indicates an invalid contract address being passed or used
  */
 export class InvalidContractAddressError extends ParameterValidationError {
-  constructor(public readonly contractAddress: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly contractAddress: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidContractAddressError';
     this.message = `Invalid contract address "${contractAddress}"`;
@@ -201,7 +225,10 @@ export class InvalidContractAddressError extends ParameterValidationError {
  *  @description Error that indicates an invalid chain id being passed or used
  */
 export class InvalidChainIdError extends ParameterValidationError {
-  constructor(public readonly chainId: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly chainId: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidChainIdError';
     this.message = `Invalid chain id "${chainId}"`;
@@ -214,7 +241,10 @@ export class InvalidChainIdError extends ParameterValidationError {
  *  @description Error that indicates an invalid public key hash being passed or used
  */
 export class InvalidKeyHashError extends ParameterValidationError {
-  constructor(public readonly keyHash: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly keyHash: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidKeyHashError';
     this.message = `Invalid public key hash "${keyHash}"`;
@@ -227,7 +257,10 @@ export class InvalidKeyHashError extends ParameterValidationError {
  *  @description Error that indicates an invalid operation hash being passed or used
  */
 export class InvalidOperationHashError extends ParameterValidationError {
-  constructor(public readonly operationHash: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly operationHash: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidOperationHashError';
     this.message = `Invalid operation hash "${operationHash}"`;
@@ -240,7 +273,10 @@ export class InvalidOperationHashError extends ParameterValidationError {
  *  @description Error that indicates an invalid operation kind being passed or used
  */
 export class InvalidOperationKindError extends ParameterValidationError {
-  constructor(public readonly operationKind: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly operationKind: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidOperationKindError';
     this.message = `Invalid operation kind "${operationKind}"`;
@@ -275,7 +311,10 @@ export class ProhibitedActionError extends UnsupportedActionError {
  *  @description Error that indicates a failure in grabbing the public key
  */
 export class PublicKeyNotFoundError extends TaquitoError {
-  constructor(public readonly pkh: string, public readonly cause?: any) {
+  constructor(
+    public readonly pkh: string,
+    public readonly cause?: any
+  ) {
     super();
     this.name = 'PublicKeyNotFoundError';
     this.message = `Public key not found of this address "${pkh}" in either wallet or contract API.`;

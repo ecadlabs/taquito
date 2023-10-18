@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "17.3.1",
+  "version": "17.3.2",
   "description": "Classes, interfaces, and types shared across Taquito packages",
   "keywords": [
     "tezos",
@@ -23,22 +23,21 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts",
-    "start": "rollup -c rollup.config.ts -w",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
+    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
     "test": "jest"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
       "prettier --write",
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "jest": {
@@ -59,5 +58,13 @@
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
     ]
+  },
+  "dependencies": {
+    "json-stringify-safe": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/json-stringify-safe": "^5.0.1",
+    "rollup": "^4.1.4",
+    "rollup-plugin-typescript2": "^0.36.0"
   }
 }

@@ -5,15 +5,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Originate contract with timestamp storage/params: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     });
 
-    
-    it('should originate contract correctly with number passed into timestamp storage', async (done) => {
+
+    it('should originate contract correctly with number passed into timestamp storage', async () => {
       const date = Date.now();
-      
+
       const op = await Tezos.contract.originate({
         code: `{ parameter timestamp ;
           storage timestamp ;
@@ -28,10 +27,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.contractAddress).toBeDefined();
       expect(op.status).toEqual('applied');
 
-      done();
     });
 
-    it('should originate contract correctly with string passed into timestamp storage', async (done) => {
+    it('should originate contract correctly with string passed into timestamp storage', async () => {
       const date = new Date().toISOString();
 
       const op = await Tezos.contract.originate({
@@ -48,7 +46,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.contractAddress).toBeDefined();
       expect(op.status).toEqual('applied');
 
-      done();
     });
   });
 });

@@ -4,12 +4,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
     describe(`Storage contract with pair as key using: ${rpc}`, () => {
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup()
-            done()
         })
 
-        it('originates a contract and call its method using bytes as Uint8Array', async (done) => {
+        it('originates a contract and call its method using bytes as Uint8Array', async () => {
             const value = new Uint8Array([202, 254]);
             const code =
                 [{ "prim": "parameter", "args": [{ "prim": "bytes" }] },
@@ -38,7 +37,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(operation.status).toEqual('applied');
             expect(storage).toEqual('cafecafe');
 
-            done();
         })
     });
 })

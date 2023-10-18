@@ -91,7 +91,10 @@ export class RpcClientCache implements RpcClientInterface {
    *
    * @example new RpcClientCache(new RpcClient('https://mainnet.ecadinfra.com/'))
    */
-  constructor(private rpcClient: RpcClientInterface, private ttl = defaultTtl) {}
+  constructor(
+    private rpcClient: RpcClientInterface,
+    private ttl = defaultTtl
+  ) {}
 
   getAllCachedData() {
     return this._cache;

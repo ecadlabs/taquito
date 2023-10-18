@@ -9,12 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination of a token contract through contract api using: ${rpc}`, () => {
 
-    beforeAll(async (done) => {
+    beforeAll(async () => {
       await setup()
-      done()
     })
 
-    test('Verify contract.originate for a token contract and mints some tokens', async (done) => {
+    test('Verify contract.originate for a token contract and mints some tokens', async () => {
       // TODO: Fails when using ephemeral keys
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -33,11 +32,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await opMethod.confirmation();
       expect(opMethod.hash).toBeDefined();
       expect(opMethod.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-      done();
     });
 
 
-    test('Verify a token contract mints some tokens using the `methodObjects` method', async (done) => {
+    test('Verify a token contract mints some tokens using the `methodObjects` method', async () => {
 
 
       const opMethod = await contract.methodsObject.mint({
@@ -48,7 +46,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await opMethod.confirmation();
       expect(opMethod.hash).toBeDefined();
       expect(opMethod.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-      done();
     });
   });
 })

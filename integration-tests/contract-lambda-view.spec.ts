@@ -9,12 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
 
   describe(`Test contract with lambda view trough contract api using: ${rpc}`, () => {
-    beforeEach(async done => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    test('Verify contract.originate for FA1.2 contract and then fetch data from view entrypoints', async (done) => {
+    test('Verify contract.originate for FA1.2 contract and then fetch data from view entrypoints', async () => {
       const mapAccount1 = new MichelsonMap();
       mapAccount1.set('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', '25');
       mapAccount1.set('tz1Nu949TjA4zzJ1iobz76fHPZbWUraRVrCE', '25');
@@ -55,10 +54,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const getAllowance = await contract.views.getAllowance('tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq', 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM').read();
       expect(getAllowance.toString()).toEqual('25');
 
-      done();
     });
 
-    test('Verify contract.originate for a contract and then fetch data from view entrypoints', async (done) => {
+    test('Verify contract.originate for a contract and then fetch data from view entrypoints', async () => {
       const mapAccount2 = new MichelsonMap();
       mapAccount2.set('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', '25');
       mapAccount2.set('tz1bmyy6QX9HVf7EnBJ6avmWZJbPYGAgXhbH', '25');
@@ -94,10 +92,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         owner: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'
       });
 
-      done();
     });
 
-    test('Verify contract.originate for a FA2 contract and then fetch data from view entrypoints', async (done) => {
+    test('Verify contract.originate for a FA2 contract and then fetch data from view entrypoints', async () => {
       const bigMapLedger = new MichelsonMap();
       bigMapLedger.set('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', {
         allowances: ['tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY'],
@@ -145,7 +142,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         }
       }]);
 
-      done();
     });
   });
 });

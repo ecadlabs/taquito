@@ -2476,15 +2476,24 @@
             "build-docs": "typedoc",
             "gh-pages": "gh-pages"
           },
-          "workspaces": ["packages/*"],
+          "workspaces": [
+            "packages/*"
+          ],
           "jest": {
             "transform": {
               ".(ts|tsx)": "ts-jest"
             },
-            "testPathIgnorePatterns": ["/node_modules/", "/integration-tests/"],
+            "testPathIgnorePatterns": [
+              "/node_modules/",
+              "/integration-tests/"
+            ],
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": ["ts", "tsx", "js"],
+            "moduleFileExtensions": [
+              "ts",
+              "tsx",
+              "js"
+            ],
             "moduleNameMapper": {
               "^@taquito/rpc$": "<rootDir>/packages/taquito-rpc/src/taquito-rpc.ts",
               "^@taquito/taquito$": "<rootDir>/packages/taquito/src/taquito.ts",
@@ -2495,14 +2504,19 @@
               "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
               "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts"
             },
-            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-            "collectCoverageFrom": ["packages/**/src/**/*.{js,ts}"]
+            "coveragePathIgnorePatterns": [
+              "/node_modules/",
+              "/test/"
+            ],
+            "collectCoverageFrom": [
+              "packages/**/src/**/*.{js,ts}"
+            ]
           },
           "devDependencies": {
             "@commitlint/cli": "^11.0.0",
             "@commitlint/config-conventional": "^11.0.0",
             "@types/jest": "^26.0.14",
-            "@types/node": "^16",
+            "@types/node": "^18",
             "colors": "^1.4.0",
             "commitizen": "^4.2.1",
             "coveralls": "^3.1.0",
@@ -2521,7 +2535,6 @@
             "replace-in-file": "^6.1.0",
             "rimraf": "^3.0.2",
             "rollup-plugin-json": "^4.0.0",
-            "rollup-plugin-sourcemaps": "^0.6.3",
             "rollup-plugin-typescript2": "^0.27.3",
             "semantic-release": "^17.2.3",
             "shelljs": "^0.8.4",
@@ -2540,7 +2553,9 @@
             }
           },
           "commitlint": {
-            "extends": ["@commitlint/config-conventional"]
+            "extends": [
+              "@commitlint/config-conventional"
+            ]
           }
         }
       }

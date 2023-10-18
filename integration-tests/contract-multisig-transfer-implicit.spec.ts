@@ -6,11 +6,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
 
   describe(`Test multisig contract through contract api for origination, contract interaction, and transfer to an implicit account with: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    test('Verify contract.originate, contract interaction, and transfer to an implicit account for a contract with multiple signatures', async (done) => {
+    test('Verify contract.originate, contract interaction, and transfer to an implicit account for a contract with multiple signatures', async () => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
@@ -26,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       })
       const contract = await op.contract();
-      expect(op.status).toEqual('applied')     
+      expect(op.status).toEqual('applied')
 
       // Utility function that mimics the PAIR operation of michelson
       // file deepcode ignore no-any: any is good enough
@@ -125,7 +124,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       expect(op2.status).toEqual('applied')
 
-      done();
     })
   })
 });

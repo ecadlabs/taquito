@@ -1,5 +1,5 @@
 ---
-title: Estimate Operations
+title: Estimate Provider
 author: Edmond Lee & Roxane Letourneau
 ---
 import Tabs from '@theme/Tabs';
@@ -7,7 +7,9 @@ import TabItem from '@theme/TabItem';
 
 Taquito's estimate method can be used to estimate fees, gas, and storage associated with an operation.
 
-## Estimate Values
+## The `Estimate` object
+
+The `Estimate` object has the following properties:
 
 [`burnFeeMutez`]: The number of Mutez that will be burned for the storage of the operation. Returns a number.
 

@@ -8,7 +8,7 @@ describe('RpcTzProvider test', () => {
   });
 
   describe('getBalance', () => {
-    it('calls get balance from the rpc client', async (done) => {
+    it('calls get balance from the rpc client', async () => {
       const mockRpcClient = {
         getBalance: jest.fn(),
       };
@@ -22,12 +22,11 @@ describe('RpcTzProvider test', () => {
       expect(mockRpcClient.getBalance.mock.calls[0][0]).toEqual(
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
       );
-      done();
     });
   });
 
   describe('getDelegate', () => {
-    it('calls get delegate from the rpc client', async (done) => {
+    it('calls get delegate from the rpc client', async () => {
       const mockRpcClient = {
         getDelegate: jest.fn(),
       };
@@ -40,7 +39,6 @@ describe('RpcTzProvider test', () => {
       expect(mockRpcClient.getDelegate.mock.calls[0][0]).toEqual(
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
       );
-      done();
     });
   });
 
@@ -50,7 +48,7 @@ describe('RpcTzProvider test', () => {
       publicKey: jest.Mock<any, any>;
       sign: jest.Mock<any, any>;
     };
-    it('should produce a activate_account operation', async (done) => {
+    it('should produce a activate_account operation', async () => {
       const mockRpcClient = {
         getBlock: jest.fn(),
         getScript: jest.fn(),
@@ -111,7 +109,6 @@ describe('RpcTzProvider test', () => {
         opbytes:
           'test00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
       });
-      done();
     });
   });
 });

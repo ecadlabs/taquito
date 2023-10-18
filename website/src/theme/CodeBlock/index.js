@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Playground from '@theme/Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
@@ -84,7 +83,8 @@ export default ({
       const { Parser, packDataBytes } = await import('@taquito/michel-codec');
       const { RpcClient } = await import('@taquito/rpc');
       const { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } = await import('@taquito/sapling');
-  
+      const TransportWebHID = (await import("@ledgerhq/hw-transport-webhid")).default;
+
       let wallet;
       if (typeof window !== 'undefined') {
         // solve localStorage is not defined Error when building server

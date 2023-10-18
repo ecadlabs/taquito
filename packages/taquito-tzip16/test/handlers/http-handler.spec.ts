@@ -17,7 +17,7 @@ describe('Tzip16 http handler test', () => {
     httpHandler['httpBackend'] = mockHttpBackend as any;
   });
 
-  it('Should return a string representing the metadata fetched by the httpBackend', async (done) => {
+  it('Should return a string representing the metadata fetched by the httpBackend', async () => {
     mockHttpBackend.createRequest.mockResolvedValue(`{ "name": "Taquito test" }`);
     const tzip16Uri = {
       sha256hash: undefined,
@@ -27,6 +27,5 @@ describe('Tzip16 http handler test', () => {
     const metadata = await httpHandler.getMetadata(mockContractAbstraction, tzip16Uri, mockContext);
 
     expect(metadata).toEqual(`{ "name": "Taquito test" }`);
-    done();
   });
 });

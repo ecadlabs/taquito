@@ -41,12 +41,11 @@ describe('Contract abstraction composer test', () => {
     toolkit = new TezosToolkit(mockRpcClient);
   });
 
-  it('Should add a helloWorld method on the contract abstraction', async (done) => {
+  it('Should add a helloWorld method on the contract abstraction', async () => {
     const result = await toolkit.contract.at(
       'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
       composeContractAbstractionTest
     );
     expect(result.constractAbstractionTest().helloWorld()).toEqual('Hello World!');
-    done();
   });
 });

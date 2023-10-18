@@ -6,12 +6,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination having ticket with init through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    it('Verify wallet.originate for a contract having ticket with init', async (done) => {
+    it('Verify wallet.originate for a contract having ticket with init', async () => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage
@@ -20,21 +19,19 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation();
       expect(op.opHash).toBeDefined();
 
-      done();
     });
 
-    it('Verify wallet.originate having ticket with init in JSON', async (done) => {
+    it('Verify wallet.originate having ticket with init in JSON', async () => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
-        init: { prim: 'Pair', args: [ { prim: 'None' }, { prim: 'None' } ] }
+        init: { prim: 'Pair', args: [{ prim: 'None' }, { prim: 'None' }] }
       }).send();
 
       await op.confirmation();
       expect(op.opHash).toBeDefined();
-      done();
     });
 
-    it('Verify wallet.originate for a contract having ticket with storage', async (done) => {
+    it('Verify wallet.originate for a contract having ticket with storage', async () => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         storage: {
@@ -46,7 +43,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation();
       expect(op.opHash).toBeDefined();
 
-      done();
     });
   });
 })

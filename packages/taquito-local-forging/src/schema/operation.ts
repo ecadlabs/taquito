@@ -247,7 +247,9 @@ export const schemaEncoder =
           );
         }
 
-        return prev + values.reduce((prevBytes, current) => prevBytes + encoder(current), '');
+        return (
+          prev + values.reduce((prevBytes, current) => prevBytes + encoder(current as object), '')
+        );
       } else {
         const encoder = encoders[valueToEncode];
         return prev + encoder(value[key]);

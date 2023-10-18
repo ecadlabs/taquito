@@ -5,16 +5,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination with set bool prop on init and via call through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup()
-      done()
     })
-    it('Verify wallet.originate for a contract with bool storage init to true and then sets to false', async (done) => {
+    it('Verify wallet.originate for a contract with bool storage init to true and then sets to false', async () => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: booleanCode,
         storage: true,
-        }).send();
+      }).send();
       await op.confirmation()
       expect(op.opHash).toBeDefined();
       expect(op.status).toBeTruthy
@@ -28,7 +27,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.opHash).toBeDefined();
 
       expect(await contract.storage()).toBeFalsy();
-      done();
     });
   });
 })

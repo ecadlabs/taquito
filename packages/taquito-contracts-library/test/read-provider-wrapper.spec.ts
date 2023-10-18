@@ -19,7 +19,7 @@ describe('RpcWrapperContractsLibrary tests', () => {
     ).toBeInstanceOf(ReadWrapperContractsLibrary);
   });
 
-  it('get a script from RPC when the contract is not in the library', async (done) => {
+  it('get a script from RPC when the contract is not in the library', async () => {
     mockReadProvider.getScript.mockResolvedValue('script-from-rpc');
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const readWrapper = new ReadWrapperContractsLibrary(
@@ -28,10 +28,9 @@ describe('RpcWrapperContractsLibrary tests', () => {
     );
     const script = await readWrapper.getScript(contractAddress, 'head');
     expect(script).toEqual('script-from-rpc');
-    done();
   });
 
-  it('get entrypoints from RPC when the contract is not in the library', async (done) => {
+  it('get entrypoints from RPC when the contract is not in the library', async () => {
     mockReadProvider.getEntrypoints.mockResolvedValue('entrypoints-from-http');
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const readWrapper = new ReadWrapperContractsLibrary(
@@ -40,10 +39,9 @@ describe('RpcWrapperContractsLibrary tests', () => {
     );
     const entrypoints = await readWrapper.getEntrypoints(contractAddress);
     expect(entrypoints).toEqual('entrypoints-from-http');
-    done();
   });
 
-  it('get script and entrypoints from library when contract is in the library', async (done) => {
+  it('get script and entrypoints from library when contract is in the library', async () => {
     const contractAddress = 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY';
     const contractLib = new ContractsLibrary();
 
@@ -57,6 +55,5 @@ describe('RpcWrapperContractsLibrary tests', () => {
     const readWrapper = new ReadWrapperContractsLibrary(mockReadProvider as any, contractLib);
     expect(await readWrapper.getScript(contractAddress, 'head')).toEqual(script);
     expect(await readWrapper.getEntrypoints(contractAddress)).toEqual(entrypoints);
-    done();
   });
 });

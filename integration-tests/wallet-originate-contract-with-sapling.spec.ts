@@ -7,22 +7,20 @@ CONFIGS().forEach(({ lib, rpc, setup, }) => {
 
   describe(`Test contract origination with sapling through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done()
     })
 
-     it('Originates a contract made with wallet api with sapling states in its storage', async (done) => {
-       const op = await Tezos.wallet.originate({
-         code: saplingContractDoubleJProto,
-         storage: {
-           left: SaplingStateValue,
-           right: SaplingStateValue
-         }
-       }).send();
-       await op.confirmation();
-       expect(op.opHash).toBeDefined();
-       done();
-     });
+    it('Originates a contract made with wallet api with sapling states in its storage', async () => {
+      const op = await Tezos.wallet.originate({
+        code: saplingContractDoubleJProto,
+        storage: {
+          left: SaplingStateValue,
+          right: SaplingStateValue
+        }
+      }).send();
+      await op.confirmation();
+      expect(op.opHash).toBeDefined();
+    });
   });
 })

@@ -4,6 +4,7 @@
   import type { TestSettings, TestResult } from "../types";
   import { shortenHash } from "../utils";
   import { NetworkType } from "@airgap/beacon-sdk";
+  import { stringify } from "@taquito/core";
 
   let test: TestSettings | undefined;
   let executionTime = 0;
@@ -276,7 +277,9 @@
             </div>
             {#if test.documentation}
               <div class="learn-more">
-                <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+                <a href={test.documentation} target="_blank" rel="noopener noreferrer"
+                  >Learn more about <b>{test.keyword}</b> with Taquito</a
+                >
               </div>
             {/if}
           </div>
@@ -385,7 +388,9 @@
       </div>
       {#if test.documentation}
         <div class="learn-more">
-          <a href={test.documentation} target="_blank" rel="noopener noreferrer">Learn more about <b>{test.keyword}</b> with Taquito</a>
+          <a href={test.documentation} target="_blank" rel="noopener noreferrer"
+            >Learn more about <b>{test.keyword}</b> with Taquito</a
+          >
         </div>
       {/if}
     {/if}

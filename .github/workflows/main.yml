@@ -17,7 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - 'lts/gallium'
           - 'lts/hydrogen'
     steps:
     - uses: actions/checkout@v3
@@ -49,7 +48,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: lts/gallium
+        node-version: lts/hydrogen
     - run: npm ci
     - run: npm run build
     - if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -77,7 +76,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: lts/gallium
+        node-version: lts/hydrogen
 
     ## The 4 Bootstrap Accounts (alias, pk, pkh, sk)
     # alice,edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn,tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb,unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq

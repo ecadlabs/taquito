@@ -6,13 +6,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     describe(`Test emptying a revealed implicit account into a new implicit account through contract api using: ${rpc}`, () => {
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
             await setup()
-            done()
         })
 
-      it('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async (done) => {
-        const receiver = await createAddress();
+        it('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async () => {
+            const receiver = await createAddress();
             const receiver_pkh = await receiver.signer.publicKeyHash();
 
             // create and fund the account we want to empty
@@ -38,20 +37,19 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             const maxAmount = balance.minus(totalFees).toNumber();
 
             const opTransfer = await sender.contract.transfer({
-                 to: receiver_pkh,
-                 mutez: true,
-                 amount: maxAmount,
-                 fee: estimate.suggestedFeeMutez,
-                 gasLimit: estimate.gasLimit,
-                 storageLimit: estimate.storageLimit
-             });
+                to: receiver_pkh,
+                mutez: true,
+                amount: maxAmount,
+                fee: estimate.suggestedFeeMutez,
+                gasLimit: estimate.gasLimit,
+                storageLimit: estimate.storageLimit
+            });
 
-             await opTransfer.confirmation();
-             const finalBalance = await Tezos.tz.getBalance(sender_pkh);
+            await opTransfer.confirmation();
+            const finalBalance = await Tezos.tz.getBalance(sender_pkh);
 
-             expect(finalBalance.toString()).toEqual("0")
+            expect(finalBalance.toString()).toEqual("0")
 
-            done();
         });
     });
 })

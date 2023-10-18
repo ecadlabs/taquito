@@ -9,12 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       await setup();
-      done();
     });
 
-    mondaynet('Verify ticket is not easily created by a callback', async (done) => {
+    mondaynet('Verify ticket is not easily created by a callback', async () => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter (or (address %init) (ticket %setToken string)) ;
@@ -76,11 +75,10 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
         const opSend = await opCallerContract.methods.init(opGetterContract.address).send();
         await opSend.confirmation();
-        
+
       } catch (error: any) {
         expect(error.message).toContain('{"prim":"Unit"}');
       }
-      done();
     });
   });
 });
