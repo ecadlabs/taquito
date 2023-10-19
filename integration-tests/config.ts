@@ -59,7 +59,8 @@ interface Config {
  */
 export enum SignerType {
   EPHEMERAL_KEY,
-  SECRET_KEY
+  SECRET_KEY,
+  LOCAL_KEYGEN,
 }
 
 interface ConfigWithSetup extends Config {
@@ -77,7 +78,7 @@ interface EphemeralConfig {
 }
 
 interface SecretKeyConfig {
-  type: SignerType.SECRET_KEY,
+  type: SignerType.SECRET_KEY | SignerType.LOCAL_KEYGEN,
   secret_key: string,
   password?: string
 }
@@ -85,6 +86,13 @@ interface SecretKeyConfig {
 export const defaultSecretKey: SecretKeyConfig = {
   // pkh is tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD
   type: SignerType.SECRET_KEY,
+  secret_key: process.env['SECRET_KEY'] || 'spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN',
+  password: process.env['PASSWORD_SECRET_KEY'] || undefined,
+}
+
+export const defaultFlextesa: SecretKeyConfig = {
+  // pkh is tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD
+  type: SignerType.LOCAL_KEYGEN,
   secret_key: process.env['SECRET_KEY'] || 'spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN',
   password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
@@ -145,6 +153,9 @@ const nairobinetEphemeral: Config =
 const nairobinetSecretKey: Config =
   { ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey },  ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
 
+const nairobinetFlextesa: Config =
+  { ...nairobinetEphemeral, ...{ signerConfig: defaultFlextesa },  ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
+
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
@@ -173,8 +184,8 @@ const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
-} else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
-  providers.push(nairobinetSecretKey);
+} else if (process.env['RUN_NAIROBINET_WITH_FLEXTESA']) {
+  providers.push(nairobinetFlextesa);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
@@ -247,6 +258,23 @@ const setupWithSecretKey = async (Tezos: TezosToolkit, signerConfig: SecretKeyCo
   Tezos.setSignerProvider(new InMemorySigner(signerConfig.secret_key, signerConfig.password));
 };
 
+const setupWithLocalKeygen = async (Tezos: TezosToolkit, signerConfig: SecretKeyConfig) => {
+  try {
+    const keyUrl = `http://127.0.0.1:20001/key?key=${signerConfig.secret_key}&passphrase=${signerConfig.password}`;
+    const response = await fetch(keyUrl, {
+      method: 'GET',
+    });
+    const newKey = await response.text();
+    if (!newKey) {
+      throw new Error('No key returned from local keygen');
+    }
+    const signer = new InMemorySigner(newKey);
+    Tezos.setSignerProvider(signer);
+  } catch (e) {
+    console.log('An error occurs when trying to fetch a local key:', e);
+  }
+};
+
 const configurePollingInterval = (Tezos: TezosToolkit, pollingIntervalMilliseconds: string | undefined) => {
   if(pollingIntervalMilliseconds) {
     Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: Number(pollingIntervalMilliseconds) }));
@@ -300,7 +328,9 @@ export const CONFIGS = () => {
           signerConfig,
           networkType,
           setup: async (preferFreshKey: boolean = false) => {
-            if (signerConfig.type === SignerType.SECRET_KEY) {
+            if (signerConfig.type === SignerType.LOCAL_KEYGEN) {
+              await setupWithLocalKeygen(Tezos, signerConfig);
+            } else if (signerConfig.type === SignerType.SECRET_KEY) {
               setupWithSecretKey(Tezos, signerConfig);
             } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
               if (preferFreshKey) {

@@ -5,6 +5,7 @@
     "test:nairobinet": "NAIROBINET=true jest",
     "test:nairobinet-secret-key": "RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand",
     "test:originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
+    "test:flextesa:nairobinet": "source ./sandbox-env.sh && jest --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts",
     "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest",
     "test:mondaynet": "MONDAYNET=true jest",
     "test:mondaynet-secret-key": "RUN_MONDAYNET_WITH_SECRET_KEY=true jest --runInBand",
@@ -32,7 +33,10 @@
     "@taquito/utils": "^17.3.2",
     "bignumber.js": "^9.1.2",
     "bip39": "3.1.0",
-    "blakejs": "^1.2.1"
+    "blakejs": "^1.2.1",
+    "crypto-js": "^4.1.1",
+    "fastify": "^4.24.3",
+    "node-fetch": "^3.3.2"
   },
   "private": true,
   "jest": {
@@ -58,11 +62,14 @@
       "default",
       "jest-stare"
     ],
-    "testResultsProcessor": "../node_modules/jest-stare"
+    "testResultsProcessor": "../node_modules/jest-stare",
+    "globalSetup": "./global-setup.ts",
+    "globalTeardown": "./global-teardown.ts"
   },
   "devDependencies": {
     "@types/jest": "^29.5.5",
     "@types/node": "^20",
+    "@types/node-fetch": "^2.6.7",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
     "eslint": "^8.51.0",
