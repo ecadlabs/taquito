@@ -184,6 +184,8 @@ const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
+} else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
+  providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_NAIROBINET_WITH_FLEXTESA']) {
   providers.push(nairobinetFlextesa);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
