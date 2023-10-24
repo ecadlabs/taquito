@@ -189,7 +189,7 @@
             "@types/elliptic": "^6.4.12",
             "@types/jest": "^26.0.16",
             "@types/libsodium-wrappers": "^0.7.8",
-            "@types/node": "^18",
+            "@types/node": "^20",
             "@types/pbkdf2": "^3.1.0",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
