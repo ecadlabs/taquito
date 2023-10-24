@@ -19,7 +19,7 @@ jobs:
         node:
           - 'lts/hydrogen'
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node }}
@@ -46,9 +46,9 @@ jobs:
             testnet_uppercase: NAIROBINET
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v3
       with:
-        node-version: lts/hydrogen
+        node-version: 18
     - run: npm ci
     - run: npm run build
     - if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -74,9 +74,9 @@ jobs:
             flextesa_docker_image: oxheadalpha/flextesa:20230607
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v3
       with:
-        node-version: lts/hydrogen
+        node-version: 18
 
     ## The 4 Bootstrap Accounts (alias, pk, pkh, sk)
     # alice,edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn,tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb,unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq

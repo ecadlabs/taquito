@@ -17,9 +17,9 @@ jobs:
       name: Checkout repository
       uses: actions/checkout@v4
     -
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v3
       with:
-        node-version: lts/hydrogen
+        node-version: 18
     - run: npm ci
     - run: npm run build
     - run: cd packages/taquito-local-forging && npm run build-webpack

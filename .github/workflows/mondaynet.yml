@@ -37,9 +37,9 @@ jobs:
         SSH_HOST: ecad-mondaynet-archive
 
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v3
       with:
-        node-version: lts/hydrogen
+        node-version: 18
     - run: npm ci
     - run: npm run build
     -
