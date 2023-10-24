@@ -85,7 +85,7 @@
     "@types/bluebird": "^3.5.40",
     "@types/elliptic": "^6.4.15",
     "@types/jest": "^29.5.5",
-    "@types/node": "^20",
+    "@types/node": "^18",
     "@types/pbkdf2": "^3.1.0",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",

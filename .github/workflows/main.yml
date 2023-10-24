@@ -17,7 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - 'lts/gallium'
           - 'lts/hydrogen'
     steps:
     - uses: actions/checkout@v3
@@ -46,8 +45,8 @@ jobs:
           - testnet: nairobinet
             testnet_uppercase: NAIROBINET
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: lts/hydrogen
     - run: npm ci
@@ -74,10 +73,10 @@ jobs:
             testnet_uppercase: NAIROBINET
             flextesa_docker_image: oxheadalpha/flextesa:20230607
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
-        node-version: lts/gallium
+        node-version: lts/hydrogen
 
     ## The 4 Bootstrap Accounts (alias, pk, pkh, sk)
     # alice,edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn,tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb,unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
