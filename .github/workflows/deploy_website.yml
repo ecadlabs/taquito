@@ -18,9 +18,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18
-    - run: npm ci
-    - run: npm run build
-    - run: npm ci
+    - run: npm run rebuild
       working-directory: website
     - run: npm run build
       working-directory: website

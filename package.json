@@ -14,7 +14,7 @@
     "rebuild": "npm run clean && npm clean-install && npm run build",
     "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website,taquito-test-dapp-vite --collectCoverage",
     "lint": "lerna run lint",
-    "clean": "rm -rf ./node_modules/* && lerna clean --yes",
+    "clean": "lerna clean --yes",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "example": "cd example && npm run example",
