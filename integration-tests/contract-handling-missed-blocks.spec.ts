@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     beforeEach(async () => {
       await setup();
-      timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
+      timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(3);
     })
 
     it('Verify the operation is found even if the poller skipped blocks', async () => {
