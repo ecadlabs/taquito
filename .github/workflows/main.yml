@@ -19,12 +19,12 @@ jobs:
         node:
           - 'lts/hydrogen'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
-    - run: npm run rebuild
+    - run: npm run build
     - run: npm run lint
     - run: npm run build-docs
     - run: npm run test -- --runInBand
@@ -45,10 +45,10 @@ jobs:
           - testnet: nairobinet
             testnet_uppercase: NAIROBINET
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: lts/hydrogen
     - run: npm ci
     - run: npm run rebuild
     - if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -73,10 +73,10 @@ jobs:
             testnet_uppercase: NAIROBINET
             flextesa_docker_image: oxheadalpha/flextesa:20230607
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: lts/hydrogen
 
     ## The 4 Bootstrap Accounts (alias, pk, pkh, sk)
     # alice,edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn,tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb,unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
@@ -111,7 +111,7 @@ jobs:
           --until-level 200_000_000 \
           --protocol-kind ${{ matrix.protocol }}
     - run: npm ci
-    - run: npm run rebuild
+    - run: npm run build
     - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true

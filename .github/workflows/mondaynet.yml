@@ -36,10 +36,10 @@ jobs:
         SSH_KEY: ${{ secrets.MONDAYNET_TORU_SSH_KEY }}
         SSH_HOST: ecad-mondaynet-archive
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: lts/hydrogen
     - run: npm ci
     - run: npm run build
     -
