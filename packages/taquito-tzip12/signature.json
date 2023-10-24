@@ -226,7 +226,7 @@
           },
           "devDependencies": {
             "@types/jest": "^26.0.14",
-            "@types/node": "^20",
+            "@types/node": "^18",
             "@types/ws": "^7.2.7",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",

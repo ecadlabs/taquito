@@ -169,7 +169,7 @@
           },
           "devDependencies": {
             "@types/jest": "^26.0.16",
-            "@types/node": "^20",
+            "@types/node": "^18",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
