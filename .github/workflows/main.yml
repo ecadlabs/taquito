@@ -23,6 +23,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node }}
+    - run: npm run ci
     - run: npm run rebuild
     - run: npm run lint
     - run: npm run build-docs
@@ -48,6 +49,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18
+    - run: npm run ci
     - run: npm run rebuild
     - if: ${{ !github.event.pull_request.head.repo.fork }}
       name: Tailscale
@@ -108,6 +110,7 @@ jobs:
           --no-daemons-for=donald \
           --until-level 200_000_000 \
           --protocol-kind ${{ matrix.protocol }}
+    - run: npm run ci
     - run: npm run rebuild
     - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts
       env:
