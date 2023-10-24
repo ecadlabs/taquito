@@ -3,17 +3,16 @@ import {
   InternalOperationResult,
   OperationContentsAndResultTransaction,
 } from '@taquito/rpc';
-import { BehaviorSubject, from, Observable, ObservableInput, OperatorFunction, timer } from 'rxjs';
 import {
-  concatMap,
-  distinctUntilKeyChanged,
-  first,
-  pluck,
-  publish,
-  refCount,
-  retry,
-  switchMap,
-} from 'rxjs/operators';
+  BehaviorSubject,
+  from,
+  Observable,
+  ObservableInput,
+  OperatorFunction,
+  timer,
+  share,
+} from 'rxjs';
+import { concatMap, distinctUntilKeyChanged, first, map, retry, switchMap } from 'rxjs/operators';
 import { Context } from '../context';
 import { evaluateFilter, eventFilter } from './filters';
 import {
@@ -68,7 +67,9 @@ const applyEventFilter = (filter?: EventFilter) =>
             const internalOpResults = tx.metadata.internal_operation_results;
             if (internalOpResults) {
               for (const event of internalOpResults) {
-                if (eventFilter(event, filter?.address, filter?.tag, filter?.excludeFailedOperations)) {
+                if (
+                  eventFilter(event, filter?.address, filter?.tag, filter?.excludeFailedOperations)
+                ) {
                   sub.next({
                     opHash: op.hash,
                     blockHash: block.hash,
@@ -92,13 +93,16 @@ export class PollingSubscribeProvider implements SubscribeProvider {
 
   private newBlock$: Observable<BlockResponse>;
 
-  constructor(private context: Context, config: Partial<PollingSubscribeProviderConfig> = {}) {
+  constructor(
+    private context: Context,
+    config: Partial<PollingSubscribeProviderConfig> = {}
+  ) {
     this._config$ = new BehaviorSubject({
       ...defaultConfigStreamer,
       ...config,
     });
     this.timer$ = this._config$.pipe(
-      pluck('pollingIntervalMilliseconds'),
+      map((x) => x.pollingIntervalMilliseconds),
       switchMap((pollingIntervalMilliseconds) => {
         if (!pollingIntervalMilliseconds) {
           return from(this.getConfirmationPollingInterval()).pipe(
@@ -114,8 +118,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
     this.newBlock$ = this.timer$.pipe(
       switchMap(() => getLastBlock(this.context)),
       distinctUntilKeyChanged('hash'),
-      publish(),
-      refCount()
+      share({ resetOnError: false, resetOnComplete: false, resetOnRefCountZero: false })
     );
   }
 
@@ -157,7 +160,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
 
   subscribe(_filter: 'head'): Subscription<string> {
     return new ObservableSubscription(
-      this.newBlock$.pipe(pluck('hash')),
+      this.newBlock$.pipe(map((x) => x.hash)),
       this.config.shouldObservableSubscriptionRetry,
       this.config.observableSubscriptionRetryFunction
     );
