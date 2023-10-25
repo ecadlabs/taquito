@@ -3,10 +3,11 @@ import { CONFIGS } from './config';
 import { tzip7Contract } from './data/tzip_7_contract';
 import { testContract } from './data/test_lambda_view';
 import { fa2Contract } from './data/fa2_contract';
+import stringify from 'json-stringify-safe';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
+  const toJSON = (x: any) => JSON.parse(stringify(x));
 
   describe(`Test contract with lambda view trough contract api using: ${rpc}`, () => {
     beforeEach(async () => {

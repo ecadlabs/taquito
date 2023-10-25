@@ -1,4 +1,5 @@
 import { CONFIGS } from './config';
+import stringify from 'json-stringify-safe';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
@@ -21,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await register.confirmation();
 
       } catch (e) {
-        console.log(JSON.stringify(e));
+        console.log(stringify(e));
       }
 
     });
