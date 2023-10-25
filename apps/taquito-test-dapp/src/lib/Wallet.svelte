@@ -4,17 +4,17 @@
   import { TezosToolkit } from "@taquito/taquito";
   import { BeaconWallet } from "@taquito/beacon-wallet";
   // import { BeaconEvent, defaultEventCallbacks } from "@airgap/beacon-sdk";
-  import type { DAppClientOptions, NetworkType } from "@airgap/beacon-sdk";
+  import { BeaconEvent, type DAppClientOptions } from "@airgap/beacon-sdk";
   import store from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
-  import { defaultMatrixNode, rpcUrl, defaultNetworkType } from "../config";
+  import { defaultMatrixNode, getRpcUrl, defaultNetworkType, type SupportedNetworks } from "../config";
   import type { TezosAccountAddress } from "../types";
 
   let showDialog = false;
   let connectedWallet = "";
 
   const createNewWallet = (config: {
-    networkType: NetworkType,
+    networkType: SupportedNetworks,
   }) => {
     const options: DAppClientOptions = {
       name: "Taquito Test Dapp",
@@ -47,13 +47,15 @@
           networkType: $store.networkType
         });
 
+    subscribeToAllEvents(wallet);
+
     try {
       await wallet.requestPermissions();
 
       const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
       store.updateUserAddress(userAddress);
-
-      const Tezos = new TezosToolkit(rpcUrl[$store.networkType]);
+      const url = getRpcUrl($store.networkType);
+      const Tezos = new TezosToolkit(url);
       Tezos.setWalletProvider(wallet);
       store.updateTezos(Tezos);
 
@@ -72,7 +74,7 @@
   };
 
   const disconnectWallet = async () => {
-    await $store.wallet.clearActiveAccount();
+    await $store.wallet?.clearActiveAccount();
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
@@ -80,7 +82,7 @@
   };
 
   export const setWallet = async (config: {
-    networkType: NetworkType,
+    networkType: SupportedNetworks,
   }) => {
     if (window && window.localStorage) {
       // finds the Beacon keys
@@ -95,7 +97,8 @@
 
     const wallet = createNewWallet(config);
     store.updateWallet(wallet);
-    const Tezos = new TezosToolkit(rpcUrl[config.networkType]);
+    const url = getRpcUrl(config.networkType);
+    const Tezos = new TezosToolkit(url);
     Tezos.setWalletProvider(wallet);
     store.updateTezos(Tezos);
 
@@ -127,6 +130,38 @@
       }
     }
   });
+
+const saveLog = (data: unknown, eventType: BeaconEvent) => {
+  const log = JSON.stringify({eventType, data});
+  store.addEvent(log);
+};
+
+function subscribeToAllEvents(wallet: BeaconWallet) {
+  wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_SENT, (data) => saveLog(data, BeaconEvent.PERMISSION_REQUEST_SENT));
+  wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_SUCCESS, (data) => saveLog(data, BeaconEvent.PERMISSION_REQUEST_SUCCESS));
+  wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_ERROR, (data) => saveLog(data, BeaconEvent.PERMISSION_REQUEST_ERROR));
+  wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_SENT, (data) => saveLog(data, BeaconEvent.OPERATION_REQUEST_SENT));
+  wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_SUCCESS, (data) => saveLog(data, BeaconEvent.OPERATION_REQUEST_SUCCESS));
+  wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_ERROR, (data) => saveLog(data, BeaconEvent.OPERATION_REQUEST_ERROR));
+  wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_SENT, (data) => saveLog(data, BeaconEvent.SIGN_REQUEST_SENT));
+  wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_SUCCESS, (data) => saveLog(data, BeaconEvent.SIGN_REQUEST_SUCCESS));
+  wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_ERROR, (data) => saveLog(data, BeaconEvent.SIGN_REQUEST_ERROR));
+  wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_SENT, (data) => saveLog(data, BeaconEvent.BROADCAST_REQUEST_SENT));
+  wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_SUCCESS, (data) => saveLog(data, BeaconEvent.BROADCAST_REQUEST_SUCCESS));
+  wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_ERROR, (data) => saveLog(data, BeaconEvent.BROADCAST_REQUEST_ERROR));
+  wallet.client.subscribeToEvent(BeaconEvent.ACKNOWLEDGE_RECEIVED, (data) => saveLog(data, BeaconEvent.ACKNOWLEDGE_RECEIVED));
+  wallet.client.subscribeToEvent(BeaconEvent.LOCAL_RATE_LIMIT_REACHED, (data) => saveLog(data, BeaconEvent.LOCAL_RATE_LIMIT_REACHED));
+  wallet.client.subscribeToEvent(BeaconEvent.NO_PERMISSIONS, (data) => saveLog(data, BeaconEvent.NO_PERMISSIONS));
+  wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET));
+  wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_TRANSPORT_SET, (data) => saveLog(data, BeaconEvent.ACTIVE_TRANSPORT_SET));
+  wallet.client.subscribeToEvent(BeaconEvent.SHOW_PREPARE, (data) => saveLog(data, BeaconEvent.SHOW_PREPARE));
+  wallet.client.subscribeToEvent(BeaconEvent.HIDE_UI, (data) => saveLog(data, BeaconEvent.HIDE_UI));
+  wallet.client.subscribeToEvent(BeaconEvent.PAIR_INIT, (data) => saveLog(data, BeaconEvent.PAIR_INIT));
+  wallet.client.subscribeToEvent(BeaconEvent.PAIR_SUCCESS, (data) => saveLog(data, BeaconEvent.PAIR_SUCCESS));
+  wallet.client.subscribeToEvent(BeaconEvent.CHANNEL_CLOSED, (data) => saveLog(data, BeaconEvent.CHANNEL_CLOSED));
+  wallet.client.subscribeToEvent(BeaconEvent.INTERNAL_ERROR, (data) => saveLog(data, BeaconEvent.INTERNAL_ERROR));
+  wallet.client.subscribeToEvent(BeaconEvent.UNKNOWN, (data) => saveLog(data, BeaconEvent.UNKNOWN));
+}
 </script>
 
 <style lang="scss">

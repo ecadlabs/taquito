@@ -3,7 +3,7 @@ import path from "path";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 // https://vitejs.dev/config/
-export default ({ command }) => {
+export default ({ command, mode }) => {
   const isBuild = command === "build";
   return defineConfig({
     plugins: [svelte()],
@@ -26,6 +26,13 @@ export default ({ command }) => {
           path.resolve(),
           // "./src/walletbeacon.dapp.min.js"
           `../../node_modules/@airgap/beacon-dapp/dist/${isBuild ? "esm" : "cjs"
+          }/index.js`
+          // `../../node_modules/@airgap/beacon-dapp/dist/walletbeacon.dapp.min.js`
+        ),
+        "@airgap/beacon-sdk": path.resolve(
+          path.resolve(),
+          // "./src/walletbeacon.dapp.min.js"
+          `../../node_modules/@airgap/beacon-sdk/dist/${isBuild ? "esm" : "cjs"
           }/index.js`
           // `../../node_modules/@airgap/beacon-dapp/dist/walletbeacon.dapp.min.js`
         ),

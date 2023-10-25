@@ -3,7 +3,7 @@
   import { TezosToolkit } from "@taquito/taquito";
   import { NetworkType } from "@airgap/beacon-sdk";
   import Select from "svelte-select";
-  import { rpcUrl } from "./config";
+  import { getRpcUrl } from "./config";
   import store from "./store";
   import Layout from "./Layout.svelte";
   import TestContainer from "./lib/TestContainer.svelte";
@@ -35,9 +35,9 @@
   let networkError = false;
   let showCustomNetworkInput = false;
   let customNetworkInput = "https://";
-  const groupBy = (item) => item.group;
+  const groupBy = (item: { group: any }) => item.group;
 
-  const changeNetwork = (event) => {
+  const changeNetwork = (event: { detail: { value: string } }) => {
     networkError = false;
     showCustomNetworkInput = false;
     const walletComponent = layout.getSideBar().getWallet();
@@ -48,9 +48,6 @@
       case "ghostnet":
         store.updateNetworkType(NetworkType.GHOSTNET);
         break;
-      case "mumbainet":
-        store.updateNetworkType(NetworkType.MUMBAINET);
-        break;
       case "nairobinet":
         store.updateNetworkType(NetworkType.NAIROBINET);
         break;
@@ -58,7 +55,7 @@
         //TODO: input custom RPC URL
         showCustomNetworkInput = true;
         setTimeout(() => {
-          document.getElementById("custom-network-input").focus();
+          document.getElementById("custom-network-input")?.focus();
         }, 100);
         break;
       default:
@@ -67,7 +64,7 @@
     }
   };
 
-  const changeMatrixNode = (event) => {
+  const changeMatrixNode = (event: { detail: { value: string } }) => {
     switch (event.detail.value.toLocaleLowerCase()) {
       case "default":
         store.updateMatrixNode("beacon-node-1.sky.papers.tech");
@@ -77,9 +74,10 @@
         break;
       case "custom":
         store.updateMatrixNode("beacon-node-1.sky.papers.tech");
-        if (!rpcUrl.custom) {
+        if (!getRpcUrl(NetworkType.CUSTOM)) {
+          // TODO: This logic does not seem right
           // in case the user did not provide any custom network URL
-          store.updateTezos(new TezosToolkit(rpcUrl.ghostnet));
+          store.updateTezos(new TezosToolkit(getRpcUrl(NetworkType.GHOSTNET)));
         }
         break;
     }
@@ -116,7 +114,7 @@
 <style lang="scss">
   .connect-container {
     width: 100%;
-    height: 100%;
+    height: 60%;
     display: grid;
     place-items: center;
 
@@ -194,7 +192,7 @@
           <button
             on:click={() => {
               const wallet = document.getElementById("wallet-button");
-              wallet.click();
+              wallet?.click();
             }}
           >
             <span class="material-icons-outlined"> account_balance_wallet </span>

@@ -1,22 +1,22 @@
 import { writable } from "svelte/store";
-import type { NetworkType } from "@airgap/beacon-sdk";
 import type { TezosToolkit } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
-import { defaultMatrixNode, defaultNetworkType } from "./config";
+import { defaultMatrixNode, defaultNetworkType, type SupportedNetworks } from "./config";
 import type { TestSettings } from "./types";
 
 interface State {
-  Tezos: TezosToolkit;
-  userAddress: string;
-  userBalance: number;
-  wallet: BeaconWallet;
+  Tezos: TezosToolkit | undefined;
+  userAddress: string | undefined;
+  userBalance: number | undefined;
+  wallet: BeaconWallet | undefined;
   disableDefaultEvents: boolean;
-  networkType: NetworkType;
-  customNetworkUrl: string;
+  networkType: SupportedNetworks;
+  customNetworkUrl: string | undefined;
   matrixNode: string;
-  confirmationObservableTest: { level: number; currentConfirmation: number }[];
-  selectedTest: string;
+  confirmationObservableTest: { level: number; currentConfirmation: number }[] | undefined;
+  selectedTest: string | undefined;
   tests: Array<TestSettings>;
+  eventLogs: Array<string>;
 }
 
 const initialState: State = {
@@ -30,19 +30,20 @@ const initialState: State = {
   customNetworkUrl: undefined,
   confirmationObservableTest: undefined,
   selectedTest: undefined,
-  tests: []
+  tests: [],
+  eventLogs: ['dApp started'],
 };
 
 const store = writable(initialState);
 
 const state = {
   subscribe: store.subscribe,
-  updateUserAddress: (address: string) =>
+  updateUserAddress: (address: string | undefined) =>
     store.update(store => ({
       ...store,
       userAddress: address
     })),
-  updateUserBalance: (balance: number) =>
+  updateUserBalance: (balance: number | undefined) =>
     store.update(store => ({
       ...store,
       userBalance: balance
@@ -52,7 +53,7 @@ const state = {
       ...store,
       Tezos
     })),
-  updateWallet: (wallet: BeaconWallet) =>
+  updateWallet: (wallet: BeaconWallet | undefined) =>
     store.update(store => ({
       ...store,
       wallet
@@ -67,7 +68,7 @@ const state = {
       ...store,
       disableDefaultEvents: !store.disableDefaultEvents
     })),
-  updateNetworkType: (networkType: NetworkType, url?: string) =>
+  updateNetworkType: (networkType: SupportedNetworks, url?: string) =>
     store.update(store => ({
       ...store,
       networkType,
@@ -78,7 +79,7 @@ const state = {
       ...store,
       confirmationObservableTest:
         store.confirmationObservableTest &&
-        Array.isArray(store.confirmationObservableTest)
+          Array.isArray(store.confirmationObservableTest)
           ? [...store.confirmationObservableTest, conf]
           : [conf]
     })),
@@ -87,7 +88,7 @@ const state = {
       ...store,
       confirmationObservableTest: undefined
     })),
-  updateSelectedTest: (testId: string) =>
+  updateSelectedTest: (testId: string | undefined) =>
     store.update(store => ({
       ...store,
       selectedTest: testId
@@ -105,7 +106,13 @@ const state = {
           ? { ...test, lastResult: { option: "some", val: res } }
           : test
       )
-    }))
+    })),
+  addEvent: (newEvent: string) =>
+    store.update(store => ({
+      ...store,
+      eventLogs: [...store.eventLogs, newEvent]
+    })),
+  clearEvents: () => store.update(store => ({ ...store, eventLogs: [] })),
 };
 
 export default state;

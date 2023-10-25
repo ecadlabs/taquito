@@ -25,6 +25,14 @@
       background: rgba(4, 189, 228, 0.8);
     }
   }
+  .events-container {
+    background-color: skyblue;
+    width: 100%;
+    grid-column: 1 / 3;
+    ul {
+      overflow-y: scroll;
+    }
+  }
 </style>
 
 <main>
@@ -35,6 +43,17 @@
   </div>
   <Sidebar bind:this={side}/>
   <slot />
+  <div class="events-container">
+    Events ({$store.eventLogs.length}): <button on:click={store.clearEvents}>clear</button>
+    <ul>
+      {#each $store.eventLogs as event}
+        <li>
+          <span class="material-icons-outlined"> event_note </span>
+          <span>{event}</span>
+        </li>
+      {/each}
+    </ul>
+  </div>  
 </main>
 <TaquitoLogo dir="normal" />
 <TaquitoLogo dir="reverse" />
