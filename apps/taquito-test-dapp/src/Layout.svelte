@@ -1,6 +1,5 @@
 <script lang="ts">
   import Sidebar from "./lib/Sidebar.svelte";
-  import TaquitoLogo from "./lib/TaquitoLogo.svelte";
   import store from "./store";
   let side: Sidebar;
 
@@ -26,11 +25,17 @@
     }
   }
   .events-container {
-    background-color: skyblue;
-    width: 100%;
     grid-column: 1 / 3;
+    height: calc(25vh);
     ul {
       overflow-y: scroll;
+      background-color: skyblue;
+      height: 100%;
+    }
+    > span {
+      color: white;
+      font-weight: bold;
+      font-size: larger;
     }
   }
 </style>
@@ -44,7 +49,7 @@
   <Sidebar bind:this={side}/>
   <slot />
   <div class="events-container">
-    Events ({$store.eventLogs.length}): <button on:click={store.clearEvents}>clear</button>
+    <span>Events ({$store.eventLogs.length}):</span> <button on:click={store.clearEvents} style="display: inline;">clear</button>
     <ul>
       {#each $store.eventLogs as event}
         <li>
@@ -55,5 +60,3 @@
     </ul>
   </div>  
 </main>
-<TaquitoLogo dir="normal" />
-<TaquitoLogo dir="reverse" />

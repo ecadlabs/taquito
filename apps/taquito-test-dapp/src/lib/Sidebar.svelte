@@ -21,7 +21,7 @@
 <style lang="scss">
   section {
     padding: 10px;
-    height: calc(80vh - 20px);
+    height: calc(60vh - 20px);
     color: white;
     display: grid;
     grid-template-rows: 8% 5% 87%;
@@ -43,7 +43,7 @@
 
     ul {
       height: 95%;
-      list-style-image: url(description_white_24dp.svg);
+      list-style-image: url(../assets/icons/description_white_24dp.svg);
       list-style-position: inside;
       overflow-y: scroll;
       overflow-x: auto;

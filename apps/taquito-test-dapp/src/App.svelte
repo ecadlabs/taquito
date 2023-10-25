@@ -40,7 +40,6 @@
   const changeNetwork = (event: { detail: { value: string } }) => {
     networkError = false;
     showCustomNetworkInput = false;
-    const walletComponent = layout.getSideBar().getWallet();
     switch (event.detail.value.toLocaleLowerCase()) {
       case "mainnet":
         store.updateNetworkType(NetworkType.MAINNET);
