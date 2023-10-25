@@ -27,6 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await op.confirmation();
 
         simpleContractAddress = op.contractAddress!;
+        console.log(simpleContractAddress)
       } catch (e) {
         console.log(stringify(e));
       }
