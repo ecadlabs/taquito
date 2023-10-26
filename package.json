@@ -78,7 +78,7 @@
     "@types/estree": "^1.0.2",
     "@types/jest": "^29.5.5",
     "@types/mocha": "^10.0.2",
-    "@types/node": "^20",
+    "@types/node": "^18",
     "@types/typedarray-to-buffer": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
