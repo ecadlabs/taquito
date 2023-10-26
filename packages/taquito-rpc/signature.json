@@ -187,7 +187,7 @@
           "devDependencies": {
             "@types/jest": "^26.0.16",
             "@types/lodash": "^4.14.165",
-            "@types/node": "^18",
+            "@types/node": "^16",
             "colors": "^1.4.0",
             "coveralls": "^3.1.0",
             "cross-env": "^7.0.2",
