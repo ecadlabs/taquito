@@ -13,13 +13,13 @@ jobs:
   bundle-webpack:
     runs-on: ubuntu-latest
     steps:
-    - 
+    -
       name: Checkout repository
       uses: actions/checkout@v2
     -
       uses: actions/setup-node@v2
       with:
-        node-version: lts/hydrogen
+        node-version: lts/gallium
     - run: npm ci
     - run: npm run build
     - run: cd packages/taquito-local-forging && npm run build-webpack
