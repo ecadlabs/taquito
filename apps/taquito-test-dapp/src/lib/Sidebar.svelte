@@ -21,7 +21,7 @@
 <style lang="scss">
   section {
     padding: 10px;
-    height: calc(60vh - 20px);
+    height: 100%;
     color: white;
     display: grid;
     grid-template-rows: 8% 5% 87%;

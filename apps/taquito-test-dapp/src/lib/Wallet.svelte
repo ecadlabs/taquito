@@ -152,7 +152,13 @@ function subscribeToAllEvents(wallet: BeaconWallet) {
   wallet.client.subscribeToEvent(BeaconEvent.ACKNOWLEDGE_RECEIVED, (data) => saveLog(data, BeaconEvent.ACKNOWLEDGE_RECEIVED));
   wallet.client.subscribeToEvent(BeaconEvent.LOCAL_RATE_LIMIT_REACHED, (data) => saveLog(data, BeaconEvent.LOCAL_RATE_LIMIT_REACHED));
   wallet.client.subscribeToEvent(BeaconEvent.NO_PERMISSIONS, (data) => saveLog(data, BeaconEvent.NO_PERMISSIONS));
-  wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET));
+
+  wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
+    saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET)
+    store.updateUserAddress(data.address);
+    store.updateNetworkType(data.network.type as SupportedNetworks);
+  });
+
   wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_TRANSPORT_SET, (data) => saveLog(data, BeaconEvent.ACTIVE_TRANSPORT_SET));
   wallet.client.subscribeToEvent(BeaconEvent.SHOW_PREPARE, (data) => saveLog(data, BeaconEvent.SHOW_PREPARE));
   wallet.client.subscribeToEvent(BeaconEvent.HIDE_UI, (data) => saveLog(data, BeaconEvent.HIDE_UI));

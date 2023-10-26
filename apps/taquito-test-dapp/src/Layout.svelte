@@ -25,17 +25,22 @@
     }
   }
   .events-container {
+    border: 1px solid navy;
+    margin: 3px;
+    padding: 3px;
     grid-column: 1 / 3;
-    height: calc(25vh);
-    ul {
-      overflow-y: scroll;
-      background-color: skyblue;
-      height: 100%;
-    }
+    display: flex;
+    flex-direction: column;
+
     > span {
       color: white;
       font-weight: bold;
       font-size: larger;
+    }
+    ul {
+      overflow-y: scroll;
+      flex-grow: 1; 
+      background-color: skyblue;
     }
   }
 </style>
@@ -49,7 +54,7 @@
   <Sidebar bind:this={side}/>
   <slot />
   <div class="events-container">
-    <span>Events ({$store.eventLogs.length}):</span> <button on:click={store.clearEvents} style="display: inline;">clear</button>
+    <span>Events ({$store.eventLogs.length}): <button on:click={store.clearEvents} style="display: inline;">clear</button></span>
     <ul>
       {#each $store.eventLogs as event}
         <li>
