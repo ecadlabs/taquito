@@ -19,8 +19,8 @@ jobs:
         node:
           - 'lts/hydrogen'
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
@@ -45,8 +45,8 @@ jobs:
           - testnet: nairobinet
             testnet_uppercase: NAIROBINET
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: lts/hydrogen
     - run: npm ci
@@ -73,8 +73,8 @@ jobs:
             testnet_uppercase: NAIROBINET
             flextesa_docker_image: oxheadalpha/flextesa:20230607
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: lts/hydrogen
 
