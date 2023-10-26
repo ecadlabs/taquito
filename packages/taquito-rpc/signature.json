@@ -139,7 +139,7 @@
           },
           "license": "MIT",
           "engines": {
-            "node": ">=18"
+            "node": ">=16"
           },
           "scripts": {
             "test": "jest --coverage",
