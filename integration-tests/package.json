@@ -5,7 +5,7 @@
     "test:nairobinet": "NAIROBINET=true jest",
     "test:nairobinet-secret-key": "RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand",
     "test:originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
-    "test:flextesa:nairobinet": "RUN_NAIROBINET_WITH_FLEXTESA=true jest --forceExit -w 4",
+    "test:flextesa:nairobinet": "RUN_NAIROBINET_WITH_FLEXTESA=true jest -w 4",
     "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest",
     "test:mondaynet": "MONDAYNET=true jest",
     "test:mondaynet-secret-key": "RUN_MONDAYNET_WITH_SECRET_KEY=true jest --runInBand",
