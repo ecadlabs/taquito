@@ -121,7 +121,7 @@ jobs:
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2
-    - run: npm -w integration-tests run test:flextesa:${{ matrix.testnet }} -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts
+    - run: npm -w integration-tests run test:flextesa:${{ matrix.testnet }}
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_FLEXTESA: true
         SECRET_KEY: edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2
