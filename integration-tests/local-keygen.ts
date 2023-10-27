@@ -18,26 +18,30 @@ export class KeygenServer {
             let keygen = this.keygenMap.get(key);
             if (!keygen) {
                 keygen = new LocalKeygen(key, passphrase);
-                console.log(`Created new keygen for ${key}`);
+                // console.log(`Created new keygen for ${key}`);
                 this.keygenMap.set(key, keygen);
             }
             const newKey = await keygen.getKey();
             reply.send(newKey);
         });
 
+        this.fastify.get('/stats', (_request, reply) => {
+            const items = Array.from(this.keygenMap.entries());
+            reply.send({ total: this.keygenMap.size, stats: items.map(k => ({ name: k[0], stats: k[1].getStats() })) });
+        });
+
         await this.fastify.listen({ port: 20001, host: 'localhost' }, (err, _address) => {
             if (err) {
                 throw err;
             }
-            // console.log(`Server is now listening on ${address}`);
         });
     }
 
     async stopServer() {
-        await this.fastify.close();
         for (const keygen of this.keygenMap.values()) {
             keygen.cleanup();
         }
+        await this.fastify.close();
     }
 }
 
@@ -46,10 +50,10 @@ class LocalKeygen {
     private _keysQueue: string[] = [];
     private _tezos: TezosToolkit;
     private _creatingSigners = false;
-    private _batchSize = 20;
-    private _minCount = 10;
-    private _maxCount = 100;
+    private _batchSize = 15;
+    private _maxCount = 50;
     private _interval: NodeJS.Timeout;
+    private _totalCreated = 0;
 
     constructor(key: string, passphrase?: string) {
         this._tezos = new TezosToolkit('http://localhost:20000');
@@ -75,7 +79,7 @@ class LocalKeygen {
                 return;
             }
         }
-        console.log(`creating ${count} signers, current queue size ${this._keysQueue.length}`);
+        // console.log(`creating ${count} signers, current queue size ${this._keysQueue.length}`);
         this._creatingSigners = true;
         try {
             const keys: string[] = [];
@@ -93,8 +97,16 @@ class LocalKeygen {
             const op = await transfers.send();
             await op.confirmation();
             this._keysQueue.push(...keys);
+            this._totalCreated += keys.length;
         } finally {
             this._creatingSigners = false;
+        }
+    }
+
+    getStats() {
+        return {
+            totalCreated: this._totalCreated,
+            queueSize: this._keysQueue.length
         }
     }
 
