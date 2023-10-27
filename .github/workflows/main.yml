@@ -71,8 +71,7 @@ jobs:
           - protocol: Nairobi
             testnet: nairobinet
             testnet_uppercase: NAIROBINET
-            flextesa_docker_image: oxheadalpha/flextesa:20230607
-            flextesa_box: nairobibox
+            flextesa_docker_image: oxheadalpha/flextesa:latest
     env:
       TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
       POLLING_INTERVAL_MILLISECONDS: 100
@@ -103,7 +102,19 @@ jobs:
         --detach \
         -p 20000:20000 \
         ${{ matrix.flextesa_docker_image }} \
-        ${{ matrix.flextesa_box }} start
+        flextesa mini-net \
+          --root /tmp/mini-box --size 1 \
+          --set-history-mode N000:archive \
+          --number-of-b 4 \
+          --balance-of-bootstrap-accounts tez:100_000_000 \
+          --time-b 1 \
+          --add-bootstrap-account="${alice}@2_000_000_000_000" \
+          --add-bootstrap-account="${bob}@2_000_000_000_000" \
+          --add-bootstrap-account="${charlie}@2_000_000_000_000" \
+          --add-bootstrap-account="${donald}@2_000_000_000_000" \
+          --no-daemons-for=donald \
+          --until-level 200_000_000 \
+          --protocol-kind ${{ matrix.protocol }}
     - run: npm ci
     - run: npm run build
     - run: npm -w integration-tests run test:originate-known-contracts
