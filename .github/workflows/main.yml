@@ -127,5 +127,5 @@ jobs:
         SECRET_KEY: edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2
     - run: npm -w integration-tests run test:${{ matrix.testnet }}-secret-key sandbox-ballot-operation.spec.ts
       env:
-        RUN_${{ matrix.testnet_uppercase }}_WITH_FLEXTESA: true
+        RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
