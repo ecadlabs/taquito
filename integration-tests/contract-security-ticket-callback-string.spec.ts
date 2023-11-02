@@ -1,5 +1,6 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 // TC-T-009 - Create Ticket - callback case 2 - address and option
 // TC-T-010 - Create ticket - callback case 3 - string and option
@@ -14,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`Test contracts using: ${rpc}`, () => {
+  _describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

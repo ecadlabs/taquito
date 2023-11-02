@@ -1,13 +1,14 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  describe(`Test emptying a revealed implicit account through wallet api using: ${rpc}`, () => {
+  _describe(`Test emptying a revealed implicit account through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify that a new revealed implicit account can be created, funded and emptied', async () => {
+    _it('Verify that a new revealed implicit account can be created, funded and emptied', async () => {
       const LocalTez = await createAddress();
       const op = await Tezos.wallet.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 }).send();
       await op.confirmation();

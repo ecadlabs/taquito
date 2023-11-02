@@ -1,9 +1,10 @@
 import { CONFIGS } from "./config";
 import { voteSample } from "./data/vote-contract";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract origination of a vote contract through wallet api using: ${rpc}`, () => {
+  _describe(`Test contract origination of a vote contract through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

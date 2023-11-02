@@ -1,7 +1,8 @@
 import { HttpBackend } from '@taquito/http-utils';
+import { _describe, _it } from "./test-utils";
 
-describe('HttpBackend request', () => {
-  it('will fail with method and url in error message', async () => {
+_describe('HttpBackend request', () => {
+  _it('will fail with method and url in error message', async () => {
     try {
       const http: HttpBackend = new HttpBackend(1);
       await http.createRequest<string>({
@@ -15,7 +16,7 @@ describe('HttpBackend request', () => {
       expect(err.message).toContain('Error: timeout of 1ms exceeded')
     }
   });
-  it('will fail with method, url and query in error message', async () => {
+  _it('will fail with method, url and query in error message', async () => {
     try {
       const http: HttpBackend = new HttpBackend(1);
       await http.createRequest<string>({

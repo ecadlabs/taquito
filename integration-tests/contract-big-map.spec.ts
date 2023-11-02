@@ -4,11 +4,12 @@ import { MichelsonMap, BigMapAbstraction, MichelCodecPacker } from '@taquito/taq
 import { tokenBigmapCode } from './data/token_bigmap';
 import { tokenCode, tokenInit } from './data/tokens';
 import BigNumber from 'bignumber.js';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination with initialized Maps with variants of data through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination with initialized Maps with variants of data through contract api using: ${rpc}`, () => {
     /** The purpose of the test is to make sure that the keys in the map are properly ordered by Taquito before injection of the operation, 
     *   If the keys are not ordered, the node will reject the operation. */
 
@@ -16,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       await setup()
     })
 
-    it('Verify contract.originate with initialized Map with variants of data', async () => {
+    _it('Verify contract.originate with initialized Map with variants of data', async () => {
       const op = await Tezos.contract.originate({
         balance: '1',
         code: storageContract,
@@ -169,7 +170,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
 
       }
     );
-    it('Originate contract and init bigmap to empty map', async () => {
+    _it('Originate contract and init bigmap to empty map', async () => {
       const op = await Tezos.contract.originate({
         balance: '1',
         code: tokenBigmapCode,
@@ -183,7 +184,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
     });
-    it('originates a contract with empty bigmap and fetches the storage/bigmap', async () => {
+    _it('originates a contract with empty bigmap and fetches the storage/bigmap', async () => {
       // Deploy a contract with a big map
       const op = await Tezos.contract.originate({
         balance: '1',
@@ -204,14 +205,14 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       expect(bigMapValue['1']).toEqual(expect.objectContaining(new MichelsonMap()));
     });
 
-    it('Return undefined when BigMap key is not found', async () => {
+    _it('Return undefined when BigMap key is not found', async () => {
       const myContract = await Tezos.contract.at(knownBigMapContract);
       const contractStorage: any = await myContract.storage();
       const value = await contractStorage.ledger.get('tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB');
       expect(value).toBeUndefined();
     });
 
-    it('originates a contract with empty bigmap and fetches value in the bigMap using local packing', async () => {
+    _it('originates a contract with empty bigmap and fetches value in the bigMap using local packing', async () => {
       // Configure the Tezostoolkit to use the MichelCodecPacker (the data will be packed locally instead of using the rpc)
       Tezos.setPackerProvider(new MichelCodecPacker());
 
@@ -235,7 +236,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       expect(bigMapValue['1']).toEqual(expect.objectContaining(new MichelsonMap()));
     });
 
-    it('originate a contract with empty bigMap but represented with object literal', async () => {
+    _it('originate a contract with empty bigMap but represented with object literal', async () => {
       const signer = await Tezos.signer.publicKeyHash();
       const objLitAsMichelsonMap = {
         [signer]: { 0: '1', 1: {} },

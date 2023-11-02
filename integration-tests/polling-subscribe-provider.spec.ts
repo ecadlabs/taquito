@@ -1,5 +1,6 @@
 import { CONFIGS, sleep } from './config';
 import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
+import { _describe, _it } from "./test-utils";
 
 /* mainContract.jsligo: This is the source code for the main contract.
 If you need to change the main contract, you can change this, use the ligo compiler to compile it, and update both the Michelson code below and the jsligo here.
@@ -104,7 +105,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   let mainContractAddress: string;
   let secondUser: TezosToolkit;
 
-  describe(`Polling Subscribe Provider using ${rpc}`, () => {
+  _describe(`Polling Subscribe Provider using ${rpc}`, () => {
     beforeAll(async () => {
       await setup();
 
@@ -152,7 +153,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await resetStorageOperation.confirmation();
     });
 
-    it('should be able to subscribe to events with tag and address params given', async () => {
+    _it('should be able to subscribe to events with tag and address params given', async () => {
       const data: any = [];
 
       const eventSub = Tezos.stream.subscribeEvent({

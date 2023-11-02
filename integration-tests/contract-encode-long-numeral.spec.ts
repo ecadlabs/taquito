@@ -1,9 +1,10 @@
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
-    describe(`Test contract origination for a contract having long numeral in storage and calling default entry point with long numeral through contract api using: ${rpc}`, () => {
+    _describe(`Test contract origination for a contract having long numeral in storage and calling default entry point with long numeral through contract api using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
         });
@@ -23,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
     });
 
-    describe(`Test contract origination having long numeral in storage and calling default entry point with long numeral through wallet api using: ${rpc}`, () => {
+    _describe(`Test contract origination having long numeral in storage and calling default entry point with long numeral through wallet api using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
         });

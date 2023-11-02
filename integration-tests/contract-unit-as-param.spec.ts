@@ -1,10 +1,11 @@
 import { CONFIGS } from "./config";
 import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination with unit as params through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination with unit as params through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup(true)

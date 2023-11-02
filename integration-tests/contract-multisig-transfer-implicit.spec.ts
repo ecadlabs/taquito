@@ -1,11 +1,12 @@
 import { CONFIGS } from "./config";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
 
-  describe(`Test multisig contract through contract api for origination, contract interaction, and transfer to an implicit account with: ${rpc}`, () => {
+  _describe(`Test multisig contract through contract api for origination, contract interaction, and transfer to an implicit account with: ${rpc}`, () => {
     beforeEach(async () => {
       await setup()
     })

@@ -1,10 +1,11 @@
 import { CONFIGS } from './config';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
+  _describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

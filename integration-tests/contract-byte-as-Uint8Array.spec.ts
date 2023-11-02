@@ -1,14 +1,15 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
-    describe(`Storage contract with pair as key using: ${rpc}`, () => {
+    _describe(`Storage contract with pair as key using: ${rpc}`, () => {
 
         beforeEach(async () => {
             await setup()
         })
 
-        it('originates a contract and call its method using bytes as Uint8Array', async () => {
+        _it('originates a contract and call its method using bytes as Uint8Array', async () => {
             const value = new Uint8Array([202, 254]);
             const code =
                 [{ "prim": "parameter", "args": [{ "prim": "bytes" }] },

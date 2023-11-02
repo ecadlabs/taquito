@@ -1,6 +1,7 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { securityWrongAnnotations } from './data/security-wrong-annotations-contract';
+import { _describe, _it } from "./test-utils";
 
 // TC-009: Check whether wrong field annotations are leading to failed transactions.
 /** 
@@ -50,7 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`Test contracts to verify wrong field annotations are leading to failed transactions using: ${rpc}`, () => {
+  _describe(`Test contracts to verify wrong field annotations are leading to failed transactions using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

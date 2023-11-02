@@ -1,10 +1,11 @@
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Register global constants using: ${rpc}`, () => {
+  _describe(`Register global constants using: ${rpc}`, () => {
     const randomAnnots = () => crypto.randomBytes(3).toString('hex');
     let annots = randomAnnots();
 

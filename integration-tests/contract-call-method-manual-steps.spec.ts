@@ -1,11 +1,12 @@
 import { createTransferOperation } from '@taquito/taquito';
 import { encodeOpHash } from '@taquito/utils';
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test obtain operation hash before sending the operation to the node ${rpc}`, () => {
+  _describe(`Test obtain operation hash before sending the operation to the node ${rpc}`, () => {
     beforeEach(async () => {
       await setup(true);
     });

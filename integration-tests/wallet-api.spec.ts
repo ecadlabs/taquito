@@ -1,4 +1,5 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -7,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     await setup();
   })
 
-  describe(`Test wallet api using: ${rpc}`, () => {
+  _describe(`Test wallet api using: ${rpc}`, () => {
     test('Test simple origination and wait for confirmation using promise', async () => {
       const walletOp = await Tezos.wallet.originate({
         balance: "1",

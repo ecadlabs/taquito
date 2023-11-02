@@ -1,6 +1,7 @@
 import { CONFIGS } from './config';
 import { RpcClient } from '@taquito/rpc';
 import { Protocols, TezosToolkit } from '@taquito/taquito';
+import { _describe, _it } from "./test-utils";
 
 // TC001 - non-existing KT addresses can not be prefunded
 
@@ -12,7 +13,7 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
   const Tezos = new TezosToolkit(new RpcClient(rpc));
 
-  describe(`Test contracts using: ${rpc}`, () => {
+  _describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
 

@@ -1,15 +1,16 @@
 import { CONFIGS } from "./config";
 import { MichelsonMap } from "@taquito/taquito";
 import { collection_code } from "./data/collection_contract";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Collection contract tests using: ${rpc}`, () => {
+  _describe(`Collection contract tests using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Originate a contract with set,list,map and exercise all collections', async () => {
+    _it('Originate a contract with set,list,map and exercise all collections', async () => {
       const addr = await Tezos.signer.publicKeyHash();
 
       const initialStorage = {

@@ -1,17 +1,18 @@
 import { CONFIGS } from './config';
 import { b58cencode, Prefix, prefix } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
+import { _describe, _it } from "./test-utils";
 const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
-    describe(`Test contract.batch containing a high number of operations through contract api using: ${rpc}`, () => {
+    _describe(`Test contract.batch containing a high number of operations through contract api using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup(true);
         });
 
-        it('Verify contract.batch with 150 operations', async () => {
+        _it('Verify contract.batch with 150 operations', async () => {
             const dests: { key: string, pkh: string }[] = [];
             const batchSize = 150;
 

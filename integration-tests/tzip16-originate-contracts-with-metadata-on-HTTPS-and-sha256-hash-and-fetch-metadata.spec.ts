@@ -2,6 +2,7 @@ import { CONFIGS } from "./config";
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -11,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     const test = require('jest-retries');
 
-    describe(`Test contract origination having a sha256 hash in URI through contract api using: ${rpc}`, () => {
+    _describe(`Test contract origination having a sha256 hash in URI through contract api using: ${rpc}`, () => {
 
         beforeEach(async () => {
             await setup()

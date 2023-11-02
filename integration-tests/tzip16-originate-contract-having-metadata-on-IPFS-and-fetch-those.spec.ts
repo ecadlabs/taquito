@@ -2,6 +2,7 @@ import { CONFIGS } from './config';
 import { tacoContractTzip16 } from './data/modified-taco-contract';
 import { MichelsonMap } from '@taquito/taquito';
 import { char2Bytes, tzip16, Tzip16Module, IpfsHttpHandler, Handler, MetadataProvider } from '@taquito/tzip16';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -16,12 +17,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     let contractAddress: string;
 
-    describe(`Test contract origination having metadata stored at IPFS URL through contract api using: ${rpc}`, () => {
+    _describe(`Test contract origination having metadata stored at IPFS URL through contract api using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
         });
 
-        it('Verify contract.originate for a contract having metadata stored on IPFS', async () => {
+        _it('Verify contract.originate for a contract having metadata stored on IPFS', async () => {
 
             // location of the contract metadata
             const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
@@ -48,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         });
 
-        it('Verify that the metadata for the contract having metadata stored on IPFS can be fetched', async () => {
+        _it('Verify that the metadata for the contract having metadata stored on IPFS can be fetched', async () => {
 
             const contract = await Tezos.contract.at(contractAddress, tzip16);
             const metadata = await contract.tzip16().getMetadata();

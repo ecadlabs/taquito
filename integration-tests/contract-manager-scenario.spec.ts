@@ -1,15 +1,16 @@
 import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
 
-  describe(`Test TZ Manager through contract api: ${rpc}`, () => {
+  _describe(`Test TZ Manager through contract api: ${rpc}`, () => {
     beforeEach(async () => {
       await setup()
     })
-    it('Verify contract.transfer scenarios: implicit transfer to and from contracts, set and remove delegate, and transfer from a contract to a contract', async () => {
+    _it('Verify contract.transfer scenarios: implicit transfer to and from contracts, set and remove delegate, and transfer from a contract to a contract', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,

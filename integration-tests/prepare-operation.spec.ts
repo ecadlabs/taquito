@@ -2,12 +2,13 @@ import { OperationContentsBallot, OperationContentsTransaction } from '@taquito/
 import { OpKind } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { LocalForger } from '@taquito/local-forging';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
   const Tezos = lib;
   let contractAddress: string;
 
-  describe(`Test Preparation of operations using the PrepareProvider`, () => {
+  _describe(`Test Preparation of operations using the PrepareProvider`, () => {
     beforeAll(async () => {
       await setup();
 
@@ -34,7 +35,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
     beforeEach(async () => {
     });
 
-    it('should be able to prepare a transaction operation', async () => {
+    _it('should be able to prepare a transaction operation', async () => {
       const prepared = await Tezos.prepare.transaction({
         to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 5
@@ -54,7 +55,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
     });
 
-    it('should be able to prepare a batch operation', async () => {
+    _it('should be able to prepare a batch operation', async () => {
       const prepared = await Tezos.prepare.batch([
         {
           kind: OpKind.TRANSACTION,
@@ -79,7 +80,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
     });
 
-    it('should be able to prepare a ballot operation', async () => {
+    _it('should be able to prepare a ballot operation', async () => {
       const prepared = await Tezos.prepare.ballot({
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
         ballot: 'yay'
@@ -99,7 +100,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(prepared.opOb.protocol).toEqual(protocol);
     });
 
-    it('should be able to prepare a contractCall', async () => {
+    _it('should be able to prepare a contractCall', async () => {
       const contractAbs = await Tezos.contract.at(contractAddress);
       const method = await contractAbs.methods.increment(1);
       const prepared = await Tezos.prepare.contractCall(method);
@@ -113,8 +114,8 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
     });
   });
 
-  describe('toPreapply conversion method', () => {
-    it('Verify toPreaplyParams returns executable params for preapplyOperations', async () => {
+  _describe('toPreapply conversion method', () => {
+    _it('Verify toPreaplyParams returns executable params for preapplyOperations', async () => {
       const receiver = await createAddress();
 
       const pkh = await receiver.signer.publicKeyHash();
@@ -143,9 +144,9 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
     });
   });
 
-  describe('toForge conversion method', () => {
+  _describe('toForge conversion method', () => {
 
-    it('Verify that toForge is executable for both local forger and rpc.forgeOperations', async () => {
+    _it('Verify that toForge is executable for both local forger and rpc.forgeOperations', async () => {
       const receiver = await createAddress();
       const pkh = await receiver.signer.publicKeyHash();
       const preparedTransfer = await Tezos.prepare.transaction({ amount: 1, to: pkh });

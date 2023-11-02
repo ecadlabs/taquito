@@ -1,14 +1,15 @@
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract call with amount using: ${rpc}`, () => {
+  _describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
 
-    it(
+    _it(
       'originate a contract with SUB MUTEZ',
       async () => {
         const op = await Tezos.contract.originate({
@@ -30,7 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }
     );
 
-    it('fail to originate a contract on Ithaca with SUB', async () => {
+    _it('fail to originate a contract on Ithaca with SUB', async () => {
       try {
         await Tezos.contract.originate({
           code: `{ parameter (or (or (mutez %decrement) (mutez %increment)) (mutez %reset)) ;

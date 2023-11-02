@@ -1,9 +1,10 @@
 import { CONFIGS } from "./config";
 import { depositContractCode, depositContractStorage } from "./data/deposit_contract";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test smart contract entrypoint call with unit as param through wallet API using:: ${rpc}`, () => {
+  _describe(`Test smart contract entrypoint call with unit as param through wallet API using:: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup(true)

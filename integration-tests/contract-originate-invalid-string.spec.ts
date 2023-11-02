@@ -1,9 +1,10 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination with invalid data through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination with invalid data through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

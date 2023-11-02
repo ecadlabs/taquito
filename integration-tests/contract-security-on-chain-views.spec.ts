@@ -1,5 +1,6 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 /**   
  * This "naive*" testcase assumes that the on-chain view stack is not correctly separated from the caller's stack. 
@@ -16,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`Test contracts using: ${rpc}`, () => {
+  _describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

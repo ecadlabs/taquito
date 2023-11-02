@@ -1,14 +1,15 @@
 import { CONFIGS } from "./config";
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test call to an entrypoint with no annotations calling methods by index through contract api using: ${rpc}`, () => {
+  _describe(`Test call to an entrypoint with no annotations calling methods by index through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify contract.originate for a contract without annotation and call entry points', async () => {
+    _it('Verify contract.originate for a contract without annotation and call entry points', async () => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
       const BALANCE = '0';

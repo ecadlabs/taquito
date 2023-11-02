@@ -1,10 +1,11 @@
 import { CONFIGS } from "./config";
 import { tokenCode, tokenInit } from "./data/tokens";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination of a token contract through wallet api using: ${rpc}`, () => {
+  _describe(`Test contract origination of a token contract through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

@@ -1,14 +1,15 @@
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test injecting more than one manager operation in a block: ${rpc}`, () => {
+  _describe(`Test injecting more than one manager operation in a block: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
 
-    it('Verify that doing transfers without awaiting the confirmation after each will fail', async () => {
+    _it('Verify that doing transfers without awaiting the confirmation after each will fail', async () => {
       try {
         const op1 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 1 });
         const op2 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 });

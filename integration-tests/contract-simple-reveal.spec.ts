@@ -1,8 +1,9 @@
 import { CONFIGS, SignerType } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, signerConfig }) => {
     const Tezos = lib;
-    describe(`Test reveal of account through contract API using: ${rpc}`, () => {
+    _describe(`Test reveal of account through contract API using: ${rpc}`, () => {
 
         const testWithKeyGen = signerConfig.type === SignerType.SECRET_KEY ? test.skip : test;
 

@@ -1,5 +1,6 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 /**
  * TC-006: Check that the type "operation" is not duplicable and that the error will be "internal_operation_replay"
@@ -9,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`Test contracts using: ${rpc}`, () => {
+  _describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

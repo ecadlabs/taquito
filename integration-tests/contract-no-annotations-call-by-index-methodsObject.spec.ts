@@ -1,16 +1,17 @@
 import { CONFIGS } from "./config";
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract origination with no annotations calling methods by index using methodObjects through contract api: ${rpc}`, () => {
+  _describe(`Test contract origination with no annotations calling methods by index using methodObjects through contract api: ${rpc}`, () => {
     /** The goal of the test is to verify a contract entrypoint call using the methodsObject method (contract.methodsObject) 
      *  in case of a contract having no annotation in its code. */
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify contract.originate for a contract with no annotations for methods using methodObjects', async () => {
+    _it('Verify contract.originate for a contract with no annotations for methods using methodObjects', async () => {
       // Constants to replace annotations
       const ACCOUNTS = '0';
       const BALANCE = '0';

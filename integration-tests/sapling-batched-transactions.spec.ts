@@ -4,6 +4,7 @@ import { InMemorySpendingKey, InMemoryViewingKey, SaplingToolkit, SaplingTransac
 import BigNumber from 'bignumber.js';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import * as bip39 from 'bip39';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -33,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   const memoSize = 4;
 
-  describe(`Sapling transactions: ${rpc}`, () => {
+  _describe(`Sapling transactions: ${rpc}`, () => {
 
     beforeAll(async () => {
       await setup();
@@ -71,7 +72,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Prepare and inject 3 batched shielded transactions', async () => {
+    _it('Prepare and inject 3 batched shielded transactions', async () => {
 
       const shieldedTx = await saplingToolkit1.prepareShieldedTransaction([{
         to: paymentAddress1Index0,
@@ -98,7 +99,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify balances after the shielded tx', async () => {
+    _it('Verify balances after the shielded tx', async () => {
       const balance1 = await txViewer1.getBalance();
       const inputs1 = await txViewer1.getIncomingAndOutgoingTransactions();
 
@@ -148,7 +149,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       })
     });
 
-    it('Prepare and inject batched sapling transactions', async () => {
+    _it('Prepare and inject batched sapling transactions', async () => {
 
       const tx = await saplingToolkit1.prepareSaplingTransaction([{
         to: paymentAddress2Index0,
@@ -196,7 +197,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify balances after the sapling transactions', async () => {
+    _it('Verify balances after the sapling transactions', async () => {
       const balance1 = await txViewer1.getBalance();
       const inputs1 = await txViewer1.getIncomingAndOutgoingTransactions();
 

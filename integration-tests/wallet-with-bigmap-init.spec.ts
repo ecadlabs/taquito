@@ -1,15 +1,16 @@
 import { CONFIGS } from "./config";
 import { MichelsonMap } from "@taquito/taquito";
 import { tokenBigmapCode } from "./data/token_bigmap";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test token contract origination with big map and with initial data through wallet api using: ${rpc}`, () => {
+  _describe(`Test token contract origination with big map and with initial data through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify wallet.originate for a token contract with BigMap and with initialized Storage/BigMap', async () => {
+    _it('Verify wallet.originate for a token contract with BigMap and with initialized Storage/BigMap', async () => {
       const addr = await Tezos.signer.publicKeyHash();
       const initialStorage = {
         owner: addr,

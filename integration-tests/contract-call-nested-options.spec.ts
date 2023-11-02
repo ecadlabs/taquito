@@ -1,9 +1,10 @@
 import { DefaultContractType } from "@taquito/taquito";
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, setup }) => {
   const Tezos = lib;
-  describe(`Test nested options contract`, () => {
+  _describe(`Test nested options contract`, () => {
     let nestedOptionsContract: DefaultContractType;
     beforeAll(async () => {
       await setup();
@@ -38,7 +39,7 @@ CONFIGS().forEach(({ lib, setup }) => {
       await nestedOptionsOriginate.confirmation();
       nestedOptionsContract = await nestedOptionsOriginate.contract();
     })
-    it('making contract calls with methodsObject', async () => {
+    _it('making contract calls with methodsObject', async () => {
       const nested2None1 = await nestedOptionsContract.methodsObject.default(null).send();
       await nested2None1.confirmation();
       expect(await nestedOptionsContract.storage()).toEqual('nested2 null');

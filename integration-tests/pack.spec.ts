@@ -4,6 +4,7 @@ import { MichelsonType, MichelsonData, ProtocolID, packDataBytes } from "@taquit
 import { MichelsonV1Expression } from "@taquito/rpc";
 import fs from "fs";
 import path from "path";
+import { _describe, _it } from "./test-utils";
 
 interface TypedTestData {
     type?: MichelsonType;
@@ -16,7 +17,7 @@ interface TypedTestData {
 CONFIGS().forEach(({ rpc, protocol }) => {
     const Tezos = new TezosToolkit(rpc);
 
-    describe(`Test binary encoding: ${rpc}`, () => {
+    _describe(`Test binary encoding: ${rpc}`, () => {
         const files = [
             'binary-data1.json',
             'binary-data3.json'
@@ -26,7 +27,7 @@ CONFIGS().forEach(({ rpc, protocol }) => {
             ...paths.map((p) => JSON.parse(fs.readFileSync(p).toString()))
         );
 
-        describe("Test pack", () => {
+        _describe("Test pack", () => {
             for (const s of src) {
                 const def = (s.proto === undefined || s.proto === protocol) ? test : test.skip;
                 def(`Verify that .pack for local pack will return same result as for network pack: ${JSON.stringify(s.data)} (${rpc})`, async () => {

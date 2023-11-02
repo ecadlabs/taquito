@@ -1,16 +1,17 @@
 import { CONFIGS } from "./config";
 import { recFactApplyStore, recursiveLambda, reduceMap } from "./data/lambda-rec";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test deploying and interacting with contracts having recursive lambda through the contract api using: ${rpc}`, () => {
+  _describe(`Test deploying and interacting with contracts having recursive lambda through the contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup(true);
     })
 
-    it('Verify that a contract having the LAMBDA_REC instruction in its code can be deployed', async () => {
+    _it('Verify that a contract having the LAMBDA_REC instruction in its code can be deployed', async () => {
       const deployContract = await Tezos.contract.originate({
         code: recFactApplyStore,
         storage: { 0: 3 }
@@ -22,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify that a contract entrypoint having a type lambda can be called with a recursive lambda', async () => {
+    _it('Verify that a contract entrypoint having a type lambda can be called with a recursive lambda', async () => {
       const deployContract = await Tezos.contract.originate({
         code: reduceMap,
         storage: [1]

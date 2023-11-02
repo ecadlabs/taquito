@@ -1,5 +1,6 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 // TC-T-001: Testcase to duplicate a ticket using "dup" instruction.
 
@@ -7,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`Test contracts using: ${rpc}`, () => {
+  _describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

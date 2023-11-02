@@ -1,11 +1,12 @@
 import { CONFIGS } from "./config";
 import { MANAGER_LAMBDA, TezosToolkit } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Funder = lib;
   let Tezos: TezosToolkit;
-  describe(`Generic Multisig set delegate: ${rpc}`, () => {
+  _describe(`Generic Multisig set delegate: ${rpc}`, () => {
     beforeAll(async () => {
       await setup(true);
       // Checks if test is being run in Flextesa or not

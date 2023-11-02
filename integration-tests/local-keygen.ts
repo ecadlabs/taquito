@@ -30,11 +30,12 @@ export class KeygenServer {
             reply.send({ total: this.keygenMap.size, stats: items.map(k => ({ name: k[0], stats: k[1].getStats() })) });
         });
 
-        await this.fastify.listen({ port: 20001, host: 'localhost' }, (err, _address) => {
+        this.fastify.listen({ port: 20001, host: 'localhost' }, (err, _address) => {
             if (err) {
                 throw err;
             }
         });
+        await new Promise(r => setTimeout(r, 1000)); // TODO: have a loop that checks if the server is up
     }
 
     async stopServer() {

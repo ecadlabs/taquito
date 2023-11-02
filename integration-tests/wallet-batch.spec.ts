@@ -3,11 +3,12 @@ import { ligoSample, ligoSampleMichelson } from './data/ligo-simple-contract';
 import { managerCode } from './data/manager_code';
 import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
 import { OperationContentsAndResultTransaction } from '@taquito/rpc'
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }) => {
     const Tezos = lib;
 
-    describe(`Test wallet.batch using: ${rpc}`, () => {
+    _describe(`Test wallet.batch using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
         });

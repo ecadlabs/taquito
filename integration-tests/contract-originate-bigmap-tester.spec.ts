@@ -1,10 +1,11 @@
 import { MichelsonMap } from '@taquito/michelson-encoder';
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test origination of contract with various types of bigmaps using: ${rpc}`, () => {
+  _describe(`Test origination of contract with various types of bigmaps using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

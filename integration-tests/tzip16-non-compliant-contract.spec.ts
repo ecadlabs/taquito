@@ -1,16 +1,17 @@
 import { CONFIGS } from "./config";
 import { tzip16, Tzip16Module, BigMapContractMetadataNotFoundError } from '@taquito/tzip16';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   Tezos.addExtension(new Tzip16Module());
 
-  describe(`Test contract origination of a Tzip16 non-complaint contract through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination of a Tzip16 non-complaint contract through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify contract.originate for a simple contract having no metadata and then try to fetch metadata', async () => {
+    _it('Verify contract.originate for a simple contract having no metadata and then try to fetch metadata', async () => {
 
       const value = '1234';
       const code =

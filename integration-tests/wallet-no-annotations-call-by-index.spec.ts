@@ -1,9 +1,10 @@
 import { CONFIGS } from "./config";
 import { noAnnotCode, noAnnotInit } from "./data/token_without_annotation";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test calling methods by index through wallet api using: ${rpc}`, () => {
+  _describe(`Test calling methods by index through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup();

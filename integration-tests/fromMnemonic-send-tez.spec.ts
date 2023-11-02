@@ -3,10 +3,11 @@ import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import * as Bip39 from 'bip39';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   let Funder: TezosToolkit;
-  describe(`Test fromMnemonic instantiation with rpc: ${rpc}`, () => {
+  _describe(`Test fromMnemonic instantiation with rpc: ${rpc}`, () => {
     let mnemonic: string;
 
     beforeAll(async () => {
@@ -14,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       Funder = lib;
       await setup();
     });
-    it('Should create an InMemorySigner (ed25519) with the fromMnemonic method and transfer tez to an account', async () => {
+    _it('Should create an InMemorySigner (ed25519) with the fromMnemonic method and transfer tez to an account', async () => {
       try {
         const Tezos = new TezosToolkit(rpc);
         // with all default values
@@ -39,7 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         throw { err, mnemonic };
       }
     });
-    it('Should create an InMemorySigner (secp256k1) with the fromMnemonic method and transfer tez to an account', async () => {
+    _it('Should create an InMemorySigner (secp256k1) with the fromMnemonic method and transfer tez to an account', async () => {
       try {
         const Tezos = new TezosToolkit(rpc);
         // with all default values
@@ -63,7 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         throw { err, mnemonic };
       }
     });
-    it('Should create an InMemorySigner (p256) with the fromMnemonic method and transfer tez to an account', async () => {
+    _it('Should create an InMemorySigner (p256) with the fromMnemonic method and transfer tez to an account', async () => {
       try {
         const Tezos = new TezosToolkit(rpc);
         // with all default values

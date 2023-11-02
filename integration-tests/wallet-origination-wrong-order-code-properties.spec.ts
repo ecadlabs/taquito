@@ -1,10 +1,11 @@
 import { CONFIGS } from "./config";
 import { smartpySample } from "./data/smartpy-example-contract";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination with code properties in atypical order through wallet api: ${rpc}`, () => {
+  _describe(`Test contract origination with code properties in atypical order through wallet api: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

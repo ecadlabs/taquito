@@ -1,12 +1,13 @@
 import { CONFIGS } from "./config";
 import { tokenBigmapCode } from "./data/token_bigmap";
 import { MichelsonMap } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const test = require('jest-retries');
 
-  describe(`Test contract origination with empty BigMap origination scenario through wallet api using: ${rpc}`, () => {
+  _describe(`Test contract origination with empty BigMap origination scenario through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

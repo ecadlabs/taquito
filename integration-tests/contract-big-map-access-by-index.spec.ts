@@ -1,10 +1,11 @@
 import { CONFIGS } from "./config";
 import { tokenCode, tokenInit } from "./data/tokens";
 import { MichelsonMap, MichelCodecPacker } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;
-  describe(`Test contract origination and accessing big map abstraction by index through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination and accessing big map abstraction by index through contract api using: ${rpc}`, () => {
 
     // In this scenario the code of the contract doesn't have annotation in its storage, so Taquito references element by indexes. 
 
@@ -12,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
       await setup()
     })
 
-    it('Verify origination of a contract having a bigMap in its storage using contract.originate and the Storage/BigMap can be fetched', async () => {
+    _it('Verify origination of a contract having a bigMap in its storage using contract.originate and the Storage/BigMap can be fetched', async () => {
       // Deploy a contract with a big map
       const op = await Tezos.contract.originate({
         balance: "1",
@@ -34,14 +35,14 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
     })
 
 
-    it('Verify that it returns undefined when BigMap key is not found', async () => {
+    _it('Verify that it returns undefined when BigMap key is not found', async () => {
       const myContract = await Tezos.contract.at(knownBigMapContract);
       const contractStorage: any = await myContract.storage();
       const value = await contractStorage.ledger.get("tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB")
       expect(value).toBeUndefined();
     })
 
-    it('Verify contract.originate with BigMap and the value in the BigMap can be fetched using local packing', async () => {
+    _it('Verify contract.originate with BigMap and the value in the BigMap can be fetched using local packing', async () => {
 
       // Configure the Tezostoolkit to use the MichelCodecPacker (the data will be packed locally instead of using the rpc)
       Tezos.setPackerProvider(new MichelCodecPacker());

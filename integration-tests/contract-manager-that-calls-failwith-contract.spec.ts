@@ -2,11 +2,12 @@ import { CONFIGS } from "./config";
 import { failwithContractCode } from "./data/failwith";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination of a contract that calls 2nd contract that FAILs through contract api: ${rpc}`, () => {
+  _describe(`Test contract origination of a contract that calls 2nd contract that FAILs through contract api: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

@@ -1,14 +1,15 @@
 import { CONFIGS } from "./config";
 import { failwithContractCode } from "./data/failwith";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract origination that throws FAILWITH api through wallet api using: ${rpc}`, () => {
+  _describe(`Test contract origination that throws FAILWITH api through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify calling the default method of a contract with FAILWITH code will fail and throw an error', async () => {
+    _it('Verify calling the default method of a contract with FAILWITH code will fail and throw an error', async () => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: failwithContractCode,

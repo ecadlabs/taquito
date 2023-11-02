@@ -1,13 +1,14 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
-  describe(`Test account delegation with estimation through wallet api using: ${rpc}`, () => {
+  _describe(`Test account delegation with estimation through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup(true)
     })
-    it('Verify that an address can be delegated to a known baker with an automatic estimate', async () => {
+    _it('Verify that an address can be delegated to a known baker with an automatic estimate', async () => {
       const delegate = knownBaker
       const pkh = await Tezos.signer.publicKeyHash();
       try {

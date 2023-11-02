@@ -1,15 +1,16 @@
 import { CONFIGS } from './config';
 import { ligoSample } from './data/ligo-simple-contract';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract.batch with smart rollup add messages using: ${rpc}`, () => {
+  _describe(`Test contract.batch with smart rollup add messages using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup(true);
     });
 
-    it('should be able to batch smart rollup add messages with other operations', async () => {
+    _it('should be able to batch smart rollup add messages with other operations', async () => {
       const batch = Tezos.contract
         .batch()
         .withSmartRollupAddMessages({

@@ -1,11 +1,12 @@
 import { CONFIGS } from "./config";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   const Tezos = lib;
 
-  describe(`Test TZ Manager through wallet api: ${rpc}`, () => {
+  _describe(`Test TZ Manager through wallet api: ${rpc}`, () => {
     beforeEach(async () => {
       await setup()
     })

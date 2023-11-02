@@ -4,6 +4,7 @@ import { entrypoints } from './data/contract-entrypoints';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { compose } from '@taquito/taquito';
 import { tzip12 } from '@taquito/tzip12';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract }) => {
     const Tezos = lib;
@@ -35,12 +36,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract
         ],
         storage: { prim: 'Pair', args: [{ int: '7' }, { int: '60101' }] }
     }
-    describe(`Test extensions TezosToolkit through wallet api: ${rpc}`, () => {
+    _describe(`Test extensions TezosToolkit through wallet api: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
         });
 
-        it('Verify configuration of a ContractsLibrary and a Tzip16Module on the TezosToolkit instance', async () => {
+        _it('Verify configuration of a ContractsLibrary and a Tzip16Module on the TezosToolkit instance', async () => {
             const contractsLibrary = new ContractsLibrary();
 
             // We intentionally load a script that does not match the knownBigMapContract script

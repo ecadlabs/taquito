@@ -6,6 +6,7 @@ import { permit_fa12_smartpy } from './data/permit_fa12_smartpy';
 import { buf2hex, char2Bytes, hex2buf } from '@taquito/utils';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { packDataBytes } from "@taquito/michel-codec"
+import { _describe, _it } from "./test-utils";
 
 const blake = require('blakejs');
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
@@ -78,7 +79,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   Tezos.setPackerProvider(new MichelCodecPacker());
 
-  describe(`Verify contract origination, transfer, and minting with a permit for tzip-17 through contract api: ${rpc}`, () => {
+  _describe(`Verify contract origination, transfer, and minting with a permit for tzip-17 through contract api: ${rpc}`, () => {
     beforeEach(async () => {
       await setup(true);
     });
@@ -242,7 +243,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     });
 
-    describe(`Verify contract having a permit for tzip-17: ${rpc}`, () => {
+    _describe(`Verify contract having a permit for tzip-17: ${rpc}`, () => {
       beforeEach(async () => {
         await setup(true);
       });

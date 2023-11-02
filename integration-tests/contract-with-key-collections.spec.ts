@@ -1,18 +1,19 @@
 import { CONFIGS } from "./config";
 import { MichelsonMap } from "@taquito/taquito";
 import { contractWithKeyCollections } from "./data/contract-with-key-collections";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination with key collections through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination with key collections through contract api using: ${rpc}`, () => {
     type Storage = { keySet: string[], keyMap: MichelsonMap<string, number>; }
 
     beforeEach(async () => {
       await setup();
     });
 
-    it('Verify contract.originate for a contract with set and map of keys and change them using corresponding methods', async () => {
+    _it('Verify contract.originate for a contract with set and map of keys and change them using corresponding methods', async () => {
       const initialStorage: Storage = {
         keySet: [
           'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',

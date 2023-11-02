@@ -1,11 +1,12 @@
 import { CONFIGS } from './config';
 import { miStr, miObject } from './data/contractWithUnpair';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
     const test = require('jest-retries');
 
-    describe(`Test contract origination with UNPAIR through wallet api using: ${rpc}`, () => {
+    _describe(`Test contract origination with UNPAIR through wallet api using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
         });

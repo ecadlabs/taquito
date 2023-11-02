@@ -1,5 +1,6 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 /**
  * TC-002/003 This test case originates a contract with a "payout" entrypoint. When calling the payout entrypoint, a contract can transfer
@@ -14,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
   const address = 'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys';
 
-  describe(`Test contracts using: ${rpc}`, () => {
+  _describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup(true);
     });

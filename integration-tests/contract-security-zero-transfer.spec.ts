@@ -1,5 +1,6 @@
 import { CONFIGS } from './config';
 import { Protocols } from '@taquito/taquito';
+import { _describe, _it } from "./test-utils";
 
 // TC-007 - A 0tez transaction to an implicit account should fail.
 
@@ -7,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
-  describe(`Test contracts using: ${rpc}`, () => {
+  _describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
 

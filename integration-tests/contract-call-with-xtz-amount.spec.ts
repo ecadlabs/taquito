@@ -1,4 +1,5 @@
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 import {
   depositContractCode,
@@ -8,12 +9,12 @@ import {
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract call with amount using: ${rpc}`, () => {
+  _describe(`Test contract call with amount using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup(true);
     });
 
-    it(
+    _it(
       'originates a contract with SUB MUTEZ and sends base layer tokens when calling contract methods',
       async () => {
         const op = await Tezos.contract.originate({

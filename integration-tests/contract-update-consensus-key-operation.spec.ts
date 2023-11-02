@@ -1,10 +1,11 @@
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   const Tezos = lib;
 
-  describe(`Test Update Consensus Key using: ${rpc}`, () => {
+  _describe(`Test Update Consensus Key using: ${rpc}`, () => {
     let pk: string;
     beforeAll(async () => {
       await setup(true);
@@ -26,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     });
 
-    it('should be able to inject update_consensus_key operation', async () => {
+    _it('should be able to inject update_consensus_key operation', async () => {
       const op = await Tezos.contract.updateConsensusKey({ pk });
       await op.confirmation();
 

@@ -5,11 +5,12 @@ import { originate, originate2, transferImplicit2 } from './data/lambda';
 import { ligoSample } from './data/ligo-simple-contract';
 import { managerCode } from './data/manager_code';
 import { InvalidAmountError } from '@taquito/core';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
   const Tezos = lib;
 
-  describe(`Test estimate scenarios using: ${rpc}`, () => {
+  _describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
     let contract: Contract;
     const amt = 2000000 + DEFAULT_FEE.REVEAL;
@@ -36,7 +37,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       }
     });
 
-    it('Verify .estimate.transfer with allocated destination', async () => {
+    _it('Verify .estimate.transfer with allocated destination', async () => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
       expect(estimate.gasLimit).toEqual(201);
       expect(estimate.storageLimit).toEqual(0);
@@ -48,7 +49,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.consumedMilligas).toEqual(100040);
     });
 
-    it('Verify .estimate.transfer with unallocated destination', async () => {
+    _it('Verify .estimate.transfer with unallocated destination', async () => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
       expect(estimate.gasLimit).toEqual(201);
       expect(estimate.storageLimit).toEqual(257);
@@ -60,7 +61,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.consumedMilligas).toEqual(100040);
     });
 
-    it('Verify .estimate.originate simple contract', async () => {
+    _it('Verify .estimate.originate simple contract', async () => {
       const estimate = await LowAmountTez.estimate.originate({
         balance: '1',
         code: ligoSample,
@@ -76,7 +77,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.consumedMilligas).toEqual(576347);
     });
 
-    it('Verify .estimate.setDelegate result', async () => {
+    _it('Verify .estimate.setDelegate result', async () => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
         source: await LowAmountTez.signer.publicKeyHash(),
@@ -91,7 +92,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.consumedMilligas).toEqual(100000);
     });
 
-    it('Verify .estimate.transfer for internal transfer to allocated implicit', async () => {
+    _it('Verify .estimate.transfer for internal transfer to allocated implicit', async () => {
       const tx = contract.methods.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(1457);
@@ -104,7 +105,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.consumedMilligas).toEqual(1356735);
     });
 
-    it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
+    _it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
       const tx = contract.methods.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -121,7 +122,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.consumedMilligas).toEqual(1471270);
     });
 
-    it('Verify .estimate.transfer for internal origination', async () => {
+    _it('Verify .estimate.transfer for internal origination', async () => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(1868);
@@ -134,7 +135,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.consumedMilligas).toEqual(1767848);
     });
 
-    it('Verify .estimate.transfer for multiple internal originations', async () => {
+    _it('Verify .estimate.transfer for multiple internal originations', async () => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(2394);
@@ -150,7 +151,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       await op2.confirmation();
     });
 
-    it('should throw error when trying to estimate transfer with negative amount in param', async () => {
+    _it('should throw error when trying to estimate transfer with negative amount in param', async () => {
       expect(async () => {
         const est = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: -1 });
       }).rejects.toThrowError(InvalidAmountError);
@@ -158,7 +159,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
   });
 
 
-  describe(`Test estimate scenarios with very low balance using: ${rpc}`, () => {
+  _describe(`Test estimate scenarios with very low balance using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
     const amt = 2000 + DEFAULT_FEE.REVEAL;
 
@@ -170,7 +171,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       await transfer.confirmation();
     });
 
-    it('Verify .estimate.transfer to regular address', async () => {
+    _it('Verify .estimate.transfer to regular address', async () => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
       expect(estimate.gasLimit).toEqual(201);
       expect(estimate.storageLimit).toEqual(0);
@@ -182,7 +183,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.consumedMilligas).toEqual(100040);
     });
 
-    it('Estimate transfer to regular address with a fixed fee', async () => {
+    _it('Estimate transfer to regular address with a fixed fee', async () => {
 
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
 
@@ -191,7 +192,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       });
     });
 
-    it('Estimate transfer to regular address with insufficient balance', async () => {
+    _it('Estimate transfer to regular address with insufficient balance', async () => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toMatchObject({
@@ -199,7 +200,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       });
     });
 
-    it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async () => {
+    _it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async () => {
       await expect(
         LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) })
       ).rejects.toEqual(
@@ -208,7 +209,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         }));
     });
 
-    it('Estimate origination with insufficient balance to pay storage', async () => {
+    _it('Estimate origination with insufficient balance to pay storage', async () => {
       await expect(LowAmountTez.estimate.originate({
         balance: '0',
         code: ligoSample,

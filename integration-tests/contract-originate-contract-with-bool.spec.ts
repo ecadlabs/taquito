@@ -1,14 +1,15 @@
 import { CONFIGS } from "./config";
 import { booleanCode } from "./data/boolean_parameter";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract origination with set bool prop on init and via call through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination with set bool prop on init and via call through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify contract.originate for a contract with bool storage init to true and then sets to false', async () => {
+    _it('Verify contract.originate for a contract with bool storage init to true and then sets to false', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: booleanCode,

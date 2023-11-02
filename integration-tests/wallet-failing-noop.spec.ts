@@ -2,6 +2,7 @@ import { InMemorySigner } from "@taquito/signer";
 import { CONFIGS, defaultSecretKey, isSandbox } from "./config";
 import { OpKind, Protocols, TezosToolkit } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ rpc, setup, protocol }) => {
 
@@ -9,7 +10,7 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
   Tezos.setSignerProvider(new InMemorySigner(defaultSecretKey.secret_key));
   const nairobinet = !isSandbox({ rpc }) && protocol === Protocols.PtNairobi ? it : it.skip;
 
-  describe(`Test failing_noop through wallet api, based on head, and secret_key using: ${rpc}`, () => {
+  _describe(`Test failing_noop through wallet api, based on head, and secret_key using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
@@ -37,12 +38,12 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
     });
   });
 
-  describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
+  _describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
 
-    it('Verify that the wallet.signFailingNoop signs a text on the genesis block', async () => {
+    _it('Verify that the wallet.signFailingNoop signs a text on the genesis block', async () => {
       const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
@@ -51,7 +52,7 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
       expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
     });
 
-    it('Verify that the wallet.signFailingNoop signs a text based on head block', async () => {
+    _it('Verify that the wallet.signFailingNoop signs a text based on head block', async () => {
       const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 'head',

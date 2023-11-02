@@ -2,6 +2,7 @@ import { VotingPeriodBlockResult } from '@taquito/rpc';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 import { CONFIGS, sleep } from './config';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
   const flextesanet = rpc === 'http://localhost:20000' ? test : test.skip;
@@ -16,7 +17,7 @@ CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
   const Charlie = new TezosToolkit(rpc);
   Charlie.setSignerProvider(new InMemorySigner('edsk3RgWvbKKA1atEUcaGwivge7QtckHkTL9nQJUXQKY5r8WKp4pF4'));
 
-  describe(`Test Proposal and Ballot operation in ${protocol.substring(0, 8)} with flextesa`, () => {
+  _describe(`Test Proposal and Ballot operation in ${protocol.substring(0, 8)} with flextesa`, () => {
     beforeAll(async () => {
       await setup();
       let constants = await Alice.rpc.getConstants();

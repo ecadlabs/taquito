@@ -1,13 +1,14 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test transaction and wait for 2 confirmations through wallet api using: ${rpc}`, () => {
+  _describe(`Test transaction and wait for 2 confirmations through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify wallet.transfer for 2 XTZ to an address and wait for 2 confirmations', async () => {
+    _it('Verify wallet.transfer for 2 XTZ to an address and wait for 2 confirmations', async () => {
       const op = await Tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 }).send();
       await op.confirmation()
       const [first, second] = await Promise.all([op.confirmation(), op.confirmation(2)])

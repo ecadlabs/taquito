@@ -1,16 +1,17 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     const Tezos = lib;
 
-    describe(`Test emptying a revealed implicit account into a new implicit account through contract api using: ${rpc}`, () => {
+    _describe(`Test emptying a revealed implicit account into a new implicit account through contract api using: ${rpc}`, () => {
 
         beforeEach(async () => {
             await setup()
         })
 
-        it('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async () => {
+        _it('Verify that a new unrevealed implicit account can be created from the sender account and the sender account can be emptied into the created one.', async () => {
             const receiver = await createAddress();
             const receiver_pkh = await receiver.signer.publicKeyHash();
 

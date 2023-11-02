@@ -2,16 +2,17 @@ import { codeViewsTopLevel } from "./data/contract_views_top_level";
 import { CONFIGS } from "./config";
 import BigNumber from 'bignumber.js';
 import { ViewSimulationError } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`On chain views using the contract API: ${rpc}`, () => {
+  _describe(`On chain views using the contract API: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup(true)
     })
-    it(`as a user I want to originate a smart contract having top level views and simulate the views execution`, async () => {
+    _it(`as a user I want to originate a smart contract having top level views and simulate the views execution`, async () => {
       // Contract origination
       const op = await Tezos.contract.originate({
         code: codeViewsTopLevel,

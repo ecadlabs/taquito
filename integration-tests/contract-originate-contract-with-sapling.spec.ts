@@ -8,6 +8,7 @@ import {
   saplingContractSendJProto,
   saplingContractUseExistingStateJProto,
 } from './data/sapling_test_contracts';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -17,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     right: SaplingStateAbstraction;
   }
 
-  describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
+  _describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

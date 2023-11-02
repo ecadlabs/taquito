@@ -3,12 +3,13 @@ import { CONFIGS } from './config';
 import { tzip7Contract } from './data/tzip_7_contract';
 import { testContract } from './data/test_lambda_view';
 import { fa2Contract } from './data/fa2_contract';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
 
-  describe(`Test contract with lambda view trough contract api using: ${rpc}`, () => {
+  _describe(`Test contract with lambda view trough contract api using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });

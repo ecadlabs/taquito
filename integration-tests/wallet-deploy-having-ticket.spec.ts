@@ -1,16 +1,17 @@
 import { CONFIGS } from "./config";
 import { ticketCode, ticketStorage } from './data/code_with_ticket';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination having ticket with init through wallet api using: ${rpc}`, () => {
+  _describe(`Test contract origination having ticket with init through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup();
     });
 
-    it('Verify wallet.originate for a contract having ticket with init', async () => {
+    _it('Verify wallet.originate for a contract having ticket with init', async () => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: ticketStorage
@@ -21,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify wallet.originate having ticket with init in JSON', async () => {
+    _it('Verify wallet.originate having ticket with init in JSON', async () => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         init: { prim: 'Pair', args: [{ prim: 'None' }, { prim: 'None' }] }
@@ -31,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.opHash).toBeDefined();
     });
 
-    it('Verify wallet.originate for a contract having ticket with storage', async () => {
+    _it('Verify wallet.originate for a contract having ticket with storage', async () => {
       const op = await Tezos.wallet.originate({
         code: ticketCode,
         storage: {

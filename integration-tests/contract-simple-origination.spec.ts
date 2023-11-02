@@ -1,15 +1,16 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination of a simple contract through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination of a simple contract through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup();
     });
 
-    it('Verify contract.originate for a simple contract', async () => {
+    _it('Verify contract.originate for a simple contract', async () => {
 
       const op = await Tezos.contract.originate({
         balance: "1",

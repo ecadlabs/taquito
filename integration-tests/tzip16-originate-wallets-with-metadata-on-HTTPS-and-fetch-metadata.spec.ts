@@ -2,6 +2,7 @@ import { CONFIGS } from "./config";
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -11,12 +12,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddressEmoji: string;
     let contractAddressInvalidMetadata: string;
 
-    describe(`Test contract origination having metadata stored at HTTPS URL through wallet api using: ${rpc}`, () => {
+    _describe(`Test contract origination having metadata stored at HTTPS URL through wallet api using: ${rpc}`, () => {
 
         beforeEach(async () => {
             await setup()
         })
-        it('Verify wallet.originate for a contract having empty metadata stored at an HTTPS URL', async () => {
+        _it('Verify wallet.originate for a contract having empty metadata stored at an HTTPS URL', async () => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/empty-metadata.json';
@@ -45,7 +46,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.opHash).toBeDefined();
         });
 
-        it('Verify that the metadata for the contract having empty metadata stored at an HTTPS URL can be fetched', async () => {
+        _it('Verify that the metadata for the contract having empty metadata stored at an HTTPS URL can be fetched', async () => {
 
             const contract = await Tezos.wallet.at(contractAddressEmptyMetadata, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -56,7 +57,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(metadata.metadata).toEqual({});
         });
 
-        it('Verify wallet.originate for a contract having valid metadata stored at an HTTPS URL', async () => {
+        _it('Verify wallet.originate for a contract having valid metadata stored at an HTTPS URL', async () => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
@@ -82,7 +83,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.opHash).toBeDefined();
         });
 
-        it('Verify wallet.originate for a contract having valid metadata which contains emoji stored at an HTTPS URL', async () => {
+        _it('Verify wallet.originate for a contract having valid metadata which contains emoji stored at an HTTPS URL', async () => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/emoji-in-metadata.json';
@@ -109,7 +110,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.opHash).toBeDefined();
         });
 
-        it('Verify that the metadata for the contract which contains emoji can be fetched', async () => {
+        _it('Verify that the metadata for the contract which contains emoji can be fetched', async () => {
 
             const contract = await Tezos.wallet.at(contractAddressEmoji, tzip16);
             const metadata = await contract.tzip16().getMetadata();
@@ -157,7 +158,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         });
 
-        it('Verify contract.originate for a contract having invalid metadata stored at an HTTPS URL', async () => {
+        _it('Verify contract.originate for a contract having invalid metadata stored at an HTTPS URL', async () => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/invalid.json';
@@ -184,7 +185,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(op.opHash).toBeDefined();
         });
 
-        it('Verify that the invalid metadata of the contract failed to fetch', async () => {
+        _it('Verify that the invalid metadata of the contract failed to fetch', async () => {
 
             const contract = await Tezos.wallet.at(contractAddressInvalidMetadata, tzip16);
             try {

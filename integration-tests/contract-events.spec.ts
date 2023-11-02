@@ -1,15 +1,16 @@
 import { CONFIGS } from "./config";
 import { mainContractWithDuplicateEvents } from "./data/main-contract-with-duplicate-events";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Events using contract API: ${rpc}`, () => {
+  _describe(`Events using contract API: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup(true)
     })
-    it(`We should be able to access events of an originated contract`, async () => {
+    _it(`We should be able to access events of an originated contract`, async () => {
       // Contract origination
       const op = await Tezos.contract.originate({
         code: mainContractWithDuplicateEvents,

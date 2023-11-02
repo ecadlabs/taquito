@@ -1,9 +1,10 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
   const Tezos = lib;
 
-  describe(`Test emptying a delegated implicit account through contract api using: ${rpc}`, () => {
+  _describe(`Test emptying a delegated implicit account through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

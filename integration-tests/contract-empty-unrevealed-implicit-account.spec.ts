@@ -1,14 +1,15 @@
 import { CONFIGS } from "./config";
 import { DEFAULT_FEE } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
-  describe(`Test emptying an unrevealed implicit account through contract api using: ${rpc}`, () => {
+  _describe(`Test emptying an unrevealed implicit account through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify that a new unrevealed implicit account can be created, funded and emptied through contract api', async () => {
+    _it('Verify that a new unrevealed implicit account can be created, funded and emptied through contract api', async () => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 0.005 });
       await op.confirmation();

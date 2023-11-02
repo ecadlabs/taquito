@@ -1,11 +1,12 @@
 import { CONFIGS } from "./config";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 import { genericMultisig } from "./data/multisig";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
   const Tezos = lib;
 
-  describe(`Generic Multisig transfer to contract: ${rpc}`, () => {
+  _describe(`Generic Multisig transfer to contract: ${rpc}`, () => {
     beforeEach(async () => {
       await setup()
     })

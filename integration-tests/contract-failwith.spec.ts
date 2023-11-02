@@ -1,14 +1,15 @@
 import { CONFIGS } from "./config";
 import { failwithContractCode } from "./data/failwith";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test contract origination that throws FAILWITH api through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination that throws FAILWITH api through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify contract.originate a contract with FAILWITH instruction and verify an error is thrown when calling the contract entrypoint', async () => {
+    _it('Verify contract.originate a contract with FAILWITH instruction and verify an error is thrown when calling the contract entrypoint', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: failwithContractCode,

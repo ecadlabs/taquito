@@ -2,6 +2,7 @@ import { CONFIGS } from "./config";
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -9,12 +10,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   let contractAddress: string;
   let contractMetadataInAnotherContract: string;
 
-  describe(`Test contract origination having metadata stored on chain through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination having metadata stored on chain through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify contract.originate for a contract having metadata inside its own storage', async () => {
+    _it('Verify contract.originate for a contract having metadata inside its own storage', async () => {
 
       const metadataJSON = {
         "name": "test",
@@ -49,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
     });
 
-    it('Verify the metadata for a contract having metadata inside its own storage can be fetched', async () => {
+    _it('Verify the metadata for a contract having metadata inside its own storage can be fetched', async () => {
 
       const contract = await Tezos.wallet.at(contractAddress, tzip16);
       const metadata = await contract.tzip16().getMetadata();
@@ -81,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify contract.originate for a contract having metadata inside another contract same network', async () => {
+    _it('Verify contract.originate for a contract having metadata inside another contract same network', async () => {
 
       const metadataBigMap = new MichelsonMap();
       metadataBigMap.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
@@ -101,7 +102,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
     });
 
-    it('Verify that metadata for contract having metadata inside another contract on the same network can be fetched', async () => {
+    _it('Verify that metadata for contract having metadata inside another contract on the same network can be fetched', async () => {
 
       const contract = await Tezos.wallet.at(contractMetadataInAnotherContract, tzip16);
       const metadata = await contract.tzip16().getMetadata();

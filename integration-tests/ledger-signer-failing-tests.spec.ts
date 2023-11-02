@@ -2,6 +2,7 @@ import { CONFIGS } from './config';
 import { LedgerSigner, LedgerTransport, DerivationType } from '@taquito/ledger-signer';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { ligoSample } from "./data/ligo-simple-contract";
+import { _describe, _it } from "./test-utils";
 
 /**
  * LedgerSigner failing test
@@ -11,7 +12,7 @@ import { ligoSample } from "./data/ligo-simple-contract";
 CONFIGS().forEach(({ lib, setup }) => {
     const tezos = lib;
 
-    describe('Test LedgerSigner declining operations to verify that Ledger throw a proper error', () => {
+    _describe('Test LedgerSigner declining operations to verify that Ledger throw a proper error', () => {
         let transport: LedgerTransport;
 
         beforeEach(async () => {
@@ -19,9 +20,9 @@ CONFIGS().forEach(({ lib, setup }) => {
             await setup();
         });
 
-        describe('Test to verify that user can decline all prompts on the ledger device', () => {
+        _describe('Test to verify that user can decline all prompts on the ledger device', () => {
 
-            it('Verify that Ledger will throw an error when public key is declined', async () => {
+            _it('Verify that Ledger will throw an error when public key is declined', async () => {
                 const signer = new LedgerSigner(
                     transport,
                     "44'/1729'/0'/0'",
@@ -36,7 +37,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                 }
             });
 
-            it('Verify that Ledger will throw an error when signing is declined', async () => {
+            _it('Verify that Ledger will throw an error when signing is declined', async () => {
                 const signer = new LedgerSigner(
                     transport,
                     "44'/1729'/0'/0'",
@@ -53,11 +54,11 @@ CONFIGS().forEach(({ lib, setup }) => {
                 }
             });
 
-            describe('Test that Ledger can be used with wallet API', () => {
+            _describe('Test that Ledger can be used with wallet API', () => {
 
                 jest.setTimeout(60000)
 
-                it('Verify that Ledger will throw an error when a transaction is declined', async () => {
+                _it('Verify that Ledger will throw an error when a transaction is declined', async () => {
                     const signer = new LedgerSigner(
                         transport,
                         "44'/1729'/0'/0'",
@@ -75,9 +76,9 @@ CONFIGS().forEach(({ lib, setup }) => {
                 });
             });
 
-            describe('Should be able to use Ledger with contract API', () => {
+            _describe('Should be able to use Ledger with contract API', () => {
                 jest.setTimeout(60000)
-                it('Should throw error when user declines to originate contract with Ledger', async () => {
+                _it('Should throw error when user declines to originate contract with Ledger', async () => {
                     const signer = new LedgerSigner(
                         transport,
                         "44'/1729'/0'/0'",

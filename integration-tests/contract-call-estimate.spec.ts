@@ -1,9 +1,10 @@
 import { Estimate } from '@taquito/taquito';
 import { CONFIGS } from './config';
+import { _describe, _it } from "./test-utils";
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test estimation of contractCalls using ${rpc}`, () => {
+  _describe(`Test estimation of contractCalls using ${rpc}`, () => {
     let op;
     let contractAddress: string | undefined;
 
@@ -21,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it(`should be able to estimate a contract call`, async () => {
+    _it(`should be able to estimate a contract call`, async () => {
       const contract = await Tezos.contract.at(contractAddress!);
       const opEntrypoint = contract.methods.default(5);
       const estimate = await Tezos.estimate.contractCall(opEntrypoint);

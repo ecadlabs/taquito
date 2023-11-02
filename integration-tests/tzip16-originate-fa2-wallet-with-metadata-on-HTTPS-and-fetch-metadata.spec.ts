@@ -2,13 +2,14 @@ import { CONFIGS } from "./config";
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { MichelsonMap } from "@taquito/taquito";
 import { fa2ContractTzip16 } from "./data/fa2_contract_with_metadata";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
    const Tezos = lib;
    const test = require('jest-retries');
    Tezos.addExtension(new Tzip16Module());
    let contractAddress: string;
-   describe(`Test contract origination of a fa2 contract having Tzip16 metadata and view through wallet api using: ${rpc}`, () => {
+   _describe(`Test contract origination of a fa2 contract having Tzip16 metadata and view through wallet api using: ${rpc}`, () => {
 
       beforeEach(async () => {
          await setup()

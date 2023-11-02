@@ -2,11 +2,12 @@ import { CONFIGS } from "./config";
 import { BigMapAbstraction, MichelsonMap } from "@taquito/taquito";
 import { storageContractWithPairAsKey } from "./data/storage-contract-with-pair-as-key";
 import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Test contract origination with pair as key in storage through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination with pair as key in storage through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

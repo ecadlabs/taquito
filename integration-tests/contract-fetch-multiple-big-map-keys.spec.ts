@@ -2,11 +2,12 @@ import { CONFIGS } from './config';
 import { tokenCode } from './data/tokens';
 import { MichelsonMap, BigMapAbstraction } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
-    describe(`Test contract origination with multiple BigMap variations through contract api using: ${rpc}`, () => {
+    _describe(`Test contract origination with multiple BigMap variations through contract api using: ${rpc}`, () => {
         /**  The contract code doesn't have annotations, so the keys of the storage and of the bigmap are indexes. */
 
         beforeEach(async () => {

@@ -1,9 +1,10 @@
 import { PollingSubscribeProvider } from "@taquito/taquito";
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  describe(`Test handling of missed blocks through wallet api using: ${rpc}`, () => {
+  _describe(`Test handling of missed blocks through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()

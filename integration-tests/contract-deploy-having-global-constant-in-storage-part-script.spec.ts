@@ -1,11 +1,12 @@
 import { DefaultGlobalConstantsProvider } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { voteSampleGlobalConstants } from './data/vote_contract_global_constant_storage';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
 
-    describe(`Originate a voting contract having two global constants in the storage section of its code: ${rpc}`, () => {
+    _describe(`Originate a voting contract having two global constants in the storage section of its code: ${rpc}`, () => {
         const globalConstant1 = {
             "prim": "pair",
             "args":

@@ -1,16 +1,17 @@
 import { CONFIGS } from "./config";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  describe(`Originate contract with timestamp storage/params: ${rpc}`, () => {
+  _describe(`Originate contract with timestamp storage/params: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     });
 
 
-    it('should originate contract correctly with number passed into timestamp storage', async () => {
+    _it('should originate contract correctly with number passed into timestamp storage', async () => {
       const date = Date.now();
 
       const op = await Tezos.contract.originate({
@@ -29,7 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('should originate contract correctly with string passed into timestamp storage', async () => {
+    _it('should originate contract correctly with string passed into timestamp storage', async () => {
       const date = new Date().toISOString();
 
       const op = await Tezos.contract.originate({

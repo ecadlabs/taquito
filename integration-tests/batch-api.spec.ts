@@ -2,15 +2,16 @@ import { CONFIGS } from "./config";
 import { ligoSample, ligoSampleMichelson } from "./data/ligo-simple-contract";
 import { managerCode } from "./data/manager_code";
 import { MANAGER_LAMBDA, OpKind } from "@taquito/taquito";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
   const Tezos = lib;
-  describe(`Test the Taquito batch api using: ${rpc}`, () => {
+  _describe(`Test the Taquito batch api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    it('Verify simple batch transfers with origination', async () => {
+    _it('Verify simple batch transfers with origination', async () => {
       const batch = await Tezos.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -26,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       expect(op.status).toEqual('applied')
     })
 
-    it('Verify a batch of transfers and origination operations using a combination of the two notations (array of operation with kind mixed with withTransfer method)', async () => {
+    _it('Verify a batch of transfers and origination operations using a combination of the two notations (array of operation with kind mixed with withTransfer method)', async () => {
       /** Tests the usage of a mix of the 2 possible notations for batched operations
        *  See for details on the 2 notations: 
        *  https://tezostaquito.io/docs/batch_API#--the-array-of-transactions-method 
@@ -52,7 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       expect(op.status).toEqual('applied')
     })
 
-    it('Verify simple batch transfer with origination fails when storage_exhausted', async () => {
+    _it('Verify simple batch transfer with origination fails when storage_exhausted', async () => {
       expect.assertions(1);
       try {
         await Tezos.batch()
@@ -73,7 +74,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       }
     })
 
-    it('Verify batch transfer and origination from an account with a low balance', async () => {
+    _it('Verify batch transfer and origination from an account with a low balance', async () => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();
@@ -95,7 +96,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       expect(op.status).toEqual('applied')
     })
 
-    it('Verify batch transfer with chained contract calls', async () => {
+    _it('Verify batch transfer with chained contract calls', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,
@@ -118,7 +119,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       expect(batchOp.status).toEqual('applied')
     });
 
-    it('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
+    _it('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
       const op = await Tezos.contract.originate({
         balance: "1",
         code: managerCode,
@@ -141,7 +142,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       expect(batchOp.status).toEqual('applied')
     });
 
-    it('Verify simple batch transfers with origination from code in Michelson format', async () => {
+    _it('Verify simple batch transfers with origination from code in Michelson format', async () => {
       const batch = Tezos.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })

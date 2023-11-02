@@ -2,6 +2,7 @@ import { CONFIGS } from './config';
 import { tacoContractTzip16 } from './data/modified-taco-contract';
 import { MichelsonMap } from '@taquito/taquito';
 import { char2Bytes, tzip16, Tzip16Module, IpfsHttpHandler, Handler, MetadataProvider } from '@taquito/tzip16';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -16,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     let contractAddress: string;
 
-    describe(`Test contract origination having metadata stored at IPFS URL through wallet api using: ${rpc}`, () => {
+    _describe(`Test contract origination having metadata stored at IPFS URL through wallet api using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup();
         });

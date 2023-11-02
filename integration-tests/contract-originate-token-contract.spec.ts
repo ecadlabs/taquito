@@ -1,13 +1,14 @@
 import { ContractAbstraction, ContractProvider } from "@taquito/taquito";
 import { CONFIGS } from "./config";
 import { tokenCode, tokenInit } from "./data/tokens";
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   let contract: ContractAbstraction<ContractProvider>;
 
-  describe(`Test contract origination of a token contract through contract api using: ${rpc}`, () => {
+  _describe(`Test contract origination of a token contract through contract api using: ${rpc}`, () => {
 
     beforeAll(async () => {
       await setup()

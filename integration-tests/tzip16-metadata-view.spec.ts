@@ -2,12 +2,13 @@ import { CONFIGS } from './config';
 import { MichelsonMap } from '@taquito/taquito';
 import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
 import { contractCode, metadataViewsExample1, metadataViewsExample2 } from './data/metadataViews';
+import { _describe, _it } from "./test-utils";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 	const Tezos = lib;
 	Tezos.addExtension(new Tzip16Module());
 
-	describe(`Test contract origination with metadata having views that return bytes and calls the views from TZComet through contract api using: ${rpc}`, () => {
+	_describe(`Test contract origination with metadata having views that return bytes and calls the views from TZComet through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
 			await setup();
 		});
