@@ -157,6 +157,7 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
+        'ophash_before_injecting',
         'drain_account',
         'complex_parameters',
         'confirmation_event_stream',
