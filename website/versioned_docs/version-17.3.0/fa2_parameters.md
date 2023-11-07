@@ -10,14 +10,14 @@ Based on the [TZIP-12 standard](https://gitlab.com/tezos/tzip/-/blob/master/prop
 
 In order to be compliant with the standard, a contract (among other requirements) must implement 3 main entrypoints:
 - **transfer**: an entrypoint to be called to transfer one or multiple tokens from one address to the other
-- **update_operators**: a list of parameters to give or withdraw access to users' tokens from third-parties
 - **balance_of**: an entrypoint meant to be called on-chain in order to get the balance of a specific account
+- **update_operators**: a list of parameters to give or withdraw access to users' tokens from third-parties
 
 Because the *transfer* and *update_operators* entrypoints require complex Michelson data, it can sometimes be complicated to find the right formatting for the parameters in JavaScript using Taquito.
 
 ## Reminder: calling the entrypoint of an FA2 contract
 
-Once you have the address of the contract you want to update, calling the *transfer* or the *update_operators* entrypoint follows the same steps as with any other contract:
+Once you have the address of the contract you want to update, calling the `transfer` or the `update_operators` entrypoint follows the same steps as with any other contract:
 
 ```typescript
 import { TezosToolkit } from "@taquito/taquito";
@@ -46,7 +46,7 @@ Here is the type signature for the entrypoint parameter in Michelson:
   )
 )
 ```
-This means that the entrypoint takes a list of pairs annotated with *%transfer*. Each pair is made on the left side of the account the tokens must be deducted from and on the right side of a second list of transactions holding the recipient of the transfer, the id of the token in question (in case the contract holds multiple tokens with different ids) and the amount to be deducted.
+This means that the entrypoint takes a list of pairs annotated with `%transfer`. Each pair is made on the left side of the account the tokens must be deducted from and on the right side of a second list of transactions holding the recipient of the transfer, the id of the token in question (in case the contract holds multiple tokens with different ids) and the amount to be deducted.
 
 > Note: Incidentally, this means that the contract can process multiple transfers at the same time, with one spender sending transfers to multiple recipients for one or different token ids.
 
@@ -99,6 +99,42 @@ You can then add as many transactions as you like to be processed by the contrac
 
 > Note: the properties holding the addresses of the spender and the recipient both end with an underscore: **from_** and **to_**.
 
+## The balance_of entrypoint
+Here is the type signature for the entrypoint parameter in Michelson:
+```
+(pair %balance_of
+  (list %requests
+    (pair
+      (address %owner)
+      (nat %token_id)
+    )
+  )
+  (contract %callback
+    (list
+      (pair
+        (pair %request
+          (address %owner)
+          (nat %token_id)
+        )
+        (nat %balance)
+      )
+    )
+  )
+)
+```
+This means that the entrypoint takes a pair annotated as `%balance_of`. On the left side of `%balance_of` pair takes a list of `%requests` structured as a pair of address as `%owner` and nat as `%token_id`. On the right side of `%balance_of` pair takes a contract annotated as `%callback` which the contract entrypoint type signature will be a list of pairs on the left side of the pair as `%request` that constructs with an address as `%owner` and nat as `%token_id` and on the right side as nat as `%balance`
+
+```typescript
+const balance_params = {
+  request: [
+    {
+      owner: 'tz1XTyqBn4xi9tkRDutpRyQwHxfF8ar4i4Wq',
+      token_id: '0'
+    }
+  ],
+  callback: 'KT1B9bXnsuqZkxbk2fBJbuhRRf1VpcFz2VV7'
+}
+```
 
 ## The update_operators entrypoint
 Here is the type signature for the entrypoint parameter in Michelson:
@@ -123,8 +159,8 @@ Here is the type signature for the entrypoint parameter in Michelson:
 )
 ```
 
-As mentioned above, Michelson lists are represented as arrays in Taquito. 
-A union value inside a list is represented as an object with one property: the annotation of the left or right side. The value is then represented as usual in Taquito. In the case of the *update_operators* entrypoint, the value is an object whose properties are the annotations of the right-combed pair:
+As mentioned above, Michelson lists are represented as arrays in Taquito.
+A union value inside a list is represented as an object with one property: the annotation of the left or right side. The value is then represented as usual in Taquito. In the case of the `update_operators` entrypoint, the value is an object whose properties are the annotations of the right-combed pair:
 
 ```typescript
 const operator_params = [
@@ -172,5 +208,4 @@ await batchOp.confirmation();
 ```
 
 In the first contract call (to the token contract), the user authorizes the dapp contract to transfer his tokens on his behalf.
-In the second contract call (to the dapp contract), the user calls a hypothetical *mint* entrypoint that sends a transaction under the hood to transfer the user's tokens to the contract account.
-
+In the second contract call (to the dapp contract), the user calls a hypothetical `mint` entrypoint that sends a transaction under the hood to transfer the user's tokens to the contract account.

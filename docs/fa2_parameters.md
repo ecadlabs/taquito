@@ -17,7 +17,7 @@ Because the *transfer* and *update_operators* entrypoints require complex Michel
 
 ## Reminder: calling the entrypoint of an FA2 contract
 
-Once you have the address of the contract you want to update, calling the *transfer* or the *update_operators* entrypoint follows the same steps as with any other contract:
+Once you have the address of the contract you want to update, calling the `transfer` or the `update_operators` entrypoint follows the same steps as with any other contract:
 
 ```typescript
 import { TezosToolkit } from "@taquito/taquito";
@@ -46,7 +46,7 @@ Here is the type signature for the entrypoint parameter in Michelson:
   )
 )
 ```
-This means that the entrypoint takes a list of pairs annotated with *%transfer*. Each pair is made on the left side of the account the tokens must be deducted from and on the right side of a second list of transactions holding the recipient of the transfer, the id of the token in question (in case the contract holds multiple tokens with different ids) and the amount to be deducted.
+This means that the entrypoint takes a list of pairs annotated with `%transfer`. Each pair is made on the left side of the account the tokens must be deducted from and on the right side of a second list of transactions holding the recipient of the transfer, the id of the token in question (in case the contract holds multiple tokens with different ids) and the amount to be deducted.
 
 > Note: Incidentally, this means that the contract can process multiple transfers at the same time, with one spender sending transfers to multiple recipients for one or different token ids.
 
@@ -122,8 +122,7 @@ Here is the type signature for the entrypoint parameter in Michelson:
   )
 )
 ```
-This means that the entrypoint takes a pair annotated as *%balance_of*. On the left side of *%balance_of* pair takes a list of *%requests* structured as a pair of address as *%owner* and nat as *%token_id*. On the right side of *%balance_of* pair takes a contract annotated as *%callback* which the contract entrypoint type signature will be a list of pairs on the left side of the pair as *%request* that constructs with an address as *%owner and nat as *%token_id* and on the right side as nat as *%balance*
-
+This means that the entrypoint takes a pair annotated as `%balance_of`. On the left side of `%balance_of` pair takes a list of `%requests` structured as a pair of address as `%owner` and nat as `%token_id`. On the right side of `%balance_of` pair takes a contract annotated as `%callback` which the contract entrypoint type signature will be a list of pairs on the left side of the pair as `%request` that constructs with an address as `%owner` and nat as `%token_id` and on the right side as nat as `%balance`
 
 ```typescript
 const balance_params = {
@@ -161,7 +160,7 @@ Here is the type signature for the entrypoint parameter in Michelson:
 ```
 
 As mentioned above, Michelson lists are represented as arrays in Taquito.
-A union value inside a list is represented as an object with one property: the annotation of the left or right side. The value is then represented as usual in Taquito. In the case of the *update_operators* entrypoint, the value is an object whose properties are the annotations of the right-combed pair:
+A union value inside a list is represented as an object with one property: the annotation of the left or right side. The value is then represented as usual in Taquito. In the case of the `update_operators` entrypoint, the value is an object whose properties are the annotations of the right-combed pair:
 
 ```typescript
 const operator_params = [
@@ -209,4 +208,4 @@ await batchOp.confirmation();
 ```
 
 In the first contract call (to the token contract), the user authorizes the dapp contract to transfer his tokens on his behalf.
-In the second contract call (to the dapp contract), the user calls a hypothetical *mint* entrypoint that sends a transaction under the hood to transfer the user's tokens to the contract account.
+In the second contract call (to the dapp contract), the user calls a hypothetical `mint` entrypoint that sends a transaction under the hood to transfer the user's tokens to the contract account.
