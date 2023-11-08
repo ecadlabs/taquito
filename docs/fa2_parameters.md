@@ -30,7 +30,7 @@ await op.confirmation();
 
 ## The transfer entrypoint
 Here is the type signature for the entrypoint parameter in Michelson:
-```
+``` 
 (list %transfer
   (pair
     (address %from_)
