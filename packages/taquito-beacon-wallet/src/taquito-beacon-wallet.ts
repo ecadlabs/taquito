@@ -26,6 +26,7 @@ import {
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
+import stringify from 'json-stringify-safe';
 
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
@@ -218,7 +219,7 @@ export class BeaconWallet implements WalletProvider {
         return SigningType.OPERATION;
       }
     }
-    throw new Error(`Invalid watermark ${JSON.stringify(watermark)}`);
+    throw new Error(`Invalid watermark ${stringify(watermark)}`);
   }
 
   async getPK() {

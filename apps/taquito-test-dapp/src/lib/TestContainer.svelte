@@ -4,7 +4,6 @@
   import type { TestSettings, TestResult } from "../types";
   import { shortenHash } from "../utils";
   import { NetworkType } from "@airgap/beacon-sdk";
-  import { stringify } from "@taquito/core";
 
   let test: TestSettings | undefined;
   let executionTime = 0;
@@ -12,9 +11,12 @@
   let success: boolean | undefined;
   let opHash = "";
   let input = { text: "", fee: 400, storageLimit: 400, gasLimit: 1320 };
-  let testResult: { id: string; title: string; body: any };
+  let testResult: { id: string; title: string; body: any } | undefined;
 
   const run = async () => {
+    if (!test) {
+      return;
+    }
     success = undefined;
     loading = true;
     executionTime = 0;
@@ -52,9 +54,9 @@
             id: test.id,
             title: "Signing Result",
             body: {
-              input: result.sigDetails.input,
-              "formatted input": result.sigDetails.formattedInput,
-              bytes: result.sigDetails.bytes,
+              input: result.sigDetails?.input,
+              "formatted input": result.sigDetails?.formattedInput,
+              bytes: result.sigDetails?.bytes,
               output: result.output,
             },
           };
@@ -78,14 +80,14 @@
   };
 
   const switchAccount = async () => {
-    await $store.wallet.clearActiveAccount();
+    await $store.wallet?.clearActiveAccount();
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
     store.updateSelectedTest(undefined);
     setTimeout(() => {
       const walletButton = document.getElementById("wallet-button");
-      walletButton.click();
+      walletButton?.click();
     }, 200);
   };
 
@@ -261,7 +263,7 @@
       Please select a test to run in the left sidebar to start
     {:else if test && test.inputType === "sapling"}
       <h3 class="test-title">{test.name}</h3>
-      {#await $store.wallet.getPKH() then pkh}
+      {#await $store.wallet?.getPKH() then pkh}
         {#if pkh === "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"}
           <div class="test-description">{test.description}</div>
           <div class="input-sapling">
@@ -338,14 +340,6 @@
               {#if $store.networkType === NetworkType.ITHACANET}
                 <a
                   href={`https://better-call.dev/ithacanet/opg/${opHash}/contents`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {shortenHash(opHash)}
-                </a>
-              {:else if $store.networkType === NetworkType.HANGZHOUNET}
-                <a
-                  href={`https://better-call.dev/hangzhounet/opg/${opHash}/contents`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

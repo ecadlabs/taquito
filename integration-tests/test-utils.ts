@@ -15,24 +15,25 @@ interface FunctionLike {
 }
 
 export function _it(name: string, fn: Global.TestFn, timeout?: number): void {
-    jestIt(name, wrapTestFn(fn), timeout);
+    jestIt(name, wrapTestFn(name, fn), timeout);
 };
 
 export const _describe = (name: Global.BlockNameLike, fn: EmptyFunction): void => {
-    jestDescribe(name, wrapEmptyFunction(fn));
+    jestDescribe(name, wrapEmptyFunction(name, fn));
 };
 
-const wrapEmptyFunction: (testFunction: EmptyFunction) => EmptyFunction = (testFunction) => {
+const wrapEmptyFunction: (functionName: Global.BlockNameLike,testFunction: EmptyFunction) => EmptyFunction = (functionName, testFunction) => {
     return () => {
         try {
             testFunction();
         } catch (e: unknown) {
-            fail(stringify(e));
+            console.error(`Error in test ${functionName}: ${stringify(e)}`)
+            throw new Error(`Error while running test ${functionName}`);
         }
     }
 }
 
-function wrapTestFn(testFunction: Global.TestFn): Global.TestFn {
+function wrapTestFn(functionName: string, testFunction: Global.TestFn): Global.TestFn {
     if (testFunction.length === 0 ) {
         return async function(this: Global.TestContext) {
             try {
@@ -43,7 +44,8 @@ function wrapTestFn(testFunction: Global.TestFn): Global.TestFn {
                     return result;
                 }
             } catch (e: unknown) {
-                fail(stringify(e));
+                console.error(`Error in test ${functionName}: ${stringify(e)}`)
+                throw new Error(`Error while running test ${functionName}`);
             }
         }
     } else {
@@ -51,13 +53,14 @@ function wrapTestFn(testFunction: Global.TestFn): Global.TestFn {
             try {
                 return (testFunction as Global.DoneTakingTestFn).bind(this)(done);
             } catch (e: unknown) {
-                fail(stringify(e));
+                console.error(`Error in test ${functionName}: ${stringify(e)}`)
+                throw new Error(`Error while running test ${functionName}`);
             }
         }
     }
 }
 
-const wrapProvidesCallback: (testFunction?: ProvidesCallback) => ProvidesCallback | undefined = (testFunction) => {
+const wrapProvidesCallback: (functionName: Global.BlockNameLike, testFunction?: ProvidesCallback) => ProvidesCallback | undefined = (functionName, testFunction) => {
     if (!testFunction) {
         return undefined;
     }
@@ -66,7 +69,8 @@ const wrapProvidesCallback: (testFunction?: ProvidesCallback) => ProvidesCallbac
             try {
                 await (testFunction as (() => PromiseLike<unknown>))();
             } catch (e: unknown) {
-                fail(stringify(e));
+                console.error(`Error in test ${functionName}: ${stringify(e)}`)
+                throw new Error(`Error while running test ${functionName}`);
             }
         }
     } else {
@@ -74,7 +78,8 @@ const wrapProvidesCallback: (testFunction?: ProvidesCallback) => ProvidesCallbac
             try {
                 (testFunction as ((cb: DoneCallback) => void | undefined))(cb);
             } catch (e: unknown) {
-                fail(stringify(e));
+                console.error(`Error in test ${functionName}: ${stringify(e)}`)
+                throw new Error(`Error while running test ${functionName}`);
             }
         }
     }

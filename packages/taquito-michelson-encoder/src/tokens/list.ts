@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { ListTokenSchema } from '../schema/types';
 import { Token, TokenFactory, Semantic, TokenValidationError, SemanticEncoding } from './token';
 
@@ -7,7 +8,11 @@ import { Token, TokenFactory, Semantic, TokenValidationError, SemanticEncoding }
  */
 export class ListValidationError extends TokenValidationError {
   name = 'ListValidationError';
-  constructor(public value: any, public token: ListToken, message: string) {
+  constructor(
+    public value: any,
+    public token: ListToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -32,11 +37,7 @@ export class ListToken extends Token {
    */
   private validate(value: any) {
     if (!Array.isArray(value)) {
-      throw new ListValidationError(
-        value,
-        this,
-        `Value ${JSON.stringify(value)} is not a valid array`
-      );
+      throw new ListValidationError(value, this, `Value ${stringify(value)} is not a valid array`);
     }
   }
 

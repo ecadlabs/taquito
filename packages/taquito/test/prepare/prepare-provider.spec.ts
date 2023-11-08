@@ -171,7 +171,7 @@ describe('PrepareProvider test', () => {
         init: `"test"`,
       });
 
-      const res = JSON.parse(JSON.stringify(prepared));
+      const res = JSON.parse(stringify(prepared));
       expect(res).toEqual(preparedOriginationOpWithReveal);
     });
 
@@ -190,7 +190,7 @@ describe('PrepareProvider test', () => {
         init: `"test"`,
       });
 
-      const res = JSON.parse(JSON.stringify(prepared));
+      const res = JSON.parse(stringify(prepared));
 
       expect(res).toEqual(preparedOriginationOpNoReveal);
     });

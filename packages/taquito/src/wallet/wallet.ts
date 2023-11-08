@@ -29,6 +29,7 @@ import {
   invalidDetail,
 } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
+import stringify from 'json-stringify-safe';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -135,7 +136,7 @@ export class WalletOperationBatch {
       case OpKind.INCREASE_PAID_STORAGE:
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
       default:
-        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
+        throw new InvalidOperationKindError(stringify((param as any).kind));
     }
   }
 
@@ -162,7 +163,7 @@ export class WalletOperationBatch {
           this.withIncreasePaidStorage(param);
           break;
         default:
-          throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
+          throw new InvalidOperationKindError(stringify((param as any).kind));
       }
     }
 

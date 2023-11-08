@@ -7,7 +7,7 @@ import { blockResponse } from './data';
 describe('WalletOperation', () => {
   let testScheduler: TestScheduler;
 
-  const toJSON = (x: any) => JSON.parse(JSON.stringify(x));
+  const toJSON = (x: any) => JSON.parse(stringify(x));
   const createFakeBlock = (level: number, opHash?: string) => {
     const op = {
       hash: `block_hash_${level}`,

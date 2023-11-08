@@ -35,9 +35,9 @@
   let networkError = false;
   let showCustomNetworkInput = false;
   let customNetworkInput = "https://";
-  const groupBy = (item) => item.group;
+  const groupBy = (item: { group: any; }) => item.group;
 
-  const changeNetwork = (event) => {
+  const changeNetwork = (event: { detail: { value: string; }; }) => {
     networkError = false;
     showCustomNetworkInput = false;
     const walletComponent = layout.getSideBar().getWallet();
@@ -58,7 +58,7 @@
         //TODO: input custom RPC URL
         showCustomNetworkInput = true;
         setTimeout(() => {
-          document.getElementById("custom-network-input").focus();
+          document.getElementById("custom-network-input")?.focus();
         }, 100);
         break;
       default:
@@ -67,7 +67,7 @@
     }
   };
 
-  const changeMatrixNode = (event) => {
+  const changeMatrixNode = (event: { detail: { value: string; }; }) => {
     switch (event.detail.value.toLocaleLowerCase()) {
       case "default":
         store.updateMatrixNode("beacon-node-1.sky.papers.tech");
@@ -194,7 +194,7 @@
           <button
             on:click={() => {
               const wallet = document.getElementById("wallet-button");
-              wallet.click();
+              wallet?.click();
             }}
           >
             <span class="material-icons-outlined"> account_balance_wallet </span>

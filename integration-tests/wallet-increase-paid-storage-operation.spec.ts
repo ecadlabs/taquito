@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { CONFIGS } from './config';
 import { _describe, _it } from "./test-utils";
 
@@ -26,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         simpleContractAddress = (await op.contract()).address
       } catch (e) {
-        console.log(JSON.stringify(e));
+        console.log(stringify(e));
       }
     });
 

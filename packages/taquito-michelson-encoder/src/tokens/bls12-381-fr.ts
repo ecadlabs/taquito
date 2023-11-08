@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -7,7 +8,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class Bls12381frValidationError extends TokenValidationError {
   name = 'Bls12381frValidationError';
-  constructor(public value: any, public token: Bls12381frToken, message: string) {
+  constructor(
+    public value: any,
+    public token: Bls12381frToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -31,7 +36,7 @@ export class Bls12381frToken extends Token {
     if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
       return;
     }
-    throw new Bls12381frValidationError(val, this, `Invalid bytes: ${JSON.stringify(val)}`);
+    throw new Bls12381frValidationError(val, this, `Invalid bytes: ${stringify(val)}`);
   }
 
   private convertUint8ArrayToHexString(val: any) {

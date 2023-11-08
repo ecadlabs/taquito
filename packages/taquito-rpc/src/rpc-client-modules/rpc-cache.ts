@@ -60,6 +60,7 @@ import {
   ValidationResult,
   invalidDetail,
 } from '@taquito/utils';
+import stringify from 'json-stringify-safe';
 
 interface CachedDataInterface {
   [key: string]: {
@@ -119,11 +120,11 @@ export class RpcClientCache implements RpcClientInterface {
     rpcMethodParams.forEach((param) => {
       paramsToString =
         typeof param === 'object'
-          ? paramsToString + JSON.stringify(param) + '/'
+          ? paramsToString + stringify(param) + '/'
           : paramsToString + param + '/';
     });
     return rpcMethodData
-      ? `${rpcUrl}/${rpcMethodName}/${paramsToString}${JSON.stringify(rpcMethodData)}/`
+      ? `${rpcUrl}/${rpcMethodName}/${paramsToString}${stringify(rpcMethodData)}/`
       : `${rpcUrl}/${rpcMethodName}/${paramsToString}`;
   }
 

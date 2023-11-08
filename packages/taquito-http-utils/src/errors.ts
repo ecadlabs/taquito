@@ -1,5 +1,6 @@
 import { NetworkError } from '@taquito/core';
 import { STATUS_CODE } from './status_code';
+import stringify from 'json-stringify-safe';
 
 /**
  *  @category Error
@@ -9,11 +10,12 @@ export class HttpRequestFailed extends NetworkError {
   constructor(
     public readonly method: string,
     public readonly url: string,
-    public readonly cause: Error
+    public readonly cause: Error,
+    public readonly additionalInfo?: string
   ) {
     super();
     this.name = 'HttpRequestFailed';
-    this.message = `${method} ${url} ${String(cause)}`;
+    this.message = `${method} ${url} ${stringify(cause)}`;
   }
 }
 

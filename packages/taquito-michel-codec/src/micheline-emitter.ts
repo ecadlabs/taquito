@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { Expr, Prim, sourceReference } from './micheline';
 
 export interface FormatOptions {
@@ -68,7 +69,7 @@ function emitExpr(node: Expr, f: Formatter, foldMacros: boolean): string {
   if (Array.isArray(node)) {
     return emitSeq(node, f, foldMacros);
   } else if ('string' in node) {
-    return JSON.stringify(node.string);
+    return stringify(node.string);
   } else if ('int' in node) {
     return node.int;
   } else if ('bytes' in node) {

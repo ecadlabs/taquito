@@ -5,10 +5,11 @@
   import { BeaconWallet } from "@taquito/beacon-wallet";
   // import { BeaconEvent, defaultEventCallbacks } from "@airgap/beacon-sdk";
   import type { DAppClientOptions, NetworkType } from "@airgap/beacon-sdk";
-  import store from "../store";
+  import store, { type SupportedNetworkTypes } from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
   import { defaultMatrixNode, rpcUrl, defaultNetworkType } from "../config";
   import type { TezosAccountAddress } from "../types";
+  import { HttpRequestFailed } from "@taquito/http-utils";
 
   let showDialog = false;
   let connectedWallet = "";
@@ -40,6 +41,10 @@
   };
 
   const connectWallet = async () => {
+    if (!$store.networkType) {
+      console.error("No network type selected");
+      return;
+   }
     setWallet({
       networkType: $store.networkType
     });
@@ -67,12 +72,15 @@
       const peers = await wallet.client.getPeers();
       connectedWallet = peers[0].name;
     } catch (err) {
+      if (err instanceof HttpRequestFailed) {
+        console.error(err.cause);
+      }
       console.error(err);
     }
   };
 
   const disconnectWallet = async () => {
-    await $store.wallet.clearActiveAccount();
+    await $store.wallet?.clearActiveAccount();
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
@@ -80,7 +88,7 @@
   };
 
   export const setWallet = async (config: {
-    networkType: NetworkType,
+    networkType: SupportedNetworkTypes,
   }) => {
     if (window && window.localStorage) {
       // finds the Beacon keys
@@ -109,7 +117,6 @@
         store.updateUserBalance(balance.toNumber());
       }
     }
-
   }
 
   onMount(async () => {

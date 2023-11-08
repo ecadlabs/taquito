@@ -13,7 +13,7 @@ _describe('HttpBackend request', () => {
       expect(err.name).toEqual('HttpRequestFailed')
       expect(err.message).toContain('GET')
       expect(err.message).toContain('https://mainnet.ecadinfra.com/chains/main/blocks/head/hash')
-      expect(err.message).toContain('Error: timeout of 1ms exceeded')
+      expect(err.message).toContain('timeout of 1ms exceeded')
     }
   });
   _it('will fail with method, url and query in error message', async () => {
@@ -30,7 +30,7 @@ _describe('HttpBackend request', () => {
       expect(err.name).toEqual('HttpRequestFailed')
       expect(err.message).toContain('GET')
       expect(err.message).toContain('https://mainnet.ecadinfra.com/chains/main/blocks/head/helpers/baking_rights')
-      expect(err.message).toContain('Error: timeout of 1ms exceeded')
+      expect(err.message).toContain('timeout of 1ms exceeded')
     }
   });
 })

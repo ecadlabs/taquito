@@ -3,6 +3,7 @@ import { OrToken } from './or';
 import { PairTokenSchema } from '../schema/types';
 import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
 import { TaquitoError } from '@taquito/core';
+import stringify from 'json-stringify-safe';
 
 /**
  *  @category Error
@@ -26,7 +27,7 @@ export class TokenComparisonError extends TaquitoError {
     public val2: string
   ) {
     super();
-    this.message = `Tokens ${JSON.stringify(val1)} and ${JSON.stringify(val2)} are not comparable`;
+    this.message = `Tokens ${stringify(val1)} and ${stringify(val2)} are not comparable`;
   }
 }
 
@@ -46,7 +47,7 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [an
   }
   if (val.args === undefined) {
     throw new TokenArgumentValidationError(
-      `The value ${JSON.stringify(
+      `The value ${stringify(
         val
       )} is an invalid PairToken with no arguments, a pair must have two or more arguments.`
     );

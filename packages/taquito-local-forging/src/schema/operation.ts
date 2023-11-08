@@ -7,6 +7,7 @@ import {
   OperationEncodingError,
   UnsupportedOperationError,
 } from '../errors';
+import stringify from 'json-stringify-safe';
 
 export const ManagerOperationSchema = {
   branch: CODEC.BRANCH,
@@ -241,7 +242,7 @@ export const schemaEncoder =
 
         if (!Array.isArray(values)) {
           throw new OperationEncodingError(
-            `Invalid operation value "${JSON.stringify(
+            `Invalid operation value "${stringify(
               values
             )}" of key "${key}, expected value to be Array.`
           );

@@ -6,6 +6,7 @@ import { opMappingReverse, opMapping } from '../constants';
 import { pad } from '../utils';
 import { UnexpectedMichelsonValueError } from '../errors';
 import { InvalidHexStringError } from '@taquito/core';
+import stringify from 'json-stringify-safe';
 
 export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
 export type BytesValue = { bytes: string };
@@ -67,7 +68,7 @@ export const valueEncoder: Encoder<MichelsonValue> = (value: MichelsonValue) => 
     return intEncoder(value);
   }
 
-  throw new UnexpectedMichelsonValueError(JSON.stringify(value));
+  throw new UnexpectedMichelsonValueError(stringify(value));
 };
 
 export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {

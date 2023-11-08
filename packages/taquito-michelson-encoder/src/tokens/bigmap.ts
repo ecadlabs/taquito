@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { MichelsonMap } from '../michelson-map';
 import { BigMapTokenSchema } from '../schema/types';
 import {
@@ -15,7 +16,11 @@ import {
  */
 export class BigMapValidationError extends TokenValidationError {
   name = 'BigMapValidationError';
-  constructor(public value: any, public token: BigMapToken, message: string) {
+  constructor(
+    public value: any,
+    public token: BigMapToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -69,7 +74,7 @@ export class BigMapToken extends Token {
       throw new BigMapValidationError(
         value,
         this,
-        `Value ${JSON.stringify(value)} is not a MichelsonMap`
+        `Value ${stringify(value)} is not a MichelsonMap`
       );
     }
   }
@@ -150,7 +155,7 @@ export class BigMapToken extends Token {
       throw new BigMapValidationError(
         val,
         this,
-        `Big map is expecting either an array (Athens) or an object with an int property (Babylon). Got ${JSON.stringify(
+        `Big map is expecting either an array (Athens) or an object with an int property (Babylon). Got ${stringify(
           val
         )}`
       );

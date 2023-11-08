@@ -1,21 +1,23 @@
 import { writable } from "svelte/store";
 import type { NetworkType } from "@airgap/beacon-sdk";
-import type { TezosToolkit } from "@taquito/taquito";
-import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { defaultMatrixNode, defaultNetworkType } from "./config";
 import type { TestSettings } from "./types";
+import type { TezosToolkit } from "@taquito/taquito";
+import type { BeaconWallet } from "@taquito/beacon-wallet";
+
+export type SupportedNetworkTypes = NetworkType.CUSTOM | NetworkType.MAINNET | NetworkType.GHOSTNET | NetworkType.MUMBAINET | NetworkType.NAIROBINET | NetworkType.ITHACANET;
 
 interface State {
-  Tezos: TezosToolkit;
-  userAddress: string;
-  userBalance: number;
-  wallet: BeaconWallet;
+  Tezos?: TezosToolkit;
+  userAddress?: string;
+  userBalance?: number;
+  wallet?: BeaconWallet;
   disableDefaultEvents: boolean;
-  networkType: NetworkType;
-  customNetworkUrl: string;
+  networkType: SupportedNetworkTypes;
+  customNetworkUrl?: string;
   matrixNode: string;
-  confirmationObservableTest: { level: number; currentConfirmation: number }[];
-  selectedTest: string;
+  confirmationObservableTest?: { level: number; currentConfirmation: number }[];
+  selectedTest?: string;
   tests: Array<TestSettings>;
 }
 
@@ -37,12 +39,12 @@ const store = writable(initialState);
 
 const state = {
   subscribe: store.subscribe,
-  updateUserAddress: (address: string) =>
+  updateUserAddress: (address?: string) =>
     store.update(store => ({
       ...store,
       userAddress: address
     })),
-  updateUserBalance: (balance: number) =>
+  updateUserBalance: (balance?: number) =>
     store.update(store => ({
       ...store,
       userBalance: balance
@@ -52,7 +54,7 @@ const state = {
       ...store,
       Tezos
     })),
-  updateWallet: (wallet: BeaconWallet) =>
+  updateWallet: (wallet?: BeaconWallet) =>
     store.update(store => ({
       ...store,
       wallet
@@ -67,7 +69,7 @@ const state = {
       ...store,
       disableDefaultEvents: !store.disableDefaultEvents
     })),
-  updateNetworkType: (networkType: NetworkType, url?: string) =>
+  updateNetworkType: (networkType: SupportedNetworkTypes, url?: string) =>
     store.update(store => ({
       ...store,
       networkType,
@@ -87,7 +89,7 @@ const state = {
       ...store,
       confirmationObservableTest: undefined
     })),
-  updateSelectedTest: (testId: string) =>
+  updateSelectedTest: (testId?: string) =>
     store.update(store => ({
       ...store,
       selectedTest: testId

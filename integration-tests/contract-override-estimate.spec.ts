@@ -1,6 +1,7 @@
 import { CONFIGS } from "./config";
 import { InvalidEstimateValueError } from '@taquito/taquito';
 import { _describe, _it } from "./test-utils";
+import stringify from "json-stringify-safe";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
@@ -15,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const account = await createAddress();
         pkh = await account.signer.publicKeyHash();
       } catch (e) {
-        console.log(JSON.stringify(e));
+        console.log(stringify(e));
       }
 
     });

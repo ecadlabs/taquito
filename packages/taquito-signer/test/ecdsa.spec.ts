@@ -268,7 +268,7 @@ describe('ECDSA', () => {
           const seed = chain.seed || Bip39.mnemonicToSeedSync(chain.mnemonic || '', '');
           const root = ECDSA.PrivateKey.fromSeed(seed, curve.curve);
           for (const keyData of chain.keys) {
-            it(JSON.stringify(keyData.path.map((x) => x >>> 0)), () => {
+            it(stringify(keyData.path.map((x) => x >>> 0)), () => {
               const key = root.derivePath(keyData.path);
               if (keyData.chain) {
                 expect(Buffer.from(key.chainCode).toString('hex')).toBe(keyData.chain);

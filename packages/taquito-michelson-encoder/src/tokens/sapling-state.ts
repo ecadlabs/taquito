@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { SaplingStateTokenSchema } from '../schema/types';
 import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -7,7 +8,11 @@ import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError }
  */
 export class SaplingStateValidationError extends TokenValidationError {
   name = 'SaplingStateValidationError';
-  constructor(public value: any, public token: SaplingStateToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SaplingStateToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -40,7 +45,7 @@ export class SaplingStateToken extends Token {
       throw new SaplingStateValidationError(
         val,
         this,
-        `Sapling state is expecting an object with an int property. Got ${JSON.stringify(val)}`
+        `Sapling state is expecting an object with an int property. Got ${stringify(val)}`
       );
     }
   }
@@ -56,7 +61,7 @@ export class SaplingStateToken extends Token {
       throw new SaplingStateValidationError(
         val,
         this,
-        `Invalid sapling_state. Received: ${JSON.stringify(val)} while expecting: {}`
+        `Invalid sapling_state. Received: ${stringify(val)} while expecting: {}`
       );
     }
   }
@@ -74,7 +79,7 @@ export class SaplingStateToken extends Token {
       throw new SaplingStateValidationError(
         val,
         this,
-        `Invalid sapling_state. Received: ${JSON.stringify(val)} while expecting: {}`
+        `Invalid sapling_state. Received: ${stringify(val)} while expecting: {}`
       );
     }
   }

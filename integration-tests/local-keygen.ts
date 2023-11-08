@@ -3,14 +3,21 @@ import { Prefix, b58cencode, prefix } from "@taquito/utils";
 import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 import Fastify from "fastify";
+import * as fs from "fs";
 
 export class KeygenServer {
     private keygenMap: Map<string, LocalKeygen> = new Map();
 
     constructor() {
+        this.saveInterval = setInterval(() => this.saveLogTick(), 10000);
+        this.allCalls = [];
     }
 
     private fastify = Fastify();
+    private totalCalls = new Map<string, number>();
+    private allCalls: { time: Date, path: string }[];
+    private startTime = new Date().toISOString();
+    private saveInterval: NodeJS.Timeout;
 
     async startServer() {
         this.fastify.get('/key', async (request, reply) => {
@@ -27,7 +34,19 @@ export class KeygenServer {
 
         this.fastify.get('/stats', (_request, reply) => {
             const items = Array.from(this.keygenMap.entries());
-            reply.send({ total: this.keygenMap.size, stats: items.map(k => ({ name: k[0], stats: k[1].getStats() })) });
+            reply.send({ total: this.keygenMap.size, 
+                totalCalls: Array.from(this.totalCalls.entries()).sort((a, b) => b[1] - a[1]).map(x => [x[1], x[0].substring(0, 100)]), stats: items.map(k => ({ name: k[0], stats: k[1].getStats() })) });
+        });
+
+        this.fastify.post('/logHttpCall', (request, reply) => {
+            const { type } = request.query as any;
+            this.allCalls.push({ time: new Date(), path: type });
+            if (this.totalCalls.has(type)) {
+                this.totalCalls.set(type, this.totalCalls.get(type)! + 1);
+            } else {
+                this.totalCalls.set(type, 1);
+            }
+            reply.send({ success: true });
         });
 
         this.fastify.listen({ port: 20001, host: 'localhost' }, (err, _address) => {
@@ -38,7 +57,29 @@ export class KeygenServer {
         await new Promise(r => setTimeout(r, 1000)); // TODO: have a loop that checks if the server is up
     }
 
+    saveLogTick() {
+        const toBeSaved = this.allCalls.splice(0, this.allCalls.length);
+        if (toBeSaved.length == 0) {
+            return;
+        }
+        this.saveLog(toBeSaved);
+        this.saveStats(false);
+    }
+
+    private saveLog(toBeSaved: { time: Date; path: string; }[]) {
+        fs.appendFileSync(`../alireza/logs/keygen-log-${this.startTime}.json`, toBeSaved.map(item => `${item.time.toISOString()}: ${item.path}`).join(`\n`));
+    }
+
+    private saveStats(complete: boolean) {
+        const stats = Array.from(this.totalCalls.entries());
+        stats.sort((a, b) => b[1] - a[1]);
+        fs.writeFileSync(`../alireza/logs/keygen-stats-${this.startTime}.json`, `${complete ? 'complete' : 'incomplete'} \n ${stats.map(item => `${item[1]}: ${item[0]}`).join(`\n`)}`);
+    }
+
     async stopServer() {
+        this.saveStats(true);
+        this.saveLog(this.allCalls);
+        clearInterval(this.saveInterval);
         for (const keygen of this.keygenMap.values()) {
             keygen.cleanup();
         }

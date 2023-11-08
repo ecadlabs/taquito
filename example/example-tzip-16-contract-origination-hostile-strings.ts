@@ -34,7 +34,7 @@ async function example() {
 
     const metadataBigMAp = new MichelsonMap();
     metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataJSON)))
+    metadataBigMAp.set("here", char2Bytes(stringify(metadataJSON)))
 
     const tacoShopStorageMap = new MichelsonMap();
 

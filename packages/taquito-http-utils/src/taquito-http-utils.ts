@@ -7,6 +7,7 @@ import fetchAdapter from './fetch-adapter';
 import { STATUS_CODE } from './status_code';
 import axios from 'axios';
 import { HttpRequestFailed, HttpResponseError } from './errors';
+import stringify from 'json-stringify-safe';
 
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
 
@@ -80,6 +81,7 @@ export class HttpBackend {
     { url, method, timeout = this.timeout, query, headers = {}, json = true }: HttpRequestOptions,
     data?: object | string
   ) {
+    const originalTrace = new Error().stack;
     const urlWithQuery = url + this.serialize(query);
     let resType: ResponseType;
     let transformResponse = undefined;
@@ -96,6 +98,14 @@ export class HttpBackend {
     }
 
     try {
+      if (isNode && process.env.RUN_NAIROBINET_WITH_FLEXTESA) {
+        const _response = await fetch(
+          `http://127.0.0.1:20001/logHttpCall?type=${HttpBackend.getCallPath()}`,
+          {
+            method: 'POST',
+          }
+        );
+      }
       const response = await axios.request<T>({
         url: urlWithQuery,
         method: method ?? 'GET',
@@ -113,7 +123,7 @@ export class HttpBackend {
         let errorData;
 
         if (typeof err.response.data === 'object') {
-          errorData = JSON.stringify(err.response.data);
+          errorData = stringify(err.response.data);
         } else {
           errorData = err.response.data;
         }
@@ -126,8 +136,33 @@ export class HttpBackend {
           urlWithQuery
         );
       } else {
-        throw new HttpRequestFailed(String(method), urlWithQuery, err);
+        throw new HttpRequestFailed(String(method), urlWithQuery, err, stringify(originalTrace));
       }
+    }
+  }
+
+  private static getCallPath(): string {
+    try {
+      const err = new Error();
+      const stack = err.stack;
+      if (!stack) {
+        return 'emptyStack';
+      }
+      const lines = stack.split('\n');
+      const path = lines
+        .map((line) => {
+          const match = line.match(/\s*at (.*) \((.*)\)/);
+          if (match) {
+            return `${match[1]} ${match[2].split('/').pop()}`;
+          }
+          return line.split('/').pop();
+        })
+        .filter((line) => !line?.startsWith('Error'))
+        .join('++');
+      return path;
+    } catch (e) {
+      console.log(`Could not get call path: ${e}`);
+      return 'failedToGetCallPath';
     }
   }
 }

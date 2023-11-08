@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { BaseTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -7,7 +8,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class NeverTokenError extends TokenValidationError {
   name = 'NeverTokenError';
-  constructor(public value: any, public token: NeverToken, message: string) {
+  constructor(
+    public value: any,
+    public token: NeverToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -30,7 +35,7 @@ export class NeverToken extends Token {
     throw new NeverTokenError(
       val,
       this,
-      `Assigning a value to the type never is forbidden. Trying to assign ${JSON.stringify(val)}.`
+      `Assigning a value to the type never is forbidden. Trying to assign ${stringify(val)}.`
     );
   }
 
@@ -44,7 +49,7 @@ export class NeverToken extends Token {
     throw new NeverTokenError(
       val,
       this,
-      `Assigning a value to the type never is forbidden. Trying to assign ${JSON.stringify(val)}.`
+      `Assigning a value to the type never is forbidden. Trying to assign ${stringify(val)}.`
     );
   }
 
@@ -55,7 +60,7 @@ export class NeverToken extends Token {
     throw new NeverTokenError(
       val,
       this,
-      `There is no literal value for the type never. Trying to execute ${JSON.stringify(val)}.`
+      `There is no literal value for the type never. Trying to execute ${stringify(val)}.`
     );
   }
 

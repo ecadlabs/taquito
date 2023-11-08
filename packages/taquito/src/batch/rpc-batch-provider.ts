@@ -38,6 +38,7 @@ import {
 } from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
+import stringify from 'json-stringify-safe';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -239,7 +240,7 @@ export class OperationBatch extends Provider {
           ...param,
         });
       default:
-        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
+        throw new InvalidOperationKindError(stringify((param as any).kind));
     }
   }
 
@@ -281,7 +282,7 @@ export class OperationBatch extends Provider {
           this.withSmartRollupOriginate(param);
           break;
         default:
-          throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
+          throw new InvalidOperationKindError(stringify((param as any).kind));
       }
     }
 

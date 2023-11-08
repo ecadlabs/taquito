@@ -2,6 +2,7 @@ import { tokens } from './tokens';
 import { Token } from './token';
 import { PairToken } from './pair';
 import { TaquitoError } from '@taquito/core';
+import stringify from 'json-stringify-safe';
 
 /**
  *  @category Error
@@ -9,7 +10,10 @@ import { TaquitoError } from '@taquito/core';
  */
 export class InvalidTokenError extends TaquitoError {
   name = 'Invalid token error';
-  constructor(public message: string, public data: any) {
+  constructor(
+    public message: string,
+    public data: any
+  ) {
     super(message);
   }
 }
@@ -27,7 +31,7 @@ export function createToken(val: any, idx: number): Token {
   const t = tokens.find((x) => x.prim === val.prim);
   if (!t) {
     throw new InvalidTokenError(
-      `Malformed data: ${JSON.stringify(val)}. Expected a value with a valid prim property`,
+      `Malformed data: ${stringify(val)}. Expected a value with a valid prim property`,
       val
     );
   }

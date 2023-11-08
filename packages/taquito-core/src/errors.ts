@@ -1,6 +1,9 @@
 // ==========================================================================================
 // parent error classes for Taquito
 // ==========================================================================================
+
+import stringify from 'json-stringify-safe';
+
 /**
  *  @category Error
  *  @description Parent error class all taquito errors to extend from
@@ -151,9 +154,9 @@ export class InvalidViewParameterError extends ParameterValidationError {
   ) {
     super();
     this.name = 'InvalidViewParameterError';
-    this.message = `Invalid view arguments ${JSON.stringify(
+    this.message = `Invalid view arguments ${stringify(
       args
-    )} received for name "${viewName}" expecting one of the following signatures ${JSON.stringify(
+    )} received for name "${viewName}" expecting one of the following signatures ${stringify(
       sigs
     )}.`;
   }

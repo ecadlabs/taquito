@@ -11,6 +11,7 @@ import {
   MichelsonTypeID,
   MichelsonSimpleComparableTypeID,
 } from './michelson-types';
+import stringify from 'json-stringify-safe';
 
 // Michelson validator
 
@@ -177,7 +178,10 @@ export class MichelsonValidationError extends MichelsonError {
    * @param val Value of a node caused the error
    * @param message An error message
    */
-  constructor(public readonly val: Expr, public readonly message: string) {
+  constructor(
+    public readonly val: Expr,
+    public readonly message: string
+  ) {
     super(val, message);
     this.name = 'MichelsonValidationError';
   }
@@ -886,9 +890,9 @@ export function assertDataListIfAny(d: MichelsonData): d is MichelsonData[] {
   for (const v of d) {
     if ('prim' in v) {
       if (isInstruction(v)) {
-        throw new MichelsonError(d, `Instruction outside of a lambda: ${JSON.stringify(d)}`);
+        throw new MichelsonError(d, `Instruction outside of a lambda: ${stringify(d)}`);
       } else if (v.prim === 'Elt') {
-        throw new MichelsonError(d, `Elt item outside of a map literal: ${JSON.stringify(d)}`);
+        throw new MichelsonError(d, `Elt item outside of a map literal: ${stringify(d)}`);
       }
     }
   }

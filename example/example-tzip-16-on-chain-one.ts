@@ -14,7 +14,7 @@ async function example() {
 
     const metadataBigMAp = new MichelsonMap();
     metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample1)))
+    metadataBigMAp.set("here", char2Bytes(stringify(metadataViewsExample1)))
 
     const op = await tezos.contract.originate({
       code: contractCode,

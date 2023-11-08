@@ -9,6 +9,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@taquito/rpc": "^17.3.2",
+    "json-stringify-safe": "^5.0.1",
     "yargs": "^17.7.2"
   }
 }

@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { SetTokenSchema } from '../schema/types';
 import {
   Token,
@@ -14,7 +15,11 @@ import {
  */
 export class SetValidationError extends TokenValidationError {
   name = 'SetValidationError';
-  constructor(public value: any, public token: SetToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SetToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -39,7 +44,7 @@ export class SetToken extends Token {
    */
   private validate(value: any) {
     if (!Array.isArray(value)) {
-      throw new SetValidationError(value, this, `Value ${JSON.stringify(value)} is not an array`);
+      throw new SetValidationError(value, this, `Value ${stringify(value)} is not an array`);
     }
   }
 

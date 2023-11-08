@@ -66,23 +66,25 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^17.3.2"
+    "@taquito/core": "^17.3.2",
+    "json-stringify-safe": "^5.0.1"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.40",
-    "@types/jest": "^29.5.5",
+    "@types/bluebird": "^3.5.41",
+    "@types/jest": "^29.5.7",
+    "@types/json-stringify-safe": "^5.0.2",
     "@types/node": "^20",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
-    "eslint": "^8.51.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "eslint": "^8.52.0",
     "jest": "^29.7.0",
     "jest-config": "^29.7.0",
     "jest-extended": "^4.0.2",
-    "lint-staged": "^14.0.1",
+    "lint-staged": "^15.0.2",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^3.0.3",
     "rimraf": "^5.0.5",
-    "rollup": "^4.1.4",
+    "rollup": "^4.2.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "ts-jest": "^29.1.1",

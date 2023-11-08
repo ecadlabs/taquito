@@ -29,17 +29,17 @@ describe('Expand global constants', () => {
 
   it('Should expand global constants in script using parseSequence', () => {
     expect(
-      JSON.stringify(
+      stringify(
         p.parseSequence(
           script(globalConstant('constantHashInt'), globalConstant('constantHashDrop'))
         )
       )
-    ).toEqual(JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON)));
+    ).toEqual(stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON)));
   });
 
   it('Should expand global constants in script using parseList', () => {
     expect(
-      JSON.stringify(
+      stringify(
         p.parseList(
           `IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { ${globalConstant(
             'constantHashDrop'
@@ -47,7 +47,7 @@ describe('Expand global constants', () => {
         )
       )
     ).toEqual(
-      JSON.stringify({
+      stringify({
         prim: 'IF_LEFT',
         args: [
           [
@@ -70,13 +70,13 @@ describe('Expand global constants', () => {
 
   it('Should expand global constants in script using parseMichelineExpression', () => {
     expect(
-      JSON.stringify(
+      stringify(
         p.parseMichelineExpression(
           `(or (${globalConstant('constantHashInt')}) (${globalConstant('constantHashInt')}))`
         )
       )
     ).toEqual(
-      JSON.stringify({
+      stringify({
         prim: 'or',
         args: [registeredIntExprJSON, registeredIntExprJSON],
       })
@@ -85,9 +85,9 @@ describe('Expand global constants', () => {
 
   it('Should expand global constants in script using parseScript', () => {
     expect(
-      JSON.stringify(
+      stringify(
         p.parseScript(script(globalConstant('constantHashInt'), globalConstant('constantHashDrop')))
       )
-    ).toEqual(JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON)));
+    ).toEqual(stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON)));
   });
 });

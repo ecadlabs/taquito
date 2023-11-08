@@ -19,6 +19,7 @@ import {
   hasMetadataWithInternalOperationResult,
   hasMetadataWithResult,
 } from './types';
+import stringify from 'json-stringify-safe';
 
 export interface TezosOperationErrorWithMessage extends TezosGenericOperationError {
   with: MichelsonV1ExpressionBase;
@@ -55,7 +56,7 @@ export class TezosOperationError extends RpcError {
       } else if (lastError.with.int) {
         this.message = lastError.with.int;
       } else {
-        this.message = JSON.stringify(lastError.with);
+        this.message = stringify(lastError.with);
       }
     }
   }

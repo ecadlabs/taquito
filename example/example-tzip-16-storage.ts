@@ -25,7 +25,7 @@ async function example() {
 
     const metadataBigMap = new MichelsonMap();
     metadataBigMap.set("", char2Bytes('tezos-storage:here'));
-    metadataBigMap.set("here", char2Bytes(JSON.stringify(metadataJSON)))
+    metadataBigMap.set("here", char2Bytes(stringify(metadataJSON)))
 
     // Ligo Taco shop contract modified to include metadata in storage
     // https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A

@@ -179,7 +179,7 @@ async function originateTheContracts() {
     contract_catalogue.forEach((value, key) => {
       jsonObject[key] = value;
     });
-    console.log(JSON.stringify(jsonObject));
+    console.log(stringify(jsonObject));
   }
 }
 
@@ -584,7 +584,7 @@ async function originateTzip16Storage() {
 
     const metadataBigMap = new MichelsonMap();
     metadataBigMap.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMap.set('here', char2Bytes(JSON.stringify(metadataJSON)));
+    metadataBigMap.set('here', char2Bytes(stringify(metadataJSON)));
 
     const tacoShopStorageMap = new MichelsonMap();
 
@@ -696,7 +696,7 @@ async function originateTzip16OnChainJSON() {
   try {
     const metadataBigMAp = new MichelsonMap();
     metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample1)));
+    metadataBigMAp.set('here', char2Bytes(stringify(metadataViewsExample1)));
 
     const op = await tezos.contract.originate({
       code: contractCode,
@@ -719,7 +719,7 @@ async function originateTzip16OnChainMultiply() {
   try {
     const metadataBigMAp = new MichelsonMap();
     metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample2)));
+    metadataBigMAp.set('here', char2Bytes(stringify(metadataViewsExample2)));
 
     const op = await tezos.contract.originate({
       code: contractCode,

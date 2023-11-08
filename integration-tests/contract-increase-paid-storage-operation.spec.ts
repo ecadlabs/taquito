@@ -2,6 +2,7 @@ import { CONFIGS } from './config';
 import { OpKind } from '@taquito/taquito';
 import { ligoSample } from './data/ligo-simple-contract';
 import { _describe, _it } from "./test-utils";
+import stringify from 'json-stringify-safe';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 
@@ -28,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         simpleContractAddress = op.contractAddress!;
       } catch (e) {
-        console.log(JSON.stringify(e));
+        console.log(stringify(e));
       }
     });
 

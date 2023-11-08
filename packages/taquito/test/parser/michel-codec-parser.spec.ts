@@ -33,8 +33,8 @@ describe('MichelCodec parser', () => {
       const parser = new MichelCodecParser(new Context(mockRpcClient as any));
       const result = await parser.prepareCodeOrigination(originateParams);
 
-      expect(JSON.stringify(result)).toEqual(
-        JSON.stringify({
+      expect(stringify(result)).toEqual(
+        stringify({
           code: [
             { prim: 'parameter', args: [{ prim: 'int' }] },
             {
@@ -71,8 +71,8 @@ describe('MichelCodec parser', () => {
       const parser = new MichelCodecParser(new Context(mockRpcClient as any));
       const result = await parser.prepareCodeOrigination(originateParams);
 
-      expect(JSON.stringify(result)).toEqual(
-        JSON.stringify({
+      expect(stringify(result)).toEqual(
+        stringify({
           code: [
             { prim: 'parameter', args: [{ prim: 'int' }] },
             {
@@ -109,8 +109,8 @@ describe('MichelCodec parser', () => {
       const parser = new MichelCodecParser(new Context(mockRpcClient as any));
       const result = await parser.prepareCodeOrigination(originateParams);
 
-      expect(JSON.stringify(result)).toEqual(
-        JSON.stringify({
+      expect(stringify(result)).toEqual(
+        stringify({
           code: [
             { prim: 'parameter', args: [{ prim: 'int' }] },
             {

@@ -20,7 +20,7 @@ describe('Sapling State Tree tests', () => {
     const result = await state.getStateTree(sapling_state_diff);
 
     expect(result).toBeDefined();
-    expect(JSON.stringify(result)).toEqual(stateTree);
+    expect(stringify(result)).toEqual(stateTree);
   });
 
   it('Should be able to get witness from Sapling state diff', async () => {

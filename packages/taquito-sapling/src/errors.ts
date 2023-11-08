@@ -1,11 +1,15 @@
 import { ParameterValidationError, TaquitoError } from '@taquito/core';
+import stringify from 'json-stringify-safe';
 
 /**
  *  @category Error
  *  @description Error indicates the spending key is invalid
  */
 export class InvalidSpendingKey extends ParameterValidationError {
-  constructor(public readonly sk: string, public readonly errorDetail: string) {
+  constructor(
+    public readonly sk: string,
+    public readonly errorDetail: string
+  ) {
     super();
     this.name = 'InvalidSpendingKey';
     this.message = `Invalid spending key "${sk}" ${errorDetail}.`;
@@ -20,7 +24,7 @@ export class InvalidMerkleTreeError extends ParameterValidationError {
   constructor(public readonly root: string) {
     super();
     this.name = 'InvalidMerkleTreeError';
-    this.message = `Invalid merkle tree has root "${JSON.stringify(
+    this.message = `Invalid merkle tree has root "${stringify(
       root
     )}" different from expected root.`;
   }
@@ -42,7 +46,10 @@ export class TreeConstructionFailure extends TaquitoError {
  *  @description Error indicates the memo is invalid
  */
 export class InvalidMemo extends ParameterValidationError {
-  constructor(public readonly memo: string, public readonly errorDetails: string) {
+  constructor(
+    public readonly memo: string,
+    public readonly errorDetails: string
+  ) {
     super();
     this.name = 'InvalidMemo';
     this.message = `Invalid memo "${memo}" with length ${memo.length} ${errorDetails}`;
@@ -54,7 +61,10 @@ export class InvalidMemo extends ParameterValidationError {
  *  @description Error indicates not enough balance to prepare the sapling transaction
  */
 export class InsufficientBalance extends TaquitoError {
-  constructor(public readonly realBalance: string, public readonly amountToSpend: string) {
+  constructor(
+    public readonly realBalance: string,
+    public readonly amountToSpend: string
+  ) {
     super();
     this.name = 'InsufficientBalance';
     this.message = `Unable to spend "${amountToSpend}" mutez while the balance is only ${realBalance} mutez.`;

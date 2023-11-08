@@ -7,6 +7,7 @@ import { buf2hex, char2Bytes, hex2buf } from '@taquito/utils';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { packDataBytes } from "@taquito/michel-codec"
 import { _describe, _it } from "./test-utils";
+import stringify from 'json-stringify-safe';
 
 const blake = require('blakejs');
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
@@ -324,9 +325,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         try {
           await fail_contract.methods.transfer(bootstrap3_address, bootstrap4_address, 1).send();
         } catch (errors) {
-          let jsonStr: string = JSON.stringify(errors);
+          let jsonStr: string = stringify(errors);
           let jsonObj = JSON.parse(jsonStr);
-          let error_code = JSON.stringify(jsonObj.errors[1].with.int);
+          let error_code = stringify(jsonObj.errors[1].with.int);
           expect((error_code = '26'));
         }
 

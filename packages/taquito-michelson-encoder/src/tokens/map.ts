@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-safe';
 import { MichelsonMap } from '../michelson-map';
 import { MapTokenSchema } from '../schema/types';
 import {
@@ -15,7 +16,11 @@ import {
  */
 export class MapValidationError extends TokenValidationError {
   name = 'MapValidationError';
-  constructor(public value: any, public token: MapToken, message: string) {
+  constructor(
+    public value: any,
+    public token: MapToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -47,7 +52,7 @@ export class MapToken extends Token {
       throw new MapValidationError(
         value,
         this,
-        `Value ${JSON.stringify(value)} is not a valid MichelsonMap`
+        `Value ${stringify(value)} is not a valid MichelsonMap`
       );
     }
   }

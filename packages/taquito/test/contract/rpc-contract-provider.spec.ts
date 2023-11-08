@@ -240,7 +240,7 @@ describe('RpcContractProvider test', () => {
         storageLimit: 257,
       });
 
-      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      const res = JSON.parse(stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResults);
     });
@@ -256,7 +256,7 @@ describe('RpcContractProvider test', () => {
         storageLimit: 257,
         mutez: true,
       });
-      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      const res = JSON.parse(stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResultsMutezTrue);
     });
@@ -272,7 +272,7 @@ describe('RpcContractProvider test', () => {
         init: miInit,
       });
 
-      const res = JSON.parse(JSON.stringify(result.raw)); // Strip symbols
+      const res = JSON.parse(stringify(result.raw)); // Strip symbols
 
       expect(res).toEqual(originateResultsEstimate);
     });

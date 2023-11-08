@@ -7,6 +7,7 @@ import {
 } from '../token';
 import BigNumber from 'bignumber.js';
 import { BaseTokenSchema } from '../../schema/types';
+import stringify from 'json-stringify-safe';
 
 /**
  *  @category Error
@@ -14,7 +15,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class IntValidationError extends TokenValidationError {
   name = 'IntValidationError';
-  constructor(public value: any, public token: IntToken, message: string) {
+  constructor(
+    public value: any,
+    public token: IntToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -55,7 +60,7 @@ export class IntToken extends ComparableToken {
   private validate(val: any) {
     const bigNumber = new BigNumber(val);
     if (bigNumber.isNaN()) {
-      throw new IntValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
+      throw new IntValidationError(val, this, `Value is not a number: ${stringify(val)}`);
     }
   }
 

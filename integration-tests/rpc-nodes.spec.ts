@@ -6,6 +6,7 @@ import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 import { ticketCode, ticketStorage } from './data/code_with_ticket';
 import { _describe, _it } from "./test-utils";
+import stringify from 'json-stringify-safe';
 
 CONFIGS().forEach(
   ({
@@ -39,7 +40,7 @@ CONFIGS().forEach(
         const ticketCallOp = await ticketContract.methods.auto_call(1).send();
         await ticketCallOp.confirmation();
       } catch (e) {
-        console.log('Failed to originate ticket contract', JSON.stringify(e));
+        console.log('Failed to originate ticket contract', stringify(e));
       }
 
     });

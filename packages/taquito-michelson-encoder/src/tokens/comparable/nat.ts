@@ -7,6 +7,7 @@ import {
 } from '../token';
 import BigNumber from 'bignumber.js';
 import { BaseTokenSchema } from '../../schema/types';
+import stringify from 'json-stringify-safe';
 
 /**
  *  @category Error
@@ -14,7 +15,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class NatValidationError extends TokenValidationError {
   name = 'NatValidationError';
-  constructor(public value: any, public token: NatToken, message: string) {
+  constructor(
+    public value: any,
+    public token: NatToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -51,10 +56,10 @@ export class NatToken extends ComparableToken {
   private validate(val: any) {
     const bigNumber = new BigNumber(val);
     if (bigNumber.isNaN()) {
-      throw new NatValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
+      throw new NatValidationError(val, this, `Value is not a number: ${stringify(val)}`);
     }
     if (bigNumber.isNegative()) {
-      throw new NatValidationError(val, this, `Value cannot be negative: ${JSON.stringify(val)}`);
+      throw new NatValidationError(val, this, `Value cannot be negative: ${stringify(val)}`);
     }
   }
 

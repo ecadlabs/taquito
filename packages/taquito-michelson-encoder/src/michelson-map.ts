@@ -1,16 +1,20 @@
 import { MichelsonV1Expression } from '@taquito/rpc';
 import { Schema } from './schema/storage';
-import stringify from 'fast-json-stable-stringify';
+import stableStringify from 'fast-json-stable-stringify';
 import { TaquitoError } from '@taquito/core';
+import safeStringify from 'json-stringify-safe';
 
 /**
  *  @category Error
  *  @description Error that indicates an invalid map type being passed or used
  */
 export class InvalidMapTypeError extends TaquitoError {
-  constructor(public readonly mapType: any, public readonly reason: string) {
+  constructor(
+    public readonly mapType: any,
+    public readonly reason: string
+  ) {
     super();
-    this.message = `The map type '${JSON.stringify(mapType)}' is invalid. Reason: ${reason}.`;
+    this.message = `The map type '${safeStringify(mapType)}' is invalid. Reason: ${reason}.`;
     this.name = 'InvalidMapTypeError';
   }
 }
@@ -60,11 +64,11 @@ export class MapTypecheckError extends TaquitoError {
     public readonly reason: any
   ) {
     super();
-    this.message = `The ${objectType} provided: ${JSON.stringify(
+    this.message = `The ${objectType} provided: ${safeStringify(
       value
-    )} is not compatible with the expected michelson type: ${JSON.stringify(
+    )} is not compatible with the expected michelson type: ${safeStringify(
       type
-    )}. Reason: ${JSON.stringify(reason)}.`;
+    )}. Reason: ${safeStringify(reason)}.`;
     this.name = 'MapTypecheckError';
   }
 }
@@ -156,7 +160,7 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
   }
 
   private serializeDeterministically(key: K): string {
-    return stringify(key);
+    return stableStringify(key);
   }
 
   *keys(): Generator<K> {

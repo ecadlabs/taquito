@@ -297,7 +297,7 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<ManagerKeyResponse> {
     this.validateAddress(address);
-    return this.httpBackend.createRequest<ManagerKeyResponse>({
+    return await this.httpBackend.createRequest<ManagerKeyResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/manager_key`
       ),
