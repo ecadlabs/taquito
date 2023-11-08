@@ -26,6 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await op.confirmation();
 
         simpleContractAddress = op.contractAddress!;
+        console.log('this is the new contract address: ', simpleContractAddress);
       } catch (e) {
         console.log(JSON.stringify(e));
       }
@@ -93,7 +94,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           destination: simpleContractAddress
         }
       ])
-        .send();
+      .send();
 
       await op.confirmation();
       expect(op.status).toEqual('applied');
