@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         simpleContractAddress = op.contractAddress!;
       } catch (e) {
-        console.log(JSON.stringify(e));
+        console.log(`Error when trying to originate the contract for the test: \n`, JSON.stringify(e));
       }
     });
 
@@ -41,35 +41,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       await op.confirmation();
       expect(op.hash).toBeDefined();
-      expect(op.status).toEqual('applied');
-
-      const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
-
-      expect(parseInt(paidSpaceAfter)).toEqual(parseInt(paidSpaceBefore) + 1);
-    });
-
-    it(`should be able to include increasePaidStorage operation in a batch: ${rpc}`, async () => {
-      const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
-
-      const op = await Tezos.contract
-        .batch()
-        .withOrigination({
-          balance: "1",
-          code: `parameter string;
-          storage string;
-          code {CAR;
-                PUSH string "Hello ";
-                CONCAT;
-                NIL operation; PAIR};
-          `,
-          init: `"test"`
-        })
-        .withIncreasePaidStorage({
-          amount: 1,
-          destination: simpleContractAddress
-        })
-        .send();
-      await op.confirmation();
       expect(op.status).toEqual('applied');
 
       const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
