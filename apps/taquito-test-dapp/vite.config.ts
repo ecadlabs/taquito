@@ -31,10 +31,8 @@ export default ({ command, mode }) => {
         ),
         "@airgap/beacon-sdk": path.resolve(
           path.resolve(),
-          // "./src/walletbeacon.dapp.min.js"
           `../../node_modules/@airgap/beacon-sdk/dist/${isBuild ? "esm" : "cjs"
           }/index.js`
-          // `../../node_modules/@airgap/beacon-dapp/dist/walletbeacon.dapp.min.js`
         ),
         // polyfills
         "readable-stream": "vite-compatible-readable-stream",
