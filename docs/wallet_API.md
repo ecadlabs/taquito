@@ -6,16 +6,20 @@ author: Claude Barde
 
 ## What is the Wallet API?
 
-You have learned how to use Taquito to interact with the Tezos blockchain. Up to this document, you have been using a signer to sign operations. For interactive dApps, it is common to use a wallet to sign operations. From a user's perspective, the workflow is as follows:
+You have learned how to use Taquito to interact with the Tezos blockchain. Up to this document, we used a signer to sign operations. Interactive dApps (short for "decentralized Apps") commonly use a wallet to sign operations. From a user's perspective, the workflow is as follows:
 
-1. The user has a wallet installed and configured on their device.
+1. The user has a wallet installed and configured on their device. (Or they might be using a web-based wallet)
 2. The user visits a dApp and wants to interact with it.
 3. The dApp asks the user to connect their wallet.
 4. The user selects their wallet.
 5. The wallet asks the user to confirm the connection.
-6. Now when the dApp wants to send an operation, it asks the wallet to sign it. This might need additional confirmation from the user, or the user might have setup their wallet to sign operations automatically (for instance, automatically sign transactions below a certain amount in a certain time frame).
+6. When the dApp wants to send an operation, it asks the wallet to sign it. This might need additional confirmation from the user, or they might have set up their wallet to sign operations automatically (for instance, automatically sign transactions below a certain amount in a certain time frame).
+7. There are two possibilities here:
+    1. The wallet signs the operation and sends (injects) it to the blockchain.
+    2. The wallet sends the signed operation to the dApp, and the dApp sends it to the network.
+8. The dApp can now wait for the operation to be confirmed.
 
-The main benefit of this workflow is that the user does not have to trust a dApp with their private key. The private key never 
+The main benefit of this workflow is that the user does not have to trust a dApp with their private key. The private key never leaves the wallet.
 
 ## Installing the Wallet API
 
@@ -119,6 +123,22 @@ wallet
   .then((address) => println(`Your address: ${address}`));
 
 Tezos.setWalletProvider(wallet);
+```
+
+### Subscribing to events
+
+While your dApp is connected to the wallet, different events can happen on the wallet side. A reactive dApp can subscribe to these events and update the UI to create a good user experience.
+The different types of events are defined in the type `BeaconEvent` that can be imported from `"@airgap/beacon-sdk"`. Some of the events are: `ACTIVE_ACCOUNT_SET`, `PAIR_SUCCESS`, `SIGN_REQUEST_SUCCESS`.
+To see all possible events, please check out the [BeaconEvent in Beacon SDK documentation](https://typedocs.walletbeacon.io/enums/beaconevent.html).
+
+You can subscribe to any of these events as follows:
+
+```ts
+await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
+  // logic to update the active account in your dApp's UI
+  console.log(data.address);
+});
+await wallet.requestPermissions();
 ```
 
 ### - Development wallets
@@ -732,43 +752,3 @@ In most cases, you want to use the Wallet API when you give the users of your da
 The Wallet API introduces a new method to process operation confirmations. Observables. When the dApp sends the operation to the wallet, the dApp will "listen" when the operation appears in a block. The Wallet API observable will "emit" a stream of events as they occur. Orphan/Uncle block detection is also surfaced when observing confirmations for an operation.
 
 The duties of a Wallet are much broader than the very narrow duty of signing operation byte sequences. That's one reason why we built the Wallet API. It offers a better user experience by doing less. It allows Wallets to carry out all the duties expected of a Wallet.
-
-## Subscribing to events
-
-While your dApp is connected to the wallet, different events can happen on the wallet side. A reactive dApp can subscribe to these events and update the UI to create a good user experience.
-The different types of events are defined in the type `BeaconEvent` that can be imported from `"@airgap/beacon-sdk"`. Currently the following events are supported:
-
-```
-BeaconEvent.ACKNOWLEDGE_RECEIVED
-BeaconEvent.ACTIVE_ACCOUNT_SET
-BeaconEvent.ACTIVE_TRANSPORT_SET
-BeaconEvent.BROADCAST_REQUEST_SENT
-BeaconEvent.BROADCAST_REQUEST_SUCCESS
-BeaconEvent.BROADCAST_REQUEST_ERROR
-BeaconEvent.CHANNEL_CLOSED
-BeaconEvent.HIDE_UI
-BeaconEvent.INTERNAL_ERROR
-BeaconEvent.LOCAL_RATE_LIMIT_REACHED
-BeaconEvent.NO_PERMISSIONS
-BeaconEvent.OPERATION_REQUEST_SENT
-BeaconEvent.OPERATION_REQUEST_SUCCESS
-BeaconEvent.OPERATION_REQUEST_ERROR
-BeaconEvent.PAIR_INIT
-BeaconEvent.PAIR_SUCCESS
-BeaconEvent.PERMISSION_REQUEST_ERROR
-BeaconEvent.SIGN_REQUEST_SENT
-BeaconEvent.SIGN_REQUEST_SUCCESS
-BeaconEvent.SIGN_REQUEST_ERROR
-BeaconEvent.SHOW_PREPARE
-BeaconEvent.UNKNOWN
-```
-
-You can subscribe to any of these events as follows:
-
-```ts
-await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
-  // logic to update the active account in your dApp's UI
-  console.log(data.address);
-});
-await wallet.requestPermissions();
-```
