@@ -9,15 +9,16 @@ author: Claude Barde
 You have learned how to use Taquito to interact with the Tezos blockchain. Up to this document, we used a signer to sign operations. Interactive dApps (short for "decentralized Apps") commonly use a wallet to sign operations. From a user's perspective, the workflow is as follows:
 
 1. The user has a wallet installed and configured on their device. (Or they might be using a web-based wallet)
-2. The user visits a dApp and wants to interact with it.
-3. The dApp asks the user to connect their wallet.
-4. The user selects their wallet.
-5. The wallet asks the user to confirm the connection.
-6. When the dApp wants to send an operation, it asks the wallet to sign it. This might need additional confirmation from the user, or they might have set up their wallet to sign operations automatically (for instance, automatically sign transactions below a certain amount in a certain time frame).
-7. There are two possibilities here:
+2. The user visits a dApp.
+3. The user takes action to interact with the dApp.
+4. The dApp asks the user to connect their wallet.
+5. The user selects their wallet.
+6. The wallet asks the user to confirm the connection.
+7. When the dApp wants to send an operation, it asks the wallet to sign it. This might need additional confirmation from the user.
+8. There are two possibilities here:
     1. The wallet signs the operation and sends (injects) it to the blockchain.
     2. The wallet sends the signed operation to the dApp, and the dApp sends it to the network.
-8. The dApp can now wait for the operation to be confirmed.
+9. The dApp can now wait for the operation to be confirmed.
 
 The main benefit of this workflow is that the user does not have to trust a dApp with their private key. The private key never leaves the wallet.
 
@@ -29,7 +30,7 @@ The first thing to do is to use the wallet API is to install it. You just need t
 npm install @taquito/taquito @taquito/beacon-wallet @temple-wallet/dapp
 ```
 
-A separate step from setting up the wallet in the dApp code as a developer is to setup the wallet as the user. This step is different for each wallet. Some wallets are browser extensions, while others are mobile apps or web wallets.
+A separate step from setting up the wallet in the dApp code as a developer is to set up the wallet as the user. This step is different for each wallet (e.g., Temple needs the user to install a browser extension). Some wallets are browser extensions, while others are mobile apps or web wallets.
 We will explain the requirements for the different wallets in detail in the sections below.
 
 ## Connecting the wallet
@@ -81,6 +82,7 @@ The necessary bare minimum to instantiate the wallet is an object with a `name` 
 The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
 
 ```js
+// TODO: subscribe to events, more information below
 await wallet.requestPermissions();
 ```
 
