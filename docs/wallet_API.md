@@ -6,7 +6,7 @@ author: Claude Barde
 
 ## What is the Wallet API?
 
-You have learned how to use Taquito to interact with the Tezos blockchain. Up to this document, we used a signer to sign operations. Interactive dApps (short for "decentralized Apps") commonly use a wallet to sign operations. From a user's perspective, the workflow is as follows:
+You have learned how to use Taquito to interact with the Tezos blockchain. Up to this document, we used a signer to sign operations. Interactive dApps (short for "decentralized Apps") commonly use a wallet to sign operations. The Wallet API provides a new yet familiar way to interact with the blockchain and smart contracts by delegating several actions that Taquito previously handled to the wallets. This delegation offers more flexibility for both developers and users and gives the ecosystem more space to evolve. From a user's perspective, the workflow is as follows:
 
 1. The user has a wallet installed and configured on their device. (Or they might be using a web-based wallet)
 2. The user visits a dApp.
