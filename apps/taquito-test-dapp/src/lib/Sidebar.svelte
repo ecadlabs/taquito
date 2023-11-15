@@ -21,7 +21,7 @@
 <style lang="scss">
   section {
     padding: 10px;
-    height: calc(100vh - 20px);
+    height: 100%;
     color: white;
     display: grid;
     grid-template-rows: 8% 5% 87%;
@@ -43,16 +43,13 @@
 
     ul {
       height: 95%;
-      list-style-image: url(description_white_24dp.svg);
+      list-style-image: url(../assets/icons/description_white_24dp.svg);
       list-style-position: inside;
-      overflow: auto;
+      overflow-y: scroll;
+      overflow-x: auto;
       margin-left: 0px;
       margin-bottom: 50px;
       padding: 5px 5px;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
 
       li {
         background: rgba(80, 227, 194, 0.25);
@@ -103,6 +100,7 @@
       {/each}
     {:else}
       {#each $store.tests as test}
+        <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
         <li
           id={test.id}
           style={$store.userAddress ? "cursor:pointer" : "cursor:not-allowed"}
