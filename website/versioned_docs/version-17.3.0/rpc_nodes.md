@@ -23,7 +23,7 @@ values={[
 
 | Provider         | Net          | URL                                      | Header                                                                          |
 |------------------|--------------|------------------------------------------|---------------------------------------------------------------------------------|
-| ECAD Labs        | Mainnet      | https://mainnet.ecadinfra.com            | [Check](https://mainnet.ecadinfra.com/chains/main/blocks/head/header)           |
+| ECAD Labs        | Mainnet      | https://mainnet.ecadinfra.com               | [Check](https://mainnet.ecadinfra.com/chains/main/blocks/head/header)              |
 | ECAD Labs        | Ghostnet     | https://ghostnet.ecadinfra.com           | [Check](https://ghostnet.ecadinfra.com/chains/main/blocks/head/header)          |
 | ECAD Labs        | Nairobinet   | https://nairobinet.ecadinfra.com         | [Check](https://nairobinet.ecadinfra.com/chains/main/blocks/head/header)        |
 | ECAD Labs        | Mumbainet    | https://mumbainet.ecadinfra.com          | [Check](https://mumbainet.ecadinfra.com/chains/main/blocks/head/header)         |
@@ -34,16 +34,17 @@ values={[
 | Marigold         | Ghostnet     | https://ghostnet.tezos.marigold.dev/     | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
 | Marigold         | Nairobinet   | https://nairobinet.tezos.marigold.dev/   | [Check](https://nairobinet.tezos.marigold.dev/chains/main/blocks/head/header)   |
 | Marigold         | Mumbainet    | https://mumbainet.tezos.marigold.dev/    | [Check](https://mumbainet.tezos.marigold.dev/chains/main/blocks/head/header)    |
+| TezTools         | Mainnet      | https://eu01-node.teztools.net/          | [Check](https://eu01-node.teztools.net/chains/main/blocks/head/header)          |
 
 *If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 </TabItem>
   <TabItem value="commercialNodes">
 
 | Provider         |  Details                                    |  
-|------------------|---------------------------------------------|
-| TzPro            |  https://tzpro.io/                          |
-| MIDL.dev         |  https://midl.dev/tezos-rpc/                |
-| Exaion           |  https://node.exaion.com                    |
+|------------------|------------------------------------------------------------------------|
+| MIDL.dev         |  https://midl.dev/tezos-rpc/            |
+| TezTools.io      |  https://t.me/teztools (Telegram) |
+| Exaion           |  https://node.exaion.com |
 
 *If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
