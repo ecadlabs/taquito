@@ -1,40 +1,37 @@
 ---
 title: Wallet API
+id: wallet_API
 author: Claude Barde
 ---
 
 ## What is the Wallet API?
 
-The Tezos blockchain is a fantastic tool, but it is self-contained. Except for the transactions you send to it, it has no interaction with the outside world. However, it would be amazing to interact with it, such as making payments, reading the balance of an account, or recording data in a smart contract. This interaction is what the Wallet API (and Taquito in general) achieves. The Wallet API provides a new yet familiar way to interact with the blockchain and smart contracts by delegating several actions that Taquito previously handled to the wallets. This delegation offers more flexibility for both developers and users and gives the ecosystem more space to evolve.
+You have learned how to use Taquito to interact with the Tezos blockchain. Up to this document, we used a signer to sign operations. Interactive dApps (short for "decentralized Apps") commonly use a wallet to sign operations. The Wallet API provides a new yet familiar way to interact with the blockchain and smart contracts by delegating several actions that Taquito previously handled to the wallets. This delegation offers more flexibility for both developers and users and gives the ecosystem more space to evolve. From a user's perspective, the workflow is as follows:
+
+1. The user has a wallet installed and configured on their device. (Or they might be using a web-based wallet)
+2. The user visits a dApp.
+3. The user takes action to interact with the dApp.
+4. The dApp asks the user to connect their wallet.
+5. The user selects their wallet.
+6. The wallet asks the user to confirm the connection.
+7. When the dApp wants to send an operation, it asks the wallet to sign it. This might need additional confirmation from the user.
+8. There are two possibilities here:
+    1. The wallet signs the operation and sends (injects) it to the blockchain.
+    2. The wallet sends the signed operation to the dApp, and the dApp sends it to the network.
+9. The dApp can now wait for the operation to be confirmed.
+
+The main benefit of this workflow is that the user does not have to trust a dApp with their private key. The private key never leaves the wallet.
 
 ## Installing the Wallet API
 
 The first thing to do is to use the wallet API is to install it. You just need to install the Taquito package to use the wallet API:
 
 ```
-npm install @taquito/taquito
-
+npm install @taquito/taquito @taquito/beacon-wallet @temple-wallet/dapp
 ```
 
-or
-
-```
-yarn add @taquito/taquito
-
-```
-
-Make sure you have the latest version (`7.1.0` when this article was written, but the API became available from `6.3.2-beta.0`).
-
-Once the package is downloaded, you can install the wallet of your choice. The wallet API supports different kinds of wallets. The _Beacon_ and _Temple_ wallets are available to use at the moment. You can install one or both wallets, depending on your requirements:
-
-```
-npm install @taquito/beacon-wallet
-
-npm install @temple-wallet/dapp
-
-```
-
-Remember that some wallets may require an extra step in addition to the package installation. For example, Temple must be used with an extension installed in the browser. We will explain the requirements for the different wallets in detail in the sections below.
+A separate step from setting up the wallet in the dApp code as a developer is to set up the wallet as the user. This step is different for each wallet (e.g., Temple needs the user to install a browser extension). Some wallets are browser extensions, while others are mobile apps or web wallets.
+We will explain the requirements for the different wallets in detail in the sections below.
 
 ## Connecting the wallet
 
@@ -66,7 +63,7 @@ Then, you can start initializing the wallet:
 const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://tezostaquito.io/img/favicon.svg',
-  preferredNetwork: 'ghostnet',
+  network: { type: 'ghostnet' },
   eventHandlers: {
     PERMISSION_REQUEST_SUCCESS: {
       handler: async (data) => {
@@ -78,19 +75,22 @@ const options = {
 const wallet = new BeaconWallet(options);
 ```
 
-The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
+The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp and the network you want it to point to. In this case, we choose to point it to `ghostnet`. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
 
-> Note: if you want to use the Kukai wallet for testing on ghostnet, you must use the optional property `preferredNetwork` and set it to `ghostnet`, otherwise the mainnet version of the Kukai wallet will open.
+> Note: Previous versions of Beacon used to have a `preferredNetwork` property instead of `network`. This property has been removed in the latest version of Beacon, and you must now use the `network` property.
 
 The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
 
 ```js
-await wallet.requestPermissions({
-  network: {
-    type: 'mainnet' | 'ghostnet' | 'jakartanet' | 'custom',
-  },
-});
+// TODO: subscribe to events, more information below
+await wallet.requestPermissions();
 ```
+
+:::note Subscribe to Events to be notified of changes in the wallet
+Please check out the section [Subscribing to events](#subscribing-to-events) to learn how to subscribe to events and be notified of changes in the wallet.
+:::
+
+In previous versions of Beacon, you were able to set the `network` property when doing `requestPermissions()`. This behavior was removed from Beacon, and you must now set the network when instantiating the wallet.
 
 You can choose among `mainnet`, `jakartanet` `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
@@ -120,11 +120,27 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 // const wallet = new BeaconWallet(options);
 
 wallet
-  .requestPermissions({ network: { type: 'ghostnet' } })
+  .requestPermissions()
   .then((_) => wallet.getPKH())
   .then((address) => println(`Your address: ${address}`));
 
 Tezos.setWalletProvider(wallet);
+```
+
+### Subscribing to events
+
+While your dApp is connected to the wallet, different events can happen on the wallet side. A reactive dApp can subscribe to these events and update the UI to create a good user experience.
+The different types of events are defined in the type `BeaconEvent` that can be imported from `"@airgap/beacon-sdk"`. Some of the events are: `ACTIVE_ACCOUNT_SET`, `PAIR_SUCCESS`, `SIGN_REQUEST_SUCCESS`.
+To see all possible events, please check out the [BeaconEvent in Beacon SDK documentation](https://typedocs.walletbeacon.io/enums/beaconevent.html).
+
+You can subscribe to any of these events as follows:
+
+```ts
+await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
+  // logic to update the active account in your dApp's UI
+  console.log(data.address);
+});
+await wallet.requestPermissions();
 ```
 
 ### - Development wallets
@@ -163,7 +179,7 @@ const wallet = new TempleWallet('MyAwesomeDapp');
 The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
 
 ```js
-await wallet.connect('mainnet' | 'limanet' | 'ghostnet' | 'mondaynet' | 'sandbox');
+await wallet.connect('mainnet' | 'mumbainet'  | 'nairobinet' | 'ghostnet' | 'mondaynet' | 'sandbox');
 ```
 
 (Temple used to be called Thanos and some Taquito code still uses the name Thanos.)
@@ -197,12 +213,12 @@ Tezos.setProvider({ wallet });
 //import { TempleWallet } from '@temple-wallet/dapp';
 TempleWallet.isAvailable()
   .then(() => {
-    const mywallet = new TempleWallet('MyAwesomeDapp');
-    mywallet
+    const myWallet = new TempleWallet('MyAwesomeDapp');
+    myWallet
       .connect('ghostnet')
       .then(() => {
-        Tezos.setWalletProvider(mywallet);
-        return mywallet.getPKH();
+        Tezos.setWalletProvider(myWallet);
+        return myWallet.getPKH();
       })
       .then((pkh) => {
         println(`Your address: ${pkh}`);
@@ -257,7 +273,7 @@ Transactions to smart contracts operate in the same fashion as transactions to a
 
 ## Calling a smart contract
 
-Sending a transaction to a smart contract to update its storage will be a different type of action as it implies targetting a specific entrypoint and formatting correctly the data to be sent.
+Sending a transaction to a smart contract to update its storage will be a different type of action as it implies targeting a specific entrypoint and formatting correctly the data to be sent.
 
 Fortunately, Taquito will make this operation go like a breeze! First, you need the contract abstraction created with the address of the smart contract you are targeting:
 
@@ -721,7 +737,7 @@ const op = await Tezos.wallet.transfer({ to: 'tz1...', amount: 2 }).send();
 await op.confirmation();
 ```
 
-If you want to send a transaction to a contract, the process is very similar with the addition of the `parameter` property that must point to the entrypoint you are targetting and the value you want to pass:
+If you want to send a transaction to a contract, the process is very similar with the addition of the `parameter` property that must point to the entrypoint you are targeting and the value you want to pass:
 
 ```js
 const op = await Tezos.wallet

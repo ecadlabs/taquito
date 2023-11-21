@@ -28,6 +28,7 @@ main {
   position: relative;
   display: grid;
   grid-template-columns: 25% 75%;
+  grid-template-rows: 75% 25%;
   height: 100vh;
   z-index: 10;
 }

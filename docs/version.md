@@ -2,6 +2,26 @@
 title: Versions
 author: Jev Bjorsell
 ---
+
+# Taquito v17.4.0
+
+**Potential Breaking Changes** : 
+We have updated various dependencies to the latest version in this release. Please update and test our packages for compatibility. We encourage all users to get in touch with the Taquito team if you encounter any unexpected behaviours and/or side effects.
+
+## Summary
+
+### Documentation
+- Updated docs on flattening nested Michelson type pairs and unions #2458 #2328
+- Added docs to obtain operation hash before injecting an operation #2550
+- Added details of FA2 contract entrypoint `balance_of` param #2719
+- Updated Wallet API docs to include examples on subscribing to events emitted by Beacon #2707
+- Updated the Taquito test dApp to output events #2707
+
+### Internals
+ - Updated various dependencies [PR#2693](https://github.com/ecadlabs/taquito/pull/2693) [PR#2720](https://github.com/ecadlabs/taquito/pull/2720)
+ - Added detectOpenHandles argument when running Flextesa integration tests as temporary workaround to Jest throwing circular JSON errors [PR#2721](https://github.com/ecadlabs/taquito/pull/2721)
+
+
 # Taquito v17.3.2
 
 ## Summary

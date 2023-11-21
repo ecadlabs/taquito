@@ -1,6 +1,6 @@
 ---
-title: Amendment and Voting
-id: amendment_and_voting
+title: Proposal & Ballot
+id: proposal_and_ballot
 author: Davis Sawali
 ---
 

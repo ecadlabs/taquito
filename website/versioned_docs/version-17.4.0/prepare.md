@@ -1,5 +1,5 @@
 ---
-title: Preparing Operations
+title: Prepare Provider
 author: Davis Sawali
 ---
 

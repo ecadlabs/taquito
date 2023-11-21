@@ -4,7 +4,7 @@
   import type { TestSettings, TestResult } from "../types";
   import { shortenHash } from "../utils";
   import { NetworkType } from "@airgap/beacon-sdk";
-  import { stringify } from "@taquito/core";
+  import { getTzKtUrl } from "../config";
 
   let test: TestSettings | undefined;
   let executionTime = 0;
@@ -335,36 +335,12 @@
           {#if opHash}
             <div style="word-break:break-word;">
               Operation hash:
-              {#if $store.networkType === NetworkType.ITHACANET}
-                <a
-                  href={`https://better-call.dev/ithacanet/opg/${opHash}/contents`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {shortenHash(opHash)}
-                </a>
-              {:else if $store.networkType === NetworkType.HANGZHOUNET}
-                <a
-                  href={`https://better-call.dev/hangzhounet/opg/${opHash}/contents`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {shortenHash(opHash)}
-                </a>
-              {:else if $store.networkType === NetworkType.GHOSTNET}
-                <a
-                  href={`https://better-call.dev/ghostnet/opg/${opHash}/contents`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {shortenHash(opHash)}
-                </a>
-              {:else if $store.networkType === NetworkType.MAINNET}
-                <a href={`https://tzkt.io/${opHash}`} target="_blank" rel="noopener noreferrer">
-                  {shortenHash(opHash)}
-                </a>
-              {:else}
+              {#if $store.networkType === NetworkType.CUSTOM}
                 {shortenHash(opHash)}
+              {:else}
+                <a href={`${getTzKtUrl($store.networkType)}/${opHash}`} target="_blank" rel="noopener noreferrer">
+                  {shortenHash(opHash)}
+                </a>
               {/if}
             </div>
           {/if}

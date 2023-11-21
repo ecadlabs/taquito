@@ -49,6 +49,8 @@ Tezos.setProvider({
 });
 ```
 
+Alternatively, you can use a `WalletProvider` to interact with a wallet. Please refer to the [Wallet API](wallet_API.md) documentation for more information.
+
 ## Examples
 
 ### Get the current Tezos balance for an address
