@@ -59,7 +59,9 @@
   },
   "dependencies": {
     "@taquito/core": "^17.4.0",
-    "axios": "^0.27.2"
+    "@types/node-fetch": "^2.6.9",
+    "axios": "^0.27.2",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.40",
