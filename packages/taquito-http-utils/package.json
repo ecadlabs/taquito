@@ -60,7 +60,6 @@
   "dependencies": {
     "@taquito/core": "^17.4.0",
     "@types/node-fetch": "^2.6.9",
-    "axios": "^0.27.2",
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {

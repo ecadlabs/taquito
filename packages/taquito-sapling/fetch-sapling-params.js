@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require("fs")
-const axios = require("axios")
+const fetch = require('node-fetch');
 
 const ZCASH_DOWNLOAD_URL = 'https://download.z.cash/downloads';
 const ZCASH_SPEND_PARAMS_FILE_NAME = 'sapling-spend.params';
@@ -9,10 +9,9 @@ const SPEND_PARAMS = 'saplingSpendParams';
 const OUTPUT_PARAMS = 'saplingOutputParams';
 
 async function fetchSaplingParams(url, name) {
-
-  const response = await axios.get(`${ZCASH_DOWNLOAD_URL}/${url}`, {
-    responseType: 'arraybuffer',
-  });
+  const response = await fetch(`${ZCASH_DOWNLOAD_URL}/${url}`);
+  const arrBuff = await response.arrayBuffer();
+  const buff = Buffer.from(arrBuff);
 
   fs.writeFile(`${name}.js`, `
   (function (root, factory) {
@@ -28,7 +27,7 @@ async function fetchSaplingParams(url, name) {
   }
 }(this, function () {
     return {
-      "${name}": "${response.data.toString('base64')}"
+      "${name}": "${buff.toString('base64')}"
     };
 }));
     `, (err) => {
