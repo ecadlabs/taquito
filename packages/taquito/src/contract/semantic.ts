@@ -5,6 +5,10 @@ import BigNumber from 'bignumber.js';
 import { MichelsonV1Expression } from '@taquito/rpc';
 import { SaplingStateAbstraction } from './sapling-state-abstraction';
 
+/**
+ * @description Override the default michelson encoder semantic to provide richer abstraction over storage properties
+ * @param provider ContractProvider (contract API)
+ */
 // Override the default michelson encoder semantic to provide richer abstraction over storage properties
 export const smartContractAbstractionSemantic: (p: ContractProvider) => Semantic = (
   provider: ContractProvider
@@ -26,7 +30,7 @@ export const smartContractAbstractionSemantic: (p: ContractProvider) => Semantic
     } else {
       return new SaplingStateAbstraction(new BigNumber(val.int), provider);
     }
-  }
+  },
   /*
   // TODO: embed useful other abstractions
   'contract':  () => {},

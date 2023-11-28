@@ -9,3 +9,4 @@ export * from './contract-methods/contract-method-interface';
 export * from './contract-methods/contract-method-flat-param';
 export * from './contract-methods/contract-method-object-param';
 export * from './sapling-state-abstraction';
+export { smartContractAbstractionSemantic } from './semantic';
