@@ -75,7 +75,6 @@
     "bignumber.js": "^9.1.2",
     "bip39": "3.1.0",
     "blakejs": "^1.2.1",
-    "node-fetch": "^2.7.0",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
   },

@@ -3,10 +3,6 @@
  * @module @taquito/http-utils
  */
 
-// const fetch = require('node-fetch');
-
-import fetch from 'node-fetch';
-
 import { STATUS_CODE } from './status_code';
 import { HttpRequestFailed, HttpResponseError, HttpTimeoutError } from './errors';
 
