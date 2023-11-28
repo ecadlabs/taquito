@@ -70,7 +70,7 @@ export class HttpBackend {
    * @throws {@link HttpRequestFailed} | {@link HttpResponseError} | {@link HttpTimeoutError}
    */
   async createRequest<T>(
-    { url, method, query, timeout = this.timeout, headers = {}, json = true }: HttpRequestOptions,
+    { url, method, timeout = this.timeout, query, headers = {}, json = true }: HttpRequestOptions,
     data?: object | string
   ) {
     // Serializes query params
