@@ -4,8 +4,10 @@
  */
 
 let fetch = globalThis?.fetch;
-// Will only use browser fetch if we are in a browser environment, will default to the more stable node-fetch otherwise
-if (!fetch || process?.versions?.node) {
+// Will only use browser fetch if we are in a browser environment,
+// default to the more stable node-fetch otherwise
+const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
+if (isNode) {
   fetch = require('node-fetch');
 }
 
