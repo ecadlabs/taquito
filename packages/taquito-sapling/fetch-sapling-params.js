@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require("fs")
+const fetch = require("node-fetch");
 
 const ZCASH_DOWNLOAD_URL = 'https://download.z.cash/downloads';
 const ZCASH_SPEND_PARAMS_FILE_NAME = 'sapling-spend.params';

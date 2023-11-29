@@ -3,6 +3,12 @@
  * @module @taquito/http-utils
  */
 
+let fetch = globalThis?.fetch;
+// Will only use browser fetch if we are in a browser environment, will default to the more stable node-fetch otherwise
+if (!fetch || process?.versions?.node) {
+  fetch = require('node-fetch');
+}
+
 import { STATUS_CODE } from './status_code';
 import { HttpRequestFailed, HttpResponseError, HttpTimeoutError } from './errors';
 
