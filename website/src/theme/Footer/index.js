@@ -116,16 +116,16 @@ function Footer() {
                             <FooterForm />
                           </li>
                         ) : item.html === 'image' ? (
-                          <a href="/" rel="noreferrer noopener" aria-label="">
+                          <a key={key} href="/" rel="noreferrer noopener" aria-label="">
                             <div
                               ref={footerContainer}
                               onMouseEnter={() => lottie.play('footerLogo')}
-                              onMouseLeave={setInterval(() => {
+                              onMouseLeave={() => setInterval(() => {
                                 if (isActive) {
                                   return lottie.stop('footerLogo');
                                 }
                               }, 5000)}
-                              class="footerLogo"
+                              className="footerLogo"
                             />
                           </a>
                         ) : (
