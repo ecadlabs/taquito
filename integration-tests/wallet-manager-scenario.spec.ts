@@ -21,7 +21,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       contract = await op.contract();
     });
 
-    it('Verify wallet.transfer scenarios: implicit transfer to and from contracts, set and remove delegate, and transfer from a contract to a contract.', async () => {
+    it('should be able to transfer to originated account', async () => {
       // Transfer from implicit account (tz1) to contract (kt1_alice)
       // A regular transfer operation is made. No smart contract calls required for this scenario.
       const op = await Tezos.wallet.transfer({ to: contract.address, amount: 0.01 }).send();
