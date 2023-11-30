@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   let contract: DefaultWalletType;
 
   describe(`Test TZ Manager through wallet api: ${rpc}`, () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup();
 
       op = await Tezos.wallet.originate({
