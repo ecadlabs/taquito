@@ -215,6 +215,7 @@ const setupSignerWithFreshKey = async (
       headers: requestHeaders,
       json: false,
     });
+    
     const signer = new InMemorySigner(key!);
     Tezos.setSignerProvider(signer);
   } catch (e) {

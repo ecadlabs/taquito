@@ -30,6 +30,21 @@ export class HttpResponseError extends NetworkError {
     public readonly url: string
   ) {
     super();
-    this.name = 'HttpResponse';
+    this.name = 'HttpResponseError';
+  }
+}
+
+/**
+ *  @category Error
+ *  @description Error
+ */
+export class HttpTimeoutError extends NetworkError {
+  constructor(
+    public readonly timeout: number,
+    public readonly url: string
+  ) {
+    super();
+    this.name = 'HttpTimeoutError';
+    this.message = `HTTP request timeout of ${timeout}ms exceeded`;
   }
 }
