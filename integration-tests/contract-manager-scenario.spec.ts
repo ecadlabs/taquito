@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
   let contract: DefaultContractType;
   describe(`Test TZ Manager through contract api: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup();
+      await setup(true);
 
       op = await Tezos.contract.originate({
         balance: "1",
@@ -20,7 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       contract = await op.contract();
     });
 
-    it('should be ableto transfer from implicit to originated contracts', async () => {
+    it('should be able to transfer from implicit to originated contracts', async () => {
       // Transfer from implicit account (tz1) to contract (kt1_alice)
       // A regular transfer operation is made. No smart contract calls required for this scenario.
       const op = await Tezos.contract.transfer({ to: contract.address, amount: 1 })
