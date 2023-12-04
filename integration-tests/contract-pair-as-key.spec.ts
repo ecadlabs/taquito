@@ -68,18 +68,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }, 100);
     });
 
-    // it('Verify contract.originate for a contract with pair as a key', async () => {
-    //   const op = await Tezos.contract.originate({
-    //     balance: "0",
-    //     code: storageContractWithPairAsKey,
-    //     storage: storageMap
-    //   });
+    it('Verify contract.originate for a contract with pair as a key', async () => {
+      const op = await Tezos.contract.originate({
+        balance: "0",
+        code: storageContractWithPairAsKey,
+        storage: storageMap
+      });
 
-    //   await op.confirmation();
+      await op.confirmation();
       
-    //   expect(op.hash).toBeDefined();
-    //   expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-    // })
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+    });
 
     it('Verify contract.originate for a contract with pair as a key in map ', async () => {
       /** The init property is used in this test instead of the storage property as in the previous test. */
