@@ -2,17 +2,17 @@ import { CONFIGS } from "./config";
 import { BigMapAbstraction, MichelsonMap } from "@taquito/taquito";
 import { storageContractWithPairAsKey } from "./data/storage-contract-with-pair-as-key";
 import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
+import { MichelsonMapKey } from "@taquito/michelson-encoder";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
+  let storageMap: MichelsonMap<MichelsonMapKey, unknown>;
 
   describe(`Test contract origination with pair as key in storage through contract api using: ${rpc}`, () => {
     beforeAll(async () => {
       await setup();
-    });
 
-    it('Verify contract.originate for a contract with pair as a key', async () => {
-      const storageMap = new MichelsonMap();
+      storageMap = new MichelsonMap();
       // The contract schema in this example has a key with 8 nested pairs
       // (int(nat(string(bytes(mutez(bool(key_hash(timestamp(address)))))))))
       // and a value of `int`
@@ -66,7 +66,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         7: "2018-09-06T15:08:29.000Z",
         8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
       }, 100);
+    });
 
+    it('Verify contract.originate for a contract with pair as a key', async () => {
       const op = await Tezos.contract.originate({
         balance: "0",
         code: storageContractWithPairAsKey,
