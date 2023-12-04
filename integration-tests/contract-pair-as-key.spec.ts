@@ -29,7 +29,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5", // key_hash
         7: "2019-09-06T15:08:29.000Z",             // timestamp
         8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"  // address
-      }, 100)
+      }, 100);
+
       storageMap.set({
         0: "1",
         1: "2",
@@ -40,7 +41,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
         7: "2019-09-06T15:08:29.000Z",
         8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
-      }, 100)
+      }, 100);
+
       storageMap.set({
         0: "2",
         1: "2",
@@ -51,7 +53,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
         7: "2019-09-06T15:08:29.000Z",
         8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
-      }, 100)
+      }, 100);
+
       storageMap.set({
         0: "1",
         1: "2",
@@ -69,9 +72,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: storageContractWithPairAsKey,
         storage: storageMap
       });
+
       await op.confirmation();
-      
-      await op.contract()
       
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -86,7 +88,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       });
       await op.confirmation();
 
-      const contract = await op.contract()
+      const contract = await op.contract();
 
       const storage2: BigMapAbstraction = await contract.storage();
       const value = await storage2.get({ 'test': 'test2', 'test2': 'test3' });
