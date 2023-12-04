@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test contract origination with pair as key in storage through contract api using: ${rpc}`, () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup();
     });
 
