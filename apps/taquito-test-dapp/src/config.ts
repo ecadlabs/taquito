@@ -30,6 +30,7 @@ export const defaultMatrixNode = "beacon-node-1.sky.papers.tech";
 
 export const defaultNetworkType = NetworkType.GHOSTNET;
 
+// new protocol updated rpc url in example/data/test-dapp-contract.ts and npm -w example run example:deploy-dapp
 export const contractAddress = {
   mainnet: "KT1ShtH2zCrKMuWGRejEd6RAcnePwxBQeMAN",
   ghostnet: "KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5",
