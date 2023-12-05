@@ -4,6 +4,7 @@ import styles from './Hero.module.scss';
 import Slider from 'react-slick';
 import '../../../static/slick/slick.css';
 import '../../../static/slick/slick-theme.css';
+import GetStartedButton from '../GetStartedButton/GetStartedButton';
 
 const FeatureList = [
   {
@@ -14,52 +15,18 @@ const FeatureList = [
         easier
       </>
     ),
-    link: {
-      title: 'Get Started',
-      url: '/docs/quick_start',
-    },
-
-    logoImages: [
-      {
-        logo: require('../../../static/img/example.png').default,
-        link: {
-          title: 'Get Started',
-          url: '/docs/quick_start',
-        },
-      },
-      {
-        logo: require('../../../static/img/example.png').default,
-        link: {
-          title: 'Get Started',
-          url: '/docs/quick_start',
-        },
-      },
-      {
-        logo: require('../../../static/img/example.png').default,
-        link: {
-          title: 'Get Started',
-          url: '/docs/quick_start',
-        },
-      },
-    ],
     features: [
       {
-        title: 'Installing the Taqueri CLI',
-        // icon: 'require("../../../static/img/briefcase.png").default',
-        description: 'Installing the Taqueria is easy',
         gif: require('../../../static/img/hero-00.png').default,
       },
       {
-        title: 'Installing the Taqueria VS Code Extension',
-        // icon: require("../../../static/img/briefcase.png").default,
-        description: 'Taqueria has a VS Code extension available in the marketplace',
         gif: require('../../../static/img/hero-0.png').default,
       },
     ],
   },
 ];
 
-function Feature({ title, description, link, features }) {
+function Feature({ title, description, features }) {
   const sliderSettings = {
     arrows: false,
     dots: true,
@@ -70,20 +37,6 @@ function Feature({ title, description, link, features }) {
     initialSlide: 0,
     dotsClass: 'slick-dots slick-thumb',
     autoplaySpeed: 7000,
-
-    // customPaging: () => (
-    //   <div style={{ marginTop: '100px' }}>
-    //     <div
-    //       style={{
-    //         height: '6px',
-    //         width: '6px',
-    //         background: 'red',
-    //         // borderRadius: '100%',
-    //         // backgroundColor: theme.colors.textLightGray,
-    //       }}
-    //     />
-    //   </div>
-    // ),
   };
 
   return (
@@ -93,12 +46,7 @@ function Feature({ title, description, link, features }) {
           <h1 className={styles.heroTitle}>{title}</h1>
           <div className={styles.heroCardContent}>
             <p className={styles.heroCardDescription}>{description}</p>
-            <div className={styles.heroButtonContainer}>
-              <a className={styles.heroButton} href={link.url}>
-                {link.title}
-              </a>
-            </div>
-            {link.tilte}
+            <GetStartedButton />
           </div>
         </div>
       </div>

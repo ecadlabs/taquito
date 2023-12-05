@@ -6,6 +6,7 @@ import '../../../static/slick/slick.css';
 import '../../../static/slick/slick-theme.css';
 import ArrowRight from '../../../static/img/carousel-arrow-right.svg';
 import ArrowLeft from '../../../static/img/carousel-arrow-left.svg';
+import GetStartedButton from '../GetStartedButton/GetStartedButton';
 
 const FeatureList = [
   {
@@ -141,7 +142,10 @@ function Feature({ images, title }) {
   };
   return (
     <div className={styles.teams}>
-      <h2 className={styles.teamsTitle}>{title}</h2>
+      <div className={styles.titleAndButtonContainer}>
+        <h2 className={styles.teamsTitle}>{title}</h2>
+        <GetStartedButton />
+      </div>
       <div className={styles.arrowLeftContainer}>
         <ArrowLeft onClick={prevSlide} className={styles.arrowLeft} />
       </div>

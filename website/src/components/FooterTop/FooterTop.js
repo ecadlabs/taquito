@@ -12,7 +12,14 @@ const FeatureList = [
 function Feature({ title, url }) {
   return (
     <div className={styles.Contentcontainer}>
-      <h5 className={styles.headline}>{title}</h5>
+      <div className={styles.titleAndButtonContainer}>
+        <h5 className={styles.headline}>{title}</h5>
+        <div className={styles.footerTopButtonContainer}>
+          <a className={styles.footerTopButton} href='/docs/quick_start'>
+            Get Started
+          </a>
+        </div>
+      </div>
       <a href={url}>
         <ECADSvg className={styles.footerFeatureSvg} />
       </a>
