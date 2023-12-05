@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination to configure parserProvider to parse plain Michelson`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup();
     })
     it('uses noopParser to originate Michelson code and fails', async () => {
       // Configure the Tezostoolkit to use the NoopParser (the Michelson won't be parsed)
@@ -36,7 +36,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: idMichelsonCode,
         init: idInitData
       });
-      await op.confirmation()
+      await op.confirmation();
       expect(op.status).toEqual('applied')
     });
 
@@ -47,7 +47,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: idMichelsonCode,
         init: idInitData
       });
-      await op.confirmation()
+      await op.confirmation();
       expect(op.status).toEqual('applied')
     });
   });
@@ -63,7 +63,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: idMichelsonCode,
         init: idInitData
       })
-      await op.confirmation()
+      await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
     });
@@ -73,7 +73,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: idMichelsonCode,
         init: idInitData
       })
-      await op.confirmation()
+      await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
     });
