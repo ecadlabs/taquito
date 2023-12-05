@@ -27,12 +27,7 @@ const sidebars = {
         'operation_flow',
         'rpc_nodes',
         'web3js_taquito',
-        {
-          type: 'link',
-          label: '💬 Support Chatbot',
-          href: '/chatbot',
-          description: 'Ask questions and get answers from the TaquitoGPT chatbot',
-        },
+        'chatbot',
       ],
     },
     {
