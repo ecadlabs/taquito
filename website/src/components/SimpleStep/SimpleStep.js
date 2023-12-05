@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
-import clsx from 'clsx';
 import styles from './SimpleStep.module.scss';
+import GetStartedButton from '../GetStartedButton/GetStartedButton';
 
 const FeatureList = [
   {
@@ -53,9 +54,8 @@ function Feature({ title, steps, link, description }) {
                   <div className={styles.stepSvg}>
                     <step.icon alt={step.title} />
                   </div>
-                  <span className={idx === 0 ? styles.stepNumberFirst : styles.stepNumber}>{`${
-                    idx + 1
-                  }.`}</span>
+                  <span className={idx === 0 ? styles.stepNumberFirst : styles.stepNumber}>{`${idx + 1
+                    }.`}</span>
                 </div>
                 <div className={styles.textContainer}>
                   <h4 className={styles.stepTitle}>{step.title}</h4>
@@ -65,6 +65,9 @@ function Feature({ title, steps, link, description }) {
             </div>
           ))}
         </div>
+      </div>
+      <div className={styles.stepButtonContainer}>
+        <GetStartedButton />
       </div>
     </div>
   );
