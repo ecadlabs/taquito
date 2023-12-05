@@ -29,9 +29,8 @@ const sidebars = {
         'web3js_taquito',
         {
           type: 'link',
-          label: 'TaquitoGPT Support Chatbot',
+          label: '💬 Support Chatbot',
           href: '/chatbot',
-          className: 'sidebarHeader',
           description: 'Ask questions and get answers from the TaquitoGPT chatbot',
         },
       ],
