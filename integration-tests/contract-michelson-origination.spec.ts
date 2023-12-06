@@ -54,7 +54,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination in a plain Michelson through contract api using: ${rpc}`, () => {
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup()
     })
     it('Verify contract.originate for an ID contract written in plain Michelson', async () => {
