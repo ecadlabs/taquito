@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
 import styles from './SimpleStep.module.scss';
-import GetStartedButton from '../GetStartedButton/GetStartedButton';
+import StartNowButton from '../StartNowButton/StartNowButton';
 
 const FeatureList = [
   {
@@ -66,9 +66,7 @@ function Feature({ title, steps, link, description }) {
           ))}
         </div>
       </div>
-      <div className={styles.stepButtonContainer}>
-        <GetStartedButton />
-      </div>
+      <StartNowButton />
     </div>
   );
 }

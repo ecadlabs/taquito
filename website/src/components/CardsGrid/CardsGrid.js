@@ -1,11 +1,16 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
+import clsx from 'clsx';
 import styles from './CardsGrid.module.scss';
-import GetStartedButton from '../GetStartedButton/GetStartedButton';
 
 const FeatureList = [
   {
     title: 'What makes Taquito so amazing?',
+    link: {
+      title: 'Get Started',
+      url: '/docs/quick_start',
+      text: 'Ready to start?',
+    },
+
     cards: [
       {
         icon: require('../../../static/img/briefcase.svg').default,
@@ -35,13 +40,15 @@ const FeatureList = [
   },
 ];
 
-function Feature({ title, cards }) {
+function Feature({ title, cards, link }) {
   return (
     <div className={styles.content}>
       <div className={styles.cardsGridContainer}>
         <div className={styles.cardsGridTitleContainer}>
           <h1 className={styles.cardsGridTitle}>{title}</h1>
-          <GetStartedButton />
+          <a className={styles.cardsButton} href={link.url}>
+            {link.title}
+          </a>
         </div>
         <div className={styles.cardsGridCards}>
           {cards.map((card, idx) => (

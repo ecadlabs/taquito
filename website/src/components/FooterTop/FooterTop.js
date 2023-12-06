@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './FooterTop.module.css';
 import ECADSvg from '../../../static/img/ECAD_logo.svg';
-import GetStartedButton from '../GetStartedButton/GetStartedButton';
 
 const FeatureList = [
   {
@@ -13,12 +12,7 @@ const FeatureList = [
 function Feature({ title, url }) {
   return (
     <div className={styles.Contentcontainer}>
-      <div className={styles.titleAndButtonContainer}>
-        <h5 className={styles.headline}>{title}</h5>
-        <div className={styles.footerTopButtonContainer}>
-          <GetStartedButton />
-        </div>
-      </div>
+      <h5 className={styles.headline}>{title}</h5>
       <a href={url}>
         <ECADSvg className={styles.footerFeatureSvg} />
       </a>

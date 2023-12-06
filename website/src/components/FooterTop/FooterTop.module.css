@@ -51,15 +51,7 @@
 	height: 100%;
 }
 
-.titleAndButtonContainer {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: flex-end;
-	height: 100%;
-}
-
-.headline {
+.Contentcontainer h5 {
 	height: max-content;
 	margin-bottom: 60px;
 	white-space: nowrap;

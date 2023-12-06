@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './SimpleWay.module.scss';
 import SimpleWaySvg from '../../../static/img/logo-taquito-color.svg';
-import GetStartedButton from '../GetStartedButton/GetStartedButton';
+import StartNowButton from '../StartNowButton/StartNowButton';
 
 const FeatureList = [
   {
@@ -40,7 +40,7 @@ function Feature({ ways, title }) {
           </div>
         ))}
       </div>
-      <GetStartedButton />
+      <StartNowButton darkBg={true} />
     </div>
   );
 }
