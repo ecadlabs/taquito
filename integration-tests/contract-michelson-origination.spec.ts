@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination to configure parserProvider to parse plain Michelson`, () => {
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup();
     })
     it('uses noopParser to originate Michelson code and fails', async () => {
