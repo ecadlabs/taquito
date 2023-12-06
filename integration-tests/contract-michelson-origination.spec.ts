@@ -37,7 +37,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: idInitData
       });
       await op.confirmation();
-      expect(op.status).toEqual('applied')
+      expect(op.status).toEqual('applied');
     });
 
     it('no parser configured will use MichelCodecParser by default to originate Michelson code and succeeds', async () => {
@@ -53,30 +53,32 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   });
 
   describe(`Test contract origination in a plain Michelson through contract api using: ${rpc}`, () => {
-
     beforeAll(async () => {
-      await setup()
-    })
+      await setup();
+    });
+
     it('Verify contract.originate for an ID contract written in plain Michelson', async () => {
       const op = await Tezos.contract.originate({
         balance: "0",
         code: idMichelsonCode,
         init: idInitData
-      })
+      });
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
     });
+
     it('Origination should pass with balance as number', async () => {
       const op = await Tezos.contract.originate({
         balance: 0,
         code: idMichelsonCode,
         init: idInitData
-      })
+      });
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
     });
+
     it('Origination should thow error if given NaN for balance', async () => {
       expect(() => Tezos.contract.originate({
         balance: "asdf",
@@ -85,4 +87,4 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       })).rejects.toThrowError(InvalidBalanceError)
     });
   });
-})
+});
