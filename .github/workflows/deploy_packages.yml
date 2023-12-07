@@ -1,0 +1,114 @@
+name: Deploy Edge
+
+on:
+  pull_request:
+  push:
+    branches: ["master"]
+    tags:
+      - "v*"
+      - "rc*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  deploy-edge-packages:
+    name: Deploy edge packages
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.head.repo.fork && (github.event_name == 'pull_request' || github.ref == 'refs/heads/master') }}
+    env:
+      VERDACCIO_TOKEN: ${{ secrets.EDGE_VERDACCIO_TOKEN }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: lts/hydrogen
+
+    - name: Set environment variables for PR
+      if: ${{ github.event_name == 'pull_request' }}
+      run: |
+        echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        echo "PACKAGE_VERSION=`node -p "require('./packages/taquito/package.json').version"`" >> $GITHUB_ENV
+        echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+        echo "TARGET_VERSION=${PACKAGE_VERSION}-${SHORT_SHA}--${BRANCH_NAME}" >> $GITHUB_ENV
+        npm ci
+        find packages/ -mindepth 1 -maxdepth 2 -name README.md | xargs sed -i '1s/^/# WARNING This build is produced from a feature branch and could contain unreviewed changes from the public. Use with caution, do not use in production\n\n/'
+        npx lerna version "${TARGET_VERSION}" --no-push --no-git-tag-version --yes
+        npm run version-stamp
+        npm run build
+        npm run -w @taquito/taquito build:release
+        git config user.email "actions@github.com" && git config user.name "Github Actions"
+        git add . && git commit -m "committing changes to files to make lerna happy in next step, this is expected to never be pushed to remote"
+        echo ${VERDACCIO_TOKEN} >> ~/.npmrc
+        npx lerna publish --dist-tag edge from-package --yes --registry https://npm.preview.tezostaquito.io/
+        echo "COMMENT_BODY<<EOF"  >> $GITHUB_ENV
+        echo "New packages have been deployed to the preview repository at https://npm.preview.tezostaquito.io/." >> $GITHUB_ENV
+        echo "" >> $GITHUB_ENV
+        echo "### Published packages:" >> $GITHUB_ENV
+        echo "\`\`\`" >> $GITHUB_ENV
+        find packages/ -mindepth 1 -maxdepth 2 -name package.json | xargs -I{} node -pe "require('./{}')['name']" | sed "s/^\(.*\)$/npm i \1@${TARGET_VERSION} --registry https:\/\/npm.preview.tezostaquito.io\//" >> $GITHUB_ENV
+        echo "\`\`\`" >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+
+    - name: Update PR message
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        header: deploy-packages
+        message: ${{ env.COMMENT_BODY }}
+
+  determine-release-type:
+    name: Determine release type
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    outputs:
+      release_type: ${{ steps.release_type.outputs.release_type }}
+
+    steps:
+
+    - name: Determine release Type
+      id: release_type
+      run: |
+        if [[ $GITHUB_REF == *"-RC"* ]]; then
+          echo "::set-output name=release_type::prerelease"
+        else
+          echo "::set-output name=release_type::release"
+        fi
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [determine-release-type]
+
+    steps:
+    - name: Create release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+        prerelease: ${{ needs.determine-release-type.outputs.release_type == 'prerelease' }}
+
+    - name: Publish packages
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        npx lerna clean --yes
+        npm run build
+        if [[ ${{ needs.determine-release-type.outputs.release_type }} == 'prerelease' ]]; then
+          npx lerna publish --dist-tag next from-package
+        else
+          npx lerna publish from-package
+        fi
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+
+
