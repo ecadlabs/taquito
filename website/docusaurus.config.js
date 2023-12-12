@@ -9,6 +9,9 @@ module.exports = {
   baseUrl: '/',
   projectName: 'taquito',
   organizationName: 'ecadlabs',
+  markdown: {
+    mermaid: true,
+  },
   scripts: [
     'https://buttons.github.io/buttons.js',
     {
