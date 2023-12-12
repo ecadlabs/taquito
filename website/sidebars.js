@@ -24,6 +24,7 @@ const sidebars = {
       collapsible: false,
       items: [
         'quick_start',
+        'tutorial',
         'operation_flow',
         'rpc_nodes',
         'web3js_taquito',
