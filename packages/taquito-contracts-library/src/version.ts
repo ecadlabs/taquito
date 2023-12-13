@@ -1,5 +1,5 @@
 // IMPORTANT: THIS FILE IS AUTO GENERATED! DO NOT MANUALLY EDIT OR CHECKIN!
 export const VERSION = {
-  commitHash: 'a908ab176a8c52c025fd43e7acd452415396f54e',
-  version: '17.4.0',
+  commitHash: 'ff6c3b619e314a09bb0aa65d711ef9eaf81a0ee9',
+  version: '17.5.0',
 };

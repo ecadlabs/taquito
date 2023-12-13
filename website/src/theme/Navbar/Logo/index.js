@@ -36,6 +36,40 @@ export default function NavbarLogo() {
     }
   }, [isActive]);
 
+
+  useEffect(() => {
+    const scriptId = 'chatBaseExternalScript';
+    const existingScript = document.getElementById(scriptId);
+    if (existingScript) {
+      return;
+    }
+
+    const script = document.createElement('script');
+  
+    script.src = "https://www.chatbase.co/embed.min.js";
+    script.defer = true;
+    script.chatbotId="Cn650xmUdORPNUE8fcKlg";
+    script.domain="www.chatbase.co";
+    script.id = scriptId;
+    document.body.appendChild(script);
+  }, []);
+  
+  useEffect(() => {
+    const scriptId = 'chatBaseInlineScript';
+    const existingScript = document.getElementById(scriptId);
+    if (existingScript) {
+      return;
+    }
+    const script = document.createElement('script');
+  
+    script.text = `window.embeddedChatbotConfig = {
+      chatbotId: "Cn650xmUdORPNUE8fcKlg",
+      domain: "www.chatbase.co"
+    };`;
+    script.id = scriptId;
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <a href="/" rel="noreferrer noopener" aria-label="" className="navbar__brand__container">
       <div
@@ -43,14 +77,12 @@ export default function NavbarLogo() {
         onMouseEnter={() => {
           return lottie.play('navbarLogo');
         }}
-        onMouseLeave={setInterval(() => {
+        onMouseLeave={() => setInterval(() => {
           if (isActive) {
             return lottie.stop('navbarLogo');
           }
         }, 5000)}
         className="navbar__brand"
-        imageClassName="navbar__logo"
-        titleClassName="navbar__title"
       />
     </a>
   );

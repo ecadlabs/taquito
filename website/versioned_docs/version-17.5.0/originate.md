@@ -46,10 +46,9 @@ importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
-const option = { name: "nameOfWallet" }
+const option = { name: "nameOfWallet", network: { type: 'jakartanet' }}
 const wallet = new BeaconWallet(option)
-const network = { type: "jakartanet" }
-await wallet.requestPermissions({ network })
+await wallet.requestPermissions()
 Tezos.setWalletProvider(wallet)
 ```
 
