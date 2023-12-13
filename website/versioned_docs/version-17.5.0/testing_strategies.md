@@ -44,7 +44,7 @@ Integration Tests look to ensure that multiple software components are working t
 Here is a simple example of an integration test. The test sends Taquito instructions to a live test node with the transactions processed on the blockchain. This test originates a contract on the chain with transfers and verifies that confirmation is received.
  
 ```javascript
-    it('Simple transfers with origination', async (done) => {
+    it('Simple transfers with origination', async () => {
       const batch = await Tezos.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -58,7 +58,6 @@ Here is a simple example of an integration test. The test sends Taquito instruct
       const op = await batch.send();
       await op.confirmation();
       expect(op.status).toEqual('applied')
-      done();
     })
 ```
  
