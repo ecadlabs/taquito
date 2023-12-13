@@ -27,6 +27,7 @@ const sidebars = {
         'operation_flow',
         'rpc_nodes',
         'web3js_taquito',
+        'chatbot',
       ],
     },
     {

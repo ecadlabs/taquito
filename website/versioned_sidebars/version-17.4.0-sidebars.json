@@ -10,7 +10,8 @@
         "quick_start",
         "operation_flow",
         "rpc_nodes",
-        "web3js_taquito"
+        "web3js_taquito",
+        "chatbot"
       ]
     },
     {
