@@ -26,11 +26,11 @@ The counter contract has two entry points named `increment` and `decrement.` Taq
 
 The counter contract's storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
 
-### Counter Contract in JSLIGO v1.1.0
+### Counter Contract in JSLIGO v1.2.0
 
 ```
-namespace Counter {
-  type storage = int;
+export namespace Counter {
+  export type storage = int;
   type ret = [list<operation>, storage];
 
   // Three entrypoints
@@ -42,7 +42,7 @@ namespace Counter {
   const decrement = (delta : int, store : storage) : ret => [list([]), store - delta];
 
   @entry
-  const reset = (_p : unit, _s : storage) : ret => [list([]), 0];
+  const reset = (_u : unit, _s : storage) : ret => [list([]), 0];
 };
 ```
 
