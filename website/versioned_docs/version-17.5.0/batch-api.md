@@ -31,7 +31,6 @@ await op2.confirmation();
  */
 ```
 
-Tracking the confirmation of transactions and the update of the transaction counter can be very frustrating and cumbersome, this is why Taquito provides the Batch API. The Batch API allows you to group all your transactions together and emit them at once under the same transaction counter value and the same transaction hash.
 
 ## How does it work?
 

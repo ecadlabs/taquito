@@ -3,6 +3,10 @@ title: Cancel HTTP requests
 author: Roxane Letourneau
 ---
 
+:::warning
+This document was recently modified to reflect the switch from Axios to Fetch
+:::
+
 Having Taquito implemented in composable modules is a design choice to allow users to customize the modules to meet some of their specific needs.
 
 One of these needs might be the ability to **cancel** HTTP requests to optimize the network. Indeed, Taquito has heavy methods that make a lot of requests to the RPC. For example, in some cases, users might want to cancel almost immediately a call when using it in user interfaces. It is possible to incorporate some logic into the `HttpBackend` and `RpcClient` classes to fulfill this need.
@@ -11,7 +15,11 @@ Here is one example to override `HttpBackend` and/or `RpcClient`:
 
 
 #### **Create a custom** `HttpBackend`  
-Create a class called `CancellableHttpBackend` which extends the `HttpBackend` class. Override the `createRequest` method to utilize an [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) to handle and capture abort signals. We also use [Axios](https://github.com/axios/axios) to send HTTP requests. For more information on cancelling Axios requests, refer to [this documentation](https://github.com/axios/axios#cancellation)
+Create a class called `CancellableHttpBackend` which extends the `HttpBackend` class. Override the `createRequest` method to utilize an [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) to handle and capture abort signals. 
+
+:::warning
+We currently use the `AbortController` to timeout requests in the `HttpBackend` class. Plase note that this example will override the timeout functionality. If you want to keep the timeout functionality, you can add a custom timeout to call the cancelRequest method after a certain amount of time.
+:::
 
 ``` ts
 class CancellableHttpBackend extends HttpBackend {
@@ -32,25 +40,36 @@ class CancellableHttpBackend extends HttpBackend {
   async createRequest<T>(
     [...]
     let response;
+    
     try {
-      response = await axios.request<T>({
-        url: url + this.serialize(query),
-        method: method ?? 'GET',
-        headers: headers,
-        responseType: resType,
+      const response = await fetch(urlWithQuery, {
+        method,
+        headers,
+        body: JSON.stringify(data),
         signal: this.abortController.signal,
-        transformResponse,
-        timeout: timeout,
-        data: data,
       });
-    } catch (err: any) {
-      throw new HttpResponseError(
-        `Http error response: (${err.response.status}) ${JSON.stringify(err.response.data)}`,
-        err.response.status as STATUS_CODE,
-        err.response.statusText,
-        JSON.stringify(err.response.data),
-        url + this.serialize(query)
-      )
+
+      if (typeof response === 'undefined') {
+        throw new Error('Response is undefined');
+      }
+
+      // Handle responses with status code >= 400
+      if (response.status >= 400) {
+        const errorData = await response.text();
+        throw new HttpResponseError(
+         ...
+        );
+      }
+
+      if (json) {
+        return response.json() as T;
+      } else {
+        return response.text() as unknown as T;
+      }
+    } catch (e: unknown) {
+      ...
+    } finally {
+      clearTimeout(t);
     }
 
     return response.data
