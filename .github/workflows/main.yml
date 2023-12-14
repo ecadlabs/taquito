@@ -44,6 +44,8 @@ jobs:
         include:
           - testnet: nairobinet
             testnet_uppercase: NAIROBINET
+          - testnet: oxfordnet
+            testnet_uppercase: OXFORDNET
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -72,6 +74,10 @@ jobs:
             testnet: nairobinet
             testnet_uppercase: NAIROBINET
             flextesa_docker_image: oxheadalpha/flextesa:20230607
+          - protocol: Oxford
+            testnet: oxfordnet
+            testnet_uppercase: OXFORDNET
+            flextesa_docker_image: oxheadalpha/flextesa:latest
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
