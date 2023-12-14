@@ -2,14 +2,14 @@ import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer'
 import { code, storage } from './data/test-dapp-contract';
 
-const ghostnet = 'https://ghostnet.ecadinfra.com'
-const nairobinet = 'https://nairobinet.ecadinfra.com/'
+// update the targeted rpc url before running
+const rpcUrl = 'https://nairobinet.ecadinfra.com/'
 
-originate(nairobinet)
+originate(rpcUrl)
 
 async function originate(url: string) {
   const Tezos = new TezosToolkit(url)
-  // alice address tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
+  // if it's a new protocol might need to fund alice's address tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
   Tezos.setSignerProvider(new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq'))
 
 
