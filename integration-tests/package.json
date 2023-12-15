@@ -14,7 +14,7 @@
   "dependencies": {
     "@ledgerhq/devices": "8.0.7",
     "@ledgerhq/hw-transport": "6.28.8",
-    "@ledgerhq/hw-transport-node-hid": "6.27.21",
+    "@ledgerhq/hw-transport-node-hid": "6.28.0",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.27.19",
     "@taquito/contracts-library": "^17.5.0",
     "@taquito/core": "^17.5.0",
