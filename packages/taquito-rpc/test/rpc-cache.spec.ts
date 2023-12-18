@@ -30,8 +30,6 @@ import {
   blockResponse,
   protocols,
   constants,
-  txRollupInbox,
-  txRollupState,
   ticketBalancesResponse,
   pendingOperationsResponse,
 } from './data/rpc-responses';
@@ -129,8 +127,6 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getCurrentPeriod.mockReturnValue(currentPeriod);
     mockRpcClient.getSuccessorPeriod.mockReturnValue(successorPeriod);
     mockRpcClient.getProtocols.mockReturnValue(protocols);
-    mockRpcClient.getTxRollupInbox.mockReturnValue(txRollupInbox);
-    mockRpcClient.getTxRollupState.mockReturnValue(txRollupState);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
     mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
     mockRpcClient.getPendingOperations.mockReturnValue(pendingOperationsResponse);
@@ -268,13 +264,6 @@ describe('RpcClientCache test', () => {
       successorPeriod
     );
     expect(rpcCache.getAllCachedData()['rpcTest/getProtocols/head/'].response).toEqual(protocols);
-    expect(
-      rpcCache.getAllCachedData()[`rpcTest/getTxRollupInbox/head/${txRollupId}/${blockLevel}/`]
-        .response
-    ).toEqual(txRollupInbox);
-    expect(
-      rpcCache.getAllCachedData()[`rpcTest/getTxRollupState/head/${txRollupId}/`].response
-    ).toEqual(txRollupState);
     expect(
       rpcCache.getAllCachedData()[
         `rpcTest/getTicketBalance/head/${contractAddress}/${JSON.stringify(ticketToken)}/`
@@ -443,14 +432,6 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()[`rpcTest/getProtocols/${block.block}/`].response).toEqual(
       protocols
     );
-    expect(
-      rpcCache.getAllCachedData()[
-        `rpcTest/getTxRollupInbox/${block.block}/${txRollupId}/${blockLevel}/`
-      ].response
-    ).toEqual(txRollupInbox);
-    expect(
-      rpcCache.getAllCachedData()[`rpcTest/getTxRollupState/${block.block}/${txRollupId}/`].response
-    ).toEqual(txRollupState);
     expect(
       rpcCache.getAllCachedData()[
         `rpcTest/getTicketBalance/${block.block}/${contractAddress}/${JSON.stringify(ticketToken)}/`
