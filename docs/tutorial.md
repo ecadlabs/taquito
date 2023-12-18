@@ -632,20 +632,16 @@ Make sure that the command `npm run dev` is still running in the terminal, and t
 
 ## Closing thoughts
 
+We've come a long way. We started with a simple command-line application that reads the balance of an address from the blockchain. Then we established a high-level understanding of the blockchain, Tezos, dApps, and Taquito. After that, we sent a `Transfer` operation to the blockchain using Taquito. Then we interacted with a smart contract using Taquito. Finally, we implemented a simple GUI dApp.
 
+Your journey does not end here. There are many more things to learn. Here are some ideas:
 
-
+- Check out the [Taquito documentation](https://tezostaquito.io/docs/introduction) to learn more about Taquito.
+- Learn a smart contract language like [Ligo](https://ligolang.org/).
+- Learn more about Tezos and its ecosystem, check out the [Tezos Developer Portal](https://tezos.com/developers/).
+- See what others are doing: Join Tezos community on [Discord](https://discord.gg/tezos), [Reddit](https://www.reddit.com/r/tezos/), [Twitter](https://twitter.com/tezos), and [Telegram](https://t.me/tezosplatform).
+- Start building. There is no better way to learn than to build something. You can start with a simple idea and build on it.
 
 ### What is needed to make the dApp production-ready
 
-
-
-
-
-
-### What's next
-
-
-
-
-
+Please make sure you read and apply the checklist from [Dapp pre-launch checklist](dapp_prelaunch) before you launch your dApp.
