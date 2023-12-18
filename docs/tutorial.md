@@ -1,70 +1,57 @@
 ---
-title: Tutorial
+title: 🧑‍🏫 Tutorial
 id: tutorial
 author: Alireza Haghshenas
 ---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## Introduction
 
 This tutorial will walk you through the process of creating a simple dApp using Taquito. We will:
 
-1. Establish a high-level understanding of the blockchain, dApps, and Taquito
-1. Create a simple command-line application that shows the balance of an address
+1. Create a simple command-line application that reads the balance of an address from the blockchain
+1. Establish a high-level understanding of the blockchain, Tezos, dApps, and Taquito
 1. Send a `Transfer` operation to the blockchain using Taquito
-1. Interact with a smart contract using Taquito (mint an NFT on [objkt.com](https://objkt.com) NFT marketplace)
-1. Implement a simple GUI to do the last step in a browser
+1. Interact with a smart contract using Taquito
+1. Implement a simple GUI dApp
 
 If you are not interested in NFTs, don't worry; the concepts you learn are applicable to any dApp.
 
 ## Prerequisites
 
 ### Prior knowledge
-In order to follow this tutorial, you need to have a basic understanding of the following concepts:
+In order to follow this tutorial, you need to have a grasp of the following concepts:
 - Basic knowledge of JavaScript and programming in general
 - A high-level understanding of blockchain technology and ecosystem (we will also cover this briefly in the tutorial)
 
 ### Development machine
+
 We need a development machine with the following software installed:
 - [Node.js](https://nodejs.org): one of the current versions (LTS recommended)
-- A code editor: VS Code is recommended, but you can use your favorite editor
+- A code editor like VS Code, or any other editor of your choice
+- Optionally: docker (for creating your own key pair)
 
 This tutorial should work on Windows, Linux, and macOS. On other systems like a Chromebook or a tablet, you might need additional setup not covered in the tutorial.
 
-## What is a blockchain?
+:::info
+If you are using windows, there are two ways to run the commands in this tutorial: inside a WSL2 terminal, or inside powershell. Generally, WSL2 is recommended for programming. But if you are not familiar with it, you can use powershell. If you are using WSL2, you can use the same commands as Linux.
+:::
 
-The blockchain is a way to trust a network of computers run by strangers (so you don't trust the individual people). It might seem impossible, but it works. How?
-
-All computers that form a blockchain run the same software. They also store all the information needed to verify the integrity of the data. So anyone can verify that the data is correct. Techniques from cryptography are used to make this possible.
-
-In order to work with a blockchain, a high level understanding is enough:
-
-1. The blockchain is a network of computers that run the same software.
-1. The blockchain stores data in a way that anyone can verify the integrity of the data.
-1. The data is split into "blocks". Each block contains a list of operations (like sending some tokens from one account to another).
-1. Once a block is created and the blockchain reaches a consensus on the information in it, it is impossible to change the data in the block.
-1. In order to send an operation to the blockchain, you can send it to any of the nodes participating in the consensus. The node will forward the data to the other nodes.
-1. In order to read data from the blockchain, you can send a request to any of the nodes.
-1. Anyone can read data from the blockchain. But to send an operation to the blockchain, it needs to be cryptographically signed.
-
-Like any complex system, the simple overview we just gave is vastly simplified by leaving out a lot of details, and avoiding unnecessary precision. I believe having a good mental model of the system is more important than being precise. As you keep working in the blockchain ecosystem, your mental model will become more accurate over time.
-
-## What makes Tezos different?
-
-Some interesting features in Tezos are designed to address the shortcomings of the earlier generations of blockchains. These features are:
-
-1. Proof of stake (It is now being adopted by some other blockchains as well). This eliminates a big problem with earlier blockchains: the need for a lot of energy to run the network.
-1. Evolution of the blockchain. Remember that the blockchain is a network of computers that run the same software. This means that if you want to upgrade the software, all the computers need to be upgraded at the same time. This is not easy to do. Tezos solves this problem by having evolution baked into the protocol. This means that the blockchain can evolve over time without the need for a "hard fork".
-1. Delegation: Users can "delegate" their funds to a "baker". The baker will participate in the network consensus and will receive rewards. The baker will then share the rewards with the delegators. This makes it possible for users to participate in the network consensus without the need to run a node themselves, or to transfer their funds to a third party.
-
-Different versions of Tezos protocol are named after historic cities. We are now in the "Nairobi" era. But the next protocol "Oxford" is being implemented and will be voted on soon.
-
-The "mainnet" is the actual Tezos Blockchain. However, there are several "testnets" that are used for testing. One of them is named "ghostnet", and evolves to the new protocol much earlier than the mainnet, so that the ecosystem has enough time to implement features related to the new protocol and test them.
-
-## Let's start with a simple command-line application
+## Let's start with a simple command-line application {#start-coding}
 
 In this section, we will create a simple command-line application that shows the balance of an address. This will help us understand the basics of Taquito and the flow of events in a dApp.
 
 Open a terminal and run the following commands:
+
+<Tabs
+defaultValue="linux"
+values={[
+{label: 'Linux & mac', value: 'linux'},
+{label: 'Windows', value: 'windows'}
+]}>
+  <TabItem value="linux">
 
 ```bash
 mkdir my-cli-dapp
@@ -73,6 +60,20 @@ cd my-cli-dapp
 npm init -y
 npm install -D typescript ts-node
 ```
+
+  </TabItem>
+  <TabItem value="windows">
+
+```bash
+md my-cli-dapp
+cd my-cli-dapp
+
+npm init -y
+npm install -D typescript ts-node
+```
+
+  </TabItem>
+</Tabs>
 
 Then create a file named `index.ts` in the folder `my-cli-dapp` and add the following code:
 
@@ -108,13 +109,76 @@ tezosToolkit.tz.getBalance("tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L").then(balance 
 
 running `npx ts-node index.ts` should now show the balance of the specified address.
 
-Congratulations! You have just interacted with the Tezos blockchain using Taquito.
+Congratulations! You have just interacted with the Tezos blockchain using Taquito. In the next section, we will establish a high-level understanding of the blockchain, Tezos, dApps, and Taquito. If you are already familiar with these concepts, you can skip to [Sending a `Transfer` operation to the blockchain using Taquito](#sending-operations).
 
-## Sending a `Transfer` operation to the blockchain using Taquito
+## What is a blockchain?
+The blockchain is a way to trust a network of computers run by strangers (so you don't trust the individual people). It might seem impossible, but it works. How?
 
+All computers that form a blockchain run the same software. They also store all the information needed to verify the integrity of the data. So anyone can verify that the data is correct. Techniques from cryptography are used to make this possible.
+
+In order to work with a blockchain, a high level understanding is enough:
+
+1. The blockchain is a network of computers that run the same software.
+1. The blockchain stores data in a way that anyone can verify the integrity of the data.
+1. The data is split into "blocks". Each block contains a list of operations (like sending some tokens from one account to another).
+1. Once a block is created and the blockchain reaches a consensus on the information in it, it is impossible to change the data in the block.
+1. In order to send an operation to the blockchain, you can send it to any of the nodes participating in the consensus. The node will forward the data to the other nodes.
+1. In order to read data from the blockchain, you can send a request to any of the nodes.
+1. Anyone can read data from the blockchain. But to send an operation to the blockchain, it needs to be cryptographically signed.
+
+Like any complex system, the simple overview we just gave is vastly simplified by leaving out a lot of details, and avoiding unnecessary precision. I believe having a good mental model of the system is more important than being precise. As you keep working in the blockchain ecosystem, your mental model will become more accurate over time.
+
+<details>
+  <summary>How does the blockchain work?</summary>
+
+Here, I try to explain the overall mechanism that enables the blockchain to work. This is not necessary to understand the rest of the tutorial. But if you are curious, read on. Also, this is by no means a complete explanation. I am leaving out a lot of details.
+
+As said earlier, the data to be written to the blockchain is divided into blocks. Each block contains a list of operations, and a cryptographic hash (like sha256) of the block is calculated. The hash is a short string that uniquely identifies the block. The hash of the previous block is also stored in the block. So the blocks are effectively making a chain, hence the name "blockchain".
+
+This chaining has an interesting property: if you change the data in a block, the hash of the block will change. Because the hash of this block is stored in the next block, the hash of the next block will also change, and now you have to change the hash of all blocks after that. This feels like branching out another chain from the block you changed. The two branches will never meet again.
+
+This also has another interesting property: if you want to make sure that you agree with another computer on the entire contents of the blockchain, you just need to compare the hashes of the last blocks. If the hashes are the same, you agree on the entire contents of the blockchain.
+
+This is fine as long as all computers agree on the hash. But what if an attacker wants to advertise the wrong block? The network needs a way to establish a "majority" of votes. So that the "honest" nodes can still agree on the correct block even if some nodes are dishonest. This is done using a "consensus algorithm".
+
+The old school "Proof of Work" consensus algorithm was introduced with Bitcoin. In this algorithm, the computers compete to solve a puzzle. The first computer to solve the puzzle gets to create the next block. If an attacker manages to beat the rest of the network on one block, the honest nodes still have a higher chance to find the next block based on the block they agree on. So the attacker needs to have more computing power than the rest of the network combined. This is very expensive and not practical.
+
+While POW is a genius solution, it is also very energy-intensive. It is estimated that the Bitcoin network uses as much energy as the entire country of Argentina. This is not sustainable.
+
+The next generation of blockchains introduced the "Proof of Stake". In this algorithm, the computers that participate in the consensus are selected based on the amount of tokens they have. The more tokens you have, the higher your chance of being selected to create the next block. This is much more energy-efficient. The Tezos blockchain uses this algorithm.
+</details>
+
+## What makes Tezos different? {#about-tezos}
+Some interesting features in Tezos are designed to address the shortcomings of the earlier generations of blockchains. These features are:
+
+1. Proof of stake (It is now being adopted by some other blockchains as well). This eliminates a big problem with earlier blockchains: the need for a lot of energy to run the network.
+1. Evolution of the blockchain. Remember that the blockchain is a network of computers that run the same software. This means that if you want to upgrade the software, all the computers need to be upgraded at the same time. This is not easy to do. Tezos solves this problem by having evolution baked into the protocol. This means that the blockchain can evolve over time without the need for a "hard fork".
+1. Delegation: Users can "delegate" their funds to a "baker". The baker will participate in the network consensus and will receive rewards. The baker will then share the rewards with the delegators. This makes it possible for users to participate in the network consensus without the need to run a node themselves, or to transfer their funds to a third party.
+
+Different versions of Tezos protocol are named after historic cities. We are now in the "Nairobi" era. But the next protocol "Oxford" is being implemented and will be voted on soon.
+
+The "mainnet" is the actual Tezos Blockchain. However, there are several "testnets" that are used for testing. One of them is named "ghostnet", and evolves to the new protocol much earlier than the mainnet, so that the ecosystem has enough time to implement features related to the new protocol and test them.
+
+## What is Taquito?
+Taquito is a JavaScript library that makes it easy to interact with the Tezos blockchain. It is designed to be used in dApps. It is also used in some wallets and other tools. It is open-source, developed and maintained by ECAD Labs.
+
+Without Taquito, sending operations to the Tezos blockchain requires you to write a lot of code. Some of that is to:
+1. Estimate the fees for the operation
+1. Properly encode the operation
+1. Sign the operation
+
+And to implement all these, you need detailed information about different data types, protocols, constants, and algorithms used in the Tezos blockchain. Taquito abstracts away all this complexity and provides a simple API for interacting with the blockchain.
+
+## Sending a `Transfer` operation to the blockchain using Taquito {#seding-operations}
 Now we want to send an operation to the blockchain. When reading, we just sent a read request. When sending an operation, we need to prove that we own the address. To do this, we need to sign the operation with the private key of the address.
 
 In the next step, we will simply store the private key in the source code. This is not secure, and you should never do this in a production application.
+
+Taquito provides an "In Memory Signer" functionality. Use the following command to add that to your project:
+
+```bash
+npm install -s @taquito/signer
+```
 
 Open the file `index.ts` and replace the code with the following:
 
@@ -335,7 +399,7 @@ Open the file `index.html` and make the following changes:
 +    <title>My dApp</title>
 ```
 
-Open the file `src/App.css` and make the following changes:
+Open the file `src/App.tsx` and make the following changes:
 
 ```tsx
 import { useState } from "react";
