@@ -20,8 +20,6 @@ export type ParamsWithKind =
   | withKind<ActivationParams, OpKind.ACTIVATION>
   | withKind<RegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>
   | withKind<IncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
-  | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>
-  | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
   | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
@@ -61,8 +59,6 @@ export type RPCOpWithFee =
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
   | RPCIncreasePaidStorageOperation
-  | RPCTxRollupOriginationOperation
-  | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
@@ -75,8 +71,6 @@ export type RPCOpWithSource =
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
   | RPCIncreasePaidStorageOperation
-  | RPCTxRollupOriginationOperation
-  | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
@@ -93,8 +87,6 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'reveal',
       'register_global_constant',
       'increase_paid_storage',
-      'tx_rollup_origination',
-      'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
       'smart_rollup_add_messages',
@@ -113,8 +105,6 @@ export const isOpRequireReveal = <T extends { kind: OpKind }>(
       'origination',
       'register_global_constant',
       'increase_paid_storage',
-      'tx_rollup_origination',
-      'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
       'smart_rollup_add_messages',
@@ -338,53 +328,6 @@ export interface RPCActivateOperation {
   kind: OpKind.ACTIVATION;
   pkh: string;
   secret: string;
-}
-
-/**
- * @description RPC tx rollup origination operation
- */
-export interface RPCTxRollupOriginationOperation {
-  kind: OpKind.TX_ROLLUP_ORIGINATION;
-  fee: number;
-  gas_limit: number;
-  storage_limit: number;
-  source: string;
-  tx_rollup_origination: object;
-}
-
-/**
- * @description Parameters for the `txRollupOriginate` method
- */
-export interface TxRollupOriginateParams {
-  source?: string;
-  fee?: number;
-  gasLimit?: number;
-  storageLimit?: number;
-}
-
-/**
- * @description Parameters for the `txRollupSubmitBatch` method
- */
-export interface TxRollupBatchParams {
-  source?: string;
-  fee?: number;
-  gasLimit?: number;
-  storageLimit?: number;
-  rollup: string;
-  content: string;
-}
-
-/**
- * @description RPC tx rollup batch operation
- */
-export interface RPCTxRollupBatchOperation {
-  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH;
-  fee: number;
-  gas_limit: number;
-  storage_limit: number;
-  source: string;
-  rollup: string;
-  content: string;
 }
 
 /**

@@ -55,7 +55,6 @@ export class RpcReadAdapter implements TzReadProvider {
     hard_gas_limit_per_block: BigNumber;
     hard_storage_limit_per_operation: BigNumber;
     cost_per_byte: BigNumber;
-    tx_rollup_origination_size?: number;
     smart_rollup_origination_size: number;
   }> {
     const {
@@ -65,7 +64,6 @@ export class RpcReadAdapter implements TzReadProvider {
       hard_gas_limit_per_block,
       hard_storage_limit_per_operation,
       cost_per_byte,
-      tx_rollup_origination_size,
       smart_rollup_origination_size,
     } = await this.rpc.getConstants({ block: String(block) });
     return {
@@ -75,7 +73,6 @@ export class RpcReadAdapter implements TzReadProvider {
       hard_gas_limit_per_block,
       hard_storage_limit_per_operation,
       cost_per_byte,
-      tx_rollup_origination_size,
       smart_rollup_origination_size,
     };
   }
