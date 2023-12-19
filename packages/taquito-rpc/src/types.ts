@@ -92,25 +92,28 @@ export interface TxRollupTicketsInfo {
   amount: string;
   claimer: string;
 }
+
 export interface DelegatesResponse {
-  balance?: BigNumber;
   full_balance?: BigNumber;
   current_frozen_deposits?: BigNumber;
-  frozen_deposits?: BigNumber;
-  frozen_balance?: BigNumber;
-  frozen_balance_by_cycle?: Frozenbalancebycycle[];
-  frozen_deposits_limit?: BigNumber;
   staking_balance: BigNumber;
+  frozen_deposits_limit?: BigNumber;
   delegated_contracts: string[];
   delegated_balance: BigNumber;
   deactivated: boolean;
   grace_period: number;
+  total_delegated_stake?: BigNumber;
+  staking_denominator?: BigNumber;
   voting_power?: BigNumber;
   current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
   active_consensus_key?: string;
   pending_consensus_keys?: PendingConsensusKey[];
+  balance?: BigNumber;
+  frozen_deposits?: BigNumber;
+  frozen_balance?: BigNumber;
+  frozen_balance_by_cycle?: Frozenbalancebycycle[];
 }
 
 export type PendingConsensusKey = {
@@ -1278,6 +1281,7 @@ export interface EndorsingRightsResponseItemDelegates {
   endorsing_power: number;
   consensus_key?: string;
 }
+
 export interface EndorsingRightsResponseItem {
   level: number;
   delegate?: string;
@@ -1303,7 +1307,15 @@ export interface BallotsResponse {
   pass: BigNumber;
 }
 
-export type PeriodKindResponse = 'proposal' | 'exploration' | 'cooldown' | 'promotion' | 'adoption';
+export type PeriodKindResponse =
+  | 'proposal'
+  | 'exploration'
+  | 'cooldown'
+  | 'promotion'
+  | 'adoption'
+  | 'testing_vote'
+  | 'testing'
+  | 'promotion_vote';
 
 export type CurrentProposalResponse = string | null;
 
@@ -1872,7 +1884,7 @@ export interface LazyStorageDiffUpdatesBigMap {
 
 export type CommitmentsAndCiphertexts = [
   SaplingTransactionCommitment,
-  SaplingTransactionCiphertext
+  SaplingTransactionCiphertext,
 ];
 
 export type SaplingTransactionCommitment = string;
@@ -1917,6 +1929,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto018 &
   ConstantsResponseProto017 &
   ConstantsResponseProto016 &
   ConstantsResponseProto015 &
@@ -1960,6 +1973,87 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
+export interface ConstantsResponseProto018
+  extends Omit<
+    ConstantsResponseProto017,
+    | 'baking_reward_bonus_per_slot'
+    | 'baking_reward_fixed_portion'
+    | 'double_baking_punishment'
+    | 'endorsing_reward_per_slot'
+    | 'frozen_deposits_percentage'
+    | 'liquidity_baking_subsidy'
+    | 'ratio_of_frozen_deposits_slashed_per_double_endorsement'
+    | 'seed_nonce_revelation_tip'
+    | 'smart_rollup_enable'
+    | 'tx_rollup_commitment_bond'
+    | 'tx_rollup_cost_per_byte_ema_factor'
+    | 'tx_rollup_enable'
+    | 'tx_rollup_finality_period'
+    | 'tx_rollup_hard_size_limit_per_inbox'
+    | 'tx_rollup_hard_size_limit_per_message'
+    | 'tx_rollup_max_commitments_count'
+    | 'tx_rollup_max_inboxes_count'
+    | 'tx_rollup_max_messages_per_inbox'
+    | 'tx_rollup_max_ticket_payload_size'
+    | 'tx_rollup_max_withdrawals_per_batch'
+    | 'tx_rollup_origination_size'
+    | 'tx_rollup_rejection_max_proof_size'
+    | 'tx_rollup_sunset_level'
+    | 'tx_rollup_withdraw_period'
+  > {
+  adaptive_issuance_activation_vote_enable: boolean;
+  adaptive_issuance_launch_ema_threshold: number;
+  adaptive_rewards_params: {
+    center_dz: {
+      denominator: string;
+      numerator: string;
+    };
+    growth_rate: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_max: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_min: {
+      denominator: string;
+      numerator: string;
+    };
+    max_bonus: string;
+    radius_dz: {
+      denominator: string;
+      numerator: string;
+    };
+  };
+  autostaking_enable: boolean;
+  edge_of_staking_over_delegation: number;
+  global_limit_of_staking_over_baking: number;
+  issuance_weights: {
+    attesting_reward_weight: number;
+    baking_reward_bonus_weight: number;
+    baking_reward_fixed_portion_weight: number;
+    base_total_issued_per_minute: string;
+    liquidity_baking_subsidy_weight: number;
+    seed_nonce_revelation_tip_weight: number;
+    vdf_revelation_tip_weight: number;
+  };
+  limit_of_delegation_over_baking: number;
+  minimal_frozen_stake: string;
+  percentage_of_frozen_deposits_slashed_per_double_attestation: number;
+  percentage_of_frozen_deposits_slashed_per_double_baking: number;
+  smart_rollup_private_enable: boolean;
+  smart_rollup_reveal_activation_level: {
+    dal_page: number;
+    dal_parameters: number;
+    metadata: number;
+    raw_data: {
+      Blake2B: number;
+    };
+  };
+  smart_rollup_riscv_pvm_enable: boolean;
+  zk_rollup_max_ticket_payload_size: number;
+}
 export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
 export interface ConstantsResponseProto016
@@ -2367,7 +2461,8 @@ export interface TxRollupInboxResponse {
 }
 
 export interface PendingOperationsQueryArguments {
-  version?: '1';
+  version?: '1' | '2';
+  validated?: boolean;
   applied?: boolean;
   refused?: boolean;
   outdated?: boolean;
@@ -2383,8 +2478,17 @@ type FailedProcessedOperation = Pick<
   error: TezosGenericOperationError[];
 };
 
-export interface PendingOperations {
+export interface PendingOperationsV1 {
   applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
+  refused: FailedProcessedOperation[];
+  outdated: FailedProcessedOperation[];
+  branch_refused: FailedProcessedOperation[];
+  branch_delayed: FailedProcessedOperation[];
+  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
+}
+
+export interface PendingOperationsV2 {
+  validated: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
   refused: FailedProcessedOperation[];
   outdated: FailedProcessedOperation[];
   branch_refused: FailedProcessedOperation[];

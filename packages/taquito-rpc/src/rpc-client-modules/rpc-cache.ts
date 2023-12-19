@@ -49,7 +49,8 @@ import {
   TicketTokenParams,
   AllTicketBalances,
   PendingOperationsQueryArguments,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   OriginationProofParams,
   RPCSimulateOperationParam,
 } from '../types';
@@ -1258,7 +1259,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
-  ): Promise<PendingOperations> {
+  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
       RPCMethodName.GET_PENDING_OPERATIONS,

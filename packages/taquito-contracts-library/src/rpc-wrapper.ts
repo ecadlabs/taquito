@@ -46,7 +46,8 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   PendingOperationsQueryArguments,
   OriginationProofParams,
   RPCSimulateOperationParam,
@@ -58,7 +59,10 @@ import { ContractsLibrary } from './taquito-contracts-library';
  *
  */
 export class RpcWrapperContractsLibrary implements RpcClientInterface {
-  constructor(private rpc: RpcClientInterface, private contractslibrary: ContractsLibrary) {}
+  constructor(
+    private rpc: RpcClientInterface,
+    private contractslibrary: ContractsLibrary
+  ) {}
 
   async getContract(
     address: string,
@@ -331,7 +335,9 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
   }
-  async getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperations> {
+  async getPendingOperations(
+    args: PendingOperationsQueryArguments
+  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
   }
   async getOriginationProof(

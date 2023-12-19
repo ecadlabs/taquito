@@ -46,7 +46,8 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   PendingOperationsQueryArguments,
   OriginationProofParams,
   RPCSimulateOperationParam,
@@ -54,10 +55,11 @@ import {
 
 export interface RPCOptions {
   block: string;
+  version?: '0' | '1';
 }
 
 export const defaultChain = 'main';
-export const defaultRPCOptions: RPCOptions = { block: 'head' };
+export const defaultRPCOptions: RPCOptions = { block: 'head', version: '0' };
 
 export interface RpcClientInterface {
   getBlockHash(options?: RPCOptions): Promise<string>;
@@ -132,7 +134,9 @@ export interface RpcClientInterface {
     options?: RPCOptions
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
-  getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperations>;
+  getPendingOperations(
+    args: PendingOperationsQueryArguments
+  ): Promise<PendingOperationsV1 | PendingOperationsV2>;
   getOriginationProof(params: OriginationProofParams, options?: RPCOptions): Promise<string>;
 }
 

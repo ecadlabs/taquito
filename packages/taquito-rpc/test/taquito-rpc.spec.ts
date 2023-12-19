@@ -39,7 +39,8 @@ import {
   OperationContentsAndResultSmartRollupExecuteOutboxMessage,
   RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   OperationContentsAndResultSmartRollupCement,
   OperationContentsAndResultSmartRollupPublish,
   OperationContentsAndResultSmartRollupRefute,
@@ -446,6 +447,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
         url: 'root/chains/test/blocks/head/helpers/preapply/operations',
+        query: { version: '0' },
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({});
@@ -564,6 +566,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head/metadata',
+        query: { version: '0' },
       });
 
       expect(result).toEqual({
@@ -1447,6 +1450,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
       const endorsement = response.operations[0][0]
         .contents[0] as OperationContentsAndResultEndorsement;
@@ -1688,6 +1692,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
       const transaction = response.operations[0][0]
         .contents[0] as OperationContentsAndResultTransaction;
@@ -1776,6 +1781,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
       const endorsementWithSlot = response.operations[0][0]
         .contents[0] as OperationContentsAndResultEndorsementWithSlot;
@@ -2333,6 +2339,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
 
       const transaction = response.operations[0][0]
@@ -2478,6 +2485,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: 'root/chains/test/blocks/head',
+        query: { version: '0' },
       });
 
       const origination = response.operations[3][0]
@@ -3788,6 +3796,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
         url: 'root/chains/test/blocks/head/helpers/scripts/run_operation',
+        query: { version: '0' },
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
@@ -3846,6 +3855,7 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'POST',
         url: 'root/chains/test/blocks/head/helpers/scripts/simulate_operation',
+        query: { version: '0' },
       });
 
       expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
@@ -4558,7 +4568,8 @@ describe('RpcClient test', () => {
   describe('getPendingOperations', () => {
     it('should query the correct url and retrun pending operations in mempool', async () => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
-      const response: PendingOperations = await client.getPendingOperations();
+      const response: PendingOperationsV1 | PendingOperationsV2 =
+        await client.getPendingOperations();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
