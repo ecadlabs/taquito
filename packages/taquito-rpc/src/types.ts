@@ -336,103 +336,6 @@ export interface OperationContentsRegisterGlobalConstant {
   value: MichelsonV1Expression;
 }
 
-export interface OperationContentsTxRollupOrigination {
-  kind: OpKind.TX_ROLLUP_ORIGINATION;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  tx_rollup_origination: any;
-}
-
-export interface OperationContentsTxRollupSubmitBatch {
-  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  content: string;
-  burn_limit?: string;
-}
-
-export interface OperationContentsTxRollupCommit {
-  kind: OpKind.TX_ROLLUP_COMMIT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: TxRollupCommitment;
-}
-
-export interface OperationContentsTxRollupReturnBond {
-  kind: OpKind.TX_ROLLUP_RETURN_BOND;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-}
-
-export interface OperationContentsTxRollupFinalizeCommitment {
-  kind: OpKind.TX_ROLLUP_FINALIZE_COMMITMENT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-}
-
-export interface OperationContentsTxRollupRemoveCommitment {
-  kind: OpKind.TX_ROLLUP_REMOVE_COMMITMENT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-}
-
-export interface OperationContentsTxRollupRejection {
-  kind: OpKind.TX_ROLLUP_REJECTION;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  level: number;
-  message: TxRollupMessage;
-  message_position: string;
-  message_path: string[];
-  message_result_hash: string;
-  message_result_path: string[];
-  previous_message_result: TxRollupPreviousMessageResult;
-  previous_message_result_path: string[];
-  proof: TxRollupProof | string;
-}
-
-export interface OperationContentsTxRollupDispatchTickets {
-  kind: OpKind.TX_ROLLUP_DISPATCH_TICKETS;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  tx_rollup: string;
-  level: number;
-  context_hash: string;
-  message_index: number;
-  message_result_path: string[];
-  tickets_info: TxRollupTicketsInfo[];
-}
-
 export interface OperationContentsTransferTicket {
   kind: OpKind.TRANSFER_TICKET;
   source: string;
@@ -586,13 +489,6 @@ export type OperationContents =
   | OperationContentsFailingNoop
   | OperationContentsRegisterGlobalConstant
   | OperationContentsSetDepositsLimit
-  | OperationContentsTxRollupOrigination
-  | OperationContentsTxRollupSubmitBatch
-  | OperationContentsTxRollupCommit
-  | OperationContentsTxRollupReturnBond
-  | OperationContentsTxRollupFinalizeCommitment
-  | OperationContentsTxRollupRemoveCommitment
-  | OperationContentsTxRollupRejection
   | OperationContentsTransferTicket
   | OperationContentsUpdateConsensusKey
   | OperationContentsDrainDelegate
@@ -906,95 +802,6 @@ export interface OperationContentsAndResultSetDepositsLimit {
   metadata: OperationContentsAndResultMetadataSetDepositsLimit;
 }
 
-export interface OperationContentsAndResultTxRollupOrigination {
-  kind: OpKind.TX_ROLLUP_ORIGINATION;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  tx_rollup_origination: any;
-  metadata: OperationContentsAndResultMetadataTxRollupOrigination;
-}
-
-export interface OperationContentsAndResultTxRollupSubmitBatch {
-  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  content: string;
-  burn_limit?: string;
-  metadata: OperationContentsAndResultMetadataTxRollupSubmitBatch;
-}
-
-export interface OperationContentsAndResultTxRollupCommit {
-  kind: OpKind.TX_ROLLUP_COMMIT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  commitment: TxRollupCommitment;
-  metadata: OperationContentsAndResultMetadataTxRollupCommit;
-}
-
-export interface OperationContentsAndResultTxRollupReturnBond {
-  kind: OpKind.TX_ROLLUP_RETURN_BOND;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  metadata: OperationContentsAndResultMetadataTxRollupReturnBond;
-}
-
-export interface OperationContentsAndResultTxRollupFinalizeCommitment {
-  kind: OpKind.TX_ROLLUP_FINALIZE_COMMITMENT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  metadata: OperationContentsAndResultMetadataTxRollupFinalizeCommitment;
-}
-
-export interface OperationContentsAndResultTxRollupRemoveCommitment {
-  kind: OpKind.TX_ROLLUP_REMOVE_COMMITMENT;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  metadata: OperationContentsAndResultMetadataTxRollupRemoveCommitment;
-}
-
-export interface OperationContentsAndResultTxRollupRejection {
-  kind: OpKind.TX_ROLLUP_REJECTION;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  rollup: string;
-  level: number;
-  message: TxRollupMessage;
-  message_position: string;
-  message_path: string[];
-  message_result_hash: string;
-  message_result_path: string[];
-  previous_message_result: TxRollupPreviousMessageResult;
-  previous_message_result_path: string[];
-  proof: TxRollupProof | string;
-  metadata: OperationContentsAndResultMetadataTxRollupRejection;
-}
-
 export interface OperationContentsAndResultTransferTicket {
   kind: OpKind.TRANSFER_TICKET;
   source: string;
@@ -1009,22 +816,6 @@ export interface OperationContentsAndResultTransferTicket {
   destination: string;
   entrypoint: string;
   metadata: OperationContentsAndResultMetadataTransferTicket;
-}
-
-export interface OperationContentsAndResultTxRollupDispatchTickets {
-  kind: OpKind.TX_ROLLUP_DISPATCH_TICKETS;
-  source: string;
-  fee: string;
-  counter: string;
-  gas_limit: string;
-  storage_limit: string;
-  tx_rollup: string;
-  level: number;
-  context_hash: string;
-  message_index: number;
-  message_result_path: string[];
-  tickets_info: TxRollupTicketsInfo[];
-  metadata: OperationContentsAndResultMetadataTxRollupDispatchTickets;
 }
 
 export interface OperationContentsAndResultUpdateConsensusKey {
@@ -1180,14 +971,6 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultEndorsementWithSlot
   | OperationContentsAndResultRegisterGlobalConstant
   | OperationContentsAndResultSetDepositsLimit
-  | OperationContentsAndResultTxRollupOrigination
-  | OperationContentsAndResultTxRollupSubmitBatch
-  | OperationContentsAndResultTxRollupCommit
-  | OperationContentsAndResultTxRollupDispatchTickets
-  | OperationContentsAndResultTxRollupReturnBond
-  | OperationContentsAndResultTxRollupFinalizeCommitment
-  | OperationContentsAndResultTxRollupRemoveCommitment
-  | OperationContentsAndResultTxRollupRejection
   | OperationContentsAndResultTransferTicket
   | OperationContentsAndResultIncreasePaidStorage
   | OperationContentsAndResultUpdateConsensusKey
