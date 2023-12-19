@@ -81,8 +81,6 @@ describe('RpcContractProvider test', () => {
     batch: jest.Mock<any, any>;
     reveal: jest.Mock<any, any>;
     registerGlobalConstant: jest.Mock<any, any>;
-    txRollupOriginate: jest.Mock<any, any>;
-    txRollupSubmitBatch: jest.Mock<any, any>;
     transferTicket: jest.Mock<any, any>;
     increasePaidStorage: jest.Mock<any, any>;
     updateConsensusKey: jest.Mock<any, any>;
@@ -142,8 +140,6 @@ describe('RpcContractProvider test', () => {
       batch: jest.fn(),
       reveal: jest.fn(),
       registerGlobalConstant: jest.fn(),
-      txRollupOriginate: jest.fn(),
-      txRollupSubmitBatch: jest.fn(),
       transferTicket: jest.fn(),
       increasePaidStorage: jest.fn(),
       updateConsensusKey: jest.fn(),
