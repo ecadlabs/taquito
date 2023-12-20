@@ -38,8 +38,6 @@ import {
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
-  TxRollupInboxResponse,
-  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingInfoResponse,
@@ -120,12 +118,6 @@ export interface RpcClientInterface {
   getSaplingDiffById(id: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
-  getTxRollupState(txRollupId: string, options?: RPCOptions): Promise<TxRollupStateResponse>;
-  getTxRollupInbox(
-    txRollupId: string,
-    blockLevel: string,
-    options?: RPCOptions
-  ): Promise<TxRollupInboxResponse | null>;
   getStorageUsedSpace(contract: string, options?: RPCOptions): Promise<string>;
   getStoragePaidSpace(contract: string, options?: RPCOptions): Promise<string>;
   getTicketBalance(
@@ -172,8 +164,6 @@ export enum RPCMethodName {
   GET_SCRIPT = 'getScript',
   GET_STORAGE = 'getStorage',
   GET_SUCCESSOR_PERIOD = 'getSuccessorPeriod',
-  GET_TX_ROLLUP_INBOX = 'getTxRollupInbox',
-  GET_TX_ROLLUP_STATE = 'getTxRollupState',
   GET_VOTES_LISTINGS = 'getVotesListings',
   PACK_DATA = 'packData',
   GET_STORAGE_USED_SPACE = 'getStorageUsedSpace',

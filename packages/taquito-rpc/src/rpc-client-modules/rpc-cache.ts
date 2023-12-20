@@ -41,8 +41,6 @@ import {
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
-  TxRollupInboxResponse,
-  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
@@ -1102,42 +1100,6 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getProtocols({ block });
-      this.put(key, response);
-      return response;
-    }
-  }
-
-  async getTxRollupState(
-    txRollupId: string,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<TxRollupStateResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_TX_ROLLUP_STATE, [
-      block,
-      txRollupId,
-    ]);
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getTxRollupState(txRollupId, { block });
-      this.put(key, response);
-      return response;
-    }
-  }
-
-  async getTxRollupInbox(
-    txRollupId: string,
-    blockLevel: string,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<TxRollupInboxResponse | null> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_TX_ROLLUP_INBOX, [
-      block,
-      txRollupId,
-      blockLevel,
-    ]);
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getTxRollupInbox(txRollupId, blockLevel, { block });
       this.put(key, response);
       return response;
     }
