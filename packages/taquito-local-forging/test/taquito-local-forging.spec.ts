@@ -41,6 +41,7 @@ describe('Forge and parse operations default protocol', () => {
           },
         ],
       };
+
       expect(() => {
         localForger.forge(operation);
       }).toThrow(InvalidOperationKindError);
@@ -329,6 +330,7 @@ describe('Forge and parse operations default protocol', () => {
         );
       });
 
+      //
       it('forged bytes smart_rollup_execute_outbox_message should match', async () => {
         const forged = await localForger.forge({
           branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
