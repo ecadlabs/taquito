@@ -1,4 +1,4 @@
-import { CONFIGS, NetworkType } from './config';
+import { CONFIGS } from './config';
 import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2, PvmKind } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
