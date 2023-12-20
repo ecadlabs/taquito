@@ -469,6 +469,7 @@ export interface SmartRollupAddMessagesParams {
   storageLimit?: number;
   message: string[];
 }
+
 export interface SmartRollupOriginateParams {
   source?: string;
   fee?: number;
