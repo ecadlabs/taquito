@@ -44,6 +44,8 @@ jobs:
         include:
           - testnet: nairobinet
             testnet_uppercase: NAIROBINET
+          - testnet: oxfordnet
+            testnet_uppercase: OXFORDNET
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -72,6 +74,10 @@ jobs:
             testnet: nairobinet
             testnet_uppercase: NAIROBINET
             flextesa_docker_image: oxheadalpha/flextesa:20230607
+          - protocol: Oxford
+            testnet: oxfordnet
+            testnet_uppercase: OXFORDNET
+            flextesa_docker_image: oxheadalpha/flextesa:latest
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -112,7 +118,7 @@ jobs:
           --protocol-kind ${{ matrix.protocol }}
     - run: npm ci
     - run: npm run build
-    - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts contract-batch-high-number-of-operations.spec.ts contract-pair-as-key.spec.ts --detectOpenHandles --runInBand
+    - run: npm -w integration-tests run originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts contract-batch-high-number-of-operations.spec.ts contract-pair-as-key.spec.ts --detectOpenHandles --runInBand
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2

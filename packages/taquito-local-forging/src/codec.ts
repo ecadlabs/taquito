@@ -469,27 +469,6 @@ export const entrypointNameDecoder = (val: Uint8ArrayConsumer) => {
   return Buffer.from(entry).toString('utf8');
 };
 
-export const txRollupOriginationParamEncoder = (_value: string) => {
-  return '';
-};
-
-export const txRollupOriginationParamDecoder = (_val: Uint8ArrayConsumer) => {
-  return {};
-};
-
-export const txRollupIdEncoder = prefixEncoder(Prefix.TXR1);
-
-export const txRollupIdDecoder = prefixDecoder(Prefix.TXR1);
-
-export const txRollupBatchContentEncoder = (value: string) => {
-  return `${pad(value.length / 2)}${value}`;
-};
-
-export const txRollupBatchContentDecoder = (val: Uint8ArrayConsumer) => {
-  const value = extractRequiredLen(val);
-  return Buffer.from(value).toString('hex');
-};
-
 export const burnLimitEncoder = (val: string) => {
   return !val ? '00' : `ff${zarithEncoder(val)}`;
 };
