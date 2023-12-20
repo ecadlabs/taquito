@@ -33,7 +33,7 @@ export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
     },
   };
 }
-
+//
 export class LocalForger implements Forger {
   constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
 
