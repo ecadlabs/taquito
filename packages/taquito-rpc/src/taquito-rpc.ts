@@ -2,7 +2,12 @@
  * @packageDocumentation
  * @module @taquito/rpc
  */
-import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
+import {
+  HttpBackend,
+  HttpRequestOptions,
+  HttpResponseError,
+  STATUS_CODE,
+} from '@taquito/http-utils';
 import BigNumber from 'bignumber.js';
 import {
   defaultChain,
@@ -522,17 +527,18 @@ export class RpcClient implements RpcClientInterface {
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id
    * @example getBlock() will default to `/main/chains/block/head?version=0` which shows { kind: endorsement }
-   * @example getBlock({ block: 'head~2', version: '1' }) will return an offset of 2 from head blocks and shows { kind: attestation }
+   * @example getBlock({ block: 'head~2', version: 1 }) will return an offset of 2 from head blocks and shows { kind: attestation }
    * @example getBlock({ block: 'BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2' }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block, version }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
-    const response = await this.httpBackend.createRequest<BlockResponse>({
+    const requestOptions: HttpRequestOptions = {
       url: this.createURL(`/chains/${this.chain}/blocks/${block}`),
       method: 'GET',
-      query: { version },
-    });
-
-    return response;
+    };
+    if (version !== undefined) {
+      requestOptions.query = { version };
+    }
+    return await this.httpBackend.createRequest<BlockResponse>(requestOptions);
   }
 
   /**
@@ -564,13 +570,14 @@ export class RpcClient implements RpcClientInterface {
     block,
     version,
   }: RPCOptions = defaultRPCOptions): Promise<BlockMetadata> {
-    const response = await this.httpBackend.createRequest<BlockMetadata>({
+    const requestOptions: HttpRequestOptions = {
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/metadata`),
       method: 'GET',
-      query: { version },
-    });
-
-    return response;
+    };
+    if (version !== undefined) {
+      requestOptions.query = { version };
+    }
+    return await this.httpBackend.createRequest<BlockMetadata>(requestOptions);
   }
 
   /**
@@ -789,16 +796,14 @@ export class RpcClient implements RpcClientInterface {
     ops: PreapplyParams,
     { block, version }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse[]> {
-    const response = await this.httpBackend.createRequest<PreapplyResponse[]>(
-      {
-        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/preapply/operations`),
-        method: 'POST',
-        query: { version },
-      },
-      ops
-    );
-
-    return response;
+    const requestOptions: HttpRequestOptions = {
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/preapply/operations`),
+      method: 'POST',
+    };
+    if (version !== undefined) {
+      requestOptions.query = { version };
+    }
+    return await this.httpBackend.createRequest<PreapplyResponse[]>(requestOptions, ops);
   }
 
   /**
@@ -841,16 +846,14 @@ export class RpcClient implements RpcClientInterface {
     op: RPCRunOperationParam,
     { block, version }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse> {
-    const response = await this.httpBackend.createRequest<any>(
-      {
-        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`),
-        method: 'POST',
-        query: { version },
-      },
-      op
-    );
-
-    return response;
+    const requestOptions: HttpRequestOptions = {
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`),
+      method: 'POST',
+    };
+    if (version !== undefined) {
+      requestOptions.query = { version };
+    }
+    return await this.httpBackend.createRequest<any>(requestOptions, op);
   }
 
   /**
@@ -865,18 +868,16 @@ export class RpcClient implements RpcClientInterface {
     op: RPCSimulateOperationParam,
     { block, version }: RPCOptions = defaultRPCOptions
   ): Promise<PreapplyResponse> {
-    const response = await this.httpBackend.createRequest<any>(
-      {
-        url: this.createURL(
-          `/chains/${this.chain}/blocks/${block}/helpers/scripts/simulate_operation`
-        ),
-        method: 'POST',
-        query: { version },
-      },
-      op
-    );
-
-    return response;
+    const requestOptions: HttpRequestOptions = {
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/helpers/scripts/simulate_operation`
+      ),
+      method: 'POST',
+    };
+    if (version !== undefined) {
+      requestOptions.query = { version };
+    }
+    return await this.httpBackend.createRequest<any>(requestOptions, op);
   }
 
   /**
