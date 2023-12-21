@@ -17,6 +17,8 @@ import {
   DelegateResponse,
   DelegatesResponse,
   VotingInfoResponse,
+  AttestationRightsQueryArguments,
+  AttestationRightsResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -58,7 +60,10 @@ import { ContractsLibrary } from './taquito-contracts-library';
  *
  */
 export class RpcWrapperContractsLibrary implements RpcClientInterface {
-  constructor(private rpc: RpcClientInterface, private contractslibrary: ContractsLibrary) {}
+  constructor(
+    private rpc: RpcClientInterface,
+    private contractslibrary: ContractsLibrary
+  ) {}
 
   async getContract(
     address: string,
@@ -170,6 +175,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BakingRightsResponse> {
     return this.rpc.getBakingRights(args, { block });
+  }
+  async getAttestationRights(
+    args: AttestationRightsQueryArguments,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<AttestationRightsResponse> {
+    return this.rpc.getAttestationRights(args, { block });
   }
   async getEndorsingRights(
     args: EndorsingRightsQueryArguments,

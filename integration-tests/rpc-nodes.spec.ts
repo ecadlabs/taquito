@@ -1,10 +1,11 @@
 import { CONFIGS } from './config';
-import { DefaultContractType } from "@taquito/taquito";
+import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperations, PvmKind } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 import { ticketCode, ticketStorage } from './data/code_with_ticket';
+import { ProtoGreaterOrEqual } from '@taquito/michel-codec'
 
 CONFIGS().forEach(
   ({
@@ -20,6 +21,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
+    const unrestrictedOxfordAndAlpha = rpc.endsWith("ecadinfra.com") && ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test.skip : test;
 
     let ticketContract: DefaultContractType;
 
@@ -162,6 +164,19 @@ CONFIGS().forEach(
           expect(bakingRights).toBeDefined();
           expect(bakingRights[0].round).toBeDefined();
           expect(bakingRights[0].priority).toBeUndefined();
+        });
+
+        unrestrictedOxfordAndAlpha('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+          const attestationRights = await rpcClient.getAttestationRights();
+          expect(attestationRights).toBeDefined();
+          expect(attestationRights[0].delegates).toBeDefined();
+          expect(attestationRights[0].delegates![0].delegate).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].delegate).toEqual('string');
+          expect(attestationRights[0].delegates![0].attestation_power).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].attestation_power).toEqual('number');
+          expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
+          expect(attestationRights[0].delegate).toBeUndefined();
         });
 
         unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async () => {
