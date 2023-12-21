@@ -113,8 +113,7 @@ export const metadataViewsExample1 = {
 					michelsonStorageView: {
 						returnType: {
 							prim: 'bytes',
-							args: [],
-							annots: [ '%returnedBytes' ]
+							args: []
 						},
 						code: [
 							{
@@ -289,7 +288,7 @@ export const metadataViewsExample2 = {
 				{
 					michelsonStorageView: {
 						parameter: { prim: 'nat', args: [], annots: [] },
-						returnType: { prim: 'nat', args: [], annots: [] },
+						returnType: { prim: 'nat', args: [] },
 						code: [
 							{ prim: 'DUP', args: [], annots: [] },
 							{ prim: 'CDR', args: [], annots: [] },

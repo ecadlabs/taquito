@@ -860,7 +860,6 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   storage_limit: string;
   pvm_kind: PvmKind;
   kernel: string;
-  origination_proof: string;
   parameters_ty: MichelsonV1Expression;
   metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
 }
@@ -909,7 +908,6 @@ export interface OperationContentsAndResultSmartRollupCement {
   gas_limit: string;
   storage_limit: string;
   rollup: string;
-  commitment: string;
   metadata: OperationContentsAndResultMetadataSmartRollupCement;
 }
 

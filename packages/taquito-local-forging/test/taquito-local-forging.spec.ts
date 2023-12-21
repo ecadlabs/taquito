@@ -41,7 +41,6 @@ describe('Forge and parse operations default protocol', () => {
           },
         ],
       };
-
       expect(() => {
         localForger.forge(operation);
       }).toThrow(InvalidOperationKindError);
