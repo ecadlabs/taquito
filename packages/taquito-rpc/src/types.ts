@@ -33,84 +33,32 @@ export type OtherElts =
       other_elts: OtherEltsInner;
     };
 
-type State =
-  | {
-      inode: Inode;
-    }
-  | {
-      other_elts: OtherElts;
-    };
-
 export interface Inode {
   length: string;
   proofs: [string | null, string | null];
 }
 
-type TxRollupProofContextHash =
-  | {
-      value: string;
-    }
-  | {
-      node: string;
-    };
-
-export interface TxRollupProof {
-  version: number;
-  before: TxRollupProofContextHash;
-  after: TxRollupProofContextHash;
-  state: State[];
-}
-
-export interface TxRollupCommitment {
-  level: number;
-  messages: string[];
-  predecessor?: string;
-  inbox_merkle_root: string;
-}
-
-export interface TxRollupDeposit {
-  sender: string;
-  destination: string;
-  ticket_hash: string;
-  amount: string;
-}
-
-export interface TxRollupMessage {
-  batch?: string;
-  deposit?: TxRollupDeposit;
-}
-
-export interface TxRollupPreviousMessageResult {
-  context_hash: string;
-  withdraw_list_hash: string;
-}
-
-export interface TxRollupTicketsInfo {
-  contents: MichelsonV1Expression;
-  ty: MichelsonV1Expression;
-  ticketer: string;
-  amount: string;
-  claimer: string;
-}
 export interface DelegatesResponse {
-  balance?: BigNumber;
   full_balance?: BigNumber;
   current_frozen_deposits?: BigNumber;
-  frozen_deposits?: BigNumber;
-  frozen_balance?: BigNumber;
-  frozen_balance_by_cycle?: Frozenbalancebycycle[];
-  frozen_deposits_limit?: BigNumber;
   staking_balance: BigNumber;
+  frozen_deposits_limit?: BigNumber;
   delegated_contracts: string[];
   delegated_balance: BigNumber;
   deactivated: boolean;
   grace_period: number;
+  total_delegated_stake?: BigNumber;
+  staking_denominator?: BigNumber;
   voting_power?: BigNumber;
   current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
   active_consensus_key?: string;
   pending_consensus_keys?: PendingConsensusKey[];
+  balance?: BigNumber;
+  frozen_deposits?: BigNumber;
+  frozen_balance?: BigNumber;
+  frozen_balance_by_cycle?: Frozenbalancebycycle[];
 }
 
 export type PendingConsensusKey = {
@@ -548,57 +496,9 @@ export interface OperationContentsAndResultMetadata {
   balance_updates?: OperationMetadataBalanceUpdates[];
 }
 
-export interface OperationContentsAndResultMetadataTxRollupOrigination {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultTxRollupOrigination;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataTxRollupSubmitBatch {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultTxRollupSubmitBatch;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataTxRollupCommit {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultTxRollupCommit;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataTxRollupReturnBond {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultTxRollupReturnBond;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataTxRollupFinalizeCommitment {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultTxRollupFinalizeCommitment;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataTxRollupRemoveCommitment {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultTxRollupRemoveCommitment;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataTxRollupRejection {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultTxRollupRejection;
-  internal_operation_results?: InternalOperationResult[];
-}
-
 export interface OperationContentsAndResultMetadataTransferTicket {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultTransferTicket;
-  internal_operation_results?: InternalOperationResult[];
-}
-
-export interface OperationContentsAndResultMetadataTxRollupDispatchTickets {
-  balance_updates?: OperationMetadataBalanceUpdates[];
-  operation_result: OperationResultTxRollupDispatchTickets;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -1061,6 +961,7 @@ export interface EndorsingRightsResponseItemDelegates {
   endorsing_power: number;
   consensus_key?: string;
 }
+
 export interface EndorsingRightsResponseItem {
   level: number;
   delegate?: string;
@@ -1086,7 +987,15 @@ export interface BallotsResponse {
   pass: BigNumber;
 }
 
-export type PeriodKindResponse = 'proposal' | 'exploration' | 'cooldown' | 'promotion' | 'adoption';
+export type PeriodKindResponse =
+  | 'proposal'
+  | 'exploration'
+  | 'cooldown'
+  | 'promotion'
+  | 'adoption'
+  | 'testing_vote'
+  | 'testing'
+  | 'promotion_vote';
 
 export type CurrentProposalResponse = string | null;
 
@@ -1248,75 +1157,6 @@ export type InternalOperationResultEnum =
   | OperationResultDelegation
   | OperationResultOrigination
   | OperationResultEvent;
-
-export interface OperationResultTxRollupOrigination {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  consumed_milligas?: string;
-  originated_rollup?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultTxRollupSubmitBatch {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  consumed_milligas?: string;
-  paid_storage_size_diff?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultTxRollupDispatchTickets {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  consumed_milligas?: string;
-  paid_storage_size_diff?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultTxRollupCommit {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  consumed_milligas?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultTxRollupReturnBond {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  consumed_milligas?: string;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultTxRollupFinalizeCommitment {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  consumed_milligas?: string;
-  level?: number;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultTxRollupRemoveCommitment {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  consumed_milligas?: string;
-  level?: number;
-  errors?: TezosGenericOperationError[];
-}
-
-export interface OperationResultTxRollupRejection {
-  status: OperationResultStatusEnum;
-  balance_updates?: OperationBalanceUpdates;
-  consumed_gas?: string;
-  consumed_milligas?: string;
-  errors?: TezosGenericOperationError[];
-}
 
 export interface OperationResultTransferTicket {
   status: OperationResultStatusEnum;
@@ -1491,15 +1331,7 @@ export type OperationResult =
   | OperationResultSmartRollupRefute
   | OperationResultSmartRollupRecoverBond
   | OperationResultSmartRollupTimeout
-  | OperationResultSmartRollupExecuteOutboxMessage
-  | OperationResultTxRollupOrigination
-  | OperationResultTxRollupSubmitBatch
-  | OperationResultTxRollupDispatchTickets
-  | OperationResultTxRollupCommit
-  | OperationResultTxRollupReturnBond
-  | OperationResultTxRollupFinalizeCommitment
-  | OperationResultTxRollupRemoveCommitment
-  | OperationResultTxRollupRejection;
+  | OperationResultSmartRollupExecuteOutboxMessage;
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
@@ -1700,6 +1532,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto018 &
   ConstantsResponseProto017 &
   ConstantsResponseProto016 &
   ConstantsResponseProto015 &
@@ -1743,6 +1576,87 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
+export interface ConstantsResponseProto018
+  extends Omit<
+    ConstantsResponseProto017,
+    | 'baking_reward_bonus_per_slot'
+    | 'baking_reward_fixed_portion'
+    | 'double_baking_punishment'
+    | 'endorsing_reward_per_slot'
+    | 'frozen_deposits_percentage'
+    | 'liquidity_baking_subsidy'
+    | 'ratio_of_frozen_deposits_slashed_per_double_endorsement'
+    | 'seed_nonce_revelation_tip'
+    | 'smart_rollup_enable'
+    | 'tx_rollup_commitment_bond'
+    | 'tx_rollup_cost_per_byte_ema_factor'
+    | 'tx_rollup_enable'
+    | 'tx_rollup_finality_period'
+    | 'tx_rollup_hard_size_limit_per_inbox'
+    | 'tx_rollup_hard_size_limit_per_message'
+    | 'tx_rollup_max_commitments_count'
+    | 'tx_rollup_max_inboxes_count'
+    | 'tx_rollup_max_messages_per_inbox'
+    | 'tx_rollup_max_ticket_payload_size'
+    | 'tx_rollup_max_withdrawals_per_batch'
+    | 'tx_rollup_origination_size'
+    | 'tx_rollup_rejection_max_proof_size'
+    | 'tx_rollup_sunset_level'
+    | 'tx_rollup_withdraw_period'
+  > {
+  adaptive_issuance_activation_vote_enable: boolean;
+  adaptive_issuance_launch_ema_threshold: number;
+  adaptive_rewards_params: {
+    center_dz: {
+      denominator: string;
+      numerator: string;
+    };
+    growth_rate: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_max: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_min: {
+      denominator: string;
+      numerator: string;
+    };
+    max_bonus: string;
+    radius_dz: {
+      denominator: string;
+      numerator: string;
+    };
+  };
+  autostaking_enable: boolean;
+  edge_of_staking_over_delegation: number;
+  global_limit_of_staking_over_baking: number;
+  issuance_weights: {
+    attesting_reward_weight: number;
+    baking_reward_bonus_weight: number;
+    baking_reward_fixed_portion_weight: number;
+    base_total_issued_per_minute: string;
+    liquidity_baking_subsidy_weight: number;
+    seed_nonce_revelation_tip_weight: number;
+    vdf_revelation_tip_weight: number;
+  };
+  limit_of_delegation_over_baking: number;
+  minimal_frozen_stake: string;
+  percentage_of_frozen_deposits_slashed_per_double_attestation: number;
+  percentage_of_frozen_deposits_slashed_per_double_baking: number;
+  smart_rollup_private_enable: boolean;
+  smart_rollup_reveal_activation_level: {
+    dal_page: number;
+    dal_parameters: number;
+    metadata: number;
+    raw_data: {
+      Blake2B: number;
+    };
+  };
+  smart_rollup_riscv_pvm_enable: boolean;
+  zk_rollup_max_ticket_payload_size: number;
+}
 export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
 export interface ConstantsResponseProto016
@@ -2129,28 +2043,10 @@ export type LastRemovedCommitmentHashes = {
   last_message_hash: string;
   commitment_hash: string;
 };
-export interface TxRollupStateResponse {
-  last_removed_commitment_hashes?: LastRemovedCommitmentHashes;
-  finalized_commitments: Next;
-  unfinalized_commitments: Next;
-  uncommitted_inboxes: Next;
-  commitment_newest_hash?: string;
-  tezos_head_level?: number;
-  burn_per_byte: string;
-  allocated_storage: string;
-  occupied_storage: string;
-  inbox_ema: number;
-  commitments_watermark?: number;
-}
-
-export interface TxRollupInboxResponse {
-  inbox_length: number;
-  cumulated_size: number;
-  merkle_root: string;
-}
 
 export interface PendingOperationsQueryArguments {
-  version?: '1';
+  version?: '1' | '2';
+  validated?: boolean;
   applied?: boolean;
   refused?: boolean;
   outdated?: boolean;
@@ -2166,8 +2062,17 @@ type FailedProcessedOperation = Pick<
   error: TezosGenericOperationError[];
 };
 
-export interface PendingOperations {
+export interface PendingOperationsV1 {
   applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
+  refused: FailedProcessedOperation[];
+  outdated: FailedProcessedOperation[];
+  branch_refused: FailedProcessedOperation[];
+  branch_delayed: FailedProcessedOperation[];
+  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
+}
+
+export interface PendingOperationsV2 {
+  validated: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
   refused: FailedProcessedOperation[];
   outdated: FailedProcessedOperation[];
   branch_refused: FailedProcessedOperation[];
