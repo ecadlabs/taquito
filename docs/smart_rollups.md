@@ -27,10 +27,10 @@ await op.confirmation();
 
 ##### please note
 - `pvmKind` at this time the only PVM supported is `wasm_2_0_0`
-- `kernel` is passed as a hexadecimal string examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/mumbai/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
+- `kernel` is passed as a hexadecimal string examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/active/smart_rollups.html)
 - `parametersType` is a MichelsonV1Expression to define the type. 
 
-For more information in regards to Smart Rollup Origination please refer to the this [link](https://tezos.gitlab.io/mumbai/smart_rollups.html?highlight=smart%20rollup%20originate#id1)
+For more information in regards to Smart Rollup Origination please refer to the this [link](https://tezos.gitlab.io/active/smart_rollups.html#origination)
 
 
 ## `smart_rollup_add_messages`
@@ -50,7 +50,7 @@ If you read closely, the message includes a `destination`, a `parameter`, and an
 
 These messages can then be claimed back into L1 as a legitimate contract call using the `smart_rollup_execute_outbox_message` operation which we will go over in another section of this doc.
 
-for more information, refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html#sending-an-external-inbox-message)
+for more information, refer to [this document](https://tezos.gitlab.io/active/smart_rollups.html#external-messages)
 
 ### Example
 ```typescript
@@ -63,4 +63,4 @@ const op = await Tezos.contract.smartRollupAddMessages({
 await op.confirmation();
 ```
 
-- `message` property receives an array of encoded outbox messages. For more information on how to encode or what message gets encoded, refer to [this document](https://tezos.gitlab.io/mumbai/smart_rollups.html#sending-an-external-inbox-message)
+- `message` property receives an array of encoded outbox messages. For more information on how to encode or what message gets encoded
