@@ -38,21 +38,21 @@ import {
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
-  TxRollupInboxResponse,
-  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingInfoResponse,
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
 } from './types';
 
 export interface RPCOptions {
   block: string;
+  version?: 0 | 1 | '0' | '1';
 }
 
 export const defaultChain = 'main';
@@ -117,12 +117,6 @@ export interface RpcClientInterface {
   getSaplingDiffById(id: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
-  getTxRollupState(txRollupId: string, options?: RPCOptions): Promise<TxRollupStateResponse>;
-  getTxRollupInbox(
-    txRollupId: string,
-    blockLevel: string,
-    options?: RPCOptions
-  ): Promise<TxRollupInboxResponse | null>;
   getStorageUsedSpace(contract: string, options?: RPCOptions): Promise<string>;
   getStoragePaidSpace(contract: string, options?: RPCOptions): Promise<string>;
   getTicketBalance(
@@ -131,7 +125,9 @@ export interface RpcClientInterface {
     options?: RPCOptions
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
-  getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperations>;
+  getPendingOperations(
+    args: PendingOperationsQueryArguments
+  ): Promise<PendingOperationsV1 | PendingOperationsV2>;
 }
 
 export enum RPCMethodName {
@@ -166,8 +162,6 @@ export enum RPCMethodName {
   GET_SCRIPT = 'getScript',
   GET_STORAGE = 'getStorage',
   GET_SUCCESSOR_PERIOD = 'getSuccessorPeriod',
-  GET_TX_ROLLUP_INBOX = 'getTxRollupInbox',
-  GET_TX_ROLLUP_STATE = 'getTxRollupState',
   GET_VOTES_LISTINGS = 'getVotesListings',
   PACK_DATA = 'packData',
   GET_STORAGE_USED_SPACE = 'getStorageUsedSpace',
