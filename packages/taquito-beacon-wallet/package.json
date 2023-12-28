@@ -66,7 +66,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "4.0.12",
+    "@airgap/beacon-dapp": "4.1.0",
     "@taquito/core": "^17.5.0",
     "@taquito/taquito": "^17.5.0"
   },
