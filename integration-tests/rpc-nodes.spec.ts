@@ -1,11 +1,11 @@
 import { CONFIGS } from './config';
 import { DefaultContractType, Protocols } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperations, PvmKind } from '@taquito/rpc';
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2, PvmKind } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 import { ticketCode, ticketStorage } from './data/code_with_ticket';
-import { ProtoGreaterOrEqual } from '@taquito/michel-codec'
+import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
 CONFIGS().forEach(
   ({
@@ -460,10 +460,20 @@ CONFIGS().forEach(
           expect(ticketBalances[0].amount).toBeDefined();
         });
 
-        it('Verify that rpcClient.getPendingOperations will retrieve the pending operations in mempool', async () => {
-          const pendingOperations: PendingOperations = await rpcClient.getPendingOperations();
+        it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
+          const pendingOperations = await rpcClient.getPendingOperations({ version: '1'}) as PendingOperationsV1;
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.applied).toBeInstanceOf(Array);
+          expect(pendingOperations.refused).toBeInstanceOf(Array);
+          expect(pendingOperations.outdated).toBeInstanceOf(Array);
+          expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
+          expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
+        });
+
+        unrestrictedOxfordAndAlpha('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
+          const pendingOperations = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;
+          expect(pendingOperations).toBeDefined();
+          expect(pendingOperations.validated).toBeInstanceOf(Array);
           expect(pendingOperations.refused).toBeInstanceOf(Array);
           expect(pendingOperations.outdated).toBeInstanceOf(Array);
           expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
