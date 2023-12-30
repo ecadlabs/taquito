@@ -43,8 +43,6 @@ describe('RpcClientCache test', () => {
 
   const address = 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn';
   const contractAddress = 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D';
-  const txRollupId = 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w';
-  const blockLevel = '0';
   const ticketToken = {
     ticketer: contractAddress,
     content_type: { prim: 'string' },
@@ -87,8 +85,6 @@ describe('RpcClientCache test', () => {
       getCurrentPeriod: jest.fn(),
       getSuccessorPeriod: jest.fn(),
       getProtocols: jest.fn(),
-      getTxRollupInbox: jest.fn(),
-      getTxRollupState: jest.fn(),
       getTicketBalance: jest.fn(),
       getAllTicketBalances: jest.fn(),
       getPendingOperations: jest.fn(),
@@ -174,8 +170,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
     await rpcCache.getProtocols();
-    await rpcCache.getTxRollupInbox(txRollupId, blockLevel);
-    await rpcCache.getTxRollupState(txRollupId);
     await rpcCache.getTicketBalance(contractAddress, {
       ticketer: contractAddress,
       content_type: { prim: 'string' },
@@ -320,8 +314,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod(block);
     await rpcCache.getSuccessorPeriod(block);
     await rpcCache.getProtocols(block);
-    await rpcCache.getTxRollupInbox(txRollupId, blockLevel, block);
-    await rpcCache.getTxRollupState(txRollupId, block);
     await rpcCache.getTicketBalance(
       contractAddress,
       {

@@ -41,15 +41,14 @@ import {
   SaplingDiffResponse,
   ScriptResponse,
   StorageResponse,
-  TxRollupInboxResponse,
-  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
   PendingOperationsQueryArguments,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   OriginationProofParams,
   RPCSimulateOperationParam,
 } from '../types';
@@ -1106,42 +1105,6 @@ export class RpcClientCache implements RpcClientInterface {
     }
   }
 
-  async getTxRollupState(
-    txRollupId: string,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<TxRollupStateResponse> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_TX_ROLLUP_STATE, [
-      block,
-      txRollupId,
-    ]);
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getTxRollupState(txRollupId, { block });
-      this.put(key, response);
-      return response;
-    }
-  }
-
-  async getTxRollupInbox(
-    txRollupId: string,
-    blockLevel: string,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<TxRollupInboxResponse | null> {
-    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_TX_ROLLUP_INBOX, [
-      block,
-      txRollupId,
-      blockLevel,
-    ]);
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getTxRollupInbox(txRollupId, blockLevel, { block });
-      this.put(key, response);
-      return response;
-    }
-  }
-
   /**
    *
    * @param contract address of the contract we want to retrieve storage information of
@@ -1258,7 +1221,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
-  ): Promise<PendingOperations> {
+  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
       RPCMethodName.GET_PENDING_OPERATIONS,
