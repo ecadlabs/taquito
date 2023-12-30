@@ -9,7 +9,13 @@ import {
   paddedBytesDecoder,
 } from '../src/codec';
 import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
-import { pkhEncoder, publicKeyDecoder, publicKeyEncoder } from '../src/codec';
+import {
+  pkhEncoder,
+  pkhsEncoder,
+  pkhsDecoder,
+  publicKeyDecoder,
+  publicKeyEncoder,
+} from '../src/codec';
 import {
   DecodeBallotValueError,
   DecodePvmKindError,
@@ -74,6 +80,49 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     } catch (e) {
       expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
     }
+  });
+
+  test(`Verify pkhsEncoder`, async () => {
+    const none = pkhsEncoder();
+    expect(none).toEqual('00');
+    const empty = pkhsEncoder([]);
+    expect(empty).toEqual('ff00000000');
+    const tz = pkhsEncoder([
+      'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY',
+      'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+      'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
+      'tz4HQ8VeXAyrZMhES1qLMJAc9uAVXjbMpS8u',
+    ]);
+    expect(tz).toEqual(
+      'ff0000005400c9fc72e8491bd2973e196f04ec6918ad5bcee22d012ffebbf1560632ca767bc960ccdb84669d284c2c026fde46af0356a0476dae4e4600172dc9309b3aa4035c14a7a05c10fc8b402fbcdd48dc8136236bf3c1'
+    );
+
+    expect(() => pkhsEncoder(['tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5'])).toThrow(
+      InvalidKeyHashError
+    );
+    try {
+      pkhsEncoder(['tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5']);
+    } catch (e) {
+      expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
+    }
+  });
+
+  test(`Verify pkhsDecoder`, async () => {
+    const none = pkhsDecoder(Uint8ArrayConsumer.fromHexString('00'));
+    expect(none).toEqual(undefined);
+    const empty = pkhsDecoder(Uint8ArrayConsumer.fromHexString('ff00000000'));
+    expect(empty).toEqual([]);
+    const tz = pkhsDecoder(
+      Uint8ArrayConsumer.fromHexString(
+        'ff0000005400c9fc72e8491bd2973e196f04ec6918ad5bcee22d012ffebbf1560632ca767bc960ccdb84669d284c2c026fde46af0356a0476dae4e4600172dc9309b3aa4'
+      )
+    );
+    expect(tz).toEqual([
+      'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY',
+      'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
+      'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
+    ]);
+    //
   });
 
   test(`Verify publicKeyEncoder`, async () => {
@@ -240,13 +289,15 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
   test('Verify that pvmKindEncoder functions correctly and returns UnsupportedPvmKindError on unknown case', () => {
     expect(pvmKindEncoder('arith')).toEqual('00');
     expect(pvmKindEncoder('wasm_2_0_0')).toEqual('01');
+    expect(pvmKindEncoder('riscv')).toEqual('02');
     expect(() => pvmKindEncoder('foobar')).toThrowError(UnsupportedPvmKindError);
   });
 
   test('Verify that pvmKindDecoder functions correctly and returns DecodePvmKindError on unknown case', () => {
     expect(pvmKindDecoder(Uint8ArrayConsumer.fromHexString('00'))).toEqual('arith');
     expect(pvmKindDecoder(Uint8ArrayConsumer.fromHexString('01'))).toEqual('wasm_2_0_0');
-    expect(() => pvmKindDecoder(Uint8ArrayConsumer.fromHexString('02'))).toThrowError(
+    expect(pvmKindDecoder(Uint8ArrayConsumer.fromHexString('02'))).toEqual('riscv');
+    expect(() => pvmKindDecoder(Uint8ArrayConsumer.fromHexString('03'))).toThrowError(
       DecodePvmKindError
     );
   });

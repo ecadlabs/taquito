@@ -57,6 +57,18 @@ export const pkhDecoder = (val: Uint8ArrayConsumer) => {
   }
 };
 
+export const pkhsDecoder = (val: Uint8ArrayConsumer) => {
+  if (!boolDecoder(val)) {
+    return undefined;
+  }
+  const pkhs = [];
+  val.consume(4);
+  while (val.length() > 0) {
+    pkhs.push(pkhDecoder(val));
+  }
+  return pkhs;
+};
+
 export const branchEncoder = prefixEncoder(Prefix.B);
 export const tz1Encoder = prefixEncoder(Prefix.TZ1);
 
@@ -116,6 +128,8 @@ export const pvmKindEncoder = (pvm: string): string => {
       return '00';
     case 'wasm_2_0_0':
       return '01';
+    case 'riscv':
+      return '02';
     default:
       throw new UnsupportedPvmKindError(pvm);
   }
@@ -128,6 +142,8 @@ export const pvmKindDecoder = (pvm: Uint8ArrayConsumer): string => {
       return 'arith';
     case 0x01:
       return 'wasm_2_0_0';
+    case 0x02:
+      return 'riscv';
     default:
       throw new DecodePvmKindError(value[0].toString());
   }
@@ -211,6 +227,19 @@ export const pkhEncoder = (val: string) => {
           ` expecting one for the following "${Prefix.TZ1}", "${Prefix.TZ2}", "${Prefix.TZ3}" or "${Prefix.TZ4}".`
       );
   }
+};
+
+export const pkhsEncoder = (val?: string[]) => {
+  if (!val) {
+    return boolEncoder(false);
+  }
+  if (val.length === 0) {
+    return boolEncoder(true) + pad(0);
+  }
+  const pkhs = val.reduce((prev, curr) => {
+    return prev + pkhEncoder(curr);
+  }, '');
+  return boolEncoder(true) + pad(pkhs.length / 2) + pkhs;
 };
 
 export const publicKeyEncoder = (val: string) => {

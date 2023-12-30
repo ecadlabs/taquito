@@ -149,6 +149,7 @@ export const SmartRollupOriginateSchema = {
   pvm_kind: CODEC.PVM_KIND,
   kernel: CODEC.PADDED_BYTES,
   parameters_ty: CODEC.VALUE,
+  whitelist: CODEC.PKH_ARR,
 };
 
 export const SmartRollupAddMessagesSchema = {

@@ -334,6 +334,7 @@ export interface OperationContentsSmartRollupOriginate {
   pvm_kind: PvmKind;
   kernel: string;
   parameters_ty: MichelsonV1Expression;
+  whitelist?: string[];
 }
 
 export interface OperationContentsSmartRollupAddMessages {
@@ -761,6 +762,7 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   pvm_kind: PvmKind;
   kernel: string;
   parameters_ty: MichelsonV1Expression;
+  whitelist?: string[];
   metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
 }
 
@@ -1207,7 +1209,7 @@ export interface OperationResultSmartRollupOriginate {
   address?: string;
   genesis_commitment_hash?: string;
   consumed_milligas?: string;
-  size: string;
+  size?: string;
   errors?: TezosGenericOperationError[];
 }
 
@@ -2080,6 +2082,7 @@ export interface PendingOperationsV2 {
 export enum PvmKind {
   WASM2 = 'wasm_2_0_0',
   ARITH = 'arith',
+  RISCV = 'riscv',
 }
 
 export interface SmartRollupPublishCommitment {
