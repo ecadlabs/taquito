@@ -21,7 +21,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const unrestrictedOxfordAndAlpha = rpc.endsWith("ecadinfra.com") && ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test.skip : test;
+    const unrestrictedOxfordAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -166,7 +166,7 @@ CONFIGS().forEach(
           expect(bakingRights[0].priority).toBeUndefined();
         });
 
-        unrestrictedOxfordAndAlpha('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+        unrestrictedRPCNode('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
           const attestationRights = await rpcClient.getAttestationRights();
           expect(attestationRights).toBeDefined();
           expect(attestationRights[0].delegates).toBeDefined();
@@ -461,7 +461,7 @@ CONFIGS().forEach(
         });
 
         it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
-          const pendingOperations = await rpcClient.getPendingOperations({ version: '1'}) as PendingOperationsV1;
+          const pendingOperations = await rpcClient.getPendingOperations({ version: '1' }) as PendingOperationsV1;
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.applied).toBeInstanceOf(Array);
           expect(pendingOperations.refused).toBeInstanceOf(Array);
