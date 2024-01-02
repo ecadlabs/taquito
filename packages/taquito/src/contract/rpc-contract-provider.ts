@@ -73,7 +73,10 @@ import { PrepareProvider } from '../prepare';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
-  constructor(context: Context, private estimator: EstimationProvider) {
+  constructor(
+    context: Context,
+    private estimator: EstimationProvider
+  ) {
     super(context);
   }
   contractProviderTypeSymbol = Symbol.for('taquito-contract-provider-type-symbol');
@@ -657,13 +660,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       params,
       this.estimator.smartRollupOriginate.bind(this.estimator)
     );
-    const originationProof = await this.rpc.getOriginationProof({
-      kind: params.pvmKind,
-      kernel: params.kernel,
-    });
-    const completeParams = { ...params, originationProof };
 
-    const prepared = await this.prepare.smartRollupOriginate({ ...completeParams, ...estimate });
+    const prepared = await this.prepare.smartRollupOriginate({ ...params, ...estimate });
     const content = prepared.opOb.contents.find(
       (op) => op.kind === OpKind.SMART_ROLLUP_ORIGINATE
     ) as OperationContentsSmartRollupOriginate;
