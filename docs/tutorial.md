@@ -59,7 +59,7 @@ mkdir my-cli-dapp
 cd my-cli-dapp
 
 npm init -y
-npm install -D typescript ts-node
+npm i -D typescript ts-node
 ```
 
   </TabItem>
@@ -70,7 +70,7 @@ md my-cli-dapp
 cd my-cli-dapp
 
 npm init -y
-npm install -D typescript ts-node
+npm i -D typescript ts-node
 ```
 
   </TabItem>
@@ -92,7 +92,7 @@ If everything is done right, you should be able to see the output `Hello Tezos!`
 Now, we can start using Taquito to interact with the Tezos blockchain.
 
 ```bash
-npm install -s @taquito/taquito
+npm i @taquito/taquito
 ```
 
 Now, open the file `index.ts` and replace the code with the following:
@@ -176,6 +176,9 @@ Without Taquito, sending operations to the Tezos blockchain requires you to writ
 1. Estimate the costs for the operation
 1. Properly encode the operation
 1. Sign the operation
+1. Inject the operation
+1. Get the operation receipt
+1. Monitor the chain for inclusion of the operation
 
 And to implement all these, you need detailed information about different data types, protocols, constants, and algorithms used in the Tezos blockchain. Taquito abstracts away all this complexity and provides a simple API for interacting with the blockchain.
 
@@ -187,7 +190,7 @@ In the next step, we will simply store the private key in the source code. This 
 Taquito provides an "In Memory Signer" functionality. Use the following command to add that to your project:
 
 ```bash
-npm install -s @taquito/signer
+npm i @taquito/signer
 ```
 
 Open the file `index.ts` and replace the code with the following:
@@ -380,6 +383,36 @@ Here is a high-level summary of the flow of events in the dApp:
 1. The dApp can wait for the operation to be included in a block
 1. The dApp can read the result of the operation from the blockchain
 
+```mermaid
+sequenceDiagram
+  actor user
+  user->>browser: visits the dApp
+  browser->>server: request the dApp's code
+  server->>browser: sends the dApp's code
+  create participant dApp as dApp
+  browser->>dApp: loads and runs the dApp
+  Note right of dApp: Inside the browser
+  dApp->>blockchain: can read data from the blockchain
+  blockchain->>dApp: sends the data
+  dApp->>indexer: can read indexed data from the indexer/explorer
+  indexer->>dApp: sends the data
+  dApp->>user: shows data from the blockchain/indexer/explorer
+  user->>dApp: makes an interaction that requires connecting the wallet
+  dApp->>user: shows a popup to connect the wallet
+  user->>wallet: selects a wallet and visits the wallet
+  wallet->>user: asks for approval of the connection
+  user->>wallet: approves the connection
+  wallet->>dApp: approves the connection
+  user->>dApp: interacts with dapp that requires sending an operation to the blockchain
+  dApp->>wallet: sends the operation to the wallet to be signed
+  wallet->>user: shows the operation to the user and asks for approval
+  user->>wallet: approves the operation
+  wallet->>blockchain: sends the signed operation to the blockchain
+  wallet->>dApp: sends the result of the operation to the dApp
+  dApp->>blockchain: awaits the inclusion of the operation in a block
+  dApp->>user: shows the result of the operation
+```
+
 Alternatively, in a slightly different flow, the wallet sends the signed operation to the dApp, and dApp sends it to the blockchain. From the user's point of view, both flows look the same.
 
 ## Creating a simple dApp that transfers ꜩ from the user's wallet to another address
@@ -415,7 +448,7 @@ git commit -m "initial commit"
 In the next step, we add Taquito and Beacon SDK to the React app, and create a minimal UI to connect to the wallet and transfer ꜩ.
 
 ```bash
-npm install @taquito/taquito @taquito/beacon-wallet
+npm i @taquito/taquito @taquito/beacon-wallet
 ```
 
 Open the file `index.html` and make the following changes:
@@ -607,7 +640,7 @@ export default Transfer;
 The libraries Taquito and Beacon SDK are designed to run in a Node.js environment. However, we are running them in a browser. This causes some issues. For example, the Beacon SDK uses the Node.js `buffer`, `stream`, and `util` modules. These modules are not available in the browser. Fortunately, there are browser-compatible versions of these modules. We can use these versions instead of the Node.js versions. To do this, we need to install the following packages:
 
 ```bash
-npm i --save buffer stream-browserify util
+npm i buffer stream-browserify util
 ```
 
 Now we need to tell Vite to use these packages instead of the Node.js versions. To do this, open the file `vite.config.ts` and add the following code:
