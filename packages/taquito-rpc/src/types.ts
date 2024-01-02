@@ -19,19 +19,19 @@ interface INodeExtender {
 
 type OtherEltsInner =
   | {
-      value: any;
-    }
+    value: any;
+  }
   | {
-      inode_extender: INodeExtender;
-    };
+    inode_extender: INodeExtender;
+  };
 
 export type OtherElts =
   | {
-      node: [string, { value: string } | { node: string }][];
-    }
+    node: [string, { value: string } | { node: string }][];
+  }
   | {
-      other_elts: OtherEltsInner;
-    };
+    other_elts: OtherEltsInner;
+  };
 
 export interface Inode {
   length: string;
@@ -1106,13 +1106,13 @@ export interface ScriptedContracts {
 
 export type BondId =
   | {
-      smart_rollup?: never;
-      tx_rollup: string;
-    }
+    smart_rollup?: never;
+    tx_rollup: string;
+  }
   | {
-      smart_rollup: string;
-      tx_rollup?: never;
-    };
+    smart_rollup: string;
+    tx_rollup?: never;
+  };
 
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
@@ -1820,10 +1820,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto009 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
+export interface ConstantsResponseProto009 extends ConstantsResponseProto008 { }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 { }
 
 export interface ConstantsResponseProto007
   extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
@@ -2031,12 +2031,12 @@ export type ProtocolsResponse = {
 
 export type Next =
   | {
-      next: number;
-    }
+    next: number;
+  }
   | {
-      newest: number;
-      oldest: number;
-    };
+    newest: number;
+    oldest: number;
+  };
 
 export type LastRemovedCommitmentHashes = {
   last_message_hash: string;
