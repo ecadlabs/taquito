@@ -397,7 +397,6 @@ export interface OperationContentsSmartRollupOriginate {
   storage_limit: string;
   pvm_kind: PvmKind;
   kernel: string;
-  origination_proof: string;
   parameters_ty: MichelsonV1Expression;
 }
 
@@ -885,7 +884,6 @@ export interface OperationContentsAndResultSmartRollupOriginate {
   storage_limit: string;
   pvm_kind: PvmKind;
   kernel: string;
-  origination_proof: string;
   parameters_ty: MichelsonV1Expression;
   metadata: OperationContentsAndResultMetadataSmartRollupOriginate;
 }
@@ -934,7 +932,6 @@ export interface OperationContentsAndResultSmartRollupCement {
   gas_limit: string;
   storage_limit: string;
   rollup: string;
-  commitment: string;
   metadata: OperationContentsAndResultMetadataSmartRollupCement;
 }
 
@@ -2241,11 +2238,6 @@ export interface PendingOperationsV2 {
 export enum PvmKind {
   WASM2 = 'wasm_2_0_0',
   ARITH = 'arith',
-}
-
-export interface OriginationProofParams {
-  kind: PvmKind;
-  kernel: string;
 }
 
 export interface SmartRollupPublishCommitment {

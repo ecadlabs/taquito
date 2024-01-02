@@ -155,7 +155,6 @@ export const SmartRollupOriginateSchema = {
   storage_limit: CODEC.ZARITH,
   pvm_kind: CODEC.PVM_KIND,
   kernel: CODEC.PADDED_BYTES,
-  origination_proof: CODEC.PADDED_BYTES,
   parameters_ty: CODEC.VALUE,
 };
 

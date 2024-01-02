@@ -51,7 +51,6 @@ import {
   PendingOperationsQueryArguments,
   PendingOperationsV1,
   PendingOperationsV2,
-  OriginationProofParams,
   RPCSimulateOperationParam,
 } from '../types';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
@@ -76,8 +75,7 @@ type RpcMethodParam =
   | BakingRightsQueryArguments
   | PendingOperationsQueryArguments
   | AttestationRightsQueryArguments
-  | EndorsingRightsQueryArguments
-  | OriginationProofParams;
+  | EndorsingRightsQueryArguments;
 
 const defaultTtl = 1000;
 
@@ -1261,30 +1259,6 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getPendingOperations(args);
-      this.put(key, response);
-      return response;
-    }
-  }
-
-  /**
-   *
-   * @param params contains the PVM kind and kernel to generate the origination proof from
-   * @description rpc call to generate the origination proof needed for the smart rollup originate operation
-   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
-   */
-  async getOriginationProof(
-    params: OriginationProofParams,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<string> {
-    const key = this.formatCacheKey(
-      this.rpcClient.getRpcUrl(),
-      RPCMethodName.GET_ORIGINATION_PROOF,
-      [block, params]
-    );
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getOriginationProof(params, { block });
       this.put(key, response);
       return response;
     }
