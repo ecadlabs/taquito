@@ -45,7 +45,7 @@ export const prefixDecoder = (pre: Prefix) => (str: Uint8ArrayConsumer) => {
 
 export const tz1Decoder = prefixDecoder(Prefix.TZ1);
 export const branchDecoder = prefixDecoder(Prefix.B);
-export const pkhDecoder = (val: Uint8ArrayConsumer) => {
+export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
   const prefix = val.consume(1);
 
   if (prefix[0] === 0x00) {
@@ -57,16 +57,16 @@ export const pkhDecoder = (val: Uint8ArrayConsumer) => {
   }
 };
 
-export const pkhsDecoder = (val: Uint8ArrayConsumer) => {
+export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
   if (!boolDecoder(val)) {
     return undefined;
   }
-  const pkhs = [];
+  const publicKeyHashes = [];
   val.consume(4);
   while (val.length() > 0) {
-    pkhs.push(pkhDecoder(val));
+    publicKeyHashes.push(publicKeyHashDecoder(val));
   }
-  return pkhs;
+  return publicKeyHashes;
 };
 
 export const branchEncoder = prefixEncoder(Prefix.B);
@@ -151,7 +151,7 @@ export const pvmKindDecoder = (pvm: Uint8ArrayConsumer): string => {
 
 export const delegateEncoder = (val: string) => {
   if (val) {
-    return boolEncoder(true) + pkhEncoder(val);
+    return boolEncoder(true) + publicKeyHashEncoder(val);
   } else {
     return boolEncoder(false);
   }
@@ -205,11 +205,11 @@ export const boolDecoder = (val: Uint8ArrayConsumer): boolean => {
 export const delegateDecoder = (val: Uint8ArrayConsumer) => {
   const hasDelegate = boolDecoder(val);
   if (hasDelegate) {
-    return pkhDecoder(val);
+    return publicKeyHashDecoder(val);
   }
 };
 
-export const pkhEncoder = (val: string) => {
+export const publicKeyHashEncoder = (val: string) => {
   const pubkeyPrefix = val.substring(0, 3);
   switch (pubkeyPrefix) {
     case Prefix.TZ1:
@@ -229,17 +229,17 @@ export const pkhEncoder = (val: string) => {
   }
 };
 
-export const pkhsEncoder = (val?: string[]) => {
+export const publicKeyHashesEncoder = (val?: string[]) => {
   if (!val) {
     return boolEncoder(false);
   }
   if (val.length === 0) {
     return boolEncoder(true) + pad(0);
   }
-  const pkhs = val.reduce((prev, curr) => {
-    return prev + pkhEncoder(curr);
+  const publicKeyHashes = val.reduce((prev, curr) => {
+    return prev + publicKeyHashEncoder(curr);
   }, '');
-  return boolEncoder(true) + pad(pkhs.length / 2) + pkhs;
+  return boolEncoder(true) + pad(publicKeyHashes.length / 2) + publicKeyHashes;
 };
 
 export const publicKeyEncoder = (val: string) => {
@@ -267,7 +267,7 @@ export const addressEncoder = (val: string): string => {
     case Prefix.TZ2:
     case Prefix.TZ3:
     case Prefix.TZ4:
-      return '00' + pkhEncoder(val);
+      return '00' + publicKeyHashEncoder(val);
     case Prefix.KT1:
       return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
     default:
@@ -333,7 +333,7 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   switch (preamble[0]) {
     case 0x00:
-      return pkhDecoder(val);
+      return publicKeyHashDecoder(val);
     case 0x01: {
       const address = prefixDecoder(Prefix.KT1)(val);
       val.consume(1);
