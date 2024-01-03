@@ -21,7 +21,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const unrestrictedOxfordAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test : test.skip;
+    const oxfordAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -470,7 +470,7 @@ CONFIGS().forEach(
           expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
         });
 
-        unrestrictedOxfordAndAlpha('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
+        oxfordAndAlpha('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.validated).toBeInstanceOf(Array);
