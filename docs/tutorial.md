@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 ## Introduction
 
-In this tutorial, we will walk through the process of creating a simple dApp (short for "Distributed Application") using Taquito. We will:
+In this tutorial, we will walk through the process of creating a simple dApp (short for "Decentralized Application") using Taquito. We will:
 
 1. Create a simple command-line application that reads the balance of an address from the blockchain
 1. Establish a high-level understanding of the blockchain, Tezos, dApps, and Taquito
@@ -85,9 +85,9 @@ Now, run the following command in the terminal:
 npx ts-node index.ts
 ```
 
-If everything is done right, you should be able to see the output `Hello Tezos!` in the terminal.
-Now, we can start using Taquito to interact with the Tezos blockchain. In the terminal, press ctrl+c to stop the `npx ts-node index.ts` command.
-Then run the following command to install Taquito:
+If everything is done right, you should be able to see the output `Hello Blockchain!` in the terminal.
+Now, we can start using Taquito to interact with the Tezos blockchain.
+Run the following command to install Taquito:
 
 ```bash
 npm i @taquito/taquito
@@ -105,7 +105,7 @@ tezosToolkit.tz.getBalance("tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L").then(balance 
 });
 ```
 
-Running `npx ts-node index.ts` should now show the balance of the specified address.
+Running `npx ts-node index.ts` should now show the balance of the specified address. This balance is in units of Mutez (micro Tez). Tez is the currency of Tezos, its code is `XTZ`, and the symbol is `ꜩ`. 1 Tez is 1,000,000 Mutez.
 
 Congratulations! You have just interacted with the Tezos blockchain using Taquito. In the next section, we will establish a high-level understanding of the blockchain, Tezos, dApps, and Taquito. If you are already familiar with these concepts, you can skip to [Sending a Transfer operation to the blockchain using Taquito](#sending-operations).
 
@@ -234,7 +234,7 @@ What is happening here? Let's break it down:
 1. We print the hash of the operation.
 
 For the purpose of this section, I have created a new address and funded it on testnet. You are sharing the same secret key with everyone else going through this tutorial. So don't use this address for anything important. Also, there are two possible reasons why you might not be able to send the operation:
-1. Other people testing the code have consumed all the ꜩ in the address, so your operation will fail because of insufficient funds. You can head over to [ghostnet faucet](https://faucet.ghostnet.teztnets.xyz/) and send some ꜩ to the address for free.
+1. Other people testing the code have consumed all the ꜩ in the address, so your operation will fail because of insufficient funds. You can head over to [ghostnet faucet](https://faucet.ghostnet.teztnets.xyz/) and send some ꜩ to the address for free. Or you can get free Testnet Tez right from your terminal: `npx @oxheadalpha/get-tez <your-address> --amount 100 --network ghostnet`
 1. Another person is sending an operation from this address at the same time as you. One address can only send one operation to each block. This is very improbable, but at least you know someone else is going through this tutorial at the same time as you. 😄
 
 <details>
@@ -298,7 +298,7 @@ What happens here? Let's break it down:
 1- We wait for the confirmation and print the hash as before.
 
 Now, if you run your code, you should be able to see the hash of the operation in the terminal.
-After about a minute, you should be able to see the new NFT in the collection. Because everyone following this tutorial is minting NFTs with the same metadata, all the NFTs in this collection will look the same. However, the number of tokens in the collection should increase by one.
+After about a minute, you should be able to see the new NFT in the collection from [this link](https://ghostnet.objkt.com/collection/KT1XmD31NdBrTcL7bPF3md6i5g4BbE6s2YLv). Because everyone following this tutorial is minting NFTs with the same metadata, all the NFTs in this collection will look the same. However, the number of tokens in the collection should increase by one.
 
 Congratulations! You have just interacted with a smart contract using Taquito. Additionally, you programmatically minted an NFT.
 
@@ -390,7 +390,8 @@ npm i
 npm run dev
 ```
 
-Now open a browser and visit `http://localhost:4173/`. You should see a page that says: "Hello, Vite + React".
+The terminal should show a message that says: `➜  Local:   http://localhost:4173/` but the port number might be different.
+Now open a browser and visit the URL printed in the terminal. You should see a page that says: "Hello, Vite + React".
 
 <details>
   <summary>Optional: Commit the initial code to git</summary>
@@ -418,7 +419,7 @@ Open the file `index.html` and make the following changes:
 +    <title>My dApp</title>
 ```
 
-Open the file `src/App.tsx` and make the following changes:
+Open the file `src/App.tsx` and replace the content with the following code:
 
 ```tsx
 import { useState } from "react";
@@ -545,7 +546,7 @@ const Transfer = ({
       setLoading(true);
       try {
         const op = await Tezos.wallet
-          .transfer({ to: recipient, amount: parseInt(amount) })
+          .transfer({ to: recipient, amount: parseInt(amount), mutez: true })
           .send();
         await op.confirmation();
       } catch (error) {
@@ -595,8 +596,8 @@ export default Transfer;
 
 ```
 
-<details>
-  <summary>Fixing node-specific dependencies in browser</summary>
+### Fixing node-specific dependencies in the browser
+
 The libraries Taquito and Beacon SDK are designed to run in a Node.js environment. However, we are running them in a browser. This causes some issues. For example, the Beacon SDK uses the Node.js `buffer`, `stream`, and `util` modules. These modules are not available in the browser. Fortunately, there are browser-compatible versions of these modules. We can use these versions instead of the Node.js versions. To do this, we need to install the following packages:
 
 ```bash
@@ -636,7 +637,7 @@ import { Buffer } from "buffer";
 
 globalThis.Buffer = Buffer;
 ```
-Also, add the following code to the file `index.html`:
+Also, make the following modification to the file `index.html`:
 
 ```diff
     <div id="root"></div>
@@ -645,13 +646,14 @@ Also, add the following code to the file `index.html`:
   </body>
 
 ```
-</details>
+
+### Running the dApp
 
 Make sure that the command `npm run dev` is still running in the terminal, and that there are no build errors.
 
-Now, you should be able to see the "Connect Wallet" button in the browser. Clicking on it opens the wallet selection modal. You can choose your favorite wallet and connect to it. After this, you need to visit your wallet to approve the connection. After that, you should be able to see the "Send" button. You can enter an address and an amount and click on the "Send" button to send ꜩ to the address.
+Now, you should be able to see the "Connect Wallet" button in the browser. Clicking on it opens the wallet selection modal. You can choose your favorite wallet and connect to it. After this, you need to visit your wallet to approve the connection. After that, you should be able to see the "Send" button. You can enter an address and an amount (in Mutez, notice the `mutez: true` in `Transfer.tsx`) and click on the "Send" button to send ꜩ to the address.
 
-If you have not set up a wallet before, clicking on the Kukai wallet opens a page that asks you to create a new wallet. Remember to visit the Faucet page to fund your wallet with some ꜩ. If you want to use that wallet for real ꜩ, you need to back up the mnemonic phrase. But remember that the mnemonic phrase is a secret. Anyone who has access to it can steal your ꜩ.
+If you have not set up a wallet before, clicking on the Kukai wallet opens a page that asks you to create a new wallet. Remember to visit the [ghostnet faucet](https://faucet.ghostnet.teztnets.xyz/) to fund your wallet with some ꜩ. If you want to use that wallet for real ꜩ, you need to back up the mnemonic phrase. But remember that the mnemonic phrase is a secret. Anyone who has access to it can steal your ꜩ.
 
 ## Closing thoughts
 
