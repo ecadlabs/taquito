@@ -2446,6 +2446,19 @@ export const blockMetadata = {
     },
   ],
 };
+export const attestationRights = [
+  {
+    level: 151187,
+    delegates: [
+      {
+        delegate: 'tz3Q1fwk1vh3zm5LqyUV9e2wZBdaEXcovh2r',
+        first_slot: 79,
+        attestation_power: 326,
+        consensus_key: 'tz3Q1fwk1vh3zm5LqyUV9e2wZBdaEXcovh2r',
+      },
+    ],
+  },
+];
 export const endorsingRights = [
   {
     level: 516500,

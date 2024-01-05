@@ -17,6 +17,8 @@ import {
   DelegateResponse,
   DelegatesResponse,
   VotingInfoResponse,
+  AttestationRightsQueryArguments,
+  AttestationRightsResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -171,6 +173,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BakingRightsResponse> {
     return this.rpc.getBakingRights(args, { block });
+  }
+  async getAttestationRights(
+    args: AttestationRightsQueryArguments,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<AttestationRightsResponse> {
+    return this.rpc.getAttestationRights(args, { block });
   }
   async getEndorsingRights(
     args: EndorsingRightsQueryArguments,

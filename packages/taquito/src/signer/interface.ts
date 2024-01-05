@@ -5,7 +5,7 @@ export interface Signer {
   /**
    *
    * @param op Operation to sign
-   * @param magicByte Magic bytes 11 for block, 12 for preendorsement, 13 for endorsements, 3 for generic, 5 for the PACK format of michelson
+   * @param magicByte Magic bytes 11 for block, 12 for preattestation/preendorsement, 13 for attestation/endorsements, 3 for generic, 5 for the PACK format of michelson
    */
   sign(
     op: string,

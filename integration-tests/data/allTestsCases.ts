@@ -48,36 +48,18 @@ interface TestCase {
   expected?: object;
 }
 
-export const nairobiCases: TestCase[] = [
+export const oxfordCases: TestCase[] = [
   {
-    name: 'Set deposits limit 1000000',
+    name: 'Attestation',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: OpKind.SET_DEPOSITS_LIMIT,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          limit: '1000000',
-        },
-      ],
-    },
-  },
-  {
-    name: 'Unset deposits limit',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.SET_DEPOSITS_LIMIT,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10'
+          kind: OpKind.ATTESTATION,
+          slot: 0,
+          level: 66299,
+          round: 5,
+          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
         },
       ],
     },
@@ -130,6 +112,40 @@ export const commonCases: TestCase[] = [
           period: -300,
           ballot: 'yay',
           proposal: 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
+        },
+      ],
+    },
+  },
+
+  {
+    name: 'Set deposits limit 1000000',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          limit: '1000000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Unset deposits limit',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10'
         },
       ],
     },
@@ -1167,21 +1183,6 @@ export const commonCases: TestCase[] = [
             code: codeViewsTopLevel,
             storage: storageViewsTopLevel,
           },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Endorsement',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.ENDORSEMENT,
-          slot: 0,
-          level: 66299,
-          round: 5,
-          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
         },
       ],
     },
