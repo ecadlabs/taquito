@@ -34,6 +34,8 @@ import {
   DelegateResponse,
   DelegatesResponse,
   VotingInfoResponse,
+  AttestationRightsQueryArguments,
+  AttestationRightsResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -605,6 +607,27 @@ export class RpcClient implements RpcClientInterface {
    *
    * @param args contains optional query arguments
    * @param options contains generic configuration for rpc calls to specified block (default as head)
+   *
+   * @description Retrieves the delegates allowed to attest a block
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
+   */
+  async getAttestationRights(
+    args: AttestationRightsQueryArguments = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<AttestationRightsResponse> {
+    const response = await this.httpBackend.createRequest<AttestationRightsResponse>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/attestation_rights`),
+      method: 'GET',
+      query: args,
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param args contains optional query arguments
+   * @param options contains generic configuration for rpc calls
    *
    * @description Retrieves the list of delegates allowed to bake a block.
    *

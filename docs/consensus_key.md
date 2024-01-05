@@ -3,7 +3,7 @@ title: Consensus Keys
 author: Davis Sawali & Hui-An Yang
 ---
 
-The "consensus key" feature allows bakers to use a different key, called the consensus key. It will allow for baking and signing consensus operations (i.e. pre-endorsements and endorsements). For more detailed information on consensus keys, refer to [this documentation](https://tezos.gitlab.io/protocols/015_lima.html?highlight=update%20consensus%20key#consensus-key)
+The "consensus key" feature allows bakers to use a different key, called the consensus key. It will allow for baking and signing consensus operations (i.e. preattestation/preendorsements and attestation/endorsements). For more detailed information on consensus keys, refer to [this documentation](https://tezos.gitlab.io/protocols/015_lima.html?highlight=update%20consensus%20key#consensus-key)
 
 Starting from Lima protocol, these 2 new operations will be available:
 

@@ -21,7 +21,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const oxfordAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test : test.skip
+    const oxfordAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -164,6 +164,19 @@ CONFIGS().forEach(
           expect(bakingRights).toBeDefined();
           expect(bakingRights[0].round).toBeDefined();
           expect(bakingRights[0].priority).toBeUndefined();
+        });
+
+        unrestrictedRPCNode('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+          const attestationRights = await rpcClient.getAttestationRights();
+          expect(attestationRights).toBeDefined();
+          expect(attestationRights[0].delegates).toBeDefined();
+          expect(attestationRights[0].delegates![0].delegate).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].delegate).toEqual('string');
+          expect(attestationRights[0].delegates![0].attestation_power).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].attestation_power).toEqual('number');
+          expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
+          expect(attestationRights[0].delegate).toBeUndefined();
         });
 
         unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async () => {
@@ -448,7 +461,7 @@ CONFIGS().forEach(
         });
 
         it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
-          const pendingOperations = await rpcClient.getPendingOperations({ version: '1'}) as PendingOperationsV1;
+          const pendingOperations = await rpcClient.getPendingOperations({ version: '1' }) as PendingOperationsV1;
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.applied).toBeInstanceOf(Array);
           expect(pendingOperations.refused).toBeInstanceOf(Array);

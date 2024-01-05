@@ -31,6 +31,7 @@ import {
   ActivationSchema,
   BallotSchema,
   DelegationSchema,
+  AttestationSchema,
   EndorsementSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
@@ -99,6 +100,8 @@ decoders[CODEC.OP_TRANSACTION] = (val: Uint8ArrayConsumer) =>
 decoders[CODEC.OP_ORIGINATION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(OriginationSchema)(val);
 decoders[CODEC.OP_BALLOT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(BallotSchema)(val);
+decoders[CODEC.OP_ATTESTATION] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(AttestationSchema)(val);
 decoders[CODEC.OP_ENDORSEMENT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(EndorsementSchema)(val);
 decoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: Uint8ArrayConsumer) =>
