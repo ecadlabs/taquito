@@ -16,6 +16,7 @@ export enum CODEC {
   ZARITH = 'zarith',
   PUBLIC_KEY = 'public_key',
   PKH = 'pkh',
+  PKH_ARR = 'pkhArr',
   DELEGATE = 'delegate',
   SCRIPT = 'script',
   BALLOT_STATEMENT = 'ballotStmt',
