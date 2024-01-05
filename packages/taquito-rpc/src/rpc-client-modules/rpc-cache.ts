@@ -20,6 +20,8 @@ import {
   DelegateResponse,
   DelegatesResponse,
   VotingInfoResponse,
+  AttestationRightsQueryArguments,
+  AttestationRightsResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -72,6 +74,7 @@ type RpcMethodParam =
   | BigMapKey
   | BakingRightsQueryArguments
   | PendingOperationsQueryArguments
+  | AttestationRightsQueryArguments
   | EndorsingRightsQueryArguments;
 
 const defaultTtl = 1000;
@@ -615,6 +618,33 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getBakingRights(args, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   *
+   * @param args contains optional query arguments
+   * @param options contains generic configuration for rpc calls
+   *
+   * @description Retrieves the delegates allowed to attest a block.
+   *
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-attestation-rights
+   */
+  async getAttestationRights(
+    args: AttestationRightsQueryArguments = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<AttestationRightsResponse> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_ATTESTATION_RIGHTS,
+      [block, args]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getAttestationRights(args, { block });
       this.put(key, response);
       return response;
     }

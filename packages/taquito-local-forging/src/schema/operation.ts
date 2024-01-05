@@ -65,6 +65,13 @@ export const BallotSchema = {
   ballot: CODEC.BALLOT_STATEMENT,
 };
 
+export const AttestationSchema = {
+  slot: CODEC.INT16,
+  level: CODEC.INT32,
+  round: CODEC.INT32,
+  block_payload_hash: CODEC.BLOCK_PAYLOAD_HASH,
+};
+
 export const EndorsementSchema = {
   slot: CODEC.INT16,
   level: CODEC.INT32,
@@ -149,6 +156,7 @@ export const SmartRollupOriginateSchema = {
   pvm_kind: CODEC.PVM_KIND,
   kernel: CODEC.PADDED_BYTES,
   parameters_ty: CODEC.VALUE,
+  whitelist: CODEC.PKH_ARR,
 };
 
 export const SmartRollupAddMessagesSchema = {
