@@ -20,7 +20,7 @@
     "example": "cd example && npm run example",
     "build-docs": "typedoc --tsconfig ./tsconfig.typedoc.json",
     "gh-pages": "gh-pages",
-    "integration-tests": "npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:nairobinet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts",
+    "integration-tests": "npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts",
     "version-stamp": "lerna run version-stamp"
   },
   "jest": {

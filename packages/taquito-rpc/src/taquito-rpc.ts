@@ -454,7 +454,7 @@ export class RpcClient implements RpcClientInterface {
    *
    * @description Returns the delegate info (e.g. voting power) found in the listings of the current voting period.
    *
-   * @see https://tezos.gitlab.io/kathmandu/rpc.html#get-block-id-context-delegates-pkh-voting-info
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-voting-info
    */
 
   async getVotingInfo(
@@ -884,7 +884,7 @@ export class RpcClient implements RpcClientInterface {
    *
    * @description Simulate an operation on the blockchain
    *
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/nairobi-openapi.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/oxford-openapi.json
    */
   async simulateOperation(
     op: RPCSimulateOperationParam,

@@ -92,7 +92,7 @@ Please check out the section [Subscribing to events](#subscribing-to-events) to 
 
 In previous versions of Beacon, you were able to set the `network` property when doing `requestPermissions()`. This behavior was removed from Beacon, and you must now set the network when instantiating the wallet.
 
-You can choose among `mainnet`, `jakartanet` `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+You can choose among `mainnet`, `oxfordnet`, `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
 ```js
 const userAddress = await wallet.getPKH();

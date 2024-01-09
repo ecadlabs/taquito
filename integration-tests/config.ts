@@ -30,15 +30,10 @@ export const isSandbox = (config: { rpc: string }) => {
 
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
-// A network type. TESTNETs corresponds to a pre-existing set of test
-// networks, such as Jakartanet, Kathmanet, Mondaynet etc.  Some
-// integration test cases are hardcoded against such networks.  A
-// SANDBOX is a local, ephemeral sandboxed network. When the
-// integration test suite runs against such network, the test
-// network-specific test cases are disabled.
+// user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,
-  SANDBOX,
+  TESTNET,  // corresponds ghostnet, oxfordnet and weeklynet etc.
+  SANDBOX,  // corresponds to flextesa local chain
 }
 
 interface Config {

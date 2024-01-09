@@ -36,7 +36,7 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
   .originate({
@@ -62,7 +62,7 @@ Tezos.contract
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
   .originate({
@@ -84,7 +84,7 @@ Tezos.wallet
     println(`Origination completed.`);
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
-```   
+```
   </TabItem>
 </Tabs>
 
@@ -111,7 +111,7 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
   .originate({
@@ -137,7 +137,7 @@ Tezos.contract
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
   .originate({
@@ -159,7 +159,7 @@ Tezos.wallet
     println(`Origination completed.`);
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
-```  
+```
   </TabItem>
 </Tabs>
 
@@ -188,7 +188,7 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.contract
   .originate({
@@ -215,7 +215,7 @@ Tezos.contract
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-// const Tezos = new TezosToolkit('https://jakartanet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
 Tezos.wallet
   .originate({
@@ -237,6 +237,6 @@ Tezos.wallet
     println(`Origination completed.`);
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
-```    
+```
   </TabItem>
 </Tabs>

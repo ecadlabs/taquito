@@ -66,6 +66,7 @@
     "octez",
     "opkind",
     "originations",
+    "oxfordbox",
     "oxfordnet",
     "oxheadalpha",
     "Pkhfrom",
@@ -114,6 +115,7 @@
     "Unparsing",
     "vals",
     "walletbeacon",
+    "weeklynet",
     "ZARITH"
   ],
   "files": [
