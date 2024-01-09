@@ -30,7 +30,7 @@ export interface WalletProvider {
   /**
    * @description Get the public key from the wallet
    */
-  getPK: () => Promise<string | undefined>;
+  getPK: () => Promise<string>;
 
   /**
    * @description Transform WalletTransferParams into a format compliant with the underlying wallet

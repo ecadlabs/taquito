@@ -195,6 +195,7 @@ export class Wallet {
   }
 
   private _pkh?: string;
+  private _pk?: string;
 
   /**
    * @description Retrieve the PKH of the account that is currently in use by the wallet
@@ -206,8 +207,14 @@ export class Wallet {
     if (!this._pkh || forceRefetch) {
       this._pkh = await this.walletProvider.getPKH();
     }
-
     return this._pkh;
+  }
+
+  async pk({ forceRefetch }: PKHOption = {}) {
+    if (!this._pk || forceRefetch) {
+      this._pk = await this.walletProvider.getPK();
+    }
+    return this._pk;
   }
 
   private walletCommand = <T>(send: () => Promise<T>) => {
@@ -407,9 +414,5 @@ export class Wallet {
       readProvider
     );
     return contractAbstractionComposer(abs, this.context);
-  }
-
-  getPK() {
-    return this.walletProvider.getPK();
   }
 }
