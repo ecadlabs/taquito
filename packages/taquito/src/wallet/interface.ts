@@ -28,6 +28,11 @@ export interface WalletProvider {
   getPKH: () => Promise<string>;
 
   /**
+   * @description Get the public key from the wallet
+   */
+  getPK: () => Promise<string | undefined>;
+
+  /**
    * @description Transform WalletTransferParams into a format compliant with the underlying wallet
    */
   mapTransferParamsToWalletParams: (params: () => Promise<WalletTransferParams>) => Promise<any>;
@@ -58,9 +63,4 @@ export interface WalletProvider {
    * @description Request the wallet to sign a payload
    */
   sign(bytes: string, watermark?: Uint8Array): Promise<string>;
-
-  /**
-   * @description Get the public key from the wallet
-   */
-  getPK(): Promise<string>;
 }
