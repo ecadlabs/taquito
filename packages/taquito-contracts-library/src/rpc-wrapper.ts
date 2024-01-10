@@ -17,6 +17,8 @@ import {
   DelegateResponse,
   DelegatesResponse,
   VotingInfoResponse,
+  AttestationRightsQueryArguments,
+  AttestationRightsResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -47,7 +49,6 @@ import {
   PendingOperationsV1,
   PendingOperationsV2,
   PendingOperationsQueryArguments,
-  OriginationProofParams,
   RPCSimulateOperationParam,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
@@ -172,6 +173,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BakingRightsResponse> {
     return this.rpc.getBakingRights(args, { block });
+  }
+  async getAttestationRights(
+    args: AttestationRightsQueryArguments,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<AttestationRightsResponse> {
+    return this.rpc.getAttestationRights(args, { block });
   }
   async getEndorsingRights(
     args: EndorsingRightsQueryArguments,
@@ -324,11 +331,5 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     args: PendingOperationsQueryArguments
   ): Promise<PendingOperationsV1 | PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
-  }
-  async getOriginationProof(
-    params: OriginationProofParams,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<string> {
-    return this.rpc.getOriginationProof(params, { block });
   }
 }

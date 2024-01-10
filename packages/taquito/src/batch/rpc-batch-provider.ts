@@ -24,7 +24,7 @@ import {
   TransferTicketParams,
   IncreasePaidStorageParams,
   SmartRollupAddMessagesParams,
-  SmartRollupOriginateParamsWithProof,
+  SmartRollupOriginateParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -197,7 +197,7 @@ export class OperationBatch extends Provider {
    *
    * @param params Smart Rollup Originate operation parameter
    */
-  withSmartRollupOriginate(params: SmartRollupOriginateParamsWithProof) {
+  withSmartRollupOriginate(params: SmartRollupOriginateParams) {
     this.operations.push({ kind: OpKind.SMART_ROLLUP_ORIGINATE, ...params });
     return this;
   }

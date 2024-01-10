@@ -10,7 +10,8 @@ import {
   int32Encoder,
   paddedBytesEncoder,
   parametersEncoder,
-  pkhEncoder,
+  publicKeyHashEncoder,
+  publicKeyHashesEncoder,
   smartRollupMessageEncoder,
   proposalEncoder,
   proposalsEncoder,
@@ -30,6 +31,7 @@ import {
   ActivationSchema,
   BallotSchema,
   DelegationSchema,
+  AttestationSchema,
   EndorsementSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
@@ -60,7 +62,8 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.BRANCH]: branchEncoder,
   [CODEC.ZARITH]: zarithEncoder,
   [CODEC.PUBLIC_KEY]: publicKeyEncoder,
-  [CODEC.PKH]: pkhEncoder,
+  [CODEC.PKH]: publicKeyHashEncoder,
+  [CODEC.PKH_ARR]: publicKeyHashesEncoder,
   [CODEC.DELEGATE]: delegateEncoder,
   [CODEC.SCRIPT]: scriptEncoder,
   [CODEC.BALLOT_STATEMENT]: ballotEncoder,
@@ -89,6 +92,7 @@ encoders[CODEC.OP_DELEGATION] = (val: any) => schemaEncoder(encoders)(Delegation
 encoders[CODEC.OP_TRANSACTION] = (val: any) => schemaEncoder(encoders)(TransactionSchema)(val);
 encoders[CODEC.OP_ORIGINATION] = (val: any) => schemaEncoder(encoders)(OriginationSchema)(val);
 encoders[CODEC.OP_BALLOT] = (val: any) => schemaEncoder(encoders)(BallotSchema)(val);
+encoders[CODEC.OP_ATTESTATION] = (val: any) => schemaEncoder(encoders)(AttestationSchema)(val);
 encoders[CODEC.OP_ENDORSEMENT] = (val: any) => schemaEncoder(encoders)(EndorsementSchema)(val);
 encoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: any) =>
   schemaEncoder(encoders)(SeedNonceRevelationSchema)(val);

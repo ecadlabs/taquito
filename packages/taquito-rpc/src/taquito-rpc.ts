@@ -34,6 +34,8 @@ import {
   DelegateResponse,
   DelegatesResponse,
   VotingInfoResponse,
+  AttestationRightsQueryArguments,
+  AttestationRightsResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -65,7 +67,6 @@ import {
   PendingOperationsQueryArguments,
   PendingOperationsV1,
   PendingOperationsV2,
-  OriginationProofParams,
   RPCSimulateOperationParam,
 } from './types';
 import { castToBigNumber } from './utils/utils';
@@ -606,6 +607,27 @@ export class RpcClient implements RpcClientInterface {
    *
    * @param args contains optional query arguments
    * @param options contains generic configuration for rpc calls to specified block (default as head)
+   *
+   * @description Retrieves the delegates allowed to attest a block
+   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
+   */
+  async getAttestationRights(
+    args: AttestationRightsQueryArguments = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<AttestationRightsResponse> {
+    const response = await this.httpBackend.createRequest<AttestationRightsResponse>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/attestation_rights`),
+      method: 'GET',
+      query: args,
+    });
+
+    return response;
+  }
+
+  /**
+   *
+   * @param args contains optional query arguments
+   * @param options contains generic configuration for rpc calls
    *
    * @description Retrieves the list of delegates allowed to bake a block.
    *
@@ -1198,27 +1220,5 @@ export class RpcClient implements RpcClientInterface {
       method: 'GET',
       query: args,
     });
-  }
-
-  /**
-   *
-   * @param params contains the PVM kind and kernel to generate the origination proof from
-   * @param options contains generic configuration for rpc calls to specified block (default as head)
-   * @description rpc call to generate the origination proof needed for a smart rollup originate operation
-   * @see https://tezos.gitlab.io/protocols/016_mumbai.html#rpc-changes
-   */
-  async getOriginationProof(
-    params: OriginationProofParams,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<string> {
-    return this.httpBackend.createRequest<string>(
-      {
-        url: this.createURL(
-          `/chains/${this.chain}/blocks/${block}/context/smart_rollups/all/origination_proof`
-        ),
-        method: 'POST',
-      },
-      params
-    );
   }
 }

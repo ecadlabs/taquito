@@ -10,7 +10,8 @@ import {
   int32Decoder,
   paddedBytesDecoder,
   parametersDecoder,
-  pkhDecoder,
+  publicKeyHashDecoder,
+  publicKeyHashesDecoder,
   smartRollupMessageDecoder,
   proposalDecoder,
   proposalsDecoder,
@@ -30,6 +31,7 @@ import {
   ActivationSchema,
   BallotSchema,
   DelegationSchema,
+  AttestationSchema,
   EndorsementSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
@@ -62,7 +64,8 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.BRANCH]: branchDecoder,
   [CODEC.ZARITH]: zarithDecoder,
   [CODEC.PUBLIC_KEY]: publicKeyDecoder,
-  [CODEC.PKH]: pkhDecoder,
+  [CODEC.PKH]: publicKeyHashDecoder,
+  [CODEC.PKH_ARR]: publicKeyHashesDecoder,
   [CODEC.DELEGATE]: delegateDecoder,
   [CODEC.INT32]: int32Decoder,
   [CODEC.SCRIPT]: scriptDecoder,
@@ -97,6 +100,8 @@ decoders[CODEC.OP_TRANSACTION] = (val: Uint8ArrayConsumer) =>
 decoders[CODEC.OP_ORIGINATION] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(OriginationSchema)(val);
 decoders[CODEC.OP_BALLOT] = (val: Uint8ArrayConsumer) => schemaDecoder(decoders)(BallotSchema)(val);
+decoders[CODEC.OP_ATTESTATION] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(AttestationSchema)(val);
 decoders[CODEC.OP_ENDORSEMENT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(EndorsementSchema)(val);
 decoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: Uint8ArrayConsumer) =>

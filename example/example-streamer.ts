@@ -6,6 +6,10 @@ async function example() {
   tezos.setStreamProvider(tezos.getFactory(PollingSubscribeProvider)({ shouldObservableSubscriptionRetry: true, pollingIntervalMilliseconds: 15000 }));
   try {
 
+    const bakerAttestationFilter = {
+      and: [{ source: 'tz1bQMn5xYFbX6geRxqvuAiTywsCtNywawxH' }, { kind: 'attestation' }]
+    }
+
     const bakerEndorsementFilter = {
       and: [{ source: 'tz1bQMn5xYFbX6geRxqvuAiTywsCtNywawxH' }, { kind: 'endorsement' }]
     }
@@ -15,7 +19,7 @@ async function example() {
     }
 
     const sub = tezos.stream.subscribeOperation({
-      or: [bakerEndorsementFilter, bakerDelegation]
+      or: [bakerAttestationFilter, bakerEndorsementFilter, bakerDelegation]
     })
 
     sub.on('data', console.log)

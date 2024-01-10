@@ -10,6 +10,7 @@ import {
   ProposalsSchema,
   RevealSchema,
   RegisterGlobalConstantSchema,
+  AttestationSchema,
   EndorsementSchema,
   TransferTicketSchema,
   IncreasePaidStorageSchema,
@@ -29,6 +30,7 @@ type OperationKind =
   | OpKind.TRANSACTION
   | OpKind.ORIGINATION
   | OpKind.BALLOT
+  | OpKind.ATTESTATION
   | OpKind.ENDORSEMENT
   | OpKind.SEED_NONCE_REVELATION
   | OpKind.PROPOSALS
@@ -49,6 +51,7 @@ const OperationKindMapping = {
   transaction: TransactionSchema,
   origination: OriginationSchema,
   ballot: BallotSchema,
+  attestation: AttestationSchema,
   endorsement: EndorsementSchema,
   seed_nonce_revelation: SeedNonceRevelationSchema,
   proposals: ProposalsSchema,
