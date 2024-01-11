@@ -16,6 +16,10 @@ export class LegacyWalletProvider implements WalletProvider {
     return this.context.signer.publicKeyHash();
   }
 
+  async getPK(): Promise<string> {
+    return this.context.signer.publicKey();
+  }
+
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
     return attachKind(await params(), OpKind.TRANSACTION);
   }
@@ -40,9 +44,5 @@ export class LegacyWalletProvider implements WalletProvider {
   async sign(bytes: string, watermark?: Uint8Array) {
     const { prefixSig } = await this.context.signer.sign(bytes, watermark);
     return prefixSig;
-  }
-
-  getPK() {
-    return this.context.signer.publicKey();
   }
 }

@@ -71,7 +71,7 @@ export class BeaconWallet implements WalletProvider {
     if (!account) {
       throw new BeaconWalletNotInitialized();
     }
-    return account.publicKey;
+    return account.publicKey ?? '';
   }
 
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
