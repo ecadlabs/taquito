@@ -2,7 +2,7 @@ import { CONFIGS } from "./config";
 import { commonCases, oxfordCases } from './data/allTestsCases';
 import { LocalForger, ProtocolsHash } from '@taquito/local-forging'
 import { Protocols, TezosToolkit } from "@taquito/taquito";
-import { ProtoGreaterOrEqual } from '@taquito/michel-codec'
+import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
 CONFIGS().forEach(({ rpc, protocol }) => {
   const Tezos = new TezosToolkit(rpc);
