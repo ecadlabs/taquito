@@ -22,6 +22,7 @@ import { codeViewsTopLevel, storageViewsTopLevel } from './contract_views_top_le
 import { MichelsonV1Expression, OpKind, PvmKind } from '@taquito/rpc';
 import { emitCode } from './code_with_emit';
 import { lambdaRecCode } from './code_with_lambda_rec';
+import { timelockCode, timelockStorage, timelockExpected } from './timelock-flip-contract';
 
 function extractOp(
   startIndex: number,
@@ -50,6 +51,45 @@ interface TestCase {
 
 export const oxfordCases: TestCase[] = [
   {
+    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: timelockCode,
+            storage: timelockStorage,
+          },
+        },
+      ],
+    },
+    expected: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: timelockExpected,
+            storage: timelockStorage,
+          },
+        },
+      ],
+    },
+  },
+  {
     name: 'Attestation',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
@@ -60,10 +100,10 @@ export const oxfordCases: TestCase[] = [
           level: 66299,
           round: 5,
           block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
-        },
-      ],
-    },
-  },
+        }
+      ]
+    }
+  }
 ];
 
 export const commonCases: TestCase[] = [
@@ -159,6 +199,39 @@ export const commonCases: TestCase[] = [
           kind: OpKind.SEED_NONCE_REVELATION,
           level: 25550,
           nonce: new Array(32).fill('ff').join(''),
+        },
+      ],
+    },
+  },
+  {
+    name: 'Set deposits limit 1000000',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          limit: '1000000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Unset deposits limit',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10'
         },
       ],
     },
