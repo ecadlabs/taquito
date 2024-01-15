@@ -234,7 +234,7 @@ With a non-default derivation path non-hardened with a tz2 address
 
 ~~To load a faucet key (available from https://faucet.tzalpha.net/) for working a public testnet use the `importKey` function.~~
 :::note
-Since August 2022, the JSON faucets we used to import with the `importKey` function are no longer available. You can use the following link to fund an address on the different testnets: https://teztnets.xyz/.
+Since August 2022, the JSON faucets we used to import with the `importKey` function are no longer available. You can use the following link to fund an address on the different testnets: https://teztnets.com/.
 :::
 
 ### A simple factory multiple keys/wallets

@@ -21,6 +21,7 @@
     "@docusaurus/plugin-google-gtag": "2.4.3",
     "@docusaurus/preset-classic": "2.4.3",
     "@docusaurus/theme-live-codeblock": "2.4.3",
+    "@docusaurus/theme-mermaid": "^2.4.3",
     "@docusaurus/theme-search-algolia": "2.4.3",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
@@ -28,8 +29,8 @@
     "@ledgerhq/hw-transport-webhid": "^6.27.19",
     "@mdx-js/react": "^1.6.22",
     "@svgr/webpack": "^8.1.0",
-    "@taquito/core": "file:../packages/taquito-core",
     "@taquito/beacon-wallet": "file:../packages/taquito-beacon-wallet",
+    "@taquito/core": "file:../packages/taquito-core",
     "@taquito/http-utils": "file:../packages/taquito-http-utils",
     "@taquito/ledger-signer": "file:../packages/taquito-ledger-signer",
     "@taquito/michel-codec": "file:../packages/taquito-michel-codec",
@@ -87,5 +88,5 @@
       "last 1 safari version"
     ]
   },
-  "version": "17.5.0"
+  "version": "17.5.2"
 }
