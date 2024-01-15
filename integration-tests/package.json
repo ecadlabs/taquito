@@ -3,8 +3,6 @@
   "scripts": {
     "test": "jest",
     "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand",
-    "test:nairobinet": "NAIROBINET=true jest",
-    "test:nairobinet-secret-key": "RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand",
     "test:oxfordnet": "OXFORDNET=true jest",
     "test:oxfordnet-secret-key": "RUN_OXFORDNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:mondaynet": "MONDAYNET=true jest",

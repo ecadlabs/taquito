@@ -42,8 +42,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - testnet: nairobinet
-            testnet_uppercase: NAIROBINET
           - testnet: oxfordnet
             testnet_uppercase: OXFORDNET
     steps:
@@ -70,10 +68,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - protocol: Nairobi
-            testnet: nairobinet
-            testnet_uppercase: NAIROBINET
-            flextesa_docker_image: oxheadalpha/flextesa:20230607
           - protocol: Oxford
             testnet: oxfordnet
             testnet_uppercase: OXFORDNET
