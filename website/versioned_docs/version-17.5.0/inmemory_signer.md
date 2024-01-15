@@ -189,14 +189,14 @@ With ed25519 default derivation path (Reminder Must be hardened with either h or
   // import { TezosToolkit } from '@taquito/taquito
   // import { InMemorySigner } from '@taquito/signer'
   // const Tezos = new TezosToolkit('https://nairobinet.ecadinfra.com');
-  
-  // ed25519 must have all hardened paths 
-  
+
+  // ed25519 must have all hardened paths
+
   // using all default values password = '' curve = 'ed25519' and derivationPath "44'/1729'/0'/0'"
   const params = {
     mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business'
   }
-  
+
 
   const signer = InMemorySigner.fromMnemonic(params);
   Tezos.setSignerProvider(signer)
@@ -234,7 +234,7 @@ With a non-default derivation path non-hardened with a tz2 address
 
 ~~To load a faucet key (available from https://faucet.tzalpha.net/) for working a public testnet use the `importKey` function.~~
 :::note
-Since August 2022, the JSON faucets we used to import with the `importKey` function are no longer available. You can use the following link to fund an address on the different testnets: https://teztnets.xyz/.
+Since August 2022, the JSON faucets we used to import with the `importKey` function are no longer available. You can use the following link to fund an address on the different testnets: https://teztnets.com/.
 :::
 
 ### A simple factory multiple keys/wallets

@@ -86,7 +86,7 @@ Tezos.setProvider({
 });
 ```
 
-The following link can be used to fund an address on the different testnets: https://teztnets.xyz/.
+The following link can be used to fund an address on the different testnets: https://teztnets.com/.
 
 ### Transfer
 

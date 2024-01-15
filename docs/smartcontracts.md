@@ -26,34 +26,24 @@ The counter contract has two entry points named `increment` and `decrement.` Taq
 
 The counter contract's storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
 
-### Counter Contract in JSLIGO
+### Counter Contract in JSLIGO v1.2.0
 
 ```
-type storage = int;
+export namespace Counter {
+  export type storage = int;
+  type ret = [list<operation>, storage];
 
-type parameter =
-| ["Increment", int]
-| ["Decrement", int]
-| ["Reset"];
+  // Three entrypoints
 
-type return_ = [list <operation>, storage];
+  @entry
+  const increment = (delta : int, store : storage) : ret => [list([]), store + delta];
 
-/* Two entrypoints */
-const add = ([store, delta] : [storage, int]) : storage => store + delta;
-const sub = ([store, delta] : [storage, int]) : storage => store - delta;
+  @entry
+  const decrement = (delta : int, store : storage) : ret => [list([]), store - delta];
 
-/* Main access point that dispatches to the entrypoints according to
-   the smart contract parameter. */
-const main = ([action, store] : [parameter, storage]) : return_ => {
- return [
-   (list([]) as list <operation>),    // No operations
-   (match (action, {
-    Increment: (n: int) => add ([store, n]),
-    Decrement: (n: int) => sub ([store, n]),
-    Reset:     ()  => 0}))
-  ]
+  @entry
+  const reset = (_u : unit, _s : storage) : ret => [list([]), 0];
 };
-
 ```
 
 You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
@@ -61,10 +51,10 @@ You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 ### Counter Contract Michelson source code
 
 ```
-{ parameter (or (or (int %decrement) (int %increment)) (unit %reset)) ;
+{ parameter (or (unit %reset) (or (int %decrement) (int %increment))) ;
   storage int ;
   code { UNPAIR ;
-         IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { DROP 2 ; PUSH int 0 } ;
+         IF_LEFT { DROP 2 ; PUSH int 0 } { IF_LEFT { SWAP ; SUB } { ADD } } ;
          NIL operation ;
          PAIR } }
 ```

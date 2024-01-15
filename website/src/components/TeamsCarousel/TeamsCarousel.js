@@ -13,91 +13,86 @@ const FeatureList = [
     // Svg: require("../../../static/img/taq_orange.svg").default,
     images: [
       {
-        Image: require('../../../static/img/kolibri-logo.png').default,
-        title: 'Kolibri',
-        url: 'https://kolibri.finance/',
-      },
-      {
-        Image: require('../../../static/img/sweet.png').default,
-        title: 'Sweet',
-        url: 'https://sweet.io/',
-      },
-      {
-        Image: require('../../../static/img/interpop_logo.png').default,
-        title: 'Interpop',
-        url: 'https://www.interpop.io/',
-      },
-      {
-        Image: require('../../../static/img/quipuswap-logo.png').default,
-        title: 'QuipuSwap',
-        url: 'https://quipuswap.com/',
-      },
-      {
-        Image: require('../../../static/img/spruce_logo.png').default,
-        title: 'Spruce',
-        url: 'https://www.spruceid.com/',
-      },
-      {
-        Image: require('../../../static/img/plenty.png').default,
-        title: 'Plenty',
-        url: 'https://www.plentydefi.com/',
-      },
-      {
-        Image: require('../../../static/img/Kukai_logo.png').default,
-        title: 'Kukai',
-        url: 'https://wallet.kukai.app/',
-      },
-      {
-        Image: require('../../../static/img/tezos_mandala.png').default,
-        title: 'Tezos Mandala',
-        url: 'https://tezos-mandala.art/',
-      },
-      {
-        Image: require('../../../static/img/temple-logo.png').default,
-        title: 'Temple - Tezos Wallet',
-        url: 'https://templewallet.com/',
-      },
-      {
-        Image: require('../../../static/img/tz-colors.png').default,
-        title: 'tzcolors',
-        url: 'https://www.tzcolors.io/',
-      },
-      {
-        Image: require('../../../static/img/nomadic_logo.png').default,
-        title: 'Nomadic Labs',
-        url: 'https://www.nomadic-labs.com/',
-      },
-      {
         Image: require('../../../static/img/blockwatch_logo.png').default,
         title: 'Blockwatch',
-        url: 'https://blockwatch.cc/blog/tag/tezos/',
+        url: 'https://blockwatch.cc/blog/tag/tezos/'
       },
       {
-        Image: require('../../../static/img/Group.png').default,
-        title: 'Tezos Domains',
-        url: 'https://tezos.domains',
-      },
-      {
-        Image: require('../../../static/img/Ligoland_logo.png').default,
-        title: 'Ligo',
-        url: 'https://ligolang.org/',
+        Image: require('../../../static/img/fxhash.jpeg').default,
+        title: 'fxhash',
+        url: 'https://www.fxhash.xyz/'
       },
       {
         Image: require('../../../static/img/Vector_1.png').default,
         title: 'Homebase',
-        url: 'https://tezos-homebase.io/',
+        url: 'https://tezos-homebase.io/'
       },
       {
-        Image: require('../../../static/img/radion_logo.png').default,
-        title: 'Radion',
-        url: 'https://www.radion.fm/',
+        Image: require('../../../static/img/Kukai_logo.png').default,
+        title: 'Kukai',
+        url: 'https://wallet.kukai.app/'
       },
       {
-        Image: require('../../../static/img/stakerdao_logo.png').default,
-        title: 'Staker DAO',
-        url: 'https://www.stakerdao.com/',
+        Image: require('../../../static/img/Ligoland_logo.png').default,
+        title: 'Ligo',
+        url: 'https://ligolang.org/'
       },
-    ],
+      {
+        Image: require('../../../static/img/mooncakes.jpeg').default,
+        title: 'mooncakes',
+        url: 'https://mooncakes.fun/'
+      },
+      {
+        Image: require('../../../static/img/nomadic_logo.png').default,
+        title: 'Nomadic Labs',
+        url: 'https://www.nomadic-labs.com/'
+      },
+      {
+        Image: require('../../../static/img/objkt.jpeg').default,
+        title: 'objkt.com',
+        url: 'https://objkt.com/'
+      },
+      {
+        Image: require('../../../static/img/plenty.png').default,
+        title: 'Plenty',
+        url: 'https://www.plentydefi.com/'
+      },
+      {
+        Image: require('../../../static/img/quipuswap-logo.png').default,
+        title: 'QuipuSwap',
+        url: 'https://quipuswap.com/'
+      },
+      {
+        Image: require('../../../static/img/spruce_logo.png').default,
+        title: 'Spruce',
+        url: 'https://www.spruceid.com/'
+      },
+      {
+        Image: require('../../../static/img/teia.jpeg').default,
+        title: 'teia',
+        url: 'https://teia.art/'
+      },
+      {
+        Image: require('../../../static/img/temple-logo.png').default,
+        title: 'Temple - Tezos Wallet',
+        url: 'https://templewallet.com/'
+      },
+      {
+        Image: require('../../../static/img/Group.png').default,
+        title: 'Tezos Domains',
+        url: 'https://tezos.domains'
+      },
+      {
+        Image: require('../../../static/img/tezos_mandala.png').default,
+        title: 'Tezos Mandala',
+        url: 'https://tezos-mandala.art/'
+      },
+      {
+        Image: require('../../../static/img/tz-colors.png').default,
+        title: 'tzcolors',
+        url: 'https://www.tzcolors.io/'
+      }
+    ]
   },
 ];
 
