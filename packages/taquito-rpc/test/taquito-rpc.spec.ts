@@ -42,7 +42,7 @@ import {
   blockIthacanetResponse,
   blockKathmandunetResponse,
   blockLimanetResponse,
-  blockMondaynetResponse,
+  blockWeeklynetResponse,
   delegatesIthacanetResponse,
   delegatesKathmandunetResponse,
   votingInfoKathmandunetResponse,
@@ -2835,7 +2835,7 @@ describe('RpcClient test', () => {
     });
 
     it('should be able to access the properties of operation type transfer_ticket, proto14', async () => {
-      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockMondaynetResponse));
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(blockWeeklynetResponse));
       const response = await client.getBlock();
       const content = response.operations[3][0]
         .contents[1] as OperationContentsAndResultTransferTicket;

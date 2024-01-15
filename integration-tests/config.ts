@@ -116,7 +116,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'MONDAYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
+    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -152,17 +152,17 @@ const ghostnetEphemeral: Config =
 const ghostnetSecretKey: Config =
   { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling:8732' } };
 
-const mondaynetEphemeral: Config =
+const weeklynetEphemeral: Config =
   defaultConfig({
-    networkName: 'MONDAYNET',
+    networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
     defaultRpc: 'http://mondaynet.ecadinfra.com:8732',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
 
-const mondaynetSecretKey: Config =
-  { ...mondaynetEphemeral, ...{ signerConfig: defaultSecretKey } };
+const weeklynetSecretKey: Config =
+  { ...weeklynetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
 const providers: Config[] = [];
 
@@ -172,14 +172,14 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(oxfordnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
-  providers.push(mondaynetSecretKey);
+} else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
+  providers.push(weeklynetSecretKey);
 } else if (process.env['OXFORDNET']) {
   providers.push(oxfordnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
-} else if (process.env['MONDAYNET']) {
-  providers.push(mondaynetEphemeral);
+} else if (process.env['WEEKLYNET']) {
+  providers.push(weeklynetEphemeral);
 } else {
   providers.push(oxfordnetEphemeral);
 }

@@ -8,7 +8,7 @@ import {
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
   const oxfordnet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProxfordY) ? test : test.skip;
-  const mondaynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
+  const weeklynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
   describe('Test fetching constants for all protocols on Mainnet', () => {
 
     const rpcUrl = 'https://mainnet.ecadinfra.com/';
@@ -252,7 +252,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
       });
     });
 
-    mondaynet(`successfully fetches all constants for mondaynet using ${rpc}`, async () => {
+    weeklynet(`successfully fetches all constants for weeklynet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
       const constants: ConstantsResponseProto017 = await Tezos.rpc.getConstants();
 

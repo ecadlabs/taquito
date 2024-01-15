@@ -9,14 +9,14 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
+  const weeklynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
 
-    mondaynet('Verify mutez underflow example', async () => {
+    weeklynet('Verify mutez underflow example', async () => {
       try {
         const op = await Tezos.contract.originate({
           code: `        { parameter unit ;

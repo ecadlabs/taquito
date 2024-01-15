@@ -5,7 +5,7 @@ import { Protocols } from '@taquito/taquito';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
+  const weeklynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
     });
 
-    mondaynet('Verify that Transactions of 0ꜩ towards a contract without code are forbidden', async () => {
+    weeklynet('Verify that Transactions of 0ꜩ towards a contract without code are forbidden', async () => {
       try {
         const op = await Tezos.contract.originate({
           code: `{ parameter address ;

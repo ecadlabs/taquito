@@ -1,12 +1,12 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from './config';
 
-/**   
- * This "naive*" testcase assumes that the on-chain view stack is not correctly separated from the caller's stack. 
- * Thus, this testcase assumes that there is only one stack, whereas the elements of the on-chain stack are on top. 
- * Naive - meaning: WE just try it without thinking whether this test makes sense in regards with the used underlying architecture. 
+/**
+ * This "naive*" testcase assumes that the on-chain view stack is not correctly separated from the caller's stack.
+ * Thus, this testcase assumes that there is only one stack, whereas the elements of the on-chain stack are on top.
+ * Naive - meaning: WE just try it without thinking whether this test makes sense in regards with the used underlying architecture.
  * We think of the underlying architecture (type system, stack separation, etc.) as a black box.
- * 
+ *
  * TC-V-002: On-chain view - add instruction
  * TC-V-003: On-chain view - dig instruction
  * TC-V-004: On-chain view - dup instruction
@@ -14,14 +14,14 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
+  const weeklynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
 
-    mondaynet("Verify we can access the stack of the caller by using the instruction add.", async () => {
+    weeklynet("Verify we can access the stack of the caller by using the instruction add.", async () => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -37,16 +37,16 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                       "rogue" unit nat
                       {
                         # We assume that the on-chain view stack is just on top of the caller stack.
-                    
+
                         # DROP view input
                         DROP;
-                    
+
                         # On the caller stack the top value is a "nat". So, we try to access this by using instruction "add".
                         PUSH nat 3;
                         ADD;
                         # we leave this addition result on stack.
-                    
-                        # Since, add consumes two stack elements, we have to push another nat (the result of the view) to stack in order 
+
+                        # Since, add consumes two stack elements, we have to push another nat (the result of the view) to stack in order
                         # to restore a correct stack.
                         PUSH nat 1;
                       };
@@ -62,7 +62,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     });
 
-    mondaynet("Verify we can access the stack of the caller by using the instruction dig n", async () => {
+    weeklynet("Verify we can access the stack of the caller by using the instruction dig n", async () => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -99,7 +99,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     });
 
-    mondaynet("Verify we can access the stack of the caller by using the instruction dup.", async () => {
+    weeklynet("Verify we can access the stack of the caller by using the instruction dup.", async () => {
       try {
         const opGetter = await Tezos.contract.originate({
           code: ` { parameter unit;
@@ -138,4 +138,3 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 });
 
 // This test was transcribed to Taquito from bash scripts at https://github.com/InferenceAG/TezosSecurityBaselineChecking
-
