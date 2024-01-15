@@ -53,22 +53,22 @@ CONFIGS().forEach(
       const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
       describe(`Test calling all methods from RPC node: ${rpc}`, () => {
-        it('Verify rpcClient.getBlockHash returns the head block hash', async () => {
+        it('Verify that rpcClient.getBlockHash returns the head block hash', async () => {
           const blockHash = await rpcClient.getBlockHash();
           expect(blockHash).toBeDefined();
         });
 
-        it('Verify rpcClient.getLiveBlocks returns the ancestors of the head block', async () => {
+        it('Verify that rpcClient.getLiveBlocks returns the ancestors of the head block', async () => {
           const liveBlocks = await rpcClient.getLiveBlocks();
           expect(liveBlocks).toBeDefined();
         });
 
-        it(`Verify rpcClient.getBalance for known baker returns the balance of the address`, async () => {
+        it(`Verify that rpcClient.getBalance for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
           const balance = await rpcClient.getBalance(knownBaker);
           expect(balance).toBeDefined();
         });
 
-        it(`Verify that rpcClient.getStorage for know contract returns the data of a contract`, async () => {
+        it(`Verify that rpcClient.getStorage for knownContract returns the data of a contract`, async () => {
           const storage = await rpcClient.getStorage(knownContract);
           expect(storage).toBeDefined();
         });
@@ -132,7 +132,7 @@ CONFIGS().forEach(
           expect(delegates).toBeDefined();
         });
 
-        it(`Fetches voting information about a delegate from RPC`, async () => {
+        it(`Verify that rpc.getVotingInfo for known baker returns voting information about a delegate from RPC`, async () => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
         });

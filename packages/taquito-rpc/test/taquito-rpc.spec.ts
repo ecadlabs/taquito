@@ -3371,18 +3371,19 @@ describe('RpcClient test', () => {
             metadata: {
               balance_updates: [
                 {
-                  category: 'storage fees',
-                  kind: 'burned',
+                  kind: 'minted',
+                  category: 'baking bonuses',
+                  change: '-266662',
                   origin: 'block',
                 },
                 {
-                  category: 'block fees',
-                  change: '374',
-                  kind: 'accumulator',
+                  kind: 'freezer',
+                  category: 'deposits',
+                  staker: {
+                    baker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+                  },
+                  change: '266662',
                   origin: 'block',
-                },
-                {
-                  category: 'legacy_rewards',
                 },
               ],
             },
@@ -3397,11 +3398,10 @@ describe('RpcClient test', () => {
               'balance_updates'
             ] as OperationMetadataBalanceUpdates[])
           : [];
-      expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
-      expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
-      expect(balanceUpdate![2]['category']).toEqual(
-        METADATA_BALANCE_UPDATES_CATEGORY.LEGACY_REWARDS
+      expect(balanceUpdate![0]['category']).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.BAKING_BONUSES
       );
+      expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.DEPOSITS);
     });
   });
 
@@ -3429,18 +3429,19 @@ describe('RpcClient test', () => {
             metadata: {
               balance_updates: [
                 {
-                  category: 'storage fees',
-                  kind: 'burned',
+                  kind: 'minted',
+                  category: 'baking rewards',
+                  change: '-266667',
                   origin: 'block',
                 },
                 {
-                  category: 'block fees',
-                  change: '374',
-                  kind: 'accumulator',
+                  kind: 'freezer',
+                  category: 'deposits',
+                  staker: {
+                    baker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+                  },
+                  change: '266667',
                   origin: 'block',
-                },
-                {
-                  category: 'legacy_rewards',
                 },
               ],
             },
@@ -3455,11 +3456,10 @@ describe('RpcClient test', () => {
               'balance_updates'
             ] as OperationMetadataBalanceUpdates[])
           : [];
-      expect(balanceUpdate![0]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.STORAGE_FEES);
-      expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.BLOCK_FEES);
-      expect(balanceUpdate![2]['category']).toEqual(
-        METADATA_BALANCE_UPDATES_CATEGORY.LEGACY_REWARDS
+      expect(balanceUpdate![0]['category']).toEqual(
+        METADATA_BALANCE_UPDATES_CATEGORY.BAKING_REWARDS
       );
+      expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.DEPOSITS);
     });
   });
 
