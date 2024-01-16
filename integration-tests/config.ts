@@ -7,7 +7,6 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 import { knownContractsProxfordY } from './known-contracts-ProxfordY';
 
 const nodeCrypto = require('crypto');
@@ -30,15 +29,10 @@ export const isSandbox = (config: { rpc: string }) => {
 
 const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
-// A network type. TESTNETs corresponds to a pre-existing set of test
-// networks, such as Jakartanet, Kathmanet, Mondaynet etc.  Some
-// integration test cases are hardcoded against such networks.  A
-// SANDBOX is a local, ephemeral sandboxed network. When the
-// integration test suite runs against such network, the test
-// network-specific test cases are disabled.
+// user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,
-  SANDBOX,
+  TESTNET,  // corresponds ghostnet, oxfordnet and weeklynet etc.
+  SANDBOX,  // corresponds to flextesa local chain
 }
 
 interface Config {
@@ -122,7 +116,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'MONDAYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
+    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -133,18 +127,6 @@ const defaultConfig = ({
     networkType: networkType
   }
 }
-
-const nairobinetEphemeral: Config =
-  defaultConfig({
-    networkName: 'NAIROBINET',
-    protocol: Protocols.PtNairobi,
-    defaultRpc: 'http://ecad-nairobinet-full.i.tez.ie:8732',
-    knownContracts: knownContractsPtNairobi,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/nairobinet')
-  });
-
-const nairobinetSecretKey: Config =
-  { ...nairobinetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-nairobinet-full:8732' } };
 
 const oxfordnetEphemeral: Config =
   defaultConfig({
@@ -170,40 +152,36 @@ const ghostnetEphemeral: Config =
 const ghostnetSecretKey: Config =
   { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling:8732' } };
 
-const mondaynetEphemeral: Config =
+const weeklynetEphemeral: Config =
   defaultConfig({
-    networkName: 'MONDAYNET',
+    networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
     defaultRpc: 'http://mondaynet.ecadinfra.com:8732',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
 
-const mondaynetSecretKey: Config =
-  { ...mondaynetEphemeral, ...{ signerConfig: defaultSecretKey } };
+const weeklynetSecretKey: Config =
+  { ...weeklynetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(nairobinetSecretKey, oxfordnetSecretKey);
-} else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
-  providers.push(nairobinetSecretKey);
+  providers.push(oxfordnetSecretKey);
 } else if (process.env['RUN_OXFORDNET_WITH_SECRET_KEY']) {
   providers.push(oxfordnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_MONDAYNET_WITH_SECRET_KEY']) {
-  providers.push(mondaynetSecretKey);
-} else if (process.env['NAIROBINET']) {
-  providers.push(nairobinetEphemeral);
+} else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
+  providers.push(weeklynetSecretKey);
 } else if (process.env['OXFORDNET']) {
   providers.push(oxfordnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
-} else if (process.env['MONDAYNET']) {
-  providers.push(mondaynetEphemeral);
+} else if (process.env['WEEKLYNET']) {
+  providers.push(weeklynetEphemeral);
 } else {
-  providers.push(nairobinetEphemeral, oxfordnetEphemeral);
+  providers.push(oxfordnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {

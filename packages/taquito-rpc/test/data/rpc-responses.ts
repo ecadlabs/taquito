@@ -3991,7 +3991,7 @@ export const blockLimanetResponse = {
   ],
 };
 
-export const blockMondaynetResponse = {
+export const blockWeeklynetResponse = {
   protocol: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
   chain_id: 'NetXrxsLyu6hTHx',
   hash: 'BLxSQZzbnjL8yWqo8fJDE6cy2ATPmqQSaLKtheFBzAz4QVTcm5h',

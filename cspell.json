@@ -67,6 +67,7 @@
     "octez",
     "opkind",
     "originations",
+    "oxfordbox",
     "oxfordnet",
     "oxheadalpha",
     "Pkhfrom",
@@ -100,6 +101,7 @@
     "taquito",
     "tcli",
     "testbox",
+    "testchain",
     "tezbridge",
     "tezos",
     "Thanos",
@@ -115,6 +117,7 @@
     "Unparsing",
     "vals",
     "walletbeacon",
+    "weeklynet",
     "ZARITH"
   ],
   "files": [

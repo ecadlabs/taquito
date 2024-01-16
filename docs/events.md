@@ -7,9 +7,9 @@ author: Davis Sawali
 # Contract Events
 
 ## Introduction
-Contract events is a way for contracts to deliver event-like information to third-party (off-chain) applications. It can be emitted by using the EMIT instruction in Michelson. 
+Contract events is a way for contracts to deliver event-like information to third-party (off-chain) applications. It can be emitted by using the EMIT instruction in Michelson.
 
-For more details and examples of how the EMIT instruction works, refer to [this article](https://tezos.gitlab.io/kathmandu/event.html).
+For more details and examples of how the EMIT instruction works, refer to [this article](https://tezos.gitlab.io/active/event.html).
 
 ## Getting contract events in Taquito
 You can get the events in a contract through the `eventSchema` field of the `ContractAbstraction`.
@@ -58,8 +58,8 @@ const Tezos = new TezosToolkit(RPC_URL);
 
 Tezos.setStreamProvider(
   Tezos.getFactory(PollingSubscribeProvider)({
-    shouldObservableSubscriptionRetry: true, 
-    pollingIntervalMilliseconds: 1500 
+    shouldObservableSubscriptionRetry: true,
+    pollingIntervalMilliseconds: 1500
   })
 );
 
@@ -69,9 +69,9 @@ try {
     address: 'KT1_CONTRACT_ADDRESS',
     excludeFailedOperations: true
   });
-    
+
   sub.on('data', console.log);
-    
+
 } catch (e) {
   console.log(e);
 }
@@ -79,7 +79,7 @@ try {
 
 
 - `tag` is the tag string that was defined in the smart contract with the EMIT instruction
-- `address` is the address of the smart contract that was called 
+- `address` is the address of the smart contract that was called
 - `excludeFailedOperations`: In rare cases, events from failed operations can be received by the subscriber. You can use this field to filter out these events (if you pass `true` to this field, only events from successful operations will be received)
 
 :::info

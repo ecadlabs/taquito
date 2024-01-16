@@ -19,19 +19,19 @@ interface INodeExtender {
 
 type OtherEltsInner =
   | {
-    value: any;
-  }
+      value: any;
+    }
   | {
-    inode_extender: INodeExtender;
-  };
+      inode_extender: INodeExtender;
+    };
 
 export type OtherElts =
   | {
-    node: [string, { value: string } | { node: string }][];
-  }
+      node: [string, { value: string } | { node: string }][];
+    }
   | {
-    other_elts: OtherEltsInner;
-  };
+      other_elts: OtherEltsInner;
+    };
 
 export interface Inode {
   length: string;
@@ -88,6 +88,8 @@ export type BigMapKey = {
 
 export type LiquidityBakingToggleVotes = 'on' | 'off' | 'pass';
 
+export type AdaptiveIssuanceVote = 'on' | 'off' | 'pass';
+
 export interface BlockFullHeader {
   level: number;
   proto: number;
@@ -102,8 +104,9 @@ export interface BlockFullHeader {
   priority?: number;
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
-  liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   liquidity_baking_toggle_vote?: LiquidityBakingToggleVotes;
+  adaptive_issuance_vote?: AdaptiveIssuanceVote;
+  liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   signature: string;
 }
 
@@ -1169,6 +1172,15 @@ export type ProposalsResponseItem = [string, BigNumber];
 
 export type ProposalsResponse = ProposalsResponseItem[];
 
+export type HeaderContentEnum = 'activate' | 'activate_testchain';
+
+export interface HeaderContent {
+  command: HeaderContentEnum;
+  hash: string;
+  fitness: string[];
+  protocol_parameters: string;
+}
+
 export interface BlockHeaderResponse {
   protocol: string;
   chain_id: string;
@@ -1181,6 +1193,7 @@ export interface BlockHeaderResponse {
   operations_hash: string;
   fitness: string[];
   context: string;
+  content: HeaderContent;
   payload_hash?: string;
   payload_round?: number;
   priority?: number;
@@ -1263,13 +1276,13 @@ export interface ScriptedContracts {
 
 export type BondId =
   | {
-    smart_rollup?: never;
-    tx_rollup: string;
-  }
+      smart_rollup?: never;
+      tx_rollup: string;
+    }
   | {
-    smart_rollup: string;
-    tx_rollup?: never;
-  };
+      smart_rollup: string;
+      tx_rollup?: never;
+    };
 
 export interface OperationBalanceUpdatesItem {
   kind: BalanceUpdateKindEnum;
@@ -1557,49 +1570,74 @@ export type MetadataBalanceUpdatesKindEnum =
   | 'accumulator'
   | 'burned'
   | 'commitment'
-  | 'minted';
+  | 'minted'
+  | 'staking';
 
 export enum METADATA_BALANCE_UPDATES_CATEGORY {
-  BAKING_REWARDS = 'baking rewards',
-  REWARDS = 'rewards',
-  FEES = 'fees',
-  DEPOSITS = 'deposits',
-  LEGACY_REWARDS = 'legacy_rewards',
-  LEGACY_FEES = 'legacy_fees',
-  LEGACY_DEPOSITS = 'legacy_deposits',
-  BLOCK_FEES = 'block fees',
-  NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
-  DOUBLE_SIGNING_EVIDENCE_REWARDS = 'double signing evidence rewards',
-  ENDORSING_REWARDS = 'endorsing rewards',
   BAKING_BONUSES = 'baking bonuses',
-  STORAGE_FEES = 'storage fees',
-  PUNISHMENTS = 'punishments',
-  LOST_ENDORSING_REWARDS = 'lost endorsing rewards',
-  SUBSIDY = 'subsidy',
+  BAKING_REWARDS = 'baking rewards',
+  BLOCK_FEES = 'block fees',
+  BONDS = 'bonds',
+  BOOTSTRAP = 'bootstrap',
   BURNED = 'burned',
   COMMITMENT = 'commitment',
-  BOOTSTRAP = 'bootstrap',
+  DELEGATE_DENOMINATOR = 'delegate_denominator',
+  DELEGATOR_NUMERATOR = 'delegator_numerator',
+  DEPOSITS = 'deposits',
+  ENDORSING_REWARDS = 'endorsing rewards',
   INVOICE = 'invoice',
+  LOST_ENDORSING_REWARDS = 'lost endorsing rewards',
   MINTED = 'minted',
-  TX_ROLLUP_REJECTION_REWARDS = 'tx_rollup_rejection_rewards',
-  TX_ROLLUP_REJECTION_PUNISHMENTS = 'tx_rollup_rejection_punishments',
-  BONDS = 'bonds',
+  NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
+  PUNISHMENTS = 'punishments',
+  SMART_ROLLUP_REFUTATION_PUNISHMENTS = 'smart_rollup_refutation_punishments',
+  SMART_ROLLUP_REFUTATION_REWARDS = 'smart_rollup_refutation_rewards',
+  STORAGE_FEES = 'storage fees',
+  SUBSIDY = 'subsidy',
+  UNSTAKED_DEPOSITS = 'unstaked_deposits',
 }
+
 export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
 
-export type MetadataBalanceUpdatesOriginEnum = 'block' | 'migration' | 'subsidy' | 'simulation';
+export type MetadataBalanceUpdatesOriginEnum =
+  | 'block'
+  | 'migration'
+  | 'subsidy'
+  | 'simulation'
+  | 'delayed_operation';
+
+export type FrozenStaker = SingleStaker | SharedStaker | Baker;
+
+export type Staker = SingleStaker | SharedStaker;
+
+export interface SingleStaker {
+  contract: string;
+  delegate: string;
+}
+
+export interface SharedStaker {
+  delegate: string;
+}
+
+export interface Baker {
+  baker: string;
+}
 
 export interface OperationMetadataBalanceUpdates {
   kind: MetadataBalanceUpdatesKindEnum;
-  category?: MetadataBalanceUpdatesCategoryEnum;
   contract?: string;
+  change: string;
+  origin?: MetadataBalanceUpdatesOriginEnum;
+  delayed_operation_hash?: string;
+  category?: MetadataBalanceUpdatesCategoryEnum;
+  staker?: FrozenStaker | Staker;
   delegate?: string;
   participation?: boolean;
   revelation?: boolean;
   committer?: string;
+  bond_id?: string;
   cycle?: number;
-  change: string;
-  origin?: MetadataBalanceUpdatesOriginEnum;
+  delegator?: string;
 }
 
 export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'backtracked';
@@ -1978,10 +2016,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto009 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto008 { }
+export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto008 extends ConstantsResponseProto007 { }
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
 export interface ConstantsResponseProto007
   extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
@@ -2069,9 +2107,9 @@ export interface BlockMetadata {
   voting_period_kind?: string;
   voting_period_info?: VotingPeriodBlockResult;
   nonce_hash?: string;
-  consumed_gas: string;
-  deactivated: string[];
-  balance_updates: OperationBalanceUpdates;
+  consumed_gas?: string;
+  deactivated?: string[];
+  balance_updates?: OperationBalanceUpdates;
   liquidity_baking_escape_ema?: number;
   liquidity_baking_toggle_ema?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
@@ -2189,12 +2227,12 @@ export type ProtocolsResponse = {
 
 export type Next =
   | {
-    next: number;
-  }
+      next: number;
+    }
   | {
-    newest: number;
-    oldest: number;
-  };
+      newest: number;
+      oldest: number;
+    };
 
 export type LastRemovedCommitmentHashes = {
   last_message_hash: string;
