@@ -195,6 +195,7 @@ export class Wallet {
   }
 
   private _pkh?: string;
+  private _pk?: string;
 
   /**
    * @description Retrieve the PKH of the account that is currently in use by the wallet
@@ -206,8 +207,20 @@ export class Wallet {
     if (!this._pkh || forceRefetch) {
       this._pkh = await this.walletProvider.getPKH();
     }
-
     return this._pkh;
+  }
+
+  /**
+   * @description Retrieve the PK of the account that is currently in use by the wallet
+   *
+   * @param option Option to use while fetching the PK.
+   * If forceRefetch is specified the wallet provider implementation will refetch the PK from the wallet
+   */
+  async pk({ forceRefetch }: PKHOption = {}) {
+    if (!this._pk || forceRefetch) {
+      this._pk = await this.walletProvider.getPK();
+    }
+    return this._pk;
   }
 
   private walletCommand = <T>(send: () => Promise<T>) => {
@@ -409,7 +422,11 @@ export class Wallet {
     return contractAbstractionComposer(abs, this.context);
   }
 
-  getPK() {
-    return this.walletProvider.getPK();
+  /**
+   * @deprecated Deprecated in favor of {@link Wallet.pk} will be removed in v19.1
+   * @description Retrieve the PK of the account that is currently in use by the wallet
+   */
+  async getPK() {
+    return await this.pk();
   }
 }
