@@ -187,7 +187,8 @@ export abstract class Provider {
     if (errors.length) {
       throw new TezosOperationError(
         errors,
-        'Error occurred during validation simulation of operation'
+        'Error occurred during validation simulation of operation',
+        opResponse
       );
     }
 
