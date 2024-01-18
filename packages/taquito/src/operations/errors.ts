@@ -163,7 +163,7 @@ export const flattenErrors = (
 
 /**
  *  @category Error
- *  @description Error that indicates a general failure happening during an origination operation
+ *  @description Error that indicates a general failure happening during an origination operation.
  */
 export class OriginationOperationError extends TaquitoError {
   constructor(public readonly message: string) {
