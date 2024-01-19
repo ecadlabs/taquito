@@ -1,6 +1,7 @@
 import { ParameterValidationError, RpcError, TaquitoError } from '@taquito/core';
 import {
   MichelsonV1ExpressionBase,
+  OperationContentsAndResult,
   OperationResult,
   OperationResultDelegation,
   OperationResultOrigination,
@@ -33,31 +34,36 @@ const isErrorWithMessage = (error: any): error is TezosOperationErrorWithMessage
  *  @description Generic tezos error that will be thrown when a mistake occurs when doing an operation; more details here https://tezos.gitlab.io/api/errors.html
  */
 export class TezosOperationError extends RpcError {
-  id: string;
-  kind: string;
+  public readonly lastError: TezosGenericOperationError;
 
   constructor(
     public readonly errors: TezosGenericOperationError[],
-    public readonly errorDetails?: string
+    public readonly errorDetails: string,
+    public readonly operationsWithResults: OperationContentsAndResult[]
   ) {
     super();
     this.name = 'TezosOperationError';
     // Last error is 'often' the one with more detail
-    const lastError = errors[errors.length - 1];
-    this.id = lastError.id;
-    this.kind = lastError.kind;
+    this.lastError = errors[errors.length - 1];
 
     this.message = `(${this.kind}) ${this.id}`;
 
-    if (isErrorWithMessage(lastError)) {
-      if (lastError.with.string) {
-        this.message = lastError.with.string;
-      } else if (lastError.with.int) {
-        this.message = lastError.with.int;
+    if (isErrorWithMessage(this.lastError)) {
+      if (this.lastError.with.string) {
+        this.message = this.lastError.with.string;
+      } else if (this.lastError.with.int) {
+        this.message = this.lastError.with.int;
       } else {
-        this.message = JSON.stringify(lastError.with);
+        this.message = JSON.stringify(this.lastError.with);
       }
     }
+  }
+
+  get id(): string {
+    return this.lastError.id;
+  }
+  get kind(): string {
+    return this.lastError.kind;
   }
 }
 
@@ -157,7 +163,7 @@ export const flattenErrors = (
 
 /**
  *  @category Error
- *  @description Error that indicates a general failure happening during an origination operation
+ *  @description Error that indicates a general failure happening during an origination operation.
  */
 export class OriginationOperationError extends TaquitoError {
   constructor(public readonly message: string) {
