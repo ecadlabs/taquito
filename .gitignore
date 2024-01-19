@@ -19,3 +19,5 @@ integration-tests/jest-stare
 **/saplingOutputParams*
 **/saplingSpendParams*
 apps/**/node_modules
+
+.nx/cache
