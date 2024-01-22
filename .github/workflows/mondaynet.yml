@@ -40,7 +40,8 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: lts/hydrogen
-    - run: npm ci
+    - run: npm install --save-dev @rollup/rollup-linux-x64-gnu
+    - run: npm ci --include=optional
     - run: npm run build
     -
       id: originate-contracts-mondaynet
