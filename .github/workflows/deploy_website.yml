@@ -18,7 +18,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: lts/hydrogen
-    - run: npm ci
+    - run: npm ci --include=optional
     - run: npm run build
     - run: npm ci
       working-directory: website
