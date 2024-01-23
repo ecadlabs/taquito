@@ -25,10 +25,7 @@ export default class LambdaView {
       await this.lambdaContract.methods.default(this.voidLambda).send();
     } catch (ex) {
       if (ex instanceof TezosOperationError) {
-        const lastError: any = ex.errors[ex.errors.length - 1];
-
-        const failedWith = lastError.with;
-        return failedWith;
+        return (ex.lastError as any).with;
       } else {
         throw ex;
       }

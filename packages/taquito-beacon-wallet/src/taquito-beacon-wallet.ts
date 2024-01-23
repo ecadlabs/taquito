@@ -66,6 +66,14 @@ export class BeaconWallet implements WalletProvider {
     return account.address;
   }
 
+  async getPK() {
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    return account.publicKey ?? '';
+  }
+
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
     let walletParams: WalletTransferParams;
     await this.client.showPrepare();
@@ -219,13 +227,5 @@ export class BeaconWallet implements WalletProvider {
       }
     }
     throw new Error(`Invalid watermark ${JSON.stringify(watermark)}`);
-  }
-
-  async getPK() {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
-      throw new BeaconWalletNotInitialized();
-    }
-    return account?.publicKey;
   }
 }

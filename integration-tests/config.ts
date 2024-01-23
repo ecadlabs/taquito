@@ -215,6 +215,7 @@ const setupSignerWithFreshKey = async (
       headers: requestHeaders,
       json: false,
     });
+    
     const signer = new InMemorySigner(key!);
     Tezos.setSignerProvider(signer);
   } catch (e) {
@@ -280,7 +281,7 @@ export const CONFIGS = () => {
       }) => {
         const Tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
 
-        Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 300 } });
+        Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 } });
 
         setupForger(Tezos, forger);
 

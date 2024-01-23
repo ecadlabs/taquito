@@ -5,8 +5,8 @@ import {
 } from '../src/taquito-beacon-wallet';
 import LocalStorageMock from './mock-local-storage';
 import { PermissionScope, LocalStorage, SigningType } from '@airgap/beacon-dapp';
-
 global.localStorage = new LocalStorageMock();
+global.window = { addEventListener: jest.fn() } as any;
 
 describe('Beacon Wallet tests', () => {
   it('Verify that BeaconWallet is instantiable', () => {
