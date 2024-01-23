@@ -227,5 +227,5 @@ Special thanks to these libraries, which have been excellent references for deve
 [stackexchange]: https://tezos.stackexchange.com/questions/tagged/taquito
 [discord]: https://discord.com/channels/934567382700146739/939205889901092874
 
-# TODO: Remove this section when ready to publish: try 2GB
+# TODO: Remove this section when ready to publish: try 3GB
 
