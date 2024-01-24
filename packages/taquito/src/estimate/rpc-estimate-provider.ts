@@ -26,6 +26,8 @@ import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
 import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
 
+// const SIGNATURE_STUB ='edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
+
 export class RPCEstimateProvider extends Provider implements EstimationProvider {
   private readonly ALLOCATION_STORAGE = 257;
   private readonly ORIGINATION_STORAGE = 257;
@@ -51,29 +53,31 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     size: number,
     costPerByte: BigNumber
   ): EstimateProperties {
+    console.log('4.5 content ' + JSON.stringify(content));
     const operationResults = flattenOperationResult({ contents: [content] });
-    let totalMilligas = 0;
-    let totalStorage = 0;
+    console.log('5. flattenOperationResult ' + JSON.stringify(operationResults));
+    let consumedMilligas = 0;
+    let accumulatedStorage = 0;
     operationResults.forEach((result) => {
-      totalStorage +=
-        'originated_contracts' in result && typeof result.originated_contracts !== 'undefined'
-          ? result.originated_contracts.length * this.ORIGINATION_STORAGE
-          : 0;
-      totalStorage += 'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
-      totalMilligas += Number(result.consumed_milligas) || 0;
-      totalStorage +=
-        'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
-      totalStorage +=
+      consumedMilligas += Number(result.consumed_milligas) || 0;
+      accumulatedStorage +=
+        'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0; // transfer to unrevealed implicit
+      accumulatedStorage +=
         'storage_size' in result && 'global_address' in result
           ? Number(result.storage_size) || 0
-          : 0;
-      totalStorage += 'genesis_commitment_hash' in result ? Number(result.size) : 0;
+          : 0; // register_global_constants
+      accumulatedStorage +=
+        'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0; // transfer_ticket, originate, contract_call
+      accumulatedStorage +=
+        'originated_contracts' in result && Array.isArray(result.originated_contracts)
+          ? result.originated_contracts.length * this.ORIGINATION_STORAGE
+          : 0; // originate
+      accumulatedStorage += 'genesis_commitment_hash' in result ? Number(result.size) || 0 : 0; //smart_rollup_originate
     });
-
     if (isOpWithFee(content)) {
       return {
-        milligasLimit: totalMilligas || 0,
-        storageLimit: Number(totalStorage || 0),
+        milligasLimit: consumedMilligas || 0,
+        storageLimit: accumulatedStorage || 0,
         opSize: size,
         minimalFeePerStorageByteMutez: costPerByte.toNumber(),
       };
@@ -90,17 +94,19 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
   private async calculateEstimates(
     op: PreparedOperation,
-    constants: Pick<ConstantsResponse, 'cost_per_byte' | 'smart_rollup_origination_size'>
+    constants: Pick<ConstantsResponse, 'cost_per_byte'>
   ) {
     const {
       opbytes,
       opOb: { branch, contents },
     } = await this.forge(op);
+    console.log('2. contents ' + JSON.stringify(contents));
     const operation: RPCSimulateOperationParam = {
+      // operation: { branch, contents, signature: SIGNATURE_STUB},
       operation: { branch, contents },
       chain_id: await this.context.readProvider.getChainId(),
     };
-
+    console.log('3. operation ' + JSON.stringify(operation));
     const { opResponse } = await this.simulate(operation);
     const { cost_per_byte } = constants;
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
@@ -117,11 +123,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
           ? op.opOb.contents.length - 1
           : op.opOb.contents.length;
     }
-
+    console.log('4. opResponse ', JSON.stringify(opResponse));
     return opResponse.contents.map((x) => {
       return this.getEstimationPropertiesFromOperationContent(
         x,
         // TODO: Calculate a specific opSize for each operation.
+        // 0,
         x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : opbytes.length / 2 / numberOfOps,
         cost_per_byte
       );
@@ -174,12 +181,15 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       gasLimit,
       ...rest,
     });
+    console.log('1. preparedOperation ' + JSON.stringify(preparedOperation));
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    console.log('6. estimateProperties before ' + JSON.stringify(estimateProperties));
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
     }
+    console.log('7. estimateProperties after ' + JSON.stringify(estimateProperties));
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
 

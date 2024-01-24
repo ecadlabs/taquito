@@ -3,6 +3,7 @@ const MINIMAL_FEE_PER_BYTE_MUTEZ = 1;
 const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
 
 const GAS_BUFFER = 100;
+// const STORAGE_BUFFER = 20
 
 export interface EstimateProperties {
   milligasLimit: number;
@@ -71,8 +72,7 @@ export class Estimate {
    * @description  The limit on the amount of storage an [operation](https://tezos.gitlab.io/user/glossary.html#operations) can use.
    */
   get storageLimit() {
-    const limit = Math.max(Number(this._storageLimit), 0);
-    return limit > 0 ? limit : 0;
+    return Math.max(Number(this._storageLimit), 0);
   }
 
   /**
@@ -97,7 +97,7 @@ export class Estimate {
    * @description Minimum fees for the [operation](https://tezos.gitlab.io/user/glossary.html#operations) according to [baker](https://tezos.gitlab.io/user/glossary.html#baker) defaults.
    */
   get minimalFeeMutez() {
-    return this.roundUp(MINIMAL_FEE_MUTEZ + this.operationFeeMutez);
+    return this.roundUp(this.operationFeeMutez + MINIMAL_FEE_MUTEZ);
   }
 
   /**
