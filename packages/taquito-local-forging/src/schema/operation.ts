@@ -65,6 +65,13 @@ export const BallotSchema = {
   ballot: CODEC.BALLOT_STATEMENT,
 };
 
+export const AttestationSchema = {
+  slot: CODEC.INT16,
+  level: CODEC.INT32,
+  round: CODEC.INT32,
+  block_payload_hash: CODEC.BLOCK_PAYLOAD_HASH,
+};
+
 export const EndorsementSchema = {
   slot: CODEC.INT16,
   level: CODEC.INT32,
@@ -104,26 +111,6 @@ export const TransferTicketSchema = {
   ticket_amount: CODEC.ZARITH,
   destination: CODEC.ADDRESS,
   entrypoint: CODEC.ENTRYPOINT,
-};
-
-export const TxRollupOriginationSchema = {
-  source: CODEC.PKH,
-  fee: CODEC.ZARITH,
-  counter: CODEC.ZARITH,
-  gas_limit: CODEC.ZARITH,
-  storage_limit: CODEC.ZARITH,
-  tx_rollup_origination: CODEC.TX_ROLLUP_ORIGINATION_PARAM,
-};
-
-export const TxRollupSubmitBatchSchema = {
-  source: CODEC.PKH,
-  fee: CODEC.ZARITH,
-  counter: CODEC.ZARITH,
-  gas_limit: CODEC.ZARITH,
-  storage_limit: CODEC.ZARITH,
-  rollup: CODEC.TX_ROLLUP_ID,
-  content: CODEC.TX_ROLLUP_BATCH_CONTENT,
-  burn_limit: CODEC.BURN_LIMIT,
 };
 
 export const IncreasePaidStorageSchema = {
@@ -168,8 +155,8 @@ export const SmartRollupOriginateSchema = {
   storage_limit: CODEC.ZARITH,
   pvm_kind: CODEC.PVM_KIND,
   kernel: CODEC.PADDED_BYTES,
-  origination_proof: CODEC.PADDED_BYTES,
   parameters_ty: CODEC.VALUE,
+  whitelist: CODEC.PKH_ARR,
 };
 
 export const SmartRollupAddMessagesSchema = {

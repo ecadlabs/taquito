@@ -10,8 +10,6 @@ import {
   OperationResultSmartRollupOriginate,
   OperationResultTransaction,
   OperationResultTransferTicket,
-  OperationResultTxRollupOrigination,
-  OperationResultTxRollupSubmitBatch,
   PreapplyResponse,
   TezosGenericOperationError,
 } from '@taquito/rpc';
@@ -83,8 +81,6 @@ export type MergedOperationResult = OperationResultTransaction &
   OperationResultOrigination &
   OperationResultDelegation &
   OperationResultRegisterGlobalConstant &
-  OperationResultTxRollupOrigination &
-  OperationResultTxRollupSubmitBatch &
   OperationResultTransferTicket &
   Partial<OperationResultSmartRollupOriginate> &
   OperationResultReveal & {

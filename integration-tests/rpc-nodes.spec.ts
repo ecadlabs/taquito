@@ -1,10 +1,11 @@
 import { CONFIGS } from './config';
-import { DefaultContractType } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperations, PvmKind } from '@taquito/rpc';
+import { DefaultContractType, Protocols } from "@taquito/taquito";
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2, PvmKind } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from './data/token_bigmap';
 import { ticketCode, ticketStorage } from './data/code_with_ticket';
+import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
 CONFIGS().forEach(
   ({
@@ -20,6 +21,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
+    const oxfordAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -51,22 +53,22 @@ CONFIGS().forEach(
       const rpcClient = new RpcClientCache(new RpcClient(rpc));
 
       describe(`Test calling all methods from RPC node: ${rpc}`, () => {
-        it('Verify rpcClient.getBlockHash returns the head block hash', async () => {
+        it('Verify that rpcClient.getBlockHash returns the head block hash', async () => {
           const blockHash = await rpcClient.getBlockHash();
           expect(blockHash).toBeDefined();
         });
 
-        it('Verify rpcClient.getLiveBlocks returns the ancestors of the head block', async () => {
+        it('Verify that rpcClient.getLiveBlocks returns the ancestors of the head block', async () => {
           const liveBlocks = await rpcClient.getLiveBlocks();
           expect(liveBlocks).toBeDefined();
         });
 
-        it(`Verify rpcClient.getBalance for known baker returns the balance of the address`, async () => {
+        it(`Verify that rpcClient.getBalance for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
           const balance = await rpcClient.getBalance(knownBaker);
           expect(balance).toBeDefined();
         });
 
-        it(`Verify that rpcClient.getStorage for know contract returns the data of a contract`, async () => {
+        it(`Verify that rpcClient.getStorage for knownContract returns the data of a contract`, async () => {
           const storage = await rpcClient.getStorage(knownContract);
           expect(storage).toBeDefined();
         });
@@ -130,7 +132,7 @@ CONFIGS().forEach(
           expect(delegates).toBeDefined();
         });
 
-        it(`Fetches voting information about a delegate from RPC`, async () => {
+        it(`Verify that rpc.getVotingInfo for known baker returns voting information about a delegate from RPC`, async () => {
           const votinInfo = await rpcClient.getVotingInfo(knownBaker);
           expect(votinInfo).toBeDefined();
         });
@@ -162,6 +164,19 @@ CONFIGS().forEach(
           expect(bakingRights).toBeDefined();
           expect(bakingRights[0].round).toBeDefined();
           expect(bakingRights[0].priority).toBeUndefined();
+        });
+
+        unrestrictedRPCNode('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+          const attestationRights = await rpcClient.getAttestationRights();
+          expect(attestationRights).toBeDefined();
+          expect(attestationRights[0].delegates).toBeDefined();
+          expect(attestationRights[0].delegates![0].delegate).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].delegate).toEqual('string');
+          expect(attestationRights[0].delegates![0].attestation_power).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].attestation_power).toEqual('number');
+          expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
+          expect(attestationRights[0].delegate).toBeUndefined();
         });
 
         unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async () => {
@@ -445,8 +460,8 @@ CONFIGS().forEach(
           expect(ticketBalances[0].amount).toBeDefined();
         });
 
-        it('Verify that rpcClient.getPendingOperations will retrieve the pending operations in mempool', async () => {
-          const pendingOperations: PendingOperations = await rpcClient.getPendingOperations();
+        it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
+          const pendingOperations = await rpcClient.getPendingOperations({ version: '1' }) as PendingOperationsV1;
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.applied).toBeInstanceOf(Array);
           expect(pendingOperations.refused).toBeInstanceOf(Array);
@@ -455,15 +470,15 @@ CONFIGS().forEach(
           expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
         });
 
-        it('Verify that rpcClient.getOriginationProof will retrieve the proof needed for smart rollup originate', async () => {
-          const proof = await rpcClient.getOriginationProof({
-            kernel: '23212f7573722f62696e2f656e762073680a6578706f7274204b45524e454c3d22303036313733366430313030303030303031323830373630303337663766376630313766363030323766376630313766363030353766376637663766376630313766363030313766303036303031376630313766363030323766376630303630303030303032363130333131373336643631373237343566373236663663366337353730356636333666373236353061373236353631363435663639366537303735373430303030313137333664363137323734356637323666366336633735373035663633366637323635306337373732363937343635356636663735373437303735373430303031313137333664363137323734356637323666366336633735373035663633366637323635306237333734366637323635356637373732363937343635303030323033303530343033303430353036303530333031303030313037313430323033366436353664303230303061366236353732366536353663356637323735366530303036306161343031303432613031303237663431666130303266303130303231303132303030326630313030323130323230303132303032343730343430343165343030343131323431303034316534303034313030313030323161306230623038303032303030343163343030366230623530303130353766343166653030326430303030323130333431666330303266303130303231303232303030326430303030323130343230303032663031303032313035323030313130303432313036323030343230303334363034343032303030343130313661323030313431303136623130303131613035323030353230303234363034343032303030343130373661323030363130303131613062306230623164303130313766343164633031343138343032343139303163313030303231303034313834303232303030313030353431383430323130303330623062333830353030343165343030306231323266366236353732366536353663326636353665373632663732363536323666366637343030343166383030306230323030303130303431666130303062303230303032303034316663303030623032303030303030343166653030306230313031220a',
-            kind: PvmKind.WASM2
-          })
-          const hexRegex = RegExp('^[a-fA-F0-9]+$');
-          expect(proof).toBeDefined();
-          expect(hexRegex.test(proof)).toEqual(true);
-        })
+        oxfordAndAlpha('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
+          const pendingOperations = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;
+          expect(pendingOperations).toBeDefined();
+          expect(pendingOperations.validated).toBeInstanceOf(Array);
+          expect(pendingOperations.refused).toBeInstanceOf(Array);
+          expect(pendingOperations.outdated).toBeInstanceOf(Array);
+          expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
+          expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
+        });
       });
     });
   }

@@ -26,7 +26,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       expect(op.status).toEqual('applied');
       expect(op.includedInBlock).toBeDefined();
-
     });
   });
 });

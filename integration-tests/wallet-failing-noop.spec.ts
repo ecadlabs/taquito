@@ -1,48 +1,20 @@
+import { CONFIGS } from "./config";
+import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { InMemorySigner } from "@taquito/signer";
-import { CONFIGS, defaultSecretKey, isSandbox } from "./config";
-import { OpKind, Protocols, TezosToolkit } from "@taquito/taquito";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ rpc, setup, protocol }) => {
-
-  const Tezos = new TezosToolkit(rpc);
-  Tezos.setSignerProvider(new InMemorySigner(defaultSecretKey.secret_key));
-  const nairobinet = !isSandbox({ rpc }) && protocol === Protocols.PtNairobi ? it : it.skip;
-
-  describe(`Test failing_noop through wallet api, based on head, and secret_key using: ${rpc}`, () => {
-    beforeEach(async () => {
-      await setup();
-    });
-
-    nairobinet('Verify that the wallet.signFailingNoop result is as expected when the block and private key are kept constant', async () => {
-      const signed = await Tezos.wallet.signFailingNoop({
-        arbitrary: "48656C6C6F20576F726C64", // Hello World
-        basedOnBlock: 0,
-      });
-      // This test is skipped from flextesa because the genesis block hash is not guaranteed to stay the same
-      // The signature will change if the hash of the genesis block changes (maybe when switching to a testnet based on a new protocol).
-      // Also it depends on the signing key.
-      // So if any of them changes, the expected values need to be adjusted
-      expect(signed).toEqual({
-        bytes: 'df2788eed43ab680c8a2b79969ce4de93b9768cd2786a85ebdfba90ca7612638110000000b48656c6c6f20576f726c64',
-        signature: 'spsig1QVVCiQ6aN2zmut2wKTg4zWLoP9ia4qUY2hBo21odA7P25gqfieFWJMyntaJWmyrd6v3mgjKF5n4d2wcaB3LxkLmd1MoJQ',
-        signedContent: {
-          branch: 'BMQZWtQjSpyJZBVHbABEmVP9VG8yEZPZ3wNftwZdXt6A33ZYatj',
-          contents: [{
-            kind: OpKind.FAILING_NOOP,
-            arbitrary: '48656C6C6F20576F726C64'
-          }]
-        }
-      });
-    });
-  });
+CONFIGS().forEach(({ rpc, lib }) => {
+  const aliceSKey = 'edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq'
 
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
-    beforeEach(async () => {
-      await setup();
+    let Tezos: TezosToolkit;
+
+    beforeAll(async () => {
+      Tezos = lib;
+      Tezos.setSignerProvider(new InMemorySigner(aliceSKey));
     });
 
-    it('Verify that the wallet.signFailingNoop signs a text on the genesis block', async () => {
+    it('Verify that the wallet.failingNoop signs a text on the genesis block', async () => {
       const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
@@ -51,13 +23,40 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
       expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
     });
 
-    it('Verify that the wallet.signFailingNoop signs a text based on head block', async () => {
+    it('Verify that the wallet.failingNoop signs a text base on head block', async () => {
       const signed = await Tezos.wallet.signFailingNoop({
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 'head',
       });
       const pk = await Tezos.wallet.pk();
       expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
+    });
+  });
+
+  describe(`Test failing_noop through wallet api, based on genesis and secret_key on mainnet`, () => {
+    let Mainnet: TezosToolkit;
+
+    beforeAll(async () => {
+      Mainnet = new TezosToolkit('https://rpc.tzkt.io/mainnet'); // this is an archive node public rpc url for mainnet
+      Mainnet.setSignerProvider(new InMemorySigner(aliceSKey));
+    });
+
+    it('Verify that the wallet.failingNoop result is as expected when the block and secret key are kept constant', async () => {
+      const signed = await Mainnet.wallet.signFailingNoop({
+        arbitrary: "48656C6C6F20576F726C64", // Hello World
+        basedOnBlock: 0,
+      });
+      expect(signed).toEqual({
+        bytes: '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed8424c7ccd00b110000000b48656c6c6f20576f726c64',
+        signature: 'edsigtYFkwJo6uVY5J1KnjnMFsj3Y1MKD9vqmtX2sF2u6yyg6fLJWn6Cy1CcbwJAkmEq5Zxvh49uYkMtHHGbeBm8LqBJg2uYjqG',
+        signedContent: {
+          branch: 'BLockGenesisGenesisGenesisGenesisGenesisf79b5d1CoW2',
+          contents: [{
+            kind: OpKind.FAILING_NOOP,
+            arbitrary: '48656C6C6F20576F726C64'
+          }]
+        }
+      });
     });
   });
 })

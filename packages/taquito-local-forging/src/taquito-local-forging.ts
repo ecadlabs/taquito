@@ -22,7 +22,7 @@ export * from './interface';
 export { VERSION } from './version';
 export { ProtocolsHash } from './protocols';
 
-const PROTOCOL_CURRENT = ProtocolsHash.PtMumbai2;
+const PROTOCOL_CURRENT = ProtocolsHash.ProxfordY;
 
 export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
   return {
@@ -33,7 +33,7 @@ export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
     },
   };
 }
-
+//
 export class LocalForger implements Forger {
   constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
 
@@ -60,10 +60,7 @@ export class LocalForger implements Forger {
           continue;
         } else if (content.kind === 'set_deposits_limit' && diff[0] === 'limit') {
           continue;
-        } else if (
-          content.kind === ('tx_rollup_submit_batch' as unknown) &&
-          diff[0] === 'burn_limit'
-        ) {
+        } else if (content.kind === 'smart_rollup_originate' && diff[0] === 'whitelist') {
           continue;
         } else {
           throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);

@@ -7,19 +7,19 @@ import { CONFIGS } from './config';
 
 // Naively* trying to create an own ticket from scratch.
 // We assume that the ticket is just a (pair string cty nat) and can "easily" be created via a callback.
-// *Naively - meaning: WE just try it without thinking whether this test makes sense in regards with the used underlying architecture. 
+// *Naively - meaning: WE just try it without thinking whether this test makes sense in regards with the used underlying architecture.
 // We think of the underlying architecture (type system, stack separation, etc.) as a black box.
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
+  const weeklynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
 
-    mondaynet("Verify ticket is not easily created by a callback - address and option", async () => {
+    weeklynet("Verify ticket is not easily created by a callback - address and option", async () => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter (or (address %init) (option %setToken (ticket string))) ;
@@ -86,7 +86,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     });
 
-    mondaynet("Verify ticket is not easily created by a callback - string and option ", async () => {
+    weeklynet("Verify ticket is not easily created by a callback - string and option ", async () => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter
@@ -157,7 +157,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       }
     });
 
-    mondaynet("Verify ticket is not easily created by a callback - string", async () => {
+    weeklynet("Verify ticket is not easily created by a callback - string", async () => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter
@@ -231,4 +231,3 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 });
 
 // This test was transcribed to Taquito from bash scripts at https://github.com/InferenceAG/TezosSecurityBaselineChecking
-
