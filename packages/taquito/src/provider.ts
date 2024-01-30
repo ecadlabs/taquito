@@ -21,6 +21,7 @@ import {
   createIncreasePaidStorageOperation,
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
+  createSmartRollupExecuteOutboxMessageOperation,
 } from './contract/prepare';
 import { OpKind } from '@taquito/rpc';
 import { InvalidOperationKindError } from '@taquito/utils';
@@ -121,6 +122,10 @@ export abstract class Provider {
         });
       case OpKind.SMART_ROLLUP_ORIGINATE:
         return createSmartRollupOriginateOperation({
+          ...param,
+        });
+      case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
+        return createSmartRollupExecuteOutboxMessageOperation({
           ...param,
         });
       default:
