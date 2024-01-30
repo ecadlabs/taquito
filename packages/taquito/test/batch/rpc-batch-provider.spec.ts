@@ -504,7 +504,7 @@ describe('OperationBatch test', () => {
     });
   });
 
-  describe('withSmartRollupAddMessage op', () => {
+  describe('withSmartRollupAddMessages op', () => {
     it('should produce a batch op which contains a smartRollupAddMessages operation', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);

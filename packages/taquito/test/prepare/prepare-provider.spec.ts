@@ -1034,7 +1034,7 @@ describe('PrepareProvider test', () => {
     });
   });
 
-  describe('SmartRollupOriginate', () => {
+  describe('smartRollupOriginate', () => {
     it('Should prepare smartRollupOriginate without reveal', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
