@@ -44,7 +44,7 @@
     "@taquito/tzip16": "file:../packages/taquito-tzip16",
     "@taquito/utils": "file:../packages/taquito-utils",
     "abort-controller": "^3.0.0",
-    "algoliasearch": "^4.20.0",
+    "algoliasearch": "^4.22.1",
     "axios": "^0.27.2",
     "buffer": "^6.0.3",
     "classnames": "^2.3.2",
