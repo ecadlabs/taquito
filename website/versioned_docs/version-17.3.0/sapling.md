@@ -76,7 +76,7 @@ Note that the balance is represented in mutez.
 
 The balance can be retrieved as follows:
 
-```js live noInline
+```js 
 import { RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
@@ -109,7 +109,7 @@ The `SaplingTransactionViewer` class exposes a method called `getIncomingAndOutg
 
 Example:
 
-```js live noInline
+```js 
 import { RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
@@ -150,7 +150,7 @@ The `prepareShieldedTransaction` method returns the crafted Sapling transaction 
 
 Here is an example of how to prepare and inject a shielded transaction using Taquito:
 
-```js live noInline
+```js 
 // import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 // import { RpcClient } from '@taquito/rpc';
@@ -222,7 +222,7 @@ A user should not use their own implicit account (tz1, tz2, tz3) to submit a Sap
 
 Here is an example of how to prepare and inject a Sapling transaction using Taquito:
 
-```js live noInline
+```js 
 // import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 // import { RpcClient } from '@taquito/rpc';
@@ -280,7 +280,7 @@ The `prepareUnshieldedTransaction` method returns the crafted Sapling transactio
 
 Here is an example of how to prepare and inject an unshielded transaction using Taquito:
 
-```js live noInline
+```js 
 // import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 // import { RpcClient } from '@taquito/rpc';
