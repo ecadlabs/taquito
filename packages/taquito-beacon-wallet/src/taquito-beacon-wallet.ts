@@ -80,7 +80,7 @@ export class BeaconWallet implements WalletProvider {
     try {
       walletParams = await params();
     } catch (err) {
-      await this.client.hideUI();
+      await this.client.hideUI(['alert']);
       throw err;
     }
     return this.removeDefaultParams(
@@ -95,7 +95,7 @@ export class BeaconWallet implements WalletProvider {
     try {
       walletParams = await params();
     } catch (err) {
-      await this.client.hideUI();
+      await this.client.hideUI(['alert']);
       throw err;
     }
     return this.removeDefaultParams(
@@ -110,7 +110,7 @@ export class BeaconWallet implements WalletProvider {
     try {
       walletParams = await params();
     } catch (err) {
-      await this.client.hideUI();
+      await this.client.hideUI(['alert']);
       throw err;
     }
     return this.removeDefaultParams(
@@ -125,7 +125,7 @@ export class BeaconWallet implements WalletProvider {
     try {
       walletParams = await params();
     } catch (err) {
-      await this.client.hideUI();
+      await this.client.hideUI(['alert']);
       throw err;
     }
     return this.removeDefaultParams(
