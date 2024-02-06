@@ -1,4 +1,4 @@
-import { DEFAULT_FEE, MANAGER_LAMBDA, TezosToolkit } from '@taquito/taquito';
+import { MANAGER_LAMBDA, TezosToolkit, getRevealFee } from '@taquito/taquito';
 import { Contract } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { originate, originate2, transferImplicit2 } from './data/lambda';
@@ -12,13 +12,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
   describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
     let contract: Contract;
-    const amt = 2000000 + DEFAULT_FEE.REVEAL;
+    let amt = 2000000
 
     beforeAll(async () => {
       try {
         await setup();
         LowAmountTez = await createAddress();
         const pkh = await LowAmountTez.signer.publicKeyHash();
+        amt += getRevealFee(await LowAmountTez.signer.publicKeyHash());
         const transfer = await Tezos.contract.transfer({ to: pkh, mutez: true, amount: amt });
         await transfer.confirmation();
         const op = await Tezos.contract.originate({
@@ -26,8 +27,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
           code: managerCode,
           init: { 'string': pkh },
         });
-        contract = await op.contract();
-        contract = await LowAmountTez.contract.at(contract.address);
+        await op.confirmation();
+        contract = await LowAmountTez.contract.at((await op.contract()).address);
         expect(op.status).toEqual('applied');
       }
       catch (ex: any) {
@@ -160,18 +161,19 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
   describe(`Test estimate scenarios with very low balance using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
-    const amt = 2000 + DEFAULT_FEE.REVEAL;
+    let amt = 2000
 
     beforeAll(async () => {
       await setup();
       LowAmountTez = await createAddress();
       const pkh = await LowAmountTez.signer.publicKeyHash();
+      amt += getRevealFee(await LowAmountTez.signer.publicKeyHash());
       const transfer = await Tezos.contract.transfer({ to: pkh, mutez: true, amount: amt });
       await transfer.confirmation();
     });
 
     it('Verify .estimate.transfer to regular address', async () => {
-      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) });
+      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(await LowAmountTez.signer.publicKeyHash())) });
       expect(estimate.gasLimit).toEqual(201);
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(372);
@@ -184,8 +186,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Estimate transfer to regular address with a fixed fee', async () => {
 
-      const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) };
-
+      const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(await LowAmountTez.signer.publicKeyHash())) };
       await expect(LowAmountTez.estimate.transfer(params)).rejects.toMatchObject({
         id: expect.stringContaining('empty_implicit_contract'),
       });
@@ -201,7 +202,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async () => {
       await expect(
-        LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + DEFAULT_FEE.REVEAL) })
+        LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(await LowAmountTez.signer.publicKeyHash())) })
       ).rejects.toEqual(
         expect.objectContaining({
           message: expect.stringContaining('storage_exhausted'),

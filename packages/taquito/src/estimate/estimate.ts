@@ -3,7 +3,6 @@ const MINIMAL_FEE_PER_BYTE_MUTEZ = 1;
 const MINIMAL_FEE_PER_GAS_MUTEZ = 0.1;
 
 const GAS_BUFFER = 100;
-// const STORAGE_BUFFER = 20
 
 export interface EstimateProperties {
   milligasLimit: number;

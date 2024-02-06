@@ -29,7 +29,7 @@ import {
   ActivationParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
-import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
+import { DEFAULT_STORAGE_LIMIT, Protocols, getRevealFee, getRevealGasLimit } from '../constants';
 import { RPCResponseError } from '../errors';
 import { PublicKeyNotFoundError, InvalidOperationKindError, DeprecationError } from '@taquito/core';
 import { Context } from '../context';
@@ -173,7 +173,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         ops.unshift(
           await createRevealOperation(
             {
-              fee: DEFAULT_FEE.REVEAL,
+              fee: getRevealFee(pkh),
               storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
               gasLimit: getRevealGasLimit(pkh),
             },
@@ -986,7 +986,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops.unshift(
         await createRevealOperation(
           {
-            fee: DEFAULT_FEE.REVEAL,
+            fee: getRevealFee(pkh),
             storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
             gasLimit: getRevealGasLimit(pkh),
           },

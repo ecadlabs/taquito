@@ -33,9 +33,7 @@ import {
   RPCActivateOperation,
 } from '../operations/types';
 import {
-  DEFAULT_FEE,
-  DEFAULT_GAS_LIMIT,
-  DEFAULT_STORAGE_LIMIT,
+  // DEFAULT_GAS_LIMIT,
   getRevealGasLimit,
 } from '../constants';
 import { format } from '@taquito/utils';
@@ -60,9 +58,9 @@ export const createOriginationOperation = async ({
   balance = '0',
   delegate,
   storage,
-  fee = DEFAULT_FEE.ORIGINATION,
-  gasLimit = DEFAULT_GAS_LIMIT.ORIGINATION,
-  storageLimit = DEFAULT_STORAGE_LIMIT.ORIGINATION,
+  fee,
+  gasLimit,
+  storageLimit,
   mutez = false,
 }: OriginateParams) => {
   if (storage !== undefined && init !== undefined) {
@@ -100,14 +98,14 @@ export const createOriginationOperation = async ({
     throw new InvalidBalanceError(`Invalid Balance "${balance}", cannot be converted to a number`);
   }
 
-  const operation: RPCOriginationOperation = {
+  const operation = {
     kind: OpKind.ORIGINATION,
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     balance: mutez ? balance.toString() : format('tz', 'mutez', balance).toString(),
     script,
-  };
+  } as RPCOriginationOperation;
 
   if (delegate) {
     operation.delegate = delegate;
@@ -119,12 +117,12 @@ export const createTransferOperation = async ({
   to,
   amount,
   parameter,
-  fee = DEFAULT_FEE.TRANSFER,
-  gasLimit = DEFAULT_GAS_LIMIT.TRANSFER,
-  storageLimit = DEFAULT_STORAGE_LIMIT.TRANSFER,
+  fee,
+  gasLimit,
+  storageLimit,
   mutez = false,
 }: TransferParams) => {
-  const operation: RPCTransferOperation = {
+  return {
     kind: OpKind.TRANSACTION,
     fee,
     gas_limit: gasLimit,
@@ -132,34 +130,29 @@ export const createTransferOperation = async ({
     amount: mutez ? amount.toString() : format('tz', 'mutez', amount).toString(),
     destination: to,
     parameters: parameter,
-  };
-  return operation;
+  } as RPCTransferOperation;
 };
 
 export const createSetDelegateOperation = async ({
   delegate,
   source,
-  fee = DEFAULT_FEE.DELEGATION,
-  gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
-  storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
+  fee,
+  gasLimit,
+  storageLimit,
 }: DelegateParams) => {
-  const operation: RPCDelegateOperation = {
+  const operation = {
     kind: OpKind.DELEGATION,
     source,
     fee,
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     delegate,
-  };
+  } as RPCDelegateOperation;
   return operation;
 };
 
 export const createRegisterDelegateOperation = async (
-  {
-    fee = DEFAULT_FEE.DELEGATION,
-    gasLimit = DEFAULT_GAS_LIMIT.DELEGATION,
-    storageLimit = DEFAULT_STORAGE_LIMIT.DELEGATION,
-  }: RegisterDelegateParams,
+  { fee, gasLimit, storageLimit }: RegisterDelegateParams,
   source: string
 ) => {
   return {
@@ -172,11 +165,7 @@ export const createRegisterDelegateOperation = async (
 };
 
 export const createRevealOperation = async (
-  {
-    fee = DEFAULT_FEE.REVEAL,
-    gasLimit = undefined,
-    storageLimit = DEFAULT_STORAGE_LIMIT.REVEAL,
-  }: RevealParams,
+  { fee, gasLimit, storageLimit }: RevealParams,
   source: string,
   publicKey: string
 ) => {
