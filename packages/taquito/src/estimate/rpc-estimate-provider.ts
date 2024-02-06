@@ -107,7 +107,11 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     // Fail early in case of errors
     if (errors.length) {
-      throw new TezosOperationError(errors, 'Error occurred during estimation');
+      throw new TezosOperationError(
+        errors,
+        'Error occurred during estimation',
+        opResponse.contents
+      );
     }
 
     let numberOfOps = 1;

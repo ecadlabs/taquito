@@ -36,6 +36,7 @@ export enum Protocols {
   PtMumbaii = 'PtMumbaiiFFEGbew1rRjzSPyzRbA51Tm3RVZL5suHPxSZYDhCEc',
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
+  ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -54,7 +55,8 @@ export const protocols = {
   '015': [Protocols.PtLimaPtL],
   '016': [Protocols.PtMumbai2], // mumbai v2
   '017': [Protocols.PtNairobi],
-  '018': [Protocols.ProtoALpha],
+  '019': [Protocols.ProxfordY],
+  '020': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {
@@ -73,6 +75,7 @@ export enum ChainIds {
   MUMBAINET = 'NetXQw6nWSnrJ5t',
   MUMBAINET2 = 'NetXgbcrNtXD2yA',
   NAIROBINET = 'NetXyuzvDo2Ugzb',
+  OXFORDNET2 = 'NetXxWsskGahzQB',
 }
 
 // for a fixed fee the gasLimit accepted by both simulate and injection endpoint is between 1.2-5times of actual gas consumption

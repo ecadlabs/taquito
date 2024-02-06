@@ -6,14 +6,14 @@ import { CONFIGS } from './config';
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
-  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
+  const weeklynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup();
     });
 
-    mondaynet('Verify ticket is not easily created by a callback', async () => {
+    weeklynet('Verify ticket is not easily created by a callback', async () => {
       try {
         const opCaller = await Tezos.contract.originate({
           code: ` { parameter (or (address %init) (ticket %setToken string)) ;

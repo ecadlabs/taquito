@@ -905,18 +905,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   }: SmartRollupOriginateParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
-    const originationProof = await this.rpc.getOriginationProof({
-      kind: rest.pvmKind,
-      kernel: rest.kernel,
-    });
-
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
 
     const op = await createSmartRollupOriginateOperation({
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
       ...rest,
-      originationProof,
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
