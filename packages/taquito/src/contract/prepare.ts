@@ -32,10 +32,7 @@ import {
   RPCActivateOperation,
   SmartRollupOriginateParams,
 } from '../operations/types';
-import {
-  // DEFAULT_GAS_LIMIT,
-  getRevealGasLimit,
-} from '../constants';
+import { getRevealGasLimit } from '../constants';
 import { format } from '@taquito/utils';
 import {
   InvalidCodeParameter,

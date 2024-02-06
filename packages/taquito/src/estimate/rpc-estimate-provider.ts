@@ -97,10 +97,10 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       opOb: { branch, contents },
     } = await this.forge(op);
     const operation: RPCSimulateOperationParam = {
-      // operation: { branch, contents, signature: SIGNATURE_STUB},
       operation: { branch, contents },
       chain_id: await this.context.readProvider.getChainId(),
     };
+
     const { opResponse } = await this.simulate(operation);
     const { cost_per_byte } = constants;
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
@@ -121,11 +121,11 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
           ? op.opOb.contents.length - 1
           : op.opOb.contents.length;
     }
+
     return opResponse.contents.map((x) => {
       return this.getEstimationPropertiesFromOperationContent(
         x,
         // TODO: Calculate a specific opSize for each operation.
-        // 0,
         x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : opbytes.length / 2 / numberOfOps,
         cost_per_byte
       );
