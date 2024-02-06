@@ -2,7 +2,7 @@ import { Protocols } from "@taquito/taquito";
 import { CONFIGS, NetworkType } from "./config";
 import BigNumber from 'bignumber.js';
 import {
-  ConstantsResponseProto017, ConstantsResponseProto018,
+  ConstantsResponseProto017, ConstantsResponseProto019,
 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
@@ -122,7 +122,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   describe(`Fetch constants for testnet`, () => {
     oxfordnet(`successfully fetches all constants for oxfordnet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto018 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto019 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
 
@@ -254,7 +254,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
 
     weeklynet(`successfully fetches all constants for weeklynet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto017 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto019 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         adaptive_issuance_launch_ema_threshold: 10000000,
