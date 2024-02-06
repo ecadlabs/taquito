@@ -17,6 +17,8 @@ import {
   DelegateResponse,
   DelegatesResponse,
   VotingInfoResponse,
+  AttestationRightsQueryArguments,
+  AttestationRightsResponse,
   EndorsingRightsQueryArguments,
   EndorsingRightsResponse,
   EntrypointsResponse,
@@ -39,16 +41,14 @@ import {
   RunViewResult,
   SaplingDiffResponse,
   ScriptResponse,
-  TxRollupInboxResponse,
-  TxRollupStateResponse,
   UnparsingMode,
   VotesListingsResponse,
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperations,
+  PendingOperationsV1,
+  PendingOperationsV2,
   PendingOperationsQueryArguments,
-  OriginationProofParams,
   RPCSimulateOperationParam,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
@@ -58,7 +58,10 @@ import { ContractsLibrary } from './taquito-contracts-library';
  *
  */
 export class RpcWrapperContractsLibrary implements RpcClientInterface {
-  constructor(private rpc: RpcClientInterface, private contractslibrary: ContractsLibrary) {}
+  constructor(
+    private rpc: RpcClientInterface,
+    private contractslibrary: ContractsLibrary
+  ) {}
 
   async getContract(
     address: string,
@@ -170,6 +173,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BakingRightsResponse> {
     return this.rpc.getBakingRights(args, { block });
+  }
+  async getAttestationRights(
+    args: AttestationRightsQueryArguments,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<AttestationRightsResponse> {
+    return this.rpc.getAttestationRights(args, { block });
   }
   async getEndorsingRights(
     args: EndorsingRightsQueryArguments,
@@ -293,19 +302,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   async getProtocols({ block }: RPCOptions = defaultRPCOptions): Promise<ProtocolsResponse> {
     return this.rpc.getProtocols({ block });
   }
-  async getTxRollupState(
-    txRollupId: string,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<TxRollupStateResponse> {
-    return this.rpc.getTxRollupState(txRollupId, { block });
-  }
-  async getTxRollupInbox(
-    txRollupId: string,
-    blockLevel: string,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<TxRollupInboxResponse | null> {
-    return this.rpc.getTxRollupInbox(txRollupId, blockLevel, { block });
-  }
   async getStorageUsedSpace(
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
@@ -331,13 +327,9 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
   }
-  async getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperations> {
+  async getPendingOperations(
+    args: PendingOperationsQueryArguments
+  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
-  }
-  async getOriginationProof(
-    params: OriginationProofParams,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<string> {
-    return this.rpc.getOriginationProof(params, { block });
   }
 }

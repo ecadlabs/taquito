@@ -22,6 +22,7 @@ import { codeViewsTopLevel, storageViewsTopLevel } from './contract_views_top_le
 import { MichelsonV1Expression, OpKind, PvmKind } from '@taquito/rpc';
 import { emitCode } from './code_with_emit';
 import { lambdaRecCode } from './code_with_lambda_rec';
+import { timelockCode, timelockStorage, timelockExpected } from './timelock-flip-contract';
 
 function extractOp(
   startIndex: number,
@@ -48,40 +49,61 @@ interface TestCase {
   expected?: object;
 }
 
-export const nairobiCases: TestCase[] = [
+export const oxfordCases: TestCase[] = [
   {
-    name: 'Set deposits limit 1000000',
+    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
     operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
       contents: [
         {
-          kind: OpKind.SET_DEPOSITS_LIMIT,
+          kind: OpKind.ORIGINATION,
           counter: '1',
           source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
           fee: '10000',
           gas_limit: '10',
           storage_limit: '10',
-          limit: '1000000',
+          balance: '0',
+          script: {
+            code: timelockCode,
+            storage: timelockStorage,
+          },
+        },
+      ],
+    },
+    expected: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: timelockExpected,
+            storage: timelockStorage,
+          },
         },
       ],
     },
   },
   {
-    name: 'Unset deposits limit',
+    name: 'Attestation',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: OpKind.SET_DEPOSITS_LIMIT,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10'
-        },
-      ],
-    },
-  },
+          kind: OpKind.ATTESTATION,
+          slot: 0,
+          level: 66299,
+          round: 5,
+          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
+        }
+      ]
+    }
+  }
 ];
 
 export const commonCases: TestCase[] = [
@@ -134,6 +156,40 @@ export const commonCases: TestCase[] = [
       ],
     },
   },
+
+  {
+    name: 'Set deposits limit 1000000',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          limit: '1000000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Unset deposits limit',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10'
+        },
+      ],
+    },
+  },
   {
     name: 'Seed nonce revelation',
     operation: {
@@ -143,6 +199,39 @@ export const commonCases: TestCase[] = [
           kind: OpKind.SEED_NONCE_REVELATION,
           level: 25550,
           nonce: new Array(32).fill('ff').join(''),
+        },
+      ],
+    },
+  },
+  {
+    name: 'Set deposits limit 1000000',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          limit: '1000000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Unset deposits limit',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.SET_DEPOSITS_LIMIT,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10'
         },
       ],
     },
@@ -1172,21 +1261,6 @@ export const commonCases: TestCase[] = [
     },
   },
   {
-    name: 'Endorsement',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.ENDORSEMENT,
-          slot: 0,
-          level: 66299,
-          round: 5,
-          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
-        },
-      ],
-    },
-  },
-  {
     name: `Origination of a contract that contains the instructions SUB_MUTEZ`,
     operation: {
       branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
@@ -1363,8 +1437,6 @@ export const commonCases: TestCase[] = [
           pvm_kind: PvmKind.WASM2,
           kernel:
             '23212f7573722f62696e2f656e762073680a6578706f7274204b45524e454c3d22303036313733366430313030303030303031323830373630303337663766376630313766363030323766376630313766363030353766376637663766376630313766363030313766303036303031376630313766363030323766376630303630303030303032363130333131373336643631373237343566373236663663366337353730356636333666373236353061373236353631363435663639366537303735373430303030313137333664363137323734356637323666366336633735373035663633366637323635306337373732363937343635356636663735373437303735373430303031313137333664363137323734356637323666366336633735373035663633366637323635306237333734366637323635356637373732363937343635303030323033303530343033303430353036303530333031303030313037313430323033366436353664303230303061366236353732366536353663356637323735366530303036306161343031303432613031303237663431666130303266303130303231303132303030326630313030323130323230303132303032343730343430343165343030343131323431303034316534303034313030313030323161306230623038303032303030343163343030366230623530303130353766343166653030326430303030323130333431666330303266303130303231303232303030326430303030323130343230303032663031303032313035323030313130303432313036323030343230303334363034343032303030343130313661323030313431303136623130303131613035323030353230303234363034343032303030343130373661323030363130303131613062306230623164303130313766343164633031343138343032343139303163313030303231303034313834303232303030313030353431383430323130303330623062333830353030343165343030306231323266366236353732366536353663326636353665373632663732363536323666366637343030343166383030306230323030303130303431666130303062303230303032303034316663303030623032303030303030343166653030306230313031220a',
-          origination_proof:
-            '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea18030fab8a3adde4b553c4d391e9cd19ee13b17941c1f49c040d621bbfbea964993810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9',
           parameters_ty: {
             prim: 'bytes',
           },

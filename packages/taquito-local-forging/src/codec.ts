@@ -45,7 +45,7 @@ export const prefixDecoder = (pre: Prefix) => (str: Uint8ArrayConsumer) => {
 
 export const tz1Decoder = prefixDecoder(Prefix.TZ1);
 export const branchDecoder = prefixDecoder(Prefix.B);
-export const pkhDecoder = (val: Uint8ArrayConsumer) => {
+export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
   const prefix = val.consume(1);
 
   if (prefix[0] === 0x00) {
@@ -55,6 +55,18 @@ export const pkhDecoder = (val: Uint8ArrayConsumer) => {
   } else if (prefix[0] === 0x02) {
     return prefixDecoder(Prefix.TZ3)(val);
   }
+};
+
+export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
+  if (!boolDecoder(val)) {
+    return undefined;
+  }
+  const publicKeyHashes = [];
+  val.consume(4);
+  while (val.length() > 0) {
+    publicKeyHashes.push(publicKeyHashDecoder(val));
+  }
+  return publicKeyHashes;
 };
 
 export const branchEncoder = prefixEncoder(Prefix.B);
@@ -116,6 +128,8 @@ export const pvmKindEncoder = (pvm: string): string => {
       return '00';
     case 'wasm_2_0_0':
       return '01';
+    case 'riscv':
+      return '02';
     default:
       throw new UnsupportedPvmKindError(pvm);
   }
@@ -128,6 +142,8 @@ export const pvmKindDecoder = (pvm: Uint8ArrayConsumer): string => {
       return 'arith';
     case 0x01:
       return 'wasm_2_0_0';
+    case 0x02:
+      return 'riscv';
     default:
       throw new DecodePvmKindError(value[0].toString());
   }
@@ -135,7 +151,7 @@ export const pvmKindDecoder = (pvm: Uint8ArrayConsumer): string => {
 
 export const delegateEncoder = (val: string) => {
   if (val) {
-    return boolEncoder(true) + pkhEncoder(val);
+    return boolEncoder(true) + publicKeyHashEncoder(val);
   } else {
     return boolEncoder(false);
   }
@@ -189,11 +205,11 @@ export const boolDecoder = (val: Uint8ArrayConsumer): boolean => {
 export const delegateDecoder = (val: Uint8ArrayConsumer) => {
   const hasDelegate = boolDecoder(val);
   if (hasDelegate) {
-    return pkhDecoder(val);
+    return publicKeyHashDecoder(val);
   }
 };
 
-export const pkhEncoder = (val: string) => {
+export const publicKeyHashEncoder = (val: string) => {
   const pubkeyPrefix = val.substring(0, 3);
   switch (pubkeyPrefix) {
     case Prefix.TZ1:
@@ -211,6 +227,19 @@ export const pkhEncoder = (val: string) => {
           ` expecting one for the following "${Prefix.TZ1}", "${Prefix.TZ2}", "${Prefix.TZ3}" or "${Prefix.TZ4}".`
       );
   }
+};
+
+export const publicKeyHashesEncoder = (val?: string[]) => {
+  if (!val) {
+    return boolEncoder(false);
+  }
+  if (val.length === 0) {
+    return boolEncoder(true) + pad(0);
+  }
+  const publicKeyHashes = val.reduce((prev, curr) => {
+    return prev + publicKeyHashEncoder(curr);
+  }, '');
+  return boolEncoder(true) + pad(publicKeyHashes.length / 2) + publicKeyHashes;
 };
 
 export const publicKeyEncoder = (val: string) => {
@@ -238,7 +267,7 @@ export const addressEncoder = (val: string): string => {
     case Prefix.TZ2:
     case Prefix.TZ3:
     case Prefix.TZ4:
-      return '00' + pkhEncoder(val);
+      return '00' + publicKeyHashEncoder(val);
     case Prefix.KT1:
       return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
     default:
@@ -304,7 +333,7 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   switch (preamble[0]) {
     case 0x00:
-      return pkhDecoder(val);
+      return publicKeyHashDecoder(val);
     case 0x01: {
       const address = prefixDecoder(Prefix.KT1)(val);
       val.consume(1);
@@ -467,27 +496,6 @@ export const entrypointNameDecoder = (val: Uint8ArrayConsumer) => {
   const entry = extractRequiredLen(val);
 
   return Buffer.from(entry).toString('utf8');
-};
-
-export const txRollupOriginationParamEncoder = (_value: string) => {
-  return '';
-};
-
-export const txRollupOriginationParamDecoder = (_val: Uint8ArrayConsumer) => {
-  return {};
-};
-
-export const txRollupIdEncoder = prefixEncoder(Prefix.TXR1);
-
-export const txRollupIdDecoder = prefixDecoder(Prefix.TXR1);
-
-export const txRollupBatchContentEncoder = (value: string) => {
-  return `${pad(value.length / 2)}${value}`;
-};
-
-export const txRollupBatchContentDecoder = (val: Uint8ArrayConsumer) => {
-  const value = extractRequiredLen(val);
-  return Buffer.from(value).toString('hex');
 };
 
 export const burnLimitEncoder = (val: string) => {

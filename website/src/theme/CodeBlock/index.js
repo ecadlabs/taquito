@@ -82,7 +82,6 @@ export default ({
       const { Schema, ParameterSchema } = await import("@taquito/michelson-encoder");
       const { Parser, packDataBytes } = await import('@taquito/michel-codec');
       const { RpcClient } = await import('@taquito/rpc');
-      const { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } = await import('@taquito/sapling');
       const TransportWebHID = (await import("@ledgerhq/hw-transport-webhid")).default;
 
       let wallet;
@@ -127,10 +126,7 @@ export default ({
         Parser,
         packDataBytes,
         RpcReadAdapter,
-        SaplingToolkit,
         RpcClient,
-        InMemorySpendingKey,
-        InMemoryViewingKey,
         Ed25519,
         ECDSA,
         Path,
@@ -181,7 +177,6 @@ export default ({
           Parser: dependencies?.Parser,
           packDataBytes: dependencies?.packDataBytes,
           RpcReadAdapter: dependencies?.RpcReadAdapter,
-          SaplingToolkit: dependencies?.SaplingToolkit,
           RpcClient: dependencies?.RpcClient,
           InMemorySpendingKey: dependencies?.InMemorySpendingKey,
           InMemoryViewingKey: dependencies?.InMemoryViewingKey,

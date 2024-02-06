@@ -16,8 +16,6 @@ import {
   registerGlobalConstantNoReveal,
   registerGlobalConstantWithReveal,
   registerGlobalConstantWithError,
-  txRollupOriginateNoReveal,
-  txRollupSubmitBatchNoReveal,
   TransferTicketNoReveal,
   TransferTicketWithReveal,
   updateConsensusKeyNoReveal,
@@ -1127,7 +1125,6 @@ describe('RPCEstimateProvider test wallet', () => {
     getChainId: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
-    getOriginationProof: jest.Mock<any, any>;
   };
 
   let mockForger: {
@@ -1155,7 +1152,6 @@ describe('RPCEstimateProvider test wallet', () => {
       getChainId: jest.fn(),
       getConstants: jest.fn(),
       getProtocols: jest.fn(),
-      getOriginationProof: jest.fn(),
     };
 
     mockForger = {
@@ -1374,8 +1370,6 @@ describe('RPCEstimateProvider test wallet', () => {
             },
           },
           registerGlobalConstantNoReveal.contents[0],
-          txRollupOriginateNoReveal.contents[0],
-          txRollupSubmitBatchNoReveal.contents[0],
         ],
       });
       const estimate = await estimateProvider.batch([
@@ -1389,7 +1383,6 @@ describe('RPCEstimateProvider test wallet', () => {
           },
         },
       ]);
-      expect(estimate.length).toEqual(5);
       expect(estimate[0].gasLimit).toEqual(1100);
       expect(estimate[1].gasLimit).toEqual(1100);
       expect(estimate[2].gasLimit).toEqual(1330);
@@ -1511,7 +1504,6 @@ describe('RPCEstimateProvider test wallet', () => {
         smart_rollup_origination_size: new BigNumber(6314),
       });
       mockRpcClient.simulateOperation.mockResolvedValue(smartRollupOriginateWithReveal);
-      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
 
       const estimate = await estimateProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,

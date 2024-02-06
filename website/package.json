@@ -37,7 +37,6 @@
     "@taquito/michelson-encoder": "file:../packages/taquito-michelson-encoder",
     "@taquito/remote-signer": "file:../packages/taquito-remote-signer",
     "@taquito/rpc": "file:../packages/taquito-rpc",
-    "@taquito/sapling": "file:../packages/taquito-sapling",
     "@taquito/signer": "file:../packages/taquito-signer",
     "@taquito/taquito": "file:../packages/taquito",
     "@taquito/tzip12": "file:../packages/taquito-tzip12",
@@ -88,5 +87,5 @@
       "last 1 safari version"
     ]
   },
-  "version": "17.5.2"
+  "version": "19.0.0"
 }
