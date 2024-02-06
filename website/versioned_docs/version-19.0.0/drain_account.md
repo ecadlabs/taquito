@@ -23,7 +23,7 @@ In the following example, we have not revealed the account that we want to empty
 
 ```js live noInline
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
-// import { DEFAULT_FEE } from "@taquito/taquito";
+// import { getRevealFee } from "@taquito/taquito";
 
 Tezos.signer
     .publicKeyHash()
@@ -37,18 +37,18 @@ Tezos.signer
             return Tezos.estimate
                 .transfer({
                     to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-                    amount: balance.toNumber() - DEFAULT_FEE.REVEAL, // Remove default reveal fee
+                    amount: balance.toNumber() - getRevealFee(address), // Remove default reveal fee
                     mutez: true
                 })
                 .then((estimate) => {
                     const maxAmount = balance.minus(
-                      estimate.suggestedFeeMutez + DEFAULT_FEE.REVEAL
+                      estimate.suggestedFeeMutez + getRevealFee(address)
                     ).toNumber();
                     println(
                         `The estimated fees related to the emptying operation are ${
                           estimate.suggestedFeeMutez
                         } mutez.\nThe fees related to the reveal operation are ${
-                          DEFAULT_FEE.REVEAL
+                          getRevealFee(address)
                         } mutez.\nConsidering those fees, the amount we need to send to empty the account is ${
                           maxAmount / 1000000
                         } ꜩ.`
