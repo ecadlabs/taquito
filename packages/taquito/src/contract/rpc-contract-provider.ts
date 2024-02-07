@@ -683,9 +683,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   }
 
   /**
-   * @description Execute an outbox message of the specified smart rollup.
-   * The outbox message can only be executed when the associated commitment has been cemented
-   *
+   * @description Execute a message from a smart rollup's outbox of a cemented commitment
    * @param SmartRollupExecuteOutboxMessageParams
    * @returns An operation handle with results from the RPC node
    */

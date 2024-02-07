@@ -276,7 +276,7 @@ export interface ContractProvider extends StorageProvider {
    */
   smartRollupOriginate(params: SmartRollupOriginateParams): Promise<SmartRollupOriginateOperation>;
   /**
-   * @description Execute an outbox message of the specified smart rollup
+   * @description Execute a message from a smart rollup's outbox of a cemented commitment
    *
    * @returns An operation handle with the result from the RPC node
    *
