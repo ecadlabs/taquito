@@ -78,9 +78,9 @@ export enum ChainIds {
   OXFORDNET2 = 'NetXxWsskGahzQB',
 }
 
-// A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times (we use median 3.1 times) of actual gas consumption
+// A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption
 export const getRevealGasLimit = (address: string) =>
-  Math.round((getRevealGasLimitInternal(address) * 31) / 10);
+  Math.round((getRevealGasLimitInternal(address) * 40) / 10);
 
 const getRevealGasLimitInternal = (address: string) => {
   switch (address.substring(0, 3)) {
