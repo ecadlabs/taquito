@@ -156,7 +156,7 @@ Tezos.contract
     const i = 7;
 
     println(`Incrementing storage value by ${i}...`);
-    return contract.methods.increment(i).send();
+    return contract.methodsObject.increment(i).send();
   })
   .then((op) => {
     println(`Waiting for ${op.hash} to be confirmed...`);
@@ -176,7 +176,7 @@ Tezos.wallet
     const i = 7;
 
     println(`Incrementing storage value by ${i}...`);
-    return wallet.methods.increment(i).send();
+    return wallet.methodsObject.increment(i).send();
   })
   .then((op) => {
     println(`Waiting for ${op.opHash} to be confirmed...`);

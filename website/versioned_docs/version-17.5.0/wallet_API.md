@@ -294,7 +294,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 ```js live noInline wallet
 Tezos.wallet
   .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
-  .then((contract) => contract.methods.areYouThere(true).send())
+  .then((contract) => contract.methodsObject.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
     return op.confirmation();
@@ -318,7 +318,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 Tezos.wallet
   .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
   .then((contract) =>
-    contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
+    contract.methodsObject.addName({0: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 1: 'Alice'}).send()
   )
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -340,7 +340,7 @@ Tezos.wallet
 If the entrypoint doesn't expect any value (or more precisely, if it expects a `unit` value), you also have to specify it when sending the transaction as follows:
 
 ```js
-contract.methods.noArgumentEntrypoint([['unit']]).send();
+contract.methodsObject.noArgumentEntrypoint(UintValue).send();
 ```
 
 This will tell Taquito that a value of type unit needs to be sent to the entrypoint.
@@ -608,7 +608,7 @@ _Properties:_
 
 2. `methods`: an object whose methods are named after the contract entrypoints (if the entrypoints are not annotated, the methods will be numbers).
 
-3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methods.default()`).
+3. `parameterSchema`: an instance of the [Parameter class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/parameter.ts) with two useful methods: `hasAnnotation` tells you if the entrypoints are annotated and `isMultipleEntryPoint` tells you if the contract has multiple entrypoints (if _false_, you can interact with the contract with `.methodsObject.default()`).
 
 4. `schema`: an instance of the [Schema class](https://github.com/ecadlabs/taquito/blob/d424fa178a95675920b21c8e8c228fbe0e7df36e/packages/taquito-michelson-encoder/src/schema/storage.ts#L15) with various methods to get more information about the storage or the structure of the contract.
 
@@ -679,7 +679,7 @@ const batch = Tezos.wallet
     code: code,
     storage: 0,
   })
-  .withContractCall(contractInstance.methods.entrypoint());
+  .withContractCall(contractInstance.methodsObject.entrypoint());
 
 const batchOp = await batch.send();
 

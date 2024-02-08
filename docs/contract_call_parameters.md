@@ -13,7 +13,7 @@ You will find below tables that match some of the most common values that smart 
 
 | Michelson type | Michelson value            | Taquito `methods & methodObject`|
 | -------------- | -------------------------- | ------------------------------- |
-| unit           | Unit                       | \[["unit"]]                     |
+| unit           | Unit                       | UintValue                       |
 | bool           | True                       | true                            |
 | int            | 6                          | 6                               |
 | nat            | 7                          | 7                               |
@@ -92,15 +92,15 @@ The michelson-encoder has limitations when encoding complex data structures with
 A brief example for `Pair int string` using a Wallet Provider would be:
 
 ```ts
-let opWithWallet = await tezos.wallet.transfer({ 
-  to: 'KT1...', 
-  amount: 0, 
-  parameter: { 
-    entrypoint: 'default', 
+let opWithWallet = await tezos.wallet.transfer({
+  to: 'KT1...',
+  amount: 0,
+  parameter: {
+    entrypoint: 'default',
     value: {
       prim: 'Pair',
       args: [
-        {int: 6}, 
+        {int: 6},
         {string:"tez"}
       ],
     }
@@ -111,11 +111,11 @@ let opWithWallet = await tezos.wallet.transfer({
 Another example of Michelson type `pair (pair int nat) (option nat)` using the Contract Provider.
 
 ```ts
-const opWithSigner = await tezos.contract.transfer({ 
-  to: 'KT1...', 
-  amount: 0, 
-  parameter: { 
-    entrypoint: 'default', 
+const opWithSigner = await tezos.contract.transfer({
+  to: 'KT1...',
+  amount: 0,
+  parameter: {
+    entrypoint: 'default',
     value: {
       prim: 'Pair',
       args: [{
@@ -124,11 +124,10 @@ const opWithSigner = await tezos.contract.transfer({
           {int: 6},
           {int: 7}
         ],
-        }, 
+        },
         { prim: 'None' } // <- this || { "int": 10 }
       ],
     }
   }
 })
 ```
-

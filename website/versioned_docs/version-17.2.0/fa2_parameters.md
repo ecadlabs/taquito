@@ -24,7 +24,7 @@ import { TezosToolkit } from "@taquito/taquito";
 
 const Tezos = await new TezosTooolkit(RPC_URL);
 const contract = await Tezos.wallet.at(FA2_CONTRACT_ADDRESS);
-const op = await contract.methods.transfer(transfer_params).send();
+const op = await contract.methodsObject.transfer(transfer_params).send();
 await op.confirmation();
 ```
 
@@ -123,7 +123,7 @@ Here is the type signature for the entrypoint parameter in Michelson:
 )
 ```
 
-As mentioned above, Michelson lists are represented as arrays in Taquito. 
+As mentioned above, Michelson lists are represented as arrays in Taquito.
 A union value inside a list is represented as an object with one property: the annotation of the left or right side. The value is then represented as usual in Taquito. In the case of the *update_operators* entrypoint, the value is an object whose properties are the annotations of the right-combed pair:
 
 ```typescript
@@ -157,7 +157,7 @@ const Tezos = await new TezosToolkit(RPC_URL);
 const dappContract = await Tezos.wallet.at(DAPP_CONTRACT_ADDRESS);
 const tokenContract = await Tezos.wallet.at(FA2_CONTRACT_ADDRESS);
 const batchOp = await Tezos.wallet.batch()
-    .withContractCall(tokenContract.methods.update_operators([
+    .withContractCall(tokenContract.methodsObject.update_operators([
         {
             add_operator: {
                 owner: USER_ADDRESS,
@@ -166,11 +166,10 @@ const batchOp = await Tezos.wallet.batch()
             }
         }
     ]))
-    .withContractCall(dappContract.methods.mint())
+    .withContractCall(dappContract.methodsObject.mint())
     .send();
 await batchOp.confirmation();
 ```
 
 In the first contract call (to the token contract), the user authorizes the dapp contract to transfer his tokens on his behalf.
 In the second contract call (to the dapp contract), the user calls a hypothetical *mint* entrypoint that sends a transaction under the hood to transfer the user's tokens to the contract account.
-

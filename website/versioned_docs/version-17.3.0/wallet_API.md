@@ -268,7 +268,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 ```js live noInline wallet
 Tezos.wallet
   .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
-  .then((contract) => contract.methods.areYouThere(true).send())
+  .then((contract) => contract.methodsObject.areYouThere(true).send())
   .then((op) => {
     println(`Hash: ${op.opHash}`);
     return op.confirmation();
@@ -292,7 +292,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 Tezos.wallet
   .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
   .then((contract) =>
-    contract.methods.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
+    contract.methodsObject.addName('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 'Alice').send()
   )
   .then((op) => {
     println(`Hash: ${op.opHash}`);
@@ -314,7 +314,7 @@ Tezos.wallet
 If the entrypoint doesn't expect any value (or more precisely, if it expects a `unit` value), you also have to specify it when sending the transaction as follows:
 
 ```js
-contract.methods.noArgumentEntrypoint([['unit']]).send();
+contract.methodsObject.noArgumentEntrypoint([['unit']]).send();
 ```
 
 This will tell Taquito that a value of type unit needs to be sent to the entrypoint.
@@ -653,7 +653,7 @@ const batch = Tezos.wallet
     code: code,
     storage: 0,
   })
-  .withContractCall(contractInstance.methods.entrypoint());
+  .withContractCall(contractInstance.methodsObject.entrypoint());
 
 const batchOp = await batch.send();
 

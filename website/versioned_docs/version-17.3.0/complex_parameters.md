@@ -43,7 +43,7 @@ storage (pair
           (map %validators nat address));
 ```
 
-In this example, we originate the contract with initial values in the storage. We use the `MichelsonMap` class' of Taquito to initialize [the maps and the bigMap](https://tezostaquito.io/docs/maps_bigmaps). 
+In this example, we originate the contract with initial values in the storage. We use the `MichelsonMap` class' of Taquito to initialize [the maps and the bigMap](https://tezostaquito.io/docs/maps_bigmaps).
 
 As described above, the `map %data` uses a value that we chose between different types. When using Taquito, we need to surround the chosen argument with curly braces. In the current example, we initialize the value in the `map %data` to the boolean true: `{ bool: true }`.
 
@@ -59,7 +59,7 @@ const dataMap = new MichelsonMap();
 //key is a string, we choose a boolean for the value
 dataMap.set('Hello', { bool : true })
 
-//%records 
+//%records
 const recordsBigMap = new MichelsonMap();
 recordsBigMap.set(
     'FFFF', //key of the bigMap %records is in bytes
@@ -89,7 +89,7 @@ importKey(Tezos, secretKey)
     code : contractJson,
     storage : {
       owner : 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
-      records: recordsBigMap, 
+      records: recordsBigMap,
       validators : validatorsMap
     }})
 }).then((contractOriginated) => {
@@ -102,7 +102,7 @@ importKey(Tezos, secretKey)
 
 ## Calling the function of a contract having a complex object as a parameter
 
-The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes` and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key. The user needs to choose the value of the `map` between different proposed types. 
+The contract contains a function named `set_child_record`. The parameter of the function is composed of nested pairs regrouping different datatypes (address, `map`, `bytes` and `nat`). Two of its arguments, the `address %address` and the `nat %ttl`, are optional. The `map %data` uses a `string` as its key. The user needs to choose the value of the `map` between different proposed types.
 
 Here is the parameter of the function defined in Michelson :
 
@@ -138,7 +138,13 @@ importKey(Tezos, secretKey)
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
-    let inspect = myContract.methods.set_child_record('tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', dataMap, 'EEEE', 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', 'FFFF', '10').toTransferParams(); 
+    let inspect = myContract.methodsObject.set_child_record({
+      address: { Some: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr' },
+      data: dataMap,
+      label: 'EEEE',
+      owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+      parent: 'FFFF',
+      ttl: { Some: '10' }}).toTransferParams();
     println(JSON.stringify(inspect, null, 2))
 }).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
@@ -156,15 +162,15 @@ importKey(Tezos, secretKey)
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
-  
-    return myContract.methods.set_child_record(
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
-      dataMap, //data
-      'EEEE', //label
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //owner
-      'FFFF', //parent
-      '10' //ttl(optional)
-    ).send(); 
+
+    return myContract.methodsObject.set_child_record({
+      address: { Some: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr' },
+      data: dataMap,
+      label: 'EEEE',
+      owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+      parent: 'FFFF',
+      ttl: { Some: '10' }
+    }).send();
 }).then(op => {
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
@@ -187,15 +193,15 @@ importKey(Tezos, secretKey)
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { nat : '3' })
-  
-    return myContract.methods.set_child_record(
-      null, //address(optional)
-      dataMap, //data
-      'EEEE', //label
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //owner
-      'FFFF', //parent
-      undefined //ttl(optional)
-    ).send(); 
+
+    return myContract.methods.set_child_record({
+      address: null,
+      data: dataMap,
+      label: 'EEEE',
+      owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+      parent: 'FFFF',
+      ttl: null
+    }).send();
 }).then(op => {
     println(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
