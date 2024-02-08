@@ -13,7 +13,7 @@ You will find below tables that match some of the most common values that smart 
 
 | Michelson type | Michelson value            | Taquito `methods & methodObject`|
 | -------------- | -------------------------- | ------------------------------- |
-| unit           | Unit                       | UintValue                       |
+| unit           | Unit                       | UnitValue                       |
 | bool           | True                       | true                            |
 | int            | 6                          | 6                               |
 | nat            | 7                          | 7                               |
@@ -21,6 +21,7 @@ You will find below tables that match some of the most common values that smart 
 | mutez          | 500000                     | 50000 / 50_000                  |
 | timestamp      | "2022-12-19T15:53:26.055Z" | "2022-12-19T15:53:26.055Z"      |
 
+> Note: you can import `UnitValue` from `@taquito/taquito` and `@taquito/michelson-encoder`
 > Note: if you want to pass the current timestamp to a contract entrypoint, you can use `new Date().toISOString()` which will output the right format.
 
 ## Option

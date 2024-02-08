@@ -95,7 +95,7 @@ This method may be one of the most useful ones as it allows you to batch and emi
 const contract = await Tezos.wallet.at(VALID_CONTRACT_ADDRESS);
 const batch = await Tezos.wallet.batch()
   .withContractCall(contract.methodsObject.interact('tezos'))
-  .withContractCall(contract.methodsObject.wait(UintValue));
+  .withContractCall(contract.methodsObject.wait(UnitValue));
 ```
 
 #### - The `array of transactions` method

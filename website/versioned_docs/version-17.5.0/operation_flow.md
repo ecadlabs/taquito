@@ -73,7 +73,7 @@ You might think to do something like this:
  * AND YOU WILL GET AN ERROR MESSAGE
  */
 const op1 = await contract.methodsObject.interact('tezos').send();
-const op2 = await contract.methodsObject.wait(UintValue).send();
+const op2 = await contract.methodsObject.wait(UnitValue).send();
 
 await op1.confirmation();
 await op2.confirmation();

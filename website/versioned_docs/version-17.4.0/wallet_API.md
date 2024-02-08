@@ -340,7 +340,7 @@ Tezos.wallet
 If the entrypoint doesn't expect any value (or more precisely, if it expects a `unit` value), you also have to specify it when sending the transaction as follows:
 
 ```js
-contract.methodsObject.noArgumentEntrypoint(UintValue).send();
+contract.methodsObject.noArgumentEntrypoint(UnitValue).send();
 ```
 
 This will tell Taquito that a value of type unit needs to be sent to the entrypoint.

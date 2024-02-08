@@ -14,7 +14,7 @@ Taquito provides a simple way of forging and sending transactions to the blockch
  * AND YOU WILL GET AN ERROR MESSAGE
  */
 const op1 = await contract.methodsObject.interact('tezos').send();
-const op2 = await contract.methodsObject.wait(UintValue).send();
+const op2 = await contract.methodsObject.wait(UnitValue).send();
 
 await op1.confirmation();
 await op2.confirmation();
@@ -95,7 +95,7 @@ This method may be one of the most useful ones as it allows you to batch and emi
 const contract = await Tezos.wallet.at(VALID_CONTRACT_ADDRESS);
 const batch = await Tezos.wallet.batch()
   .withContractCall(contractObject.interact('tezos'))
-  .withContractCall(contract.methodsObject.wait(UintValue));
+  .withContractCall(contract.methodsObject.wait(UnitValue));
 ```
 
 #### - The `array of transactions` method
@@ -123,7 +123,7 @@ const batch = await Tezos.wallet.batch([
     delegate: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
   },
   { kind: OpKind.TRANSACTION,
-    ...contract.methodsObject.default(UintValue).toTransferParams()
+    ...contract.methodsObject.default(UnitValue).toTransferParams()
   }
 ]);
 ```
