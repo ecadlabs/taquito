@@ -74,6 +74,8 @@
     "@commitlint/cli": "^17.8.0",
     "@commitlint/config-conventional": "^17.8.0",
     "@nrwl/jest": "^16.10.0",
+    "@parcel/packager-ts": "^2.11.0",
+    "@parcel/transformer-typescript-types": "^2.11.0",
     "@types/bluebird": "^3.5.40",
     "@types/estree": "^1.0.2",
     "@types/jest": "^29.5.5",

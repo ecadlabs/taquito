@@ -42,7 +42,7 @@ export * from './contract';
 export * from './contract/big-map';
 export { CompositeForger } from './forger/composite-forger';
 export { RpcForger } from './forger/rpc-forger';
-export * from './operations';
+export type * from './operations';
 export { OperationBatch } from './batch/rpc-batch-provider';
 export * from './signer/interface';
 export * from './subscribe/interface';
@@ -51,7 +51,7 @@ export { PollingSubscribeProvider } from './subscribe/polling-subcribe-provider'
 export { ObservableSubscription } from './subscribe/observable-subscription';
 export * from './tz/interface';
 export * from './wallet';
-export { Extension } from './extension/extension';
+export type { Extension } from './extension/extension';
 export * from './injector/interface';
 export * from './injector/rpc-injector';
 export * from './parser/interface';
@@ -63,7 +63,7 @@ export * from './packer/rpc-packer';
 export * from './global-constants/default-global-constants-provider';
 export * from './global-constants/errors';
 export * from './global-constants/interface-global-constants-provider';
-export {
+export type {
   BigMapQuery,
   SaplingStateQuery,
   BlockIdentifier,

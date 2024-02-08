@@ -9,7 +9,7 @@ export * from './schema/view-schema';
 export * from './schema/event-schema';
 export * from './schema/errors';
 export * from './schema/types';
-export { Semantic, SemanticEncoding, BigMapKeyType } from './tokens/token';
+export type { Semantic, SemanticEncoding, BigMapKeyType } from './tokens/token';
 export * from './errors';
 
 export const UnitValue = Symbol();

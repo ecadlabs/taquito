@@ -80,7 +80,7 @@ import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core'
 
 export { castToBigNumber } from './utils/utils';
 
-export {
+export type {
   RPCOptions,
   defaultChain,
   defaultRPCOptions,

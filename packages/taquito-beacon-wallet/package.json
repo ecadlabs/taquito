@@ -7,8 +7,11 @@
     "blockchain",
     "websocket"
   ],
-  "main": "dist/taquito-beacon-wallet.umd.js",
+  "browser": "dist/taquito-beacon-wallet.umd.js",
+  "main": "dist/taquito-beacon-wallet.min.js",
   "module": "dist/taquito-beacon-wallet.es6.js",
+  "source": "src/taquito-beacon-wallet.ts",
+  "types": "dist/types/taquito-beacon-wallet.d.ts",
   "typings": "dist/types/taquito-beacon-wallet.d.ts",
   "files": [
     "signature.json",
@@ -34,7 +37,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
+    "build": "parcel build",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {
@@ -68,7 +71,9 @@
   "dependencies": {
     "@airgap/beacon-dapp": "4.1.2",
     "@taquito/core": "^19.0.1",
-    "@taquito/taquito": "^19.0.1"
+    "@taquito/taquito": "^19.0.1",
+    "@taquito/utils": "^19.0.1",
+    "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.40",
@@ -86,6 +91,7 @@
     "jest-config": "^29.7.0",
     "lint-staged": "^14.0.1",
     "lodash.camelcase": "^4.3.0",
+    "parcel": "^2.11.0",
     "prettier": "^3.0.3",
     "prompt": "^1.3.0",
     "replace-in-file": "^7.0.1",

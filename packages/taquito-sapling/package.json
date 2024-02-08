@@ -6,8 +6,11 @@
     "tezos",
     "sapling"
   ],
-  "main": "dist/taquito-sapling.umd.js",
+  "browser": "dist/taquito-sapling.umd.js",
+  "main": "dist/taquito-sapling.min.js",
   "module": "dist/taquito-sapling.es6.js",
+  "source": "src/taquito-sapling.ts",
+  "types": "dist/types/taquito-sapling.d.ts",
   "typings": "dist/types/taquito-sapling.d.ts",
   "files": [
     "signature.json",
@@ -34,7 +37,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
+    "build": "parcel build",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
     "postinstall": "node fetch-sapling-params.js"
   },
@@ -81,6 +84,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/jest": "^29.5.5",
     "@types/node": "^20",
     "@types/pbkdf2": "^3.1.0",
@@ -95,11 +99,13 @@
     "jest-config": "^29.7.0",
     "lint-staged": "^14.0.1",
     "lodash.camelcase": "^4.3.0",
+    "parcel": "^2.11.0",
     "prettier": "^3.0.3",
     "prompt": "^1.3.0",
     "replace-in-file": "^7.0.1",
     "rimraf": "^5.0.5",
     "rollup": "^4.1.4",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.1.1",

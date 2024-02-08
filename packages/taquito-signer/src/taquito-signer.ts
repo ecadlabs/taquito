@@ -17,7 +17,18 @@ import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
 import { Tz2, ECKey, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
-import * as Bip39 from 'bip39';
+import { mnemonicToSeedSync, mnemonicToSeed, mnemonicToEntropy, entropyToMnemonic, generateMnemonic, validateMnemonic, setDefaultWordlist, getDefaultWordlist, wordlists } from 'bip39';
+export const Bip39 = {
+  mnemonicToSeedSync: mnemonicToSeedSync,
+  mnemonicToSeed: mnemonicToSeed,
+  mnemonicToEntropy: mnemonicToEntropy,
+  entropyToMnemonic: entropyToMnemonic,
+  generateMnemonic: generateMnemonic,
+  validateMnemonic: validateMnemonic,
+  setDefaultWordlist: setDefaultWordlist,
+  getDefaultWordlist: getDefaultWordlist,
+  wordlists: wordlists,
+}
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import { InvalidKeyError } from '@taquito/core';
