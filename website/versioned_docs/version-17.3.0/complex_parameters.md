@@ -194,7 +194,7 @@ importKey(Tezos, secretKey)
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { nat : '3' })
 
-    return myContract.methods.set_child_record({
+    return myContract.methodsObject.set_child_record({
       address: null,
       data: dataMap,
       label: 'EEEE',

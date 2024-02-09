@@ -249,7 +249,7 @@ Tezos.contract
     println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
     println(
       `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
-        contract.methodsObject.set_child_record().getSignature(),
+        contract.methods.set_child_record().getSignature(),
         null,
         2
       )}`

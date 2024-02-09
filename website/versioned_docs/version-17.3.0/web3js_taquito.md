@@ -124,7 +124,7 @@ const receipt = await contract.methodsObject.increment(1).send();
 **Taquito**:
 
 ```js
-const op = await contract.methods.increment(1).send();
+const op = await contract.methodsObject.increment(1).send();
 await op.confirmation();
 ```
 

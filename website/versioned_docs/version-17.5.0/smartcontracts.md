@@ -239,7 +239,7 @@ Tezos.contract
     println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
     println(
       `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
-        contract.methodsObject.set_child_record().getSignature(),
+        contract.methods.set_child_record().getSignature(),
         null,
         2
       )}`
@@ -260,7 +260,7 @@ importKey(Tezos, secretKey)
     return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
   })
   .then((contract) => {
-    return contract.methodsObject
+    return contract.methods
       .set_child_record(
         'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
         new MichelsonMap(), //data

@@ -313,7 +313,7 @@ saplingToolkit.prepareUnshieldedTransaction({
     Tezos.contract.at(saplingContractAddress)
     .then((saplingContract) => {
         println(`Injecting the Sapling transaction using the ContractAbstraction...`);
-        return saplingContract.methods.default([unshieldedTx]).send();
+        return saplingContract.methodsObject.default([unshieldedTx]).send();
     })
     .then((op) => {
         println(`Waiting for ${op.hash} to be confirmed...`);
