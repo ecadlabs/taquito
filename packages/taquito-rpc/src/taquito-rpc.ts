@@ -80,11 +80,11 @@ import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core'
 
 export { castToBigNumber } from './utils/utils';
 
-export type {
-  RPCOptions,
+export {
+  type RPCOptions,
   defaultChain,
   defaultRPCOptions,
-  RpcClientInterface,
+  type RpcClientInterface,
 } from './rpc-client-interface';
 
 export { RpcClientCache } from './rpc-client-modules/rpc-cache';

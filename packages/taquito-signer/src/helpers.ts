@@ -1,6 +1,6 @@
 import { b58cencode, prefix } from '@taquito/utils';
-import { PrivateKey as PrivateKeyEd } from './derivation-tools/ed25519';
-import { PrivateKey as PrivateKeyEc } from './derivation-tools/ecdsa';
+import { Ed25519 } from './derivation-tools/ed25519';
+import { ECDSA } from './derivation-tools/ecdsa';
 import { Path } from './derivation-tools';
 import { InvalidCurveError, ToBeImplemented } from './errors';
 
@@ -17,18 +17,18 @@ export type Curves = 'ed25519' | 'secp256k1' | 'p256' | 'bip25519';
  */
 export const generateSecretKey = (seed: Uint8Array, derivationPath: string, curve: Curves) => {
   const path = Path.fromString(derivationPath);
-  let node: PrivateKeyEc | PrivateKeyEd;
+  let node: ECDSA.PrivateKey | Ed25519.PrivateKey;
 
   switch (curve) {
     case 'ed25519': {
-      node = PrivateKeyEd.fromSeed(seed).derivePath(path);
+      node = Ed25519.PrivateKey.fromSeed(seed).derivePath(path);
       const sk = b58cencode(node.seed().slice(0, 32), prefix.edsk2);
       return sk;
     }
     case 'secp256k1':
     case 'p256': {
       const prefixType = curve === 'secp256k1' ? prefix.spsk : prefix.p2sk;
-      let privKey = PrivateKeyEc.fromSeed(seed, curve);
+      let privKey = ECDSA.PrivateKey.fromSeed(seed, curve);
       privKey = privKey.derivePath(path);
       const uint8arr = new Uint8Array(privKey.keyPair.getPrivate().toArray());
       const sk = b58cencode(uint8arr, prefixType);

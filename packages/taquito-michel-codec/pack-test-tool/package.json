@@ -4,7 +4,9 @@
   "description": "Generate pack test data via Tezos RPC",
   "main": "pack-test-tool.js",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "build": ""
+  },
   "author": "Eugene Zagidullin <eugene@ecadlabs.com>",
   "license": "Apache-2.0",
   "dependencies": {

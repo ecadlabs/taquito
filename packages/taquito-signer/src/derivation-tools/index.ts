@@ -1,7 +1,7 @@
 import { InvalidDerivationPathError } from '@taquito/core';
 
-export * as ECDSA from './ecdsa';
-export * as Ed25519 from './ed25519';
+export { ECDSA } from './ecdsa';
+export { Ed25519 } from './ed25519';
 
 export const Hard = 0x80000000;
 
