@@ -3,7 +3,9 @@
   "compilerOptions": {
     "declarationDir": "dist/types",
     "outDir": "dist/lib",
-    "jsx": "react"
+    "jsx": "react",
+    "types": ["node"],
+    "typeRoots": ["../../node_modules/@types"]
   },
-  "include": ["src"]
+  "include": ["src"],
 }

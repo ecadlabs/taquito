@@ -1,3 +1,4 @@
+import process from 'process'
 /**
  * @packageDocumentation
  * @module @taquito/http-utils
