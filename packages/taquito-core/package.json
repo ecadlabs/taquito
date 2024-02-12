@@ -6,7 +6,7 @@
     "tezos",
     "blockchain"
   ],
-  "browser": "dist/taquito-core.umd.js",
+  "browser": "dist/taquito-core.browser.js",
   "main": "dist/lib/taquito-core.js",
   "module": "dist/taquito-core.es6.js",
   "source": "src/taquito-core.ts",

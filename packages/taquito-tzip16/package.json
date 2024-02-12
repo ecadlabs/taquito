@@ -7,7 +7,7 @@
     "blockchain",
     "tzip16"
   ],
-  "browser": "dist/taquito-tzip16.umd.js",
+  "browser": "dist/taquito-tzip16.browser.js",
   "main": "dist/taquito-tzip16.min.js",
   "module": "dist/taquito-tzip16.es6.js",
   "source": "src/taquito-tzip16.ts",

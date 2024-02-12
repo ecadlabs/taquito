@@ -7,7 +7,7 @@
     "blockchain",
     "signer"
   ],
-  "browser": "dist/taquito-signer.umd.js",
+  "browser": "dist/taquito-signer.browser.js",
   "main": "dist/taquito-signer.min.js",
   "module": "dist/taquito-signer.es6.js",
   "source": "src/taquito-signer.ts",

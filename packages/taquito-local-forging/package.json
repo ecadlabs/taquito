@@ -7,7 +7,7 @@
     "blockchain",
     "signer"
   ],
-  "browser": "dist/taquito-local-forging.umd.js",
+  "browser": "dist/taquito-local-forging.browser.js",
   "main": "dist/taquito-local-forging.min.js",
   "module": "dist/taquito-local-forging.es6.js",
   "source": "src/taquito-local-forging.ts",

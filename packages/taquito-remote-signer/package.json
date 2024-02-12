@@ -6,7 +6,7 @@
     "tezos",
     "blockchain"
   ],
-  "browser": "dist/taquito-remote-signer.umd.js",
+  "browser": "dist/taquito-remote-signer.browser.js",
   "main": "dist/taquito-remote-signer.min.js",
   "module": "dist/taquito-remote-signer.es6.js",
   "source": "src/taquito-remote-signer.ts",

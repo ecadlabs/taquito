@@ -5,7 +5,7 @@
   "keywords": [
     "tezos"
   ],
-  "browser": "dist/taquito-http-utils.umd.js",
+  "browser": "dist/taquito-http-utils.browser.js",
   "main": "dist/taquito-http-utils.min.js",
   "module": "dist/taquito-http-utils.es6.js",
   "source": "src/taquito-http-utils.ts",

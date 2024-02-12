@@ -8,7 +8,7 @@
     "michelson",
     "smart-contract"
   ],
-  "browser": "dist/taquito-michelson-encoder.umd.js",
+  "browser": "dist/taquito-michelson-encoder.browser.js",
   "main": "dist/taquito-michelson-encoder.min.js",
   "module": "dist/taquito-michelson-encoder.es6.js",
   "source": "src/taquito-michelson-encoder.ts",

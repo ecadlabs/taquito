@@ -6,7 +6,7 @@
     "tezos",
     "sapling"
   ],
-  "browser": "dist/taquito-sapling.umd.js",
+  "browser": "dist/taquito-sapling.browser.js",
   "main": "dist/taquito-sapling.min.js",
   "module": "dist/taquito-sapling.es6.js",
   "source": "src/taquito-sapling.ts",

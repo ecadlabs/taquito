@@ -14,6 +14,7 @@
     "@tsconfig/svelte": "^5.0.2",
     "events": "^3.3.0",
     "lerna": "^7.4.2",
+    "parcel": "^2.11.0",
     "prettier-plugin-svelte": "^3.0.3",
     "sass": "^1.69.4",
     "svelte": "^4.2.1",

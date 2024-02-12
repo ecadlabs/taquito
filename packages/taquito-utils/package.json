@@ -8,7 +8,7 @@
     "michelson",
     "smart-contract"
   ],
-  "browser": "dist/taquito-utils.umd.js",
+  "browser": "dist/taquito-utils.browser.js",
   "main": "dist/taquito-utils.min.js",
   "module": "dist/taquito-utils.es6.js",
   "source": "src/taquito-utils.ts",

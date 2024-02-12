@@ -7,7 +7,7 @@
     "blockchain",
     "websocket"
   ],
-  "browser": "dist/taquito-beacon-wallet.umd.js",
+  "browser": "dist/taquito-beacon-wallet.browser.js",
   "main": "dist/taquito-beacon-wallet.min.js",
   "module": "dist/taquito-beacon-wallet.es6.js",
   "source": "src/taquito-beacon-wallet.ts",

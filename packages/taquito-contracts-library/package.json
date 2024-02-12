@@ -5,7 +5,7 @@
   "keywords": [
     "tezos"
   ],
-  "browser": "dist/taquito-contracts-library.umd.js",
+  "browser": "dist/taquito-contracts-library.browser.js",
   "main": "dist/taquito-contracts-library.min.js",
   "module": "dist/taquito-contracts-library.es6.js",
   "source": "src/taquito-contracts-library.ts",

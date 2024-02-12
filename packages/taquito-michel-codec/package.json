@@ -7,7 +7,7 @@
     "blockchain",
     "signer"
   ],
-  "browser": "./dist/taquito-michel-codec.umd.js",
+  "browser": "./dist/taquito-michel-codec.browser.js",
   "main": "./dist/lib/taquito-michel-codec.js",
   "module": "./dist/taquito-michel-codec.es6.js",
   "source": "./src/taquito-michel-codec.ts",

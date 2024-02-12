@@ -7,7 +7,7 @@
     "blockchain",
     "ledger"
   ],
-  "browser": "dist/taquito-ledger-signer.umd.js",
+  "browser": "dist/taquito-ledger-signer.browser.js",
   "main": "dist/taquito-ledger-signer.min.js",
   "module": "dist/taquito-ledger-signer.es6.js",
   "source": "src/taquito-ledger-signer.ts",

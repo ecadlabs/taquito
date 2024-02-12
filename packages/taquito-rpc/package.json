@@ -7,7 +7,7 @@
     "blockchain",
     "rpc"
   ],
-  "browser": "dist/taquito-rpc.umd.js",
+  "browser": "dist/taquito-rpc.browser.js",
   "main": "dist/taquito-rpc.min.js",
   "module": "dist/taquito-rpc.es6.js",
   "source": "src/taquito-rpc.ts",
