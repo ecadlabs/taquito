@@ -103,7 +103,101 @@ export const oxfordCases: TestCase[] = [
         }
       ]
     }
-  }
+  },
+  {
+    name: 'Transaction with stake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'stake',
+            value: {
+              prim: "Unit"
+            },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'unstake',
+            value: {
+              int: "9999999999999"
+            },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with finalize_unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'finalize_unstake',
+            value: {
+              prim: "Unit"
+            },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Transaction with set_delegate_parameters entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          parameters: {
+            entrypoint: 'set_delegate_parameters',
+            value: { prim: 'Pair', args: [{ int: '5000000' }, { prim: 'Pair', args: [{ int: '1000000000' }, { prim: 'Unit' }] }] },
+          },
+          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
+          amount: '1000',
+        },
+      ],
+    },
+  },
 ];
 
 export const commonCases: TestCase[] = [
