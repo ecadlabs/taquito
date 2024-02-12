@@ -76,6 +76,27 @@ export type RPCOpWithSource =
   | RPCSmartRollupAddMessagesOperation
   | RPCSmartRollupOriginateOperation;
 
+export const isOpWithGasBuffer = <
+  T extends { kind: OpKind; parameter?: TransactionOperationParameter },
+>(
+  op: T
+): boolean => {
+  if (op.kind === OpKind.TRANSACTION && op.parameter) {
+    return true;
+  } else {
+    return (
+      [
+        'origination',
+        'register_global_constant',
+        'transfer_ticket',
+        'update_consensus_key',
+        'smart_rollup_add_messages',
+        'smart_rollup_originate',
+      ].indexOf(op.kind) !== -1
+    );
+  }
+};
+
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
 ): op is withKind<T, Exclude<Exclude<OpKind, OpKind.ACTIVATION>, OpKind.FAILING_NOOP>> => {

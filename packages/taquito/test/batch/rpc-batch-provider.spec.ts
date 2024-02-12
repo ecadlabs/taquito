@@ -166,8 +166,8 @@ describe('OperationBatch test', () => {
             {
               value: { int: '2' },
               counter: '1',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
@@ -241,8 +241,8 @@ describe('OperationBatch test', () => {
             {
               value: { int: '2' },
               counter: '2',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
@@ -278,8 +278,8 @@ describe('OperationBatch test', () => {
             {
               value: { string: 'test' },
               counter: '1',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
@@ -362,8 +362,8 @@ describe('OperationBatch test', () => {
             {
               value: { string: 'test' },
               counter: '2',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
@@ -400,8 +400,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'increase_paid_storage',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               storage_limit: '93',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
@@ -448,8 +448,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'increase_paid_storage',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               storage_limit: '93',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
@@ -529,8 +529,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'smart_rollup_add_messages',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               storage_limit: '93',
               message: [
                 '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
@@ -622,8 +622,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'smart_rollup_add_messages',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               storage_limit: '93',
               message: [
                 '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
@@ -663,8 +663,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'smart_rollup_originate',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               storage_limit: '93',
               kernel: '1234567890',
               parameters_ty: { prim: 'bytes' },
@@ -754,8 +754,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'smart_rollup_originate',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '375',
+              gas_limit: '1230',
               storage_limit: '93',
               kernel: '1234567890',
               parameters_ty: { prim: 'bytes' },

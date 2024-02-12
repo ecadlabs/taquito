@@ -385,8 +385,8 @@ export const originateResultsEstimate = {
       revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
       {
         kind: 'origination',
-        fee: '391',
-        gas_limit: '101',
+        fee: '291',
+        gas_limit: '1',
         storage_limit: '1000',
         balance: '200000000',
         script: scriptSample,

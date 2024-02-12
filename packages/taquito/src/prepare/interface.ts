@@ -12,6 +12,8 @@ import {
   TransferTicketParams,
   UpdateConsensusKeyParams,
   ActivationParams,
+  SmartRollupAddMessagesParams,
+  SmartRollupOriginateParams,
 } from '../operations/types';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -118,10 +120,24 @@ export interface PreparationProvider {
 
   /**
    * @description Method to prepare a drain_delegate operation
-   * @param params drainDelegatex operation parameters
+   * @param params drainDelegate operation parameters
    * @returns a PreparedOperation object
    */
   drainDelegate(params: DrainDelegateParams): Promise<PreparedOperation>;
+
+  /**
+   * @description Method to prepare a smart_rollup_add_messages operation
+   * @param params smartRollupAddMessages operation parameters
+   * @returns a PreparedOperation object
+   */
+  smartRollupAddMessages(params: SmartRollupAddMessagesParams): Promise<PreparedOperation>;
+
+  /**
+   * @description Method to prepare a smart_rollup_originate operation
+   * @param params smartRollupOriginate operation parameters
+   * @returns a PreparedOperation object
+   */
+  smartRollupOriginate(params: SmartRollupOriginateParams): Promise<PreparedOperation>;
 
   /**
    *

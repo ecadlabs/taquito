@@ -4,6 +4,7 @@ import { flattenErrors, flattenOperationResult, TezosOperationError } from '../o
 import {
   DelegateParams,
   isOpWithFee,
+  isOpWithGasBuffer,
   OriginateParams,
   ParamsWithKind,
   RegisterDelegateParams,
@@ -29,7 +30,9 @@ import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
 export class RPCEstimateProvider extends Provider implements EstimationProvider {
   private readonly ALLOCATION_STORAGE = 257;
   private readonly ORIGINATION_STORAGE = 257;
-  private readonly OP_SIZE_REVEAL = 128;
+  private readonly OP_SIZE_REVEAL = 324; // injecting size tz1=320, tz2=322, tz3=322, tz4=420(not supported)
+  private readonly MILLIGAS_BUFFER = 100 * 1000;
+  private readonly STORAGE_BUFFER = 20;
 
   private prepare = new PrepareProvider(this.context);
 
@@ -56,24 +59,31 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     let accumulatedStorage = 0;
     operationResults.forEach((result) => {
       consumedMilligas += Number(result.consumed_milligas) || 0;
+      // transfer to unrevealed implicit
       accumulatedStorage +=
-        'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0; // transfer to unrevealed implicit
+        'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
+      // register_global_constants
       accumulatedStorage +=
         'storage_size' in result && 'global_address' in result
           ? Number(result.storage_size) || 0
-          : 0; // register_global_constants
+          : 0;
+      // transfer_ticket, originate, contract_call
       accumulatedStorage +=
-        'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0; // transfer_ticket, originate, contract_call
+        'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
+      // originate
       accumulatedStorage +=
         'originated_contracts' in result && Array.isArray(result.originated_contracts)
           ? result.originated_contracts.length * this.ORIGINATION_STORAGE
-          : 0; // originate
-      accumulatedStorage += 'genesis_commitment_hash' in result ? Number(result.size) || 0 : 0; //smart_rollup_originate
+          : 0;
+      //smart_rollup_originate
+      accumulatedStorage += 'genesis_commitment_hash' in result ? Number(result.size) || 0 : 0;
     });
     if (isOpWithFee(content)) {
       return {
-        milligasLimit: consumedMilligas || 0,
-        storageLimit: accumulatedStorage || 0,
+        milligasLimit: isOpWithGasBuffer(content)
+          ? consumedMilligas + Number(this.MILLIGAS_BUFFER)
+          : consumedMilligas,
+        storageLimit: accumulatedStorage > 0 ? accumulatedStorage + this.STORAGE_BUFFER : 0,
         opSize: size,
         minimalFeePerStorageByteMutez: costPerByte.toNumber(),
       };
@@ -125,8 +135,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     return opResponse.contents.map((x) => {
       return this.getEstimationPropertiesFromOperationContent(
         x,
-        // TODO: Calculate a specific opSize for each operation.
-        x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : opbytes.length / 2 / numberOfOps,
+        // diff between estimated and injecting OP_SIZE is 124-126, we added buffer to use 130
+        x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : (opbytes.length + 130) / 2 / numberOfOps,
         cost_per_byte
       );
     });
@@ -148,6 +158,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
 
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -183,6 +194,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -216,6 +228,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -250,6 +263,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -294,6 +308,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -351,6 +366,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -379,6 +395,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -398,6 +415,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -418,6 +436,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -436,6 +455,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -458,6 +478,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
+      estimateProperties[0].opSize -= 161;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
