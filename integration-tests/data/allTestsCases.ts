@@ -108,24 +108,18 @@ export const oxfordCases: TestCase[] = [
     name: 'Transaction with stake entrypoint',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.TRANSACTION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          parameters: {
-            entrypoint: 'stake',
-            value: {
-              prim: "Unit"
-            },
-          },
-          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
-          amount: '1000',
-        },
-      ],
+      contents: [{
+        kind: OpKind.TRANSACTION,
+        source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+        fee: "0",
+        counter: "407",
+        gas_limit: "1040000",
+        storage_limit: "60000",
+        amount: "1000000000",
+        destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+        parameters:
+          { entrypoint: "stake", value: { prim: "Unit" } }
+      }]
     },
   },
   {
@@ -135,21 +129,16 @@ export const oxfordCases: TestCase[] = [
       contents: [
         {
           kind: OpKind.TRANSACTION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          parameters: {
-            entrypoint: 'unstake',
-            value: {
-              int: "9999999999999"
-            },
-          },
-          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
-          amount: '1000',
-        },
-      ],
+          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          fee: "689",
+          counter: "408",
+          gas_limit: "4250",
+          storage_limit: "0",
+          amount: "99999999999000000",
+          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          parameters:
+            { entrypoint: "unstake", value: { prim: "Unit" } }
+        }],
     },
   },
   {
@@ -159,21 +148,19 @@ export const oxfordCases: TestCase[] = [
       contents: [
         {
           kind: OpKind.TRANSACTION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          parameters: {
-            entrypoint: 'finalize_unstake',
-            value: {
-              prim: "Unit"
-            },
-          },
-          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
-          amount: '1000',
-        },
-      ],
+          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          fee: "409",
+          counter: "409",
+          gas_limit: "1529",
+          storage_limit: "0",
+          amount: "0",
+          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          parameters:
+          {
+            entrypoint: "finalize_unstake",
+            value: { prim: "Unit" }
+          }
+        }],
     },
   },
   {
@@ -183,19 +170,29 @@ export const oxfordCases: TestCase[] = [
       contents: [
         {
           kind: OpKind.TRANSACTION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          parameters: {
-            entrypoint: 'set_delegate_parameters',
-            value: { prim: 'Pair', args: [{ int: '5000000' }, { prim: 'Pair', args: [{ int: '1000000000' }, { prim: 'Unit' }] }] },
-          },
-          destination: 'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA',
-          amount: '1000',
-        },
-      ],
+          source: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
+          fee: "351",
+          counter: "391",
+          gas_limit: "791",
+          storage_limit: "0",
+          amount: "0",
+          destination: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
+          parameters:
+          {
+            entrypoint: "set_delegate_parameters",
+            value:
+            {
+              prim: "Pair",
+              args:
+                [{ int: "5000000" },
+                {
+                  prim: "Pair",
+                  args:
+                    [{ int: "1000000000" }, { prim: "Unit" }]
+                }]
+            }
+          }
+        }]
     },
   },
 ];
