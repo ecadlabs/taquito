@@ -103,7 +103,98 @@ export const oxfordCases: TestCase[] = [
         }
       ]
     }
-  }
+  },
+  {
+    name: 'Transaction with stake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [{
+        kind: OpKind.TRANSACTION,
+        source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+        fee: "0",
+        counter: "407",
+        gas_limit: "1040000",
+        storage_limit: "60000",
+        amount: "1000000000",
+        destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+        parameters:
+          { entrypoint: "stake", value: { prim: "Unit" } }
+      }]
+    },
+  },
+  {
+    name: 'Transaction with unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          fee: "689",
+          counter: "408",
+          gas_limit: "4250",
+          storage_limit: "0",
+          amount: "99999999999000000",
+          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          parameters:
+            { entrypoint: "unstake", value: { prim: "Unit" } }
+        }],
+    },
+  },
+  {
+    name: 'Transaction with finalize_unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          fee: "409",
+          counter: "409",
+          gas_limit: "1529",
+          storage_limit: "0",
+          amount: "0",
+          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          parameters:
+          {
+            entrypoint: "finalize_unstake",
+            value: { prim: "Unit" }
+          }
+        }],
+    },
+  },
+  {
+    name: 'Transaction with set_delegate_parameters entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
+          fee: "351",
+          counter: "391",
+          gas_limit: "791",
+          storage_limit: "0",
+          amount: "0",
+          destination: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
+          parameters:
+          {
+            entrypoint: "set_delegate_parameters",
+            value:
+            {
+              prim: "Pair",
+              args:
+                [{ int: "5000000" },
+                {
+                  prim: "Pair",
+                  args:
+                    [{ int: "1000000000" }, { prim: "Unit" }]
+                }]
+            }
+          }
+        }]
+    },
+  },
 ];
 
 export const commonCases: TestCase[] = [
