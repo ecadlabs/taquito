@@ -9,7 +9,11 @@ import { TaquitoError } from '@taquito/core';
 export abstract class TokenValidationError extends TaquitoError {
   name = 'TokenValidationError';
 
-  constructor(public readonly value: any, public readonly token: Token, baseMessage: string) {
+  constructor(
+    public readonly value: any,
+    public readonly token: Token,
+    baseMessage: string
+  ) {
     super();
     const annot = this.token.annot();
     const annotText = annot ? `[${annot}] ` : '';
@@ -32,7 +36,9 @@ export abstract class Token {
     protected val: MichelsonV1ExpressionExtended,
     protected idx: number,
     protected fac: TokenFactory
-  ) {}
+  ) {
+    this.createToken = fac;
+  }
 
   protected typeWithoutAnnotations() {
     const handleMichelsonExpression = (val: MichelsonV1Expression): MichelsonV1Expression => {
@@ -90,7 +96,7 @@ export abstract class Token {
     return this.val;
   }
 
-  public createToken = this.fac;
+  public createToken: TokenFactory;
 
   /**
    * @deprecated ExtractSchema has been deprecated in favor of generateSchema

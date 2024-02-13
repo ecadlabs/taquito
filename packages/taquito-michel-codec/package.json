@@ -7,15 +7,13 @@
     "blockchain",
     "signer"
   ],
-  "browser": "./dist/taquito-michel-codec.browser.js",
-  "main": "./dist/lib/taquito-michel-codec.js",
-  "module": "./dist/taquito-michel-codec.es6.js",
-  "source": "./src/taquito-michel-codec.ts",
-  "types": "./dist/types/taquito-michel-codec.d.ts",
-  "typings": "./dist/types/taquito-michel-codec.d.ts",
+  "main": "dist/taquito-michel-codec.js",
+  "module": "dist/taquito-michel-codec.es6.js",
+  "source": "src/taquito-michel-codec.ts",
+  "types": "dist/types/taquito-michel-codec.d.ts",
+  "typings": "dist/types/taquito-michel-codec.d.ts",
   "files": [
-    "dist",
-    "signature.json"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
@@ -37,7 +35,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "parcel build",
+    "build": "microbundle",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {
@@ -72,7 +70,6 @@
     "@taquito/core": "^19.0.1"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/bluebird": "^3.5.40",
     "@types/jest": "^29.5.5",
     "@types/node": "^20",
@@ -84,13 +81,9 @@
     "jest-extended": "^4.0.2",
     "lint-staged": "^14.0.1",
     "lodash.camelcase": "^4.3.0",
-    "parcel": "^2.11.0",
+    "microbundle": "^0.15.1",
     "prettier": "^3.0.3",
     "rimraf": "^5.0.5",
-    "rollup": "^4.1.4",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-polyfill-node": "^0.13.0",
-    "rollup-plugin-typescript2": "^0.36.0",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "ts-toolbelt": "^9.6.0",

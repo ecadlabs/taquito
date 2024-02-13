@@ -1,4 +1,3 @@
-import process from 'process'
 /**
  * @packageDocumentation
  * @module @taquito/http-utils
@@ -7,7 +6,7 @@ import process from 'process'
 let fetch = globalThis?.fetch;
 // Will only use browser fetch if we are in a browser environment,
 // default to the more stable node-fetch otherwise
-const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
+const isNode = typeof globalThis.process !== 'undefined' && !!globalThis.process?.versions?.node;
 if (isNode) {
   fetch = require('node-fetch');
 }

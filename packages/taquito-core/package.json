@@ -6,15 +6,13 @@
     "tezos",
     "blockchain"
   ],
-  "browser": "dist/taquito-core.browser.js",
-  "main": "dist/lib/taquito-core.js",
+  "main": "dist/taquito-core.js",
   "module": "dist/taquito-core.es6.js",
   "source": "src/taquito-core.ts",
   "types": "dist/types/taquito-core.d.ts",
   "typings": "dist/types/taquito-core.d.ts",
   "files": [
-    "dist",
-    "signature.json"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
@@ -33,7 +31,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "parcel build",
+    "build": "microbundle",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
     "test": "jest"
   },
@@ -66,11 +64,7 @@
     "json-stringify-safe": "^5.0.1"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/json-stringify-safe": "^5.0.1",
-    "parcel": "^2.11.0",
-    "rollup": "^4.1.4",
-    "rollup-plugin-polyfill-node": "^0.13.0",
-    "rollup-plugin-typescript2": "^0.36.0"
+    "microbundle": "^0.15.1"
   }
 }

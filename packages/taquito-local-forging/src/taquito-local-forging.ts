@@ -35,9 +35,14 @@ export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
 }
 //
 export class LocalForger implements Forger {
-  constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
+  constructor(public readonly protocolHash = PROTOCOL_CURRENT) {
+    this.codec = getCodec(CODEC.MANAGER, this.protocolHash);
+  }
 
-  private codec = getCodec(CODEC.MANAGER, this.protocolHash);
+  private codec: {
+    encoder: (params: ForgeParams) => string;
+    decoder: (hex: string) => ForgeParams;
+  };
 
   forge(params: ForgeParams): Promise<string> {
     const branchValidation = validateBlock(params.branch);

@@ -7,15 +7,13 @@
     "blockchain",
     "signer"
   ],
-  "browser": "dist/taquito-signer.browser.js",
   "main": "dist/taquito-signer.min.js",
   "module": "dist/taquito-signer.es6.js",
   "source": "src/taquito-signer.ts",
   "types": "dist/types/taquito-signer.d.ts",
   "typings": "dist/types/taquito-signer.d.ts",
   "files": [
-    "dist",
-    "signature.json"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
@@ -37,7 +35,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "parcel build",
+    "build": "microbundle",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {
@@ -86,7 +84,6 @@
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/bluebird": "^3.5.40",
     "@types/elliptic": "^6.4.15",
     "@types/jest": "^29.5.5",
@@ -102,15 +99,11 @@
     "jest-config": "^29.7.0",
     "lint-staged": "^14.0.1",
     "lodash.camelcase": "^4.3.0",
-    "parcel": "^2.11.0",
+    "microbundle": "^0.15.1",
     "prettier": "^3.0.3",
     "prompt": "^1.3.0",
     "replace-in-file": "^7.0.1",
     "rimraf": "^5.0.5",
-    "rollup": "^4.1.4",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-polyfill-node": "^0.13.0",
-    "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",

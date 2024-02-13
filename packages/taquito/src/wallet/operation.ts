@@ -34,50 +34,10 @@ export class WalletOperation {
   protected _included = false;
 
   private lastHead: BlockResponse | undefined;
-  protected newHead$: Observable<BlockResponse> = this._newHead$.pipe(
-    switchMap((newHead) => {
-      const prevHead = this.lastHead?.header.level ?? newHead.header.level - 1;
-      return range(prevHead + 1, newHead.header.level - prevHead - 1).pipe(
-        concatMap((level) => this.context.readProvider.getBlock(level)),
-        endWith(newHead)
-      );
-    }),
-    tap((newHead) => (this.lastHead = newHead)),
-    share({
-      connector: () => new ReplaySubject(1),
-      resetOnError: false,
-      resetOnComplete: false,
-      resetOnRefCountZero: false,
-    })
-  );
+  protected newHead$: Observable<BlockResponse>;
 
   // Observable that emit once operation is seen in a block
-  private confirmed$ = this.newHead$.pipe(
-    map((head) => {
-      for (const opGroup of head.operations) {
-        for (const op of opGroup) {
-          if (op.hash === this.opHash) {
-            this._included = true;
-            this._includedInBlock.next(head);
-            this._operationResult.next(op.contents as OperationContentsAndResult[]);
-
-            // Return the block where the operation was found
-            return head;
-          }
-        }
-      }
-    }),
-    filter<BlockResponse | undefined, BlockResponse>((x): x is BlockResponse => {
-      return typeof x !== 'undefined';
-    }),
-    first(),
-    share({
-      connector: () => new ReplaySubject(1),
-      resetOnError: false,
-      resetOnComplete: false,
-      resetOnRefCountZero: false,
-    })
-  );
+  private confirmed$: Observable<BlockResponse>;
 
   async operationResults() {
     return this._operationResult.pipe(first()).toPromise();
@@ -110,6 +70,48 @@ export class WalletOperation {
     if (validateOperation(this.opHash) !== ValidationResult.VALID) {
       throw new InvalidOperationHashError(this.opHash);
     }
+    this.newHead$ = this._newHead$.pipe(
+      switchMap((newHead) => {
+        const prevHead = this.lastHead?.header.level ?? newHead.header.level - 1;
+        return range(prevHead + 1, newHead.header.level - prevHead - 1).pipe(
+          concatMap((level) => this.context.readProvider.getBlock(level)),
+          endWith(newHead)
+        );
+      }),
+      tap((newHead) => (this.lastHead = newHead)),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnError: false,
+        resetOnComplete: false,
+        resetOnRefCountZero: false,
+      })
+    );
+    this.confirmed$ = this.newHead$.pipe(
+      map((head) => {
+        for (const opGroup of head.operations) {
+          for (const op of opGroup) {
+            if (op.hash === this.opHash) {
+              this._included = true;
+              this._includedInBlock.next(head);
+              this._operationResult.next(op.contents as OperationContentsAndResult[]);
+
+              // Return the block where the operation was found
+              return head;
+            }
+          }
+        }
+      }),
+      filter<BlockResponse | undefined, BlockResponse>((x): x is BlockResponse => {
+        return typeof x !== 'undefined';
+      }),
+      first(),
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnError: false,
+        resetOnComplete: false,
+        resetOnRefCountZero: false,
+      })
+    );
     this.confirmed$
       .pipe(
         first(),

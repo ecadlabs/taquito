@@ -40,7 +40,7 @@
         "taquito-local-forging/src/taquito-local-forging.ts"
       ],
       "@taquito/michel-codec": [
-        "taquito-michelson-encoder/src/taquito-michel-codec.ts"
+        "taquito-michel-codec/src/taquito-michel-codec.ts"
       ],
       "@taquito/michelson-encoder": [
         "taquito-michelson-encoder/src/taquito-michelson-encoder.ts"
