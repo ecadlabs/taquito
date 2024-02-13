@@ -270,6 +270,10 @@ export const entrypointMapping: { [key: string]: string } = {
   '03': 'set_delegate',
   '04': 'remove_delegate',
   '05': 'deposit',
+  '06': 'stake',
+  '07': 'unstake',
+  '08': 'finalize_unstake',
+  '09': 'set_delegate_parameters',
 };
 
 export const entrypointMappingReverse = (() => {
