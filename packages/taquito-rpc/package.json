@@ -7,11 +7,10 @@
     "blockchain",
     "rpc"
   ],
-  "main": "dist/taquito-rpc.min.js",
+  "main": "dist/taquito-rpc.js",
   "module": "dist/taquito-rpc.es6.js",
   "source": "src/taquito-rpc.ts",
   "types": "dist/types/taquito-rpc.d.ts",
-  "typings": "dist/types/taquito-rpc.d.ts",
   "files": [
     "dist"
   ],
@@ -35,7 +34,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {

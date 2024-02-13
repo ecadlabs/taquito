@@ -1,8 +1,4 @@
 {
   "extends": "../../tsconfig.prod.json",
-  "compilerOptions": {
-    "declarationDir": "dist/types",
-    "outDir": "dist/lib",
-  },
   "include": ["src"]
 }

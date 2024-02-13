@@ -6,11 +6,10 @@
     "tezos",
     "sapling"
   ],
-  "main": "dist/taquito-sapling.min.js",
+  "main": "dist/taquito-sapling.js",
   "module": "dist/taquito-sapling.es6.js",
   "source": "src/taquito-sapling.ts",
   "types": "dist/types/taquito-sapling.d.ts",
-  "typings": "dist/types/taquito-sapling.d.ts",
   "files": [
     "dist",
     "fetch-sapling-params.js"
@@ -35,7 +34,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
     "postinstall": "node fetch-sapling-params.js"
   },

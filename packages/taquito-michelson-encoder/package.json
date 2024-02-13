@@ -8,11 +8,10 @@
     "michelson",
     "smart-contract"
   ],
-  "main": "dist/taquito-michelson-encoder.min.js",
+  "main": "dist/taquito-michelson-encoder.js",
   "module": "dist/taquito-michelson-encoder.es6.js",
   "source": "src/taquito-michelson-encoder.ts",
   "types": "dist/types/taquito-michelson-encoder.d.ts",
-  "typings": "dist/types/taquito-michelson-encoder.d.ts",
   "files": [
     "dist"
   ],
@@ -36,7 +35,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {

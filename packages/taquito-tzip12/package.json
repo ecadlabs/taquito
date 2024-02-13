@@ -7,11 +7,10 @@
     "blockchain",
     "tzip12"
   ],
-  "main": "dist/taquito-tzip12.min.js",
+  "main": "dist/taquito-tzip12.js",
   "module": "dist/taquito-tzip12.es6.js",
   "source": "src/taquito-tzip12.ts",
   "types": "dist/types/taquito-tzip12.d.ts",
-  "typings": "dist/types/taquito-tzip12.d.ts",
   "files": [
     "dist"
   ],
@@ -33,7 +32,7 @@
     "prebuild": "rimraf dist",
     "test": "jest --collectCoverage",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {

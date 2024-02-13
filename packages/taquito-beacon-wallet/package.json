@@ -7,11 +7,10 @@
     "blockchain",
     "websocket"
   ],
-  "main": "dist/taquito-beacon-wallet.min.js",
+  "main": "dist/taquito-beacon-wallet.js",
   "module": "dist/taquito-beacon-wallet.es6.js",
   "source": "src/taquito-beacon-wallet.ts",
   "types": "dist/types/taquito-beacon-wallet.d.ts",
-  "typings": "dist/types/taquito-beacon-wallet.d.ts",
   "files": [
     "dist"
   ],
@@ -35,7 +34,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {

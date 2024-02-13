@@ -5,11 +5,10 @@
   "keywords": [
     "tezos"
   ],
-  "main": "dist/taquito-contracts-library.min.js",
+  "main": "dist/taquito-contracts-library.js",
   "module": "dist/taquito-contracts-library.es6.js",
   "source": "src/taquito-contracts-library.ts",
   "types": "dist/types/taquito-contracts-library.d.ts",
-  "typings": "dist/types/taquito-contracts-library.d.ts",
   "files": [
     "dist"
   ],
@@ -33,7 +32,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/taquito-contracts-library/src/* dist/types",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {

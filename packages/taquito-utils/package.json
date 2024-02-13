@@ -8,11 +8,10 @@
     "michelson",
     "smart-contract"
   ],
-  "main": "dist/taquito-utils.min.js",
+  "main": "dist/taquito-utils.js",
   "module": "dist/taquito-utils.es6.js",
   "source": "src/taquito-utils.ts",
   "types": "dist/types/taquito-utils.d.ts",
-  "typings": "dist/types/taquito-utils.d.ts",
   "files": [
     "dist"
   ],
@@ -33,7 +32,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
     "test": "jest"
   },

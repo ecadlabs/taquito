@@ -5,11 +5,10 @@
   "keywords": [
     "tezos"
   ],
-  "main": "dist/taquito-http-utils.min.js",
+  "main": "dist/taquito-http-utils.js",
   "module": "dist/taquito-http-utils.es6.js",
   "source": "src/taquito-http-utils.ts",
   "types": "dist/types/taquito-http-utils.d.ts",
-  "typings": "dist/types/taquito-http-utils.d.ts",
   "files": [
     "dist"
   ],
@@ -30,7 +29,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {

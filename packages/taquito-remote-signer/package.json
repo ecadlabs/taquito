@@ -6,11 +6,10 @@
     "tezos",
     "blockchain"
   ],
-  "main": "dist/taquito-remote-signer.min.js",
+  "main": "dist/taquito-remote-signer.js",
   "module": "dist/taquito-remote-signer.es6.js",
   "source": "src/taquito-remote-signer.ts",
   "types": "dist/types/taquito-remote-signer.d.ts",
-  "typings": "dist/types/taquito-remote-signer.d.ts",
   "files": [
     "dist"
   ],
@@ -32,7 +31,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {

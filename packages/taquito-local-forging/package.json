@@ -7,11 +7,10 @@
     "blockchain",
     "signer"
   ],
-  "main": "dist/taquito-local-forging.min.js",
+  "main": "dist/taquito-local-forging.js",
   "module": "dist/taquito-local-forging.es6.js",
   "source": "src/taquito-local-forging.ts",
   "types": "dist/types/taquito-local-forging.d.ts",
-  "typings": "dist/types/taquito-local-forging.d.ts",
   "files": [
     "dist"
   ],
@@ -35,7 +34,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
     "build-webpack": "webpack --progress --color"
   },

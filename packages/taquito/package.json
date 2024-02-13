@@ -6,12 +6,10 @@
     "tezos",
     "blockchain"
   ],
-  "main": "dist/taquito.min.js",
-  "unpkg": "dist/taquito.min.js",
+  "main": "dist/taquito.js",
   "module": "dist/taquito.es6.js",
   "source": "src/taquito.ts",
   "types": "dist/types/taquito.d.ts",
-  "typings": "dist/types/taquito.d.ts",
   "files": [
     "dist"
   ],
@@ -38,7 +36,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ./version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs && npm run build:web",
     "build:web": "webpack && node update-readme.js",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"

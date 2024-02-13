@@ -7,11 +7,10 @@
     "blockchain",
     "signer"
   ],
-  "main": "dist/taquito-signer.min.js",
+  "main": "dist/taquito-signer.js",
   "module": "dist/taquito-signer.es6.js",
   "source": "src/taquito-signer.ts",
   "types": "dist/types/taquito-signer.d.ts",
-  "typings": "dist/types/taquito-signer.d.ts",
   "files": [
     "dist"
   ],
@@ -35,7 +34,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {

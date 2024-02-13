@@ -7,11 +7,10 @@
     "blockchain",
     "ledger"
   ],
-  "main": "dist/taquito-ledger-signer.min.js",
+  "main": "dist/taquito-ledger-signer.js",
   "module": "dist/taquito-ledger-signer.es6.js",
   "source": "src/taquito-ledger-signer.ts",
   "types": "dist/types/taquito-ledger-signer.d.ts",
-  "typings": "dist/types/taquito-ledger-signer.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -29,7 +28,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "microbundle && mv dist/types/*/src/* dist/types/",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
     "test": "jest --coverage"
   },
