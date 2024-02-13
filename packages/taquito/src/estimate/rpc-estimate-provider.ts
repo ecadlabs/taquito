@@ -156,7 +156,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
 
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -192,7 +192,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -226,7 +226,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -261,7 +261,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -306,7 +306,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -364,7 +364,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -393,7 +393,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -413,7 +413,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -434,7 +434,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -453,7 +453,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -476,7 +476,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= 161;
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
