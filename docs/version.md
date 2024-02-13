@@ -2,6 +2,20 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v19.0.2
+
+### Bug Fixes
+- `@taquito/local-forging` - Added the correct constants for staking/unstaking in the forger [PR#2824](https://github.com/ecadlabs/taquito/pull/2824)
+
+
+# Taquito v19.0.1
+
+### Dependency updates
+- Updated Beacon version to v4.1.2 [PR#2811](https://github.com/ecadlabs/taquito/pull/2811)
+
+### Documentation
+- Removed Sapling live code examples from the website due to large bundle sizes, static code examples will still exist [PR#2810](https://github.com/ecadlabs/taquito/pull/2810)
+
 # Taquito v19.0.0
 
 :::info

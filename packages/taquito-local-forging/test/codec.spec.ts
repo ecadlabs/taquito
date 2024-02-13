@@ -269,7 +269,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() =>
       entrypointDecoder(
         Uint8ArrayConsumer.fromHexString(
-          '085c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+          '0a5c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
     ).toThrow(OversizedEntryPointError);
@@ -277,7 +277,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() =>
       entrypointDecoder(
         Uint8ArrayConsumer.fromHexString(
-          '085c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+          '0a5c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
     ).toThrow(
