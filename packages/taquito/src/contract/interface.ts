@@ -23,6 +23,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  SmartRollupExecuteOutboxMessageParams,
   FailingNoopParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
@@ -34,6 +35,7 @@ import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
+import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-rollup-execute-outbox-message-operation';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
 
 export type ContractSchema = Schema | unknown;
@@ -273,6 +275,16 @@ export interface ContractProvider extends StorageProvider {
    * @param SmartRollupOriginateParams smartRollupOriginate operation parameter
    */
   smartRollupOriginate(params: SmartRollupOriginateParams): Promise<SmartRollupOriginateOperation>;
+  /**
+   * @description Execute a message from a smart rollup's outbox of a cemented commitment
+   *
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param SmartRollupExecuteOutboxMessageParams smartRollupExecuteOutboxMessage operation parameter
+   */
+  smartRollupExecuteOutboxMessage(
+    params: SmartRollupExecuteOutboxMessageParams
+  ): Promise<SmartRollupExecuteOutboxMessageOperation>;
 
   /**
    *

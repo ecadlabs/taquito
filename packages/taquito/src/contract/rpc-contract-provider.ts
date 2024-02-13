@@ -13,6 +13,7 @@ import {
   OperationContentsReveal,
   OperationContentsSmartRollupAddMessages,
   OperationContentsSmartRollupOriginate,
+  OperationContentsSmartRollupExecuteOutboxMessage,
   OperationContentsTransaction,
   OperationContentsTransferTicket,
   OperationContentsUpdateConsensusKey,
@@ -53,6 +54,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  SmartRollupExecuteOutboxMessageParams,
   FailingNoopParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
@@ -68,6 +70,7 @@ import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
+import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-rollup-execute-outbox-message-operation';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
@@ -670,6 +673,35 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
 
     return new SmartRollupOriginateOperation(
+      hash,
+      content,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   * @description Execute a message from a smart rollup's outbox of a cemented commitment
+   * @param SmartRollupExecuteOutboxMessageParams
+   * @returns An operation handle with results from the RPC node
+   */
+  async smartRollupExecuteOutboxMessage(params: SmartRollupExecuteOutboxMessageParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.smartRollupExecuteOutboxMessage.bind(this.estimator)
+    );
+
+    const prepared = await this.prepare.smartRollupExecuteOutboxMessage({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE
+    ) as OperationContentsSmartRollupExecuteOutboxMessage;
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+
+    return new SmartRollupExecuteOutboxMessageOperation(
       hash,
       content,
       publicKeyHash,
