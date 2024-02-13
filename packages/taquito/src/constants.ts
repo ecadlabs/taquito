@@ -1,21 +1,22 @@
-//  value is based on octez-client reveal operation gasLimit of each address type
-export const DEFAULT_GAS_LIMIT = {
-  REVEAL_TZ1: 169,
-  REVEAL_TZ2: 155,
-  REVEAL_TZ3: 445,
-  REVEAL_TZ4: 1674,
+// value is based on octez-client reveal operation gasLimit of each address type
+const REVEAL_GAS_LIMIT = {
+  TZ1: 169,
+  TZ2: 155,
+  TZ3: 445,
+  TZ4: 1674,
 };
-//  value is based on octez-client reveal operation fee of each address type
-export const DEFAULT_FEE = {
-  REVEAL_TZ1: 276,
-  REVEAL_TZ2: 276,
-  REVEAL_TZ3: 305,
-  REVEAL_TZ4: 477,
+// value is based on octez-client reveal operation fee of each address type
+const REVEAL_FEE = {
+  TZ1: 276,
+  TZ2: 276,
+  TZ3: 305,
+  TZ4: 477,
 };
-export const DEFAULT_STORAGE_LIMIT = {
-  REVEAL: 0,
-};
-
+// value is based on octez-client reveal operation storageLimit of all address type
+export const REVEAL_STORAGE_LIMIT = 0;
+// protocol constants
+export const ORIGINATION_SIZE = 257;
+// protocol constants
 export const COST_PER_BYTE = 250;
 
 export enum Protocols {
@@ -85,13 +86,13 @@ export const getRevealGasLimit = (address: string) =>
 const getRevealGasLimitInternal = (address: string) => {
   switch (address.substring(0, 3)) {
     case 'tz1':
-      return DEFAULT_GAS_LIMIT.REVEAL_TZ1;
+      return REVEAL_GAS_LIMIT.TZ1;
     case 'tz2':
-      return DEFAULT_GAS_LIMIT.REVEAL_TZ2;
+      return REVEAL_GAS_LIMIT.TZ2;
     case 'tz3':
-      return DEFAULT_GAS_LIMIT.REVEAL_TZ3;
+      return REVEAL_GAS_LIMIT.TZ3;
     case 'tz4':
-      return DEFAULT_GAS_LIMIT.REVEAL_TZ4;
+      return REVEAL_GAS_LIMIT.TZ4;
     default:
       throw new Error(`Cannot estimate reveal gas limit for ${address}`);
   }
@@ -102,13 +103,13 @@ export const getRevealFee = (address: string) => getRevealFeeInternal(address);
 const getRevealFeeInternal = (address: string) => {
   switch (address.substring(0, 3)) {
     case 'tz1':
-      return DEFAULT_FEE.REVEAL_TZ1;
+      return REVEAL_FEE.TZ1;
     case 'tz2':
-      return DEFAULT_FEE.REVEAL_TZ2;
+      return REVEAL_FEE.TZ2;
     case 'tz3':
-      return DEFAULT_FEE.REVEAL_TZ3;
+      return REVEAL_FEE.TZ3;
     case 'tz4':
-      return DEFAULT_FEE.REVEAL_TZ4;
+      return REVEAL_FEE.TZ4;
     default:
       throw new Error(`Cannot estimate reveal gas limit for ${address}`);
   }

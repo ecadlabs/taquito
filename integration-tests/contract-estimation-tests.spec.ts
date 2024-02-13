@@ -52,7 +52,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     it('Verify .estimate.transfer with unallocated destination', async () => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
       expect(estimate.gasLimit).toEqual(101);
-      expect(estimate.storageLimit).toEqual(277);
+      expect(estimate.storageLimit).toEqual(257);
       expect(estimate.suggestedFeeMutez).toEqual(188);
       expect(estimate.burnFeeMutez).toEqual(69250);
       expect(estimate.minimalFeeMutez).toEqual(168);
@@ -68,7 +68,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         storage: 0,
       });
       expect(estimate.gasLimit).toEqual(677);
-      expect(estimate.storageLimit).toEqual(591);
+      expect(estimate.storageLimit).toEqual(571);
       expect(estimate.suggestedFeeMutez).toEqual(537);
       expect(estimate.burnFeeMutez).toEqual(147750);
       expect(estimate.minimalFeeMutez).toEqual(517);
@@ -113,7 +113,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       ).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(1471);
-      expect(estimate.storageLimit).toEqual(534);
+      expect(estimate.storageLimit).toEqual(514);
       expect(estimate.suggestedFeeMutez).toEqual(457);
       expect(estimate.burnFeeMutez).toEqual(133500);
       expect(estimate.minimalFeeMutez).toEqual(437);
@@ -126,7 +126,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const tx = contract.methods.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(1767);
-      expect(estimate.storageLimit).toEqual(337);
+      expect(estimate.storageLimit).toEqual(317);
       expect(estimate.suggestedFeeMutez).toEqual(433);
       expect(estimate.burnFeeMutez).toEqual(84250);
       expect(estimate.minimalFeeMutez).toEqual(413);
@@ -139,7 +139,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const tx = contract.methods.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(2293);
-      expect(estimate.storageLimit).toEqual(654);
+      expect(estimate.storageLimit).toEqual(634);
       expect(estimate.suggestedFeeMutez).toEqual(551);
       expect(estimate.burnFeeMutez).toEqual(163500);
       expect(estimate.minimalFeeMutez).toEqual(531);

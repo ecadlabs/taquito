@@ -28,10 +28,8 @@ import { PreparedOperation } from '../prepare';
 import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
 
 export class RPCEstimateProvider extends Provider implements EstimationProvider {
-  private readonly ALLOCATION_STORAGE = 257;
-  private readonly ORIGINATION_STORAGE = 257;
   private readonly OP_SIZE_REVEAL = 324; // injecting size tz1=320, tz2=322, tz3=322, tz4=420(not supported)
-  private readonly MILLIGAS_BUFFER = 100 * 1000;
+  private readonly MILLIGAS_BUFFER = 100 * 1000; // 100 buffer depends on operation kind
 
   private prepare = new PrepareProvider(this.context);
 
@@ -51,7 +49,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   private getEstimationPropertiesFromOperationContent(
     content: PreapplyResponse['contents'][0],
     size: number,
-    costPerByte: BigNumber
+    costPerByte: BigNumber,
+    originationSize: number
   ): EstimateProperties {
     const operationResults = flattenOperationResult({ contents: [content] });
     let consumedMilligas = 0;
@@ -59,8 +58,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     operationResults.forEach((result) => {
       consumedMilligas += Number(result.consumed_milligas) || 0;
       // transfer to unrevealed implicit
+      accumulatedStorage += 'allocated_destination_contract' in result ? originationSize : 0;
+      // originate
       accumulatedStorage +=
-        'allocated_destination_contract' in result ? this.ALLOCATION_STORAGE : 0;
+        'originated_contracts' in result && Array.isArray(result.originated_contracts)
+          ? result.originated_contracts.length * originationSize
+          : 0;
       // register_global_constants
       accumulatedStorage +=
         'storage_size' in result && 'global_address' in result
@@ -69,11 +72,6 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       // transfer_ticket, originate, contract_call
       accumulatedStorage +=
         'paid_storage_size_diff' in result ? Number(result.paid_storage_size_diff) || 0 : 0;
-      // originate
-      accumulatedStorage +=
-        'originated_contracts' in result && Array.isArray(result.originated_contracts)
-          ? result.originated_contracts.length * this.ORIGINATION_STORAGE
-          : 0;
       //smart_rollup_originate
       accumulatedStorage += 'genesis_commitment_hash' in result ? Number(result.size) || 0 : 0;
     });
@@ -99,7 +97,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
   private async calculateEstimates(
     op: PreparedOperation,
-    constants: Pick<ConstantsResponse, 'cost_per_byte'>
+    constants: Pick<ConstantsResponse, 'cost_per_byte' | 'origination_size'>
   ) {
     const {
       opbytes,
@@ -111,7 +109,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     };
 
     const { opResponse } = await this.simulate(operation);
-    const { cost_per_byte } = constants;
+    const { cost_per_byte, origination_size } = constants;
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
     // Fail early in case of errors
@@ -136,7 +134,8 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         x,
         // diff between estimated and injecting OP_SIZE is 124-126, we added buffer to use 130
         x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : (opbytes.length + 130) / 2 / numberOfOps,
-        cost_per_byte
+        cost_per_byte,
+        origination_size ?? 257 // protocol constants
       );
     });
   }
