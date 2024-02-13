@@ -100,7 +100,7 @@ export class Estimate {
    * @description The suggested fee for the operation which includes minimal fees and a small buffer.
    */
   get suggestedFeeMutez() {
-    return this.roundUp(this.operationFeeMutez + MINIMAL_FEE_MUTEZ * 1.1);
+    return this.roundUp(this.operationFeeMutez + MINIMAL_FEE_MUTEZ * 1.2);
   }
 
   /**

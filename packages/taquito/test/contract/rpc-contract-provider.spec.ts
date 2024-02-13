@@ -821,7 +821,7 @@ describe('RpcContractProvider test', () => {
             {
               delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
               counter: '2',
-              fee: '390',
+              fee: '400',
               gas_limit: '1000',
               kind: 'delegation',
               source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
@@ -868,7 +868,7 @@ describe('RpcContractProvider test', () => {
             {
               delegate: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               counter: '2',
-              fee: '390',
+              fee: '400',
               gas_limit: '1000',
               kind: 'delegation',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
@@ -895,7 +895,7 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               counter: '1',
-              fee: '274',
+              fee: '284',
               gas_limit: '1000',
               kind: 'reveal',
               public_key: 'test_pub_key',
@@ -927,7 +927,7 @@ describe('RpcContractProvider test', () => {
             {
               value: { prim: 'Pair', args: [{ int: '999' }, { int: '999' }] },
               counter: '2',
-              fee: '375',
+              fee: '385',
               gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
@@ -962,7 +962,7 @@ describe('RpcContractProvider test', () => {
             {
               kind: 'increase_paid_storage',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '375',
+              fee: '385',
               gas_limit: '1230',
               storage_limit: '93',
               amount: '1',
@@ -993,7 +993,7 @@ describe('RpcContractProvider test', () => {
             {
               kind: 'increase_paid_storage',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '375',
+              fee: '385',
               gas_limit: '1230',
               storage_limit: '93',
               amount: '1',
@@ -1292,7 +1292,7 @@ describe('RpcContractProvider test', () => {
             {
               kind: 'smart_rollup_add_messages',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '375',
+              fee: '385',
               gas_limit: '1230',
               storage_limit: '93',
               message: [
@@ -1326,7 +1326,7 @@ describe('RpcContractProvider test', () => {
             {
               kind: 'smart_rollup_add_messages',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '375',
+              fee: '385',
               gas_limit: '1230',
               storage_limit: '93',
               message: [
@@ -1466,7 +1466,7 @@ describe('RpcContractProvider test', () => {
                 prim: 'bytes',
               },
               counter: '2',
-              fee: '333',
+              fee: '343',
               gas_limit: '1230',
               kind: 'smart_rollup_originate',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
@@ -1552,7 +1552,7 @@ describe('RpcContractProvider test', () => {
                 prim: 'bytes',
               },
               counter: '1',
-              fee: '333',
+              fee: '343',
               gas_limit: '1230',
               kind: 'smart_rollup_originate',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',

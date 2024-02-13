@@ -32,7 +32,6 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   private readonly ORIGINATION_STORAGE = 257;
   private readonly OP_SIZE_REVEAL = 324; // injecting size tz1=320, tz2=322, tz3=322, tz4=420(not supported)
   private readonly MILLIGAS_BUFFER = 100 * 1000;
-  private readonly STORAGE_BUFFER = 20;
 
   private prepare = new PrepareProvider(this.context);
 
@@ -83,7 +82,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         milligasLimit: isOpWithGasBuffer(content)
           ? consumedMilligas + Number(this.MILLIGAS_BUFFER)
           : consumedMilligas,
-        storageLimit: accumulatedStorage > 0 ? accumulatedStorage + this.STORAGE_BUFFER : 0,
+        storageLimit: accumulatedStorage || 0,
         opSize: size,
         minimalFeePerStorageByteMutez: costPerByte.toNumber(),
       };
