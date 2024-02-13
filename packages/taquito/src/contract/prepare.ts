@@ -27,10 +27,12 @@ import {
   RPCUpdateConsensusKeyOperation,
   SmartRollupAddMessagesParams,
   RPCSmartRollupAddMessagesOperation,
+  SmartRollupOriginateParams,
   RPCSmartRollupOriginateOperation,
+  SmartRollupExecuteOutboxMessageParams,
+  RPCSmartRollupOutboxMessageOperation,
   ActivationParams,
   RPCActivateOperation,
-  SmartRollupOriginateParams,
 } from '../operations/types';
 import {
   DEFAULT_FEE,
@@ -336,4 +338,25 @@ export const createSmartRollupOriginateOperation = async ({
     kernel,
     parameters_ty: parametersType,
   } as RPCSmartRollupOriginateOperation;
+};
+
+export const createSmartRollupExecuteOutboxMessageOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  rollup,
+  cementedCommitment,
+  outputProof,
+}: SmartRollupExecuteOutboxMessageParams) => {
+  return {
+    kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    rollup,
+    cemented_commitment: cementedCommitment,
+    output_proof: outputProof,
+  } as RPCSmartRollupOutboxMessageOperation;
 };
