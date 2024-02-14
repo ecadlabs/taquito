@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   describe('Test fetching constants for all protocols on Mainnet', () => {
     const rpcUrl = 'https://mainnet.ecadinfra.com/';
     Tezos.setRpcProvider(rpcUrl);
-    it(`successfully fetches Proto18(oxford2) constants at head`, async () => {
+    it(`successfully fetches Proto19(oxford2) constants at head`, async () => {
       const constants: ConstantsResponseProto019 = await Tezos.rpc.getConstants();
       expect(constants).toEqual({
         adaptive_issuance_activation_vote_enable: false,
@@ -143,7 +143,6 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
     oxfordnet(`successfully fetches all constants for oxfordnet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
       const constants: ConstantsResponseProto019 = await Tezos.rpc.getConstants();
-
       expect(constants).toEqual({
         adaptive_issuance_activation_vote_enable: false,
         adaptive_issuance_launch_ema_threshold: 100000000,
