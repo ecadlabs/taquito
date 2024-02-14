@@ -956,7 +956,7 @@ ledger.set(
 );
 
 const url = 'https://storage.googleapis.com/tzip-16/fa2-views.json';
-const bytesUrl = char2Bytes(url);
+const bytesUrl = byteStringToHexString(url);
 const metadata = new MichelsonMap();
 metadata.set('', bytesUrl);
 
@@ -964,15 +964,15 @@ const operators = new MichelsonMap();
 
 const tokens = new MichelsonMap();
 const metadataMap0 = new MichelsonMap();
-metadataMap0.set('', char2Bytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
-metadataMap0.set('name', char2Bytes('Name from URI is prioritized!'));
+metadataMap0.set('', byteStringToHexString('https://storage.googleapis.com/tzip-16/token-metadata.json'));
+metadataMap0.set('name', byteStringToHexString('Name from URI is prioritized!'));
 const metadataMap1 = new MichelsonMap();
-metadataMap1.set('name', char2Bytes('AliceToken'));
-metadataMap1.set('symbol', char2Bytes('ALC'));
+metadataMap1.set('name', byteStringToHexString('AliceToken'));
+metadataMap1.set('symbol', byteStringToHexString('ALC'));
 metadataMap1.set('decimals', '30');
-metadataMap1.set('extra', char2Bytes('Add more data'));
+metadataMap1.set('extra', byteStringToHexString('Add more data'));
 const metadataMap2 = new MichelsonMap();
-metadataMap2.set('name', char2Bytes('Invalid token metadata'));
+metadataMap2.set('name', byteStringToHexString('Invalid token metadata'));
 tokens.set('0', {
   metadata_map: metadataMap0,
   total_supply: '20000',
@@ -1059,8 +1059,8 @@ const metadataJSON = {
 };
 
 const metadataBigMap = new MichelsonMap();
-metadataBigMap.set('', char2Bytes('tezos-storage:here'));
-metadataBigMap.set('here', char2Bytes(JSON.stringify(metadataJSON)));
+metadataBigMap.set('', byteStringToHexString('tezos-storage:here'));
+metadataBigMap.set('here', byteStringToHexString(JSON.stringify(metadataJSON)));
 
 const tacoShopStorageMap = new MichelsonMap();
 
@@ -1115,7 +1115,7 @@ storage (pair (big_map %metadata string bytes)
 
 ```js
 const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
-const bytesUrl = char2Bytes(url);
+const bytesUrl = byteStringToHexString(url);
 
 const metadataBigMap = new MichelsonMap();
 metadataBigMap.set('', bytesUrl);
@@ -1177,7 +1177,7 @@ const urlPercentEncoded = encodeURIComponent(
 );
 const metadataSha256 = '0x7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b';
 const url = 'sha256://' + metadataSha256 + '/https:' + urlPercentEncoded;
-const bytesUrl = char2Bytes(url);
+const bytesUrl = byteStringToHexString(url);
 
 const metadataBigMap = new MichelsonMap();
 metadataBigMap.set('', bytesUrl);
@@ -1235,7 +1235,7 @@ storage (pair (big_map %metadata string bytes)
 
 ```js
 const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
-const bytesUrl = char2Bytes(uri);
+const bytesUrl = byteStringToHexString(uri);
 
 const metadataBigMap = new MichelsonMap();
 metadataBigMap.set('', bytesUrl);
@@ -1291,8 +1291,8 @@ storage (pair nat (big_map %metadata string bytes));
 
 ```js
 const metadataBigMAp = new MichelsonMap();
-metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample1)));
+metadataBigMAp.set('', byteStringToHexString('tezos-storage:here'));
+metadataBigMAp.set('here', byteStringToHexString(JSON.stringify(metadataViewsExample1)));
 
 const op = await tezos.contract.originate({
   code: contractCode,
@@ -1340,8 +1340,8 @@ storage (pair nat (big_map %metadata string bytes));
 
 ```js
 const metadataBigMAp = new MichelsonMap();
-metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample2)));
+metadataBigMAp.set('', byteStringToHexString('tezos-storage:here'));
+metadataBigMAp.set('here', byteStringToHexString(JSON.stringify(metadataViewsExample2)));
 
 const op = await tezos.contract.originate({
   code: contractCode,

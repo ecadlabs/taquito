@@ -1,7 +1,7 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
-import { char2Bytes } from '@taquito/utils';
+import { byteStringToHexString } from '@taquito/utils';
 
 async function example() {
   const provider = 'https://ghostnet.ecadinfra.com';
@@ -13,7 +13,7 @@ async function example() {
     console.log('Deploying Tzip16Https contract...');
     // location of the contract metadata
     const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
-    const bytesUrl = char2Bytes(url);
+    const bytesUrl = byteStringToHexString(url);
 
     const metadataBigMap = new MichelsonMap();
     metadataBigMap.set("", bytesUrl);

@@ -1,5 +1,5 @@
 import { MichelsonMap, ViewSimulationError } from '@taquito/taquito';
-import { char2Bytes, InvalidUriError } from '@taquito/tzip16';
+import { byteStringToHexString, InvalidUriError } from '@taquito/tzip16';
 import { Tzip12ContractAbstraction } from '../src/tzip12-contract-abstraction';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from '../src/errors';
 
@@ -130,9 +130,9 @@ describe('Tzip12 contract abstraction test', () => {
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
     });
-    tokenMap.set('name', char2Bytes('Taquito'));
-    tokenMap.set('symbol', char2Bytes('XTZ'));
-    tokenMap.set('decimals', char2Bytes('3'));
+    tokenMap.set('name', byteStringToHexString('Taquito'));
+    tokenMap.set('symbol', byteStringToHexString('XTZ'));
+    tokenMap.set('decimals', byteStringToHexString('3'));
 
     // takes as parameter the nat token-id and returns the (pair nat (map string bytes)) value
     mockMichelsonStorageView.executeView.mockResolvedValue({
@@ -192,7 +192,10 @@ describe('Tzip12 contract abstraction test', () => {
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
     });
-    tokenMap.set('', char2Bytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
+    tokenMap.set(
+      '',
+      byteStringToHexString('https://storage.googleapis.com/tzip-16/token-metadata.json')
+    );
 
     mockMichelsonStorageView.executeView.mockResolvedValue({
       token_id: '0',
@@ -211,12 +214,12 @@ describe('Tzip12 contract abstraction test', () => {
 
   it('Test 1 for fetchTokenMetadataFromUri(): Should warn that the URI is invalid and return undefined', async () => {
     const tokenMap = new MichelsonMap();
-    tokenMap.set('test', char2Bytes('test'));
-    tokenMap.set('', char2Bytes('InvalidUriError'));
-    tokenMap.set('testtest', char2Bytes('testtest'));
+    tokenMap.set('test', byteStringToHexString('test'));
+    tokenMap.set('', byteStringToHexString('InvalidUriError'));
+    tokenMap.set('testtest', byteStringToHexString('testtest'));
 
     mockMetadataProvider.provideMetadata.mockImplementation(() => {
-      throw new InvalidUriError(char2Bytes('InvalidUriError'));
+      throw new InvalidUriError(byteStringToHexString('InvalidUriError'));
     });
 
     const tokenMetadata = await tzip12Abs['fetchTokenMetadataFromUri'](
@@ -227,8 +230,8 @@ describe('Tzip12 contract abstraction test', () => {
 
   it('Test 2 for fetchTokenMetadataFromUri(): Should return undefined when no URI', async () => {
     const tokenMap = new MichelsonMap();
-    tokenMap.set('test', char2Bytes('test'));
-    tokenMap.set('testtest', char2Bytes('testtest'));
+    tokenMap.set('test', byteStringToHexString('test'));
+    tokenMap.set('testtest', byteStringToHexString('testtest'));
 
     const tokenMetadata = await tzip12Abs['fetchTokenMetadataFromUri'](
       tokenMap as MichelsonMap<string, string>
@@ -250,9 +253,9 @@ describe('Tzip12 contract abstraction test', () => {
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
     });
-    tokenMap.set('name', char2Bytes('Taquito'));
-    tokenMap.set('symbol', char2Bytes('XTZ'));
-    tokenMap.set('decimals', char2Bytes('3'));
+    tokenMap.set('name', byteStringToHexString('Taquito'));
+    tokenMap.set('symbol', byteStringToHexString('XTZ'));
+    tokenMap.set('decimals', byteStringToHexString('3'));
 
     // takes as parameter the nat token-id and returns the (pair nat (map string bytes)) value
     mockMichelsonStorageView.executeView.mockResolvedValue({
@@ -292,9 +295,9 @@ describe('Tzip12 contract abstraction test', () => {
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
     });
-    tokenMap.set('name', char2Bytes('Taquito'));
-    tokenMap.set('symbol', char2Bytes('XTZ'));
-    tokenMap.set('decimals', char2Bytes('3'));
+    tokenMap.set('name', byteStringToHexString('Taquito'));
+    tokenMap.set('symbol', byteStringToHexString('XTZ'));
+    tokenMap.set('decimals', byteStringToHexString('3'));
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue({
       token_id: '0',
       token_info: tokenMap,
@@ -343,9 +346,9 @@ describe('Tzip12 contract abstraction test', () => {
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
     });
-    tokenMap.set('name', char2Bytes('Taquito'));
-    tokenMap.set('symbol', char2Bytes('XTZ'));
-    tokenMap.set('decimals', char2Bytes('3'));
+    tokenMap.set('name', byteStringToHexString('Taquito'));
+    tokenMap.set('symbol', byteStringToHexString('XTZ'));
+    tokenMap.set('decimals', byteStringToHexString('3'));
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue({
       token_id: '0',
       token_info: tokenMap,
@@ -371,10 +374,10 @@ describe('Tzip12 contract abstraction test', () => {
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
     });
-    tokenMap.set('', char2Bytes('https://test'));
-    tokenMap.set('name', char2Bytes('Taquito'));
-    tokenMap.set('symbol', char2Bytes('XTZ'));
-    tokenMap.set('decimals', char2Bytes('3'));
+    tokenMap.set('', byteStringToHexString('https://test'));
+    tokenMap.set('name', byteStringToHexString('Taquito'));
+    tokenMap.set('symbol', byteStringToHexString('XTZ'));
+    tokenMap.set('decimals', byteStringToHexString('3'));
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue({
       token_id: '0',
       token_info: tokenMap,
@@ -409,10 +412,10 @@ describe('Tzip12 contract abstraction test', () => {
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
     });
-    tokenMap.set('', char2Bytes('https://test'));
-    tokenMap.set('name', char2Bytes('Taquito'));
-    tokenMap.set('symbol', char2Bytes('XTZ'));
-    tokenMap.set('decimals', char2Bytes('3'));
+    tokenMap.set('', byteStringToHexString('https://test'));
+    tokenMap.set('name', byteStringToHexString('Taquito'));
+    tokenMap.set('symbol', byteStringToHexString('XTZ'));
+    tokenMap.set('decimals', byteStringToHexString('3'));
 
     // takes as parameter the nat token-id and returns the (pair nat (map string bytes)) value
     mockMichelsonStorageView.executeView.mockResolvedValue({
@@ -438,8 +441,8 @@ describe('Tzip12 contract abstraction test', () => {
       prim: 'map',
       args: [{ prim: 'string' }, { prim: 'bytes' }],
     });
-    tokenMap.set('name', char2Bytes('Taquito'));
-    tokenMap.set('symbol', char2Bytes('XTZ'));
+    tokenMap.set('name', byteStringToHexString('Taquito'));
+    tokenMap.set('symbol', byteStringToHexString('XTZ'));
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue({
       token_id: '0',
       token_info: tokenMap,

@@ -48,12 +48,12 @@ const formattedInput: string = [
 ].join(' ');
 ```
 
-After formatting the string properly, you can convert it into bytes, for example, with the `char2Bytes` function of the `@taquito/utils` package:
+After formatting the string properly, you can convert it into bytes, for example, with the `byteStringToHexString` function of the `@taquito/utils` package:
 
 ```js
-import { char2Bytes } from '@taquito/utils';
+import { byteStringToHexString } from '@taquito/utils';
 
-const bytes = char2Bytes(formattedInput);
+const bytes = byteStringToHexString(formattedInput);
 const bytesLength = (bytes.length / 2).toString(16);
 const addPadding = `00000000${bytesLength}`;
 const paddedBytesLength = addPadding.slice(addPadding.length - 8);
@@ -90,7 +90,7 @@ The wallet will return an object with a `signature` property that holds our sign
 Here is the full code to sign data with a wallet:
 
 ```ts
-import { char2Bytes } from '@taquito/utils';
+import { byteStringToHexString } from '@taquito/utils';
 import { RequestSignPayloadInput, SigningType } from '@airgap/beacon-sdk';
 
 // The data to format
@@ -107,7 +107,7 @@ const formattedInput: string = [
 ].join(' ');
 
 // The bytes to sign
-const bytes = char2Bytes(formattedInput);
+const bytes = byteStringToHexString(formattedInput);
 const bytesLength = (bytes.length / 2).toString(16);
 const addPadding = `00000000${bytesLength}`;
 const paddedBytesLength = addPadding.slice(addPadding.length - 8);

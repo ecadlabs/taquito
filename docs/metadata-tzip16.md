@@ -356,7 +356,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// import { Tzip16Module, tzip16, hexStringToByteString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 Tezos.addExtension(new Tzip16Module());
@@ -375,7 +375,7 @@ Tezos.contract
   })
   .then((result) => {
     println(`Result of the view someJson: ${result}`);
-    println(`Transform result to char: ${bytes2Char(result)}`);
+    println(`Transform result to char: ${hexStringToByteString(result)}`);
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
@@ -385,7 +385,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// import { Tzip16Module, tzip16, hexStringToByteString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 Tezos.addExtension(new Tzip16Module());
@@ -404,7 +404,7 @@ Tezos.wallet
   })
   .then((result) => {
     println(`Result of the view someJson: ${result}`);
-    println(`Transform result to char: ${bytes2Char(result)}`);
+    println(`Transform result to char: ${hexStringToByteString(result)}`);
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

@@ -1,5 +1,5 @@
 import { TezosToolkit } from '@taquito/taquito';
-import { char2Bytes } from '@taquito/utils';
+import { byteStringToHexString } from '@taquito/utils';
 import { tacoContractTzip16 } from "../integration-tests/data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 import { InMemorySigner } from '@taquito/signer';
@@ -33,8 +33,8 @@ async function example() {
     };
 
     const metadataBigMAp = new MichelsonMap();
-    metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataJSON)))
+    metadataBigMAp.set("", byteStringToHexString('tezos-storage:here'));
+    metadataBigMAp.set("here", byteStringToHexString(JSON.stringify(metadataJSON)))
 
     const tacoShopStorageMap = new MichelsonMap();
 
