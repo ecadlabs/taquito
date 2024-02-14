@@ -2,6 +2,12 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v19.0.2
+
+### Bug Fixes
+- `@taquito/local-forging` - Added the correct constants for staking/unstaking in the forger [PR#2824](https://github.com/ecadlabs/taquito/pull/2824)
+
+
 # Taquito v19.0.1
 
 ### Dependency updates
