@@ -211,7 +211,7 @@ Tezos.wallet
 ## Choosing between the `methods` or `methodsObject` members to interact with smart contracts
 
 :::note
-Since Taquito version 16.2.0, we introduced syntax support for nested options in `methodsObject` but not `methods` due to the limitation of the flattened form. We recommend users migrate to using `methodsObject` as its syntax is consistent with storage parameters, supports all Michelson data types, and is continually maintained
+Since Taquito version 16.2.0, we introduced syntax support for nested options in `methodsObject` but not `methods` due to the limitation of the flattened form. We recommend users migrate to using `methodsObject` as its syntax is consistent with storage parameters, supports all Michelson data types, and is continually maintained.
 
 Since Taquito version 10.2.0, parameters can be passed in an object format when calling a smart contract entry point. The `ContractAbstraction` class has a new member called `methodsObject`, which serves the same purpose as the `methods` member. The format expected by the smart contract method differs: methods expect flattened arguments while `methodsObject` expects an object. `methodsObject` provides Taquito users with a way to pass an object when calling a contract entry point using a format similar to that used by the storage parameter when deploying a contract.
 
