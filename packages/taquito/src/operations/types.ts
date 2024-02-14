@@ -77,11 +77,11 @@ export type RPCOpWithSource =
   | RPCSmartRollupOriginateOperation;
 
 export const isOpWithGasBuffer = <
-  T extends { kind: OpKind; parameter?: TransactionOperationParameter },
+  T extends { kind: OpKind; parameters?: TransactionOperationParameter },
 >(
   op: T
 ): boolean => {
-  if (op.kind === OpKind.TRANSACTION && op.parameter) {
+  if (op.kind === OpKind.TRANSACTION && op.parameters) {
     return true;
   } else {
     return (
