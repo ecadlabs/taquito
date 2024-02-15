@@ -58,7 +58,7 @@ export default ({
 
   useEffect(() => {
     async function getDependencies() {
-      const { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE, RpcReadAdapter, UnitValue } = await import('@taquito/taquito');
+      const { TezosToolkit, MichelsonMap, compose, getRevealFee, RpcReadAdapter, UnitValue } = await import('@taquito/taquito');
       const { verifySignature } = await import('@taquito/utils');
       const {
         validateAddress,
