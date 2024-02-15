@@ -1,12 +1,12 @@
 import {
   encodeExpr,
-  byteStringToHexString,
-  hexStringToByteString,
+  stringToBytes,
+  bytesToString,
   encodeOpHash,
   getPkhfromPk,
   encodeKeyHash,
   encodeKey,
-  encodePubKey,
+  encodeAddress,
   b58cdecode,
   prefix,
   Prefix,
@@ -27,27 +27,27 @@ describe('Encode expr', () => {
   });
 });
 
-describe('encodePubKey', () => {
+describe('encodeAddress', () => {
   it('Should encode address properly (tz1)', () => {
-    expect(encodePubKey('0000e96b9f8b19af9c7ffa0c0480e1977b295850961f')).toEqual(
+    expect(encodeAddress('0000e96b9f8b19af9c7ffa0c0480e1977b295850961f')).toEqual(
       'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'
     );
   });
 
   it('Should encode address properly (tz2)', () => {
-    expect(encodePubKey('0001907d6a7e9f084df840d6e67ffa8db5464f87d4d1')).toEqual(
+    expect(encodeAddress('0001907d6a7e9f084df840d6e67ffa8db5464f87d4d1')).toEqual(
       'tz2MVED1t9Jery77Bwm1m5YhUx8Wp5KWWRQe'
     );
   });
 
   it('Should encode address properly (tz3)', () => {
-    expect(encodePubKey('00022165a26786121eff8203bed56ffaf85d6bb25e42')).toEqual(
+    expect(encodeAddress('00022165a26786121eff8203bed56ffaf85d6bb25e42')).toEqual(
       'tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1'
     );
   });
 
   it('Should encode address properly (KT1)', () => {
-    expect(encodePubKey('01f9b689a478253793bd92357c5e08e5ebcd8db47600')).toEqual(
+    expect(encodeAddress('01f9b689a478253793bd92357c5e08e5ebcd8db47600')).toEqual(
       'KT1XM8VUFBiM9AC5czWU15fEeE9nmuEYWt3Y'
     );
   });
@@ -112,63 +112,59 @@ describe('sapling keys', () => {
 describe('String/Bytes conversions', () => {
   it('Should convert a string to bytes', () => {
     // I used the result from http://string-functions.com/string-hex.aspx for the test
-    expect(byteStringToHexString('Taquito is awesome!')).toEqual(
-      '5461717569746f20697320617765736f6d6521'
-    );
+    expect(stringToBytes('Taquito is awesome!')).toEqual('5461717569746f20697320617765736f6d6521');
   });
 
   it('Should convert bytes to string', () => {
-    expect(hexStringToByteString('5461717569746f20697320617765736f6d6521')).toEqual(
-      'Taquito is awesome!'
-    );
+    expect(bytesToString('5461717569746f20697320617765736f6d6521')).toEqual('Taquito is awesome!');
   });
 
   it('Test1: Should convert a string of char (utf-8) to a string of bytes, and convert it back to the same string of char', () => {
     const charString = 'http:';
     const bytes = '687474703a';
 
-    expect(byteStringToHexString(charString)).toEqual(bytes);
-    expect(hexStringToByteString(bytes)).toEqual(charString);
+    expect(stringToBytes(charString)).toEqual(bytes);
+    expect(bytesToString(bytes)).toEqual(charString);
   });
 
   it('Test2: Should convert a string of char (utf-8) to a string of bytes, and convert it back to the same string of char', () => {
     const charString = 'tezos-storage:contents';
     const bytes = '74657a6f732d73746f726167653a636f6e74656e7473';
 
-    expect(byteStringToHexString(charString)).toEqual(bytes);
-    expect(hexStringToByteString(bytes)).toEqual(charString);
+    expect(stringToBytes(charString)).toEqual(bytes);
+    expect(bytesToString(bytes)).toEqual(charString);
   });
 
   it('Test3: Should convert a string of char (utf-8) to a string of bytes, and convert it back to the same string of char', () => {
     const charString = 'tezos-storage:here';
     const bytes = '74657a6f732d73746f726167653a68657265';
 
-    expect(byteStringToHexString(charString)).toEqual(bytes);
-    expect(hexStringToByteString(bytes)).toEqual(charString);
+    expect(stringToBytes(charString)).toEqual(bytes);
+    expect(bytesToString(bytes)).toEqual(charString);
   });
 
   it('Test4: Should convert a string of char (utf-8) to a string of bytes, and convert it back to the same string of char', () => {
     const charString = `{"version":"tzcomet-example v0.0.42"}`;
     const bytes = '7b2276657273696f6e223a22747a636f6d65742d6578616d706c652076302e302e3432227d';
 
-    expect(byteStringToHexString(charString)).toEqual(bytes);
-    expect(hexStringToByteString(bytes)).toEqual(charString);
+    expect(stringToBytes(charString)).toEqual(bytes);
+    expect(bytesToString(bytes)).toEqual(charString);
   });
 
   it('Test5: Should convert a string of char (utf-8) with Emoji to a string of bytes, and convert it back to the same string of char', () => {
     const charString = 'Test 😀, 🤣 & 💰';
     const bytes = '5465737420f09f98802c20f09fa4a3202620f09f92b0';
 
-    expect(byteStringToHexString(charString)).toEqual(bytes);
-    expect(hexStringToByteString(bytes)).toEqual(charString);
+    expect(stringToBytes(charString)).toEqual(bytes);
+    expect(bytesToString(bytes)).toEqual(charString);
   });
 
   it('Test6: Should convert a string of char (utf-8) with naughty string to a string of bytes, and convert it back to the same string of char', () => {
     const charString = '¯_(ツ)_/¯';
     const bytes = 'c2af5f28e38384295f2fc2af';
 
-    expect(byteStringToHexString(charString)).toEqual(bytes);
-    expect(hexStringToByteString(bytes)).toEqual(charString);
+    expect(stringToBytes(charString)).toEqual(bytes);
+    expect(bytesToString(bytes)).toEqual(charString);
   });
 
   it('Test7: Should convert a string of char (utf-8) with naughty string to a string of bytes, and convert it back to the same string of char', () => {
@@ -176,8 +172,8 @@ describe('String/Bytes conversions', () => {
     const bytes =
       'f09d958bf09d9599f09d959620f09d95a2f09d95a6f09d959af09d9594f09d959c20f09d9593f09d95a3f09d95a0f09d95a8f09d959f20f09d9597f09d95a0f09d95a920f09d959bf09d95a6f09d959ef09d95a1f09d95a420f09d95a0f09d95a7f09d9596f09d95a320f09d95a5f09d9599f09d959620f09d959df09d9592f09d95abf09d95aa20f09d9595f09d95a0f09d9598';
 
-    expect(byteStringToHexString(charString)).toEqual(bytes);
-    expect(hexStringToByteString(bytes)).toEqual(charString);
+    expect(stringToBytes(charString)).toEqual(bytes);
+    expect(bytesToString(bytes)).toEqual(charString);
   });
 });
 

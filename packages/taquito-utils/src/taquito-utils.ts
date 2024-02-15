@@ -120,8 +120,28 @@ export function b58decodeL2Address(payload: string) {
  * @description Base58 encode an address using predefined prefix
  *
  * @param value Address to base58 encode (tz1, tz2, tz3 or KT1)
+ * @deprecated use encodeAddress instead, same functionality with a more descriptive name
  */
 export function encodePubKey(value: string) {
+  if (value.substring(0, 2) === '00') {
+    const pref: { [key: string]: Uint8Array } = {
+      '0000': prefix.tz1,
+      '0001': prefix.tz2,
+      '0002': prefix.tz3,
+    };
+
+    return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
+  }
+  return b58cencode(value.substring(2, 42), prefix.KT);
+}
+
+/**
+ *
+ * @description Base58 encode an address using predefined prefix (tz1, tz2, tz3). KT1 is not supported.
+ *
+ * @param value Address to base58 encode (tz1, tz2, tz3 or KT1)
+ */
+export function encodeAddress(value: string) {
   if (value.substring(0, 2) === '00') {
     const pref: { [key: string]: Uint8Array } = {
       '0000': prefix.tz1,
@@ -331,7 +351,7 @@ export const getPkhfromPk = (publicKey: string): string => {
  * @description Convert a string to bytes
  *
  * @param str String to convert
- * @deprecated use byteStringToHexString instead, same functionality with a more descriptive name
+ * @deprecated use stringToBytes instead, same functionality with a more descriptive name
  */
 export function char2Bytes(str: string) {
   return Buffer.from(str, 'utf8').toString('hex');
@@ -339,11 +359,11 @@ export function char2Bytes(str: string) {
 
 /**
  *
- * @description Convert a byte string to a hex string representation
+ * @description Convert a string to a byte string representation
  *
  * @param str String to convert
  */
-export function byteStringToHexString(str: string) {
+export function stringToBytes(str: string) {
   return Buffer.from(str, 'utf8').toString('hex');
 }
 
@@ -360,11 +380,11 @@ export function bytes2Char(hex: string): string {
 
 /**
  *
- * @description Convert hex string representation to bytes
+ * @description Convert byte string representation to string
  *
- * @param str hex string to convert
+ * @param str byte string to convert
  */
-export function hexStringToByteString(hex: string): string {
+export function bytesToString(hex: string): string {
   return Buffer.from(hex2buf(hex)).toString('utf8');
 }
 

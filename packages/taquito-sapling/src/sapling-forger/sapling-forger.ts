@@ -4,7 +4,7 @@ import {
   SaplingTransactionOutput,
   SaplingTransactionPlaintext,
 } from '../types';
-import { byteStringToHexString, toHexBuf } from '@taquito/utils';
+import { stringToBytes, toHexBuf } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 
 export class SaplingForger {
@@ -106,7 +106,7 @@ export class SaplingForger {
 
   forgeTransactionPlaintext(txPlainText: SaplingTransactionPlaintext) {
     const encodedMemo = Buffer.from(
-      byteStringToHexString(txPlainText.memo).padEnd(txPlainText.memoSize, '0'),
+      stringToBytes(txPlainText.memo).padEnd(txPlainText.memoSize, '0'),
       'hex'
     );
     return Buffer.concat([

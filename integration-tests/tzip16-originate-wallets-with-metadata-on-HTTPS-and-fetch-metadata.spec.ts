@@ -1,7 +1,7 @@
 import { CONFIGS } from "./config";
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
-import { tzip16, Tzip16Module, byteStringToHexString } from '@taquito/tzip16';
+import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -20,7 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/empty-metadata.json';
-            const bytesUrl = byteStringToHexString(url);
+            const bytesUrl = stringToBytes(url);
 
             const metadataBigMAp = new MichelsonMap();
             metadataBigMAp.set("", bytesUrl);
@@ -60,7 +60,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
-            const bytesUrl = byteStringToHexString(url);
+            const bytesUrl = stringToBytes(url);
 
             const metadataBigMAp = new MichelsonMap();
             metadataBigMAp.set("", bytesUrl);
@@ -86,7 +86,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/emoji-in-metadata.json';
-            const bytesUrl = byteStringToHexString(url);
+            const bytesUrl = stringToBytes(url);
 
             const metadataBigMAp = new MichelsonMap();
             metadataBigMAp.set("", bytesUrl);
@@ -161,7 +161,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             // location of the contract metadata
             const url = 'https://storage.googleapis.com/tzip-16/invalid.json';
-            const bytesUrl = byteStringToHexString(url);
+            const bytesUrl = stringToBytes(url);
 
             const metadataBigMAp = new MichelsonMap();
             metadataBigMAp.set("", bytesUrl);

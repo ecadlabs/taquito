@@ -18,8 +18,8 @@ export * from './viewKind/viewFactory';
 export { VERSION } from './version';
 
 /**
- * @deprecated `import { hexStringToByteString, byteStringToHexString } from "@taquito/tzip16"` is deprecated in favor of
- * `import { hexStringToByteString, byteStringToHexString } from "@taquito/utils"`
+ * @deprecated `import { bytesToString, stringToBytes } from "@taquito/tzip16"` is deprecated in favor of
+ * `import { bytesToString, stringToBytes } from "@taquito/utils"`
  *
  */
-export { hexStringToByteString, byteStringToHexString } from '@taquito/utils';
+export { bytesToString, stringToBytes } from '@taquito/utils';

@@ -1,6 +1,6 @@
 import { format } from '../src/format';
 import BigNumber from 'bignumber.js';
-import { hexStringToByteString, byteStringToHexString } from '../src/taquito-utils';
+import { bytesToString, stringToBytes } from '../src/taquito-utils';
 
 describe('Format', () => {
   it('Should convert mutez to tz', () => {
@@ -33,7 +33,7 @@ describe('tezostaquito.io example signing formatting', () => {
       'something',
     ].join(' ');
 
-    const bytes = byteStringToHexString(formattedInput);
+    const bytes = stringToBytes(formattedInput);
     const bytesLength = (bytes.length / 2).toString(16);
     const addPadding = `00000000${bytesLength}`;
     const paddedBytesLength = addPadding.slice(addPadding.length - 8);
@@ -42,8 +42,8 @@ describe('tezostaquito.io example signing formatting', () => {
     const check = regex.test(payloadBytes);
     expect(check).toEqual(true);
     expect(payloadBytes.length % 2).toEqual(0);
-    expect(hexStringToByteString(payloadBytes)).toEqual(
-      hexStringToByteString('05' + '01' + paddedBytesLength) + formattedInput
+    expect(bytesToString(payloadBytes)).toEqual(
+      bytesToString('05' + '01' + paddedBytesLength) + formattedInput
     );
   });
 });

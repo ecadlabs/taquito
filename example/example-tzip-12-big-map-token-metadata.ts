@@ -1,6 +1,6 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey, InMemorySigner } from '@taquito/signer';
-import { b58cencode, byteStringToHexString, Prefix, prefix } from '@taquito/utils';
+import { b58cencode, stringToBytes, Prefix, prefix } from '@taquito/utils';
 import { fa2TokenFactory } from '../integration-tests/data/fa2-token-factory';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -51,7 +51,7 @@ async function example() {
 			);
 
 			const url = 'https://storage.googleapis.com/tzip-16/fa2-token-factory.json';
-			const bytesUrl = byteStringToHexString(url);
+			const bytesUrl = stringToBytes(url);
 			const metadata = new MichelsonMap();
 			metadata.set('', bytesUrl);
 
@@ -69,12 +69,12 @@ async function example() {
 
 			const token_metadata = new MichelsonMap();
 			const token1 = new MichelsonMap();
-			token1.set('name', byteStringToHexString('wToken'));
-			token1.set('symbol', byteStringToHexString('wTK'));
+			token1.set('name', stringToBytes('wToken'));
+			token1.set('symbol', stringToBytes('wTK'));
 			token1.set('decimals', '36');
 			const token2 = new MichelsonMap();
-			token2.set('name', byteStringToHexString('AliceToken'));
-			token2.set('symbol', byteStringToHexString('ALC'));
+			token2.set('name', stringToBytes('AliceToken'));
+			token2.set('symbol', stringToBytes('ALC'));
 			token2.set('decimals', '30');
 			token_metadata.set('1', {
 				token_id: '1',

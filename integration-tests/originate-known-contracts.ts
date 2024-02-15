@@ -2,7 +2,7 @@ import { CONFIGS } from './config';
 import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito/taquito';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
-import { byteStringToHexString } from '@taquito/utils';
+import { stringToBytes } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { codeViewsTopLevel } from './data/contract_views_top_level';
 import { knownBigMapContract } from './data/knownBigMapContract';
@@ -118,7 +118,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     );
 
     const url = 'https://storage.googleapis.com/tzip-16/fa2-views.json';
-    const bytesUrl = byteStringToHexString(url);
+    const bytesUrl = stringToBytes(url);
     const metadata = new MichelsonMap();
     metadata.set('', bytesUrl);
 
@@ -126,15 +126,15 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
 
     const tokens = new MichelsonMap();
     const metadataMap0 = new MichelsonMap();
-    metadataMap0.set('', byteStringToHexString('https://storage.googleapis.com/tzip-16/token-metadata.json'));
-    metadataMap0.set('name', byteStringToHexString('Name from URI is prioritized!'));
+    metadataMap0.set('', stringToBytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
+    metadataMap0.set('name', stringToBytes('Name from URI is prioritized!'));
     const metadataMap1 = new MichelsonMap();
-    metadataMap1.set('name', byteStringToHexString('AliceToken'));
-    metadataMap1.set('symbol', byteStringToHexString('ALC'));
+    metadataMap1.set('name', stringToBytes('AliceToken'));
+    metadataMap1.set('symbol', stringToBytes('ALC'));
     metadataMap1.set('decimals', '30');
-    metadataMap1.set('extra', byteStringToHexString('Add more data'));
+    metadataMap1.set('extra', stringToBytes('Add more data'));
     const metadataMap2 = new MichelsonMap();
-    metadataMap2.set('name', byteStringToHexString('Invalid token metadata'));
+    metadataMap2.set('name', stringToBytes('Invalid token metadata'));
     tokens.set('0', {
       metadata_map: metadataMap0,
       total_supply: '20000',

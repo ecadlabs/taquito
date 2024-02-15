@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { tzip16, Tzip16Module, byteStringToHexString } from '@taquito/tzip16';
+import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
 import { MichelsonMap } from "@taquito/taquito";
 import { fa2ContractTzip16 } from "./data/fa2_contract_with_metadata";
 
@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
          // location of the contract metadata
          const url = 'https://storage.googleapis.com/tzip-16/fa2-metadata.json';
-         const bytesUrl = byteStringToHexString(url);
+         const bytesUrl = stringToBytes(url);
 
          const metadataBigMAp = new MichelsonMap();
          metadataBigMAp.set("", bytesUrl);

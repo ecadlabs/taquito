@@ -4,7 +4,7 @@ import {
   Tzip16ContractAbstraction,
   MetadataContext,
   View,
-  hexStringToByteString,
+  bytesToString,
   BigMapId,
 } from '@taquito/tzip16';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './errors';
@@ -130,16 +130,14 @@ export class Tzip12ContractAbstraction {
       try {
         const metadataFromUri = await this.context.metadataProvider.provideMetadata(
           this.contractAbstraction,
-          hexStringToByteString(uri),
+          bytesToString(uri),
           this.context
         );
         return metadataFromUri.metadata;
       } catch (e: any) {
         if (e.name === 'InvalidUriError') {
           console.warn(
-            `The URI ${hexStringToByteString(
-              uri
-            )} is present in the token metadata, but is invalid.`
+            `The URI ${bytesToString(uri)} is present in the token metadata, but is invalid.`
           );
         } else {
           throw e;
@@ -160,14 +158,12 @@ export class Tzip12ContractAbstraction {
       if (keyTokenMetadata === 'decimals') {
         Object.assign(tokenMetadataDecoded, {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          [keyTokenMetadata]: Number(
-            hexStringToByteString(metadataTokenMap.get(keyTokenMetadata)!)
-          ),
+          [keyTokenMetadata]: Number(bytesToString(metadataTokenMap.get(keyTokenMetadata)!)),
         });
       } else if (!(keyTokenMetadata === '')) {
         Object.assign(tokenMetadataDecoded, {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          [keyTokenMetadata]: hexStringToByteString(metadataTokenMap.get(keyTokenMetadata)!),
+          [keyTokenMetadata]: bytesToString(metadataTokenMap.get(keyTokenMetadata)!),
         });
       }
     }

@@ -7,7 +7,7 @@ import {
 } from "@taquito/taquito";
 import type { ContractProvider } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
-import { byteStringToHexString, verifySignature } from "@taquito/utils";
+import { stringToBytes, verifySignature } from "@taquito/utils";
 import { SigningType, type RequestSignPayloadInput } from "@airgap/beacon-sdk";
 import { get } from "svelte/store";
 import type { TestSettings, TestResult } from "./types";
@@ -23,10 +23,10 @@ const preparePayloadToSign = (
   formattedInput: string;
 } => {
   const formattedInput = `Tezos Signed Message: taquito-test-dapp.netlify.app/ ${new Date().toISOString()} ${input}`;
-  const bytes = byteStringToHexString(formattedInput);
+  const bytes = stringToBytes(formattedInput);
   const payload: RequestSignPayloadInput = {
     signingType: SigningType.MICHELINE,
-    payload: "05" + "0100" + byteStringToHexString(bytes.length.toString()) + bytes,
+    payload: "05" + "0100" + stringToBytes(bytes.length.toString()) + bytes,
     sourceAddress: userAddress
   };
   return {
@@ -319,7 +319,7 @@ const signFailingNoop = async (
   input: string,
   tezos: TezosToolkit,
 ): Promise<TestResult> => {
-  const bytes = byteStringToHexString(input);
+  const bytes = stringToBytes(input);
   try {
     const signedPayload = await tezos.wallet.signFailingNoop({
       arbitrary: bytes,
