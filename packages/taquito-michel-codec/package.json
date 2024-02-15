@@ -8,7 +8,7 @@
     "signer"
   ],
   "main": "dist/taquito-michel-codec.js",
-  "module": "dist/taquito-michel-codec.es6.js",
+  "browser": "dist/taquito-michel-codec.browser.js",
   "source": "src/taquito-michel-codec.ts",
   "types": "dist/types/taquito-michel-codec.d.ts",
   "files": [
@@ -34,7 +34,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle && mv dist/types/*/src/* dist/types/",
+    "build": "parcel build",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {
@@ -81,6 +81,7 @@
     "lint-staged": "^14.0.1",
     "lodash.camelcase": "^4.3.0",
     "microbundle": "^0.15.1",
+    "parcel": "^2.11.0",
     "prettier": "^3.0.3",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.1",

@@ -8,7 +8,7 @@
     "signer"
   ],
   "main": "dist/taquito-signer.js",
-  "module": "dist/taquito-signer.es6.js",
+  "browser": "dist/taquito-signer.browser.js",
   "source": "src/taquito-signer.ts",
   "types": "dist/types/taquito-signer.d.ts",
   "files": [
@@ -34,7 +34,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle && mv dist/types/*/src/* dist/types/",
+    "build": "parcel build",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {
@@ -99,6 +99,7 @@
     "lint-staged": "^14.0.1",
     "lodash.camelcase": "^4.3.0",
     "microbundle": "^0.15.1",
+    "parcel": "^2.11.0",
     "prettier": "^3.0.3",
     "prompt": "^1.3.0",
     "replace-in-file": "^7.0.1",

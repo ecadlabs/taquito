@@ -7,7 +7,7 @@
     "blockchain"
   ],
   "main": "dist/taquito-core.js",
-  "module": "dist/taquito-core.es6.js",
+  "browser": "dist/taquito-core.browser.js",
   "source": "src/taquito-core.ts",
   "types": "dist/types/taquito-core.d.ts",
   "files": [
@@ -30,7 +30,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
-    "build": "microbundle",
+    "build": "parcel build",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
     "test": "jest"
   },
@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@types/json-stringify-safe": "^5.0.1",
-    "microbundle": "^0.15.1"
+    "microbundle": "^0.15.1",
+    "parcel": "^2.11.0"
   }
 }
