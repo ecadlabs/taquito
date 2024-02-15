@@ -27,6 +27,10 @@ import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
 import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
 
+// stub signature that won't be verified by tezos rpc simulate_operation
+const STUB_SIGNATURE =
+  'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
+
 export class RPCEstimateProvider extends Provider implements EstimationProvider {
   private readonly OP_SIZE_REVEAL = 324; // injecting size tz1=320, tz2=322, tz3=322, tz4=420(not supported)
   private readonly MILLIGAS_BUFFER = 100 * 1000; // 100 buffer depends on operation kind
@@ -104,7 +108,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       opOb: { branch, contents },
     } = await this.forge(op);
     const operation: RPCSimulateOperationParam = {
-      operation: { branch, contents },
+      operation: { branch, contents, signature: STUB_SIGNATURE },
       chain_id: await this.context.readProvider.getChainId(),
     };
 
