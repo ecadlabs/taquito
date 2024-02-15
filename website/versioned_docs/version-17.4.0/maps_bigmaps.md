@@ -188,7 +188,7 @@ Tezos.contract
         );
 
         //Calling the main method of the contract will modify the storage
-        return myContract.methods.default('1').send();
+        return myContract.methodsObject.default('1').send();
       })
       .then((op) => {
         println(`Waiting for ${op.hash} to be confirmed...`);
@@ -231,7 +231,7 @@ Tezos.wallet
         );
 
         //Calling the main method of the contract will modify the storage
-        return myContract.methods.default('1').send();
+        return myContract.methodsObject.default('1').send();
       })
       .then((op) => {
         println(`Waiting for ${op.opHash} to be confirmed...`);

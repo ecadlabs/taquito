@@ -107,7 +107,7 @@ The `contractCall()` member method can now be used to estimate contract calls as
 Tezos.contract
   .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
-    return contract.methods.increment(7);
+    return contract.methodsObject.increment(7);
   })
   .then((op) => {
     println(`Estimating the smart contract call: `);
@@ -136,7 +136,7 @@ Tezos.contract
 Tezos.wallet
   .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
-    return contract.methods.increment(7);
+    return contract.methodsObject.increment(7);
   })
   .then((op) => {
     println(`Estimating the smart contract call: `);

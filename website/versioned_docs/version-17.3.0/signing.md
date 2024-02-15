@@ -171,9 +171,9 @@ Tezos.signer
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
-First, you provide the Michelson code to be signed as a string along with its type.  
-Then, you create a new instance of the `michel-codec` parser and call the `parseMichelineExpression` on it to get the JSON representation of the Michelson code and type.  
-Once done, you can pack the data using the `packDataBytes` function available in the `@taquito/michel-codec` package.  
+First, you provide the Michelson code to be signed as a string along with its type.
+Then, you create a new instance of the `michel-codec` parser and call the `parseMichelineExpression` on it to get the JSON representation of the Michelson code and type.
+Once done, you can pack the data using the `packDataBytes` function available in the `@taquito/michel-codec` package.
 To finish, use one of the methods presented above to sign the packed data (with the `InMemorySigner` like in this example or with the Beacon SDK).
 
 :::caution
@@ -186,8 +186,8 @@ After forging a signature, you may want to send it to a contract so it can use i
 
 ```js
 const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-const op = await contract.methods
-  .check_signature(public_key, signature, payloadBytes)
+const op = await contract.methodsObject
+  .check_signature({public_key, signature, payloadBytes})
   .send();
 await op.confirmation();
 ```

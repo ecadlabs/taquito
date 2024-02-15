@@ -228,7 +228,7 @@ describe('Ticket_deprecated token', () => {
       expect(() => tokenTicketDeprecatedString.Encode(['hello'])).toThrowError(
         EncodeTicketDeprecatedError
       );
-      expect(() => tokenTicketDeprecatedUnit.Encode(['Unit'])).toThrowError(
+      expect(() => tokenTicketDeprecatedUnit.Encode([UnitValue])).toThrowError(
         EncodeTicketDeprecatedError
       );
     });

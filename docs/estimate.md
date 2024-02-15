@@ -48,19 +48,19 @@ println(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
 Tezos.estimate
   .transfer({ to: address, amount: amount })
   .then((est) => {
-    println(`burnFeeMutez : ${est.burnFeeMutez}, 
-    gasLimit : ${est.gasLimit}, 
-    minimalFeeMutez : ${est.minimalFeeMutez}, 
-    storageLimit : ${est.storageLimit}, 
-    suggestedFeeMutez : ${est.suggestedFeeMutez}, 
-    totalCost : ${est.totalCost}, 
+    println(`burnFeeMutez : ${est.burnFeeMutez},
+    gasLimit : ${est.gasLimit},
+    minimalFeeMutez : ${est.minimalFeeMutez},
+    storageLimit : ${est.storageLimit},
+    suggestedFeeMutez : ${est.suggestedFeeMutez},
+    totalCost : ${est.totalCost},
     usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
   })
   .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
-  <TabItem value="wallet"> 
+  <TabItem value="wallet">
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
@@ -73,16 +73,16 @@ println(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
 Tezos.estimate
   .transfer({ to: address, amount: amount })
   .then((est) => {
-    println(`burnFeeMutez : ${est.burnFeeMutez}, 
-    gasLimit : ${est.gasLimit}, 
-    minimalFeeMutez : ${est.minimalFeeMutez}, 
-    storageLimit : ${est.storageLimit}, 
-    suggestedFeeMutez : ${est.suggestedFeeMutez}, 
-    totalCost : ${est.totalCost}, 
+    println(`burnFeeMutez : ${est.burnFeeMutez},
+    gasLimit : ${est.gasLimit},
+    minimalFeeMutez : ${est.minimalFeeMutez},
+    storageLimit : ${est.storageLimit},
+    suggestedFeeMutez : ${est.suggestedFeeMutez},
+    totalCost : ${est.totalCost},
     usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
   })
   .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
-``` 
+```
 
   </TabItem>
 </Tabs>
@@ -90,7 +90,7 @@ Tezos.estimate
 
 ### Estimate a smart contract call
 
-This example will demonstrate how to estimate the fees related to calling a smart contract. 
+This example will demonstrate how to estimate the fees related to calling a smart contract.
 
 <Tabs
 defaultValue="signer"
@@ -102,26 +102,26 @@ values={[
 
 We have updated the estimate provider to have a `contractCall()` method.
 The `contractCall()` member method can now be used to estimate contract calls as such:
-    
+
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 Tezos.contract
   .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
-    return contract.methods.increment(7);
+    return contract.methodsObject.increment(7);
   })
   .then((op) => {
     println(`Estimating the smart contract call: `);
     return Tezos.estimate.contractCall(op);
   })
   .then((estimate) => {
-    println(`burnFeeMutez : ${estimate.burnFeeMutez}, 
-    gasLimit : ${estimate.gasLimit}, 
-    minimalFeeMutez : ${estimate.minimalFeeMutez}, 
-    storageLimit : ${estimate.storageLimit}, 
-    suggestedFeeMutez : ${estimate.suggestedFeeMutez}, 
-    totalCost : ${estimate.totalCost}, 
+    println(`burnFeeMutez : ${estimate.burnFeeMutez},
+    gasLimit : ${estimate.gasLimit},
+    minimalFeeMutez : ${estimate.minimalFeeMutez},
+    storageLimit : ${estimate.storageLimit},
+    suggestedFeeMutez : ${estimate.suggestedFeeMutez},
+    totalCost : ${estimate.totalCost},
     usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
   })
   .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
@@ -129,28 +129,28 @@ Tezos.contract
 
 
 </TabItem>
-  <TabItem value="wallet"> 
+  <TabItem value="wallet">
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
-      
+
 Tezos.wallet
   .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
-    return contract.methods.increment(7);
+    return contract.methodsObject.increment(7);
   })
   .then((op) => {
     println(`Estimating the smart contract call: `);
     return Tezos.estimate.contractCall(op);
   })
   .then((estimate) => {
-    println(`burnFeeMutez : ${estimate.burnFeeMutez}, 
-    gasLimit : ${estimate.gasLimit}, 
-    minimalFeeMutez : ${estimate.minimalFeeMutez}, 
-    storageLimit : ${estimate.storageLimit}, 
-    suggestedFeeMutez : ${estimate.suggestedFeeMutez}, 
-    totalCost : ${estimate.totalCost}, 
+    println(`burnFeeMutez : ${estimate.burnFeeMutez},
+    gasLimit : ${estimate.gasLimit},
+    minimalFeeMutez : ${estimate.minimalFeeMutez},
+    storageLimit : ${estimate.storageLimit},
+    suggestedFeeMutez : ${estimate.suggestedFeeMutez},
+    totalCost : ${estimate.totalCost},
     usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
   })
   .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
@@ -199,7 +199,7 @@ Tezos.estimate
 ```
 
 </TabItem>
-  <TabItem value="wallet"> 
+  <TabItem value="wallet">
 
 
 ```js live noInline wallet
@@ -226,7 +226,7 @@ Tezos.estimate
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
   })
   .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
-```  
+```
 
   </TabItem>
 </Tabs>

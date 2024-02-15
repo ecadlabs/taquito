@@ -1726,7 +1726,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
-  ConstantsResponseProto018 &
+  ConstantsResponseProto019 &
   ConstantsResponseProto017 &
   ConstantsResponseProto016 &
   ConstantsResponseProto015 &
@@ -1770,7 +1770,7 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
-export interface ConstantsResponseProto018
+export interface ConstantsResponseProto019
   extends Omit<
     ConstantsResponseProto017,
     | 'baking_reward_bonus_per_slot'

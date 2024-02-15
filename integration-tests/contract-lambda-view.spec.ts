@@ -1,4 +1,4 @@
-import { MichelsonMap } from '@taquito/taquito';
+import { MichelsonMap, UnitValue } from '@taquito/taquito';
 import { CONFIGS } from './config';
 import { tzip7Contract } from './data/tzip_7_contract';
 import { testContract } from './data/test_lambda_view';
@@ -45,7 +45,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation()
       const contract = await op.contract();
 
-      const getTotalSupply = await contract.views.getTotalSupply([['Unit']]).read();
+      const getTotalSupply = await contract.views.getTotalSupply(UnitValue).read();
       expect(getTotalSupply.toString()).toEqual('100');
 
       const getBalance = await contract.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1').read();
