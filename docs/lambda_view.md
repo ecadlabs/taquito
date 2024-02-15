@@ -54,7 +54,7 @@ Then we call the `read()` method. (Note that we have no longer need a lambda con
 Tezos.contract
   .at('KT1MhfAnNbg2oACFBP4VDU5bNY5MZUXdeDWs')
   .then((contract) => {
-    return contract.views.getTotalSupply([['Unit']]).read();
+    return contract.views.getTotalSupply(UnitValue).read();
   })
   .then((response) => {
     println(response);

@@ -10,20 +10,20 @@ Taquito provides a simple way of forging and sending transactions to the blockch
 
 ```js
 /*
- * ONE OF THESE TRANSACTIONS WILL FAIL 
+ * ONE OF THESE TRANSACTIONS WILL FAIL
  * AND YOU WILL GET AN ERROR MESSAGE
  */
-const op1 = await contract.methods.interact('tezos').send();
-const op2 = await contract.methods.wait([['unit']]).send();
+const op1 = await contract.methodsObject.interact({ 0: 'tezos' }).send();
+const op2 = await contract.methodsObject.wait({ 0: UnitValue }).send();
 
 await op1.confirmation();
 await op2.confirmation();
 
 /*
  * Error Message returned by the node (since Kathmandu):
- * Error while applying operation opHash: 
+ * Error while applying operation opHash:
  * Only one manager operation per manager per block allowed (found opHash2 with Xtez fee).
- * 
+ *
  * Error Message that was returned by the node (before Kathmandu):
  * "Error while applying operation opWH2nEcmmzUwK4T6agHg3bn9GDR7fW1ynqWL58AVRAb7aZFciD:
  * branch refused (Error:
@@ -94,8 +94,8 @@ This method may be one of the most useful ones as it allows you to batch and emi
 ```js
 const contract = await Tezos.wallet.at(VALID_CONTRACT_ADDRESS);
 const batch = await Tezos.wallet.batch()
-  .withContractCall(contract.methods.interact('tezos'))
-  .withContractCall(contract.methods.wait([['unit']]));
+  .withContractCall(contract.methodsObject.interact({ 0: 'tezos' }))
+  .withContractCall(contract.methodsObject.wait({ 1: UnitValue });
 ```
 
 #### - The `array of transactions` method
@@ -103,7 +103,7 @@ const batch = await Tezos.wallet.batch()
 If you prefer having an array that contains objects with the different transactions you want to emit, you can use the `with` method. It allows you to group transactions as objects instead of concatenating function calls. The object you use expects the same properties as the parameter of the corresponding method with an additional `kind` property that indicates the kind of transaction you want to emit (a handy `opKind` enum is [exported from the Taquito package](https://github.com/ecadlabs/taquito/blob/master/packages/taquito-rpc/src/opkind.ts) with the valid values for the `kind` property).
 
 ```js
-import { OpKind } from '@taquito/taquito';
+import { OpKind, UnitValue } from '@taquito/taquito';
 
 const batch = await Tezos.wallet.batch([
   {
@@ -122,8 +122,8 @@ const batch = await Tezos.wallet.batch([
     kind: OpKind.DELEGATION,
     delegate: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
   },
-  { kind: OpKind.TRANSACTION, 
-    ...contract.methods.default([['Unit']]).toTransferParams() 
+  { kind: OpKind.TRANSACTION,
+    ...contract.methodsObject.default({ 0: UnitValue }).toTransferParams()
   }
 ]);
 ```

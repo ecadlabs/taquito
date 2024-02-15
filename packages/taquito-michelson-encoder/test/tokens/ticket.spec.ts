@@ -166,7 +166,7 @@ describe('Ticket token', () => {
         ])
       ).toThrowError(EncodeTicketError);
       expect(() => tokenTicketString.Encode(['hello'])).toThrowError(EncodeTicketError);
-      expect(() => tokenTicketUnit.Encode(['Unit'])).toThrowError(EncodeTicketError);
+      expect(() => tokenTicketUnit.Encode([UnitValue])).toThrowError(EncodeTicketError);
     });
   });
 

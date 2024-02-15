@@ -100,7 +100,7 @@ The two approaches are radically different here: Web3js constructs the contract 
 **Web3js**:
 
 ```js
-const counter = await contract.methods.getCounter().call();
+const counter = await contract.methodsObject.getCounter().call();
 ```
 
 **Taquito**:
@@ -118,13 +118,13 @@ On Tezos, the whole storage is always available, and developers don't have to ad
 **Web3js**:
 
 ```js
-const receipt = await contract.methods.increment(1).send();
+const receipt = await contract.methodsObject.increment(1).send();
 ```
 
 **Taquito**:
 
 ```js
-const op = await contract.methods.increment(1).send();
+const op = await contract.methodsObject.increment(1).send();
 await op.confirmation();
 ```
 
@@ -196,9 +196,9 @@ const userBalance = await web3.eth.getBalance('0x_address');
 
 const contract = new web3.eth.Contract('contract_ABI', 'contract_address');
 
-const counter = await contract.methods.counter().call();
+const counter = await contract.methodsObject.counter().call();
 
-const receipt = await contract.methods.increment(counter + 1).send();
+const receipt = await contract.methodsObject.increment(counter + 1).send();
 ```
 
 **Taquito**:
@@ -214,6 +214,6 @@ const contract = await Tezos.wallet.at('contract_address');
 
 const counter = await contract.storage();
 
-const op = await contract.methods.increment(counter + 1).send();
+const op = await contract.methodsObject.increment(counter + 1).send();
 await op.confirmation();
 ```

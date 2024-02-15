@@ -63,7 +63,7 @@ const op = await Tezos.contract.smartRollupAddMessages({
 await op.confirmation();
 ```
 
-- `message` property receives an array of encoded outbox messages. For more information on how to encode or what message gets encoded
+- `message` property receives an array of encoded outbox messages.
 
 ## `smart_rollup_execute_outbox_message`
 
@@ -71,14 +71,14 @@ The `Smart Rollup Execute Outbox Message` operation allows users to execute a tr
 
 ### Usage
 
-To execute an outbox message you need the Smart Rollup address (`sr1` address), a serialized output proof, and a commitment hash. 
-You may obtain the serialized output proof and commitment hash through an RPC call to the Smart Rollup Node at the following URL:  
-`<smart-rollup-node-base-url>/global/block/head/helpers/proofs/outbox/${outboxMessageLevel}/messages?index=${outboxMessageIndex}`  
+To execute an outbox message you need the Smart Rollup address (`sr1` address), a serialized output proof, and a commitment hash.
+You may obtain the serialized output proof and commitment hash through an RPC call to the Smart Rollup Node at the following URL:
+`<smart-rollup-node-base-url>/global/block/head/helpers/proofs/outbox/${outboxMessageLevel}/messages?index=${outboxMessageIndex}`
 Where:
-* `outboxMessageLevel` is the Tezos level of the outbox message;  
+* `outboxMessageLevel` is the Tezos level of the outbox message;
 * `outboxMessageIndex` is the index (number) of the the outbox message.
 
-The outbox message can only be executed when the corresponding commitment is cemented. 
+The outbox message can only be executed when the corresponding commitment is cemented.
 
 ### Example
 ```typescript

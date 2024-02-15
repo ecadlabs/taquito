@@ -7,7 +7,7 @@ author: Davis Sawali
 This feature is currently a work in progress and may be updated in the near future.
 :::
 
-Before operations are _forged_, _signed_, and then _injected_, they first need to go through a _Prepare_ step. 
+Before operations are _forged_, _signed_, and then _injected_, they first need to go through a _Prepare_ step.
 
 In Taquito, the act of preparing an operation is to create the Operation Object and the counter in one single object that we name `PreparedOperation`.
 
@@ -34,7 +34,7 @@ The `PreparedOperation` object used to be abstracted from the user and would req
 - The ability to retrieve information about the operation before injecting (operation hash, etc)
 - The ability to simulate an operation before injecting
 
-The `PrepareProvider` class affords extension and control to users when preparing operations while also promoting modularity in Taquito as a design principle. 
+The `PrepareProvider` class affords extension and control to users when preparing operations while also promoting modularity in Taquito as a design principle.
 
 ## Usage example
 
@@ -43,7 +43,7 @@ The `PrepareProvider` will be accessible via the `TezosToolkit`:
 ```typescript
 // const Tezos = new TezosToolkit('RPC_ENDPOINT');
 
-const prepared = await Tezos.prepare.transaction({ 
+const prepared = await Tezos.prepare.transaction({
   to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
   amount: 5
 });
@@ -80,10 +80,10 @@ const prepared = await Tezos.prepare.batch([
 ### Contract Calls
 Users are also able to utilize the `PrepareProvider` to prepare contract calls:
 ```typescript
-// contractAddress refers to an originated increment/decrement smart contract, 
+// contractAddress refers to an originated increment/decrement smart contract,
 // omitted for brevity
 const contractAbs = await Tezos.contract.at(contractAddress);
-const method = await contractAbs.methods.increment(1);
+const method = await contractAbs.methodsObject.increment(1);
 const prepared = await Tezos.prepare.contractCall(method);
 ```
 

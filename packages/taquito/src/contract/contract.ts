@@ -112,13 +112,13 @@ export class ContractAbstraction<
   TMethodsObject extends DefaultMethodsObject<T> = DefaultMethodsObject<T>,
   TViews extends DefaultViews = DefaultViews,
   TContractViews extends DefaultContractViews = DefaultContractViews,
-  TStorage extends DefaultStorage = DefaultStorage
+  TStorage extends DefaultStorage = DefaultStorage,
 > {
   private contractMethodFactory: ContractMethodFactory<T>;
   /**
+   * @deprecated use methodsObject instead, flat params of methods can't sufficiently represent all Michelson values
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
-   *
    */
   public methods: TMethods = {} as TMethods;
   /**

@@ -16,14 +16,14 @@ try {
       // process the error
     }
 }
-```  
-&nbsp;  
+```
+&nbsp;
 If the type of value returned by the contract is a `string`, the value will be available in the `message` property of the `TezosOperationError` instance, for example:
 ```ts
 try {
     const contractAddress = "KT1XemmsT8w5obkXt6eoJ8UYn4Vhsjze9zsb";
     const contract = await Tezos.contract.at(contractAddress);
-    const op = await contract.methods.fail_with_string("error").send();
+    const op = await contract.methodsObject.fail_with_string("error").send();
     await op.confirmation();
     console.log(op.hash);
 } catch (err) {
@@ -32,7 +32,7 @@ try {
     }
 }
 ```
-&nbsp;  
+&nbsp;
 However, if the value is another type, the error message will be available in the `errors` property.
 
 Among other information, the `TezosOperationError` instance has a property called `errors` whose value is an array. The last element of the array holds the error message returned by the `FAILWITH` instruction, i.e. the last value that was on the stack before the contract call failed. This value is an object with a `with` property where you can find the Michelson expression of the last value on the stack.
@@ -42,7 +42,7 @@ For example:
 try {
     const contractAddress = "KT1XemmsT8w5obkXt6eoJ8UYn4Vhsjze9zsb";
     const contract = await Tezos.contract.at(contractAddress);
-    const op = await contract.methods.fail_with_int(2).send();
+    const op = await contract.methodsObject.fail_with_int(2).send();
     await op.confirmation();
     console.log(op.hash);
 } catch (err) {
