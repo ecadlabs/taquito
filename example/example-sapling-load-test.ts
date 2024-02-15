@@ -2,7 +2,7 @@ import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
 import { InMemorySpendingKey, SaplingToolkit } from '@taquito/sapling';
 import { singleSaplingStateContractJProtocol } from '../integration-tests/data/single_sapling_state_contract_jakarta_michelson';
-const numberOfSaplingTx = 100;
+const numberOfSaplingTx = 1;
 let totalTime = 0;
 
 async function example() {
@@ -31,7 +31,7 @@ async function example() {
             memo: 'First Tx'
         }])
 
-        const op = await saplingContract.methods.default([shieldedTx]).send({ amount: 5 });
+        const op = await saplingContract.methodsObject.default([shieldedTx]).send({ amount: 5 });
         await op.confirmation();
 
         // loop to create multiple sapling transactions (numberOfSaplingTx) and log the time taken to prepare it
@@ -51,7 +51,7 @@ async function example() {
             console.log(`seconds elapsed for tx ${i} = ${time}`);
             totalTime += time
 
-            const op = await saplingContract.methods.default([tx]).send();
+            const op = await saplingContract.methodsObject.default([tx]).send();
             await op.confirmation();
 
         }

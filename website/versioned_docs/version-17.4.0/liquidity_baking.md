@@ -20,33 +20,33 @@ The storage of the LB contract is made of 5 values:
 
 ### Entrypoint parameters and purpose
 
-- [__%default__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L329): update of the `xtzPool` value when the subsidy is sent to the contract after each block is baked  
+- [__%default__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L329): update of the `xtzPool` value when the subsidy is sent to the contract after each block is baked
 _Parameters_: no parameter, only the subsidy in tez is sent with the transaction
-- [__%tokenToXtz__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L300): exchange tzBTC for XTZ  
+- [__%tokenToXtz__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L300): exchange tzBTC for XTZ
   _Parameters_:
     - __to__: the account address that will receive the XTZ amount
     - __tokensSold__: the amount of tzBTC to sell
     - __minXtzBought__: the minimum amount of XTZ expected to be received
     - __deadline__: the expiry time of the transaction
-- [__%xtzToToken__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#261): exchange XTZ for tzBTC  
+- [__%xtzToToken__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#261): exchange XTZ for tzBTC
   _Parameters_:
     - __to__: the account address that will receive the tzBTC tokens
     - __minTokensBought__: the minimum amount of tzBTC expected to be received
     - __deadline__: the expiry time of the transaction
-- [__%tokenToToken__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L334): used as an intermediary to faciliate the exchange of tzBTC and XTZ between 2 contracts  
+- [__%tokenToToken__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L334): used as an intermediary to faciliate the exchange of tzBTC and XTZ between 2 contracts
   _Parameters_:
     - __outputDexterContract__: the contract address to send the tokens to
     - __minTokensBought__: the minimum amount of tzBTC tokens expected to be received
     - __to__: the recipient of the tokens for the transaction sent to the `outputDexterContract` address
     - __tokensSold__: the amount of tokens to be sold
     - __deadline__: the expiry time of the transaction
-- [__%addLiquidity__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L188): provision of XTZ and tzBTC to the contract and minting of LP tokens  
+- [__%addLiquidity__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L188): provision of XTZ and tzBTC to the contract and minting of LP tokens
   _Parameters_:
     - __owner__: the account address that will be credited with the LP tokens
     - __minLqtMinted__: the minimum amount of LP tokens expected to be minted
     - __maxTokensDeposited__: the maximum amount of tzBTC tokens expected to be withdrawn from the sender's balance
     - __deadline__: the expiry time of the transaction
-- [__%removeLiquidity__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L220): burning of LP tokens and credit of XTZ and tzBTC  
+- [__%removeLiquidity__](https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L220): burning of LP tokens and credit of XTZ and tzBTC
   _Parameters_:
     - __to__: the account address that will be credited with XTZ and tzBTC tokens
     - __lqtBurned__: the amount of LP tokens to burn
@@ -94,7 +94,7 @@ const tokenToXtzXtzOutput = (p: {
       xtzPool_.isGreaterThan(0) &&
       tokenPool_.isGreaterThan(0)
     ) {
-      // Includes 0.1% fee and 0.1% burn calculated separatedly: 
+      // Includes 0.1% fee and 0.1% burn calculated separatedly:
       // 999/1000 * 999/1000 = 998001/1000000
       let numerator = new BigNumber(tokenIn)
         .times(new BigNumber(xtzPool))
@@ -119,19 +119,19 @@ const minXtzBought = tokenToXtzXtzOutput({
     xtzPool,
     tokenPool
   }).toNumber();
-    
-let batch =Tezos.wallet.batch()              
-    .withContractCall(tzBtcContract.methods.approve(lbContractAddress, 0))
+
+let batch =Tezos.wallet.batch()
+    .withContractCall(tzBtcContract.methodsObject.approve({ spender: lbContractAddress, value: 0}))
     .withContractCall(
-        tzBtcContract.methods.approve(lbContractAddress, tokensSold)
+        tzBtcContract.methodsObject.approve({ spender: lbContractAddress, value: tokensSold })
     )
     .withContractCall(
-        lbContract.methods.tokenToXtz(
-            USER_ADDRESS,
+        lbContract.methodsObject.tokenToXtz({
+            to: USER_ADDRESS,
             tokensSold,
             minXtzBought,
             deadline
-        )
+        })
     );
 const batchOp = await batch.send();
 await batchOp.confirmation();
@@ -191,9 +191,11 @@ const minTokensBought = xtzToTokenTokenOutput({
     tokenPool
   }).toNumber();
 
-const op = await lbContract.methods.xtzToToken(
-    USER_ADDRESS, minTokensBought, deadline
-).send();
+const op = await lbContract.methodsObject.xtzToToken({
+    to: USER_ADDRESS,
+    minTokensBought,
+    deadline
+}).send();
 await op.confirmation();
 ```
 
@@ -219,33 +221,33 @@ const batchOp = await Tezos.wallet
 .batch([
     {
         kind: OpKind.TRANSACTION,
-        ...tzBtcContract.methods
-          .approve(LB_CONTRACT_ADDRESS, 0)
+        ...tzBtcContract.methodsObject
+          .approve({ spender: LB_CONTRACT_ADDRESS, value: 0 })
           .toTransferParams()
     },
     {
         kind: OpKind.TRANSACTION,
-        ...tzBtcContract.methods
-          .approve(LB_CONTRACT_ADDRESS, maxTokensSold)
+        ...tzBtcContract.methodsObject
+          .approve({ spender: LB_CONTRACT_ADDRESS, value: maxTokensSold })
           .toTransferParams()
     },
     {
         kind: OpKind.TRANSACTION,
-        ...lbContract.methods
-          .addLiquidity(
-            USER_ADDRESS,
-            minLqtMinted - 3,
-            maxTokensSold,
+        ...lbContract.methodsObject
+          .addLiquidity({
+            owner: USER_ADDRESS,
+            minLqtMinted: minLqtMinted - 3,
+            maxTokensDeposited: maxTokensSold,
             deadline
-          )
+          })
           .toTransferParams(),
         amount: AMOUNT_IN_XTZ,
         mutez: true
     },
     {
         kind: OpKind.TRANSACTION,
-        ...tzBtcContract.methods
-          .approve(LB_CONTRACT_ADDRESS, 0)
+        ...tzBtcContract.methodsObject
+          .approve({ spender: LB_CONTRACT_ADDRESS, value: 0 })
           .toTransferParams()
         }
 ])
@@ -253,7 +255,7 @@ const batchOp = await Tezos.wallet
 await batchOp.confirmation();
 ```
 
-The `%addLiquidity` entrypoint is probably the most complex one to interact with. 
+The `%addLiquidity` entrypoint is probably the most complex one to interact with.
 The maximum amount of tzBTC tokens to be sold is calculated using this formula: `AMOUNT_IN_TZBTC + (AMOUNT_IN_TZBTC * slippage) / 100`
 
 - __%removeLiquidity__:
@@ -293,14 +295,14 @@ const { xtzOut, tzbtcOut } = calculateLqtOutput(
     }
 );
 
-const op = await lbContract.methods
-    .removeLiquidity(
-        USER_ADDRESS,
-        amountInLqt,
-        xtzOut,
-        tzBtcOut,
+const op = await lbContract.methodsObject
+    .removeLiquidity({
+        to: USER_ADDRESS,
+        lqtBurned: amountInLqt,
+        minXtzWithdrawn: xtzOut,
+        minTokensWithdrawn: tzBtcOut,
         deadline
-    )
+    })
     .send();
 await op.confirmation();
 ```

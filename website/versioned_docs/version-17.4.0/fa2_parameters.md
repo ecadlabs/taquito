@@ -24,13 +24,13 @@ import { TezosToolkit } from "@taquito/taquito";
 
 const Tezos = await new TezosTooolkit(RPC_URL);
 const contract = await Tezos.wallet.at(FA2_CONTRACT_ADDRESS);
-const op = await contract.methods.transfer(transfer_params).send();
+const op = await contract.methodsObject.transfer(transfer_params).send();
 await op.confirmation();
 ```
 
 ## The transfer entrypoint
 Here is the type signature for the entrypoint parameter in Michelson:
-``` 
+```
 (list %transfer
   (pair
     (address %from_)
@@ -193,7 +193,7 @@ const Tezos = await new TezosToolkit(RPC_URL);
 const dappContract = await Tezos.wallet.at(DAPP_CONTRACT_ADDRESS);
 const tokenContract = await Tezos.wallet.at(FA2_CONTRACT_ADDRESS);
 const batchOp = await Tezos.wallet.batch()
-    .withContractCall(tokenContract.methods.update_operators([
+    .withContractCall(tokenContract.methodsObject.update_operators([
         {
             add_operator: {
                 owner: USER_ADDRESS,
@@ -202,7 +202,7 @@ const batchOp = await Tezos.wallet.batch()
             }
         }
     ]))
-    .withContractCall(dappContract.methods.mint())
+    .withContractCall(dappContract.methodsObject.mint())
     .send();
 await batchOp.confirmation();
 ```

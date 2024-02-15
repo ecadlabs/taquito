@@ -63,4 +63,4 @@ const op = await Tezos.contract.smartRollupAddMessages({
 await op.confirmation();
 ```
 
-- `message` property receives an array of encoded outbox messages. For more information on how to encode or what message gets encoded
+- `message` property receives an array of encoded outbox messages.

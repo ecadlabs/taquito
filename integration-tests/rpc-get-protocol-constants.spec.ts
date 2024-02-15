@@ -1,9 +1,7 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS, NetworkType } from "./config";
 import BigNumber from 'bignumber.js';
-import {
-  ConstantsResponseProto017, ConstantsResponseProto018,
-} from '@taquito/rpc';
+import { ConstantsResponseProto019 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
@@ -12,8 +10,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   describe('Test fetching constants for all protocols on Mainnet', () => {
     const rpcUrl = 'https://mainnet.ecadinfra.com/';
     Tezos.setRpcProvider(rpcUrl);
-    it(`successfully fetches Proto18(oxford2) constants at head`, async () => {
-      const constants: ConstantsResponseProto018 = await Tezos.rpc.getConstants();
+    it(`successfully fetches Proto19(oxford2) constants at head`, async () => {
+      const constants: ConstantsResponseProto019 = await Tezos.rpc.getConstants();
       expect(constants).toEqual({
         adaptive_issuance_activation_vote_enable: false,
         adaptive_issuance_launch_ema_threshold: 1600000000,
@@ -144,7 +142,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   describe(`Fetch constants for testnet`, () => {
     oxfordnet(`successfully fetches all constants for oxfordnet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto018 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto019 = await Tezos.rpc.getConstants();
       expect(constants).toEqual({
         adaptive_issuance_activation_vote_enable: false,
         adaptive_issuance_launch_ema_threshold: 100000000,
@@ -274,7 +272,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
 
     weeklynet(`successfully fetches all constants for weeklynet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto017 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto019 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         adaptive_issuance_launch_ema_threshold: 10000000,
