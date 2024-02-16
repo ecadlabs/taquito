@@ -1,9 +1,9 @@
 import { TezosToolkit } from "@taquito/taquito";
-import { CONFIGS, sleep } from "./config";
+import { CONFIGS, sleep, isSandbox } from "./config";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
   const Tezos = lib;
-  const flextesanet = rpc === 'http://localhost:20000' ? test : test.skip;
+  const flextesanet = isSandbox({ rpc }) ? test : test.skip;
 
   describe(`Test Drain Delegate in ${protocol}`, () => {
     let Delegate: TezosToolkit;
