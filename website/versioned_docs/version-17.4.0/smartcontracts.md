@@ -26,34 +26,24 @@ The counter contract has two entry points named `increment` and `decrement.` Taq
 
 The counter contract's storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
 
-### Counter Contract in JSLIGO
+### Counter Contract in JSLIGO v1.1.0
 
 ```
-type storage = int;
+namespace Counter {
+  type storage = int;
+  type ret = [list<operation>, storage];
 
-type parameter =
-| ["Increment", int]
-| ["Decrement", int]
-| ["Reset"];
+  // Three entrypoints
 
-type return_ = [list <operation>, storage];
+  @entry
+  const increment = (delta : int, store : storage) : ret => [list([]), store + delta];
 
-/* Two entrypoints */
-const add = ([store, delta] : [storage, int]) : storage => store + delta;
-const sub = ([store, delta] : [storage, int]) : storage => store - delta;
+  @entry
+  const decrement = (delta : int, store : storage) : ret => [list([]), store - delta];
 
-/* Main access point that dispatches to the entrypoints according to
-   the smart contract parameter. */
-const main = ([action, store] : [parameter, storage]) : return_ => {
- return [
-   (list([]) as list <operation>),    // No operations
-   (match (action, {
-    Increment: (n: int) => add ([store, n]),
-    Decrement: (n: int) => sub ([store, n]),
-    Reset:     ()  => 0}))
-  ]
+  @entry
+  const reset = (_p : unit, _s : storage) : ret => [list([]), 0];
 };
-
 ```
 
 You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
@@ -61,10 +51,10 @@ You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 ### Counter Contract Michelson source code
 
 ```
-{ parameter (or (or (int %decrement) (int %increment)) (unit %reset)) ;
+{ parameter (or (unit %reset) (or (int %decrement) (int %increment))) ;
   storage int ;
   code { UNPAIR ;
-         IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } } { DROP 2 ; PUSH int 0 } ;
+         IF_LEFT { DROP 2 ; PUSH int 0 } { IF_LEFT { SWAP ; SUB } { ADD } } ;
          NIL operation ;
          PAIR } }
 ```
@@ -117,8 +107,8 @@ The `at()` method causes Taquito to query a Tezos nodes RPC API for the contract
 
 The `at` method returns a representation of the contract as a plain old javascript object. Taquito dynamically creates an `increment` and `decrement` method that the developer can call as follows:
 
-- `contract.methods.increment()`
-- `contract.methods.decrement()`
+- `contract.methodsObject.increment()`
+- `contract.methodsObject.decrement()`
 
 In Tezos, to call an entrypoint on a contract, one must send a transfer operation. In the counter contract case, the transfer value can be `0` as the contract does not expect to receive any tokens. The transfer must have the appropriate Michelson values specified as "params" to call the `increment` entrypoint.
 
@@ -138,7 +128,7 @@ values={[
 Tezos.contract
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
-    let incrementParams = c.methods.increment(2).toTransferParams();
+    let incrementParams = c.methodsObject.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
@@ -152,7 +142,7 @@ Tezos.contract
 Tezos.wallet
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
-    let incrementParams = c.methods.increment(2).toTransferParams();
+    let incrementParams = c.methodsObject.increment(2).toTransferParams();
     println(JSON.stringify(incrementParams, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
@@ -185,7 +175,7 @@ Tezos.contract
     const i = 7;
 
     println(`Incrementing storage value by ${i}...`);
-    return contract.methods.increment(i).send();
+    return contract.methodsObject.increment(i).send();
   })
   .then((op) => {
     println(`Waiting for ${op.hash} to be confirmed...`);
@@ -206,7 +196,7 @@ Tezos.wallet
     const i = 7;
 
     println(`Incrementing storage value by ${i}...`);
-    return contract.methods.increment(i).send();
+    return contract.methodsObject.increment(i).send();
   })
   .then((op) => {
     println(`Waiting for ${op.opHash} to be confirmed...`);
@@ -246,7 +236,7 @@ In the following example, a contract's `set_child_record` method will be called 
 Tezos.contract
   .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
   .then((contract) => {
-    println(`List all contract methods: ${Object.keys(contract.methods)}\n`);
+    println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
     println(
       `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
         contract.methods.set_child_record().getSignature(),

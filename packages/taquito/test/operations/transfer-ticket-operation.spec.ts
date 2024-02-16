@@ -1,4 +1,4 @@
-import { ForgedBytes } from '../../src/operations/types';
+import { ForgedBytes, TransferTicketOperation } from '@taquito/taquito';
 import {
   METADATA_BALANCE_UPDATES_CATEGORY,
   OperationContentsAndResult,
@@ -7,7 +7,6 @@ import {
   OpKind,
 } from '@taquito/rpc';
 import { defaultConfigConfirmation } from '../../src/context';
-import { TransferTicketOperation } from '../../src/operations/transfer-ticket-operation';
 
 describe('Transfer Operation L2 Tx Rollup', () => {
   let fakeContext: any;

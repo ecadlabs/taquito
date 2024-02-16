@@ -9,7 +9,7 @@ import { Protocols, TezosToolkit } from '@taquito/taquito';
 const testContractAddress = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
 
 CONFIGS().forEach(({ rpc, setup, protocol }) => {
-  const mondaynet = protocol === Protocols.ProtoALpha ? test : test.skip;
+  const weeklynet = protocol === Protocols.ProtoALpha ? test : test.skip;
   const Tezos = new TezosToolkit(new RpcClient(rpc));
 
   describe(`Test contracts using: ${rpc}`, () => {
@@ -18,7 +18,7 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
 
     });
 
-    mondaynet('Verify that you cannot prefund a non existent smart contract', async () => {
+    weeklynet('Verify that you cannot prefund a non existent smart contract', async () => {
       try {
         await Tezos.contract.at(testContractAddress);
       } catch (error: any) {

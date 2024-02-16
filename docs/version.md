@@ -2,6 +2,85 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v19.0.2
+
+### Bug Fixes
+- `@taquito/local-forging` - Added the correct constants for staking/unstaking in the forger [PR#2824](https://github.com/ecadlabs/taquito/pull/2824)
+
+
+# Taquito v19.0.1
+
+### Dependency updates
+- Updated Beacon version to v4.1.2 [PR#2811](https://github.com/ecadlabs/taquito/pull/2811)
+
+### Documentation
+- Removed Sapling live code examples from the website due to large bundle sizes, static code examples will still exist [PR#2810](https://github.com/ecadlabs/taquito/pull/2810)
+
+# Taquito v19.0.0
+
+:::info
+You might have noticed that we jumped versions from v17.5.0 to v19.0.0 (no v18). We do this as an effort to be in parallel with the current Octez version. 
+- Oxford - v18
+- Oxford2 - v19
+
+Taquito v19 supports Oxford2, and not the previously named Oxford protocol.
+:::
+
+**Potential Breaking Changes**:
+Oxford2 comes with quite a few breaking changes, please make sure to update your projects accordingly.
+
+Oxford2 changes:
+- Removed transactional rollups (tx rollup) references in Taquito #2650
+- Removed origination proof from smart rollups #2597
+- Updated all references of `endorsement` into `attestation` for Oxford2 #2599
+- `@taquito/rpc` - Updated RPC types for Oxford2 compatibility #2596
+
+
+## Summary
+
+### New Features
+- `@taquito/local-forging` - Added new property `whitelist` in smart rollup origination operation #2776
+
+
+### Documentation
+
+### Internals
+
+
+# Taquito 17.5.0
+
+**Important Note:**
+In this version, we replaced instances of `Axios` in favour of `Fetch`. 
+
+We are not expecting any breaking changes, but if there are any issues that you see regarding this, please reach out to the Taquito team.
+
+## Summary
+
+### New Features
+- `@taquito/taquito` - Expose and publicly `smartContractAbstractionSemantic` #2534
+
+### Improvement
+- `@taquito/http-utils` - Removed `Axios` as a dependency of Taquito in favour of `fetch`/`node-fetch` #2461
+### Documentation
+- Updated RPC nodes on the website [PR#2732](https://github.com/ecadlabs/taquito/pull/2732
+- Updated Michelson encoder documentation to reference `generateSchema` instead of the outdated `extractSchema` #2630
+- Added a Taquito Chatbot assistant for the Taquito website to help answer user questions #2684 
+
+### Internals
+- Removed archive node, and references to it in Taquito [PR#2743](https://github.com/ecadlabs/taquito/pull/2743)
+- Updated Sass, Lerna, and Firebase versions [PR#2749](https://github.com/ecadlabs/taquito/pull/2749)
+- Updated integration tests to increase speed and reliability #2741
+
+
+## `@taquito/http-utils` - Removed `Axios` in favour of `fetch`
+The `taquito/http-utils` is responsible for handling all HTTP incoming and outgoing HTTP requests in Taquito. It utilized `Axios` as a main dependency to handle requests coming in and out of Taquito.
+
+Now that browsers and Node have supported `fetch` natively, it makes more sense for us to move towards it.
+
+Axios came with quite a large dependency tree, as well as multiple workarounds we needed to include for it to work properly (i.e. the `axios-fetch-adapter`)
+
+With this change we hope for a more stable HTTP handler in Taquito while reducing the package size at the same time.
+
 
 # Taquito v17.4.0
 

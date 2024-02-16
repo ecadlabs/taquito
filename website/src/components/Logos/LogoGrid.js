@@ -1,11 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
-import clsx from 'clsx';
 import styles from './LogoGrid.module.scss';
 
 const FeatureList = [
   {
-    // title: "Teams building with Taqueria",
-    // Svg: require("../../../static/img/taq_orange.svg").default,
     images: [
       {
         icon: require('../../../static/img/spaceship-svg.svg').default,

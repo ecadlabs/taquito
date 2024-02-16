@@ -1,6 +1,5 @@
-import { ProposalsOperation } from '../../src/operations/proposals-operation';
+import { ProposalsOperation, ForgedBytes } from '@taquito/taquito';
 import { OperationContentsAndResult } from '@taquito/rpc';
-import { ForgedBytes } from '../../src/operations/types';
 import { defaultConfigConfirmation } from '../../src/context';
 
 describe('Proposals operation', () => {

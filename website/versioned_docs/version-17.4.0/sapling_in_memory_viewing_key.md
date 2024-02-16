@@ -16,7 +16,7 @@ const inMemoryViewingKey = new InMemoryViewingKey(
 
 ### Instantiation from an unencrypted spending key:
 
-```js live noInline
+```js 
 import { InMemoryViewingKey } from '@taquito/sapling';
 
 InMemoryViewingKey.fromSpendingKey(
@@ -31,7 +31,7 @@ InMemoryViewingKey.fromSpendingKey(
 
 ### Instantiation from an encrypted spending key:
 
-```js live noInline
+```js 
 import { InMemoryViewingKey } from '@taquito/sapling';
 
 InMemoryViewingKey.fromSpendingKey(
@@ -49,7 +49,7 @@ InMemoryViewingKey.fromSpendingKey(
 
 The `InMemoryViewingKey` class has a method named `getAddress`, allowing to derive addresses (zet) from the viewing key. An index can be specified as a parameter, or the default value `0` will be used.
 
-```js live noInline 
+```js  
 import { InMemoryViewingKey } from '@taquito/sapling';
 
 const inMemoryViewingKey = new InMemoryViewingKey(

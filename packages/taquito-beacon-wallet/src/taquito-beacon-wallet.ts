@@ -66,13 +66,21 @@ export class BeaconWallet implements WalletProvider {
     return account.address;
   }
 
+  async getPK() {
+    const account = await this.client.getActiveAccount();
+    if (!account) {
+      throw new BeaconWalletNotInitialized();
+    }
+    return account.publicKey ?? '';
+  }
+
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
     let walletParams: WalletTransferParams;
     await this.client.showPrepare();
     try {
       walletParams = await params();
     } catch (err) {
-      await this.client.hideUI();
+      await this.client.hideUI(['alert']);
       throw err;
     }
     return this.removeDefaultParams(
@@ -87,7 +95,7 @@ export class BeaconWallet implements WalletProvider {
     try {
       walletParams = await params();
     } catch (err) {
-      await this.client.hideUI();
+      await this.client.hideUI(['alert']);
       throw err;
     }
     return this.removeDefaultParams(
@@ -102,7 +110,7 @@ export class BeaconWallet implements WalletProvider {
     try {
       walletParams = await params();
     } catch (err) {
-      await this.client.hideUI();
+      await this.client.hideUI(['alert']);
       throw err;
     }
     return this.removeDefaultParams(
@@ -117,7 +125,7 @@ export class BeaconWallet implements WalletProvider {
     try {
       walletParams = await params();
     } catch (err) {
-      await this.client.hideUI();
+      await this.client.hideUI(['alert']);
       throw err;
     }
     return this.removeDefaultParams(
@@ -219,13 +227,5 @@ export class BeaconWallet implements WalletProvider {
       }
     }
     throw new Error(`Invalid watermark ${JSON.stringify(watermark)}`);
-  }
-
-  async getPK() {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
-      throw new BeaconWalletNotInitialized();
-    }
-    return account?.publicKey;
   }
 }

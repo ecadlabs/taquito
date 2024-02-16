@@ -68,7 +68,7 @@ Sending 50 mutez from `kt1...` to `tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh`.
 
 ```js
 const contract = await Tezos.contract.at('kt1...');
-await contract.methods
+await contract.methodsObject
   .do(transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 50))
   .send({ amount: 0 });
 ```
@@ -104,7 +104,7 @@ Sending 1 mutez to `KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic` from `KT1...`
 
 ```js
 const contract = await Tezos.contract.at('KT1...');
-await contract.methods
+await contract.methodsObject
   .do(transferToContract('KT1KLbEeEgW5h1QLkPuPvqdgurHx6v4hGyic', 1))
   .send({ amount: 0 });
 ```

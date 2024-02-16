@@ -5,7 +5,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test origination of a token contract using: ${rpc}`, () => {
-
     beforeEach(async () => {
       await setup();
     });
@@ -19,7 +18,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
     });
 
     it('Originates a contract having ticket with init in JSON and the contract api', async () => {
@@ -31,7 +29,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
     });
 
     it('Originates a contract having ticket with storage and the contract api', async () => {
@@ -46,7 +43,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-
     });
   });
-})
+});

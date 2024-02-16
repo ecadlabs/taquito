@@ -33,7 +33,6 @@ describe('PrepareProvider test', () => {
     getCurrentPeriod: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
-    getOriginationProof: jest.Mock<any, any>;
     forgeOperations: jest.Mock<any, any>;
   };
 
@@ -67,7 +66,6 @@ describe('PrepareProvider test', () => {
       getCurrentPeriod: jest.fn(),
       getConstants: jest.fn(),
       getManagerKey: jest.fn(),
-      getOriginationProof: jest.fn(),
       forgeOperations: jest.fn(),
     };
 
@@ -1039,7 +1037,6 @@ describe('PrepareProvider test', () => {
   describe('SmartRollupOriginate', () => {
     it('Should prepare smartRollupOriginate without reveal', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
-      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
 
       const prepared = await prepareProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,
@@ -1056,7 +1053,6 @@ describe('PrepareProvider test', () => {
               kind: 'smart_rollup_originate',
               pvm_kind: 'wasm_2_0_0',
               kernel: '123456789',
-              origination_proof: '987654321',
               parameters_ty: {
                 prim: 'bytes',
               },
@@ -1075,7 +1071,6 @@ describe('PrepareProvider test', () => {
 
     it('Should prepare smartRollupOriginate with reveal', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(false);
-      mockRpcClient.getOriginationProof.mockResolvedValue('987654321');
 
       const prepared = await prepareProvider.smartRollupOriginate({
         pvmKind: PvmKind.WASM2,
@@ -1101,7 +1096,6 @@ describe('PrepareProvider test', () => {
               kind: 'smart_rollup_originate',
               pvm_kind: 'wasm_2_0_0',
               kernel: '123456789',
-              origination_proof: '987654321',
               parameters_ty: {
                 prim: 'bytes',
               },

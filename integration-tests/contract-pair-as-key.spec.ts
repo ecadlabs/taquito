@@ -2,18 +2,17 @@ import { CONFIGS } from "./config";
 import { BigMapAbstraction, MichelsonMap } from "@taquito/taquito";
 import { storageContractWithPairAsKey } from "./data/storage-contract-with-pair-as-key";
 import { mapWithPairAsKeyCode, mapWithPairAsKeyStorage } from "./data/bigmap_with_pair_as_key";
+import { MichelsonMapKey } from "@taquito/michelson-encoder";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
+  let storageMap: MichelsonMap<MichelsonMapKey, unknown>;
 
   describe(`Test contract origination with pair as key in storage through contract api using: ${rpc}`, () => {
+    beforeAll(async () => {
+      await setup();
 
-    beforeEach(async () => {
-      await setup()
-    })
-
-    test('Verify contract.originate for a contract with pair as a key', async () => {
-      const storageMap = new MichelsonMap();
+      storageMap = new MichelsonMap();
       // The contract schema in this example has a key with 8 nested pairs
       // (int(nat(string(bytes(mutez(bool(key_hash(timestamp(address)))))))))
       // and a value of `int`
@@ -30,7 +29,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5", // key_hash
         7: "2019-09-06T15:08:29.000Z",             // timestamp
         8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"  // address
-      }, 100)
+      }, 100);
+
       storageMap.set({
         0: "1",
         1: "2",
@@ -41,7 +41,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
         7: "2019-09-06T15:08:29.000Z",
         8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
-      }, 100)
+      }, 100);
+
       storageMap.set({
         0: "2",
         1: "2",
@@ -52,7 +53,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
         7: "2019-09-06T15:08:29.000Z",
         8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
-      }, 100)
+      }, 100);
+
       storageMap.set({
         0: "1",
         1: "2",
@@ -63,28 +65,36 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         6: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5",
         7: "2018-09-06T15:08:29.000Z",
         8: "tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"
-      }, 100)
+      }, 100);
+    });
+
+    it('Verify contract.originate for a contract with pair as a key', async () => {
       const op = await Tezos.contract.originate({
         balance: "0",
         code: storageContractWithPairAsKey,
         storage: storageMap
-      })
-      await op.contract()
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
-    })
+      });
 
-    test('Verify contract.originate for a contract with pair as a key in map ', async () => {
+      await op.confirmation();
+      
+      expect(op.hash).toBeDefined();
+      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+    });
+
+    it('Verify contract.originate for a contract with pair as a key in map ', async () => {
       /** The init property is used in this test instead of the storage property as in the previous test. */
       const op = await Tezos.contract.originate({
         balance: "0",
         code: mapWithPairAsKeyCode,
         init: mapWithPairAsKeyStorage
-      })
-      const contract = await op.contract()
+      });
+      await op.confirmation();
+
+      const contract = await op.contract();
+
       const storage2: BigMapAbstraction = await contract.storage();
-      const value = await storage2.get({ 'test': 'test2', 'test2': 'test3' })
-      expect(value).toEqual('test')
+      const value = await storage2.get({ 'test': 'test2', 'test2': 'test3' });
+      expect(value).toEqual('test');
     });
   });
-})
+});

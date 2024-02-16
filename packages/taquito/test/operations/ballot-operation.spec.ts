@@ -1,6 +1,5 @@
-import { BallotOperation } from '../../src/operations/ballot-operation';
+import { BallotOperation, ForgedBytes } from '@taquito/taquito';
 import { OperationContentsAndResult } from '@taquito/rpc';
-import { ForgedBytes } from '../../src/operations/types';
 import { defaultConfigConfirmation } from '../../src/context';
 
 describe('Ballot operation', () => {

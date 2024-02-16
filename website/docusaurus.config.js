@@ -9,6 +9,9 @@ module.exports = {
   baseUrl: '/',
   projectName: 'taquito',
   organizationName: 'ecadlabs',
+  markdown: {
+    mermaid: true,
+  },
   scripts: [
     'https://buttons.github.io/buttons.js',
     {
@@ -25,7 +28,7 @@ module.exports = {
     description:
       'A TypeScript library suite made available as a set of npm packages aiming to make building on top of Tezos easier and more enjoyable.',
   },
-  themes: [require.resolve('@docusaurus/theme-live-codeblock')],
+  themes: [require.resolve('@docusaurus/theme-live-codeblock'), '@docusaurus/theme-mermaid'],
   themeConfig: {
     colorMode: {
       defaultMode: 'light',

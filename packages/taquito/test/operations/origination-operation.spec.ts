@@ -1,6 +1,5 @@
 import { defaultConfigConfirmation } from '../../src/context';
-import { OriginationOperation } from '../../src/operations/origination-operation';
-import { ForgedBytes } from '../../src/operations/types';
+import { OriginationOperation, ForgedBytes } from '@taquito/taquito';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { OriginationOperationBuilder, RevealOperationBuilder } from '../helpers';
 import { PollingSubscribeProvider } from '../../src/subscribe/polling-subcribe-provider';

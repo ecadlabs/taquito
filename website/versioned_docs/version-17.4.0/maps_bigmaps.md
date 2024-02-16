@@ -28,7 +28,7 @@ Michelson offers two variants of `Maps` that are semantically the same but have 
 
 This example builds on the Ligo Lang Taco Shop learning resources.
 
-The storage of the contract used in the following example is a map where a key is a natural number (a `nat`), and a value is a pair composed of two values representing the quantity of stock and `tez` tokens, respectively. The contract's source code is available [here](https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-smart-contract#making-sure-we-get-paid-for-our-tacos). In the example, the contract is originated with initial values using the `MichelsonMap` class' `set` method.
+The storage of the contract used in the following example is a map where a key is a natural number (a `nat`), and a value is a pair composed of two values representing the quantity of stock and `tez` tokens, respectively. The contract's source code is available [here](https://ligolang.org/docs/tutorials/taco-shop/tezos-taco-shop-smart-contract/?lang=jsligo). In the example, the contract is originated with initial values using the `MichelsonMap` class' `set` method.
 
 <Tabs
 defaultValue="contractAPI"
@@ -188,7 +188,7 @@ Tezos.contract
         );
 
         //Calling the main method of the contract will modify the storage
-        return myContract.methods.default('1').send();
+        return myContract.methodsObject.default('1').send();
       })
       .then((op) => {
         println(`Waiting for ${op.hash} to be confirmed...`);
@@ -231,7 +231,7 @@ Tezos.wallet
         );
 
         //Calling the main method of the contract will modify the storage
-        return myContract.methods.default('1').send();
+        return myContract.methodsObject.default('1').send();
       })
       .then((op) => {
         println(`Waiting for ${op.opHash} to be confirmed...`);
