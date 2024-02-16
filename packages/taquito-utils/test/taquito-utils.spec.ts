@@ -51,6 +51,24 @@ describe('encodeAddress', () => {
       'KT1XM8VUFBiM9AC5czWU15fEeE9nmuEYWt3Y'
     );
   });
+
+  it('should encode address properly when the bytes have a 0x prefix (tz3)', () => {
+    expect(encodeAddress('0x0000e96b9f8b19af9c7ffa0c0480e1977b295850961f')).toEqual(
+      'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'
+    );
+  });
+
+  it('should encode address properly when the bytes have a 0x prefix (tz3)', () => {
+    expect(encodeAddress('0x0001907d6a7e9f084df840d6e67ffa8db5464f87d4d1')).toEqual(
+      'tz2MVED1t9Jery77Bwm1m5YhUx8Wp5KWWRQe'
+    );
+  });
+
+  it('should encode address properly when the bytes have a 0x prefix (tz3)', () => {
+    expect(encodeAddress('0x00022165a26786121eff8203bed56ffaf85d6bb25e42')).toEqual(
+      'tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1'
+    );
+  });
 });
 
 describe('encodeKey', () => {

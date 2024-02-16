@@ -314,13 +314,13 @@ const Tezos = new TezosToolkit(rpcUrl);
 
 Tezos.setWalletProvider(wallet)
 const signedW = await Tezos.wallet.signFailingNoop({
-arbitrary: stringToBytes("Hello World"),
+arbitrary: char2Bytes("Hello World"),
 basedOnBlock: 0,
 });
 
 Tezos.setSignerProvider(signer)
 const signedC = await Tezos.contract.signFailingNoop({
-arbitrary: stringToBytes("Hello World"),
+arbitrary: char2Bytes("Hello World"),
 basedOnBlock: 'genesis',
 });
 ```
@@ -2694,7 +2694,7 @@ If you have feature or issue requests, please create an issue on http://github.c
 # 8.0.6-beta.0 Updated beacon-sdk, bug fixed related to contract callback entry point
 
 * Updated beacon-sdk to version 2.2.2 #677
-* stringToBytes and bytesToString functions (initially in the taquito-tzip16 package) have been added to the taquito-utils package #589
+* char2Bytes and bytes2char functions (initially in the taquito-tzip16 package) have been added to the taquito-utils package #589
 * Allow specifying an entry point in a contract callback #652
 * Improved CI by adding retry for some of the integration tests
 
