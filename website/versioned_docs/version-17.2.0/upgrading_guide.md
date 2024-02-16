@@ -34,7 +34,7 @@ The configuration regarding the retry strategy for the `PollingSubscribeProvider
 
 **Before version 12:**
 ```ts
-Tezos.setProvider({ config: { 
+Tezos.setProvider({ config: {
   shouldObservableSubscriptionRetry: true,
   observableSubscriptionRetryFunction: retry()
  }});
@@ -42,7 +42,7 @@ Tezos.setProvider({ config: {
 
 **Since version 12:**
 ```ts
-Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ 
+Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({
   shouldObservableSubscriptionRetry: true,
   observableSubscriptionRetryFunction: retry()
  }));
@@ -50,14 +50,14 @@ Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({
 
 ## Lambda views (tzip-4 views)
 
-Since the Hangzhou protocol, the RPC exposes an endpoint (`helpers/scripts/run_view`), allowing us to run the lambda views. In version 12, we changed the implementation to use this endpoint and are not relying on a lambda contract anymore.  
+Since the Hangzhou protocol, the RPC exposes an endpoint (`helpers/scripts/run_view`), allowing us to run the lambda views. In version 12, we changed the implementation to use this endpoint and are not relying on a lambda contract anymore.
 
-**Breaking change** (primarily for sandbox users): There is no need to deploy a lambda contract anymore. The `read` method of the `ContractView` class no longer takes an optional lambda contract address as a parameter. 
+**Breaking change** (primarily for sandbox users): There is no need to deploy a lambda contract anymore. The `read` method of the `ContractView` class no longer takes an optional lambda contract address as a parameter.
 
 
 # Upgrading to version 9
 
-Please take note of the two following breaking changes: 
+Please take note of the two following breaking changes:
 - Breaking change introduced for the method `getMultipleValues` of the `BigMapAbstraction` class and the method `getBigMapKeysByID` of the `RpcContractProvider` class: they now return a MichelsonMap instead of an object. This is meant to support keys of type object that are encountered when the Michelson type of the big map key is a `pair`.
 
 - To give more flexibility to the user on the retry strategy used in the `ObservableSubscription` class, we removed the parameters `observableSubscriptionRetryDelay` and `observableSubscriptionRetries` introduced in version `8.1.1-beta` and replaced them to accept an `OperatorFunction`. When users configure the `ObservableSubscription` to retry on error, we use the `retry` operators from `rxjs` by default. An example showing how to set a custom retry strategy is available [here](https://github.com/ecadlabs/taquito/blob/master/example/example-streamer-custom-retry-logic.ts).
@@ -157,19 +157,19 @@ For example, the contract [KT1Jsf33Eh4Mt9zvx1xqW2JQpZGyo4fjW7y9](https://better-
 
 ```js
 const contract = await tezos.contract.at('KT1Jsf33Eh4Mt9zvx1xqW2JQpZGyo4fjW7y9');
-const opMethod = await contract.methods.main('2').send();
+const opMethod = await contract.methodsObject.main('2').send();
 ```
 
 **Since version 7:**
 
 ```js
 const contract = await tezos.contract.at('KT1Jsf33Eh4Mt9zvx1xqW2JQpZGyo4fjW7y9');
-const opMethod = await contract.methods.default('2').send();
+const opMethod = await contract.methodsObject.default('2').send();
 ```
 
 ### Error when not replacing main with default:
 
-If you update to version 7 without replacing main with default in your code, you might get the following error at runtime:  
+If you update to version 7 without replacing main with default in your code, you might get the following error at runtime:
 `contract.methods.main is not a function`
 
 ## Removed the `importKey` method from TezosToolkit class

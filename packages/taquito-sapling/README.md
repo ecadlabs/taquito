@@ -78,7 +78,7 @@ const shieldedTx = await saplingToolkit.prepareShieldedTransaction([{
 
 // Inject the sapling transaction using the ContractAbstraction
 // The amount MUST be specified in the send method to transfer the 3 tez to the shielded pool
-const op = await saplingContract.methods.default([shieldedTx]).send({ amount: 3 });
+const op = await saplingContract.methodsObject.default([shieldedTx]).send({ amount: 3 });
 await op.confirmation();
 ```
 

@@ -1274,31 +1274,11 @@ export interface ScriptedContracts {
   storage: MichelsonV1Expression;
 }
 
-export type BondId =
-  | {
-      smart_rollup?: never;
-      tx_rollup: string;
-    }
-  | {
-      smart_rollup: string;
-      tx_rollup?: never;
-    };
+export type BondId = {
+  smart_rollup: string;
+};
 
-export interface OperationBalanceUpdatesItem {
-  kind: BalanceUpdateKindEnum;
-  category?: BalanceUpdateCategoryEnum;
-  delegate?: string;
-  cycle?: number;
-  contract?: string;
-  change: string;
-  origin?: MetadataBalanceUpdatesOriginEnum;
-  participation?: boolean;
-  revelation?: boolean;
-  committer?: string;
-  bond_id?: BondId;
-}
-
-export type OperationBalanceUpdates = OperationBalanceUpdatesItem[];
+export type OperationBalanceUpdates = OperationMetadataBalanceUpdates[];
 
 export interface OperationObject {
   branch?: string;
@@ -1308,7 +1288,6 @@ export interface OperationObject {
 }
 
 export type InternalOperationResultKindEnum =
-  | OpKind.REVEAL
   | OpKind.TRANSACTION
   | OpKind.ORIGINATION
   | OpKind.DELEGATION
@@ -1628,14 +1607,13 @@ export interface OperationMetadataBalanceUpdates {
   contract?: string;
   change: string;
   origin?: MetadataBalanceUpdatesOriginEnum;
-  delayed_operation_hash?: string;
   category?: MetadataBalanceUpdatesCategoryEnum;
   staker?: FrozenStaker | Staker;
   delegate?: string;
   participation?: boolean;
   revelation?: boolean;
   committer?: string;
-  bond_id?: string;
+  bond_id?: BondId;
   cycle?: number;
   delegator?: string;
 }
@@ -1726,7 +1704,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
-  ConstantsResponseProto018 &
+  ConstantsResponseProto019 &
   ConstantsResponseProto017 &
   ConstantsResponseProto016 &
   ConstantsResponseProto015 &
@@ -1770,7 +1748,7 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
-export interface ConstantsResponseProto018
+export interface ConstantsResponseProto019
   extends Omit<
     ConstantsResponseProto017,
     | 'baking_reward_bonus_per_slot'

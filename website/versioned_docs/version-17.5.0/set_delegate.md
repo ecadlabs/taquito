@@ -6,9 +6,9 @@ author: Simon Boissonneault-Robert
 # Delegation and Baking
 
 ## What is baking in Tezos?
-"Baking" in Tezos is a generalized concept of participation in forming blocks on the blockchain using the Proof-of-Stake consensus algorithm. Everyone who holds Tezos coins can produce, sign, and validate blocks to get rewards in proportion to their stake. 
+"Baking" in Tezos is a generalized concept of participation in forming blocks on the blockchain using the Proof-of-Stake consensus algorithm. Everyone who holds Tezos coins can produce, sign, and validate blocks to get rewards in proportion to their stake.
 
-To become a baker, all you need to do is to run your own node with baking software and keep it online and up to date. You will also need a minimum of 8000ꜩ (XTZ) to participate in baking. 
+To become a baker, all you need to do is to run your own node with baking software and keep it online and up to date. You will also need a minimum of 8000ꜩ (XTZ) to participate in baking.
 
 Note: the minimum amount needed to have baking rights might change as new protocols get rolled out in the future.
 
@@ -62,7 +62,7 @@ A call to the KT1's smart contract's `do` method must be made to delegate to a K
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
 const contract = await Tezos.contract.at('kt1...');
-await contract.methods.do(setDelegate('tz1_delegate')).send();
+await contract.methodsObject.do(setDelegate('tz1_delegate')).send();
 ```
 
 Where `setDelegate` is a function that returns the necessary Michelson lambda. It looks like this:
