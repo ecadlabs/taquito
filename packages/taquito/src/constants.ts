@@ -128,9 +128,7 @@ const getRevealGasLimitInternal = (address: string) => {
   }
 };
 
-export const getRevealFee = (address: string) => getRevealFeeInternal(address);
-
-const getRevealFeeInternal = (address: string) => {
+export const getRevealFee = (address: string) => {
   switch (address.substring(0, 3)) {
     case 'tz1':
       return REVEAL_FEE.TZ1;
