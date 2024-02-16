@@ -137,9 +137,9 @@ export function encodePubKey(value: string) {
 
 /**
  *
- * @description Base58 encode an address using predefined prefix (tz1, tz2, tz3). KT1 is not supported. When byte string has a 0x prefix, it will be removed.
+ * @description Base58 encode an address using predefined prefix (tz1, tz2, tz3, or KT1 without annotation)
  *
- * @param value Address to base58 encode (tz1, tz2, tz3 or KT1)
+ * @param value Address to base58 encode (tz1, tz2, tz3 or KT1). Supports value with or without '0x' prefix
  */
 export function encodeAddress(value: string) {
   if (value.substring(0, 2) === '0x') {
