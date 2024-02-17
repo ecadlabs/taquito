@@ -135,15 +135,15 @@ console.log(isValid);
 
 **Conversion between hexadecimal and ASCII strings**
 ```ts
-import { char2Bytes, bytes2Char } from '@taquito/utils';
+import { stringToBytes, bytesToString } from '@taquito/utils';
 
 const url = 'https://storage.googleapis.com/tzip-16/fa2-views.json';
 const hex = '68747470733a2f2f73746f726167652e676f6f676c65617069732e636f6d2f747a69702d31362f6661322d76696577732e6a736f6e';
 
-console.log(char2Bytes(url));
+console.log(stringToBytes(url));
 // output: 68747470733a2f2f73746f726167652e676f6f676c65617069732e636f6d2f747a69702d31362f6661322d76696577732e6a736f6e
 
-console.log(bytes2Char(hex));
+console.log(bytesToString(hex));
 // output: https://storage.googleapis.com/tzip-16/fa2-views.json
 ```
 
@@ -194,12 +194,12 @@ console.log(encodeKey('0060842d4ba23a9940ef5dcf4404fdaa430cfaaccb5029fad06cb5ea8
 
 **Base58 encode an address using a predefined prefix**
 ```ts
-import { encodePubKey } from '@taquito/utils'; 
+import { encodeAddress } from '@taquito/utils'; 
 
-console.log(encodePubKey('0000e96b9f8b19af9c7ffa0c0480e1977b295850961f'));
+console.log(encodeAddress('0000e96b9f8b19af9c7ffa0c0480e1977b295850961f'));
 // output: tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM
 
-console.log(encodePubKey('01f9b689a478253793bd92357c5e08e5ebcd8db47600'));
+console.log(encodeAddress('01f9b689a478253793bd92357c5e08e5ebcd8db47600'));
 // output: KT1XM8VUFBiM9AC5czWU15fEeE9nmuEYWt3Y
 ```
 

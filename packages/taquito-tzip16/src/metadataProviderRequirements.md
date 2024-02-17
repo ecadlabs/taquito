@@ -65,7 +65,7 @@ Reuse the smart contract abstraction to retrieve the data from the storage.
 If the data are stored in another contract. Use TezosToolkit.contract.at to fetch it.
 
 Consideration:
-Data is encoded in byte in this protocol. Use the function `bytes2Char` from `tzip16-utils.ts` to decode it to a string. Then use JSON.parse on the string to produce a javascript object useable by Taquito users.
+Data is encoded in byte in this protocol. Use the function `bytesToString` from `tzip16-utils.ts` to decode it to a string. Then use JSON.parse on the string to produce a javascript object useable by Taquito users.
 
 
 # Milestone 2

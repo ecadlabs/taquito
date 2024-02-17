@@ -1,7 +1,7 @@
 import { Schema } from '@taquito/michelson-encoder';
 import { Context, ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
 import { Handler, Tzip16Uri } from '../metadata-provider';
-import { bytes2Char } from '@taquito/utils';
+import { bytesToString } from '@taquito/utils';
 import {
   InvalidContractMetadataTypeError,
   BigMapContractMetadataNotFoundError,
@@ -58,7 +58,7 @@ export class TezosStorageHandler implements Handler {
     if (!/^[0-9a-fA-F]*$/.test(bytes)) {
       throw new InvalidContractMetadataTypeError();
     }
-    return bytes2Char(bytes);
+    return bytesToString(bytes);
   }
 
   /**

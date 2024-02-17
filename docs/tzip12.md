@@ -144,7 +144,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 Tezos.addExtension(new Tzip16Module());
@@ -161,10 +161,10 @@ Tezos.contract.at(contractAddress, tzip16)
   return views['token_metadata']().executeView(tokenId)
 }).then (result => {
   println('Result of the view token_metadata:');
-  println(`name: ${bytes2Char((Object.values(result)[1]).get('name'))}`);
-  println(`decimals: ${bytes2Char((Object.values(result)[1]).get('decimals'))}`);
-  println(`symbol: ${bytes2Char((Object.values(result)[1]).get('symbol'))}`);
-  println(`extra: ${bytes2Char((Object.values(result)[1]).get('extra'))}`);
+  println(`name: ${bytesToString((Object.values(result)[1]).get('name'))}`);
+  println(`decimals: ${bytesToString((Object.values(result)[1]).get('decimals'))}`);
+  println(`symbol: ${bytesToString((Object.values(result)[1]).get('symbol'))}`);
+  println(`extra: ${bytesToString((Object.values(result)[1]).get('extra'))}`);
 })
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
@@ -173,7 +173,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 Tezos.addExtension(new Tzip16Module());
@@ -190,10 +190,10 @@ Tezos.wallet.at(contractAddress, tzip16)
   return views['token_metadata']().executeView(tokenId)
 }).then (result => {
   println('Result of the view token_metadata:');
-  println(`name: ${bytes2Char((Object.values(result)[1]).get('name'))}`);
-  println(`decimals: ${bytes2Char((Object.values(result)[1]).get('decimals'))}`);
-  println(`symbol: ${bytes2Char((Object.values(result)[1]).get('symbol'))}`);
-  println(`extra: ${bytes2Char((Object.values(result)[1]).get('extra'))}`);
+  println(`name: ${bytesToString((Object.values(result)[1]).get('name'))}`);
+  println(`decimals: ${bytesToString((Object.values(result)[1]).get('decimals'))}`);
+  println(`symbol: ${bytesToString((Object.values(result)[1]).get('symbol'))}`);
+  println(`extra: ${bytesToString((Object.values(result)[1]).get('extra'))}`);
 })
 .catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
 ```    

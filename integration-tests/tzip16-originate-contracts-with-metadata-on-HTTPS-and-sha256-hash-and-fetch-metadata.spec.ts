@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
+import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 
@@ -23,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
             const metadataSha256 = '0x18b983a4cc78d7c15d53f7642461176c1366fbdb83960ea432188130db1f8c9d';
             const url = 'sha256://' + metadataSha256 + '/https:' + urlPercentEncoded;
-            const bytesUrl = char2Bytes(url);
+            const bytesUrl = stringToBytes(url);
 
             const metadataBigMap = new MichelsonMap();
             metadataBigMap.set("", bytesUrl);
@@ -101,7 +101,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const urlPercentEncoded = encodeURIComponent('//storage.googleapis.com/tzip-16/taco-shop-metadata.json');
             const metadataSha256 = '0x7e99ecf3a4491e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b';
             const url = 'sha256://' + metadataSha256 + '/https:' + urlPercentEncoded;
-            const bytesUrl = char2Bytes(url);
+            const bytesUrl = stringToBytes(url);
 
             const metadataBigMAp = new MichelsonMap();
             metadataBigMAp.set("", bytesUrl);

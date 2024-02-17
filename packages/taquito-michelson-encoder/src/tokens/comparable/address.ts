@@ -5,7 +5,7 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from '../token';
-import { b58decode, encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { b58decode, encodeAddress, validateAddress, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
 /**
@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class AddressValidationError extends TokenValidationError {
   name = 'AddressValidationError';
-  constructor(public value: any, public token: AddressToken, message: string) {
+  constructor(
+    public value: any,
+    public token: AddressToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -90,7 +94,7 @@ export class AddressToken extends ComparableToken {
       );
     }
 
-    return encodePubKey(val.bytes);
+    return encodeAddress(val.bytes);
   }
 
   /**
@@ -123,7 +127,7 @@ export class AddressToken extends ComparableToken {
       );
     }
 
-    return encodePubKey(bytes);
+    return encodeAddress(bytes);
   }
   compare(address1: string, address2: string) {
     const isImplicit = (address: string) => {
