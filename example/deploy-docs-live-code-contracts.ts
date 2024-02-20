@@ -27,7 +27,7 @@ import {
 } from '../integration-tests/data/metadataViews';
 import { saplingLiveCodeContract } from './data/sapling_live_code_contract';
 import { contractMap8pairs } from './data/contractMap8pairs';
-import { char2Bytes } from '@taquito/utils';
+import { stringToBytes } from '@taquito/utils';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
 import BigNumber from 'bignumber.js';
 
@@ -583,8 +583,8 @@ async function originateTzip16Storage() {
     };
 
     const metadataBigMap = new MichelsonMap();
-    metadataBigMap.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMap.set('here', char2Bytes(JSON.stringify(metadataJSON)));
+    metadataBigMap.set('', stringToBytes('tezos-storage:here'));
+    metadataBigMap.set('here', stringToBytes(JSON.stringify(metadataJSON)));
 
     const tacoShopStorageMap = new MichelsonMap();
 
@@ -608,7 +608,7 @@ async function originateTzip16Https() {
   tezos.setSignerProvider(signer);
   try {
     const url = 'https://storage.googleapis.com/tzip-16/taco-shop-metadata.json';
-    const bytesUrl = char2Bytes(url);
+    const bytesUrl = stringToBytes(url);
 
     const metadataBigMap = new MichelsonMap();
     metadataBigMap.set('', bytesUrl);
@@ -640,7 +640,7 @@ async function originateTzip16SHA256() {
     );
     const metadataSha256 = '0x7e99ecf3a4490e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b';
     const url = 'sha256://' + metadataSha256 + '/https:' + urlPercentEncoded;
-    const bytesUrl = char2Bytes(url);
+    const bytesUrl = stringToBytes(url);
 
     const metadataBigMap = new MichelsonMap();
     metadataBigMap.set('', bytesUrl);
@@ -668,7 +668,7 @@ async function originateTzip16IPFS() {
   tezos.setSignerProvider(signer);
   try {
     const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
-    const bytesUrl = char2Bytes(uri);
+    const bytesUrl = stringToBytes(uri);
 
     const metadataBigMap = new MichelsonMap();
     metadataBigMap.set('', bytesUrl);
@@ -695,8 +695,8 @@ async function originateTzip16OnChainJSON() {
   tezos.setSignerProvider(signer);
   try {
     const metadataBigMAp = new MichelsonMap();
-    metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample1)));
+    metadataBigMAp.set('', stringToBytes('tezos-storage:here'));
+    metadataBigMAp.set('here', stringToBytes(JSON.stringify(metadataViewsExample1)));
 
     const op = await tezos.contract.originate({
       code: contractCode,
@@ -718,8 +718,8 @@ async function originateTzip16OnChainMultiply() {
   tezos.setSignerProvider(signer);
   try {
     const metadataBigMAp = new MichelsonMap();
-    metadataBigMAp.set('', char2Bytes('tezos-storage:here'));
-    metadataBigMAp.set('here', char2Bytes(JSON.stringify(metadataViewsExample2)));
+    metadataBigMAp.set('', stringToBytes('tezos-storage:here'));
+    metadataBigMAp.set('here', stringToBytes(JSON.stringify(metadataViewsExample2)));
 
     const op = await tezos.contract.originate({
       code: contractCode,

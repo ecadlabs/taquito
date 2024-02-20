@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
+import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
 import { tacoContractTzip16 } from "./data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
 
@@ -28,8 +28,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       };
 
       const metadataBigMap = new MichelsonMap();
-      metadataBigMap.set("", char2Bytes('tezos-storage:here'));
-      metadataBigMap.set("here", char2Bytes(JSON.stringify(metadataJSON)))
+      metadataBigMap.set("", stringToBytes('tezos-storage:here'));
+      metadataBigMap.set("here", stringToBytes(JSON.stringify(metadataJSON)))
 
       // Ligo Taco shop contract modified to include metadata in storage
       // https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A
@@ -84,7 +84,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     it('Verify contract.originate for a contract having metadata inside another contract same network', async () => {
 
       const metadataBigMap = new MichelsonMap();
-      metadataBigMap.set("", char2Bytes(`tezos-storage://${contractAddress}/here`));
+      metadataBigMap.set("", stringToBytes(`tezos-storage://${contractAddress}/here`));
 
       const tacoShopStorageMap = new MichelsonMap();
 

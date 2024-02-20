@@ -1,5 +1,4 @@
 import { CONFIGS } from "./config";
-import { DEFAULT_FEE, DEFAULT_GAS_LIMIT } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
@@ -15,16 +14,12 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         const op = await Tezos.contract.setDelegate({
           delegate,
           source: pkh,
-          fee: DEFAULT_FEE.DELEGATION,
-          gasLimit: DEFAULT_GAS_LIMIT.DELEGATION
         })
         await op.confirmation()
         expect(op.hash).toBeDefined();
         expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         expect(Number(op.consumedGas)).toBeGreaterThan(0);
         expect(op.delegate).toEqual(delegate);
-        expect(op.fee).toEqual(DEFAULT_FEE.DELEGATION);
-        expect(op.gasLimit).toEqual(DEFAULT_GAS_LIMIT.DELEGATION);
         expect(op.storageLimit).toEqual(0);
         expect(op.isRegisterOperation).toBeFalsy();
         expect(op.source).toEqual(pkh);

@@ -3,7 +3,7 @@ import { MichelsonMap, MichelCodecPacker, TezosToolkit } from '@taquito/taquito'
 import { permit_admin_42_expiry } from './data/permit_admin_42_expiry';
 import { permit_admin_42_set } from './data/permit_admin_42_set';
 import { permit_fa12_smartpy } from './data/permit_fa12_smartpy';
-import { buf2hex, char2Bytes, hex2buf } from '@taquito/utils';
+import { buf2hex, stringToBytes, hex2buf } from '@taquito/utils';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { packDataBytes } from "@taquito/michel-codec"
 
@@ -181,7 +181,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     test('Verify contract.originate for a permit fa1.2 contract with metadata views', async () => {
       const url = 'https://storage.googleapis.com/tzip-16/permit_metadata.json';
-      const bytesUrl = char2Bytes(url);
+      const bytesUrl = stringToBytes(url);
       const metadata = new MichelsonMap();
       metadata.set('', bytesUrl);
 
@@ -284,7 +284,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Originate permit-fa1.2 contract with bootstrap1_address as administrator
         const url = 'https://storage.googleapis.com/tzip-16/permit_metadata.json';
-        const bytesUrl = char2Bytes(url);
+        const bytesUrl = stringToBytes(url);
         const metadata = new MichelsonMap();
         metadata.set('', bytesUrl);
 

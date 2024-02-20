@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
 import { compose, MichelsonMap, ViewSimulationError } from '@taquito/taquito';
-import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
+import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
 import { tzip12, Tzip12Module, TokenIdNotFound, InvalidTokenMetadata } from '@taquito/tzip12';
 import { fa2TokenFactory } from './data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			);
 
 			const url = 'https://storage.googleapis.com/tzip-16/fa2-token-factory.json';
-			const bytesUrl = char2Bytes(url);
+			const bytesUrl = stringToBytes(url);
 			const metadata = new MichelsonMap();
 			metadata.set('', bytesUrl);
 
@@ -56,12 +56,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			const token_metadata = new MichelsonMap();
 			const token1 = new MichelsonMap();
-			token1.set('name', char2Bytes('wToken'));
-			token1.set('symbol', char2Bytes('wTK'));
+			token1.set('name', stringToBytes('wToken'));
+			token1.set('symbol', stringToBytes('wTK'));
 			token1.set('decimals', '36');
 			const token2 = new MichelsonMap();
-			token2.set('name', char2Bytes('AliceToken'));
-			token2.set('symbol', char2Bytes('ALC'));
+			token2.set('name', stringToBytes('AliceToken'));
+			token2.set('symbol', stringToBytes('ALC'));
 			token2.set('decimals', '30');
 			token_metadata.set('1', {
 				token_id: '1',
@@ -183,7 +183,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			);
 
 			const url = 'https://storage.googleapis.com/tzip-16/fa2-views.json';
-			const bytesUrl = char2Bytes(url);
+			const bytesUrl = stringToBytes(url);
 			const metadata = new MichelsonMap();
 			metadata.set('', bytesUrl);
 
@@ -191,15 +191,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			const tokens = new MichelsonMap();
 			const metadataMap0 = new MichelsonMap();
-			metadataMap0.set('', char2Bytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
-			metadataMap0.set('name', char2Bytes('Name from URI is prioritized!'));
+			metadataMap0.set('', stringToBytes('https://storage.googleapis.com/tzip-16/token-metadata.json'));
+			metadataMap0.set('name', stringToBytes('Name from URI is prioritized!'));
 			const metadataMap1 = new MichelsonMap();
-			metadataMap1.set('name', char2Bytes('AliceToken'));
-			metadataMap1.set('symbol', char2Bytes('ALC'));
+			metadataMap1.set('name', stringToBytes('AliceToken'));
+			metadataMap1.set('symbol', stringToBytes('ALC'));
 			metadataMap1.set('decimals', '30');
-			metadataMap1.set('extra', char2Bytes('Add more data'));
+			metadataMap1.set('extra', stringToBytes('Add more data'));
 			const metadataMap2 = new MichelsonMap();
-			metadataMap2.set('name', char2Bytes('Invalid token metadata'));
+			metadataMap2.set('name', stringToBytes('Invalid token metadata'));
 			tokens.set('0', {
 				metadata_map: metadataMap0,
 				total_supply: '20000'

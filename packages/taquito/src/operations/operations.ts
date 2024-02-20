@@ -167,9 +167,10 @@ export class Operation {
           filter((head) => head.header.level - this._foundAt >= conf - 1),
           first()
         )
-        .subscribe((_) => {
-          resolve(this._foundAt + (conf - 1));
-        }, reject);
+        .subscribe({
+          error: (e) => reject(e),
+          complete: () => resolve(this._foundAt + (conf - 1)),
+        });
     });
   }
 }

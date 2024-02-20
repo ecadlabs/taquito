@@ -1,6 +1,6 @@
 import { CONFIGS } from './config';
 import { MichelsonMap } from '@taquito/taquito';
-import { tzip16, Tzip16Module, char2Bytes } from '@taquito/tzip16';
+import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
 import { contractCode, metadataViewsExample1, metadataViewsExample2 } from './data/metadataViews';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -15,8 +15,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 		test('Verify contract.originate for a contract with metadata having views that return bytes (example taken from TZComet) and then call the views', async () => {
 
 			const metadataBigMAp = new MichelsonMap();
-			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-			metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample1)))
+			metadataBigMAp.set("", stringToBytes('tezos-storage:here'));
+			metadataBigMAp.set("here", stringToBytes(JSON.stringify(metadataViewsExample1)))
 
 			const op = await Tezos.contract.originate({
 				code: contractCode,
@@ -59,8 +59,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 		test('Verify contract.originate for a contract with metadata having a couple of views (example taken from TZComet) and then call the views', async () => {
 
 			const metadataBigMAp = new MichelsonMap();
-			metadataBigMAp.set("", char2Bytes('tezos-storage:here'));
-			metadataBigMAp.set("here", char2Bytes(JSON.stringify(metadataViewsExample2)))
+			metadataBigMAp.set("", stringToBytes('tezos-storage:here'));
+			metadataBigMAp.set("here", stringToBytes(JSON.stringify(metadataViewsExample2)))
 
 			const op = await Tezos.contract.originate({
 				code: contractCode,

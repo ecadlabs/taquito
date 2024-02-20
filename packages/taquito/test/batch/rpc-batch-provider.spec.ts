@@ -166,8 +166,8 @@ describe('OperationBatch test', () => {
             {
               value: { int: '2' },
               counter: '1',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
@@ -231,8 +231,8 @@ describe('OperationBatch test', () => {
           contents: [
             {
               counter: '1',
-              fee: '374',
-              gas_limit: '1100',
+              fee: '276',
+              gas_limit: '592',
               kind: 'reveal',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
@@ -241,8 +241,8 @@ describe('OperationBatch test', () => {
             {
               value: { int: '2' },
               counter: '2',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
@@ -278,8 +278,8 @@ describe('OperationBatch test', () => {
             {
               value: { string: 'test' },
               counter: '1',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
@@ -352,8 +352,8 @@ describe('OperationBatch test', () => {
           contents: [
             {
               counter: '1',
-              fee: '374',
-              gas_limit: '1100',
+              fee: '276',
+              gas_limit: '592',
               kind: 'reveal',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
@@ -362,8 +362,8 @@ describe('OperationBatch test', () => {
             {
               value: { string: 'test' },
               counter: '2',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               kind: 'register_global_constant',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               storage_limit: '93',
@@ -400,8 +400,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'increase_paid_storage',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               storage_limit: '93',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
@@ -438,8 +438,8 @@ describe('OperationBatch test', () => {
           contents: [
             {
               counter: '1',
-              fee: '374',
-              gas_limit: '1100',
+              fee: '276',
+              gas_limit: '592',
               kind: 'reveal',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
@@ -448,8 +448,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'increase_paid_storage',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               storage_limit: '93',
               amount: '1',
               destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
@@ -504,7 +504,7 @@ describe('OperationBatch test', () => {
     });
   });
 
-  describe('withSmartRollupAddMessage op', () => {
+  describe('withSmartRollupAddMessages op', () => {
     it('should produce a batch op which contains a smartRollupAddMessages operation', async () => {
       const estimate = new Estimate(1230000, 93, 142, 250);
       mockEstimate.batch.mockResolvedValue([estimate]);
@@ -529,8 +529,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'smart_rollup_add_messages',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               storage_limit: '93',
               message: [
                 '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
@@ -612,18 +612,18 @@ describe('OperationBatch test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
             {
               kind: 'smart_rollup_add_messages',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               storage_limit: '93',
               message: [
                 '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
@@ -663,8 +663,8 @@ describe('OperationBatch test', () => {
             {
               kind: 'smart_rollup_originate',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
+              fee: '385',
+              gas_limit: '1230',
               storage_limit: '93',
               kernel: '1234567890',
               parameters_ty: { prim: 'bytes' },
@@ -744,6 +744,97 @@ describe('OperationBatch test', () => {
           contents: [
             {
               kind: 'reveal',
+              fee: '276',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '592',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'smart_rollup_originate',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '385',
+              gas_limit: '1230',
+              storage_limit: '93',
+              kernel: '1234567890',
+              parameters_ty: { prim: 'bytes' },
+              pvm_kind: 'wasm_2_0_0',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+  });
+
+  describe('withSmartRollupExecuteOutboxMessage op', () => {
+    it('should produce a batch op without reveal', async () => {
+      const estimate = new Estimate(6385000, 36, 769, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+          rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+          cementedCommitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+          outputProof: '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        },
+      ];
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_execute_outbox_message',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '1618',
+              gas_limit: '6485',
+              storage_limit: '36',
+              rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+              cemented_commitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+              output_proof: '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should produce a batch op with reveal operation', async () => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      const estimateReveal = new Estimate(1000000, 0, 64, 250);
+      const estimate = new Estimate(6385000, 36, 769, 250);
+      mockEstimate.batch.mockResolvedValue([estimateReveal, estimate]);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+          rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+          cementedCommitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+          outputProof: '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        },
+      ];
+
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
               fee: '374',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
@@ -752,15 +843,58 @@ describe('OperationBatch test', () => {
               counter: '1',
             },
             {
-              kind: 'smart_rollup_originate',
+              kind: 'smart_rollup_execute_outbox_message',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '475',
-              gas_limit: '1330',
-              storage_limit: '93',
-              kernel: '1234567890',
-              parameters_ty: { prim: 'bytes' },
-              pvm_kind: 'wasm_2_0_0',
+              fee: '1618',
+              gas_limit: '6485',
+              storage_limit: '36',
+              rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+              cemented_commitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+              output_proof: '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
               counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should produce a batch op with overridden estimate values', async () => {
+      const estimate = new Estimate(6385000, 36, 769, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const opToBatch: ParamsWithKind[] = [
+        {
+          kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+          rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+          cementedCommitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+          outputProof: '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+          fee: 2000,
+          gasLimit: 10000,
+          storageLimit: 100,
+        },
+      ];
+
+      const batchOp = await operationBatch.with(opToBatch).send();
+
+      expect(batchOp.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'smart_rollup_execute_outbox_message',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '2000',
+              gas_limit: '10000',
+              storage_limit: '100',
+              rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+              cemented_commitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+              output_proof: '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+              counter: '1',
             },
           ],
           protocol: 'test_proto',
