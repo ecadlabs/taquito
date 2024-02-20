@@ -209,10 +209,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
@@ -307,10 +307,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
@@ -373,10 +373,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
@@ -457,10 +457,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
@@ -530,10 +530,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
@@ -667,10 +667,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
@@ -833,10 +833,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
@@ -913,10 +913,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
@@ -1085,10 +1085,10 @@ describe('PrepareProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '374',
+              fee: '276',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '1100',
+              gas_limit: '592',
               storage_limit: '0',
               counter: '1',
             },
