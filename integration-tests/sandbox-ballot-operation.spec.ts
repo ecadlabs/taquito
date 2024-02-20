@@ -1,10 +1,10 @@
 import { VotingPeriodBlockResult } from '@taquito/rpc';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-import { CONFIGS, sleep } from './config';
+import { CONFIGS, isSandbox, sleep } from './config';
 
 CONFIGS().forEach(async ({ lib, rpc, protocol, setup }) => {
-  const flextesanet = rpc === 'http://localhost:20000' ? test : test.skip;
+  const flextesanet = isSandbox({ rpc }) ? test : test.skip;
   let blocksPerVotingPeriod: number;
   let blockTime: number;
   let currentPeriod: VotingPeriodBlockResult;
