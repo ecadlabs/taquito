@@ -4,7 +4,7 @@ import {
   MichelsonContractStorage,
   MichelsonType,
 } from '@taquito/michel-codec';
-import { DEFAULT_STORAGE_LIMIT, DEFAULT_FEE, getRevealGasLimit } from '../../src/constants';
+import { REVEAL_STORAGE_LIMIT, getRevealFee, getRevealGasLimit } from '../../src/constants';
 
 const scriptSample = {
   code: [
@@ -321,12 +321,12 @@ const scriptSample = {
 
 export const revealOp = (source: string) => ({
   counter: '1',
-  fee: String(DEFAULT_FEE.REVEAL),
+  fee: String(getRevealFee(source)),
   gas_limit: String(getRevealGasLimit(source)),
   kind: 'reveal',
   public_key: 'test_pub_key',
   source,
-  storage_limit: String(DEFAULT_STORAGE_LIMIT.REVEAL),
+  storage_limit: String(REVEAL_STORAGE_LIMIT),
 });
 
 export const originateResults = {
@@ -385,8 +385,8 @@ export const originateResultsEstimate = {
       revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
       {
         kind: 'origination',
-        fee: '391',
-        gas_limit: '101',
+        fee: '301',
+        gas_limit: '1',
         storage_limit: '1000',
         balance: '200000000',
         script: scriptSample,

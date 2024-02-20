@@ -1,5 +1,5 @@
 import { CONFIGS } from "./config";
-import { DEFAULT_FEE } from "@taquito/taquito";
+import { getRevealFee } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
@@ -15,10 +15,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       // A transfer from an unrevealed account will require an additional fee (reveal operation)
       const balance = await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())
-      const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: balance.minus(DEFAULT_FEE.REVEAL).toNumber() });
+      const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: balance.minus(getRevealFee(await LocalTez.signer.publicKeyHash())).toNumber() });
 
       // The max amount that can be sent now is the total balance minus the fees + reveal fees (assuming the dest is already allocated)
-      const maxAmount = balance.minus(estimate.suggestedFeeMutez + DEFAULT_FEE.REVEAL).toNumber();
+      const maxAmount = balance.minus(estimate.suggestedFeeMutez + getRevealFee(await LocalTez.signer.publicKeyHash())).toNumber();
       const op3 = await LocalTez.contract.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount, fee: estimate.suggestedFeeMutez, gasLimit: estimate.gasLimit, storageLimit: 0 })
       await op3.confirmation();
 

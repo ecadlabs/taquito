@@ -1,5 +1,5 @@
 import { TokenSchema } from './../schema/types';
-import { encodePubKey, validateAddress, ValidationResult } from '@taquito/utils';
+import { encodeAddress, validateAddress, ValidationResult } from '@taquito/utils';
 import { ContractTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -9,7 +9,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class ContractValidationError extends TokenValidationError {
   name = 'ContractValidationError';
-  constructor(public value: any, public token: ContractToken, message: string) {
+  constructor(
+    public value: any,
+    public token: ContractToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -58,7 +62,7 @@ export class ContractToken extends Token {
       );
     }
 
-    return encodePubKey(val.bytes);
+    return encodeAddress(val.bytes);
   }
 
   /**

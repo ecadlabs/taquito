@@ -1,7 +1,7 @@
 import { CONFIGS } from './config';
 import { tacoContractTzip16 } from './data/modified-taco-contract';
 import { MichelsonMap } from '@taquito/taquito';
-import { char2Bytes, tzip16, Tzip16Module, IpfsHttpHandler, Handler, MetadataProvider } from '@taquito/tzip16';
+import { stringToBytes, tzip16, Tzip16Module, IpfsHttpHandler, Handler, MetadataProvider } from '@taquito/tzip16';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
             // location of the contract metadata
             const uri = 'ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
-            const bytesUrl = char2Bytes(uri);
+            const bytesUrl = stringToBytes(uri);
 
             const metadataBigMAp = new MichelsonMap();
             metadataBigMAp.set("", bytesUrl);

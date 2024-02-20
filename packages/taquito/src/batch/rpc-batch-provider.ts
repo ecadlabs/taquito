@@ -12,6 +12,7 @@ import {
   createIncreasePaidStorageOperation,
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
+  createSmartRollupExecuteOutboxMessageOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import {
@@ -25,6 +26,7 @@ import {
   IncreasePaidStorageParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  SmartRollupExecuteOutboxMessageParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -202,6 +204,17 @@ export class OperationBatch extends Provider {
     return this;
   }
 
+  /**
+   *
+   * @description Add a smart rollup execute outbox message to the batch
+   *
+   * @param params Smart Rollup Execute Outbox Message operation parameter
+   */
+  withSmartRollupExecuteOutboxMessage(params: SmartRollupExecuteOutboxMessageParams) {
+    this.operations.push({ kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE, ...params });
+    return this;
+  }
+
   async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -236,6 +249,10 @@ export class OperationBatch extends Provider {
         });
       case OpKind.SMART_ROLLUP_ORIGINATE:
         return createSmartRollupOriginateOperation({
+          ...param,
+        });
+      case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
+        return createSmartRollupExecuteOutboxMessageOperation({
           ...param,
         });
       default:
@@ -279,6 +296,9 @@ export class OperationBatch extends Provider {
           break;
         case OpKind.SMART_ROLLUP_ORIGINATE:
           this.withSmartRollupOriginate(param);
+          break;
+        case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
+          this.withSmartRollupExecuteOutboxMessage(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
