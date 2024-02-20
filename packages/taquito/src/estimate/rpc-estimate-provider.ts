@@ -15,6 +15,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  SmartRollupExecuteOutboxMessageParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -437,6 +438,26 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
     }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for a smart_rollup_execute_outbox_message operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  async smartRollupExecuteOutboxMessage(params: SmartRollupExecuteOutboxMessageParams) {
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const preparedOperation = await this.prepare.smartRollupExecuteOutboxMessage(params);
+
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+    }
+
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
 
