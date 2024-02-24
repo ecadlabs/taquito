@@ -15,7 +15,7 @@
   "version": "19.0.2",
   "dependencies": {
     "@ledgerhq/devices": "8.0.7",
-    "@ledgerhq/hw-transport": "6.28.8",
+    "@ledgerhq/hw-transport": "6.30.3",
     "@ledgerhq/hw-transport-node-hid": "6.27.21",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.27.19",
     "@taquito/contracts-library": "^19.0.2",
