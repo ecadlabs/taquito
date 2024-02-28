@@ -32,6 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                     3: '3'
                 }
             });
+            await op.confirmation();
             const contract = await op.contract();
 
             interface StorageType {

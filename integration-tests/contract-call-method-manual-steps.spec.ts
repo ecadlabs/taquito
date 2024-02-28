@@ -17,9 +17,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code,
         storage: 10
       });
+      await opOrigination.confirmation();
       const contract = await opOrigination.contract();
 
-      // Let's say we want to call the default entry point of the presented contract, and we want to obtain the operation hash before injecting the operation to the node. 
+      // Let's say we want to call the default entry point of the presented contract, and we want to obtain the operation hash before injecting the operation to the node.
       // Currently, if we do `await contract.methods.default(5).send()`, we won't be able to obtain the operation hash before the operation gets injected.
       // This plan to be addressed in issue #432
 
@@ -34,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // We estimate the fees for the operation
       const estimate = await Tezos.estimate.transfer(transferParams);
 
-      // The createTransferOperation function returns RPCTransferOperation where we include the estimated fees 
+      // The createTransferOperation function returns RPCTransferOperation where we include the estimated fees
       const rpcTransferOperation = await createTransferOperation({
         ...transferParams,
         fee: estimate.suggestedFeeMutez,
@@ -90,5 +91,3 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   }
 
 });
-
-

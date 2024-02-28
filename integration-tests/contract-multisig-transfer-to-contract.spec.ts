@@ -24,6 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
           keys: [await account1.signer.publicKey(), await account2.signer.publicKey(), await account3.signer.publicKey()]
         }
       })
+      await op.confirmation();
       const contract = await op.contract();
       expect(op.status).toEqual('applied')
 

@@ -123,7 +123,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
         code: managerCode,
         init: { string: await Tezos.signer.publicKeyHash() }
       });
-
+      await op.confirmation();
       const contract = await op.contract();
       expect(op.status).toEqual('applied');
 
@@ -186,6 +186,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
         code: managerCode,
         init: { "string": await Tezos.signer.publicKeyHash() },
       })
+      await op.confirmation();
       const contract = await op.contract();
 
       const estimateOp = await Tezos.estimate.batch([

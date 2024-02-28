@@ -13,6 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 code,
                 storage: 1000000000000000000000000000000000000000000000000000000
             });
+            await op.confirmation();
             const contract = await op.contract();
 
             const operation = await contract.methods
@@ -34,6 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 code,
                 storage: 1000000000000000000000000000000000000000000000000000000
             }).send();
+            await op.confirmation();
             const contract = await op.contract();
 
             const operation = await contract.methods

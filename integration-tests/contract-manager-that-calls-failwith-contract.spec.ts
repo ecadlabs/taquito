@@ -11,15 +11,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination of a contract that calls 2nd contract that FAILs through contract api: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup();      
-    
+      await setup();
+
       try {
         const op = await Tezos.contract.originate({
           balance: "1",
           code: failwithContractCode,
           storage: null
         });
-  
+        await op.confirmation();
         contract = await op.contract();
 
         opManager = await Tezos.contract.originate({
@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           code: managerCode,
           init: { "string": await Tezos.signer.publicKeyHash() },
         });
-
+        await opManager.confirmation();
       } catch(e) {
         console.log(`Error when preparing the test: ${e}`);
       }

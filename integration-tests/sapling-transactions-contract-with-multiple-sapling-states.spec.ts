@@ -30,7 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           right: SaplingStateValue
         }
       });
-
+      await saplingContractOrigination.confirmation();
       saplingContract = await saplingContractOrigination.contract();
 
       // Instantiate an InMemorySpendingKey from a spending key for Alice

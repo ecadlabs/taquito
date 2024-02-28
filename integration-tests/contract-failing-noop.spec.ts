@@ -3,14 +3,19 @@ import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { InMemorySigner } from "@taquito/signer";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ rpc, lib }) => {
+CONFIGS().forEach(({ rpc }) => {
   const aliceSKey = 'edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq'
 
   describe(`Test failing_noop through contract api using: ${rpc}`, () => {
     let Tezos: TezosToolkit;
 
     beforeAll(async () => {
-      Tezos = lib;
+      if(rpc.includes('oxfordnet')){
+        Tezos = new TezosToolkit('https://rpc.tzkt.io/oxfordnet');
+      }
+      if(rpc.includes('ghostnet')){
+        Tezos = new TezosToolkit('https://rpc.tzkt.io/ghostnet');
+      }
       Tezos.setSignerProvider(new InMemorySigner(aliceSKey));
     });
 
@@ -37,7 +42,7 @@ CONFIGS().forEach(({ rpc, lib }) => {
     let Mainnet: TezosToolkit;
 
     beforeAll(async () => {
-      Mainnet = new TezosToolkit('https://rpc.tzkt.io/mainnet'); // this is an archive node public rpc url for mainnet
+      Mainnet = new TezosToolkit('https://rpc.tzkt.io/mainnet'); // this is a mainnet archive history mode public rpc node url
       Mainnet.setSignerProvider(new InMemorySigner(aliceSKey));
     });
 

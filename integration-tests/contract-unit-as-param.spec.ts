@@ -15,6 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: depositContractCode,
         init: depositContractStorage
       })
+      await op.confirmation()
       const contract = await op.contract()
 
       const operation = await contract.methods.deposit(null).send({ amount: 1, });

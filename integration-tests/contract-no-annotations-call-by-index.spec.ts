@@ -27,6 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: noAnnotCode,
         init: noAnnotInit(await Tezos.signer.publicKeyHash())
       })
+      await op.confirmation()
       const contract = await op.contract()
 
       // Make a transfer
