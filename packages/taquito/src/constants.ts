@@ -128,7 +128,10 @@ const getRevealGasLimitInternal = (address: string) => {
   }
 };
 
-export const getRevealFee = (address: string) => {
+export const getRevealFee = (address: string) =>
+  Math.round((getRevealFeeInternal(address) * 12) / 10);
+
+export const getRevealFeeInternal = (address: string) => {
   switch (address.substring(0, 3)) {
     case 'tz1':
       return REVEAL_FEE.TZ1;
@@ -139,6 +142,6 @@ export const getRevealFee = (address: string) => {
     case 'tz4':
       return REVEAL_FEE.TZ4;
     default:
-      throw new Error(`Cannot estimate reveal gas limit for ${address}`);
+      throw new Error(`Cannot estimate reveal fee for ${address}`);
   }
 };
