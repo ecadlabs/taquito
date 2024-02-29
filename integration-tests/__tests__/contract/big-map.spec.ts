@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;
 
   describe(`Test contract origination with initialized Maps with variants of data through contract api using: ${rpc}`, () => {
-    /** The purpose of the test is to make sure that the keys in the map are properly ordered by Taquito before injection of the operation, 
+    /** The purpose of the test is to make sure that the keys in the map are properly ordered by Taquito before injection of the operation,
     *   If the keys are not ordered, the node will reject the operation. */
 
     beforeEach(async () => {
@@ -69,7 +69,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
           }),
         },
       });
-
+      await op.confirmation();
       await op.contract();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -95,6 +95,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
             3: '3',
           },
         });
+        await op.confirmation();
         const contract = await op.contract();
 
         interface StorageType {
@@ -190,6 +191,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
         code: tokenCode,
         init: tokenInit(`${await Tezos.signer.publicKeyHash()}`),
       });
+      await op.confirmation();
       const contract = await op.contract();
 
       // Fetch the storage of the newly deployed contract
@@ -221,6 +223,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
         code: tokenCode,
         init: tokenInit(`${await Tezos.signer.publicKeyHash()}`),
       });
+      await op.confirmation();
       const contract = await op.contract();
 
       // Fetch the storage of the newly deployed contract
@@ -252,7 +255,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
           3: '3',
         },
       });
-
+      await op.confirmation();
       await op.contract();
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);

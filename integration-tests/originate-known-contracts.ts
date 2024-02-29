@@ -39,6 +39,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     let originateKnownContract = async (contractName: string, tezos: TezosToolkit, contractOriginateParams: OriginateParams): Promise<void> => {
       try {
         const operation = await tezos.contract.originate(contractOriginateParams);
+        await operation.confirmation();
         const contract = await operation.contract();
         console.log(`known ${contractName} address:  ${contract.address}`);
         // Set the contract's address for subsequent GitHub actions

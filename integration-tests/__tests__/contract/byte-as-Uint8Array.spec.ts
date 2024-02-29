@@ -26,6 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 code: code,
                 storage: value
             });
+            await op.confirmation();
             const contract = await op.contract();
             const contractAbs = await Tezos.contract.at(contract.address);
 

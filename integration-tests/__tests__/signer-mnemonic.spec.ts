@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         funderPKH = await Funder.signer.publicKeyHash();
 
         /**
-         * Create 3 TezosToolkits with signer providers of different curves 
+         * Create 3 TezosToolkits with signer providers of different curves
          * and Fund them with the Funder account
          */
         Tez1 = new TezosToolkit(rpc);
@@ -57,21 +57,21 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it('should create a signer instance (ed25519) using the fromMnemonic method and successfully sign an op', async () => {
       const op = await Tez1.contract.transfer({ to: funderPKH, amount: 0.1 });
-      op.confirmation();
+      await op.confirmation();
 
       expect(op.hash).toBeDefined();
     });
 
     it('should create a signer instance (secp256k1) using the fromMnemonic method and successfully sign an op', async () => {
       const op = await Tez2.contract.transfer({ to: funderPKH, amount: 0.1 });
-      op.confirmation();
+      await op.confirmation();
 
       expect(op.hash).toBeDefined();
     });
 
     it('should create a signer instance (p256) using the fromMnemonic method and successfully sign an op', async () => {
       const op = await Tez3.contract.transfer({ to: funderPKH, amount: 0.1 });
-      op.confirmation();
+      await op.confirmation();
 
       expect(op.hash).toBeDefined();
     });

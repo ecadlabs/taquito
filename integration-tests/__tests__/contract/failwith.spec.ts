@@ -14,6 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: failwithContractCode,
         storage: null
       })
+      await op.confirmation()
       const contract = await op.contract()
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)

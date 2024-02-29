@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;
   describe(`Test contract origination and accessing big map abstraction by index through contract api using: ${rpc}`, () => {
 
-    // In this scenario the code of the contract doesn't have annotation in its storage, so Taquito references element by indexes. 
+    // In this scenario the code of the contract doesn't have annotation in its storage, so Taquito references element by indexes.
 
     beforeEach(async () => {
       await setup()
@@ -19,6 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
         code: tokenCode,
         init: tokenInit(`${await Tezos.signer.publicKeyHash()}`),
       })
+      await op.confirmation()
       const contract = await op.contract()
 
       // Fetch the storage of the newly deployed contract
@@ -52,6 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
         code: tokenCode,
         init: tokenInit(`${await Tezos.signer.publicKeyHash()}`),
       })
+      await op.confirmation()
       const contract = await op.contract()
 
       // Fetch the storage of the newly deployed contract

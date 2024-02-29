@@ -68,7 +68,7 @@ const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string
   };
 
   const sigParamPacked = packDataBytes(sigParamData, sigParamType);
-  // signs the hash    
+  // signs the hash
   const signature = await Tezos.signer.sign(sigParamPacked.bytes);
 
   return signature.sig
@@ -314,6 +314,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         //Mint 10 tokens to bootstrap 2
         const mint_contract = await LocalTez1.contract.at(fa12_contract.address);
         const mint = await mint_contract.methods.mint(bootstrap2_address, 10).send();
+        await mint.confirmation();
         expect(mint.hash).toBeDefined();
         expect(mint.status).toEqual('applied');
         await mint.confirmation();

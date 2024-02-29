@@ -42,7 +42,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: singleSaplingStateContractJProtocol(4),
         init: '{}'
       });
-
+      await saplingContractOrigination.confirmation();
       saplingContract = await saplingContractOrigination.contract();
 
       const mnemonic1: string = bip39.generateMnemonic();
@@ -326,4 +326,3 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   });
 });
-

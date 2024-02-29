@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         code: singleSaplingStateContractJProtocol(),
         init: '{}'
       });
-
+      await saplingContractOrigination.confirmation();
       saplingContract = await saplingContractOrigination.contract();
 
       // Generate a spending key and an InMemorySpendingKey instance for Bob using a mnemonic
@@ -139,7 +139,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             paymentAddress: alicePaymentAddress,
             isSpent: true
           },
-          { // This input is a payback for when Alice sent 2 tz to bob (3tz - 2tz = 1tz). 
+          { // This input is a payback for when Alice sent 2 tz to bob (3tz - 2tz = 1tz).
             // Alice consumed the 3tz input and received 1tz back.
             value: new BigNumber(1000000),
             memo: '',
@@ -262,4 +262,3 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   });
 });
-

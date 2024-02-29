@@ -27,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         code: reduceMap,
         storage: [1]
       });
-
+      await deployContract.confirmation();
       const contract = await deployContract.contract();
 
       const op = await contract.methodsObject.default({
