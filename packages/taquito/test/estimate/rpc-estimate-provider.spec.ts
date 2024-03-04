@@ -334,28 +334,6 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate.gasLimit).toEqual(1000);
     });
 
-    it('should use the maximum storage an account can afford', async () => {
-      mockRpcClientSimulateOperation();
-      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
-      await estimateProvider.transfer({
-        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-        amount: 2,
-      });
-      expect(mockRpcClient.simulateOperation).toHaveBeenCalledWith(
-        expect.objectContaining({
-          operation: expect.objectContaining({
-            contents: expect.arrayContaining([
-              expect.objectContaining({
-                fee: '0',
-                storage_limit: '1',
-                gas_limit: '1040000',
-              }),
-            ]),
-          }),
-        })
-      );
-    });
-
     it('should use the maximum storage the protocol allow if user can afford it', async () => {
       mockRpcClientSimulateOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('800000000'));
@@ -796,66 +774,6 @@ describe('RPCEstimateProvider test signer', () => {
               }),
               expect.objectContaining({
                 gas_limit: '1040000',
-              }),
-            ]),
-          }),
-        })
-      );
-    });
-
-    it('runOperation should be called with a gas_limit calculated with the hard_gas_limit_per_block constant and the number of operation in the batch', async () => {
-      const transactionResult = {
-        kind: 'transaction',
-        fee: 10000,
-        metadata: {
-          operation_result: {
-            consumed_milligas: 1000000,
-          },
-        },
-      };
-      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
-      mockRpcClient.simulateOperation.mockResolvedValue({
-        contents: [
-          transactionResult,
-          transactionResult,
-          transactionResult,
-          transactionResult,
-          transactionResult,
-          transactionResult,
-        ],
-      });
-      await estimateProvider.batch([
-        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
-        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
-      ]);
-
-      // the gas_limit need to be calculated, can not be set to the hard_gas_limit_per_operation which is 1040000,
-      // otherwise the total gas_limit of the batch is higher (6*1040000=6240000) than hard_gas_limit_per_block (5200000)
-      expect(mockRpcClient.simulateOperation).toHaveBeenCalledWith(
-        expect.objectContaining({
-          operation: expect.objectContaining({
-            contents: expect.arrayContaining([
-              expect.objectContaining({
-                gas_limit: '742857',
-              }),
-              expect.objectContaining({
-                gas_limit: '742857',
-              }),
-              expect.objectContaining({
-                gas_limit: '742857',
-              }),
-              expect.objectContaining({
-                gas_limit: '742857',
-              }),
-              expect.objectContaining({
-                gas_limit: '742857',
-              }),
-              expect.objectContaining({
-                gas_limit: '742857',
               }),
             ]),
           }),
