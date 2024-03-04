@@ -60,6 +60,7 @@ import {
 import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
+import BigNumber from 'bignumber.js';
 import { BlockIdentifier } from '../read-provider/interface';
 
 interface Limits {
@@ -102,16 +103,39 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return this.context.readProvider.getCounter(pkh, 'head') ?? '0';
   }
 
+  private adjustGasForBatchOperation(
+    gasLimitBlock: BigNumber,
+    gaslimitOp: BigNumber,
+    numberOfOps: number
+  ) {
+    return BigNumber.min(gaslimitOp, gasLimitBlock.div(numberOfOps + 1));
+  }
+
   private async getOperationLimits(
     constants: Pick<
       ConstantsResponse,
-      'hard_gas_limit_per_operation' | 'hard_storage_limit_per_operation'
-    >
+      | 'hard_gas_limit_per_operation'
+      | 'hard_gas_limit_per_block'
+      | 'hard_storage_limit_per_operation'
+    >,
+    numberOfOps?: number
   ) {
-    const { hard_gas_limit_per_operation, hard_storage_limit_per_operation } = constants;
+    const {
+      hard_gas_limit_per_operation,
+      hard_gas_limit_per_block,
+      hard_storage_limit_per_operation,
+    } = constants;
     return {
       fee: 0,
-      gasLimit: hard_gas_limit_per_operation.toNumber(),
+      gasLimit: numberOfOps
+        ? Math.floor(
+            this.adjustGasForBatchOperation(
+              hard_gas_limit_per_block,
+              hard_gas_limit_per_operation,
+              numberOfOps
+            ).toNumber()
+          )
+        : hard_gas_limit_per_operation.toNumber(),
       storageLimit: hard_storage_limit_per_operation.toNumber(),
     };
   }
@@ -959,7 +983,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh, publicKey } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants, batchParams.length);
     const revealNeeded = await this.isRevealOpNeeded(batchParams, pkh);
 
     const ops: RPCOperation[] = [];

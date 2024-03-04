@@ -781,6 +781,66 @@ describe('RPCEstimateProvider test signer', () => {
       );
     });
 
+    it('runOperation should be called with a gas_limit calculated with the hard_gas_limit_per_block constant and the number of operation in the batch', async () => {
+      const transactionResult = {
+        kind: 'transaction',
+        fee: 10000,
+        metadata: {
+          operation_result: {
+            consumed_milligas: 1000000,
+          },
+        },
+      };
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+          transactionResult,
+        ],
+      });
+      await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+      ]);
+
+      // the gas_limit need to be calculated, can not be set to the hard_gas_limit_per_operation which is 1040000,
+      // otherwise the total gas_limit of the batch is higher (6*1040000=6240000) than hard_gas_limit_per_block (5200000)
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: expect.arrayContaining([
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+              expect.objectContaining({
+                gas_limit: '742857',
+              }),
+            ]),
+          }),
+        })
+      );
+    });
+
     it('should produce a batch operation containing 2 transactions, no reveal', async () => {
       mockRpcClient.simulateOperation.mockResolvedValue({
         contents: [
