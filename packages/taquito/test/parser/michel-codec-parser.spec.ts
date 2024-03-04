@@ -141,7 +141,6 @@ describe('MichelCodec parser', () => {
       } catch (err: any) {
         expect(err).toBeInstanceOf(InvalidCodeParameter);
         expect(err.message).toContain('Unable to parse');
-        console.log(err.data);
       }
     });
 

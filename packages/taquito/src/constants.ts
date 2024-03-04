@@ -109,9 +109,9 @@ export enum ChainIds {
   OXFORDNET2 = 'NetXxWsskGahzQB',
 }
 
-// A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption
+// A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption (3.5 fails occasionally with gas exhausted; 4 fails occasionally with fee too low)
 export const getRevealGasLimit = (address: string) =>
-  Math.round((getRevealGasLimitInternal(address) * 35) / 10);
+  Math.round((getRevealGasLimitInternal(address) * 37) / 10);
 
 const getRevealGasLimitInternal = (address: string) => {
   switch (address.substring(0, 3)) {
@@ -128,7 +128,10 @@ const getRevealGasLimitInternal = (address: string) => {
   }
 };
 
-export const getRevealFee = (address: string) => {
+export const getRevealFee = (address: string) =>
+  Math.round((getRevealFeeInternal(address) * 12) / 10);
+
+export const getRevealFeeInternal = (address: string) => {
   switch (address.substring(0, 3)) {
     case 'tz1':
       return REVEAL_FEE.TZ1;
@@ -139,6 +142,6 @@ export const getRevealFee = (address: string) => {
     case 'tz4':
       return REVEAL_FEE.TZ4;
     default:
-      throw new Error(`Cannot estimate reveal gas limit for ${address}`);
+      throw new Error(`Cannot estimate reveal fee for ${address}`);
   }
 };
