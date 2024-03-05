@@ -1,4 +1,5 @@
 import { CONFIGS } from "../../config";
+import { COST_PER_BYTE } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
@@ -33,7 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
             });
 
             // // Emptying the account
-            const totalFees = estimate.suggestedFeeMutez + estimate.burnFeeMutez;
+            const totalFees = estimate.suggestedFeeMutez + estimate.burnFeeMutez - (20 * COST_PER_BYTE); // 20 is storage buffer
             const maxAmount = balance.minus(totalFees).toNumber();
 
             const opTransfer = await sender.contract.transfer({

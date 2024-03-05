@@ -66,14 +66,14 @@ export class Estimate {
   }
 
   /**
-   * @description  The limit on the amount of storage an [operation](https://tezos.gitlab.io/user/glossary.html#operations) can use.
+   * @description  The limit on the amount of storage an [operation](https://tezos.gitlab.io/user/glossary.html#operations) can use with 20 buffer.
    */
   get storageLimit() {
     return Math.max(Number(this._storageLimit), 0);
   }
 
   /**
-   * @description The limit on the amount of [gas](https://tezos.gitlab.io/user/glossary.html#gas) a given operation can consume.
+   * @description The limit on the amount of [gas](https://tezos.gitlab.io/user/glossary.html#gas) a given operation can consume with 100 buffer depends on the operation.
    */
   get gasLimit() {
     return this.roundUp(Number(this._milligasLimit) / 1000);
