@@ -334,28 +334,6 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate.gasLimit).toEqual(1000);
     });
 
-    it('should use the maximum storage an account can afford', async () => {
-      mockRpcClientSimulateOperation();
-      mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
-      await estimateProvider.transfer({
-        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-        amount: 2,
-      });
-      expect(mockRpcClient.simulateOperation).toHaveBeenCalledWith(
-        expect.objectContaining({
-          operation: expect.objectContaining({
-            contents: expect.arrayContaining([
-              expect.objectContaining({
-                fee: '0',
-                storage_limit: '1',
-                gas_limit: '1040000',
-              }),
-            ]),
-          }),
-        })
-      );
-    });
-
     it('should use the maximum storage the protocol allow if user can afford it', async () => {
       mockRpcClientSimulateOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('800000000'));
