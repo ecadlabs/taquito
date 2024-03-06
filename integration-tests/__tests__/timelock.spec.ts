@@ -1,4 +1,4 @@
-import { CONFIGS, SignerType } from "../config";
+import { CONFIGS } from "../config";
 import { Chest } from '../../packages/taquito-timelock/src/taquito-timelock';
 import { buf2hex } from '@taquito/utils';
 import * as crypto from 'crypto';
