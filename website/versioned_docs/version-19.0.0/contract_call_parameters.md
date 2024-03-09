@@ -9,7 +9,7 @@ You will find below tables that match some of the most common values that smart 
 
 > You can find the tests used to check these values [in this GitHub repo](https://github.com/claudebarde/taquito-contract-call-params)
 
-::: note
+:::note
 Since Taquito version 16.2.0, we introduced syntax support for nested options in `methodsObject` but not `methods` due to the limitation of the flattened form. We recommend users migrate to using `methodsObject` as its syntax is consistent with storage parameters, supports all Michelson data types, and is continually maintained.
 :::
 
