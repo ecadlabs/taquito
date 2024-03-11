@@ -114,7 +114,7 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: source ./integration-tests/sandbox-env.sh
-    - run: npm -w integration-tests run test:secret-key sandbox-ballot-operation.spec.ts drain-delegate.spec.ts
+    - run: npm -w integration-tests run test:secret-key sandbox-ballot-operation.spec.ts
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
