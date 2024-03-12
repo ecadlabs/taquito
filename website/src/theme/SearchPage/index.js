@@ -39,7 +39,7 @@ function useDocumentsFoundPlural() {
       ),
     );
 }
-function useDocsSearchVersionsHelpers() {
+function useDocsSearchVersionsHelpers(contextualSearch) {
   const allDocsData = useAllDocsData();
   // State of the version select menus / algolia facet filters
   // docsPluginId -> versionName map
@@ -47,7 +47,7 @@ function useDocsSearchVersionsHelpers() {
     Object.entries(allDocsData).reduce(
       (acc, [pluginId, pluginData]) => ({
         ...acc,
-        [pluginId]: pluginData.versions[0].name,
+        [pluginId]: pluginData.versions[1].name,
       }),
       {},
     ),
@@ -55,7 +55,7 @@ function useDocsSearchVersionsHelpers() {
   // Set the value of a single select menu
   const setSearchVersion = (pluginId, searchVersion) =>
     setSearchVersions((s) => ({...s, [pluginId]: searchVersion}));
-  const versioningEnabled = Object.values(allDocsData).some(
+  const versioningEnabled = contextualSearch && Object.values(allDocsData).some( // Added false && to disable versioning, might be able to remove after re-indexing with contextual search disabled
     (docsData) => docsData.versions.length > 1,
   );
   return {
@@ -66,12 +66,12 @@ function useDocsSearchVersionsHelpers() {
   };
 }
 // We want to display one select per versioned docs plugin instance
-function SearchVersionSelectList({docsSearchVersionsHelpers}) {
+function SearchVersionSelectList({docsSearchVersionsHelpers, contextualSearch}) {
   const versionedPluginEntries = Object.entries(
     docsSearchVersionsHelpers.allDocsData,
   )
     // Do not show a version select for unversioned docs plugin instances
-    .filter(([, docsData]) => docsData.versions.length > 1);
+    .filter(([, docsData]) => contextualSearch && docsData.versions.length > 1);  // Added false && to disable versioning, might be able to remove after re-indexing with contextual search disabled
   return (
     <div
       className={clsx(
@@ -112,11 +112,12 @@ function SearchPageContent() {
     i18n: {currentLocale},
   } = useDocusaurusContext();
   const {
-    algolia: {appId, apiKey, indexName},
+    algolia: {appId, apiKey, indexName, contextualSearch},
   } = useAlgoliaThemeConfig();
+  console.log('contextualSearch', contextualSearch);
   const processSearchResultUrl = useSearchResultUrlProcessor();
   const documentsFoundPlural = useDocumentsFoundPlural();
-  const docsSearchVersionsHelpers = useDocsSearchVersionsHelpers();
+  const docsSearchVersionsHelpers = useDocsSearchVersionsHelpers(contextualSearch);
   const [searchQuery, setSearchQuery] = useSearchQueryString();
   const initialSearchResultState = {
     items: [],
@@ -331,6 +332,7 @@ function SearchPageContent() {
           {docsSearchVersionsHelpers.versioningEnabled && (
             <SearchVersionSelectList
               docsSearchVersionsHelpers={docsSearchVersionsHelpers}
+              contextualSearch={contextualSearch}
             />
           )}
         </form>
