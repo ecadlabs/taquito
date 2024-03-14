@@ -1,4 +1,5 @@
 #!/bin/sh
+export TEZOS_NETWORK_TYPE=sandbox
 export RUN_NAIROBINET_WITH_SECRET_KEY=true
 export SECRET_KEY=edsk3RFgDiCt7tWB2oe96w1eRw72iYiiqZPLu9nnEY23MYRp2d8Kkx
 export TEZOS_RPC_NAIROBINET=http://localhost:20000
