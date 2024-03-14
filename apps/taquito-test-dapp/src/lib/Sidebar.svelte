@@ -1,9 +1,11 @@
 <script lang="ts">
   import { afterUpdate } from "svelte";
-  import { init, list } from "../tests";
+  import { init, list } from "taquito-test-dapp-tests/tests";
   import store from "../store";
   import Wallet from "./Wallet.svelte";
   import { contractAddress } from "../config";
+  import { get } from "svelte/store";
+  import state from "../store";
 
   let wallet: Wallet;
 
@@ -12,7 +14,11 @@
   afterUpdate(async () => {
     if ($store.Tezos && $store.wallet && $store.tests.length === 0) {
       const contract = await $store.Tezos.wallet.at(contractAddress[$store.networkType]);
-      const tests = init($store.Tezos, contract, $store.wallet);
+      const tests = init($store.Tezos, contract, $store.wallet, {
+        updateConfirmationObservableTest: store.updateConfirmationObservableTest,
+        resetConfirmationObservableTest: store.resetConfirmationObservableTest,
+        getState: () => get(state),
+      });
       store.updateTests(tests);
     }
   });

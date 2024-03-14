@@ -1,10 +1,28 @@
-export interface TestResult {
-  success: boolean;
+type TestSuccessResult = {
+  success: true;
   opHash: string;
   output?: string;
   sigDetails?: { input: string; formattedInput: string; bytes: string };
   confirmationObsOutput?: { level: number; currentConfirmation: number }[];
 }
+
+type TestFailureResult =  {
+  success: false;
+  output?: string;
+}
+
+export type StateFeatures = {
+  userAddress: string | undefined;
+}
+
+export type StoreFeatures = {
+  updateConfirmationObservableTest(entry: { level: number; currentConfirmation: number; }): void;
+  resetConfirmationObservableTest(): void;
+  getState(): StateFeatures;
+}
+
+
+export type TestResult = TestSuccessResult | TestFailureResult;
 
 export interface TestSettings {
   id: string;

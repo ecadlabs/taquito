@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import type { TezosToolkit } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { defaultMatrixNode, defaultNetworkType, type SupportedNetworks } from "./config";
-import type { TestSettings } from "./types";
+import type { TestSettings } from "../../tests/types";
 
 interface State {
   Tezos: TezosToolkit | undefined;
