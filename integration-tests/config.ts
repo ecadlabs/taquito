@@ -145,7 +145,7 @@ const nairobinetSecretKey: Config =
   defaultConfig({
     networkName: 'NAIROBINET',
     protocol: Protocols.PtNairobi,
-    defaultRpc: 'http://ecad-nairobinet-full:8732',
+    defaultRpc: 'http://localhost:20000',
     knownContracts: knownContractsPtNairobi,
     signerConfig: defaultSecretKey
   })
