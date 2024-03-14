@@ -1,0 +1,14 @@
+{
+  "name": "taquito-test-dapp-tests",
+  "version": "19.1.0",
+  "description": "",
+  "main": "tests.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@taquito/taquito": "^19.1.0"
+  }
+}

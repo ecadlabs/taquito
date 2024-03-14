@@ -3,6 +3,7 @@
   "workspaces": [
     "packages/*",
     "packages/taquito-michel-codec/pack-test-tool",
+    "apps/tests",
     "apps/taquito-test-dapp",
     "example",
     "integration-tests"

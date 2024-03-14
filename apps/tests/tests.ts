@@ -11,10 +11,10 @@ import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { stringToBytes, verifySignature } from "@taquito/utils";
 import { SigningType, type RequestSignPayloadInput } from "@airgap/beacon-sdk";
 import { get } from "svelte/store";
-import type { TestSettings, TestResult } from "./types";
-import store from "./store";
+import type { TestSettings, TestResult } from "../taquito-test-dapp/src/types";
+import store from "../taquito-test-dapp/src/store";
 import contractToOriginate from "./contractToOriginate";
-import localStore from "./store";
+import localStore from "../taquito-test-dapp/src/store";
 
 const preparePayloadToSign = (
   input: string,
