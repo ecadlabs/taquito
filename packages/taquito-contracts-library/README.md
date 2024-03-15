@@ -23,7 +23,7 @@ See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadl
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_http_utils.html)
+TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_http_utils.html)
 
 ## Disclaimer
 

@@ -31,7 +31,7 @@ Taquito provides convenient abstractions for a multitude of common operations, i
 
 ## Ok, I'm Ready!
 
-To get started with Taquito quickly, visit the [Taquito QuickStart](https://tezostaquito.io/docs/quick_start).
+To get started with Taquito quickly, visit the [Taquito QuickStart](https://taquito.io/docs/quick_start).
 
 If you prefer to start with a skeleton project, check out our [Taquito React Template](https://github.com/ecadlabs/taquito-react-template).
 
@@ -83,7 +83,7 @@ Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), an
 
 ## API Documentation
 
-TypeDoc API documentation for Taquito [is available here](https://tezostaquito.io/typedoc).
+TypeDoc API documentation for Taquito [is available here](https://taquito.io/typedoc).
 
 ## Versioning Strategy
 
@@ -222,7 +222,7 @@ Special thanks to these libraries, which have been excellent references for deve
 [0]: https://github.com/ecadlabs/tezos-indexer-api
 [2]: https://keybase.io/jevonearth
 [3]: https://keybase.io/simrob
-[4]: https://tezostaquito.io
+[4]: https://taquito.io
 [5]: https://docusaurus.io/
 [stackexchange]: https://tezos.stackexchange.com/questions/tagged/taquito
 [discord]: https://discord.com/channels/934567382700146739/939205889901092874

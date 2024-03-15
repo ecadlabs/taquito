@@ -8,7 +8,7 @@ A Transaction Optimistic Rollup (TORU) is an experimental temporary scaling solu
 
 This is a trimmed, more concise documentation of how to do TORU operations in Taquito. If you aren't yet familiar with rollup node interactions, please refer to this [documentation](https://tezos.gitlab.io/alpha/transaction_rollups.html?highlight=transaction%20rollups#transaction-rollups) by Nomadic Labs.
 
-TORU currently supports the transferring of funds in the form of [tickets](https://tezostaquito.io/docs/tickets). Fund (or ticket) transfers can be done from:
+TORU currently supports the transferring of funds in the form of [tickets](https://taquito.io/docs/tickets). Fund (or ticket) transfers can be done from:
 - Layer-1 to layer 2 (deposit)
 - Layer-2 to layer 2 (transfer)
 - Layer-2 to layer-1 (withdrawal)

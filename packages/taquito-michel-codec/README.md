@@ -165,7 +165,7 @@ const data = unpackDataBytes(src);
 
 ## API Documentation
 
-TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_michel_codec.html)
+TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_michel_codec.html)
 
 ## Disclaimer
 

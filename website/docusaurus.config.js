@@ -5,7 +5,7 @@ module.exports = {
   title: 'Taquito',
   tagline: 'A TypeScript library suite for development on the Tezos blockchain.',
   favicon: 'img/favicon.svg',
-  url: 'https://tezostaquito.io',
+  url: 'https://taquito.io',
   baseUrl: '/',
   projectName: 'taquito',
   organizationName: 'ecadlabs',
@@ -142,7 +142,7 @@ module.exports = {
             },
             {
               label: 'TypeDoc Reference',
-              to: 'https://tezostaquito.io/typedoc',
+              to: 'https://taquito.io/typedoc',
             },
           ],
         },

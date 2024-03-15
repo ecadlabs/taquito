@@ -18,9 +18,9 @@ async function example() {
       "version": "0.1",
       "license": "MIT",
       "authors": [
-        "Taquito <https://tezostaquito.io/>"
+        "Taquito <https://taquito.io/>"
       ],
-      "homepage": "https://tezostaquito.io/"
+      "homepage": "https://taquito.io/"
     };
 
     const metadataBigMap = new MichelsonMap();

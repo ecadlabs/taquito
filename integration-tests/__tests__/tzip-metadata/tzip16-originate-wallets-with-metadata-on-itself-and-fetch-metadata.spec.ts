@@ -22,9 +22,9 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         "version": "0.1",
         "license": "MIT",
         "authors": [
-          "Taquito <https://tezostaquito.io/>"
+          "Taquito <https://taquito.io/>"
         ],
-        "homepage": "https://tezostaquito.io/"
+        "homepage": "https://taquito.io/"
       };
 
       const metadataBigMAp = new MichelsonMap();
@@ -62,17 +62,17 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         "version": "0.1",
         "license": "MIT",
         "authors": [
-          "Taquito <https://tezostaquito.io/>"
+          "Taquito <https://taquito.io/>"
         ],
-        "homepage": "https://tezostaquito.io/"
+        "homepage": "https://taquito.io/"
       });
 
       expect(await (await contract.tzip16()).metadataName()).toEqual('test')
       expect(await (await contract.tzip16()).metadataDescription()).toEqual('A metadata test')
       expect(await (await contract.tzip16()).metadataVersion()).toEqual('0.1')
       expect(await (await contract.tzip16()).metadataLicense()).toEqual('MIT')
-      expect(await (await contract.tzip16()).metadataAuthors()).toEqual(["Taquito <https://tezostaquito.io/>"])
-      expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://tezostaquito.io/')
+      expect(await (await contract.tzip16()).metadataAuthors()).toEqual(["Taquito <https://taquito.io/>"])
+      expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://taquito.io/')
       expect(await (await contract.tzip16()).metadataSource()).toBeUndefined()
       expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
       expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
@@ -113,17 +113,17 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         "version": "0.1",
         "license": "MIT",
         "authors": [
-          "Taquito <https://tezostaquito.io/>"
+          "Taquito <https://taquito.io/>"
         ],
-        "homepage": "https://tezostaquito.io/"
+        "homepage": "https://taquito.io/"
       });
 
       expect(await (await contract.tzip16()).metadataName()).toEqual('test')
       expect(await (await contract.tzip16()).metadataDescription()).toEqual('A metadata test')
       expect(await (await contract.tzip16()).metadataVersion()).toEqual('0.1')
       expect(await (await contract.tzip16()).metadataLicense()).toEqual('MIT')
-      expect(await (await contract.tzip16()).metadataAuthors()).toEqual(["Taquito <https://tezostaquito.io/>"])
-      expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://tezostaquito.io/')
+      expect(await (await contract.tzip16()).metadataAuthors()).toEqual(["Taquito <https://taquito.io/>"])
+      expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://taquito.io/')
       expect(await (await contract.tzip16()).metadataSource()).toBeUndefined()
       expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
       expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()

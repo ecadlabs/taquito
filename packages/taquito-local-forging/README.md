@@ -1,6 +1,6 @@
 
 # Taquito Local Forging package
-*TypeDoc style documentation is available [here](https://tezostaquito.io/typedoc/modules/_taquito_local_forging.html)*
+*TypeDoc style documentation is available [here](https://taquito.io/typedoc/modules/_taquito_local_forging.html)*
 
 ## General Information
 

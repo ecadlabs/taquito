@@ -225,7 +225,7 @@ const sidebars = {
     {
       type: 'link',
       label: 'TypeDoc Reference',
-      href: 'https://tezostaquito.io/typedoc',
+      href: 'https://taquito.io/typedoc',
     },
   ],
 };
