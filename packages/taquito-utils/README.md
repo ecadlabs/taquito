@@ -1,5 +1,5 @@
 # Taquito Utils package
-*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_utils.html)*
+*TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_utils.html)*
 
 `@taquito/utils` is an npm package that provides developers with utility functionality for Taquito. 
 

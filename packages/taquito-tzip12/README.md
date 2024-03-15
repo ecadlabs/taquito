@@ -1,6 +1,6 @@
 # Taquito TZIP-012 package
-*Documentation can be found [here](https://tezostaquito.io/docs/tzip12)*  
-*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_tzip12.html)*
+*Documentation can be found [here](https://taquito.io/docs/tzip12)*  
+*TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_tzip12.html)*
 
 `@taquito/tzip12` is an npm package that provides developers with TZIP-12 functionality for Taquito. The package allows retrieving metadata associated with tokens of FA2 contracts.
 
