@@ -409,7 +409,7 @@ git commit -m "initial commit"
 In the next step, we add Taquito and Beacon SDK to the React app, and create a minimal UI to connect to the wallet and transfer ꜩ.
 
 ```bash
-npm i @taquito/taquito @taquito/beacon-wallet
+npm i @taquito/taquito @taquito/beacon-wallet @airgap/beacon-dapp
 ```
 
 Open the file `index.html` and make the following changes:
@@ -601,50 +601,19 @@ export default Transfer;
 The libraries Taquito and Beacon SDK are designed to run in a Node.js environment. However, we are running them in a browser. This causes some issues. For example, the Beacon SDK uses the Node.js `buffer`, `stream`, and `util` modules. These modules are not available in the browser. Fortunately, there are browser-compatible versions of these modules. We can use these versions instead of the Node.js versions. To do this, we need to install the following packages:
 
 ```bash
-npm i buffer stream-browserify util
+npm i -D vite-plugin-node-polyfills
 ```
 
-Now we need to tell Vite to use these packages instead of the Node.js versions. To do this, open the file `vite.config.ts` and add the following code:
+Now we need to tell Vite to use this plugin. To do this, open the file `vite.config.ts` and add the following code:
 
-```tsx
+```ts
 import { defineConfig } from 'vite'
-import react from "@vitejs/plugin-react";
+import react from '@vitejs/plugin-react'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
-  define: {
-    global: {},
-  },
-  build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
-  plugins: [react()],
-  resolve: {
-    alias: {
-      buffer: "buffer",
-      stream: "stream-browserify",
-      util: "util",
-    },
-  },
+  plugins: [react(), nodePolyfills()],
 });
-```
-
-Also, create a file named `src/polyfills.ts` and add the following code:
-
-```tsx
-import { Buffer } from "buffer";
-
-globalThis.Buffer = Buffer;
-```
-Also, make the following modification to the file `index.html`:
-
-```diff
-    <div id="root"></div>
-+    <script type="module" src="/src/polyfills.ts"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-
 ```
 
 ### Running the dApp
