@@ -18,6 +18,7 @@ jobs:
       matrix:
         node:
           - 'lts/hydrogen'
+          - 'lts/iron'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -42,8 +43,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - testnet: nairobinet
-            testnet_uppercase: NAIROBINET
+          - testnet: oxfordnet
+            testnet_uppercase: OXFORDNET
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -112,15 +113,9 @@ jobs:
           --protocol-kind ${{ matrix.protocol }}
     - run: npm ci
     - run: npm run build
-    - run: npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts sandbox-ballot-operation.spec.ts contract-batch-high-number-of-operations.spec.ts contract-pair-as-key.spec.ts --detectOpenHandles --runInBand
-      env:
-        RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
-        SECRET_KEY: edsk3S8mG2sSBmSRbikAcZVLCz4SrCq4DjmsQRic6MGktqNFijfrS2
-        TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
-        POLLING_INTERVAL_MILLISECONDS: 100
-        RPC_CACHE_MILLISECONDS: 0
-        TEZOS_BAKER: tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
-    - run: npm -w integration-tests run test:${{ matrix.testnet }}-secret-key sandbox-ballot-operation.spec.ts
+    - run: source ./integration-tests/sandbox-env.sh
+    - run: npm -w integration-tests run test:nairobinet-secret-key sandbox-ballot-operation.spec.ts
+    - run: npm -w integration-tests run test:nairobinet-secret-key sandbox-drain-delegate-operation.spec.ts
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
         SECRET_KEY: edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq

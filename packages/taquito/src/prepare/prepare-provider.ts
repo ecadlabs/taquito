@@ -24,12 +24,13 @@ import {
   ParamsWithKind,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  SmartRollupExecuteOutboxMessageParams,
   isOpWithFee,
   RegisterDelegateParams,
   ActivationParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
-import { DEFAULT_FEE, DEFAULT_STORAGE_LIMIT, Protocols, getRevealGasLimit } from '../constants';
+import { REVEAL_STORAGE_LIMIT, Protocols, getRevealFee, getRevealGasLimit } from '../constants';
 import { RPCResponseError } from '../errors';
 import { PublicKeyNotFoundError, InvalidOperationKindError, DeprecationError } from '@taquito/core';
 import { Context } from '../context';
@@ -52,6 +53,7 @@ import {
   ContractStorageType,
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
+  createSmartRollupExecuteOutboxMessageOperation,
   createRegisterDelegateOperation,
   createActivationOperation,
 } from '../contract';
@@ -109,23 +111,19 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return BigNumber.min(gaslimitOp, gasLimitBlock.div(numberOfOps + 1));
   }
 
-  private async getAccountLimits(
-    pkh: string,
+  private async getOperationLimits(
     constants: Pick<
       ConstantsResponse,
       | 'hard_gas_limit_per_operation'
       | 'hard_gas_limit_per_block'
       | 'hard_storage_limit_per_operation'
-      | 'cost_per_byte'
     >,
     numberOfOps?: number
   ) {
-    const balance = await this.context.readProvider.getBalance(pkh, 'head');
     const {
       hard_gas_limit_per_operation,
       hard_gas_limit_per_block,
       hard_storage_limit_per_operation,
-      cost_per_byte,
     } = constants;
     return {
       fee: 0,
@@ -138,9 +136,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
             ).toNumber()
           )
         : hard_gas_limit_per_operation.toNumber(),
-      storageLimit: Math.floor(
-        BigNumber.min(balance.dividedBy(cost_per_byte), hard_storage_limit_per_operation).toNumber()
-      ),
+      storageLimit: hard_storage_limit_per_operation.toNumber(),
     };
   }
 
@@ -173,8 +169,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         ops.unshift(
           await createRevealOperation(
             {
-              fee: DEFAULT_FEE.REVEAL,
-              storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
+              fee: getRevealFee(pkh),
+              storageLimit: REVEAL_STORAGE_LIMIT,
               gasLimit: getRevealGasLimit(pkh),
             },
             publicKeyHash,
@@ -249,6 +245,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         case OpKind.UPDATE_CONSENSUS_KEY:
         case OpKind.SMART_ROLLUP_ADD_MESSAGES:
         case OpKind.SMART_ROLLUP_ORIGINATE:
+        case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
           return {
             ...op,
             ...this.getSource(op, pkh, source),
@@ -336,7 +333,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     }
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
 
     const op = await createRevealOperation(
@@ -383,7 +380,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createOriginationOperation(
       await this.context.parser.prepareCodeOrigination({
@@ -429,7 +426,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const op = await createTransferOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
@@ -472,7 +469,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createSetDelegateOperation({
       ...rest,
@@ -514,7 +511,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
 
     const op = await createRegisterDelegateOperation(
@@ -563,7 +560,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createRegisterGlobalConstantOperation({
       ...rest,
@@ -605,7 +602,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createUpdateConsensusKeyOperation({
       ...rest,
@@ -649,7 +646,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createIncreasePaidStorageOperation({
       ...rest,
@@ -820,7 +817,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createTransferTicketOperation({
       ...rest,
@@ -864,7 +861,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createSmartRollupAddMessagesOperation({
       ...rest,
@@ -905,18 +902,55 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   }: SmartRollupOriginateParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
-    const originationProof = await this.rpc.getOriginationProof({
-      kind: rest.pvmKind,
-      kernel: rest.kernel,
-    });
-
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createSmartRollupOriginateOperation({
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
       ...rest,
-      originationProof,
+    });
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    this.#counters = {};
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+    const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare a smart_rollup_execute_outbox_message operation
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  async smartRollupExecuteOutboxMessage({
+    fee,
+    storageLimit,
+    gasLimit,
+    ...rest
+  }: SmartRollupExecuteOutboxMessageParams): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
+
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+
+    const op = await createSmartRollupExecuteOutboxMessageOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
 
     const operation = await this.addRevealOperationIfNeeded(op, pkh);
@@ -949,7 +983,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh, publicKey } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants, batchParams.length);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants, batchParams.length);
     const revealNeeded = await this.isRevealOpNeeded(batchParams, pkh);
 
     const ops: RPCOperation[] = [];
@@ -986,8 +1020,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops.unshift(
         await createRevealOperation(
           {
-            fee: DEFAULT_FEE.REVEAL,
-            storageLimit: DEFAULT_STORAGE_LIMIT.REVEAL,
+            fee: getRevealFee(pkh),
+            storageLimit: REVEAL_STORAGE_LIMIT,
             gasLimit: getRevealGasLimit(pkh),
           },
           pkh,
@@ -1033,7 +1067,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const params = contractMethod.toTransferParams();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getAccountLimits(pkh, protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const estimateLimits = mergeLimits(
       {

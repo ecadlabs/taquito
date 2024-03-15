@@ -20,13 +20,12 @@ export type ParamsWithKind =
   | withKind<ActivationParams, OpKind.ACTIVATION>
   | withKind<RegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>
   | withKind<IncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
-  | withKind<TxRollupOriginateParams, OpKind.TX_ROLLUP_ORIGINATION>
-  | withKind<TxRollupBatchParams, OpKind.TX_ROLLUP_SUBMIT_BATCH>
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
   | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
   | withKind<FailingNoopParams, OpKind.FAILING_NOOP>
-  | withKind<SmartRollupOriginateParamsWithProof, OpKind.SMART_ROLLUP_ORIGINATE>;
+  | withKind<SmartRollupOriginateParams, OpKind.SMART_ROLLUP_ORIGINATE>
+  | withKind<SmartRollupExecuteOutboxMessageParams, OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
 
@@ -61,12 +60,11 @@ export type RPCOpWithFee =
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
   | RPCIncreasePaidStorageOperation
-  | RPCTxRollupOriginationOperation
-  | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
-  | RPCSmartRollupOriginateOperation;
+  | RPCSmartRollupOriginateOperation
+  | RPCSmartRollupOutboxMessageOperation;
 
 export type RPCOpWithSource =
   | RPCTransferOperation
@@ -75,12 +73,32 @@ export type RPCOpWithSource =
   | RPCRevealOperation
   | RPCRegisterGlobalConstantOperation
   | RPCIncreasePaidStorageOperation
-  | RPCTxRollupOriginationOperation
-  | RPCTxRollupBatchOperation
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
-  | RPCSmartRollupOriginateOperation;
+  | RPCSmartRollupOriginateOperation
+  | RPCSmartRollupOutboxMessageOperation;
+
+export const isOpWithGasBuffer = <
+  T extends { kind: OpKind; parameters?: TransactionOperationParameter },
+>(
+  op: T
+): boolean => {
+  if (op.kind === OpKind.TRANSACTION && op.parameters) {
+    return true;
+  } else {
+    return (
+      [
+        'origination',
+        'register_global_constant',
+        'transfer_ticket',
+        'update_consensus_key',
+        'smart_rollup_add_messages',
+        'smart_rollup_originate',
+      ].indexOf(op.kind) !== -1
+    );
+  }
+};
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
@@ -93,12 +111,11 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'reveal',
       'register_global_constant',
       'increase_paid_storage',
-      'tx_rollup_origination',
-      'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
       'smart_rollup_add_messages',
       'smart_rollup_originate',
+      'smart_rollup_execute_outbox_message',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -113,12 +130,11 @@ export const isOpRequireReveal = <T extends { kind: OpKind }>(
       'origination',
       'register_global_constant',
       'increase_paid_storage',
-      'tx_rollup_origination',
-      'tx_rollup_submit_batch',
       'transfer_ticket',
       'update_consensus_key',
       'smart_rollup_add_messages',
       'smart_rollup_originate',
+      'smart_rollup_execute_outbox_message',
     ].indexOf(op.kind) !== -1
   );
 };
@@ -341,53 +357,6 @@ export interface RPCActivateOperation {
 }
 
 /**
- * @description RPC tx rollup origination operation
- */
-export interface RPCTxRollupOriginationOperation {
-  kind: OpKind.TX_ROLLUP_ORIGINATION;
-  fee: number;
-  gas_limit: number;
-  storage_limit: number;
-  source: string;
-  tx_rollup_origination: object;
-}
-
-/**
- * @description Parameters for the `txRollupOriginate` method
- */
-export interface TxRollupOriginateParams {
-  source?: string;
-  fee?: number;
-  gasLimit?: number;
-  storageLimit?: number;
-}
-
-/**
- * @description Parameters for the `txRollupSubmitBatch` method
- */
-export interface TxRollupBatchParams {
-  source?: string;
-  fee?: number;
-  gasLimit?: number;
-  storageLimit?: number;
-  rollup: string;
-  content: string;
-}
-
-/**
- * @description RPC tx rollup batch operation
- */
-export interface RPCTxRollupBatchOperation {
-  kind: OpKind.TX_ROLLUP_SUBMIT_BATCH;
-  fee: number;
-  gas_limit: number;
-  storage_limit: number;
-  source: string;
-  rollup: string;
-  content: string;
-}
-
-/**
  * @description Parameters for the transferTicket contract provider
  */
 export interface TransferTicketParams {
@@ -510,6 +479,14 @@ export interface RPCUpdateConsensusKeyOperation {
   pk: string;
 }
 
+export interface SmartRollupAddMessagesParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  message: string[];
+}
+
 export interface RPCSmartRollupAddMessagesOperation {
   kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
   source: string;
@@ -519,13 +496,6 @@ export interface RPCSmartRollupAddMessagesOperation {
   message: string[];
 }
 
-export interface SmartRollupAddMessagesParams {
-  source?: string;
-  fee?: number;
-  gasLimit?: number;
-  storageLimit?: number;
-  message: string[];
-}
 export interface SmartRollupOriginateParams {
   source?: string;
   fee?: number;
@@ -536,10 +506,6 @@ export interface SmartRollupOriginateParams {
   parametersType: MichelsonV1Expression;
 }
 
-export interface SmartRollupOriginateParamsWithProof extends SmartRollupOriginateParams {
-  originationProof: string;
-}
-
 export interface RPCSmartRollupOriginateOperation {
   kind: OpKind.SMART_ROLLUP_ORIGINATE;
   source: string;
@@ -548,8 +514,28 @@ export interface RPCSmartRollupOriginateOperation {
   storage_limit: number;
   pvm_kind: PvmKind;
   kernel: string;
-  origination_proof: string;
   parameters_ty: MichelsonV1Expression;
+}
+
+export interface SmartRollupExecuteOutboxMessageParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  rollup: string;
+  cementedCommitment: string;
+  outputProof: string;
+}
+
+export interface RPCSmartRollupOutboxMessageOperation {
+  kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  source: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  rollup: string;
+  cemented_commitment: string;
+  output_proof: string;
 }
 
 /**
@@ -582,8 +568,9 @@ export type RPCOperation =
   | RPCProposalsOperation
   | RPCUpdateConsensusKeyOperation
   | RPCSmartRollupAddMessagesOperation
-  | RPCFailingNoopOperation
-  | RPCSmartRollupOriginateOperation;
+  | RPCSmartRollupOriginateOperation
+  | RPCSmartRollupOutboxMessageOperation
+  | RPCFailingNoopOperation;
 
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];

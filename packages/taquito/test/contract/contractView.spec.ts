@@ -4,6 +4,7 @@ import { Context } from '../../src/context';
 import { ContractView } from '../../src/contract/contract';
 import { InvalidParameterError } from '../../src/contract/errors';
 import { ChainIds } from '../../src/constants';
+import { UnitValue } from '@taquito/michelson-encoder';
 
 describe('ContractView test', () => {
   let rpcContractProvider: RpcContractProvider;
@@ -105,7 +106,7 @@ describe('ContractView test', () => {
     const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
 
     expect(() => result.views.transfer()).toThrow(); // Entry point transfer is not a view
-    expect(result.views.getTotalSupply([['Unit']])).toBeInstanceOf(ContractView);
+    expect(result.views.getTotalSupply(UnitValue)).toBeInstanceOf(ContractView);
     expect(result.views.getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')).toBeInstanceOf(
       ContractView
     );

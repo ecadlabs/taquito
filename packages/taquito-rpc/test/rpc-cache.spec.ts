@@ -15,6 +15,7 @@ import {
   blockHeader,
   blockMetadata,
   bakingRights,
+  attestationRights,
   endorsingRights,
   ballotList,
   ballots,
@@ -30,8 +31,6 @@ import {
   blockResponse,
   protocols,
   constants,
-  txRollupInbox,
-  txRollupState,
   ticketBalancesResponse,
   pendingOperationsResponse,
 } from './data/rpc-responses';
@@ -45,8 +44,6 @@ describe('RpcClientCache test', () => {
 
   const address = 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn';
   const contractAddress = 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D';
-  const txRollupId = 'txr1YTdi9BktRmybwhgkhRK7WPrutEWVGJT7w';
-  const blockLevel = '0';
   const ticketToken = {
     ticketer: contractAddress,
     content_type: { prim: 'string' },
@@ -75,6 +72,7 @@ describe('RpcClientCache test', () => {
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getBakingRights: jest.fn(),
+      getAttestationRights: jest.fn(),
       getEndorsingRights: jest.fn(),
       getBallotList: jest.fn(),
       getBallots: jest.fn(),
@@ -89,8 +87,6 @@ describe('RpcClientCache test', () => {
       getCurrentPeriod: jest.fn(),
       getSuccessorPeriod: jest.fn(),
       getProtocols: jest.fn(),
-      getTxRollupInbox: jest.fn(),
-      getTxRollupState: jest.fn(),
       getTicketBalance: jest.fn(),
       getAllTicketBalances: jest.fn(),
       getPendingOperations: jest.fn(),
@@ -116,6 +112,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getBlockHeader.mockReturnValue(blockHeader);
     mockRpcClient.getBlockMetadata.mockReturnValue(blockMetadata);
     mockRpcClient.getBakingRights.mockReturnValue(bakingRights);
+    mockRpcClient.getAttestationRights.mockReturnValue(attestationRights);
     mockRpcClient.getEndorsingRights.mockReturnValue(endorsingRights);
     mockRpcClient.getBallotList.mockReturnValue(ballotList);
     mockRpcClient.getBallots.mockReturnValue(ballots);
@@ -129,8 +126,6 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getCurrentPeriod.mockReturnValue(currentPeriod);
     mockRpcClient.getSuccessorPeriod.mockReturnValue(successorPeriod);
     mockRpcClient.getProtocols.mockReturnValue(protocols);
-    mockRpcClient.getTxRollupInbox.mockReturnValue(txRollupInbox);
-    mockRpcClient.getTxRollupState.mockReturnValue(txRollupState);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
     mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
     mockRpcClient.getPendingOperations.mockReturnValue(pendingOperationsResponse);
@@ -162,6 +157,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockHeader();
     await rpcCache.getBlockMetadata();
     await rpcCache.getBakingRights();
+    await rpcCache.getAttestationRights();
     await rpcCache.getEndorsingRights();
     await rpcCache.getBallotList();
     await rpcCache.getBallots();
@@ -178,8 +174,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
     await rpcCache.getProtocols();
-    await rpcCache.getTxRollupInbox(txRollupId, blockLevel);
-    await rpcCache.getTxRollupState(txRollupId);
     await rpcCache.getTicketBalance(contractAddress, {
       ticketer: contractAddress,
       content_type: { prim: 'string' },
@@ -238,6 +232,9 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()['rpcTest/getBakingRights/head/{}/'].response).toEqual(
       bakingRights
     );
+    expect(rpcCache.getAllCachedData()['rpcTest/getAttestationRights/head/{}/'].response).toEqual(
+      attestationRights
+    );
     expect(rpcCache.getAllCachedData()['rpcTest/getEndorsingRights/head/{}/'].response).toEqual(
       endorsingRights
     );
@@ -268,13 +265,6 @@ describe('RpcClientCache test', () => {
       successorPeriod
     );
     expect(rpcCache.getAllCachedData()['rpcTest/getProtocols/head/'].response).toEqual(protocols);
-    expect(
-      rpcCache.getAllCachedData()[`rpcTest/getTxRollupInbox/head/${txRollupId}/${blockLevel}/`]
-        .response
-    ).toEqual(txRollupInbox);
-    expect(
-      rpcCache.getAllCachedData()[`rpcTest/getTxRollupState/head/${txRollupId}/`].response
-    ).toEqual(txRollupState);
     expect(
       rpcCache.getAllCachedData()[
         `rpcTest/getTicketBalance/head/${contractAddress}/${JSON.stringify(ticketToken)}/`
@@ -315,6 +305,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockHeader(block);
     await rpcCache.getBlockMetadata(block);
     await rpcCache.getBakingRights({ level: 1111 }, block);
+    await rpcCache.getAttestationRights({ level: 151187 }, block);
     await rpcCache.getEndorsingRights({ level: 1111 }, block);
     await rpcCache.getBallotList(block);
     await rpcCache.getBallots(block);
@@ -331,8 +322,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod(block);
     await rpcCache.getSuccessorPeriod(block);
     await rpcCache.getProtocols(block);
-    await rpcCache.getTxRollupInbox(txRollupId, blockLevel, block);
-    await rpcCache.getTxRollupState(txRollupId, block);
     await rpcCache.getTicketBalance(
       contractAddress,
       {
@@ -406,6 +395,10 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getBakingRights/${block.block}/{"level":1111}/`].response
     ).toEqual(bakingRights);
     expect(
+      rpcCache.getAllCachedData()[`rpcTest/getAttestationRights/${block.block}/{"level":151187}/`]
+        .response
+    ).toEqual(attestationRights);
+    expect(
       rpcCache.getAllCachedData()[`rpcTest/getEndorsingRights/${block.block}/{"level":1111}/`]
         .response
     ).toEqual(endorsingRights);
@@ -445,14 +438,6 @@ describe('RpcClientCache test', () => {
     );
     expect(
       rpcCache.getAllCachedData()[
-        `rpcTest/getTxRollupInbox/${block.block}/${txRollupId}/${blockLevel}/`
-      ].response
-    ).toEqual(txRollupInbox);
-    expect(
-      rpcCache.getAllCachedData()[`rpcTest/getTxRollupState/${block.block}/${txRollupId}/`].response
-    ).toEqual(txRollupState);
-    expect(
-      rpcCache.getAllCachedData()[
         `rpcTest/getTicketBalance/${block.block}/${contractAddress}/${JSON.stringify(ticketToken)}/`
       ].response
     ).toEqual('3');
@@ -484,6 +469,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockHeader();
     await rpcCache.getBlockMetadata();
     await rpcCache.getBakingRights();
+    await rpcCache.getAttestationRights();
     await rpcCache.getEndorsingRights();
     await rpcCache.getBallotList();
     await rpcCache.getBallots();

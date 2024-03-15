@@ -1,6 +1,5 @@
 import { defaultConfigConfirmation } from '../../src/context';
-import { ForgedBytes } from '../../src/operations';
-import { RevealOperation } from '../../src/operations/reveal-operation';
+import { ForgedBytes, RevealOperation } from '../../src/operations';
 import { RevealOperationBuilder } from '../helpers';
 
 describe('RevealOperation', () => {

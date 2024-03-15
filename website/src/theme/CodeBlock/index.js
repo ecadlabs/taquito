@@ -58,7 +58,7 @@ export default ({
 
   useEffect(() => {
     async function getDependencies() {
-      const { TezosToolkit, MichelsonMap, compose, DEFAULT_FEE, RpcReadAdapter } = await import('@taquito/taquito');
+      const { TezosToolkit, MichelsonMap, compose, getRevealFee, RpcReadAdapter, UnitValue } = await import('@taquito/taquito');
       const { verifySignature } = await import('@taquito/utils');
       const {
         validateAddress,
@@ -82,7 +82,6 @@ export default ({
       const { Schema, ParameterSchema } = await import("@taquito/michelson-encoder");
       const { Parser, packDataBytes } = await import('@taquito/michel-codec');
       const { RpcClient } = await import('@taquito/rpc');
-      const { SaplingToolkit, InMemorySpendingKey, InMemoryViewingKey } = await import('@taquito/sapling');
       const TransportWebHID = (await import("@ledgerhq/hw-transport-webhid")).default;
 
       let wallet;
@@ -90,7 +89,7 @@ export default ({
         // solve localStorage is not defined Error when building server
         // can use localStorage on the browser, not on the server
         wallet = new BeaconWallet({ name:"exampleWallet", network: { type: 'ghostnet'}});
-      }      
+      }
       const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
       setDependencies({
         Tezos,
@@ -122,19 +121,17 @@ export default ({
         compose,
         Schema,
         ParameterSchema,
-        DEFAULT_FEE,
+        getRevealFee,
         verifySignature,
         Parser,
         packDataBytes,
         RpcReadAdapter,
-        SaplingToolkit,
         RpcClient,
-        InMemorySpendingKey,
-        InMemoryViewingKey,
         Ed25519,
         ECDSA,
         Path,
         generateSecretKey,
+        UnitValue
       });
     }
     if (!dependencies) {
@@ -146,7 +143,8 @@ export default ({
 
     return (
       <Playground
-        scope={{ ...React,
+        scope={{
+          ...React,
           Tezos: dependencies?.Tezos,
           wallet: dependencies?.wallet,
           importKey: dependencies?.importKey,
@@ -176,12 +174,11 @@ export default ({
           compose: dependencies?.compose,
           Schema: dependencies?.Schema,
           ParameterSchema: dependencies?.ParameterSchema,
-          DEFAULT_FEE: dependencies?.DEFAULT_FEE,
+          getRevealFee: dependencies?.getRevealFee,
           verifySignature: dependencies?.verifySignature,
           Parser: dependencies?.Parser,
           packDataBytes: dependencies?.packDataBytes,
           RpcReadAdapter: dependencies?.RpcReadAdapter,
-          SaplingToolkit: dependencies?.SaplingToolkit,
           RpcClient: dependencies?.RpcClient,
           InMemorySpendingKey: dependencies?.InMemorySpendingKey,
           InMemoryViewingKey: dependencies?.InMemoryViewingKey,
@@ -189,6 +186,7 @@ export default ({
           ECDSA: dependencies?.ECDSA,
           Path: dependencies?.Path,
           generateSecretKey: dependencies?.generateSecretKey,
+          UnitValue: dependencies?.UnitValue,
          }}
         code={children.trim()}
         theme={prism.theme || defaultTheme}

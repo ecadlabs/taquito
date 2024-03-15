@@ -13,7 +13,7 @@ jobs:
   bundle-webpack:
     runs-on: ubuntu-latest
     steps:
-    - 
+    -
       name: Checkout repository
       uses: actions/checkout@v2
     -
@@ -22,7 +22,7 @@ jobs:
         node-version: lts/hydrogen
     - run: npm ci
     - run: npm run build
-    - run: cd packages/taquito-local-forging && npm run build-webpack
+    - run: npm -w packages/taquito-local-forging run build-webpack
     -
       uses: actions/upload-artifact@v3
       with:
@@ -30,3 +30,12 @@ jobs:
         path: |
           packages/taquito-local-forging/dist/taquito_local_forging.js
           packages/taquito-local-forging/dist/taquito_local_forging.js.map
+
+    - run: npm -w packages/taquito-beacon-wallet run build-webpack
+    -
+      uses: actions/upload-artifact@v3
+      with:
+        name: taquito-beacon-wallet-vanilla
+        path: |
+          packages/taquito-beacon-wallet/dist/taquito_beacon_wallet.js
+          packages/taquito-beacon-wallet/dist/taquito_beacon_wallet.js.map

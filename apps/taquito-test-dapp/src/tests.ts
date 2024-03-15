@@ -3,11 +3,12 @@ import {
   ContractAbstraction,
   Wallet,
   MichelsonMap,
-  OpKind
+  OpKind,
+  UnitValue
 } from "@taquito/taquito";
 import type { ContractProvider } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
-import { char2Bytes, verifySignature } from "@taquito/utils";
+import { stringToBytes, verifySignature } from "@taquito/utils";
 import { SigningType, type RequestSignPayloadInput } from "@airgap/beacon-sdk";
 import { get } from "svelte/store";
 import type { TestSettings, TestResult } from "./types";
@@ -23,10 +24,10 @@ const preparePayloadToSign = (
   formattedInput: string;
 } => {
   const formattedInput = `Tezos Signed Message: taquito-test-dapp.netlify.app/ ${new Date().toISOString()} ${input}`;
-  const bytes = char2Bytes(formattedInput);
+  const bytes = stringToBytes(formattedInput);
   const payload: RequestSignPayloadInput = {
     signingType: SigningType.MICHELINE,
-    payload: "05" + "0100" + char2Bytes(bytes.length.toString()) + bytes,
+    payload: "05" + "0100" + stringToBytes(bytes.length.toString()) + bytes,
     sourceAddress: userAddress
   };
   return {
@@ -55,7 +56,7 @@ const sendInt = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    const op = await contract.methods.simple_param(5).send();
+    const op = await contract.methodsObject.simple_param(5).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: true, opHash };
@@ -70,7 +71,7 @@ const sendComplexParam = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    // const op = await contract.methods.complex_param(5, "Taquito").send();
+    // const op = await contract.methodsObject.complex_param({0: 5, 1:"Taquito"}).send();
     const op = await contract.methodsObject
       .complex_param({ 0: 5, 1: "Taquito" })
       .send();
@@ -88,7 +89,7 @@ const callFail = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    const op = await contract.methods.fail([["unit"]]).send();
+    const op = await contract.methodsObject.fail(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
@@ -114,7 +115,7 @@ const callFaiWithInt = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    const op = await contract.methods.fail_with_int([["unit"]]).send();
+    const op = await contract.methodsObject.fail_with_int(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
@@ -140,7 +141,7 @@ const callFaiWithPair = async (
 ): Promise<TestResult> => {
   let opHash = "";
   try {
-    const op = await contract.methods.fail_with_pair([["unit"]]).send();
+    const op = await contract.methodsObject.fail_with_pair(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
     return { success: false, opHash: "" };
@@ -229,22 +230,22 @@ const batchApiContractCallsTest = async (
     const storage: any = await contract.storage();
     /*const batch = Tezos.wallet
         .batch()
-        .withContractCall(contract.methods.simple_param(5))
-        .withContractCall(contract.methods.simple_param(6))
-        .withContractCall(contract.methods.simple_param(7));
+        .withContractCall(contract.methodsObject.simple_param(5))
+        .withContractCall(contract.methodsObject.simple_param(6))
+        .withContractCall(contract.methodsObject.simple_param(7));
       const op = await batch.send();*/
     const batch = [
       {
         kind: OpKind.TRANSACTION,
-        ...contract.methods.simple_param(5).toTransferParams()
+        ...contract.methodsObject.simple_param(5).toTransferParams()
       },
       {
         kind: OpKind.TRANSACTION,
-        ...contract.methods.simple_param(6).toTransferParams()
+        ...contract.methodsObject.simple_param(6).toTransferParams()
       },
       {
         kind: OpKind.TRANSACTION,
-        ...contract.methods.simple_param(7).toTransferParams()
+        ...contract.methodsObject.simple_param(7).toTransferParams()
       }
     ];
     const op = await callToContract.batch(batch).send();
@@ -300,8 +301,8 @@ const signPayloadAndSend = async (
     const activeAccount = await wallet.client.getActiveAccount();
     const publicKey = activeAccount.publicKey;
     // sends transaction to contract
-    const op = await contract.methods
-      .check_signature(publicKey, signedPayload.signature, payload.payload)
+    const op = await contract.methodsObject
+      .check_signature({0: publicKey, 1: signedPayload.signature, 2: payload.payload})
       .send();
     await op.confirmation();
     return {
@@ -319,7 +320,7 @@ const signFailingNoop = async (
   input: string,
   tezos: TezosToolkit,
 ): Promise<TestResult> => {
-  const bytes = char2Bytes(input);
+  const bytes = stringToBytes(input);
   try {
     const signedPayload = await tezos.wallet.signFailingNoop({
       arbitrary: bytes,
@@ -384,9 +385,9 @@ const setTransactionLimits = async (
     let op;
     if (isNaN(+fee) || isNaN(+storageLimit) || isNaN(+gasLimit)) {
       // if one of the parameters is missing, transaction is sent as is
-      op = await contract.methods.simple_param(5).send();
+      op = await contract.methodsObject.simple_param(5).send();
     } else {
-      op = await contract.methods.simple_param(5).send({
+      op = await contract.methodsObject.simple_param(5).send({
         storageLimit: +storageLimit,
         gasLimit: +gasLimit,
         fee: +fee
@@ -415,7 +416,7 @@ const tryConfirmationObservable = async (
 
     const storage: any = await contract.storage();
     const val = storage.simple.toNumber() + 1;
-    const op = await contract.methods.simple_param(val).send();
+    const op = await contract.methodsObject.simple_param(val).send();
 
     const entries = await new Promise((resolve, reject) => {
       const evts: any[] = [];
@@ -453,8 +454,8 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
     const contractAddress = "KT1ShFVQPoLvekQu21pvuJst7cG1TjtnzdvW";
     const contract = await Tezos.wallet.at(contractAddress);
     // hashes the parameter for the contract call
-    const mintParam: any = contract.methods
-      .mint(store.userAddress, 100)
+    const mintParam: any = contract.methodsObject
+      .mint({0: store.userAddress, 1: 100})
       .toTransferParams().parameter?.value;
     const mintParamType = contract.entrypoints.entrypoints["mint"];
     // packs the entrypoint call
@@ -527,7 +528,7 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
         sourceAddress: store.userAddress
       });
       const { publicKey } = await wallet.client.getActiveAccount();
-      const permitMethodOp = await contract.methods
+      const permitMethodOp = await contract.methodsObject
         .permit([{ 0: publicKey, 1: sig.signature, 2: paramHash }])
         .send();
       await permitMethodOp.confirmation();

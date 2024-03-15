@@ -1,6 +1,5 @@
-import { ForgedBytes } from '../../src/operations/types';
+import { ForgedBytes, IncreasePaidStorageOperation } from '@taquito/taquito';
 import { OperationContentsAndResult } from '@taquito/rpc';
-import { IncreasePaidStorageOperation } from '../../src/operations/increase-paid-storage-operation';
 import { defaultConfigConfirmation } from '../../src/context';
 import { IncreasePaidStorageOperationBuilder } from '../helpers';
 

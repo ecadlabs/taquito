@@ -1,4 +1,4 @@
-# Taquito high-level functions 
+# Taquito high-level functions
 
 *TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_taquito.html)*
 
@@ -7,15 +7,15 @@ The `@taquito/taquito` package contains higher-level functionality that builds u
 ## CDN Bundle
 
 ```html
-<script src="https://unpkg.com/@taquito/taquito@17.5.2/dist/taquito.min.js"
+<script src="https://unpkg.com/@taquito/taquito@19.1.0/dist/taquito.min.js"
 crossorigin="anonymous" integrity="sha384-IxvP0ECHi5oqLyz94wF85pU9+ktcsL1HHtA42MITxZsGbsUMEu/g+0Vkjj5vqiMR"></script>
 ```
 
 ## General Information
 
-The `TezosToolkit` is a facade class that surfaces all of the library's capability and allows its configuration through different providers. 
+The `TezosToolkit` is a facade class that surfaces all of the library's capability and allows its configuration through different providers.
 
-## Install 
+## Install
 
 ```
 npm i --save @taquito/taquito
@@ -25,7 +25,7 @@ npm i --save @taquito/taquito
 ## Minimal configuration
 ### TezosToolkit instantiation
 
-The `TezosToolkit` constructor takes at least an RPC URL as a parameter. When instantiating the toolkit with a URL, a default instance of `RpcClient` is created. The `RpcClient` class is used to interact with the Tezos network. 
+The `TezosToolkit` constructor takes at least an RPC URL as a parameter. When instantiating the toolkit with a URL, a default instance of `RpcClient` is created. The `RpcClient` class is used to interact with the Tezos network.
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
@@ -114,7 +114,7 @@ Tezos.setProvider(
 
 ## Estimation
 
-Use the `estimate` member to estimate fees, gas and storage of operations. 
+Use the `estimate` member to estimate fees, gas and storage of operations.
 
 ```ts
 const estimate = await Tezos.estimate.transfer(transferParams);
@@ -125,12 +125,12 @@ const estimate = await Tezos.estimate.transfer(transferParams);
 Use the `stream` member to subscribe to specific operations:
 
 ```ts
-Tezos.setProvider({ 
-    config: { shouldObservableSubscriptionRetry: true, streamerPollingIntervalMilliseconds: 15000 } 
+Tezos.setProvider({
+    config: { shouldObservableSubscriptionRetry: true, streamerPollingIntervalMilliseconds: 15000 }
 });
 
-const bakerEndorsementFilter = {
-    and: [{ source: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m' }, { kind: 'endorsement' }]
+const bakerAttestationFilter = {
+    and: [{ source: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m' }, { kind: 'attestation' }]
 }
 
 const bakerDelegation = {
@@ -138,7 +138,7 @@ const bakerDelegation = {
 }
 
 const sub = tezos.stream.subscribeOperation({
-    or: [bakerEndorsementFilter, bakerDelegation]
+    or: [bakerAttestationFilter, bakerDelegation]
 })
 
 sub.on('data', console.log)

@@ -1,10 +1,11 @@
 import { getAllowance, getBalance, getTotalSupply } from '../data/sample16';
 import { ParameterSchema } from '../src/schema/parameter';
+import { UnitValue } from '../src/taquito-michelson-encoder';
 
 describe('Schema test when calling contract with complex object as param and null value', () => {
   it('Should encode parameter schema properly', () => {
     const schema = new ParameterSchema(getTotalSupply.args[0]);
-    const result = schema.Encode([['Unit']]);
+    const result = schema.Encode([UnitValue]);
     expect(schema).toBeTruthy();
     expect(result).toEqual({ prim: 'Unit' });
   });

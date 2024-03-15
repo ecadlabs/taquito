@@ -37,24 +37,23 @@
     "@taquito/michelson-encoder": "file:../packages/taquito-michelson-encoder",
     "@taquito/remote-signer": "file:../packages/taquito-remote-signer",
     "@taquito/rpc": "file:../packages/taquito-rpc",
-    "@taquito/sapling": "file:../packages/taquito-sapling",
     "@taquito/signer": "file:../packages/taquito-signer",
     "@taquito/taquito": "file:../packages/taquito",
     "@taquito/tzip12": "file:../packages/taquito-tzip12",
     "@taquito/tzip16": "file:../packages/taquito-tzip16",
     "@taquito/utils": "file:../packages/taquito-utils",
     "abort-controller": "^3.0.0",
-    "algoliasearch": "^4.20.0",
-    "axios": "^0.27.2",
+    "algoliasearch": "^4.22.1",
+    "axios": "^0.28.0",
     "buffer": "^6.0.3",
     "classnames": "^2.3.2",
     "clipboard": "^2.0.11",
     "clsx": "^1.2.1",
     "docusaurus-plugin-dotenv": "^1.0.1",
     "docusaurus-plugin-sass": "^0.2.5",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.3.2",
     "file-loader": "^6.2.0",
-    "firebase": "^10.5.2",
+    "firebase": "^10.7.2",
     "html-react-parser": "^3.0.16",
     "lerna": "^7.4.2",
     "lottie-web": "^5.12.2",
@@ -65,7 +64,7 @@
     "react-icons": "^4.11.0",
     "react-slick": "^0.29.0",
     "react-use-mailchimp-signup": "^2.0.2",
-    "sass": "^1.69.4",
+    "sass": "^1.70.0",
     "sass-loader": "^13.3.2",
     "stream-browserify": "^3.0.0",
     "url-loader": "^4.1.1"
@@ -88,5 +87,5 @@
       "last 1 safari version"
     ]
   },
-  "version": "17.5.2"
+  "version": "19.1.0-beta-RC.0"
 }

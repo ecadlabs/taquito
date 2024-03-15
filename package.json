@@ -21,7 +21,7 @@
     "example": "cd example && npm run example",
     "build-docs": "typedoc --tsconfig ./tsconfig.typedoc.json",
     "gh-pages": "gh-pages",
-    "integration-tests": "npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:nairobinet-secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts",
+    "integration-tests": "npm -w integration-tests run test:originate-known-contracts && npm -w integration-tests run test:secret-key -- --testPathIgnorePatterns ledger-signer-failing-tests.spec.ts ledger-signer.spec.ts contract-estimation-tests.spec.ts rpc-get-protocol-constants.spec.ts",
     "version-stamp": "lerna run version-stamp"
   },
   "jest": {
@@ -110,7 +110,7 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "ts-toolbelt": "^9.6.0",
-    "typedoc": "^0.25.2",
+    "typedoc": "^0.25.8",
     "typescript": "5.2.2"
   },
   "config": {

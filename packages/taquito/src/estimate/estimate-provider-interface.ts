@@ -13,6 +13,7 @@ import {
   UpdateConsensusKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
+  SmartRollupExecuteOutboxMessageParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
@@ -119,6 +120,16 @@ export interface EstimationProvider {
    * @param Estimate
    */
   smartRollupAddMessages(params: SmartRollupAddMessagesParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Execute Outbox Message operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  smartRollupExecuteOutboxMessage(params: SmartRollupExecuteOutboxMessageParams): Promise<Estimate>;
 
   /**
    *
