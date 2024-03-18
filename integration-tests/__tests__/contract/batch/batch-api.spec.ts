@@ -29,8 +29,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
     it('Verify a batch of transfers and origination operations using a combination of the two notations (array of operation with kind mixed with withTransfer method)', async () => {
       /** Tests the usage of a mix of the 2 possible notations for batched operations
        *  See for details on the 2 notations:
-       *  https://taquito.io/docs/batch_API#--the-array-of-transactions-method
-       *  https://taquito.io/docs/batch_API#--the-withtransfer-method
+       *  https://tezostaquito.io/docs/batch_API#--the-array-of-transactions-method
+       *  https://tezostaquito.io/docs/batch_API#--the-withtransfer-method
        */
       const op = await Tezos.batch([
         {

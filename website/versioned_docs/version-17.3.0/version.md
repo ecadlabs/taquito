@@ -1385,7 +1385,7 @@ The new categories of balance updates are `legacy_rewards`, `block fees`, `legac
 
 The new origin for balance update is `simulation`.
 
-For more information on the balance update changes, refer to http://tezos.gitlab.io/protocols/tenderbake.html#metadata
+For more information on the balance update changes, refer to https://tezos.gitlab.io/protocols/tenderbake.html#metadata
 
 ## @taquito/rpc - Updated signature of the `getEndorsingRights` and `getBakingRights` methods
 
