@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { TezosToolkit } from "@taquito/taquito";
-  import { NetworkType } from "@airgap/beacon-sdk";
+  import { NetworkType } from "@airgap/beacon-types";
   import Select from "svelte-select";
   import { getRpcUrl } from "./config";
   import store from "./store";
