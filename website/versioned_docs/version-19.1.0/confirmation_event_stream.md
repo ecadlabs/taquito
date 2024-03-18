@@ -4,7 +4,7 @@ id: confirmation_event_stream
 author: Claude Barde
 ---
 
-Every operation forged with the [Wallet API](https://tezostaquito.io/docs/wallet_API) has a `confirmationObservable` method that can be used to set a certain number of confirmations to wait for and to get an update every time a new confirmation is received.
+Every operation forged with the [Wallet API](https://taquito.io/docs/wallet_API) has a `confirmationObservable` method that can be used to set a certain number of confirmations to wait for and to get an update every time a new confirmation is received.
 
 For example, if you want to wait 10 confirmations before giving a final confirmation to your users, you can implement a counter that will be increased at each confirmation.
 
@@ -43,7 +43,7 @@ const entries = await new Promise((resolve, reject) => {
 First, we create a new promise to wrap the Observable.
 Then, we declare an array to save every confirmation returned by the Observable.
 Next, we set up the Observable. The operation we created earlier has a `confirmationObservable` method that takes as a parameter the number of confirmations you want to wait for and returns an object with a `subscribe` method to start waiting for confirmations. This method takes 3 arguments:
-- the function to run when a confirmation is received with a parameter holding [different properties](https://tezostaquito.io/typedoc/classes/_taquito_taquito.walletoperation.html#confirmationobservable), for example, details about the current block or the confirmation status
+- the function to run when a confirmation is received with a parameter holding [different properties](https://taquito.io/typedoc/classes/_taquito_taquito.walletoperation.html#confirmationobservable), for example, details about the current block or the confirmation status
 - the function to run if the promise is rejected
 - the function to run if the promise is resolved
 

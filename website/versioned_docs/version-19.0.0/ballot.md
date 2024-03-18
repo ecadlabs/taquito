@@ -16,7 +16,7 @@ const op = await Tezos.contract.ballot({
 
 await op.confirmation();
 ```
-- `proposal` is the proposal hash string that you (a delegate) would like to point your ballot towards. Information on the current proposal can be obtained by calling [this RPC endpoint](https://tezos.gitlab.io/alpha/rpc.html#get-block-id-votes-current-proposal). Alternatively, you could also get the proposal hash by using Taquito's RPC Client method `RpcClient.getCurrentProposal`. For more information on the `RpcClient` refer to [this document](https://tezostaquito.io/docs/rpc_package/)
+- `proposal` is the proposal hash string that you (a delegate) would like to point your ballot towards. Information on the current proposal can be obtained by calling [this RPC endpoint](https://tezos.gitlab.io/alpha/rpc.html#get-block-id-votes-current-proposal). Alternatively, you could also get the proposal hash by using Taquito's RPC Client method `RpcClient.getCurrentProposal`. For more information on the `RpcClient` refer to [this document](https://taquito.io/docs/rpc_package/)
 - `ballot` is your ballot vote (`yay`, `nay`, or `pass`)
 
 

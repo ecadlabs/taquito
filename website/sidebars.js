@@ -127,8 +127,8 @@ const sidebars = {
       collapsed: false,
       collapsible: false,
       items: [
-        'signing', 
-        'inmemory_signer', 
+        'signing',
+        'inmemory_signer',
         'ledger_signer'
       ],
     },
@@ -225,7 +225,7 @@ const sidebars = {
     {
       type: 'link',
       label: 'TypeDoc Reference',
-      href: 'https://tezostaquito.io/typedoc',
+      href: 'https://taquito.io/typedoc',
     },
   ],
 };
