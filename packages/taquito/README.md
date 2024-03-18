@@ -1,6 +1,6 @@
 # Taquito high-level functions
 
-*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_taquito.html)*
+*TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_taquito.html)*
 
 The `@taquito/taquito` package contains higher-level functionality that builds upon the other packages in the Tezos Typescript Library Suite.
 

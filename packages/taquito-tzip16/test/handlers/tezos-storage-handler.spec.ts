@@ -119,7 +119,7 @@ describe('Tzip16 tezos storage handler test', () => {
     );
 
     expect(metadata).toEqual(
-      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://tezostaquito.io/>"],"homepage":"https://tezostaquito.io/"}`
+      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://taquito.io/>"],"homepage":"https://taquito.io/"}`
     );
   });
 
