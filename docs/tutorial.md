@@ -501,6 +501,7 @@ const ConnectButton = ({
         name: "My dApp",
         preferredNetwork: NetworkType.GHOSTNET,
         disableDefaultEvents: false,
+        enableMetrics: true,
       });
       Tezos.setWalletProvider(wallet);
       setWallet(wallet);

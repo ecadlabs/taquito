@@ -239,6 +239,14 @@
               on:change={() => store.updateDefaultEvents()}
             />
           </label>
+          <label>
+            <span class="select-title">Enable Metrics In Beacon:</span>
+            <input
+              type="checkbox"
+              checked={$store.enableMetrics}
+              on:change={(e) => store.updateEnableMetrics()}
+            />
+          </label>
         </div>
       </div>
     </div>
