@@ -3,7 +3,6 @@
   import { fly } from "svelte/transition";
   import { TezosToolkit } from "@taquito/taquito";
   import { BeaconWallet } from "@taquito/beacon-wallet";
-  // import { BeaconEvent, defaultEventCallbacks } from "@airgap/beacon-sdk";
   import { BeaconEvent, type DAppClientOptions } from "@airgap/beacon-sdk";
   import store from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
@@ -22,7 +21,8 @@
       network: { type: config.networkType },
       walletConnectOptions: {
         projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',
-      }
+      },
+      enableMetrics: $store.enableMetrics,
     };
     // if ($store.disableDefaultEvents) {
     //   options.disableDefaultEvents = true;
