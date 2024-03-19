@@ -292,7 +292,7 @@ Tezos.wallet
 
 ## Originate multiple contracts using Taquito
 
-It is also possible to use Taquito to originate multiple contracts in one operation. The origination operations must be batched with the [Batch API](https://tezostaquito.io/docs/batch_API) and after the contracts have been originated, the addresses will be available in an array returned by the `getOriginatedContractAddresses` method of the operation object:
+It is also possible to use Taquito to originate multiple contracts in one operation. The origination operations must be batched with the [Batch API](https://taquito.io/docs/batch_API) and after the contracts have been originated, the addresses will be available in an array returned by the `getOriginatedContractAddresses` method of the operation object:
 
 ```js noInline
 const batch = Tezos.contract

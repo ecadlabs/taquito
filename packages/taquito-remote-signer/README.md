@@ -1,5 +1,5 @@
 # Taquito Remote Signer package
-*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_remote_signer.html)*
+*TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_remote_signer.html)*
 
 `@taquito/remote-signer` is an npm package that provides developers with remote signing functionality for Taquito. 
 
