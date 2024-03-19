@@ -29,10 +29,20 @@ export class TransferTicketOperation
     private readonly params: OperationContentsTransferTicket,
     private readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const transferOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === OpKind.TRANSFER_TICKET
+      ) as OperationContentsAndResultTransferTicket);
+    const result = transferOp && transferOp.metadata && transferOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {

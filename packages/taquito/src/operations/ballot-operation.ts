@@ -18,10 +18,19 @@ export class BallotOperation extends Operation {
     private readonly params: OperationContentsBallot,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const ballotOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find((op) => op.kind === 'ballot') as OperationContentsAndResultBallot);
+    const result = ballotOp;
+
+    return result ? result : undefined;
   }
 
   get operationResults() {

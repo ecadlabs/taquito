@@ -26,10 +26,23 @@ export class UpdateConsensusKeyOperation
     private readonly params: OperationContentsUpdateConsensusKey,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const updateConsensusKeyOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === 'update_consensus_key'
+      ) as OperationContentsAndResultUpdateConsensusKey);
+    const result =
+      updateConsensusKeyOp &&
+      updateConsensusKeyOp.metadata &&
+      updateConsensusKeyOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {

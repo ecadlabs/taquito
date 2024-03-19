@@ -27,10 +27,23 @@ export class SmartRollupOriginateOperation
     private readonly params: OperationContentsSmartRollupOriginate,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const smartRollupOriginateOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === OpKind.SMART_ROLLUP_ORIGINATE
+      ) as OperationContentsAndResultSmartRollupOriginate);
+    const result =
+      smartRollupOriginateOp &&
+      smartRollupOriginateOp.metadata &&
+      smartRollupOriginateOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {
@@ -44,6 +57,18 @@ export class SmartRollupOriginateOperation
       smartRollupOriginateOp.metadata &&
       smartRollupOriginateOp.metadata.operation_result;
     return result ? result : undefined;
+  }
+
+  get smartRollupAddress() {
+    return this.operationResults && this.operationResults.address;
+  }
+
+  get genesisCommitmentHash() {
+    return this.operationResults && this.operationResults.genesis_commitment_hash;
+  }
+
+  get smartRollupSize() {
+    return this.operationResults && this.operationResults.size;
   }
 
   get status() {

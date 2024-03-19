@@ -18,10 +18,21 @@ export class DrainDelegateOperation extends Operation {
     hash: string,
     private readonly params: OperationContentsDrainDelegate,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const drainDelegateOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === 'drain_delegate'
+      ) as OperationContentsAndResultDrainDelegate);
+    const result =
+      drainDelegateOp && drainDelegateOp.metadata && drainDelegateOp.metadata.balance_updates;
+    return result ? result : undefined;
   }
 
   get operationResults() {

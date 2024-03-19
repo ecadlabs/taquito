@@ -325,13 +325,13 @@ export class OperationBatch extends Provider {
     const preparedOp = await this.prepare.batch(this.operations, estimates);
 
     const opBytes = await this.forge(preparedOp);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
     return new BatchOperation(
       hash,
       preparedOp.opOb.contents,
       source,
       forgedBytes,
-      opResponse,
+      preResults,
       context
     );
   }
