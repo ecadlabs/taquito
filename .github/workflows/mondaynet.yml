@@ -47,7 +47,7 @@ jobs:
       working-directory: ./integration-tests
       env:
         MONDAYNET: true
-      run: npm run test:originate-known-contracts
+      run: npm run originate-known-contracts
     -
       if: always()
       id: integration-tests-mondaynet
@@ -58,7 +58,7 @@ jobs:
         TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }}
         TEZOS_MONDAYNET_SAPLINGCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownSaplingContractAddress }}
         TEZOS_MONDAYNET_ON_CHAIN_VIEW_CONTRACT: ${{ steps.originate-contracts-mondaynet.outputs.knownOnChainViewContractAddress }}
-      run: npm run test:mondaynet -- --maxWorkers=2
+      run: npm run test:weeklynet -- --maxWorkers=2
     -
       name: Slack Notification
       if: always()
