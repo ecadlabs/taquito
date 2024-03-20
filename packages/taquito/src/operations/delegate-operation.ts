@@ -27,10 +27,20 @@ export class DelegateOperation
     private readonly params: OperationContentsDelegation,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const delegationOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === 'delegation'
+      ) as OperationContentsAndResultDelegation);
+    const result = delegationOp && delegationOp.metadata && delegationOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {

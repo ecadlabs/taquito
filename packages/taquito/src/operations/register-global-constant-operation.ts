@@ -20,21 +20,28 @@ export class RegisterGlobalConstantOperation
   extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
 {
-  /**
-   * @description Hash (index) of the newly registered constant
-   */
-  public readonly globalConstantHash?: string;
   constructor(
     hash: string,
     private readonly params: OperationContentsRegisterGlobalConstant,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
 
-    this.globalConstantHash = this.operationResults && this.operationResults.global_address;
+  get preapplyResults() {
+    const registerGlobalConstantOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === 'register_global_constant'
+      ) as OperationContentsAndResultRegisterGlobalConstant);
+    const result =
+      registerGlobalConstantOp &&
+      registerGlobalConstantOp.metadata &&
+      registerGlobalConstantOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {
@@ -48,6 +55,13 @@ export class RegisterGlobalConstantOperation
       registerGlobalConstantOp.metadata &&
       registerGlobalConstantOp.metadata.operation_result;
     return result ? result : undefined;
+  }
+
+  /**
+   * @description Hash (index) of the newly registered constant
+   */
+  get globalConstantHash() {
+    return this.operationResults && this.operationResults.global_address;
   }
 
   get status() {

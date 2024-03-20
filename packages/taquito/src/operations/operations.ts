@@ -70,6 +70,7 @@ export class Operation {
         head.operations[i].forEach((op) => {
           if (op.hash === this.hash) {
             this._foundAt = head.header.level;
+            this.results = op.contents as OperationContentsAndResult[];
           }
         });
       }
@@ -88,7 +89,6 @@ export class Operation {
     return this._foundAt;
   }
   /**
-   *
    * @param hash Operation hash
    * @param raw Raw operation that was injected
    * @param context Taquito context allowing access to rpc and signer
@@ -97,7 +97,7 @@ export class Operation {
   constructor(
     public readonly hash: string,
     public readonly raw: ForgedBytes,
-    public readonly results: OperationContentsAndResult[],
+    protected results: OperationContentsAndResult[],
     protected readonly context: Context
   ) {
     if (validateOperation(this.hash) !== ValidationResult.VALID) {

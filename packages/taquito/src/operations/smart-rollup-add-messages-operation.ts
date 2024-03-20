@@ -26,10 +26,23 @@ export class SmartRollupAddMessagesOperation
     private readonly params: OperationContentsSmartRollupAddMessages,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const smartRollupAddMessagesOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === 'smart_rollup_add_messages'
+      ) as OperationContentsAndResultSmartRollupAddMessages);
+    const result =
+      smartRollupAddMessagesOp &&
+      smartRollupAddMessagesOp.metadata &&
+      smartRollupAddMessagesOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {

@@ -174,33 +174,33 @@ export abstract class Provider {
     forgedBytes.opbytes = signed.sbytes;
     forgedBytes.opOb.signature = signed.prefixSig;
 
-    const opResponse: OperationContentsAndResult[] = [];
-    const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
+    const preResults: OperationContentsAndResult[] = [];
+    const preResponses = await this.rpc.preapplyOperations([forgedBytes.opOb]);
 
-    if (!Array.isArray(results)) {
-      throw new TezosPreapplyFailureError(results);
+    if (!Array.isArray(preResponses)) {
+      throw new TezosPreapplyFailureError(preResponses);
     }
 
-    for (let i = 0; i < results.length; i++) {
-      for (let j = 0; j < results[i].contents.length; j++) {
-        opResponse.push(results[i].contents[j]);
+    for (let i = 0; i < preResponses.length; i++) {
+      for (let j = 0; j < preResponses[i].contents.length; j++) {
+        preResults.push(preResponses[i].contents[j]);
       }
     }
 
-    const errors = flattenErrors(results);
+    const errors = flattenErrors(preResponses);
 
     if (errors.length) {
       throw new TezosOperationError(
         errors,
         'Error occurred during validation simulation of operation',
-        opResponse
+        preResults
       );
     }
 
     return {
       hash: await this.context.injector.inject(forgedBytes.opbytes),
       forgedBytes,
-      opResponse,
+      preResults,
       context: this.context.clone(),
     };
   }

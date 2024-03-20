@@ -18,10 +18,21 @@ export class ProposalsOperation extends Operation {
     private readonly params: OperationContentsProposals,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const proposalsOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === 'proposals'
+      ) as OperationContentsAndResultProposals);
+    const result = proposalsOp;
+
+    return result ? result : undefined;
   }
 
   get operationResults() {

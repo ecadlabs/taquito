@@ -26,29 +26,43 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
 {
-  /**
-   * @description Contract address of the newly originated contract
-   */
-  public readonly contractAddress?: string;
-
   constructor(
     hash: string,
     private readonly params: OperationContentsOrigination,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context,
     private contractProvider: RpcContractProvider
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
 
+  /**
+   * @description Contract address of the newly originated contract
+   */
+  get contractAddress() {
     const originatedContracts = this.operationResults && this.operationResults.originated_contracts;
     if (Array.isArray(originatedContracts)) {
-      this.contractAddress = originatedContracts[0];
+      return originatedContracts[0];
     }
   }
 
   get status() {
     return this.operationResults?.status ?? 'unknown';
+  }
+
+  get preapplyResults() {
+    const originationOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find((op) => op.kind === 'origination') as
+        | OperationContentsAndResultOrigination
+        | undefined);
+
+    const result =
+      originationOp &&
+      hasMetadataWithResult(originationOp) &&
+      originationOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {

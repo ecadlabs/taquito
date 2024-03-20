@@ -288,12 +288,12 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     ) as OperationContentsOrigination;
     const forgedOrigination = await this.forge(preparedOrigination);
 
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(forgedOrigination);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(forgedOrigination);
     return new OriginationOperation<TContract>(
       hash,
       content,
       forgedBytes,
-      opResponse,
+      preResults,
       context,
       this
     );
@@ -333,8 +333,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     ) as OperationContentsDelegation;
 
     const opBytes = await this.forge(preparedDelegation);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new DelegateOperation(hash, content, sourceOrDefault, forgedBytes, opResponse, context);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
+    return new DelegateOperation(hash, content, sourceOrDefault, forgedBytes, preResults, context);
   }
 
   /**
@@ -358,8 +358,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     ) as OperationContentsDelegation;
 
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new DelegateOperation(hash, content, source, forgedBytes, opResponse, context);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
+    return new DelegateOperation(hash, content, source, forgedBytes, preResults, context);
   }
 
   /**
@@ -391,8 +391,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       (op) => op.kind === OpKind.TRANSACTION
     ) as OperationContentsTransaction;
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, preResults, context);
   }
 
   /**
@@ -427,8 +427,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     ) as OperationContentsTransferTicket;
 
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new TransferTicketOperation(hash, content, source, forgedBytes, opResponse, context);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
+    return new TransferTicketOperation(hash, content, source, forgedBytes, preResults, context);
   }
 
   /**
@@ -449,8 +449,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
         (op) => op.kind === OpKind.REVEAL
       ) as OperationContentsReveal;
       const opBytes = await this.forge(prepared);
-      const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-      return new RevealOperation(hash, content, publicKeyHash, forgedBytes, opResponse, context);
+      const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
+      return new RevealOperation(hash, content, publicKeyHash, forgedBytes, preResults, context);
     } else {
       throw new RevealOperationError(
         `The publicKeyHash '${publicKeyHash}' has already been revealed.`
@@ -478,13 +478,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       (op) => op.kind === OpKind.REGISTER_GLOBAL_CONSTANT
     ) as OperationContentsRegisterGlobalConstant;
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
     return new RegisterGlobalConstantOperation(
       hash,
       content,
       publicKeyHash,
       forgedBytes,
-      opResponse,
+      preResults,
       context
     );
   }
@@ -512,13 +512,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       (op) => op.kind === OpKind.INCREASE_PAID_STORAGE
     ) as OperationContentsIncreasePaidStorage;
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
     return new IncreasePaidStorageOperation(
       hash,
       content,
       publicKeyHash,
       forgedBytes,
-      opResponse,
+      preResults,
       context
     );
   }
@@ -537,8 +537,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       (op) => op.kind === OpKind.DRAIN_DELEGATE
     ) as OperationContentsDrainDelegate;
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new DrainDelegateOperation(hash, content, forgedBytes, opResponse, context);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
+    return new DrainDelegateOperation(hash, content, forgedBytes, preResults, context);
   }
 
   /**
@@ -563,8 +563,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     ) as OperationContentsBallot;
 
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new BallotOperation(hash, content, publicKeyHash, forgedBytes, opResponse, context);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
+    return new BallotOperation(hash, content, publicKeyHash, forgedBytes, preResults, context);
   }
 
   /**
@@ -588,8 +588,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       (op) => op.kind === OpKind.PROPOSALS
     ) as OperationContentsProposals;
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
-    return new ProposalsOperation(hash, content, publicKeyHash, forgedBytes, opResponse, context);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
+    return new ProposalsOperation(hash, content, publicKeyHash, forgedBytes, preResults, context);
   }
 
   /**
@@ -612,13 +612,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       (op) => op.kind === OpKind.UPDATE_CONSENSUS_KEY
     ) as OperationContentsUpdateConsensusKey;
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
     return new UpdateConsensusKeyOperation(
       hash,
       content,
       publicKeyHash,
       forgedBytes,
-      opResponse,
+      preResults,
       context
     );
   }
@@ -640,14 +640,14 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       (op) => op.kind === OpKind.SMART_ROLLUP_ADD_MESSAGES
     ) as OperationContentsSmartRollupAddMessages;
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
 
     return new SmartRollupAddMessagesOperation(
       hash,
       content,
       publicKeyHash,
       forgedBytes,
-      opResponse,
+      preResults,
       context
     );
   }
@@ -670,14 +670,14 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     ) as OperationContentsSmartRollupOriginate;
 
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
 
     return new SmartRollupOriginateOperation(
       hash,
       content,
       publicKeyHash,
       forgedBytes,
-      opResponse,
+      preResults,
       context
     );
   }
@@ -699,14 +699,14 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       (op) => op.kind === OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE
     ) as OperationContentsSmartRollupExecuteOutboxMessage;
     const opBytes = await this.forge(prepared);
-    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    const { hash, context, forgedBytes, preResults } = await this.signAndInject(opBytes);
 
     return new SmartRollupExecuteOutboxMessageOperation(
       hash,
       content,
       publicKeyHash,
       forgedBytes,
-      opResponse,
+      preResults,
       context
     );
   }

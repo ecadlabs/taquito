@@ -94,7 +94,7 @@ describe('Transfer operation', () => {
       },
     });
   });
-  it('should contains compute the consummed gas, storage diff and storage size properly', () => {
+  it('should contains compute the consumed gas, storage diff and storage size properly', () => {
     const op = new TransactionOperation(
       'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
       {} as any,

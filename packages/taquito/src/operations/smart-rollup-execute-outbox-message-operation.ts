@@ -28,10 +28,23 @@ export class SmartRollupExecuteOutboxMessageOperation
     private readonly params: OperationContentsSmartRollupExecuteOutboxMessage,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const smartRollupExecuteOutboxMessageOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE
+      ) as OperationContentsAndResultSmartRollupExecuteOutboxMessage);
+    const result =
+      smartRollupExecuteOutboxMessageOp &&
+      smartRollupExecuteOutboxMessageOp.metadata &&
+      smartRollupExecuteOutboxMessageOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {

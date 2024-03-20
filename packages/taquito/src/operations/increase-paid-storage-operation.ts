@@ -27,10 +27,23 @@ export class IncreasePaidStorageOperation
     private readonly params: OperationContentsIncreasePaidStorage,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const increasePaidStorageOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find(
+        (op) => op.kind === 'increase_paid_storage'
+      ) as OperationContentsAndResultIncreasePaidStorage);
+    const result =
+      increasePaidStorageOp &&
+      increasePaidStorageOp.metadata &&
+      increasePaidStorageOp.metadata.operation_result;
+    return result ? result : undefined;
   }
 
   get operationResults() {

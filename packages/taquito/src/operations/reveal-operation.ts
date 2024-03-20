@@ -26,10 +26,17 @@ export class RevealOperation
     private readonly params: OperationContentsReveal,
     public readonly source: string,
     raw: ForgedBytes,
-    results: OperationContentsAndResult[],
+    private readonly preResults: OperationContentsAndResult[],
     context: Context
   ) {
-    super(hash, raw, results, context);
+    super(hash, raw, [], context);
+  }
+
+  get preapplyResults() {
+    const revealOp =
+      Array.isArray(this.preResults) &&
+      (this.preResults.find((op) => op.kind === 'reveal') as OperationContentsAndResultReveal);
+    return revealOp ? [revealOp] : [];
   }
 
   get operationResults() {
