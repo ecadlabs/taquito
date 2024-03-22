@@ -82,15 +82,6 @@
   };
 
   export const setWallet = async (config: { networkType: SupportedNetworks }) => {
-    // if (window && window.localStorage) {
-    //   // finds the Beacon keys
-    //   const beaconKeys = Object.keys(window.localStorage).filter((key) =>
-    //     key.toLowerCase().includes("beacon"),
-    //   );
-    //   // deletes the keys
-    //   beaconKeys.forEach((key) => delete window.localStorage[key]);
-    // }
-
     store.updateNetworkType(config.networkType);
 
     const wallet = createNewWallet(config);
