@@ -9,7 +9,7 @@ You will find below tables that match some of the most common values that smart 
 
 > You can find the tests used to check these values [in this GitHub repo](https://github.com/claudebarde/taquito-contract-call-params)
 
-::: note
+:::note
 Since Taquito version 16.2.0, we introduced syntax support for nested options in `methodsObject` but not `methods` due to the limitation of the flattened form. We recommend users migrate to using `methodsObject` as its syntax is consistent with storage parameters, supports all Michelson data types, and is continually maintained.
 :::
 
@@ -80,7 +80,7 @@ The `methodsObject` method always takes a single object to represent the pair to
 
 ## Map and big_map
 
-See the [documentation about creating and updating maps and big_maps](https://tezostaquito.io/docs/michelsonmap/)
+See the [documentation about creating and updating maps and big_maps](https://taquito.io/docs/michelsonmap/)
 
 ## Bypassing the Michelson Encoder
 Users can bypass the `michelson-encoder` and `ContractAbstraction` by directly passing JSON Michelson in a `transfer` call. This eliminates the need to fetch and create a JS/TS contract abstraction using `tezos.wallet.at` or `tezos.contract.at` and also removes the requirement to create a local contract instance for interaction. As a result, the conversion of entrypoint parameters to the JSON Michelson format using the michelson-encoder is no longer necessary as used in the ContractAbstraction entrypoints as listed prior for `methods` and `methodsObject`.

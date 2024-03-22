@@ -71,13 +71,17 @@ export default ({
         validateProtocol,
         validateOperation,
         b58cencode,
+        bytes2Char,
+        char2Bytes,
+        bytesToString,
+        stringToBytes,
         prefix,
         Prefix
       } = await import('@taquito/utils');
       const { BeaconWallet } = await import('@taquito/beacon-wallet');
       const { InMemorySigner, importKey, Path, ECDSA, Ed25519, generateSecretKey } = await import('@taquito/signer');
       const { LedgerSigner, DerivationType } = await import('@taquito/ledger-signer');
-      const { Tzip16Module, tzip16, bytes2Char, MichelsonStorageView } = await import('@taquito/tzip16')
+      const { Tzip16Module, tzip16, MichelsonStorageView } = await import('@taquito/tzip16')
       const { Tzip12Module, tzip12 } = await import("@taquito/tzip12");
       const { Schema, ParameterSchema } = await import("@taquito/michelson-encoder");
       const { Parser, packDataBytes } = await import('@taquito/michel-codec');
@@ -113,6 +117,9 @@ export default ({
         Tzip16Module,
         tzip16,
         bytes2Char,
+        char2Bytes,
+        bytesToString,
+        stringToBytes,
         MichelsonStorageView,
         Tzip12Module,
         tzip12,
@@ -166,6 +173,9 @@ export default ({
           Tzip16Module: dependencies?.Tzip16Module,
           tzip16: dependencies?.tzip16,
           bytes2Char: dependencies?.bytes2Char,
+          char2Bytes: dependencies?.char2Bytes,
+          bytesToString: dependencies?.bytesToString,
+          stringToBytes: dependencies?.stringToBytes,
           MichelsonStorageView: dependencies?.MichelsonStorageView,
           Tzip12Module: dependencies?.Tzip12Module,
           tzip12: dependencies?.tzip12,
