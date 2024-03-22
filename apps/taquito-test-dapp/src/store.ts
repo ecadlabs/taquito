@@ -27,7 +27,7 @@ const initialState: State = {
   wallet: undefined,
   matrixNode: defaultMatrixNode,
   disableDefaultEvents: false,
-  enableMetrics: false,
+  enableMetrics: true,
   networkType: defaultNetworkType,
   customNetworkUrl: undefined,
   confirmationObservableTest: undefined,

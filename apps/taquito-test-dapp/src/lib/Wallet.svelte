@@ -18,7 +18,10 @@
     const options: DAppClientOptions = {
       name: "Taquito Test Dapp",
       matrixNodes: [defaultMatrixNode] as any,
-      network: { type: config.networkType },
+      network: {
+        type: config.networkType,
+        rpcUrl: getRpcUrl(config.networkType),
+      },
       walletConnectOptions: {
         projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',
       },
@@ -40,14 +43,11 @@
   };
 
   const connectWallet = async () => {
-    setWallet({
-      networkType: $store.networkType
+    const wallet = await setWallet({
+      networkType: $store.networkType,
     });
-    const wallet = createNewWallet({
-          networkType: $store.networkType
-        });
 
-    subscribeToAllEvents(wallet);
+    await subscribeToAllEvents(wallet);
 
     try {
       await wallet.requestPermissions();
@@ -81,17 +81,15 @@
     store.updateSelectedTest(undefined);
   };
 
-  export const setWallet = async (config: {
-    networkType: SupportedNetworks,
-  }) => {
-    if (window && window.localStorage) {
-      // finds the Beacon keys
-      const beaconKeys = Object.keys(window.localStorage).filter((key) =>
-        key.toLowerCase().includes("beacon")
-      );
-      // deletes the keys
-      beaconKeys.forEach((key) => delete window.localStorage[key]);
-    }
+  export const setWallet = async (config: { networkType: SupportedNetworks }) => {
+    // if (window && window.localStorage) {
+    //   // finds the Beacon keys
+    //   const beaconKeys = Object.keys(window.localStorage).filter((key) =>
+    //     key.toLowerCase().includes("beacon"),
+    //   );
+    //   // deletes the keys
+    //   beaconKeys.forEach((key) => delete window.localStorage[key]);
+    // }
 
     store.updateNetworkType(config.networkType);
 
@@ -112,8 +110,8 @@
         store.updateUserBalance(balance.toNumber());
       }
     }
-
-  }
+    return wallet;
+  };
 
   onMount(async () => {
     store.updateNetworkType(defaultNetworkType);
@@ -131,43 +129,89 @@
     }
   });
 
-const saveLog = (data: unknown, eventType: BeaconEvent) => {
-  const log = JSON.stringify({eventType, data});
-  store.addEvent(log);
-};
+  const saveLog = (data: unknown, eventType: BeaconEvent) => {
+    const log = JSON.stringify({ eventType, data });
+    store.addEvent(log);
+  };
 
-function subscribeToAllEvents(wallet: BeaconWallet) {
-  wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_SENT, (data) => saveLog(data, BeaconEvent.PERMISSION_REQUEST_SENT));
-  wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_SUCCESS, (data) => saveLog(data, BeaconEvent.PERMISSION_REQUEST_SUCCESS));
-  wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_ERROR, (data) => saveLog(data, BeaconEvent.PERMISSION_REQUEST_ERROR));
-  wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_SENT, (data) => saveLog(data, BeaconEvent.OPERATION_REQUEST_SENT));
-  wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_SUCCESS, (data) => saveLog(data, BeaconEvent.OPERATION_REQUEST_SUCCESS));
-  wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_ERROR, (data) => saveLog(data, BeaconEvent.OPERATION_REQUEST_ERROR));
-  wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_SENT, (data) => saveLog(data, BeaconEvent.SIGN_REQUEST_SENT));
-  wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_SUCCESS, (data) => saveLog(data, BeaconEvent.SIGN_REQUEST_SUCCESS));
-  wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_ERROR, (data) => saveLog(data, BeaconEvent.SIGN_REQUEST_ERROR));
-  wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_SENT, (data) => saveLog(data, BeaconEvent.BROADCAST_REQUEST_SENT));
-  wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_SUCCESS, (data) => saveLog(data, BeaconEvent.BROADCAST_REQUEST_SUCCESS));
-  wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_ERROR, (data) => saveLog(data, BeaconEvent.BROADCAST_REQUEST_ERROR));
-  wallet.client.subscribeToEvent(BeaconEvent.ACKNOWLEDGE_RECEIVED, (data) => saveLog(data, BeaconEvent.ACKNOWLEDGE_RECEIVED));
-  wallet.client.subscribeToEvent(BeaconEvent.LOCAL_RATE_LIMIT_REACHED, (data) => saveLog(data, BeaconEvent.LOCAL_RATE_LIMIT_REACHED));
-  wallet.client.subscribeToEvent(BeaconEvent.NO_PERMISSIONS, (data) => saveLog(data, BeaconEvent.NO_PERMISSIONS));
+  async function subscribeToAllEvents(wallet: BeaconWallet) {
+    await wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_SENT, (data) =>
+      saveLog(data, BeaconEvent.PERMISSION_REQUEST_SENT),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_SUCCESS, (data) =>
+      saveLog(data, BeaconEvent.PERMISSION_REQUEST_SUCCESS),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.PERMISSION_REQUEST_ERROR, (data) =>
+      saveLog(data, BeaconEvent.PERMISSION_REQUEST_ERROR),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_SENT, (data) =>
+      saveLog(data, BeaconEvent.OPERATION_REQUEST_SENT),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_SUCCESS, (data) =>
+      saveLog(data, BeaconEvent.OPERATION_REQUEST_SUCCESS),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_ERROR, (data) =>
+      saveLog(data, BeaconEvent.OPERATION_REQUEST_ERROR),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_SENT, (data) =>
+      saveLog(data, BeaconEvent.SIGN_REQUEST_SENT),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_SUCCESS, (data) =>
+      saveLog(data, BeaconEvent.SIGN_REQUEST_SUCCESS),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.SIGN_REQUEST_ERROR, (data) =>
+      saveLog(data, BeaconEvent.SIGN_REQUEST_ERROR),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_SENT, (data) =>
+      saveLog(data, BeaconEvent.BROADCAST_REQUEST_SENT),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_SUCCESS, (data) =>
+      saveLog(data, BeaconEvent.BROADCAST_REQUEST_SUCCESS),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.BROADCAST_REQUEST_ERROR, (data) =>
+      saveLog(data, BeaconEvent.BROADCAST_REQUEST_ERROR),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.ACKNOWLEDGE_RECEIVED, (data) =>
+      saveLog(data, BeaconEvent.ACKNOWLEDGE_RECEIVED),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.LOCAL_RATE_LIMIT_REACHED, (data) =>
+      saveLog(data, BeaconEvent.LOCAL_RATE_LIMIT_REACHED),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.NO_PERMISSIONS, (data) =>
+      saveLog(data, BeaconEvent.NO_PERMISSIONS),
+    );
 
-  wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
-    saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET)
-    store.updateUserAddress(data.address);
-    store.updateNetworkType(data.network.type as SupportedNetworks);
-  });
+    await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
+      saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET);
+      store.updateUserAddress(data.address);
+      store.updateNetworkType(data.network.type as SupportedNetworks);
+    });
 
-  wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_TRANSPORT_SET, (data) => saveLog(data, BeaconEvent.ACTIVE_TRANSPORT_SET));
-  wallet.client.subscribeToEvent(BeaconEvent.SHOW_PREPARE, (data) => saveLog(data, BeaconEvent.SHOW_PREPARE));
-  wallet.client.subscribeToEvent(BeaconEvent.HIDE_UI, (data) => saveLog(data, BeaconEvent.HIDE_UI));
-  wallet.client.subscribeToEvent(BeaconEvent.PAIR_INIT, (data) => saveLog(data, BeaconEvent.PAIR_INIT));
-  wallet.client.subscribeToEvent(BeaconEvent.PAIR_SUCCESS, (data) => saveLog(data, BeaconEvent.PAIR_SUCCESS));
-  wallet.client.subscribeToEvent(BeaconEvent.CHANNEL_CLOSED, (data) => saveLog(data, BeaconEvent.CHANNEL_CLOSED));
-  wallet.client.subscribeToEvent(BeaconEvent.INTERNAL_ERROR, (data) => saveLog(data, BeaconEvent.INTERNAL_ERROR));
-  wallet.client.subscribeToEvent(BeaconEvent.UNKNOWN, (data) => saveLog(data, BeaconEvent.UNKNOWN));
-}
+    await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_TRANSPORT_SET, (data) =>
+      saveLog(data, BeaconEvent.ACTIVE_TRANSPORT_SET),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.SHOW_PREPARE, (data) =>
+      saveLog(data, BeaconEvent.SHOW_PREPARE),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.HIDE_UI, (data) =>
+      saveLog(data, BeaconEvent.HIDE_UI),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.PAIR_INIT, (data) =>
+      saveLog(data, BeaconEvent.PAIR_INIT),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.PAIR_SUCCESS, (data) =>
+      saveLog(data, BeaconEvent.PAIR_SUCCESS),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.CHANNEL_CLOSED, (data) =>
+      saveLog(data, BeaconEvent.CHANNEL_CLOSED),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.INTERNAL_ERROR, (data) =>
+      saveLog(data, BeaconEvent.INTERNAL_ERROR),
+    );
+    await wallet.client.subscribeToEvent(BeaconEvent.UNKNOWN, (data) =>
+      saveLog(data, BeaconEvent.UNKNOWN),
+    );
+  }
 </script>
 
 <style lang="scss">
