@@ -7,7 +7,7 @@ Taquito RPC Package Documentation
 
 ## Description
 
-You can use the RPC client package to query the RPC API of your chosen node. The higher-level [`@taquito/taquito`](https://tezostaquito.io/typedoc/modules/_taquito_rpc.html) package builds on this RPC package, in general, you won't need to use this package directly, but it is available for use should you want some specific data and bypass the higher-level abstractions in Taquito.
+You can use the RPC client package to query the RPC API of your chosen node. The higher-level [`@taquito/taquito`](https://taquito.io/typedoc/modules/_taquito_rpc.html) package builds on this RPC package, in general, you won't need to use this package directly, but it is available for use should you want some specific data and bypass the higher-level abstractions in Taquito.
 
 Methods in the RPC package map one-to-one to the corresponding Tezos RPC API endpoints. All responses from the RPC are returns with TypeScript types. It doesn't do any other parsing or compositions at this level.
 
@@ -124,4 +124,4 @@ const originationProof = await client.getOriginationProof({
 
 ## Full documentation
 
-You can find the full documentation at the following address: [https://tezostaquito.io/typedoc/classes/\_taquito_rpc.rpcclient.html](https://tezostaquito.io/typedoc/classes/_taquito_rpc.rpcclient.html)
+You can find the full documentation at the following address: [https://taquito.io/typedoc/classes/\_taquito_rpc.rpcclient.html](https://taquito.io/typedoc/classes/_taquito_rpc.rpcclient.html)

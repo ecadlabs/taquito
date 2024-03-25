@@ -81,7 +81,7 @@ storage: 1;
 
 ## MichelsonMapContract
 
-The contract supports a [Michelson Tutorial](https://tezostaquito.io/docs/michelsonmap). It has a default endpoint that takes a pair of an address and an amount of tez.
+The contract supports a [Michelson Tutorial](https://taquito.io/docs/michelsonmap). It has a default endpoint that takes a pair of an address and an amount of tez.
 
 - [See the full tutorial](https://claudebarde.medium.com/?p=8d8be9930662)
 
@@ -760,7 +760,7 @@ const op = await tezos.contract.originate({
 
 # On Chain Views Contracts
 
-Views are meant to be called by a contract using the Michelson Instruction View followed by the view name and its result type. See [TaquitoDocs](https://tezostaquito.io/docs/on_chain_views) for more details.
+Views are meant to be called by a contract using the Michelson Instruction View followed by the view name and its result type. See [TaquitoDocs](https://taquito.io/docs/on_chain_views) for more details.
 
 ## ContractCallFib
 
@@ -1054,8 +1054,8 @@ const metadataJSON = {
   description: 'A metadata test',
   version: '0.1',
   license: 'MIT',
-  authors: ['Taquito <https://tezostaquito.io/>'],
-  homepage: 'https://tezostaquito.io/',
+  authors: ['Taquito <https://taquito.io/>'],
+  homepage: 'https://taquito.io/',
 };
 
 const metadataBigMap = new MichelsonMap();
@@ -1082,7 +1082,7 @@ description: A metadata test
 version: 0.1
 license: MIT
 authors: Taquito
-homepage: https://tezostaquito.io/
+homepage: https://taquito.io/
 ```
 
 </TabItem>
@@ -1377,7 +1377,7 @@ const contract = await Tezos.wallet.at('KT1B4WtE3MSEjGKnucRL5xhqnXCEX1QkLGPx');
 
 This line creates a contract abstraction with multiple methods named after the contract entrypoints. For example, if you have a `transfer` entrypoint in your contract, you will also have a `.transfer()` method in the `contract` object. Each method accepts parameters required by the contract entrypoint.
 
-For more details see [Taquito Wallet API doc](https://tezostaquito.io/docs/wallet_API)
+For more details see [Taquito Wallet API doc](https://taquito.io/docs/wallet_API)
 
 #### Entrypoints:
 
