@@ -3,7 +3,7 @@
   import store from "../store";
   import type { TestSettings, TestResult } from "../types";
   import { shortenHash } from "../utils";
-  import { NetworkType } from "@airgap/beacon-sdk";
+  import { NetworkType } from "@airgap/beacon-types";
   import { getTzKtUrl } from "../config";
 
   let test: TestSettings | undefined;
