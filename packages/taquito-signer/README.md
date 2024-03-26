@@ -1,6 +1,6 @@
 # Taquito Signer package
-*Documentation can be found [here](https://tezostaquito.io/docs/inmemory_signer)*
-*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_signer.html)*
+*Documentation can be found [here](https://taquito.io/docs/inmemory_signer)*
+*TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_signer.html)*
 
 `@taquito/signer` is an npm package that provides developers with signing functionality for Taquito.
 
