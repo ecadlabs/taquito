@@ -1,7 +1,7 @@
 # Taquito Sapling package
 
-_Documentation can be found [here](https://tezostaquito.io/docs/next/sapling)_
-_TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_sapling.html)_
+_Documentation can be found [here](https://taquito.io/docs/next/sapling)_
+_TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_sapling.html)_
 
 ## General Information
 
@@ -82,7 +82,7 @@ const op = await saplingContract.methodsObject.default([shieldedTx]).send({ amou
 await op.confirmation();
 ```
 
-Refer to the website documentation for further examples and information: https://tezostaquito.io/docs/next/sapling
+Refer to the website documentation for further examples and information: https://taquito.io/docs/next/sapling
 
 ## Additional info
 

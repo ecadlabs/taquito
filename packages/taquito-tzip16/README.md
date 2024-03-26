@@ -1,6 +1,6 @@
 # Taquito TZIP-016 package
-*Documentation can be found [here](https://tezostaquito.io/docs/metadata-tzip16/)*  
-*TypeDoc style documentation is available on-line [here](https://tezostaquito.io/typedoc/modules/_taquito_tzip16.html)*
+*Documentation can be found [here](https://taquito.io/docs/metadata-tzip16/)*  
+*TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_tzip16.html)*
 
 `@taquito/tzip16` is an npm package that provides developers with TZIP-016 functionality for Taquito. TZIP-016 is a standard for encoding access to smart contract metadata either on-chain or off-chain. The `@taquito/tzip16` package allows developers to retrieve the metadata associated with a smart contract and execute the off-chain views found in the metadata.
 

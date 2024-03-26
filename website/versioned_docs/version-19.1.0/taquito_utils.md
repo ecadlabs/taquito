@@ -6,7 +6,7 @@ author: Davis Sawali & Roxane Letourneau
 ## Description
 The `@taquito/utils` package provides developers with utility functions in Taquito.
 
-You can find a full list of available utility functions in Taquito [here](https://tezostaquito.io/typedoc/modules/_taquito_utils.html)
+You can find a full list of available utility functions in Taquito [here](https://taquito.io/typedoc/modules/_taquito_utils.html)
 
 ## Usage Example
 To use the functions, simply import the function you need as such:

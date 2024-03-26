@@ -37,7 +37,7 @@ describe('Metadata provider test', () => {
 
   it('Should succesfully fetch metadata on https', async () => {
     mockHttpHandler.getMetadata.mockResolvedValue(
-      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://tezostaquito.io/>"],"homepage":"https://tezostaquito.io/"}`
+      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://taquito.io/>"],"homepage":"https://taquito.io/"}`
     );
 
     const metadata = await metadataProvider.provideMetadata(
@@ -53,8 +53,8 @@ describe('Metadata provider test', () => {
         description: 'A metadata test',
         version: '0.1',
         license: 'MIT',
-        authors: ['Taquito <https://tezostaquito.io/>'],
-        homepage: 'https://tezostaquito.io/',
+        authors: ['Taquito <https://taquito.io/>'],
+        homepage: 'https://taquito.io/',
       },
       integrityCheckResult: undefined,
       sha256Hash: undefined,
@@ -80,7 +80,7 @@ describe('Metadata provider test', () => {
 
   it('Should succesfully fetch metadata for tezos-storage', async () => {
     mockTezosStorageHandler.getMetadata.mockResolvedValue(
-      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://tezostaquito.io/>"],"homepage":"https://tezostaquito.io/"}`
+      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://taquito.io/>"],"homepage":"https://taquito.io/"}`
     );
 
     const metadata = await metadataProvider.provideMetadata(
@@ -96,8 +96,8 @@ describe('Metadata provider test', () => {
         description: 'A metadata test',
         version: '0.1',
         license: 'MIT',
-        authors: ['Taquito <https://tezostaquito.io/>'],
-        homepage: 'https://tezostaquito.io/',
+        authors: ['Taquito <https://taquito.io/>'],
+        homepage: 'https://taquito.io/',
       },
       integrityCheckResult: undefined,
       sha256Hash: undefined,
@@ -106,7 +106,7 @@ describe('Metadata provider test', () => {
 
   it('Should succesfully fetch metadata for IPFS', async () => {
     mockIpfsHttpHandler.getMetadata.mockResolvedValue(
-      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://tezostaquito.io/>"],"homepage":"https://tezostaquito.io/"}`
+      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://taquito.io/>"],"homepage":"https://taquito.io/"}`
     );
 
     const metadata = await metadataProvider.provideMetadata(
@@ -122,8 +122,8 @@ describe('Metadata provider test', () => {
         description: 'A metadata test',
         version: '0.1',
         license: 'MIT',
-        authors: ['Taquito <https://tezostaquito.io/>'],
-        homepage: 'https://tezostaquito.io/',
+        authors: ['Taquito <https://taquito.io/>'],
+        homepage: 'https://taquito.io/',
       },
       integrityCheckResult: undefined,
       sha256Hash: undefined,

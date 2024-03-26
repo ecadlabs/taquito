@@ -1,5 +1,5 @@
 # Taquito HTTP Utilities package
-*TypeDoc style documentation is available [here](https://tezostaquito.io/typedoc/modules/_taquito_http_utils.html)*
+*TypeDoc style documentation is available [here](https://taquito.io/typedoc/modules/_taquito_http_utils.html)*
 
 `@taquito/http-utils` is an npm package that provides developers with http functionality for Taquito.
 

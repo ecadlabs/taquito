@@ -600,7 +600,7 @@ const forgedBytes = await forger.forge(params);
 - Added documentation on ~100 most popular contract entrypoint parameter examples on Tezos #2153
 - Fixed broken link on Dapp pre-launch checklist page #2293
 - Fixed broken link on smart contract collection page #2295
-- Fixed broken live code examples on the `tezostaquito.io` website #2305
+- Fixed broken live code examples on the `taquito.io` website #2305
 - Removed invalid links and duplicate entries #2332
 - Added documentation for contract entrypoints parameters in JS/TS #2153
 - Fixed broken link on Smart Contract collection page #2295
@@ -878,7 +878,7 @@ const signer = InMemorySigner.fromMnemonic({ mnemonic, password, derivationPath:
 - `@taquito/taquito` - Support `string` or `number` for the `balance` property for contract origination #1795
 
 ### Documentation
-- Documentation page dedicated to multi-sig: https://tezostaquito.io/docs/next/multisig_doc/
+- Documentation page dedicated to multi-sig: https://taquito.io/docs/next/multisig_doc/
 - Fixed broken link in the Wallet doc #1865
 
 ### Others
@@ -913,7 +913,7 @@ try {
 }
 ```
 
-Please refer to the documentation for more information: https://tezostaquito.io/docs/next/subscribe_event
+Please refer to the documentation for more information: https://taquito.io/docs/next/subscribe_event
 
 ## `@taquiro/rpc` - Support `voting_info` endpoint
 
@@ -1025,8 +1025,8 @@ Note for the users of the lower level APIs: injecting more than one manager oper
 ### Documentation
 - Added documentation feedback to Taquito website #1732
 - Fixed live code example - try temple wallet was getting an error about bad parameters #1698
-- Added documentation on TORU deposit/withdrawals: https://tezostaquito.io/docs/next/tx_rollups
-- Added links to commercial nodes (submit a PR if some are missing): https://tezostaquito.io/docs/next/rpc_nodes/
+- Added documentation on TORU deposit/withdrawals: https://taquito.io/docs/next/tx_rollups
+- Added links to commercial nodes (submit a PR if some are missing): https://taquito.io/docs/next/rpc_nodes/
 
 ### Testing
 - Emptying an implicit account does not cost extra gas anymore #1771
@@ -1105,7 +1105,7 @@ RunScriptViewResult = {
 
 ## Sapling package
 
-We implemented a package `@taquito/sapling` providing functionality for Sapling. For documentation, please refer to the following link: https://tezostaquito.io/docs/next/sapling
+We implemented a package `@taquito/sapling` providing functionality for Sapling. For documentation, please refer to the following link: https://taquito.io/docs/next/sapling
 
 We added a post-install script that fetches the z cash parameters required to initialize the sapling state. Excluding the files from the package avoids having an unsustainable bundle size.
 The files `saplingOutputParams.js` and `saplingSpendParams.js` will be created in the users `node_modules/@taquito/sapling` folder and avoid them having to download and inject those files.
@@ -1202,7 +1202,7 @@ The `NaiveEstimateProvider` class that was deprecated in v11 has been removed.
 - `@taquito/taquito` - Added support for the `tx_rollup_origination` and `tx_rollup_submit_batch` operations #1616
 
 ### Documentation
-- Remove outdated RPC nodes: https://tezostaquito.io/docs/next/rpc_nodes/
+- Remove outdated RPC nodes: https://taquito.io/docs/next/rpc_nodes/
 - Fixed broken links #1629
 
 ### Others
@@ -1303,7 +1303,7 @@ The `txRollupSubmitBatch` method also takes optional `storageLimit`, `gasLimit` 
 - `@taquito/local-forging` - Reject Invalid Inputs When Forging #483
 
 ### Documentation
-- How to capture failwith errors: https://tezostaquito.io/docs/next/failwith_errors
+- How to capture failwith errors: https://taquito.io/docs/next/failwith_errors
 
 
 
@@ -1356,7 +1356,7 @@ new RpcClient('url', 'chain', new HttpBackend(50000));
 - `@taquito/local-forging` - Reject Invalid Inputs When Forging #483
 
 ### Documentation
-- How to capture failwith errors: https://tezostaquito.io/docs/next/failwith_errors
+- How to capture failwith errors: https://taquito.io/docs/next/failwith_errors
 
 
 
@@ -1402,7 +1402,7 @@ new RpcClient('url', 'chain', new HttpBackend(50000));
 
 # Taquito v12.0.0-beta
 
-**Please note the presence of two breaking changes in this release. Refer to the following link for a guide to upgrade from version 11 to 12:** https://tezostaquito.io/docs/upgrading_guide
+**Please note the presence of two breaking changes in this release. Refer to the following link for a guide to upgrade from version 11 to 12:** https://taquito.io/docs/upgrading_guide
 
 ## Summary
 ### Ithaca support
@@ -1429,7 +1429,7 @@ new RpcClient('url', 'chain', new HttpBackend(50000));
 - @taquito/taquito - Allow estimating operations using a wallet #1387
 
 ### Documentation
-- Examples of using the BeaconWallet instance as a singleton #1045: https://tezostaquito.io/docs/beaconwallet-singleton
+- Examples of using the BeaconWallet instance as a singleton #1045: https://taquito.io/docs/beaconwallet-singleton
 - Fixed link to Tezos faucet #1383
 - Updated all website examples to show contract and wallet API example variants #493
 - Algolia improvements - Fixed search bar returning dead links and duplicates #1411
@@ -1482,7 +1482,7 @@ The new categories of balance updates are `legacy_rewards`, `block fees`, `legac
 
 The new origin for balance update is `simulation`.
 
-For more information on the balance update changes, refer to http://tezos.gitlab.io/protocols/tenderbake.html#metadata
+For more information on the balance update changes, refer to https://tezos.gitlab.io/protocols/tenderbake.html#metadata
 
 ## @taquito/rpc - Updated signature of the `getEndorsingRights` and `getBakingRights` methods
 
@@ -1607,7 +1607,7 @@ const contractView = await rpcContractProvider.at(contractAddress);
 const result = await contractView.views.getBalance(arg).read(chainId)
 ```
 
-Follow this link for full documentation on the lambda view feature: https://tezostaquito.io/docs/lambda_view
+Follow this link for full documentation on the lambda view feature: https://taquito.io/docs/lambda_view
 
 ## @taquito/taquito - Replacement of some RPC methods for performance purposes
 
@@ -1623,7 +1623,7 @@ As the Taquito local forging implementation provided in the `@taquito/local-forg
 
 
 Note that Taquito also provides a composite forger to validate the forged bytes against different implementations. The composite forger gives the most protection against supply chain attacks on Taquito and malicious RPCs.
-Follow this [link](https://tezostaquito.io/docs/forger) for an example of how to configure a composite forger.
+Follow this [link](https://taquito.io/docs/forger) for an example of how to configure a composite forger.
 
 ## @taquito/http-utils - Replaced use of `xhr2-cookies` by `axios`
 
@@ -1680,8 +1680,8 @@ Note that the wallet account needs to be revealed to conduct any estimate as Taq
 
 - Added a search bar to the Taquito website
 - Allow website users to view Taquito docs based on specific versions #1208
-- @taquito/ledger-signer - Replacement of the deprecated transport `@ledgerhq/hw-transport-node-hid` by `@ledgerhq/hw-transport-u2f`: https://tezostaquito.io/docs/ledger_signer
-- Improved documentation showing the difference between `setDelegate` and `RegisterDelegate` methods: https://tezostaquito.io/docs/set_delegate
+- @taquito/ledger-signer - Replacement of the deprecated transport `@ledgerhq/hw-transport-node-hid` by `@ledgerhq/hw-transport-u2f`: https://taquito.io/docs/ledger_signer
+- Improved documentation showing the difference between `setDelegate` and `RegisterDelegate` methods: https://taquito.io/docs/set_delegate
 - Improvements of the README files
 
 
@@ -1825,7 +1825,7 @@ const res = contract.contractViews.myView(param).executeView({
 });
 ```
 
-Here is the link to the documentation page: https://tezostaquito.io/docs/on_chain_views
+Here is the link to the documentation page: https://taquito.io/docs/on_chain_views
 
 ## @taquito/michel-codec - Option added to the Parser to expand global constants in a script
 
@@ -1880,7 +1880,7 @@ Tezos.setGlobalConstantsProvider(globalConstantProvider);
 
 We plan to support other global constant providers in the future that will depend on indexers or the RPC.
 
-Here is a link to the documentation: https://tezostaquito.io/docs/global_constant#how-to-deploy-a-contract-using-the-storage-property-if-i-use-global-constant-in-the-storage-part-of-the-code
+Here is a link to the documentation: https://taquito.io/docs/global_constant#how-to-deploy-a-contract-using-the-storage-property-if-i-use-global-constant-in-the-storage-part-of-the-code
 
 ## @taquito/michelson-encoder - Fixed the Timestamp token to support decoding UNIX string format
 
@@ -1928,9 +1928,9 @@ We encourage all developers to update their projects to use version Taquito v11 
 - `@taquito/rpc` - Support for the RPC endpoint`context/contracts/{contract}/script/normalized`. #1114
 
 ### Documentation
-- Add documentation on how to sign Michelson data #588: https://tezostaquito.io/docs/signing#signing-michelson-data
-- Add a "dApp pre-launch checklist" to website documentation #1135: https://tezostaquito.io/docs/dapp_prelaunch
-- Add a documentation page about wallets #1123: https://tezostaquito.io/docs/wallets
+- Add documentation on how to sign Michelson data #588: https://taquito.io/docs/signing#signing-michelson-data
+- Add a "dApp pre-launch checklist" to website documentation #1135: https://taquito.io/docs/dapp_prelaunch
+- Add a documentation page about wallets #1123: https://taquito.io/docs/wallets
 
 ### Others
 - Preliminary support for Idiazabalnet protocol
@@ -1971,7 +1971,7 @@ await op.confirmation();
 const hash = op.globalConstantHash; // expr...
 ```
 
-After registering an expression as a global constant, the occurrences of this expression in a smart contract code can be replaced by its corresponding hash, allowing users to originate larger contracts. More details about the new `global constant` feature and examples using the batch API are available on the following documentation page: https://tezostaquito.io/docs/global_constant
+After registering an expression as a global constant, the occurrences of this expression in a smart contract code can be replaced by its corresponding hash, allowing users to originate larger contracts. More details about the new `global constant` feature and examples using the batch API are available on the following documentation page: https://taquito.io/docs/global_constant
 
 ## `@taquito/michelson-encoder` - Support new types related to operations-on-timelock
 
@@ -2092,7 +2092,7 @@ The ContractAbstraction class has a new member called `methodsObject`, which ser
 
 It is to the user's discretion to use their preferred representation. We wanted to provide Taquito users with a way to pass an object when calling a contract entry point using a format similar to the storage parameter used when deploying a contract.
 
-A comparison between both methods is available here: https://tezostaquito.io/docs/smartcontracts#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts
+A comparison between both methods is available here: https://taquito.io/docs/smartcontracts#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts
 
 ## Compatibility support for Hangzhounet
 
@@ -2145,8 +2145,8 @@ In version 9.2.0-beta of Taquito, the ability to send more than one operation in
 ### Documentation
 
 - Updated Taquito website live examples to use Granadanet #993
-- [Documentation for FA2 functionality](https://tezostaquito.io/docs/fa2_parameters) #715
-- [Documentation for confirmation event stream for wallet API](https://tezostaquito.io/docs/confirmation_event_stream) #159
+- [Documentation for FA2 functionality](https://taquito.io/docs/fa2_parameters) #715
+- [Documentation for confirmation event stream for wallet API](https://taquito.io/docs/confirmation_event_stream) #159
 
 
 
@@ -2385,7 +2385,7 @@ The only format accepted in the Michelson-encoder for the type bytes was the hex
 
 ## @taquito/http-utils - Make http requests cancelable
 
-We received requests from users to use the abort signal to allow making requests cancelable. This implementation would require changes in the high-level API that we will consider in an incoming issue where we envisage providing a new API. Meanwhile, it is possible to customize the HttpBackend and RpcClient classes to support cancelable requests. Here is an example where a custom HttpBackend class is used to be able to cancel all requests: https://tezostaquito.io/docs/cancel_http_requests
+We received requests from users to use the abort signal to allow making requests cancelable. This implementation would require changes in the high-level API that we will consider in an incoming issue where we envisage providing a new API. Meanwhile, it is possible to customize the HttpBackend and RpcClient classes to support cancelable requests. Here is an example where a custom HttpBackend class is used to be able to cancel all requests: https://taquito.io/docs/cancel_http_requests
 The example, as not specific, might not be ideal for all use cases, so we plan to provide better support for this feature in the future.
 
 ## @taquito/michelson-encoder - Added Bls12-381 tokens
@@ -2511,7 +2511,7 @@ If you have feature or issue requests, please create an issue on http://github.c
 - Updated beacon-sdk version to v2.2.5 which includes several performance improvements for p2p pairing.
 
 ### Documentation updates
-- Added documentation about the Michelson encoder package [here](https://tezostaquito.io/docs/michelson_encoder).
+- Added documentation about the Michelson encoder package [here](https://taquito.io/docs/michelson_encoder).
 
 
 ## Forward compatibility for Florence
@@ -2609,8 +2609,8 @@ A note on how to use the Kukai wallet for testing on Edonet has been added to th
 
 ### Documentation updates
 
-- [Tickets](https://tezostaquito.io/docs/tickets)
-- [Local pack/unpack, including bigmaps.](https://tezostaquito.io/docs/maps_bigmaps#local-packing-for-big-maps)
+- [Tickets](https://taquito.io/docs/tickets)
+- [Local pack/unpack, including bigmaps.](https://taquito.io/docs/maps_bigmaps#local-packing-for-big-maps)
 - Rename Thanos to Temple wallet.
 - Build time pre-requisites for Taquito.
 - Documentation website examples now uses the edonet testnet
@@ -2621,7 +2621,7 @@ Before v8.1, Taquito provided an API to pack data using Tezos RPC. This release 
 
 Local pack means that fetching big map values is now 50% faster! Big map keys must be encoded using the PACK method, so Taquito needed to use the `rpc.packData()` method. As of v8.1 Taquito, users can opt to pack big map keys locally, eliminating an RPC round trip.
 
-This feature is _opt-in_, meaning that the Taquito user must enable it to benefit from faster big map fetching. The RPC key backing method is still the default. See [Local packing for big maps](https://tezostaquito.io/docs/maps_bigmaps#local-packing-for-big-maps)
+This feature is _opt-in_, meaning that the Taquito user must enable it to benefit from faster big map fetching. The RPC key backing method is still the default. See [Local packing for big maps](https://taquito.io/docs/maps_bigmaps#local-packing-for-big-maps)
 
 ## npm preview registry - Delivering continuous delivery
 
@@ -2631,7 +2631,7 @@ IMPORTANT NOTE: Preview builds are not official releases. They are helpful for t
 
 ## Fetch multiple bigmaps at once.
 
-Taquito now provides a new API `getMultipleValues` that fetches multiple keys in a single call.  Taquito ensures that all fetched keys are fetched from the same block level. Future enhancements for this feature may include Taquito directly fetching multiple big maps from an RPC call as and when such an RPC is added to the Tezos nodes. See docs [here](https://tezostaquito.io/docs/maps_bigmaps#fetch-multiple-big-map-values-at-once)
+Taquito now provides a new API `getMultipleValues` that fetches multiple keys in a single call.  Taquito ensures that all fetched keys are fetched from the same block level. Future enhancements for this feature may include Taquito directly fetching multiple big maps from an RPC call as and when such an RPC is added to the Tezos nodes. See docs [here](https://taquito.io/docs/maps_bigmaps#fetch-multiple-big-map-values-at-once)
 
 ## Expanded property value support for tickets and better `nat` type support.
 
@@ -2746,7 +2746,7 @@ Taquito v8 ships with full support for reading Contract and Token metadata, as w
 
 Taquito’s support makes it easy for developers to fetch metadata such as name, author, logo, symbol for a Smart Contract based on the address.
 
-Documentation on Taquitos’ new API is available here: https://tezostaquito.io/docs/metadata-tzip16/ and here https://tezostaquito.io/docs/tzip12/
+Documentation on Taquitos’ new API is available here: https://taquito.io/docs/metadata-tzip16/ and here https://taquito.io/docs/tzip12/
 
 michel-codec updates
 The michel-codec package now type checks all Michelson. Passing an incorrect data type with a Michelson operation will be caught by michel-codec.
@@ -2795,7 +2795,7 @@ If you have feature or issue requests, please create an issue on http://github.c
 
 Lambda views is a technique that allows a caller to execute a view function on a contract without incurring fees. Taquito provides an abstraction over this technique that makes it easy to use. Application developers can use this feature to call view methods on smart-contracts without incurring fees.
 
-See the [Lambda View documentation](https://tezostaquito.io/docs/lambda_view)
+See the [Lambda View documentation](https://taquito.io/docs/lambda_view)
 
 Special thanks to Philip Diaz and Michael Klien for contributing this feature to Taquito.
 
@@ -2806,8 +2806,6 @@ The `@taquito/michel-codec` package now validates/type checks your Michelson. Th
 ### Beacon V2
 
 The Taquito wallet API now supports Beacon V2. This update is the product of close collaboration between AirGap, Kukai, Temple, and Taquito. The updated TZIP-10/Beacon experience is smoother than before, and users who have more than one Tezos wallet are accommodated.
-
-The new behaviour can be seen in action here: https://cloney.tezostaquito.io/, with actual implementation from the dApp side available here: https://github.com/ecadlabs/george-cloney
 
 ### Docs
 
@@ -2838,7 +2836,7 @@ Delphi changelogs: https://blog.nomadic-labs.com/delphi-changelog.html#007-delph
 
 Taquito now ships with a [Ledger](https://www.ledger.com/) Signer implementation. This feature makes it easy to interoperate with Ledger Hardware wallets in a web context or from command-line tools.
 
-Documentation is available here: https://tezostaquito.io/docs/ledger_signer
+Documentation is available here: https://taquito.io/docs/ledger_signer
 
 We have tested using both Ledger Nano S and X devices.
 
@@ -2847,25 +2845,25 @@ Both the [Madfish](https://www.madfish.solutions/) ([Temple Wallet](https://temp
 
 ### More documentation!
 
-- [Web3js → Taquito](https://tezostaquito.io/docs/web3js_taquito)
+- [Web3js → Taquito](https://taquito.io/docs/web3js_taquito)
 - Docs on how to run our integration tests for
-  - [Ledger Devices](https://tezostaquito.io/docs/ledger_integration_test)
-  - [RPC Node](https://tezostaquito.io/docs/rpc_nodes_integration_test)
-- [Docs for RPC](https://tezostaquito.io/docs/rpc_package)
-- [Docs for popular public Tezos nodes](https://tezostaquito.io/docs/rpc_nodes)
+  - [Ledger Devices](https://taquito.io/docs/ledger_integration_test)
+  - [RPC Node](https://taquito.io/docs/rpc_nodes_integration_test)
+- [Docs for RPC](https://taquito.io/docs/rpc_package)
+- [Docs for popular public Tezos nodes](https://taquito.io/docs/rpc_nodes)
 
 
 ### Breaking Changes
 
 With a major version release, comes an opportunity for us to make some breaking changes.
 
-We have published an [upgrade guide](https://tezostaquito.io/docs/upgrading_guide) to help guide developers and making these changes as easy to adopt as possible.
+We have published an [upgrade guide](https://taquito.io/docs/upgrading_guide) to help guide developers and making these changes as easy to adopt as possible.
 
 The three most notable changes are:
 
 #### Removal of the default RPC URL
 
-Users of Taquito must specifically set their RPC URL. We have published a list of [public nodes Tezos RPC nodes](https://tezostaquito.io/docs/rpc_nodes/).
+Users of Taquito must specifically set their RPC URL. We have published a list of [public nodes Tezos RPC nodes](https://taquito.io/docs/rpc_nodes/).
 
 
 #### Removal of the default Tezos singleton
@@ -3053,7 +3051,7 @@ storage.get({firstName:"Joe", lastName: "Bloe"})
 
 ### Documentation
 
-New documentation covering how to interact with Smart Contracts using Taquito [https://tezostaquito.io/docs/smartcontracts/](https://tezostaquito.io/docs/smartcontracts/)
+New documentation covering how to interact with Smart Contracts using Taquito [https://taquito.io/docs/smartcontracts/](https://taquito.io/docs/smartcontracts/)
 
 ### Improvements & Fixes
 

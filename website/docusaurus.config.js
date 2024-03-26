@@ -5,7 +5,7 @@ module.exports = {
   title: 'Taquito',
   tagline: 'A TypeScript library suite for development on the Tezos blockchain.',
   favicon: 'img/favicon.svg',
-  url: 'https://tezostaquito.io',
+  url: 'https://taquito.io',
   baseUrl: '/',
   projectName: 'taquito',
   organizationName: 'ecadlabs',
@@ -142,7 +142,7 @@ module.exports = {
             },
             {
               label: 'TypeDoc Reference',
-              to: 'https://tezostaquito.io/typedoc',
+              to: 'https://taquito.io/typedoc',
             },
           ],
         },
@@ -176,6 +176,7 @@ module.exports = {
       apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
       indexName: 'taquito',
       appId: process.env.ALGOLIA_APPLICATION_ID,
+      contextualSearch: false,
     },
   },
   presets: [
@@ -202,9 +203,9 @@ module.exports = {
       },
     ],
   ],
-  plugins: 
+  plugins:
     [
-      require.resolve('./plugins/webpack5plugin/index.js'), 
+      require.resolve('./plugins/webpack5plugin/index.js'),
       'docusaurus-plugin-sass',
       [
         'docusaurus-plugin-dotenv',
@@ -214,5 +215,5 @@ module.exports = {
         }
       ]
     ],
-  
+
 };
