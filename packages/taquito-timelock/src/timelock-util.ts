@@ -1,10 +1,7 @@
 import bigInt, { BigInteger } from 'big-integer';
 import { hash } from '@stablelib/blake2b';
 import * as crypto from 'crypto';
-
-export interface RNG {
-  getRandomValues: (array: Uint8Array) => Uint8Array;
-}
+import { TimelockInit, RNG } from './interface';
 
 const defaultRNG: RNG = crypto;
 
@@ -149,13 +146,6 @@ export function verify(locked: BigInteger, proof: TimelockProof, time: number): 
     proof.vdfTuple.modulus
   );
   return randomizedChallenge.compare(locked) === 0 && verifyWesolowski(proof.vdfTuple, time);
-}
-
-export interface TimelockInit {
-  lockedValue: BigInteger;
-  unlockedValue: BigInteger;
-  vdfProof: BigInteger;
-  modulus?: BigInteger;
 }
 
 export class Timelock {

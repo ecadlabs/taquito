@@ -1,2 +1,3 @@
 export * from './chest';
-export * from './timelock-util';
+export * from './interface';
+export { Timelock, TimelockProof } from './timelock-util';
