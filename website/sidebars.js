@@ -142,6 +142,7 @@ const sidebars = {
         'rpc_package',
         'michelson_encoder',
         'contracts-library',
+        'timelock',
         'taquito_utils',
         {
           type: 'category',
