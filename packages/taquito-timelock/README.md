@@ -2,7 +2,7 @@
 This feature is a work in progress, and might be refined in the near future. We encourage Taquito users to try this feature and reach out to us if you have any issues or concerns.
 :::
 
-# Timelock
+# Timelock (BETA)
 
 Timelock is a cryptographic primitive that can be used as a part of a commit & reveal scheme, it provides a guarantee that the information associated to the commit phase is eventually revealed.
 

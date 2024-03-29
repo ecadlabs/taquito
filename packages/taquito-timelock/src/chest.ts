@@ -1,7 +1,7 @@
 import { openSecretBox, secretBox } from '@stablelib/nacl';
 import { BigInteger } from 'big-integer';
+import { RNG, CipherText } from './interface';
 import {
-  RNG,
   TimelockProof,
   Timelock,
   unlockAndProve,
@@ -12,11 +12,6 @@ import {
 import * as crypto from 'crypto';
 
 const defaultRNG: RNG = crypto;
-
-export interface CipherText {
-  nonce: Uint8Array;
-  payload: Uint8Array;
-}
 
 export class ChestKey extends TimelockProof {}
 
