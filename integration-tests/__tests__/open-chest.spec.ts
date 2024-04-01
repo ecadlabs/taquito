@@ -21,21 +21,20 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await originate.confirmation()
       contract = await originate.contract();
       const storageB4: any = await contract.storage()
-      console.log('storageB4', storageB4)
 
       expect(storageB4.level.toNumber()).toBe(0)
       expect(storageB4.guess).toBe('ff')
       expect(storageB4.result).toBe('ff')
     })
 
-    it('should initialize the game with chest', async () => {
+    it('should be able to initialize the game with chest', async () => {
       const payload = new TextEncoder().encode(message);
       const { chest, key } = Chest.newChestAndKey(payload, time);
       chestKey = key;
       let init = await contract.methodsObject.initialize_game(chest.encode()).send()
       await init.confirmation()
       const storageInit: any = await contract.storage()
-      console.log('storageInit', storageInit)
+
       expect(storageInit.level.toNumber()).toBeGreaterThan(0)
       expect(storageInit.guess).toBe('a0')
       expect(storageInit.result).toBe('a0')
@@ -45,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       let guess1 = await contract.methodsObject.guess(stringToBytes(message)).send()
       await guess1.confirmation()
       const storageGuess: any = await contract.storage()
-      console.log('storageGuess', storageGuess)
+
       expect(storageGuess.guess).toBe(stringToBytes(message))
       expect(storageGuess.result).toBe('b0')
     });
@@ -54,7 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       let finish = await contract.methodsObject.finish_game(chestKey.encode()).send()
       await finish.confirmation()
       const storageFinish: any = await contract.storage()
-      console.log('storageFinish', storageFinish)
+
       expect(storageFinish.guess).toBe(stringToBytes(message))
       expect(storageFinish.result).toBe('00')
     });
@@ -62,12 +61,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it('should be able to guess wrong', async () => {
       const payload = new TextEncoder().encode(message);
-      const { chest, key } = Chest.newChestAndKey(payload, time);
+      const precomputedTimelock = Timelock.precompute(time);
+      const { chest, key } = Chest.fromTimelock(payload, time, precomputedTimelock);
       chestKey = key;
       let init = await contract.methodsObject.initialize_game(chest.encode()).send()
       await init.confirmation()
       const storageInit: any = await contract.storage()
-      console.log('storageInit', storageInit)
+
       expect(storageInit.level.toNumber()).toBeGreaterThan(0)
       expect(storageInit.guess).toBe('a0')
       expect(storageInit.result).toBe('a0')
@@ -75,7 +75,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       let guess1 = await contract.methodsObject.guess(stringToBytes('bad')).send()
       await guess1.confirmation()
       const storageGuess: any = await contract.storage()
-      console.log('storageGuess', storageGuess)
+
       expect(storageGuess.guess).toBe(stringToBytes('bad'))
       expect(storageGuess.result).toBe('b0')
     });
@@ -84,7 +84,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       let finish = await contract.methodsObject.finish_game(chestKey.encode()).send()
       await finish.confirmation()
       const storageFinish: any = await contract.storage()
-      console.log('storageFinish', storageFinish)
+
       expect(storageFinish.guess).toBe(stringToBytes('bad'))
       expect(storageFinish.result).toBe('01')
     });
@@ -95,7 +95,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       let init = await contract.methodsObject.initialize_game(chest.encode()).send()
       await init.confirmation()
       const storageInit: any = await contract.storage()
-      console.log('storageInit', storageInit)
+
       expect(storageInit.level.toNumber()).toBeGreaterThan(0)
       expect(storageInit.guess).toBe('a0')
       expect(storageInit.result).toBe('a0')
@@ -104,7 +104,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       let finish = await contract.methodsObject.finish_game(key.encode()).send()
       await finish.confirmation()
       const storageFinish: any = await contract.storage()
-      console.log('storageFinish', storageFinish)
+
       expect(storageFinish.guess).toBe('a0')
       expect(storageFinish.result).toBe('10')
     })
