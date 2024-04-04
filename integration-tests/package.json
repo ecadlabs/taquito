@@ -4,6 +4,7 @@
     "test": "jest",
     "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand",
     "test:oxfordnet": "OXFORDNET=true jest",
+    "test:parisanet-secret-key": "RUN_PARISANET_WITH_SECRET_KEY=true jest --runInBand",
     "test:oxfordnet-secret-key": "RUN_OXFORDNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:nairobinet-secret-key": "RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand",
     "test:weeklynet": "WEEKLYNET=true jest",

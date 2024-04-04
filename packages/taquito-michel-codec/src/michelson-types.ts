@@ -245,66 +245,66 @@ export interface MichelsonTypeTicket<T extends MichelsonType> extends TypeX<'tic
 export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> = T extends 'int'
   ? MichelsonTypeInt
   : T extends 'nat'
-  ? MichelsonTypeNat
-  : T extends 'string'
-  ? MichelsonTypeString
-  : T extends 'bytes'
-  ? MichelsonTypeBytes
-  : T extends 'mutez'
-  ? MichelsonTypeMutez
-  : T extends 'bool'
-  ? MichelsonTypeBool
-  : T extends 'key_hash'
-  ? MichelsonTypeKeyHash
-  : T extends 'timestamp'
-  ? MichelsonTypeTimestamp
-  : T extends 'address'
-  ? MichelsonTypeAddress
-  : T extends 'key'
-  ? MichelsonTypeKey
-  : T extends 'unit'
-  ? MichelsonTypeUnit
-  : T extends 'signature'
-  ? MichelsonTypeSignature
-  : T extends 'operation'
-  ? MichelsonTypeOperation
-  : T extends 'chain_id'
-  ? MichelsonTypeChainID
-  : T extends 'option'
-  ? MichelsonTypeOption<MichelsonType>
-  : T extends 'list'
-  ? MichelsonTypeList<MichelsonType>
-  : T extends 'contract'
-  ? MichelsonTypeContract<MichelsonType>
-  : T extends 'ticket'
-  ? MichelsonTypeTicket<MichelsonType>
-  : T extends 'pair'
-  ? MichelsonTypePair<MichelsonType[]>
-  : T extends 'or'
-  ? MichelsonTypeOr<[MichelsonType, MichelsonType]>
-  : T extends 'lambda'
-  ? MichelsonTypeLambda<MichelsonType, MichelsonType>
-  : T extends 'set'
-  ? MichelsonTypeSet<MichelsonType>
-  : T extends 'map'
-  ? MichelsonTypeMap<MichelsonType, MichelsonType>
-  : T extends 'big_map'
-  ? MichelsonTypeBigMap<MichelsonType, MichelsonType>
-  : T extends 'never'
-  ? MichelsonTypeNever
-  : T extends 'bls12_381_g1'
-  ? MichelsonTypeBLS12_381_G1
-  : T extends 'bls12_381_g2'
-  ? MichelsonTypeBLS12_381_G2
-  : T extends 'bls12_381_fr'
-  ? MichelsonTypeBLS12_381_FR
-  : T extends 'sapling_transaction'
-  ? MichelsonTypeSaplingTransaction
-  : T extends 'sapling_state'
-  ? MichelsonTypeSaplingState
-  : T extends 'chest_key'
-  ? MichelsonTypeChestKey
-  : MichelsonTypeChest;
+    ? MichelsonTypeNat
+    : T extends 'string'
+      ? MichelsonTypeString
+      : T extends 'bytes'
+        ? MichelsonTypeBytes
+        : T extends 'mutez'
+          ? MichelsonTypeMutez
+          : T extends 'bool'
+            ? MichelsonTypeBool
+            : T extends 'key_hash'
+              ? MichelsonTypeKeyHash
+              : T extends 'timestamp'
+                ? MichelsonTypeTimestamp
+                : T extends 'address'
+                  ? MichelsonTypeAddress
+                  : T extends 'key'
+                    ? MichelsonTypeKey
+                    : T extends 'unit'
+                      ? MichelsonTypeUnit
+                      : T extends 'signature'
+                        ? MichelsonTypeSignature
+                        : T extends 'operation'
+                          ? MichelsonTypeOperation
+                          : T extends 'chain_id'
+                            ? MichelsonTypeChainID
+                            : T extends 'option'
+                              ? MichelsonTypeOption<MichelsonType>
+                              : T extends 'list'
+                                ? MichelsonTypeList<MichelsonType>
+                                : T extends 'contract'
+                                  ? MichelsonTypeContract<MichelsonType>
+                                  : T extends 'ticket'
+                                    ? MichelsonTypeTicket<MichelsonType>
+                                    : T extends 'pair'
+                                      ? MichelsonTypePair<MichelsonType[]>
+                                      : T extends 'or'
+                                        ? MichelsonTypeOr<[MichelsonType, MichelsonType]>
+                                        : T extends 'lambda'
+                                          ? MichelsonTypeLambda<MichelsonType, MichelsonType>
+                                          : T extends 'set'
+                                            ? MichelsonTypeSet<MichelsonType>
+                                            : T extends 'map'
+                                              ? MichelsonTypeMap<MichelsonType, MichelsonType>
+                                              : T extends 'big_map'
+                                                ? MichelsonTypeBigMap<MichelsonType, MichelsonType>
+                                                : T extends 'never'
+                                                  ? MichelsonTypeNever
+                                                  : T extends 'bls12_381_g1'
+                                                    ? MichelsonTypeBLS12_381_G1
+                                                    : T extends 'bls12_381_g2'
+                                                      ? MichelsonTypeBLS12_381_G2
+                                                      : T extends 'bls12_381_fr'
+                                                        ? MichelsonTypeBLS12_381_FR
+                                                        : T extends 'sapling_transaction'
+                                                          ? MichelsonTypeSaplingTransaction
+                                                          : T extends 'sapling_state'
+                                                            ? MichelsonTypeSaplingState
+                                                            : T extends 'chest_key'
+                                                              ? MichelsonTypeChestKey
+                                                              : MichelsonTypeChest;
 
 // Data
 
@@ -362,10 +362,10 @@ export type MichelsonContractSection<T extends MichelsonSectionID = MichelsonSec
   T extends 'parameter'
     ? MichelsonContractParameter
     : T extends 'storage'
-    ? MichelsonContractStorage
-    : T extends 'view'
-    ? MichelsonContractView
-    : MichelsonContractCode;
+      ? MichelsonContractStorage
+      : T extends 'view'
+        ? MichelsonContractView
+        : MichelsonContractCode;
 
 // Code analysis types
 export interface MichelsonTypeFailed {
@@ -401,6 +401,7 @@ export enum Protocol {
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
   ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
+  PtParisA6 = 'PtParisA6ruu136piHaBC7cQLDP87JEqtczJWP2pLa5QCELGBH5',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
@@ -434,7 +435,8 @@ const protoLevel: Record<ProtocolID, number> = {
   PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1: 16,
   PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf: 17,
   ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH: 19,
-  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 20,
+  PtParisA6ruu136piHaBC7cQLDP87JEqtczJWP2pLa5QCELGBH5: 20,
+  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 21,
 };
 
 export function ProtoGreaterOrEqual(a: ProtocolID, b: ProtocolID): boolean {

@@ -8,6 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsProxfordY } from './known-contracts-ProxfordY';
+import { knownContractsPtParisA6 } from './known-contracts-PtParisA6';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
@@ -117,8 +118,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
-    knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
+    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : networkName === 'OXFORDNET' ? 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD' : 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M'),    knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
     knownSaplingContract: process.env[`TEZOS_${networkName}_SAPLINGCONTRACT_ADDRESS`] || knownContracts.saplingContract,
@@ -128,6 +128,15 @@ const defaultConfig = ({
     networkType: networkType
   }
 }
+
+const parisanetSecretKey: Config =
+  defaultConfig({
+    networkName: 'PARISANET',
+    protocol: Protocols.PtParisA6,
+    defaultRpc: 'https://rpc.parisanet.teztnets.com',
+    knownContracts: knownContractsPtParisA6,
+    signerConfig: defaultSecretKey
+  })
 
 const oxfordnetEphemeral: Config =
   defaultConfig({
@@ -141,11 +150,11 @@ const oxfordnetEphemeral: Config =
 const oxfordnetSecretKey: Config =
   { ...oxfordnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-oxfordnet-full:8732' } };
 
-const nairobinetSecretKey: Config = 
+const nairobinetSecretKey: Config =
   defaultConfig({
     networkName: 'NAIROBINET',
     protocol: Protocols.PtNairobi,
-    defaultRpc: 'http://ecad-nairobinet-full:8732',
+    defaultRpc: 'http://localhost:20000',
     knownContracts: knownContractsPtNairobi,
     signerConfig: defaultSecretKey
   })
@@ -182,6 +191,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(oxfordnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
+} else if (process.env['RUN_PARISANET_WITH_SECRET_KEY']) {
+  providers.push(parisanetSecretKey);
 } else if(process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
