@@ -1,4 +1,4 @@
-name: Website Deploy
+name: Test dapp deploy
 
 on:
   push:
@@ -11,7 +11,11 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 jobs:
-  publish-website:
+  publish-test-dapp:
+    name: Publish TestDapp to Cloudflare Pages
+    permissions:
+      contents: read
+      deployments: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -20,37 +24,22 @@ jobs:
         node-version: lts/hydrogen
     - run: npm ci
     - run: npm run build
-    - run: npm ci
-      working-directory: website
-    - run: npm run build
-      working-directory: website
-      env:
-        NODE_OPTIONS: "--max_old_space_size=4096"
-        ALGOLIA_APPLICATION_ID: ${{ github.ref != 'refs/heads/master' && 'example' || secrets.ALGOLIA_APPLICATION_ID }}
-        ALGOLIA_SEARCH_API_KEY: ${{ github.ref != 'refs/heads/master' && 'example' || secrets.ALGOLIA_SEARCH_API_KEY }}
-        ALGOLIA_UPDATE_API_KEY: ${{ github.ref != 'refs/heads/master' && 'example' || secrets.ALGOLIA_UPDATE_API_KEY }}
-        FIREBASE_AUTH_DOMAIN: ${{ github.ref != 'refs/heads/master' && secrets.FIREBASE_AUTH_DOMAIN || secrets.FIREBASE_AUTH_DOMAIN_PROD }}
-        FIREBASE_API_KEY: ${{ github.ref != 'refs/heads/master' && secrets.FIREBASE_API_KEY || secrets.FIREBASE_API_KEY_PROD }}
-        FIREBASE_PROJECT_ID: ${{ github.ref != 'refs/heads/master' && secrets.FIREBASE_PROJECT_ID || secrets.FIREBASE_PROJECT_ID_PROD }}
-        FIREBASE_STORAGE_BUCKET: ${{ github.ref != 'refs/heads/master' && secrets.FIREBASE_STORAGE_BUCKET || secrets.FIREBASE_STORAGE_BUCKET_PROD }}
-        FIREBASE_MESSAGING_SENDER_ID: ${{ github.ref != 'refs/heads/master' && secrets.FIREBASE_MESSAGING_SENDER_ID || secrets.FIREBASE_MESSAGING_SENDER_ID_PROD }}
-        FIREBASE_APP_ID: ${{ github.ref != 'refs/heads/master' && secrets.FIREBASE_APP_ID || secrets.FIREBASE_APP_ID_PROD }}
-        FIREBASE_MEASUREMENT_ID: ${{ github.ref != 'refs/heads/master' && secrets.FIREBASE_MEASUREMENT_ID || secrets.FIREBASE_MEASUREMENT_ID_PROD }}
-    - run: npm run build-docs
-    - run: echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-    - run: npm run netlify:${{ github.ref != 'refs/heads/master' && 'preview' || 'publish' }}
-      working-directory: website
-      env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+    - run: npm -w taquito-test-dapp-vite run build
 
-    - name: Update Algolia Index
-      if: github.ref == 'refs/heads/master'
-      run: |
-        docker run --rm -e "CONFIG=$(cat ./website/config.json | jq -r tostring)" \
-          -e API_KEY=${{secrets.ALGOLIA_UPDATE_API_KEY}} \
-          -e APPLICATION_ID=${{secrets.ALGOLIA_APPLICATION_ID}} \
-          algolia/docsearch-scraper
+    - name: Publish to Cloudflare Pages
+      uses: cloudflare/pages-action@v1
+      with:
+        apiToken: ${{ secrets.CF_API_TOKEN }}
+        accountId: ${{ secrets.CF_ACCOUNT_ID }}
+        projectName: taquito-test-dapp
+        directory: apps/taquito-test-dapp/dist
+        # Optional: Enable this if you want to have GitHub Deployments triggered
+        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+        # Optional: Switch what branch you are publishing to.
+        # By default this will be the branch which triggered this workflow
+        # Optional: Change the working directory
+        # Optional: Change the Wrangler version, allows you to point to a specific version or a tag such as `beta`
+        wranglerVersion: '3'
 
     # Notify the PR of the deploy preview
     - uses: marocchino/sticky-pull-request-comment@v2
