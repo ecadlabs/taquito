@@ -70,7 +70,6 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
 
     // KnownContract
     await originateKnownContract('contract', tezos, {
-      balance: '0',
       code: knownContract,
       init: {
         prim: 'Pair',
