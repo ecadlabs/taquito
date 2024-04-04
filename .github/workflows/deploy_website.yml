@@ -27,23 +27,19 @@ jobs:
     - run: npm -w taquito-test-dapp-vite run build
 
     - name: Publish to Cloudflare Pages
+      id: cloudflare_publish
       uses: cloudflare/pages-action@v1
       with:
         apiToken: ${{ secrets.CF_API_TOKEN }}
         accountId: ${{ secrets.CF_ACCOUNT_ID }}
         projectName: taquito-test-dapp
         directory: apps/taquito-test-dapp/dist
-        # Optional: Enable this if you want to have GitHub Deployments triggered
         gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-        # Optional: Switch what branch you are publishing to.
-        # By default this will be the branch which triggered this workflow
-        # Optional: Change the working directory
-        # Optional: Change the Wrangler version, allows you to point to a specific version or a tag such as `beta`
         wranglerVersion: '3'
 
     # Notify the PR of the deploy preview
     - uses: marocchino/sticky-pull-request-comment@v2
       if: github.event_name == 'pull_request'
       with:
-        header: netlify-preview
-        message: 'A new deploy preview is available on Netlify at https://${{ env.short_sha }}--tezostaquito.netlify.app'
+        header: Test Dapp Preview
+        message: 'A new deploy preview is available on Cloudflare Pages at ${{ steps.cloudflare_publish.outputs.URL }}'
