@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { TezosToolkit } from "@taquito/taquito";
-  import { NetworkType } from "@airgap/beacon-sdk";
+  import { NetworkType } from "@airgap/beacon-types";
   import Select from "svelte-select";
   import { getRpcUrl } from "./config";
   import store from "./store";
@@ -75,15 +75,6 @@
   };
 
   onMount(() => {
-    // cleans up the local storage
-    if (window && window.localStorage) {
-      // finds the Beacon keys
-      const beaconKeys = Object.keys(window.localStorage).filter((key) =>
-        key.toLowerCase().includes("beacon")
-      );
-      // deletes the keys
-      beaconKeys.forEach((key) => delete window.localStorage[key]);
-    }
     // detects the browser
     let userAgent = navigator.userAgent;
     if (userAgent.match(/chrome|chromium|crios/i)) {
@@ -237,6 +228,14 @@
               type="checkbox"
               checked={$store.disableDefaultEvents}
               on:change={() => store.updateDefaultEvents()}
+            />
+          </label>
+          <label>
+            <span class="select-title">Enable Metrics In Beacon:</span>
+            <input
+              type="checkbox"
+              checked={$store.enableMetrics}
+              on:change={(e) => store.updateEnableMetrics()}
             />
           </label>
         </div>

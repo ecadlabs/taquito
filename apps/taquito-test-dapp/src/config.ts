@@ -1,4 +1,4 @@
-import { NetworkType } from "@airgap/beacon-sdk";
+import { NetworkType } from '@airgap/beacon-types';
 
 export type SupportedNetworks = NetworkType.OXFORDNET | NetworkType.GHOSTNET | NetworkType.MAINNET | NetworkType.CUSTOM;
 
