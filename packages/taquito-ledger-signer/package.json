@@ -1,6 +1,6 @@
 {
   "name": "@taquito/ledger-signer",
-  "version": "19.1.0",
+  "version": "19.2.0-RC.0",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -60,8 +60,8 @@
     "@ledgerhq/hw-transport": "^6.28.8",
     "@stablelib/blake2b": "^1.0.1",
     "@taquito/core": "^19.1.0",
-    "@taquito/taquito": "^19.1.0",
-    "@taquito/utils": "^19.1.0",
+    "@taquito/taquito": "^19.2.0-RC.0",
+    "@taquito/utils": "^19.2.0-RC.0",
     "buffer": "^6.0.3"
   },
   "devDependencies": {
