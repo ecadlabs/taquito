@@ -60,6 +60,9 @@
       "@taquito/taquito": [
         "taquito/src/taquito.ts"
       ],
+      "@taquito/timelock": [
+        "taquito-timelock/src/taquito-timelock.ts"
+      ],
       "@taquito/tzip12": [
         "taquito-tzip12/src/taquito-tzip12.ts"
       ],
