@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "19.1.0",
+  "version": "19.2.0-RC.0",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -67,9 +67,9 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "4.1.2",
+    "@airgap/beacon-dapp": "^4.2.1",
     "@taquito/core": "^19.1.0",
-    "@taquito/taquito": "^19.1.0"
+    "@taquito/taquito": "^19.2.0-RC.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.40",
@@ -83,6 +83,7 @@
     "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.51.0",
+    "fake-indexeddb": "^5.0.2",
     "jest": "^29.7.0",
     "jest-config": "^29.7.0",
     "lint-staged": "^14.0.1",

@@ -10,6 +10,7 @@ interface State {
   userBalance: number | undefined;
   wallet: BeaconWallet | undefined;
   disableDefaultEvents: boolean;
+  enableMetrics: boolean;
   networkType: SupportedNetworks;
   customNetworkUrl: string | undefined;
   matrixNode: string;
@@ -26,6 +27,7 @@ const initialState: State = {
   wallet: undefined,
   matrixNode: defaultMatrixNode,
   disableDefaultEvents: false,
+  enableMetrics: true,
   networkType: defaultNetworkType,
   customNetworkUrl: undefined,
   confirmationObservableTest: undefined,
@@ -67,6 +69,11 @@ const state = {
     store.update(store => ({
       ...store,
       disableDefaultEvents: !store.disableDefaultEvents
+    })),
+  updateEnableMetrics: () =>
+    store.update(store => ({
+      ...store,
+      enableMetrics: !store.enableMetrics
     })),
   updateNetworkType: (networkType: SupportedNetworks, url?: string) =>
     store.update(store => ({

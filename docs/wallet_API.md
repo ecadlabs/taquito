@@ -71,11 +71,14 @@ const options = {
       },
     },
   },
+  enableMetrics: true,
 };
 const wallet = new BeaconWallet(options);
 ```
 
 The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp and the network you want it to point to. In this case, we choose to point it to `ghostnet`. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
+
+The `enableMetrics` property is an optional parameter that allows you to enable or disable the collection of metrics. It also allows the user to report bugs via a link in the wallet pop-up.
 
 > Note: Previous versions of Beacon used to have a `preferredNetwork` property instead of `network`. This property has been removed in the latest version of Beacon, and you must now use the `network` property.
 
@@ -116,7 +119,7 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 
 ```js live noInline wallet
 // import { BeaconWallet } from '@taquito/beacon-wallet';
-// const options = { name: 'exampleWallet' };
+// const options = { name: 'exampleWallet', enableMetrics: true };
 // const wallet = new BeaconWallet(options);
 
 wallet

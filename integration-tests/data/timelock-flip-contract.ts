@@ -1,4 +1,4 @@
-// https://gitlab.com/tezos/tezos/-/blob/master/src/proto_018_Proxford/lib_protocol/contracts/timelock_flip.tz
+// https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/contracts/timelock_flip.tz
 
 export const timelockStorage = {
   "prim": "Pair",
@@ -10,16 +10,17 @@ export const timelockStorage = {
       "prim": "Pair",
       "args": [
         {
-          "bytes": "e0d984a0e19fd7e7a4ac90dc9bf7e59288e8d8b0a0ca8bf988cae8fa90dbc584c2ee91a1f5d1a1d8d695f58bd1c7b1e4c0b9f384918a89dfd4eff5c3fbaff7e5d68de19088c5fdc08286f18bc7d1c4f99590f3bfd881c68d97bf91d2d4d2ded688d993e59b8aac84b798eed496a1e2dff9cfc1e3c793a8eea1fbf3a8c6c895bb8d8dedded3ed80b4848cb9ddb0c2f1ea98b8a6c3b6c691f2e787afc9bc8dd386a4b08392bbb7c1b6cdbaa6ec98a1fc96ecb287d5f6e39892aea199f4bf91e89bb8e7b58dc4f5d5bfec88ba99d1efc7c98aabe6bebbeeb4b589a383a6f581e69edbe2a4e7db8cb7e4ab8390b6f7c4c6ba9ee7c1f8d7e0f2aba5bf97cdbb85ca8dd0f7dff8fd95a1a9a68dd3b283a5f9fc93a2e7acafc4cbbeb3b2f8fe8faf97c5d2fae681081fe2a28ce94b55c47fe6a2927dc36c403067a86e36a163000000001a7c31a45bcb9934e3089cbc023a0bebe815ee2f646a0d344469f7"
+          // stub chest
+          "bytes": "caa0f4fdc993f1c39f8e89d6e29df8d09685b6faeccd99ddc99cc9ad9381f3ca86c8a7b98590da80eeefec83f4ebf8e7fcfc92daeee5d5d8cfdedfdbcdd0849a9cf793e8fbc6c389e6f3e783caf7a3b7bea69c81acb9d3afc9b9a186f8f4fda4d0a8a9d0b6dbac88e3f4cef6d0fe81c8afde84bf99d0e48ec589e8f8b587fda9f8ee85ef89a5ddc9eccdf3fc8df8c894c8e7dfceff9bc7a482cb83f78caaa6989d9db1a68ff7b99aa490eca285ff87a1b3ecf8d7b7d0f992f0d4aad2b7e7a3ba9fc794d5d098cfa7b79fdefda19b84e78fd98dec8fb18aaee9cc92b8d49f90e5cab2ab86ad9f9c8ced94d1bdecb38cd5b7e59ca5e9ec9face6fcacc9cab3adad97e0df99d7f8b1b0f9fbeab892c8989091c3b1b7ec98aaa7918acfe081e9d6fd98f3d0c201ae8e0f0470e26cfd98d461a07d506a0ec5f45dcbaed3b43a000000113f7d9ccf48b510e34b2c32532e3874f354"
         },
         {
           "prim": "Pair",
           "args": [
             {
-              "bytes": "01"
+              "bytes": "ff"
             },
             {
-              "bytes": "01"
+              "bytes": "ff"
             }
           ]
         }
