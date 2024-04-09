@@ -1315,7 +1315,7 @@ The `RPCRunOperationParam` parameter has new optional properties: `self`, `unpar
 
 Added support to forge and unforge the new operation kinds `transfer_ticket`, `tx_rollup_origination` and `tx_rollup_submit_batch` related to TORU. We plan to add support for the remaining operations in a subsequent release.
 
-## `@taquito/michelson-encoder` - Added support for the the new type`tx_rollup_l2_address`
+## `@taquito/michelson-encoder` - Added support for the new type`tx_rollup_l2_address`
 
 We created a new class `TxRollupL2AddressToken` in the michelson-encoder to support the new Michelson type `tx_rollup_l2_address`. This type is used to identify accounts on transaction rollups' ledgers. Those accounts are prefixed with `tz4`.
 The `TxRollupL2AddressToken` class allows users of Taquito to pass `tz4` addresses in storage or smart contract entry points using the Taquito JS abstraction.
