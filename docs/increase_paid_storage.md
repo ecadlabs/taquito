@@ -22,7 +22,7 @@ const op = await Tezos.contract.increasePaidStorage({
 
 await op.confirmation();
 ```
-- `amount` is the the number of `bytes` you want to increase the paid storage by
+- `amount` is the number of `bytes` you want to increase the paid storage by
 - `destination` is the `KT1` address of the smart contract which storage you would like to increase
 
 After waiting for the operation confirmation, you will also have access to various getters of the operation such as `status`, `amount`, `destination`, `fee`, `gasLimit`, `errors`, `storageLimit`, `consumedMilligas`.
