@@ -113,4 +113,4 @@ const view = await client.runView({
 
 ## Full documentation
 
-You can find the full documentation at the following address: [https://taquito.io/typedoc/classes/\_taquito_rpc.rpcclient.html](https://taquito.io/typedoc/classes/_taquito_rpc.rpcclient.html)
+You can find the full documentation at the following address: [https://taquito.io/typedoc/classes/_taquito_rpc.RpcClient](https://taquito.io/typedoc/classes/_taquito_rpc.RpcClient)
