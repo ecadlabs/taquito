@@ -27,20 +27,13 @@ const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://taquito.io/img/favicon.svg',
   network: { type: 'ghostnet' },
-  eventHandlers: {
-    PERMISSION_REQUEST_SUCCESS: {
-      handler: async (data) => {
-        console.log('permission data:', data);
-      },
-    },
-  },
   enableMetrics: true,
 };
 const wallet = new BeaconWallet(options);
 
 await wallet.requestPermissions();
 
-wallet.client.subscribeToEvent(
+await wallet.client.subscribeToEvent(
   BeaconEvent.ACTIVE_ACCOUNT_SET,
   async (account) => {
     // An active account has been set, update the dApp UI
