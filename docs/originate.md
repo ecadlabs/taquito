@@ -48,8 +48,6 @@ import { TezosToolkit } from '@taquito/taquito';
 const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 const option = { name: "nameOfWallet", network: { type: 'ghostnet' }, enableMetrics: true};
 const wallet = new BeaconWallet(option);
-await wallet.requestPermissions();
-Tezos.setWalletProvider(wallet);
 
 await wallet.client.subscribeToEvent(
   BeaconEvent.ACTIVE_ACCOUNT_SET,
@@ -58,6 +56,8 @@ await wallet.client.subscribeToEvent(
     console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, account);
   },
 
+await wallet.requestPermissions();
+Tezos.setWalletProvider(wallet);
 ```
 
   </TabItem>
