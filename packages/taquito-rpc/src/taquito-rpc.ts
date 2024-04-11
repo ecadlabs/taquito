@@ -886,7 +886,7 @@ export class RpcClient implements RpcClientInterface {
    * @param data Data to pack
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Computes the serialized version of a data expression using the same algorithm as script instruction PACK
-   * Note: You should always verify the packed bytes before signing or requesting that they be signed when using the the RPC to pack.
+   * Note: You should always verify the packed bytes before signing or requesting that they be signed when using the RPC to pack.
    * This precaution helps protect you and your applications users from RPC nodes that have been compromised.
    * A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
    * A safer solution to pack and sign data would be to use the `packDataBytes` function available in the `@taquito/michel-codec` package.

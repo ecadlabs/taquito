@@ -12,9 +12,10 @@ CONFIGS().forEach(({ rpc }) => {
     beforeAll(async () => {
       if(rpc.includes('oxfordnet')){
         Tezos = new TezosToolkit('https://rpc.tzkt.io/oxfordnet');
-      }
-      if(rpc.includes('ghostnet')){
+      } else if(rpc.includes('ghostnet')){
         Tezos = new TezosToolkit('https://rpc.tzkt.io/ghostnet');
+      } else {
+        Tezos = new TezosToolkit(rpc);
       }
       Tezos.setSignerProvider(new InMemorySigner(aliceSKey));
     });
