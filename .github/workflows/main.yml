@@ -90,7 +90,7 @@ jobs:
         --name my-sandbox \
         --detach \
         -p 20000:20000 \
-        ${{ matrix.flextesa_docker_image }}
+        ${{ matrix.flextesa_docker_image }} \
         ${{ matrix.protocol }}box
     - run: npm ci
     - run: npm run build
