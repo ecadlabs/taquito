@@ -1,0 +1,46 @@
+name: Test dapp deploy
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  publish-test-dapp:
+    name: Publish TestDapp to Cloudflare Pages
+    permissions:
+      contents: read
+      deployments: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: lts/hydrogen
+    - run: npm ci
+    - run: npm run build
+    - run: npm -w taquito-test-dapp-vite run build
+
+    - name: Publish to Cloudflare Pages
+      id: cloudflare_publish
+      uses: cloudflare/pages-action@v1
+      with:
+        apiToken: ${{ secrets.CF_API_TOKEN }}
+        accountId: ${{ secrets.CF_ACCOUNT_ID }}
+        projectName: taquito-test-dapp
+        directory: apps/taquito-test-dapp/dist
+        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+        wranglerVersion: '3'
+
+    # Notify the PR of the deploy preview
+    - uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        header: Test Dapp Preview
+        message: 'A new deploy preview is available on Cloudflare Pages at ${{ steps.cloudflare_publish.outputs.URL }}'
