@@ -64,13 +64,6 @@ const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://taquito.io/img/favicon.svg',
   network: { type: 'ghostnet' },
-  eventHandlers: {
-    PERMISSION_REQUEST_SUCCESS: {
-      handler: async (data) => {
-        console.log('permission data:', data);
-      },
-    },
-  },
   enableMetrics: true,
 };
 const wallet = new BeaconWallet(options);
