@@ -167,13 +167,13 @@ const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
     protocol: Protocols.ProxfordY,
-    defaultRpc: 'http://ecad-ghostnet-rolling:8732',
+    defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling:8732' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
