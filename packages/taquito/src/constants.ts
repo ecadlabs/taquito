@@ -68,6 +68,7 @@ export enum Protocols {
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
   ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
+  PtParisBQ = 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -107,6 +108,7 @@ export enum ChainIds {
   MUMBAINET2 = 'NetXgbcrNtXD2yA',
   NAIROBINET = 'NetXyuzvDo2Ugzb',
   OXFORDNET2 = 'NetXxWsskGahzQB',
+  PARISNET = 'NetXo8SqH1c38SS',
 }
 
 // A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption (3.5 fails occasionally with gas exhausted; 4 fails occasionally with fee too low)

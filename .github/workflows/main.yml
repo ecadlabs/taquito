@@ -45,6 +45,8 @@ jobs:
         include:
           - testnet: oxfordnet
             testnet_uppercase: OXFORDNET
+          - testnet: parisnet
+            testnet_uppercase: PARISNET
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
