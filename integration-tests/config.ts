@@ -8,6 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsProxfordY } from './known-contracts-ProxfordY';
+import { knownContractsPtParisBQ } from './known-contracts-PtParisBQ';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
@@ -32,7 +33,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, oxfordnet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, oxfordnet, parisnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -141,6 +142,18 @@ const oxfordnetEphemeral: Config =
 const oxfordnetSecretKey: Config =
   { ...oxfordnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-oxfordnet-full:8732' } };
 
+const parisnetEphemeral: Config =
+  defaultConfig({
+    networkName: 'PARISNET',
+    protocol: Protocols.PtParisBQ,
+    defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/',
+    knownContracts: knownContractsPtParisBQ,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/parisnet')
+  });
+
+const parisnetSecretKey: Config =
+  { ...oxfordnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/' } };
+
 const nairobinetSecretKey: Config =
   defaultConfig({
     networkName: 'NAIROBINET',
@@ -177,15 +190,19 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(oxfordnetSecretKey);
+  providers.push(oxfordnetSecretKey, parisnetSecretKey);
+} else if (process.env['RUN_PARISNET_WITH_SECRET_KEY']) {
+  providers.push(parisnetSecretKey);
 } else if (process.env['RUN_OXFORDNET_WITH_SECRET_KEY']) {
   providers.push(oxfordnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if(process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
+} else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
+} else if (process.env['PARISNET']) {
+  providers.push(parisnetEphemeral);
 } else if (process.env['OXFORDNET']) {
   providers.push(oxfordnetEphemeral);
 } else if (process.env['GHOSTNET']) {
@@ -193,7 +210,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(oxfordnetEphemeral);
+  providers.push(oxfordnetEphemeral, parisnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
