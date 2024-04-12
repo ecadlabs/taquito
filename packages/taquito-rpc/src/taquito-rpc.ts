@@ -36,8 +36,6 @@ import {
   VotingInfoResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -112,7 +110,7 @@ export class RpcClient implements RpcClientInterface {
     protected url: string,
     protected chain: string = defaultChain,
     protected httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -392,20 +390,20 @@ export class RpcClient implements RpcClientInterface {
       ...castedResponse,
       frozen_balance_by_cycle: response.frozen_balance_by_cycle
         ? response.frozen_balance_by_cycle.map(({ deposit, deposits, fees, rewards, ...rest }) => {
-            const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
-              'deposit',
-              'deposits',
-              'fees',
-              'rewards',
-            ]);
-            return {
-              ...rest,
-              deposit: castedToBigNumber.deposit,
-              deposits: castedToBigNumber.deposits,
-              fees: castedToBigNumber.fees,
-              rewards: castedToBigNumber.rewards,
-            };
-          })
+          const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
+            'deposit',
+            'deposits',
+            'fees',
+            'rewards',
+          ]);
+          return {
+            ...rest,
+            deposit: castedToBigNumber.deposit,
+            deposits: castedToBigNumber.deposits,
+            fees: castedToBigNumber.fees,
+            rewards: castedToBigNumber.rewards,
+          };
+        })
         : undefined,
     };
   }
@@ -552,7 +550,6 @@ export class RpcClient implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the delegates allowed to attest a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
    */
   async getAttestationRights(
     args: AttestationRightsQueryArguments = {},
@@ -560,26 +557,6 @@ export class RpcClient implements RpcClientInterface {
   ): Promise<AttestationRightsResponse> {
     const response = await this.httpBackend.createRequest<AttestationRightsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/attestation_rights`),
-      method: 'GET',
-      query: args,
-    });
-
-    return response;
-  }
-
-  /**
-   * @deprecated Deprecated in favor of getAttestationRights
-   * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
-   * @param options contains generic configuration for rpc calls
-   * @description Retrieves the delegates allowed to endorse a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
-   */
-  async getEndorsingRights(
-    args: EndorsingRightsQueryArguments = {},
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<EndorsingRightsResponse> {
-    const response = await this.httpBackend.createRequest<EndorsingRightsResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/endorsing_rights`),
       method: 'GET',
       query: args,
     });

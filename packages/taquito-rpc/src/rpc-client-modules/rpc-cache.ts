@@ -22,8 +22,6 @@ import {
   VotingInfoResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -75,7 +73,6 @@ type RpcMethodParam =
   | BakingRightsQueryArguments
   | PendingOperationsQueryArguments
   | AttestationRightsQueryArguments
-  | EndorsingRightsQueryArguments;
 
 const defaultTtl = 1000;
 
@@ -94,7 +91,7 @@ export class RpcClientCache implements RpcClientInterface {
   constructor(
     private rpcClient: RpcClientInterface,
     private ttl = defaultTtl
-  ) {}
+  ) { }
 
   getAllCachedData() {
     return this._cache;
@@ -572,7 +569,6 @@ export class RpcClientCache implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the delegates allowed to attest a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
    */
   async getAttestationRights(
     args: AttestationRightsQueryArguments = {},
@@ -587,31 +583,6 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getAttestationRights(args, { block });
-      this.put(key, response);
-      return response;
-    }
-  }
-
-  /**
-   * @deprecated Deprecated in favor of getAttestationRights
-   * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
-   * @param options contains generic configuration for rpc calls
-   * @description Retrieves the delegates allowed to endorse a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
-   */
-  async getEndorsingRights(
-    args: EndorsingRightsQueryArguments = {},
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<EndorsingRightsResponse> {
-    const key = this.formatCacheKey(
-      this.rpcClient.getRpcUrl(),
-      RPCMethodName.GET_ENDORSING_RIGHTS,
-      [block, args]
-    );
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getEndorsingRights(args, { block });
       this.put(key, response);
       return response;
     }

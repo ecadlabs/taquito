@@ -19,8 +19,6 @@ import {
   DelegatesResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -90,10 +88,6 @@ export interface RpcClientInterface {
     args: AttestationRightsQueryArguments,
     options?: RPCOptions
   ): Promise<AttestationRightsResponse>;
-  getEndorsingRights(
-    args: EndorsingRightsQueryArguments,
-    options?: RPCOptions
-  ): Promise<EndorsingRightsResponse>;
   getBallotList(options?: RPCOptions): Promise<BallotListResponse>;
   getBallots(options?: RPCOptions): Promise<BallotsResponse>;
   getCurrentProposal(options?: RPCOptions): Promise<CurrentProposalResponse>;
@@ -157,7 +151,6 @@ export enum RPCMethodName {
   GET_DELEGATES = 'getDelegates',
   GET_VOTING_INFO = 'getVotingInfo',
   GET_ATTESTATION_RIGHTS = 'getAttestationRights',
-  GET_ENDORSING_RIGHTS = 'getEndorsingRights',
   GET_ENTRYPOINTS = 'getEntrypoints',
   GET_LIVE_BLOCKS = 'getLiveBlocks',
   GET_MANAGER_KEY = 'getManagerKey',
