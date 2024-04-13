@@ -110,7 +110,7 @@ export class RpcClient implements RpcClientInterface {
     protected url: string,
     protected chain: string = defaultChain,
     protected httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -390,20 +390,20 @@ export class RpcClient implements RpcClientInterface {
       ...castedResponse,
       frozen_balance_by_cycle: response.frozen_balance_by_cycle
         ? response.frozen_balance_by_cycle.map(({ deposit, deposits, fees, rewards, ...rest }) => {
-          const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
-            'deposit',
-            'deposits',
-            'fees',
-            'rewards',
-          ]);
-          return {
-            ...rest,
-            deposit: castedToBigNumber.deposit,
-            deposits: castedToBigNumber.deposits,
-            fees: castedToBigNumber.fees,
-            rewards: castedToBigNumber.rewards,
-          };
-        })
+            const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
+              'deposit',
+              'deposits',
+              'fees',
+              'rewards',
+            ]);
+            return {
+              ...rest,
+              deposit: castedToBigNumber.deposit,
+              deposits: castedToBigNumber.deposits,
+              fees: castedToBigNumber.fees,
+              rewards: castedToBigNumber.rewards,
+            };
+          })
         : undefined,
     };
   }
@@ -479,8 +479,8 @@ export class RpcClient implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls to specified block (default to head) and version.
    * @description All the information about a block
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id
-   * @example getBlock() will default to `/main/chains/block/head?version=0` which shows { kind: endorsement }
-   * @example getBlock({ block: 'head~2', version: 1 }) will return an offset of 2 from head blocks and shows { kind: attestation }
+   * @example getBlock() will default to `/main/chains/block/head?version=1` which shows { kind: attestation }
+   * @example getBlock({ block: 'head~2', version: 0 }) will return an offset of 2 from head blocks and shows { kind: endorsement }
    * @example getBlock({ block: 'BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2' }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block, version }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
