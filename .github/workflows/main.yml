@@ -97,7 +97,7 @@ jobs:
     - run: npm -w integration-tests run originate-known-contracts && npm -w integration-tests run test:${{ matrix.testnet }}-secret-key -- --testPathIgnorePatterns integration-tests/__tests__/ledger/ledger-signer-failing-tests.spec.ts integration-tests/__tests__/ledger/ledger-signer.spec.ts integration-tests/__tests__/contract/estimation-tests.spec.ts integration-tests/__tests__/rpc/get-protocol-constants.spec.ts --detectOpenHandles --runInBand
       env:
         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
-        SECRET_KEY: edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
+        SECRET_KEY: edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt
         TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:20000
         POLLING_INTERVAL_MILLISECONDS: 100
         RPC_CACHE_MILLISECONDS: 0

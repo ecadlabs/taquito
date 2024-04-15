@@ -1,6 +1,6 @@
 #!/bin/sh
 export RUN_OXFORDNET_WITH_SECRET_KEY=true
-export SECRET_KEY=edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
+export SECRET_KEY=edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt
 export TEZOS_RPC_OXFORDNET=http://localhost:20000
 export POLLING_INTERVAL_MILLISECONDS=100
 export RPC_CACHE_MILLISECONDS=0
