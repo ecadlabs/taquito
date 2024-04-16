@@ -212,4 +212,12 @@ export class RpcReadAdapter implements TzReadProvider {
   getLiveBlocks(block: BlockIdentifier): Promise<string[]> {
     return this.rpc.getLiveBlocks({ block: String(block) });
   }
+
+  /**
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of None means that the feature is not yet set to launch.
+   * @param block from which we want to retrieve the information
+   */
+  getAdaptiveIssuanceLaunchCycle(block: BlockIdentifier): Promise<string> {
+    return this.rpc.getAdaptiveIssuanceLaunchCycle({ block: String(block) });
+  }
 }

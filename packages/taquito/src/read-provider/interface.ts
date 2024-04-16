@@ -151,4 +151,10 @@ export interface TzReadProvider {
    * @param block from which we want to retrieve the information
    */
   getLiveBlocks(block: BlockIdentifier): Promise<string[]>;
+
+  /**
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of None means that the feature is not yet set to launch.
+   * @param block from which we want to retrieve the information
+   */
+  getAdaptiveIssuanceLaunchCycle(block: BlockIdentifier): Promise<string>;
 }

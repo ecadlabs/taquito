@@ -3320,8 +3320,8 @@ describe('RpcClient test', () => {
       const balanceUpdate =
         'metadata' in response.contents[0]
           ? (response.contents[0]['metadata'][
-            'balance_updates'
-          ] as OperationMetadataBalanceUpdates[])
+              'balance_updates'
+            ] as OperationMetadataBalanceUpdates[])
           : [];
       expect(balanceUpdate![0]['category']).toEqual(
         METADATA_BALANCE_UPDATES_CATEGORY.BAKING_BONUSES
@@ -3378,8 +3378,8 @@ describe('RpcClient test', () => {
       const balanceUpdate =
         'metadata' in response.contents[0]
           ? (response.contents[0]['metadata'][
-            'balance_updates'
-          ] as OperationMetadataBalanceUpdates[])
+              'balance_updates'
+            ] as OperationMetadataBalanceUpdates[])
           : [];
       expect(balanceUpdate![0]['category']).toEqual(
         METADATA_BALANCE_UPDATES_CATEGORY.BAKING_REWARDS
@@ -3982,8 +3982,22 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('AdaptiveIssuanceLaunchCycle', () => {
+    it('should query the right url and data', async () => {
+      httpBackend.createRequest.mockResolvedValue('6');
+      const response = await client.getAdaptiveIssuanceLaunchCycle();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/adaptive_issuance_launch_cycle`,
+      });
+
+      expect(response).toEqual('6');
+    });
+  });
+
   describe('getPendingOperations', () => {
-    it('should query the correct url and retrun pending operations in mempool', async () => {
+    it('should query the correct url and return pending operations in mempool', async () => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
       const response: PendingOperationsV1 | PendingOperationsV2 =
         await client.getPendingOperations();

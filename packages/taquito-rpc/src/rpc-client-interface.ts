@@ -125,6 +125,7 @@ export interface RpcClientInterface {
     options?: RPCOptions
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
+  getAdaptiveIssuanceLaunchCycle(options?: RPCOptions): Promise<string>;
   getPendingOperations(
     args: PendingOperationsQueryArguments
   ): Promise<PendingOperationsV1 | PendingOperationsV2>;
@@ -168,5 +169,6 @@ export enum RPCMethodName {
   GET_STORAGE_PAID_SPACE = 'getStoragePaidSpace',
   GET_TICKET_BALANCE = 'getTicketBalance',
   GET_ALL_TICKET_BALANCES = 'getAllTicketBalances',
+  GET_ADAPTIVE_ISSUANCE_LAUNCH_CYCLE = 'getAdaptiveIssuanceLaunchCycle',
   GET_PENDING_OPERATIONS = 'getPendingOperations',
 }

@@ -72,7 +72,7 @@ type RpcMethodParam =
   | BigMapKey
   | BakingRightsQueryArguments
   | PendingOperationsQueryArguments
-  | AttestationRightsQueryArguments
+  | AttestationRightsQueryArguments;
 
 const defaultTtl = 1000;
 
@@ -91,7 +91,7 @@ export class RpcClientCache implements RpcClientInterface {
   constructor(
     private rpcClient: RpcClientInterface,
     private ttl = defaultTtl
-  ) { }
+  ) {}
 
   getAllCachedData() {
     return this._cache;
@@ -1091,6 +1091,24 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getAllTicketBalances(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+  /**
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of None means that the feature is not yet set to launch.
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   */
+  async getAdaptiveIssuanceLaunchCycle({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_ADAPTIVE_ISSUANCE_LAUNCH_CYCLE,
+      [block]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getAdaptiveIssuanceLaunchCycle({ block });
       this.put(key, response);
       return response;
     }
