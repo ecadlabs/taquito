@@ -32,6 +32,7 @@ import {
   constants,
   ticketBalancesResponse,
   pendingOperationsResponse,
+  aiLaunchCycle,
 } from './data/rpc-responses';
 
 /**
@@ -126,7 +127,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getProtocols.mockReturnValue(protocols);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
     mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
-    mockRpcClient.getAdaptiveIssuanceLaunchCycle.mockReturnValue('6');
+    mockRpcClient.getAdaptiveIssuanceLaunchCycle.mockReturnValue(aiLaunchCycle);
     mockRpcClient.getPendingOperations.mockReturnValue(pendingOperationsResponse);
     rpcCache = new RpcClientCache(mockRpcClient);
   });
@@ -271,7 +272,7 @@ describe('RpcClientCache test', () => {
     ).toEqual(ticketBalancesResponse);
     expect(
       rpcCache.getAllCachedData()['rpcTest/getAdaptiveIssuanceLaunchCycle/head/'].response
-    ).toEqual('6');
+    ).toEqual(aiLaunchCycle);
     expect(rpcCache.getAllCachedData()[`rpcTest/getPendingOperations/{}/`].response).toEqual(
       pendingOperationsResponse
     );
@@ -442,7 +443,7 @@ describe('RpcClientCache test', () => {
     ).toEqual(ticketBalancesResponse);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAdaptiveIssuanceLaunchCycle/${block.block}/`].response
-    ).toEqual('6');
+    ).toEqual(aiLaunchCycle);
     rpcCache.deleteAllCachedData();
   });
 

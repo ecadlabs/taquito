@@ -4312,6 +4312,8 @@ export const ticketBalancesResponse = [
   },
 ];
 
+export const aiLaunchCycle = 6;
+
 export const pendingOperationsResponse = {
   applied: [
     {

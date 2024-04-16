@@ -5,6 +5,7 @@ import {
   MichelsonV1Expression,
   SaplingDiffResponse,
   ScriptedContracts,
+  AILaunchCycleResponse,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 import { BigMapQuery, BlockIdentifier, SaplingStateQuery, TzReadProvider } from '@taquito/taquito';
@@ -95,7 +96,7 @@ export class ReadWrapperContractsLibrary implements TzReadProvider {
   getLiveBlocks(block: BlockIdentifier): Promise<string[]> {
     return this.readProvider.getLiveBlocks(block);
   }
-  getAdaptiveIssuanceLaunchCycle(block: BlockIdentifier): Promise<string> {
+  getAdaptiveIssuanceLaunchCycle(block: BlockIdentifier): Promise<AILaunchCycleResponse> {
     return this.readProvider.getAdaptiveIssuanceLaunchCycle(block);
   }
 }

@@ -66,6 +66,7 @@ import {
   PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1055,13 +1056,13 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of None means that the feature is not yet set to launch.
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of null means that the feature is not yet set to launch.
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    */
   async getAdaptiveIssuanceLaunchCycle({
     block,
-  }: { block: string } = defaultRPCOptions): Promise<string> {
-    return this.httpBackend.createRequest<string>({
+  }: { block: string } = defaultRPCOptions): Promise<AILaunchCycleResponse> {
+    return this.httpBackend.createRequest<AILaunchCycleResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`
       ),

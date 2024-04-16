@@ -57,6 +57,7 @@ import {
   smartRollupRefuteResponse,
   smartRollupRecoverBondResponse,
   smartRollupTimeoutResponse,
+  aiLaunchCycle,
 } from './data/rpc-responses';
 
 /**
@@ -3984,7 +3985,7 @@ describe('RpcClient test', () => {
 
   describe('AdaptiveIssuanceLaunchCycle', () => {
     it('should query the right url and data', async () => {
-      httpBackend.createRequest.mockResolvedValue('6');
+      httpBackend.createRequest.mockResolvedValue(aiLaunchCycle);
       const response = await client.getAdaptiveIssuanceLaunchCycle();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
@@ -3992,7 +3993,7 @@ describe('RpcClient test', () => {
         url: `root/chains/test/blocks/head/context/adaptive_issuance_launch_cycle`,
       });
 
-      expect(response).toEqual('6');
+      expect(response).toEqual(aiLaunchCycle);
     });
   });
 

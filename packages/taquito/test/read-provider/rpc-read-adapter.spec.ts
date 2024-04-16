@@ -11,7 +11,7 @@ import {
   contractResponse,
   contractStorage,
   liveBlocks,
-  launchCycle,
+  aiLaunchCycle,
   saplingState,
 } from './data';
 import { RpcClient } from '@taquito/rpc';
@@ -294,10 +294,10 @@ describe('RpcReadAdapter test', () => {
     });
 
     it(`should get adaptive issuance launch cycle at block: ${block}`, async () => {
-      mockRpcClient.getAdaptiveIssuanceLaunchCycle.mockResolvedValue(launchCycle);
+      mockRpcClient.getAdaptiveIssuanceLaunchCycle.mockResolvedValue(aiLaunchCycle);
 
       const result = await readProvider.getAdaptiveIssuanceLaunchCycle(block);
-      expect(result).toEqual(launchCycle);
+      expect(result).toEqual(aiLaunchCycle);
 
       expect(mockRpcClient.getAdaptiveIssuanceLaunchCycle.mock.calls[0][0]).toEqual({
         block: `${block}`,

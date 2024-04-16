@@ -5,6 +5,7 @@ import {
   RpcClientInterface,
   SaplingDiffResponse,
   ScriptedContracts,
+  AILaunchCycleResponse,
 } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { BigMapQuery, BlockIdentifier, SaplingStateQuery, TzReadProvider } from './interface';
@@ -214,10 +215,10 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of None means that the feature is not yet set to launch.
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of null means that the feature is not yet set to launch.
    * @param block from which we want to retrieve the information
    */
-  getAdaptiveIssuanceLaunchCycle(block: BlockIdentifier): Promise<string> {
+  getAdaptiveIssuanceLaunchCycle(block: BlockIdentifier): Promise<AILaunchCycleResponse> {
     return this.rpc.getAdaptiveIssuanceLaunchCycle({ block: String(block) });
   }
 }
