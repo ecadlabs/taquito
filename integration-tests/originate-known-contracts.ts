@@ -11,7 +11,7 @@ import * as fs from 'fs/promises';
 
 const MUTEZ_UNIT = new BigNumber(1000000);
 
-CONFIGS().forEach(({ lib, setup, protocol }) => {
+CONFIGS().forEach(({ lib, setup, protocol, rpc }) => {
   const tezos = lib;
   let keyPkh: string = "";
   let keyInitialBalance: BigNumber = new BigNumber(0);
@@ -20,6 +20,8 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
   (async () => {
     await setup(true);
     console.log(protocol)
+    let res = await fetch(rpc + '/chains/main/blocks/head/context/delegates')
+    console.log(await res.json())
 
     let outputFile = await fs.open(`known-contracts-${protocolShort}.ts`, 'w');
     let writeOutput = async (line: string): Promise<void> => {
