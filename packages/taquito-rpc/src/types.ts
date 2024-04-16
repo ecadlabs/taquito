@@ -1678,6 +1678,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto020 &
   ConstantsResponseProto019 &
   ConstantsResponseProto017 &
   ConstantsResponseProto016 &
@@ -1721,6 +1722,89 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto020
+  extends Omit<
+    ConstantsResponseProto019,
+    | 'adaptive_rewards_params'
+    | 'blocks_per_stake_snapshot'
+    | 'dal_parametric'
+    | 'issuance_weights'
+    | 'liquidity_baking_subsidy_weight'
+    | 'preserved_cycles'
+    | 'smart_rollup_reveal_activation_level'
+  > {
+  adaptive_issuance_force_activation: boolean;
+  adaptive_rewards_params: {
+    center_dz: {
+      denominator: string;
+      numerator: string;
+    };
+    growth_rate: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_final_max: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_final_min: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_initial_max: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_initial_min: {
+      denominator: string;
+      numerator: string;
+    };
+    max_bonus: string;
+    radius_dz: {
+      denominator: string;
+      numerator: string;
+    };
+    initial_period: number;
+    transition_period: number;
+  };
+  blocks_preservation_cycles: number;
+  consensus_rights_delay: number;
+  dal_parametric: {
+    attestation_lag: number;
+    attestation_threshold: number;
+    feature_enable: boolean;
+    incentives_enable: boolean;
+    number_of_shards: number;
+    number_of_slots: number;
+    page_size: number;
+    redundancy_factor: number;
+    slot_size: number;
+  };
+  delegate_parameters_activation_delay: number;
+  direct_ticket_spending_enable: boolean;
+  issuance_weights: {
+    attesting_reward_weight: number;
+    baking_reward_bonus_weight: number;
+    baking_reward_fixed_portion_weight: number;
+    base_total_issued_per_minute: string;
+    seed_nonce_revelation_tip_weight: number;
+    vdf_revelation_tip_weight: number;
+  };
+  liquidity_baking_subsidy: string;
+  max_slashing_per_block: number;
+  max_slashing_threshold: number;
+  ns_enable: boolean;
+  smart_rollup_reveal_activation_level: {
+    dal_attested_slots_validity_lag: number;
+    dal_page: number;
+    dal_parameters: number;
+    metadata: number;
+    raw_data: {
+      Blake2B: number;
+    };
+  };
+}
 
 export interface ConstantsResponseProto019
   extends Omit<
@@ -1803,6 +1887,7 @@ export interface ConstantsResponseProto019
   smart_rollup_riscv_pvm_enable: boolean;
   zk_rollup_max_ticket_payload_size: number;
 }
+
 export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
 export interface ConstantsResponseProto016
