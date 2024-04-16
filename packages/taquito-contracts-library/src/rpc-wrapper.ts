@@ -19,8 +19,6 @@ import {
   VotingInfoResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -61,7 +59,7 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   constructor(
     private rpc: RpcClientInterface,
     private contractslibrary: ContractsLibrary
-  ) {}
+  ) { }
 
   async getContract(
     address: string,
@@ -179,12 +177,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<AttestationRightsResponse> {
     return this.rpc.getAttestationRights(args, { block });
-  }
-  async getEndorsingRights(
-    args: EndorsingRightsQueryArguments,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<EndorsingRightsResponse> {
-    return this.rpc.getEndorsingRights(args, { block });
   }
   async getBallotList({ block }: RPCOptions = defaultRPCOptions): Promise<BallotListResponse> {
     return this.rpc.getBallotList({ block });

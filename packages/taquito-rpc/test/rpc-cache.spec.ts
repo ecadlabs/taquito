@@ -16,7 +16,6 @@ import {
   blockMetadata,
   bakingRights,
   attestationRights,
-  endorsingRights,
   ballotList,
   ballots,
   currentProposal,
@@ -73,7 +72,6 @@ describe('RpcClientCache test', () => {
       getBlockMetadata: jest.fn(),
       getBakingRights: jest.fn(),
       getAttestationRights: jest.fn(),
-      getEndorsingRights: jest.fn(),
       getBallotList: jest.fn(),
       getBallots: jest.fn(),
       getCurrentProposal: jest.fn(),
@@ -113,7 +111,6 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getBlockMetadata.mockReturnValue(blockMetadata);
     mockRpcClient.getBakingRights.mockReturnValue(bakingRights);
     mockRpcClient.getAttestationRights.mockReturnValue(attestationRights);
-    mockRpcClient.getEndorsingRights.mockReturnValue(endorsingRights);
     mockRpcClient.getBallotList.mockReturnValue(ballotList);
     mockRpcClient.getBallots.mockReturnValue(ballots);
     mockRpcClient.getCurrentProposal.mockReturnValue(currentProposal);
@@ -158,7 +155,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockMetadata();
     await rpcCache.getBakingRights();
     await rpcCache.getAttestationRights();
-    await rpcCache.getEndorsingRights();
     await rpcCache.getBallotList();
     await rpcCache.getBallots();
     await rpcCache.getCurrentProposal();
@@ -235,9 +231,6 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()['rpcTest/getAttestationRights/head/{}/'].response).toEqual(
       attestationRights
     );
-    expect(rpcCache.getAllCachedData()['rpcTest/getEndorsingRights/head/{}/'].response).toEqual(
-      endorsingRights
-    );
     expect(rpcCache.getAllCachedData()['rpcTest/getBallotList/head/'].response).toEqual(ballotList);
     expect(rpcCache.getAllCachedData()['rpcTest/getBallots/head/'].response).toEqual(ballots);
     expect(rpcCache.getAllCachedData()['rpcTest/getCurrentProposal/head/'].response).toEqual(
@@ -306,7 +299,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockMetadata(block);
     await rpcCache.getBakingRights({ level: 1111 }, block);
     await rpcCache.getAttestationRights({ level: 151187 }, block);
-    await rpcCache.getEndorsingRights({ level: 1111 }, block);
     await rpcCache.getBallotList(block);
     await rpcCache.getBallots(block);
     await rpcCache.getCurrentProposal(block);
@@ -398,10 +390,6 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getAttestationRights/${block.block}/{"level":151187}/`]
         .response
     ).toEqual(attestationRights);
-    expect(
-      rpcCache.getAllCachedData()[`rpcTest/getEndorsingRights/${block.block}/{"level":1111}/`]
-        .response
-    ).toEqual(endorsingRights);
     expect(rpcCache.getAllCachedData()[`rpcTest/getBallotList/${block.block}/`].response).toEqual(
       ballotList
     );
@@ -470,7 +458,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockMetadata();
     await rpcCache.getBakingRights();
     await rpcCache.getAttestationRights();
-    await rpcCache.getEndorsingRights();
     await rpcCache.getBallotList();
     await rpcCache.getBallots();
     await rpcCache.getCurrentProposal();

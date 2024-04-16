@@ -179,19 +179,6 @@ CONFIGS().forEach(
           expect(attestationRights[0].delegate).toBeUndefined();
         });
 
-        unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async () => {
-          const endorsingRights = await rpcClient.getEndorsingRights();
-          expect(endorsingRights).toBeDefined();
-          expect(endorsingRights[0].delegates).toBeDefined();
-          expect(endorsingRights[0].delegates![0].delegate).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].delegate).toEqual('string');
-          expect(endorsingRights[0].delegates![0].endorsing_power).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].endorsing_power).toEqual('number');
-          expect(endorsingRights[0].delegates![0].first_slot).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].first_slot).toEqual('number');
-          expect(endorsingRights[0].delegate).toBeUndefined();
-        });
-
         it('Verify that rpcClient.getBallotList returns ballots casted so far during a voting period', async () => {
           const ballotList = await rpcClient.getBallotList();
           expect(ballotList).toBeDefined();

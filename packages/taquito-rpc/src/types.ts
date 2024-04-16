@@ -19,19 +19,19 @@ interface INodeExtender {
 
 type OtherEltsInner =
   | {
-      value: any;
-    }
+    value: any;
+  }
   | {
-      inode_extender: INodeExtender;
-    };
+    inode_extender: INodeExtender;
+  };
 
 export type OtherElts =
   | {
-      node: [string, { value: string } | { node: string }][];
-    }
+    node: [string, { value: string } | { node: string }][];
+  }
   | {
-      other_elts: OtherEltsInner;
-    };
+    other_elts: OtherEltsInner;
+  };
 
 export interface Inode {
   length: string;
@@ -1103,34 +1103,6 @@ export interface AttestationRightsResponseItem {
 
 export type AttestationRightsResponse = AttestationRightsResponseItem[];
 
-export type EndorsingRightsArgumentsDelegate = string | string[];
-export type EndorsingRightsArgumentsCycle = number | number[];
-export type EndorsingRightsArgumentsLevel = number | number[];
-
-export interface EndorsingRightsQueryArguments {
-  level?: EndorsingRightsArgumentsLevel;
-  cycle?: EndorsingRightsArgumentsCycle;
-  delegate?: EndorsingRightsArgumentsDelegate;
-  consensus_key?: string;
-}
-
-export interface EndorsingRightsResponseItemDelegates {
-  delegate: string;
-  first_slot: number;
-  endorsing_power: number;
-  consensus_key?: string;
-}
-
-export interface EndorsingRightsResponseItem {
-  level: number;
-  delegate?: string;
-  delegates?: EndorsingRightsResponseItemDelegates[];
-  slots?: number[];
-  estimated_time?: Date;
-}
-
-export type EndorsingRightsResponse = EndorsingRightsResponseItem[];
-
 export type BallotListResponseEnum = 'nay' | 'yay' | 'pass';
 
 export interface BallotListResponseItem {
@@ -1994,10 +1966,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto009 {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
+export interface ConstantsResponseProto009 extends ConstantsResponseProto008 { }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
+export interface ConstantsResponseProto008 extends ConstantsResponseProto007 { }
 
 export interface ConstantsResponseProto007
   extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
@@ -2205,12 +2177,12 @@ export type ProtocolsResponse = {
 
 export type Next =
   | {
-      next: number;
-    }
+    next: number;
+  }
   | {
-      newest: number;
-      oldest: number;
-    };
+    newest: number;
+    oldest: number;
+  };
 
 export type LastRemovedCommitmentHashes = {
   last_message_hash: string;
