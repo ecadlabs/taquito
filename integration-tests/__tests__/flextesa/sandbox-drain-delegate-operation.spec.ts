@@ -3,7 +3,7 @@ import { CONFIGS, sleep, isSandbox } from "../../config";
 
 CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
   const Tezos = lib;
-  const flextesanet = isSandbox({ rpc }) ? test : test.skip;
+  const tezboxnet = isSandbox({ rpc }) ? test : test.skip;
 
   describe(`Test Drain Delegate in ${protocol}`, () => {
     let Delegate: TezosToolkit;
@@ -39,7 +39,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
         console.log(JSON.stringify(e));
       }
     })
-    flextesanet('Should be able to inject drain_delegate operation', async () => {
+    tezboxnet('Should be able to inject drain_delegate operation', async () => {
       expect((await Delegate.rpc.getBalance(delegatePkh)).toNumber()).toBeGreaterThan(0);
       let destinationBalanceBefore = (await Destination.rpc.getBalance(destinationPkh)).toNumber();
 

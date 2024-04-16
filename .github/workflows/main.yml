@@ -63,7 +63,7 @@ jobs:
         # Ternary operator workaround
         TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
 
-  integration-tests-flextesa:
+  integration-tests-tezbox:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -72,7 +72,7 @@ jobs:
           - protocol: oxford
             testnet: oxfordnet
             testnet_uppercase: OXFORDNET
-            flextesa_docker_image: ghcr.io/tez-capital/tezbox:tezos-v19.1
+            tezbox_docker_image: ghcr.io/tez-capital/tezbox:tezos-v19.1
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -83,14 +83,14 @@ jobs:
     # alice,edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn,tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb,unencrypted:edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq
     # bob,edpkurPsQ8eUApnLUJ9ZPDvu98E8VNj4KtJa1aZr16Cr5ow5VHKnz4,tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6,unencrypted:edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt
 
-    - name: Provision Flextesa ${{ matrix.protocol }} container
+    - name: Provision Tezbox ${{ matrix.protocol }} container
       run: |-
         docker run \
         --rm \
         --name my-sandbox \
         --detach \
         -p 20000:20000 \
-        ${{ matrix.flextesa_docker_image }} \
+        ${{ matrix.tezbox_docker_image }} \
         ${{ matrix.protocol }}box
     - run: npm ci
     - run: npm run build

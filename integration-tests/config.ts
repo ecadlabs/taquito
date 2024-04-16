@@ -33,7 +33,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
   TESTNET,  // corresponds ghostnet, oxfordnet and weeklynet etc.
-  SANDBOX,  // corresponds to flextesa local chain
+  SANDBOX,  // corresponds to tezbox local chain
 }
 
 interface Config {
