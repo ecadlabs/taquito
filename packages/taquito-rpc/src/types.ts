@@ -1732,7 +1732,6 @@ export interface ConstantsResponseProto020
     | 'preserved_cycles'
     | 'smart_rollup_reveal_activation_level'
   > {
-  adaptive_issuance_activation_vote_enable: boolean;
   adaptive_issuance_force_activation: boolean;
   adaptive_rewards_params: {
     center_dz: {
