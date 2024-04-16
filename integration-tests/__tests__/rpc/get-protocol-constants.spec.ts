@@ -1,7 +1,7 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS, NetworkType } from "../../config";
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseProto019 } from '@taquito/rpc';
+import { ConstantsResponseProto019, ConstantsResponseProto020 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
@@ -143,7 +143,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   describe(`Fetch constants for testnet`, () => {
     parisnet(`should successfully fetch all constants for Parisnet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto019 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto020 = await Tezos.rpc.getConstants();
       expect(constants).toEqual({
         adaptive_issuance_activation_vote_enable: true,
         adaptive_issuance_force_activation: false,
