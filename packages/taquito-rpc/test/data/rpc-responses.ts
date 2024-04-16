@@ -2459,14 +2459,6 @@ export const attestationRights = [
     ],
   },
 ];
-export const endorsingRights = [
-  {
-    level: 516500,
-    delegate: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
-    slots: [12, 37, 80, 120, 130, 206, 209, 219, 229],
-    estimated_time: '2021-09-27T20:41:55Z',
-  },
-];
 export const ballotList = [];
 export const ballots = { yay: 0, nay: 0, pass: 0 };
 export const currentPeriodKind = {
