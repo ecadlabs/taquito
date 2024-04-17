@@ -231,20 +231,30 @@ describe('RpcClient test', () => {
 
   describe('getDelegates', () => {
     const sampleResponse = {
-      balance: '5092341810457',
-      frozen_balance: '2155290163074',
-      frozen_balance_by_cycle: [
-        { cycle: 135, deposit: '381760000000', fees: '971071', rewards: '11843833332' },
-        { cycle: 136, deposit: '394368000000', fees: '1433657', rewards: '12200333332' },
-      ],
-      staking_balance: '20936607331513',
-      delegated_contracts: [
-        'KT1VvXEpeBpreAVpfp4V8ZujqWu2gVykwXBJ',
-        'KT1VsSxSXUkgw6zkBGgUuDXXuJs9ToPqkrCg',
-      ],
-      delegated_balance: '15908924646030',
+      full_balance: new BigNumber('10289576365'),
+      current_frozen_deposits: new BigNumber('2028957741'),
+      frozen_deposits: new BigNumber('1028957741'),
+      staking_balance: new BigNumber('10289576365'),
+      delegated_contracts: ['tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb'],
+      delegated_balance: new BigNumber('0'),
+      min_delegated_in_current_cycle: {
+        amount: '8260618624',
+        level: {
+          level: 81924,
+          level_position: 81923,
+          cycle: 7,
+          cycle_position: 3,
+          expected_commitment: false,
+        },
+      },
       deactivated: false,
-      grace_period: 146,
+      grace_period: 7,
+      pending_denunciations: false,
+      total_delegated_stake: new BigNumber('0'),
+      staking_denominator: new BigNumber('0'),
+      voting_power: new BigNumber('10289577405'),
+      remaining_proposals: 20,
+      active_consensus_key: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
     };
 
     it('should query the right url', async () => {
@@ -262,30 +272,30 @@ describe('RpcClient test', () => {
       const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
-        balance: new BigNumber('5092341810457'),
-        frozen_balance: new BigNumber('2155290163074'),
-        frozen_balance_by_cycle: [
-          {
-            cycle: 135,
-            deposit: new BigNumber('381760000000'),
-            fees: new BigNumber('971071'),
-            rewards: new BigNumber('11843833332'),
+        full_balance: new BigNumber('10289576365'),
+        current_frozen_deposits: new BigNumber('2028957741'),
+        frozen_deposits: new BigNumber('1028957741'),
+        staking_balance: new BigNumber('10289576365'),
+        delegated_contracts: ['tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb'],
+        delegated_balance: new BigNumber('0'),
+        min_delegated_in_current_cycle: {
+          amount: '8260618624',
+          level: {
+            level: 81924,
+            level_position: 81923,
+            cycle: 7,
+            cycle_position: 3,
+            expected_commitment: false,
           },
-          {
-            cycle: 136,
-            deposit: new BigNumber('394368000000'),
-            fees: new BigNumber('1433657'),
-            rewards: new BigNumber('12200333332'),
-          },
-        ],
-        staking_balance: new BigNumber('20936607331513'),
-        delegated_contracts: [
-          'KT1VvXEpeBpreAVpfp4V8ZujqWu2gVykwXBJ',
-          'KT1VsSxSXUkgw6zkBGgUuDXXuJs9ToPqkrCg',
-        ],
-        delegated_balance: new BigNumber('15908924646030'),
+        },
         deactivated: false,
-        grace_period: 146,
+        grace_period: 7,
+        pending_denunciations: false,
+        total_delegated_stake: new BigNumber('0'),
+        staking_denominator: new BigNumber('0'),
+        voting_power: new BigNumber('10289577405'),
+        remaining_proposals: 20,
+        active_consensus_key: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
       });
     });
 
