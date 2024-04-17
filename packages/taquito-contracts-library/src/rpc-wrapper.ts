@@ -48,6 +48,7 @@ import {
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -59,7 +60,7 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   constructor(
     private rpc: RpcClientInterface,
     private contractslibrary: ContractsLibrary
-  ) { }
+  ) {}
 
   async getContract(
     address: string,
@@ -318,6 +319,11 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
+  }
+  async getAdaptiveIssuanceLaunchCycle({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<AILaunchCycleResponse> {
+    return this.rpc.getAdaptiveIssuanceLaunchCycle({ block });
   }
   async getPendingOperations(
     args: PendingOperationsQueryArguments

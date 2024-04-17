@@ -66,6 +66,7 @@ import {
   PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -997,7 +998,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-=   * @description Access the paid storage space of the contract
+   * @description Access the paid storage space of the contract
    * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
    */
   async getStoragePaidSpace(
@@ -1049,6 +1050,21 @@ export class RpcClient implements RpcClientInterface {
     return this.httpBackend.createRequest<AllTicketBalances>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
+      ),
+      method: 'GET',
+    });
+  }
+
+  /**
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of null means that the feature is not yet set to launch.
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   */
+  async getAdaptiveIssuanceLaunchCycle({
+    block,
+  }: { block: string } = defaultRPCOptions): Promise<AILaunchCycleResponse> {
+    return this.httpBackend.createRequest<AILaunchCycleResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`
       ),
       method: 'GET',
     });

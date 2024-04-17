@@ -1246,6 +1246,8 @@ export interface ScriptedContracts {
   storage: MichelsonV1Expression;
 }
 
+export type AILaunchCycleResponse = number | null;
+
 export type BondId = {
   smart_rollup: string;
 };

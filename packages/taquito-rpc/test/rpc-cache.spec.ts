@@ -32,6 +32,7 @@ import {
   constants,
   ticketBalancesResponse,
   pendingOperationsResponse,
+  aiLaunchCycle,
 } from './data/rpc-responses';
 
 /**
@@ -87,6 +88,7 @@ describe('RpcClientCache test', () => {
       getProtocols: jest.fn(),
       getTicketBalance: jest.fn(),
       getAllTicketBalances: jest.fn(),
+      getAdaptiveIssuanceLaunchCycle: jest.fn(),
       getPendingOperations: jest.fn(),
     };
 
@@ -125,6 +127,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getProtocols.mockReturnValue(protocols);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
     mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
+    mockRpcClient.getAdaptiveIssuanceLaunchCycle.mockReturnValue(aiLaunchCycle);
     mockRpcClient.getPendingOperations.mockReturnValue(pendingOperationsResponse);
     rpcCache = new RpcClientCache(mockRpcClient);
   });
@@ -176,6 +179,7 @@ describe('RpcClientCache test', () => {
       content: { string: 'ticket1' },
     });
     await rpcCache.getAllTicketBalances(contractAddress);
+    await rpcCache.getAdaptiveIssuanceLaunchCycle();
     await rpcCache.getPendingOperations();
 
     expect(rpcCache.getAllCachedData()['rpcTest/getBlockHash/head/'].response).toEqual(blockHash);
@@ -266,6 +270,9 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/head/${contractAddress}/`].response
     ).toEqual(ticketBalancesResponse);
+    expect(
+      rpcCache.getAllCachedData()['rpcTest/getAdaptiveIssuanceLaunchCycle/head/'].response
+    ).toEqual(aiLaunchCycle);
     expect(rpcCache.getAllCachedData()[`rpcTest/getPendingOperations/{}/`].response).toEqual(
       pendingOperationsResponse
     );
@@ -324,6 +331,7 @@ describe('RpcClientCache test', () => {
       block
     );
     await rpcCache.getAllTicketBalances(contractAddress, block);
+    await rpcCache.getAdaptiveIssuanceLaunchCycle(block);
 
     expect(rpcCache.getAllCachedData()[`rpcTest/getBlockHash/${block.block}/`].response).toEqual(
       blockHash
@@ -433,7 +441,9 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/${block.block}/${contractAddress}/`]
         .response
     ).toEqual(ticketBalancesResponse);
-
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getAdaptiveIssuanceLaunchCycle/${block.block}/`].response
+    ).toEqual(aiLaunchCycle);
     rpcCache.deleteAllCachedData();
   });
 
@@ -475,6 +485,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getProtocols();
     await rpcCache.getTicketBalance(contractAddress, ticketToken);
     await rpcCache.getAllTicketBalances(contractAddress);
+    await rpcCache.getAdaptiveIssuanceLaunchCycle();
     await rpcCache.getPendingOperations();
 
     rpcCache.deleteAllCachedData();
