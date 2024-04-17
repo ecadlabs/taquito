@@ -36,8 +36,6 @@ import {
   VotingInfoResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -68,6 +66,7 @@ import {
   PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -481,8 +480,8 @@ export class RpcClient implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls to specified block (default to head) and version.
    * @description All the information about a block
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id
-   * @example getBlock() will default to `/main/chains/block/head?version=0` which shows { kind: endorsement }
-   * @example getBlock({ block: 'head~2', version: 1 }) will return an offset of 2 from head blocks and shows { kind: attestation }
+   * @example getBlock() will default to `/main/chains/block/head?version=1` which shows { kind: attestation }
+   * @example getBlock({ block: 'head~2', version: 0 }) will return an offset of 2 from head blocks and shows { kind: endorsement }
    * @example getBlock({ block: 'BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2' }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block, version }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
@@ -552,7 +551,6 @@ export class RpcClient implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the delegates allowed to attest a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
    */
   async getAttestationRights(
     args: AttestationRightsQueryArguments = {},
@@ -560,26 +558,6 @@ export class RpcClient implements RpcClientInterface {
   ): Promise<AttestationRightsResponse> {
     const response = await this.httpBackend.createRequest<AttestationRightsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/attestation_rights`),
-      method: 'GET',
-      query: args,
-    });
-
-    return response;
-  }
-
-  /**
-   * @deprecated Deprecated in favor of getAttestationRights
-   * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
-   * @param options contains generic configuration for rpc calls
-   * @description Retrieves the delegates allowed to endorse a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
-   */
-  async getEndorsingRights(
-    args: EndorsingRightsQueryArguments = {},
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<EndorsingRightsResponse> {
-    const response = await this.httpBackend.createRequest<EndorsingRightsResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/endorsing_rights`),
       method: 'GET',
       query: args,
     });
@@ -1020,7 +998,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-=   * @description Access the paid storage space of the contract
+   * @description Access the paid storage space of the contract
    * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
    */
   async getStoragePaidSpace(
@@ -1072,6 +1050,21 @@ export class RpcClient implements RpcClientInterface {
     return this.httpBackend.createRequest<AllTicketBalances>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
+      ),
+      method: 'GET',
+    });
+  }
+
+  /**
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of null means that the feature is not yet set to launch.
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   */
+  async getAdaptiveIssuanceLaunchCycle({
+    block,
+  }: { block: string } = defaultRPCOptions): Promise<AILaunchCycleResponse> {
+    return this.httpBackend.createRequest<AILaunchCycleResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`
       ),
       method: 'GET',
     });

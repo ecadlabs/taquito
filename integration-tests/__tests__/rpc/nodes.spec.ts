@@ -21,7 +21,8 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const oxfordAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test : test.skip;
+    const oxford = protocol === Protocols.ProxfordY ? test : test.skip;
+    const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBQ) ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -177,19 +178,6 @@ CONFIGS().forEach(
           expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
           expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
           expect(attestationRights[0].delegate).toBeUndefined();
-        });
-
-        unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async () => {
-          const endorsingRights = await rpcClient.getEndorsingRights();
-          expect(endorsingRights).toBeDefined();
-          expect(endorsingRights[0].delegates).toBeDefined();
-          expect(endorsingRights[0].delegates![0].delegate).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].delegate).toEqual('string');
-          expect(endorsingRights[0].delegates![0].endorsing_power).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].endorsing_power).toEqual('number');
-          expect(endorsingRights[0].delegates![0].first_slot).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].first_slot).toEqual('number');
-          expect(endorsingRights[0].delegate).toBeUndefined();
         });
 
         it('Verify that rpcClient.getBallotList returns ballots casted so far during a voting period', async () => {
@@ -460,6 +448,16 @@ CONFIGS().forEach(
           expect(ticketBalances[0].amount).toBeDefined();
         });
 
+        oxford(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle null for ${rpc}`, async () => {
+          const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
+          expect(launchCycle).toEqual(null);
+        })
+
+        parisAndAlpha(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for ${rpc}`, async () => {
+          const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
+          expect(launchCycle).toEqual(6);
+        })
+
         it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '1' }) as PendingOperationsV1;
           expect(pendingOperations).toBeDefined();
@@ -470,7 +468,7 @@ CONFIGS().forEach(
           expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
         });
 
-        oxfordAndAlpha('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
+        it('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.validated).toBeInstanceOf(Array);

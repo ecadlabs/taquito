@@ -720,3 +720,5 @@ export const liveBlocks = [
   'BMcczQyMnGAzM2WJPQ2vbgyzryg52GQgNWLggpHDKPqhQzJUeT8',
   'BMdaQruY6gep3cmRwGoxEUqx2XJ79XQKqpTT7jusKLA1bSTowRc',
 ];
+
+export const aiLaunchCycle = 6;

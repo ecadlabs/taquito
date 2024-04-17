@@ -22,8 +22,6 @@ import {
   VotingInfoResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -52,6 +50,7 @@ import {
   PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
 } from '../types';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
@@ -74,8 +73,7 @@ type RpcMethodParam =
   | BigMapKey
   | BakingRightsQueryArguments
   | PendingOperationsQueryArguments
-  | AttestationRightsQueryArguments
-  | EndorsingRightsQueryArguments;
+  | AttestationRightsQueryArguments;
 
 const defaultTtl = 1000;
 
@@ -572,7 +570,6 @@ export class RpcClientCache implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the delegates allowed to attest a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
    */
   async getAttestationRights(
     args: AttestationRightsQueryArguments = {},
@@ -587,31 +584,6 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getAttestationRights(args, { block });
-      this.put(key, response);
-      return response;
-    }
-  }
-
-  /**
-   * @deprecated Deprecated in favor of getAttestationRights
-   * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
-   * @param options contains generic configuration for rpc calls
-   * @description Retrieves the delegates allowed to endorse a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
-   */
-  async getEndorsingRights(
-    args: EndorsingRightsQueryArguments = {},
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<EndorsingRightsResponse> {
-    const key = this.formatCacheKey(
-      this.rpcClient.getRpcUrl(),
-      RPCMethodName.GET_ENDORSING_RIGHTS,
-      [block, args]
-    );
-    if (this.has(key)) {
-      return this.get(key);
-    } else {
-      const response = this.rpcClient.getEndorsingRights(args, { block });
       this.put(key, response);
       return response;
     }
@@ -1120,6 +1092,26 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getAllTicketBalances(contract, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+  /**
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of null means that the feature is not yet set to launch.
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   */
+  async getAdaptiveIssuanceLaunchCycle({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<AILaunchCycleResponse> {
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_ADAPTIVE_ISSUANCE_LAUNCH_CYCLE,
+      [block]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getAdaptiveIssuanceLaunchCycle({ block });
       this.put(key, response);
       return response;
     }

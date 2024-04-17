@@ -57,6 +57,7 @@ import {
   smartRollupRefuteResponse,
   smartRollupRecoverBondResponse,
   smartRollupTimeoutResponse,
+  aiLaunchCycle,
 } from './data/rpc-responses';
 
 /**
@@ -3101,81 +3102,6 @@ describe('RpcClient test', () => {
     });
   });
 
-  describe('getEndorsingRights', () => {
-    it('query the right url and data', async () => {
-      httpBackend.createRequest.mockResolvedValue([
-        {
-          level: 547386,
-          delegate: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
-          slots: [27],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-        {
-          level: 547386,
-          delegate: 'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
-          slots: [23, 12, 0],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-        {
-          level: 547386,
-          delegate: 'tz3RB4aoyjov4KEVRbuhvQ1CKJgBJMWhaeB8',
-          slots: [31, 17, 13],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-        {
-          level: 547386,
-          delegate: 'tz3NExpXn9aPNZPorRE4SdjJ2RGrfbJgMAaV',
-          slots: [24, 9, 1],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-      ]);
-      const result = await client.getEndorsingRights();
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        query: {},
-        url: 'root/chains/test/blocks/head/helpers/endorsing_rights',
-      });
-
-      expect(result[1].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
-      expect(result[1].estimated_time).toEqual('2019-08-02T09:42:56Z');
-      expect(result[1].slots!.length).toEqual(3);
-    });
-
-    it('query the right url and data (with consensus key in delegates)', async () => {
-      httpBackend.createRequest.mockResolvedValue([
-        {
-          level: 547386,
-          delegates: [
-            {
-              delegate: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
-              first_slot: 1,
-              endorsing_power: 1,
-              consensus_key: 'tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6',
-            },
-          ],
-          slots: [27],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-      ]);
-      const result = await client.getEndorsingRights();
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        query: {},
-        url: 'root/chains/test/blocks/head/helpers/endorsing_rights',
-      });
-
-      expect(result[0].delegates).toBeDefined();
-      expect(result[0].delegates![0].delegate).toEqual('tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K');
-      expect(result[0].delegates![0].first_slot).toEqual(1);
-      expect(result[0].delegates![0].endorsing_power).toEqual(1);
-      expect(result[0].delegates![0].consensus_key).toEqual('tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6');
-      expect(result[0].estimated_time).toEqual('2019-08-02T09:42:56Z');
-      expect(result[0].slots!.length).toEqual(1);
-    });
-  });
-
   describe('getBallotList', () => {
     it('should query the right url and data', async () => {
       httpBackend.createRequest.mockReturnValue(
@@ -4057,8 +3983,22 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('AdaptiveIssuanceLaunchCycle', () => {
+    it('should query the right url and data', async () => {
+      httpBackend.createRequest.mockResolvedValue(aiLaunchCycle);
+      const response = await client.getAdaptiveIssuanceLaunchCycle();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/adaptive_issuance_launch_cycle`,
+      });
+
+      expect(response).toEqual(aiLaunchCycle);
+    });
+  });
+
   describe('getPendingOperations', () => {
-    it('should query the correct url and retrun pending operations in mempool', async () => {
+    it('should query the correct url and return pending operations in mempool', async () => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
       const response: PendingOperationsV1 | PendingOperationsV2 =
         await client.getPendingOperations();

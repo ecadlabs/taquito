@@ -19,8 +19,6 @@ import {
   DelegatesResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -50,6 +48,7 @@ import {
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
 } from './types';
 
 export interface RPCOptions {
@@ -90,10 +89,6 @@ export interface RpcClientInterface {
     args: AttestationRightsQueryArguments,
     options?: RPCOptions
   ): Promise<AttestationRightsResponse>;
-  getEndorsingRights(
-    args: EndorsingRightsQueryArguments,
-    options?: RPCOptions
-  ): Promise<EndorsingRightsResponse>;
   getBallotList(options?: RPCOptions): Promise<BallotListResponse>;
   getBallots(options?: RPCOptions): Promise<BallotsResponse>;
   getCurrentProposal(options?: RPCOptions): Promise<CurrentProposalResponse>;
@@ -131,6 +126,7 @@ export interface RpcClientInterface {
     options?: RPCOptions
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
+  getAdaptiveIssuanceLaunchCycle(options?: RPCOptions): Promise<AILaunchCycleResponse>;
   getPendingOperations(
     args: PendingOperationsQueryArguments
   ): Promise<PendingOperationsV1 | PendingOperationsV2>;
@@ -157,7 +153,6 @@ export enum RPCMethodName {
   GET_DELEGATES = 'getDelegates',
   GET_VOTING_INFO = 'getVotingInfo',
   GET_ATTESTATION_RIGHTS = 'getAttestationRights',
-  GET_ENDORSING_RIGHTS = 'getEndorsingRights',
   GET_ENTRYPOINTS = 'getEntrypoints',
   GET_LIVE_BLOCKS = 'getLiveBlocks',
   GET_MANAGER_KEY = 'getManagerKey',
@@ -175,5 +170,6 @@ export enum RPCMethodName {
   GET_STORAGE_PAID_SPACE = 'getStoragePaidSpace',
   GET_TICKET_BALANCE = 'getTicketBalance',
   GET_ALL_TICKET_BALANCES = 'getAllTicketBalances',
+  GET_ADAPTIVE_ISSUANCE_LAUNCH_CYCLE = 'getAdaptiveIssuanceLaunchCycle',
   GET_PENDING_OPERATIONS = 'getPendingOperations',
 }

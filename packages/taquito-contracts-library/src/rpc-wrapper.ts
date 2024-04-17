@@ -19,8 +19,6 @@ import {
   VotingInfoResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -50,6 +48,7 @@ import {
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -179,12 +178,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<AttestationRightsResponse> {
     return this.rpc.getAttestationRights(args, { block });
-  }
-  async getEndorsingRights(
-    args: EndorsingRightsQueryArguments,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<EndorsingRightsResponse> {
-    return this.rpc.getEndorsingRights(args, { block });
   }
   async getBallotList({ block }: RPCOptions = defaultRPCOptions): Promise<BallotListResponse> {
     return this.rpc.getBallotList({ block });
@@ -326,6 +319,11 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
+  }
+  async getAdaptiveIssuanceLaunchCycle({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<AILaunchCycleResponse> {
+    return this.rpc.getAdaptiveIssuanceLaunchCycle({ block });
   }
   async getPendingOperations(
     args: PendingOperationsQueryArguments
