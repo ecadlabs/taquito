@@ -129,6 +129,62 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getFullBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getFullBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/full_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getStakedBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getStakedBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/staked_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getUnstakedFinalizableBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getUnstakedFinalizableBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/unstaked_finalizable_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getUnstakedFrozenBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getUnstakedFrozenBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/unstaked_frozen_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
   describe('getStorage', () => {
     it('should query the right url', async () => {
       await client.getStorage(contractAddress);
