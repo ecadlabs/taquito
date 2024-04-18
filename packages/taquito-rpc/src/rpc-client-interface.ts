@@ -63,6 +63,10 @@ export interface RpcClientInterface {
   getBlockHash(options?: RPCOptions): Promise<string>;
   getLiveBlocks(options?: RPCOptions): Promise<string[]>;
   getBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
+  getFullBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
+  getStakedBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
+  getUnstakedFinalizableBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
+  getUnstakedFrozenBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
   getStorage(address: string, options?: RPCOptions): Promise<StorageResponse>;
   getScript(address: string, options?: RPCOptions): Promise<ScriptResponse>;
   getNormalizedScript(
@@ -143,6 +147,10 @@ export enum RPCMethodName {
   GET_BLOCK_HEADER = 'getBlockHeader',
   GET_BLOCK_METADATA = 'getBlockMetadata',
   GET_BALANCE = 'getBalance',
+  GET_FULL_BALANCE = 'getFullBalance',
+  GET_STAKED_BALANCE = 'getStakedBalance',
+  GET_UNSTAKED_FINALIZABLE_BALANCE = 'getUnstakedFinalizableBalance',
+  UNSTAKED_FROZEN_BALANCE = 'getUnstakedFrozenBalance',
   GET_CHAIN_ID = 'getChainId',
   GET_CONSTANTS = 'getConstants',
   GET_CONTRACT = 'getContract',

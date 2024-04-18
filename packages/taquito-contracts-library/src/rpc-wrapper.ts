@@ -92,6 +92,30 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<BalanceResponse> {
     return this.rpc.getBalance(address, { block });
   }
+  async getFullBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getFullBalance(address, { block });
+  }
+  async getStakedBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getStakedBalance(address, { block });
+  }
+  async getUnstakedFinalizableBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getUnstakedFinalizableBalance(address, { block });
+  }
+  async getUnstakedFrozenBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getUnstakedFrozenBalance(address, { block });
+  }
   async getBlockHash({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
     return this.rpc.getBlockHash({ block });
   }
