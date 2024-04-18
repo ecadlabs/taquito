@@ -2304,14 +2304,30 @@ export const managerKey = 'edpkvP1NXoo8vhYbPSvXdy466EHoYWBpf6zmjghB2p3DwJPjbB5ns
 export const delegate = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
 export const bigmapValue = { prim: 'Pair', args: [[], { int: '100' }] };
 export const delegates = {
+  full_balance: new BigNumber('10289576365'),
+  current_frozen_deposits: new BigNumber('2028957741'),
+  frozen_deposits: new BigNumber('1028957741'),
+  staking_balance: new BigNumber('10289576365'),
+  delegated_contracts: ['tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb'],
+  delegated_balance: new BigNumber('0'),
+  min_delegated_in_current_cycle: {
+    amount: '8260618624',
+    level: {
+      level: 81924,
+      level_position: 81923,
+      cycle: 7,
+      cycle_position: 3,
+      expected_commitment: false,
+    },
+  },
   deactivated: false,
-  balance: new BigNumber('5821087107868'),
-  frozen_balance: new BigNumber('1682643263470'),
-  staking_balance: new BigNumber('5792534034676'),
-  delegated_contracts: ['tz2ApgXezUaJKaY49nxEYbMjsjnkAz2mTiFC'],
-  delegated_balance: new BigNumber('12714439280'),
-  grace_period: 131,
-  voting_power: 747,
+  grace_period: 7,
+  pending_denunciations: false,
+  total_delegated_stake: new BigNumber('0'),
+  staking_denominator: new BigNumber('0'),
+  voting_power: new BigNumber('10289577405'),
+  remaining_proposals: 20,
+  active_consensus_key: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
 };
 export const votingInfo = {
   voting_power: '1005169895965',

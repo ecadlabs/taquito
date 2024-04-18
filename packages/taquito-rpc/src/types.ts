@@ -41,25 +41,32 @@ export interface Inode {
 export interface DelegatesResponse {
   full_balance?: BigNumber;
   current_frozen_deposits?: BigNumber;
+  frozen_deposits?: BigNumber;
   staking_balance: BigNumber;
-  frozen_deposits_limit?: BigNumber;
   delegated_contracts: string[];
   delegated_balance: BigNumber;
+  min_delegated_in_current_cycle?: MinDelegatedInCurrentCycle;
   deactivated: boolean;
-  grace_period: number;
   total_delegated_stake?: BigNumber;
   staking_denominator?: BigNumber;
+  active_consensus_key?: string;
+  grace_period: number;
+  pending_denunciations?: boolean;
+  frozen_deposits_limit?: BigNumber;
   voting_power?: BigNumber;
   current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
-  active_consensus_key?: string;
   pending_consensus_keys?: PendingConsensusKey[];
   balance?: BigNumber;
-  frozen_deposits?: BigNumber;
   frozen_balance?: BigNumber;
   frozen_balance_by_cycle?: Frozenbalancebycycle[];
 }
+
+export type MinDelegatedInCurrentCycle = {
+  amount: string;
+  level?: LevelInfo;
+};
 
 export type PendingConsensusKey = {
   cycle: number;
