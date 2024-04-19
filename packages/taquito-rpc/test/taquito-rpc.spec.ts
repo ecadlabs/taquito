@@ -58,6 +58,7 @@ import {
   smartRollupRecoverBondResponse,
   smartRollupTimeoutResponse,
   aiLaunchCycle,
+  unstakeRequestsResponse,
 } from './data/rpc-responses';
 
 /**
@@ -126,6 +127,98 @@ describe('RpcClient test', () => {
       });
       expect(balance).toBeInstanceOf(BigNumber);
       expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getFullBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getFullBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/full_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getStakedBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getStakedBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/staked_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getUnstakedFinalizableBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getUnstakedFinalizableBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/unstaked_finalizable_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getUnstakedFrozenBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getUnstakedFrozenBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/unstaked_frozen_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getUnstakeRequests', () => {
+    it('should query the right url', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(unstakeRequestsResponse));
+      await client.getUnstakeRequests(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/unstake_requests`,
+      });
+    });
+
+    it('should parse the response properly', async () => {
+      httpBackend.createRequest.mockResolvedValue(unstakeRequestsResponse);
+      const response = await client.getUnstakeRequests(contractAddress);
+
+      expect(response).toEqual({
+        finalizable: [
+          {
+            delegate: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA',
+            cycle: 10,
+            amount: new BigNumber('500000000'),
+          },
+        ],
+        unfinalizable: {
+          delegate: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA',
+          requests: [
+            {
+              cycle: 11,
+              amount: new BigNumber('200000000'),
+            },
+          ],
+        },
+      });
     });
   });
 

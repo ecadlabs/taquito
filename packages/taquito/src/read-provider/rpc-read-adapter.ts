@@ -17,7 +17,7 @@ export class RpcReadAdapter implements TzReadProvider {
   constructor(private rpc: RpcClientInterface) {}
 
   /**
-   * @description Access the balance of a contract.
+   * @description Access the spendable balance of a contract, excluding frozen bonds.
    * @param address address from which we want to retrieve the balance
    * @param block from which we want to retrieve the balance
    * @returns the balance in mutez
