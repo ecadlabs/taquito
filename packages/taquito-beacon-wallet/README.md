@@ -31,8 +31,6 @@ const options = {
 };
 const wallet = new BeaconWallet(options);
 
-await wallet.requestPermissions();
-
 await wallet.client.subscribeToEvent(
   BeaconEvent.ACTIVE_ACCOUNT_SET,
   async (account) => {
@@ -40,6 +38,7 @@ await wallet.client.subscribeToEvent(
     console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, account);
   },
 );
+await wallet.requestPermissions();
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setWalletProvider(wallet);
