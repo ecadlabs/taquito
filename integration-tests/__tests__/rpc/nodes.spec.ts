@@ -69,24 +69,29 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        parisAndAlpha(`Verify that rpcClient.getFullBalance for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+        it(`Verify that rpcClient.getFullBalance for knownBaker returns the full balance`, async () => {
           const balance = await rpcClient.getFullBalance(knownBaker);
           expect(balance).toBeDefined();
         });
 
-        parisAndAlpha(`Verify that rpcClient.getStakedBalance for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+        it(`Verify that rpcClient.getStakedBalance for knownBaker returns the staked balance`, async () => {
           const balance = await rpcClient.getStakedBalance(knownBaker);
           expect(balance).toBeDefined();
         });
 
-        parisAndAlpha(`Verify that rpcClient.getUnstakedFinalizableBalance for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+        it(`Verify that rpcClient.getUnstakedFinalizableBalance for knownBaker returns the unstaked finalizable balance`, async () => {
           const balance = await rpcClient.getUnstakedFinalizableBalance(knownBaker);
           expect(balance).toBeDefined();
         });
 
-        parisAndAlpha(`Verify that rpcClient.getUnstakedFrozenBalance for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+        it(`Verify that rpcClient.getUnstakedFrozenBalance for knownBaker returns the unstaked frozen balance`, async () => {
           const balance = await rpcClient.getUnstakedFrozenBalance(knownBaker);
           expect(balance).toBeDefined();
+        });
+
+        it(`Verify that rpcClient.getUnstakeRequests for knownBaker returns the unstaked requests`, async () => {
+          const response = await rpcClient.getUnstakeRequests('tz1KqYu4VQG67fgq1Pfn93ASoZxhSW7mTDbC');
+          expect(response).toBeDefined();
         });
 
         it(`Verify that rpcClient.getStorage for knownContract returns the data of a contract`, async () => {

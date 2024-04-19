@@ -19,6 +19,7 @@ import {
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
+  UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
   BigMapGetResponse,
@@ -185,7 +186,7 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @param address address from which we want to retrieve the balance
+   * @param address address from which we want to retrieve the full balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the full balance of a contract, including frozen bonds and stake.
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-full-balance
@@ -205,7 +206,7 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @param address address from which we want to retrieve the balance
+   * @param address address from which we want to retrieve the staked balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the staked balance of a contract. Returns None if the contract is originated, or neither delegated nor a delegate.
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-staked-balance
@@ -225,7 +226,7 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @param address address from which we want to retrieve the balance
+   * @param address address from which we want to retrieve the unstaked finalizable balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the balance of a contract that was requested for an unstake operation, and is no longer frozen, which means it will appear in the spendable balance of the contract after any stake/unstake/finalize_unstake operation. Returns None if the contract is originated.
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-unstaked-finalizable-balance
@@ -245,7 +246,7 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @param address address from which we want to retrieve the balance
+   * @param address address from which we want to retrieve the unstaked frozen balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the balance of a contract that was requested for an unstake operation, but is still frozen for the duration of the slashing period. Returns None if the contract is originated.
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-unstaked-frozen-balance
@@ -262,6 +263,46 @@ export class RpcClient implements RpcClientInterface {
       method: 'GET',
     });
     return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve the unstaked requests
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Access the unstake requests of the contract. The requests that appear in the finalizable field can be finalized, which means that the contract can transfer these (no longer frozen) funds to their spendable balance with a [finalize_unstake] operation call. Returns null if there is no unstake request pending.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-unstake-requests
+   */
+  async getUnstakeRequests(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<UnstakeRequestsResponse> {
+    this.validateAddress(address);
+    const response = await this.httpBackend.createRequest<UnstakeRequestsResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/unstake_requests`
+      ),
+      method: 'GET',
+    });
+    return response === null
+      ? null
+      : {
+          finalizable: response.finalizable.map(({ amount, ...rest }) => {
+            const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
+            return {
+              ...rest,
+              amount: castedToBigNumber.amount,
+            };
+          }),
+          unfinalizable: {
+            delegate: response.unfinalizable.delegate,
+            requests: response.unfinalizable.requests.map(({ amount, cycle }) => {
+              const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
+              return {
+                cycle,
+                amount: castedToBigNumber.amount,
+              };
+            }),
+          },
+        };
   }
 
   /**

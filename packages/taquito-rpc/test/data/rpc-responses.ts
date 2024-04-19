@@ -2299,7 +2299,24 @@ export const contract = {
     storage: { prim: 'Pair', args: [] },
   },
 };
-
+export const unstakeRequestsResponse = {
+  finalizable: [
+    {
+      delegate: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA',
+      cycle: 10,
+      amount: new BigNumber('500000000'),
+    },
+  ],
+  unfinalizable: {
+    delegate: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA',
+    requests: [
+      {
+        cycle: 11,
+        amount: new BigNumber('200000000'),
+      },
+    ],
+  },
+};
 export const managerKey = 'edpkvP1NXoo8vhYbPSvXdy466EHoYWBpf6zmjghB2p3DwJPjbB5nsf';
 export const delegate = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
 export const bigmapValue = { prim: 'Pair', args: [[], { int: '100' }] };

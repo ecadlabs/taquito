@@ -3,6 +3,7 @@ import {
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
+  UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
   BigMapKey,
@@ -115,6 +116,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
     return this.rpc.getUnstakedFrozenBalance(address, { block });
+  }
+  async getUnstakeRequests(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<UnstakeRequestsResponse> {
+    return this.rpc.getUnstakeRequests(address, { block });
   }
   async getBlockHash({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
     return this.rpc.getBlockHash({ block });

@@ -3,6 +3,7 @@ import {
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
+  UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
   BigMapGetResponse,
@@ -67,6 +68,7 @@ export interface RpcClientInterface {
   getStakedBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
   getUnstakedFinalizableBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
   getUnstakedFrozenBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
+  getUnstakeRequests(address: string, options?: RPCOptions): Promise<UnstakeRequestsResponse>;
   getStorage(address: string, options?: RPCOptions): Promise<StorageResponse>;
   getScript(address: string, options?: RPCOptions): Promise<ScriptResponse>;
   getNormalizedScript(
@@ -150,7 +152,8 @@ export enum RPCMethodName {
   GET_FULL_BALANCE = 'getFullBalance',
   GET_STAKED_BALANCE = 'getStakedBalance',
   GET_UNSTAKED_FINALIZABLE_BALANCE = 'getUnstakedFinalizableBalance',
-  UNSTAKED_FROZEN_BALANCE = 'getUnstakedFrozenBalance',
+  GET_UNSTAKED_FROZEN_BALANCE = 'getUnstakedFrozenBalance',
+  GET_UNSTAKE_REQUESTS = 'getUnstakeRequests',
   GET_CHAIN_ID = 'getChainId',
   GET_CONSTANTS = 'getConstants',
   GET_CONTRACT = 'getContract',

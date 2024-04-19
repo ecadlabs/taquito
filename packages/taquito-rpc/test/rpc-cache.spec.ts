@@ -4,6 +4,7 @@ import {
   blockHash,
   liveBlocks,
   balance,
+  unstakeRequestsResponse,
   storage,
   script,
   contract,
@@ -61,6 +62,7 @@ describe('RpcClientCache test', () => {
       getStakedBalance: jest.fn(),
       getUnstakedFinalizableBalance: jest.fn(),
       getUnstakedFrozenBalance: jest.fn(),
+      getUnstakeRequests: jest.fn(),
       getStorage: jest.fn(),
       getStorageUsedSpace: jest.fn(),
       getStoragePaidSpace: jest.fn(),
@@ -105,6 +107,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getStakedBalance.mockReturnValue(balance);
     mockRpcClient.getUnstakedFinalizableBalance.mockReturnValue(balance);
     mockRpcClient.getUnstakedFrozenBalance.mockReturnValue(balance);
+    mockRpcClient.getUnstakeRequests.mockReturnValue(unstakeRequestsResponse);
     mockRpcClient.getStorage.mockReturnValue(storage);
     mockRpcClient.getStorageUsedSpace.mockReturnValue('100');
     mockRpcClient.getStoragePaidSpace.mockReturnValue('120');
@@ -154,6 +157,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getStakedBalance(address);
     await rpcCache.getUnstakedFinalizableBalance(address);
     await rpcCache.getUnstakedFrozenBalance(address);
+    await rpcCache.getUnstakeRequests(address);
     await rpcCache.getStorage(contractAddress);
     await rpcCache.getStoragePaidSpace(contractAddress);
     await rpcCache.getStorageUsedSpace(contractAddress);
@@ -212,6 +216,9 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getUnstakedFrozenBalance/head/${address}/`].response
     ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getUnstakeRequests/head/${address}/`].response
+    ).toEqual(unstakeRequestsResponse);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getStorage/head/${contractAddress}/`].response
     ).toEqual(storage);
@@ -314,6 +321,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getStakedBalance(address, block);
     await rpcCache.getUnstakedFinalizableBalance(address, block);
     await rpcCache.getUnstakedFrozenBalance(address, block);
+    await rpcCache.getUnstakeRequests(address, block);
     await rpcCache.getStorage(contractAddress, block);
     await rpcCache.getStoragePaidSpace(contractAddress, block);
     await rpcCache.getStorageUsedSpace(contractAddress, block);
@@ -388,6 +396,9 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getUnstakedFrozenBalance/${block.block}/${address}/`]
         .response
     ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getUnstakeRequests/${block.block}/${address}/`].response
+    ).toEqual(unstakeRequestsResponse);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getStorage/${block.block}/${contractAddress}/`].response
     ).toEqual(storage);
@@ -499,6 +510,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getStakedBalance(address);
     await rpcCache.getUnstakedFinalizableBalance(address);
     await rpcCache.getUnstakedFrozenBalance(address);
+    await rpcCache.getUnstakeRequests(address);
     await rpcCache.getStorage(contractAddress);
     await rpcCache.getStoragePaidSpace(contractAddress);
     await rpcCache.getStorageUsedSpace(contractAddress);
