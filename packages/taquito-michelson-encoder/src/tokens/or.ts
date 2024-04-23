@@ -14,7 +14,11 @@ import {
  */
 export class OrValidationError extends TokenValidationError {
   name = 'OrValidationError';
-  constructor(public value: any, public token: OrToken, message: string) {
+  constructor(
+    public value: any,
+    public token: OrToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -25,21 +29,22 @@ export class OrToken extends ComparableToken {
   constructor(
     protected val: { prim: string; args: any[]; annots: any[] },
     protected idx: number,
-    protected fac: TokenFactory
+    protected fac: TokenFactory,
+    protected parentTokenType?: 'Or' | 'Pair' | 'Other' | undefined
   ) {
-    super(val, idx, fac);
+    super(val, idx, fac, parentTokenType);
   }
 
   public Encode(args: any[]): any {
     const label = args[args.length - 1];
 
-    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const leftToken = this.createToken(this.val.args[0], this.getIdx(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     }
 
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const rightToken = this.createToken(this.val.args[1], this.getIdx() + keyCount, 'Or');
 
     if (String(leftToken.annot()) === String(label) && !(leftToken instanceof OrToken)) {
       args.pop();
@@ -66,13 +71,13 @@ export class OrToken extends ComparableToken {
   }
 
   public ExtractSignature(): any {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const leftToken = this.createToken(this.val.args[0], this.getIdx(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     }
 
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const rightToken = this.createToken(this.val.args[1], this.getIdx() + keyCount, 'Or');
 
     const newSig = [];
 
@@ -102,13 +107,13 @@ export class OrToken extends ComparableToken {
     this.validateJavascriptObject(args);
     const label = Object.keys(args)[0];
 
-    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const leftToken = this.createToken(this.val.args[0], this.getIdx(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     }
 
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const rightToken = this.createToken(this.val.args[1], this.getIdx() + keyCount, 'Or');
 
     if (String(leftToken.annot()) === String(label) && !(leftToken instanceof OrToken)) {
       return { prim: 'Left', args: [leftToken.EncodeObject(args[label], semantic)] };
@@ -154,12 +159,12 @@ export class OrToken extends ComparableToken {
    * @throws {@link OrValidationError}
    */
   public Execute(val: any, semantics?: Semantic): any {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const leftToken = this.createToken(this.val.args[0], this.getIdx(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     }
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const rightToken = this.createToken(this.val.args[1], this.getIdx() + keyCount, 'Or');
 
     if (val.prim === 'Right') {
       if (rightToken instanceof OrToken) {
@@ -190,7 +195,7 @@ export class OrToken extends ComparableToken {
     getRightValue: (token: Token) => any,
     concat: (left: any, right: any) => any
   ) {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const leftToken = this.createToken(this.val.args[0], this.getIdx(), 'Or');
     let keyCount = 1;
     let leftValue;
     if (leftToken instanceof OrToken) {
@@ -200,7 +205,7 @@ export class OrToken extends ComparableToken {
       leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
     }
 
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const rightToken = this.createToken(this.val.args[1], this.getIdx() + keyCount, 'Or');
     let rightValue;
     if (rightToken instanceof OrToken) {
       rightValue = getRightValue(rightToken);
@@ -255,13 +260,13 @@ export class OrToken extends ComparableToken {
   }
 
   private findToken(label: any): Token | null {
-    const leftToken = this.createToken(this.val.args[0], this.idx);
+    const leftToken = this.createToken(this.val.args[0], this.getIdx(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     }
 
-    const rightToken = this.createToken(this.val.args[1], this.idx + keyCount);
+    const rightToken = this.createToken(this.val.args[1], this.getIdx() + keyCount, 'Or');
 
     if (
       String(leftToken.annot()) === String(label) &&
@@ -333,5 +338,9 @@ export class OrToken extends ComparableToken {
       })
     );
     return tokens;
+  }
+
+  protected getIdx(): number {
+    return this.parentTokenType === 'Or' ? this.idx : 0;
   }
 }

@@ -10,6 +10,7 @@ import {
   tokenNoAnnots,
   tokenOrWithOption,
 } from '../data/or-tokens';
+import { Schema } from '../../src/taquito-michelson-encoder';
 
 describe('Or token', () => {
   describe('generateSchema, EncodeObject, Execute', () => {
@@ -980,6 +981,412 @@ describe('Or token', () => {
         key: { prim: 'Right', args: [{ string: 'test' }] },
         type: { prim: 'or', args: [{ prim: 'int' }, { prim: 'string' }] },
       });
+    });
+  });
+
+  describe('Nesting of Pair and Or', () => {
+    it('reproducing the reported bug in #2927', () => {
+      const schemaObj = {
+        prim: 'pair',
+        args: [
+          {
+            prim: 'set',
+            args: [
+              {
+                prim: 'address',
+              },
+            ],
+            annots: ['%owners'],
+          },
+          {
+            prim: 'set',
+            args: [
+              {
+                prim: 'address',
+              },
+            ],
+            annots: ['%inheritors'],
+          },
+          {
+            prim: 'or',
+            args: [
+              {
+                prim: 'unit',
+                annots: ['%aCTIVE'],
+              },
+              {
+                prim: 'or',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [
+                      {
+                        prim: 'address',
+                      },
+                      {
+                        prim: 'timestamp',
+                      },
+                    ],
+                    annots: ['%rECOVERING'],
+                  },
+                  {
+                    prim: 'unit',
+                    annots: ['%dEAD'],
+                  },
+                ],
+              },
+            ],
+            annots: ['%status'],
+          },
+          {
+            prim: 'mutez',
+            annots: ['%quick_recovery_stake'],
+          },
+          {
+            prim: 'nat',
+            annots: ['%quick_recovery_period'],
+          },
+        ],
+      };
+      const dataObj = {
+        prim: 'Pair',
+        args: [
+          [
+            {
+              string: 'tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6',
+            },
+          ],
+          [],
+          {
+            prim: 'Right',
+            args: [
+              {
+                prim: 'Left',
+                args: [
+                  {
+                    prim: 'Pair',
+                    args: [
+                      {
+                        string: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+                      },
+                      {
+                        string: '2024-04-19T13:53:22Z',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            int: '1000000',
+          },
+          {
+            int: '0',
+          },
+          {
+            int: '414522',
+          },
+          {
+            int: '414523',
+          },
+        ],
+      };
+      const expected = {
+        owners: ['tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6'],
+        inheritors: [],
+        status: {
+          rECOVERING: {
+            0: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+            1: '2024-04-19T13:53:22.000Z',
+          },
+        },
+        quick_recovery_stake: BigNumber(1000000),
+        quick_recovery_period: BigNumber(0),
+        direct_debit_mandates: '414522',
+        direct_debit_mandates_history: '414523',
+      };
+
+      const schema = new Schema(schemaObj);
+      const result = schema.Execute(dataObj);
+      expect(result).toEqual(expected);
+    });
+
+    it('a smaller reproduction', () => {
+      const schemaObj = {
+        prim: 'pair',
+        args: [
+          {
+            prim: 'set',
+            args: [
+              {
+                prim: 'address',
+              },
+            ],
+            annots: ['%owners'],
+          },
+          {
+            prim: 'set',
+            args: [
+              {
+                prim: 'address',
+              },
+            ],
+            annots: ['%inheritors'],
+          },
+          {
+            prim: 'or',
+            args: [
+              {
+                prim: 'unit',
+                annots: ['%aCTIVE'],
+              },
+              {
+                prim: 'or',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [
+                      {
+                        prim: 'address',
+                      },
+                      {
+                        prim: 'timestamp',
+                      },
+                    ],
+                    annots: ['%rECOVERING'],
+                  },
+                  {
+                    prim: 'unit',
+                    annots: ['%dEAD'],
+                  },
+                ],
+              },
+            ],
+            annots: ['%status'],
+          },
+          {
+            prim: 'mutez',
+            annots: ['%quick_recovery_stake'],
+          },
+          {
+            prim: 'nat',
+            annots: ['%quick_recovery_period'],
+          },
+          {
+            prim: 'big_map',
+            args: [
+              {
+                prim: 'pair',
+                args: [
+                  {
+                    prim: 'address',
+                  },
+                  {
+                    prim: 'or',
+                    args: [
+                      {
+                        prim: 'nat',
+                        annots: ['%sECOND'],
+                      },
+                      {
+                        prim: 'or',
+                        args: [
+                          {
+                            prim: 'nat',
+                            annots: ['%mINUTE'],
+                          },
+                          {
+                            prim: 'or',
+                            args: [
+                              {
+                                prim: 'nat',
+                                annots: ['%hOUR'],
+                              },
+                              {
+                                prim: 'or',
+                                args: [
+                                  {
+                                    prim: 'nat',
+                                    annots: ['%dAY'],
+                                  },
+                                  {
+                                    prim: 'or',
+                                    args: [
+                                      {
+                                        prim: 'nat',
+                                        annots: ['%wEEK'],
+                                      },
+                                      {
+                                        prim: 'or',
+                                        args: [
+                                          {
+                                            prim: 'nat',
+                                            annots: ['%mONTH'],
+                                          },
+                                          {
+                                            prim: 'nat',
+                                            annots: ['%yEAR'],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                prim: 'mutez',
+              },
+            ],
+            annots: ['%direct_debit_mandates'],
+          },
+          {
+            prim: 'big_map',
+            args: [
+              {
+                prim: 'pair',
+                args: [
+                  {
+                    prim: 'address',
+                  },
+                  {
+                    prim: 'or',
+                    args: [
+                      {
+                        prim: 'nat',
+                        annots: ['%sECOND'],
+                      },
+                      {
+                        prim: 'or',
+                        args: [
+                          {
+                            prim: 'nat',
+                            annots: ['%mINUTE'],
+                          },
+                          {
+                            prim: 'or',
+                            args: [
+                              {
+                                prim: 'nat',
+                                annots: ['%hOUR'],
+                              },
+                              {
+                                prim: 'or',
+                                args: [
+                                  {
+                                    prim: 'nat',
+                                    annots: ['%dAY'],
+                                  },
+                                  {
+                                    prim: 'or',
+                                    args: [
+                                      {
+                                        prim: 'nat',
+                                        annots: ['%wEEK'],
+                                      },
+                                      {
+                                        prim: 'or',
+                                        args: [
+                                          {
+                                            prim: 'nat',
+                                            annots: ['%mONTH'],
+                                          },
+                                          {
+                                            prim: 'nat',
+                                            annots: ['%yEAR'],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                prim: 'timestamp',
+              },
+            ],
+            annots: ['%direct_debit_mandates_history'],
+          },
+        ],
+      };
+      const dataObj = {
+        prim: 'Pair',
+        args: [
+          [
+            {
+              string: 'tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6',
+            },
+          ],
+          [],
+          {
+            prim: 'Right',
+            args: [
+              {
+                prim: 'Left',
+                args: [
+                  {
+                    prim: 'Pair',
+                    args: [
+                      {
+                        string: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+                      },
+                      {
+                        string: '2024-04-19T13:53:22Z',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            int: '1000000',
+          },
+          {
+            int: '0',
+          },
+          {
+            int: '414522',
+          },
+          {
+            int: '414523',
+          },
+        ],
+      };
+      const expected = {
+        owners: ['tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6'],
+        inheritors: [],
+        status: {
+          rECOVERING: {
+            0: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+            1: '2024-04-19T13:53:22.000Z',
+          },
+        },
+        quick_recovery_stake: BigNumber(1000000),
+        quick_recovery_period: BigNumber(0),
+        direct_debit_mandates: '414522',
+        direct_debit_mandates_history: '414523',
+      };
+
+      const schema = new Schema(schemaObj);
+      const result = schema.Execute(dataObj);
+      expect(result).toEqual(expected);
     });
   });
 });
