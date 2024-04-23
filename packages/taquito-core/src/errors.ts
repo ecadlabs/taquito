@@ -69,7 +69,7 @@ export class InvalidStakingAddressError extends ParameterValidationError {
   ) {
     super();
     this.name = 'InvalidStakingAddressError';
-    this.message = `Invalid staking address "${address}", you can only stake to your own address`;
+    this.message = `Invalid staking address "${address}", you can only set destination as your own address`;
   }
 }
 
