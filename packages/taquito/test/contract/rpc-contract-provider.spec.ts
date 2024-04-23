@@ -637,7 +637,6 @@ describe('RpcContractProvider test', () => {
   describe('transfer - staking pseudo operations', () => {
     it('should be able to produce a reveal and stake pseudo operation', async () => {
       const result = await rpcContractProvider.stake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -664,7 +663,7 @@ describe('RpcContractProvider test', () => {
               gas_limit: '10600',
               storage_limit: '300',
               amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'stake',
                 value: {
@@ -682,12 +681,23 @@ describe('RpcContractProvider test', () => {
       });
     });
 
+    it('should be able to produce an error if destination is passed and is different than the source', async () => {
+      const estimate = new Estimate(1000, 1000, 180, 1000);
+      mockEstimate.stake.mockResolvedValue(estimate);
+
+      expect(async () => {
+        await rpcContractProvider.stake({
+          to: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+          amount: 2,
+        });
+      }).rejects.toThrow();
+    });
+
     it('should be able to produce a stake operation when no fees are specified', async () => {
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.stake.mockResolvedValue(estimate);
 
       const result = await rpcContractProvider.stake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
 
@@ -711,7 +721,7 @@ describe('RpcContractProvider test', () => {
               gas_limit: '1',
               storage_limit: '1000',
               amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'stake',
                 value: {
@@ -736,7 +746,6 @@ describe('RpcContractProvider test', () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const result = await rpcContractProvider.stake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
 
@@ -751,7 +760,7 @@ describe('RpcContractProvider test', () => {
               gas_limit: '1',
               storage_limit: '1000',
               amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'stake',
                 value: {
@@ -771,7 +780,6 @@ describe('RpcContractProvider test', () => {
 
     it('should be able to produce a reveal and unstake pseudo operation', async () => {
       const result = await rpcContractProvider.unstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
         fee: 10000,
         gasLimit: 10600,
@@ -798,7 +806,7 @@ describe('RpcContractProvider test', () => {
               gas_limit: '10600',
               storage_limit: '300',
               amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'unstake',
                 value: {
@@ -821,7 +829,6 @@ describe('RpcContractProvider test', () => {
       mockEstimate.unstake.mockResolvedValue(estimate);
 
       const result = await rpcContractProvider.unstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
 
@@ -845,7 +852,7 @@ describe('RpcContractProvider test', () => {
               gas_limit: '1',
               storage_limit: '1000',
               amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'unstake',
                 value: {
@@ -870,7 +877,6 @@ describe('RpcContractProvider test', () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const result = await rpcContractProvider.unstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
 
@@ -885,7 +891,7 @@ describe('RpcContractProvider test', () => {
               gas_limit: '1',
               storage_limit: '1000',
               amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'unstake',
                 value: {
@@ -905,8 +911,6 @@ describe('RpcContractProvider test', () => {
 
     it('should be able to produce a reveal and finalize_unstake pseudo operation', async () => {
       const result = await rpcContractProvider.finalizeUnstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        amount: 2,
         fee: 10000,
         gasLimit: 10600,
         storageLimit: 300,
@@ -931,8 +935,8 @@ describe('RpcContractProvider test', () => {
               fee: '10000',
               gas_limit: '10600',
               storage_limit: '300',
-              amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              amount: '0',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'finalize_unstake',
                 value: {
@@ -950,14 +954,19 @@ describe('RpcContractProvider test', () => {
       });
     });
 
+    it('should throw an error when an amount other than 0 is specified on a finalize_unstake pseudo-operation', async () => {
+      await expect(
+        rpcContractProvider.finalizeUnstake({
+          amount: 2,
+        })
+      ).rejects.toThrow();
+    });
+
     it('should be able to produce a reveal and finalize_unstake pseudo operation when no fees are specified', async () => {
       const estimate = new Estimate(1000, 1000, 180, 1000);
       mockEstimate.finalizeUnstake.mockResolvedValue(estimate);
 
-      const result = await rpcContractProvider.finalizeUnstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        amount: 2,
-      });
+      const result = await rpcContractProvider.finalizeUnstake({});
 
       expect(result.raw).toEqual({
         opbytes: 'test',
@@ -978,8 +987,8 @@ describe('RpcContractProvider test', () => {
               fee: '301',
               gas_limit: '1',
               storage_limit: '1000',
-              amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              amount: '0',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'finalize_unstake',
                 value: {
@@ -1003,10 +1012,7 @@ describe('RpcContractProvider test', () => {
 
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-      const result = await rpcContractProvider.finalizeUnstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        amount: 2,
-      });
+      const result = await rpcContractProvider.finalizeUnstake({});
 
       expect(result.raw).toEqual({
         opbytes: 'test',
@@ -1018,8 +1024,8 @@ describe('RpcContractProvider test', () => {
               fee: '301',
               gas_limit: '1',
               storage_limit: '1000',
-              amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              amount: '0',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'finalize_unstake',
                 value: {

@@ -186,7 +186,6 @@ describe('RPCEstimateProvider test signer', () => {
       mockRpcClient.simulateOperation.mockResolvedValue(stakeNoReveal);
 
       const estimate = await estimateProvider.stake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
 
@@ -197,7 +196,6 @@ describe('RPCEstimateProvider test signer', () => {
       mockRpcClient.simulateOperation.mockResolvedValue(unstakeNoReveal);
 
       const estimate = await estimateProvider.unstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 2,
       });
 
@@ -207,10 +205,7 @@ describe('RPCEstimateProvider test signer', () => {
     it('should return estimates for finalize_unstake pseudo-operation', async () => {
       mockRpcClient.simulateOperation.mockResolvedValue(finalizeUnstakeNoReveal);
 
-      const estimate = await estimateProvider.finalizeUnstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        amount: 2,
-      });
+      const estimate = await estimateProvider.finalizeUnstake({});
 
       expect(estimate.gasLimit).toEqual(1629);
     });

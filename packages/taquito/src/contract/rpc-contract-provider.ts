@@ -30,6 +30,8 @@ import {
   InvalidAddressError,
   InvalidContractAddressError,
   InvalidAmountError,
+  InvalidFinalizeUnstakeAmountError,
+  InvalidStakingAddressError,
 } from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -407,10 +409,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param Stake pseudo-operation parameter
    */
   async stake(params: StakeParams) {
-    const toValidation = validateAddress(params.to);
-    if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+    if (params.to === undefined) {
+      params.to = params.source;
     }
+    if (params.to !== undefined && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
+    }
+
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
@@ -442,10 +447,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param Unstake pseudo-operation parameter
    */
   async unstake(params: UnstakeParams) {
-    const toValidation = validateAddress(params.to);
-    if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+    if (params.to === undefined) {
+      params.to = params.source;
     }
+    if (params.to !== undefined && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
+    }
+
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
@@ -477,18 +485,25 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param Finalize_unstake pseudo-operation parameter
    */
   async finalizeUnstake(params: FinalizeUnstakeParams) {
-    const toValidation = validateAddress(params.to);
-    if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+    if (params.to === undefined) {
+      params.to = params.source;
     }
+    if (params.to !== undefined && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
+    }
+
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
     }
 
-    if (params.amount < 0) {
-      throw new InvalidAmountError(params.amount.toString());
+    if (params.amount === undefined) {
+      params.amount = 0;
     }
+    if (params.amount !== undefined && params.amount > 0) {
+      throw new InvalidFinalizeUnstakeAmountError('Amount must be 0 to finalize unstake.');
+    }
+
     const publicKeyHash = await this.signer.publicKeyHash();
     const estimate = await this.estimate(
       params,

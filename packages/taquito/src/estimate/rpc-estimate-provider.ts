@@ -29,7 +29,7 @@ import { ContractMethod, ContractMethodObject, ContractProvider } from '../contr
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
-import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
+import { InvalidAddressError, InvalidAmountError, InvalidStakingAddressError } from '@taquito/core';
 
 // stub signature that won't be verified by tezos rpc simulate_operation
 const STUB_SIGNATURE =
@@ -215,10 +215,13 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param Stake pseudo-operation parameter
    */
   async stake({ fee, storageLimit, gasLimit, ...rest }: StakeParams) {
-    const toValidation = validateAddress(rest.to);
-    if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.to, invalidDetail(toValidation));
+    if (rest.to === undefined) {
+      rest.to = rest.source;
     }
+    if (rest.to !== undefined && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
+    }
+
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
@@ -251,10 +254,13 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param Unstake pseudo-operation parameter
    */
   async unstake({ fee, storageLimit, gasLimit, ...rest }: UnstakeParams) {
-    const toValidation = validateAddress(rest.to);
-    if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.to, invalidDetail(toValidation));
+    if (rest.to === undefined) {
+      rest.to = rest.source;
     }
+    if (rest.to !== undefined && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
+    }
+
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
@@ -287,17 +293,23 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param finalize_unstake pseudo-operation parameter
    */
   async finalizeUnstake({ fee, storageLimit, gasLimit, ...rest }: FinalizeUnstakeParams) {
-    const toValidation = validateAddress(rest.to);
-    if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.to, invalidDetail(toValidation));
+    if (rest.to === undefined) {
+      rest.to = rest.source;
+    }
+    if (rest.to !== undefined && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
     }
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
     }
-    if (rest.amount < 0) {
-      throw new InvalidAmountError(rest.amount.toString());
+    if (rest.amount === undefined) {
+      rest.amount = 0;
     }
+    if (rest.amount !== undefined && rest.amount !== 0) {
+      throw new Error('Amount must be 0 for finalize_unstake operation');
+    }
+
     const preparedOperation = await this.prepare.finalizeUnstake({
       fee,
       storageLimit,

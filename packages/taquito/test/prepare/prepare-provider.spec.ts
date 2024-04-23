@@ -269,7 +269,6 @@ describe('PrepareProvider test', () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.stake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 1000000000,
       });
 
@@ -292,7 +291,7 @@ describe('PrepareProvider test', () => {
               gas_limit: '1040000',
               storage_limit: '60000',
               amount: '1000000000000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'stake',
                 value: {
@@ -313,7 +312,6 @@ describe('PrepareProvider test', () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.stake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 1000000000,
       });
 
@@ -327,7 +325,7 @@ describe('PrepareProvider test', () => {
               gas_limit: '1040000',
               storage_limit: '60000',
               amount: '1000000000000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'stake',
                 value: {
@@ -350,7 +348,6 @@ describe('PrepareProvider test', () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
       const prepared = await prepareProvider.unstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 9999,
       });
 
@@ -373,7 +370,7 @@ describe('PrepareProvider test', () => {
               gas_limit: '1040000',
               storage_limit: '60000',
               amount: '9999000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'unstake',
                 value: {
@@ -394,7 +391,6 @@ describe('PrepareProvider test', () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
       const prepared = await prepareProvider.unstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         amount: 9999,
       });
 
@@ -408,7 +404,7 @@ describe('PrepareProvider test', () => {
               gas_limit: '1040000',
               storage_limit: '60000',
               amount: '9999000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'unstake',
                 value: {
@@ -430,10 +426,7 @@ describe('PrepareProvider test', () => {
     it('should return a prepared finalize_unstake pseudo operation with a reveal op', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
-      const prepared = await prepareProvider.finalizeUnstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        amount: 0,
-      });
+      const prepared = await prepareProvider.finalizeUnstake({});
 
       expect(prepared).toEqual({
         opOb: {
@@ -454,7 +447,7 @@ describe('PrepareProvider test', () => {
               gas_limit: '1040000',
               storage_limit: '60000',
               amount: '0',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'finalize_unstake',
                 value: {
@@ -474,10 +467,7 @@ describe('PrepareProvider test', () => {
     it('should return a prepared finalize_unstake pseudo operation without a reveal op', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-      const prepared = await prepareProvider.finalizeUnstake({
-        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-        amount: 0,
-      });
+      const prepared = await prepareProvider.finalizeUnstake({});
 
       expect(prepared).toEqual({
         opOb: {
@@ -489,7 +479,7 @@ describe('PrepareProvider test', () => {
               gas_limit: '1040000',
               storage_limit: '60000',
               amount: '0',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               parameters: {
                 entrypoint: 'finalize_unstake',
                 value: {

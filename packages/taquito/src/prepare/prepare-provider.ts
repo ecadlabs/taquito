@@ -470,6 +470,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const op = await createTransferOperation({
       ...rest,
+      to: pkh,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
       parameter: {
         entrypoint: 'stake',
@@ -518,6 +519,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const op = await createTransferOperation({
       ...rest,
+      to: pkh,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
       parameter: {
         entrypoint: 'unstake',
@@ -564,6 +566,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const op = await createTransferOperation({
       ...rest,
+      to: pkh,
+      amount: 0,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
       parameter: {
         entrypoint: 'finalize_unstake',
