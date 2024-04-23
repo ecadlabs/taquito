@@ -9,7 +9,11 @@ import { TaquitoError } from '@taquito/core';
 export abstract class TokenValidationError extends TaquitoError {
   name = 'TokenValidationError';
 
-  constructor(public readonly value: any, public readonly token: Token, baseMessage: string) {
+  constructor(
+    public readonly value: any,
+    public readonly token: Token,
+    baseMessage: string
+  ) {
     super();
     const annot = this.token.annot();
     const annotText = annot ? `[${annot}] ` : '';
@@ -17,7 +21,11 @@ export abstract class TokenValidationError extends TaquitoError {
   }
 }
 
-export type TokenFactory = (val: any, idx: number) => Token;
+export type TokenFactory = (
+  val: any,
+  idx: number,
+  parentTokenType?: 'Or' | 'Pair' | 'Other'
+) => Token;
 
 export interface Semantic {
   [key: string]: (value: MichelsonV1Expression, schema: MichelsonV1Expression) => any;
@@ -31,7 +39,8 @@ export abstract class Token {
   constructor(
     protected val: MichelsonV1ExpressionExtended,
     protected idx: number,
-    protected fac: TokenFactory
+    protected fac: TokenFactory,
+    protected parentTokenType?: 'Or' | 'Pair' | 'Other'
   ) {}
 
   protected typeWithoutAnnotations() {
