@@ -56,6 +56,9 @@ import {
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
   FailingNoopParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -390,6 +393,114 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     const content = prepared.opOb.contents.find(
       (op) => op.kind === OpKind.TRANSACTION
     ) as OperationContentsTransaction;
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Stake tz from current address to a specific address. Built on top of the existing transaction operation
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Stake pseudo-operation parameter
+   */
+  async stake(params: StakeParams) {
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+    }
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
+
+    const source = params.source || publicKeyHash;
+    const prepared = await this.prepare.stake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Unstake tz from current address to a specific address. Built on top of the existing transaction operation
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Unstake pseudo-operation parameter
+   */
+  async unstake(params: UnstakeParams) {
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+    }
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(params, this.estimator.unstake.bind(this.estimator));
+
+    const source = params.source || publicKeyHash;
+    const prepared = await this.prepare.unstake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Finalize unstake tz from current address to a specific address. Built on top of the existing transaction operation
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Finalize_unstake pseudo-operation parameter
+   */
+  async finalizeUnstake(params: FinalizeUnstakeParams) {
+    const toValidation = validateAddress(params.to);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+    }
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.finalizeUnstake.bind(this.estimator)
+    );
+
+    const source = params.source || publicKeyHash;
+    const prepared = await this.prepare.finalizeUnstake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);

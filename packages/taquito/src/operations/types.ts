@@ -311,6 +311,21 @@ export interface TransferParams {
 }
 
 /**
+ * @description RPC Stake pseudo operation params
+ */
+export interface StakeParams extends TransferParams {}
+
+/**
+ * @description RPC unstake pseudo operation params
+ */
+export interface UnstakeParams extends TransferParams {}
+
+/**
+ * @description RPC finalize_unstake pseudo operation params
+ */
+export interface FinalizeUnstakeParams extends TransferParams {}
+
+/**
  * @description RPC register global constant operation
  */
 export interface RPCRegisterGlobalConstantOperation {

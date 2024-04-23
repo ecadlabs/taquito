@@ -22,6 +22,9 @@ import {
   smartRollupAddMessagesNoReveal,
   smartRollupOriginateWithReveal,
   smartRollupExecuteOutboxMessageNoReveal,
+  stakeNoReveal,
+  unstakeNoReveal,
+  finalizeUnstakeNoReveal,
 } from '../contract/helper';
 import { OpKind, PvmKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
@@ -175,6 +178,41 @@ describe('RPCEstimateProvider test signer', () => {
         init: '{}',
       });
       expect(estimate.gasLimit).toEqual(1100);
+    });
+  });
+
+  describe('staking', () => {
+    it('should return estimates for stake pseudo-operation', async () => {
+      mockRpcClient.simulateOperation.mockResolvedValue(stakeNoReveal);
+
+      const estimate = await estimateProvider.stake({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+      });
+
+      expect(estimate.gasLimit).toEqual(3730);
+    });
+
+    it('should return estimates for unstake pseudo-operation', async () => {
+      mockRpcClient.simulateOperation.mockResolvedValue(unstakeNoReveal);
+
+      const estimate = await estimateProvider.unstake({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+      });
+
+      expect(estimate.gasLimit).toEqual(4350);
+    });
+
+    it('should return estimates for finalize_unstake pseudo-operation', async () => {
+      mockRpcClient.simulateOperation.mockResolvedValue(finalizeUnstakeNoReveal);
+
+      const estimate = await estimateProvider.finalizeUnstake({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+      });
+
+      expect(estimate.gasLimit).toEqual(1629);
     });
   });
 

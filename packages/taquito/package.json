@@ -31,7 +31,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "jest --coverage --testPathIgnorePatterns=operation-factory.spec.ts",
+    "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
