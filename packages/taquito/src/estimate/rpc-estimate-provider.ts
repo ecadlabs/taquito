@@ -220,7 +220,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
     }
 
-    if (!rest?.to) {
+    if (!rest.to) {
       rest.to = rest.source;
     }
     if (rest.to && rest.to !== rest.source) {
@@ -260,7 +260,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
     }
 
-    if (!rest?.to) {
+    if (!rest.to) {
       rest.to = rest.source;
     }
     if (rest.to && rest.to !== rest.source) {
@@ -300,7 +300,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
     }
 
-    if (!rest?.to) {
+    if (!rest.to) {
       rest.to = rest.source;
     }
     if (rest.to && rest.to !== rest.source) {

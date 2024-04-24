@@ -414,10 +414,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
     }
 
-    if (!params?.to) {
+    if (!params.to) {
       params.to = params.source;
     }
-    if (params?.to && params.to !== params.source) {
+    if (params.to && params.to !== params.source) {
       throw new InvalidStakingAddressError(params.to);
     }
 
@@ -454,11 +454,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
     }
 
-    if (!params?.to) {
+    if (!params.to) {
       params.to = params.source;
     }
 
-    if (params?.to && params.to !== params.source) {
+    if (params.to && params.to !== params.source) {
       throw new InvalidStakingAddressError(params.to);
     }
 
@@ -492,10 +492,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
     }
 
-    if (!params?.to) {
+    if (!params.to) {
       params.to = params.source;
     }
-    if (params?.to && params.to !== params.source) {
+    if (params.to && params.to !== params.source) {
       throw new InvalidStakingAddressError(params.to);
     }
 
