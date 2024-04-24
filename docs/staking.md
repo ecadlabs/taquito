@@ -80,8 +80,8 @@ Before you stake some of your Tez, it is in "Spendable" state. When you stake it
 
 ```mermaid
 graph LR
-A[Spendable] --stake(amount)--> B[Staked]
-B --unstake(amount)--> C[Unstaked + Frozen]
-C --wait 4 cycles--> D[Unstaked + Finalizable]
-D --finalize_unstake--> A
+A[Spendable] -- "stake(amount)" --> B[Staked]
+B -- "unstake(amount)" --> C[Unstaked + Frozen]
+C -- wait 4 cycles --> D[Unstaked + Finalizable]
+D -- finalize_unstake --> A
 ```
