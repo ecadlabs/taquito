@@ -11,6 +11,21 @@ export type DelegateResponse = string | null;
 
 export type OperationHash = string;
 
+export type UnstakeRequestsResponse = {
+  finalizable: {
+    delegate: string;
+    cycle: number;
+    amount: BigNumber;
+  }[];
+  unfinalizable: {
+    delegate: string;
+    requests: {
+      cycle: number;
+      amount: BigNumber;
+    }[];
+  };
+} | null;
+
 interface INodeExtender {
   length: string;
   segment: string;

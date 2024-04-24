@@ -311,6 +311,48 @@ export interface TransferParams {
 }
 
 /**
+ * @description RPC Stake pseudo operation params
+ */
+export interface StakeParams {
+  to?: string;
+  source?: string;
+  amount: number;
+  fee?: number;
+  parameter?: TransactionOperationParameter;
+  gasLimit?: number;
+  storageLimit?: number;
+  mutez?: boolean;
+}
+
+/**
+ * @description RPC unstake pseudo operation params
+ */
+export interface UnstakeParams {
+  to?: string;
+  source?: string;
+  amount: number;
+  fee?: number;
+  parameter?: TransactionOperationParameter;
+  gasLimit?: number;
+  storageLimit?: number;
+  mutez?: boolean;
+}
+
+/**
+ * @description RPC finalize_unstake pseudo operation params
+ */
+export interface FinalizeUnstakeParams {
+  to?: string;
+  source?: string;
+  amount?: number;
+  fee?: number;
+  parameter?: TransactionOperationParameter;
+  gasLimit?: number;
+  storageLimit?: number;
+  mutez?: boolean;
+}
+
+/**
  * @description RPC register global constant operation
  */
 export interface RPCRegisterGlobalConstantOperation {
