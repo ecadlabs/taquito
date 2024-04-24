@@ -23,9 +23,13 @@ Before you can stake your funds, two conditions should be met:
 
 ```javascript
 
-// TODO: Add code after the implementation is done
+const op = await Tezos.contract.stake({
+        amount: 100
+      });
+      await op.confirmation();
 
 ```
+
 
 # Unstaking Funds
 
@@ -33,7 +37,10 @@ To unstake your funds, you need to call the `unstake` operation. This will chang
 The unstaked funds will still be frozen (and subject to slashing for 4 cycles). After that, your funds will be in "Unstaked + Finalizable" state.
 
 ```javascript
-
+const op = await Tezos.contract.unstake({
+        amount: 50
+      });
+      await op.confirmation();
 ```
 
 # Finalizing Unstake
@@ -41,6 +48,8 @@ The unstaked funds will still be frozen (and subject to slashing for 4 cycles). 
 To finalize your unstaked funds, you need to call the `finalize_unstake` operation. This will change your fund's status back to "spendable".
 
 ```javascript
+const op = await Tezos.contract.finalizeUnstake({});
+      await op.confirmation();
 
 ```
 
@@ -50,11 +59,8 @@ To finalize your unstaked funds, you need to call the `finalize_unstake` operati
 At the time of this writing, a cycle is ~~16384~~ blocks (with Paris protocol will be 24576), and ~~15~~ (10) seconds per block. This means a cycle is about 2.8 days (and will stay the same after Paris). This might change with the activation of newer protocols.
 
 ## Overstaking
-A delegate can set the maximum amount of staking they can accept, as a multiply of their own balance. If a delegate's limit is exceeded, the exceeding stake is automatically considered as delegation for the delegate's baking and voting power calculation, but it does remain slashable. That means it's your responsibility to make sure you're not 
+A delegate can set the maximum amount of staking they can accept, as a multiply of their own balance. If a delegate's limit is exceeded, the exceeding stake is automatically considered as delegation for the delegate's baking and voting power calculation, but it does remain slashable. That means it's your responsibility to make sure you're not overstaking. Remember that overstaking can even happen after you have staked successfully, because your delegate changes their own balance, or their staking parameter.
 
-```javascript
-// Todo: check for overstaking
-```
 
 ## Changing Delegate
 When you change your delegate, your funds will be automatically unstaked. You will have to wait for 4 cycles before you can stake them again.
