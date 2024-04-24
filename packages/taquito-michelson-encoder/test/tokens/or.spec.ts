@@ -154,7 +154,7 @@ describe('Or token', () => {
       });
       expect(
         tokenComplexNoAnnots.EncodeObject({
-          1: { 1: 3, 2: 4, 3: 31, 4: '2019-09-06T15:08:29.000Z' },
+          1: { 0: 3, 1: 4, 2: 31, 3: '2019-09-06T15:08:29.000Z' },
         })
       ).toEqual({
         prim: 'Left',
@@ -176,7 +176,7 @@ describe('Or token', () => {
           },
         ],
       });
-      expect(tokenComplexNoAnnots.EncodeObject({ 2: { 2: 3, 3: 'test' } })).toEqual({
+      expect(tokenComplexNoAnnots.EncodeObject({ 2: { 0: 3, 1: 'test' } })).toEqual({
         prim: 'Right',
         args: [
           {
@@ -187,7 +187,7 @@ describe('Or token', () => {
       });
       expect(
         tokenComplexNoAnnots.EncodeObject({
-          3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' },
+          3: { 0: 4, 1: 3, 2: '2019-09-06T15:08:29.000Z' },
         })
       ).toEqual({
         prim: 'Right',
@@ -245,7 +245,7 @@ describe('Or token', () => {
       });
       expect(
         tokenComplex.EncodeObject({
-          option1: { 1: 3, 2: 4, 3: 31, 4: '2019-09-06T15:08:29.000Z' },
+          option1: { 0: 3, 1: 4, 2: 31, 3: '2019-09-06T15:08:29.000Z' },
         })
       ).toEqual({
         prim: 'Left',
@@ -267,7 +267,7 @@ describe('Or token', () => {
           },
         ],
       });
-      expect(tokenComplex.EncodeObject({ option2: { 2: 3, 3: 'test' } })).toEqual({
+      expect(tokenComplex.EncodeObject({ option2: { 0: 3, 1: 'test' } })).toEqual({
         prim: 'Right',
         args: [
           {
@@ -278,7 +278,7 @@ describe('Or token', () => {
       });
       expect(
         tokenComplex.EncodeObject({
-          option3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' },
+          option3: { 0: 4, 1: 3, 2: '2019-09-06T15:08:29.000Z' },
         })
       ).toEqual({
         prim: 'Right',
@@ -577,9 +577,9 @@ describe('Or token', () => {
 
       expect(tokenComplexNoAnnots.ExtractSchema()).toEqual({
         0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
-        1: { 1: 'nat', 2: 'mutez', 3: 'nat', 4: 'timestamp' },
-        2: { 2: 'nat', 3: 'timestamp' },
-        3: { 3: 'nat', 4: 'mutez', 5: 'timestamp' },
+        1: { 0: 'nat', 1: 'mutez', 2: 'nat', 3: 'timestamp' },
+        2: { 0: 'nat', 1: 'timestamp' },
+        3: { 0: 'nat', 1: 'mutez', 2: 'timestamp' },
         4: 'nat',
       });
 
@@ -606,19 +606,19 @@ describe('Or token', () => {
           1: {
             __michelsonType: 'pair',
             schema: {
-              1: {
+              0: {
                 __michelsonType: 'nat',
                 schema: 'nat',
               },
-              2: {
+              1: {
                 __michelsonType: 'mutez',
                 schema: 'mutez',
               },
-              3: {
+              2: {
                 __michelsonType: 'nat',
                 schema: 'nat',
               },
-              4: {
+              3: {
                 __michelsonType: 'timestamp',
                 schema: 'timestamp',
               },
@@ -627,11 +627,11 @@ describe('Or token', () => {
           2: {
             __michelsonType: 'pair',
             schema: {
-              2: {
+              0: {
                 __michelsonType: 'nat',
                 schema: 'nat',
               },
-              3: {
+              1: {
                 __michelsonType: 'timestamp',
                 schema: 'timestamp',
               },
@@ -640,15 +640,15 @@ describe('Or token', () => {
           3: {
             __michelsonType: 'pair',
             schema: {
-              3: {
+              0: {
                 __michelsonType: 'nat',
                 schema: 'nat',
               },
-              4: {
+              1: {
                 __michelsonType: 'mutez',
                 schema: 'mutez',
               },
-              5: {
+              2: {
                 __michelsonType: 'timestamp',
                 schema: 'timestamp',
               },
@@ -663,9 +663,9 @@ describe('Or token', () => {
 
       expect(tokenComplex.ExtractSchema()).toEqual({
         option0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
-        option1: { 1: 'nat', 2: 'mutez', 3: 'nat', 4: 'timestamp' },
-        option2: { 2: 'nat', 3: 'timestamp' },
-        option3: { 3: 'nat', 4: 'mutez', 5: 'timestamp' },
+        option1: { 0: 'nat', 1: 'mutez', 2: 'nat', 3: 'timestamp' },
+        option2: { 0: 'nat', 1: 'timestamp' },
+        option3: { 0: 'nat', 1: 'mutez', 2: 'timestamp' },
         option4: 'nat',
       });
 
@@ -692,19 +692,19 @@ describe('Or token', () => {
           option1: {
             __michelsonType: 'pair',
             schema: {
-              1: {
+              0: {
                 __michelsonType: 'nat',
                 schema: 'nat',
               },
-              2: {
+              1: {
                 __michelsonType: 'mutez',
                 schema: 'mutez',
               },
-              3: {
+              2: {
                 __michelsonType: 'nat',
                 schema: 'nat',
               },
-              4: {
+              3: {
                 __michelsonType: 'timestamp',
                 schema: 'timestamp',
               },
@@ -713,11 +713,11 @@ describe('Or token', () => {
           option2: {
             __michelsonType: 'pair',
             schema: {
-              2: {
+              0: {
                 __michelsonType: 'nat',
                 schema: 'nat',
               },
-              3: {
+              1: {
                 __michelsonType: 'timestamp',
                 schema: 'timestamp',
               },
@@ -726,15 +726,15 @@ describe('Or token', () => {
           option3: {
             __michelsonType: 'pair',
             schema: {
-              3: {
+              0: {
                 __michelsonType: 'nat',
                 schema: 'nat',
               },
-              4: {
+              1: {
                 __michelsonType: 'mutez',
                 schema: 'mutez',
               },
-              5: {
+              2: {
                 __michelsonType: 'timestamp',
                 schema: 'timestamp',
               },
@@ -856,7 +856,7 @@ describe('Or token', () => {
             },
           ],
         })
-      ).toEqual({ myPair: { 4: new BigNumber(3), 5: new BigNumber(4) } }); // { 4: { myPair: { 4: '3', 5: '4'} } }
+      ).toEqual({ myPair: { 0: new BigNumber(3), 1: new BigNumber(4) } }); // { 4: { myPair: { 4: '3', 5: '4'} } }
       expect(
         tokenNestedOr.Execute({
           prim: 'Right',
@@ -939,7 +939,7 @@ describe('Or token', () => {
             },
           ],
         })
-      ).toEqual({ 4: { 4: new BigNumber(3), 5: new BigNumber(4) } }); // { 4: { myPair: { 4: '3', 5: '4'} } }
+      ).toEqual({ 4: { 0: new BigNumber(3), 1: new BigNumber(4) } }); // { 4: { myPair: { 4: '3', 5: '4'} } }
       expect(
         tokenNestedOrWithoutAnnot.Execute({
           prim: 'Right',
