@@ -20,15 +20,15 @@ describe('Schema test', () => {
       },
       '1': 'mutez',
       '2': {
-        '2': 'address',
-        '3': 'bool',
+        '0': 'address',
+        '1': 'bool',
       },
       '3': {
         lambda: {
           parameters: {
-            5: { Some: 'bytes' },
-            3: 'address',
-            4: 'string',
+            0: 'address',
+            1: 'string',
+            2: { Some: 'bytes' },
           },
           returns: 'operation',
         },
@@ -65,11 +65,11 @@ describe('Schema test', () => {
         '2': {
           __michelsonType: 'pair',
           schema: {
-            '2': {
+            '0': {
               __michelsonType: 'address',
               schema: 'address',
             },
-            '3': {
+            '1': {
               __michelsonType: 'bool',
               schema: 'bool',
             },
@@ -81,15 +81,15 @@ describe('Schema test', () => {
             parameters: {
               __michelsonType: 'pair',
               schema: {
-                3: {
+                0: {
                   __michelsonType: 'address',
                   schema: 'address',
                 },
-                4: {
+                1: {
                   __michelsonType: 'string',
                   schema: 'string',
                 },
-                5: {
+                2: {
                   __michelsonType: 'option',
                   schema: {
                     __michelsonType: 'bytes',

@@ -15,9 +15,9 @@ describe('Exchange contract test', () => {
     expect(schema.ExtractSchema()).toEqual({
       '0': {
         big_map: {
-          key: "address",
-          value: "nat"
-        }
+          key: 'address',
+          value: 'nat',
+        },
       },
       '1': 'contract',
       '2': 'contract',
@@ -32,19 +32,19 @@ describe('Exchange contract test', () => {
               '2': 'timestamp',
             },
             '1': {
-              '1': 'nat',
-              '2': 'mutez',
-              '3': 'nat',
-              '4': 'timestamp',
-            },
-            '2': {
+              '0': 'nat',
+              '1': 'mutez',
               '2': 'nat',
               '3': 'timestamp',
             },
+            '2': {
+              '0': 'nat',
+              '1': 'timestamp',
+            },
             '3': {
-              '3': 'nat',
-              '4': 'mutez',
-              '5': 'timestamp',
+              '0': 'nat',
+              '1': 'mutez',
+              '2': 'timestamp',
             },
           },
         },
@@ -55,17 +55,17 @@ describe('Exchange contract test', () => {
       __michelsonType: 'pair',
       schema: {
         '0': {
-          __michelsonType: "big_map",
+          __michelsonType: 'big_map',
           schema: {
             key: {
-              __michelsonType: "address",
-              schema: "address"
+              __michelsonType: 'address',
+              schema: 'address',
             },
             value: {
-              __michelsonType: "nat",
-              schema: "nat"
-            }
-          }
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+          },
         },
         '1': {
           __michelsonType: 'contract',
@@ -78,7 +78,7 @@ describe('Exchange contract test', () => {
                   schema: {
                     0: {
                       __michelsonType: 'address',
-                      schema: 'address'
+                      schema: 'address',
                     },
                     1: {
                       __michelsonType: 'contract',
@@ -91,154 +91,154 @@ describe('Exchange contract test', () => {
                               schema: {
                                 0: {
                                   __michelsonType: 'address',
-                                  schema: 'address'
+                                  schema: 'address',
                                 },
                                 1: {
                                   __michelsonType: 'address',
-                                  schema: 'address'
+                                  schema: 'address',
                                 },
                                 2: {
                                   __michelsonType: 'nat',
-                                  schema: 'nat'
+                                  schema: 'nat',
                                 },
-                              }
+                              },
                             },
                             1: {
                               __michelsonType: 'address',
-                              schema: 'address'
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                              schema: 'address',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
                 1: {
                   __michelsonType: 'nat',
-                  schema: 'nat'
-                }
-              }
-            }
-          }
+                  schema: 'nat',
+                },
+              },
+            },
+          },
         },
         '2': {
           __michelsonType: 'contract',
           schema: {
             parameter: {
-              __michelsonType: "or",
+              __michelsonType: 'or',
               schema: {
                 0: {
-                  __michelsonType: "pair",
+                  __michelsonType: 'pair',
                   schema: {
                     0: {
                       __michelsonType: 'address',
-                      schema: 'address'
+                      schema: 'address',
                     },
                     1: {
                       __michelsonType: 'address',
-                      schema: 'address'
+                      schema: 'address',
                     },
                     2: {
                       __michelsonType: 'nat',
-                      schema: 'nat'
+                      schema: 'nat',
                     },
-                  }
+                  },
                 },
                 1: {
                   __michelsonType: 'address',
-                  schema: 'address'
-                }
-              }
-            }
-          }
+                  schema: 'address',
+                },
+              },
+            },
+          },
         },
         '3': {
           __michelsonType: 'nat',
-          schema: 'nat'
+          schema: 'nat',
         },
         '4': {
-          __michelsonType: "map",
+          __michelsonType: 'map',
           schema: {
             key: {
               __michelsonType: 'address',
-              schema: 'address'
+              schema: 'address',
             },
             value: {
-              __michelsonType: "or",
+              __michelsonType: 'or',
               schema: {
                 '0': {
-                  __michelsonType: "pair",
+                  __michelsonType: 'pair',
                   schema: {
                     '0': {
                       __michelsonType: 'nat',
-                      schema: 'nat'
+                      schema: 'nat',
                     },
                     '1': {
                       __michelsonType: 'nat',
-                      schema: 'nat'
+                      schema: 'nat',
                     },
                     '2': {
                       __michelsonType: 'timestamp',
-                      schema: 'timestamp'
+                      schema: 'timestamp',
                     },
-                  }
+                  },
                 },
                 '1': {
                   __michelsonType: 'pair',
                   schema: {
-                    '1': {
+                    '0': {
                       __michelsonType: 'nat',
-                      schema: 'nat'
+                      schema: 'nat',
+                    },
+                    '1': {
+                      __michelsonType: 'mutez',
+                      schema: 'mutez',
                     },
                     '2': {
-                      __michelsonType: 'mutez',
-                      schema: 'mutez'
+                      __michelsonType: 'nat',
+                      schema: 'nat',
                     },
                     '3': {
-                      __michelsonType: 'nat',
-                      schema: 'nat'
-                    },
-                    '4': {
                       __michelsonType: 'timestamp',
-                      schema: 'timestamp'
+                      schema: 'timestamp',
                     },
-                  }
+                  },
                 },
                 '2': {
                   __michelsonType: 'pair',
                   schema: {
-                    '2': {
+                    '0': {
                       __michelsonType: 'nat',
-                      schema: 'nat'
+                      schema: 'nat',
                     },
-                    '3': {
+                    '1': {
                       __michelsonType: 'timestamp',
-                      schema: 'timestamp'
+                      schema: 'timestamp',
                     },
-                  }
+                  },
                 },
                 '3': {
                   __michelsonType: 'pair',
                   schema: {
-                    '3': {
+                    '0': {
                       __michelsonType: 'nat',
-                      schema: 'nat'
+                      schema: 'nat',
                     },
-                    '4': {
+                    '1': {
                       __michelsonType: 'mutez',
-                      schema: 'mutez'
+                      schema: 'mutez',
                     },
-                    '5': {
+                    '2': {
                       __michelsonType: 'timestamp',
-                      schema: 'timestamp'
+                      schema: 'timestamp',
                     },
-                  }
+                  },
                 },
-              }
+              },
             },
           },
         },
-      }
+      },
     });
   });
 
@@ -278,99 +278,99 @@ describe('Exchange contract test', () => {
         '2': 'timestamp',
       },
       '1': {
-        '1': 'nat',
-        '2': 'mutez',
-        '3': 'nat',
-        '4': 'timestamp',
-      },
-      '2': {
+        '0': 'nat',
+        '1': 'mutez',
         '2': 'nat',
         '3': 'timestamp',
       },
+      '2': {
+        '0': 'nat',
+        '1': 'timestamp',
+      },
       '3': {
-        '3': 'nat',
-        '4': 'mutez',
-        '5': 'timestamp',
+        '0': 'nat',
+        '1': 'mutez',
+        '2': 'timestamp',
       },
       '4': 'nat',
     });
 
     expect(schema.generateSchema()).toEqual({
-      __michelsonType: "or",
+      __michelsonType: 'or',
       schema: {
         '0': {
-          __michelsonType: "pair",
+          __michelsonType: 'pair',
           schema: {
             '0': {
               __michelsonType: 'nat',
-              schema: 'nat'
+              schema: 'nat',
             },
             '1': {
               __michelsonType: 'nat',
-              schema: 'nat'
+              schema: 'nat',
             },
             '2': {
               __michelsonType: 'timestamp',
-              schema: 'timestamp'
+              schema: 'timestamp',
             },
-          }
+          },
         },
         '1': {
-          __michelsonType: "pair",
+          __michelsonType: 'pair',
           schema: {
-            '1': {
+            '0': {
               __michelsonType: 'nat',
-              schema: 'nat'
+              schema: 'nat',
+            },
+            '1': {
+              __michelsonType: 'mutez',
+              schema: 'mutez',
             },
             '2': {
-              __michelsonType: 'mutez',
-              schema: 'mutez'
+              __michelsonType: 'nat',
+              schema: 'nat',
             },
             '3': {
-              __michelsonType: 'nat',
-              schema: 'nat'
-            },
-            '4': {
               __michelsonType: 'timestamp',
-              schema: 'timestamp'
+              schema: 'timestamp',
             },
-          }
+          },
         },
         '2': {
-          __michelsonType: "pair",
+          __michelsonType: 'pair',
           schema: {
-            '2': {
+            '0': {
               __michelsonType: 'nat',
-              schema: 'nat'
+              schema: 'nat',
             },
-            '3': {
+            '1': {
               __michelsonType: 'timestamp',
-              schema: 'timestamp'
+              schema: 'timestamp',
             },
-          }
+          },
         },
         '3': {
-          __michelsonType: "pair",
+          __michelsonType: 'pair',
           schema: {
-            '3': {
+            '0': {
               __michelsonType: 'nat',
-              schema: 'nat'
+              schema: 'nat',
             },
-            '4': {
+            '1': {
               __michelsonType: 'mutez',
-              schema: 'mutez'
+              schema: 'mutez',
             },
-            '5': {
+            '2': {
               __michelsonType: 'timestamp',
-              schema: 'timestamp'
+              schema: 'timestamp',
             },
-          }
+          },
         },
         '4': {
           __michelsonType: 'nat',
-          schema: 'nat'
+          schema: 'nat',
         },
-      }
+      },
     });
   });
 
@@ -525,7 +525,7 @@ describe('Exchange contract test', () => {
     expect(schema.ExtractSchema()).toEqual({
       '0': {
         big_map: {
-          key: "address",
+          key: 'address',
           value: {
             '0': 'nat',
             '1': {
@@ -543,52 +543,52 @@ describe('Exchange contract test', () => {
     });
 
     expect(schema.generateSchema()).toEqual({
-      __michelsonType: "pair",
+      __michelsonType: 'pair',
       schema: {
         '0': {
-          __michelsonType: "big_map",
+          __michelsonType: 'big_map',
           schema: {
             key: {
-              __michelsonType: "address",
-              schema: "address"
+              __michelsonType: 'address',
+              schema: 'address',
             },
             value: {
               __michelsonType: 'pair',
               schema: {
                 '0': {
-                  __michelsonType: "nat",
-                  schema: "nat"
+                  __michelsonType: 'nat',
+                  schema: 'nat',
                 },
                 '1': {
                   __michelsonType: 'map',
                   schema: {
                     key: {
-                      __michelsonType: "address",
-                      schema: "address"
+                      __michelsonType: 'address',
+                      schema: 'address',
                     },
                     value: {
-                      __michelsonType: "nat",
-                      schema: "nat"
+                      __michelsonType: 'nat',
+                      schema: 'nat',
                     },
                   },
                 },
-              }
+              },
             },
           },
         },
         '1': {
-          __michelsonType: "nat",
-          schema: "nat"
+          __michelsonType: 'nat',
+          schema: 'nat',
         },
         '2': {
-          __michelsonType: "string",
-          schema: "string"
+          __michelsonType: 'string',
+          schema: 'string',
         },
         '3': {
-          __michelsonType: "string",
-          schema: "string"
+          __michelsonType: 'string',
+          schema: 'string',
         },
-      }
+      },
     });
   });
 
@@ -614,30 +614,30 @@ describe('Exchange contract test', () => {
     });
 
     expect(schema.generateSchema()).toEqual({
-      __michelsonType: "or",
+      __michelsonType: 'or',
       schema: {
         '0': {
-          __michelsonType: "pair",
+          __michelsonType: 'pair',
           schema: {
             '0': {
               __michelsonType: 'address',
-              schema: "address"
+              schema: 'address',
             },
             '1': {
               __michelsonType: 'address',
-              schema: "address"
+              schema: 'address',
             },
             '2': {
               __michelsonType: 'nat',
-              schema: "nat"
+              schema: 'nat',
             },
-          }
+          },
         },
         '1': {
           __michelsonType: 'address',
-          schema: "address"
+          schema: 'address',
         },
-      }
+      },
     });
 
     expect(schema.ExtractSignatures()).toContainEqual(['1', 'address']);
