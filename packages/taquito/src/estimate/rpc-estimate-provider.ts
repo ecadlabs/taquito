@@ -307,7 +307,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       throw new InvalidStakingAddressError(rest.to);
     }
 
-    if (rest.amount === undefined) {
+    if (!rest.amount) {
       rest.amount = 0;
     }
     if (rest.amount !== undefined && rest.amount !== 0) {

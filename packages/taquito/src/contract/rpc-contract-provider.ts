@@ -499,7 +499,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       throw new InvalidStakingAddressError(params.to);
     }
 
-    if (params.amount === undefined) {
+    if (!params.amount) {
       params.amount = 0;
     }
     if (params.amount !== undefined && params.amount > 0) {
