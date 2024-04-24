@@ -402,23 +402,23 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Stake tz from current address to a specific address. Built on top of the existing transaction operation
+   * @description Stake a given amount for the source address
    *
    * @returns An operation handle with the result from the rpc node
    *
    * @param Stake pseudo-operation parameter
    */
   async stake(params: StakeParams) {
-    if (params.to === undefined) {
-      params.to = params.source;
-    }
-    if (params.to !== undefined && params.to !== params.source) {
-      throw new InvalidStakingAddressError(params.to);
-    }
-
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (!params?.to) {
+      params.to = params.source;
+    }
+    if (params?.to && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
     }
 
     if (params.amount < 0) {
@@ -440,23 +440,26 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Unstake tz from current address to a specific address. Built on top of the existing transaction operation
+   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance.
+   * Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over,
+   * the operation "finalize unstake" must be called for the funds to appear in the liquid balance.
    *
    * @returns An operation handle with the result from the rpc node
    *
    * @param Unstake pseudo-operation parameter
    */
   async unstake(params: UnstakeParams) {
-    if (params.to === undefined) {
-      params.to = params.source;
-    }
-    if (params.to !== undefined && params.to !== params.source) {
-      throw new InvalidStakingAddressError(params.to);
-    }
-
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (!params?.to) {
+      params.to = params.source;
+    }
+
+    if (params?.to && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
     }
 
     if (params.amount < 0) {
@@ -478,23 +481,22 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Finalize unstake tz from current address to a specific address. Built on top of the existing transaction operation
-   *
+   * @description Transfer all the finalizable unstaked funds of the source to their liquid balance
    * @returns An operation handle with the result from the rpc node
    *
    * @param Finalize_unstake pseudo-operation parameter
    */
   async finalizeUnstake(params: FinalizeUnstakeParams) {
-    if (params.to === undefined) {
-      params.to = params.source;
-    }
-    if (params.to !== undefined && params.to !== params.source) {
-      throw new InvalidStakingAddressError(params.to);
-    }
-
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (!params?.to) {
+      params.to = params.source;
+    }
+    if (params?.to && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
     }
 
     if (params.amount === undefined) {

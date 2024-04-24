@@ -215,17 +215,18 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param Stake pseudo-operation parameter
    */
   async stake({ fee, storageLimit, gasLimit, ...rest }: StakeParams) {
-    if (rest.to === undefined) {
-      rest.to = rest.source;
-    }
-    if (rest.to !== undefined && rest.to !== rest.source) {
-      throw new InvalidStakingAddressError(rest.to);
-    }
-
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
     }
+
+    if (!rest?.to) {
+      rest.to = rest.source;
+    }
+    if (rest.to && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
+    }
+
     if (rest.amount < 0) {
       throw new InvalidAmountError(rest.amount.toString());
     }
@@ -254,17 +255,18 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param Unstake pseudo-operation parameter
    */
   async unstake({ fee, storageLimit, gasLimit, ...rest }: UnstakeParams) {
-    if (rest.to === undefined) {
-      rest.to = rest.source;
-    }
-    if (rest.to !== undefined && rest.to !== rest.source) {
-      throw new InvalidStakingAddressError(rest.to);
-    }
-
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
     }
+
+    if (!rest?.to) {
+      rest.to = rest.source;
+    }
+    if (rest.to && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
+    }
+
     if (rest.amount < 0) {
       throw new InvalidAmountError(rest.amount.toString());
     }
@@ -293,16 +295,18 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param finalize_unstake pseudo-operation parameter
    */
   async finalizeUnstake({ fee, storageLimit, gasLimit, ...rest }: FinalizeUnstakeParams) {
-    if (rest.to === undefined) {
-      rest.to = rest.source;
-    }
-    if (rest.to !== undefined && rest.to !== rest.source) {
-      throw new InvalidStakingAddressError(rest.to);
-    }
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
     }
+
+    if (!rest?.to) {
+      rest.to = rest.source;
+    }
+    if (rest.to && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
+    }
+
     if (rest.amount === undefined) {
       rest.amount = 0;
     }
