@@ -7,9 +7,9 @@ author: Alireza Haghshenas
 
 Staking is an update to the "Proof of Stake" Mechanism in Tezos.
 
-Before Staking, the only way for Tez holders to participate in the network was by delegating their tokens to a baker. Delegated funds contributed to a delegate's voting and baking power, but were not subject to staking: they could not be slashed in case the baker misbehaved. This is a useful feature for many users, but limits the total amount ot staked tez to the amount of tez that bakers themselves hold. In other words, if participating in the "Proof of Stake" mechanism required setting up and maintaining a baker, which is a significant barrier to entry for many users.
+Before Staking, the only way for Tez holders to participate in the network was by delegating their tokens to a baker. Delegated funds contributed to a delegate's voting and baking power, but were not subject to staking: they could not be slashed in case the baker misbehaved. This is a useful feature for many users, but limits the total amount of staked tez to the amount of tez that bakers themselves hold. In other words, participating in the "Proof of Stake" mechanism required setting up and maintaining a baker, which is a significant barrier to entry for many users.
 
-Staking changes this by allowing any user to participate in the "Proof of Stake" mechanism without setting up a baker. Users can now stake their tokens to their delegates, and their staked tokens will be subject to slashing in case of deleate/baker's misbehavior. This allows the total amount of staked tez to be much higher than the amount of tez that bakers themselves hold, which in turn increases the security of the network.
+Staking changes this by allowing any user to participate in the "Proof of Stake" mechanism without setting up a baker. Users can now stake their tokens to their delegates, and their staked tokens will be subject to slashing in case of delegate/baker's misbehaviour. This allows the total amount of staked Tez to be much higher than the amount of tez that bakers themselves hold, which in turn increases the security of the network.
 
 Users can control their staked funds using the `stake`, `unstake`, and `finalize_unstake` operations. These are implemented as pseudo-entrypoints, and the parameters are passed to a transfer operation with the same destination as the sender.
 
@@ -18,7 +18,7 @@ To accept staked funds, a delegate needs to have opted in to staking. This is do
 # Staking Funds
 To stake your funds, you need to call the `stake` operation.
 Before you can stake your funds, two conditions should be met:
-1. You need yo have delegated your funds to a delegate before you can stake them (by calling [`setDelegate`](#set_delegate))
+1. You need yor have delegated your funds to a delegate before you can stake them (by calling [`setDelegate`](#set_delegate))
 1. Your delegate should accept staking by calling `set_delegate_parameters`
 
 ```javascript
@@ -29,7 +29,7 @@ Before you can stake your funds, two conditions should be met:
 
 # Unstaking Funds
 
-To unstake your funds, you need to call the `unstake` operation. This will change your fund's status to "Unstaked +  Frozen"
+To unstake your funds, you need to call the `unstake` operation. This will change your fund's status to "Unstaked + Frozen"
 The unstaked funds will still be frozen (and subject to slashing for 4 cycles). After that, your funds will be in "Unstaked + Finalizable" state.
 
 ```javascript
@@ -38,7 +38,7 @@ The unstaked funds will still be frozen (and subject to slashing for 4 cycles). 
 
 # Finalizing Unstake
 
-To finalize your unstaked funds, you need to call the `finalize_unstake` operation. This will change your fund's status to "spendable".
+To finalize your unstaked funds, you need to call the `finalize_unstake` operation. This will change your fund's status back to "spendable".
 
 ```javascript
 
@@ -63,10 +63,10 @@ When you change your delegate, your funds will be automatically unstaked. You wi
 The `stake` and `unstake` operations will automatically finalize all currently finalizable funds.
 
 ## Adaptive Issuance
-A concept related to staking is adaptive issuance. Adaptive issuance is a mechanism that adjusts the block reward based on the total amount of staked tez. In short, the reward will be adjusted to keep the staked funds about 50% of the total supply. To read more about the mechanism you can check [this document](https://tezos.gitlab.io/paris/adaptive_issuance.html#adaptive-issuance).
+A concept related to staking is adaptive issuance. Adaptive issuance is a mechanism that adjusts the block reward based on the total amount of staked tez. In short, the reward will be adjusted to keep the staked funds about 50% of the total supply. To read more about the mechanism, you can check [this document](https://tezos.gitlab.io/paris/adaptive_issuance.html#adaptive-issuance).
 
 ## Staking Rewards
-In delegation, rewards were given to the baker, and it was the baker's responsibility to distribute the rewards to the delegators. In staking, the rewards are given directly to the staker. However, rewards are not given immediately, but are distributed through staked(frozen) balance, and the user can spend the reward along with their initial stake when they `unstake` and `finalize_unstake`.
+In delegation, rewards were given to the baker, and it was the baker's responsibility to distribute the rewards to the delegators. In staking, the rewards are given directly to the staker. However, rewards are not given immediately, but are distributed through staked (frozen) balance, and the user can spend the reward along with their initial stake when they `unstake` and `finalize_unstake`.
 
 ## Lifetime of Staked Funds
 
