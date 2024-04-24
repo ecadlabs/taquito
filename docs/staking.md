@@ -15,6 +15,10 @@ Users can control their staked funds using the `stake`, `unstake`, and `finalize
 
 To accept staked funds, a delegate needs to have opted in to staking. This is done by `set_delegate_parameters`. This part is not supported by Taquito, as it is not a dApp operation. More information [here](https://tezos.gitlab.io/paris/adaptive_issuance.html#staking-policy-configuration).
 
+:::info
+After protocol Paris is activated, the adaptive issuance will still be disabled for about two weeks. During this period, staking operations will result in this error: `proto.019-PtParisB.operation.manual_staking_forbidden`.
+:::
+
 # Staking Funds
 To stake your funds, you need to call the `stake` operation.
 Before you can stake your funds, two conditions should be met:
