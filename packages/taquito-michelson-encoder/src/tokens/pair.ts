@@ -97,7 +97,7 @@ export class PairToken extends ComparableToken {
   private tokens(): [Token, Token] {
     let cnt = 0;
     return this.args().map((a) => {
-      const tok = this.createToken(a, this.getIdx() + cnt, 'Pair');
+      const tok = this.createToken(a, this.getIdxForChildren() + cnt, 'Pair');
       if (tok instanceof PairToken) {
         cnt += Object.keys(tok.ExtractSchema()).length;
       } else {
@@ -116,13 +116,13 @@ export class PairToken extends ComparableToken {
 
   public ExtractSignature(): any {
     const args = this.args();
-    const leftToken = this.createToken(args[0], this.getIdx(), 'Pair');
+    const leftToken = this.createToken(args[0], this.getIdxForChildren(), 'Pair');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     }
 
-    const rightToken = this.createToken(args[1], this.getIdx() + keyCount, 'Pair');
+    const rightToken = this.createToken(args[1], this.getIdxForChildren() + keyCount, 'Pair');
 
     const newSig = [];
 
@@ -175,7 +175,7 @@ export class PairToken extends ComparableToken {
   private traversal(getLeftValue: (token: Token) => any, getRightValue: (token: Token) => any) {
     const args = this.args();
 
-    const leftToken = this.createToken(args[0], this.getIdx(), 'Pair');
+    const leftToken = this.createToken(args[0], this.getIdxForChildren(), 'Pair');
     let keyCount = 1;
     let leftValue;
     if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
@@ -187,7 +187,7 @@ export class PairToken extends ComparableToken {
       leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
     }
 
-    const rightToken = this.createToken(args[1], this.getIdx() + keyCount, 'Pair');
+    const rightToken = this.createToken(args[1], this.getIdxForChildren() + keyCount, 'Pair');
     let rightValue;
     if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
       rightValue = getRightValue(rightToken);
@@ -282,7 +282,10 @@ export class PairToken extends ComparableToken {
     return tokens;
   }
 
-  protected getIdx(): number {
+  protected getIdxForChildren(): number {
+    if (Token.fieldNumberingStrategy === 'Legacy') {
+      return this.idx;
+    }
     return this.parentTokenType === 'Pair' ? this.idx : 0;
   }
 }

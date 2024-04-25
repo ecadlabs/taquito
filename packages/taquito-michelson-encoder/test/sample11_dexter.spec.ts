@@ -9,10 +9,49 @@ import BigNumber from 'bignumber.js';
 import { ParameterSchema } from '../src/schema/parameter';
 import { MichelsonMap } from '../src/michelson-map';
 import { expectMichelsonMap } from './utils';
+import { Token } from '../src/taquito-michelson-encoder';
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storageDexter);
-    expect(schema.ExtractSchema()).toEqual({
+    const extractSchema_Legacy = {
+      '0': {
+        big_map: {
+          key: 'address',
+          value: 'nat',
+        },
+      },
+      '1': 'contract',
+      '2': 'contract',
+      '3': 'nat',
+      '4': {
+        map: {
+          key: 'address',
+          value: {
+            '0': {
+              '0': 'nat',
+              '1': 'nat',
+              '2': 'timestamp',
+            },
+            '1': {
+              '1': 'nat',
+              '2': 'mutez',
+              '3': 'nat',
+              '4': 'timestamp',
+            },
+            '2': {
+              '2': 'nat',
+              '3': 'timestamp',
+            },
+            '3': {
+              '3': 'nat',
+              '4': 'mutez',
+              '5': 'timestamp',
+            },
+          },
+        },
+      },
+    };
+    const extractSchema_ResetFields = {
       '0': {
         big_map: {
           key: 'address',
@@ -49,9 +88,205 @@ describe('Exchange contract test', () => {
           },
         },
       },
-    });
+    };
 
-    expect(schema.generateSchema()).toEqual({
+    Token.fieldNumberingStrategy = 'Legacy';
+    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
+    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    Token.fieldNumberingStrategy = 'Latest';
+    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+
+    const generateSchema_Legacy = {
+      __michelsonType: 'pair',
+      schema: {
+        '0': {
+          __michelsonType: 'big_map',
+          schema: {
+            key: {
+              __michelsonType: 'address',
+              schema: 'address',
+            },
+            value: {
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+          },
+        },
+        '1': {
+          __michelsonType: 'contract',
+          schema: {
+            parameter: {
+              __michelsonType: 'or',
+              schema: {
+                0: {
+                  __michelsonType: 'pair',
+                  schema: {
+                    0: {
+                      __michelsonType: 'address',
+                      schema: 'address',
+                    },
+                    1: {
+                      __michelsonType: 'contract',
+                      schema: {
+                        parameter: {
+                          __michelsonType: 'or',
+                          schema: {
+                            0: {
+                              __michelsonType: 'pair',
+                              schema: {
+                                0: {
+                                  __michelsonType: 'address',
+                                  schema: 'address',
+                                },
+                                1: {
+                                  __michelsonType: 'address',
+                                  schema: 'address',
+                                },
+                                2: {
+                                  __michelsonType: 'nat',
+                                  schema: 'nat',
+                                },
+                              },
+                            },
+                            1: {
+                              __michelsonType: 'address',
+                              schema: 'address',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                1: {
+                  __michelsonType: 'nat',
+                  schema: 'nat',
+                },
+              },
+            },
+          },
+        },
+        '2': {
+          __michelsonType: 'contract',
+          schema: {
+            parameter: {
+              __michelsonType: 'or',
+              schema: {
+                0: {
+                  __michelsonType: 'pair',
+                  schema: {
+                    0: {
+                      __michelsonType: 'address',
+                      schema: 'address',
+                    },
+                    1: {
+                      __michelsonType: 'address',
+                      schema: 'address',
+                    },
+                    2: {
+                      __michelsonType: 'nat',
+                      schema: 'nat',
+                    },
+                  },
+                },
+                1: {
+                  __michelsonType: 'address',
+                  schema: 'address',
+                },
+              },
+            },
+          },
+        },
+        '3': {
+          __michelsonType: 'nat',
+          schema: 'nat',
+        },
+        '4': {
+          __michelsonType: 'map',
+          schema: {
+            key: {
+              __michelsonType: 'address',
+              schema: 'address',
+            },
+            value: {
+              __michelsonType: 'or',
+              schema: {
+                '0': {
+                  __michelsonType: 'pair',
+                  schema: {
+                    '0': {
+                      __michelsonType: 'nat',
+                      schema: 'nat',
+                    },
+                    '1': {
+                      __michelsonType: 'nat',
+                      schema: 'nat',
+                    },
+                    '2': {
+                      __michelsonType: 'timestamp',
+                      schema: 'timestamp',
+                    },
+                  },
+                },
+                '1': {
+                  __michelsonType: 'pair',
+                  schema: {
+                    '1': {
+                      __michelsonType: 'nat',
+                      schema: 'nat',
+                    },
+                    '2': {
+                      __michelsonType: 'mutez',
+                      schema: 'mutez',
+                    },
+                    '3': {
+                      __michelsonType: 'nat',
+                      schema: 'nat',
+                    },
+                    '4': {
+                      __michelsonType: 'timestamp',
+                      schema: 'timestamp',
+                    },
+                  },
+                },
+                '2': {
+                  __michelsonType: 'pair',
+                  schema: {
+                    '2': {
+                      __michelsonType: 'nat',
+                      schema: 'nat',
+                    },
+                    '3': {
+                      __michelsonType: 'timestamp',
+                      schema: 'timestamp',
+                    },
+                  },
+                },
+                '3': {
+                  __michelsonType: 'pair',
+                  schema: {
+                    '3': {
+                      __michelsonType: 'nat',
+                      schema: 'nat',
+                    },
+                    '4': {
+                      __michelsonType: 'mutez',
+                      schema: 'mutez',
+                    },
+                    '5': {
+                      __michelsonType: 'timestamp',
+                      schema: 'timestamp',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const generateSchema_ResetFields = {
       __michelsonType: 'pair',
       schema: {
         '0': {
@@ -239,7 +474,14 @@ describe('Exchange contract test', () => {
           },
         },
       },
-    });
+    };
+
+    Token.fieldNumberingStrategy = 'Legacy';
+    expect(schema.generateSchema()).toEqual(generateSchema_Legacy);
+    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
+    Token.fieldNumberingStrategy = 'Latest';
+    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
   });
 
   it('Test storage parsing', () => {
@@ -271,7 +513,30 @@ describe('Exchange contract test', () => {
 
   it('Test parameter schema', () => {
     const schema = new ParameterSchema(params);
-    expect(schema.ExtractSchema()).toEqual({
+    const extractSchema_Legacy = {
+      '0': {
+        '0': 'nat',
+        '1': 'nat',
+        '2': 'timestamp',
+      },
+      '1': {
+        '1': 'nat',
+        '2': 'mutez',
+        '3': 'nat',
+        '4': 'timestamp',
+      },
+      '2': {
+        '2': 'nat',
+        '3': 'timestamp',
+      },
+      '3': {
+        '3': 'nat',
+        '4': 'mutez',
+        '5': 'timestamp',
+      },
+      '4': 'nat',
+    };
+    const extractSchema_ResetFields = {
       '0': {
         '0': 'nat',
         '1': 'nat',
@@ -293,9 +558,93 @@ describe('Exchange contract test', () => {
         '2': 'timestamp',
       },
       '4': 'nat',
-    });
+    };
 
-    expect(schema.generateSchema()).toEqual({
+    Token.fieldNumberingStrategy = 'Legacy';
+    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
+    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    Token.fieldNumberingStrategy = 'Latest';
+    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+
+    const generateSchema_Legacy = {
+      __michelsonType: 'or',
+      schema: {
+        '0': {
+          __michelsonType: 'pair',
+          schema: {
+            '0': {
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+            '1': {
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+            '2': {
+              __michelsonType: 'timestamp',
+              schema: 'timestamp',
+            },
+          },
+        },
+        '1': {
+          __michelsonType: 'pair',
+          schema: {
+            '1': {
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+            '2': {
+              __michelsonType: 'mutez',
+              schema: 'mutez',
+            },
+            '3': {
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+            '4': {
+              __michelsonType: 'timestamp',
+              schema: 'timestamp',
+            },
+          },
+        },
+        '2': {
+          __michelsonType: 'pair',
+          schema: {
+            '2': {
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+            '3': {
+              __michelsonType: 'timestamp',
+              schema: 'timestamp',
+            },
+          },
+        },
+        '3': {
+          __michelsonType: 'pair',
+          schema: {
+            '3': {
+              __michelsonType: 'nat',
+              schema: 'nat',
+            },
+            '4': {
+              __michelsonType: 'mutez',
+              schema: 'mutez',
+            },
+            '5': {
+              __michelsonType: 'timestamp',
+              schema: 'timestamp',
+            },
+          },
+        },
+        '4': {
+          __michelsonType: 'nat',
+          schema: 'nat',
+        },
+      },
+    };
+    const generateSchema_ResetFields = {
       __michelsonType: 'or',
       schema: {
         '0': {
@@ -371,7 +720,14 @@ describe('Exchange contract test', () => {
           schema: 'nat',
         },
       },
-    });
+    };
+
+    Token.fieldNumberingStrategy = 'Legacy';
+    expect(schema.generateSchema()).toEqual(generateSchema_Legacy);
+    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
+    Token.fieldNumberingStrategy = 'Latest';
+    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
   });
 
   it('Encode parameter properly func 0', () => {
