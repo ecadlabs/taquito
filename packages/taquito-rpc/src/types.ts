@@ -2161,20 +2161,23 @@ export interface BlockMetadata {
   max_operation_list_length: MaxOperationListLength[];
   proposer?: string;
   baker: string;
-  level?: Level;
   level_info?: LevelInfo;
-  voting_period_kind?: string;
   voting_period_info?: VotingPeriodBlockResult;
   nonce_hash?: string;
-  consumed_gas?: string;
   deactivated?: string[];
   balance_updates?: OperationBalanceUpdates;
-  liquidity_baking_escape_ema?: number;
   liquidity_baking_toggle_ema?: number;
+  adaptive_issuance_vote_ema?: number;
+  adaptive_issuance_activation_cycle?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
-  consumed_milligas?: string;
   proposer_consensus_key?: string;
   baker_consensus_key?: string;
+  consumed_milligas?: string;
+  dal_attestation?: string;
+  level?: Level;
+  voting_period_kind?: string;
+  consumed_gas?: string;
+  liquidity_baking_escape_ema?: number;
 }
 
 export type RPCRunOperationParam = {
@@ -2411,6 +2414,7 @@ export enum SmartRollupRefuteRevealProofKind {
   RAW_DATA_PROOF = 'raw_data_proof',
   METADATA_PROOF = 'metadata_proof',
   DAL_PAGE_PROOF = 'dal_page_proof',
+  DAL_PARAMETERS_PROOF = 'dal_parameters_proof',
 }
 
 export interface SmartRollupRefuteRevealProofRaw {
@@ -2429,11 +2433,14 @@ export interface SmartRollupRefuteRevealProofDalPage {
   };
   dal_proof: string;
 }
-
+export interface SmartRollupRefuteRevealProofDalParameters {
+  reveal_proof_kind: SmartRollupRefuteRevealProofKind.DAL_PARAMETERS_PROOF;
+}
 export type SmartRollupRefuteRevealProofOptions =
   | SmartRollupRefuteRevealProofRaw
   | SmartRollupRefuteRevealProofMetadata
-  | SmartRollupRefuteRevealProofDalPage;
+  | SmartRollupRefuteRevealProofDalPage
+  | SmartRollupRefuteRevealProofDalParameters;
 
 export type SmartRollupGameStatus =
   | SmartRollupRefuteGameStatusOptions.ONGOING
