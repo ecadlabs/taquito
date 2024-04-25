@@ -1197,8 +1197,8 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
-   * @param args has 5 optional properties. We support version 1 as default will output { applied: { kind: endorsement} } version 2 will output { validated: { kind: attestation} }. The rest of the properties is to filter pending operations response
-   * @default args { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
+   * @param args has 5 optional properties. We support version 1 & 2
+   * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
    * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-mempool-openapi-rc.json
    */
   async getPendingOperations(
