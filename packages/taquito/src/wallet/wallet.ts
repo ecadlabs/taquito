@@ -16,11 +16,16 @@ import {
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
+  WalletStakeParams,
+  WalletUnstakeParams,
+  WalletFinalizeUnstakeParams,
 } from './interface';
 import {
   InvalidAddressError,
   InvalidContractAddressError,
   InvalidOperationKindError,
+  InvalidStakingAddressError,
+  InvalidFinalizeUnstakeAmountError,
 } from '@taquito/core';
 import {
   validateAddress,
@@ -351,11 +356,98 @@ export class Wallet {
 
   /**
    *
-   * @description
+   * @description Stake a given amount for the source address
    *
-   * @returns
+   * @returns An operation handle with the result from the rpc node
    *
-   * @param params
+   * @param Stake pseudo-operation parameter
+   */
+  stake(params: WalletStakeParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapStakeParamsToWalletParams(async () => {
+        const source = await this.pkh();
+        if (!params.to) {
+          params.to = source;
+        }
+        if (params.to !== source) {
+          throw new InvalidStakingAddressError(params.to);
+        }
+        params.parameter = { entrypoint: 'stake', value: { prim: 'Unit' } };
+        return params;
+      });
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   *
+   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance.
+   * Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over,
+   * the operation "finalize unstake" must be called for the funds to appear in the liquid balance.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Unstake pseudo-operation parameter
+   */
+  unstake(params: WalletUnstakeParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapUnstakeParamsToWalletParams(async () => {
+        const source = await this.pkh();
+        if (!params.to) {
+          params.to = source;
+        }
+        if (params.to !== source) {
+          throw new InvalidStakingAddressError(params.to);
+        }
+        params.parameter = { entrypoint: 'unstake', value: { prim: 'Unit' } };
+        return params;
+      });
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return await this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   *
+   * @description Transfer all the finalizable unstaked funds of the source to their liquid balance
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Finalize_unstake pseudo-operation parameter
+   */
+  finalizeUnstake(params: WalletFinalizeUnstakeParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapFinalizeUnstakeParamsToWalletParams(
+        async () => {
+          const source = await this.pkh();
+          if (!params.to) {
+            params.to = source;
+          }
+          if (params.to !== source) {
+            throw new InvalidStakingAddressError(params.to);
+          }
+          if (!params.amount) {
+            params.amount = 0;
+          }
+          if (params.amount !== 0) {
+            throw new InvalidFinalizeUnstakeAmountError('Amount must be 0 to finalize unstake.');
+          }
+          params.parameter = { entrypoint: 'finalize_unstake', value: { prim: 'Unit' } };
+          return params;
+        }
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return await this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   *
+   * @description Increase the paid storage of a smart contract.
+   *
+   * @returns A wallet command from which we can send the operation to the wallet
+   *
+   * @param params operation parameter
    */
   increasePaidStorage(params: WalletIncreasePaidStorageParams) {
     const destinationValidation = validateAddress(params.destination);
