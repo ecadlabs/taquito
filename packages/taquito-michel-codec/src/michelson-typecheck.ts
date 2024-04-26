@@ -548,25 +548,23 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       throw new MichelsonTypeError(t, `sapling state expected: ${JSON.stringify(d)}`, d);
 
     case 'ticket':
-      if ('prim' in d) {
-        if (d.prim === 'Pair') {
-          // backward compatibility
-          assertDataValidInternal(
-            d,
-            {
-              prim: 'pair',
-              args: [{ prim: 'address' }, t.args[0], { prim: 'nat' }],
-            },
-            ctx
-          );
-          return;
-        } else if (d.prim === 'Ticket') {
-          assertDataValidInternal(d.args[0], { prim: 'address' }, ctx);
-          assertTypesEqual(d.args[1], t.args[0]);
-          assertDataValidInternal(d.args[2], t.args[0], ctx);
-          assertDataValidInternal(d.args[3], { prim: 'nat' }, ctx);
-          return;
-        }
+      if ('prim' in d && d.prim === 'Ticket') {
+        assertDataValidInternal(d.args[0], { prim: 'address' }, ctx);
+        assertTypesEqual(d.args[1], t.args[0]);
+        assertDataValidInternal(d.args[2], t.args[0], ctx);
+        assertDataValidInternal(d.args[3], { prim: 'nat' }, ctx);
+        return;
+      } else if (isPairData(d)) {
+        // backward compatibility
+        assertDataValidInternal(
+          d,
+          {
+            prim: 'pair',
+            args: [{ prim: 'address' }, t.args[0], { prim: 'nat' }],
+          },
+          ctx
+        );
+        return;
       }
       throw new MichelsonTypeError(t, `ticket expected: ${JSON.stringify(d)}`, d);
 
