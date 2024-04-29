@@ -36,6 +36,25 @@ const preparePayloadToSign = (
   };
 };
 
+const transferToEtherlink = async (
+  amount: number,
+  address: string,
+  tezos: TezosToolkit,
+): Promise<TestResult> => {
+  let opHash = "";
+  try {
+    const contract = await tezos.wallet.at('KT1VEjeQfDBSfpDH5WeBM5LukHPGM2htYEh3')
+    let op = await contract.methodsObject.deposit({ evm_address: 'sr18wx6ezkeRjt1SZSeZ2UQzQN3Uc3YLMLqg', l2_address: address }).send({ amount });
+    await op.confirmation()
+    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    console.log("Operation successful with op hash:", opHash);
+    return { success: true, opHash };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "" };
+  }
+};
+
 const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
   let opHash = "";
   try {
@@ -302,7 +321,7 @@ const signPayloadAndSend = async (
     const publicKey = activeAccount.publicKey;
     // sends transaction to contract
     const op = await contract.methodsObject
-      .check_signature({0: publicKey, 1: signedPayload.signature, 2: payload.payload})
+      .check_signature({ 0: publicKey, 1: signedPayload.signature, 2: payload.payload })
       .send();
     await op.confirmation();
     return {
@@ -371,25 +390,6 @@ const verifySignatureWithTaquito = async (
     }
   } catch (error) {
     return { success: false, opHash: "", output: JSON.stringify(error) };
-  }
-};
-
-const transferToEtherlink = async (
-  amount: number,
-  address: string,
-  tezos: TezosToolkit,
-): Promise<TestResult> => {
-  let opHash = "";
-  try {
-    const contract = await tezos.wallet.at('KT1VEjeQfDBSfpDH5WeBM5LukHPGM2htYEh3')
-    let op = await contract.methodsObject.deposit({ evm_address: 'sr18wx6ezkeRjt1SZSeZ2UQzQN3Uc3YLMLqg', l2_address: address }).send({ amount });
-    await op.confirmation()
-    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
-    console.log("Operation successful with op hash:", opHash);
-    return { success: true, opHash };
-  } catch (error) {
-    console.log(error);
-    return { success: false, opHash: "" };
   }
 };
 
@@ -474,7 +474,7 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
     const contract = await Tezos.wallet.at(contractAddress);
     // hashes the parameter for the contract call
     const mintParam: any = contract.methodsObject
-      .mint({0: store.userAddress, 1: 100})
+      .mint({ 0: store.userAddress, 1: 100 })
       .toTransferParams().parameter?.value;
     const mintParamType = contract.entrypoints.entrypoints["mint"];
     // packs the entrypoint call
@@ -566,6 +566,7 @@ const saplingShielded = async (
 };
 
 export const list = [
+  "Transfer tez from ghostnet to Etherlink",
   "Send tez",
   "Contract call with int",
   "Contract call with (pair nat string)",
@@ -590,6 +591,25 @@ export const init = (
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>,
   wallet: BeaconWallet | undefined
 ): TestSettings[] => [
+
+    {
+      id: "transfer-to-etherlink",
+      name: "Transfer tez from ghostnet to Etherlink",
+      description:
+        "This test allows you transfer your tez from ghostnet to etherlink",
+      documentation: '',
+      keyword: 'transfer to etherlink',
+      run: input =>
+        transferToEtherlink(
+          input.amount,
+          input.address,
+          Tezos
+        ),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "transfer-to-etherlink",
+      lastResult: { option: "none", val: false }
+    },
     {
       id: "send-tez",
       name: "Send tez",
@@ -744,24 +764,6 @@ export const init = (
       showExecutionTime: false,
       inputRequired: true,
       inputType: "string",
-      lastResult: { option: "none", val: false }
-    },
-    {
-      id: "transfer-to-etherlink",
-      name: "Transfer tez from ghostnet to Etherlink",
-      description:
-        "This test allows you transfer your tez from ghostnet to etherlink",
-      documentation: '',
-      keyword: 'transfer to etherlink',
-      run: input =>
-        transferToEtherlink(
-          input.amount,
-          input.address,
-          Tezos
-        ),
-      showExecutionTime: false,
-      inputRequired: true,
-      inputType: "transfer-to-etherlink",
       lastResult: { option: "none", val: false }
     },
     {
