@@ -203,7 +203,7 @@ describe('Schema test', () => {
 
   it('Should build parameter schema properly', () => {
     const schema = new ParameterSchema(params);
-    const extractSchema_ExpacteLegacy = {
+    const extractSchema_Legacy = {
       allowance: {
         '4': 'address',
         '5': 'address',
@@ -527,7 +527,7 @@ describe('Schema test', () => {
     };
 
     Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ExpacteLegacy);
+    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
     expect(schema.generateSchema()).toEqual(generateSchema_Legacy);
     Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
     expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
