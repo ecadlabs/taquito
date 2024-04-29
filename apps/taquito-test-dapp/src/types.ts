@@ -15,7 +15,7 @@ export interface TestSettings {
   run: (input?: any) => Promise<TestResult>;
   showExecutionTime: boolean;
   inputRequired: boolean;
-  inputType?: "string" | "set-limits" | "sapling";
+  inputType?: "string" | "set-limits" | "sapling" | "transfer-to-etherlink";
   lastResult: { option: "none" | "some"; val: boolean };
 }
 
