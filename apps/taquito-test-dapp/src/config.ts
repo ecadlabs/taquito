@@ -4,9 +4,9 @@ export type SupportedNetworks = NetworkType.OXFORDNET | NetworkType.GHOSTNET | N
 
 const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkType.MAINNET]: "https://mainnet.ecadinfra.com",
-  [NetworkType.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
-  [NetworkType.OXFORDNET]: "https://oxfordnet.ecadinfra.com/",
-  [NetworkType.CUSTOM]: "https://ghostnet.ecadinfra.com/",
+  [NetworkType.GHOSTNET]: "http://ecad-ghostnet-rolling-2.i.tez.ie:8732/",
+  [NetworkType.OXFORDNET]: "http://ecad-oxfordnet-full.i.tez.ie:8732",
+  [NetworkType.CUSTOM]: "http://ecad-ghostnet-rolling-2.i.tez.ie:8732/",
 };
 
 export const getRpcUrl = (networkType: SupportedNetworks): string => {
