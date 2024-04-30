@@ -36,7 +36,7 @@ const preparePayloadToSign = (
   };
 };
 
-const transferToEtherlink = async (
+const sendTezToEtherlink = async (
   amount: number,
   address: string,
   tezos: TezosToolkit,
@@ -566,8 +566,8 @@ const saplingShielded = async (
 };
 
 export const list = [
-  "Transfer tez from ghostnet to Etherlink",
   "Send tez",
+  "Send tez from Ghostnet to Etherlink",
   "Contract call with int",
   "Contract call with (pair nat string)",
   "Contract call that fails",
@@ -591,25 +591,6 @@ export const init = (
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>,
   wallet: BeaconWallet | undefined
 ): TestSettings[] => [
-
-    {
-      id: "transfer-to-etherlink",
-      name: "Transfer tez from ghostnet to Etherlink",
-      description:
-        "This test allows you transfer your tez from ghostnet to etherlink",
-      documentation: '',
-      keyword: 'transfer to etherlink',
-      run: input =>
-        transferToEtherlink(
-          input.amount,
-          input.address,
-          Tezos
-        ),
-      showExecutionTime: false,
-      inputRequired: true,
-      inputType: "transfer-to-etherlink",
-      lastResult: { option: "none", val: false }
-    },
     {
       id: "send-tez",
       name: "Send tez",
@@ -619,6 +600,24 @@ export const init = (
       run: () => sendTez(Tezos),
       showExecutionTime: false,
       inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "send-tez-to-etherlink",
+      name: "Send tez from Ghostnet to Etherlink",
+      description:
+        "This test allows you send your ghostnet tez to etherlink address",
+      documentation: '',
+      keyword: 'etherlink',
+      run: input =>
+        sendTezToEtherlink(
+          input.amount,
+          input.address,
+          Tezos
+        ),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "etherlink",
       lastResult: { option: "none", val: false }
     },
     {

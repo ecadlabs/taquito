@@ -28,7 +28,7 @@
         test.id === "sign-payload-and-send" ||
         test.id === "sign-failingNoop" ||
         test.id === "verify-signature" ||
-        test.id === "transfer-to-etherlink" ||
+        test.id === "send-tez-to-etherlink" ||
         test.id === "set-transaction-limits"
       ) {
         result = await test.run(input);
@@ -303,17 +303,17 @@
             bind:value={input.text}
           />
         </div>
-      {:else if test.inputRequired && test.inputType === "transfer-to-etherlink"}
-        <div class="test-input test-transfer-etherlink">
-          <label for="transfer-address">
+      {:else if test.inputRequired && test.inputType === "etherlink"}
+        <div class="test-input test-send-tez-to-etherlink">
+          <label for="etherlink-address">
             <span>Etherlink address</span>
             <input type="string" id="etherlink-address" bind:value={input.address} />
           </label>
           <br />
           <br />
-          <label for="transfer-amount">
+          <label for="send-amount">
             <span>amount</span>
-            <input type="number" id="transfer-amount" bind:value={input.amount} />
+            <input type="number" id="send-amount" bind:value={input.amount} />
           </label>
         </div>
       {:else if test.inputRequired && test.inputType === "set-limits"}
