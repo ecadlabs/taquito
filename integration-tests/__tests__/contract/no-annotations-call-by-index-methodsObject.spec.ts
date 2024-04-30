@@ -53,8 +53,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       // Approve
       const operation2 = await contract.methodsObject[APPROVE]({
-        2: ACCOUNT2_ADDRESS,
-        3: "1"
+        0: ACCOUNT2_ADDRESS,
+        1: "1"
       }).send();
 
       await operation2.confirmation();
