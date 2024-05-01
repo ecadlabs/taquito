@@ -57,6 +57,8 @@ import {
   smartRollupRefuteResponse,
   smartRollupRecoverBondResponse,
   smartRollupTimeoutResponse,
+  aiLaunchCycle,
+  unstakeRequestsResponse,
 } from './data/rpc-responses';
 
 /**
@@ -125,6 +127,98 @@ describe('RpcClient test', () => {
       });
       expect(balance).toBeInstanceOf(BigNumber);
       expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getFullBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getFullBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/full_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getStakedBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getStakedBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/staked_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getUnstakedFinalizableBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getUnstakedFinalizableBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/unstaked_finalizable_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getUnstakedFrozenBalance', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getUnstakedFrozenBalance(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/unstaked_frozen_balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getUnstakeRequests', () => {
+    it('should query the right url', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(unstakeRequestsResponse));
+      await client.getUnstakeRequests(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/unstake_requests`,
+      });
+    });
+
+    it('should parse the response properly', async () => {
+      httpBackend.createRequest.mockResolvedValue(unstakeRequestsResponse);
+      const response = await client.getUnstakeRequests(contractAddress);
+
+      expect(response).toEqual({
+        finalizable: [
+          {
+            delegate: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA',
+            cycle: 10,
+            amount: new BigNumber('500000000'),
+          },
+        ],
+        unfinalizable: {
+          delegate: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA',
+          requests: [
+            {
+              cycle: 11,
+              amount: new BigNumber('200000000'),
+            },
+          ],
+        },
+      });
     });
   });
 
@@ -230,20 +324,30 @@ describe('RpcClient test', () => {
 
   describe('getDelegates', () => {
     const sampleResponse = {
-      balance: '5092341810457',
-      frozen_balance: '2155290163074',
-      frozen_balance_by_cycle: [
-        { cycle: 135, deposit: '381760000000', fees: '971071', rewards: '11843833332' },
-        { cycle: 136, deposit: '394368000000', fees: '1433657', rewards: '12200333332' },
-      ],
-      staking_balance: '20936607331513',
-      delegated_contracts: [
-        'KT1VvXEpeBpreAVpfp4V8ZujqWu2gVykwXBJ',
-        'KT1VsSxSXUkgw6zkBGgUuDXXuJs9ToPqkrCg',
-      ],
-      delegated_balance: '15908924646030',
+      full_balance: new BigNumber('10289576365'),
+      current_frozen_deposits: new BigNumber('2028957741'),
+      frozen_deposits: new BigNumber('1028957741'),
+      staking_balance: new BigNumber('10289576365'),
+      delegated_contracts: ['tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb'],
+      delegated_balance: new BigNumber('0'),
+      min_delegated_in_current_cycle: {
+        amount: '8260618624',
+        level: {
+          level: 81924,
+          level_position: 81923,
+          cycle: 7,
+          cycle_position: 3,
+          expected_commitment: false,
+        },
+      },
       deactivated: false,
-      grace_period: 146,
+      grace_period: 7,
+      pending_denunciations: false,
+      total_delegated_stake: new BigNumber('0'),
+      staking_denominator: new BigNumber('0'),
+      voting_power: new BigNumber('10289577405'),
+      remaining_proposals: 20,
+      active_consensus_key: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
     };
 
     it('should query the right url', async () => {
@@ -261,30 +365,30 @@ describe('RpcClient test', () => {
       const response = await client.getDelegates(contractAddress);
 
       expect(response).toEqual({
-        balance: new BigNumber('5092341810457'),
-        frozen_balance: new BigNumber('2155290163074'),
-        frozen_balance_by_cycle: [
-          {
-            cycle: 135,
-            deposit: new BigNumber('381760000000'),
-            fees: new BigNumber('971071'),
-            rewards: new BigNumber('11843833332'),
+        full_balance: new BigNumber('10289576365'),
+        current_frozen_deposits: new BigNumber('2028957741'),
+        frozen_deposits: new BigNumber('1028957741'),
+        staking_balance: new BigNumber('10289576365'),
+        delegated_contracts: ['tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb'],
+        delegated_balance: new BigNumber('0'),
+        min_delegated_in_current_cycle: {
+          amount: '8260618624',
+          level: {
+            level: 81924,
+            level_position: 81923,
+            cycle: 7,
+            cycle_position: 3,
+            expected_commitment: false,
           },
-          {
-            cycle: 136,
-            deposit: new BigNumber('394368000000'),
-            fees: new BigNumber('1433657'),
-            rewards: new BigNumber('12200333332'),
-          },
-        ],
-        staking_balance: new BigNumber('20936607331513'),
-        delegated_contracts: [
-          'KT1VvXEpeBpreAVpfp4V8ZujqWu2gVykwXBJ',
-          'KT1VsSxSXUkgw6zkBGgUuDXXuJs9ToPqkrCg',
-        ],
-        delegated_balance: new BigNumber('15908924646030'),
+        },
         deactivated: false,
-        grace_period: 146,
+        grace_period: 7,
+        pending_denunciations: false,
+        total_delegated_stake: new BigNumber('0'),
+        staking_denominator: new BigNumber('0'),
+        voting_power: new BigNumber('10289577405'),
+        remaining_proposals: 20,
+        active_consensus_key: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
       });
     });
 
@@ -3101,81 +3205,6 @@ describe('RpcClient test', () => {
     });
   });
 
-  describe('getEndorsingRights', () => {
-    it('query the right url and data', async () => {
-      httpBackend.createRequest.mockResolvedValue([
-        {
-          level: 547386,
-          delegate: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
-          slots: [27],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-        {
-          level: 547386,
-          delegate: 'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
-          slots: [23, 12, 0],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-        {
-          level: 547386,
-          delegate: 'tz3RB4aoyjov4KEVRbuhvQ1CKJgBJMWhaeB8',
-          slots: [31, 17, 13],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-        {
-          level: 547386,
-          delegate: 'tz3NExpXn9aPNZPorRE4SdjJ2RGrfbJgMAaV',
-          slots: [24, 9, 1],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-      ]);
-      const result = await client.getEndorsingRights();
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        query: {},
-        url: 'root/chains/test/blocks/head/helpers/endorsing_rights',
-      });
-
-      expect(result[1].delegate).toEqual('tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN');
-      expect(result[1].estimated_time).toEqual('2019-08-02T09:42:56Z');
-      expect(result[1].slots!.length).toEqual(3);
-    });
-
-    it('query the right url and data (with consensus key in delegates)', async () => {
-      httpBackend.createRequest.mockResolvedValue([
-        {
-          level: 547386,
-          delegates: [
-            {
-              delegate: 'tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K',
-              first_slot: 1,
-              endorsing_power: 1,
-              consensus_key: 'tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6',
-            },
-          ],
-          slots: [27],
-          estimated_time: '2019-08-02T09:42:56Z',
-        },
-      ]);
-      const result = await client.getEndorsingRights();
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        query: {},
-        url: 'root/chains/test/blocks/head/helpers/endorsing_rights',
-      });
-
-      expect(result[0].delegates).toBeDefined();
-      expect(result[0].delegates![0].delegate).toEqual('tz3WMqdzXqRWXwyvj5Hp2H7QEepaUuS7vd9K');
-      expect(result[0].delegates![0].first_slot).toEqual(1);
-      expect(result[0].delegates![0].endorsing_power).toEqual(1);
-      expect(result[0].delegates![0].consensus_key).toEqual('tz1asyQFDgjv2muoaiZ5x5U5RPpaNz33Z2F6');
-      expect(result[0].estimated_time).toEqual('2019-08-02T09:42:56Z');
-      expect(result[0].slots!.length).toEqual(1);
-    });
-  });
-
   describe('getBallotList', () => {
     it('should query the right url and data', async () => {
       httpBackend.createRequest.mockReturnValue(
@@ -4057,8 +4086,22 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('AdaptiveIssuanceLaunchCycle', () => {
+    it('should query the right url and data', async () => {
+      httpBackend.createRequest.mockResolvedValue(aiLaunchCycle);
+      const response = await client.getAdaptiveIssuanceLaunchCycle();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/adaptive_issuance_launch_cycle`,
+      });
+
+      expect(response).toEqual(aiLaunchCycle);
+    });
+  });
+
   describe('getPendingOperations', () => {
-    it('should query the correct url and retrun pending operations in mempool', async () => {
+    it('should query the correct url and return pending operations in mempool', async () => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
       const response: PendingOperationsV1 | PendingOperationsV2 =
         await client.getPendingOperations();

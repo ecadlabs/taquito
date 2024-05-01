@@ -17,6 +17,9 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
@@ -26,7 +29,7 @@ import { ContractMethod, ContractMethodObject, ContractProvider } from '../contr
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
-import { InvalidAddressError, InvalidAmountError } from '@taquito/core';
+import { InvalidAddressError, InvalidAmountError, InvalidStakingAddressError } from '@taquito/core';
 
 // stub signature that won't be verified by tezos rpc simulate_operation
 const STUB_SIGNATURE =
@@ -188,6 +191,130 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       throw new InvalidAmountError(rest.amount.toString());
     }
     const preparedOperation = await this.prepare.transaction({
+      fee,
+      storageLimit,
+      gasLimit,
+      ...rest,
+    });
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an stake pseudo-operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Stake pseudo-operation parameter
+   */
+  async stake({ fee, storageLimit, gasLimit, ...rest }: StakeParams) {
+    const sourceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+    }
+
+    if (!rest.to) {
+      rest.to = rest.source;
+    }
+    if (rest.to && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
+    }
+
+    if (rest.amount < 0) {
+      throw new InvalidAmountError(rest.amount.toString());
+    }
+    const preparedOperation = await this.prepare.stake({
+      fee,
+      storageLimit,
+      gasLimit,
+      ...rest,
+    });
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an Unstake pseudo-operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Unstake pseudo-operation parameter
+   */
+  async unstake({ fee, storageLimit, gasLimit, ...rest }: UnstakeParams) {
+    const sourceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+    }
+
+    if (!rest.to) {
+      rest.to = rest.source;
+    }
+    if (rest.to && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
+    }
+
+    if (rest.amount < 0) {
+      throw new InvalidAmountError(rest.amount.toString());
+    }
+    const preparedOperation = await this.prepare.unstake({
+      fee,
+      storageLimit,
+      gasLimit,
+      ...rest,
+    });
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an finalize_unstake pseudo-operation
+   *
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param finalize_unstake pseudo-operation parameter
+   */
+  async finalizeUnstake({ fee, storageLimit, gasLimit, ...rest }: FinalizeUnstakeParams) {
+    const sourceValidation = validateAddress(rest.source ?? '');
+    if (rest.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+    }
+
+    if (!rest.to) {
+      rest.to = rest.source;
+    }
+    if (rest.to && rest.to !== rest.source) {
+      throw new InvalidStakingAddressError(rest.to);
+    }
+
+    if (!rest.amount) {
+      rest.amount = 0;
+    }
+    if (rest.amount !== undefined && rest.amount !== 0) {
+      throw new Error('Amount must be 0 for finalize_unstake operation');
+    }
+
+    const preparedOperation = await this.prepare.finalizeUnstake({
       fee,
       storageLimit,
       gasLimit,

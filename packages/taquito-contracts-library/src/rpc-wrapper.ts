@@ -3,6 +3,7 @@ import {
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
+  UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
   BigMapKey,
@@ -19,8 +20,6 @@ import {
   VotingInfoResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -50,6 +49,7 @@ import {
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -92,6 +92,36 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
     return this.rpc.getBalance(address, { block });
+  }
+  async getFullBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getFullBalance(address, { block });
+  }
+  async getStakedBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getStakedBalance(address, { block });
+  }
+  async getUnstakedFinalizableBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getUnstakedFinalizableBalance(address, { block });
+  }
+  async getUnstakedFrozenBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getUnstakedFrozenBalance(address, { block });
+  }
+  async getUnstakeRequests(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<UnstakeRequestsResponse> {
+    return this.rpc.getUnstakeRequests(address, { block });
   }
   async getBlockHash({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
     return this.rpc.getBlockHash({ block });
@@ -179,12 +209,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<AttestationRightsResponse> {
     return this.rpc.getAttestationRights(args, { block });
-  }
-  async getEndorsingRights(
-    args: EndorsingRightsQueryArguments,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<EndorsingRightsResponse> {
-    return this.rpc.getEndorsingRights(args, { block });
   }
   async getBallotList({ block }: RPCOptions = defaultRPCOptions): Promise<BallotListResponse> {
     return this.rpc.getBallotList({ block });
@@ -326,6 +350,11 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<AllTicketBalances> {
     return this.rpc.getAllTicketBalances(contract, { block });
+  }
+  async getAdaptiveIssuanceLaunchCycle({
+    block,
+  }: RPCOptions = defaultRPCOptions): Promise<AILaunchCycleResponse> {
+    return this.rpc.getAdaptiveIssuanceLaunchCycle({ block });
   }
   async getPendingOperations(
     args: PendingOperationsQueryArguments

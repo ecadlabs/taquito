@@ -4,11 +4,20 @@ import {
   IncreasePaidStorageParams,
   OriginateParams,
   TransferParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 
 export type WalletDefinedFields = 'source';
 
 export type WalletTransferParams = Omit<TransferParams, WalletDefinedFields>;
+
+export type WalletStakeParams = Omit<StakeParams, WalletDefinedFields>;
+
+export type WalletUnstakeParams = Omit<UnstakeParams, WalletDefinedFields>;
+
+export type WalletFinalizeUnstakeParams = Omit<FinalizeUnstakeParams, WalletDefinedFields>;
 
 export type WalletOriginateParams<TStorage = any> = Omit<
   OriginateParams<TStorage>,
@@ -36,6 +45,23 @@ export interface WalletProvider {
    * @description Transform WalletTransferParams into a format compliant with the underlying wallet
    */
   mapTransferParamsToWalletParams: (params: () => Promise<WalletTransferParams>) => Promise<any>;
+
+  /**
+   * @description Transform WalletStakeParams into a format compliant with the underlying wallet
+   */
+  mapStakeParamsToWalletParams: (params: () => Promise<WalletStakeParams>) => Promise<any>;
+
+  /**
+   * @description Transform WalletUnstakeParams into a format compliant with the underlying wallet
+   */
+  mapUnstakeParamsToWalletParams: (params: () => Promise<WalletUnstakeParams>) => Promise<any>;
+
+  /**
+   * @description Transform WalletFinalizeUnstakeParams into a format compliant with the underlying wallet
+   */
+  mapFinalizeUnstakeParamsToWalletParams: (
+    params: () => Promise<WalletFinalizeUnstakeParams>
+  ) => Promise<any>;
 
   /**
    * @description Transform WalletOriginateParams into a format compliant with the underlying wallet

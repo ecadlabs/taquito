@@ -4,6 +4,7 @@ import {
   blockHash,
   liveBlocks,
   balance,
+  unstakeRequestsResponse,
   storage,
   script,
   contract,
@@ -16,7 +17,6 @@ import {
   blockMetadata,
   bakingRights,
   attestationRights,
-  endorsingRights,
   ballotList,
   ballots,
   currentProposal,
@@ -33,6 +33,7 @@ import {
   constants,
   ticketBalancesResponse,
   pendingOperationsResponse,
+  aiLaunchCycle,
 } from './data/rpc-responses';
 
 /**
@@ -57,6 +58,11 @@ describe('RpcClientCache test', () => {
       getBlockHash: jest.fn(),
       getLiveBlocks: jest.fn(),
       getBalance: jest.fn(),
+      getFullBalance: jest.fn(),
+      getStakedBalance: jest.fn(),
+      getUnstakedFinalizableBalance: jest.fn(),
+      getUnstakedFrozenBalance: jest.fn(),
+      getUnstakeRequests: jest.fn(),
       getStorage: jest.fn(),
       getStorageUsedSpace: jest.fn(),
       getStoragePaidSpace: jest.fn(),
@@ -73,7 +79,6 @@ describe('RpcClientCache test', () => {
       getBlockMetadata: jest.fn(),
       getBakingRights: jest.fn(),
       getAttestationRights: jest.fn(),
-      getEndorsingRights: jest.fn(),
       getBallotList: jest.fn(),
       getBallots: jest.fn(),
       getCurrentProposal: jest.fn(),
@@ -89,6 +94,7 @@ describe('RpcClientCache test', () => {
       getProtocols: jest.fn(),
       getTicketBalance: jest.fn(),
       getAllTicketBalances: jest.fn(),
+      getAdaptiveIssuanceLaunchCycle: jest.fn(),
       getPendingOperations: jest.fn(),
     };
 
@@ -97,6 +103,11 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getBlockHash.mockReturnValue(blockHash);
     mockRpcClient.getLiveBlocks.mockReturnValue(liveBlocks);
     mockRpcClient.getBalance.mockReturnValue(balance);
+    mockRpcClient.getFullBalance.mockReturnValue(balance);
+    mockRpcClient.getStakedBalance.mockReturnValue(balance);
+    mockRpcClient.getUnstakedFinalizableBalance.mockReturnValue(balance);
+    mockRpcClient.getUnstakedFrozenBalance.mockReturnValue(balance);
+    mockRpcClient.getUnstakeRequests.mockReturnValue(unstakeRequestsResponse);
     mockRpcClient.getStorage.mockReturnValue(storage);
     mockRpcClient.getStorageUsedSpace.mockReturnValue('100');
     mockRpcClient.getStoragePaidSpace.mockReturnValue('120');
@@ -113,7 +124,6 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getBlockMetadata.mockReturnValue(blockMetadata);
     mockRpcClient.getBakingRights.mockReturnValue(bakingRights);
     mockRpcClient.getAttestationRights.mockReturnValue(attestationRights);
-    mockRpcClient.getEndorsingRights.mockReturnValue(endorsingRights);
     mockRpcClient.getBallotList.mockReturnValue(ballotList);
     mockRpcClient.getBallots.mockReturnValue(ballots);
     mockRpcClient.getCurrentProposal.mockReturnValue(currentProposal);
@@ -128,6 +138,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getProtocols.mockReturnValue(protocols);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
     mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
+    mockRpcClient.getAdaptiveIssuanceLaunchCycle.mockReturnValue(aiLaunchCycle);
     mockRpcClient.getPendingOperations.mockReturnValue(pendingOperationsResponse);
     rpcCache = new RpcClientCache(mockRpcClient);
   });
@@ -142,6 +153,11 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock();
     await rpcCache.getLiveBlocks();
     await rpcCache.getBalance(address);
+    await rpcCache.getFullBalance(address);
+    await rpcCache.getStakedBalance(address);
+    await rpcCache.getUnstakedFinalizableBalance(address);
+    await rpcCache.getUnstakedFrozenBalance(address);
+    await rpcCache.getUnstakeRequests(address);
     await rpcCache.getStorage(contractAddress);
     await rpcCache.getStoragePaidSpace(contractAddress);
     await rpcCache.getStorageUsedSpace(contractAddress);
@@ -158,7 +174,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockMetadata();
     await rpcCache.getBakingRights();
     await rpcCache.getAttestationRights();
-    await rpcCache.getEndorsingRights();
     await rpcCache.getBallotList();
     await rpcCache.getBallots();
     await rpcCache.getCurrentProposal();
@@ -180,6 +195,7 @@ describe('RpcClientCache test', () => {
       content: { string: 'ticket1' },
     });
     await rpcCache.getAllTicketBalances(contractAddress);
+    await rpcCache.getAdaptiveIssuanceLaunchCycle();
     await rpcCache.getPendingOperations();
 
     expect(rpcCache.getAllCachedData()['rpcTest/getBlockHash/head/'].response).toEqual(blockHash);
@@ -188,6 +204,21 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()[`rpcTest/getBalance/head/${address}/`].response).toEqual(
       balance
     );
+    expect(rpcCache.getAllCachedData()[`rpcTest/getFullBalance/head/${address}/`].response).toEqual(
+      balance
+    );
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getStakedBalance/head/${address}/`].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getUnstakedFinalizableBalance/head/${address}/`].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getUnstakedFrozenBalance/head/${address}/`].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getUnstakeRequests/head/${address}/`].response
+    ).toEqual(unstakeRequestsResponse);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getStorage/head/${contractAddress}/`].response
     ).toEqual(storage);
@@ -235,9 +266,6 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()['rpcTest/getAttestationRights/head/{}/'].response).toEqual(
       attestationRights
     );
-    expect(rpcCache.getAllCachedData()['rpcTest/getEndorsingRights/head/{}/'].response).toEqual(
-      endorsingRights
-    );
     expect(rpcCache.getAllCachedData()['rpcTest/getBallotList/head/'].response).toEqual(ballotList);
     expect(rpcCache.getAllCachedData()['rpcTest/getBallots/head/'].response).toEqual(ballots);
     expect(rpcCache.getAllCachedData()['rpcTest/getCurrentProposal/head/'].response).toEqual(
@@ -273,6 +301,9 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/head/${contractAddress}/`].response
     ).toEqual(ticketBalancesResponse);
+    expect(
+      rpcCache.getAllCachedData()['rpcTest/getAdaptiveIssuanceLaunchCycle/head/'].response
+    ).toEqual(aiLaunchCycle);
     expect(rpcCache.getAllCachedData()[`rpcTest/getPendingOperations/{}/`].response).toEqual(
       pendingOperationsResponse
     );
@@ -286,6 +317,11 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock(block);
     await rpcCache.getLiveBlocks(block);
     await rpcCache.getBalance(address, block);
+    await rpcCache.getFullBalance(address, block);
+    await rpcCache.getStakedBalance(address, block);
+    await rpcCache.getUnstakedFinalizableBalance(address, block);
+    await rpcCache.getUnstakedFrozenBalance(address, block);
+    await rpcCache.getUnstakeRequests(address, block);
     await rpcCache.getStorage(contractAddress, block);
     await rpcCache.getStoragePaidSpace(contractAddress, block);
     await rpcCache.getStorageUsedSpace(contractAddress, block);
@@ -306,7 +342,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockMetadata(block);
     await rpcCache.getBakingRights({ level: 1111 }, block);
     await rpcCache.getAttestationRights({ level: 151187 }, block);
-    await rpcCache.getEndorsingRights({ level: 1111 }, block);
     await rpcCache.getBallotList(block);
     await rpcCache.getBallots(block);
     await rpcCache.getCurrentProposal(block);
@@ -332,6 +367,7 @@ describe('RpcClientCache test', () => {
       block
     );
     await rpcCache.getAllTicketBalances(contractAddress, block);
+    await rpcCache.getAdaptiveIssuanceLaunchCycle(block);
 
     expect(rpcCache.getAllCachedData()[`rpcTest/getBlockHash/${block.block}/`].response).toEqual(
       blockHash
@@ -345,6 +381,24 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getBalance/${block.block}/${address}/`].response
     ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getFullBalance/${block.block}/${address}/`].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getStakedBalance/${block.block}/${address}/`].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[
+        `rpcTest/getUnstakedFinalizableBalance/${block.block}/${address}/`
+      ].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getUnstakedFrozenBalance/${block.block}/${address}/`]
+        .response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getUnstakeRequests/${block.block}/${address}/`].response
+    ).toEqual(unstakeRequestsResponse);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getStorage/${block.block}/${contractAddress}/`].response
     ).toEqual(storage);
@@ -398,10 +452,6 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getAttestationRights/${block.block}/{"level":151187}/`]
         .response
     ).toEqual(attestationRights);
-    expect(
-      rpcCache.getAllCachedData()[`rpcTest/getEndorsingRights/${block.block}/{"level":1111}/`]
-        .response
-    ).toEqual(endorsingRights);
     expect(rpcCache.getAllCachedData()[`rpcTest/getBallotList/${block.block}/`].response).toEqual(
       ballotList
     );
@@ -445,7 +495,9 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getAllTicketBalances/${block.block}/${contractAddress}/`]
         .response
     ).toEqual(ticketBalancesResponse);
-
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getAdaptiveIssuanceLaunchCycle/${block.block}/`].response
+    ).toEqual(aiLaunchCycle);
     rpcCache.deleteAllCachedData();
   });
 
@@ -454,6 +506,11 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock();
     await rpcCache.getLiveBlocks();
     await rpcCache.getBalance(address);
+    await rpcCache.getFullBalance(address);
+    await rpcCache.getStakedBalance(address);
+    await rpcCache.getUnstakedFinalizableBalance(address);
+    await rpcCache.getUnstakedFrozenBalance(address);
+    await rpcCache.getUnstakeRequests(address);
     await rpcCache.getStorage(contractAddress);
     await rpcCache.getStoragePaidSpace(contractAddress);
     await rpcCache.getStorageUsedSpace(contractAddress);
@@ -470,7 +527,6 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlockMetadata();
     await rpcCache.getBakingRights();
     await rpcCache.getAttestationRights();
-    await rpcCache.getEndorsingRights();
     await rpcCache.getBallotList();
     await rpcCache.getBallots();
     await rpcCache.getCurrentProposal();
@@ -488,6 +544,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getProtocols();
     await rpcCache.getTicketBalance(contractAddress, ticketToken);
     await rpcCache.getAllTicketBalances(contractAddress);
+    await rpcCache.getAdaptiveIssuanceLaunchCycle();
     await rpcCache.getPendingOperations();
 
     rpcCache.deleteAllCachedData();
