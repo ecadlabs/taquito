@@ -3,6 +3,9 @@ title: Staking and Adaptive Issuance
 author: Alireza Haghshenas
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Staking and Adaptive Issuance
 
 Staking is an update to the "Proof of Stake" Mechanism in Tezos.
@@ -25,37 +28,111 @@ Before you can stake your funds, two conditions should be met:
 1. You need yor have delegated your funds to a delegate before you can stake them (by calling [`setDelegate`](#set_delegate))
 1. Your delegate should accept staking by calling `set_delegate_parameters`
 
+
+<Tabs
+defaultValue="contract"
+values={[
+{label: 'Contract Api', value: 'contract'},
+{label: 'Wallet Api', value: 'wallet'}
+]}>
+  <TabItem value="contract">
+
 ```javascript
 
 const op = await Tezos.contract.stake({
-        amount: 100
+        amount: 100,
+        mutez: false
       });
       await op.confirmation();
 
 ```
 
+  </TabItem>
+  <TabItem value="wallet">
+
+```javascript
+
+const op = await Tezos.wallet.stake({
+        amount: 100,
+        mutez: false
+      }).send();
+      await op.confirmation();
+
+```
+
+  </TabItem>
+</Tabs>
 
 # Unstaking Funds
 
 To unstake your funds, you need to call the `unstake` operation. This will change your fund's status to "Unstaked + Frozen"
 The unstaked funds will still be frozen (and subject to slashing for 4 cycles). After that, your funds will be in "Unstaked + Finalizable" state.
 
+<Tabs
+defaultValue="contract"
+values={[
+{label: 'Contract Api', value: 'contract'},
+{label: 'Wallet Api', value: 'wallet'}
+]}>
+  <TabItem value="contract">
+
 ```javascript
+
 const op = await Tezos.contract.unstake({
-        amount: 50
+        amount: 50,
+        mutez: false
       });
       await op.confirmation();
+
 ```
+
+  </TabItem>
+  <TabItem value="wallet">
+
+```javascript
+
+const op = await Tezos.wallet.unstake({
+        amount: 50,
+        mutez: false
+      }).send();
+      await op.confirmation();
+
+```
+
+  </TabItem>
+</Tabs>
 
 # Finalizing Unstake
 
 To finalize your unstaked funds, you need to call the `finalize_unstake` operation. This will change your fund's status back to "spendable".
 
+<Tabs
+defaultValue="contract"
+values={[
+{label: 'Contract Api', value: 'contract'},
+{label: 'Wallet Api', value: 'wallet'}
+]}>
+  <TabItem value="contract">
+
 ```javascript
-const op = await Tezos.contract.finalizeUnstake({});
+
+const op = await Tezos.contract.finalizeUnstake();
       await op.confirmation();
 
 ```
+
+  </TabItem>
+  <TabItem value="wallet">
+
+```javascript
+
+const op = await Tezos.wallet.finalizeUnstake().send();
+      await op.confirmation();
+
+```
+
+  </TabItem>
+</Tabs>
 
 # Additional Info and Some Notes
 
