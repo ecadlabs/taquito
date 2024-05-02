@@ -504,6 +504,20 @@ export interface OperationContentsSmartRollupTimeout {
   stakers: SmartRollupTimeoutStakers;
 }
 
+export interface OperationContentsDalPublishCommitment {
+  kind: OpKind.DAL_PUBLISH_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  slot_header: {
+    slot_index: number;
+    commitment: string;
+    commitment_proof: string;
+  };
+}
+
 export type OperationContents =
   | OperationContentsAttestation
   | OperationContentsPreattestation
@@ -539,7 +553,8 @@ export type OperationContents =
   | OperationContentsSmartRollupCement
   | OperationContentsSmartRollupRefute
   | OperationContentsSmartRollupRecoverBond
-  | OperationContentsSmartRollupTimeout;
+  | OperationContentsSmartRollupTimeout
+  | OperationContentsDalPublishCommitment;
 
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -672,6 +687,12 @@ export interface OperationContentsAndResultMetadataSmartRollupRecoverBond {
 export interface OperationContentsAndResultMetadataSmartRollupTimeout {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultSmartRollupTimeout;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataDalPublishCommitment {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultDalPublishCommitment;
   internal_operation_results?: InternalOperationResult[];
 }
 
@@ -999,6 +1020,17 @@ export interface OperationContentsAndResultSmartRollupTimeout {
   metadata: OperationContentsAndResultMetadataSmartRollupTimeout;
 }
 
+export interface OperationContentsAndResultDalPublishCommitment {
+  kind: OpKind.DAL_PUBLISH_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  metadata: OperationContentsAndResultMetadataDalPublishCommitment;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultAttestation
   | OperationContentsAndResultPreattestation
@@ -1033,7 +1065,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupCement
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupRecoverBond
-  | OperationContentsAndResultSmartRollupTimeout;
+  | OperationContentsAndResultSmartRollupTimeout
+  | OperationContentsAndResultDalPublishCommitment;
 
 export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultTransaction
@@ -1044,8 +1077,11 @@ export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultSetDepositsLimit
   | OperationContentsAndResultUpdateConsensusKey
   | OperationContentsAndResultIncreasePaidStorage
+  | OperationContentsAndResultTransferTicket
   | OperationContentsAndResultSmartRollupAddMessages
-  | OperationContentsAndResultSmartRollupOriginate;
+  | OperationContentsAndResultSmartRollupOriginate
+  | OperationContentsAndResultSmartRollupExecuteOutboxMessage
+  | OperationContentsAndResultDalPublishCommitment;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1413,6 +1449,18 @@ export interface OperationResultSmartRollupTimeout {
   errors?: TezosGenericOperationError[];
 }
 
+export interface OperationResultDalPublishCommitment {
+  status: OperationResultStatusEnum;
+  slot_header?: {
+    version: string;
+    level: number;
+    index: number;
+    commitment: string;
+  };
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
 export interface ContractBigMapDiffItem {
   key_hash?: string;
   key?: MichelsonV1Expression;
@@ -1475,7 +1523,8 @@ export type OperationResult =
   | OperationResultSmartRollupRefute
   | OperationResultSmartRollupRecoverBond
   | OperationResultSmartRollupTimeout
-  | OperationResultSmartRollupExecuteOutboxMessage;
+  | OperationResultSmartRollupExecuteOutboxMessage
+  | OperationResultDalPublishCommitment;
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
