@@ -23,6 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     const ACCOUNT2_ADDRESS = 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
     
+    // Runs the entire tests for a given fieldNumberingStrategy
     const testContract = (strategy: FieldNumberingStrategy, innerObjectStartingIndex: number) => {
       it(`Verify contract.originate for a contract with no annotations for methods using methodObjects with fieldNumberingStrategy: ${strategy}`, async () => {
         Tezos.setFieldNumberingStrategy(strategy);
@@ -69,6 +70,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         expect(account1[ALLOWANCES].get(ACCOUNT2_ADDRESS).toString()).toEqual('1')
       });
     };
+    
+    // Run the tests for all fieldNumberingStrategies
     testContract('Legacy', 2);
     testContract('ResetFieldNumbersInNestedObjects', 0);
     testContract('Latest', 0);
