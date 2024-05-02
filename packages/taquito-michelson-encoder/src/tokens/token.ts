@@ -35,7 +35,31 @@ export interface SemanticEncoding {
   [key: string]: (value: any, type?: MichelsonV1Expression) => MichelsonV1Expression;
 }
 
+/**
+ * @description Possible strategies for mapping between javascript classes and Michelson values
+ * Legacy: The old behaviour: { annot1: 'some value', annot2: 'other Value', annot3: { 2: 'yet another value', 3: 'also some value' }}
+ * ResetFieldNumbersInNestedObjects: { annot1: 'some value', annot2: 'other Value', annot3: { 0: 'yet another value', 1: 'also some value' }}
+ * Latest: This will include new changes as we might implement in the future. This is the suggested value if it does not break your code
+ */
+export type FieldNumberingStrategy = 'Legacy' | 'ResetFieldNumbersInNestedObjects' | 'Latest';
+
 export abstract class Token {
+  private static _fieldNumberingStrategy: FieldNumberingStrategy = 'Latest';
+
+  /**
+   * @description Gets the strategy used for field numbering in Token execute/encode/decode to convert Michelson values to/from javascript objects, returns a value of type {@link FieldNumberingStrategy} that controls how field numbers are calculated
+   */
+  static get fieldNumberingStrategy() {
+    return Token._fieldNumberingStrategy;
+  }
+
+  /**
+   * @description Sets the strategy used for field numbering in Token execute/encode/decode to convert Michelson values to/from javascript objects, accepts a value of type {@link FieldNumberingStrategy} that controls how field numbers are calculated
+   */
+  static set fieldNumberingStrategy(value: FieldNumberingStrategy) {
+    Token._fieldNumberingStrategy = value;
+  }
+
   constructor(
     protected val: MichelsonV1ExpressionExtended,
     protected idx: number,
