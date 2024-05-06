@@ -15,8 +15,6 @@ CONFIGS().forEach(({ rpc, protocol }) => {
         const localForger = new LocalForger(protocol as unknown as ProtocolsHash);
         const result = await localForger.forge(operation);
         const rpcResult = await Tezos.rpc.forgeOperations(operation);
-        console.log('local', result)
-        console.log('rpc', rpcResult)
         expect(result).toEqual(rpcResult);
         expect(await localForger.parse(result)).toEqual(expected || operation);
     });
