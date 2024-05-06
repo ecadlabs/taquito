@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import {
   LazyStorageDiffBigMap,
   OperationContentsAndResultEndorsement,
-  // OperationContentsAndResultEndorsementWithDal,
+  OperationContentsAndResultAttestationWithDal,
   OperationContentsAndResultOrigination,
   OperationResultTransaction,
   OperationContentsAndResultTransaction,
@@ -1788,92 +1788,72 @@ describe('RpcClient test', () => {
       expect(transaction.metadata.operation_result.consumed_gas).toEqual('24660');
     });
 
-    // it('should query the right url and property for operation, proto 9, endorsement_with_slot', async () => {
-    //   httpBackend.createRequest.mockReturnValue(
-    //     Promise.resolve({
-    //       protocol: 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
-    //       chain_id: 'NetXxkAx4woPLyu',
-    //       hash: 'BLRWVvWTrqgUt1JL76RnUguKhkqfbHnXVrznXpuCrhxemSuCrb3',
-    //       header: {
-    //         level: 174209,
-    //         proto: 1,
-    //         predecessor: 'BMarN3hiEmCrSrfeo6qndubHe9FXpPy4qcj3Xr2NBGGfG4Tfcaj',
-    //         timestamp: '2021-05-07T18:37:59Z',
-    //         validation_pass: 4,
-    //         operations_hash: 'LLoaFb5cQjcr2pzKbLsmhPN2NgLY5gGs9ePimjRsNyCtgAQejfbXg',
-    //         fitness: ['01', '000000000002a880'],
-    //         context: 'CoWMJU1LmpfMn92zz4Ah1TrwXaSHnRWcy8dcso32AH7miULKad1d',
-    //         priority: 0,
-    //         proof_of_work_nonce: '08351e3d59170e00',
-    //         signature:
-    //           'sigg9pz9Q5i17nDZpZ3mbbMQsLHNuHX3SxTxHguLwgR9xYL2x17TmH7QfVFsadQTa61QCnq5vuFXkFtymeQKNh74VsWnMu9D',
-    //       },
-    //       metadata: {},
-    //       operations: [
-    //         [
-    //           {
-    //             protocol: 'PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i',
-    //             chain_id: 'NetXxkAx4woPLyu',
-    //             hash: 'ooYSSxYcgreJQtrzxqyBpBdCntVbnbvHdtqA7RZsFcSDz4XFZJY',
-    //             branch: 'BMarN3hiEmCrSrfeo6qndubHe9FXpPy4qcj3Xr2NBGGfG4Tfcaj',
-    //             contents: [
-    //               {
-    //                 kind: 'endorsement_with_slot',
-    //                 endorsement: {
-    //                   branch: 'BMarN3hiEmCrSrfeo6qndubHe9FXpPy4qcj3Xr2NBGGfG4Tfcaj',
-    //                   operations: { kind: 'endorsement', level: 174208 },
-    //                   signature:
-    //                     'signiPFVn2gFXvu7dKxEnifWQgbzan9ca6z7XSS5PyNBin2BufNBTFz9hgM7imvWf2HSj6NY3ECtEvb5xmwiYnUDbpSTUQC6',
-    //                 },
-    //                 slot: 4,
-    //                 metadata: {
-    //                   balance_updates: [
-    //                     {
-    //                       kind: 'contract',
-    //                       contract: 'tz1VWasoyFGAWZt5K2qZRzP3cWzv3z7MMhP8',
-    //                       change: '-320000000',
-    //                       origin: 'block',
-    //                     },
-    //                     {
-    //                       kind: 'freezer',
-    //                       category: 'deposits',
-    //                       delegate: 'tz1VWasoyFGAWZt5K2qZRzP3cWzv3z7MMhP8',
-    //                       cycle: 85,
-    //                       change: '320000000',
-    //                       origin: 'block',
-    //                     },
-    //                     {
-    //                       kind: 'freezer',
-    //                       category: 'rewards',
-    //                       delegate: 'tz1VWasoyFGAWZt5K2qZRzP3cWzv3z7MMhP8',
-    //                       cycle: 85,
-    //                       change: '6250000',
-    //                       origin: 'block',
-    //                     },
-    //                   ],
-    //                   delegate: 'tz1VWasoyFGAWZt5K2qZRzP3cWzv3z7MMhP8',
-    //                   slots: [4, 11, 18, 21, 24],
-    //                 },
-    //               },
-    //             ],
-    //           },
-    //         ],
-    //       ],
-    //     })
-    //   );
+    it('should query the right url and property for operation, proto 20, attestation_with_dal', async () => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          protocol: 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
+          chain_id: 'NetXo8SqH1c38SS',
+          hash: 'BKsCfYZrh417adJiKbGsyhVG2XrvUBJDhhkCAkZQzWzkEHCejXr',
+          header: {
+            level: 416914,
+            proto: 2,
+            predecessor: 'BLBXzegi3m1K8YjP7w9YgEpts5a9ZCFjY7xqRcm16p6yFxXbZGT',
+            timestamp: '2024-05-06T18:01:07Z',
+            validation_pass: 4,
+            operations_hash: 'LLoZxmgEJQyZ74XCrZQu8Jtcov4SnGGRyuYf32fYmURW2Xfcj58Gv',
+            fitness: ['02', '00065c92', '', 'ffffffff', '00000000'],
+            context: 'CoV1GGrMBca5uBG4AzQbKNrQhQHHTtSYJAHVk7pJtuMw3uWiNvTV',
+            payload_hash: 'vh1mfavAuf7E1m1tZUEHkWomS8BDiLsVZz9T1A79Afu8Cag5DQHG',
+            payload_round: 0,
+            proof_of_work_nonce: 'e38cf66600000000',
+            liquidity_baking_toggle_vote: 'on',
+            adaptive_issuance_vote: 'on',
+            signature:
+              'sighpgD4aPxorZUvPxKvBHYNvnQEBRctF14bYXFX9qLbXbCGZv64S1dFVduBLzWBSEXCcHWiBuUT1iLZt9SE2mKCTkLtWuo5',
+          },
+          metadata: {},
+          operations: [
+            [
+              {
+                protocol: 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
+                chain_id: 'NetXo8SqH1c38SS',
+                hash: 'opSmHyeasw4QcJ4Jc2qi6arNeSQMhFRjHBdFYWXGoMydLkgVRtb',
+                branch: 'BLHyjaqV2FhuHLQL3CBjWJqgZZ77BxcNxh3ehXcNYMQjjqAPwqA',
+                contents: [
+                  {
+                    kind: 'attestation_with_dal',
+                    slot: 19,
+                    level: 416913,
+                    round: 0,
+                    block_payload_hash: 'vh27AvfjAJob9VdcZHEPHFbMAzi6nhCiHVzAyDBEdAPDCcEa676t',
+                    dal_attestation: '0',
+                    metadata: {
+                      delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+                      consensus_power: 532,
+                      consensus_key: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+                    },
+                  },
+                ],
+                signature:
+                  'sigh9rmktxbqmK6fXaq2ciAQrbrVH8pZhKeXEKHCzgNmJaP6gc1njofiMMzvhx2SRXQ7Gv8aVDzBM18kDGmUoBxQA693Bk2o',
+              },
+            ],
+          ],
+        })
+      );
 
-    //   const response = await client.getBlock();
+      const response = await client.getBlock();
 
-    //   expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-    //     method: 'GET',
-    //     url: 'root/chains/test/blocks/head',
-    //   });
-    //   const endorsementWithSlot = response.operations[0][0]
-    //     .contents[0] as OperationContentsAndResultEndorsementWithSlot;
-    //   expect(endorsementWithSlot.kind).toEqual('endorsement_with_slot');
-    //   expect(endorsementWithSlot.metadata.slots).toEqual([4, 11, 18, 21, 24]);
-    //   expect(endorsementWithSlot.slot).toEqual(4);
-    // });
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head',
+      });
+      const endorsementWithSlot = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultAttestationWithDal;
+      expect(endorsementWithSlot.kind).toEqual('attestation_with_dal');
+      expect(endorsementWithSlot.slot).toEqual(19);
+      expect(endorsementWithSlot.dal_attestation).toEqual('0');
+    });
 
     it('should query the right url and properties (big_map_diff and lazy_storage_diff) in transaction operation result, proto 9', async () => {
       httpBackend.createRequest.mockReturnValue(
