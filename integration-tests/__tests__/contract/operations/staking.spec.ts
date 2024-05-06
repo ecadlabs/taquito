@@ -1,7 +1,10 @@
 import { CONFIGS } from "../../../config";
+import { Protocols } from '@taquito/taquito';
+import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, protocol }) => {
   const Tezos = lib;
+  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBQ) ? test : test.skip;
 
   describe(`Staking pseudo operations: ${rpc}`, () => {
 
@@ -9,23 +12,23 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup(true);
 
       const delegateOp = await Tezos.contract.setDelegate({
-        delegate: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA',
+        delegate: knownBaker,
         source: await Tezos.signer.publicKeyHash()
       });
 
       await delegateOp.confirmation();
     });
 
-    it('should throw an error when the destination specified is not the same as source', async () => {
+    parisAndAlpha('should throw an error when the destination specified is not the same as source', async () => {
       expect(async () => {
         const op = await Tezos.contract.stake({
           amount: 0.1,
-          to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA'
+          to: knownBaker
         });
       }).rejects.toThrow();
     });
 
-    it('should be able to stake funds to a designated delegate', async () => {
+    parisAndAlpha('should be able to stake funds to a designated delegate', async () => {
       const op = await Tezos.contract.stake({
         amount: 0.1
       });
@@ -35,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
     });
 
-    it('should be able to unstake funds from a designated delegate', async () => {
+    parisAndAlpha('should be able to unstake funds from a designated delegate', async () => {
       const op = await Tezos.contract.unstake({
         amount: 0.1
       });
@@ -45,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
     });
 
-    it('should be able to finalize_unstake funds from a designated delegate', async () => {
+    parisAndAlpha('should be able to finalize_unstake funds from a designated delegate', async () => {
       const op = await Tezos.contract.finalizeUnstake({});
       await op.confirmation();
 
