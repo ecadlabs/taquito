@@ -220,7 +220,7 @@ export class Wallet {
 
   /**
    * @description Originate a new contract according to the script in parameters.
-   * @returns An operation handle with the result from the rpc node
+   * @returns a OriginationWalletOperation promise object when followed by .send()
    * @param originateParams Originate operation parameter
    */
   originate<TWallet extends DefaultWalletType = DefaultWalletType>(
@@ -241,7 +241,7 @@ export class Wallet {
 
   /**
    * @description Set the delegate for a contract.
-   * @returns An operation handle with the result from the rpc node
+   * @returns a WalletDelegateParams promise object when followed by .send()
    * @param delegateParams operation parameter
    */
   setDelegate(params: WalletDelegateParams) {
@@ -291,7 +291,7 @@ export class Wallet {
 
   /**
    * @description Register the current address as delegate.
-   * @returns An operation handle with the result from the rpc node
+   * @returns a DelegationWalletOperation promise object when followed by .send()
    */
   registerDelegate() {
     return this.walletCommand(async () => {
@@ -306,7 +306,7 @@ export class Wallet {
 
   /**
    * @description Transfer tezos tokens from current address to a specific address or call a smart contract.
-   * @returns A wallet command from which we can send the operation to the wallet
+   * @returns a TransactionWalletOperation promise object when followed by .send()
    * @param params operation parameter
    */
   transfer(params: WalletTransferParams) {
@@ -325,7 +325,7 @@ export class Wallet {
 
   /**
    * @description Stake a given amount for the source address
-   * @returns A wallet command from which we can send the operation to the wallet
+   * @returns a TransactionWalletOperation promise object when followed by .send()
    * @param Stake pseudo-operation parameter
    */
   stake(params: WalletStakeParams) {
@@ -350,7 +350,7 @@ export class Wallet {
    * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance.
    * Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over,
    * the operation "finalize unstake" must be called for the funds to appear in the liquid balance.
-   * @returns A wallet command from which we can send the operation to the wallet
+   * @returns a TransactionWalletOperation promise object when followed by .send()
    * @param Unstake pseudo-operation parameter
    */
   unstake(params: WalletUnstakeParams) {
@@ -373,7 +373,7 @@ export class Wallet {
 
   /**
    * @description Transfer all the finalizable unstaked funds of the source to their liquid balance
-   * @returns A wallet command from which we can send the operation to the wallet
+   * @returns a TransactionWalletOperation promise object when followed by .send()
    * @param Finalize_unstake pseudo-operation parameter
    */
   finalizeUnstake(params: WalletFinalizeUnstakeParams) {
@@ -404,7 +404,7 @@ export class Wallet {
 
   /**
    * @description Increase the paid storage of a smart contract.
-   * @returns A wallet command from which we can send the operation to the wallet
+   * @returns a IncreasePaidStorageWalletOperation promise object when followed by .send()
    * @param params operation parameter
    */
   increasePaidStorage(params: WalletIncreasePaidStorageParams) {
