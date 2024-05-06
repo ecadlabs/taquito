@@ -26,7 +26,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker }) => {
       expect(await op.status()).toBe('applied');
 
       const stakedBalance = await Tezos.rpc.getStakedBalance(await Tezos.signer.publicKeyHash());
-      expect(Math.round(stakedBalance.toNumber()/1000000)).toEqual(3); // staked balance returned in mutez therefore dividing by 1000000
+      // staked balance returned in mutez therefore dividing by 1000000 and rounding explanation here https://tezos-dev.slack.com/archives/C05RS0MEJ9H/p1714641691368019?thread_ts=1714604532.409029&cid=C05RS0MEJ9H
+      expect(Math.round(stakedBalance.toNumber() / 1000000)).toEqual(3);
     });
 
     parisAndAlpha(`should be able to unstake successfully: ${rpc}`, async () => {
@@ -35,11 +36,12 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker }) => {
       expect(await op.status()).toBe('applied');
 
       const UnstakedBalance = await Tezos.rpc.getUnstakedFrozenBalance(await Tezos.signer.publicKeyHash());
-      expect(Math.round(UnstakedBalance.toNumber()/1000000)).toEqual(1); // unstaked balance returned in mutez therefore dividing by 1000000
+      // unstaked balance returned in mutez therefore dividing by 1000000 and rounding explanation here https://tezos-dev.slack.com/archives/C05RS0MEJ9H/p1714641691368019?thread_ts=1714604532.409029&cid=C05RS0MEJ9H
+      expect(Math.round(UnstakedBalance.toNumber() / 1000000)).toEqual(1);
     });
 
     parisAndAlpha(`should be able to finalizeUnstake successfully: ${rpc}`, async () => {
-      const op = await Tezos.wallet.finalizeUnstake({ }).send()
+      const op = await Tezos.wallet.finalizeUnstake({}).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
     });
