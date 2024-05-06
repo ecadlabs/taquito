@@ -1,7 +1,10 @@
 import { CONFIGS } from "../../../config";
+import { Protocols } from '@taquito/taquito';
+import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, protocol }) => {
   const Tezos = lib;
+  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBQ) ? test : test.skip;
 
   describe(`Staking pseudo operations: ${rpc}`, () => {
 
@@ -16,7 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       await delegateOp.confirmation();
     });
 
-    it('should throw an error when the destination specified is not the same as source', async () => {
+    parisAndAlpha('should throw an error when the destination specified is not the same as source', async () => {
       expect(async () => {
         const op = await Tezos.contract.stake({
           amount: 0.1,
@@ -25,7 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       }).rejects.toThrow();
     });
 
-    it('should be able to stake funds to a designated delegate', async () => {
+    parisAndAlpha('should be able to stake funds to a designated delegate', async () => {
       const op = await Tezos.contract.stake({
         amount: 0.1
       });
@@ -35,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       expect(op.status).toEqual('applied');
     });
 
-    it('should be able to unstake funds from a designated delegate', async () => {
+    parisAndAlpha('should be able to unstake funds from a designated delegate', async () => {
       const op = await Tezos.contract.unstake({
         amount: 0.1
       });
@@ -45,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       expect(op.status).toEqual('applied');
     });
 
-    it('should be able to finalize_unstake funds from a designated delegate', async () => {
+    parisAndAlpha('should be able to finalize_unstake funds from a designated delegate', async () => {
       const op = await Tezos.contract.finalizeUnstake({});
       await op.confirmation();
 
