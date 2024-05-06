@@ -1,6 +1,6 @@
 import { CONFIGS } from "../../../config";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
 
   describe(`Staking pseudo operations: ${rpc}`, () => {
@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup(true);
 
       const delegateOp = await Tezos.contract.setDelegate({
-        delegate: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA',
+        delegate: knownBaker,
         source: await Tezos.signer.publicKeyHash()
       });
 
@@ -20,7 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(async () => {
         const op = await Tezos.contract.stake({
           amount: 0.1,
-          to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA'
+          to: knownBaker
         });
       }).rejects.toThrow();
     });
