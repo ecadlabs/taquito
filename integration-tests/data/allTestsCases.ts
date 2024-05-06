@@ -49,6 +49,24 @@ interface TestCase {
   expected?: object;
 }
 
+export const parisCases: TestCase[] = [
+  {
+    name: 'Attestation With Dal operation',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.ATTESTATION_WITH_DAL,
+          slot: 0,
+          level: 66299,
+          round: 5,
+          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
+          dal_attestation: '10'
+        }
+      ]
+    }
+  },
+]
 export const oxfordCases: TestCase[] = [
   {
     name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',

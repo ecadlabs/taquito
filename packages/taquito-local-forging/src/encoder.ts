@@ -32,7 +32,7 @@ import {
   BallotSchema,
   DelegationSchema,
   AttestationSchema,
-  EndorsementSchema,
+  AttestationWithDalSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
   DrainDelegateSchema,
@@ -93,7 +93,8 @@ encoders[CODEC.OP_TRANSACTION] = (val: any) => schemaEncoder(encoders)(Transacti
 encoders[CODEC.OP_ORIGINATION] = (val: any) => schemaEncoder(encoders)(OriginationSchema)(val);
 encoders[CODEC.OP_BALLOT] = (val: any) => schemaEncoder(encoders)(BallotSchema)(val);
 encoders[CODEC.OP_ATTESTATION] = (val: any) => schemaEncoder(encoders)(AttestationSchema)(val);
-encoders[CODEC.OP_ENDORSEMENT] = (val: any) => schemaEncoder(encoders)(EndorsementSchema)(val);
+encoders[CODEC.OP_ATTESTATION_WITH_DAL] = (val: any) =>
+  schemaEncoder(encoders)(AttestationWithDalSchema)(val);
 encoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: any) =>
   schemaEncoder(encoders)(SeedNonceRevelationSchema)(val);
 encoders[CODEC.OP_PROPOSALS] = (val: any) => schemaEncoder(encoders)(ProposalsSchema)(val);

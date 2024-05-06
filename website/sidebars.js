@@ -58,6 +58,7 @@ const sidebars = {
         'smart_rollups',
         'proposal_and_ballot',
         'failing_noop',
+        'staking',
       ]
     },
     {
