@@ -143,7 +143,7 @@ const isVerified = verifySignature(
 
 ## Signing Michelson data
 
-Taquito also offers the possibility to sign Michelson code. This feature can be useful, for example, if you need to send a lambda to a contract to be executed but want to restrict the number of users who can submit a lambda by verifiying the signer's address. The signing of Michelson code requires the use of the `michel-codec` package:
+Taquito also offers the possibility to sign Michelson code. This feature can be useful, for example, if you need to send a lambda to a contract to be executed but want to restrict the number of users who can submit a lambda by verifying the signer's address. The signing of Michelson code requires the use of the `michel-codec` package:
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
