@@ -72,11 +72,12 @@ export const AttestationSchema = {
   block_payload_hash: CODEC.BLOCK_PAYLOAD_HASH,
 };
 
-export const EndorsementSchema = {
+export const AttestationWithDalSchema = {
   slot: CODEC.INT16,
   level: CODEC.INT32,
   round: CODEC.INT32,
   block_payload_hash: CODEC.BLOCK_PAYLOAD_HASH,
+  dal_attestation: CODEC.ZARITH,
 };
 
 export const SeedNonceRevelationSchema = {

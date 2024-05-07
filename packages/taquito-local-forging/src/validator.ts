@@ -11,7 +11,7 @@ import {
   RevealSchema,
   RegisterGlobalConstantSchema,
   AttestationSchema,
-  EndorsementSchema,
+  AttestationWithDalSchema,
   TransferTicketSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
@@ -31,7 +31,7 @@ type OperationKind =
   | OpKind.ORIGINATION
   | OpKind.BALLOT
   | OpKind.ATTESTATION
-  | OpKind.ENDORSEMENT
+  | OpKind.ATTESTATION_WITH_DAL
   | OpKind.SEED_NONCE_REVELATION
   | OpKind.PROPOSALS
   | OpKind.REGISTER_GLOBAL_CONSTANT
@@ -52,7 +52,7 @@ const OperationKindMapping = {
   origination: OriginationSchema,
   ballot: BallotSchema,
   attestation: AttestationSchema,
-  endorsement: EndorsementSchema,
+  attestation_with_dal: AttestationWithDalSchema,
   seed_nonce_revelation: SeedNonceRevelationSchema,
   proposals: ProposalsSchema,
   register_global_constant: RegisterGlobalConstantSchema,

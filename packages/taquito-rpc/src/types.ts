@@ -247,16 +247,22 @@ export interface OperationContentsSetDepositsLimit {
   limit?: string;
 }
 
-export interface OperationContentsAttestationWithSlot {
-  kind: OpKind.ATTESTATION_WITH_SLOT;
-  endorsement: InlinedAttestation;
+export interface OperationContentsAttestationWithDal {
+  kind: OpKind.ATTESTATION_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
 }
 
-export interface OperationContentsEndorsementWithSlot {
-  kind: OpKind.ENDORSEMENT_WITH_SLOT;
-  endorsement: InlinedEndorsement;
+export interface OperationContentsEndorsementWithDal {
+  kind: OpKind.ENDORSEMENT_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
 }
 
 export interface OperationContentsRevelation {
@@ -537,8 +543,8 @@ export type OperationContents =
   | OperationContentsTransaction
   | OperationContentsOrigination
   | OperationContentsDelegation
-  | OperationContentsAttestationWithSlot
-  | OperationContentsEndorsementWithSlot
+  | OperationContentsAttestationWithDal
+  | OperationContentsEndorsementWithDal
   | OperationContentsFailingNoop
   | OperationContentsRegisterGlobalConstant
   | OperationContentsSetDepositsLimit
@@ -566,8 +572,7 @@ export interface OperationContentsAndResultMetadataExtended1 {
 export interface OperationContentsAndResultMetadataExtended0 {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  slots?: number[];
-  endorsement_power?: number;
+  endorsement_power: number;
   consensus_key?: string;
 }
 
@@ -739,10 +744,13 @@ export interface OperationContentsAndResultDoublePreattestation {
   metadata: OperationContentsAndResultMetadata;
 }
 
-export interface OperationContentsAndResultAttestationWithSlot {
-  kind: OpKind.ATTESTATION_WITH_SLOT;
-  endorsement: InlinedAttestation;
+export interface OperationContentsAndResultAttestationWithDal {
+  kind: OpKind.ATTESTATION_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
   metadata: OperationContentsAndResultMetadataExtended1;
 }
 
@@ -753,10 +761,13 @@ export interface OperationContentsAndResultDoublePreEndorsement {
   metadata: OperationContentsAndResultMetadata;
 }
 
-export interface OperationContentsAndResultEndorsementWithSlot {
-  kind: OpKind.ENDORSEMENT_WITH_SLOT;
-  endorsement: InlinedEndorsement;
+export interface OperationContentsAndResultEndorsementWithDal {
+  kind: OpKind.ENDORSEMENT_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
   metadata: OperationContentsAndResultMetadataExtended0;
 }
 
@@ -1049,8 +1060,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTransaction
   | OperationContentsAndResultOrigination
   | OperationContentsAndResultDelegation
-  | OperationContentsAndResultAttestationWithSlot
-  | OperationContentsAndResultEndorsementWithSlot
+  | OperationContentsAndResultAttestationWithDal
+  | OperationContentsAndResultEndorsementWithDal
   | OperationContentsAndResultRegisterGlobalConstant
   | OperationContentsAndResultSetDepositsLimit
   | OperationContentsAndResultTransferTicket
