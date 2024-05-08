@@ -1038,7 +1038,11 @@ export interface OperationContentsAndResultDalPublishCommitment {
   counter: string;
   gas_limit: string;
   storage_limit: string;
-  pk: string;
+  slot_header: {
+    slot_index: number;
+    commitment: string;
+    commitment_proof: string;
+  };
   metadata: OperationContentsAndResultMetadataDalPublishCommitment;
 }
 
