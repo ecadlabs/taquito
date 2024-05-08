@@ -205,7 +205,6 @@ export const operationEncoder =
 export const operationDecoder =
   (decoders: { [key: string]: Decoder }) => (value: Uint8ArrayConsumer) => {
     const op = value.consume(1);
-    console.log(op[0].toString());
     const operationName = kindMapping[op[0]];
     if (operationName === undefined) {
       throw new UnsupportedOperationError(op[0].toString());
