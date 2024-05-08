@@ -578,6 +578,6 @@ export const slotHeaderDecoder = (val: Uint8ArrayConsumer) => {
   return {
     slot_index: Number(preamble[0].toString(10)),
     commitment: dalCommitmentDecoder(val),
-    commitment_proof: toHexString(val.consume(prefixLength[Prefix.SH] * 2)),
+    commitment_proof: toHexString(val.consume(96)), // rpcForger expect commitment_proof bytes to be len 96
   };
 };
