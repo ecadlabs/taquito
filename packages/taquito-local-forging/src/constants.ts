@@ -63,7 +63,7 @@ export enum CODEC {
   SLOT_HEADER = 'slot_header',
 }
 
-// See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
+// See https://tezos.gitlab.io/shell/p2p_api.html#alpha-michelson-v1-primitives-enumeration-unsigned-8-bit-integer
 export const opMapping: { [key: string]: string } = {
   '00': 'parameter',
   '01': 'storage',
@@ -222,6 +222,7 @@ export const opMapping: { [key: string]: string } = {
   '9a': 'TICKET',
   '9b': 'BYTES',
   '9c': 'NAT',
+  '9d': 'Ticket',
 };
 
 export const opMappingReverse = (() => {

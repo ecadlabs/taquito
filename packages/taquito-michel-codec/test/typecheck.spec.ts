@@ -131,13 +131,27 @@ describe('Typecheck', () => {
     assertDataValid(data, typedef);
   });
 
-  it('assertDataValid: ticket', () => {
+  it('assertDataValid: legacy ticket', () => {
     const typedef: MichelsonType = { prim: 'ticket', args: [{ prim: 'bytes' }] };
     const data: MichelsonData = [
       { string: 'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq' },
       { bytes: '01020304' },
       { int: '42' },
     ];
+    assertDataValid(data, typedef);
+  });
+
+  it('assertDataValid: ticket', () => {
+    const typedef: MichelsonType = { prim: 'ticket', args: [{ prim: 'string' }] };
+    const data: MichelsonData = {
+      prim: 'Ticket',
+      args: [
+        { string: 'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq' },
+        { prim: 'string' },
+        { string: 'TicketTicket' },
+        { int: '42' },
+      ]
+    };
     assertDataValid(data, typedef);
   });
 
