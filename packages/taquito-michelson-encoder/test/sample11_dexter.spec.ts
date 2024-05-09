@@ -9,16 +9,15 @@ import BigNumber from 'bignumber.js';
 import { ParameterSchema } from '../src/schema/parameter';
 import { MichelsonMap } from '../src/michelson-map';
 import { expectMichelsonMap } from './utils';
-import { Token } from '../src/taquito-michelson-encoder';
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storageDexter);
-    const extractSchema_Legacy = {
+    expect(schema.ExtractSchema()).toEqual({
       '0': {
         big_map: {
-          key: 'address',
-          value: 'nat',
-        },
+          key: "address",
+          value: "nat"
+        }
       },
       '1': 'contract',
       '2': 'contract',
@@ -50,68 +49,23 @@ describe('Exchange contract test', () => {
           },
         },
       },
-    };
-    const extractSchema_ResetFields = {
-      '0': {
-        big_map: {
-          key: 'address',
-          value: 'nat',
-        },
-      },
-      '1': 'contract',
-      '2': 'contract',
-      '3': 'nat',
-      '4': {
-        map: {
-          key: 'address',
-          value: {
-            '0': {
-              '0': 'nat',
-              '1': 'nat',
-              '2': 'timestamp',
-            },
-            '1': {
-              '0': 'nat',
-              '1': 'mutez',
-              '2': 'nat',
-              '3': 'timestamp',
-            },
-            '2': {
-              '0': 'nat',
-              '1': 'timestamp',
-            },
-            '3': {
-              '0': 'nat',
-              '1': 'mutez',
-              '2': 'timestamp',
-            },
-          },
-        },
-      },
-    };
+    });
 
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-
-    const generateSchema_Legacy = {
+    expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
         '0': {
-          __michelsonType: 'big_map',
+          __michelsonType: "big_map",
           schema: {
             key: {
-              __michelsonType: 'address',
-              schema: 'address',
+              __michelsonType: "address",
+              schema: "address"
             },
             value: {
-              __michelsonType: 'nat',
-              schema: 'nat',
-            },
-          },
+              __michelsonType: "nat",
+              schema: "nat"
+            }
+          }
         },
         '1': {
           __michelsonType: 'contract',
@@ -124,7 +78,7 @@ describe('Exchange contract test', () => {
                   schema: {
                     0: {
                       __michelsonType: 'address',
-                      schema: 'address',
+                      schema: 'address'
                     },
                     1: {
                       __michelsonType: 'contract',
@@ -137,351 +91,155 @@ describe('Exchange contract test', () => {
                               schema: {
                                 0: {
                                   __michelsonType: 'address',
-                                  schema: 'address',
+                                  schema: 'address'
                                 },
                                 1: {
                                   __michelsonType: 'address',
-                                  schema: 'address',
+                                  schema: 'address'
                                 },
                                 2: {
                                   __michelsonType: 'nat',
-                                  schema: 'nat',
+                                  schema: 'nat'
                                 },
-                              },
+                              }
                             },
                             1: {
                               __michelsonType: 'address',
-                              schema: 'address',
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
+                              schema: 'address'
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 },
                 1: {
                   __michelsonType: 'nat',
-                  schema: 'nat',
-                },
-              },
-            },
-          },
+                  schema: 'nat'
+                }
+              }
+            }
+          }
         },
         '2': {
           __michelsonType: 'contract',
           schema: {
             parameter: {
-              __michelsonType: 'or',
+              __michelsonType: "or",
               schema: {
                 0: {
-                  __michelsonType: 'pair',
+                  __michelsonType: "pair",
                   schema: {
                     0: {
                       __michelsonType: 'address',
-                      schema: 'address',
+                      schema: 'address'
                     },
                     1: {
                       __michelsonType: 'address',
-                      schema: 'address',
+                      schema: 'address'
                     },
                     2: {
                       __michelsonType: 'nat',
-                      schema: 'nat',
+                      schema: 'nat'
                     },
-                  },
+                  }
                 },
                 1: {
                   __michelsonType: 'address',
-                  schema: 'address',
-                },
-              },
-            },
-          },
+                  schema: 'address'
+                }
+              }
+            }
+          }
         },
         '3': {
           __michelsonType: 'nat',
-          schema: 'nat',
+          schema: 'nat'
         },
         '4': {
-          __michelsonType: 'map',
+          __michelsonType: "map",
           schema: {
             key: {
               __michelsonType: 'address',
-              schema: 'address',
+              schema: 'address'
             },
             value: {
-              __michelsonType: 'or',
+              __michelsonType: "or",
               schema: {
                 '0': {
-                  __michelsonType: 'pair',
+                  __michelsonType: "pair",
                   schema: {
                     '0': {
                       __michelsonType: 'nat',
-                      schema: 'nat',
+                      schema: 'nat'
                     },
                     '1': {
                       __michelsonType: 'nat',
-                      schema: 'nat',
+                      schema: 'nat'
                     },
                     '2': {
                       __michelsonType: 'timestamp',
-                      schema: 'timestamp',
+                      schema: 'timestamp'
                     },
-                  },
+                  }
                 },
                 '1': {
                   __michelsonType: 'pair',
                   schema: {
                     '1': {
                       __michelsonType: 'nat',
-                      schema: 'nat',
+                      schema: 'nat'
                     },
                     '2': {
                       __michelsonType: 'mutez',
-                      schema: 'mutez',
+                      schema: 'mutez'
                     },
                     '3': {
                       __michelsonType: 'nat',
-                      schema: 'nat',
+                      schema: 'nat'
                     },
                     '4': {
                       __michelsonType: 'timestamp',
-                      schema: 'timestamp',
+                      schema: 'timestamp'
                     },
-                  },
+                  }
                 },
                 '2': {
                   __michelsonType: 'pair',
                   schema: {
                     '2': {
                       __michelsonType: 'nat',
-                      schema: 'nat',
+                      schema: 'nat'
                     },
                     '3': {
                       __michelsonType: 'timestamp',
-                      schema: 'timestamp',
+                      schema: 'timestamp'
                     },
-                  },
+                  }
                 },
                 '3': {
                   __michelsonType: 'pair',
                   schema: {
                     '3': {
                       __michelsonType: 'nat',
-                      schema: 'nat',
+                      schema: 'nat'
                     },
                     '4': {
                       __michelsonType: 'mutez',
-                      schema: 'mutez',
+                      schema: 'mutez'
                     },
                     '5': {
                       __michelsonType: 'timestamp',
-                      schema: 'timestamp',
+                      schema: 'timestamp'
                     },
-                  },
+                  }
                 },
-              },
+              }
             },
           },
         },
-      },
-    };
-    const generateSchema_ResetFields = {
-      __michelsonType: 'pair',
-      schema: {
-        '0': {
-          __michelsonType: 'big_map',
-          schema: {
-            key: {
-              __michelsonType: 'address',
-              schema: 'address',
-            },
-            value: {
-              __michelsonType: 'nat',
-              schema: 'nat',
-            },
-          },
-        },
-        '1': {
-          __michelsonType: 'contract',
-          schema: {
-            parameter: {
-              __michelsonType: 'or',
-              schema: {
-                0: {
-                  __michelsonType: 'pair',
-                  schema: {
-                    0: {
-                      __michelsonType: 'address',
-                      schema: 'address',
-                    },
-                    1: {
-                      __michelsonType: 'contract',
-                      schema: {
-                        parameter: {
-                          __michelsonType: 'or',
-                          schema: {
-                            0: {
-                              __michelsonType: 'pair',
-                              schema: {
-                                0: {
-                                  __michelsonType: 'address',
-                                  schema: 'address',
-                                },
-                                1: {
-                                  __michelsonType: 'address',
-                                  schema: 'address',
-                                },
-                                2: {
-                                  __michelsonType: 'nat',
-                                  schema: 'nat',
-                                },
-                              },
-                            },
-                            1: {
-                              __michelsonType: 'address',
-                              schema: 'address',
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                1: {
-                  __michelsonType: 'nat',
-                  schema: 'nat',
-                },
-              },
-            },
-          },
-        },
-        '2': {
-          __michelsonType: 'contract',
-          schema: {
-            parameter: {
-              __michelsonType: 'or',
-              schema: {
-                0: {
-                  __michelsonType: 'pair',
-                  schema: {
-                    0: {
-                      __michelsonType: 'address',
-                      schema: 'address',
-                    },
-                    1: {
-                      __michelsonType: 'address',
-                      schema: 'address',
-                    },
-                    2: {
-                      __michelsonType: 'nat',
-                      schema: 'nat',
-                    },
-                  },
-                },
-                1: {
-                  __michelsonType: 'address',
-                  schema: 'address',
-                },
-              },
-            },
-          },
-        },
-        '3': {
-          __michelsonType: 'nat',
-          schema: 'nat',
-        },
-        '4': {
-          __michelsonType: 'map',
-          schema: {
-            key: {
-              __michelsonType: 'address',
-              schema: 'address',
-            },
-            value: {
-              __michelsonType: 'or',
-              schema: {
-                '0': {
-                  __michelsonType: 'pair',
-                  schema: {
-                    '0': {
-                      __michelsonType: 'nat',
-                      schema: 'nat',
-                    },
-                    '1': {
-                      __michelsonType: 'nat',
-                      schema: 'nat',
-                    },
-                    '2': {
-                      __michelsonType: 'timestamp',
-                      schema: 'timestamp',
-                    },
-                  },
-                },
-                '1': {
-                  __michelsonType: 'pair',
-                  schema: {
-                    '0': {
-                      __michelsonType: 'nat',
-                      schema: 'nat',
-                    },
-                    '1': {
-                      __michelsonType: 'mutez',
-                      schema: 'mutez',
-                    },
-                    '2': {
-                      __michelsonType: 'nat',
-                      schema: 'nat',
-                    },
-                    '3': {
-                      __michelsonType: 'timestamp',
-                      schema: 'timestamp',
-                    },
-                  },
-                },
-                '2': {
-                  __michelsonType: 'pair',
-                  schema: {
-                    '0': {
-                      __michelsonType: 'nat',
-                      schema: 'nat',
-                    },
-                    '1': {
-                      __michelsonType: 'timestamp',
-                      schema: 'timestamp',
-                    },
-                  },
-                },
-                '3': {
-                  __michelsonType: 'pair',
-                  schema: {
-                    '0': {
-                      __michelsonType: 'nat',
-                      schema: 'nat',
-                    },
-                    '1': {
-                      __michelsonType: 'mutez',
-                      schema: 'mutez',
-                    },
-                    '2': {
-                      __michelsonType: 'timestamp',
-                      schema: 'timestamp',
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    };
-
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.generateSchema()).toEqual(generateSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
+      }
+    });
   });
 
   it('Test storage parsing', () => {
@@ -513,7 +271,7 @@ describe('Exchange contract test', () => {
 
   it('Test parameter schema', () => {
     const schema = new ParameterSchema(params);
-    const extractSchema_Legacy = {
+    expect(schema.ExtractSchema()).toEqual({
       '0': {
         '0': 'nat',
         '1': 'nat',
@@ -535,199 +293,85 @@ describe('Exchange contract test', () => {
         '5': 'timestamp',
       },
       '4': 'nat',
-    };
-    const extractSchema_ResetFields = {
-      '0': {
-        '0': 'nat',
-        '1': 'nat',
-        '2': 'timestamp',
-      },
-      '1': {
-        '0': 'nat',
-        '1': 'mutez',
-        '2': 'nat',
-        '3': 'timestamp',
-      },
-      '2': {
-        '0': 'nat',
-        '1': 'timestamp',
-      },
-      '3': {
-        '0': 'nat',
-        '1': 'mutez',
-        '2': 'timestamp',
-      },
-      '4': 'nat',
-    };
+    });
 
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-
-    const generateSchema_Legacy = {
-      __michelsonType: 'or',
+    expect(schema.generateSchema()).toEqual({
+      __michelsonType: "or",
       schema: {
         '0': {
-          __michelsonType: 'pair',
+          __michelsonType: "pair",
           schema: {
             '0': {
               __michelsonType: 'nat',
-              schema: 'nat',
+              schema: 'nat'
             },
             '1': {
               __michelsonType: 'nat',
-              schema: 'nat',
+              schema: 'nat'
             },
             '2': {
               __michelsonType: 'timestamp',
-              schema: 'timestamp',
+              schema: 'timestamp'
             },
-          },
+          }
         },
         '1': {
-          __michelsonType: 'pair',
+          __michelsonType: "pair",
           schema: {
             '1': {
               __michelsonType: 'nat',
-              schema: 'nat',
+              schema: 'nat'
             },
             '2': {
               __michelsonType: 'mutez',
-              schema: 'mutez',
+              schema: 'mutez'
             },
             '3': {
               __michelsonType: 'nat',
-              schema: 'nat',
+              schema: 'nat'
             },
             '4': {
               __michelsonType: 'timestamp',
-              schema: 'timestamp',
+              schema: 'timestamp'
             },
-          },
+          }
         },
         '2': {
-          __michelsonType: 'pair',
+          __michelsonType: "pair",
           schema: {
             '2': {
               __michelsonType: 'nat',
-              schema: 'nat',
+              schema: 'nat'
             },
             '3': {
               __michelsonType: 'timestamp',
-              schema: 'timestamp',
+              schema: 'timestamp'
             },
-          },
+          }
         },
         '3': {
-          __michelsonType: 'pair',
+          __michelsonType: "pair",
           schema: {
             '3': {
               __michelsonType: 'nat',
-              schema: 'nat',
+              schema: 'nat'
             },
             '4': {
               __michelsonType: 'mutez',
-              schema: 'mutez',
+              schema: 'mutez'
             },
             '5': {
               __michelsonType: 'timestamp',
-              schema: 'timestamp',
+              schema: 'timestamp'
             },
-          },
+          }
         },
         '4': {
           __michelsonType: 'nat',
-          schema: 'nat',
+          schema: 'nat'
         },
-      },
-    };
-    const generateSchema_ResetFields = {
-      __michelsonType: 'or',
-      schema: {
-        '0': {
-          __michelsonType: 'pair',
-          schema: {
-            '0': {
-              __michelsonType: 'nat',
-              schema: 'nat',
-            },
-            '1': {
-              __michelsonType: 'nat',
-              schema: 'nat',
-            },
-            '2': {
-              __michelsonType: 'timestamp',
-              schema: 'timestamp',
-            },
-          },
-        },
-        '1': {
-          __michelsonType: 'pair',
-          schema: {
-            '0': {
-              __michelsonType: 'nat',
-              schema: 'nat',
-            },
-            '1': {
-              __michelsonType: 'mutez',
-              schema: 'mutez',
-            },
-            '2': {
-              __michelsonType: 'nat',
-              schema: 'nat',
-            },
-            '3': {
-              __michelsonType: 'timestamp',
-              schema: 'timestamp',
-            },
-          },
-        },
-        '2': {
-          __michelsonType: 'pair',
-          schema: {
-            '0': {
-              __michelsonType: 'nat',
-              schema: 'nat',
-            },
-            '1': {
-              __michelsonType: 'timestamp',
-              schema: 'timestamp',
-            },
-          },
-        },
-        '3': {
-          __michelsonType: 'pair',
-          schema: {
-            '0': {
-              __michelsonType: 'nat',
-              schema: 'nat',
-            },
-            '1': {
-              __michelsonType: 'mutez',
-              schema: 'mutez',
-            },
-            '2': {
-              __michelsonType: 'timestamp',
-              schema: 'timestamp',
-            },
-          },
-        },
-        '4': {
-          __michelsonType: 'nat',
-          schema: 'nat',
-        },
-      },
-    };
-
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.generateSchema()).toEqual(generateSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
+      }
+    });
   });
 
   it('Encode parameter properly func 0', () => {
@@ -881,7 +525,7 @@ describe('Exchange contract test', () => {
     expect(schema.ExtractSchema()).toEqual({
       '0': {
         big_map: {
-          key: 'address',
+          key: "address",
           value: {
             '0': 'nat',
             '1': {
@@ -899,52 +543,52 @@ describe('Exchange contract test', () => {
     });
 
     expect(schema.generateSchema()).toEqual({
-      __michelsonType: 'pair',
+      __michelsonType: "pair",
       schema: {
         '0': {
-          __michelsonType: 'big_map',
+          __michelsonType: "big_map",
           schema: {
             key: {
-              __michelsonType: 'address',
-              schema: 'address',
+              __michelsonType: "address",
+              schema: "address"
             },
             value: {
               __michelsonType: 'pair',
               schema: {
                 '0': {
-                  __michelsonType: 'nat',
-                  schema: 'nat',
+                  __michelsonType: "nat",
+                  schema: "nat"
                 },
                 '1': {
                   __michelsonType: 'map',
                   schema: {
                     key: {
-                      __michelsonType: 'address',
-                      schema: 'address',
+                      __michelsonType: "address",
+                      schema: "address"
                     },
                     value: {
-                      __michelsonType: 'nat',
-                      schema: 'nat',
+                      __michelsonType: "nat",
+                      schema: "nat"
                     },
                   },
                 },
-              },
+              }
             },
           },
         },
         '1': {
-          __michelsonType: 'nat',
-          schema: 'nat',
+          __michelsonType: "nat",
+          schema: "nat"
         },
         '2': {
-          __michelsonType: 'string',
-          schema: 'string',
+          __michelsonType: "string",
+          schema: "string"
         },
         '3': {
-          __michelsonType: 'string',
-          schema: 'string',
+          __michelsonType: "string",
+          schema: "string"
         },
-      },
+      }
     });
   });
 
@@ -970,30 +614,30 @@ describe('Exchange contract test', () => {
     });
 
     expect(schema.generateSchema()).toEqual({
-      __michelsonType: 'or',
+      __michelsonType: "or",
       schema: {
         '0': {
-          __michelsonType: 'pair',
+          __michelsonType: "pair",
           schema: {
             '0': {
               __michelsonType: 'address',
-              schema: 'address',
+              schema: "address"
             },
             '1': {
               __michelsonType: 'address',
-              schema: 'address',
+              schema: "address"
             },
             '2': {
               __michelsonType: 'nat',
-              schema: 'nat',
+              schema: "nat"
             },
-          },
+          }
         },
         '1': {
           __michelsonType: 'address',
-          schema: 'address',
+          schema: "address"
         },
-      },
+      }
     });
 
     expect(schema.ExtractSignatures()).toContainEqual(['1', 'address']);

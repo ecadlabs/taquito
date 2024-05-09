@@ -16,4 +16,4 @@ export const UnitValue = Symbol();
 export const SaplingStateValue = {};
 export * from './michelson-map';
 export { VERSION } from './version';
-export { FieldNumberingStrategy, Token } from './tokens/token';
+export { Token } from './tokens/token';

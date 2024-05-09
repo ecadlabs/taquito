@@ -32,9 +32,8 @@ import { ParserProvider } from './parser/interface';
 import { MichelCodecParser } from './parser/michel-codec-parser';
 import { Injector } from './injector/interface';
 import { RpcInjector } from './injector/rpc-injector';
-import { FieldNumberingStrategy, Token } from '@taquito/michelson-encoder';
 
-export { FieldNumberingStrategy, Token, MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
+export { MichelsonMap, UnitValue } from '@taquito/michelson-encoder';
 export { Forger, ForgeParams, ForgeResponse } from '@taquito/local-forging';
 export * from './constants';
 export * from './context';
@@ -359,14 +358,6 @@ export class TezosToolkit {
       this._context.injector = injectorProvider;
       this._options.injectorProvider = injectorProvider;
     }
-  }
-
-  /**
-   * @description Sets the strategy used for field numbering in Token execute/encode/decode to convert Michelson values to/from javascript objects
-   * @param strategy a value of type FieldNumberingStrategy that controls how field numbers are calculated
-   */
-  setFieldNumberingStrategy(strategy: FieldNumberingStrategy) {
-    Token.fieldNumberingStrategy = strategy;
   }
 
   /**

@@ -65,12 +65,7 @@ function collapse(val: Token['val'] | any[], prim: string = PairToken.prim): [an
 export class PairToken extends ComparableToken {
   static prim: 'pair' = 'pair' as const;
 
-  constructor(
-    val: MichelsonV1Expression,
-    idx: number,
-    fac: TokenFactory,
-    parentTokenType?: 'Or' | 'Pair' | 'Other' | undefined
-  ) {
+  constructor(val: MichelsonV1Expression, idx: number, fac: TokenFactory) {
     super(
       Array.isArray(val)
         ? {
@@ -78,14 +73,13 @@ export class PairToken extends ComparableToken {
             args: val,
           }
         : (val as MichelsonV1ExpressionExtended).prim
-          ? (val as MichelsonV1ExpressionExtended)
-          : ({
-              prim: PairToken.prim,
-              args: val,
-            } as MichelsonV1ExpressionExtended),
+        ? (val as MichelsonV1ExpressionExtended)
+        : ({
+            prim: PairToken.prim,
+            args: val,
+          } as MichelsonV1ExpressionExtended),
       idx,
-      fac,
-      parentTokenType
+      fac
     );
   }
 
@@ -97,7 +91,7 @@ export class PairToken extends ComparableToken {
   private tokens(): [Token, Token] {
     let cnt = 0;
     return this.args().map((a) => {
-      const tok = this.createToken(a, this.getIdxForChildren() + cnt, 'Pair');
+      const tok = this.createToken(a, this.idx + cnt);
       if (tok instanceof PairToken) {
         cnt += Object.keys(tok.ExtractSchema()).length;
       } else {
@@ -116,13 +110,13 @@ export class PairToken extends ComparableToken {
 
   public ExtractSignature(): any {
     const args = this.args();
-    const leftToken = this.createToken(args[0], this.getIdxForChildren(), 'Pair');
+    const leftToken = this.createToken(args[0], this.idx);
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
       keyCount = Object.keys(leftToken.ExtractSchema()).length;
     }
 
-    const rightToken = this.createToken(args[1], this.getIdxForChildren() + keyCount, 'Pair');
+    const rightToken = this.createToken(args[1], this.idx + keyCount);
 
     const newSig = [];
 
@@ -175,7 +169,7 @@ export class PairToken extends ComparableToken {
   private traversal(getLeftValue: (token: Token) => any, getRightValue: (token: Token) => any) {
     const args = this.args();
 
-    const leftToken = this.createToken(args[0], this.getIdxForChildren(), 'Pair');
+    const leftToken = this.createToken(args[0], this.idx);
     let keyCount = 1;
     let leftValue;
     if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
@@ -187,7 +181,7 @@ export class PairToken extends ComparableToken {
       leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
     }
 
-    const rightToken = this.createToken(args[1], this.getIdxForChildren() + keyCount, 'Pair');
+    const rightToken = this.createToken(args[1], this.idx + keyCount);
     let rightValue;
     if (rightToken instanceof PairToken && !rightToken.hasAnnotations()) {
       rightValue = getRightValue(rightToken);
@@ -280,12 +274,5 @@ export class PairToken extends ComparableToken {
     }
     this.tokens().map((t) => t.findAndReturnTokens(tokenToFind, tokens));
     return tokens;
-  }
-
-  protected getIdxForChildren(): number {
-    if (Token.fieldNumberingStrategy === 'Legacy') {
-      return this.idx;
-    }
-    return this.parentTokenType === 'Pair' ? this.idx : 0;
   }
 }

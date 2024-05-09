@@ -9,7 +9,7 @@
 # * Clone and build nwaku: https://is.gd/NXeAnv
 # * Add a .env file with a variable NWAKU_DIR set to your nwaku directory
 
-_err() { # write a (loud) message to stderr, if running interactively
+_err() { # write a (loud) message to stderr, if running interacively
     [[ -o interactive ]] && tput setaf 1
     echo "$@" 1>&2
 }
