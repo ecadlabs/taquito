@@ -37,6 +37,7 @@ import {
   SmartRollupRefutationStart,
   SmartRollupRefutationOptions,
   RPCSimulateOperationParam,
+  OperationContentsAndResultDalPublishCommitment,
 } from '../src/types';
 import {
   blockIthacanetResponse,
@@ -1788,73 +1789,6 @@ describe('RpcClient test', () => {
       expect(transaction.metadata.operation_result.consumed_gas).toEqual('24660');
     });
 
-    it('should query the right url and property for operation, proto 20, attestation_with_dal', async () => {
-      httpBackend.createRequest.mockReturnValue(
-        Promise.resolve({
-          protocol: 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
-          chain_id: 'NetXo8SqH1c38SS',
-          hash: 'BKsCfYZrh417adJiKbGsyhVG2XrvUBJDhhkCAkZQzWzkEHCejXr',
-          header: {
-            level: 416914,
-            proto: 2,
-            predecessor: 'BLBXzegi3m1K8YjP7w9YgEpts5a9ZCFjY7xqRcm16p6yFxXbZGT',
-            timestamp: '2024-05-06T18:01:07Z',
-            validation_pass: 4,
-            operations_hash: 'LLoZxmgEJQyZ74XCrZQu8Jtcov4SnGGRyuYf32fYmURW2Xfcj58Gv',
-            fitness: ['02', '00065c92', '', 'ffffffff', '00000000'],
-            context: 'CoV1GGrMBca5uBG4AzQbKNrQhQHHTtSYJAHVk7pJtuMw3uWiNvTV',
-            payload_hash: 'vh1mfavAuf7E1m1tZUEHkWomS8BDiLsVZz9T1A79Afu8Cag5DQHG',
-            payload_round: 0,
-            proof_of_work_nonce: 'e38cf66600000000',
-            liquidity_baking_toggle_vote: 'on',
-            adaptive_issuance_vote: 'on',
-            signature:
-              'sighpgD4aPxorZUvPxKvBHYNvnQEBRctF14bYXFX9qLbXbCGZv64S1dFVduBLzWBSEXCcHWiBuUT1iLZt9SE2mKCTkLtWuo5',
-          },
-          metadata: {},
-          operations: [
-            [
-              {
-                protocol: 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
-                chain_id: 'NetXo8SqH1c38SS',
-                hash: 'opSmHyeasw4QcJ4Jc2qi6arNeSQMhFRjHBdFYWXGoMydLkgVRtb',
-                branch: 'BLHyjaqV2FhuHLQL3CBjWJqgZZ77BxcNxh3ehXcNYMQjjqAPwqA',
-                contents: [
-                  {
-                    kind: 'attestation_with_dal',
-                    slot: 19,
-                    level: 416913,
-                    round: 0,
-                    block_payload_hash: 'vh27AvfjAJob9VdcZHEPHFbMAzi6nhCiHVzAyDBEdAPDCcEa676t',
-                    dal_attestation: '0',
-                    metadata: {
-                      delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
-                      consensus_power: 532,
-                      consensus_key: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
-                    },
-                  },
-                ],
-                signature:
-                  'sigh9rmktxbqmK6fXaq2ciAQrbrVH8pZhKeXEKHCzgNmJaP6gc1njofiMMzvhx2SRXQ7Gv8aVDzBM18kDGmUoBxQA693Bk2o',
-              },
-            ],
-          ],
-        })
-      );
-
-      const response = await client.getBlock();
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'GET',
-        url: 'root/chains/test/blocks/head',
-      });
-      const endorsementWithSlot = response.operations[0][0]
-        .contents[0] as OperationContentsAndResultAttestationWithDal;
-      expect(endorsementWithSlot.kind).toEqual('attestation_with_dal');
-      expect(endorsementWithSlot.slot).toEqual(19);
-      expect(endorsementWithSlot.dal_attestation).toEqual('0');
-    });
-
     it('should query the right url and properties (big_map_diff and lazy_storage_diff) in transaction operation result, proto 9', async () => {
       httpBackend.createRequest.mockReturnValue(
         Promise.resolve({
@@ -3143,6 +3077,174 @@ describe('RpcClient test', () => {
       expect(ticketReceipt?.ticket_token.ticketer).toEqual('KT1JGcC8DuWHcShu6XvtfgKVnV2zcYsZ4TVH');
       expect(ticketReceipt?.updates[0].account).toEqual('KT1JoRgUcR6NApwMLnBZ2pehCzp8tR4HtkHj');
       expect(ticketReceipt?.updates[0].amount).toEqual('1');
+    });
+
+    it('should query the right url and property for operation, proto 20, attestation_with_dal', async () => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          protocol: 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
+          chain_id: 'NetXo8SqH1c38SS',
+          hash: 'BKsCfYZrh417adJiKbGsyhVG2XrvUBJDhhkCAkZQzWzkEHCejXr',
+          header: {
+            level: 416914,
+            proto: 2,
+            predecessor: 'BLBXzegi3m1K8YjP7w9YgEpts5a9ZCFjY7xqRcm16p6yFxXbZGT',
+            timestamp: '2024-05-06T18:01:07Z',
+            validation_pass: 4,
+            operations_hash: 'LLoZxmgEJQyZ74XCrZQu8Jtcov4SnGGRyuYf32fYmURW2Xfcj58Gv',
+            fitness: ['02', '00065c92', '', 'ffffffff', '00000000'],
+            context: 'CoV1GGrMBca5uBG4AzQbKNrQhQHHTtSYJAHVk7pJtuMw3uWiNvTV',
+            payload_hash: 'vh1mfavAuf7E1m1tZUEHkWomS8BDiLsVZz9T1A79Afu8Cag5DQHG',
+            payload_round: 0,
+            proof_of_work_nonce: 'e38cf66600000000',
+            liquidity_baking_toggle_vote: 'on',
+            adaptive_issuance_vote: 'on',
+            signature:
+              'sighpgD4aPxorZUvPxKvBHYNvnQEBRctF14bYXFX9qLbXbCGZv64S1dFVduBLzWBSEXCcHWiBuUT1iLZt9SE2mKCTkLtWuo5',
+          },
+          metadata: {},
+          operations: [
+            [
+              {
+                protocol: 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
+                chain_id: 'NetXo8SqH1c38SS',
+                hash: 'opSmHyeasw4QcJ4Jc2qi6arNeSQMhFRjHBdFYWXGoMydLkgVRtb',
+                branch: 'BLHyjaqV2FhuHLQL3CBjWJqgZZ77BxcNxh3ehXcNYMQjjqAPwqA',
+                contents: [
+                  {
+                    kind: 'attestation_with_dal',
+                    slot: 19,
+                    level: 416913,
+                    round: 0,
+                    block_payload_hash: 'vh27AvfjAJob9VdcZHEPHFbMAzi6nhCiHVzAyDBEdAPDCcEa676t',
+                    dal_attestation: '0',
+                    metadata: {
+                      delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+                      consensus_power: 532,
+                      consensus_key: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+                    },
+                  },
+                ],
+                signature:
+                  'sigh9rmktxbqmK6fXaq2ciAQrbrVH8pZhKeXEKHCzgNmJaP6gc1njofiMMzvhx2SRXQ7Gv8aVDzBM18kDGmUoBxQA693Bk2o',
+              },
+            ],
+          ],
+        })
+      );
+
+      const response = await client.getBlock();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head',
+      });
+      const endorsementWithSlot = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultAttestationWithDal;
+      expect(endorsementWithSlot.kind).toEqual('attestation_with_dal');
+      expect(endorsementWithSlot.slot).toEqual(19);
+      expect(endorsementWithSlot.dal_attestation).toEqual('0');
+    });
+
+    it('should query the right url and property for operation, proto 20, dal_publish_commitment', async () => {
+      httpBackend.createRequest.mockReturnValue(
+        Promise.resolve({
+          protocol: 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
+          chain_id: 'NetXo8SqH1c38SS',
+          hash: 'BKsCfYZrh417adJiKbGsyhVG2XrvUBJDhhkCAkZQzWzkEHCejXr',
+          header: {
+            level: 416914,
+            proto: 2,
+            predecessor: 'BLBXzegi3m1K8YjP7w9YgEpts5a9ZCFjY7xqRcm16p6yFxXbZGT',
+            timestamp: '2024-05-06T18:01:07Z',
+            validation_pass: 4,
+            operations_hash: 'LLoZxmgEJQyZ74XCrZQu8Jtcov4SnGGRyuYf32fYmURW2Xfcj58Gv',
+            fitness: ['02', '00065c92', '', 'ffffffff', '00000000'],
+            context: 'CoV1GGrMBca5uBG4AzQbKNrQhQHHTtSYJAHVk7pJtuMw3uWiNvTV',
+            payload_hash: 'vh1mfavAuf7E1m1tZUEHkWomS8BDiLsVZz9T1A79Afu8Cag5DQHG',
+            payload_round: 0,
+            proof_of_work_nonce: 'e38cf66600000000',
+            liquidity_baking_toggle_vote: 'on',
+            adaptive_issuance_vote: 'on',
+            signature:
+              'sighpgD4aPxorZUvPxKvBHYNvnQEBRctF14bYXFX9qLbXbCGZv64S1dFVduBLzWBSEXCcHWiBuUT1iLZt9SE2mKCTkLtWuo5',
+          },
+          metadata: {},
+          operations: [
+            [
+              {
+                protocol: 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
+                chain_id: 'NetXycmjU7QxoVf',
+                hash: 'onhU8VcKQ7Jfh2wE2ABJMq4MHN2x9262WVeSXV6SVzpZjZcqSj8',
+                branch: 'BMT5yA3UH3CJkaYJBq33Q1BNZU6NL4zZNBhCHKwxygSm59P1x9M',
+                contents: [
+                  {
+                    kind: 'dal_publish_commitment',
+                    source: 'tz1Mp9zrMAJ3jckh3juLXGobfDv6oyUycfSy',
+                    fee: '513',
+                    counter: '67',
+                    gas_limit: '1433',
+                    storage_limit: '0',
+                    slot_header: {
+                      slot_index: 0,
+                      commitment:
+                        'sh1vHbHrPSt7eWqYJmM9EUk5scjbvR5PKBckJxmmDJzYHHBkca8Lz4hxXX6zpW5wbhJhswJd4v',
+                      commitment_proof:
+                        '90c6576ad09e11b14eb464cdd214fe061ba8e8e5a3175e29fe7ff40526f90c2f2f4e02fe9fe03f7adb0fe286d7828b970eb1979f0f65ca3637a51d5456b442377d20397eb1b02544c2e435d79e156881443179fe16b32ad9e9501622a647c2ce',
+                    },
+                    metadata: {
+                      balance_updates: [
+                        {
+                          kind: 'contract',
+                          contract: 'tz1Mp9zrMAJ3jckh3juLXGobfDv6oyUycfSy',
+                          change: '-513',
+                          origin: 'block',
+                        },
+                        {
+                          kind: 'accumulator',
+                          category: 'block fees',
+                          change: '513',
+                          origin: 'block',
+                        },
+                      ],
+                      operation_result: {
+                        status: 'applied',
+                        slot_header: {
+                          version: '0',
+                          level: 117424,
+                          index: 0,
+                          commitment:
+                            'sh1vHbHrPSt7eWqYJmM9EUk5scjbvR5PKBckJxmmDJzYHHBkca8Lz4hxXX6zpW5wbhJhswJd4v',
+                        },
+                        consumed_milligas: '1332590',
+                      },
+                    },
+                  },
+                ],
+                signature:
+                  'sigwNUDa4HvpGMwpNEuqha91o9vgQzE4AkHZvLiYybRv1137jtorpHr1RZrhw5K167Z4e5UkbPHUsBMTq3KFyPkA1N6ZQnZD',
+              },
+            ],
+          ],
+        })
+      );
+
+      const response = await client.getBlock();
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head',
+      });
+      const endorsementWithSlot = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultDalPublishCommitment;
+      expect(endorsementWithSlot.kind).toEqual('dal_publish_commitment');
+      expect(endorsementWithSlot.slot_header.slot_index).toEqual(0);
+      expect(endorsementWithSlot.slot_header.commitment).toEqual(
+        'sh1vHbHrPSt7eWqYJmM9EUk5scjbvR5PKBckJxmmDJzYHHBkca8Lz4hxXX6zpW5wbhJhswJd4v'
+      );
+      expect(endorsementWithSlot.slot_header.commitment_proof).toEqual(
+        '90c6576ad09e11b14eb464cdd214fe061ba8e8e5a3175e29fe7ff40526f90c2f2f4e02fe9fe03f7adb0fe286d7828b970eb1979f0f65ca3637a51d5456b442377d20397eb1b02544c2e435d79e156881443179fe16b32ad9e9501622a647c2ce'
+      );
     });
   });
 

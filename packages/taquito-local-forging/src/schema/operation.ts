@@ -180,6 +180,15 @@ export const SmartRollupExecuteOutboxMessageSchema = {
   output_proof: CODEC.PADDED_BYTES,
 };
 
+export const DalPublishCommitmentSchema = {
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  slot_header: CODEC.SLOT_HEADER,
+};
+
 export const FailingNoopSchema = {
   arbitrary: CODEC.PADDED_BYTES,
 };
@@ -196,7 +205,6 @@ export const operationEncoder =
 export const operationDecoder =
   (decoders: { [key: string]: Decoder }) => (value: Uint8ArrayConsumer) => {
     const op = value.consume(1);
-
     const operationName = kindMapping[op[0]];
     if (operationName === undefined) {
       throw new UnsupportedOperationError(op[0].toString());

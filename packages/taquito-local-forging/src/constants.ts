@@ -59,6 +59,8 @@ export enum CODEC {
   PVM_KIND = 'pvm_kind',
   OP_SMART_ROLLUP_ADD_MESSAGES = 'smart_rollup_add_messages',
   OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'smart_rollup_execute_outbox_message',
+  OP_DAL_PUBLISH_COMMITMENT = 'dal_publish_commitment',
+  SLOT_HEADER = 'slot_header',
 }
 
 // See https://tezos.gitlab.io/shell/p2p_api.html#alpha-michelson-v1-primitives-enumeration-unsigned-8-bit-integer
@@ -231,7 +233,7 @@ export const opMappingReverse = (() => {
   return result;
 })();
 
-// See https://tezos.gitlab.io/shell/p2p_api.html?highlight=p2p
+// See https://tezos.gitlab.io/shell/p2p_api.html
 export const kindMapping: { [key: number]: string } = {
   0x04: 'activate_account',
   0x6b: 'reveal',
@@ -252,6 +254,7 @@ export const kindMapping: { [key: number]: string } = {
   0xc8: 'smart_rollup_originate',
   0xc9: 'smart_rollup_add_messages',
   0xce: 'smart_rollup_execute_outbox_message',
+  0xe6: 'dal_publish_commitment',
   0x11: 'failing_noop',
 };
 

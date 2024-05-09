@@ -24,6 +24,7 @@ import {
   tz1Decoder,
   valueParameterDecoder,
   zarithDecoder,
+  slotHeaderDecoder,
 } from './codec';
 import { CODEC } from './constants';
 import { scriptDecoder } from './michelson/codec';
@@ -50,6 +51,7 @@ import {
   SmartRollupOriginateSchema,
   SmartRollupAddMessagesSchema,
   SmartRollupExecuteOutboxMessageSchema,
+  DalPublishCommitmentSchema,
   FailingNoopSchema,
 } from './schema/operation';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
@@ -86,6 +88,7 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.PVM_KIND]: pvmKindDecoder,
   [CODEC.PADDED_BYTES]: paddedBytesDecoder,
   [CODEC.SMART_ROLLUP_MESSAGE]: smartRollupMessageDecoder,
+  [CODEC.SLOT_HEADER]: slotHeaderDecoder,
 };
 
 decoders[CODEC.OPERATION] = operationDecoder(decoders);
@@ -125,6 +128,8 @@ decoders[CODEC.OP_SMART_ROLLUP_ADD_MESSAGES] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(SmartRollupAddMessagesSchema)(val);
 decoders[CODEC.OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(SmartRollupExecuteOutboxMessageSchema)(val);
+decoders[CODEC.OP_DAL_PUBLISH_COMMITMENT] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(DalPublishCommitmentSchema)(val);
 decoders[CODEC.MANAGER] = schemaDecoder(decoders)(ManagerOperationSchema);
 decoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(SetDepositsLimitSchema)(val);
