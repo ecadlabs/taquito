@@ -37,7 +37,7 @@ Depending on the current Tezos upgrade cycle, multiple testnet networks may be c
 
 
 ```
-OXFORDNET=true npm run test
+PARISNET=true npm run test
 ```
 
 ## Configuration
@@ -52,7 +52,7 @@ If different testnets are configured in the `config.ts` file, you can run tests 
 
 
 ```
-npm run test:oxfordnet contract-with-bigmap-init.spec.ts
+npm run test:parisnet contract-with-bigmap-init.spec.ts
 ```
 
 
@@ -60,7 +60,7 @@ Or for a specific test within a test file:
 
 
 ```
-npm run test:oxfordnet -- -t "Verify contract.originate for a contract and call deposit method with unit param"
+npm run test:parisnet -- -t "Verify contract.originate for a contract and call deposit method with unit param"
 ```
 
 
@@ -70,7 +70,7 @@ npm run test:oxfordnet -- -t "Verify contract.originate for a contract and call 
 To run tests against a node that is not pre-configured in Taquito, use:
 
 
-`export TEZOS_RPC_OXFORDNET='http://localhost:8732'`.
+`export TEZOS_RPC_PARISNET='http://localhost:8732'`.
 
 ## Using a Secret Key Instead of the Keygen API
 
@@ -79,7 +79,7 @@ By default, the integration tests use an ephemeral key managed by the Keygen API
 
 
 ```
-npm run test:oxfordnet-secret-key contract-with-bigmap-init.spec.ts
+npm run test:parisnet-secret-key contract-with-bigmap-init.spec.ts
 ```
 
 
@@ -103,7 +103,7 @@ To review the graphical report of the test run, open the index.html file in ~/ta
 ## Taquito Integration Tests with Flextesa
 
 :::warning
-Due to the discontinuation of Flextesa support from Protocol Oxford onwards, we unfortunately will not be testing against sandboxes anymore. 
+Due to the discontinuation of Flextesa support from Protocol Oxford onwards, we unfortunately will not be testing against sandboxes anymore.
 
 The only sandbox tests we're running points to the latest Nairobibox to specifically test for the `ballot` and `drain_delegate` operation.
 :::

@@ -10,8 +10,8 @@ CONFIGS().forEach(({ rpc }) => {
     let Tezos: TezosToolkit;
 
     beforeAll(async () => {
-      if(rpc.includes('oxfordnet')){
-        Tezos = new TezosToolkit('https://rpc.tzkt.io/oxfordnet');
+      if(rpc.includes('parisnet')){
+        Tezos = new TezosToolkit('https://rpc.tzkt.io/parisnet');
       } else if(rpc.includes('ghostnet')){
         Tezos = new TezosToolkit('https://rpc.tzkt.io/ghostnet');
       } else {
