@@ -74,9 +74,9 @@ Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), an
 | [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 allows retrieving NFT/token metadata                                                         |
 | [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 allows retrieving contract metadata and executing off-chain views                            |
 | [@taquito/beacon-wallet](packages/taquito-beacon-wallet)         | TZIP-10 implementation of a Wallet API                                                               |
-| [@taquito/http-utils](packages/taquito-http-utils)               | Provides functionality configure http request options                                                |
+| [@taquito/http-utils](packages/taquito-http-utils)               | Provides functionality to configure and customize http requests                                      |
 | [@taquito/core](packages/taquito-core)                           | Provides parent and core types, classes, and interfaces for other Taquito packages or external uses  |
-| [@taquito/sapling](packages/taquito-sapling)                     | Provides functionality to prepare and read sapling transaction                                       |
+| [@taquito/sapling](packages/taquito-sapling)                     | Provides functionality to prepare and read sapling transactions                                      |
 | [@taquito/contracts-library](packages/taquito-contracts-library) | Provides functionality specify static data related to contracts                                      |
 | [@taquito/ledger-signer](packages/taquito-ledger-signer)         | Provides functionality for ledger signer provider                                                    |
 | [@taquito/timelock](packages/taquito-timelock)                   | Provides functionality to create and open timelocks                                                  |
