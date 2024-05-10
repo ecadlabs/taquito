@@ -247,16 +247,22 @@ export interface OperationContentsSetDepositsLimit {
   limit?: string;
 }
 
-export interface OperationContentsAttestationWithSlot {
-  kind: OpKind.ATTESTATION_WITH_SLOT;
-  endorsement: InlinedAttestation;
+export interface OperationContentsAttestationWithDal {
+  kind: OpKind.ATTESTATION_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
 }
 
-export interface OperationContentsEndorsementWithSlot {
-  kind: OpKind.ENDORSEMENT_WITH_SLOT;
-  endorsement: InlinedEndorsement;
+export interface OperationContentsEndorsementWithDal {
+  kind: OpKind.ENDORSEMENT_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
 }
 
 export interface OperationContentsRevelation {
@@ -504,6 +510,20 @@ export interface OperationContentsSmartRollupTimeout {
   stakers: SmartRollupTimeoutStakers;
 }
 
+export interface OperationContentsDalPublishCommitment {
+  kind: OpKind.DAL_PUBLISH_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  slot_header: {
+    slot_index: number;
+    commitment: string;
+    commitment_proof: string;
+  };
+}
+
 export type OperationContents =
   | OperationContentsAttestation
   | OperationContentsPreattestation
@@ -523,8 +543,8 @@ export type OperationContents =
   | OperationContentsTransaction
   | OperationContentsOrigination
   | OperationContentsDelegation
-  | OperationContentsAttestationWithSlot
-  | OperationContentsEndorsementWithSlot
+  | OperationContentsAttestationWithDal
+  | OperationContentsEndorsementWithDal
   | OperationContentsFailingNoop
   | OperationContentsRegisterGlobalConstant
   | OperationContentsSetDepositsLimit
@@ -539,7 +559,8 @@ export type OperationContents =
   | OperationContentsSmartRollupCement
   | OperationContentsSmartRollupRefute
   | OperationContentsSmartRollupRecoverBond
-  | OperationContentsSmartRollupTimeout;
+  | OperationContentsSmartRollupTimeout
+  | OperationContentsDalPublishCommitment;
 
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -551,8 +572,7 @@ export interface OperationContentsAndResultMetadataExtended1 {
 export interface OperationContentsAndResultMetadataExtended0 {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  slots?: number[];
-  endorsement_power?: number;
+  endorsement_power: number;
   consensus_key?: string;
 }
 
@@ -675,6 +695,12 @@ export interface OperationContentsAndResultMetadataSmartRollupTimeout {
   internal_operation_results?: InternalOperationResult[];
 }
 
+export interface OperationContentsAndResultMetadataDalPublishCommitment {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultDalPublishCommitment;
+  internal_operation_results?: InternalOperationResult[];
+}
+
 export interface OperationContentsAndResultAttestation {
   kind: OpKind.ATTESTATION;
   block_payload_hash?: string;
@@ -718,10 +744,13 @@ export interface OperationContentsAndResultDoublePreattestation {
   metadata: OperationContentsAndResultMetadata;
 }
 
-export interface OperationContentsAndResultAttestationWithSlot {
-  kind: OpKind.ATTESTATION_WITH_SLOT;
-  endorsement: InlinedAttestation;
+export interface OperationContentsAndResultAttestationWithDal {
+  kind: OpKind.ATTESTATION_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
   metadata: OperationContentsAndResultMetadataExtended1;
 }
 
@@ -732,10 +761,13 @@ export interface OperationContentsAndResultDoublePreEndorsement {
   metadata: OperationContentsAndResultMetadata;
 }
 
-export interface OperationContentsAndResultEndorsementWithSlot {
-  kind: OpKind.ENDORSEMENT_WITH_SLOT;
-  endorsement: InlinedEndorsement;
+export interface OperationContentsAndResultEndorsementWithDal {
+  kind: OpKind.ENDORSEMENT_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
   metadata: OperationContentsAndResultMetadataExtended0;
 }
 
@@ -999,6 +1031,21 @@ export interface OperationContentsAndResultSmartRollupTimeout {
   metadata: OperationContentsAndResultMetadataSmartRollupTimeout;
 }
 
+export interface OperationContentsAndResultDalPublishCommitment {
+  kind: OpKind.DAL_PUBLISH_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  slot_header: {
+    slot_index: number;
+    commitment: string;
+    commitment_proof: string;
+  };
+  metadata: OperationContentsAndResultMetadataDalPublishCommitment;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultAttestation
   | OperationContentsAndResultPreattestation
@@ -1017,8 +1064,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTransaction
   | OperationContentsAndResultOrigination
   | OperationContentsAndResultDelegation
-  | OperationContentsAndResultAttestationWithSlot
-  | OperationContentsAndResultEndorsementWithSlot
+  | OperationContentsAndResultAttestationWithDal
+  | OperationContentsAndResultEndorsementWithDal
   | OperationContentsAndResultRegisterGlobalConstant
   | OperationContentsAndResultSetDepositsLimit
   | OperationContentsAndResultTransferTicket
@@ -1033,7 +1080,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupCement
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupRecoverBond
-  | OperationContentsAndResultSmartRollupTimeout;
+  | OperationContentsAndResultSmartRollupTimeout
+  | OperationContentsAndResultDalPublishCommitment;
 
 export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultTransaction
@@ -1044,8 +1092,11 @@ export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultSetDepositsLimit
   | OperationContentsAndResultUpdateConsensusKey
   | OperationContentsAndResultIncreasePaidStorage
+  | OperationContentsAndResultTransferTicket
   | OperationContentsAndResultSmartRollupAddMessages
-  | OperationContentsAndResultSmartRollupOriginate;
+  | OperationContentsAndResultSmartRollupOriginate
+  | OperationContentsAndResultSmartRollupExecuteOutboxMessage
+  | OperationContentsAndResultDalPublishCommitment;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1413,6 +1464,18 @@ export interface OperationResultSmartRollupTimeout {
   errors?: TezosGenericOperationError[];
 }
 
+export interface OperationResultDalPublishCommitment {
+  status: OperationResultStatusEnum;
+  slot_header?: {
+    version: string;
+    level: number;
+    index: number;
+    commitment: string;
+  };
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
 export interface ContractBigMapDiffItem {
   key_hash?: string;
   key?: MichelsonV1Expression;
@@ -1475,7 +1538,8 @@ export type OperationResult =
   | OperationResultSmartRollupRefute
   | OperationResultSmartRollupRecoverBond
   | OperationResultSmartRollupTimeout
-  | OperationResultSmartRollupExecuteOutboxMessage;
+  | OperationResultSmartRollupExecuteOutboxMessage
+  | OperationResultDalPublishCommitment;
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;

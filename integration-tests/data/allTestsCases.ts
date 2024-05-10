@@ -49,6 +49,45 @@ interface TestCase {
   expected?: object;
 }
 
+export const parisCases: TestCase[] = [
+  {
+    name: 'Attestation With Dal operation',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.ATTESTATION_WITH_DAL,
+          slot: 0,
+          level: 66299,
+          round: 5,
+          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
+          dal_attestation: '10'
+        }
+      ]
+    }
+  },
+  {
+    name: 'Dal Publish Commitment operation1',
+    operation: {
+      branch: 'BMT5yA3UH3CJkaYJBq33Q1BNZU6NL4zZNBhCHKwxygSm59P1x9M',
+      contents: [
+        {
+          kind: OpKind.DAL_PUBLISH_COMMITMENT,
+          source: 'tz1Mp9zrMAJ3jckh3juLXGobfDv6oyUycfSy',
+          fee: '513',
+          counter: '67',
+          gas_limit: '1433',
+          storage_limit: '0',
+          slot_header: {
+            slot_index: 10,
+            commitment: 'sh1vHbHrPSt7eWqYJmM9EUk5scjbvR5PKBckJxmmDJzYHHBkca8Lz4hxXX6zpW5wbhJhswJd4v',
+            commitment_proof: '90c6576ad09e11b14eb464cdd214fe061ba8e8e5a3175e29fe7ff40526f90c2f2f4e02fe9fe03f7adb0fe286d7828b970eb1979f0f65ca3637a51d5456b442377d20397eb1b02544c2e435d79e156881443179fe16b32ad9e9501622a647c2ce'
+          }
+        }
+      ]
+    }
+  },
+]
 export const oxfordCases: TestCase[] = [
   {
     name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',

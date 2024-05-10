@@ -1,4 +1,4 @@
-import { Prim, Expr, IntLiteral, StringLiteral } from './micheline';
+import { Prim, Expr, IntLiteral, StringLiteral, BytesLiteral } from './micheline';
 import { Tuple, NoArgs, ReqArgs, MichelsonError } from './utils';
 import {
   MichelsonCode,
@@ -230,6 +230,14 @@ function assertStringLiteral(ex: Expr): ex is StringLiteral {
     return true;
   }
   throw new MichelsonValidationError(ex, 'string literal expected');
+}
+
+// usually an address
+function assertStringOrBytes(ex: Expr): ex is StringLiteral | BytesLiteral {
+  if ('string' in ex || 'bytes' in ex) {
+    return true;
+  }
+  throw new MichelsonValidationError(ex, 'string or bytes literal expected');
 }
 
 function assertArgs<N extends number>(
@@ -730,6 +738,15 @@ export function assertMichelsonData(ex: Expr): ex is MichelsonData {
       case 'Lambda_rec':
         if (ex.args) {
           assertMichelsonInstruction(ex.args);
+        }
+        break;
+
+      case 'Ticket':
+        if (assertArgs(ex, 4)) {
+          assertStringOrBytes(ex.args[0]);
+          assertMichelsonType(ex.args[1]);
+          assertMichelsonData(ex.args[2]);
+          assertIntLiteral(ex.args[3]);
         }
         break;
 

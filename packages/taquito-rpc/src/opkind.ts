@@ -11,8 +11,8 @@ export enum OpKind {
   SET_DEPOSITS_LIMIT = 'set_deposits_limit',
   DOUBLE_PREATTESTATION_EVIDENCE = 'double_preattestation_evidence',
   DOUBLE_PREENDORSEMENT_EVIDENCE = 'double_preendorsement_evidence',
-  ATTESTATION_WITH_SLOT = 'attestation_with_slot',
-  ENDORSEMENT_WITH_SLOT = 'endorsement_with_slot',
+  ATTESTATION_WITH_DAL = 'attestation_with_dal',
+  ENDORSEMENT_WITH_DAL = 'endorsement_with_dal',
   SEED_NONCE_REVELATION = 'seed_nonce_revelation',
   DOUBLE_ATTESTATION_EVIDENCE = 'double_attestation_evidence',
   DOUBLE_ENDORSEMENT_EVIDENCE = 'double_endorsement_evidence',
@@ -36,4 +36,5 @@ export enum OpKind {
   SMART_ROLLUP_RECOVER_BOND = 'smart_rollup_recover_bond',
   SMART_ROLLUP_REFUTE = 'smart_rollup_refute',
   SMART_ROLLUP_TIMEOUT = 'smart_rollup_timeout',
+  DAL_PUBLISH_COMMITMENT = 'dal_publish_commitment',
 }
