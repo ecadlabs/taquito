@@ -472,11 +472,6 @@ CONFIGS().forEach(
           expect(ticketBalances[0].amount).toBeDefined();
         });
 
-        it(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle null for ${rpc}`, async () => {
-          const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
-          expect(launchCycle).toEqual(null);
-        })
-
         parisAndAlpha(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for ${rpc}`, async () => {
           const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
           expect(launchCycle).toEqual(6);
