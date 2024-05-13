@@ -66,6 +66,51 @@ const setDelegate = async (delegate: string, Tezos: TezosToolkit): Promise<TestR
   }
 };
 
+const stake = async (amount: number, Tezos: TezosToolkit): Promise<TestResult> => {
+  let opHash = "";
+  try {
+    const op = await Tezos.wallet
+      .stake({ amount })
+      .send();
+    await op.confirmation();
+    opHash = op.opHash;
+    return { success: true, opHash };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "" };
+  }
+};
+
+const unstake = async (amount: number, Tezos: TezosToolkit): Promise<TestResult> => {
+  let opHash = "";
+  try {
+    const op = await Tezos.wallet
+      .unstake({ amount })
+      .send();
+    await op.confirmation();
+    opHash = op.opHash;
+    return { success: true, opHash };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "" };
+  }
+};
+
+const finalizeUnstake = async (Tezos: TezosToolkit): Promise<TestResult> => {
+  let opHash = "";
+  try {
+    const op = await Tezos.wallet
+      .finalizeUnstake({})
+      .send();
+    await op.confirmation();
+    opHash = op.opHash;
+    return { success: true, opHash };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "" };
+  }
+};
+
 const sendInt = async (
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
 ): Promise<TestResult> => {
@@ -564,6 +609,9 @@ const saplingShielded = async (
 export const list = [
   "Send tez",
   "Set Delegate",
+  "Stake",
+  "Unstake",
+  "Finalize Unstake",
   "Contract call with int",
   "Contract call with (pair nat string)",
   "Contract call that fails",
@@ -608,6 +656,41 @@ export const init = (
       showExecutionTime: false,
       inputRequired: true,
       inputType: "delegate",
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "stake",
+      name: "Stake",
+      description: "This test stake your spendable balance into frozen staking balance",
+      documentation: 'https://taquito.io/docs/staking',
+      keyword: 'stake',
+      run: input => stake(input.stake, Tezos),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "stake",
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "unstake",
+      name: "Unstake",
+      description: "This test unstake amount from your staking balance into unstaked frozen balance",
+      documentation: 'https://taquito.io/docs/staking',
+      keyword: 'unstake',
+      run: input => unstake(input.unstake, Tezos),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "unstake",
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "finalize-unstake",
+      name: "finalize unstake",
+      description: "This test transfer all finalizable unstaked balance into spendable balance",
+      documentation: 'https://taquito.io/docs/staking',
+      keyword: 'finalizeUnstake',
+      run: () => finalizeUnstake(Tezos),
+      showExecutionTime: false,
+      inputRequired: false,
       lastResult: { option: "none", val: false }
     },
     {
