@@ -40,7 +40,6 @@ export class BeaconWallet implements WalletProvider {
     this.client = getDAppClientInstance(options);
 
     this.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, async (data) => {
-      console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, data);
       this.account = data;
     });
   }
