@@ -67,7 +67,6 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async getPKH() {
-    // const account = await this.client.getActiveAccount();
     if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
@@ -75,7 +74,6 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async getPK() {
-    // const account = await this.client.getActiveAccount();
     if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
@@ -175,7 +173,6 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async sendOperations(params: any[]) {
-    // const account = await this.client.getActiveAccount();
     if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
