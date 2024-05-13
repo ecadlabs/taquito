@@ -51,6 +51,21 @@ const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
   }
 };
 
+const setDelegate = async (delegate: string, Tezos: TezosToolkit): Promise<TestResult> => {
+  let opHash = "";
+  try {
+    const op = await Tezos.wallet
+      .setDelegate({ delegate })
+      .send();
+    await op.confirmation();
+    opHash = op.opHash;
+    return { success: true, opHash };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "" };
+  }
+};
+
 const sendInt = async (
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
 ): Promise<TestResult> => {
@@ -548,6 +563,7 @@ const saplingShielded = async (
 
 export const list = [
   "Send tez",
+  "Set Delegate",
   "Contract call with int",
   "Contract call with (pair nat string)",
   "Contract call that fails",
@@ -580,6 +596,18 @@ export const init = (
       run: () => sendTez(Tezos),
       showExecutionTime: false,
       inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "set-delegate",
+      name: "Set Delegate",
+      description: "This test sets delegate to your specified address",
+      documentation: 'https://taquito.io/docs/set_delegate/#setdelegate',
+      keyword: 'delegate',
+      run: input => setDelegate(input.delegate, Tezos),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "delegate",
       lastResult: { option: "none", val: false }
     },
     {
