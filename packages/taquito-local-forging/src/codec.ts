@@ -18,6 +18,7 @@ import {
   DecodePvmKindError,
   InvalidSmartRollupCommitmentHashError,
   InvalidSmartRollupAddressError,
+  InvalidDalCommitmentError,
 } from './errors';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
@@ -29,7 +30,7 @@ import {
   stripLengthPrefixFromBytes,
 } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { pad } from './utils';
+import { pad, toHexString } from './utils';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
 // https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
@@ -470,7 +471,7 @@ export const parametersEncoder = (val: { entrypoint: string; value: MichelsonVal
 
   const encodedEntrypoint = entrypointEncoder(val.entrypoint);
   const parameters = valueEncoder(val.value);
-  const length = (parameters.length / 2).toString(16).padStart(8, '0');
+  const length = pad(parameters.length / 2);
   return `ff${encodedEntrypoint}${length}${parameters}`;
 };
 
@@ -540,4 +541,43 @@ export const smartRollupMessageDecoder = (val: Uint8ArrayConsumer) => {
   const valueArray = extractRequiredLen(val);
   const ret = stripLengthPrefixFromBytes(new Uint8ArrayConsumer(valueArray));
   return ret.map((value) => Buffer.from(value).toString('hex'));
+};
+
+export const dalCommitmentEncoder = (val: string): string => {
+  const prefix = val.substring(0, 2);
+  if (prefix === Prefix.SH) {
+    return prefixEncoder(Prefix.SH)(val);
+  }
+  throw new InvalidDalCommitmentError(
+    val,
+    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SH}'`
+  );
+};
+
+export const dalCommitmentDecoder = (val: Uint8ArrayConsumer) => {
+  const commitment = prefixDecoder(Prefix.SH)(val);
+  if (commitment.substring(0, 2) !== Prefix.SH) {
+    throw new InvalidDalCommitmentError(
+      commitment,
+      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SH}'`
+    );
+  }
+  return commitment;
+};
+
+export const slotHeaderEncoder = (val: {
+  slot_index: number;
+  commitment: string;
+  commitment_proof: string;
+}) => {
+  return pad(val.slot_index, 2) + dalCommitmentEncoder(val.commitment) + val.commitment_proof;
+};
+
+export const slotHeaderDecoder = (val: Uint8ArrayConsumer) => {
+  const preamble = val.consume(1);
+  return {
+    slot_index: Number(preamble[0].toString(10)),
+    commitment: dalCommitmentDecoder(val),
+    commitment_proof: toHexString(val.consume(96)), // rpcForger expect commitment_proof bytes to be len 96
+  };
 };

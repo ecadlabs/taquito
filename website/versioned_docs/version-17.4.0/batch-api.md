@@ -31,7 +31,6 @@ await op2.confirmation();
  */
 ```
 
-
 ## How does it work?
 
 The `contract` or `wallet` property of the `TezosToolkit` object exposes a method called `batch` (the choice between `contract` or `wallet` depends on your use case, whether the transaction will be signed by a wallet or not). Subsequently, the returned object exposes six different methods that you can concatenate according to the number of transactions to emit.

@@ -20,6 +20,7 @@ import {
   SmartRollupOriginateSchema,
   SmartRollupAddMessagesSchema,
   SmartRollupExecuteOutboxMessageSchema,
+  DalPublishCommitmentSchema,
   FailingNoopSchema,
 } from './schema/operation';
 
@@ -42,7 +43,8 @@ type OperationKind =
   | OpKind.SET_DEPOSITS_LIMIT
   | OpKind.SMART_ROLLUP_ORIGINATE
   | OpKind.SMART_ROLLUP_ADD_MESSAGES
-  | OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  | OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE
+  | OpKind.DAL_PUBLISH_COMMITMENT;
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
@@ -64,6 +66,7 @@ const OperationKindMapping = {
   smart_rollup_originate: SmartRollupOriginateSchema,
   smart_rollup_add_messages: SmartRollupAddMessagesSchema,
   smart_rollup_execute_outbox_message: SmartRollupExecuteOutboxMessageSchema,
+  dal_publish_commitment: DalPublishCommitmentSchema,
   failing_noop: FailingNoopSchema,
 };
 
