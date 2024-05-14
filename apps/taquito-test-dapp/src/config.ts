@@ -1,11 +1,12 @@
 import { NetworkType } from '@airgap/beacon-types';
 
-export type SupportedNetworks = NetworkType.OXFORDNET | NetworkType.GHOSTNET | NetworkType.MAINNET | NetworkType.CUSTOM;
+export type SupportedNetworks = NetworkType.PARISNET | NetworkType.OXFORDNET | NetworkType.GHOSTNET | NetworkType.MAINNET | NetworkType.CUSTOM;
 
 const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkType.MAINNET]: "https://mainnet.ecadinfra.com",
   [NetworkType.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
   [NetworkType.OXFORDNET]: "https://oxfordnet.ecadinfra.com/",
+  [NetworkType.PARISNET]: "https://rpc.parisnet.teztnets.com/",
   [NetworkType.CUSTOM]: "https://ghostnet.ecadinfra.com/",
 };
 
@@ -21,6 +22,8 @@ export const getTzKtUrl = (networkType: SupportedNetworks): string | undefined =
       return "https://ghostnet.tzkt.io";
     case NetworkType.OXFORDNET:
       return "https://oxfordnet.tzkt.io";
+    case NetworkType.PARISNET:
+      return "https://parisnet.tzkt.io";
     case NetworkType.CUSTOM:
       return undefined;
   }

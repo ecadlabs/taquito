@@ -24,13 +24,9 @@ export type TezosAccountAddress = `tz${"1" | "2" | "3"}${string}`;
 
 // export enum NetworkType {
 //   MAINNET = "mainnet",
-//   DELPHINET = "delphinet",
-//   EDONET = "edonet",
-//   FLORENCENET = "florencenet",
-//   GRANADANET = "granadanet",
-//   HANGZHOUNET = "hangzhounet",
-//   ITHACANET = "ithacanet",
 //   GHOSTNET = "ghostnet",
-//   JAKARTANET = "jakartanet",
+//   WEEKLYNET = "weeklynet",
+//   OXFORDNET = "oxfordnet",
+//   PARISNET = "parisnet",
 //   CUSTOM = "custom"
 // }
