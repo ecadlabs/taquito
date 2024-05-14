@@ -21,7 +21,6 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const oxford = protocol === Protocols.ProxfordY ? test : test.skip;
     const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBQ) ? test : test.skip;
 
     let ticketContract: DefaultContractType;
@@ -472,11 +471,6 @@ CONFIGS().forEach(
           expect(ticketBalances[0].content).toBeDefined();
           expect(ticketBalances[0].amount).toBeDefined();
         });
-
-        oxford(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle null for ${rpc}`, async () => {
-          const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
-          expect(launchCycle).toEqual(null);
-        })
 
         parisAndAlpha(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for ${rpc}`, async () => {
           const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();

@@ -36,6 +36,25 @@ const preparePayloadToSign = (
   };
 };
 
+const sendTezToEtherlink = async (
+  amount: number,
+  address: string,
+  tezos: TezosToolkit,
+): Promise<TestResult> => {
+  let opHash = "";
+  try {
+    const contract = await tezos.wallet.at('KT1VEjeQfDBSfpDH5WeBM5LukHPGM2htYEh3')
+    let op = await contract.methodsObject.deposit({ evm_address: 'sr18wx6ezkeRjt1SZSeZ2UQzQN3Uc3YLMLqg', l2_address: address }).send({ amount });
+    await op.confirmation()
+    opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
+    console.log("Operation successful with op hash:", opHash);
+    return { success: true, opHash };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "" };
+  }
+};
+
 const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
   let opHash = "";
   try {
@@ -362,7 +381,7 @@ const signPayloadAndSend = async (
     const publicKey = activeAccount.publicKey;
     // sends transaction to contract
     const op = await contract.methodsObject
-      .check_signature({0: publicKey, 1: signedPayload.signature, 2: payload.payload})
+      .check_signature({ 0: publicKey, 1: signedPayload.signature, 2: payload.payload })
       .send();
     await op.confirmation();
     return {
@@ -515,7 +534,7 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
     const contract = await Tezos.wallet.at(contractAddress);
     // hashes the parameter for the contract call
     const mintParam: any = contract.methodsObject
-      .mint({0: store.userAddress, 1: 100})
+      .mint({ 0: store.userAddress, 1: 100 })
       .toTransferParams().parameter?.value;
     const mintParamType = contract.entrypoints.entrypoints["mint"];
     // packs the entrypoint call
@@ -612,6 +631,7 @@ export const list = [
   "Stake",
   "Unstake",
   "Finalize Unstake",
+  "Send tez from Ghostnet to Etherlink",
   "Contract call with int",
   "Contract call with (pair nat string)",
   "Contract call that fails",
@@ -691,6 +711,24 @@ export const init = (
       run: () => finalizeUnstake(Tezos),
       showExecutionTime: false,
       inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
+    {
+      id: "send-tez-to-etherlink",
+      name: "Send tez from Ghostnet to Etherlink",
+      description:
+        "This test allows you send your ghostnet tez to etherlink address",
+      documentation: '',
+      keyword: 'etherlink',
+      run: input =>
+        sendTezToEtherlink(
+          input.amount,
+          input.address,
+          Tezos
+        ),
+      showExecutionTime: false,
+      inputRequired: true,
+      inputType: "etherlink",
       lastResult: { option: "none", val: false }
     },
     {

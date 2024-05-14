@@ -11,10 +11,6 @@ Welcome, Web3 developer!
 
 Taquito is a fast and lightweight [TypeScript](https://www.typescriptlang.org/) library to accelerate DApp development on the [Tezos](https://tezos.com/developers) blockchain. With it, you can easily interact with Smart Contracts deployed to Tezos. It is distributed as a suite of individual `npm` packages, to reduce bloat and improve application startup times.
 
-## What about Smart Contract Development?
-
-If you are a current or aspiring "full-stack" blockchain developer, be sure to check out Taquito's sister project [Taqueria](https://taqueria.io). Taqueria is a Developer Tool Suite with *rich support* for Smart Contract development and orchestration on Tezos, and fully compliments Taquito.
-
 ## What is Included in Taquito?
 
 Taquito is primarily targeted at Front-End Web3 developers, so it comes with batteries included, such as a [React Template Project](https://github.com/ecadlabs/taquito-react-template), an extensible framework, and many helpful utilities. It can be used in *many* execution contexts, including Serverless, Node.js, Deno, and Electron (to name a few) and has minimal dependencies.
@@ -45,11 +41,9 @@ Taquito currently supports the following versions of Node.js®:
 | ---------------- | ---------- |
 | v12 LTS          |    ❌      |
 | v14 LTS          |    ❌      |
-| v16.13.1         |    ❌      |
 | v16 LTS/Gallium  |    ❌      |
-| 17.3.x           |    ❌      |
 | v18 LTS/Hydrogen |    ✅      |
-| v20              |    ✅      |
+| v20 LTS/Iron     |    ✅      |
 
 While other versions often work, the above are what we officially support. YMMV!
 
@@ -64,26 +58,33 @@ We are active and enthusiastic participants of the following community support c
 
 Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), and is composed of several npm packages that are [published to npmjs.org](https://www.npmjs.com/package/@taquito/taquito) under the `@taquito` handle. Each package has its own README which can be found in the corresponding directory within `packages/`.
 
-| High-Level Packages                                            | Responsibility                                               |
-| -------------------------------------------------------------- | ------------------------------------------------------------ |
+| High-Level Packages                                            | Responsibility                                                                                         |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | [@taquito/taquito](packages/taquito)                           | [Facade](https://en.wikipedia.org/wiki/Facade_pattern) to lower-level, package-specific functionality  |
 
-| Low-Level Packages                                               | Responsibility                                                |
-| ---------------------------------------------------------------- | ------------------------------------------------------------- |
-| [@taquito/local-forging](packages/taquito-local-forging)         | Local "forging": serialization of Tezos operations as bytes   |
-| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Creates JS abstractions of Smart Contracts                    |
-| [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms, expands Macros, etc         |
-| [@taquito/remote-signer](packages/taquito-remote-signer)         | Provides the facility to use a remote signer, such as https://signatory.io    |
-| [@taquito/rpc](packages/taquito-rpc)                             | RPC client library: every rpc endpoint has its own method     |
-| [@taquito/signer](packages/taquito-signer)                       | Provides functionality to sign data using tezos keys          |
-| [@taquito/utils](packages/taquito-utils)                         | Provides different encoding and decoding utilities            |
-| [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 allows retrieving NFT/token metadata                  |
-| [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 allows retrieving contract metadata and executing off-chain views |
-| [@taquito/beacon-wallet](packages/taquito-beacon-wallet)         | TZIP-10 implementation of a Wallet API                        |
+| Low-Level Packages                                               | Responsibility                                                                                       |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| [@taquito/local-forging](packages/taquito-local-forging)         | Local "forging": serialization of Tezos operations as bytes                                          |
+| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Creates JS abstractions of Smart Contracts                                                           |
+| [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms, expands Macros, etc                                                |
+| [@taquito/remote-signer](packages/taquito-remote-signer)         | Provides the facility to use a remote signer, such as https://signatory.io                           |
+| [@taquito/rpc](packages/taquito-rpc)                             | RPC client library: every rpc endpoint has its own method                                            |
+| [@taquito/signer](packages/taquito-signer)                       | Provides functionality to sign data using tezos keys                                                 |
+| [@taquito/utils](packages/taquito-utils)                         | Provides different encoding and decoding utilities                                                   |
+| [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 allows retrieving NFT/token metadata                                                         |
+| [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 allows retrieving contract metadata and executing off-chain views                            |
+| [@taquito/beacon-wallet](packages/taquito-beacon-wallet)         | TZIP-10 implementation of a Wallet API                                                               |
+| [@taquito/http-utils](packages/taquito-http-utils)               | Provides functionality to configure and customize http requests                                      |
+| [@taquito/core](packages/taquito-core)                           | Provides parent and core types, classes, and interfaces for other Taquito packages or external uses  |
+| [@taquito/sapling](packages/taquito-sapling)                     | Provides functionality to prepare and read sapling transactions                                      |
+| [@taquito/contracts-library](packages/taquito-contracts-library) | Provides functionality specify static data related to contracts                                      |
+| [@taquito/ledger-signer](packages/taquito-ledger-signer)         | Provides functionality for ledger signer provider                                                    |
+| [@taquito/timelock](packages/taquito-timelock)                   | Provides functionality to create and open timelocks                                                  |
 
 ## API Documentation
 
 TypeDoc API documentation for Taquito [is available here](https://taquito.io/typedoc).
+
 
 ## Versioning Strategy
 

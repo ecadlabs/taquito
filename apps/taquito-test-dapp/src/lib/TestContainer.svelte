@@ -11,7 +11,7 @@
   let loading = false;
   let success: boolean | undefined;
   let opHash = "";
-  let input = { text: "", fee: 400, storageLimit: 400, gasLimit: 1320, amount: 0, delegate: "" };
+  let input = { text: "", fee: 400, storageLimit: 400, gasLimit: 1320, amount: 0, address: "", delegate: "", stake: 0, unstake: 0 };
   let testResult: { id: string; title: string; body: any };
 
   const run = async () => {
@@ -31,6 +31,7 @@
         test.id === "set-delegate" ||
         test.id === "stake" ||
         test.id === "unstake" ||
+        test.id === "send-tez-to-etherlink" ||
         test.id === "set-transaction-limits"
       ) {
         result = await test.run(input);
@@ -324,6 +325,19 @@
           <label for="unstake-amount">
             <span>Unstake amount</span>
             <input type="unstake" id="unstake-amount" bind:value={input.unstake} />
+          </label>
+        </div>
+      {:else if test.inputRequired && test.inputType === "etherlink"}
+        <div class="test-input test-send-tez-to-etherlink">
+          <label for="etherlink-address">
+            <span>Etherlink address</span>
+            <input type="string" id="etherlink-address" bind:value={input.address} />
+          </label>
+          <br />
+          <br />
+          <label for="send-amount">
+            <span>amount</span>
+            <input type="number" id="send-amount" bind:value={input.amount} />
           </label>
         </div>
       {:else if test.inputRequired && test.inputType === "set-limits"}

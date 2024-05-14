@@ -88,153 +88,6 @@ export const parisCases: TestCase[] = [
     }
   },
 ]
-export const oxfordCases: TestCase[] = [
-  {
-    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
-    operation: {
-      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: timelockCode,
-            storage: timelockStorage,
-          },
-        },
-      ],
-    },
-    expected: {
-      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: timelockExpected,
-            storage: timelockStorage,
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Attestation',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.ATTESTATION,
-          slot: 0,
-          level: 66299,
-          round: 5,
-          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
-        }
-      ]
-    }
-  },
-  {
-    name: 'Transaction with stake entrypoint',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [{
-        kind: OpKind.TRANSACTION,
-        source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-        fee: "0",
-        counter: "407",
-        gas_limit: "1040000",
-        storage_limit: "60000",
-        amount: "1000000000",
-        destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-        parameters:
-          { entrypoint: "stake", value: { prim: "Unit" } }
-      }]
-    },
-  },
-  {
-    name: 'Transaction with unstake entrypoint',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.TRANSACTION,
-          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-          fee: "689",
-          counter: "408",
-          gas_limit: "4250",
-          storage_limit: "0",
-          amount: "99999999999000000",
-          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-          parameters:
-            { entrypoint: "unstake", value: { prim: "Unit" } }
-        }],
-    },
-  },
-  {
-    name: 'Transaction with finalize_unstake entrypoint',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.TRANSACTION,
-          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-          fee: "409",
-          counter: "409",
-          gas_limit: "1529",
-          storage_limit: "0",
-          amount: "0",
-          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-          parameters:
-          {
-            entrypoint: "finalize_unstake",
-            value: { prim: "Unit" }
-          }
-        }],
-    },
-  },
-  {
-    name: 'Transaction with set_delegate_parameters entrypoint',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.TRANSACTION,
-          source: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
-          fee: "351",
-          counter: "391",
-          gas_limit: "791",
-          storage_limit: "0",
-          amount: "0",
-          destination: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
-          parameters:
-          {
-            entrypoint: "set_delegate_parameters",
-            value:
-            {
-              prim: "Pair",
-              args:
-                [{ int: "5000000" },
-                {
-                  prim: "Pair",
-                  args:
-                    [{ int: "1000000000" }, { prim: "Unit" }]
-                }]
-            }
-          }
-        }]
-    },
-  },
-];
 
 export const commonCases: TestCase[] = [
   {
@@ -1625,5 +1478,150 @@ export const commonCases: TestCase[] = [
         }
       ]
     }
-  }
+  },
+  {
+    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: timelockCode,
+            storage: timelockStorage,
+          },
+        },
+      ],
+    },
+    expected: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: timelockExpected,
+            storage: timelockStorage,
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Attestation',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.ATTESTATION,
+          slot: 0,
+          level: 66299,
+          round: 5,
+          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
+        }
+      ]
+    }
+  },
+  {
+    name: 'Transaction with stake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [{
+        kind: OpKind.TRANSACTION,
+        source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+        fee: "0",
+        counter: "407",
+        gas_limit: "1040000",
+        storage_limit: "60000",
+        amount: "1000000000",
+        destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+        parameters:
+          { entrypoint: "stake", value: { prim: "Unit" } }
+      }]
+    },
+  },
+  {
+    name: 'Transaction with unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          fee: "689",
+          counter: "408",
+          gas_limit: "4250",
+          storage_limit: "0",
+          amount: "99999999999000000",
+          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          parameters:
+            { entrypoint: "unstake", value: { prim: "Unit" } }
+        }],
+    },
+  },
+  {
+    name: 'Transaction with finalize_unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          fee: "409",
+          counter: "409",
+          gas_limit: "1529",
+          storage_limit: "0",
+          amount: "0",
+          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          parameters:
+          {
+            entrypoint: "finalize_unstake",
+            value: { prim: "Unit" }
+          }
+        }],
+    },
+  },
+  {
+    name: 'Transaction with set_delegate_parameters entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
+          fee: "351",
+          counter: "391",
+          gas_limit: "791",
+          storage_limit: "0",
+          amount: "0",
+          destination: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
+          parameters:
+          {
+            entrypoint: "set_delegate_parameters",
+            value:
+            {
+              prim: "Pair",
+              args:
+                [{ int: "5000000" },
+                {
+                  prim: "Pair",
+                  args:
+                    [{ int: "1000000000" }, { prim: "Unit" }]
+                }]
+            }
+          }
+        }]
+    },
+  },
 ];
