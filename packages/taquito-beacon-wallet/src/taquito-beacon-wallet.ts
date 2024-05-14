@@ -38,7 +38,6 @@ export class BeaconWallet implements WalletProvider {
 
   constructor(options: DAppClientOptions) {
     this.client = getDAppClientInstance(options);
-
     this.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, async (data) => {
       this.account = data;
     });
