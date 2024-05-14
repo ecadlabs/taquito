@@ -41,6 +41,7 @@ export class BeaconWallet implements WalletProvider {
 
   constructor(options: DAppClientOptions) {
     this.client = getDAppClientInstance(options);
+    // Subscribe to the active account set event, this will update when there are account changes happening in the dApp
     this.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, async (data) => {
       this.account = data;
     });
