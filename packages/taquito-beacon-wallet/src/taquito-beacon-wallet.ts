@@ -10,6 +10,8 @@ import {
   PermissionScope,
   getDAppClientInstance,
   SigningType,
+  AccountInfo,
+  BeaconEvent,
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
@@ -35,9 +37,13 @@ export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
+  public account: AccountInfo | undefined;
 
   constructor(options: DAppClientOptions) {
     this.client = getDAppClientInstance(options);
+    this.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, async (data) => {
+      this.account = data;
+    });
   }
 
   private validateRequiredScopesOrFail(
@@ -62,19 +68,17 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async getPKH() {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
+    if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
-    return account.address;
+    return this.account.address;
   }
 
   async getPK() {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
+    if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
-    return account.publicKey ?? '';
+    return this.account.publicKey ?? '';
   }
 
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
@@ -221,11 +225,10 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async sendOperations(params: any[]) {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
+    if (!this.account) {
       throw new BeaconWalletNotInitialized();
     }
-    const permissions = account.scopes;
+    const permissions = this.account.scopes;
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
     const { transactionHash } = await this.client.requestOperation({ operationDetails: params });
