@@ -9,10 +9,7 @@ import { TaquitoError } from '@taquito/core';
  */
 export class InvalidTokenError extends TaquitoError {
   name = 'Invalid token error';
-  constructor(
-    public message: string,
-    public data: any
-  ) {
+  constructor(public message: string, public data: any) {
     super(message);
   }
 }
@@ -22,13 +19,9 @@ export class InvalidTokenError extends TaquitoError {
  * @description Create a token from a value
  * @throws {@link InvalidTokenError} If the value passed is not supported by the Michelson Encoder
  */
-export function createToken(
-  val: any,
-  idx: number,
-  parentTokenType?: 'Or' | 'Pair' | 'Other' | undefined
-): Token {
+export function createToken(val: any, idx: number): Token {
   if (Array.isArray(val)) {
-    return new PairToken(val, idx, createToken, parentTokenType);
+    return new PairToken(val, idx, createToken);
   }
 
   const t = tokens.find((x) => x.prim === val.prim);
@@ -38,5 +31,5 @@ export function createToken(
       val
     );
   }
-  return new t(val, idx, createToken, parentTokenType);
+  return new t(val, idx, createToken);
 }

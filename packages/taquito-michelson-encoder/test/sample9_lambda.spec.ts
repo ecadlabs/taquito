@@ -2,17 +2,17 @@
 
 import { params as params9 } from '../data/sample9';
 import { ParameterSchema } from '../src/schema/parameter';
-import { Token } from '../src/taquito-michelson-encoder';
 
 describe('Schema test', () => {
   it('Should parse storage properly', () => {
     const schema = new ParameterSchema(params9);
+    const storage = schema.ExtractSchema();
 
     expect(schema.ExtractSignatures()).toContainEqual(['0', 'address', 'string', 'bytes']);
     expect(schema.ExtractSignatures()).toContainEqual(['1', 'mutez']);
     expect(schema.ExtractSignatures()).toContainEqual(['2', 'address', 'bool']);
 
-    const extractSchema_Legacy = {
+    expect(storage).toEqual({
       '0': {
         '0': 'address',
         '1': 'string',
@@ -33,38 +33,9 @@ describe('Schema test', () => {
           returns: 'operation',
         },
       },
-    };
-    const extractSchema_ResetFields = {
-      '0': {
-        '0': 'address',
-        '1': 'string',
-        '2': { Some: 'bytes' },
-      },
-      '1': 'mutez',
-      '2': {
-        '0': 'address',
-        '1': 'bool',
-      },
-      '3': {
-        lambda: {
-          parameters: {
-            0: 'address',
-            1: 'string',
-            2: { Some: 'bytes' },
-          },
-          returns: 'operation',
-        },
-      },
-    };
+    });
 
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-
-    const generateSchema_Legacy = {
+    expect(schema.generateSchema()).toEqual({
       __michelsonType: 'or',
       schema: {
         '0': {
@@ -134,85 +105,7 @@ describe('Schema test', () => {
           },
         },
       },
-    };
-    const generateSchema_ResetFields = {
-      __michelsonType: 'or',
-      schema: {
-        '0': {
-          __michelsonType: 'pair',
-          schema: {
-            '0': {
-              __michelsonType: 'address',
-              schema: 'address',
-            },
-            '1': {
-              __michelsonType: 'string',
-              schema: 'string',
-            },
-            '2': {
-              __michelsonType: 'option',
-              schema: {
-                __michelsonType: 'bytes',
-                schema: 'bytes',
-              },
-            },
-          },
-        },
-        '1': {
-          __michelsonType: 'mutez',
-          schema: 'mutez',
-        },
-        '2': {
-          __michelsonType: 'pair',
-          schema: {
-            '0': {
-              __michelsonType: 'address',
-              schema: 'address',
-            },
-            '1': {
-              __michelsonType: 'bool',
-              schema: 'bool',
-            },
-          },
-        },
-        '3': {
-          __michelsonType: 'lambda',
-          schema: {
-            parameters: {
-              __michelsonType: 'pair',
-              schema: {
-                0: {
-                  __michelsonType: 'address',
-                  schema: 'address',
-                },
-                1: {
-                  __michelsonType: 'string',
-                  schema: 'string',
-                },
-                2: {
-                  __michelsonType: 'option',
-                  schema: {
-                    __michelsonType: 'bytes',
-                    schema: 'bytes',
-                  },
-                },
-              },
-            },
-            returns: {
-              __michelsonType: 'operation',
-              schema: 'operation',
-            },
-          },
-        },
-      },
-    };
-
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.generateSchema()).toEqual(generateSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
+    });
 
     expect({
       args: [
