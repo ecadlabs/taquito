@@ -628,10 +628,10 @@ const saplingShielded = async (
 export const list = [
   "Send tez",
   "Set Delegate",
-  "Stake",
-  "Unstake",
-  "Finalize Unstake",
-  "Send tez from Ghostnet to Etherlink",
+  "[parisnet] Stake",
+  "[parisnet] Unstake",
+  "[parisnet] Finalize Unstake",
+  "[ghostnet] Send tez from Ghostnet to Etherlink",
   "Contract call with int",
   "Contract call with (pair nat string)",
   "Contract call that fails",
@@ -646,8 +646,8 @@ export const list = [
   "Verify a provided signature",
   "Set the transaction limits",
   "Subscribe to confirmations",
-  "Permit contract",
-  "Sapling"
+  "[wip] Permit contract",
+  "[wip] Sapling"
 ];
 
 export const init = (
@@ -680,8 +680,8 @@ export const init = (
     },
     {
       id: "stake",
-      name: "Stake",
-      description: "This test stake your spendable balance into frozen staking balance",
+      name: "[parisnet] Stake",
+      description: "This test stake your spendable balance into frozen staked balance",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'stake',
       run: input => stake(input.stake, Tezos),
@@ -692,8 +692,8 @@ export const init = (
     },
     {
       id: "unstake",
-      name: "Unstake",
-      description: "This test unstake amount from your staking balance into unstaked frozen balance",
+      name: "[parisnet] Unstake",
+      description: "This test unstake amount from your frozen staked balance into unstaked frozen balance which after 4 cycles will become unstaked finalizable balance",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'unstake',
       run: input => unstake(input.unstake, Tezos),
@@ -704,8 +704,8 @@ export const init = (
     },
     {
       id: "finalize-unstake",
-      name: "finalize unstake",
-      description: "This test transfer all finalizable unstaked balance into spendable balance",
+      name: "[parisnet] Finalize unstake",
+      description: "This test transfer all unstaked finalizable balance back into spendable balance",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'finalizeUnstake',
       run: () => finalizeUnstake(Tezos),
@@ -715,7 +715,7 @@ export const init = (
     },
     {
       id: "send-tez-to-etherlink",
-      name: "Send tez from Ghostnet to Etherlink",
+      name: "[ghostnet] Send tez from Ghostnet to Etherlink",
       description:
         "This test allows you send your ghostnet tez to etherlink address",
       documentation: '',
@@ -910,7 +910,7 @@ export const init = (
     },
     {
       id: "permit",
-      name: "Permit contract",
+      name: "[wip] Permit contract",
       description: "This test implements TZIP-17",
       keyword: 'permit',
       run: () => permit(Tezos, wallet),
@@ -920,7 +920,7 @@ export const init = (
     },
     {
       id: "sapling-shielded",
-      name: "Sapling shielded transaction",
+      name: "[wip] Sapling shielded transaction",
       description: "This test prepares and sends a shielded transaction to a Sapling pool",
       documentation: 'https://taquito.io/docs/sapling/',
       keyword: 'sapling',
