@@ -10,6 +10,7 @@ import {
   tokenNoAnnots,
   tokenOrWithOption,
 } from '../data/or-tokens';
+import { Schema, Token } from '../../src/taquito-michelson-encoder';
 
 describe('Or token', () => {
   describe('generateSchema, EncodeObject, Execute', () => {
@@ -151,11 +152,8 @@ describe('Or token', () => {
           },
         ],
       });
-      expect(
-        tokenComplexNoAnnots.EncodeObject({
-          1: { 1: 3, 2: 4, 3: 31, 4: '2019-09-06T15:08:29.000Z' },
-        })
-      ).toEqual({
+
+      let encode_Expected: object = {
         prim: 'Left',
         args: [
           {
@@ -174,8 +172,17 @@ describe('Or token', () => {
             ],
           },
         ],
-      });
-      expect(tokenComplexNoAnnots.EncodeObject({ 2: { 2: 3, 3: 'test' } })).toEqual({
+      };
+      let object_Legacy: object = { 1: { 1: 3, 2: 4, 3: 31, 4: '2019-09-06T15:08:29.000Z' } };
+      let object_ResetFields: object = { 1: { 0: 3, 1: 4, 2: 31, 3: '2019-09-06T15:08:29.000Z' } };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplexNoAnnots.EncodeObject(object_Legacy)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplexNoAnnots.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplexNoAnnots.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+
+      encode_Expected = {
         prim: 'Right',
         args: [
           {
@@ -183,12 +190,17 @@ describe('Or token', () => {
             args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }],
           },
         ],
-      });
-      expect(
-        tokenComplexNoAnnots.EncodeObject({
-          3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' },
-        })
-      ).toEqual({
+      };
+      object_Legacy = { 2: { 2: 3, 3: 'test' } };
+      object_ResetFields = { 2: { 0: 3, 1: 'test' } };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplexNoAnnots.EncodeObject(object_Legacy)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplexNoAnnots.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplexNoAnnots.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+
+      encode_Expected = {
         prim: 'Right',
         args: [
           {
@@ -212,7 +224,15 @@ describe('Or token', () => {
             ],
           },
         ],
-      });
+      };
+      object_Legacy = { 3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' } };
+      object_ResetFields = { 3: { 0: 4, 1: 3, 2: '2019-09-06T15:08:29.000Z' } };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplexNoAnnots.EncodeObject(object_Legacy)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplexNoAnnots.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplexNoAnnots.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
       expect(tokenComplexNoAnnots.EncodeObject({ 4: 4 })).toEqual({
         prim: 'Right',
         args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '4' }] }] }],
@@ -242,11 +262,8 @@ describe('Or token', () => {
           },
         ],
       });
-      expect(
-        tokenComplex.EncodeObject({
-          option1: { 1: 3, 2: 4, 3: 31, 4: '2019-09-06T15:08:29.000Z' },
-        })
-      ).toEqual({
+
+      encode_Expected = {
         prim: 'Left',
         args: [
           {
@@ -265,8 +282,17 @@ describe('Or token', () => {
             ],
           },
         ],
-      });
-      expect(tokenComplex.EncodeObject({ option2: { 2: 3, 3: 'test' } })).toEqual({
+      };
+      object_Legacy = { option1: { 1: 3, 2: 4, 3: 31, 4: '2019-09-06T15:08:29.000Z' } };
+      object_ResetFields = { option1: { 0: 3, 1: 4, 2: 31, 3: '2019-09-06T15:08:29.000Z' } };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplex.EncodeObject(object_Legacy)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplex.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplex.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+
+      encode_Expected = {
         prim: 'Right',
         args: [
           {
@@ -274,12 +300,17 @@ describe('Or token', () => {
             args: [{ prim: 'Pair', args: [{ int: '3' }, { string: 'test' }] }],
           },
         ],
-      });
-      expect(
-        tokenComplex.EncodeObject({
-          option3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' },
-        })
-      ).toEqual({
+      };
+      object_Legacy = { option2: { 2: 3, 3: 'test' } };
+      object_ResetFields = { option2: { 0: 3, 1: 'test' } };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplex.EncodeObject(object_Legacy)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplex.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplex.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+
+      encode_Expected = {
         prim: 'Right',
         args: [
           {
@@ -303,7 +334,16 @@ describe('Or token', () => {
             ],
           },
         ],
-      });
+      };
+      object_Legacy = { option3: { 3: 4, 4: 3, 5: '2019-09-06T15:08:29.000Z' } };
+      object_ResetFields = { option3: { 0: 4, 1: 3, 2: '2019-09-06T15:08:29.000Z' } };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplex.EncodeObject(object_Legacy)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplex.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplex.EncodeObject(object_ResetFields)).toEqual(encode_Expected);
+
       expect(tokenComplex.EncodeObject({ option4: 4 })).toEqual({
         prim: 'Right',
         args: [{ prim: 'Right', args: [{ prim: 'Right', args: [{ int: '4' }] }] }],
@@ -574,15 +614,28 @@ describe('Or token', () => {
         },
       });
 
-      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual({
+      let extractSchema_Legacy: object = {
         0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
         1: { 1: 'nat', 2: 'mutez', 3: 'nat', 4: 'timestamp' },
         2: { 2: 'nat', 3: 'timestamp' },
         3: { 3: 'nat', 4: 'mutez', 5: 'timestamp' },
         4: 'nat',
-      });
+      };
+      let extractSchema_ResetFields: object = {
+        0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
+        1: { 0: 'nat', 1: 'mutez', 2: 'nat', 3: 'timestamp' },
+        2: { 0: 'nat', 1: 'timestamp' },
+        3: { 0: 'nat', 1: 'mutez', 2: 'timestamp' },
+        4: 'nat',
+      };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_Legacy);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_ResetFields);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_ResetFields);
 
-      expect(tokenComplexNoAnnots.generateSchema()).toEqual({
+      let generateSchema_Legacy: object = {
         __michelsonType: 'or',
         schema: {
           0: {
@@ -658,17 +711,113 @@ describe('Or token', () => {
             schema: 'nat',
           },
         },
-      });
+      };
+      let generateSchema_ResetFields: object = {
+        __michelsonType: 'or',
+        schema: {
+          0: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              1: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              2: {
+                __michelsonType: 'timestamp',
+                schema: 'timestamp',
+              },
+            },
+          },
+          1: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              1: {
+                __michelsonType: 'mutez',
+                schema: 'mutez',
+              },
+              2: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              3: {
+                __michelsonType: 'timestamp',
+                schema: 'timestamp',
+              },
+            },
+          },
+          2: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              1: {
+                __michelsonType: 'timestamp',
+                schema: 'timestamp',
+              },
+            },
+          },
+          3: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              1: {
+                __michelsonType: 'mutez',
+                schema: 'mutez',
+              },
+              2: {
+                __michelsonType: 'timestamp',
+                schema: 'timestamp',
+              },
+            },
+          },
+          4: {
+            __michelsonType: 'nat',
+            schema: 'nat',
+          },
+        },
+      };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplexNoAnnots.generateSchema()).toEqual(generateSchema_Legacy);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplexNoAnnots.generateSchema()).toEqual(generateSchema_ResetFields);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplexNoAnnots.generateSchema()).toEqual(generateSchema_ResetFields);
 
-      expect(tokenComplex.ExtractSchema()).toEqual({
+      extractSchema_Legacy = {
         option0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
         option1: { 1: 'nat', 2: 'mutez', 3: 'nat', 4: 'timestamp' },
         option2: { 2: 'nat', 3: 'timestamp' },
         option3: { 3: 'nat', 4: 'mutez', 5: 'timestamp' },
         option4: 'nat',
-      });
+      };
+      extractSchema_ResetFields = {
+        option0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
+        option1: { 0: 'nat', 1: 'mutez', 2: 'nat', 3: 'timestamp' },
+        option2: { 0: 'nat', 1: 'timestamp' },
+        option3: { 0: 'nat', 1: 'mutez', 2: 'timestamp' },
+        option4: 'nat',
+      };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_Legacy);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_ResetFields);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_ResetFields);
 
-      expect(tokenComplex.generateSchema()).toEqual({
+      generateSchema_Legacy = {
         __michelsonType: 'or',
         schema: {
           option0: {
@@ -744,7 +893,90 @@ describe('Or token', () => {
             schema: 'nat',
           },
         },
-      });
+      };
+      generateSchema_ResetFields = {
+        __michelsonType: 'or',
+        schema: {
+          option0: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              1: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              2: {
+                __michelsonType: 'timestamp',
+                schema: 'timestamp',
+              },
+            },
+          },
+          option1: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              1: {
+                __michelsonType: 'mutez',
+                schema: 'mutez',
+              },
+              2: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              3: {
+                __michelsonType: 'timestamp',
+                schema: 'timestamp',
+              },
+            },
+          },
+          option2: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              1: {
+                __michelsonType: 'timestamp',
+                schema: 'timestamp',
+              },
+            },
+          },
+          option3: {
+            __michelsonType: 'pair',
+            schema: {
+              0: {
+                __michelsonType: 'nat',
+                schema: 'nat',
+              },
+              1: {
+                __michelsonType: 'mutez',
+                schema: 'mutez',
+              },
+              2: {
+                __michelsonType: 'timestamp',
+                schema: 'timestamp',
+              },
+            },
+          },
+          option4: {
+            __michelsonType: 'nat',
+            schema: 'nat',
+          },
+        },
+      };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenComplex.generateSchema()).toEqual(generateSchema_Legacy);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenComplex.generateSchema()).toEqual(generateSchema_ResetFields);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenComplex.generateSchema()).toEqual(generateSchema_ResetFields);
 
       expect(tokenOrWithOption.generateSchema()).toEqual({
         __michelsonType: 'or',
@@ -840,22 +1072,29 @@ describe('Or token', () => {
           ],
         })
       ).toEqual({ myNat: new BigNumber(6) }); // { 0: '6'  }
-      expect(
-        tokenNestedOr.Execute({
-          prim: 'Right',
-          args: [
-            {
-              prim: 'Left',
-              args: [
-                {
-                  prim: 'Left',
-                  args: [{ prim: 'Pair', args: [{ int: '3' }, { int: '4' }] }],
-                },
-              ],
-            },
-          ],
-        })
-      ).toEqual({ myPair: { 4: new BigNumber(3), 5: new BigNumber(4) } }); // { 4: { myPair: { 4: '3', 5: '4'} } }
+      let michelson: object = {
+        prim: 'Right',
+        args: [
+          {
+            prim: 'Left',
+            args: [
+              {
+                prim: 'Left',
+                args: [{ prim: 'Pair', args: [{ int: '3' }, { int: '4' }] }],
+              },
+            ],
+          },
+        ],
+      };
+      let execute_Legacy: object = { myPair: { 4: new BigNumber(3), 5: new BigNumber(4) } };
+      let execute_ResetFields: object = { myPair: { 0: new BigNumber(3), 1: new BigNumber(4) } };
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenNestedOr.Execute(michelson)).toEqual(execute_Legacy);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenNestedOr.Execute(michelson)).toEqual(execute_ResetFields);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenNestedOr.Execute(michelson)).toEqual(execute_ResetFields);
+
       expect(
         tokenNestedOr.Execute({
           prim: 'Right',
@@ -923,22 +1162,31 @@ describe('Or token', () => {
           ],
         })
       ).toEqual({ 3: new BigNumber(6) }); // { 0: '6'  }
-      expect(
-        tokenNestedOrWithoutAnnot.Execute({
-          prim: 'Right',
-          args: [
-            {
-              prim: 'Left',
-              args: [
-                {
-                  prim: 'Left',
-                  args: [{ prim: 'Pair', args: [{ int: '3' }, { int: '4' }] }],
-                },
-              ],
-            },
-          ],
-        })
-      ).toEqual({ 4: { 4: new BigNumber(3), 5: new BigNumber(4) } }); // { 4: { myPair: { 4: '3', 5: '4'} } }
+
+      michelson = {
+        prim: 'Right',
+        args: [
+          {
+            prim: 'Left',
+            args: [
+              {
+                prim: 'Left',
+                args: [{ prim: 'Pair', args: [{ int: '3' }, { int: '4' }] }],
+              },
+            ],
+          },
+        ],
+      };
+      execute_Legacy = { 4: { 4: new BigNumber(3), 5: new BigNumber(4) } };
+      execute_ResetFields = { 4: { 0: new BigNumber(3), 1: new BigNumber(4) } };
+
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(tokenNestedOrWithoutAnnot.Execute(michelson)).toEqual(execute_Legacy);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(tokenNestedOrWithoutAnnot.Execute(michelson)).toEqual(execute_ResetFields);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(tokenNestedOrWithoutAnnot.Execute(michelson)).toEqual(execute_ResetFields);
+
       expect(
         tokenNestedOrWithoutAnnot.Execute({
           prim: 'Right',
@@ -980,6 +1228,420 @@ describe('Or token', () => {
         key: { prim: 'Right', args: [{ string: 'test' }] },
         type: { prim: 'or', args: [{ prim: 'int' }, { prim: 'string' }] },
       });
+    });
+  });
+
+  describe('Nesting of Pair and Or', () => {
+    it('reproducing the reported bug in #2927', () => {
+      const schemaObj = {
+        prim: 'pair',
+        args: [
+          {
+            prim: 'set',
+            args: [
+              {
+                prim: 'address',
+              },
+            ],
+            annots: ['%owners'],
+          },
+          {
+            prim: 'set',
+            args: [
+              {
+                prim: 'address',
+              },
+            ],
+            annots: ['%inheritors'],
+          },
+          {
+            prim: 'or',
+            args: [
+              {
+                prim: 'unit',
+                annots: ['%aCTIVE'],
+              },
+              {
+                prim: 'or',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [
+                      {
+                        prim: 'address',
+                      },
+                      {
+                        prim: 'timestamp',
+                      },
+                    ],
+                    annots: ['%rECOVERING'],
+                  },
+                  {
+                    prim: 'unit',
+                    annots: ['%dEAD'],
+                  },
+                ],
+              },
+            ],
+            annots: ['%status'],
+          },
+          {
+            prim: 'mutez',
+            annots: ['%quick_recovery_stake'],
+          },
+          {
+            prim: 'nat',
+            annots: ['%quick_recovery_period'],
+          },
+          {
+            prim: 'big_map',
+            args: [
+              {
+                prim: 'pair',
+                args: [
+                  {
+                    prim: 'address',
+                  },
+                  {
+                    prim: 'or',
+                    args: [
+                      {
+                        prim: 'nat',
+                        annots: ['%sECOND'],
+                      },
+                      {
+                        prim: 'or',
+                        args: [
+                          {
+                            prim: 'nat',
+                            annots: ['%mINUTE'],
+                          },
+                          {
+                            prim: 'or',
+                            args: [
+                              {
+                                prim: 'nat',
+                                annots: ['%hOUR'],
+                              },
+                              {
+                                prim: 'or',
+                                args: [
+                                  {
+                                    prim: 'nat',
+                                    annots: ['%dAY'],
+                                  },
+                                  {
+                                    prim: 'or',
+                                    args: [
+                                      {
+                                        prim: 'nat',
+                                        annots: ['%wEEK'],
+                                      },
+                                      {
+                                        prim: 'or',
+                                        args: [
+                                          {
+                                            prim: 'nat',
+                                            annots: ['%mONTH'],
+                                          },
+                                          {
+                                            prim: 'nat',
+                                            annots: ['%yEAR'],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                prim: 'mutez',
+              },
+            ],
+            annots: ['%direct_debit_mandates'],
+          },
+          {
+            prim: 'big_map',
+            args: [
+              {
+                prim: 'pair',
+                args: [
+                  {
+                    prim: 'address',
+                  },
+                  {
+                    prim: 'or',
+                    args: [
+                      {
+                        prim: 'nat',
+                        annots: ['%sECOND'],
+                      },
+                      {
+                        prim: 'or',
+                        args: [
+                          {
+                            prim: 'nat',
+                            annots: ['%mINUTE'],
+                          },
+                          {
+                            prim: 'or',
+                            args: [
+                              {
+                                prim: 'nat',
+                                annots: ['%hOUR'],
+                              },
+                              {
+                                prim: 'or',
+                                args: [
+                                  {
+                                    prim: 'nat',
+                                    annots: ['%dAY'],
+                                  },
+                                  {
+                                    prim: 'or',
+                                    args: [
+                                      {
+                                        prim: 'nat',
+                                        annots: ['%wEEK'],
+                                      },
+                                      {
+                                        prim: 'or',
+                                        args: [
+                                          {
+                                            prim: 'nat',
+                                            annots: ['%mONTH'],
+                                          },
+                                          {
+                                            prim: 'nat',
+                                            annots: ['%yEAR'],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                prim: 'timestamp',
+              },
+            ],
+            annots: ['%direct_debit_mandates_history'],
+          },
+        ],
+      };
+      const dataObj = {
+        prim: 'Pair',
+        args: [
+          [
+            {
+              string: 'tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6',
+            },
+          ],
+          [],
+          {
+            prim: 'Right',
+            args: [
+              {
+                prim: 'Left',
+                args: [
+                  {
+                    prim: 'Pair',
+                    args: [
+                      {
+                        string: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+                      },
+                      {
+                        string: '2024-04-19T13:53:22Z',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            int: '1000000',
+          },
+          {
+            int: '0',
+          },
+          {
+            int: '414522',
+          },
+          {
+            int: '414523',
+          },
+        ],
+      };
+      const execute_Legacy = {
+        owners: ['tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6'],
+        inheritors: [],
+        status: {
+          rECOVERING: {
+            3: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+            4: '2024-04-19T13:53:22.000Z',
+          },
+        },
+        quick_recovery_stake: BigNumber(1000000),
+        quick_recovery_period: BigNumber(0),
+        direct_debit_mandates: '414522',
+        direct_debit_mandates_history: '414523',
+      };
+      const execte_ResetFields = {
+        owners: ['tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6'],
+        inheritors: [],
+        status: {
+          rECOVERING: {
+            0: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+            1: '2024-04-19T13:53:22.000Z',
+          },
+        },
+        quick_recovery_stake: BigNumber(1000000),
+        quick_recovery_period: BigNumber(0),
+        direct_debit_mandates: '414522',
+        direct_debit_mandates_history: '414523',
+      };
+
+      const schema = new Schema(schemaObj);
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(schema.Execute(dataObj)).toEqual(execute_Legacy);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(schema.Execute(dataObj)).toEqual(execte_ResetFields);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(schema.Execute(dataObj)).toEqual(execte_ResetFields);
+    });
+
+    it('a smaller reproduction', () => {
+      const schemaObj = {
+        prim: 'pair',
+        args: [
+          {
+            prim: 'set',
+            args: [
+              {
+                prim: 'address',
+              },
+            ],
+            annots: ['%owners'],
+          },
+          {
+            prim: 'set',
+            args: [
+              {
+                prim: 'address',
+              },
+            ],
+            annots: ['%inheritors'],
+          },
+          {
+            prim: 'or',
+            args: [
+              {
+                prim: 'unit',
+                annots: ['%aCTIVE'],
+              },
+              {
+                prim: 'or',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [
+                      {
+                        prim: 'address',
+                      },
+                      {
+                        prim: 'timestamp',
+                      },
+                    ],
+                    annots: ['%rECOVERING'],
+                  },
+                  {
+                    prim: 'unit',
+                    annots: ['%dEAD'],
+                  },
+                ],
+              },
+            ],
+            annots: ['%status'],
+          },
+        ],
+      };
+      const dataObj = {
+        prim: 'Pair',
+        args: [
+          [
+            {
+              string: 'tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6',
+            },
+          ],
+          [],
+          {
+            prim: 'Right',
+            args: [
+              {
+                prim: 'Left',
+                args: [
+                  {
+                    prim: 'Pair',
+                    args: [
+                      {
+                        string: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+                      },
+                      {
+                        string: '2024-04-19T13:53:22Z',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+      const execute_Legacy = {
+        owners: ['tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6'],
+        inheritors: [],
+        status: {
+          rECOVERING: {
+            3: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+            4: '2024-04-19T13:53:22.000Z',
+          },
+        },
+      };
+      const execute_ResetFields = {
+        owners: ['tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6'],
+        inheritors: [],
+        status: {
+          rECOVERING: {
+            0: 'tz1dcjLdDM6uYKYdQhK177cUbtvL8QwX4ebH',
+            1: '2024-04-19T13:53:22.000Z',
+          },
+        },
+      };
+
+      const schema = new Schema(schemaObj);
+      Token.fieldNumberingStrategy = 'Legacy';
+      expect(schema.Execute(dataObj)).toEqual(execute_Legacy);
+      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
+      expect(schema.Execute(dataObj)).toEqual(execute_ResetFields);
+      Token.fieldNumberingStrategy = 'Latest';
+      expect(schema.Execute(dataObj)).toEqual(execute_ResetFields);
     });
   });
 });
