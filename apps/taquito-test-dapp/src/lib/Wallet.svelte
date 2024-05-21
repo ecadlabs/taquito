@@ -6,18 +6,15 @@
   import { BeaconEvent, type DAppClientOptions } from "@airgap/beacon-sdk";
   import store from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
-  import {
-    defaultMatrixNode,
-    getRpcUrl,
-    defaultNetworkType,
-    type SupportedNetworks,
-  } from "../config";
+  import { defaultMatrixNode, getRpcUrl, defaultNetworkType, type SupportedNetworks } from "../config";
   import type { TezosAccountAddress } from "../types";
 
   let showDialog = false;
   let connectedWallet = "";
 
-  const createNewWallet = (config: { networkType: SupportedNetworks }) => {
+  const createNewWallet = (config: {
+    networkType: SupportedNetworks,
+  }) => {
     const options: DAppClientOptions = {
       name: "Taquito Test Dapp",
       matrixNodes: [defaultMatrixNode] as any,
@@ -26,7 +23,7 @@
         rpcUrl: getRpcUrl(config.networkType),
       },
       walletConnectOptions: {
-        projectId: "ba97fd7d1e89eae02f7c330e14ce1f36",
+        projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',
       },
       enableMetrics: $store.enableMetrics,
     };

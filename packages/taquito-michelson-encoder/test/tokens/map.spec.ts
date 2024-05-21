@@ -192,7 +192,7 @@ describe('Map token', () => {
       map.set({ myBytes: 'cccc' }, 15); //LLR
       map.set({ myAddress: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5); //LLL
       map.set({ myNat: 48 }, 16); //LRR
-      map.set({ myPair: { 4: 12, 5: 6 } }, 3); //RLL
+      map.set({ myPair: { 0: 12, 1: 6 } }, 3); //RLL
       map.set({ myInt: 4 }, 6); //LRL
       map.set({ myString: 'test' }, 3); //RLR
       map.set({ myBytes: 'aaaa' }, 5); //LLR
@@ -351,7 +351,7 @@ describe('Map token', () => {
       map.set({ 1: 'cccc' }, 15); //LLR
       map.set({ 0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' }, 5); //LLL
       map.set({ 3: 48 }, 16); //LRR
-      map.set({ 4: { 4: 12, 5: 6 } }, 3); //RLL
+      map.set({ 4: { 0: 12, 1: 6 } }, 3); //RLL
       map.set({ 2: 4 }, 6); //LRL
       map.set({ 5: 'test' }, 3); //RLR
       map.set({ 1: 'aaaa' }, 5); //LLR
@@ -642,13 +642,13 @@ describe('Map token', () => {
         schema: {
           key: {
             __michelsonType: 'string',
-            schema: 'string'
+            schema: 'string',
           },
           value: {
             __michelsonType: 'int',
-            schema: 'int'
-          }
-        }
+            schema: 'int',
+          },
+        },
       });
     });
   });
@@ -760,19 +760,19 @@ describe('Map token with pair', () => {
             schema: {
               0: {
                 __michelsonType: 'string',
-                schema: 'string'
+                schema: 'string',
               },
               1: {
                 __michelsonType: 'string',
-                schema: 'string'
-              }
-            }
+                schema: 'string',
+              },
+            },
           },
           value: {
             __michelsonType: 'int',
-            schema: 'int'
-          }
-        }
+            schema: 'int',
+          },
+        },
       });
     });
   });
@@ -890,19 +890,19 @@ describe('Map token with annotated pair', () => {
           schema: {
             test: {
               __michelsonType: 'string',
-              schema: 'string'
+              schema: 'string',
             },
             test2: {
               __michelsonType: 'string',
-              schema: 'string'
-            }
-          }
+              schema: 'string',
+            },
+          },
         },
         value: {
           __michelsonType: 'int',
-          schema: 'int'
-        }
-      }
+          schema: 'int',
+        },
+      },
     });
   });
 });
@@ -1176,47 +1176,47 @@ describe('Map token with complex pair', () => {
           schema: {
             0: {
               __michelsonType: 'int',
-              schema: 'int'
+              schema: 'int',
             },
             1: {
               __michelsonType: 'nat',
-              schema: 'nat'
+              schema: 'nat',
             },
             2: {
               __michelsonType: 'string',
-              schema: 'string'
+              schema: 'string',
             },
             3: {
               __michelsonType: 'bytes',
-              schema: 'bytes'
+              schema: 'bytes',
             },
             4: {
               __michelsonType: 'mutez',
-              schema: 'mutez'
+              schema: 'mutez',
             },
             5: {
               __michelsonType: 'bool',
-              schema: 'bool'
+              schema: 'bool',
             },
             6: {
               __michelsonType: 'key_hash',
-              schema: 'key_hash'
+              schema: 'key_hash',
             },
             7: {
               __michelsonType: 'timestamp',
-              schema: 'timestamp'
+              schema: 'timestamp',
             },
             8: {
               __michelsonType: 'address',
-              schema: 'address'
+              schema: 'address',
             },
-          }
+          },
         },
         value: {
           __michelsonType: 'int',
-          schema: 'int'
-        }
-      }
+          schema: 'int',
+        },
+      },
     });
   });
 });
