@@ -25,13 +25,14 @@ values={[
 |------------------|--------------|------------------------------------------|---------------------------------------------------------------------------------|
 | ECAD Labs        | Mainnet      | https://mainnet.ecadinfra.com            | [Check](https://mainnet.ecadinfra.com/chains/main/blocks/head/header)           |
 | ECAD Labs        | Ghostnet     | https://ghostnet.ecadinfra.com           | [Check](https://ghostnet.ecadinfra.com/chains/main/blocks/head/header)          |
-| ECAD Labs        | Oxfordnet    | https://oxfordnet.ecadinfra.com          | [Check](https://oxfordnet.ecadinfra.com/chains/main/blocks/head/header)         |
 | SmartPy          | Mainnet      | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header)              |
 | SmartPy          | Ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header)             |
 | Tezos Foundation | Mainnet      | https://rpc.tzbeta.net/                  | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)                  |
+| Tezos Foundation | Ghostnet     | https://rpc.ghostnet.teztnets.com/       | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header)       |
+| Tezos Foundation | Oxfordnet    | https://rpc.oxfordnet.teztnets.com/      | [Check](https://rpc.oxfordnet.teztnets.com/chains/main/blocks/head/header)      |
+| Tezos Foundation | Parisnet     | https://rpc.parisnet.teztnets.com/       | [Check](https://rpc.parisnet.teztnets.com/chains/main/blocks/head/header)       |
 | Marigold         | Mainnet      | https://mainnet.tezos.marigold.dev/      | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)      |
 | Marigold         | Ghostnet     | https://ghostnet.tezos.marigold.dev/     | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
-| Marigold         | Oxfordnet    | https://oxfordnet.tezos.marigold.dev/    | [Check](https://oxfordnet.tezos.marigold.dev/chains/main/blocks/head/header)    |
 
 *If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 </TabItem>
