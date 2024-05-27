@@ -3,10 +3,10 @@ title: Michel Codec
 author: Hui-An Yang
 ---
 
-The purpose of the `taquito/michel-codec` package is to convert and validate Michelson expressions between JSON-based Michelson and Micheline. This package also comes with functions like `packData`, `packDataBytes`, `unpackData` and `unpackDataBytes` to serialize any value of packable type to its optimized binary representation locally and vice versa, like Michelson instructions `PACK` and `UNPACK`.
+The `taquito/michel-codec` package converts and validates Michelson expressions between JSON-based Michelson and Micheline. It also comes with various functions like `packData`, `packDataBytes`, `unpackData` and `unpackDataBytes` to serialize any value of packable type to its optimized binary representation locally and vice versa, like Michelson instructions `PACK` and `UNPACK`.
 
 ## Parser class
-To use the parser class as is, we import it from the package and initialize it.
+To use the parser class, import and initialize it as follows.
 
 ```ts
 import { Parser } from '@taquito/michel-codec'
@@ -34,7 +34,7 @@ const p = new Parser(parserOptions);
 
 ### parseJSON & emitMicheline - Parse JSON Michelson and convert it to Micheline
 * `parseJSON` - takes a JSON-encoded Michelson, validates it, strips away unneeded properties and expands macros based on your configuration.
-* `emitMicheline` takes a parsed JSON Michelson object and converts it to Micheline expression with formatting options.
+* `emitMicheline` takes a parsed JSON Michelson object and converts it to a Micheline expression with formatting options.
 
 ```js live noInline
 // import { Parser, emitMicheline } from '@taquito/michel-codec'
@@ -75,8 +75,8 @@ println('JSON Michelson data: ' + JSON.stringify(data));
 
 ### packData & packDataBytes - Pack Michelson data
 `packData` & `packDataBytes` serialize any value of packable type to its optimized binary representation identical to the one used by PACK Michelson instructions.
-Without a type definition (not recommended) the data will be encoded as a binary form of a generic Michelson expression.
-Type definition allows some types like `timestamp` and `address` and other base58 representable types to be encoded to corresponding optimized binary forms borrowed from the Tezos protocol.
+Without a type definition (not recommended), `packData` and `packDataBytes` will encode the data as a binary form of a generic Michelson expression.
+Type definition allows types like `timestamp`, `address` and other base58 representable types to be encoded to corresponding optimized binary forms borrowed from the Tezos protocol.
 
 ```ts
 // import { packData, packDataBytes } from '@taquito/michel-codec'
@@ -92,24 +92,24 @@ const packedBytes = packDataBytes(data, typ);
 ```
 
 ### unpackData & unpackDataBytes - Unpack Michelson data
-Deserialize a byte array into the corresponding Michelson value.
-Without a type definition (not recommended) the binary data will be treated as a binary form of a generic Michelson expression and returned as is.
-Type definition allows some types like `timestamp` and `address` and other types usually encoded in optimized binary forms to be transformed back to their string representations like base58 and ISO timestamps.
+Deserialize a byte array into its corresponding Michelson value.
+Without a type definition (not recommended), the binary data will be treated as a binary form of a generic Michelson expression and returned as is.
+Type definition allows some types, like `timestamp` and `address` and others, usually encoded in optimized binary forms, to be transformed back to their string representations like base58 and ISO timestamps.
 
 ```ts
 // import { unpackData, unpackDataBytes } from '@taquito/michel-codec'
-const typ: MichelsonType = { prim: 'timestamp' };
+const type: MichelsonType = { prim: 'timestamp' };
 
 const src1 = [0x05, 0x00, 0xa7, 0xe8, 0xe4, 0xd8, 0x0b];
-const data1 = unpackData(src1, typ);
+const data1 = unpackData(src1, type);
 // { string: "2019-09-26T10:59:51Z" }
 
 const src2 = { bytes: '0500a7e8e4d80b' };
-const data2 = unpackDataBytes(src2, typ);
+const data2 = unpackDataBytes(src2, type);
 // { string: "2019-09-26T10:59:51Z" }
 ```
 
-Alternatively the same binary data without a type definition will not be deserialized correctly
+Alternatively, the same binary data without passing a type definition to `unpackData`, `unpackDataBytes` will not be deserialized correctly
 ```ts
 // import { unpackData, unpackDataBytes } from '@taquito/michel-codec'
 
