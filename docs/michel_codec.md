@@ -13,7 +13,7 @@ import { Parser } from '@taquito/michel-codec'
 const p = new Parser()
 ```
 ### Configuration
-If you'd like to customize the parser class to `expandMacros` or `expandGlobalConstant,` you can configure its `ParserOptions` through initialization.
+You can configure the parser class by passing `ParserOptions` through initialization with `expandMacros` and `expandGlobalConstant` properties.
 
 * `expandMacros` -  defaults to true unless you don't want `Parser` class to expand them; you can pass `{ expandMacros: false }` to disable it. ref: Expand [Michelson macros](https://tezos.gitlab.io/whitedoc/michelson.html#macros) during parsing
 * `expandGlobalConstant` - expects an object where the keys are global constant hashes and the values are the corresponding JSON Micheline expressions.
@@ -74,7 +74,7 @@ println('JSON Michelson data: ' + JSON.stringify(data));
 ## PACK and UNPACK locally
 
 ### packData & packDataBytes - Pack Michelson data
-`packData` & `packDataBytes` serialize any value of packable type to its optimized binary representation identical to the one used by PACK Michelson instructions.
+Serialize any value of packable type to its optimized binary representation identical to the one used by PACK Michelson instructions.
 Without a type definition (not recommended), `packData` and `packDataBytes` will encode the data as a binary form of a generic Michelson expression.
 Type definition allows types like `timestamp`, `address` and other base58 representable types to be encoded to corresponding optimized binary forms borrowed from the Tezos protocol.
 
