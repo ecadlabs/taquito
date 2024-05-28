@@ -84,7 +84,7 @@ export default ({
       const { Tzip16Module, tzip16, MichelsonStorageView } = await import('@taquito/tzip16')
       const { Tzip12Module, tzip12 } = await import("@taquito/tzip12");
       const { Schema, ParameterSchema } = await import("@taquito/michelson-encoder");
-      const { Parser, packDataBytes } = await import('@taquito/michel-codec');
+      const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
       const { RpcClient } = await import('@taquito/rpc');
       const TransportWebHID = (await import("@ledgerhq/hw-transport-webhid")).default;
 
@@ -132,6 +132,7 @@ export default ({
         verifySignature,
         Parser,
         packDataBytes,
+        emitMicheline,
         RpcReadAdapter,
         RpcClient,
         Ed25519,
@@ -188,6 +189,7 @@ export default ({
           verifySignature: dependencies?.verifySignature,
           Parser: dependencies?.Parser,
           packDataBytes: dependencies?.packDataBytes,
+          emitMicheline: dependencies?.emitMicheline,
           RpcReadAdapter: dependencies?.RpcReadAdapter,
           RpcClient: dependencies?.RpcClient,
           InMemorySpendingKey: dependencies?.InMemorySpendingKey,
