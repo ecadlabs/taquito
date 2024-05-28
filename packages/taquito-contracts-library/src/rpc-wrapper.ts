@@ -50,6 +50,7 @@ import {
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
+  AllDelegatesQueryArguments,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -173,6 +174,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BigMapResponse> {
     return this.rpc.getBigMapExpr(id, expr, { block });
+  }
+  async getAllDelegates(
+    args: AllDelegatesQueryArguments,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<string[]> {
+    return this.rpc.getAllDelegates(args, { block });
   }
   async getDelegates(
     address: string,
