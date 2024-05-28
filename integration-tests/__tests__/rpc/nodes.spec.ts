@@ -155,9 +155,10 @@ CONFIGS().forEach(
         it(`Verify that rpcClient.getAllDelegates returns all delegates from RPC`, async () => {
           const allDelegates = await rpcClient.getAllDelegates();
           expect(allDelegates).toBeDefined();
-          console.log(allDelegates)
+
           const allViableDelegates =  await rpcClient.getAllDelegates({active: true, with_minimal_stake: true});
           expect(allViableDelegates).toBeDefined();
+
           expect(allViableDelegates.length).toBeLessThanOrEqual(allDelegates.length);
         });
 
