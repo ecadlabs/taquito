@@ -50,6 +50,7 @@ import {
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
+  AllDelegatesQueryArguments,
 } from './types';
 
 export interface RPCOptions {
@@ -81,6 +82,7 @@ export interface RpcClientInterface {
   getDelegate(address: string, options?: RPCOptions): Promise<DelegateResponse>;
   getBigMapKey(address: string, key: BigMapKey, options?: RPCOptions): Promise<BigMapGetResponse>;
   getBigMapExpr(id: string, expr: string, options?: RPCOptions): Promise<BigMapResponse>;
+  getAllDelegates(args: AllDelegatesQueryArguments, options?: RPCOptions): Promise<string[]>;
   getDelegates(address: string, options?: RPCOptions): Promise<DelegatesResponse>;
   getVotingInfo(address: string, options?: RPCOptions): Promise<VotingInfoResponse>;
   getConstants(options?: RPCOptions): Promise<ConstantsResponse>;
@@ -161,6 +163,7 @@ export enum RPCMethodName {
   GET_CURRENT_PROPOSAL = 'getCurrentProposal',
   GET_CURRENT_QUORUM = 'getCurrentQuorum',
   GET_DELEGATE = 'getDelegate',
+  GET_ALL_DELEGATES = 'getAllDelegates',
   GET_DELEGATES = 'getDelegates',
   GET_VOTING_INFO = 'getVotingInfo',
   GET_ATTESTATION_RIGHTS = 'getAttestationRights',

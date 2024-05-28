@@ -323,6 +323,21 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getAllDelegates', () => {
+    it('should query the right url and data', async () => {
+      httpBackend.createRequest.mockResolvedValue(['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD']);
+      const result = await client.getAllDelegates({ active: true, with_minimal_stake: true });
+      await client.getAllDelegates({ active: true, with_minimal_stake: true });
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: 'root/chains/test/blocks/head/context/delegates',
+        query: { active: true, with_minimal_stake: true },
+      });
+
+      expect(result).toEqual(['tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD']);
+    });
+  });
+
   describe('getDelegates', () => {
     const sampleResponse = {
       full_balance: new BigNumber('10289576365'),
