@@ -1125,6 +1125,13 @@ export type BakingRightsArgumentsDelegate = string | string[];
 export type BakingRightsArgumentsCycle = number | number[];
 export type BakingRightsArgumentsLevel = number | number[];
 
+export type AllDelegatesQueryArguments = {
+  active?: boolean;
+  inactive?: boolean;
+  with_minimal_stake?: boolean;
+  without_minimal_stake?: boolean;
+};
+
 export type BakingRightsQueryArguments = BakingRightsQueryArgumentsBase;
 
 export interface BakingRightsQueryArgumentsBase {

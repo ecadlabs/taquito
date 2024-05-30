@@ -72,6 +72,7 @@ describe('RpcClientCache test', () => {
       getManagerKey: jest.fn(),
       getDelegate: jest.fn(),
       getBigMapExpr: jest.fn(),
+      getAllDelegates: jest.fn(),
       getDelegates: jest.fn(),
       getVotingInfo: jest.fn(),
       getConstants: jest.fn(),
@@ -117,6 +118,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getManagerKey.mockReturnValue(managerKey);
     mockRpcClient.getDelegate.mockReturnValue(delegate);
     mockRpcClient.getBigMapExpr.mockReturnValue(bigmapValue);
+    mockRpcClient.getAllDelegates.mockReturnValue([delegate]);
     mockRpcClient.getDelegates.mockReturnValue(delegates);
     mockRpcClient.getVotingInfo.mockReturnValue(votingInfo);
     mockRpcClient.getConstants.mockReturnValue(constants);
@@ -167,6 +169,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getManagerKey(contractAddress);
     await rpcCache.getDelegate(address);
     await rpcCache.getBigMapExpr('72', 'expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp');
+    await rpcCache.getAllDelegates();
     await rpcCache.getDelegates(address);
     await rpcCache.getVotingInfo(address);
     await rpcCache.getConstants();
@@ -250,6 +253,9 @@ describe('RpcClientCache test', () => {
         'rpcTest/getBigMapExpr/head/72/expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp/'
       ].response
     ).toEqual(bigmapValue);
+    expect(rpcCache.getAllCachedData()[`rpcTest/getAllDelegates/head/{}/`].response).toEqual([
+      delegate,
+    ]);
     expect(rpcCache.getAllCachedData()[`rpcTest/getDelegates/head/${address}/`].response).toEqual(
       delegates
     );
@@ -335,6 +341,7 @@ describe('RpcClientCache test', () => {
       'expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp',
       block
     );
+    await rpcCache.getAllDelegates({}, block);
     await rpcCache.getDelegates(address, block);
     await rpcCache.getVotingInfo(address, block);
     await rpcCache.getConstants(block);
@@ -433,6 +440,10 @@ describe('RpcClientCache test', () => {
         `rpcTest/getBigMapExpr/${block.block}/72/expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp/`
       ].response
     ).toEqual(bigmapValue);
+    console.log(`rpcTest/getAllDelegates/${block.block}/{}`);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getAllDelegates/${block.block}/{}/`].response
+    ).toEqual([delegate]);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getDelegates/${block.block}/${address}/`].response
     ).toEqual(delegates);
@@ -520,6 +531,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getManagerKey(contractAddress);
     await rpcCache.getDelegate(address);
     await rpcCache.getBigMapExpr('72', 'expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp');
+    await rpcCache.getAllDelegates();
     await rpcCache.getDelegates(address);
     await rpcCache.getVotingInfo(address);
     await rpcCache.getConstants();

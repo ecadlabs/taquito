@@ -52,6 +52,7 @@ import {
   PendingOperationsV2,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
+  AllDelegatesQueryArguments,
 } from '../types';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
@@ -73,6 +74,7 @@ type RpcMethodParam =
   | UnparsingMode
   | BigMapKey
   | BakingRightsQueryArguments
+  | AllDelegatesQueryArguments
   | PendingOperationsQueryArguments
   | AttestationRightsQueryArguments;
 
@@ -541,6 +543,29 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getBigMapExpr(id, expr, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param args contains optional query arguments (active, inactive, with_minimal_stake, without_minimal_stake)
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Lists all registered delegates by default with query arguments to filter unneeded values.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh
+   */
+  async getAllDelegates(
+    args: AllDelegatesQueryArguments = {},
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string[]> {
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_ALL_DELEGATES, [
+      block,
+      args,
+    ]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getAllDelegates(args, { block });
       this.put(key, response);
       return response;
     }

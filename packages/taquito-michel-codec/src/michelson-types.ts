@@ -405,6 +405,7 @@ export enum Protocol {
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
   ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
   PtParisBQ = 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
+  PtParisBx = 'PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
@@ -439,6 +440,7 @@ const protoLevel: Record<ProtocolID, number> = {
   PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf: 17,
   ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH: 19,
   PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz: 20,
+  PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ: 20,
   ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 21,
 };
 

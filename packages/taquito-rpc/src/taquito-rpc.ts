@@ -68,6 +68,7 @@ import {
   PendingOperationsV2,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
+  AllDelegatesQueryArguments,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -474,6 +475,23 @@ export class RpcClient implements RpcClientInterface {
     return this.httpBackend.createRequest<BigMapResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/big_maps/${id}/${expr}`),
       method: 'GET',
+    });
+  }
+
+  /**
+   * @param args contains optional query arguments (active, inactive, with_minimal_stake, without_minimal_stake)
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Lists all registered delegates by default with query arguments to filter unneeded values.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh
+   */
+  async getAllDelegates(
+    args: AllDelegatesQueryArguments = {},
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string[]> {
+    return await this.httpBackend.createRequest<string[]>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates`),
+      method: 'GET',
+      query: args,
     });
   }
 
