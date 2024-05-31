@@ -6,7 +6,7 @@ import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
 CONFIGS().forEach(({ rpc, protocol }) => {
   const Tezos = new TezosToolkit(rpc);
-  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBQ) ? test : test.skip
+  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBx) ? test : test.skip
 
   describe(`Test local forger: ${rpc}`, () => {
     parisCases.forEach(({ name, operation, expected }) => {

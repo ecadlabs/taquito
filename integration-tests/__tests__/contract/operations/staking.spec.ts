@@ -4,7 +4,7 @@ import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, protocol }) => {
   const Tezos = lib;
-  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBQ) ? test : test.skip;
+  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBx) ? test : test.skip;
 
   describe(`Staking pseudo operations: ${rpc}`, () => {
 

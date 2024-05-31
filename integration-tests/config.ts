@@ -7,7 +7,7 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsPtParisBQ } from './known-contracts-PtParisBQ';
+import { knownContractsPtParisBx } from './known-contracts-PtParisBx';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
@@ -132,9 +132,9 @@ const defaultConfig = ({
 const parisnetEphemeral: Config =
   defaultConfig({
     networkName: 'PARISNET',
-    protocol: Protocols.PtParisBQ,
+    protocol: Protocols.PtParisBx,
     defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/',
-    knownContracts: knownContractsPtParisBQ,
+    knownContracts: knownContractsPtParisBx,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/parisnet')
   });
 
@@ -153,7 +153,7 @@ const nairobinetSecretKey: Config =
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
-    protocol: Protocols.ProxfordY,
+    protocol: Protocols.PtParisBx,
     defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')

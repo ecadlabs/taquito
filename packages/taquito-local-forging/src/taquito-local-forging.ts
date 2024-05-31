@@ -22,7 +22,7 @@ export * from './interface';
 export { VERSION } from './version';
 export { ProtocolsHash } from './protocols';
 
-const PROTOCOL_CURRENT = ProtocolsHash.PtParisBQ;
+const PROTOCOL_CURRENT = ProtocolsHash.PtParisBx;
 
 export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
   return {
