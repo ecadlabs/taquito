@@ -142,6 +142,7 @@ const sidebars = {
       items: [
         'rpc_package',
         'michelson_encoder',
+        'michel_codec',
         'contracts-library',
         'timelock',
         'taquito_utils',
