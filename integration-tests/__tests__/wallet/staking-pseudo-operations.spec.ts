@@ -5,7 +5,7 @@ import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker }) => {
   const Tezos = lib;
-  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBQ) ? test : test.skip;
+  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBx) ? test : test.skip;
   describe(`Test staking pseudo operations using: ${rpc}`, () => {
     beforeAll(async () => {
       await setup(true);
