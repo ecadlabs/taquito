@@ -128,7 +128,7 @@ type Instr0<PT extends MichelsonNoArgInstructionID> = Prim0<PT>;
 type InstrX<PT extends MichelsonRegularInstructionID, AT extends Expr[]> = PrimX<PT, AT>;
 
 export type MichelsonCode = InstructionList | MichelsonInstruction;
-export interface InstructionList extends List<MichelsonCode> {}
+export interface InstructionList extends List<MichelsonCode> { }
 
 export type MichelsonNoArgInstruction = Instr0<MichelsonNoArgInstructionID>;
 export type MichelsonInstruction =
@@ -224,23 +224,23 @@ export type MichelsonTypeChest = Type0<'chest'>;
 type TypeList<T extends MichelsonType[]> = T & Node;
 export type MichelsonTypePair<T extends MichelsonType[]> = TypeX<'pair', T> | TypeList<T>;
 
-export interface MichelsonTypeOption<T extends MichelsonType> extends TypeX<'option', [T]> {}
-export interface MichelsonTypeList<T extends MichelsonType> extends TypeX<'list', [T]> {}
-export interface MichelsonTypeContract<T extends MichelsonType> extends TypeX<'contract', [T]> {}
-export interface MichelsonTypeOr<T extends [MichelsonType, MichelsonType]> extends TypeX<'or', T> {}
+export interface MichelsonTypeOption<T extends MichelsonType> extends TypeX<'option', [T]> { }
+export interface MichelsonTypeList<T extends MichelsonType> extends TypeX<'list', [T]> { }
+export interface MichelsonTypeContract<T extends MichelsonType> extends TypeX<'contract', [T]> { }
+export interface MichelsonTypeOr<T extends [MichelsonType, MichelsonType]> extends TypeX<'or', T> { }
 export interface MichelsonTypeLambda<Arg extends MichelsonType, Ret extends MichelsonType>
-  extends TypeX<'lambda', [Arg, Ret]> {}
+  extends TypeX<'lambda', [Arg, Ret]> { }
 
-export interface MichelsonTypeSet<T extends MichelsonType> extends TypeX<'set', [T]> {}
+export interface MichelsonTypeSet<T extends MichelsonType> extends TypeX<'set', [T]> { }
 export interface MichelsonTypeMap<K extends MichelsonType, V extends MichelsonType>
-  extends TypeX<'map', [K, V]> {}
+  extends TypeX<'map', [K, V]> { }
 export interface MichelsonTypeBigMap<K extends MichelsonType, V extends MichelsonType>
-  extends TypeX<'big_map', [K, V]> {}
+  extends TypeX<'big_map', [K, V]> { }
 export interface MichelsonTypeSaplingState<S extends string = string>
-  extends TypeX<'sapling_state', [IntLiteral<S>]> {}
+  extends TypeX<'sapling_state', [IntLiteral<S>]> { }
 export interface MichelsonTypeSaplingTransaction<S extends string = string>
-  extends TypeX<'sapling_transaction', [IntLiteral<S>]> {}
-export interface MichelsonTypeTicket<T extends MichelsonType> extends TypeX<'ticket', [T]> {}
+  extends TypeX<'sapling_transaction', [IntLiteral<S>]> { }
+export interface MichelsonTypeTicket<T extends MichelsonType> extends TypeX<'ticket', [T]> { }
 
 export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> = T extends 'int'
   ? MichelsonTypeInt
@@ -317,7 +317,8 @@ export type MichelsonDataID =
   | 'Left'
   | 'Right'
   | 'Some'
-  | 'Lambda_rec';
+  | 'Lambda_rec'
+  | 'Ticket';
 
 type Data0<PT extends MichelsonDataID> = Prim0<PT>;
 type DataX<PT extends MichelsonDataID, AT extends MichelsonData[]> = PrimX<PT, AT>;
@@ -329,6 +330,7 @@ export type MichelsonDataPair<T extends MichelsonData[]> = DataX<'Pair', T> | Da
 export type MichelsonMapElt = PrimX<'Elt', [MichelsonData, MichelsonData]>;
 export type MichelsonMapEltList = List<MichelsonMapElt>;
 export type MichelsonLambdaRec = DataX<'Lambda_rec', [InstructionList]>;
+export type MichelsonTicket = PrimX<'Ticket', [StringLiteral | BytesLiteral, MichelsonType, MichelsonData, IntLiteral]>;
 
 export type MichelsonData =
   | IntLiteral
@@ -341,7 +343,8 @@ export type MichelsonData =
   | MichelsonDataPair<MichelsonData[]>
   | InstructionList
   | MichelsonMapEltList
-  | MichelsonLambdaRec;
+  | MichelsonLambdaRec
+  | MichelsonTicket;
 
 // Top level script sections
 
@@ -360,12 +363,12 @@ export type MichelsonContract = MichelsonContractSection[];
 
 export type MichelsonContractSection<T extends MichelsonSectionID = MichelsonSectionID> =
   T extends 'parameter'
-    ? MichelsonContractParameter
-    : T extends 'storage'
-    ? MichelsonContractStorage
-    : T extends 'view'
-    ? MichelsonContractView
-    : MichelsonContractCode;
+  ? MichelsonContractParameter
+  : T extends 'storage'
+  ? MichelsonContractStorage
+  : T extends 'view'
+  ? MichelsonContractView
+  : MichelsonContractCode;
 
 // Code analysis types
 export interface MichelsonTypeFailed {
@@ -401,6 +404,8 @@ export enum Protocol {
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
   ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
+  PtParisBQ = 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
+  PtParisBx = 'PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
@@ -434,7 +439,9 @@ const protoLevel: Record<ProtocolID, number> = {
   PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1: 16,
   PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf: 17,
   ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH: 19,
-  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 20,
+  PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz: 20,
+  PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ: 20,
+  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 21,
 };
 
 export function ProtoGreaterOrEqual(a: ProtocolID, b: ProtocolID): boolean {

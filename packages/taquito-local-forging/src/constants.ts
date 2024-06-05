@@ -43,7 +43,7 @@ export enum CODEC {
   OP_BALLOT = 'ballot',
   OP_FAILING_NOOP = 'failing_noop',
   OP_ATTESTATION = 'attestation',
-  OP_ENDORSEMENT = 'endorsement',
+  OP_ATTESTATION_WITH_DAL = 'attestation_with_dal',
   OP_SEED_NONCE_REVELATION = 'seed_nonce_revelation',
   OP_REVEAL = 'reveal',
   OP_PROPOSALS = 'proposals',
@@ -59,9 +59,11 @@ export enum CODEC {
   PVM_KIND = 'pvm_kind',
   OP_SMART_ROLLUP_ADD_MESSAGES = 'smart_rollup_add_messages',
   OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'smart_rollup_execute_outbox_message',
+  OP_DAL_PUBLISH_COMMITMENT = 'dal_publish_commitment',
+  SLOT_HEADER = 'slot_header',
 }
 
-// See https://tezos.gitlab.io/whitedoc/michelson.html#full-grammar
+// See https://tezos.gitlab.io/shell/p2p_api.html#alpha-michelson-v1-primitives-enumeration-unsigned-8-bit-integer
 export const opMapping: { [key: string]: string } = {
   '00': 'parameter',
   '01': 'storage',
@@ -220,6 +222,7 @@ export const opMapping: { [key: string]: string } = {
   '9a': 'TICKET',
   '9b': 'BYTES',
   '9c': 'NAT',
+  '9d': 'Ticket',
 };
 
 export const opMappingReverse = (() => {
@@ -230,7 +233,7 @@ export const opMappingReverse = (() => {
   return result;
 })();
 
-// See https://tezos.gitlab.io/shell/p2p_api.html?highlight=p2p
+// See https://tezos.gitlab.io/shell/p2p_api.html
 export const kindMapping: { [key: number]: string } = {
   0x04: 'activate_account',
   0x6b: 'reveal',
@@ -239,6 +242,7 @@ export const kindMapping: { [key: number]: string } = {
   0x6d: 'origination',
   0x06: 'ballot',
   0x15: 'attestation',
+  0x17: 'attestation_with_dal',
   0x01: 'seed_nonce_revelation',
   0x05: 'proposals',
   0x6f: 'register_global_constant',
@@ -250,6 +254,7 @@ export const kindMapping: { [key: number]: string } = {
   0xc8: 'smart_rollup_originate',
   0xc9: 'smart_rollup_add_messages',
   0xce: 'smart_rollup_execute_outbox_message',
+  0xe6: 'dal_publish_commitment',
   0x11: 'failing_noop',
 };
 

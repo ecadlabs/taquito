@@ -3,21 +3,17 @@ import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { InMemorySigner } from "@taquito/signer";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ rpc }) => {
-  const aliceSKey = 'edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq'
-
+CONFIGS().forEach(({ lib, setup, rpc }) => {
   describe(`Test failing_noop through contract api using: ${rpc}`, () => {
-    let Tezos: TezosToolkit;
+    let Tezos = lib;
 
     beforeAll(async () => {
-      if(rpc.includes('oxfordnet')){
-        Tezos = new TezosToolkit('https://rpc.tzkt.io/oxfordnet');
-      } else if(rpc.includes('ghostnet')){
-        Tezos = new TezosToolkit('https://rpc.tzkt.io/ghostnet');
-      } else {
-        Tezos = new TezosToolkit(rpc);
+      setup(true);
+      if (rpc.includes('parisnet')) {
+        Tezos.setProvider({ rpc: 'https://rpc.tzkt.io/parisnet' }); // public archive node to fetch genesis block
+      } else if (rpc.includes('ghostnet')) {
+        Tezos.setProvider({ rpc: 'https://rpc.tzkt.io/ghostnet' }); // public archive node to fetch genesis block
       }
-      Tezos.setSignerProvider(new InMemorySigner(aliceSKey));
     });
 
     it('Verify that the contract.failingNoop signs a text on the genesis block', async () => {
@@ -43,8 +39,8 @@ CONFIGS().forEach(({ rpc }) => {
     let Mainnet: TezosToolkit;
 
     beforeAll(async () => {
-      Mainnet = new TezosToolkit('https://rpc.tzkt.io/mainnet'); // this is a mainnet archive history mode public rpc node url
-      Mainnet.setSignerProvider(new InMemorySigner(aliceSKey));
+      Mainnet = new TezosToolkit('https://rpc.tzkt.io/mainnet'); // public archive node to fetch genesis block
+      Mainnet.setSignerProvider(new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq')); // alice's secret key
     });
 
     it('Verify that the contract.failingNoop result is as expected when the block and secret key are kept constant', async () => {

@@ -87,6 +87,9 @@ describe('RpcContractProvider test', () => {
     contractCall: jest.Mock<any, any>;
     smartRollupOriginate: jest.Mock<any, any>;
     smartRollupExecuteOutboxMessage: jest.Mock<any, any>;
+    stake: jest.Mock<any, any>;
+    unstake: jest.Mock<any, any>;
+    finalizeUnstake: jest.Mock<any, any>;
   };
 
   beforeEach(() => {
@@ -146,6 +149,9 @@ describe('RpcContractProvider test', () => {
       contractCall: jest.fn(),
       smartRollupOriginate: jest.fn(),
       smartRollupExecuteOutboxMessage: jest.fn(),
+      stake: jest.fn(),
+      unstake: jest.fn(),
+      finalizeUnstake: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -624,6 +630,416 @@ describe('RpcContractProvider test', () => {
           signature: 'test_sig',
         },
         opbytes: 'test',
+      });
+    });
+  });
+
+  describe('transfer - staking pseudo operations', () => {
+    it('should be able to produce a reveal and stake pseudo operation', async () => {
+      const result = await rpcContractProvider.stake({
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '331',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '625',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '10000',
+              gas_limit: '10600',
+              storage_limit: '300',
+              amount: '2000000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'stake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce an error if destination is passed and is different than the source', async () => {
+      const estimate = new Estimate(1000, 1000, 180, 1000);
+      mockEstimate.stake.mockResolvedValue(estimate);
+
+      expect(async () => {
+        await rpcContractProvider.stake({
+          to: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+          amount: 2,
+        });
+      }).rejects.toThrow();
+    });
+
+    it('should be able to produce a stake operation when no fees are specified', async () => {
+      const estimate = new Estimate(1000, 1000, 180, 1000);
+      mockEstimate.stake.mockResolvedValue(estimate);
+
+      const result = await rpcContractProvider.stake({
+        amount: 2,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '331',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '625',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '301',
+              gas_limit: '1',
+              storage_limit: '1000',
+              amount: '2000000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'stake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce a stake operation without reveal when manager is defined', async () => {
+      const estimate = new Estimate(1000, 1000, 180, 1000);
+      mockEstimate.stake.mockResolvedValue(estimate);
+
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const result = await rpcContractProvider.stake({
+        amount: 2,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'transaction',
+              fee: '301',
+              gas_limit: '1',
+              storage_limit: '1000',
+              amount: '2000000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'stake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce a reveal and unstake pseudo operation', async () => {
+      const result = await rpcContractProvider.unstake({
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '331',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '625',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '10000',
+              gas_limit: '10600',
+              storage_limit: '300',
+              amount: '2000000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce a reveal and unstake pseudo operation when no fees are specified', async () => {
+      const estimate = new Estimate(1000, 1000, 180, 1000);
+      mockEstimate.unstake.mockResolvedValue(estimate);
+
+      const result = await rpcContractProvider.unstake({
+        amount: 2,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '331',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '625',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '301',
+              gas_limit: '1',
+              storage_limit: '1000',
+              amount: '2000000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce a reveal and unstake pseudo operation without reveal when account is revealed', async () => {
+      const estimate = new Estimate(1000, 1000, 180, 1000);
+      mockEstimate.unstake.mockResolvedValue(estimate);
+
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const result = await rpcContractProvider.unstake({
+        amount: 2,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'transaction',
+              fee: '301',
+              gas_limit: '1',
+              storage_limit: '1000',
+              amount: '2000000',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce a reveal and finalize_unstake pseudo operation', async () => {
+      const result = await rpcContractProvider.finalizeUnstake({
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '331',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '625',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '10000',
+              gas_limit: '10600',
+              storage_limit: '300',
+              amount: '0',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should throw an error when an amount other than 0 is specified on a finalize_unstake pseudo-operation', async () => {
+      await expect(
+        rpcContractProvider.finalizeUnstake({
+          amount: 2,
+        })
+      ).rejects.toThrow();
+    });
+
+    it('should be able to produce a reveal and finalize_unstake pseudo operation when no fees are specified', async () => {
+      const estimate = new Estimate(1000, 1000, 180, 1000);
+      mockEstimate.finalizeUnstake.mockResolvedValue(estimate);
+
+      const result = await rpcContractProvider.finalizeUnstake({});
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '331',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '625',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '301',
+              gas_limit: '1',
+              storage_limit: '1000',
+              amount: '0',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce a reveal and finalize_unstake pseudo operation without reveal when account is revealed', async () => {
+      const estimate = new Estimate(1000, 1000, 180, 1000);
+      mockEstimate.finalizeUnstake.mockResolvedValue(estimate);
+
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const result = await rpcContractProvider.finalizeUnstake({});
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'transaction',
+              fee: '301',
+              gas_limit: '1',
+              storage_limit: '1000',
+              amount: '0',
+              destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
       });
     });
   });

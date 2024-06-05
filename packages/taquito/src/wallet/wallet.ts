@@ -16,11 +16,16 @@ import {
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
+  WalletStakeParams,
+  WalletUnstakeParams,
+  WalletFinalizeUnstakeParams,
 } from './interface';
 import {
   InvalidAddressError,
   InvalidContractAddressError,
   InvalidOperationKindError,
+  InvalidStakingAddressError,
+  InvalidFinalizeUnstakeAmountError,
 } from '@taquito/core';
 import {
   validateAddress,
@@ -49,9 +54,7 @@ export class WalletOperationBatch {
   ) {}
 
   /**
-   *
    * @description Add a transaction operation to the batch
-   *
    * @param params Transfer operation parameter
    */
   withTransfer(params: WalletTransferParams) {
@@ -64,9 +67,7 @@ export class WalletOperationBatch {
   }
 
   /**
-   *
    * @description Add a contract call to the batch
-   *
    * @param params Call a contract method
    * @param options Generic operation parameters
    */
@@ -78,9 +79,7 @@ export class WalletOperationBatch {
   }
 
   /**
-   *
    * @description Add a delegation operation to the batch
-   *
    * @param params Delegation operation parameter
    */
   withDelegation(params: WalletDelegateParams) {
@@ -93,9 +92,7 @@ export class WalletOperationBatch {
   }
 
   /**
-   *
    * @description Add an origination operation to the batch
-   *
    * @param params Origination operation parameter
    */
   withOrigination<TWallet extends DefaultWalletType = DefaultWalletType>(
@@ -106,9 +103,7 @@ export class WalletOperationBatch {
   }
 
   /**
-   *
    * @description Add an IncreasePaidStorage operation to the batch
-   *
    * @param param IncreasePaidStorage operation parameter
    */
   withIncreasePaidStorage(params: WalletIncreasePaidStorageParams) {
@@ -140,9 +135,7 @@ export class WalletOperationBatch {
   }
 
   /**
-   *
    * @description Add a group operation to the batch. Operation will be applied in the order they are in the params array
-   *
    * @param params Operations parameter
    * @throws {@link InvalidOperationKindError}
    */
@@ -170,9 +163,7 @@ export class WalletOperationBatch {
   }
 
   /**
-   *
    * @description Submit batch operation to wallet
-   *
    */
   async send() {
     const ops: WalletParamsWithKind[] = [];
@@ -199,7 +190,6 @@ export class Wallet {
 
   /**
    * @description Retrieve the PKH of the account that is currently in use by the wallet
-   *
    * @param option Option to use while fetching the PKH.
    * If forceRefetch is specified the wallet provider implementation will refetch the PKH from the wallet
    */
@@ -212,7 +202,6 @@ export class Wallet {
 
   /**
    * @description Retrieve the PK of the account that is currently in use by the wallet
-   *
    * @param option Option to use while fetching the PK.
    * If forceRefetch is specified the wallet provider implementation will refetch the PK from the wallet
    */
@@ -230,11 +219,8 @@ export class Wallet {
   };
 
   /**
-   *
    * @description Originate a new contract according to the script in parameters.
-   *
-   * @returns An operation handle with the result from the rpc node
-   *
+   * @returns a OriginationWalletOperation promise object when followed by .send()
    * @param originateParams Originate operation parameter
    */
   originate<TWallet extends DefaultWalletType = DefaultWalletType>(
@@ -254,11 +240,8 @@ export class Wallet {
   }
 
   /**
-   *
    * @description Set the delegate for a contract.
-   *
-   * @returns An operation handle with the result from the rpc node
-   *
+   * @returns a WalletDelegateParams promise object when followed by .send()
    * @param delegateParams operation parameter
    */
   setDelegate(params: WalletDelegateParams) {
@@ -276,11 +259,8 @@ export class Wallet {
   }
 
   /**
-   *
    * @description failing_noop operation that is guaranteed to fail. DISCLAIMER: Not all wallets support signing failing_noop operations.
-   *
    * @returns Signature for a failing_noop
-   *
    * @param params operation parameter
    */
   async signFailingNoop(params: WalletFailingNoopParams) {
@@ -310,11 +290,8 @@ export class Wallet {
   }
 
   /**
-   *
    * @description Register the current address as delegate.
-   *
-   * @returns An operation handle with the result from the rpc node
-   *
+   * @returns a DelegationWalletOperation promise object when followed by .send()
    */
   registerDelegate() {
     return this.walletCommand(async () => {
@@ -328,11 +305,8 @@ export class Wallet {
   }
 
   /**
-   *
    * @description Transfer tezos tokens from current address to a specific address or call a smart contract.
-   *
-   * @returns A wallet command from which we can send the operation to the wallet
-   *
+   * @returns a TransactionWalletOperation promise object when followed by .send()
    * @param params operation parameter
    */
   transfer(params: WalletTransferParams) {
@@ -350,12 +324,88 @@ export class Wallet {
   }
 
   /**
-   *
-   * @description
-   *
-   * @returns
-   *
-   * @param params
+   * @description Stake a given amount for the source address
+   * @returns a TransactionWalletOperation promise object when followed by .send()
+   * @param Stake pseudo-operation parameter
+   */
+  stake(params: WalletStakeParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapStakeParamsToWalletParams(async () => {
+        const source = await this.pkh();
+        if (!params.to) {
+          params.to = source;
+        }
+        if (params.to !== source) {
+          throw new InvalidStakingAddressError(params.to);
+        }
+        params.parameter = { entrypoint: 'stake', value: { prim: 'Unit' } };
+        return params;
+      });
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance.
+   * Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over,
+   * the operation "finalize unstake" must be called for the funds to appear in the liquid balance.
+   * @returns a TransactionWalletOperation promise object when followed by .send()
+   * @param Unstake pseudo-operation parameter
+   */
+  unstake(params: WalletUnstakeParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapUnstakeParamsToWalletParams(async () => {
+        const source = await this.pkh();
+        if (!params.to) {
+          params.to = source;
+        }
+        if (params.to !== source) {
+          throw new InvalidStakingAddressError(params.to);
+        }
+        params.parameter = { entrypoint: 'unstake', value: { prim: 'Unit' } };
+        return params;
+      });
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return await this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   * @description Transfer all the finalizable unstaked funds of the source to their liquid balance
+   * @returns a TransactionWalletOperation promise object when followed by .send()
+   * @param Finalize_unstake pseudo-operation parameter
+   */
+  finalizeUnstake(params: WalletFinalizeUnstakeParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapFinalizeUnstakeParamsToWalletParams(
+        async () => {
+          const source = await this.pkh();
+          if (!params.to) {
+            params.to = source;
+          }
+          if (params.to !== source) {
+            throw new InvalidStakingAddressError(params.to);
+          }
+          if (!params.amount) {
+            params.amount = 0;
+          }
+          if (params.amount !== 0) {
+            throw new InvalidFinalizeUnstakeAmountError('Amount must be 0 to finalize unstake.');
+          }
+          params.parameter = { entrypoint: 'finalize_unstake', value: { prim: 'Unit' } };
+          return params;
+        }
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return await this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   * @description Increase the paid storage of a smart contract.
+   * @returns a IncreasePaidStorageWalletOperation promise object when followed by .send()
+   * @param params operation parameter
    */
   increasePaidStorage(params: WalletIncreasePaidStorageParams) {
     const destinationValidation = validateAddress(params.destination);
@@ -372,11 +422,8 @@ export class Wallet {
   }
 
   /**
-   *
    * @description Create a batch of operation
-   *
    * @returns A batch object from which we can add more operation or send a command to the wallet to execute the batch
-   *
    * @param params List of operation to initialize the batch with
    */
   batch(params?: Parameters<WalletOperationBatch['with']>[0]) {
@@ -390,10 +437,8 @@ export class Wallet {
   }
 
   /**
-   *
    * @description Create an smart contract abstraction for the address specified. Calling entrypoints with the returned
    * smart contract abstraction will leverage the wallet provider to make smart contract calls
-   *
    * @param address Smart contract address
    * @throws {@link InvalidContractAddressError} If the contract address is not valid
    */

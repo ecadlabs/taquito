@@ -62,6 +62,28 @@ export class InvalidAddressError extends ParameterValidationError {
   }
 }
 
+export class InvalidStakingAddressError extends ParameterValidationError {
+  constructor(
+    public readonly address: string,
+    public readonly errorDetail?: string
+  ) {
+    super();
+    this.name = 'InvalidStakingAddressError';
+    this.message = `Invalid staking address "${address}", you can only set destination as your own address`;
+  }
+}
+
+export class InvalidFinalizeUnstakeAmountError extends ParameterValidationError {
+  constructor(
+    public readonly address: string,
+    public readonly errorDetail?: string
+  ) {
+    super();
+    this.name = 'InvalidFinalizeUnstakeAmountError';
+    this.message = `The amount can only be 0 when finalizing an unstake`;
+  }
+}
+
 /**
  *  @category Error
  *  @description Error that indicates an invalid block hash being passed or used

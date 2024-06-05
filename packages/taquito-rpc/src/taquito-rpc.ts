@@ -19,6 +19,7 @@ import {
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
+  UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
   BigMapGetResponse,
@@ -36,8 +37,6 @@ import {
   VotingInfoResponse,
   AttestationRightsQueryArguments,
   AttestationRightsResponse,
-  EndorsingRightsQueryArguments,
-  EndorsingRightsResponse,
   EntrypointsResponse,
   ForgeOperationsParams,
   ManagerKeyResponse,
@@ -68,6 +67,8 @@ import {
   PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
+  AILaunchCycleResponse,
+  AllDelegatesQueryArguments,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -142,7 +143,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Get the block's hash, its unique identifier.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-hash
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-hash
    */
   async getBlockHash({ block }: RPCOptions = defaultRPCOptions): Promise<string> {
     const hash = await this.httpBackend.createRequest<string>({
@@ -155,7 +156,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description List the ancestors of the given block which, if referred to as the branch in an operation header, are recent enough for that operation to be included in the current block.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-live-blocks
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-live-blocks
    */
   async getLiveBlocks({ block }: RPCOptions = defaultRPCOptions): Promise<string[]> {
     const blocks = await this.httpBackend.createRequest<string[]>({
@@ -169,7 +170,7 @@ export class RpcClient implements RpcClientInterface {
    * @param address address from which we want to retrieve the balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the spendable balance of a contract, excluding frozen bonds
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-balance
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-balance
    */
   async getBalance(
     address: string,
@@ -186,10 +187,130 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
+   * @param address address from which we want to retrieve the full balance
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Access the full balance of a contract, including frozen bonds and stake.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-full-balance
+   */
+  async getFullBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/full_balance`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve the staked balance
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Access the staked balance of a contract. Returns None if the contract is originated, or neither delegated nor a delegate.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-staked-balance
+   */
+  async getStakedBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/staked_balance`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve the unstaked finalizable balance
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Access the balance of a contract that was requested for an unstake operation, and is no longer frozen, which means it will appear in the spendable balance of the contract after any stake/unstake/finalize_unstake operation. Returns None if the contract is originated.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-unstaked-finalizable-balance
+   */
+  async getUnstakedFinalizableBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/unstaked_finalizable_balance`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve the unstaked frozen balance
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Access the balance of a contract that was requested for an unstake operation, but is still frozen for the duration of the slashing period. Returns None if the contract is originated.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-unstaked-frozen-balance
+   */
+  async getUnstakedFrozenBalance(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/unstaked_frozen_balance`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve the unstaked requests
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Access the unstake requests of the contract. The requests that appear in the finalizable field can be finalized, which means that the contract can transfer these (no longer frozen) funds to their spendable balance with a [finalize_unstake] operation call. Returns null if there is no unstake request pending.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-unstake-requests
+   */
+  async getUnstakeRequests(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<UnstakeRequestsResponse> {
+    this.validateAddress(address);
+    const response = await this.httpBackend.createRequest<UnstakeRequestsResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/unstake_requests`
+      ),
+      method: 'GET',
+    });
+    return response === null
+      ? null
+      : {
+          finalizable: response.finalizable.map(({ amount, ...rest }) => {
+            const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
+            return {
+              ...rest,
+              amount: castedToBigNumber.amount,
+            };
+          }),
+          unfinalizable: {
+            delegate: response.unfinalizable.delegate,
+            requests: response.unfinalizable.requests.map(({ amount, cycle }) => {
+              const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
+              return {
+                cycle,
+                amount: castedToBigNumber.amount,
+              };
+            }),
+          },
+        };
+  }
+
+  /**
    * @param address contract address from which we want to retrieve the storage
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the data of the contract.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-storage
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-storage
    */
   async getStorage(
     address: string,
@@ -208,7 +329,7 @@ export class RpcClient implements RpcClientInterface {
    * @param address contract address from which we want to retrieve the script
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the code and data of the contract.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   async getScript(
     address: string,
@@ -250,7 +371,7 @@ export class RpcClient implements RpcClientInterface {
    * @param address contract address from which we want to retrieve
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the complete status of a contract.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id
    */
   async getContract(
     address: string,
@@ -271,7 +392,7 @@ export class RpcClient implements RpcClientInterface {
    * @param address contract address from which we want to retrieve the manager
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the manager of an implicit contract
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-manager-key
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-manager-key
    */
   async getManagerKey(
     address: string,
@@ -290,7 +411,7 @@ export class RpcClient implements RpcClientInterface {
    * @param address contract address from which we want to retrieve the delegate (baker)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the delegate of a contract, if any
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-delegate
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-delegate
    */
   async getDelegate(
     address: string,
@@ -320,7 +441,7 @@ export class RpcClient implements RpcClientInterface {
    * @param address contract address from which we want to retrieve the big map key
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the value associated with a key in the big map storage of the contract.
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
+   * @see https://tezos.gitlab.io/active/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
    */
   async getBigMapKey(
     address: string,
@@ -344,7 +465,7 @@ export class RpcClient implements RpcClientInterface {
    * @param expr Expression hash to query (A b58check encoded Blake2b hash of the expression (The expression can be packed using the pack_data method))
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the value associated with a key in a big map.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id-script-expr
    */
   async getBigMapExpr(
     id: string,
@@ -358,10 +479,27 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
+   * @param args contains optional query arguments (active, inactive, with_minimal_stake, without_minimal_stake)
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Lists all registered delegates by default with query arguments to filter unneeded values.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh
+   */
+  async getAllDelegates(
+    args: AllDelegatesQueryArguments = {},
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<string[]> {
+    return await this.httpBackend.createRequest<string[]>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates`),
+      method: 'GET',
+      query: args,
+    });
+  }
+
+  /**
    * @param address delegate address which we want to retrieve
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Everything about a delegate
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-delegates-pkh
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh
    */
   async getDelegates(
     address: string,
@@ -433,7 +571,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description All constants
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-constants
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-constants
    */
   async getConstants({ block }: RPCOptions = defaultRPCOptions): Promise<ConstantsResponse> {
     const response = await this.httpBackend.createRequest<ConstantsResponse>({
@@ -480,9 +618,9 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head) and version.
    * @description All the information about a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id
-   * @example getBlock() will default to `/main/chains/block/head?version=0` which shows { kind: endorsement }
-   * @example getBlock({ block: 'head~2', version: 1 }) will return an offset of 2 from head blocks and shows { kind: attestation }
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id
+   * @example getBlock() will default to `/main/chains/block/head?version=1` which shows { kind: attestation }
+   * @example getBlock({ block: 'head~2', version: 0 }) will return an offset of 2 from head blocks and shows { kind: endorsement }
    * @example getBlock({ block: 'BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2' }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block, version }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
@@ -499,7 +637,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description The whole block header
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-header
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-header
    */
   async getBlockHeader({ block }: RPCOptions = defaultRPCOptions): Promise<BlockHeaderResponse> {
     const response = await this.httpBackend.createRequest<BlockHeaderResponse>({
@@ -513,7 +651,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head) and version
    * @description All the metadata associated to the block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-metadata
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-metadata
    */
   async getBlockMetadata({
     block,
@@ -533,7 +671,7 @@ export class RpcClient implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, consensus_key, and max_round)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the list of delegates allowed to bake a block.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-baking-rights
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async getBakingRights(
     args: BakingRightsQueryArguments = {},
@@ -552,7 +690,7 @@ export class RpcClient implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the delegates allowed to attest a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async getAttestationRights(
     args: AttestationRightsQueryArguments = {},
@@ -568,29 +706,9 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @deprecated Deprecated in favor of getAttestationRights
-   * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
-   * @param options contains generic configuration for rpc calls
-   * @description Retrieves the delegates allowed to endorse a block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-helpers-endorsing-rights
-   */
-  async getEndorsingRights(
-    args: EndorsingRightsQueryArguments = {},
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<EndorsingRightsResponse> {
-    const response = await this.httpBackend.createRequest<EndorsingRightsResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/endorsing_rights`),
-      method: 'GET',
-      query: args,
-    });
-
-    return response;
-  }
-
-  /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Ballots casted so far during a voting period
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-ballot-list
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-ballot-list
    */
   async getBallotList({ block }: RPCOptions = defaultRPCOptions): Promise<BallotListResponse> {
     const response = await this.httpBackend.createRequest<BallotListResponse>({
@@ -604,7 +722,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Sum of ballots casted so far during a voting period
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-ballots
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-ballots
    */
   async getBallots({ block }: RPCOptions = defaultRPCOptions): Promise<BallotsResponse> {
     const response = await this.httpBackend.createRequest<BallotsResponse>({
@@ -619,7 +737,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Current proposal under evaluation.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-proposal
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-current-proposal
    */
   async getCurrentProposal({
     block,
@@ -635,7 +753,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Current expected quorum.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-quorum
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-current-quorum
    */
   async getCurrentQuorum({
     block,
@@ -651,7 +769,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description List of delegates with their voting power
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-listings
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-listings
    */
   async getVotesListings({
     block,
@@ -674,7 +792,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description List of proposals with number of supporters
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-proposals
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-proposals
    */
   async getProposals({ block }: RPCOptions = defaultRPCOptions): Promise<ProposalsResponse> {
     const response = await this.httpBackend.createRequest<ProposalsResponse>({
@@ -693,7 +811,7 @@ export class RpcClient implements RpcClientInterface {
    * @param data operation contents to forge
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Forge an operation returning the unsigned bytes
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-forge-operations
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async forgeOperations(
     data: ForgeOperationsParams,
@@ -711,7 +829,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param signedOpBytes signed bytes to inject
    * @description Inject an operation in node and broadcast it and return the ID of the operation
-   * @see https://tezos.gitlab.io/api/rpc.html#post-injection-operation
+   * @see https://tezos.gitlab.io/shell/rpc.html#post-injection-operation
    */
   async injectOperation(signedOpBytes: string): Promise<OperationHash> {
     return this.httpBackend.createRequest<any>(
@@ -727,7 +845,7 @@ export class RpcClient implements RpcClientInterface {
    * @param ops Operations to apply
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Simulate the application of the operations with the context of the given block and return the result of each operation application
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-preapply-operations
+   * @see https://tezos.gitlab.io/active/rpc.html#post-block-id-helpers-preapply-operations
    */
   async preapplyOperations(
     ops: PreapplyParams,
@@ -747,7 +865,7 @@ export class RpcClient implements RpcClientInterface {
    * @param contract address of the contract we want to get the entrypoints of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Return the list of entrypoints of the contract
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-entrypoints
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-entrypoints
    * @version 005_PsBABY5H
    */
   async getEntrypoints(
@@ -772,7 +890,7 @@ export class RpcClient implements RpcClientInterface {
    * @param op Operation to run
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Run an operation with the context of the given block and without signature checks and return the operation application result, including the consumed gas.
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-run-operation
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async runOperation(
     op: RPCRunOperationParam,
@@ -792,7 +910,7 @@ export class RpcClient implements RpcClientInterface {
    * @param op Operation to simulate
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Simulate running an operation at some future moment (based on the number of blocks given in the `latency` argument), and return the operation application result.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/oxford-openapi.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async simulateOperation(
     op: RPCSimulateOperationParam,
@@ -814,7 +932,7 @@ export class RpcClient implements RpcClientInterface {
    * @param code Code to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Run a Michelson script in the current context
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-run-code
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async runCode(
     code: RPCRunCodeParam,
@@ -835,6 +953,7 @@ export class RpcClient implements RpcClientInterface {
    * @param viewScriptParams Parameters of the script view to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Simulate a call to a michelson view
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async runScriptView(
     { unparsing_mode = 'Readable', ...rest }: RPCRunScriptViewParam,
@@ -857,7 +976,8 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param viewParams Parameters of the view to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * @description Simulate a call to a view following the TZIP-4 standard. See https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints.
+   * @description Simulate a call to a view following the TZIP-4 standard.
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async runView(
     { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
@@ -891,7 +1011,7 @@ export class RpcClient implements RpcClientInterface {
    * A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
    * A safer solution to pack and sign data would be to use the `packDataBytes` function available in the `@taquito/michel-codec` package.
    * @example packData({ data: { string: "test" }, type: { prim: "string" } })
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-helpers-scripts-pack-data
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async packData(data: PackDataParams, { block }: RPCOptions = defaultRPCOptions) {
     const { gas, ...rest } = await this.httpBackend.createRequest<PackDataResponse>(
@@ -923,7 +1043,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Returns the voting period (index, kind, starting position) and related information (position, remaining) of the interrogated block
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-current-period
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-current-period
    */
   async getCurrentPeriod({
     block,
@@ -940,7 +1060,7 @@ export class RpcClient implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Returns the voting period (index, kind, starting position) and related information (position, remaining) of the next block.Useful to craft operations that will be valid in the next block
    * @example getSuccessorPeriod() will default to successor voting period for /main/chains/block/head.
-   * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-votes-successor-period
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-successor-period
    */
   async getSuccessorPeriod({
     block,
@@ -1003,7 +1123,7 @@ export class RpcClient implements RpcClientInterface {
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the used storage space of the contract
-   * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async getStorageUsedSpace(
     contract: string,
@@ -1020,8 +1140,8 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-=   * @description Access the paid storage space of the contract
-   * @see https://tezos.gitlab.io/lima/rpc.html#get-block-id-context-contracts-contract-id-storage
+   * @description Access the paid storage space of the contract
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
    */
   async getStoragePaidSpace(
     contract: string,
@@ -1078,10 +1198,26 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
+   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of null means that the feature is not yet set to launch.
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-adaptive-issuance-launch-cycle
+   */
+  async getAdaptiveIssuanceLaunchCycle({
+    block,
+  }: { block: string } = defaultRPCOptions): Promise<AILaunchCycleResponse> {
+    return this.httpBackend.createRequest<AILaunchCycleResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`
+      ),
+      method: 'GET',
+    });
+  }
+
+  /**
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
-   * @param args has 5 optional properties. We support version 1 as default will output { applied: { kind: endorsement} } version 2 will output { validated: { kind: attestation} }. The rest of the properties is to filter pending operations response
-   * @default args { version: '1', applied: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
-   * @see https://tezos.gitlab.io/CHANGES.html?highlight=pending_operations#id4
+   * @param args has 5 optional properties. We support version 1 & 2
+   * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-mempool-openapi-rc.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}

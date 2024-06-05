@@ -24,6 +24,7 @@ import {
   tz1Encoder,
   valueParameterEncoder,
   zarithEncoder,
+  slotHeaderEncoder,
 } from './codec';
 import { CODEC } from './constants';
 import { scriptEncoder } from './michelson/codec';
@@ -32,7 +33,7 @@ import {
   BallotSchema,
   DelegationSchema,
   AttestationSchema,
-  EndorsementSchema,
+  AttestationWithDalSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
   DrainDelegateSchema,
@@ -50,6 +51,7 @@ import {
   SmartRollupOriginateSchema,
   SmartRollupExecuteOutboxMessageSchema,
   SmartRollupAddMessagesSchema,
+  DalPublishCommitmentSchema,
   FailingNoopSchema,
 } from './schema/operation';
 
@@ -84,6 +86,7 @@ export const encoders: { [key: string]: Encoder<any> } = {
   [CODEC.PVM_KIND]: pvmKindEncoder,
   [CODEC.PADDED_BYTES]: paddedBytesEncoder,
   [CODEC.SMART_ROLLUP_MESSAGE]: smartRollupMessageEncoder,
+  [CODEC.SLOT_HEADER]: slotHeaderEncoder,
 };
 
 encoders[CODEC.OPERATION] = operationEncoder(encoders);
@@ -93,7 +96,8 @@ encoders[CODEC.OP_TRANSACTION] = (val: any) => schemaEncoder(encoders)(Transacti
 encoders[CODEC.OP_ORIGINATION] = (val: any) => schemaEncoder(encoders)(OriginationSchema)(val);
 encoders[CODEC.OP_BALLOT] = (val: any) => schemaEncoder(encoders)(BallotSchema)(val);
 encoders[CODEC.OP_ATTESTATION] = (val: any) => schemaEncoder(encoders)(AttestationSchema)(val);
-encoders[CODEC.OP_ENDORSEMENT] = (val: any) => schemaEncoder(encoders)(EndorsementSchema)(val);
+encoders[CODEC.OP_ATTESTATION_WITH_DAL] = (val: any) =>
+  schemaEncoder(encoders)(AttestationWithDalSchema)(val);
 encoders[CODEC.OP_SEED_NONCE_REVELATION] = (val: any) =>
   schemaEncoder(encoders)(SeedNonceRevelationSchema)(val);
 encoders[CODEC.OP_PROPOSALS] = (val: any) => schemaEncoder(encoders)(ProposalsSchema)(val);
@@ -113,6 +117,8 @@ encoders[CODEC.OP_SMART_ROLLUP_ADD_MESSAGES] = (val: any) =>
   schemaEncoder(encoders)(SmartRollupAddMessagesSchema)(val);
 encoders[CODEC.OP_SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE] = (val: any) =>
   schemaEncoder(encoders)(SmartRollupExecuteOutboxMessageSchema)(val);
+encoders[CODEC.OP_DAL_PUBLISH_COMMITMENT] = (val: any) =>
+  schemaEncoder(encoders)(DalPublishCommitmentSchema)(val);
 encoders[CODEC.MANAGER] = schemaEncoder(encoders)(ManagerOperationSchema);
 encoders[CODEC.OP_SET_DEPOSITS_LIMIT] = (val) =>
   schemaEncoder(encoders)(SetDepositsLimitSchema)(val);

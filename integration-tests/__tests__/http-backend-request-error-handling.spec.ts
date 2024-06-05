@@ -27,7 +27,7 @@ describe('HttpBackend request', () => {
       });
     } catch (err: any) {
       expect(err.name).toEqual('HttpResponseError');
-      expect(err.status).toEqual(401);
+      expect(err.status).toEqual(403);
       expect(err.url).toEqual('https://mainnet.ecadinfra.com/chains/main/blocks/head/helpers/baking_rights?level=0');
       expect(err.message).toContain('Not authorized');
     }

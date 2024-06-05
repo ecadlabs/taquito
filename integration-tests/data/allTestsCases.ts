@@ -49,153 +49,45 @@ interface TestCase {
   expected?: object;
 }
 
-export const oxfordCases: TestCase[] = [
+export const parisCases: TestCase[] = [
   {
-    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
-    operation: {
-      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: timelockCode,
-            storage: timelockStorage,
-          },
-        },
-      ],
-    },
-    expected: {
-      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
-      contents: [
-        {
-          kind: OpKind.ORIGINATION,
-          counter: '1',
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '0',
-          script: {
-            code: timelockExpected,
-            storage: timelockStorage,
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Attestation',
+    name: 'Attestation With Dal operation',
     operation: {
       branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
       contents: [
         {
-          kind: OpKind.ATTESTATION,
+          kind: OpKind.ATTESTATION_WITH_DAL,
           slot: 0,
           level: 66299,
           round: 5,
           block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
+          dal_attestation: '10'
         }
       ]
     }
   },
   {
-    name: 'Transaction with stake entrypoint',
+    name: 'Dal Publish Commitment operation1',
     operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [{
-        kind: OpKind.TRANSACTION,
-        source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-        fee: "0",
-        counter: "407",
-        gas_limit: "1040000",
-        storage_limit: "60000",
-        amount: "1000000000",
-        destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-        parameters:
-          { entrypoint: "stake", value: { prim: "Unit" } }
-      }]
-    },
-  },
-  {
-    name: 'Transaction with unstake entrypoint',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      branch: 'BMT5yA3UH3CJkaYJBq33Q1BNZU6NL4zZNBhCHKwxygSm59P1x9M',
       contents: [
         {
-          kind: OpKind.TRANSACTION,
-          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-          fee: "689",
-          counter: "408",
-          gas_limit: "4250",
-          storage_limit: "0",
-          amount: "99999999999000000",
-          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-          parameters:
-            { entrypoint: "unstake", value: { prim: "Unit" } }
-        }],
-    },
-  },
-  {
-    name: 'Transaction with finalize_unstake entrypoint',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.TRANSACTION,
-          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-          fee: "409",
-          counter: "409",
-          gas_limit: "1529",
-          storage_limit: "0",
-          amount: "0",
-          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
-          parameters:
-          {
-            entrypoint: "finalize_unstake",
-            value: { prim: "Unit" }
+          kind: OpKind.DAL_PUBLISH_COMMITMENT,
+          source: 'tz1Mp9zrMAJ3jckh3juLXGobfDv6oyUycfSy',
+          fee: '513',
+          counter: '67',
+          gas_limit: '1433',
+          storage_limit: '0',
+          slot_header: {
+            slot_index: 10,
+            commitment: 'sh1vHbHrPSt7eWqYJmM9EUk5scjbvR5PKBckJxmmDJzYHHBkca8Lz4hxXX6zpW5wbhJhswJd4v',
+            commitment_proof: '90c6576ad09e11b14eb464cdd214fe061ba8e8e5a3175e29fe7ff40526f90c2f2f4e02fe9fe03f7adb0fe286d7828b970eb1979f0f65ca3637a51d5456b442377d20397eb1b02544c2e435d79e156881443179fe16b32ad9e9501622a647c2ce'
           }
-        }],
-    },
+        }
+      ]
+    }
   },
-  {
-    name: 'Transaction with set_delegate_parameters entrypoint',
-    operation: {
-      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
-      contents: [
-        {
-          kind: OpKind.TRANSACTION,
-          source: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
-          fee: "351",
-          counter: "391",
-          gas_limit: "791",
-          storage_limit: "0",
-          amount: "0",
-          destination: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
-          parameters:
-          {
-            entrypoint: "set_delegate_parameters",
-            value:
-            {
-              prim: "Pair",
-              args:
-                [{ int: "5000000" },
-                {
-                  prim: "Pair",
-                  args:
-                    [{ int: "1000000000" }, { prim: "Unit" }]
-                }]
-            }
-          }
-        }]
-    },
-  },
-];
+]
 
 export const commonCases: TestCase[] = [
   {
@@ -1586,5 +1478,150 @@ export const commonCases: TestCase[] = [
         }
       ]
     }
-  }
+  },
+  {
+    name: 'Origination of a contract that contains the types chest, chest_key and the instruction OPEN_CHEST',
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: timelockCode,
+            storage: timelockStorage,
+          },
+        },
+      ],
+    },
+    expected: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '0',
+          script: {
+            code: timelockExpected,
+            storage: timelockStorage,
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: 'Attestation',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.ATTESTATION,
+          slot: 0,
+          level: 66299,
+          round: 5,
+          block_payload_hash: 'vh3FEkypvxUYLwjGYd2Sme7aWyfX8npDsqxcL6imVpBWnAZeNn2n',
+        }
+      ]
+    }
+  },
+  {
+    name: 'Transaction with stake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [{
+        kind: OpKind.TRANSACTION,
+        source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+        fee: "0",
+        counter: "407",
+        gas_limit: "1040000",
+        storage_limit: "60000",
+        amount: "1000000000",
+        destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+        parameters:
+          { entrypoint: "stake", value: { prim: "Unit" } }
+      }]
+    },
+  },
+  {
+    name: 'Transaction with unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          fee: "689",
+          counter: "408",
+          gas_limit: "4250",
+          storage_limit: "0",
+          amount: "99999999999000000",
+          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          parameters:
+            { entrypoint: "unstake", value: { prim: "Unit" } }
+        }],
+    },
+  },
+  {
+    name: 'Transaction with finalize_unstake entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          fee: "409",
+          counter: "409",
+          gas_limit: "1529",
+          storage_limit: "0",
+          amount: "0",
+          destination: "tz1eDDguimfor6kkt96Ri4pBeEZXEzvuyjQX",
+          parameters:
+          {
+            entrypoint: "finalize_unstake",
+            value: { prim: "Unit" }
+          }
+        }],
+    },
+  },
+  {
+    name: 'Transaction with set_delegate_parameters entrypoint',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.TRANSACTION,
+          source: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
+          fee: "351",
+          counter: "391",
+          gas_limit: "791",
+          storage_limit: "0",
+          amount: "0",
+          destination: "tz1X1TKpLiZuPEo2YVvDiqQ47Zp9a797ejkp",
+          parameters:
+          {
+            entrypoint: "set_delegate_parameters",
+            value:
+            {
+              prim: "Pair",
+              args:
+                [{ int: "5000000" },
+                {
+                  prim: "Pair",
+                  args:
+                    [{ int: "1000000000" }, { prim: "Unit" }]
+                }]
+            }
+          }
+        }]
+    },
+  },
 ];

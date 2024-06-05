@@ -7,7 +7,7 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsProxfordY } from './known-contracts-ProxfordY';
+import { knownContractsPtParisBx } from './known-contracts-PtParisBx';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
@@ -32,7 +32,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, oxfordnet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, parisnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -129,17 +129,17 @@ const defaultConfig = ({
   }
 }
 
-const oxfordnetEphemeral: Config =
+const parisnetEphemeral: Config =
   defaultConfig({
-    networkName: 'OXFORDNET',
-    protocol: Protocols.ProxfordY,
-    defaultRpc: 'http://ecad-oxfordnet-full.i.tez.ie:8732',
-    knownContracts: knownContractsProxfordY,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/oxfordnet')
+    networkName: 'PARISNET',
+    protocol: Protocols.PtParisBx,
+    defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/',
+    knownContracts: knownContractsPtParisBx,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/parisnet')
   });
 
-const oxfordnetSecretKey: Config =
-  { ...oxfordnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-oxfordnet-full:8732' } };
+const parisnetSecretKey: Config =
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/' } };
 
 const nairobinetSecretKey: Config =
   defaultConfig({
@@ -153,7 +153,7 @@ const nairobinetSecretKey: Config =
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
-    protocol: Protocols.ProxfordY,
+    protocol: Protocols.PtParisBx,
     defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
@@ -177,23 +177,23 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(oxfordnetSecretKey);
-} else if (process.env['RUN_OXFORDNET_WITH_SECRET_KEY']) {
-  providers.push(oxfordnetSecretKey);
+  providers.push(parisnetSecretKey);
+} else if (process.env['RUN_PARISNET_WITH_SECRET_KEY']) {
+  providers.push(parisnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if(process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
+} else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
-} else if (process.env['OXFORDNET']) {
-  providers.push(oxfordnetEphemeral);
+} else if (process.env['PARISNET']) {
+  providers.push(parisnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(oxfordnetEphemeral);
+  providers.push(parisnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
