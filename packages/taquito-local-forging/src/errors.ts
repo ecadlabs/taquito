@@ -6,7 +6,10 @@ import { ENTRYPOINT_MAX_LENGTH } from './constants';
  *  @category Error
  *  @description Error that indicates an invalid operation content being passed or used
  */ export class InvalidOperationSchemaError extends ParameterValidationError {
-  constructor(public readonly operation: OperationContents, public readonly errorDetail?: string) {
+  constructor(
+    public readonly operation: OperationContents,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidOperationSchemaError';
     this.message = `Invalid operation content recevied`;
@@ -125,7 +128,10 @@ export class DecodePvmKindError extends ParameterValidationError {
  * @description Error that indicates an invalid Smart Rollup Address (sr1)
  */
 export class InvalidSmartRollupAddressError extends ParameterValidationError {
-  constructor(public readonly address: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly address: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidSmartRollupAddress';
     this.message = `Invalid smart rollup address "${address}"`;
@@ -138,10 +144,29 @@ export class InvalidSmartRollupAddressError extends ParameterValidationError {
  * @description Error that indicates an invalid Smart Rollup commitment hash (src1)
  */
 export class InvalidSmartRollupCommitmentHashError extends ParameterValidationError {
-  constructor(public readonly hash: string, public readonly errorDetail?: string) {
+  constructor(
+    public readonly hash: string,
+    public readonly errorDetail?: string
+  ) {
     super();
     this.name = 'InvalidSmartRollupCommitmentHashError';
     this.message = `Invalid smart rollup commitment hash "${hash}"`;
+    errorDetail ? (this.message += ` ${errorDetail}.`) : '';
+  }
+}
+
+/**
+ * @category Error
+ * @description Error that indicates an invalid dal commitment (sh)
+ */
+export class InvalidDalCommitmentError extends ParameterValidationError {
+  constructor(
+    public readonly commitment: string,
+    public readonly errorDetail?: string
+  ) {
+    super();
+    this.name = 'InvalidDalCommitmentError';
+    this.message = `Invalid dal commitment "${commitment}"`;
     errorDetail ? (this.message += ` ${errorDetail}.`) : '';
   }
 }

@@ -25,6 +25,9 @@ import {
   WalletOriginateParams,
   WalletProvider,
   WalletTransferParams,
+  WalletStakeParams,
+  WalletUnstakeParams,
+  WalletFinalizeUnstakeParams,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
@@ -38,6 +41,7 @@ export class BeaconWallet implements WalletProvider {
 
   constructor(options: DAppClientOptions) {
     this.client = getDAppClientInstance(options);
+    // Subscribe to the active account set event, this will update when there are account changes happening in the dApp
     this.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, async (data) => {
       this.account = data;
     });
@@ -80,6 +84,51 @@ export class BeaconWallet implements WalletProvider {
 
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
     let walletParams: WalletTransferParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI(['alert']);
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createTransferOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapStakeParamsToWalletParams(params: () => Promise<WalletStakeParams>) {
+    let walletParams: WalletStakeParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI(['alert']);
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createTransferOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapUnstakeParamsToWalletParams(params: () => Promise<WalletUnstakeParams>) {
+    let walletParams: WalletUnstakeParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI(['alert']);
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createTransferOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapFinalizeUnstakeParamsToWalletParams(params: () => Promise<WalletFinalizeUnstakeParams>) {
+    let walletParams: WalletFinalizeUnstakeParams;
     await this.client.showPrepare();
     try {
       walletParams = await params();
@@ -152,7 +201,13 @@ export class BeaconWallet implements WalletProvider {
   }
 
   removeDefaultParams(
-    params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams,
+    params:
+      | WalletTransferParams
+      | WalletStakeParams
+      | WalletUnstakeParams
+      | WalletFinalizeUnstakeParams
+      | WalletOriginateParams
+      | WalletDelegateParams,
     operatedParams: any
   ) {
     // If fee, storageLimit or gasLimit is undefined by user

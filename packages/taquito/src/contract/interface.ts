@@ -25,6 +25,9 @@ import {
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
   FailingNoopParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { ContractAbstraction, ContractStorageType, DefaultContractType } from './contract';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
@@ -157,6 +160,36 @@ export interface ContractProvider extends StorageProvider {
    * @param Transfer operation parameter
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
+
+  /**
+   *
+   * @description Stake tz from current address to a specific address. Built on top of the existing transaction operation
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Stake pseudo-operation parameter
+   */
+  stake(params: StakeParams): Promise<TransactionOperation>;
+
+  /**
+   *
+   * @description Unstake tz from current address to a specific address. Built on top of the existing transaction operation
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Unstake pseudo-operation parameter
+   */
+  unstake(params: UnstakeParams): Promise<TransactionOperation>;
+
+  /**
+   *
+   * @description Finalize unstake tz from current address to a specific address. Built on top of the existing transaction operation
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param finalize_unstake pseudo-operation parameter
+   */
+  finalizeUnstake(params: FinalizeUnstakeParams): Promise<TransactionOperation>;
 
   /**
    *

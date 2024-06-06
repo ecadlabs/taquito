@@ -21,7 +21,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const oxfordAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.ProxfordY) ? test : test.skip;
+    const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBx) ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -66,6 +66,31 @@ CONFIGS().forEach(
         it(`Verify that rpcClient.getBalance for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
           const balance = await rpcClient.getBalance(knownBaker);
           expect(balance).toBeDefined();
+        });
+
+        it(`Verify that rpcClient.getFullBalance for knownBaker returns the full balance`, async () => {
+          const balance = await rpcClient.getFullBalance(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
+        it(`Verify that rpcClient.getStakedBalance for knownBaker returns the staked balance`, async () => {
+          const balance = await rpcClient.getStakedBalance(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
+        it(`Verify that rpcClient.getUnstakedFinalizableBalance for knownBaker returns the unstaked finalizable balance`, async () => {
+          const balance = await rpcClient.getUnstakedFinalizableBalance(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
+        it(`Verify that rpcClient.getUnstakedFrozenBalance for knownBaker returns the unstaked frozen balance`, async () => {
+          const balance = await rpcClient.getUnstakedFrozenBalance(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
+        it(`Verify that rpcClient.getUnstakeRequests for knownBaker returns the unstaked requests`, async () => {
+          const response = await rpcClient.getUnstakeRequests('tz1KqYu4VQG67fgq1Pfn93ASoZxhSW7mTDbC');
+          expect(response).toBeDefined();
         });
 
         it(`Verify that rpcClient.getStorage for knownContract returns the data of a contract`, async () => {
@@ -127,6 +152,16 @@ CONFIGS().forEach(
           expect(bigMapValue).toBeDefined();
         });
 
+        it(`Verify that rpcClient.getAllDelegates returns all delegates from RPC`, async () => {
+          const allDelegates = await rpcClient.getAllDelegates();
+          expect(allDelegates).toBeDefined();
+
+          const allViableDelegates =  await rpcClient.getAllDelegates({active: true, with_minimal_stake: true});
+          expect(allViableDelegates).toBeDefined();
+
+          expect(allViableDelegates.length).toBeLessThanOrEqual(allDelegates.length);
+        });
+
         it(`Verify that rpcClient.getDelegates for known baker returns information about a delegate from RPC`, async () => {
           const delegates = await rpcClient.getDelegates(knownBaker);
           expect(delegates).toBeDefined();
@@ -177,19 +212,6 @@ CONFIGS().forEach(
           expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
           expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
           expect(attestationRights[0].delegate).toBeUndefined();
-        });
-
-        unrestrictedRPCNode('Verify that rpcClient.getEndorsingRights retrieves the list of delegates allowed to endorse a block', async () => {
-          const endorsingRights = await rpcClient.getEndorsingRights();
-          expect(endorsingRights).toBeDefined();
-          expect(endorsingRights[0].delegates).toBeDefined();
-          expect(endorsingRights[0].delegates![0].delegate).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].delegate).toEqual('string');
-          expect(endorsingRights[0].delegates![0].endorsing_power).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].endorsing_power).toEqual('number');
-          expect(endorsingRights[0].delegates![0].first_slot).toBeDefined();
-          expect(typeof endorsingRights[0].delegates![0].first_slot).toEqual('number');
-          expect(endorsingRights[0].delegate).toBeUndefined();
         });
 
         it('Verify that rpcClient.getBallotList returns ballots casted so far during a voting period', async () => {
@@ -460,6 +482,11 @@ CONFIGS().forEach(
           expect(ticketBalances[0].amount).toBeDefined();
         });
 
+        parisAndAlpha(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for ${rpc}`, async () => {
+          const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
+          expect(launchCycle).toEqual(6);
+        })
+
         it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '1' }) as PendingOperationsV1;
           expect(pendingOperations).toBeDefined();
@@ -470,7 +497,7 @@ CONFIGS().forEach(
           expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
         });
 
-        oxfordAndAlpha('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
+        it('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.validated).toBeInstanceOf(Array);

@@ -58,6 +58,7 @@ const sidebars = {
         'smart_rollups',
         'proposal_and_ballot',
         'failing_noop',
+        'staking',
       ]
     },
     {
@@ -141,6 +142,7 @@ const sidebars = {
       items: [
         'rpc_package',
         'michelson_encoder',
+        'michel_codec',
         'contracts-library',
         'timelock',
         'taquito_utils',

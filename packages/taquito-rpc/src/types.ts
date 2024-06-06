@@ -11,6 +11,21 @@ export type DelegateResponse = string | null;
 
 export type OperationHash = string;
 
+export type UnstakeRequestsResponse = {
+  finalizable: {
+    delegate: string;
+    cycle: number;
+    amount: BigNumber;
+  }[];
+  unfinalizable: {
+    delegate: string;
+    requests: {
+      cycle: number;
+      amount: BigNumber;
+    }[];
+  };
+} | null;
+
 interface INodeExtender {
   length: string;
   segment: string;
@@ -41,25 +56,32 @@ export interface Inode {
 export interface DelegatesResponse {
   full_balance?: BigNumber;
   current_frozen_deposits?: BigNumber;
+  frozen_deposits?: BigNumber;
   staking_balance: BigNumber;
-  frozen_deposits_limit?: BigNumber;
   delegated_contracts: string[];
   delegated_balance: BigNumber;
+  min_delegated_in_current_cycle?: MinDelegatedInCurrentCycle;
   deactivated: boolean;
-  grace_period: number;
   total_delegated_stake?: BigNumber;
   staking_denominator?: BigNumber;
+  active_consensus_key?: string;
+  grace_period: number;
+  pending_denunciations?: boolean;
+  frozen_deposits_limit?: BigNumber;
   voting_power?: BigNumber;
   current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
-  active_consensus_key?: string;
   pending_consensus_keys?: PendingConsensusKey[];
   balance?: BigNumber;
-  frozen_deposits?: BigNumber;
   frozen_balance?: BigNumber;
   frozen_balance_by_cycle?: Frozenbalancebycycle[];
 }
+
+export type MinDelegatedInCurrentCycle = {
+  amount: string;
+  level?: LevelInfo;
+};
 
 export type PendingConsensusKey = {
   cycle: number;
@@ -225,16 +247,22 @@ export interface OperationContentsSetDepositsLimit {
   limit?: string;
 }
 
-export interface OperationContentsAttestationWithSlot {
-  kind: OpKind.ATTESTATION_WITH_SLOT;
-  endorsement: InlinedAttestation;
+export interface OperationContentsAttestationWithDal {
+  kind: OpKind.ATTESTATION_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
 }
 
-export interface OperationContentsEndorsementWithSlot {
-  kind: OpKind.ENDORSEMENT_WITH_SLOT;
-  endorsement: InlinedEndorsement;
+export interface OperationContentsEndorsementWithDal {
+  kind: OpKind.ENDORSEMENT_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
 }
 
 export interface OperationContentsRevelation {
@@ -482,6 +510,20 @@ export interface OperationContentsSmartRollupTimeout {
   stakers: SmartRollupTimeoutStakers;
 }
 
+export interface OperationContentsDalPublishCommitment {
+  kind: OpKind.DAL_PUBLISH_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  slot_header: {
+    slot_index: number;
+    commitment: string;
+    commitment_proof: string;
+  };
+}
+
 export type OperationContents =
   | OperationContentsAttestation
   | OperationContentsPreattestation
@@ -501,8 +543,8 @@ export type OperationContents =
   | OperationContentsTransaction
   | OperationContentsOrigination
   | OperationContentsDelegation
-  | OperationContentsAttestationWithSlot
-  | OperationContentsEndorsementWithSlot
+  | OperationContentsAttestationWithDal
+  | OperationContentsEndorsementWithDal
   | OperationContentsFailingNoop
   | OperationContentsRegisterGlobalConstant
   | OperationContentsSetDepositsLimit
@@ -517,7 +559,8 @@ export type OperationContents =
   | OperationContentsSmartRollupCement
   | OperationContentsSmartRollupRefute
   | OperationContentsSmartRollupRecoverBond
-  | OperationContentsSmartRollupTimeout;
+  | OperationContentsSmartRollupTimeout
+  | OperationContentsDalPublishCommitment;
 
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -529,8 +572,7 @@ export interface OperationContentsAndResultMetadataExtended1 {
 export interface OperationContentsAndResultMetadataExtended0 {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  slots?: number[];
-  endorsement_power?: number;
+  endorsement_power: number;
   consensus_key?: string;
 }
 
@@ -653,6 +695,12 @@ export interface OperationContentsAndResultMetadataSmartRollupTimeout {
   internal_operation_results?: InternalOperationResult[];
 }
 
+export interface OperationContentsAndResultMetadataDalPublishCommitment {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultDalPublishCommitment;
+  internal_operation_results?: InternalOperationResult[];
+}
+
 export interface OperationContentsAndResultAttestation {
   kind: OpKind.ATTESTATION;
   block_payload_hash?: string;
@@ -696,10 +744,13 @@ export interface OperationContentsAndResultDoublePreattestation {
   metadata: OperationContentsAndResultMetadata;
 }
 
-export interface OperationContentsAndResultAttestationWithSlot {
-  kind: OpKind.ATTESTATION_WITH_SLOT;
-  endorsement: InlinedAttestation;
+export interface OperationContentsAndResultAttestationWithDal {
+  kind: OpKind.ATTESTATION_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
   metadata: OperationContentsAndResultMetadataExtended1;
 }
 
@@ -710,10 +761,13 @@ export interface OperationContentsAndResultDoublePreEndorsement {
   metadata: OperationContentsAndResultMetadata;
 }
 
-export interface OperationContentsAndResultEndorsementWithSlot {
-  kind: OpKind.ENDORSEMENT_WITH_SLOT;
-  endorsement: InlinedEndorsement;
+export interface OperationContentsAndResultEndorsementWithDal {
+  kind: OpKind.ENDORSEMENT_WITH_DAL;
   slot: number;
+  level: number;
+  round: number;
+  block_payload_hash: string;
+  dal_attestation: string;
   metadata: OperationContentsAndResultMetadataExtended0;
 }
 
@@ -977,6 +1031,21 @@ export interface OperationContentsAndResultSmartRollupTimeout {
   metadata: OperationContentsAndResultMetadataSmartRollupTimeout;
 }
 
+export interface OperationContentsAndResultDalPublishCommitment {
+  kind: OpKind.DAL_PUBLISH_COMMITMENT;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  slot_header: {
+    slot_index: number;
+    commitment: string;
+    commitment_proof: string;
+  };
+  metadata: OperationContentsAndResultMetadataDalPublishCommitment;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultAttestation
   | OperationContentsAndResultPreattestation
@@ -995,8 +1064,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultTransaction
   | OperationContentsAndResultOrigination
   | OperationContentsAndResultDelegation
-  | OperationContentsAndResultAttestationWithSlot
-  | OperationContentsAndResultEndorsementWithSlot
+  | OperationContentsAndResultAttestationWithDal
+  | OperationContentsAndResultEndorsementWithDal
   | OperationContentsAndResultRegisterGlobalConstant
   | OperationContentsAndResultSetDepositsLimit
   | OperationContentsAndResultTransferTicket
@@ -1011,7 +1080,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupCement
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupRecoverBond
-  | OperationContentsAndResultSmartRollupTimeout;
+  | OperationContentsAndResultSmartRollupTimeout
+  | OperationContentsAndResultDalPublishCommitment;
 
 export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultTransaction
@@ -1022,8 +1092,11 @@ export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultSetDepositsLimit
   | OperationContentsAndResultUpdateConsensusKey
   | OperationContentsAndResultIncreasePaidStorage
+  | OperationContentsAndResultTransferTicket
   | OperationContentsAndResultSmartRollupAddMessages
-  | OperationContentsAndResultSmartRollupOriginate;
+  | OperationContentsAndResultSmartRollupOriginate
+  | OperationContentsAndResultSmartRollupExecuteOutboxMessage
+  | OperationContentsAndResultDalPublishCommitment;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1051,6 +1124,13 @@ export interface BlockResponse {
 export type BakingRightsArgumentsDelegate = string | string[];
 export type BakingRightsArgumentsCycle = number | number[];
 export type BakingRightsArgumentsLevel = number | number[];
+
+export type AllDelegatesQueryArguments = {
+  active?: boolean;
+  inactive?: boolean;
+  with_minimal_stake?: boolean;
+  without_minimal_stake?: boolean;
+};
 
 export type BakingRightsQueryArguments = BakingRightsQueryArgumentsBase;
 
@@ -1102,34 +1182,6 @@ export interface AttestationRightsResponseItem {
 }
 
 export type AttestationRightsResponse = AttestationRightsResponseItem[];
-
-export type EndorsingRightsArgumentsDelegate = string | string[];
-export type EndorsingRightsArgumentsCycle = number | number[];
-export type EndorsingRightsArgumentsLevel = number | number[];
-
-export interface EndorsingRightsQueryArguments {
-  level?: EndorsingRightsArgumentsLevel;
-  cycle?: EndorsingRightsArgumentsCycle;
-  delegate?: EndorsingRightsArgumentsDelegate;
-  consensus_key?: string;
-}
-
-export interface EndorsingRightsResponseItemDelegates {
-  delegate: string;
-  first_slot: number;
-  endorsing_power: number;
-  consensus_key?: string;
-}
-
-export interface EndorsingRightsResponseItem {
-  level: number;
-  delegate?: string;
-  delegates?: EndorsingRightsResponseItemDelegates[];
-  slots?: number[];
-  estimated_time?: Date;
-}
-
-export type EndorsingRightsResponse = EndorsingRightsResponseItem[];
 
 export type BallotListResponseEnum = 'nay' | 'yay' | 'pass';
 
@@ -1274,6 +1326,8 @@ export interface ScriptedContracts {
   storage: MichelsonV1Expression;
 }
 
+export type AILaunchCycleResponse = number | null;
+
 export type BondId = {
   smart_rollup: string;
 };
@@ -1417,6 +1471,18 @@ export interface OperationResultSmartRollupTimeout {
   errors?: TezosGenericOperationError[];
 }
 
+export interface OperationResultDalPublishCommitment {
+  status: OperationResultStatusEnum;
+  slot_header?: {
+    version: string;
+    level: number;
+    index: number;
+    commitment: string;
+  };
+  consumed_milligas?: string;
+  errors?: TezosGenericOperationError[];
+}
+
 export interface ContractBigMapDiffItem {
   key_hash?: string;
   key?: MichelsonV1Expression;
@@ -1479,7 +1545,8 @@ export type OperationResult =
   | OperationResultSmartRollupRefute
   | OperationResultSmartRollupRecoverBond
   | OperationResultSmartRollupTimeout
-  | OperationResultSmartRollupExecuteOutboxMessage;
+  | OperationResultSmartRollupExecuteOutboxMessage
+  | OperationResultDalPublishCommitment;
 
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
@@ -1704,6 +1771,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto020 &
   ConstantsResponseProto019 &
   ConstantsResponseProto017 &
   ConstantsResponseProto016 &
@@ -1747,6 +1815,89 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto020
+  extends Omit<
+    ConstantsResponseProto019,
+    | 'adaptive_rewards_params'
+    | 'blocks_per_stake_snapshot'
+    | 'dal_parametric'
+    | 'issuance_weights'
+    | 'liquidity_baking_subsidy_weight'
+    | 'preserved_cycles'
+    | 'smart_rollup_reveal_activation_level'
+  > {
+  adaptive_issuance_force_activation: boolean;
+  adaptive_rewards_params: {
+    center_dz: {
+      denominator: string;
+      numerator: string;
+    };
+    growth_rate: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_final_max: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_final_min: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_initial_max: {
+      denominator: string;
+      numerator: string;
+    };
+    issuance_ratio_initial_min: {
+      denominator: string;
+      numerator: string;
+    };
+    max_bonus: string;
+    radius_dz: {
+      denominator: string;
+      numerator: string;
+    };
+    initial_period: number;
+    transition_period: number;
+  };
+  blocks_preservation_cycles: number;
+  consensus_rights_delay: number;
+  dal_parametric: {
+    attestation_lag: number;
+    attestation_threshold: number;
+    feature_enable: boolean;
+    incentives_enable: boolean;
+    number_of_shards: number;
+    number_of_slots: number;
+    page_size: number;
+    redundancy_factor: number;
+    slot_size: number;
+  };
+  delegate_parameters_activation_delay: number;
+  direct_ticket_spending_enable: boolean;
+  issuance_weights: {
+    attesting_reward_weight: number;
+    baking_reward_bonus_weight: number;
+    baking_reward_fixed_portion_weight: number;
+    base_total_issued_per_minute: string;
+    seed_nonce_revelation_tip_weight: number;
+    vdf_revelation_tip_weight: number;
+  };
+  liquidity_baking_subsidy: string;
+  max_slashing_per_block: number;
+  max_slashing_threshold: number;
+  ns_enable: boolean;
+  smart_rollup_reveal_activation_level: {
+    dal_attested_slots_validity_lag: number;
+    dal_page: number;
+    dal_parameters: number;
+    metadata: number;
+    raw_data: {
+      Blake2B: number;
+    };
+  };
+}
 
 export interface ConstantsResponseProto019
   extends Omit<
@@ -1829,6 +1980,7 @@ export interface ConstantsResponseProto019
   smart_rollup_riscv_pvm_enable: boolean;
   zk_rollup_max_ticket_payload_size: number;
 }
+
 export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
 export interface ConstantsResponseProto016
@@ -2080,20 +2232,23 @@ export interface BlockMetadata {
   max_operation_list_length: MaxOperationListLength[];
   proposer?: string;
   baker: string;
-  level?: Level;
   level_info?: LevelInfo;
-  voting_period_kind?: string;
   voting_period_info?: VotingPeriodBlockResult;
   nonce_hash?: string;
-  consumed_gas?: string;
   deactivated?: string[];
   balance_updates?: OperationBalanceUpdates;
-  liquidity_baking_escape_ema?: number;
   liquidity_baking_toggle_ema?: number;
+  adaptive_issuance_vote_ema?: number;
+  adaptive_issuance_activation_cycle?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
-  consumed_milligas?: string;
   proposer_consensus_key?: string;
   baker_consensus_key?: string;
+  consumed_milligas?: string;
+  dal_attestation?: string;
+  level?: Level;
+  voting_period_kind?: string;
+  consumed_gas?: string;
+  liquidity_baking_escape_ema?: number;
 }
 
 export type RPCRunOperationParam = {
@@ -2330,6 +2485,7 @@ export enum SmartRollupRefuteRevealProofKind {
   RAW_DATA_PROOF = 'raw_data_proof',
   METADATA_PROOF = 'metadata_proof',
   DAL_PAGE_PROOF = 'dal_page_proof',
+  DAL_PARAMETERS_PROOF = 'dal_parameters_proof',
 }
 
 export interface SmartRollupRefuteRevealProofRaw {
@@ -2348,11 +2504,14 @@ export interface SmartRollupRefuteRevealProofDalPage {
   };
   dal_proof: string;
 }
-
+export interface SmartRollupRefuteRevealProofDalParameters {
+  reveal_proof_kind: SmartRollupRefuteRevealProofKind.DAL_PARAMETERS_PROOF;
+}
 export type SmartRollupRefuteRevealProofOptions =
   | SmartRollupRefuteRevealProofRaw
   | SmartRollupRefuteRevealProofMetadata
-  | SmartRollupRefuteRevealProofDalPage;
+  | SmartRollupRefuteRevealProofDalPage
+  | SmartRollupRefuteRevealProofDalParameters;
 
 export type SmartRollupGameStatus =
   | SmartRollupRefuteGameStatusOptions.ONGOING

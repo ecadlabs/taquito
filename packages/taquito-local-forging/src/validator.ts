@@ -11,7 +11,7 @@ import {
   RevealSchema,
   RegisterGlobalConstantSchema,
   AttestationSchema,
-  EndorsementSchema,
+  AttestationWithDalSchema,
   TransferTicketSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
@@ -20,6 +20,7 @@ import {
   SmartRollupOriginateSchema,
   SmartRollupAddMessagesSchema,
   SmartRollupExecuteOutboxMessageSchema,
+  DalPublishCommitmentSchema,
   FailingNoopSchema,
 } from './schema/operation';
 
@@ -31,7 +32,7 @@ type OperationKind =
   | OpKind.ORIGINATION
   | OpKind.BALLOT
   | OpKind.ATTESTATION
-  | OpKind.ENDORSEMENT
+  | OpKind.ATTESTATION_WITH_DAL
   | OpKind.SEED_NONCE_REVELATION
   | OpKind.PROPOSALS
   | OpKind.REGISTER_GLOBAL_CONSTANT
@@ -42,7 +43,8 @@ type OperationKind =
   | OpKind.SET_DEPOSITS_LIMIT
   | OpKind.SMART_ROLLUP_ORIGINATE
   | OpKind.SMART_ROLLUP_ADD_MESSAGES
-  | OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+  | OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE
+  | OpKind.DAL_PUBLISH_COMMITMENT;
 
 const OperationKindMapping = {
   activate_account: ActivationSchema,
@@ -52,7 +54,7 @@ const OperationKindMapping = {
   origination: OriginationSchema,
   ballot: BallotSchema,
   attestation: AttestationSchema,
-  endorsement: EndorsementSchema,
+  attestation_with_dal: AttestationWithDalSchema,
   seed_nonce_revelation: SeedNonceRevelationSchema,
   proposals: ProposalsSchema,
   register_global_constant: RegisterGlobalConstantSchema,
@@ -64,6 +66,7 @@ const OperationKindMapping = {
   smart_rollup_originate: SmartRollupOriginateSchema,
   smart_rollup_add_messages: SmartRollupAddMessagesSchema,
   smart_rollup_execute_outbox_message: SmartRollupExecuteOutboxMessageSchema,
+  dal_publish_commitment: DalPublishCommitmentSchema,
   failing_noop: FailingNoopSchema,
 };
 

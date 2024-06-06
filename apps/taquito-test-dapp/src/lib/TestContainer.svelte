@@ -11,7 +11,7 @@
   let loading = false;
   let success: boolean | undefined;
   let opHash = "";
-  let input = { text: "", fee: 400, storageLimit: 400, gasLimit: 1320, amount: 0, address: "" };
+  let input = { text: "", fee: 400, storageLimit: 400, gasLimit: 1320, amount: 0, address: "", delegate: "", stake: 0, unstake: 0 };
   let testResult: { id: string; title: string; body: any };
 
   const run = async () => {
@@ -28,6 +28,9 @@
         test.id === "sign-payload-and-send" ||
         test.id === "sign-failingNoop" ||
         test.id === "verify-signature" ||
+        test.id === "set-delegate" ||
+        test.id === "stake" ||
+        test.id === "unstake" ||
         test.id === "send-tez-to-etherlink" ||
         test.id === "set-transaction-limits"
       ) {
@@ -302,6 +305,27 @@
             placeholder="Enters the payload here"
             bind:value={input.text}
           />
+        </div>
+        {:else if test.inputRequired && test.inputType === "delegate"}
+        <div class="test-input set-delegate">
+          <label for="delegate-address">
+            <span>Delegate address</span>
+            <input type="delegate" id="delegate-address" bind:value={input.delegate} />
+          </label>
+        </div>
+        {:else if test.inputRequired && test.inputType === "stake"}
+        <div class="test-input stake">
+          <label for="stake-amount">
+            <span>Stake amount</span>
+            <input type="stake" id="stake-amount" bind:value={input.stake} />
+          </label>
+        </div>
+        {:else if test.inputRequired && test.inputType === "unstake"}
+        <div class="test-input unstake">
+          <label for="unstake-amount">
+            <span>Unstake amount</span>
+            <input type="unstake" id="unstake-amount" bind:value={input.unstake} />
+          </label>
         </div>
       {:else if test.inputRequired && test.inputType === "etherlink"}
         <div class="test-input test-send-tez-to-etherlink">

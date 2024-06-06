@@ -30,6 +30,8 @@ import {
   InvalidAddressError,
   InvalidContractAddressError,
   InvalidAmountError,
+  InvalidFinalizeUnstakeAmountError,
+  InvalidStakingAddressError,
 } from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -56,6 +58,9 @@ import {
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
   FailingNoopParams,
+  StakeParams,
+  UnstakeParams,
+  FinalizeUnstakeParams,
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
@@ -390,6 +395,129 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     const content = prepared.opOb.contents.find(
       (op) => op.kind === OpKind.TRANSACTION
     ) as OperationContentsTransaction;
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Stake a given amount for the source address
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Stake pseudo-operation parameter
+   */
+  async stake(params: StakeParams) {
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (!params.to) {
+      params.to = params.source;
+    }
+    if (params.to && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
+    }
+
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(params, this.estimator.stake.bind(this.estimator));
+
+    const source = params.source || publicKeyHash;
+    const prepared = await this.prepare.stake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance.
+   * Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over,
+   * the operation "finalize unstake" must be called for the funds to appear in the liquid balance.
+   *
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Unstake pseudo-operation parameter
+   */
+  async unstake(params: UnstakeParams) {
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (!params.to) {
+      params.to = params.source;
+    }
+
+    if (params.to && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
+    }
+
+    if (params.amount < 0) {
+      throw new InvalidAmountError(params.amount.toString());
+    }
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(params, this.estimator.unstake.bind(this.estimator));
+
+    const source = params.source || publicKeyHash;
+    const prepared = await this.prepare.unstake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
+  }
+
+  /**
+   *
+   * @description Transfer all the finalizable unstaked funds of the source to their liquid balance
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param Finalize_unstake pseudo-operation parameter
+   */
+  async finalizeUnstake(params: FinalizeUnstakeParams) {
+    const sourceValidation = validateAddress(params.source ?? '');
+    if (params.source && sourceValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+    }
+
+    if (!params.to) {
+      params.to = params.source;
+    }
+    if (params.to && params.to !== params.source) {
+      throw new InvalidStakingAddressError(params.to);
+    }
+
+    if (!params.amount) {
+      params.amount = 0;
+    }
+    if (params.amount !== undefined && params.amount > 0) {
+      throw new InvalidFinalizeUnstakeAmountError('Amount must be 0 to finalize unstake.');
+    }
+
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const estimate = await this.estimate(
+      params,
+      this.estimator.finalizeUnstake.bind(this.estimator)
+    );
+
+    const source = params.source || publicKeyHash;
+    const prepared = await this.prepare.finalizeUnstake({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.TRANSACTION
+    ) as OperationContentsTransaction;
+
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new TransactionOperation(hash, content, source, forgedBytes, opResponse, context);
