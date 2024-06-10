@@ -91,6 +91,7 @@ export class HttpBackend {
 
     try {
       const response = await fetch(urlWithQuery, {
+        keepalive: false,
         method,
         headers,
         body: JSON.stringify(data),
