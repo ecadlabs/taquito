@@ -658,7 +658,7 @@ export const init = (
     {
       id: "send-tez",
       name: "Send tez",
-      description: "This test sends 0.1 tez to Alice's address",
+      description: "This test sends 0.1 tez to Alice's address.",
       documentation: 'https://taquito.io/docs/wallet_API#making-transfers',
       keyword: 'transfer',
       run: () => sendTez(Tezos),
@@ -669,7 +669,7 @@ export const init = (
     {
       id: "set-delegate",
       name: "Set Delegate",
-      description: "This test sets delegate to your specified address",
+      description: "This test sets a delegate for your specified address.",
       documentation: 'https://taquito.io/docs/set_delegate/#setdelegate',
       keyword: 'delegate',
       run: input => setDelegate(input.delegate, Tezos),
@@ -681,7 +681,7 @@ export const init = (
     {
       id: "stake",
       name: "[parisnet] Stake",
-      description: "This test stake your spendable balance into frozen staked balance",
+      description: "This test stakes your spendable balance into your frozen staked balance.",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'stake',
       run: input => stake(input.stake, Tezos),
@@ -693,7 +693,7 @@ export const init = (
     {
       id: "unstake",
       name: "[parisnet] Unstake",
-      description: "This test unstake amount from your frozen staked balance into unstaked frozen balance which after 4 cycles will become unstaked finalizable balance",
+      description: "This test unstakes a portion of your frozen staked balance, converting it into an unstaked frozen balance. After 5 cycles, this balance will become an unstaked finalizable balance.",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'unstake',
       run: input => unstake(input.unstake, Tezos),
@@ -705,7 +705,7 @@ export const init = (
     {
       id: "finalize-unstake",
       name: "[parisnet] Finalize unstake",
-      description: "This test transfer all unstaked finalizable balance back into spendable balance",
+      description: "This test transfers all unstaked finalizable balance back into your spendable balance.",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'finalizeUnstake',
       run: () => finalizeUnstake(Tezos),
@@ -715,9 +715,9 @@ export const init = (
     },
     {
       id: "send-tez-to-etherlink",
-      name: "[ghostnet] Send tez from Ghostnet to Etherlink",
+      name: "[ghostnet] Send tez from Ghostnet to Etherlink.",
       description:
-        "This test allows you send your ghostnet tez to etherlink address",
+        "This test allows you send your ghostnet tez to an etherlink address.",
       documentation: '',
       keyword: 'etherlink',
       run: input =>
@@ -734,7 +734,7 @@ export const init = (
     {
       id: "contract-call-simple-type",
       name: "Contract call with int",
-      description: "This test calls a contract entrypoint and passes an int",
+      description: "This test calls a contract entrypoint and passes an int.",
       documentation: 'https://taquito.io/docs/smartcontracts',
       keyword: 'methods',
       run: () => sendInt(contract),
@@ -746,7 +746,7 @@ export const init = (
       id: "contract-call-complex-type",
       name: "Contract call with (pair nat string)",
       description:
-        "This test calls a contract entrypoint and passes a pair holding a nat and a string",
+        "This test calls a contract entrypoint and passes a pair holding a nat and a string.",
       documentation: 'https://taquito.io/docs/smartcontracts/#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts',
       keyword: 'methodsObject',
       run: () => sendComplexParam(contract),
@@ -758,7 +758,7 @@ export const init = (
       id: "contract-call-fail",
       name: "Contract call that fails",
       description:
-        'This test calls a contract entrypoint that fails with the message "Fail entrypoint"',
+        'This test calls a contract entrypoint that fails with the message "Fail entrypoint."',
       documentation: 'https://taquito.io/docs/failwith_errors/',
       keyword: 'failwith',
       run: () => callFail(contract),
@@ -769,7 +769,7 @@ export const init = (
     {
       id: "contract-call-fail-with-int",
       name: "Contract call that fails with int",
-      description: "This test calls a contract entrypoint that fails with an int",
+      description: "This test calls a contract entrypoint that fails with an int.",
       documentation: 'https://taquito.io/docs/failwith_errors/',
       keyword: 'failwith',
       run: () => callFaiWithInt(contract),
@@ -780,7 +780,7 @@ export const init = (
     {
       id: "contract-call-fail-with-pair",
       name: "Contract call that fails with (pair int string)",
-      description: "This test calls a contract entrypoint that fails with a pair",
+      description: "This test calls a contract entrypoint that fails with a pair.",
       documentation: 'https://taquito.io/docs/failwith_errors/',
       keyword: 'failwith',
       run: () => callFaiWithPair(contract),
@@ -791,7 +791,7 @@ export const init = (
     {
       id: "originate-success",
       name: "Originate smart contract with success",
-      description: "This test successfully originates a smart contract",
+      description: "This test successfully originates a smart contract.",
       documentation: 'https://taquito.io/docs/originate/#originate-the-contract-using-taquito',
       keyword: 'originate',
       run: () => originateSuccess(Tezos),
@@ -802,7 +802,7 @@ export const init = (
     {
       id: "batch-api",
       name: "Use the Batch API with a wallet",
-      description: "This test sends 0.3 tez to 3 different addresses",
+      description: "This test sends 0.3 tez to 3 different addresses.",
       documentation: 'https://taquito.io/docs/batch_api/#--the-withtransfer-method',
       keyword: 'withTransfer',
       run: () => batchApiTest(Tezos),
@@ -813,7 +813,7 @@ export const init = (
     {
       id: "batch-api-contract-call",
       name: "Use the Batch API for contract calls",
-      description: "This test calls the same entrypoint 3 times in 1 transaction",
+      description: "This test calls the same entrypoint 3 times in 1 transaction.",
       documentation: 'https://taquito.io/docs/batch_api/#--the-withcontractcall-method',
       keyword: 'withcontractcall',
       run: () =>
@@ -829,7 +829,7 @@ export const init = (
     {
       id: "sign-payload",
       name: "Sign the provided payload",
-      description: "This test signs the payload provided by the user",
+      description: "This test signs the payload provided by the user.",
       documentation: 'https://taquito.io/docs/signing/#generating-a-signature-with-beacon-sdk',
       keyword: 'requestSignPayload',
       run: input => signPayload(input.text, wallet),
@@ -842,7 +842,7 @@ export const init = (
       id: "sign-payload-and-send",
       name: "Sign and send the signature to the contract",
       description:
-        "This test signs the provided payload and sends it to the contract to check it",
+        "This test signs the provided payload and sends it to the contract to check it.",
       documentation: 'https://taquito.io/docs/signing/#sending-the-signature-to-a-smart-contract',
       keyword: 'check_signature',
       run: input => signPayloadAndSend(input.text, wallet, contract),
@@ -854,7 +854,7 @@ export const init = (
     {
       id: "sign-failingNoop",
       name: "Sign the provided payload in a failing noop",
-      description: "This test signs the payload provided by the user wrapped in a failing noop",
+      description: "This test signs the payload provided by the user wrapped in a failing noop.",
       documentation: 'https://taquito.io/docs/failing_noop',
       keyword: 'failingNoop',
       run: input => signFailingNoop(input.text, Tezos),
@@ -867,7 +867,7 @@ export const init = (
       id: "verify-signature",
       name: "Verify a provided signature",
       description:
-        "This test signs the provided payload and uses Taquito to verify the signature",
+        "This test signs the provided payload and uses Taquito to verify the signature.",
       documentation: 'https://taquito.io/docs/signing/#verifying-a-signature',
       keyword: 'verifySignature',
       run: input => verifySignatureWithTaquito(input.text, wallet, contract),
@@ -880,7 +880,7 @@ export const init = (
       id: "set-transaction-limits",
       name: "Set the transaction limits",
       description:
-        "This test allows you to set the fee, storage limit and gas limit manually",
+        "This test allows you to set the fee, storage limit and gas limit manually.",
       documentation: 'https://taquito.io/docs/transaction_limits/#setting-the-limits',
       keyword: 'transaction limits',
       run: input =>
@@ -899,7 +899,7 @@ export const init = (
       id: "confirmation-observable",
       name: "Subscribe to confirmations",
       description:
-        "This test updates the underlying contract and subscribes to 3 confirmations",
+        "This test updates the underlying contract and subscribes to 3 confirmations.",
       documentation: 'https://taquito.io/docs/confirmation_event_stream/#setting-up-the-observable',
       keyword: 'confirmationObservable',
       run: () =>
@@ -921,7 +921,7 @@ export const init = (
     {
       id: "sapling-shielded",
       name: "[wip] Sapling shielded transaction",
-      description: "This test prepares and sends a shielded transaction to a Sapling pool",
+      description: "This test prepares and sends a shielded transaction to a Sapling pool.",
       documentation: 'https://taquito.io/docs/sapling/',
       keyword: 'sapling',
       run: () => saplingShielded(contract as ContractAbstraction<Wallet>),
