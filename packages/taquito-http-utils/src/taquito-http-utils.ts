@@ -91,7 +91,7 @@ export class HttpBackend {
 
     try {
       const response = await fetch(urlWithQuery, {
-        keepalive: false,
+        keepalive: false, // Disable keepalive (keepalive defaults to true starting from Node 19 & 20)
         method,
         headers,
         body: JSON.stringify(data),
