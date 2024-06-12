@@ -1633,6 +1633,7 @@ export enum METADATA_BALANCE_UPDATES_CATEGORY {
   ENDORSING_REWARDS = 'endorsing rewards',
   INVOICE = 'invoice',
   LOST_ENDORSING_REWARDS = 'lost endorsing rewards',
+  LOST_ATTESTING_REWARDS = 'lost attesting rewards',
   MINTED = 'minted',
   NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
   PUNISHMENTS = 'punishments',
@@ -1641,6 +1642,12 @@ export enum METADATA_BALANCE_UPDATES_CATEGORY {
   STORAGE_FEES = 'storage fees',
   SUBSIDY = 'subsidy',
   UNSTAKED_DEPOSITS = 'unstaked_deposits',
+  DOUBLE_SIGNING_EVIDENCE_REWARDS = 'double signing evidence rewards',
+  FEES = 'fees',
+  LEGACY_DEPOSITS = 'legacy_deposits',
+  LEGACY_FEES = 'legacy_fees',
+  LEGACY_REWARDS = 'legacy_rewards',
+  REWARDS = 'rewards',
 }
 
 export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
@@ -1652,7 +1659,7 @@ export type MetadataBalanceUpdatesOriginEnum =
   | 'simulation'
   | 'delayed_operation';
 
-export type FrozenStaker = SingleStaker | SharedStaker | Baker;
+export type FrozenStaker = SingleStaker | SharedStaker | Baker | Baker_edge;
 
 export type Staker = SingleStaker | SharedStaker;
 
@@ -1669,6 +1676,10 @@ export interface Baker {
   baker: string;
 }
 
+export interface Baker_edge {
+  baker_edge: string;
+}
+
 export interface OperationMetadataBalanceUpdates {
   kind: MetadataBalanceUpdatesKindEnum;
   contract?: string;
@@ -1683,6 +1694,7 @@ export interface OperationMetadataBalanceUpdates {
   bond_id?: BondId;
   cycle?: number;
   delegator?: string;
+  delayed_operation_hash?: string;
 }
 
 export type OperationResultStatusEnum = 'applied' | 'failed' | 'skipped' | 'backtracked';
