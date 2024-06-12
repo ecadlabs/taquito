@@ -15,7 +15,7 @@
   },
   "version": "20.0.0",
   "dependencies": {
-    "@ledgerhq/devices": "8.2.2",
+    "@ledgerhq/devices": "8.3.0",
     "@ledgerhq/hw-transport": "6.30.5",
     "@ledgerhq/hw-transport-node-hid": "6.28.5",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.29.5",
