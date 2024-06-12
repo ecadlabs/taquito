@@ -18,7 +18,7 @@
     "@ledgerhq/devices": "8.2.2",
     "@ledgerhq/hw-transport": "6.30.5",
     "@ledgerhq/hw-transport-node-hid": "6.28.5",
-    "@ledgerhq/hw-transport-node-hid-noevents": "6.29.5",
+    "@ledgerhq/hw-transport-node-hid-noevents": "6.29.6",
     "@taquito/contracts-library": "^20.0.0",
     "@taquito/core": "^20.0.0",
     "@taquito/http-utils": "^20.0.0",
