@@ -70,6 +70,7 @@ export enum Protocols {
   ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
   PtParisBQ = 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
   PtParisBx = 'PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ',
+  PtParisCN = 'PtParisCNYDDgwNyJTAuPTNjmvS6FEWP6nJi4KCqiNPMD1ESjTF',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -89,7 +90,8 @@ export const protocols = {
   '016': [Protocols.PtMumbai2], // mumbai v2
   '017': [Protocols.PtNairobi],
   '019': [Protocols.ProxfordY],
-  '020': [Protocols.ProtoALpha],
+  '020': [Protocols.PtParisBQ, Protocols.PtParisBx, Protocols.PtParisCN],
+  '021': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {

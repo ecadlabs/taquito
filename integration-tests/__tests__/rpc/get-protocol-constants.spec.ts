@@ -5,7 +5,7 @@ import { ConstantsResponseProto019, ConstantsResponseProto020 } from '@taquito/r
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
-  const parisnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PtParisBx) ? test : test.skip;
+  const parisnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PtParisCN) ? test : test.skip;
   const weeklynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
   describe('Test fetching constants for all protocols on Mainnet', () => {
     const rpcUrl = 'https://mainnet.ecadinfra.com/';
