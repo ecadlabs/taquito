@@ -141,6 +141,87 @@ const isVerified = verifySignature(
 );
 ```
 
+## Generating a tzip-32 message signature
+
+The community have proposed [tzip-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md)(draft), Off-Chain Message Signing, which aims to define a formal message signing standard  that is simple, secure, extendable and compatible with hardware wallets. Tzip-32 can be further used in [tzip-33](https://gitlab.com/tezos/tzip/-/blob/6483efc9e591960effe76f4ae996ec187bf13bf4/drafts/current/draft-sign-in-with-tezos.md)(draft) which is a [caip-122](https://chainagnostic.org/CAIPs/caip-122) compliant sign-in with Tezos standard.
+
+**Message encoding**
+
+This is the schema to encode the message into bytes, please read the [tzip-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md) for more detail.
+
+| Name                  | Size     | Contents                |
+|-----------------------|----------|-------------------------|
+| magic_string          | 30 bytes | bytes                   |
+| # Bytes in next field | 1 byte   | unsigned 8-bit integer  |
+| interface             | variable | bytes                   |
+| character_encoding    | 1 byte   | unsigned 8-bit integer  |
+| # Bytes in next field | 2 bytes  | unsigned 16-bit integer |
+| message               | Variable | bytes                   |
+
+
+<Tabs
+defaultValue="contractAPI"
+values={[
+{label: 'Contract API', value: 'contractAPI'},
+{label: 'Wallet API', value: 'walletAPI'}
+]}>
+<TabItem value="contractAPI">
+
+
+The Off-Chain Message Signing magic bytes is `0x80` defined in [tzip-31](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-signer-requests/tzip-31.md)(draft).
+
+```js live noInline
+// import { TezosToolkit } from '@taquito/taquito'
+// import { InMemorySigner } from '@taquito/signer'
+// import { stringToBytes, num2PaddedHex } from '@taquito/utils';
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+
+let magicByte = '0x80'
+let magicString = 'tezos signed offchain message'
+let interface_ = 'tzip://32'
+let characterEncoding = '0'
+let message = 'Hello world!'
+
+let bytes = stringToBytes(magicString) + num2PaddedHex(interface_.length, 8) + stringToBytes(interface_) + num2PaddedHex(Number(characterEncoding), 8) + num2PaddedHex(message.length, 16) + stringToBytes(message)
+
+InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb')
+  .then((theSigner) => {
+    Tezos.setProvider({ signer: theSigner });
+    return Tezos.signer.sign(bytes, new Uint8Array([parseInt(magicByte, 16)]))
+  })
+  .then(signed => {
+    println(JSON.stringify(signed, null, 2));
+  })
+  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```
+
+</TabItem>
+  <TabItem value="walletAPI">
+
+```js live noInline wallet
+// import { TezosToolkit } from '@taquito/taquito'
+// import { InMemorySigner } from '@taquito/signer'
+// import { stringToBytes, num2PaddedHex } from '@taquito/utils';
+// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+
+let magicByte = '0x80'
+let magicString = 'tezos signed offchain message'
+let interface_ = 'tzip://32'
+let characterEncoding = '0'
+let message = 'Hello world!'
+
+let bytes = stringToBytes(magicString) + num2PaddedHex(interface_.length, 8) + stringToBytes(interface_) + num2PaddedHex(characterEncoding, 8) + num2PaddedHex(message.length, 16) + stringToBytes(message)
+
+const payload = {
+  signingType: SigningType.RAW,
+  payload: magicByte + bytes
+}
+wallet.client.requestSignPayload(payload).then(signed => println(JSON.stringify(signed, null, 2)))
+```
+
+  </TabItem>
+</Tabs>
+
 ## Signing Michelson data
 
 Taquito also offers the possibility to sign Michelson code. This feature can be useful, for example, if you need to send a lambda to a contract to be executed but want to restrict the number of users who can submit a lambda by verifying the signer's address. The signing of Michelson code requires the use of the `michel-codec` package:
