@@ -7,7 +7,7 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsPtParisBx } from './known-contracts-PtParisBx';
+import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
@@ -133,13 +133,13 @@ const parisnetEphemeral: Config =
   defaultConfig({
     networkName: 'PARISNET',
     protocol: Protocols.PtParisBx,
-    defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/',
-    knownContracts: knownContractsPtParisBx,
+    defaultRpc: 'https://rpc.pariscnet.teztnets.com/',
+    knownContracts: knownContractsPsParisCZ,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/parisnet')
   });
 
 const parisnetSecretKey: Config =
-  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/' } };
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com//' } };
 
 const nairobinetSecretKey: Config =
   defaultConfig({
