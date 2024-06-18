@@ -7,7 +7,7 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsPtParisBx } from './known-contracts-PtParisBx';
+import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
 
 const nodeCrypto = require('crypto');
@@ -117,7 +117,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
+    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M'), // tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M aka teztnetsbaker is a placeholder for tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD on parisc protocol
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -132,14 +132,14 @@ const defaultConfig = ({
 const parisnetEphemeral: Config =
   defaultConfig({
     networkName: 'PARISNET',
-    protocol: Protocols.PtParisBx,
-    defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/',
-    knownContracts: knownContractsPtParisBx,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/parisnet')
+    protocol: Protocols.PsParisCZ,
+    defaultRpc: 'https://rpc.pariscnet.teztnets.com/',
+    knownContracts: knownContractsPsParisCZ,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/pariscnet')
   });
 
 const parisnetSecretKey: Config =
-  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://parisnet.i.ecadinfra.com:8732/' } };
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
 
 const nairobinetSecretKey: Config =
   defaultConfig({

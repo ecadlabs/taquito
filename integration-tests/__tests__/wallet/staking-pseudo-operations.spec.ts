@@ -1,11 +1,8 @@
 import { CONFIGS } from '../../config';
-import { Protocols } from '@taquito/taquito';
-import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@taquito/core';
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   const Tezos = lib;
-  const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBx) ? test : test.skip;
   describe(`Test staking pseudo operations using: ${rpc}`, () => {
     beforeAll(async () => {
       await setup(true);
@@ -20,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker }) => {
       }
     });
 
-    parisAndAlpha(`should be able to stake successfully: ${rpc}`, async () => {
+    it(`should be able to stake successfully: ${rpc}`, async () => {
       const op = await Tezos.wallet.stake({ amount: 3 }).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
@@ -30,7 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker }) => {
       expect(Math.round(stakedBalance.toNumber() / 1000000)).toEqual(3);
     });
 
-    parisAndAlpha(`should be able to unstake successfully: ${rpc}`, async () => {
+    it(`should be able to unstake successfully: ${rpc}`, async () => {
       const op = await Tezos.wallet.unstake({ amount: 1 }).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
@@ -40,13 +37,13 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker }) => {
       expect(Math.round(UnstakedBalance.toNumber() / 1000000)).toEqual(1);
     });
 
-    parisAndAlpha(`should be able to finalizeUnstake successfully: ${rpc}`, async () => {
+    it(`should be able to finalizeUnstake successfully: ${rpc}`, async () => {
       const op = await Tezos.wallet.finalizeUnstake({}).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
     });
 
-    parisAndAlpha('should throw error when param is against pseudo operation', async () => {
+    it('should throw error when param is against pseudo operation', async () => {
       expect(async () => {
         const op = await Tezos.wallet.stake({ amount: 1, to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' }).send();
       }).rejects.toThrow(InvalidStakingAddressError);

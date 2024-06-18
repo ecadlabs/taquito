@@ -68,8 +68,8 @@ export enum Protocols {
   PtMumbai2 = 'PtMumbai2TmsJHNGRkD8v8YDbtao7BLUC3wjASn1inAKLFCjaH1',
   PtNairobi = 'PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf',
   ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
-  PtParisBQ = 'PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz',
   PtParisBx = 'PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ',
+  PsParisCZ = 'PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -89,7 +89,8 @@ export const protocols = {
   '016': [Protocols.PtMumbai2], // mumbai v2
   '017': [Protocols.PtNairobi],
   '019': [Protocols.ProxfordY],
-  '020': [Protocols.ProtoALpha],
+  '020': [Protocols.PtParisBx, Protocols.PsParisCZ],
+  '021': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {
@@ -109,7 +110,8 @@ export enum ChainIds {
   MUMBAINET2 = 'NetXgbcrNtXD2yA',
   NAIROBINET = 'NetXyuzvDo2Ugzb',
   OXFORDNET2 = 'NetXxWsskGahzQB',
-  PARISNET = 'NetXo8SqH1c38SS',
+  PARISBNET = 'NetXo8SqH1c38SS',
+  PARISCNET = 'NetXXWAHLEvre9b',
 }
 
 // A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption (3.5 fails occasionally with gas exhausted; 4 fails occasionally with fee too low)
