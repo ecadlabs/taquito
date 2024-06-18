@@ -144,13 +144,13 @@ const isVerified = verifySignature(
 );
 ```
 
-## Generating a tzip-32 message signature
+## Generating a TZIP-32 message signature
 
-The community have proposed [tzip-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md)(draft), Off-Chain Message Signing, which aims to define a formal message signing standard  that is simple, secure, extendable and compatible with hardware wallets. Tzip-32 can be further used in [tzip-33](https://gitlab.com/tezos/tzip/-/blob/6483efc9e591960effe76f4ae996ec187bf13bf4/drafts/current/draft-sign-in-with-tezos.md)(draft) which is a [caip-122](https://chainagnostic.org/CAIPs/caip-122) compliant sign-in with Tezos standard.
+The community have proposed [TZIP-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md)(draft), Off-Chain Message Signing, which aims to define a formal message signing standard  that is simple, secure, extendable and compatible with hardware wallets. TZIP-32 can be further used in [TZIP-33](https://gitlab.com/tezos/tzip/-/blob/6483efc9e591960effe76f4ae996ec187bf13bf4/drafts/current/draft-sign-in-with-tezos.md)(draft) which is a [CAIP-122](https://chainagnostic.org/CAIPs/caip-122) compliant sign-in with Tezos standard.
 
 **Message encoding**
 
-This is the schema to encode the message into bytes, please read the [tzip-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md) for more detail.
+This is the schema to encode the message into bytes, please read the [TZIP-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md) for more detail.
 
 | Name                  | Size     | Contents                |
 |-----------------------|----------|-------------------------|
@@ -161,9 +161,9 @@ This is the schema to encode the message into bytes, please read the [tzip-32](h
 | # Bytes in next field | 2 bytes  | unsigned 16-bit integer |
 | message               | Variable | bytes                   |
 
-**Examples of signing tzip-32 message on contractAPI and walletAPI**
+**Examples of signing TZIP-32 message on contractAPI and walletAPI**
 
-The Off-Chain Message Signing magic bytes is `0x80` defined in [tzip-31](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-signer-requests/tzip-31.md)(draft).
+The Off-Chain Message Signing magic bytes is `0x80` defined in [TZIP-31](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-signer-requests/tzip-31.md)(draft).
 
 <Tabs
 defaultValue="contractAPI"
