@@ -4,6 +4,9 @@ id: signing
 author: Claude Barde
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Signing arbitrary chunks of data is a common practice in a blockchain environment and is usually done to prove that a user has access to a certain account or that a message comes from a certain account.
 
 This practice is still new on Tezos and the use cases are rare. However, as the interactions between users and smart contracts increase, knowing how to sign data and send the signature to a smart contract can set you one step ahead in your knowledge of the Tezos blockchain.
@@ -158,6 +161,9 @@ This is the schema to encode the message into bytes, please read the [tzip-32](h
 | # Bytes in next field | 2 bytes  | unsigned 16-bit integer |
 | message               | Variable | bytes                   |
 
+**Examples of signing tzip-32 message on contractAPI and walletAPI**
+
+The Off-Chain Message Signing magic bytes is `0x80` defined in [tzip-31](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-signer-requests/tzip-31.md)(draft).
 
 <Tabs
 defaultValue="contractAPI"
@@ -166,9 +172,6 @@ values={[
 {label: 'Wallet API', value: 'walletAPI'}
 ]}>
 <TabItem value="contractAPI">
-
-
-The Off-Chain Message Signing magic bytes is `0x80` defined in [tzip-31](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-signer-requests/tzip-31.md)(draft).
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito'
@@ -210,7 +213,7 @@ let interface_ = 'tzip://32'
 let characterEncoding = '0'
 let message = 'Hello world!'
 
-let bytes = stringToBytes(magicString) + num2PaddedHex(interface_.length, 8) + stringToBytes(interface_) + num2PaddedHex(characterEncoding, 8) + num2PaddedHex(message.length, 16) + stringToBytes(message)
+let bytes = stringToBytes(magicString) + num2PaddedHex(interface_.length, 8) + stringToBytes(interface_) + num2PaddedHex(Number(characterEncoding), 8) + num2PaddedHex(message.length, 16) + stringToBytes(message)
 
 const payload = {
   signingType: SigningType.RAW,
