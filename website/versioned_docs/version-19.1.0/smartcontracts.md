@@ -81,7 +81,7 @@ Tezos.contract
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
-    println(JSON.stringify(methods, null, 2));
+    console.log(JSON.stringify(methods, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
 ```
@@ -96,7 +96,7 @@ Tezos.wallet
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let methods = c.parameterSchema.ExtractSignatures();
-    println(JSON.stringify(methods, null, 2));
+    console.log(JSON.stringify(methods, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
 ```
@@ -129,7 +129,7 @@ Tezos.contract
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methodsObject.increment(2).toTransferParams();
-    println(JSON.stringify(incrementParams, null, 2));
+    console.log(JSON.stringify(incrementParams, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
 ```
@@ -143,7 +143,7 @@ Tezos.wallet
   .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
   .then((c) => {
     let incrementParams = c.methodsObject.increment(2).toTransferParams();
-    println(JSON.stringify(incrementParams, null, 2));
+    console.log(JSON.stringify(incrementParams, null, 2));
   })
   .catch((error) => console.log(`Error: ${error}`));
 ```
@@ -174,15 +174,15 @@ Tezos.contract
   .then((contract) => {
     const i = 7;
 
-    println(`Incrementing storage value by ${i}...`);
+    console.log(`Incrementing storage value by ${i}...`);
     return contract.methodsObject.increment(i).send();
   })
   .then((op) => {
-    println(`Waiting for ${op.hash} to be confirmed...`);
+    console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(3).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -195,15 +195,15 @@ Tezos.wallet
   .then((contract) => {
     const i = 7;
 
-    println(`Incrementing storage value by ${i}...`);
+    console.log(`Incrementing storage value by ${i}...`);
     return contract.methodsObject.increment(i).send();
   })
   .then((op) => {
-    println(`Waiting for ${op.opHash} to be confirmed...`);
+    console.log(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(3).then(() => op.opHash);
   })
-  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
   </TabItem>
 </Tabs>
@@ -235,8 +235,8 @@ In the following example, a contract's `set_child_record` method will be called 
 Tezos.contract
   .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
   .then((contract) => {
-    println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
-    println(
+    console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
+    console.log(
       `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
         contract.methodsObject.set_child_record().getSignature(),
         null,
@@ -244,7 +244,7 @@ Tezos.contract
       )}`
     );
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 The preceding example returns an object giving indication on how to structure the parameter when calling the`set_child_record` method. Here is an example where the `set_child_record` method is called by passing the parameter in an object format:
@@ -270,11 +270,11 @@ importKey(Tezos, secretKey)
       .send();
   })
   .then((op) => {
-    println(`Awaiting for ${op.hash} to be confirmed...`);
+    console.log(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation().then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
 <TabItem value='flat'>
@@ -287,8 +287,8 @@ In the following example, a contract's `set_child_record` method will be called 
 Tezos.contract
   .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
   .then((contract) => {
-    println(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
-    println(
+    console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
+    console.log(
       `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
         contract.methods.set_child_record().getSignature(),
         null,
@@ -296,7 +296,7 @@ Tezos.contract
       )}`
     );
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 The preceding example returns an array which contains the different possible signatures. Different signatures are possible as the `set_child_record` method contains some optional arguments. In the following example the `set_child_record` method is called by passing the arguments in the flattened way:
@@ -323,11 +323,11 @@ importKey(Tezos, secretKey)
       .send();
   })
   .then((op) => {
-    println(`Awaiting for ${op.hash} to be confirmed...`);
+    console.log(`Awaiting for ${op.hash} to be confirmed...`);
     return op.confirmation().then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>

@@ -67,6 +67,8 @@ class SemiLiveProvider extends LiveProvider {
     const code = `
 let _printlnBuffer = "";
 
+let console = {log: println};
+
 function println(value) {
   _printlnBuffer += value + "\\n";
 

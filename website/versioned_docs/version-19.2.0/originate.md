@@ -108,13 +108,13 @@ Tezos.contract
     },
   })
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed.`);
+    console.log(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -138,13 +138,13 @@ Tezos.wallet
   })
   .send()
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -175,13 +175,13 @@ Tezos.contract
     init: `(Pair 0 (Pair 1 { "edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t" }))`,
   })
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed.`);
+    console.log(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -201,13 +201,13 @@ Tezos.wallet
   })
   .send()
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -248,13 +248,13 @@ Tezos.contract
     },
   })
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed.`);
+    console.log(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -286,13 +286,13 @@ Tezos.wallet
   })
   .send()
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>

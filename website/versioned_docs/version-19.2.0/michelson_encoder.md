@@ -81,7 +81,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.generateSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 ---
 When there is no annotation, the keys of the object are indexes starting from 0.
@@ -101,7 +101,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.generateSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 ---
 Here is another example using a complex storage:
@@ -242,7 +242,7 @@ const storageType =
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.generateSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 
 ### The Typecheck method
@@ -269,7 +269,7 @@ const typecheck = storageSchema.Typecheck({
     threshold: 5,
     keys: ['edpkuLxx9PQD8fZ45eUzrK3yhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
 })
-println(typecheck);
+console.log(typecheck);
 ```
 
 ### The Encode method
@@ -297,7 +297,7 @@ const michelsonData = storageSchema.Encode({
     threshold: 5,
     keys: ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g', 'edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
 })
-println(JSON.stringify(michelsonData, null, 2));
+console.log(JSON.stringify(michelsonData, null, 2));
 ```
 
 ### The Execute method
@@ -345,7 +345,7 @@ const dataMichelson = {
   ]
 }
 const data = storageSchema.Execute(dataMichelson)
-println(JSON.stringify(data, null, 2));
+console.log(JSON.stringify(data, null, 2));
 ```
 
 The `Execute` method takes an optional parameter of type `Semantic`. It allows overriding the default representation returned by the Michelson Encoder for specific types.
@@ -359,12 +359,12 @@ const schema = new Schema({ prim: 'big_map', args: [{ prim: 'address' }, { prim:
 const dataMichelson = { int: 123456 }
 
 const data = schema.Execute(dataMichelson)
-println(`Default value returned by the Michelson Encoder for big_map: ${JSON.stringify(data, null, 2)}`);
+console.log(`Default value returned by the Michelson Encoder for big_map: ${JSON.stringify(data, null, 2)}`);
 
 // instead of returning the big map id, we can override it
 // we return an object in this case
 const dataCustom = schema.Execute(dataMichelson, { big_map: (val) => Object({ id: val.int })})
-println(`Customized representation of the big_map value: ${JSON.stringify(dataCustom)}`);
+console.log(`Customized representation of the big_map value: ${JSON.stringify(dataCustom)}`);
 ```
 ---
 Here is an example for the `ticket` type:
@@ -374,10 +374,10 @@ const schema = new Schema({"prim":"ticket","args":[{"prim":"string"}]});
 const dataMichelson = {"prim":"Pair","args":[{"string":"KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw"},{"string":"test"},{"int":"2"}]}
 
 const data = schema.Execute(dataMichelson)
-println(`Default representation of the ticket value returned by the Michelson Encoder: ${JSON.stringify(data, null, 2)}`);
+console.log(`Default representation of the ticket value returned by the Michelson Encoder: ${JSON.stringify(data, null, 2)}`);
 
 const dataCustom = schema.Execute(dataMichelson, { ticket: (val) => val.args[1].string})
-println(`Customized representation of the ticket value: ${JSON.stringify(dataCustom)}`);
+console.log(`Customized representation of the ticket value: ${JSON.stringify(dataCustom)}`);
 ```
 
 ### How the Schema class is used inside Taquito
@@ -404,7 +404,7 @@ const michelsonData = parameterSchema.Encode(
     'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
     '12'
 )
-println(JSON.stringify(michelsonData, null, 2));
+console.log(JSON.stringify(michelsonData, null, 2));
 ```
 ---
 Here is an example of `encodeObject`:
@@ -414,7 +414,7 @@ const michelsonData = parameterSchema.EncodeObject({
     spender: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
     value: '12'
 })
-println(JSON.stringify(michelsonData, null, 2));
+console.log(JSON.stringify(michelsonData, null, 2));
 ```
 
 ### How the ParameterSchema class is used inside Taquito
@@ -442,7 +442,7 @@ const storageSchema = new Schema({
 	]
 });
 const annotatedSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(annotatedSchema, null, 2));
+console.log(JSON.stringify(annotatedSchema, null, 2));
 ```
 ---
 We can also have a similar definition without the annotations:
@@ -461,7 +461,7 @@ const storageSchema = new Schema({
 	]
 });
 const noAnnotationsSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(noAnnotationsSchema, null, 2));
+console.log(JSON.stringify(noAnnotationsSchema, null, 2));
 ```
 
 In Taquito, we will flatten these nested `pair`s to make it easier to use them in typescript dApps. Please note how the result of `generateSchema` is different in the annotated vs non-annotated cases:
@@ -510,7 +510,7 @@ const storageSchema = new Schema({
 	]
 });
 const mixedSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(mixedSchema, null, 2));
+console.log(JSON.stringify(mixedSchema, null, 2));
 ```
 
 ### Unions
@@ -531,5 +531,5 @@ const storageSchema = new Schema({
 	]
 });
 const mixedSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(mixedSchema, null, 2));
+console.log(JSON.stringify(mixedSchema, null, 2));
 ```

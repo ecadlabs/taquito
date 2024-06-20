@@ -57,9 +57,9 @@ Tezos.contract
     return contract.views.getTotalSupply(UnitValue).read();
   })
   .then((response) => {
-    println(response);
+    console.log(response);
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 <!-- ```js live noInline
@@ -69,9 +69,9 @@ Tezos.contract
     return contract.views.getBalance('tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5').read();
   })
   .then((response) => {
-    println(response);
+    console.log(response);
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ``` -->
 
 **More examples:**
@@ -85,9 +85,9 @@ Tezos.contract
       .read();
   })
   .then((response) => {
-    println(JSON.stringify(response, null, 2));
+    console.log(JSON.stringify(response, null, 2));
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 <!-- ```js live noInline
@@ -97,7 +97,7 @@ Tezos.contract
     return contract.views.getBalance('tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5').read();
   })
   .then((response) => {
-    println(JSON.stringify(response, null, 2));
+    console.log(JSON.stringify(response, null, 2));
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ``` -->
