@@ -96,11 +96,11 @@ const saplingToolkit = new SaplingToolkit(
 
 saplingToolkit.getSaplingTransactionViewer()
   .then((txViewer) => {
-    println(`Fetching Alice balance in the shielded pool...`);
+    console.log(`Fetching Alice balance in the shielded pool...`);
     return txViewer.getBalance();
   })
-  .then((balance) => println(`Alice's balance is ${balance.toString()} mutez`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((balance) => console.log(`Alice's balance is ${balance.toString()} mutez`))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## How to retrieve my transaction history?
@@ -129,11 +129,11 @@ const saplingToolkit = new SaplingToolkit(
 
 saplingToolkit.getSaplingTransactionViewer()
   .then((txViewer) => {
-    println(`Fetching Alice's history of transactions in the shielded pool...`);
+    console.log(`Fetching Alice's history of transactions in the shielded pool...`);
     return txViewer.getIncomingAndOutgoingTransactions();
   })
-  .then((history) => println(`Alice's transaction history is ${JSON.stringify(history, null, 2)}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((history) => console.log(`Alice's transaction history is ${JSON.stringify(history, null, 2)}`))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## How to prepare a shielded transaction?
@@ -174,12 +174,12 @@ const saplingToolkit = new SaplingToolkit(
 
 inMemorySpendingKey.getSaplingViewingKeyProvider()
   .then((inMemoryViewingKey) => {
-    println(`Fetching a payment address for Alice (zet)...`);
+    console.log(`Fetching a payment address for Alice (zet)...`);
     return inMemoryViewingKey.getAddress();
   })
   .then((paymentAddress) => {
-    println(`Alice's payment address is: ${paymentAddress.address}`);
-    println(`Preparing the shielded transaction...`);
+    console.log(`Alice's payment address is: ${paymentAddress.address}`);
+    console.log(`Preparing the shielded transaction...`);
     return saplingToolkit.prepareShieldedTransaction([{
         to: paymentAddress.address,
         amount: 3,
@@ -188,20 +188,20 @@ inMemorySpendingKey.getSaplingViewingKeyProvider()
     }]);
   })
   .then((shieldedTx) => {
-    println(`The sapling transaction parameter is: ${shieldedTx}`);
+    console.log(`The sapling transaction parameter is: ${shieldedTx}`);
     Tezos.contract.at(saplingContractAddress)
     .then((saplingContract) => {
-        println(`Injecting the Sapling transaction using the ContractAbstraction...`);
+        console.log(`Injecting the Sapling transaction using the ContractAbstraction...`);
         // The amount MUST be specified in the send method to transfer the 3 tez to the shielded pool
         return saplingContract.methodsObject.default([shieldedTx]).send({ amount: 3 });
     })
     .then((op) => {
-        println(`Waiting for ${op.hash} to be confirmed...`);
+        console.log(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
+    .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
   })
-  .catch((error) => println(`Error: ${(error)}`));
+  .catch((error) => console.log(`Error: ${(error)}`));
 ```
 
 ## How to prepare a Sapling transaction?
@@ -244,7 +244,7 @@ const saplingToolkit = new SaplingToolkit(
     readProvider
 );
 
-println(`Preparing the sapling transaction...`);
+console.log(`Preparing the sapling transaction...`);
 saplingToolkit.prepareSaplingTransaction([{
     to: 'zet14CMN2T4x1f8sgXeAGWQwczSf6SJ8bm8nyP2Tg7HJn2VmtPtB2nE2q7MMgdmMEwpGQ',
     amount: 3,
@@ -252,19 +252,19 @@ saplingToolkit.prepareSaplingTransaction([{
     mutez: false // set to false by default
 }])
 .then((saplingTx) => {
-    println(`The sapling transaction parameter is: ${saplingTx}`);
+    console.log(`The sapling transaction parameter is: ${saplingTx}`);
     Tezos.contract.at(saplingContractAddress)
     .then((saplingContract) => {
-        println(`Injecting the Sapling transaction using the ContractAbstraction...`);
+        console.log(`Injecting the Sapling transaction using the ContractAbstraction...`);
         return saplingContract.methodsObject.default([saplingTx]).send();
     })
     .then((op) => {
-        println(`Waiting for ${op.hash} to be confirmed...`);
+        console.log(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
+    .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
 })
-.catch((error) => println(`Error: ${(error)}`));
+.catch((error) => console.log(`Error: ${(error)}`));
 ```
 
 ## How to prepare an unshielded transaction?
@@ -302,26 +302,26 @@ const saplingToolkit = new SaplingToolkit(
     readProvider
 );
 
-println(`Preparing the unshielded transaction...`);
+console.log(`Preparing the unshielded transaction...`);
 saplingToolkit.prepareUnshieldedTransaction({
     to: 'tz1hDFKpVkT7jzYncaLma4vxh4Gg6JNqvdtB',
     amount: 20,
     mutez: true // set to false by default
 })
 .then((unshieldedTx) => {
-    println(`The sapling transaction parameter is: ${unshieldedTx}`);
+    console.log(`The sapling transaction parameter is: ${unshieldedTx}`);
     Tezos.contract.at(saplingContractAddress)
     .then((saplingContract) => {
-        println(`Injecting the Sapling transaction using the ContractAbstraction...`);
+        console.log(`Injecting the Sapling transaction using the ContractAbstraction...`);
         return saplingContract.methodsObject.default([unshieldedTx]).send();
     })
     .then((op) => {
-        println(`Waiting for ${op.hash} to be confirmed...`);
+        console.log(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
+    .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
 })
-.catch((error) => println(`Error: ${(error)}`));
+.catch((error) => console.log(`Error: ${(error)}`));
 ```
 
 # SaplingTransactionViewer
