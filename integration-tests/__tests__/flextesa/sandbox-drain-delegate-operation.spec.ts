@@ -1,3 +1,8 @@
+/**
+ *  This test is not being run by any runner, 
+ *  will keep for future reference if an alternative sandbox is available
+ */
+
 import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS, sleep, isSandbox } from "../../config";
 
