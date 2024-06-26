@@ -548,526 +548,98 @@ When having nested `pair`s or unions (`or`), Taquito assigns numbers to fields w
 In previous versions of Taquito, the nested object's fields were numbered were a continuation of the parent object's fields.
 For example, the following schema:
 
-```js
-{
-	prim: 'or',
-	args: [
-		{
-		prim: 'pair',
-		args: [{ prim: 'address' }, { prim: 'nat' }],
-		annots: ['%transfer']
-		},
-		{
-		prim: 'or',
-		args: [
-			{
-			prim: 'pair',
-			args: [{ prim: 'address' }, { prim: 'nat' }],
-			annots: ['%approve']
-			},
-			{
-			prim: 'or',
-			args: [
-				{
-				prim: 'pair',
-				args: [
-					{ prim: 'address' },
-					{
-					prim: 'pair',
-					args: [{ prim: 'address' }, { prim: 'nat' }]
-					}
-				],
-				annots: ['%transferFrom']
-				},
-				{
-				prim: 'or',
-				args: [
-					{
-					prim: 'pair',
-					args: [
-						{ prim: 'address' },
-						{
-						prim: 'contract',
-						args: [{ prim: 'nat' }],
-						annots: [':NatContract']
-						}
-					],
-					annots: ['%balanceOf']
-					},
-					{
-					prim: 'or',
-					args: [
-						{
-						prim: 'pair',
-						args: [
-							{ prim: 'address' },
-							{
-							prim: 'pair',
-							args: [
-								{ prim: 'address' },
-								{
-								prim: 'contract',
-								args: [
-									{
-									prim: 'pair',
-									args: [
-										{ prim: 'nat' },
-										{ prim: 'nat' }
-									]
-									}
-								],
-								annots: [':NatNatContract']
-								}
-							]
-							}
-						],
-						annots: ['%allowance']
-						},
-						{
-						prim: 'or',
-						args: [
-							{
-							prim: 'pair',
-							args: [
-								{ prim: 'address' },
-								{ prim: 'nat' }
-							],
-							annots: ['%createAccount']
-							},
-							{
-							prim: 'list',
-							args: [
-								{
-								prim: 'pair',
-								args: [
-									{ prim: 'address' },
-									{ prim: 'nat' }
-								]
-								}
-							],
-							annots: ['%createAccounts']
-							}
-						]
-						}
-					]
-					}
-				]
-				}
-			]
-			}
-		]
-		}
-	],
-	annots: [':_entries']
-}
+```js live noInline
+const param = {
+    prim: 'or',
+    args: [
+        {
+            prim: 'pair',
+            args: [{ prim: 'address' }, { prim: 'nat' }],
+            annots: ['%transfer']
+        },
+        {
+            prim: 'or',
+            args: [
+                {
+                    prim: 'pair',
+                    args: [{ prim: 'address' }, { prim: 'nat' }],
+                    annots: ['%approve']
+                },
+                {
+                    prim: 'pair',
+                    args: [{ prim: 'address' }, { prim: 'nat' }],
+                    annots: ['%mint']
+                }
+            ]
+        }
+    ],
+    annots: [':_entries']
+};
+const parameterSchema = new ParameterSchema(param);
+Token.fieldNumberingStrategy = "Legacy"; //To bring back the old behavior
+const value = parameterSchema.generateSchema();
+console.log(JSON.stringify(value, null, 2));
+Token.fieldNumberingStrategy = 'Latest'; //To restore the default (new) behavior
 ```
 
-The function `generateSchema` would return the following object:
-
-```js
-{
-	__michelsonType: 'or',
-	schema: {
-	allowance: {
-		__michelsonType: 'pair',
-		schema: {
-		'4': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'5': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		NatNatContract: {
-			__michelsonType: 'contract',
-			schema: {
-			parameter: {
-				__michelsonType: 'pair',
-				schema: {
-				'0': {
-					__michelsonType: 'nat',
-					schema: 'nat',
-				},
-				'1': {
-					__michelsonType: 'nat',
-					schema: 'nat',
-				},
-				},
-			},
-			},
-		},
-		},
-	},
-	approve: {
-		__michelsonType: 'pair',
-		schema: {
-		'1': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'2': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	balanceOf: {
-		__michelsonType: 'pair',
-		schema: {
-		'3': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		NatContract: {
-			__michelsonType: 'contract',
-			schema: {
-			parameter: {
-				__michelsonType: 'nat',
-				schema: 'nat',
-			},
-			},
-		},
-		},
-	},
-	createAccount: {
-		__michelsonType: 'pair',
-		schema: {
-		'5': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'6': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	createAccounts: {
-		__michelsonType: 'list',
-		schema: {
-		__michelsonType: 'pair',
-		schema: {
-			'6': {
-			__michelsonType: 'address',
-			schema: 'address',
-			},
-			'7': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-			},
-		},
-		},
-	},
-	transfer: {
-		__michelsonType: 'pair',
-		schema: {
-		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	transferFrom: {
-		__michelsonType: 'pair',
-		schema: {
-		'2': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'3': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'4': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	},
-}
-```
+Please run the code above and check the output.
 
 Please note how nested field numbers are not predictable. The field numbers are assigned in the order their parent were encountered during the traversal of the tree.
 While this behavior is not an error, it is prone to unexpected changes when the schema is modified. Also, predicting the field number of a specific field is not straightforward.
 
 With the release of Taquito version 20.0.0, we have made a breaking change in the Michelson Encoder package. The field numbering is now predictable and consistent.
-The field numbers for each nested object (`Or`/`Pair`) are now reset from zero:
-
-```js
-{
-	__michelsonType: 'or',
-	schema: {
-	allowance: {
-		__michelsonType: 'pair',
-		schema: {
-		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'1': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		NatNatContract: {
-			__michelsonType: 'contract',
-			schema: {
-			parameter: {
-				__michelsonType: 'pair',
-				schema: {
-				'0': {
-					__michelsonType: 'nat',
-					schema: 'nat',
-				},
-				'1': {
-					__michelsonType: 'nat',
-					schema: 'nat',
-				},
-				},
-			},
-			},
-		},
-		},
-	},
-	approve: {
-		__michelsonType: 'pair',
-		schema: {
-		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	balanceOf: {
-		__michelsonType: 'pair',
-		schema: {
-		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		NatContract: {
-			__michelsonType: 'contract',
-			schema: {
-			parameter: {
-				__michelsonType: 'nat',
-				schema: 'nat',
-			},
-			},
-		},
-		},
-	},
-	createAccount: {
-		__michelsonType: 'pair',
-		schema: {
-		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	createAccounts: {
-		__michelsonType: 'list',
-		schema: {
-		__michelsonType: 'pair',
-		schema: {
-			'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-			},
-			'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-			},
-		},
-		},
-	},
-	transfer: {
-		__michelsonType: 'pair',
-		schema: {
-		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	transferFrom: {
-		__michelsonType: 'pair',
-		schema: {
-		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'1': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'2': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	},
-}
-```
+The field numbers for each nested object (`Or`/`Pair`) are now reset from zero. You can see that by commenting out the line: `Token.fieldNumberingStrategy = "Legacy";` and running the code again.
 
 Below you can see a diff of the new versus old behavior:
 
 ```diff
 {
-	__michelsonType: 'or',
-	schema: {
-	allowance: {
-		__michelsonType: 'pair',
-		schema: {
--		'4': {
-+		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
--		'5': {
-+		'1': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		NatNatContract: {
-			__michelsonType: 'contract',
-			schema: {
-			parameter: {
-				__michelsonType: 'pair',
-				schema: {
-				'0': {
-					__michelsonType: 'nat',
-					schema: 'nat',
-				},
-				'1': {
-					__michelsonType: 'nat',
-					schema: 'nat',
-				},
-				},
-			},
-			},
-		},
-		},
-	},
-	approve: {
-		__michelsonType: 'pair',
-		schema: {
--		'1': {
-+		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
--		'2': {
-+		'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	balanceOf: {
-		__michelsonType: 'pair',
-		schema: {
--		'3': {
-+		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		NatContract: {
-			__michelsonType: 'contract',
-			schema: {
-			parameter: {
-				__michelsonType: 'nat',
-				schema: 'nat',
-			},
-			},
-		},
-		},
-	},
-	createAccount: {
-		__michelsonType: 'pair',
-		schema: {
--		'5': {
-+		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
--		'6': {
-+		'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	createAccounts: {
-		__michelsonType: 'list',
-		schema: {
-		__michelsonType: 'pair',
-		schema: {
--			'6': {
-+			'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-			},
--			'7': {
-+			'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-			},
-		},
-		},
-	},
-	transfer: {
-		__michelsonType: 'pair',
-		schema: {
-		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
-		'1': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	transferFrom: {
-		__michelsonType: 'pair',
-		schema: {
--		'2': {
-+		'0': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
--		'3': {
-+		'1': {
-			__michelsonType: 'address',
-			schema: 'address',
-		},
--		'4': {
-+		'2': {
-			__michelsonType: 'nat',
-			schema: 'nat',
-		},
-		},
-	},
-	},
+  "__michelsonType": "or",
+  "schema": {
+    "transfer": {
+      "__michelsonType": "pair",
+      "schema": {
+        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    },
+    "approve": {
+      "__michelsonType": "pair",
+      "schema": {
+-        "1": {
++        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+-        "2": {
++        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    },
+    "mint": {
+      "__michelsonType": "pair",
+      "schema": {
+-        "2": {
++        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+-        "3": {
++        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    }
+  }
 }
 ```
 You can enable the old behavior by setting the `Token.fieldNumberingStrategy = 'Legacy'`. Please not that this value should stay the same for the whole application.
