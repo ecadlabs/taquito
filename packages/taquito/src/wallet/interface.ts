@@ -7,6 +7,7 @@ import {
   StakeParams,
   UnstakeParams,
   FinalizeUnstakeParams,
+  TransferTicketParams,
 } from '../operations/types';
 
 export type WalletDefinedFields = 'source';
@@ -30,6 +31,8 @@ export type WalletFailingNoopParams = Omit<FailingNoopParams, WalletDefinedField
 
 export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, WalletDefinedFields>;
 
+export type WalletTransferTicketParams = Omit<TransferTicketParams, WalletDefinedFields>;
+
 export interface WalletProvider {
   /**
    * @description Request the public key hash from the wallet
@@ -45,6 +48,13 @@ export interface WalletProvider {
    * @description Transform WalletTransferParams into a format compliant with the underlying wallet
    */
   mapTransferParamsToWalletParams: (params: () => Promise<WalletTransferParams>) => Promise<any>;
+
+  /**
+   * @description Transform WalletTransferTicketParams into a format compliant with the underlying wallet
+   */
+  mapTransferTicketParamsToWalletParams: (
+    params: () => Promise<WalletTransferTicketParams>
+  ) => Promise<any>;
 
   /**
    * @description Transform WalletStakeParams into a format compliant with the underlying wallet

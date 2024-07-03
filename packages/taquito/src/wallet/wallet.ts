@@ -19,6 +19,7 @@ import {
   WalletStakeParams,
   WalletUnstakeParams,
   WalletFinalizeUnstakeParams,
+  WalletTransferTicketParams,
 } from './interface';
 import {
   InvalidAddressError,
@@ -43,7 +44,8 @@ export type WalletParamsWithKind =
   | withKind<WalletTransferParams, OpKind.TRANSACTION>
   | withKind<WalletOriginateParams, OpKind.ORIGINATION>
   | withKind<WalletDelegateParams, OpKind.DELEGATION>
-  | withKind<WalletIncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>;
+  | withKind<WalletIncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
+  | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>;
 
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
@@ -112,6 +114,19 @@ export class WalletOperationBatch {
       throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
     }
     this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
+    return this;
+  }
+
+  /**
+   * @description Add an TransferTicket operation to the batch
+   * @param param TransferTicket operation parameter
+   */
+  withTransferTicket(params: WalletTransferTicketParams) {
+    const destinationValidation = validateAddress(params.destination);
+    if (destinationValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+    }
+    this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
   }
 
@@ -320,6 +335,26 @@ export class Wallet {
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
       return this.context.operationFactory.createTransactionOperation(opHash);
+    });
+  }
+
+  /**
+   * @description Transfer tezos tickets from current address to a specific address or a smart contract
+   * @returns a TransferTicketWalletOperation promise object when followed by .send()
+   * @param params operation parameter
+   */
+  transferTicket(params: WalletTransferTicketParams) {
+    const toValidation = validateAddress(params.destination);
+    if (toValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(params.destination, invalidDetail(toValidation));
+    }
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapTransferTicketParamsToWalletParams(
+        async () => params
+      );
+
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createTransferTicketOperation(opHash);
     });
   }
 
