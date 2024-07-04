@@ -584,7 +584,8 @@ Token.fieldNumberingStrategy = 'Latest'; //To restore the default (new) behavior
 
 Please run the code above and check the output.
 
-Please note how nested field numbers are not predictable. The field numbers are assigned in the order their parent were encountered during the traversal of the tree.
+Please note how nested field numbers are not predictable. The field numbers are assigned in the order their parent were encountered during the traversal of the tree. For instance, in the above example, `approve` would get a field number of `1`. Because it has annotations, the field number is not used. But its nested fields would be numbered starting from `1` and not `2`.
+
 While this behavior is not an error, it is prone to unexpected changes when the schema is modified. Also, predicting the field number of a specific field is not straightforward.
 
 With the release of Taquito version 20.0.0, we have made a breaking change in the Michelson Encoder package. The field numbering is now predictable and consistent.
@@ -642,5 +643,5 @@ Below you can see a diff of the new versus old behavior:
   }
 }
 ```
-You can enable the old behavior by setting the `Token.fieldNumberingStrategy = 'Legacy'`. Please not that this value should stay the same for the whole application.
+You can enable the old behavior by setting the `Token.fieldNumberingStrategy = 'Legacy'`. Please note that this value should stay the same for the whole application.
 The possible values are: `type FieldNumberingStrategy = 'Legacy' | 'ResetFieldNumbersInNestedObjects' | 'Latest';` For new applications, we recommend using the default value `Latest`.
