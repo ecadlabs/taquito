@@ -35,8 +35,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
 
         // Send 3 tickets from the originated contract to sender
-        const sendTickets = await ticketSendContract.methods.default(senderPkh, '3').send();
+        const sendTickets = await ticketSendContract.methodsObject.default([senderPkh, '3']).send()
         await sendTickets.confirmation();
+
       } catch (error) {
         console.log(error);
       }
@@ -63,7 +64,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await transferTicketOp.confirmation();
 
       expect(await transferTicketOp.status()).toEqual('applied');
-      console.log(`opHash: ${transferTicketOp.opHash}`);
 
       // Check balances after transferring tickets
       const balanceAfter = await client.getTicketBalance(recipientPkh, ticketToken);
