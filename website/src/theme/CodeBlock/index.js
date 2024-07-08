@@ -83,7 +83,7 @@ export default ({
       const { LedgerSigner, DerivationType } = await import('@taquito/ledger-signer');
       const { Tzip16Module, tzip16, MichelsonStorageView } = await import('@taquito/tzip16')
       const { Tzip12Module, tzip12 } = await import("@taquito/tzip12");
-      const { Schema, ParameterSchema } = await import("@taquito/michelson-encoder");
+      const { Schema, ParameterSchema, Token } = await import("@taquito/michelson-encoder");
       const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
       const { RpcClient } = await import('@taquito/rpc');
       const TransportWebHID = (await import("@ledgerhq/hw-transport-webhid")).default;
@@ -128,6 +128,7 @@ export default ({
         compose,
         Schema,
         ParameterSchema,
+        Token,
         getRevealFee,
         verifySignature,
         Parser,
@@ -185,6 +186,7 @@ export default ({
           compose: dependencies?.compose,
           Schema: dependencies?.Schema,
           ParameterSchema: dependencies?.ParameterSchema,
+          Token: dependencies?.Token,
           getRevealFee: dependencies?.getRevealFee,
           verifySignature: dependencies?.verifySignature,
           Parser: dependencies?.Parser,
