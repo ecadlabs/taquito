@@ -75,10 +75,12 @@ export default ({
         char2Bytes,
         bytesToString,
         stringToBytes,
+        num2PaddedHex,
         prefix,
         Prefix
       } = await import('@taquito/utils');
       const { BeaconWallet } = await import('@taquito/beacon-wallet');
+      const { SigningType } = await import('@airgap/beacon-sdk');
       const { InMemorySigner, importKey, Path, ECDSA, Ed25519, generateSecretKey } = await import('@taquito/signer');
       const { LedgerSigner, DerivationType } = await import('@taquito/ledger-signer');
       const { Tzip16Module, tzip16, MichelsonStorageView } = await import('@taquito/tzip16')
@@ -120,6 +122,8 @@ export default ({
         char2Bytes,
         bytesToString,
         stringToBytes,
+        num2PaddedHex,
+        SigningType,
         MichelsonStorageView,
         Tzip12Module,
         tzip12,
@@ -178,6 +182,8 @@ export default ({
           char2Bytes: dependencies?.char2Bytes,
           bytesToString: dependencies?.bytesToString,
           stringToBytes: dependencies?.stringToBytes,
+          num2PaddedHex: dependencies?.num2PaddedHex,
+          SigningType: dependencies?.SigningType,
           MichelsonStorageView: dependencies?.MichelsonStorageView,
           Tzip12Module: dependencies?.Tzip12Module,
           tzip12: dependencies?.tzip12,
