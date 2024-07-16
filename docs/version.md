@@ -6,16 +6,16 @@ author: Jev Bjorsell
 # Taquito v20.0.0
 ## Summary
 
-### Paris(B) Protocol Support 
+### Paris(B) Protocol Support
 Paris(B) Protocol has new Adaptive Issuance features, including staking pseudo-operations and rpc endpoints.
 
-⚠️ Warning ⚠️ 
+⚠️ Warning ⚠️
 Adaptive Issuance, Staking, and Adaptive slashing will be in effect roughly two weeks (5 cycles) after the proposal is activated on Mainnet. The new AI features will not be usable until then.
 
 ### ⚠️ Breaking Changes ⚠️
 
 ### Beacon Migration
-As of Beacon version 4.2.0, Beacon has migrated from using `dAppClient.getActiveAccount()` to using an event subscription method `BeaconEvent.ACTIVE_ACCOUNT_SET` for handling active account changes. 
+As of Beacon version 4.2.0, Beacon has migrated from using `dAppClient.getActiveAccount()` to using an event subscription method `BeaconEvent.ACTIVE_ACCOUNT_SET` for handling active account changes.
 
 **IF YOU ARE STILL USING THE `eventHandlers` PROPERTY WHEN INITIALIZING A DAPP CLIENT, PLEASE UPDATE YOUR CODE.**
 
@@ -62,10 +62,10 @@ New behaviour - inner object's field number will start with '0'
 - `@taquito/rpc` - Removed `getEndorsingRights` RPC endpoint along with its related type definition and tests #2884
 - `@taquito/rpc` - Updated RPC types for `AttestationWithDal` and `EndorsementWithDal` #2880
 - `@taquito/rpc` - Updated RPC response types to support DAL types #2882
-- `@taquito/rpc` - Updated RPC response type for the new manager op `dal_publish_commitment` #2881 
+- `@taquito/rpc` - Updated RPC response type for the new manager op `dal_publish_commitment` #2881
 - `@taquito/rpc` - Added a new RPC endpoint called `getAllDelegates` #2976
 - `@taquito/local-forging` - Added local forging support for `AttestationWithDal` operation #2880
-- `@taquito/local-forging` - Added local forging support for the new manager operation `dal_publish_commitment` #2881 
+- `@taquito/local-forging` - Added local forging support for the new manager operation `dal_publish_commitment` #2881
 - `@taquito/michel-codec` - Updated Michelson type definitions and validators to include the new Paris protocol ticket literals [PR#2940](https://github.com/ecadlabs/taquito/pull/2940)
 
 ### Internals
@@ -127,10 +127,10 @@ await op.confirmation();
 
 # Taquito v19.1.0
 
-**Potential Breaking Changes**: 
+**Potential Breaking Changes**:
 - `@taquito/rpc` - replaced `OperationBalanceUpdatesItem` in favour of `OperationMetadataBalanceUpdates` #2817 #2827
 - `@taquito/taquito` - Several optimizations made to fees and estimation in Taquito #2532
-    - removed `DEFAULT_GAS_LIMIT`, `DEFAULT_STORAGE_LIMIT`, `DEFAULT_FEE` in favour of `getRevealFee`, more details 
+    - removed `DEFAULT_GAS_LIMIT`, `DEFAULT_STORAGE_LIMIT`, `DEFAULT_FEE` in favour of `getRevealFee`, more details
     - Added a small buffer to `gasLimit` (varying depending on operations)
     - Reduced `suggestedFeeMutez` buffer from 100 to 20 per op
     - Refined `gasLimit` and `storageLimit` according to `simulate_operation` results from the octez-client
@@ -139,12 +139,12 @@ await op.confirmation();
 
 ### New Features
 - `@taquito/taquito` - Added smart rollup execute outbox message operation #2321 (please note that this feature is not fully tested due to some parts requiring the use of `octez-client`)
-`@taquito/beacon-wallet` - added beacon-wallet bundle script to output a `.zip` bundle for browser only environments #2744 
+`@taquito/beacon-wallet` - added beacon-wallet bundle script to output a `.zip` bundle for browser only environments #2744
 
 ### Improvement
 - `@taquito/michelson-encoder` - replaced references of `[['unit']]` to be `UnitValue` instead [PR#2813](https://github.com/ecadlabs/taquito/pull/2813)
-- `@taquito/taquito` - added 20 storageLimit buffer to prevent `storage_exhausted` error #2854 
-- `@taquito/taquito` - removed the storageLimit cap mechanism #2855 
+- `@taquito/taquito` - added 20 storageLimit buffer to prevent `storage_exhausted` error #2854
+- `@taquito/taquito` - removed the storageLimit cap mechanism #2855
 
 ### Documentation
 - Added michel-codec to Typedoc documentation #2806
@@ -152,7 +152,7 @@ await op.confirmation();
 - Removed `giganode` references from Taquito documentation [PR#2813](https://github.com/ecadlabs/taquito/pull/2813)
 
 ### Deprecation
-- `@taquito/utils` - Deprecated several util methods and updated their names into something more representative. Slight improvements to existing util methods #2372 #2274 
+- `@taquito/utils` - Deprecated several util methods and updated their names into something more representative. Slight improvements to existing util methods #2372 #2274
 - `@taquito/taquito` - Deprecated `methods` in favour of `methodsObject`. `methodsObject`'s syntax is more consistent with storage params, supports all Michelson data types, and will be maintained going forward #2813
 
 ### Internals
@@ -180,7 +180,7 @@ await op.confirmation();
 # Taquito v19.0.0
 
 :::info
-You might have noticed that we jumped versions from v17.5.0 to v19.0.0 (no v18). We do this as an effort to be in parallel with the current Octez version. 
+You might have noticed that we jumped versions from v17.5.0 to v19.0.0 (no v18). We do this as an effort to be in parallel with the current Octez version.
 - Oxford - v18
 - Oxford2 - v19
 
@@ -211,7 +211,7 @@ Oxford2 changes:
 # Taquito 17.5.0
 
 **Important Note:**
-In this version, we replaced instances of `Axios` in favour of `Fetch`. 
+In this version, we replaced instances of `Axios` in favour of `Fetch`.
 
 We are not expecting any breaking changes, but if there are any issues that you see regarding this, please reach out to the Taquito team.
 
@@ -225,7 +225,7 @@ We are not expecting any breaking changes, but if there are any issues that you 
 ### Documentation
 - Updated RPC nodes on the website [PR#2732](https://github.com/ecadlabs/taquito/pull/2732
 - Updated Michelson encoder documentation to reference `generateSchema` instead of the outdated `extractSchema` #2630
-- Added a Taquito Chatbot assistant for the Taquito website to help answer user questions #2684 
+- Added a Taquito Chatbot assistant for the Taquito website to help answer user questions #2684
 
 ### Internals
 - Removed archive node, and references to it in Taquito [PR#2743](https://github.com/ecadlabs/taquito/pull/2743)
@@ -245,7 +245,7 @@ With this change we hope for a more stable HTTP handler in Taquito while reducin
 
 # Taquito v17.4.0
 
-**Potential Breaking Changes** : 
+**Potential Breaking Changes** :
 We have updated various dependencies to the latest version in this release. Please update and test our packages for compatibility. We encourage all users to get in touch with the Taquito team if you encounter any unexpected behaviours and/or side effects.
 
 ## Summary
@@ -2435,7 +2435,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 *before version 10.0.0-beta, the returned value was:*
 ```typescript=
@@ -2485,7 +2485,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 *before version 10.0.0-beta the returned value was:*
 ```json=

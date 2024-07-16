@@ -1,11 +1,10 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType, Protocols } from "@taquito/taquito";
+import { DefaultContractType } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2, PvmKind } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
 import { ticketCode, ticketStorage } from '../../data/code_with_ticket';
-import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
 CONFIGS().forEach(
   ({
@@ -21,7 +20,6 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const parisAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtParisBx) ? test : test.skip;
 
     let ticketContract: DefaultContractType;
 
@@ -156,7 +154,7 @@ CONFIGS().forEach(
           const allDelegates = await rpcClient.getAllDelegates();
           expect(allDelegates).toBeDefined();
 
-          const allViableDelegates =  await rpcClient.getAllDelegates({active: true, with_minimal_stake: true});
+          const allViableDelegates = await rpcClient.getAllDelegates({ active: true, with_minimal_stake: true });
           expect(allViableDelegates).toBeDefined();
 
           expect(allViableDelegates.length).toBeLessThanOrEqual(allDelegates.length);
@@ -482,9 +480,15 @@ CONFIGS().forEach(
           expect(ticketBalances[0].amount).toBeDefined();
         });
 
-        parisAndAlpha(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for ${rpc}`, async () => {
+        it(`Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for ${rpc}`, async () => {
           const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
-          expect(launchCycle).toEqual(6);
+          if (rpc.includes('ghostnet')) {
+            expect(launchCycle).toEqual(1054);
+          } else if (rpc.includes('parisnet')) {
+            expect(launchCycle).toEqual(6);
+          } else if (rpc.includes('mondaynet') || rpc.includes('weeklynet')) {
+            expect(launchCycle).toEqual(5);
+          }
         })
 
         it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {

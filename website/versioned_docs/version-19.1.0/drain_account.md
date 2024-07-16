@@ -29,7 +29,7 @@ Tezos.signer
     .publicKeyHash()
     .then((address) => {
         Tezos.tz.getBalance(address).then((balance) => {
-            println(
+            console.log(
                 `The account we want to drain is ${address}.\nIts initial balance is ${
                   balance.toNumber() / 1000000
                   } ꜩ.`
@@ -44,7 +44,7 @@ Tezos.signer
                     const maxAmount = balance.minus(
                       estimate.suggestedFeeMutez + getRevealFee(address)
                     ).toNumber();
-                    println(
+                    console.log(
                         `The estimated fees related to the emptying operation are ${
                           estimate.suggestedFeeMutez
                         } mutez.\nThe fees related to the reveal operation are ${
@@ -63,19 +63,19 @@ Tezos.signer
                     });
                 })
                 .then((op) => {
-                    println(`Waiting for confirmation of the draining operation...`);
+                    console.log(`Waiting for confirmation of the draining operation...`);
                     return op.confirmation(1).then(() => op.hash);
                 })
                 .then((hash) => {
-                    println(`The account has been emptied.`);
+                    console.log(`The account has been emptied.`);
                     return Tezos.tz.getBalance(address);
                 })
                 .then((finalBalance) => {
-                    println(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
+                    console.log(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
                 });
         });
     })
-    .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+    .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## Draining originated accounts (KT1)
@@ -118,24 +118,24 @@ Tezos.signer
         init: { string: address },
       })
       .then((contractOrigination) => {
-        println(
+        console.log(
           `Waiting for confirmation of origination for ${contractOrigination.contractAddress}...`
         );
         return contractOrigination.contract();
       })
       .then((contract) => {
-        println(`Origination completed.`);
+        console.log(`Origination completed.`);
         Tezos.tz.getBalance(contract.address).then((balance) => {
-          println(`The balance of the contract is ${balance.toNumber() / 1000000} ꜩ.`);
+          console.log(`The balance of the contract is ${balance.toNumber() / 1000000} ꜩ.`);
           const estimateOp = contract.methodsObject
             .do(transferImplicit('tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', balance.toNumber()))
             .toTransferParams({});
-          println(`Waiting for the estimation of the smart contract call...`);
+          console.log(`Waiting for the estimation of the smart contract call...`);
           Tezos.estimate
             .transfer(estimateOp)
             .then((estimate) => {
               //Will be deducted from manager's address
-              println(
+              console.log(
                 `The estimated fees related to the emptying operation are ${estimate.suggestedFeeMutez} mutez.`
               );
               return contract.methodsObject
@@ -143,18 +143,18 @@ Tezos.signer
                 .send({ amount: 0 });
             })
             .then((operation) => {
-              println(`Waiting for confirmation of the draining operation...`);
+              console.log(`Waiting for confirmation of the draining operation...`);
               return operation.confirmation(1).then(() => operation.hash);
             })
             .then((hash) => {
-              println(`The account has been emptied.`);
+              console.log(`The account has been emptied.`);
               return Tezos.tz.getBalance(contract.address);
             })
             .then((finalBalance) => {
-              println(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
+              console.log(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
             });
         });
       });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

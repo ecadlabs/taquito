@@ -494,7 +494,7 @@ Tezos.contract
           0: '1', //nat
           1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
         });
-        println(`The value associated with the specified key of the map is ${valueMap}.`);
+        console.log(`The value associated with the specified key of the map is ${valueMap}.`);
         return myContract.storage();
       })
 
@@ -506,10 +506,10 @@ Tezos.contract
         });
       })
       .then((valueBigMap) => {
-        println(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
+        console.log(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
       });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
