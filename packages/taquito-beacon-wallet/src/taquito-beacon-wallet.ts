@@ -28,6 +28,8 @@ import {
   WalletStakeParams,
   WalletUnstakeParams,
   WalletFinalizeUnstakeParams,
+  WalletTransferTicketParams,
+  createTransferTicketOperation,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
@@ -94,6 +96,21 @@ export class BeaconWallet implements WalletProvider {
     return this.removeDefaultParams(
       walletParams,
       await createTransferOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapTransferTicketParamsToWalletParams(params: () => Promise<WalletTransferTicketParams>) {
+    let walletParams: WalletTransferTicketParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI(['alert']);
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createTransferTicketOperation(this.formatParameters(walletParams))
     );
   }
 
