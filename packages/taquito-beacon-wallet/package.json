@@ -27,7 +27,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --forceExit",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
