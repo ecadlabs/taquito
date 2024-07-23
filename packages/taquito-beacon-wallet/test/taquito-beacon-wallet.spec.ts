@@ -41,7 +41,7 @@ describe('Beacon Wallet tests', () => {
   it(`Verify that an error is thrown if BeaconWallet is initialized with an empty object`, async () => {
     try {
       const wallet = new BeaconWallet({} as any);
-      expect(await wallet).toBeDefined();
+      expect(wallet).toBeDefined();
     } catch (e) {
       console.log('hello there', e);
       expect((e as any).message).toEqual('Name not set');
@@ -89,25 +89,25 @@ describe('Beacon Wallet tests', () => {
 
   it('Verify getSigningType returns correct signing type for undefined', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const signingType = await wallet['getSigningType'](undefined);
+    const signingType = wallet['getSigningType'](undefined);
     expect(signingType).toBe(SigningType.RAW);
   });
 
   it('Verify getSigningType returns correct signing type for an empty array', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const signingType = await wallet['getSigningType'](new Uint8Array([]));
+    const signingType = wallet['getSigningType'](new Uint8Array([]));
     expect(signingType).toBe(SigningType.RAW);
   });
 
   it('Verify getSigningType returns correct signing type for 3', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const signingType = await wallet['getSigningType'](new Uint8Array([3]));
+    const signingType = wallet['getSigningType'](new Uint8Array([3]));
     expect(signingType).toBe(SigningType.OPERATION);
   });
 
   it('Verify getSigningType returns correct signing type for 5', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const signingType = await wallet['getSigningType'](new Uint8Array([5]));
+    const signingType = wallet['getSigningType'](new Uint8Array([5]));
     expect(signingType).toBe(SigningType.MICHELINE);
   });
 
