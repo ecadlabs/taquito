@@ -27,7 +27,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "jest --coverage --forceExit",
+    "test": "jest --coverage --forceExit --detectOpenHandles --openHandlesTimeout=5000",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
