@@ -10,6 +10,25 @@ global.localStorage = new LocalStorageMock();
 global.indexedDB = indexedDB;
 global.window = { addEventListener: jest.fn() } as any;
 
+jest.mock('@airgap/beacon-transport-postmessage', () => {
+  jest.useFakeTimers()
+  const originalModule = jest.requireActual('@airgap/beacon-transport-postmessage');
+  jest.runAllTimers()
+
+  return {
+    ...originalModule,
+    PostMessageTransport: jest.fn().mockImplementation(() => {
+      return {
+        connect: jest.fn(),
+        startOpenChannelListener: jest.fn(),
+        getPairingRequestInfo: jest.fn(),
+        listen: jest.fn(),
+      };
+    }),
+    getAvailableExtensions: jest.fn(),
+  };
+});
+
 describe('Beacon Wallet tests', () => {
   it('Verify that BeaconWallet is instantiable', () => {
     const wallet = new BeaconWallet({ name: 'testWallet' });
