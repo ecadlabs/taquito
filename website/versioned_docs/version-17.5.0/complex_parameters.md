@@ -93,11 +93,11 @@ importKey(Tezos, secretKey)
       validators : validatorsMap
     }})
 }).then((contractOriginated) => {
-  println(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
+  console.log(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
   return contractOriginated.contract();
 }).then((contract) => {
-  println(`Origination completed.`);
-}).catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  console.log(`Origination completed.`);
+}).catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ## Calling the function of a contract having a complex object as a parameter
@@ -145,8 +145,8 @@ importKey(Tezos, secretKey)
       owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
       parent: 'FFFF',
       ttl: { Some: '10' }}).toTransferParams();
-    println(JSON.stringify(inspect, null, 2))
-}).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+    console.log(JSON.stringify(inspect, null, 2))
+}).catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 #### Call the set_child_record function when all the arguments are defined
@@ -172,11 +172,11 @@ importKey(Tezos, secretKey)
       ttl: { Some: '10' }
     }).send();
 }).then(op => {
-    println(`Waiting for ${op.hash} to be confirmed...`);
+    console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
-}).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+    console.log(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
+}).catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
 
@@ -203,9 +203,9 @@ importKey(Tezos, secretKey)
       ttl: null
     }).send();
 }).then(op => {
-    println(`Waiting for ${op.hash} to be confirmed...`);
+    console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    println(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
-}).catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+    console.log(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
+}).catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

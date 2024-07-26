@@ -50,9 +50,9 @@ InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGR
     return Tezos.signer.publicKeyHash();
   })
   .then((publicKeyHash) => {
-    println(`The public key hash associated is: ${publicKeyHash}.`);
+    console.log(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ```js live noInline
@@ -67,9 +67,9 @@ InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNF
     return Tezos.signer.publicKeyHash();
   })
   .then((publicKeyHash) => {
-    println(`The public key hash associated is: ${publicKeyHash}.`);
+    console.log(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 When required, Taquito offers the `b58cencode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
@@ -84,7 +84,7 @@ const b58encodedSecret = b58cencode(
   '7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d',
   prefix[Prefix.P2SK]
 );
-println(
+console.log(
   `The secret is encoded in base58 and the prefix "p2sk" is added to it: ${b58encodedSecret}.`
 );
 //We take the encoded secret to configure the signer.
@@ -95,9 +95,9 @@ InMemorySigner.fromSecretKey(b58encodedSecret)
     return Tezos.signer.publicKeyHash();
   })
   .then((publicKeyHash) => {
-    println(`The public key hash associated is: ${publicKeyHash}.`);
+    console.log(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### Loading an encrypted private key with a passphrase
@@ -131,9 +131,9 @@ InMemorySigner.fromSecretKey(
     return Tezos.signer.publicKeyHash();
   })
   .then((publicKeyHash) => {
-    println(`The public key hash associated is: ${publicKeyHash}.`);
+    console.log(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ```js live noInline
@@ -151,9 +151,9 @@ InMemorySigner.fromSecretKey(
     return Tezos.signer.publicKeyHash();
   })
   .then((publicKeyHash) => {
-    println(`The public key hash associated is: ${publicKeyHash}.`);
+    console.log(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 ```js live noInline
@@ -171,9 +171,9 @@ InMemorySigner.fromSecretKey(
     return Tezos.signer.publicKeyHash();
   })
   .then((publicKeyHash) => {
-    println(`The public key hash associated is: ${publicKeyHash}.`);
+    console.log(`The public key hash associated is: ${publicKeyHash}.`);
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 
@@ -202,9 +202,9 @@ With ed25519 default derivation path (Reminder Must be hardened with either h or
   Tezos.setSignerProvider(signer)
   Tezos.signer.publicKeyHash()
     .then((publicKeyHash) => {
-      println(`The public key hash associated is: ${publicKeyHash}`)
+      console.log(`The public key hash associated is: ${publicKeyHash}`)
     })
-    .catch(err => println(err))
+    .catch(err => console.log(err))
 ```
 
 With a non-default derivation path non-hardened with a tz2 address
@@ -225,9 +225,9 @@ With a non-default derivation path non-hardened with a tz2 address
   Tezos.setSignerProvider(signer)
   Tezos.signer.publicKeyHash()
     .then((publicKeyHash) => {
-      println(`The public key hash associated is: ${publicKeyHash}`)
+      console.log(`The public key hash associated is: ${publicKeyHash}`)
     })
-    .catch(err => println(err))
+    .catch(err => console.log(err))
 ```
 
 ### Using a testnet faucet key

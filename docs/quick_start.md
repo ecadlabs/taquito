@@ -61,8 +61,8 @@ Alternatively, you can use a `WalletProvider` to interact with a wallet. Please 
 
 Tezos.tz
   .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')
-  .then((balance) => println(`${balance.toNumber() / 1000000} ꜩ`))
-  .catch((error) => println(JSON.stringify(error)));
+  .then((balance) => console.log(`${balance.toNumber() / 1000000} ꜩ`))
+  .catch((error) => console.log(JSON.stringify(error)));
 ```
 
 ### Using the inMemory Signer and Importing a key
@@ -104,15 +104,15 @@ values={[
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-println(`Transfering ${amount} ꜩ to ${address}...`);
+console.log(`Transfering ${amount} ꜩ to ${address}...`);
 Tezos.contract
   .transfer({ to: address, amount: amount })
   .then((op) => {
-    println(`Waiting for ${op.hash} to be confirmed...`);
+    console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -122,16 +122,16 @@ Tezos.contract
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-println(`Transfering ${amount} ꜩ to ${address}...`);
+console.log(`Transfering ${amount} ꜩ to ${address}...`);
 Tezos.wallet
   .transfer({ to: address, amount: amount })
   .send()
   .then((op) => {
-    println(`Waiting for ${op.opHash} to be confirmed...`);
+    console.log(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(1).then(() => op.opHash);
   })
-    .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+    .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -155,15 +155,15 @@ Tezos.contract
   .then((contract) => {
     const i = 7;
 
-    println(`Incrementing storage value by ${i}...`);
+    console.log(`Incrementing storage value by ${i}...`);
     return contract.methodsObject.increment(i).send();
   })
   .then((op) => {
-    println(`Waiting for ${op.hash} to be confirmed...`);
+    console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -175,15 +175,15 @@ Tezos.wallet
   .then((wallet) => {
     const i = 7;
 
-    println(`Incrementing storage value by ${i}...`);
+    console.log(`Incrementing storage value by ${i}...`);
     return wallet.methodsObject.increment(i).send();
   })
   .then((op) => {
-    println(`Waiting for ${op.opHash} to be confirmed...`);
+    console.log(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation(1).then(() => op.opHash);
   })
-  .then((hash) => println(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 

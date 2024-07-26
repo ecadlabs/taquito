@@ -5,7 +5,7 @@ author: Jev Bjorsell
 # Taquito 17.5.0
 
 **Important Note:**
-In this version, we replaced instances of `Axios` in favour of `Fetch`. 
+In this version, we replaced instances of `Axios` in favour of `Fetch`.
 
 We are not expecting any breaking changes, but if there are any issues that you see regarding this, please reach out to the Taquito team.
 
@@ -19,7 +19,7 @@ We are not expecting any breaking changes, but if there are any issues that you 
 ### Documentation
 - Updated RPC nodes on the website [PR#2732](https://github.com/ecadlabs/taquito/pull/2732
 - Updated Michelson encoder documentation to reference `generateSchema` instead of the outdated `extractSchema` #2630
-- Added a Taquito Chatbot assistant for the Taquito website to help answer user questions #2684 
+- Added a Taquito Chatbot assistant for the Taquito website to help answer user questions #2684
 
 ### Internals
 - Removed archive node, and references to it in Taquito [PR#2743](https://github.com/ecadlabs/taquito/pull/2743)
@@ -39,7 +39,7 @@ With this change we hope for a more stable HTTP handler in Taquito while reducin
 
 # Taquito v17.4.0
 
-**Potential Breaking Changes** : 
+**Potential Breaking Changes** :
 We have updated various dependencies to the latest version in this release. Please update and test our packages for compatibility. We encourage all users to get in touch with the Taquito team if you encounter any unexpected behaviours and/or side effects.
 
 ## Summary
@@ -2229,7 +2229,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 *before version 10.0.0-beta, the returned value was:*
 ```typescript=
@@ -2279,7 +2279,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 *before version 10.0.0-beta the returned value was:*
 ```json=

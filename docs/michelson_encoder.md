@@ -7,6 +7,11 @@ The purpose of the `Michelson-Encoder` package is to create an abstraction over 
 
 Its integration into the main `Taquito` package makes it easier to write the storage when deploying a contract and the parameter when calling a contract entry-point.
 
+:::info
+With the release of Taquito vevsion 20.0.0, we have made a breaking change in the Michelson Encoder package.
+Please check the [Breaking Change to Field Numbering](#breaking-change-to-field-numbering) section of this document for more information and how to enable the old behavior.
+:::
+
 ## How it works?
 
 There are three main classes in the Michelson Encoder:
@@ -81,7 +86,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.generateSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 ---
 When there is no annotation, the keys of the object are indexes starting from 0.
@@ -101,7 +106,7 @@ const storageType = {
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.generateSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 ---
 Here is another example using a complex storage:
@@ -242,7 +247,7 @@ const storageType =
 };
 const storageSchema = new Schema(storageType);
 const extractSchema = storageSchema.generateSchema();
-println(JSON.stringify(extractSchema, null, 2));
+console.log(JSON.stringify(extractSchema, null, 2));
 ```
 
 ### The Typecheck method
@@ -264,12 +269,16 @@ const storageType = {
     ]
 };
 const storageSchema = new Schema(storageType);
-const typecheck = storageSchema.Typecheck({
-    stored_counter: 10,
-    threshold: 5,
-    keys: ['edpkuLxx9PQD8fZ45eUzrK3yhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
-})
-println(typecheck);
+try {
+	storageSchema.Typecheck({
+		stored_counter: 10,
+		threshold: 5,
+		keys: ['edpkuLxx9PQD8fZ45eUzrK3yhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
+	})
+	console.log('Storage object is valid');
+} catch (e) {
+	console.log(`Storage is not valid: ${e}`);
+}
 ```
 
 ### The Encode method
@@ -297,7 +306,7 @@ const michelsonData = storageSchema.Encode({
     threshold: 5,
     keys: ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g', 'edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
 })
-println(JSON.stringify(michelsonData, null, 2));
+console.log(JSON.stringify(michelsonData, null, 2));
 ```
 
 ### The Execute method
@@ -345,7 +354,7 @@ const dataMichelson = {
   ]
 }
 const data = storageSchema.Execute(dataMichelson)
-println(JSON.stringify(data, null, 2));
+console.log(JSON.stringify(data, null, 2));
 ```
 
 The `Execute` method takes an optional parameter of type `Semantic`. It allows overriding the default representation returned by the Michelson Encoder for specific types.
@@ -359,12 +368,12 @@ const schema = new Schema({ prim: 'big_map', args: [{ prim: 'address' }, { prim:
 const dataMichelson = { int: 123456 }
 
 const data = schema.Execute(dataMichelson)
-println(`Default value returned by the Michelson Encoder for big_map: ${JSON.stringify(data, null, 2)}`);
+console.log(`Default value returned by the Michelson Encoder for big_map: ${JSON.stringify(data, null, 2)}`);
 
 // instead of returning the big map id, we can override it
 // we return an object in this case
 const dataCustom = schema.Execute(dataMichelson, { big_map: (val) => Object({ id: val.int })})
-println(`Customized representation of the big_map value: ${JSON.stringify(dataCustom)}`);
+console.log(`Customized representation of the big_map value: ${JSON.stringify(dataCustom)}`);
 ```
 ---
 Here is an example for the `ticket` type:
@@ -374,10 +383,10 @@ const schema = new Schema({"prim":"ticket","args":[{"prim":"string"}]});
 const dataMichelson = {"prim":"Pair","args":[{"string":"KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw"},{"string":"test"},{"int":"2"}]}
 
 const data = schema.Execute(dataMichelson)
-println(`Default representation of the ticket value returned by the Michelson Encoder: ${JSON.stringify(data, null, 2)}`);
+console.log(`Default representation of the ticket value returned by the Michelson Encoder: ${JSON.stringify(data, null, 2)}`);
 
 const dataCustom = schema.Execute(dataMichelson, { ticket: (val) => val.args[1].string})
-println(`Customized representation of the ticket value: ${JSON.stringify(dataCustom)}`);
+console.log(`Customized representation of the ticket value: ${JSON.stringify(dataCustom)}`);
 ```
 
 ### How the Schema class is used inside Taquito
@@ -404,7 +413,7 @@ const michelsonData = parameterSchema.Encode(
     'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
     '12'
 )
-println(JSON.stringify(michelsonData, null, 2));
+console.log(JSON.stringify(michelsonData, null, 2));
 ```
 ---
 Here is an example of `encodeObject`:
@@ -414,7 +423,7 @@ const michelsonData = parameterSchema.EncodeObject({
     spender: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
     value: '12'
 })
-println(JSON.stringify(michelsonData, null, 2));
+console.log(JSON.stringify(michelsonData, null, 2));
 ```
 
 ### How the ParameterSchema class is used inside Taquito
@@ -442,7 +451,7 @@ const storageSchema = new Schema({
 	]
 });
 const annotatedSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(annotatedSchema, null, 2));
+console.log(JSON.stringify(annotatedSchema, null, 2));
 ```
 ---
 We can also have a similar definition without the annotations:
@@ -461,7 +470,7 @@ const storageSchema = new Schema({
 	]
 });
 const noAnnotationsSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(noAnnotationsSchema, null, 2));
+console.log(JSON.stringify(noAnnotationsSchema, null, 2));
 ```
 
 In Taquito, we will flatten these nested `pair`s to make it easier to use them in typescript dApps. Please note how the result of `generateSchema` is different in the annotated vs non-annotated cases:
@@ -510,7 +519,7 @@ const storageSchema = new Schema({
 	]
 });
 const mixedSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(mixedSchema, null, 2));
+console.log(JSON.stringify(mixedSchema, null, 2));
 ```
 
 ### Unions
@@ -531,5 +540,108 @@ const storageSchema = new Schema({
 	]
 });
 const mixedSchema = storageSchema.ExtractSchema();
-println(JSON.stringify(mixedSchema, null, 2));
+console.log(JSON.stringify(mixedSchema, null, 2));
 ```
+
+## Breaking Change to Field Numbering {#breaking-change-to-field-numbering}
+When having nested `pair`s or unions (`or`), Taquito assigns numbers to fields when an annotation is not present.
+In previous versions of Taquito, the nested object's fields were numbered were a continuation of the parent object's fields.
+For example, the following schema:
+
+```js live noInline
+const param = {
+    prim: 'or',
+    args: [
+        {
+            prim: 'pair',
+            args: [{ prim: 'address' }, { prim: 'nat' }],
+            annots: ['%transfer']
+        },
+        {
+            prim: 'or',
+            args: [
+                {
+                    prim: 'pair',
+                    args: [{ prim: 'address' }, { prim: 'nat' }],
+                    annots: ['%approve']
+                },
+                {
+                    prim: 'pair',
+                    args: [{ prim: 'address' }, { prim: 'nat' }],
+                    annots: ['%mint']
+                }
+            ]
+        }
+    ],
+    annots: [':_entries']
+};
+const parameterSchema = new ParameterSchema(param);
+Token.fieldNumberingStrategy = "Legacy"; //To bring back the old behavior
+const value = parameterSchema.generateSchema();
+console.log(JSON.stringify(value, null, 2));
+Token.fieldNumberingStrategy = 'Latest'; //To restore the default (new) behavior
+```
+
+Please run the code above and check the output.
+
+Please note how nested field numbers are not predictable. The field numbers are assigned in the order their parent were encountered during the traversal of the tree. For instance, in the above example, `approve` would get a field number of `1`. Because it has annotations, the field number is not used. But its nested fields would be numbered starting from `1` and not `2`.
+
+While this behavior is not an error, it is prone to unexpected changes when the schema is modified. Also, predicting the field number of a specific field is not straightforward.
+
+With the release of Taquito version 20.0.0, we have made a breaking change in the Michelson Encoder package. The field numbering is now predictable and consistent.
+The field numbers for each nested object (`Or`/`Pair`) are now reset from zero. You can see that by commenting out the line: `Token.fieldNumberingStrategy = "Legacy";` and running the code again.
+
+Below you can see a diff of the new versus old behavior:
+
+```diff
+{
+  "__michelsonType": "or",
+  "schema": {
+    "transfer": {
+      "__michelsonType": "pair",
+      "schema": {
+        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    },
+    "approve": {
+      "__michelsonType": "pair",
+      "schema": {
+-        "1": {
++        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+-        "2": {
++        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    },
+    "mint": {
+      "__michelsonType": "pair",
+      "schema": {
+-        "2": {
++        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+-        "3": {
++        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    }
+  }
+}
+```
+You can enable the old behavior by setting the `Token.fieldNumberingStrategy = 'Legacy'`. Please note that this value should stay the same for the whole application.
+The possible values are: `type FieldNumberingStrategy = 'Legacy' | 'ResetFieldNumbersInNestedObjects' | 'Latest';` For new applications, we recommend using the default value `Latest`.

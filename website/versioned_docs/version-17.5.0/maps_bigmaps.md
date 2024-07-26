@@ -55,13 +55,13 @@ Tezos.contract
     storage: storageMap,
   })
   .then((contractOriginated) => {
-    println(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
+    console.log(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
     return contractOriginated.contract();
   })
   .then((contract) => {
-    println(`Origination completed.`);
+    console.log(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -85,13 +85,13 @@ Tezos.wallet
   })
   .send()
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -120,13 +120,13 @@ Tezos.contract
     }),
   })
   .then((contractOriginated) => {
-    println(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
+    console.log(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
     return contractOriginated.contract();
   })
   .then((contract) => {
-    println(`Origination completed.`);
+    console.log(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -146,13 +146,13 @@ Tezos.wallet
   })
   .send()
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
  </TabItem>
@@ -181,7 +181,7 @@ Tezos.contract
       .then((myStorage) => {
         //We want to see the value of the key "1"
         const value = myStorage.get('1');
-        println(
+        console.log(
           `The key "1" of the map has a current_stock of ${
             value[Object.keys(value)[0]]
           } and a max_price of   ${value[Object.keys(value)[1]]}.`
@@ -191,25 +191,25 @@ Tezos.contract
         return myContract.methodsObject.default('1').send();
       })
       .then((op) => {
-        println(`Waiting for ${op.hash} to be confirmed...`);
+        console.log(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
       })
       .then((hash) => {
-        println(`Operation injected.`);
+        console.log(`Operation injected.`);
 
         //Use the get method to see the change in storage
         return myContract.storage();
       })
       .then((myStorage) => {
         const value = myStorage.get('1');
-        println(
+        console.log(
           `The key "1" of the map has now a current_stock of ${
             value[Object.keys(value)[0]]
           } and a max_price of ${value[Object.keys(value)[1]]}.`
         );
       });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -224,7 +224,7 @@ Tezos.wallet
       .then((myStorage) => {
         //We want to see the value of the key "1"
         const value = myStorage.get('1');
-        println(
+        console.log(
           `The key "1" of the map has a current_stock of ${
             value[Object.keys(value)[0]]
           } and a max_price of   ${value[Object.keys(value)[1]]}.`
@@ -234,25 +234,25 @@ Tezos.wallet
         return myContract.methodsObject.default('1').send();
       })
       .then((op) => {
-        println(`Waiting for ${op.opHash} to be confirmed...`);
+        console.log(`Waiting for ${op.opHash} to be confirmed...`);
         return op.confirmation(1).then(() => op.opHash);
       })
       .then((hash) => {
-        println(`Operation injected.`);
+        console.log(`Operation injected.`);
 
         //Use the get method to see the change in storage
         return myContract.storage();
       })
       .then((myStorage) => {
         const value = myStorage.get('1');
-        println(
+        console.log(
           `The key "1" of the map has now a current_stock of ${
             value[Object.keys(value)[0]]
           } and a max_price of ${value[Object.keys(value)[1]]}.`
         );
       });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -326,13 +326,13 @@ Tezos.contract
     },
   })
   .then((contractOriginated) => {
-    println(`Waiting for the contract origination of ${contractOriginated.contractAddress}...`);
+    console.log(`Waiting for the contract origination of ${contractOriginated.contractAddress}...`);
     return contractOriginated.contract();
   })
   .then((contract) => {
-    println(`Origination completed.`);
+    console.log(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -383,13 +383,13 @@ Tezos.wallet
   })
   .send()
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -422,10 +422,10 @@ Tezos.contract
       0: '2', //nat
       1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
     });
-    println(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
+    console.log(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
     ${value[Object.keys(value)[1]]}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -442,10 +442,10 @@ Tezos.wallet
       0: '2', //nat
       1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
     });
-    println(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
+    console.log(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
     ${value[Object.keys(value)[1]]}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -519,13 +519,13 @@ Tezos.contract
     storage: storageMap,
   })
   .then((contractOriginated) => {
-    println(`Waiting for the contract origination of ${contractOriginated.contractAddress}...`);
+    console.log(`Waiting for the contract origination of ${contractOriginated.contractAddress}...`);
     return contractOriginated.contract();
   })
   .then((contract) => {
-    println(`Origination completed.`);
+    console.log(`Origination completed.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -571,13 +571,13 @@ Tezos.wallet
   })
   .send()
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -617,9 +617,9 @@ Tezos.contract
       7: '2019-09-06T15:08:29.000Z', // timestamp
       8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
     });
-    println(`The value associated to this key is ${value}.`);
+    console.log(`The value associated to this key is ${value}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -643,9 +643,9 @@ Tezos.wallet
       7: '2019-09-06T15:08:29.000Z', // timestamp
       8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
     });
-    println(`The value associated to this key is ${value}.`);
+    console.log(`The value associated to this key is ${value}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -717,13 +717,13 @@ Tezos.contract
     },
   })
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -774,13 +774,13 @@ Tezos.wallet
   })
   .send()
   .then((originationOp) => {
-    println(`Waiting for confirmation of origination...`);
+    console.log(`Waiting for confirmation of origination...`);
     return originationOp.contract();
   })
   .then((contract) => {
-    println(`Origination completed for ${contract.address}.`);
+    console.log(`Origination completed for ${contract.address}.`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -810,7 +810,7 @@ Tezos.contract
           0: '1', //nat
           1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
         });
-        println(`The value associated with the specified key of the map is ${valueMap}.`);
+        console.log(`The value associated with the specified key of the map is ${valueMap}.`);
         return myContract.storage();
       })
 
@@ -822,10 +822,10 @@ Tezos.contract
         });
       })
       .then((valueBigMap) => {
-        println(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
+        console.log(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
       });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -843,7 +843,7 @@ Tezos.wallet
           0: '1', //nat
           1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
         });
-        println(`The value associated with the specified key of the map is ${valueMap}.`);
+        console.log(`The value associated with the specified key of the map is ${valueMap}.`);
         return myContract.storage();
       })
 
@@ -855,10 +855,10 @@ Tezos.wallet
         });
       })
       .then((valueBigMap) => {
-        println(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
+        console.log(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
       });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -908,11 +908,11 @@ values={[
 Tezos.contract
   .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
   .then((contract) => {
-    println('Fetching the storage of the contract...');
+    console.log('Fetching the storage of the contract...');
     return contract.storage();
   })
   .then((storage) => {
-    println('Fetching the big map values...\n');
+    console.log('Fetching the big map values...\n');
     return storage['0'].getMultipleValues([
       'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
       'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
@@ -922,10 +922,10 @@ Tezos.contract
   })
   .then((values) => {
     values.forEach((value, key) => {
-      println(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`);
+      console.log(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`);
     });
   })
-  .catch((error) => println(JSON.stringify(error)));
+  .catch((error) => console.log(JSON.stringify(error)));
 ```
 
 </TabItem>
@@ -938,11 +938,11 @@ Tezos.contract
 Tezos.wallet
   .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
   .then((contract) => {
-    println('Fetching the storage of the contract...');
+    console.log('Fetching the storage of the contract...');
     return contract.storage();
   })
   .then((storage) => {
-    println('Fetching the big map values...\n');
+    console.log('Fetching the big map values...\n');
     return storage['0'].getMultipleValues([
       'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
       'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
@@ -952,10 +952,10 @@ Tezos.wallet
   })
   .then((values) => {
     values.forEach((value, key) => {
-      println(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`);
+      console.log(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`);
     });
   })
-  .catch((error) => println(JSON.stringify(error)));
+  .catch((error) => console.log(JSON.stringify(error)));
 ```
 
   </TabItem>

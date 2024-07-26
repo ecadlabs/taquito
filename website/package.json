@@ -12,9 +12,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "delete-index": "node ./scripts/delete-index.js",
-    "netlify:preview": "netlify deploy --json --alias=$(git rev-parse --short HEAD) --message \"Deployment for $(git branch --show-current)\"",
-    "netlify:publish": "netlify deploy --json --prod --message \"Deployment for $(git branch --show-current)\""
+    "delete-index": "node ./scripts/delete-index.js"
   },
   "dependencies": {
     "@docusaurus/core": "2.4.3",
@@ -72,7 +70,6 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.4.3",
     "@tsconfig/docusaurus": "^2.0.2",
-    "netlify-cli": "^17.22.0",
     "typescript": "^5.2.2"
   },
   "browserslist": {

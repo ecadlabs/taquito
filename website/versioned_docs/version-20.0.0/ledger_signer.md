@@ -226,13 +226,13 @@ function getAddressInfo(transport, index) {
   return Tezos.signer.publicKeyHash().then((pkh) => {
     Tezos.tz.getBalance(pkh).then((balance) => {
       Tezos.rpc.getManagerKey(pkh).then((getPublicKey) => {
-        println(
+        console.log(
           `The public key hash related to the derivation path having the index ${index} is ${pkh}.`
         );
         if (getPublicKey) {
-          println(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`);
+          console.log(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`);
         } else {
-          println('This account is not revealed.\n');
+          console.log('This account is not revealed.\n');
         }
       });
     });

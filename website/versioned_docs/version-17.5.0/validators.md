@@ -26,12 +26,12 @@ import { validateAddress } from '@taquito/utils';
 //valid
 const pkh = 'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx';
 const validation = validateAddress(pkh);
-println(`Calling the validateAddress function with ${pkh} returns ${validation}.`);
+console.log(`Calling the validateAddress function with ${pkh} returns ${validation}.`);
 
 //invalid checksum
 const invalidPkh = 'tz1L9r8mWmRpndRhuvMCWESLGSVeFzQ9NAWx';
 const invalidValidation = validateAddress(invalidPkh);
-println(`Calling the validateAddress function with ${invalidPkh} returns ${invalidValidation}.`);
+console.log(`Calling the validateAddress function with ${invalidPkh} returns ${invalidValidation}.`);
 ```
 
 #### The `validateKeyHash` function
@@ -46,12 +46,12 @@ import { validateKeyHash } from '@taquito/utils';
 //valid
 const keyHash = 'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx';
 const validation = validateKeyHash(keyHash);
-println(`Calling the validateKeyHash function with ${keyHash} returns ${validation}.`);
+console.log(`Calling the validateKeyHash function with ${keyHash} returns ${validation}.`);
 
 //invalid prefix
 const keyHashWithoutPrefix = 'L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx';
 const invalidValidation = validateKeyHash(keyHashWithoutPrefix);
-println(`Calling the validateKeyHash function with ${keyHash} returns ${invalidValidation}.`);
+console.log(`Calling the validateKeyHash function with ${keyHash} returns ${invalidValidation}.`);
 ```
 
 #### The `validateContractAddress` function
@@ -66,7 +66,7 @@ import { validateContractAddress } from '@taquito/utils';
 //valid
 const contractAddress = 'KT1AfxAKKLnEg6rQ6kHdvCWwagjSaxEwURSJ';
 const validation = validateContractAddress(contractAddress);
-println(`Calling the validateContractAddress function with ${contractAddress} returns ${validation}.`);
+console.log(`Calling the validateContractAddress function with ${contractAddress} returns ${validation}.`);
 ```
 
 ### Validate a chain
@@ -81,12 +81,12 @@ import { validateChain } from '@taquito/utils';
 //valid
 const chainId = 'NetXdQprcVkpaWU';
 const validation = validateChain(chainId);
-println(`Calling the validateChain function with ${chainId} returns ${validation}.`);
+console.log(`Calling the validateChain function with ${chainId} returns ${validation}.`);
 
 //invalid prefix
 const chainIdWithoutPrefix = 'XdQprcVkpaWU';
 const invalidValidation = validateChain(chainIdWithoutPrefix);
-println(`Calling the validateChain function with ${chainIdWithoutPrefix} returns ${invalidValidation}.`);
+console.log(`Calling the validateChain function with ${chainIdWithoutPrefix} returns ${invalidValidation}.`);
 ```
 
 ### Validate a public key
@@ -99,12 +99,12 @@ import { validatePublicKey } from '@taquito/utils';
 //valid
 const publicKey = 'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g';
 const validation = validatePublicKey(publicKey);
-println(`Calling the validatePublicKey function with ${publicKey} returns ${validation}.`);
+console.log(`Calling the validatePublicKey function with ${publicKey} returns ${validation}.`);
 
 //invalid prefix
 const value = 'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx';
 const invalidValidation = validatePublicKey(value);
-println(`Calling the validatePublicKey function with ${value} returns ${invalidValidation}.`);
+console.log(`Calling the validatePublicKey function with ${value} returns ${invalidValidation}.`);
 ```
 
 ### Validate a signature
@@ -117,12 +117,12 @@ import { validateSignature } from '@taquito/utils';
 //valid
 const signature = 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 const validation = validateSignature(signature);
-println(`Calling the validateSignature function with ${signature} returns ${validation}.`);
+console.log(`Calling the validateSignature function with ${signature} returns ${validation}.`);
 
 //invalid checksum
 const invalidSignature = 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuM';
 const invalidValidation = validateSignature(invalidSignature);
-println(`Calling the validateSignature function with ${invalidSignature} returns ${invalidValidation}.`);
+console.log(`Calling the validateSignature function with ${invalidSignature} returns ${invalidValidation}.`);
 ```
 
 ### Validate a Block Hash
@@ -135,12 +135,12 @@ import { validateBlock } from '@taquito/utils';
 //valid
 const block ='BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw';
 const validation = validateBlock(block);
-println(`Calling the validateBlock function with ${block} returns ${validation}.`);
+console.log(`Calling the validateBlock function with ${block} returns ${validation}.`);
 
 //invalid checksum
 const invalidBlock ='BMEdgRZbJJrtByoA5Jyuvy8mzp8mefbcrno82nQCAEbBCUhog';
 const invalidValidation = validateBlock(invalidBlock);
-println(`Calling the validateBlock function with ${invalidBlock} returns ${invalidValidation}.`);
+console.log(`Calling the validateBlock function with ${invalidBlock} returns ${invalidValidation}.`);
 ```
 ### Validate an Operation Hash
 
@@ -152,12 +152,12 @@ import { validateOperation } from '@taquito/utils';
 //valid
 const operation ='ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
 const validation = validateOperation(operation);
-println(`Calling the validateOperation function with ${operation} returns ${validation}.`);
+console.log(`Calling the validateOperation function with ${operation} returns ${validation}.`);
 
 //invalid checksum
 const invalidOperation ='ont3n75kMA2xeoTdxkGM23h5XhWgyP51WEznc4zCDtGNz1TWSz';
 const invalidValidation = validateOperation(invalidOperation);
-println(`Calling the validateOperation function with ${invalidOperation} returns ${invalidValidation}.`);
+console.log(`Calling the validateOperation function with ${invalidOperation} returns ${invalidValidation}.`);
 ```
 ### Validate a Protocol Hash
 
@@ -169,12 +169,12 @@ import { validateProtocol } from '@taquito/utils';
 //valid
 const protocol ='PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx';
 const validation = validateProtocol(protocol);
-println(`Calling the validateProtocol function with ${protocol} returns ${validation}.`);
+console.log(`Calling the validateProtocol function with ${protocol} returns ${validation}.`);
 
 //invalid checksum
 const invalidProtocol ='PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95b3m53QJiXGmrbU';
 const invalidValidation = validateProtocol(invalidProtocol);
-println(`Calling the validateProtocol function with ${invalidProtocol} returns ${invalidValidation}.`);
+console.log(`Calling the validateProtocol function with ${invalidProtocol} returns ${invalidValidation}.`);
 ```
 
 # Verification of a signature
@@ -191,5 +191,5 @@ const pk = 'sppk7c7hkPj47yjYFEHX85q46sFJGw6RBrqoVSHwAJAT4e14KJwzoey';
 const sig = 'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM3sinFtiCzLbsyP6d365EHoNevxhT47nx'
 
 const isValid = verifySignature(message, pk, sig);
-println(isValid);
+console.log(isValid);
 ```

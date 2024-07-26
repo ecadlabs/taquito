@@ -1673,7 +1673,7 @@ export interface SharedStaker {
 }
 
 export interface Baker {
-  baker: string;
+  baker_own_stake: string;
 }
 
 export interface Baker_edge {

@@ -44,11 +44,11 @@ values={[
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-println(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
+console.log(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
 Tezos.estimate
   .transfer({ to: address, amount: amount })
   .then((est) => {
-    println(`burnFeeMutez : ${est.burnFeeMutez},
+    console.log(`burnFeeMutez : ${est.burnFeeMutez},
     gasLimit : ${est.gasLimit},
     minimalFeeMutez : ${est.minimalFeeMutez},
     storageLimit : ${est.storageLimit},
@@ -69,11 +69,11 @@ Tezos.estimate
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-println(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
+console.log(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
 Tezos.estimate
   .transfer({ to: address, amount: amount })
   .then((est) => {
-    println(`burnFeeMutez : ${est.burnFeeMutez},
+    console.log(`burnFeeMutez : ${est.burnFeeMutez},
     gasLimit : ${est.gasLimit},
     minimalFeeMutez : ${est.minimalFeeMutez},
     storageLimit : ${est.storageLimit},
@@ -112,11 +112,11 @@ Tezos.contract
     return contract.methodsObject.increment(7);
   })
   .then((op) => {
-    println(`Estimating the smart contract call: `);
+    console.log(`Estimating the smart contract call: `);
     return Tezos.estimate.contractCall(op);
   })
   .then((estimate) => {
-    println(`burnFeeMutez : ${estimate.burnFeeMutez},
+    console.log(`burnFeeMutez : ${estimate.burnFeeMutez},
     gasLimit : ${estimate.gasLimit},
     minimalFeeMutez : ${estimate.minimalFeeMutez},
     storageLimit : ${estimate.storageLimit},
@@ -141,11 +141,11 @@ Tezos.wallet
     return contract.methodsObject.increment(7);
   })
   .then((op) => {
-    println(`Estimating the smart contract call: `);
+    console.log(`Estimating the smart contract call: `);
     return Tezos.estimate.contractCall(op);
   })
   .then((estimate) => {
-    println(`burnFeeMutez : ${estimate.burnFeeMutez},
+    console.log(`burnFeeMutez : ${estimate.burnFeeMutez},
     gasLimit : ${estimate.gasLimit},
     minimalFeeMutez : ${estimate.minimalFeeMutez},
     storageLimit : ${estimate.storageLimit},
@@ -176,7 +176,7 @@ values={[
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
-println(`Estimating the contract origination : `);
+console.log(`Estimating the contract origination : `);
 Tezos.estimate
   .originate({
     code: genericMultisigJSONfile,
@@ -187,7 +187,7 @@ Tezos.estimate
     },
   })
   .then((originationOp) => {
-    println(`burnFeeMutez : ${originationOp.burnFeeMutez},
+    console.log(`burnFeeMutez : ${originationOp.burnFeeMutez},
     gasLimit : ${originationOp.gasLimit},
     minimalFeeMutez : ${originationOp.minimalFeeMutez},
     storageLimit : ${originationOp.storageLimit},
@@ -195,7 +195,7 @@ Tezos.estimate
     totalCost : ${originationOp.totalCost},
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -206,7 +206,7 @@ Tezos.estimate
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 
-println(`Estimating the contract origination : `);
+console.log(`Estimating the contract origination : `);
 Tezos.estimate
   .originate({
     code: genericMultisigJSONfile,
@@ -217,7 +217,7 @@ Tezos.estimate
     },
   })
   .then((originationOp) => {
-    println(`burnFeeMutez : ${originationOp.burnFeeMutez},
+    console.log(`burnFeeMutez : ${originationOp.burnFeeMutez},
     gasLimit : ${originationOp.gasLimit},
     minimalFeeMutez : ${originationOp.minimalFeeMutez},
     storageLimit : ${originationOp.storageLimit},
@@ -225,7 +225,7 @@ Tezos.estimate
     totalCost : ${originationOp.totalCost},
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>

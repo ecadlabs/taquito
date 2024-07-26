@@ -63,15 +63,10 @@ class SemiLiveProvider extends LiveProvider {
       }
     }
 
-    // The following piece of code provides additional functionality to the user code such as prinln function and key import
+    // The following piece of code provides additional functionality to the user code such as console.log and key import
     const code = `
-let _printlnBuffer = "";
 
-function println(value) {
-  _printlnBuffer += value + "\\n";
-
-  render(_printlnBuffer);
-}
+let console = {log: value => render("" + value  + "\\n")};
 
 ${template()}
 

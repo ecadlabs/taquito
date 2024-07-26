@@ -167,8 +167,8 @@ const packed = packDataBytes(
 );
 Tezos.signer
   .sign(packed.bytes)
-  .then((signed) => println(JSON.stringify(signed, null, 2)))
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .then((signed) => console.log(JSON.stringify(signed, null, 2)))
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 First, you provide the Michelson code to be signed as a string along with its type.

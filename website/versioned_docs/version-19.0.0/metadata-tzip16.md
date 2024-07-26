@@ -104,13 +104,13 @@ const contractAddress = 'KT1V9mi4SiN85aUKjkJGRDDxELSbMSMdBMcy';
 Tezos.contract
   .at(contractAddress, tzip16)
   .then((contract) => {
-    println(`Fetching the metadata for ${contractAddress}...`);
+    console.log(`Fetching the metadata for ${contractAddress}...`);
     return contract.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    console.log(JSON.stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -128,13 +128,13 @@ const contractAddress = 'KT1V9mi4SiN85aUKjkJGRDDxELSbMSMdBMcy';
 Tezos.wallet
   .at(contractAddress, tzip16)
   .then((wallet) => {
-    println(`Fetching the metadata for ${contractAddress}...`);
+    console.log(`Fetching the metadata for ${contractAddress}...`);
     return wallet.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    console.log(JSON.stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -162,13 +162,13 @@ const contractAddress = 'KT1MJ7wAZ9LBB797zhGJrXByaaUwvLGfe3qz';
 Tezos.contract
   .at(contractAddress, tzip16)
   .then((contract) => {
-    println(`Fetching the metadata for ${contractAddress}...`);
+    console.log(`Fetching the metadata for ${contractAddress}...`);
     return contract.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    console.log(JSON.stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -185,13 +185,13 @@ const contractAddress = 'KT1MJ7wAZ9LBB797zhGJrXByaaUwvLGfe3qz';
 Tezos.wallet
   .at(contractAddress, tzip16)
   .then((wallet) => {
-    println(`Fetching the metadata for ${contractAddress}...`);
+    console.log(`Fetching the metadata for ${contractAddress}...`);
     return wallet.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    console.log(JSON.stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
   </TabItem>
 </Tabs>
@@ -218,13 +218,13 @@ const contractAddress = 'KT1JbEzvHn2Y2DjVQ7kgK8H8pxrspG893JsX';
 Tezos.contract
   .at(contractAddress, tzip16)
   .then((contract) => {
-    println(`Fetching the metadata for ${contractAddress}...`);
+    console.log(`Fetching the metadata for ${contractAddress}...`);
     return contract.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    console.log(JSON.stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -242,13 +242,13 @@ const contractAddress = 'KT1JbEzvHn2Y2DjVQ7kgK8H8pxrspG893JsX';
 Tezos.wallet
   .at(contractAddress, tzip16)
   .then((wallet) => {
-    println(`Fetching the metadata for ${contractAddress}...`);
+    console.log(`Fetching the metadata for ${contractAddress}...`);
     return wallet.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    console.log(JSON.stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -276,13 +276,13 @@ const contractAddress = 'KT1SDtsB4DHdh1QwFNgvsavxDwQJBdimgrcL';
 Tezos.contract
   .at(contractAddress, tzip16)
   .then((contract) => {
-    println(`Fetching the metadata for ${contractAddress}...`);
+    console.log(`Fetching the metadata for ${contractAddress}...`);
     return contract.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    console.log(JSON.stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -300,13 +300,13 @@ const contractAddress = 'KT1SDtsB4DHdh1QwFNgvsavxDwQJBdimgrcL';
 Tezos.wallet
   .at(contractAddress, tzip16)
   .then((wallet) => {
-    println(`Fetching the metadata for ${contractAddress}...`);
+    console.log(`Fetching the metadata for ${contractAddress}...`);
     return wallet.tzip16().getMetadata();
   })
   .then((metadata) => {
-    println(JSON.stringify(metadata, null, 2));
+    console.log(JSON.stringify(metadata, null, 2));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -366,18 +366,18 @@ const contractAddress = 'KT1XdXkU9piczYpTU8ToAAGJunzFiGCWRvVK';
 Tezos.contract
   .at(contractAddress, tzip16)
   .then((contract) => {
-    println(`Initialising the views for ${contractAddress}...`);
+    console.log(`Initialising the views for ${contractAddress}...`);
     return contract.tzip16().metadataViews();
   })
   .then((views) => {
-    println(`The following view names were found in the metadata: ${Object.keys(views)}`);
+    console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
     return views.someJson().executeView();
   })
   .then((result) => {
-    println(`Result of the view someJson: ${result}`);
-    println(`Transform result to char: ${bytes2Char(result)}`);
+    console.log(`Result of the view someJson: ${result}`);
+    console.log(`Transform result to char: ${bytes2Char(result)}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -395,18 +395,18 @@ const contractAddress = 'KT1XdXkU9piczYpTU8ToAAGJunzFiGCWRvVK';
 Tezos.wallet
   .at(contractAddress, tzip16)
   .then((wallet) => {
-    println(`Initialising the views for ${contractAddress}...`);
+    console.log(`Initialising the views for ${contractAddress}...`);
     return wallet.tzip16().metadataViews();
   })
   .then((views) => {
-    println(`The following view names were found in the metadata: ${Object.keys(views)}`);
+    console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
     return views.someJson().executeView();
   })
   .then((result) => {
-    println(`Result of the view someJson: ${result}`);
-    println(`Transform result to char: ${bytes2Char(result)}`);
+    console.log(`Result of the view someJson: ${result}`);
+    console.log(`Transform result to char: ${bytes2Char(result)}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -437,19 +437,19 @@ Tezos.contract
   .at(contractAddress, tzip16)
   .then((contract) => {
     return contract.storage().then((storage) => {
-      println(`The nat in the storage of the contract is: ${storage[0]}`);
-      println(`Initialising the views for ${contractAddress}...`);
+      console.log(`The nat in the storage of the contract is: ${storage[0]}`);
+      console.log(`Initialising the views for ${contractAddress}...`);
       return contract.tzip16().metadataViews();
     });
   })
   .then((views) => {
-    println(`The following view names were found in the metadata: ${Object.keys(views)}`);
+    console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
     return views['multiply-the-nat-in-storage']().executeView(10);
   })
   .then((result) => {
-    println(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
+    console.log(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -468,19 +468,19 @@ Tezos.wallet
   .at(contractAddress, tzip16)
   .then((wallet) => {
     return wallet.storage().then((storage) => {
-      println(`The nat in the storage of the contract is: ${storage[0]}`);
-      println(`Initialising the views for ${contractAddress}...`);
+      console.log(`The nat in the storage of the contract is: ${storage[0]}`);
+      console.log(`Initialising the views for ${contractAddress}...`);
       return wallet.tzip16().metadataViews();
     });
   })
   .then((views) => {
-    println(`The following view names were found in the metadata: ${Object.keys(views)}`);
+    console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
     return views['multiply-the-nat-in-storage']().executeView(10);
   })
   .then((result) => {
-    println(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
+    console.log(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
   </TabItem>
@@ -526,10 +526,10 @@ Tezos.contract
     );
 
     view.executeView(2).then((result) => {
-      println(`Result of the custom view: ${result}`);
+      console.log(`Result of the custom view: ${result}`);
     });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -563,10 +563,10 @@ Tezos.wallet
     );
 
     view.executeView(2).then((result) => {
-      println(`Result of the custom view: ${result}`);
+      console.log(`Result of the custom view: ${result}`);
     });
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
   </TabItem>
 </Tabs>

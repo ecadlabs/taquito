@@ -44,14 +44,14 @@ Tezos.contract
   .at("KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7")
   .then(contract => {
     const code = p.parseJSON(contract.script.code);
-    println("Pretty print Michelson smart contract:");
-    println(emitMicheline(code, {indent:" ", newline: "\n",}));
+    console.log("Pretty print Michelson smart contract:");
+    console.log(emitMicheline(code, {indent:" ", newline: "\n",}));
 
     const storage = p.parseJSON(contract.script.storage);
-    println("Pretty print Storage:");
-    println(emitMicheline(storage, {indent:" ", newline: "\n",}));
+    console.log("Pretty print Storage:");
+    console.log(emitMicheline(storage, {indent:" ", newline: "\n",}));
   })
-  .catch((error) => println(`Error: ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
 ### parseMichelineExpression - Parse Micheline and convert it to JSON Michelson
@@ -64,11 +64,11 @@ const p = new Parser();
 
 const michelineScript = `{parameter unit; storage unit; code {CDR; NIL operation; PAIR};}`
 const script = p.parseMichelineExpression(michelineScript);
-println('JSON Michelson script: ' + JSON.stringify(script) + '\n');
+console.log('JSON Michelson script: ' + JSON.stringify(script) + '\n');
 
 const michelineData = `(IF_LEFT { IF_LEFT { SWAP ; SUB } { ADD } })`;
 const data = p.parseMichelineExpression(michelineData);
-println('JSON Michelson data: ' + JSON.stringify(data));
+console.log('JSON Michelson data: ' + JSON.stringify(data));
 ```
 
 ## PACK and UNPACK locally

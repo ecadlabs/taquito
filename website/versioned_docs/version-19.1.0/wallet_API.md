@@ -122,7 +122,7 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 wallet
   .requestPermissions()
   .then((_) => wallet.getPKH())
-  .then((address) => println(`Your address: ${address}`));
+  .then((address) => console.log(`Your address: ${address}`));
 
 Tezos.setWalletProvider(wallet);
 ```
@@ -221,7 +221,7 @@ TempleWallet.isAvailable()
         return myWallet.getPKH();
       })
       .then((pkh) => {
-        println(`Your address: ${pkh}`);
+        console.log(`Your address: ${pkh}`);
       });
   })
   .catch((err) => console.log(err));
@@ -238,18 +238,18 @@ Tezos.wallet
   .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
   .send()
   .then((op) => {
-    println(`Hash: ${op.opHash}`);
+    console.log(`Hash: ${op.opHash}`);
 
     op.confirmation()
       .then((result) => {
         console.log(result);
         if (result.completed) {
-          println('Transaction correctly processed!');
+          console.log('Transaction correctly processed!');
         } else {
-          println('An error has occurred');
+          console.log('An error has occurred');
         }
       })
-      .catch((err) => println(err));
+      .catch((err) => console.log(err));
   });
 ```
 
@@ -262,11 +262,11 @@ Tezos.wallet
   .transfer({ to: 'KT1TBxaaeikEUcVN2qdQY7n9Q21ykcX1NLzY', amount: 0.2 })
   .send()
   .then((op) => {
-    println(`Waiting for ${op.opHash} to be confirmed...`);
+    console.log(`Waiting for ${op.opHash} to be confirmed...`);
     return op.confirmation().then(() => op.opHash);
   })
-  .then(() => println(`Operation injected!`))
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .then(() => console.log(`Operation injected!`))
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 Transactions to smart contracts operate in the same fashion as transactions to an implicit account, the only difference being the `KT1...` address. You will also receive a transaction hash and have to wait for the transaction to be confirmed. Once confirmed, it can be the right time to update the user's/contract's balance, for example.
@@ -296,17 +296,17 @@ Tezos.wallet
   .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
   .then((contract) => contract.methodsObject.areYouThere(true).send())
   .then((op) => {
-    println(`Hash: ${op.opHash}`);
+    console.log(`Hash: ${op.opHash}`);
     return op.confirmation();
   })
   .then((result) => {
     console.log(result);
     if (result.completed) {
-      println(`Transaction correctly processed!
+      console.log(`Transaction correctly processed!
       Block: ${result.block.header.level}
       Chain ID: ${result.block.chain_id}`);
     } else {
-      println('An error has occurred');
+      console.log('An error has occurred');
     }
   })
   .catch((err) => console.log(err));
@@ -321,17 +321,17 @@ Tezos.wallet
     contract.methodsObject.addName({0: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 1: 'Alice'}).send()
   )
   .then((op) => {
-    println(`Hash: ${op.opHash}`);
+    console.log(`Hash: ${op.opHash}`);
     return op.confirmation();
   })
   .then((result) => {
     console.log(result);
     if (result.completed) {
-      println(`Transaction correctly processed!
+      console.log(`Transaction correctly processed!
       Block: ${result.block.header.level}
       Chain ID: ${result.block.chain_id}`);
     } else {
-      println('An error has occurred');
+      console.log('An error has occurred');
     }
   })
   .catch((err) => console.log(err));

@@ -9,7 +9,7 @@ The `@taquito/tzip12` package allows retrieving metadata associated with tokens 
 
 ## How to use the tzip12 package
 
-The package can act as an extension to the well-known Taquito contract abstraction. 
+The package can act as an extension to the well-known Taquito contract abstraction.
 
 1. **We first need to create an instance of `Tzip12Module` and add it as an extension to our `TezosToolkit`**
 
@@ -32,8 +32,8 @@ Tezos.addExtension(new Tzip12Module());
 const contract = await Tezos.contract.at("contractAddress", tzip12)
 ```
 
-**The compose function**  
-The contract abstraction can also be extended to a `Tzip12ContractAbstraction` and a `Tzip16ContractAbstraction` (at the same time) by using the `compose` function. 
+**The compose function**
+The contract abstraction can also be extended to a `Tzip12ContractAbstraction` and a `Tzip16ContractAbstraction` (at the same time) by using the `compose` function.
 Thus, all methods of the `ContractAbstraction`, `Tzip12ContractAbstraction` and `Tzip16ContractAbstraction` classes will be available on the contract abstraction instance.
 
 ```js
@@ -50,7 +50,7 @@ await contract.tzip16().getMetadata(); // Tzip16ContractAbstraction method
 
 There are two scenarios to obtain the metadata of a token:
 1. They can be obtained from executing an off-chain view named `token_metadata` present in the contract metadata
-2. or from a big map named `token_metadata` in the contract storage. 
+2. or from a big map named `token_metadata` in the contract storage.
 
 The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class will find the token metadata with precedence for the off-chain view, if there is one, as specified in the standard.
 
@@ -97,13 +97,13 @@ const tokenId = 1;
 
 Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
 .then(contract => {
-  println(`Fetching the token metadata for the token ID ${tokenId}...`);
+  console.log(`Fetching the token metadata for the token ID ${tokenId}...`);
   return contract.tzip12().getTokenMetadata(tokenId);
 })
 .then (tokenMetadata => {
-  println(JSON.stringify(tokenMetadata, null, 2));
+  console.log(JSON.stringify(tokenMetadata, null, 2));
 })
-.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+.catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -121,14 +121,14 @@ const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, compose(tzip12, tzip16))
 .then(wallet => {
-  println(`Fetching the token metadata for the token ID ${tokenId}...`);
+  console.log(`Fetching the token metadata for the token ID ${tokenId}...`);
   return wallet.tzip12().getTokenMetadata(tokenId);
 })
 .then (tokenMetadata => {
-  println(JSON.stringify(tokenMetadata, null, 2));
+  console.log(JSON.stringify(tokenMetadata, null, 2));
 })
-.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
-```   
+.catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```
   </TabItem>
 </Tabs>
 
@@ -154,19 +154,19 @@ const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
-  println(`Initialising the views for ${contractAddress}...`);
+  console.log(`Initialising the views for ${contractAddress}...`);
   return contract.tzip16().metadataViews();
 })
 .then (views => {
   return views['token_metadata']().executeView(tokenId)
 }).then (result => {
-  println('Result of the view token_metadata:');
-  println(`name: ${bytesToString((Object.values(result)[1]).get('name'))}`);
-  println(`decimals: ${bytesToString((Object.values(result)[1]).get('decimals'))}`);
-  println(`symbol: ${bytesToString((Object.values(result)[1]).get('symbol'))}`);
-  println(`extra: ${bytesToString((Object.values(result)[1]).get('extra'))}`);
+  console.log('Result of the view token_metadata:');
+  console.log(`name: ${bytesToString((Object.values(result)[1]).get('name'))}`);
+  console.log(`decimals: ${bytesToString((Object.values(result)[1]).get('decimals'))}`);
+  console.log(`symbol: ${bytesToString((Object.values(result)[1]).get('symbol'))}`);
+  console.log(`extra: ${bytesToString((Object.values(result)[1]).get('extra'))}`);
 })
-.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+.catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -183,20 +183,20 @@ const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, tzip16)
 .then(wallet => {
-  println(`Initialising the views for ${contractAddress}...`);
+  console.log(`Initialising the views for ${contractAddress}...`);
   return wallet.tzip16().metadataViews();
 })
 .then (views => {
   return views['token_metadata']().executeView(tokenId)
 }).then (result => {
-  println('Result of the view token_metadata:');
-  println(`name: ${bytesToString((Object.values(result)[1]).get('name'))}`);
-  println(`decimals: ${bytesToString((Object.values(result)[1]).get('decimals'))}`);
-  println(`symbol: ${bytesToString((Object.values(result)[1]).get('symbol'))}`);
-  println(`extra: ${bytesToString((Object.values(result)[1]).get('extra'))}`);
+  console.log('Result of the view token_metadata:');
+  console.log(`name: ${bytesToString((Object.values(result)[1]).get('name'))}`);
+  console.log(`decimals: ${bytesToString((Object.values(result)[1]).get('decimals'))}`);
+  console.log(`symbol: ${bytesToString((Object.values(result)[1]).get('symbol'))}`);
+  console.log(`extra: ${bytesToString((Object.values(result)[1]).get('extra'))}`);
 })
-.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
-```    
+.catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```
   </TabItem>
 </Tabs>
 
@@ -211,7 +211,7 @@ To be [Tzip-012 compliant](https://gitlab.com/tzip/tzip/-/blob/master/proposals/
 <Tabs
   defaultValue="michelson"
   values={[
-    {label: 'Michelson', value: 'michelson'}, 
+    {label: 'Michelson', value: 'michelson'},
     {label: 'JSON Michelson', value: 'jsonMichelson'}
     ]}>
   <TabItem value="michelson">
@@ -229,15 +229,15 @@ To be [Tzip-012 compliant](https://gitlab.com/tzip/tzip/-/blob/master/proposals/
 ```
 prim: 'big_map',
     args: [
-        { prim: 'nat' }, 
+        { prim: 'nat' },
         { prim: 'pair', args: [
-            { prim: 'nat' , annots: ['%token_id']}, 
+            { prim: 'nat' , annots: ['%token_id']},
             { prim: "map", args: [{ prim: 'string' }, { prim: 'bytes' }], annots: ['%token_info'] }] }],
     annots: ['%token_metadata']
 ```
 
   </TabItem>
-</Tabs>  
+</Tabs>
 
 Otherwise, the token metadata won't be found by the `getTokenMetadata` method, and a `TokenMetadataNotFound` error will be thrown.
 :::
@@ -262,13 +262,13 @@ const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip12)
 .then(contract => {
-  println(`Fetching the token metadata for the token ID ${tokenId} of ${contractAddress}...`);
+  console.log(`Fetching the token metadata for the token ID ${tokenId} of ${contractAddress}...`);
   return contract.tzip12().getTokenMetadata(tokenId);
 })
 .then (tokenMetadata => {
-  println(JSON.stringify(tokenMetadata, null, 2));
+  console.log(JSON.stringify(tokenMetadata, null, 2));
 })
-.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
+.catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 </TabItem>
   <TabItem value="walletAPI">
@@ -285,17 +285,17 @@ const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, tzip12)
 .then(wallet => {
-  println(`Fetching the token metadata for the token ID ${tokenId} of ${contractAddress}...`);
+  console.log(`Fetching the token metadata for the token ID ${tokenId} of ${contractAddress}...`);
   return wallet.tzip12().getTokenMetadata(tokenId);
 })
 .then (tokenMetadata => {
-  println(JSON.stringify(tokenMetadata, null, 2));
+  console.log(JSON.stringify(tokenMetadata, null, 2));
 })
-.catch(error => println(`Error: ${JSON.stringify(error, null, 2)}`));
-```   
+.catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```
   </TabItem>
 </Tabs>
 
-#### For more information on the contracts used in the examples: 
+#### For more information on the contracts used in the examples:
 
 integration-tests/tzip12-token-metadata.spec.ts
