@@ -193,9 +193,9 @@ InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGR
     return Tezos.signer.sign(bytes, new Uint8Array([parseInt(magicByte, 16)]))
   })
   .then(signed => {
-    println(JSON.stringify(signed, null, 2));
+    console.log(JSON.stringify(signed, null, 2));
   })
-  .catch((error) => println(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
 </TabItem>
@@ -219,7 +219,7 @@ const payload = {
   signingType: SigningType.RAW,
   payload: magicByte + bytes
 }
-wallet.client.requestSignPayload(payload).then(signed => println(JSON.stringify(signed, null, 2)))
+wallet.client.requestSignPayload(payload).then(signed => console.log(JSON.stringify(signed, null, 2)))
 ```
 
   </TabItem>
