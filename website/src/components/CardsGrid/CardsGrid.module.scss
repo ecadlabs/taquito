@@ -79,29 +79,29 @@
 
   @media (max-width: 1200px) {
     width: 100%;
-    .cardsGridTitle {
-      max-width: fit-content;
-      padding: 10px;
-    }
     justify-content: center;
     align-items: center;
     margin-bottom: 50px;
     text-align: center;
+    .cardsGridTitle {
+      max-width: fit-content;
+      padding: 10px;
+    }
   }
 }
 
 .cardsGridCards {
   width: 65%;
-
-  @media (max-width: 1200px) {
-    width: 100%;
-  }
-
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   margin: auto;
+
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
+
 }
 
 .cardContainer {
