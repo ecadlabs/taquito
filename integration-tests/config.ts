@@ -9,6 +9,7 @@ import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
 import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
+import { knownContractsPtA4NFGxa } from './known-contracts-PtA4NFGxa';
 
 const nodeCrypto = require('crypto');
 
@@ -117,7 +118,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb'), // tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzbn(Germán - TT) is a placeholder for til tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD accepts external staking
+    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M'), // tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzbn(Germán - TT) is a placeholder for til tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD accepts external staking
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -150,6 +151,15 @@ const nairobinetSecretKey: Config =
     signerConfig: defaultSecretKey
   })
 
+  const betanetSecretKey: Config =
+  defaultConfig({
+    networkName: 'BETANET',
+    protocol: Protocols.PtA4NFGxa,
+    defaultRpc: 'https://rpc.betanet-2024-07-24.teztnets.com',
+    knownContracts: knownContractsPtA4NFGxa,
+    signerConfig: defaultSecretKey
+  })
+
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
@@ -166,7 +176,7 @@ const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'http://mondaynet.ecadinfra.com:8732',
+    defaultRpc: 'https://rpc.weeklynet-2024-07-31.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
@@ -184,6 +194,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
   providers.push(nairobinetSecretKey);
+} else if (process.env['RUN_BETANET_WITH_SECRET_KEY']) {
+  providers.push(betanetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['PARISNET']) {

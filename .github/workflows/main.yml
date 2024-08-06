@@ -62,3 +62,29 @@ jobs:
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
+
+  integration-tests-betanet:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        include:
+          - testnet: betanet
+            testnet_uppercase: BETANET
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/hydrogen
+      - run: npm ci
+      - run: npm run build
+      - if: ${{ !github.event.pull_request.head.repo.fork }}
+        name: Tailscale
+        uses: tailscale/github-action@v1
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          version: 1.32.2
+      - run: npm -w integration-tests run originate-known-contracts
+        env:
+          RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
+          TEZOS_RPC_${{ matrix.testnet_uppercase }}: https://rpc.betanet-2024-07-24.teztnets.com

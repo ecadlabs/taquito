@@ -6,6 +6,7 @@
     "test:parisnet": "PARISNET=true jest",
     "test:parisnet-secret-key": "RUN_PARISNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:nairobinet-secret-key": "RUN_NAIROBINET_WITH_SECRET_KEY=true jest --runInBand",
+    "test:betanet-secret-key": "RUN_BETANET_WITH_SECRET_KEY=true jest --runInBand",
     "test:weeklynet": "WEEKLYNET=true jest",
     "test:weeklynet-secret-key": "RUN_WEEKLYNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:ghostnet": "GHOSTNET=true jest",
