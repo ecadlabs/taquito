@@ -41,7 +41,7 @@
     "example:scan-path-ledger": "node -r ts-node/register --preserve-symlinks scan-path-ledger.ts"
   },
   "dependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^6.28.5",
+    "@ledgerhq/hw-transport-node-hid": "^6.29.3",
     "@taquito/ledger-signer": "^20.0.1",
     "@taquito/local-forging": "^20.0.1",
     "@taquito/michel-codec": "^20.0.1",
@@ -55,7 +55,7 @@
     "bignumber.js": "^9.1.2"
   },
   "devDependencies": {
-    "@types/node-hid": "^1.3.2",
-    "ts-node": "^10.9.1"
+    "@types/node-hid": "^1.3.4",
+    "ts-node": "^10.9.2"
   }
 }
