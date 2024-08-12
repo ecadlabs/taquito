@@ -89,7 +89,10 @@ export const defaultSecretKey: SecretKeyConfig = {
 const defaultEphemeralConfig = (keyUrl: string): EphemeralConfig => ({
   type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
   keyUrl: keyUrl,
-  requestHeaders: { Authorization: 'Bearer taquito-example' },
+  requestHeaders: { 
+    Authorization: 'Bearer taquito-example',
+    Referer: 'https://taquito.io/'
+  },
 });
 
 // Named parameters for defaultConfig below
@@ -136,7 +139,7 @@ const parisnetEphemeral: Config =
     protocol: Protocols.PsParisCZ,
     defaultRpc: 'https://rpc.pariscnet.teztnets.com/',
     knownContracts: knownContractsPsParisCZ,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/pariscnet')
+    signerConfig: defaultEphemeralConfig('http://ecad-tezos-keygen-1.i.ecadinfra.com:3000/pariscnet')
   });
 
 const parisnetSecretKey: Config =
@@ -151,26 +154,29 @@ const nairobinetSecretKey: Config =
     signerConfig: defaultSecretKey
   })
 
-  const betanetSecretKey: Config =
+const betanetSecretKey: Config = 
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://betanet.ecadinfra.com' } };
+
+const betanetEphemeral: Config =
   defaultConfig({
     networkName: 'BETANET',
     protocol: Protocols.PtA4NFGxa,
-    defaultRpc: 'https://rpc.betanet-2024-07-24.teztnets.com',
+    defaultRpc: 'https://betanet.ecadinfra.com',
     knownContracts: knownContractsPtA4NFGxa,
-    signerConfig: defaultSecretKey
-  })
+    signerConfig: defaultEphemeralConfig('http://ecad-tezos-keygen-1.i.ecadinfra.com:3000/betanet')
+  });
 
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
     protocol: Protocols.PtParisBx,
-    defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732',
+    defaultRpc: 'http://ghostnet.ecadinfra.com',
     knownContracts: knownContractsPtGhostnet,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
+    signerConfig: defaultEphemeralConfig('http://ecad-tezos-keygen-1.i.ecadinfra.com:3000/ghostnet')
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
@@ -202,6 +208,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(parisnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
+} else if (process.env['BETANET']) {
+  providers.push(betanetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
