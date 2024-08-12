@@ -89,7 +89,7 @@ export const defaultSecretKey: SecretKeyConfig = {
 const defaultEphemeralConfig = (keyUrl: string): EphemeralConfig => ({
   type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
   keyUrl: keyUrl,
-  requestHeaders: { 
+  requestHeaders: {
     Authorization: 'Bearer taquito-example',
     Referer: 'https://taquito.io/'
   },
@@ -154,14 +154,14 @@ const nairobinetSecretKey: Config =
     signerConfig: defaultSecretKey
   })
 
-const betanetSecretKey: Config = 
-  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://betanet.ecadinfra.com' } };
+const betanetSecretKey: Config =
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-tezos-betanet-baker.i.ecadinfra.com' } };
 
 const betanetEphemeral: Config =
   defaultConfig({
     networkName: 'BETANET',
     protocol: Protocols.PtA4NFGxa,
-    defaultRpc: 'https://betanet.ecadinfra.com',
+    defaultRpc: 'http://ecad-tezos-betanet-baker.i.ecadinfra.com',
     knownContracts: knownContractsPtA4NFGxa,
     signerConfig: defaultEphemeralConfig('http://ecad-tezos-keygen-1.i.ecadinfra.com:3000/betanet')
   });

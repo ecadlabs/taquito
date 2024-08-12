@@ -17,7 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - 'lts/hydrogen'
           - 'lts/iron'
     steps:
       - uses: actions/checkout@v4
@@ -45,9 +44,11 @@ jobs:
         include:
           - testnet: parisnet
             testnet_uppercase: PARISNET
+            rpc_url: https://parisnet.ecadinfra.com
           - testnet: betanet
             testnet_uppercase: BETANET
             allow_failure: true
+            rpc_url: http://ecad-tezos-betanet-baker.i.ecadinfra.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -65,5 +66,5 @@ jobs:
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}:
-            ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
+            ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
         continue-on-error: ${{ matrix.allow_failure || false }}
