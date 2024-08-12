@@ -45,6 +45,9 @@ jobs:
         include:
           - testnet: parisnet
             testnet_uppercase: PARISNET
+          - testnet: betanet
+            testnet_uppercase: BETANET
+            allow_failure: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -61,4 +64,6 @@ jobs:
       - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
           # Ternary operator workaround
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
+          TEZOS_RPC_${{ matrix.testnet_uppercase }}:
+            ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
+        continue-on-error: ${{ matrix.allow_failure || false }}
