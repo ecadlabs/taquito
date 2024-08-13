@@ -304,12 +304,13 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
       });
     });
 
-    betanet(`should successfully fetch all constants for Parisnet using ${rpc}`, async () => {
+    betanet(`should successfully fetch all constants for Betanet
+       using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
       const constants: ConstantsResponseProto020 = await Tezos.rpc.getConstants();
       expect(constants).toEqual({
         adaptive_issuance_activation_vote_enable: true,
-        adaptive_issuance_force_activation: true,
+        adaptive_issuance_force_activation: false,
         adaptive_issuance_launch_ema_threshold: 0,
         adaptive_rewards_params: {
           center_dz: {
@@ -357,14 +358,14 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         michelson_maximum_type_size: 2001,
         smart_rollup_max_wrapped_proof_binary_size: 30000,
         smart_rollup_max_number_of_messages_per_level: '1000000',
-        blocks_per_cycle: 128,
-        blocks_per_commitment: 16,
+        blocks_per_commitment: 25,
+        blocks_per_cycle: 210,
         blocks_preservation_cycles: 1,
-        nonce_revelation_threshold: 32,
+        nonce_revelation_threshold: 50,
         ns_enable: true,
         cycles_per_voting_period: 1,
         hard_gas_limit_per_operation: new BigNumber(1040000),
-        hard_gas_limit_per_block: new BigNumber(5200000),
+        hard_gas_limit_per_block: new BigNumber(3328000),
         proof_of_work_threshold: new BigNumber(-1),
         minimal_stake: new BigNumber(6000000000),
         origination_size: 257,
@@ -387,9 +388,9 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         edge_of_staking_over_delegation: 2,
         global_limit_of_staking_over_baking: 5,
         liquidity_baking_toggle_ema_threshold: 100000,
-        max_operations_time_to_live: 120,
-        minimal_block_delay: new BigNumber(7),
-        delay_increment_per_round: new BigNumber(7),
+        max_operations_time_to_live: 187,
+        minimal_block_delay: new BigNumber(4),
+        delay_increment_per_round: new BigNumber(4),
         delegate_parameters_activation_delay: 3,
         direct_ticket_spending_enable: false,
         consensus_committee_size: 7000,
@@ -419,10 +420,10 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         quorum_max: 7000,
         quorum_min: 2000,
         smart_rollup_arith_pvm_enable: true,
-        smart_rollup_challenge_window_in_blocks: 40,
-        smart_rollup_commitment_period_in_blocks: 20,
-        smart_rollup_max_lookahead_in_blocks: 30000,
-        smart_rollup_max_active_outbox_levels: 20160,
+        smart_rollup_challenge_window_in_blocks: 62,
+        smart_rollup_commitment_period_in_blocks: 31,
+        smart_rollup_max_active_outbox_levels: 31500,
+        smart_rollup_max_lookahead_in_blocks: 46875,
         smart_rollup_max_outbox_messages_per_level: 100,
         smart_rollup_max_number_of_cemented_commitments: 5,
         smart_rollup_max_number_of_parallel_games: 32,
@@ -441,7 +442,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         },
         smart_rollup_riscv_pvm_enable: true,
         smart_rollup_stake_amount: '32000000',
-        smart_rollup_timeout_period_in_blocks: 500,
+        smart_rollup_timeout_period_in_blocks: 781,
+        testnet_dictator: 'tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8',
         vdf_difficulty: new BigNumber(10000000),
         zk_rollup_enable: true,
         zk_rollup_max_ticket_payload_size: 2048,
