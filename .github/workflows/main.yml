@@ -68,3 +68,9 @@ jobs:
           TEZOS_RPC_${{ matrix.testnet_uppercase }}:
             ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
         continue-on-error: ${{ matrix.allow_failure || false }}
+      - name: Check for test failures
+        if: ${{ failure() && matrix.allow_failure }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.warning('Tests failed for the testnet: ${{ matrix.testnet }}. This failure is allowed, but please review the logs.')
