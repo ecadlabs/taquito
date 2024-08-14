@@ -38,7 +38,6 @@ jobs:
 
   integration-tests-testnet:
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       matrix:
         include:
@@ -47,7 +46,6 @@ jobs:
             rpc_url: https://parisnet.ecadinfra.com
           - testnet: betanet
             testnet_uppercase: BETANET
-            allow_failure: true
             rpc_url: http://ecad-tezos-betanet-baker.i.ecadinfra.com
     steps:
       - uses: actions/checkout@v4
@@ -68,10 +66,3 @@ jobs:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}:
             ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-        continue-on-error: ${{ matrix.allow_failure || false }}
-      - name: Check for test failures
-        if: ${{ steps.run-tests.outcome == 'failure' && matrix.allow_failure }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            core.warning('Tests failed for the testnet: ${{ matrix.testnet }}. This failure is allowed, but please review the logs.')
