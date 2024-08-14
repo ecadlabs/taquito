@@ -62,14 +62,15 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
-      - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
+      - id: run-tests
+        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}:
             ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
         continue-on-error: ${{ matrix.allow_failure || false }}
       - name: Check for test failures
-        if: ${{ failure() && matrix.allow_failure }}
+        if: ${{ steps.run-tests.outcome == 'failure' && matrix.allow_failure }}
         uses: actions/github-script@v6
         with:
           script: |
