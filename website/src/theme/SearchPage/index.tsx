@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/no-autofocus */
+///* eslint-disable jsx-a11y/no-autofocus */
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import clsx from 'clsx';
 import algoliaSearchHelper from 'algoliasearch-helper';
@@ -71,7 +71,7 @@ function SearchVersionSelectList({docsSearchVersionsHelpers, contextualSearch}) 
     docsSearchVersionsHelpers.allDocsData,
   )
     // Do not show a version select for unversioned docs plugin instances
-    .filter(([, docsData]) => contextualSearch && docsData.versions.length > 1);  // Added false && to disable versioning, might be able to remove after re-indexing with contextual search disabled
+    .filter(([, docsData]) => contextualSearch && (docsData as any).versions.length > 1);  // Added false && to disable versioning, might be able to remove after re-indexing with contextual search disabled
   return (
     <div
       className={clsx(
@@ -94,7 +94,7 @@ function SearchVersionSelectList({docsSearchVersionsHelpers, contextualSearch}) 
             }
             defaultValue={docsSearchVersionsHelpers.searchVersions[pluginId]}
             className={styles.searchVersionInput}>
-            {docsData.versions.map((version, i) => (
+            {(docsData as any).versions.map((version, i) => (
               <option
                 key={i}
                 label={`${labelPrefix}${version.label}`}
@@ -400,7 +400,7 @@ function SearchPageContent() {
                             key={index}
                             className="breadcrumbs__item"
                             // Developer provided the HTML, so assume it's safe.
-                            // eslint-disable-next-line react/no-danger
+                            //// eslint-disable-next-line react/no-danger
                             dangerouslySetInnerHTML={{__html: html}}
                           />
                         ))}
@@ -412,7 +412,7 @@ function SearchPageContent() {
                     <p
                       className={styles.searchResultItemSummary}
                       // Developer provided the HTML, so assume it's safe.
-                      // eslint-disable-next-line react/no-danger
+                      //// eslint-disable-next-line react/no-danger
                       dangerouslySetInnerHTML={{__html: summary}}
                     />
                   )}

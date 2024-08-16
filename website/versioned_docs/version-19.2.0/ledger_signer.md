@@ -171,8 +171,8 @@ We can see other implementations that use `44'/1729'/0'/0'/0'`, where the next a
 
 | Wallet  | Path                                                         |
 | ------- | ------------------------------------------------------------ |
-| Tezbox  | "44'/1729'/{account}'/0'" or "44'/1729'/0'/{account}'"       |
-| Galleon | "44'/1729'/{account}'/0'/0'" or "44'/1729'/0'/0'/{account}'" |
+| Tezbox  | "44'/1729'/\{account\}'/0'" or "44'/1729'/0'/\{account\}'"       |
+| Galleon | "44'/1729'/\{account\}'/0'/0'" or "44'/1729'/0'/0'/\{account\}'" |
 
 #### Some considerations about paths
 

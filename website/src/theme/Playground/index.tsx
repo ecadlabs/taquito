@@ -6,65 +6,33 @@
  */
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
-import React, { useEffect, useRef, useState } from 'react';
-import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
+import React, { useEffect, useRef, useState, ComponentType, PropsWithChildren } from 'react';
+import { LiveEditor, LiveError, LivePreview, renderElementAsync, generateElement, LiveContext } from 'react-live';
+import { themes } from "prism-react-renderer";
 
 import styles from './styles.module.css';
+import { BeaconWallet } from '@taquito/beacon-wallet';
 
-class SemiLiveProvider extends LiveProvider {
-  constructor() {
-    super();
+type SemiLiveProviderState = {
+  element?: ComponentType | null;
+  error?: string;
+};
 
-    this.onChange = code => {
-      // Override to prevent LiveProvider transpiling code on every change but
-      // keep the code. We will need it later.
-      this.code = code;
-    }
-  }
+type SemiLiveProviderProps = {
+  code?: string;
+  disabled?: boolean;
+  enableTypeScript?: boolean;
+  language?: string;
+  noInline?: boolean;
+  scope?: Record<string, unknown>;
+  theme?: typeof themes.nightOwl;
+  transformCode?(code: string): void;
+  noConfig?: boolean;
+  wallet?: BeaconWallet;
+};
 
-  UNSAFE_componentWillMount() {
-    // Override to prevent LiveProvider transpiling code on mount but
-    // keep the code. We will need it later.
-    this.code = this.props.code;
-  }
-
-  componentDidUpdate() {
-    // Override to prevent LiveProvider transpiling code on update but
-    // keep the code. We will need it later.
-  }
-
-  run() {
-    const { scope, transformCode, noInline } = this.props;
-
-    const template = () => {
-      if (this.props.wallet) {
-        return `
-        wallet.requestPermissions()
-        .then(permission => {
-          return Tezos.setWalletProvider(wallet);
-        })
-        .then(() => {
-          ${this.code}
-        });`
-      } else if (this.props.noConfig) {
-        return this.code
-      } else {
-        return `fetch('https://keygen.ecadinfra.com/ghostnet', {
-          method: 'POST',
-          headers: { Authorization: 'Bearer taquito-example' },
-        })
-        .then(response => response.text())
-        .then(privateKey => {
-          return importKey(Tezos, privateKey);
-         })
-        .then(() => {
-          ${this.code}
-         });`
-      }
-    }
-
-    // The following piece of code provides additional functionality to the user code such as console.log and key import
-    const code = `
+// The following piece of code provides additional functionality to the user code such as console.log and key import
+const getCode = (template: () => string) => `
 
 let console = {log: value => render("" + value  + "\\n")};
 
@@ -154,8 +122,134 @@ const managerCode = [{"prim": "parameter","args":[{"prim": "or","args":[{"prim":
 
 `;
 
-    this.transpile({ code, scope, transformCode, noInline });
+function SemiLiveProvider({
+  children,
+  code = "",
+  language = "tsx",
+  theme,
+  enableTypeScript = true,
+  disabled = false,
+  scope,
+  transformCode,
+  wallet,
+  noInline = false,
+  noConfig = false,
+}: PropsWithChildren<SemiLiveProviderProps>) {
+  const [state, setState] = useState<SemiLiveProviderState>({
+    error: undefined,
+    element: undefined,
+  });
+
+  const [codeState, setCodeState] = useState(code);
+
+  async function transpileAsync(newCode: string) {
+    const errorCallback = (error: Error) => {
+      setState({ error: error.toString(), element: undefined });
+    };
+
+    // - transformCode may be synchronous or asynchronous.
+    // - transformCode may throw an exception or return a rejected promise, e.g.
+    //   if newCode is invalid and cannot be transformed.
+    // - Not using async-await to since it requires targeting ES 2017 or
+    //   importing regenerator-runtime... in the next major version of
+    //   react-live, should target ES 2017+
+    try {
+      const transformResult = transformCode ? transformCode(newCode) : newCode;
+      try {
+        const transformedCode = await Promise.resolve(transformResult);
+        const renderElement = (element: ComponentType) =>
+          setState({ error: undefined, element });
+
+        if (typeof transformedCode !== "string") {
+          throw new Error("Code failed to transform");
+        }
+
+        // Transpilation arguments
+        const input = {
+          code: transformedCode,
+          scope,
+          enableTypeScript,
+        };
+
+        if (noInline) {
+          setState({ error: undefined, element: null }); // Reset output for async (no inline) evaluation
+          renderElementAsync(input, renderElement, errorCallback);
+        } else {
+          renderElement(generateElement(input, errorCallback));
+        }
+      } catch (error) {
+        return errorCallback(error as Error);
+      }
+    } catch (e) {
+      errorCallback(e as Error);
+      return Promise.resolve();
+    }
   }
+
+  const onError = (error: Error) => setState({ error: error.toString() });
+
+  useEffect(() => {
+    setCodeState(code);
+    updateCode(codeState).catch(onError);
+  }, [code]);
+
+  useEffect(() => {
+    updateCode(codeState).catch(onError);
+  }, [scope, noInline, transformCode]);
+
+  const onChange = (newCode: string) => {
+    setCodeState(newCode);
+    updateCode(newCode).catch(onError);
+  };
+
+  async function updateCode(newCode: string) {
+    const template = () => {
+      if (wallet) {
+        return `
+        wallet.requestPermissions()
+        .then(permission => {
+          return Tezos.setWalletProvider(wallet);
+        })
+        .then(() => {
+          ${newCode}
+        });`
+      } else if (noConfig) {
+        return newCode
+      } else {
+        return `fetch('https://keygen.ecadinfra.com/ghostnet', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer taquito-example' },
+        })
+        .then(response => response.text())
+        .then(privateKey => {
+          return importKey(Tezos, privateKey);
+         })
+        .then(() => {
+          ${newCode}
+         });`
+      }
+    }
+
+    const codeToTranspile = getCode(template);
+
+    await transpileAsync(codeToTranspile);
+  }
+
+  return (
+    <LiveContext.Provider
+      value={{
+        ...state,
+        code,
+        language,
+        theme,
+        disabled,
+        onError,
+        onChange,
+      }}
+    >
+      {children}
+    </LiveContext.Provider>
+  );
 }
 
 function Playground({ children, theme, transformCode, ...props }) {
@@ -192,7 +286,7 @@ function Playground({ children, theme, transformCode, ...props }) {
 
   return (
     <SemiLiveProvider
-      ref={live}
+      // ref={live}
       code={children}
       transformCode={transformCode || (code => `${code};`)}
       theme={theme}

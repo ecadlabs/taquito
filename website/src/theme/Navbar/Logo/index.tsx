@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { useEffect, useRef, useState } from 'react';
-import Logo from '@theme/Logo';
 import lottie from 'lottie-web';
 
 export default function NavbarLogo() {
@@ -48,8 +47,8 @@ export default function NavbarLogo() {
   
     script.src = "https://www.chatbase.co/embed.min.js";
     script.defer = true;
-    script.chatbotId="Cn650xmUdORPNUE8fcKlg";
-    script.domain="www.chatbase.co";
+    (script as any).chatbotId="Cn650xmUdORPNUE8fcKlg";
+    (script as any).domain="www.chatbase.co";
     script.id = scriptId;
     document.body.appendChild(script);
   }, []);

@@ -162,7 +162,7 @@ Where `purpose` is a constant set to `44'` and `coin_type` is set to `1729'` for
 The path always begins with `44'/1729'` and we see some difference for the three other indexes across the Tezos ecosystem. We can notice that changing any number for the three last indexes of the path (`account' / change / address_index`) will lead to different accounts. **But, to ensure consistency, it is important trying to follow the same convention regarding the structure of the path and which index to increase to access the next address.**
 
 In Tezos, we generally see a slight difference in the path compared to the BIP44 specification. It is common to see path made of 4 indexes instead of 5 (default path being `44'/1729'/0'/0'` instead of `44'/1729'/0'/0'/0'`). For example, the default path used by tezos-client is `44'/1729'/0'/0'`.
-Based on what is done by the Tezos-client, the default path used by Taquito in the `LedgerSigner` is also `44'/1729'/0'/0'`. Taquito offers a template for the path called `HDPathTemplate`. This template uses four indexes and suggests doing the iteration on the `account` index.
+Based on what is done by the Tezos-client, the default path used by Taquito in the `LedgerSigner` is also `44'/1729'/0'/0'`. Taquito offers a template for the path called `HDPathTemplate`. This template uses four indexes and suggests doing the iteration on the ``account`` index.
 For example, you can use HDPathTemplate(0) (equivalent to `44'/1729'/0'/0'`) to access the first address, HDPathTemplate(1) equivalent to `44'/1729'/1'/0'`) to access the second address, HDPathTemplate(2) (equivalent to `44'/1729'/2'/0'`) to access the third address... _In order to meet the needs of each user, this template is not imposed by Taquito_.
 
 We can see other implementations that use `44'/1729'/0'/0'/0'`, where the next address is accessed by incrementing `account` or `address_index`.
@@ -171,8 +171,8 @@ We can see other implementations that use `44'/1729'/0'/0'/0'`, where the next a
 
 | Wallet  | Path                                                         |
 | ------- | ------------------------------------------------------------ |
-| Tezbox  | "44'/1729'/{account}'/0'" or "44'/1729'/0'/{account}'"       |
-| Galleon | "44'/1729'/{account}'/0'/0'" or "44'/1729'/0'/0'/{account}'" |
+| Tezbox  | "44'/1729'/\{account\}'/0'" or "44'/1729'/0'/\{account\}'"       |
+| Galleon | "44'/1729'/\{account\}'/0'/0'" or "44'/1729'/0'/0'/\{account\}'" |
 
 #### Some considerations about paths
 

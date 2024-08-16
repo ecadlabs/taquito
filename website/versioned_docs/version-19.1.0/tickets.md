@@ -20,7 +20,7 @@ In this regard, the only interaction available to Taquito with tickets is readin
 ### How to read a ticket with Taquito?
 
 Although tickets can be stored in any part of the storage of a contract, it is more common to see them in complex types like a pair or a map/big map. Taquito treats tickets like any other value fetched from a contract and they are available in JavaScript/TypeScript as an object with 3 properties:  
-`{ ticketer: string; value: any; amount: BigNumber }`
+`\{ ticketer: string; value: any; amount: BigNumber \}`
 
 - The `ticketer` property is a string representing the address of the contract that issued the ticket. As tickets can only be joined if they have the same ticketer and value, this is the guarantee that the ticket hasn't been tampered with.
 
@@ -32,10 +32,10 @@ Although tickets can be stored in any part of the storage of a contract, it is m
 
 || Ticket in Michelson | Ticket with Taquito |
 |----------------|---------------------|---------------------|
-| Value type:<br />int | (pair address (pair int nat))<br />(Pair **"KT1ABC..."** (Pair **123** **5**))| { ticketer: **"KT1ABC..."**,<br /> value: **BigNumber(123)**,<br /> amount: **BigNumber(5)** }|
-| Value type:<br />string | (pair address (pair string nat))<br />(Pair **"KT1ABC..."** (Pair **"Taquito"** **5**))| { ticketer: **"KT1ABC..."**,<br /> value: **"Taquito"**,<br /> amount: **BigNumber(5)** }|
-| Value type:<br />bool | (pair address (pair bool nat))<br />(Pair **"KT1ABC..."** (Pair **True** **5**))| { ticketer: **"KT1ABC..."**,<br /> value: **true**,<br /> amount: **BigNumber(5)** }|
-| Value type:<br />bytes | (pair address (pair bytes nat))<br />(Pair **"KT1ABC..."** (Pair **"0xCAFE"** **5**))| { ticketer: **"KT1ABC..."**,<br /> value: **"CAFE"**,<br /> amount: **BigNumber(5)** }|
-| Value type:<br /> option | (pair address (pair (option string) nat))<br />(Pair **"KT1ABC..."** (Pair **(Some "Tezos")** **5**))| { ticketer: **"KT1ABC..."**,<br /> value: **"Tezos"**,<br /> amount: **BigNumber(5)** }|
-| Value type:<br /> option | (pair address (pair (option string) nat))<br />(Pair **"KT1ABC..."** (Pair **None** **5**))| { ticketer: **"KT1ABC..."**,<br /> value: **null**,<br /> amount: **BigNumber(5)** }|
-| Value type: <br />pair int string | (pair address (pair (pair int string) nat))<br />(Pair **"KT1ABC..."** (Pair **(Pair 7 "Tacos")** **5**))| { ticketer: **"KT1ABC..."**,<br /> value: **{ 0: BigNumber(7), 1: "Tacos" }**,<br /> amount: **BigNumber(5)** }|
+| Value type:<br />int | (pair address (pair int nat))<br />(Pair **"KT1ABC..."** (Pair **123** **5**))| \{ ticketer: **"KT1ABC..."**,<br /> value: **BigNumber(123)**,<br /> amount: **BigNumber(5)** \}|
+| Value type:<br />string | (pair address (pair string nat))<br />(Pair **"KT1ABC..."** (Pair **"Taquito"** **5**))| \{ ticketer: **"KT1ABC..."**,<br /> value: **"Taquito"**,<br /> amount: **BigNumber(5)** \}|
+| Value type:<br />bool | (pair address (pair bool nat))<br />(Pair **"KT1ABC..."** (Pair **True** **5**))| \{ ticketer: **"KT1ABC..."**,<br /> value: **true**,<br /> amount: **BigNumber(5)** \}|
+| Value type:<br />bytes | (pair address (pair bytes nat))<br />(Pair **"KT1ABC..."** (Pair **"0xCAFE"** **5**))| \{ ticketer: **"KT1ABC..."**,<br /> value: **"CAFE"**,<br /> amount: **BigNumber(5)** \}|
+| Value type:<br /> option | (pair address (pair (option string) nat))<br />(Pair **"KT1ABC..."** (Pair **(Some "Tezos")** **5**))| \{ ticketer: **"KT1ABC..."**,<br /> value: **"Tezos"**,<br /> amount: **BigNumber(5)** \}|
+| Value type:<br /> option | (pair address (pair (option string) nat))<br />(Pair **"KT1ABC..."** (Pair **None** **5**))| \{ ticketer: **"KT1ABC..."**,<br /> value: **null**,<br /> amount: **BigNumber(5)** \}|
+| Value type: <br />pair int string | (pair address (pair (pair int string) nat))<br />(Pair **"KT1ABC..."** (Pair **(Pair 7 "Tacos")** **5**))| \{ ticketer: **"KT1ABC..."**,<br /> value: **\{ 0: BigNumber(7), 1: "Tacos" \}**,<br /> amount: **BigNumber(5)** \}|

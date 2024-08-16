@@ -1,7 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
+import type {Config} from '@docusaurus/types';
+import 'dotenv/config';
 
-module.exports = {
+const config: Config = {
   title: 'Taquito',
   tagline: 'A TypeScript library suite for development on the Tezos blockchain.',
   favicon: 'img/favicon.svg',
@@ -34,19 +34,6 @@ module.exports = {
       defaultMode: 'light',
       disableSwitch: false,
       respectPrefersColorScheme: false,
-      // The following value has been deprecated and will need to be re-implemented when dark mode is implemented
-      // switchConfig: {
-      // 	darkIcon: '🌙',
-      // 	darkIconStyle: {
-      // 		marginLeft: '2px',
-      // 	},
-      // 	// Unicode icons such as '\u2600' will work
-      // 	// Unicode with 5 chars require brackets: '\u{1F602}'
-      // 	lightIcon: '\u{1F602}',
-      // 	lightIconStyle: {
-      // 		marginLeft: '1px',
-      // 	},
-      // },
     },
     navbar: {
       hideOnScroll: true,
@@ -217,3 +204,5 @@ module.exports = {
     ],
 
 };
+
+export default config;

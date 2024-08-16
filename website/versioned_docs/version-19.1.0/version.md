@@ -2603,13 +2603,13 @@ To give more flexibility to the user on the retry strategy, we removed the param
 After sending an operation with Taquito, we call the confirmation method on the operation. Taquito does polling to the node to fetch new blocks and validate if the operation hash is in the block. Before this change, the polling interval's default value (confirmationPollingIntervalSecond) was set to 10 seconds. In theory, a new block is baked every 30 seconds on the testnets and every 60 seconds on mainnet. However, the time between blocks is shorter on sandboxes. For example, it can be of 5 seconds on Flextesa. A 10-second polling interval is too high for sandboxes and leads to a very high chance of missing the block containing the operation. To improve sandbox users' experience., we now calculate the polling interval value dynamically based on the RPC constants. To consider variations regarding the time between blocks in practice, we divide the value by 3 to reduce the risk of missing a block.
 
 Note that this value was configurable before and can still be configured if needed:
-Tezos.setProvider({config: {confirmationPollingIntervalSecond: 5}})
+`Tezos.setProvider({config: {confirmationPollingIntervalSecond: 5}})`
 
 ## Delay and maximum number of attempts for the ObservableSubscription
 
 When users configure the ObservableSubscription to retry on error, the retries were happening immediately and indefinitely, causing call stack exception. Now, when the retry is enabled, the subscription uses a default value of 1 second between retries and a maximum value of 10 retries.
 These values are configurable by the user:
-Tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true, observableSubscriptionRetryDelay: 2000, observableSubscriptionRetries: 3 } });
+`Tezos.setProvider({ config: { shouldObservableSubscriptionRetry: true, observableSubscriptionRetryDelay: 2000, observableSubscriptionRetries: 3 } });`
 
 ## prefixSig
 

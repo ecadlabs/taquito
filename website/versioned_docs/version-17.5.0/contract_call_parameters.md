@@ -29,12 +29,12 @@ You will find below tables that match some of the most common values that smart 
 | Michelson type           | Michelson value        | Taquito `methods`   | Taquito `methodsObject`                          |
 | ------------------------ | ---------------------- | ------------------- | ------------------------------------------------ |
 | option nat               | None                   | null                | null                                             |
-| option nat               | Some 6                 | 6                   | 6 or [6] or {Some: 5}                            |
-| option string            | Some "Tezos"           | "Tezos"             | "Tezos" or {Some: "Tezos"}                       |
-| option (list nat)        | Some { 6 ; 7 ; 8 ; 9 } | [6, 7, 8, 9]        | [6, 7, 8, 9] or {Some: [6, 7, 8, 9]}             |
-| option (pair string nat) | Some (Pair "Tezos" 8)  | "Tezos", 8          | {0: "Tezos", 1: 8} or {Some: {0: "Tezos", 1: 5}} |
-| option (or string nat)   | Some (Left "Tezos")    | 0, "Tezos"          | {0: "Tezos"} or {Some: {0: "Tezos"}}             |
-| option (option nat)      | Some(None)             | not supported       | {Some: null}                                     |
+| option nat               | Some 6                 | 6                   | 6 or [6] or \{Some: 5\}                            |
+| option string            | Some "Tezos"           | "Tezos"             | "Tezos" or \{Some: "Tezos"\}                       |
+| option (list nat)        | Some \{ 6 ; 7 ; 8 ; 9 \} | [6, 7, 8, 9]        | [6, 7, 8, 9] or \{Some: [6, 7, 8, 9]\}             |
+| option (pair string nat) | Some (Pair "Tezos" 8)  | "Tezos", 8          | \{0: "Tezos", 1: 8\} or \{Some: \{0: "Tezos", 1: 5\}\} |
+| option (or string nat)   | Some (Left "Tezos")    | 0, "Tezos"          | \{0: "Tezos"\} or \{Some: \{0: "Tezos"\}\}             |
+| option (option nat)      | Some(None)             | not supported       | \{Some: null\}                                     |
 
 There is nothing special to do to pass an option with Taquito, Taquito will assume that passing `null` means that you want to pass `None` and any other value will be `Some`. You can then pass the value following the format corresponding to its type.
 
@@ -42,9 +42,9 @@ There is nothing special to do to pass an option with Taquito, Taquito will assu
 
 | Michelson type                             | Michelson value         | Taquito `methods`         | Taquito `methodsObject` |
 | ------------------------------------------ | ----------------------- | ------------------------- | ----------------------- |
-| or int string                              | Left 5                  | 0, 5                      | {0: 5}                  |
-| or int string                              | Right "Tezos"           | 1, "Tezos"                | {1: "Tezos"}            |
-| or (pair int nat) string                   | Left (Pair 6 7)         | 0, { 0: 6, 1: 7 }         | {0: { 0: 6, 1: 7 }}     |
+| or int string                              | Left 5                  | 0, 5                      | \{0: 5\}                  |
+| or int string                              | Right "Tezos"           | 1, "Tezos"                | \{1: "Tezos"\}            |
+| or (pair int nat) string                   | Left (Pair 6 7)         | 0, \{ 0: 6, 1: 7 \}         | \{0: \{ 0: 6, 1: 7 \}\}     |
 | or (or string (pair nat int) (or int nat)) | Left (Right (Pair 6 7)) | see below                 | see below               |
 
 For nested unions, Taquito will parse it as an entrypoint, so any nested union is going to be available under its index on the `methods` object.
@@ -54,10 +54,10 @@ In non-nested unions, you target the `Left` side of the union with `0` and the `
 
 | Michelson type                  | Michelson value                           | Taquito `methods & methodsObject`               |
 | ------------------------------- | ----------------------------------------- | ----------------------------------------------- |
-| list nat                        | { 5 ; 6 ; 7 ; 8 }                         | [5, 6, 7, 8]                                    |
-| list (pair int string)          | { (Pair 5 "Tezos") ; (Pair 6 "Taquito") } | [ { 0: 5, 1: "Tezos" }, { 0: 6, 1: "Taquito" }] |
-| list (list nat)                 | { { 5 ; 6 ; 7 } ; { 8 ; 9 ; 10 } }        | [ [ 5, 6, 7 ], [ 8, 9, 10 ] ]                   |
-| list (or (pair int nat) string) | { Left (Pair 6 7) ; Right "Tezos" }       | [ { 0: { 0: 6, 1: 7 } }, { 1: "Tezos" } ]       |
+| list nat                        | \{ 5 ; 6 ; 7 ; 8 \}                         | [5, 6, 7, 8]                                    |
+| list (pair int string)          | \{ (Pair 5 "Tezos") ; (Pair 6 "Taquito") \} | [ \{ 0: 5, 1: "Tezos" \}, \{ 0: 6, 1: "Taquito" \}] |
+| list (list nat)                 | \{ \{ 5 ; 6 ; 7 \} ; \{ 8 ; 9 ; 10 \} \}        | [ [ 5, 6, 7 ], [ 8, 9, 10 ] ]                   |
+| list (or (pair int nat) string) | \{ Left (Pair 6 7) ; Right "Tezos" \}       | [ \{ 0: \{ 0: 6, 1: 7 \} \}, \{ 1: "Tezos" \} ]       |
 
 In a list, `pair` and `union` values are always represented as objects: a `pair` is represented as an object with 2 properties (`0` for the left field and `1` for the right field), while a `union` is represented as an object with a single property (`0` for `Left` or `1` for `Right`).
 
@@ -65,11 +65,11 @@ In a list, `pair` and `union` values are always represented as objects: a `pair`
 
 | Michelson type                                                         | Michelson value                                                      | Taquito `methods`      | Taquito `methodsObject`                                  |
 | ---------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------- | -------------------------------------------------------- |
-| pair int nat                                                           | Pair 6 7                                                             | 6, 7                   | { 0: 6, 1: 7 }                                           |
-| pair %this (int nat)                                                   | Pair 6 7                                                             | 6, 7                   | { 0: 6, 1: 7 }                                           |
-| pair (int %one) (nat %two)                                             | Pair 6 7                                                             | 6, 7                   | { "one": 6, "two": 7 }                                   |
-| pair (pair int nat) (pair string mutez)                                | Pair (Pair 6 7) (Pair "Tezos" 500000)                                | 6, 7, "Tezos", 50_0000 | { 0: 6, 1: 7, 2: "Tezos", 3: 50_000 }                    |
-| pair (pair (int %one) (nat %two)) (pair (string %three) (mutez %four)) | Pair (Pair (6 %one) (7 %two)) (Pair ("Tezos" %three) (500000 %four)) | 6, 7, "Tezos", 50_0000 | { "one": 6, "two": 7, "three": "Tezos", "four": 50_000 } |
+| pair int nat                                                           | Pair 6 7                                                             | 6, 7                   | \{ 0: 6, 1: 7 \}                                           |
+| pair %this (int nat)                                                   | Pair 6 7                                                             | 6, 7                   | \{ 0: 6, 1: 7 \}                                           |
+| pair (int %one) (nat %two)                                             | Pair 6 7                                                             | 6, 7                   | \{ "one": 6, "two": 7 \}                                   |
+| pair (pair int nat) (pair string mutez)                                | Pair (Pair 6 7) (Pair "Tezos" 500000)                                | 6, 7, "Tezos", 50_0000 | \{ 0: 6, 1: 7, 2: "Tezos", 3: 50_000 \}                    |
+| pair (pair (int %one) (nat %two)) (pair (string %three) (mutez %four)) | Pair (Pair (6 %one) (7 %two)) (Pair ("Tezos" %three) (500000 %four)) | 6, 7, "Tezos", 50_0000 | \{ "one": 6, "two": 7, "three": "Tezos", "four": 50_000 \} |
 
 The `methodsObject` method always takes a single object to represent the pair to be passed, while `methods` requires the pair fields to be spread. If annotations are present, they are used to identify the pair fielda in the corresponding properties of the JS object.
 

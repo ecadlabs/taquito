@@ -5,13 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Playground from '@theme/Playground';
+import Playground from '../Playground';
 import classnames from 'classnames';
 import Clipboard from 'clipboard';
 import rangeParser from 'parse-numeric-range';
-import Highlight, { defaultProps } from 'prism-react-renderer';
-import defaultTheme from 'prism-react-renderer/themes/palenight';
+import { Highlight } from 'prism-react-renderer';
+import { themes } from 'prism-react-renderer';
 import React, { useEffect, useRef, useState } from 'react';
+import { NetworkType } from '@airgap/beacon-sdk';
 
 import styles from './styles.module.css';
 
@@ -29,6 +30,7 @@ export default ({
       themeConfig: { prism = {} },
     },
   } = useDocusaurusContext();
+  const prismAny = prism as any;
   const [showCopied, setShowCopied] = useState(false);
   const [dependencies, setDependencies] = useState(null);
   const target = useRef(null);
@@ -37,7 +39,7 @@ export default ({
 
   if (metastring && highlightLinesRangeRegex.test(metastring)) {
     const highlightLinesRange = metastring.match(highlightLinesRangeRegex)[1];
-    highlightLines = rangeParser.parse(highlightLinesRange).filter(n => n > 0);
+    highlightLines = rangeParser(highlightLinesRange).filter(n => n > 0);
   }
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export default ({
       if (typeof window !== 'undefined') {
         // solve localStorage is not defined Error when building server
         // can use localStorage on the browser, not on the server
-        wallet = new BeaconWallet({ name:"exampleWallet", network: { type: 'ghostnet'}, enableMetrics: true, });
+        wallet = new BeaconWallet({ name:"exampleWallet", network: { type: NetworkType.GHOSTNET}, enableMetrics: true, });
       }
       const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
       setDependencies({
@@ -209,7 +211,8 @@ export default ({
           UnitValue: dependencies?.UnitValue,
          }}
         code={children.trim()}
-        theme={prism.theme || defaultTheme}
+        children={children.trim()}
+        theme={prismAny.theme || themes.github}
         transformCode={code => code.replace(/import .*/g, '')}
         {...props}
       />
@@ -219,8 +222,8 @@ export default ({
   let language =
     languageClassName && languageClassName.replace(/language-/, '');
 
-  if (!language && prism.defaultLanguage) {
-    language = prism.defaultLanguage;
+  if (!language && prismAny.defaultLanguage) {
+    language = prismAny.defaultLanguage;
   }
 
   const handleCopyCode = () => {
@@ -232,8 +235,7 @@ export default ({
 
   return (
     <Highlight
-      {...defaultProps}
-      theme={prism.theme || defaultTheme}
+      theme={prismAny.theme || themes.github}
       code={children.trim()}
       language={language}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => (

@@ -16,7 +16,7 @@ import IconExternalLink from '@theme/Icon/ExternalLink';
 import FooterForm from '../../components/FooterForm/FooterForm';
 import lottie from 'lottie-web';
 
-function FooterLink({ to, href, label, prependBaseUrlToHref, reactComponent, ...props }) {
+function FooterLink({ to, href, label, prependBaseUrlToHref, ...props }) {
   const toUrl = useBaseUrl(to);
   const normalizedHref = useBaseUrl(href, {
     forcePrependBaseUrl: true,
@@ -45,7 +45,7 @@ function FooterLink({ to, href, label, prependBaseUrlToHref, reactComponent, ...
   );
 }
 
-const FooterLogo = ({ sources, alt, width, height }) => (
+const FooterLogo = ({ sources, alt, width, height }: {sources: {readonly light: string;  readonly dark: string;}, alt?: string, width?: string|number, height?: string|number}) => (
   <ThemedImage className="footer__logo" alt={alt} sources={sources} width={width} height={height} />
 );
 
@@ -55,13 +55,8 @@ function Footer() {
   const { footer } = useThemeConfig();
   const { copyright, links = [], logo = {} } = footer || {};
   const sources = {
-    light: useBaseUrl(logo.src),
-    dark: useBaseUrl(logo.srcDark || logo.src),
-  };
-  const handleSubmit = (e) => {
-    if (!email) {
-      e.preventDefault();
-    }
+    light: useBaseUrl((logo as any).src),
+    dark: useBaseUrl((logo as any).srcDark || (logo as any).src),
   };
   if (!footer) {
     return null;
@@ -152,19 +147,19 @@ function Footer() {
 
         {(logo || copyright) && (
           <div className="footer__bottom text--center">
-            {logo && (logo.src || logo.srcDark) && (
+            {logo && ((logo as any).src || (logo as any).srcDark) && (
               <div className="margin-bottom--sm">
-                {logo.href ? (
-                  <Link href={logo.href} className={styles.footerLogoLink}>
+                {(logo as any).href ? (
+                  <Link href={(logo as any).href} className={styles.footerLogoLink}>
                     <FooterLogo
-                      alt={logo.alt}
+                      alt={(logo as any).alt}
                       sources={sources}
-                      width={logo.width}
-                      height={logo.height}
+                      width={(logo as any).width}
+                      height={(logo as any).height}
                     />
                   </Link>
                 ) : (
-                  <FooterLogo alt={logo.alt} sources={sources} />
+                  <FooterLogo alt={(logo as any).alt} sources={sources} />
                 )}
               </div>
             )}
