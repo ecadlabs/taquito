@@ -264,7 +264,7 @@ Here we have the storage of our contract defined in Michelson.
 
 It has a `Map` with the annotated name `%theMap`. This `Map` uses a pair consisting of a natural number and an address as its key `(1, tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx)`. Its value is also a pair of values, consisting of an `int` (annotated as `%quantity`) and `mutez` (annotated as `%amount`).
 
-```
+```ts
 (pair (pair (address %theAddress)
             (map %theMap (pair nat address) (pair (mutez %amount) (int %quantity))))
       (int %theNumber))
@@ -457,7 +457,7 @@ This contract schema has a key with eight nested pairs and the value of an int. 
 
 The Michelson storage schema with a map using eight pairs as a key:
 
-```
+```ts
 (map (pair int
         (pair nat
             (pair string
@@ -659,7 +659,7 @@ Map and BigMap are semantically the same except for everything you learned about
 
 The `MichelsonMap` class also supports the `bigMap` type. The following example uses a contract containing both a map and a bigMap in its storage. Here is the Michelson definition of storage for this example:
 
-```
+```ts
 (pair (big_map %thebigmap (pair nat address) int) (map %themap (pair nat address) int))
 ```
 

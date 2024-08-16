@@ -23,7 +23,7 @@ above excerpt, taken from [here](https://docs.tezos.com/smart-contracts/data-typ
 ## Taquito Implementation
 
 ### Creating a chest
-```
+```ts
 import { Chest } from '@taquito/timelock'
 
 const time = 10000;
@@ -35,7 +35,7 @@ const keyBytes = key.encode();
 ```
 
 ### Create a chest from an existing Timelock
-```
+```ts
 import { Chest, Timelock } from '@taquito/timelock';
 
 // ...
@@ -48,7 +48,7 @@ const keyBytes = key.encode();
 ```
 
 ### Opening a chest with an existing key
-```
+```ts
 import { Chest, ChestKey} from '@taquito/timelock';
 
 //...
@@ -73,7 +73,7 @@ Please note that the contract used in this example is for educational purposes o
 Its storage consists of 4 values, `level` and `chest` that relates to the initial value stored in the timelock during the start of the game. `guess` that relates to what value the player guesses to be the result of the coinflip, and `result` that indicates the status of the game.
 
 ### Contract in Micheline
-```
+```ts
 storage (pair (nat %level) chest (bytes %guess) (bytes %result));
 parameter ( or (chest %initialize_game) (or (bytes %guess) (chest_key %finish_game)));
 code { UNPAIR 5;
@@ -142,7 +142,7 @@ Let's originate the contract with initial storage values `level` of 0, a stub ch
 
 `timelockCode` and `timelockStorage` can be found [here](https://github.com/ecadlabs/taquito/blob/master/integration-tests/data/timelock-flip-contract.ts)
 
-```
+```ts
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Chest } from '@taquito/timelock';
 // import { stringToBytes } from '@taquito/utils';
@@ -168,7 +168,7 @@ Let us now generate `chest` and `chestKey` with a complexity of `1024`, and a pa
 
 Make a contract call to initialize the game, and the contract will update the storage values for `level` to be at head block, `chest` to point to the `chest` we generated, and both `guess` and `result` as 'a0'.
 
-```
+```ts
 ...
 const time = 1024
 const message = 'hi'
@@ -189,7 +189,7 @@ const initStorage: any = await contract.storage()
 ### Submitting our guess
 Let us now make a contract call to the `guess` entrypoint with a payload message 'hi' that will update the storage values of `guess` to `6869`, and `result` to 'b0'.
 
-```
+```ts
 ...
 let guess1 = await contract.methodsObject.guess(stringToBytes(message)).send()
 await guess1.confirmation()
@@ -208,7 +208,7 @@ We can now make a contract call to the `finish_game` entrypoint with a `chestKey
 
 If the chest opening fails, the message will be updated to `0x10`.
 
-```
+```ts
 ...
 let finish = await contract.methodsObject.finish_game(key.encode()).send()
 await finish.confirmation()

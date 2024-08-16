@@ -32,7 +32,7 @@ values={[
 
 This requires a signer to be configured, ie:
 
-```
+```ts
 import { importKey } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
@@ -42,7 +42,7 @@ importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 </TabItem>
   <TabItem value="walletAPI">
 
-```
+```ts
 import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
@@ -69,7 +69,7 @@ You can pass your initial storage as a JavaScript object to the `storage:` prope
 
 This JavaScript object :
 
-```
+```ts
 { stored_counter: 0,
   threshold: 1,
   keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t'] }
@@ -77,7 +77,7 @@ This JavaScript object :
 
 Is equivalent to this Michelson expression :
 
-```
+```ts
 (Pair 0 (Pair 1 { "edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t" }))
 ```
 
@@ -91,7 +91,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live noInline
+```ts live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
 

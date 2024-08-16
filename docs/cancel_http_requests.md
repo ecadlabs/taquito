@@ -21,7 +21,7 @@ Create a class called `CancellableHttpBackend` which extends the `HttpBackend` c
 We currently use the `AbortController` to timeout requests in the `HttpBackend` class. Plase note that this example will override the timeout functionality. If you want to keep the timeout functionality, you can add a custom timeout to call the cancelRequest method after a certain amount of time.
 :::
 
-``` ts
+```ts
 class CancellableHttpBackend extends HttpBackend {
   private abortController: AbortController;
   constructor() {
@@ -80,7 +80,7 @@ class CancellableHttpBackend extends HttpBackend {
 #### **Create a custom** `RpcClient`  
 Create a class called `CancellableRpcClient` which extends the `RpcClient` class. Pass its constructor an instance of our `CancellableHttpBackend` class. And lastly, add the `cancelRequest` method which is used to trigger the abort signal.
 
-``` ts
+```ts
 import { RpcClient } from '@taquito/rpc';
 
 class CancellableRpcClient extends RpcClient {
@@ -104,7 +104,7 @@ class CancellableRpcClient extends RpcClient {
 #### **Set the RpcProvider**  
 Set `CancellableRpcClient` on our `TezosToolkit` instance instead of using the default `RpcClient` class:
 
-``` ts
+```ts
 import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
 
@@ -116,7 +116,7 @@ tezos.setSignerProvider(signer);
  
 #### **Trigger the abort signal**  
 Now that we've setup the customRpcClient, we can trigger request cancellations by calling:
-```
+```ts
 await customRpcClient.cancelRequest();
 ```   
 

@@ -15,7 +15,7 @@ Taquito Contract API provides a simple way to interact with the Tezos blockchain
 ### Installing the Contract API
 The Contract API is part of the `@taquito/taquito` package. To install it, run the following command:
 
-```
+```bash
 npm install @taquito/taquito
 
 ```
@@ -25,7 +25,7 @@ The Contract API is exposed through the `contract` property of the `TezosToolkit
 
 Below is a quick example of how to use the `transaction` operation via the Contract API.
 
-```js
+```ts
 import { TezosToolkit } from '@taquito/taquito';
 
 const Tezos = new TezosToolkit('RPC address here');
@@ -43,14 +43,14 @@ Once you have installed the `@taquito/taquito` package into your project, howeve
 
 We work closely with the Beacon team to provide a seamless integration with the Beacon wallet. To install the Beacon wallet, run the following command:
 
-```
+```bash
 npm install @taquito/beacon-wallet
 
 ```
 
 Alternatively, you could also make use of the Temple wallet. To install the Temple wallet, run the following command in your project:
 
-```
+```bash
 npm install @temple-wallet/dapp
 
 ```
@@ -67,7 +67,7 @@ The Wallet API has a few nuances and can get pretty involved to get started and 
 There might come a time where you would want to inject multiple operations at the same time. For example, you would like to transfer funds to multiple accounts at the same time.
 
 You might think to do something like this:
-```typescript
+```ts
 /*
  * ONE OF THESE TRANSACTIONS WILL FAIL
  * AND YOU WILL GET AN ERROR MESSAGE
@@ -106,7 +106,7 @@ As developers, there might come a time when you would need to customize the flow
 We provide a level of independence and customizability if you choose to do so, without using the Contract/Wallet API, the flow of operations would look something like this:
 
 ### Preparing a Transaction Operation
-```typescript
+```ts
 import { TezosToolkit } from '@taquito/taquito'
 const Tezos = new TezosToolkit(RPC_URL);
 
@@ -123,7 +123,7 @@ const forgeable = await Tezos.prepare.toForge(prepared);
 ```
 
 ### Forging the Transaction Operation
-```typescript
+```ts
 // Import the LocalForger
 import { LocalForger } from '@taquito/local-forging';
 
@@ -134,13 +134,13 @@ const forgedBytes = await forger.forge(forgeable);
 
 ### Signing the Operation
 After the transaction operation has been forged, it can be signed as such:
-```typescript
+```ts
 const signed = await Tezos.signer.sign(forgedBytes, new Uint8Array([3]))
 ```
 
 ### Injecting the Operation
 Finally after signing, you can inject your operation to the blockchain.
 
-```typescript
+```ts
 const op = await Tezos.rpc.injectOperation(signed.sbytes);
 ```

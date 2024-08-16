@@ -26,7 +26,7 @@ The main benefit of this workflow is that the user does not have to trust a dApp
 
 The first thing to do is to use the wallet API is to install it. You just need to install the Taquito package to use the wallet API:
 
-```
+```bash
 npm install @taquito/taquito @taquito/beacon-wallet @temple-wallet/dapp
 ```
 

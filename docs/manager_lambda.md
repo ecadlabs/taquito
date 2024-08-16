@@ -24,7 +24,7 @@ MANAGER_LAMBDA.removeDelegate();
 
 The Michelson output:
 
-```
+```ts
 DROP ;
 NIL operation
 NONE key_hash ;
@@ -46,7 +46,7 @@ MANAGER_LAMBDA.setDelegate(key: string)
 
 The Michelson output:
 
-```
+```ts
 DROP ;
 NIL operation ;
 PUSH key_hash <baker-key_hash> ;
@@ -69,7 +69,7 @@ MANAGER_LAMBDA.transferImplicit(key: string, mutez: number)
 
 The Michelson output:
 
-```
+```ts
 DROP ;
 NIL operation ;
 PUSH key_hash <recipient-address> ;
@@ -94,7 +94,7 @@ MANAGER_LAMBDA.transferToContract(key: string, amount: number)
 
 The Michelson output:
 
-```
+```ts
 DROP ;
 NIL operation ;
 PUSH address <contract-address> ;

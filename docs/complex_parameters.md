@@ -14,7 +14,7 @@ Here we have the storage of the contract defined in Michelson.
 
 The storage uses a pair composed of a nested pair and a `map` (annotated as %validators). The nested pair consists of an address (annotated as %owner) and a `bigMap` (annotated as %records). The `map %validators` use a natural number (`nat`) as its key and address its value. The `bigMap %records` uses a value in `bytes` as its key and a pair consisting of nested pairs as its value. We find addresses and natural numbers in these nested pairs, where some are optional, and a `map` (annotated %data). The `map %data` uses a `string` as its key, and the user needs to choose the value of the `map` between different proposed types (`int,` `bytes,` `bool`, ...). We can notice in this example that an annotation identifies all the arguments.
 
-```
+```ts
 storage (pair
           (pair (address %owner)
                 (big_map %records bytes
@@ -106,7 +106,7 @@ The contract contains a function named `set_child_record`. The parameter of the 
 
 Here is the parameter of the function defined in Michelson :
 
-```
+```ts
 (pair %set_child_record
         (pair
           (pair (option %address address)

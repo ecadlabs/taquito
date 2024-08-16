@@ -12,7 +12,7 @@ Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json
 
 **When all endpoints are accessible for a node, you will obtain:**
 
-```
+```bash
   Test calling all methods from RPC node: http://parisnet.i.ecadinfra.com:8732/
     ✓ Verify that rpcClient.getBlockHash returns the head block hash (37 ms)
     ✓ Verify that rpcClient.getLiveBlocks returns the ancestors of the head block (53 ms)
@@ -70,7 +70,7 @@ Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json
 
 **Otherwise, you will see which endpoints do not work for a specific node:**
 
-```
+```bash
   Test calling all methods from RPC node: http://localhost:20000
     ✓ Verify that rpcClient.getBlockHash returns the head block hash (13 ms)
     ✓ Verify that rpcClient.getLiveBlocks returns the ancestors of the head block (18 ms)

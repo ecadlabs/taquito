@@ -318,7 +318,7 @@ A sequence diagram can be found [here](./tzip16-sequence-diagram#execute-a-view)
 
 In the next example, we will run a view named `someJson` that can be found in the metadata of the contract `KT1Vms3NQK8rCQJ6JkimLFtAC9NhpAq9vLqE`. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
 
-```
+```ts
 "code":
 [
   {

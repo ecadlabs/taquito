@@ -838,7 +838,7 @@ Tzip-7 introduced the approvable ledger: [Tzip-7](https://gitlab.com/tezos/tzip/
 
 This contract has an FA1.2 interface. To determine if a contract has an FA1.2 interface we can use
 
-```
+```bash
 tezos-client check contract KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L implements fa1.2
 ```
 

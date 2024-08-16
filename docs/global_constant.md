@@ -59,7 +59,7 @@ values={[
 ]}>
 <TabItem value="withConst">
 
-```
+```ts
 [ { "prim": "parameter",
     "args":
       [ { "prim": "or",
@@ -87,7 +87,7 @@ values={[
 </TabItem>
 <TabItem value="noConst">
 
-```
+```ts
 [ { "prim": "parameter",
     "args":
       [ { "prim": "or",

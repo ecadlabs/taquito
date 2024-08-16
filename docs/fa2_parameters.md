@@ -30,7 +30,7 @@ await op.confirmation();
 
 ## The transfer entrypoint
 Here is the type signature for the entrypoint parameter in Michelson:
-```
+```ts
 (list %transfer
   (pair
     (address %from_)
@@ -101,7 +101,7 @@ You can then add as many transactions as you like to be processed by the contrac
 
 ## The balance_of entrypoint
 Here is the type signature for the entrypoint parameter in Michelson:
-```
+```ts
 (pair %balance_of
   (list %requests
     (pair
@@ -138,7 +138,7 @@ const balance_params = {
 
 ## The update_operators entrypoint
 Here is the type signature for the entrypoint parameter in Michelson:
-```
+```ts
 (list %update_operators
   (or
     (pair %add_operator

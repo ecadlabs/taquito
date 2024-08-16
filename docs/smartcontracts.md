@@ -28,7 +28,7 @@ The counter contract's storage is a simple integer that gets increased or decrea
 
 ### Counter Contract in JSLIGO v1.3.0
 
-```
+```ts
 namespace Counter {
   type storage = int;
   type ret = [list<operation>, storage];
@@ -50,7 +50,7 @@ You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 
 ### Counter Contract Michelson source code
 
-```
+```ts
 { parameter (or (unit %reset) (or (int %decrement) (int %increment))) ;
   storage int ;
   code { UNPAIR ;

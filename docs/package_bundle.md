@@ -17,7 +17,7 @@ To use the JavaScript bundle for your project, download the zip file under `Asse
 After that, simply copy the `.js` file and the `.map.js` file into your project.
 
 Example of how to use the `LocalForger` class in a simple HTML script tag:
-```
+```html
 <script type="text/javascript" src="/path/to/taquito_local_forging.js"></script>
 <script type="text/javascript">
     let op = {...}
@@ -27,7 +27,7 @@ Example of how to use the `LocalForger` class in a simple HTML script tag:
 ```
 Example of how to use the `BeaconWallet` class in a simple HTML script tag:
 
-```
+```html
 <script type="text/javascript" src="/path/to/taquito_beacon_wallet.js"></script>
 <script type="text/javascript">
     let op = {...}

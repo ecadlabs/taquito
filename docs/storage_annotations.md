@@ -15,7 +15,7 @@ To do so, let's look at three examples of contract origination showing initial v
 
 ### When all the properties are annotated
 
-```
+```ts
 //storage representation in Michelson
 
 (pair
@@ -90,7 +90,7 @@ Tezos.wallet
 
 ### When there is no annotation
 
-```
+```ts
 //storage representation in Michelson
 
 (pair
@@ -165,7 +165,7 @@ Tezos.wallet
 
 ### When some arguments are annotated and others are not
 
-```
+```ts
 //storage representation in Michelson
 
 (pair

@@ -55,7 +55,7 @@ There are two scenarios to obtain the metadata of a token:
 The `getTokenMetadata` method of the `Tzip12ContractAbstraction` class will find the token metadata with precedence for the off-chain view, if there is one, as specified in the standard.
 
 The `getTokenMetadata` method returns an object matching this interface :
-```
+```ts
 interface TokenMetadata {
     token_id: number,
     decimals: number
@@ -217,7 +217,7 @@ To be [Tzip-012 compliant](https://gitlab.com/tzip/tzip/-/blob/master/proposals/
   <TabItem value="michelson">
 
 
-```
+```ts
 (big_map %token_metadata nat
   (pair (nat %token_id)
     (map %token_info string bytes)))
@@ -226,7 +226,7 @@ To be [Tzip-012 compliant](https://gitlab.com/tzip/tzip/-/blob/master/proposals/
   </TabItem>
   <TabItem value="jsonMichelson">
 
-```
+```ts
 prim: 'big_map',
     args: [
         { prim: 'nat' },

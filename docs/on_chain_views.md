@@ -21,7 +21,7 @@ A contract can define none, one, or multiple on-chain views. The views are decla
 
 **Example of a contract script that declares multiple views:**
 
-```
+```ts
 parameter nat ;
 storage nat ;
 code { CAR ; NIL operation ; PAIR } ;
@@ -97,7 +97,7 @@ Views are meant to be called by a contract using the Michelson Instruction `View
 
 **Example of a contract script having a call to a view named `fib`:**
 
-```
+```ts
 parameter (pair nat address) ;
 storage nat;
 code {
