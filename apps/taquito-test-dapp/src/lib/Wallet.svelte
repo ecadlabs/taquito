@@ -94,16 +94,16 @@
     Tezos.setWalletProvider(wallet);
     store.updateTezos(Tezos);
 
-    const activeAccount = await wallet.client.getActiveAccount();
-    if (activeAccount) {
-      const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
-      store.updateUserAddress(userAddress);
+    // const activeAccount = await wallet.client.getActiveAccount();
+    // if (activeAccount) {
+    //   const userAddress = (await wallet.getPKH()) as TezosAccountAddress;
+    //   store.updateUserAddress(userAddress);
 
-      const balance = await Tezos.tz.getBalance(userAddress);
-      if (balance) {
-        store.updateUserBalance(balance.toNumber());
-      }
-    }
+    //   const balance = await Tezos.tz.getBalance(userAddress);
+    //   if (balance) {
+    //     store.updateUserBalance(balance.toNumber());
+    //   }
+    // }
     return wallet;
   };
 
