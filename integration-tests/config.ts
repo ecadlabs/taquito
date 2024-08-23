@@ -135,7 +135,7 @@ const parisnetEphemeral: Config =
     protocol: Protocols.PsParisCZ,
     defaultRpc: 'https://rpc.pariscnet.teztnets.com/',
     knownContracts: knownContractsPsParisCZ,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/pariscnet')
+    signerConfig: defaultEphemeralConfig('http://ecad-tezos-keygen-1.i.ecadinfra.com:3000/pariscnet')
   });
 
 const parisnetSecretKey: Config =
@@ -156,11 +156,11 @@ const ghostnetEphemeral: Config =
     protocol: Protocols.PtParisBx,
     defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732',
     knownContracts: knownContractsPtGhostnet,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
+    signerConfig: defaultEphemeralConfig('http://ecad-tezos-keygen-1.i.ecadinfra.com:3000/ghostnet')
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
