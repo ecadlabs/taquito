@@ -10,8 +10,6 @@ import {
   PermissionScope,
   getDAppClientInstance,
   SigningType,
-  AccountInfo,
-  BeaconEvent,
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
