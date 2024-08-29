@@ -6,7 +6,7 @@ const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkType.MAINNET]: "https://mainnet.ecadinfra.com",
   [NetworkType.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
   [NetworkType.OXFORDNET]: "https://oxfordnet.ecadinfra.com/",
-  [NetworkType.PARISNET]: "https://rpc.parisnet.teztnets.com/",
+  [NetworkType.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
   [NetworkType.CUSTOM]: "https://ghostnet.ecadinfra.com/",
 };
 
