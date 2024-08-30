@@ -83,10 +83,6 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
-      - run: npm -w integration-tests run originate-known-contracts
-        env:
-          RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: https://rpc.betanet-2024-08-29.teztnets.com/
       - run: npm -w integration-tests run test:betanet-secret-key
         env:
           RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true

@@ -154,19 +154,19 @@ const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
     protocol: Protocols.PtParisBx,
-    defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732',
+    defaultRpc: 'https://ghostnet.ecadinfra.com',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-ghostnet-rolling-2.i.tez.ie:8732' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.ghostnet.teztnets.com' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'http://mondaynet.ecadinfra.com:8732',
+    defaultRpc: 'https://rpc.weeklynet-2024-08-28.teztnets.com/',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });

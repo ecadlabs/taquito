@@ -1,6 +1,6 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2, PvmKind } from '@taquito/rpc';
+import { DefaultContractType, Protocols } from "@taquito/taquito";
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-
+    const parisnet = protocol === Protocols.PsParisCZ ? test : test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -491,7 +491,7 @@ CONFIGS().forEach(
           }
         })
 
-        it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
+        parisnet('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '1' }) as PendingOperationsV1;
           expect(pendingOperations).toBeDefined();
           expect(pendingOperations.applied).toBeInstanceOf(Array);

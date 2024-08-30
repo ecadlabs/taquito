@@ -63,7 +63,6 @@ Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json
     ✓ Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract (28 ms)
     ✓ Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract (39 ms)
     ✓ Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for http://parisnet.i.ecadinfra.com:8732/ (29 ms)
-    ✓ Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied (397 ms)
     ✓ Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated (470 ms)
     ○ skipped Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle null for http://parisnet.i.ecadinfra.com:8732/
 ```
@@ -121,7 +120,6 @@ Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json
     ✓ Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract (7 ms)
     ✓ Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract (10 ms)
     ✓ Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle null for http://localhost:20000 (6 ms)
-    ✓ Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied (313 ms)
     ✓ Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated (323 ms)
     ○ skipped Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for http://localhost:20000
 ```
