@@ -31,6 +31,8 @@ export {
   RPCSmartRollupAddMessagesOperation,
   SmartRollupOriginateParams,
   RPCSmartRollupOriginateOperation,
+  SmartRollupExecuteOutboxMessageParams,
+  RPCSmartRollupOutboxMessageOperation,
   ActivationParams,
   RPCActivateOperation,
   BallotParams,
