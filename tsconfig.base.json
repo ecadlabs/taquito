@@ -36,6 +36,9 @@
       "@taquito/ledger-signer": [
         "taquito-ledger-signer/src/taquito-ledger-signer.ts"
       ],
+      "@taquito/wallet-connect-2": [
+        "taquito-wallet-connect-2/src/taquito-wallet-connect-2.ts"
+      ],
       "@taquito/local-forging": [
         "taquito-local-forging/src/taquito-local-forging.ts"
       ],

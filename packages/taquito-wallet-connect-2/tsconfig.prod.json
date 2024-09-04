@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.prod.json",
+  "compilerOptions": {
+    "declarationDir": "./dist/types",
+    "outDir": "./dist/lib",
+    "jsx": "react"
+  },
+  "include": ["./src/**/*"]
+}
