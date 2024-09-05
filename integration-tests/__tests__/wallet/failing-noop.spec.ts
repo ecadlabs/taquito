@@ -10,9 +10,9 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
     beforeAll(async () => {
       setup(true)
       if (rpc.includes('parisnet')) {
-        Tezos.setProvider({ rpc: 'https://rpc.tzkt.io/parisnet' }); // public archive node to fetch genesis block
+        Tezos.setRpcProvider('https://rpc.tzkt.io/parisnet'); // public archive node to fetch genesis block
       } else if (rpc.includes('ghostnet')) {
-        Tezos.setProvider({ rpc: 'https://rpc.tzkt.io/ghostnet' }); // public archive node to fetch genesis block
+        Tezos.setRpcProvider('https://rpc.tzkt.io/ghostnet'); // public archive node to fetch genesis block
       }
     });
 
