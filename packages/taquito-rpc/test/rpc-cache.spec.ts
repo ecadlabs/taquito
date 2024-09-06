@@ -22,7 +22,7 @@ import {
   currentProposal,
   currentQuorum,
   votesListing,
-  porposals,
+  proposals,
   entryPoints,
   chainId,
   packData,
@@ -131,7 +131,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getCurrentProposal.mockReturnValue(currentProposal);
     mockRpcClient.getCurrentQuorum.mockReturnValue(currentQuorum);
     mockRpcClient.getVotesListings.mockReturnValue(votesListing);
-    mockRpcClient.getProposals.mockReturnValue(porposals);
+    mockRpcClient.getProposals.mockReturnValue(proposals);
     mockRpcClient.getEntrypoints.mockReturnValue(entryPoints);
     mockRpcClient.getChainId.mockReturnValue(chainId);
     mockRpcClient.packData.mockReturnValue(packData);

@@ -55,7 +55,7 @@ import {
 
 export interface RPCOptions {
   block: string;
-  version?: 0 | 1 | '0' | '1';
+  version?: 1 | '1';
 }
 
 export const defaultChain = 'main';

@@ -641,8 +641,8 @@ export class RpcClientCache implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls to specified block (default to head) and version.
    * @description All the information about a block
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id
-   * @example getBlock() will default to `/main/chains/block/head?version=0` which shows { kind: endorsement }
-   * @example getBlock({ block: 'head~2', version: 1 }) will return an offset of 2 from head blocks and shows { kind: attestation }
+   * @example getBlock() will default to `/main/chains/block/head?version=1`
+   * @example getBlock({ block: 'head~2') will return an offset of 2 from head blocks
    * @example getBlock({ block: 'BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2' }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
@@ -1272,7 +1272,7 @@ export class RpcClientCache implements RpcClientInterface {
 
   /**
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
-   * @param args has 5 optional properties. We support version 2
+   * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
    */
   async getPendingOperations(

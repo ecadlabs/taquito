@@ -52,24 +52,10 @@ describe('Configurations for the PollingSubscribeProvider', () => {
   it('should set the pollingIntervalMilliseconds property based on the minimal_block_delay constant', async () => {
     const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
     mockReadProvider.getProtocolConstants.mockResolvedValue({
-      time_between_blocks: [new BigNumber('30'), new BigNumber('20')],
       minimal_block_delay: new BigNumber(15),
     });
     await pollingSubscribeProvider['getConfirmationPollingInterval']();
     expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(5000);
-    expect(pollingSubscribeProvider.config.shouldObservableSubscriptionRetry).toBeFalsy();
-    expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
-      retry().prototype
-    );
-  });
-
-  it('should set the pollingIntervalMilliseconds property based on the time_between_blocks constant', async () => {
-    const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
-    mockReadProvider.getProtocolConstants.mockResolvedValue({
-      time_between_blocks: [new BigNumber('30'), new BigNumber('20')],
-    });
-    await pollingSubscribeProvider['getConfirmationPollingInterval']();
-    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(10000);
     expect(pollingSubscribeProvider.config.shouldObservableSubscriptionRetry).toBeFalsy();
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype
@@ -88,10 +74,10 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     );
   });
 
-  it('should use default polling interval if time_between_blocks is 0 (sandbox)', async () => {
+  it('should use default polling interval if minimal_block_delay is 0 (sandbox)', async () => {
     const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
     mockReadProvider.getProtocolConstants.mockResolvedValue({
-      time_between_blocks: [new BigNumber('0'), new BigNumber('0')],
+      minimal_block_delay: new BigNumber('0'),
     });
     await pollingSubscribeProvider['getConfirmationPollingInterval']();
     expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(1000);
