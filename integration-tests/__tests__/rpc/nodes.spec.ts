@@ -1,6 +1,6 @@
 import { CONFIGS } from '../../config';
 import { DefaultContractType, Protocols } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2 } from '@taquito/rpc';
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
@@ -490,16 +490,6 @@ CONFIGS().forEach(
             expect(launchCycle).toEqual(5);
           }
         })
-
-        parisnet('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
-          const pendingOperations = await rpcClient.getPendingOperations({ version: '1' }) as PendingOperationsV1;
-          expect(pendingOperations).toBeDefined();
-          expect(pendingOperations.applied).toBeInstanceOf(Array);
-          expect(pendingOperations.refused).toBeInstanceOf(Array);
-          expect(pendingOperations.outdated).toBeInstanceOf(Array);
-          expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
-          expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
-        });
 
         it('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;

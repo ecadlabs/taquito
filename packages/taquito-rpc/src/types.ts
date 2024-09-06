@@ -2388,14 +2388,15 @@ export type LastRemovedCommitmentHashes = {
 };
 
 export interface PendingOperationsQueryArguments {
-  version?: '1' | '2';
+  version?: '2' | 2;
   validated?: boolean;
-  applied?: boolean;
   refused?: boolean;
   outdated?: boolean;
   branchRefused?: boolean;
   branchDelayed?: boolean;
-  validationPass?: '0' | '1' | '2' | '3';
+  validationPass?: '0' | '1' | '2' | '3' | 0 | 1 | 2 | 3;
+  source?: string;
+  operationHash?: string;
 }
 
 type FailedProcessedOperation = Pick<
@@ -2404,15 +2405,6 @@ type FailedProcessedOperation = Pick<
 > & {
   error: TezosGenericOperationError[];
 };
-
-export interface PendingOperationsV1 {
-  applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
-  refused: FailedProcessedOperation[];
-  outdated: FailedProcessedOperation[];
-  branch_refused: FailedProcessedOperation[];
-  branch_delayed: FailedProcessedOperation[];
-  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
-}
 
 export interface PendingOperationsV2 {
   validated: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
