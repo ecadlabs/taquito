@@ -62,7 +62,7 @@ jobs:
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
-  integration-tests-betanet-secret-key:
+  integration-tests-testnet-beta-secret-key:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
