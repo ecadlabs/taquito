@@ -628,9 +628,9 @@ const saplingShielded = async (
 export const list = [
   "Send tez",
   "Set Delegate",
-  "[parisnet] Stake",
-  "[parisnet] Unstake",
-  "[parisnet] Finalize Unstake",
+  "Stake",
+  "Unstake",
+  "Finalize Unstake",
   "[ghostnet] Send tez from Ghostnet to Etherlink",
   "Contract call with int",
   "Contract call with (pair nat string)",
@@ -680,7 +680,7 @@ export const init = (
     },
     {
       id: "stake",
-      name: "[parisnet] Stake",
+      name: "Stake",
       description: "This test stakes your spendable balance into your frozen staked balance.",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'stake',
@@ -692,7 +692,7 @@ export const init = (
     },
     {
       id: "unstake",
-      name: "[parisnet] Unstake",
+      name: "Unstake",
       description: "This test unstakes a portion of your frozen staked balance, converting it into an unstaked frozen balance. After 5 cycles, this balance will become an unstaked finalizable balance.",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'unstake',
@@ -704,7 +704,7 @@ export const init = (
     },
     {
       id: "finalize-unstake",
-      name: "[parisnet] Finalize unstake",
+      name: "Finalize unstake",
       description: "This test transfers all unstaked finalizable balance back into your spendable balance.",
       documentation: 'https://taquito.io/docs/staking',
       keyword: 'finalizeUnstake',
