@@ -7,6 +7,11 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
     beforeAll(async () => {
       await setup(true);
       try {
+        // There is no baker accept staking in betanet and weeklylnet hence tests will fail
+        // Currently TF is a baker that allows staking on parisnet.
+        if (rpc.includes('pariscnet')) {
+          knownBaker = 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc' // TF
+        }
         const delegateOp = await Tezos.contract.setDelegate({
           delegate: knownBaker,
           source: await Tezos.signer.publicKeyHash()
