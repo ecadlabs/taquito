@@ -1,7 +1,7 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS, NetworkType } from "../../config";
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseProto019, ConstantsResponseProto020 } from '@taquito/rpc';
+import { ConstantsResponseProto020, ConstantsResponseProto021 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
@@ -307,7 +307,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
     betanet(`should successfully fetch all constants for Betanet
       using ${rpc}`, async () => {
      Tezos.setRpcProvider(rpc);
-     const constants: ConstantsResponseProto020 = await Tezos.rpc.getConstants();
+     const constants: ConstantsResponseProto021 = await Tezos.rpc.getConstants();
      expect(constants).toEqual({
        adaptive_issuance_activation_vote_enable: true,
        adaptive_issuance_force_activation: false,
@@ -454,7 +454,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
 
     weeklynet(`should successfully fetch all constants for weeklynet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto020 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto021 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         adaptive_issuance_activation_vote_enable: true,

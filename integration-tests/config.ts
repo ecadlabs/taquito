@@ -145,7 +145,7 @@ const betanetSecretKey: Config =
   defaultConfig({
     networkName: 'BETANET',
     protocol: Protocols.PtBetaaEZ,
-    defaultRpc: '	https://rpc.betanet-2024-08-29.teztnets.com',
+    defaultRpc: 'https://rpc.betanet-2024-08-29.teztnets.com',
     knownContracts: knownContractsPtBetaaEZ,
     signerConfig: defaultSecretKey
   })
