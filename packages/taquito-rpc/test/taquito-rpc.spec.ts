@@ -145,6 +145,34 @@ describe('RpcClient test', () => {
     });
   });
 
+  describe('getBalanceAndFrozenBonds', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getBalanceAndFrozenBonds(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/balance_and_frozen_bonds`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getSpendableAndFrozenBonds', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getSpendableAndFrozenBonds(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/spendable_and_frozen_bonds`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
   describe('getFullBalance', () => {
     it('should query the right url and return a string', async () => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));

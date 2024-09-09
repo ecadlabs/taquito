@@ -71,6 +71,16 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
+        it(`Verify that rpcClient.getBalanceAndFrozenBonds for knownBaker returns the full balance`, async () => {
+          const balance = await rpcClient.getBalanceAndFrozenBonds(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
+        betanet(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
+          const balance = await rpcClient.getSpendableAndFrozenBonds(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
         it(`Verify that rpcClient.getFullBalance for knownBaker returns the full balance`, async () => {
           const balance = await rpcClient.getFullBalance(knownBaker);
           expect(balance).toBeDefined();

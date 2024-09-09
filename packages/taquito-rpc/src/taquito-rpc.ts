@@ -205,6 +205,46 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
+   * @param address address from which we want to retrieve balance and frozen bonds
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds to the contract's full balance from which staked funds and unstake requests have been excluded. Identical to the 'spendable_and_frozen_bonds' RPC.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-full-balance
+   */
+  async getBalanceAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance_and_frozen_bonds`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve spendable and frozen bonds
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds to the contract's full balance from which staked funds and unstake requests have been excluded. Identical to the 'balance_and_frozen_bonds' RPC.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-full-balance
+   */
+  async getSpendableAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/spendable_and_frozen_bonds`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
    * @param address address from which we want to retrieve the full balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the full balance of a contract, including frozen bonds and stake.

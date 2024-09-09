@@ -247,6 +247,54 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   /**
+   * @param address address from which we want to retrieve balance and frozen bonds
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds to the contract's full balance from which staked funds and unstake requests have been excluded. Identical to the 'spendable_and_frozen_bonds' RPC.
+   */
+  async getBalanceAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_BALANCE_AND_FROZEN_BONDS,
+      [block, address]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getBalanceAndFrozenBonds(address, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param address address from which we want to retrieve spendable and frozen bonds
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds to the contract's full balance from which staked funds and unstake requests have been excluded. Identical to the 'balance_and_frozen_bonds' RPC.
+   */
+  async getSpendableAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_SPENDABLE_AND_FROZEN_BONDS,
+      [block, address]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getSpendableAndFrozenBonds(address, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
    * @param address address from which we want to retrieve the full balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the full balance of a contract, including frozen bonds and stake.
