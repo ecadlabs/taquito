@@ -3,16 +3,19 @@ import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { InMemorySigner } from "@taquito/signer";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ lib, setup, rpc }) => {
-  describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
-    let Tezos = lib;
+CONFIGS().forEach(({ setup, rpc }) => {
+  let signerAlice = new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq')
 
+  describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
+    let Tezos: TezosToolkit;
     beforeAll(async () => {
       setup(true)
-      if (rpc.includes('parisnet')) {
-        Tezos.setProvider({ rpc: 'https://rpc.tzkt.io/parisnet' }); // public archive node to fetch genesis block
-      } else if (rpc.includes('ghostnet')) {
-        Tezos.setProvider({ rpc: 'https://rpc.tzkt.io/ghostnet' }); // public archive node to fetch genesis block
+      if (rpc.includes('paris')) {
+        Tezos = new TezosToolkit('https://rpc.tzkt.io/parisnet'); // public archive node to fetch genesis block
+        Tezos.setSignerProvider(signerAlice); // alice's secret key
+      } else if (rpc.includes('ghost')) {
+        Tezos = new TezosToolkit('https://rpc.tzkt.io/ghostnet'); // public archive node to fetch genesis block
+        Tezos.setSignerProvider(signerAlice); // alice's secret key
       }
     });
 
@@ -40,7 +43,7 @@ CONFIGS().forEach(({ lib, setup, rpc }) => {
 
     beforeAll(async () => {
       Mainnet = new TezosToolkit('https://rpc.tzkt.io/mainnet'); // public archive node to fetch genesis block
-      Mainnet.setSignerProvider(new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq')); // alice's secret key
+      Mainnet.setSignerProvider(signerAlice); // alice's secret key
     });
 
     it('Verify that the wallet.failingNoop result is as expected when the block and secret key are kept constant', async () => {
