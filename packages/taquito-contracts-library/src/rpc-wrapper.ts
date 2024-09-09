@@ -93,6 +93,12 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<BalanceResponse> {
     return this.rpc.getBalance(address, { block });
   }
+  async getSpendable(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getSpendable(address, { block });
+  }
   async getFullBalance(
     address: string,
     { block }: RPCOptions = defaultRPCOptions

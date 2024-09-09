@@ -58,6 +58,7 @@ describe('RpcClientCache test', () => {
       getBlockHash: jest.fn(),
       getLiveBlocks: jest.fn(),
       getBalance: jest.fn(),
+      getSpendable: jest.fn(),
       getFullBalance: jest.fn(),
       getStakedBalance: jest.fn(),
       getUnstakedFinalizableBalance: jest.fn(),
@@ -104,6 +105,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getBlockHash.mockReturnValue(blockHash);
     mockRpcClient.getLiveBlocks.mockReturnValue(liveBlocks);
     mockRpcClient.getBalance.mockReturnValue(balance);
+    mockRpcClient.getSpendable.mockReturnValue(balance);
     mockRpcClient.getFullBalance.mockReturnValue(balance);
     mockRpcClient.getStakedBalance.mockReturnValue(balance);
     mockRpcClient.getUnstakedFinalizableBalance.mockReturnValue(balance);
@@ -155,6 +157,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock();
     await rpcCache.getLiveBlocks();
     await rpcCache.getBalance(address);
+    await rpcCache.getSpendable(address);
     await rpcCache.getFullBalance(address);
     await rpcCache.getStakedBalance(address);
     await rpcCache.getUnstakedFinalizableBalance(address);
@@ -207,7 +210,10 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()[`rpcTest/getBalance/head/${address}/`].response).toEqual(
       balance
     );
-    expect(rpcCache.getAllCachedData()[`rpcTest/getFullBalance/head/${address}/`].response).toEqual(
+    expect(rpcCache.getAllCachedData()[`rpcTest/getBalance/head/${address}/`].response).toEqual(
+      balance
+    );
+    expect(rpcCache.getAllCachedData()[`rpcTest/getSpendable/head/${address}/`].response).toEqual(
       balance
     );
     expect(
@@ -323,6 +329,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock(block);
     await rpcCache.getLiveBlocks(block);
     await rpcCache.getBalance(address, block);
+    await rpcCache.getSpendable(address, block);
     await rpcCache.getFullBalance(address, block);
     await rpcCache.getStakedBalance(address, block);
     await rpcCache.getUnstakedFinalizableBalance(address, block);
@@ -387,6 +394,9 @@ describe('RpcClientCache test', () => {
     );
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getBalance/${block.block}/${address}/`].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getSpendable/${block.block}/${address}/`].response
     ).toEqual(balance);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getFullBalance/${block.block}/${address}/`].response
@@ -517,6 +527,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock();
     await rpcCache.getLiveBlocks();
     await rpcCache.getBalance(address);
+    await rpcCache.getSpendable(address);
     await rpcCache.getFullBalance(address);
     await rpcCache.getStakedBalance(address);
     await rpcCache.getUnstakedFinalizableBalance(address);

@@ -64,6 +64,7 @@ export interface RpcClientInterface {
   getBlockHash(options?: RPCOptions): Promise<string>;
   getLiveBlocks(options?: RPCOptions): Promise<string[]>;
   getBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
+  getSpendable(address: string, options?: RPCOptions): Promise<BalanceResponse>;
   getFullBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
   getStakedBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
   getUnstakedFinalizableBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;
@@ -148,6 +149,7 @@ export enum RPCMethodName {
   GET_BLOCK_HEADER = 'getBlockHeader',
   GET_BLOCK_METADATA = 'getBlockMetadata',
   GET_BALANCE = 'getBalance',
+  GET_SPENDABLE = 'getSpendable',
   GET_FULL_BALANCE = 'getFullBalance',
   GET_STAKED_BALANCE = 'getStakedBalance',
   GET_UNSTAKED_FINALIZABLE_BALANCE = 'getUnstakedFinalizableBalance',

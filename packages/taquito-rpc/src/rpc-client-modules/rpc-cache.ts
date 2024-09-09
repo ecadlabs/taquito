@@ -200,9 +200,9 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   /**
-   * @param address address from which we want to retrieve the balance
+   * @param address address from which we want to retrieve the spendable balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * @description Access the spendable balance of a contract, excluding frozen bonds
+   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'spendable' RPC.
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-balance
    */
   async getBalance(
@@ -218,6 +218,29 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getBalance(address, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param address address from which we want to retrieve the balance
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'balance' RPC.
+   */
+  async getSpendable(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_SPENDABLE, [
+      block,
+      address,
+    ]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getSpendable(address, { block });
       this.put(key, response);
       return response;
     }

@@ -37,6 +37,9 @@ export class ReadWrapperContractsLibrary implements TzReadProvider {
   getBalance(address: string, block: BlockIdentifier): Promise<BigNumber> {
     return this.readProvider.getBalance(address, block);
   }
+  getSpendable(address: string, block: BlockIdentifier): Promise<BigNumber> {
+    return this.readProvider.getSpendable(address, block);
+  }
   getDelegate(address: string, block: BlockIdentifier): Promise<string | null> {
     return this.readProvider.getDelegate(address, block);
   }
