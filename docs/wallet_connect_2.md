@@ -36,7 +36,7 @@ await walletConnect.requestPermissions({
       PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN
     ],
   },
-  registryUrl: "https://www.tezos.help/wcdata/"
+  // registryUrl: "https://www.tezos.help/wcdata/"
 });
 ```
 
@@ -80,7 +80,7 @@ WalletConnect2.init({
           networks: [NetworkType.GHOSTNET],
           methods: [PermissionScopeMethods.OPERATION_REQUEST],
         },
-        registryUrl: 'https://www.tezos.help/wcdata/',
+        // registryUrl: 'https://www.tezos.help/wcdata/',
       })
       .then(() => {
         Tezos.setWalletProvider(walletConnect);
@@ -88,13 +88,13 @@ WalletConnect2.init({
           .transfer({ to: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', amount: 1 })
           .send()
           .then((op) => {
-            println(`Waiting for ${op.opHash} to be confirmed...`);
+            console.log(`Waiting for ${op.opHash} to be confirmed...`);
             return op.confirmation().then(() => op.opHash);
           })
-          .then((hash) => println(`https://ghostnet.tzkt.io/${hash}`));
+          .then((hash) => console.log(`https://ghostnet.tzkt.io/${hash}`));
       });
   })
-  .catch((err) => println(err));
+  .catch((err) => console.log(err));
 ```
 
 ## Sign payload with `WalletConnect2`

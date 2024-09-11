@@ -68,6 +68,10 @@ class SemiLiveProvider extends LiveProvider {
 
 let console = {log: value => render("" + value  + "\\n")};
 
+// Needed for the wallet connect 2 live code example
+// https://cloud.walletconnect.com/sign-in
+const MY_PROJECT_ID = 'ba97fd7d1e89eae02f7c330e14ce1f36'
+
 ${template()}
 
 //contract used in example "estimate a contract origination"

@@ -85,6 +85,7 @@ const sidebars = {
         'beaconwallet-singleton',
         'wallets',
         'transaction_limits',
+        'wallet_connect_2',
       ],
     },
     {
