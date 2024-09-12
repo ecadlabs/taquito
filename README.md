@@ -39,11 +39,11 @@ Taquito currently supports the following versions of Node.js®:
 
 | Version          | Supported? |
 | ---------------- | ---------- |
-| v12 LTS          |    ❌      |
 | v14 LTS          |    ❌      |
 | v16 LTS/Gallium  |    ❌      |
-| v18 LTS/Hydrogen |    ✅      |
+| v18 LTS/Hydrogen |    ❌      |
 | v20 LTS/Iron     |    ✅      |
+| v22              |    ✅      |
 
 While other versions often work, the above are what we officially support. YMMV!
 
@@ -128,7 +128,7 @@ You would like to make a contribution to Taquito? Wonderful! Please read on.
 
 * Install/use a suitable version of **Node.js** (_as listed above_), for example:
 
-    `nvm use lts/gallium`
+    `nvm use lts/iron`
 
 * Install `lerna` **globally** (used by our blazingly-fast nx-based build system):
 
