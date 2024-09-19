@@ -40,6 +40,7 @@
     "@taquito/tzip12": "file:../packages/taquito-tzip12",
     "@taquito/tzip16": "file:../packages/taquito-tzip16",
     "@taquito/utils": "file:../packages/taquito-utils",
+    "@taquito/wallet-connect-2": "file:../packages/taquito-wallet-connect-2",
     "abort-controller": "^3.0.0",
     "algoliasearch": "^4.23.2",
     "axios": "^0.28.0",
@@ -70,6 +71,7 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.4.3",
     "@tsconfig/docusaurus": "^2.0.2",
+    "lokijs": "^1.5.12",
     "typescript": "^5.2.2"
   },
   "browserslist": {

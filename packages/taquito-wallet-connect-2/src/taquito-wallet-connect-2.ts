@@ -5,7 +5,9 @@
 
 import Client from '@walletconnect/sign-client';
 import { SignClientTypes, SessionTypes, PairingTypes } from '@walletconnect/types';
-import QRCodeModal from '@walletconnect/legacy-modal';
+// import QRCodeModal from '@walletconnect/legacy-modal';
+import { WalletConnectModal } from '@walletconnect/modal';
+
 import {
   createOriginationOperation,
   createSetDelegateOperation,
@@ -60,10 +62,12 @@ export class WalletConnect2 implements WalletProvider {
   private session: SessionTypes.Struct | undefined;
   private activeAccount: string | undefined;
   private activeNetwork: string | undefined;
+  private WalletConnectModal: WalletConnectModal;
 
-  constructor(signClient: Client) {
+  constructor(signClient: Client, WalletConnectModal: WalletConnectModal) {
     this.signClient = signClient;
-
+    this.WalletConnectModal = WalletConnectModal;
+    signClient.metadata;
     this.signClient.on('session_delete', ({ topic }) => {
       if (this.session?.topic === topic) {
         this.session = undefined;
@@ -106,8 +110,12 @@ export class WalletConnect2 implements WalletProvider {
    * ```
    */
   static async init(initParams: SignClientTypes.Options) {
+    if (!initParams.projectId) {
+      throw new Error('projectId is required');
+    }
     const client = await Client.init(initParams);
-    return new WalletConnect2(client);
+    const walletConnectModal = new WalletConnectModal({ projectId: initParams.projectId });
+    return new WalletConnect2(client, walletConnectModal);
   }
 
   /**
@@ -139,22 +147,16 @@ export class WalletConnect2 implements WalletProvider {
       });
 
       if (uri) {
-        QRCodeModal.open(
-          uri,
-          () => {
-            // noop
-          },
-          { registryUrl: connectParams.registryUrl }
-        );
+        this.WalletConnectModal.openModal({ uri, chains: [TEZOS_PLACEHOLDER] });
+
+        this.session = await approval();
       }
-      const session = await approval();
-      this.session = session;
     } catch (error) {
       throw new ConnectionFailed(error);
     } finally {
-      QRCodeModal.close();
+      // QRCodeModal.close();
     }
-    this.validateReceivedNamespace(connectParams.permissionScope, this.session.namespaces);
+    this.validateReceivedNamespace(connectParams.permissionScope, this.session!.namespaces);
     this.setDefaultAccountAndNetwork();
   }
 
