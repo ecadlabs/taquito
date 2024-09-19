@@ -8,7 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
-import { knownContractsPtBetaaEZ } from './known-contracts-PtBetaaEZ';
+import { knownContractsPsquebeCa } from './known-contracts-PsquebeCa';
 
 const nodeCrypto = require('crypto');
 
@@ -141,12 +141,12 @@ const parisnetEphemeral: Config =
 const parisnetSecretKey: Config =
   { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
 
-const betanetSecretKey: Config =
+const quebecASecretKey: Config =
   defaultConfig({
-    networkName: 'BETANET',
-    protocol: Protocols.PtBetaaEZ,
-    defaultRpc: 'https://rpc.betanet-2024-08-29.teztnets.com',
-    knownContracts: knownContractsPtBetaaEZ,
+    networkName: 'QUEBECANET',
+    protocol: Protocols.PsquebeCa,
+    defaultRpc: '	https://rpc.quebecanet.teztnets.com',
+    knownContracts: knownContractsPsquebeCa,
     signerConfig: defaultSecretKey
   })
 
@@ -182,8 +182,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(parisnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_BETANET_WITH_SECRET_KEY']) {
-  providers.push(betanetSecretKey);
+} else if (process.env['RUN_QUEBECANET_WITH_SECRET_KEY']) {
+  providers.push(quebecASecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['PARISNET']) {
