@@ -141,14 +141,17 @@ const parisnetEphemeral: Config =
 const parisnetSecretKey: Config =
   { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
 
-const quebecbnetSecretKey: Config =
+  const quebecbnetEphemeral: Config =
   defaultConfig({
     networkName: 'QUEBECBNET',
     protocol: Protocols.PsQuebecB,
-    defaultRpc: 'https://rpc.quebecbnet.teztnets.com',
-    knownContracts: knownContractsPsQuebecB,
-    signerConfig: defaultSecretKey
-  })
+    defaultRpc: 'https://rpc.quebecbnet.teztnets.com/',
+    knownContracts: knownContractsPsParisCZ,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecbnet')
+  });
+
+const quebecbnetSecretKey: Config =
+  { ...quebecbnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.quebecbcnet.teztnets.com/' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -188,6 +191,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['PARISNET']) {
   providers.push(parisnetEphemeral);
+} else if (process.env['QUEBECBNET']) {
+  providers.push(quebecbnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
