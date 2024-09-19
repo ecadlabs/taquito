@@ -6,7 +6,7 @@ import { ConstantsResponseProto020, ConstantsResponseProto021 } from '@taquito/r
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
   const parisnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsParisCZ) ? test : test.skip;
-  const betanet = (networkType == NetworkType.TESTNET && protocol === Protocols.PtBetaaEZ) ? test : test.skip;
+  const quebecbnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsQuebecB) ? test : test.skip;
   const weeklynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
   describe('Test fetching constants for all protocols on Mainnet', () => {
     const rpcUrl = 'https://mainnet.ecadinfra.com/';
@@ -304,7 +304,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
       });
     });
 
-    betanet(`should successfully fetch all constants for Betanet
+    quebecbnet(`should successfully fetch all constants for quebecbnet
       using ${rpc}`, async () => {
      Tezos.setRpcProvider(rpc);
      const constants: ConstantsResponseProto021 = await Tezos.rpc.getConstants();

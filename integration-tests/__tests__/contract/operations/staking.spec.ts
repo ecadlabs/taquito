@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
 
     beforeAll(async () => {
       await setup(true);
-      // There is no baker accept staking in betanet and weeklylnet hence tests will fail
+      // There is no baker accept staking in quebecbnet and weeklylnet hence tests will fail
       // Currently TF is a baker that allows staking on parisnet.
       if (rpc.includes('paris')) {
         knownBaker = 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc' // TF
