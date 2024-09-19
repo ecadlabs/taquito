@@ -45,6 +45,7 @@ jobs:
         include:
           - testnet: parisnet
             testnet_uppercase: PARISNET
+            rpc_url: https://parisnet.ecadinfra.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -58,11 +59,12 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
-      - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
+      - id: run-tests
+        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
           # Ternary operator workaround
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
-  integration-tests-testnet-beta-secret-key:
+          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
+  integration-tests-testnet-quebecA-secret-key:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
