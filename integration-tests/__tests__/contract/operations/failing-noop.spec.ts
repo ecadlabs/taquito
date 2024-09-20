@@ -7,7 +7,7 @@ CONFIGS().forEach(({ setup, rpc, lib }) => {
   let signerAlice = new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq')
 
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
-    let Tezos = lib
+    const Tezos = lib
     beforeAll(async () => {
       setup(true)
       if (rpc.includes('paris')) {
@@ -22,7 +22,9 @@ CONFIGS().forEach(({ setup, rpc, lib }) => {
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
       });
+      console.log(signed)
       const pk = await Tezos.signer.publicKey();
+      console.log(pk)
       expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
     });
 
