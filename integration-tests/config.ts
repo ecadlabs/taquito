@@ -145,13 +145,13 @@ const parisnetSecretKey: Config =
   defaultConfig({
     networkName: 'QUEBECBNET',
     protocol: Protocols.PsQuebecB,
-    defaultRpc: 'https://quebecbnet.ecadinfra.com/',
+    defaultRpc: 'http://ecad-tezos-quebecbnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPsQuebecB,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecbnet')
   });
 
 const quebecbnetSecretKey: Config =
-  { ...quebecbnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.quebecbnet.teztnets.com/' } };
+  { ...quebecbnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://quebecbnet.ecadinfra.com/' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
