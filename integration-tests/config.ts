@@ -141,14 +141,17 @@ const parisnetEphemeral: Config =
 const parisnetSecretKey: Config =
   { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
 
-const quebecASecretKey: Config =
+const quebecanetEphemeral: Config =
   defaultConfig({
     networkName: 'QUEBECANET',
     protocol: Protocols.PsquebeCa,
-    defaultRpc: '	https://rpc.quebecanet.teztnets.com',
+    defaultRpc: 'http://ecad-tezos-quebecanet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPsquebeCa,
-    signerConfig: defaultSecretKey
-  })
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecanet')
+  });
+
+const quebecanetSecretKey: Config =
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://quebecanet.ecadinfra.com/' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -160,7 +163,7 @@ const ghostnetEphemeral: Config =
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://ghostnet.ecadinfra.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
@@ -183,11 +186,13 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_QUEBECANET_WITH_SECRET_KEY']) {
-  providers.push(quebecASecretKey);
+  providers.push(quebecanetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['PARISNET']) {
   providers.push(parisnetEphemeral);
+} else if (process.env['QUEBECANET']) {
+  providers.push(quebecanetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
