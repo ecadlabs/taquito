@@ -114,7 +114,7 @@ export enum ChainIds {
   OXFORDNET2 = 'NetXxWsskGahzQB',
   PARISBNET = 'NetXo8SqH1c38SS',
   PARISCNET = 'NetXXWAHLEvre9b',
-  QUEBECANET = 'NetXsTfFgyGbHTz',
+  QUEBECANET = 'NetXQWuX99cUDUQ',
 }
 
 // A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption (3.5 fails occasionally with gas exhausted; 4 fails occasionally with fee too low)
