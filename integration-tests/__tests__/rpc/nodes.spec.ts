@@ -502,7 +502,7 @@ CONFIGS().forEach(
           } else if (rpc.includes('parisnet')) {
             expect(launchCycle).toEqual(6);
           } else if (rpc.includes('mondaynet') || rpc.includes('weeklynet')) {
-            expect(launchCycle).toEqual(5);
+            expect(launchCycle).toEqual(3);
           }
         })
 

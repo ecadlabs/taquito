@@ -552,8 +552,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         max_slashing_per_block: 10000,
         max_slashing_threshold: 2334,
         cache_script_size: 100000000,
-        cache_stake_distribution_cycles: 8,
-        cache_sampler_state_cycles: 8,
+        cache_stake_distribution_cycles: 5,
+        cache_sampler_state_cycles: 5,
         dal_parametric: {
           attestation_lag: 8,
           attestation_threshold: 66,
