@@ -139,19 +139,19 @@ const parisnetEphemeral: Config =
   });
 
 const parisnetSecretKey: Config =
-  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
   const quebecbnetEphemeral: Config =
   defaultConfig({
     networkName: 'QUEBECBNET',
     protocol: Protocols.PsQuebecB,
-    defaultRpc: 'https://rpc.quebecbnet.teztnets.com/',
-    knownContracts: knownContractsPsParisCZ,
+    defaultRpc: 'https://quebecbnet.ecadinfra.com/',
+    knownContracts: knownContractsPsQuebecB,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecbnet')
   });
 
 const quebecbnetSecretKey: Config =
-  { ...quebecbnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.quebecbcnet.teztnets.com/' } };
+  { ...quebecbnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.quebecbnet.teztnets.com/' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -163,7 +163,7 @@ const ghostnetEphemeral: Config =
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://ghostnet.ecadinfra.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({

@@ -19,7 +19,7 @@ CONFIGS().forEach(
     knownViewContract,
   }) => {
     const Tezos = lib;
-    const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
+    const unrestrictedRPCNode = rpc.includes("teztnets.com") ? test : test.skip;
     const quebecbnet = protocol === Protocols.PsQuebecB ? test : test.skip;
     let ticketContract: DefaultContractType;
 
@@ -165,7 +165,7 @@ CONFIGS().forEach(
           expect(bigMapValue).toBeDefined();
         });
 
-        it(`Verify that rpcClient.getAllDelegates returns all delegates from RPC`, async () => {
+        unrestrictedRPCNode(`Verify that rpcClient.getAllDelegates returns all delegates from RPC`, async () => {
           const allDelegates = await rpcClient.getAllDelegates();
           expect(allDelegates).toBeDefined();
 
