@@ -22,9 +22,7 @@ CONFIGS().forEach(({ setup, rpc, lib }) => {
         arbitrary: "48656C6C6F20576F726C64", // Hello World
         basedOnBlock: 0,
       });
-      console.log(signed)
       const pk = await Tezos.signer.publicKey();
-      console.log(pk)
       expect(verifySignature(signed.bytes, pk!, signed.signature, new Uint8Array([3]))).toBe(true);
     });
 
