@@ -8,7 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
-import { knownContractsPtBetaaEZ } from './known-contracts-PtBetaaEZ';
+import { knownContractsPsQuebecB } from './known-contracts-PsQuebecB';
 
 const nodeCrypto = require('crypto');
 
@@ -139,16 +139,19 @@ const parisnetEphemeral: Config =
   });
 
 const parisnetSecretKey: Config =
-  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
-const betanetSecretKey: Config =
+  const quebecbnetEphemeral: Config =
   defaultConfig({
-    networkName: 'BETANET',
-    protocol: Protocols.PtBetaaEZ,
-    defaultRpc: 'https://rpc.betanet-2024-08-29.teztnets.com',
-    knownContracts: knownContractsPtBetaaEZ,
-    signerConfig: defaultSecretKey
-  })
+    networkName: 'QUEBECBNET',
+    protocol: Protocols.PsQuebecB,
+    defaultRpc: 'https://rpc.quebecbnet.teztnets.com/',
+    knownContracts: knownContractsPsQuebecB,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecbnet')
+  });
+
+const quebecbnetSecretKey: Config =
+  { ...quebecbnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://quebecbnet.ecadinfra.com/' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -160,7 +163,7 @@ const ghostnetEphemeral: Config =
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://ghostnet.ecadinfra.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
@@ -182,12 +185,14 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(parisnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_BETANET_WITH_SECRET_KEY']) {
-  providers.push(betanetSecretKey);
+} else if (process.env['RUN_QUEBECBNET_WITH_SECRET_KEY']) {
+  providers.push(quebecbnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['PARISNET']) {
   providers.push(parisnetEphemeral);
+} else if (process.env['QUEBECBNET']) {
+  providers.push(quebecbnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
