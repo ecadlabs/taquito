@@ -145,7 +145,7 @@ const parisnetSecretKey: Config =
   defaultConfig({
     networkName: 'QUEBECBNET',
     protocol: Protocols.PsQuebecB,
-    defaultRpc: 'http://ecad-tezos-quebecbnet-rolling-1.i.ecadinfra.com/',
+    defaultRpc: 'https://rpc.quebecbnet.teztnets.com/',
     knownContracts: knownContractsPsQuebecB,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecbnet')
   });
