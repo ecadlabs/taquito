@@ -233,9 +233,33 @@ export class WalletConnect2 implements WalletProvider {
     return transactionHash;
   }
 
+  // TODO need unit and test-dapp test
   async sign(bytes: string, watermark?: Uint8Array): Promise<string> {
     console.log(bytes, watermark);
-    return '';
+    const session = this.getSession();
+    if (!this.getPermittedMethods().includes(PermissionScopeMethods.TEZOS_SIGN)) {
+      throw new MissingRequiredScope(PermissionScopeMethods.TEZOS_SIGN);
+    }
+    const network = this.getActiveNetwork();
+    const account = await this.getPKH();
+    this.validateNetworkAndAccount(network, account);
+    let expression = bytes;
+    if (watermark) {
+      expression =
+        Array.from(watermark, (byte) => byte.toString(16).padStart(2, '0')).join('') + expression;
+    }
+    const signature = await this.signClient.request<string>({
+      topic: session.topic,
+      chainId: `${TEZOS_PLACEHOLDER}:${network}`,
+      request: {
+        method: PermissionScopeMethods.TEZOS_SIGN,
+        params: {
+          expression,
+          signingType: SigningType.RAW,
+        },
+      },
+    });
+    return signature;
   }
 
   /**
@@ -266,6 +290,7 @@ export class WalletConnect2 implements WalletProvider {
         },
       },
     });
+    console.log(signature);
     return signature;
   }
 
@@ -302,12 +327,17 @@ export class WalletConnect2 implements WalletProvider {
     return this.activeAccount;
   }
 
+  // TODO need test-dapp test
   /**
    * @description Access the public key of the active account
    * @error ActiveAccountUnspecified thrown when there are multiple Tezos account in the session and none is set as the active one
    */
   async getPK() {
-    return '';
+    if (!this.activeAccount) {
+      this.getSession();
+      throw new ActiveAccountUnspecified();
+    }
+    return this.getSession().self.publicKey;
   }
 
   /**
@@ -540,7 +570,12 @@ export class WalletConnect2 implements WalletProvider {
   }
 
   private formatParameters(
-    params: WalletTransferParams | WalletOriginateParams | WalletDelegateParams
+    params:
+      | WalletTransferParams
+      | WalletTransferTicketParams
+      | WalletOriginateParams
+      | WalletDelegateParams
+      | WalletIncreasePaidStorageParams
   ) {
     const formatedParams: any = params;
     if (typeof params.fee !== 'undefined') {
