@@ -295,6 +295,83 @@ describe('Wallet connect 2 tests', () => {
     });
   });
 
+  describe('test public key', () => {
+    it('should return public key when session namespace only have one', async () => {
+      mockSignClient.connect.mockReturnValue({ approval: async () => sessionExample });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SEND],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      expect(await walletConnect.getPK()).toEqual(
+        '01b5630403234ba9745073c9ad081c7b812786b2bcfa8cfe1ff28d800b989f29'
+      );
+    });
+
+    it('should throw an error when no active account is set and session namespace has multiple accounts', async () => {
+      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
+          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+        },
+      });
+
+      await expect(walletConnect.getPK()).rejects.toThrow(
+        'Please specify the active account using the "setActiveAccount" method.'
+      );
+    });
+
+    it('should set the active account successfully', async () => {
+      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
+          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+        },
+      });
+
+      walletConnect.setActiveAccount('tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh');
+      expect(await walletConnect.getPK()).toEqual(
+        '72dfcd018c5a636c311a0214c19f24e1e52a0f38082e31e3971af9b0296f4767'
+      );
+    });
+
+    it('should fail to set the active account when it is not part of the session namespace', async () => {
+      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
+          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+        },
+      });
+
+      expect(() => walletConnect.setActiveAccount('test')).toThrow('Invalid pkh "test"');
+    });
+
+    it('should delete active account when calling disconnect', async () => {
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SEND],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      expect(await walletConnect.getPK()).toEqual(
+        '01b5630403234ba9745073c9ad081c7b812786b2bcfa8cfe1ff28d800b989f29'
+      );
+      await walletConnect.disconnect();
+      expect(mockSignClient.disconnect).toHaveBeenCalledTimes(1);
+      await expect(walletConnect.getPK()).rejects.toThrow('Not connected, no active session');
+    });
+  });
+
   describe('test validation of incoming proposal namespaces', () => {
     it('should fail to establish a connection if the proposal namespace does not have any accounts', async () => {
       // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#21-session-namespaces-must-not-have-accounts-empty
@@ -668,7 +745,9 @@ describe('Wallet connect 2 tests', () => {
 
   describe('test sendOperations', () => {
     it('should send transaction operation successfully', async () => {
-      const mockRequestResponse = { transactionHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf' };
+      const mockRequestResponse = {
+        transactionHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf',
+      };
       mockSignClient.request.mockResolvedValue(mockRequestResponse);
       await walletConnect.requestPermissions({
         permissionScope: {
@@ -703,7 +782,9 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should send transaction operation with defined limits successfully', async () => {
-      const mockRequestResponse = { transactionHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf' };
+      const mockRequestResponse = {
+        transactionHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf',
+      };
       mockSignClient.request.mockResolvedValue(mockRequestResponse);
       await walletConnect.requestPermissions({
         permissionScope: {
@@ -994,6 +1075,100 @@ describe('Wallet connect 2 tests', () => {
       await expect(walletConnect.signPayload(params)).rejects.toThrow(
         'Required permission scope were not granted for "tezos_sign"'
       );
+    });
+  });
+
+  describe('test sign', () => {
+    it('should sign successfully', async () => {
+      mockSignClient.connect.mockReturnValue({
+        approval: async () => {
+          return {
+            ...sessionExample,
+            namespaces: {
+              tezos: {
+                accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
+                events: [],
+              },
+            },
+            requiredNamespaces: {
+              tezos: {
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
+                chains: ['tezos:ghostnet'],
+                events: [],
+              },
+            },
+          };
+        },
+      });
+
+      const mockedSignature =
+        'edsigtpDN7L5LfzvYWM22fvYA4dPVr9wXaYje7z4nmBrT6ZxkGnHS6u3UuvD9TQv3BmNRSUgnMH1dKsAaLWhfuXXj63myo2m3De';
+      mockSignClient.request.mockResolvedValue(mockedSignature);
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      const sig = await walletConnect.sign(
+        '010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
+        new Uint8Array([5])
+      );
+
+      expect(mockSignClient.request).toHaveBeenCalledWith({
+        topic: sessionExample.topic,
+        chainId: `tezos:ghostnet`,
+        request: {
+          method: PermissionScopeMethods.TEZOS_SIGN,
+          params: {
+            expression:
+              '05010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
+            signingType: SigningType.RAW,
+          },
+        },
+      });
+
+      expect(sig).toEqual(mockedSignature);
+    });
+
+    it('should fail to sign payload if permission is not granted', async () => {
+      mockSignClient.connect.mockReturnValue({
+        approval: async () => {
+          return {
+            ...sessionExample,
+            namespaces: {
+              tezos: {
+                accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
+                events: [],
+              },
+            },
+            requiredNamespaces: {
+              tezos: {
+                methods: [PermissionScopeMethods.TEZOS_SEND],
+                chains: ['tezos:ghostnet'],
+                events: [],
+              },
+            },
+          };
+        },
+      });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SEND],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      await expect(
+        walletConnect.sign(
+          '010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
+          new Uint8Array([5])
+        )
+      ).rejects.toThrow('Required permission scope were not granted for "tezos_sign"');
     });
   });
 
