@@ -83,6 +83,7 @@ const sidebars = {
       collapsible: false,
       items: [
         'beaconwallet-singleton',
+        'wallet_connect_2',
         'wallets',
         'transaction_limits',
       ],
