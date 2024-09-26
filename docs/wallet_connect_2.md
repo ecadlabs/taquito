@@ -33,7 +33,7 @@ await walletConnect.requestPermissions({
   permissionScope: {
     networks: [NetworkType.GHOSTNET],
     methods: [
-      PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN
+      PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN
     ],
   },
   // registryUrl: "https://www.tezos.help/wcdata/"
@@ -52,7 +52,7 @@ Suppose there is a need to restore a session in the dapp rather than using the `
 
 ## Send Tezos operation with `WalletConnect2` and `TezosToolkit`
 
-Once an instance of `WalletConnect2` is created and a session is established, it can be injected into the `TezosToolkit` using its `setWalletProvider` method. Methods of the wallet API can be invoked to send operations to the blockchain. Those operations will be signed and injected by the wallet. The permission `PermissionScopeMethods.OPERATION_REQUEST` must have been granted, or the error `MissingRequiredScope` will be thrown.
+Once an instance of `WalletConnect2` is created and a session is established, it can be injected into the `TezosToolkit` using its `setWalletProvider` method. Methods of the wallet API can be invoked to send operations to the blockchain. Those operations will be signed and injected by the wallet. The permission `PermissionScopeMethods.TEZOS_SEND` must have been granted, or the error `MissingRequiredScope` will be thrown.
 
 Wallet connect 2 allows granting permission for multiple accounts in a session. The `setActiveAccount` must be called to set the active account that will be used to prepare the operation. It should be called every time the active account is updated in the dapp. It is possible to retrieve a list of all connected accounts using the `getAccounts` method. The `getPKH` method will return the public key hash of the active account. Note that if only one account is present in the session, it will be set as the active one by default.
 
@@ -65,7 +65,7 @@ Tezos.setRpcProvider('https://ghostnet.ecadinfra.com/');
 
 WalletConnect2.init({
   logger: 'debug',
-  projectId: MY_PROJECT_ID,
+  projectId: '861613623da99d7285aaad8279a87ee9',
   metadata: {
     name: 'Taquito website',
     description: 'Taquito website with WalletConnect2',
@@ -78,7 +78,7 @@ WalletConnect2.init({
       .requestPermissions({
         permissionScope: {
           networks: [NetworkType.GHOSTNET],
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
         },
         // registryUrl: 'https://www.tezos.help/wcdata/',
       })
@@ -99,7 +99,7 @@ WalletConnect2.init({
 
 ## Sign payload with `WalletConnect2`
 
-The `signPayload` method of `WalletConnect2` can be called to sign a payload. The response will be a string representing the signature. The permission `PermissionScopeMethods.SIGN` must have been granted, or the error `MissingRequiredScope` will be thrown.
+The `signPayload` method of `WalletConnect2` can be called to sign a payload. The response will be a string representing the signature. The permission `PermissionScopeMethods.TEZOS_SIGN` must have been granted, or the error `MissingRequiredScope` will be thrown.
 
 ## Events handling
 

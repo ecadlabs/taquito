@@ -5,8 +5,8 @@
 
 import Client from '@walletconnect/sign-client';
 import { SignClientTypes, SessionTypes, PairingTypes } from '@walletconnect/types';
-// import QRCodeModal from '@walletconnect/legacy-modal';
-import { WalletConnectModal } from '@walletconnect/modal';
+import QRCodeModal from '@walletconnect/legacy-modal';
+// import { WalletConnectModal } from '@walletconnect/modal';
 
 import {
   createOriginationOperation,
@@ -62,12 +62,14 @@ export class WalletConnect2 implements WalletProvider {
   private session: SessionTypes.Struct | undefined;
   private activeAccount: string | undefined;
   private activeNetwork: string | undefined;
-  private WalletConnectModal: WalletConnectModal;
+  // private WalletConnectModal: WalletConnectModal;
 
-  constructor(signClient: Client, WalletConnectModal: WalletConnectModal) {
+  constructor(signClient: Client) {
+    // constructor(signClient: Client, WalletConnectModal: WalletConnectModal) {
+
     this.signClient = signClient;
-    this.WalletConnectModal = WalletConnectModal;
-    signClient.metadata;
+    // this.WalletConnectModal = WalletConnectModal;
+
     this.signClient.on('session_delete', ({ topic }) => {
       if (this.session?.topic === topic) {
         this.session = undefined;
@@ -110,12 +112,13 @@ export class WalletConnect2 implements WalletProvider {
    * ```
    */
   static async init(initParams: SignClientTypes.Options) {
-    if (!initParams.projectId) {
-      throw new Error('projectId is required');
-    }
+    // if (!initParams.projectId) {
+    //   throw new Error('projectId is required');
+    // }
     const client = await Client.init(initParams);
-    const walletConnectModal = new WalletConnectModal({ projectId: initParams.projectId });
-    return new WalletConnect2(client, walletConnectModal);
+    // const walletConnectModal = new WalletConnectModal({ projectId: initParams.projectId });
+    return new WalletConnect2(client);
+    // return new WalletConnect2(client, walletConnectModal);
   }
 
   /**
@@ -147,16 +150,17 @@ export class WalletConnect2 implements WalletProvider {
       });
 
       if (uri) {
-        this.WalletConnectModal.openModal({ uri, chains: [TEZOS_PLACEHOLDER] });
-
-        this.session = await approval();
+        QRCodeModal.open(uri, () => {}, { registryUrl: connectParams.registryUrl });
+        // this.WalletConnectModal.openModal({ uri, chains: [TEZOS_PLACEHOLDER] });
+        // this.session = await approval();
       }
+      this.session = await approval();
     } catch (error) {
       throw new ConnectionFailed(error);
     } finally {
-      // QRCodeModal.close();
+      QRCodeModal.close();
     }
-    this.validateReceivedNamespace(connectParams.permissionScope, this.session!.namespaces);
+    this.validateReceivedNamespace(connectParams.permissionScope, this.session.namespaces);
     this.setDefaultAccountAndNetwork();
   }
 
@@ -209,24 +213,24 @@ export class WalletConnect2 implements WalletProvider {
    */
   async sendOperations(params: OperationParams[]) {
     const session = this.getSession();
-    if (!this.getPermittedMethods().includes(PermissionScopeMethods.OPERATION_REQUEST)) {
-      throw new MissingRequiredScope(PermissionScopeMethods.OPERATION_REQUEST);
+    if (!this.getPermittedMethods().includes(PermissionScopeMethods.TEZOS_SEND)) {
+      throw new MissingRequiredScope(PermissionScopeMethods.TEZOS_SEND);
     }
     const network = this.getActiveNetwork();
     const account = await this.getPKH();
     this.validateNetworkAndAccount(network, account);
-    const hash = await this.signClient.request<string>({
+    const { transactionHash } = await this.signClient.request<{ transactionHash: string }>({
       topic: session.topic,
       chainId: `${TEZOS_PLACEHOLDER}:${network}`,
       request: {
-        method: PermissionScopeMethods.OPERATION_REQUEST,
+        method: PermissionScopeMethods.TEZOS_SEND,
         params: {
           account,
           operations: params,
         },
       },
     });
-    return hash;
+    return transactionHash;
   }
 
   async sign(bytes: string, watermark?: Uint8Array): Promise<string> {
@@ -244,8 +248,8 @@ export class WalletConnect2 implements WalletProvider {
     sourceAddress?: string;
   }) {
     const session = this.getSession();
-    if (!this.getPermittedMethods().includes(PermissionScopeMethods.SIGN)) {
-      throw new MissingRequiredScope(PermissionScopeMethods.SIGN);
+    if (!this.getPermittedMethods().includes(PermissionScopeMethods.TEZOS_SIGN)) {
+      throw new MissingRequiredScope(PermissionScopeMethods.TEZOS_SIGN);
     }
     const network = this.getActiveNetwork();
     const account = await this.getPKH();
@@ -254,7 +258,7 @@ export class WalletConnect2 implements WalletProvider {
       topic: session.topic,
       chainId: `${TEZOS_PLACEHOLDER}:${network}`,
       request: {
-        method: PermissionScopeMethods.SIGN,
+        method: PermissionScopeMethods.TEZOS_SIGN,
         params: {
           account: params.sourceAddress ?? account,
           expression: params.payload,
