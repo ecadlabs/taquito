@@ -18,7 +18,7 @@
   let connectedWallet = "";
 
   const createNewWallet = (config: { networkType: SupportedNetworks }) => {
-    const options: DAppClientOptions = {
+    const wallet = new BeaconWallet({
       name: "Taquito Test Dapp",
       matrixNodes: [defaultMatrixNode] as any,
       network: {
@@ -29,20 +29,9 @@
         projectId: "ba97fd7d1e89eae02f7c330e14ce1f36",
       },
       enableMetrics: $store.enableMetrics,
-    };
-    // if ($store.disableDefaultEvents) {
-    //   options.disableDefaultEvents = true;
-    //   options.eventHandlers = {
-    //     // To keep the pairing alert, we have to add the following default event handlers back
-    //     [BeaconEvent.PAIR_INIT]: {
-    //       handler: defaultEventCallbacks.PAIR_INIT
-    //     },
-    //     [BeaconEvent.PAIR_SUCCESS]: {
-    //       handler: defaultEventCallbacks.PAIR_SUCCESS
-    //     }
-    //   }
-    // }
-    return new BeaconWallet(options);
+    });
+    wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, data => {console.log(JSON.stringify(data))}).then(console.log("subscribed"));
+    return wallet;
   };
 
   const connectWallet = async () => {
@@ -175,11 +164,11 @@
       saveLog(data, BeaconEvent.NO_PERMISSIONS),
     );
 
-    await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
-      saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET);
-      store.updateUserAddress(data.address);
-      store.updateNetworkType(data.network.type as SupportedNetworks);
-    });
+    // await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
+      // saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET);
+      // store.updateUserAddress(data.address);
+      // store.updateNetworkType(data.network.type as SupportedNetworks);
+    // });
 
     await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_TRANSPORT_SET, (data) =>
       saveLog(data, BeaconEvent.ACTIVE_TRANSPORT_SET),
