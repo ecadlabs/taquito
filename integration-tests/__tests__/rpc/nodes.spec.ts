@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.includes("i.ecadinfra.com") ? test : test.skip;
-    const quebecbnet = protocol === Protocols.PsQuebecB ? test : test.skip;
+    const qenanet = protocol === Protocols.PtQenaB1P ? test : test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -66,7 +66,7 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        quebecbnet(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+        qenanet(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
           const balance = await rpcClient.getSpendable(knownBaker);
           expect(balance).toBeDefined();
         });
@@ -76,7 +76,7 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        quebecbnet(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
+        qenanet(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
           const balance = await rpcClient.getSpendableAndFrozenBonds(knownBaker);
           expect(balance).toBeDefined();
         });
