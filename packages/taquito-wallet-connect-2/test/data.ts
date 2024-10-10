@@ -7,7 +7,7 @@ export const sessionExample = {
   namespaces: {
     tezos: {
       accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-      methods: ['tezos_sendOperations'],
+      methods: ['tezos_send'],
       events: [],
     },
   },
@@ -33,7 +33,7 @@ export const sessionExample = {
   },
   requiredNamespaces: {
     tezos: {
-      methods: ['tezos_sendOperations'],
+      methods: ['tezos_send'],
       chains: ['tezos:ghostnet'],
       events: [],
     },
@@ -56,7 +56,7 @@ export const sessionMultipleChains = {
         'tezos:parisnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
         'tezos:parisnet:tz2JobFgDoJ5HZ1jAoMgZCyNdbBEdAstkytV',
       ],
-      methods: ['tezos_signExpression'],
+      methods: ['tezos_sign'],
       events: [],
     },
   },
@@ -82,7 +82,7 @@ export const sessionMultipleChains = {
   },
   requiredNamespaces: {
     tezos: {
-      methods: ['tezos_signExpression'],
+      methods: ['tezos_sign'],
       chains: ['tezos:ghostnet', 'tezos:parisnet'],
       events: [],
     },

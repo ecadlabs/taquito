@@ -67,7 +67,7 @@ describe('Wallet connect 2 tests', () => {
   it('should establish a connection successfully', async () => {
     await walletConnect.requestPermissions({
       permissionScope: {
-        methods: [PermissionScopeMethods.OPERATION_REQUEST],
+        methods: [PermissionScopeMethods.TEZOS_SEND],
         networks: [NetworkType.GHOSTNET],
       },
     });
@@ -76,7 +76,7 @@ describe('Wallet connect 2 tests', () => {
       requiredNamespaces: {
         tezos: {
           chains: ['tezos:ghostnet'],
-          methods: ['tezos_sendOperations'],
+          methods: ['tezos_send'],
           events: [],
         },
       },
@@ -88,7 +88,7 @@ describe('Wallet connect 2 tests', () => {
     await expect(
       walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       })
@@ -102,7 +102,7 @@ describe('Wallet connect 2 tests', () => {
           ...sessionExample,
           requiredNamespaces: {
             unknown: {
-              methods: [PermissionScopeMethods.OPERATION_REQUEST],
+              methods: [PermissionScopeMethods.TEZOS_SEND],
               chains: ['tezos:ghostnet'],
               events: [],
             },
@@ -114,7 +114,7 @@ describe('Wallet connect 2 tests', () => {
     await expect(
       walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       })
@@ -125,7 +125,7 @@ describe('Wallet connect 2 tests', () => {
     beforeEach(async () => {
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -145,7 +145,7 @@ describe('Wallet connect 2 tests', () => {
     beforeEach(async () => {
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -186,7 +186,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.SIGN],
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
           networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
         },
       });
@@ -230,7 +230,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -243,7 +243,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.SIGN],
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
           networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
         },
       });
@@ -258,7 +258,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.SIGN],
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
           networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
         },
       });
@@ -272,7 +272,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.SIGN],
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
           networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
         },
       });
@@ -283,7 +283,7 @@ describe('Wallet connect 2 tests', () => {
     it('should delete active account when calling disconnect', async () => {
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -292,6 +292,83 @@ describe('Wallet connect 2 tests', () => {
       await walletConnect.disconnect();
       expect(mockSignClient.disconnect).toHaveBeenCalledTimes(1);
       await expect(walletConnect.getPKH()).rejects.toThrow('Not connected, no active session');
+    });
+  });
+
+  describe('test public key', () => {
+    it('should return public key when session namespace only have one', async () => {
+      mockSignClient.connect.mockReturnValue({ approval: async () => sessionExample });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SEND],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      expect(await walletConnect.getPK()).toEqual(
+        '01b5630403234ba9745073c9ad081c7b812786b2bcfa8cfe1ff28d800b989f29'
+      );
+    });
+
+    it('should throw an error when no active account is set and session namespace has multiple accounts', async () => {
+      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
+          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+        },
+      });
+
+      await expect(walletConnect.getPK()).rejects.toThrow(
+        'Please specify the active account using the "setActiveAccount" method.'
+      );
+    });
+
+    it('should set the active account successfully', async () => {
+      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
+          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+        },
+      });
+
+      walletConnect.setActiveAccount('tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh');
+      expect(await walletConnect.getPK()).toEqual(
+        '72dfcd018c5a636c311a0214c19f24e1e52a0f38082e31e3971af9b0296f4767'
+      );
+    });
+
+    it('should fail to set the active account when it is not part of the session namespace', async () => {
+      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
+          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+        },
+      });
+
+      expect(() => walletConnect.setActiveAccount('test')).toThrow('Invalid pkh "test"');
+    });
+
+    it('should delete active account when calling disconnect', async () => {
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SEND],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      expect(await walletConnect.getPK()).toEqual(
+        '01b5630403234ba9745073c9ad081c7b812786b2bcfa8cfe1ff28d800b989f29'
+      );
+      await walletConnect.disconnect();
+      expect(mockSignClient.disconnect).toHaveBeenCalledTimes(1);
+      await expect(walletConnect.getPK()).rejects.toThrow('Not connected, no active session');
     });
   });
 
@@ -306,7 +383,7 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: [],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
@@ -317,7 +394,7 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST],
+            methods: [PermissionScopeMethods.TEZOS_SEND],
             networks: [NetworkType.GHOSTNET],
           },
         })
@@ -334,7 +411,7 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
@@ -345,7 +422,7 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST],
+            methods: [PermissionScopeMethods.TEZOS_SEND],
             networks: [NetworkType.GHOSTNET],
           },
         })
@@ -360,12 +437,12 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN],
+            methods: [PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN],
             networks: [NetworkType.GHOSTNET],
           },
         })
       ).rejects.toThrow(
-        '5002: All methods must be approved. "tezos_signExpression" is missing in the session namespace.'
+        '5002: All methods must be approved. "tezos_sign" is missing in the session namespace.'
       );
     });
 
@@ -388,12 +465,12 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN],
+            methods: [PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN],
             networks: [NetworkType.GHOSTNET],
           },
         })
       ).rejects.toThrow(
-        '5002: All methods must be approved. "tezos_sendOperations,tezos_signExpression" is missing in the session namespace.'
+        '5002: All methods must be approved. "tezos_send,tezos_sign" is missing in the session namespace.'
       );
     });
 
@@ -407,7 +484,7 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
@@ -418,7 +495,7 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST],
+            methods: [PermissionScopeMethods.TEZOS_SEND],
             networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
           },
         })
@@ -437,7 +514,7 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
@@ -448,7 +525,7 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST],
+            methods: [PermissionScopeMethods.TEZOS_SEND],
             networks: [NetworkType.GHOSTNET, NetworkType.PARISNET, NetworkType.OXFORDNET],
           },
         })
@@ -470,7 +547,7 @@ describe('Wallet connect 2 tests', () => {
                   'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
                   'tezos:ghostnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
                 ],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
@@ -480,7 +557,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -489,7 +566,7 @@ describe('Wallet connect 2 tests', () => {
         requiredNamespaces: {
           tezos: {
             chains: ['tezos:ghostnet'],
-            methods: ['tezos_sendOperations'],
+            methods: ['tezos_send'],
             events: [],
           },
         },
@@ -506,7 +583,7 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST, PermissionScopeMethods.SIGN],
+                methods: [PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN],
                 events: [PermissionScopeEvents.ACCOUNTS_CHANGED],
               },
             },
@@ -516,7 +593,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -525,7 +602,7 @@ describe('Wallet connect 2 tests', () => {
         requiredNamespaces: {
           tezos: {
             chains: ['tezos:ghostnet'],
-            methods: ['tezos_sendOperations'],
+            methods: ['tezos_send'],
             events: [],
           },
         },
@@ -545,7 +622,7 @@ describe('Wallet connect 2 tests', () => {
                   'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
                   'unknown:ghostnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
                 ],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
@@ -556,7 +633,7 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST],
+            methods: [PermissionScopeMethods.TEZOS_SEND],
             networks: [NetworkType.GHOSTNET],
           },
         })
@@ -578,7 +655,7 @@ describe('Wallet connect 2 tests', () => {
                   'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
                   'tezos:limanet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
                 ],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [PermissionScopeEvents.ACCOUNTS_CHANGED],
               },
             },
@@ -588,7 +665,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -597,7 +674,7 @@ describe('Wallet connect 2 tests', () => {
         requiredNamespaces: {
           tezos: {
             chains: ['tezos:ghostnet'],
-            methods: ['tezos_sendOperations'],
+            methods: ['tezos_send'],
             events: [],
           },
         },
@@ -614,7 +691,7 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               unknown: {
                 accounts: ['unknown:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
@@ -625,7 +702,7 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST],
+            methods: [PermissionScopeMethods.TEZOS_SEND],
             networks: [NetworkType.GHOSTNET],
           },
         })
@@ -644,7 +721,7 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
@@ -655,7 +732,7 @@ describe('Wallet connect 2 tests', () => {
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
-            methods: [PermissionScopeMethods.OPERATION_REQUEST],
+            methods: [PermissionScopeMethods.TEZOS_SEND],
             networks: [NetworkType.GHOSTNET],
             events: [PermissionScopeEvents.ACCOUNTS_CHANGED],
           },
@@ -668,11 +745,13 @@ describe('Wallet connect 2 tests', () => {
 
   describe('test sendOperations', () => {
     it('should send transaction operation successfully', async () => {
-      const mockedOpHash = 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf';
-      mockSignClient.request.mockResolvedValue(mockedOpHash);
+      const mockRequestResponse = {
+        transactionHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf',
+      };
+      mockSignClient.request.mockResolvedValue(mockRequestResponse);
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -691,7 +770,7 @@ describe('Wallet connect 2 tests', () => {
         topic: sessionExample.topic,
         chainId: `tezos:ghostnet`,
         request: {
-          method: PermissionScopeMethods.OPERATION_REQUEST,
+          method: PermissionScopeMethods.TEZOS_SEND,
           params: {
             account: 'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
             operations: params,
@@ -699,15 +778,17 @@ describe('Wallet connect 2 tests', () => {
         },
       });
 
-      expect(opHash).toEqual(mockedOpHash);
+      expect(opHash).toEqual(mockRequestResponse.transactionHash);
     });
 
     it('should send transaction operation with defined limits successfully', async () => {
-      const mockedOpHash = 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf';
-      mockSignClient.request.mockResolvedValue(mockedOpHash);
+      const mockRequestResponse = {
+        transactionHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf',
+      };
+      mockSignClient.request.mockResolvedValue(mockRequestResponse);
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -735,7 +816,7 @@ describe('Wallet connect 2 tests', () => {
         topic: sessionExample.topic,
         chainId: `tezos:ghostnet`,
         request: {
-          method: PermissionScopeMethods.OPERATION_REQUEST,
+          method: PermissionScopeMethods.TEZOS_SEND,
           params: {
             account: 'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
             operations: params,
@@ -743,7 +824,7 @@ describe('Wallet connect 2 tests', () => {
         },
       });
 
-      expect(opHash).toEqual(mockedOpHash);
+      expect(opHash).toEqual(mockRequestResponse.transactionHash);
     });
 
     it('should fail to send transaction operation if permission is not granted', async () => {
@@ -754,13 +835,13 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.SIGN],
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
                 events: [],
               },
             },
             requiredNamespaces: {
               tezos: {
-                methods: [PermissionScopeMethods.SIGN],
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
                 chains: ['tezos:ghostnet'],
                 events: [],
               },
@@ -771,7 +852,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.SIGN],
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -785,7 +866,7 @@ describe('Wallet connect 2 tests', () => {
       ];
 
       await expect(walletConnect.sendOperations(params)).rejects.toThrow(
-        'Required permission scope were not granted for "tezos_sendOperations"'
+        'Required permission scope were not granted for "tezos_send"'
       );
     });
 
@@ -800,13 +881,13 @@ describe('Wallet connect 2 tests', () => {
                   'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
                   'tezos:parisnet:tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
                 ],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
             requiredNamespaces: {
               tezos: {
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 chains: ['tezos:ghostnet', 'tezos:parisnet'],
                 events: [],
               },
@@ -817,7 +898,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
         },
       });
@@ -848,13 +929,13 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.SIGN],
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
                 events: [],
               },
             },
             requiredNamespaces: {
               tezos: {
-                methods: [PermissionScopeMethods.SIGN],
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
                 chains: ['tezos:ghostnet'],
                 events: [],
               },
@@ -868,7 +949,7 @@ describe('Wallet connect 2 tests', () => {
       mockSignClient.request.mockResolvedValue(mockedSignature);
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.SIGN],
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -886,7 +967,7 @@ describe('Wallet connect 2 tests', () => {
         topic: sessionExample.topic,
         chainId: `tezos:ghostnet`,
         request: {
-          method: PermissionScopeMethods.SIGN,
+          method: PermissionScopeMethods.TEZOS_SIGN,
           params: {
             account: 'tz1hWt34L3dnwrpBeG9RWJPQVTgTTAmH1b1p',
             expression: params.payload,
@@ -906,13 +987,13 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:ghostnet:tz1hWt34L3dnwrpBeG9RWJPQVTgTTAmH1b1p'],
-                methods: [PermissionScopeMethods.SIGN],
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
                 events: [],
               },
             },
             requiredNamespaces: {
               tezos: {
-                methods: [PermissionScopeMethods.SIGN],
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
                 chains: ['tezos:ghostnet'],
                 events: [],
               },
@@ -926,7 +1007,7 @@ describe('Wallet connect 2 tests', () => {
       mockSignClient.request.mockResolvedValue(mockedSignature);
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.SIGN],
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -943,7 +1024,7 @@ describe('Wallet connect 2 tests', () => {
         topic: sessionExample.topic,
         chainId: `tezos:ghostnet`,
         request: {
-          method: PermissionScopeMethods.SIGN,
+          method: PermissionScopeMethods.TEZOS_SIGN,
           params: {
             account: 'tz1hWt34L3dnwrpBeG9RWJPQVTgTTAmH1b1p',
             expression: params.payload,
@@ -963,13 +1044,13 @@ describe('Wallet connect 2 tests', () => {
             namespaces: {
               tezos: {
                 accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 events: [],
               },
             },
             requiredNamespaces: {
               tezos: {
-                methods: [PermissionScopeMethods.OPERATION_REQUEST],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
                 chains: ['tezos:ghostnet'],
                 events: [],
               },
@@ -980,7 +1061,7 @@ describe('Wallet connect 2 tests', () => {
 
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
@@ -992,8 +1073,102 @@ describe('Wallet connect 2 tests', () => {
       };
 
       await expect(walletConnect.signPayload(params)).rejects.toThrow(
-        'Required permission scope were not granted for "tezos_signExpression"'
+        'Required permission scope were not granted for "tezos_sign"'
       );
+    });
+  });
+
+  describe('test sign', () => {
+    it('should sign successfully', async () => {
+      mockSignClient.connect.mockReturnValue({
+        approval: async () => {
+          return {
+            ...sessionExample,
+            namespaces: {
+              tezos: {
+                accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
+                events: [],
+              },
+            },
+            requiredNamespaces: {
+              tezos: {
+                methods: [PermissionScopeMethods.TEZOS_SIGN],
+                chains: ['tezos:ghostnet'],
+                events: [],
+              },
+            },
+          };
+        },
+      });
+
+      const mockedSignature =
+        'edsigtpDN7L5LfzvYWM22fvYA4dPVr9wXaYje7z4nmBrT6ZxkGnHS6u3UuvD9TQv3BmNRSUgnMH1dKsAaLWhfuXXj63myo2m3De';
+      mockSignClient.request.mockResolvedValue(mockedSignature);
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SIGN],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      const sig = await walletConnect.sign(
+        '010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
+        new Uint8Array([5])
+      );
+
+      expect(mockSignClient.request).toHaveBeenCalledWith({
+        topic: sessionExample.topic,
+        chainId: `tezos:ghostnet`,
+        request: {
+          method: PermissionScopeMethods.TEZOS_SIGN,
+          params: {
+            expression:
+              '05010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
+            signingType: SigningType.RAW,
+          },
+        },
+      });
+
+      expect(sig).toEqual(mockedSignature);
+    });
+
+    it('should fail to sign payload if permission is not granted', async () => {
+      mockSignClient.connect.mockReturnValue({
+        approval: async () => {
+          return {
+            ...sessionExample,
+            namespaces: {
+              tezos: {
+                accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
+                methods: [PermissionScopeMethods.TEZOS_SEND],
+                events: [],
+              },
+            },
+            requiredNamespaces: {
+              tezos: {
+                methods: [PermissionScopeMethods.TEZOS_SEND],
+                chains: ['tezos:ghostnet'],
+                events: [],
+              },
+            },
+          };
+        },
+      });
+
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SEND],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      await expect(
+        walletConnect.sign(
+          '010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
+          new Uint8Array([5])
+        )
+      ).rejects.toThrow('Required permission scope were not granted for "tezos_sign"');
     });
   });
 
@@ -1139,7 +1314,7 @@ describe('Wallet connect 2 tests', () => {
     beforeEach(async () => {
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.OPERATION_REQUEST],
+          methods: [PermissionScopeMethods.TEZOS_SEND],
           networks: [NetworkType.GHOSTNET],
         },
       });
