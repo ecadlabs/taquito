@@ -385,7 +385,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
          vdf_revelation_tip_weight: 1,
        },
        min_proposal_quorum: 500,
-       edge_of_staking_over_delegation: 3,
+       edge_of_staking_over_delegation: 2,
        global_limit_of_staking_over_baking: 5,
        liquidity_baking_toggle_ema_threshold: 100000,
        max_operations_time_to_live: 187,
