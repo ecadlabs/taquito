@@ -29,7 +29,8 @@ values={[
 | SmartPy          | Ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header)             |
 | Tezos Foundation | Mainnet      | https://rpc.tzbeta.net/                  | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)                  |
 | Tezos Foundation | Ghostnet     | https://rpc.ghostnet.teztnets.com/       | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header)       |
-| Tezos Foundation | Parisnet     | https://rpc.pariscnet.teztnets.com/       | [Check](https://rpc.pariscnet.teztnets.com/chains/main/blocks/head/header)       |
+| Tezos Foundation | Parisnet     | https://rpc.pariscnet.teztnets.com/      | [Check](https://rpc.pariscnet.teztnets.com/chains/main/blocks/head/header)      |
+| Tezos Foundation | Qenanet      | https://rpc.qenanet.teztnets.com/        | [Check](https://rpc.qenanet.teztnets.com/chains/main/blocks/head/header)        |
 
 *If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 </TabItem>

@@ -729,7 +729,7 @@ export class RpcClient implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, consensus_key, and max_round)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the list of delegates allowed to bake a block.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async getBakingRights(
     args: BakingRightsQueryArguments = {},
@@ -748,7 +748,7 @@ export class RpcClient implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the delegates allowed to attest a block
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async getAttestationRights(
     args: AttestationRightsQueryArguments = {},
@@ -869,7 +869,7 @@ export class RpcClient implements RpcClientInterface {
    * @param data operation contents to forge
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Forge an operation returning the unsigned bytes
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async forgeOperations(
     data: ForgeOperationsParams,
@@ -948,7 +948,7 @@ export class RpcClient implements RpcClientInterface {
    * @param op Operation to run
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Run an operation with the context of the given block and without signature checks and return the operation application result, including the consumed gas.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async runOperation(
     op: RPCRunOperationParam,
@@ -968,7 +968,7 @@ export class RpcClient implements RpcClientInterface {
    * @param op Operation to simulate
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Simulate running an operation at some future moment (based on the number of blocks given in the `latency` argument), and return the operation application result.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async simulateOperation(
     op: RPCSimulateOperationParam,
@@ -990,7 +990,7 @@ export class RpcClient implements RpcClientInterface {
    * @param code Code to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Run a Michelson script in the current context
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async runCode(
     code: RPCRunCodeParam,
@@ -1011,7 +1011,7 @@ export class RpcClient implements RpcClientInterface {
    * @param viewScriptParams Parameters of the script view to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Simulate a call to a michelson view
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async runScriptView(
     { unparsing_mode = 'Readable', ...rest }: RPCRunScriptViewParam,
@@ -1035,7 +1035,7 @@ export class RpcClient implements RpcClientInterface {
    * @param viewParams Parameters of the view to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Simulate a call to a view following the TZIP-4 standard.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async runView(
     { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
@@ -1069,7 +1069,7 @@ export class RpcClient implements RpcClientInterface {
    * A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
    * A safer solution to pack and sign data would be to use the `packDataBytes` function available in the `@taquito/michel-codec` package.
    * @example packData({ data: { string: "test" }, type: { prim: "string" } })
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async packData(data: PackDataParams, { block }: RPCOptions = defaultRPCOptions) {
     const { gas, ...rest } = await this.httpBackend.createRequest<PackDataResponse>(
@@ -1181,7 +1181,7 @@ export class RpcClient implements RpcClientInterface {
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the used storage space of the contract
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async getStorageUsedSpace(
     contract: string,
@@ -1199,7 +1199,7 @@ export class RpcClient implements RpcClientInterface {
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the paid storage space of the contract
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-openapi.json
    */
   async getStoragePaidSpace(
     contract: string,
@@ -1275,7 +1275,7 @@ export class RpcClient implements RpcClientInterface {
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
    * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined, source: undefined, operationHash: undefined }
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-mempool-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/qena-mempool-openapi.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}

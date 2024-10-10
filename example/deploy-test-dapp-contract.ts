@@ -3,14 +3,14 @@ import { InMemorySigner } from '@taquito/signer'
 import { code, storage } from './data/test-dapp-contract';
 
 // update the targeted rpc url before running
-const rpcUrl = 'http://parisnet.i.ecadinfra.com:8732'
+const rpcUrl = 'https://rpc.qenanet.teztnets.com'
 
 originate(rpcUrl)
 
 async function originate(url: string) {
   const Tezos = new TezosToolkit(url)
-  // if it's a new protocol might need to fund alice's address tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb
-  Tezos.setSignerProvider(new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq'))
+  // if it's a new protocol might need to fund alice's address spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN
+  Tezos.setSignerProvider(new InMemorySigner('spsk21y52Cp943kGnqPBSjXMC2xf1hz8QDGGih7AJdFqhxPcm1ihRN'))
 
 
   let contract = await Tezos.contract.originate({

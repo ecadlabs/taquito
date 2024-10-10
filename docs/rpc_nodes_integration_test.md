@@ -122,6 +122,6 @@ Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json
     ✓ Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage (55 ms)
     ✓ Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract (55 ms)
     ✓ Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract (56 ms)
-    ✓ Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for https://rpc.betanet-2024-08-29.teztnets.com (52 ms)
+    ✓ Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for https://rpc.qenanet.teztnets.com (52 ms)
     ✓ Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated (281 ms)
 ```
