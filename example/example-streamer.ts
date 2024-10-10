@@ -10,16 +10,12 @@ async function example() {
       and: [{ source: 'tz1bQMn5xYFbX6geRxqvuAiTywsCtNywawxH' }, { kind: 'attestation' }]
     }
 
-    const bakerEndorsementFilter = {
-      and: [{ source: 'tz1bQMn5xYFbX6geRxqvuAiTywsCtNywawxH' }, { kind: 'endorsement' }]
-    }
-
     const bakerDelegation = {
       and: [{ destination: 'tz1bQMn5xYFbX6geRxqvuAiTywsCtNywawxH' }, { kind: 'delegation' }]
     }
 
     const sub = tezos.stream.subscribeOperation({
-      or: [bakerAttestationFilter, bakerEndorsementFilter, bakerDelegation]
+      or: [bakerAttestationFilter, bakerDelegation]
     })
 
     sub.on('data', console.log)

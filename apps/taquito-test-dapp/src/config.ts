@@ -7,6 +7,7 @@ const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkType.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
   [NetworkType.OXFORDNET]: "https://oxfordnet.ecadinfra.com/",
   [NetworkType.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
+  // [NetworkType.QENANET]: "https://rpc.qenanet.teztnets.com/",
   [NetworkType.CUSTOM]: "https://ghostnet.ecadinfra.com/",
 };
 
@@ -24,6 +25,8 @@ export const getTzKtUrl = (networkType: SupportedNetworks): string | undefined =
       return "https://oxfordnet.tzkt.io";
     case NetworkType.PARISNET:
       return "https://parisnet.tzkt.io";
+      // case NetworkType.QENANET:
+      //   return "https://qenanet.tzkt.io";
     case NetworkType.CUSTOM:
       return undefined;
   }
@@ -39,4 +42,5 @@ export const contractAddress = {
   ghostnet: "KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5",
   oxfordnet: "KT1GYx1KDhMQt2GJEztRh8EyYxJUPM6fnAMM",
   parisnet: "KT1E43cQefjM8fq7B5pEJFJoGbRmuNibDoBC",
+  qenanet: "KT1PHMmvVxKYBiju4uNPL31KWBF5Zjft25WM",
 };

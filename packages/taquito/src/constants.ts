@@ -70,6 +70,7 @@ export enum Protocols {
   ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
   PtParisBx = 'PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ',
   PsParisCZ = 'PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi',
+  PtQenaB1P = 'PtQenaB1PqFEfTe2og7bZTaPvMw2CxRyDFEwWNj3GiWp9ba4bJd',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -90,7 +91,8 @@ export const protocols = {
   '017': [Protocols.PtNairobi],
   '019': [Protocols.ProxfordY],
   '020': [Protocols.PtParisBx, Protocols.PsParisCZ],
-  '021': [Protocols.ProtoALpha],
+  '021': [Protocols.PtQenaB1P],
+  '022': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {
@@ -112,6 +114,7 @@ export enum ChainIds {
   OXFORDNET2 = 'NetXxWsskGahzQB',
   PARISBNET = 'NetXo8SqH1c38SS',
   PARISCNET = 'NetXXWAHLEvre9b',
+  QENANET = 'NetXaVebR53QZgE',
 }
 
 // A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption (3.5 fails occasionally with gas exhausted; 4 fails occasionally with fee too low)

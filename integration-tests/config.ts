@@ -8,7 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
-import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
+import { knownContractsPtQenaB1P } from './known-contracts-PtQenaB1P';
 
 const nodeCrypto = require('crypto');
 
@@ -139,16 +139,19 @@ const parisnetEphemeral: Config =
   });
 
 const parisnetSecretKey: Config =
-  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
+  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
-const nairobinetSecretKey: Config =
+  const qenanetEphemeral: Config =
   defaultConfig({
-    networkName: 'NAIROBINET',
-    protocol: Protocols.PtNairobi,
-    defaultRpc: 'http://ecad-nairobinet-full:8732',
-    knownContracts: knownContractsPtNairobi,
-    signerConfig: defaultSecretKey
-  })
+    networkName: 'QENANET',
+    protocol: Protocols.PtQenaB1P,
+    defaultRpc: 'https://rpc.qenanet.teztnets.com/',
+    knownContracts: knownContractsPtQenaB1P,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/qenanet')
+  });
+
+const qenanetSecretKey: Config =
+  { ...qenanetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://qenanet.ecadinfra.com/' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -160,7 +163,7 @@ const ghostnetEphemeral: Config =
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://ghostnet.ecadinfra.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
@@ -182,12 +185,14 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(parisnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
-  providers.push(nairobinetSecretKey);
+} else if (process.env['RUN_QENANET_WITH_SECRET_KEY']) {
+  providers.push(qenanetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['PARISNET']) {
   providers.push(parisnetEphemeral);
+} else if (process.env['QENANET']) {
+  providers.push(qenanetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
