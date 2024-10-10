@@ -30,7 +30,7 @@
       },
       enableMetrics: $store.enableMetrics,
     });
-    wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, data => {console.log(JSON.stringify(data))}).then(console.log("subscribed"));
+    wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, () => {});
     return wallet;
   };
 
@@ -164,11 +164,11 @@
       saveLog(data, BeaconEvent.NO_PERMISSIONS),
     );
 
-    // await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
-      // saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET);
-      // store.updateUserAddress(data.address);
-      // store.updateNetworkType(data.network.type as SupportedNetworks);
-    // });
+    await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
+      saveLog(data, BeaconEvent.ACTIVE_ACCOUNT_SET);
+      store.updateUserAddress(data.address);
+      store.updateNetworkType(data.network.type as SupportedNetworks);
+    });
 
     await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_TRANSPORT_SET, (data) =>
       saveLog(data, BeaconEvent.ACTIVE_TRANSPORT_SET),
