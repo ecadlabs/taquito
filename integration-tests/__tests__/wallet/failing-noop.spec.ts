@@ -3,19 +3,17 @@ import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { InMemorySigner } from "@taquito/signer";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ setup, rpc }) => {
+CONFIGS().forEach(({ setup, rpc, lib }) => {
   let signerAlice = new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq')
 
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
-    let Tezos: TezosToolkit;
+    let Tezos = lib
     beforeAll(async () => {
       setup(true)
       if (rpc.includes('paris')) {
-        Tezos = new TezosToolkit('https://rpc.tzkt.io/parisnet'); // public archive node to fetch genesis block
-        Tezos.setSignerProvider(signerAlice); // alice's secret key
+        Tezos.setProvider({signer: signerAlice, rpc: 'https://rpc.tzkt.io/parisnet'})
       } else if (rpc.includes('ghost')) {
-        Tezos = new TezosToolkit('https://rpc.tzkt.io/ghostnet'); // public archive node to fetch genesis block
-        Tezos.setSignerProvider(signerAlice); // alice's secret key
+        Tezos.setProvider({signer: signerAlice, rpc: 'https://rpc.tzkt.io/ghostnet'})
       }
     });
 

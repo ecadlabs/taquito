@@ -64,7 +64,6 @@ import {
   TicketTokenParams,
   AllTicketBalances,
   PendingOperationsQueryArguments,
-  PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
@@ -167,9 +166,9 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @param address address from which we want to retrieve the balance
+   * @param address address from which we want to retrieve the spendable balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * @description Access the spendable balance of a contract, excluding frozen bonds
+   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'spendable' RPC.
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-balance
    */
   async getBalance(
@@ -180,6 +179,65 @@ export class RpcClient implements RpcClientInterface {
     const balance = await this.httpBackend.createRequest<BalanceResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve the spendable balance
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'balance' RPC.
+   */
+  async getSpendable(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/spendable`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve balance and frozen bonds
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds to the contract's full balance from which staked funds and unstake requests have been excluded. Identical to the 'spendable_and_frozen_bonds' RPC.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-full-balance
+   */
+  async getBalanceAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/balance_and_frozen_bonds`
+      ),
+      method: 'GET',
+    });
+    return new BigNumber(balance);
+  }
+
+  /**
+   * @param address address from which we want to retrieve spendable and frozen bonds
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds to the contract's full balance from which staked funds and unstake requests have been excluded. Identical to the 'balance_and_frozen_bonds' RPC.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-full-balance
+   */
+  async getSpendableAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const balance = await this.httpBackend.createRequest<BalanceResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/spendable_and_frozen_bonds`
       ),
       method: 'GET',
     });
@@ -619,8 +677,8 @@ export class RpcClient implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls to specified block (default to head) and version.
    * @description All the information about a block
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id
-   * @example getBlock() will default to `/main/chains/block/head?version=1` which shows { kind: attestation }
-   * @example getBlock({ block: 'head~2', version: 0 }) will return an offset of 2 from head blocks and shows { kind: endorsement }
+   * @example getBlock() will default to `/main/chains/block/head?version=1`
+   * @example getBlock({ block: 'head~2' }) will return an offset of 2 from head blocks
    * @example getBlock({ block: 'BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2' }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block, version }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
@@ -1215,14 +1273,14 @@ export class RpcClient implements RpcClientInterface {
 
   /**
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
-   * @param args has 5 optional properties. We support version 1 & 2
-   * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
+   * @param args has 5 optional properties
+   * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined, source: undefined, operationHash: undefined }
    * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-mempool-openapi-rc.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
-  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
-    return this.httpBackend.createRequest<PendingOperationsV1 | PendingOperationsV2>({
+  ): Promise<PendingOperationsV2> {
+    return this.httpBackend.createRequest<PendingOperationsV2>({
       url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
       method: 'GET',
       query: args,

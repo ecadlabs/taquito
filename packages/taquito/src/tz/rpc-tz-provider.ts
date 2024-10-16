@@ -28,6 +28,14 @@ export class RpcTzProvider extends Provider implements TzProvider {
     return this.context.readProvider.getBalance(address, 'head');
   }
 
+  async getSpendable(address: string): Promise<BigNumber> {
+    const addressValidation = validateAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidAddressError(address, invalidDetail(addressValidation));
+    }
+    return this.context.readProvider.getSpendable(address, 'head');
+  }
+
   async getDelegate(address: string): Promise<string | null> {
     const addressValidation = validateAddress(address);
     if (addressValidation !== ValidationResult.VALID) {

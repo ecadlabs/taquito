@@ -45,7 +45,6 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperationsV1,
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
@@ -93,6 +92,24 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<BalanceResponse> {
     return this.rpc.getBalance(address, { block });
+  }
+  async getSpendable(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getSpendable(address, { block });
+  }
+  async getBalanceAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getBalanceAndFrozenBonds(address, { block });
+  }
+  async getSpendableAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getSpendableAndFrozenBonds(address, { block });
   }
   async getFullBalance(
     address: string,
@@ -363,9 +380,7 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   }: RPCOptions = defaultRPCOptions): Promise<AILaunchCycleResponse> {
     return this.rpc.getAdaptiveIssuanceLaunchCycle({ block });
   }
-  async getPendingOperations(
-    args: PendingOperationsQueryArguments
-  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
+  async getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
   }
 }
