@@ -1,7 +1,7 @@
 {
   "name": "taquito-test-dapp-vite",
   "private": true,
-  "version": "20.0.1",
+  "version": "20.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,7 @@
     "events": "^3.3.0",
     "lerna": "^8.1.7",
     "prettier-plugin-svelte": "^3.2.6",
-    "sass": "^1.77.8",
+    "sass": "^1.78.0",
     "svelte": "^4.2.19",
     "svelte-check": "^3.8.5",
     "svelte-preprocess": "^6.0.2",
@@ -26,10 +26,10 @@
   "dependencies": {
     "@airgap/beacon-sdk": "^4.2.2",
     "@airgap/beacon-types": "^4.2.2",
-    "@taquito/beacon-wallet": "^20.0.1",
-    "@taquito/core": "^20.0.1",
-    "@taquito/taquito": "^20.0.1",
-    "@taquito/utils": "^20.0.1",
+    "@taquito/beacon-wallet": "^20.1.0",
+    "@taquito/core": "^20.1.0",
+    "@taquito/taquito": "^20.1.0",
+    "@taquito/utils": "^20.1.0",
     "buffer": "^6.0.3",
     "svelte-select": "^5.8.3",
     "vite-compatible-readable-stream": "^3.6.1"
