@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "20.0.1",
+  "version": "20.1.0",
   "description": "Classes, interfaces, and types shared across Taquito packages",
   "keywords": [
     "tezos",
@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@types/json-stringify-safe": "^5.0.3",
-    "rollup": "^4.19.1",
+    "rollup": "^4.22.4",
     "rollup-plugin-typescript2": "^0.36.0"
   }
 }

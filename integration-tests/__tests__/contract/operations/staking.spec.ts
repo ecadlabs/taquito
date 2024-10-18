@@ -1,18 +1,13 @@
 import { CONFIGS } from "../../../config";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Staking pseudo operations: ${rpc}`, () => {
 
     beforeAll(async () => {
       await setup(true);
-      // There is no baker accept staking in betanet and weeklylnet hence tests will fail
-      // Currently TF is a baker that allows staking on parisnet.
-      if (rpc.includes('paris')) {
-        knownBaker = 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc' // TF
-      }
       const delegateOp = await Tezos.contract.setDelegate({
-        delegate: knownBaker,
+        delegate: 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb', // is a delegate receiving stake on quebecnet, parisnet and ghostnet
         source: await Tezos.signer.publicKeyHash()
       });
       await delegateOp.confirmation();
@@ -22,7 +17,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       expect(async () => {
         const op = await Tezos.contract.stake({
           amount: 0.1,
-          to: knownBaker
         });
       }).rejects.toThrow();
     });

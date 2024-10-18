@@ -21,12 +21,3 @@ export interface TestSettings {
 
 export type TezosContractAddress = `KT1${string}`;
 export type TezosAccountAddress = `tz${"1" | "2" | "3"}${string}`;
-
-// export enum NetworkType {
-//   MAINNET = "mainnet",
-//   GHOSTNET = "ghostnet",
-//   WEEKLYNET = "weeklynet",
-//   OXFORDNET = "oxfordnet",
-//   PARISNET = "parisnet",
-//   CUSTOM = "custom"
-// }

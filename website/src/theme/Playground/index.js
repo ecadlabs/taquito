@@ -40,12 +40,8 @@ class SemiLiveProvider extends LiveProvider {
       if (this.props.wallet) {
         return `
         wallet.requestPermissions()
-        .then(permission => {
-          return Tezos.setWalletProvider(wallet);
-        })
-        .then(() => {
-          ${this.code}
-        });`
+          .then(permission => {return Tezos.setWalletProvider(wallet)})
+          .then(() => {${this.code}});`
       } else if (this.props.noConfig) {
         return this.code
       } else {
@@ -65,8 +61,13 @@ class SemiLiveProvider extends LiveProvider {
 
     // The following piece of code provides additional functionality to the user code such as console.log and key import
     const code = `
-
-let console = {log: value => render("" + value  + "\\n")};
+let _logBuffer = "";
+let console = {
+  log: value => {
+    _logBuffer += value + "\\n";
+    render(_logBuffer);
+  }
+};
 
 ${template()}
 
@@ -206,7 +207,7 @@ function Playground({ children, theme, transformCode, ...props }) {
           )}>
           Live Editor
         </div>
-        <LiveEditor className={styles.liveEditorBg}/>
+        <LiveEditor className={styles.liveEditorBg} />
         <button
           ref={copy}
           type="button"
@@ -234,7 +235,7 @@ function Playground({ children, theme, transformCode, ...props }) {
           )}
           onClick={handleRunCode}>
           Run code
-          </button>
+        </button>
       </div>
       <div className={styles.playgroundPreview}>
         <LivePreview />

@@ -766,7 +766,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, consensus_key, and max_round)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the list of delegates allowed to bake a block.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async getBakingRights(
     args: BakingRightsQueryArguments = {},
@@ -789,7 +789,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param args contains optional query arguments (level, cycle, delegate, and consensus_key)
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Retrieves the delegates allowed to attest a block
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async getAttestationRights(
     args: AttestationRightsQueryArguments = {},
@@ -927,7 +927,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param data operation contents to forge
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Forge an operation returning the unsigned bytes
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async forgeOperations(
     data: ForgeOperationsParams,
@@ -988,7 +988,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param op Operation to run
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Run an operation with the context of the given block and without signature checks and return the operation application result, including the consumed gas.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async runOperation(
     op: RPCRunOperationParam,
@@ -1001,7 +1001,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param op Operation to simulate
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Simulate running an operation at some future moment (based on the number of blocks given in the `latency` argument), and return the operation application result.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async simulateOperation(
     op: RPCSimulateOperationParam,
@@ -1014,7 +1014,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param code Code to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Run a Michelson script in the current context
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async runCode(
     code: RPCRunCodeParam,
@@ -1027,7 +1027,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param viewScriptParams Parameters of the script view to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Simulate a call to a michelson view
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async runScriptView(
     { unparsing_mode = 'Readable', ...rest }: RPCRunScriptViewParam,
@@ -1046,7 +1046,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param viewParams Parameters of the view to run
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Simulate a call to a view following the TZIP-4 standard.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async runView(
     { unparsing_mode = 'Readable', ...rest }: RPCRunViewParam,
@@ -1081,7 +1081,7 @@ export class RpcClientCache implements RpcClientInterface {
    * A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
    * A safer solution to pack and sign data would be to use the `packDataBytes` function available in the `@taquito/michel-codec` package.
    * @example packData({ data: { string: "test" }, type: { prim: "string" } })
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async packData(
     data: PackDataParams,
@@ -1223,7 +1223,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the used storage space of the contract
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async getStorageUsedSpace(
     contract: string,
@@ -1247,7 +1247,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
 =   * @description Access the paid storage space of the contract
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async getStoragePaidSpace(
     contract: string,
@@ -1273,7 +1273,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the contract's balance of ticket with specified ticketer, content type, and content.
    * @example ticket { ticketer: 'address', content_type: { prim: "string" }, content: { string: 'ticket1' } }
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async getTicketBalance(
     contract: string,
@@ -1299,7 +1299,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @param contract originated address we want to retrieve ticket balances of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the complete list of tickets owned by the given contract by scanning the contract's storage.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
    */
   async getAllTicketBalances(
     contract: string,

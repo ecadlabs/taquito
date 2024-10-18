@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "20.0.1",
+  "version": "20.1.0",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -77,13 +77,13 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^20.0.1",
-    "@taquito/http-utils": "^20.0.1",
-    "@taquito/local-forging": "^20.0.1",
-    "@taquito/michel-codec": "^20.0.1",
-    "@taquito/michelson-encoder": "^20.0.1",
-    "@taquito/rpc": "^20.0.1",
-    "@taquito/utils": "^20.0.1",
+    "@taquito/core": "^20.1.0",
+    "@taquito/http-utils": "^20.1.0",
+    "@taquito/local-forging": "^20.1.0",
+    "@taquito/michel-codec": "^20.1.0",
+    "@taquito/michelson-encoder": "^20.1.0",
+    "@taquito/rpc": "^20.1.0",
+    "@taquito/utils": "^20.1.0",
     "bignumber.js": "^9.1.2",
     "rxjs": "^7.8.1"
   },
@@ -109,7 +109,7 @@
     "prompt": "^1.3.0",
     "replace-in-file": "^8.1.0",
     "rimraf": "^6.0.1",
-    "rollup": "^4.19.1",
+    "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "rx-sandbox": "^2.0.5",
