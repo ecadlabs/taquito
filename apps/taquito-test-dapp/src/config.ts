@@ -1,12 +1,12 @@
 import { NetworkType } from '@airgap/beacon-types';
 
-export type SupportedNetworks = NetworkType.PARISNET | NetworkType.OXFORDNET | NetworkType.GHOSTNET | NetworkType.MAINNET | NetworkType.CUSTOM;
+export type SupportedNetworks = NetworkType.PARISNET | NetworkType.GHOSTNET | NetworkType.MAINNET | NetworkType.CUSTOM; // | NetworkType.QUEBECNET;
 
 const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkType.MAINNET]: "https://mainnet.ecadinfra.com",
   [NetworkType.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
-  [NetworkType.OXFORDNET]: "https://oxfordnet.ecadinfra.com/",
   [NetworkType.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
+  // [NetworkType.QUEBECNET]: "https://rpc.quebecnet.teztnets.com/",
   [NetworkType.CUSTOM]: "https://ghostnet.ecadinfra.com/",
 };
 
@@ -20,10 +20,10 @@ export const getTzKtUrl = (networkType: SupportedNetworks): string | undefined =
       return "https://tzkt.io";
     case NetworkType.GHOSTNET:
       return "https://ghostnet.tzkt.io";
-    case NetworkType.OXFORDNET:
-      return "https://oxfordnet.tzkt.io";
     case NetworkType.PARISNET:
       return "https://parisnet.tzkt.io";
+    // case NetworkType.QUEBECNET:
+    //   return "https://quebecnet.tzkt.io";
     case NetworkType.CUSTOM:
       return undefined;
   }
@@ -39,4 +39,5 @@ export const contractAddress = {
   ghostnet: "KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5",
   oxfordnet: "KT1GYx1KDhMQt2GJEztRh8EyYxJUPM6fnAMM",
   parisnet: "KT1E43cQefjM8fq7B5pEJFJoGbRmuNibDoBC",
+  quebecnet: "KT1Su29zJqmZkp7wdb1LYD3CNG8yeZqPm8A5"
 };
