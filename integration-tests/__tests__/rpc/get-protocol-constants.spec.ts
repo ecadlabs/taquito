@@ -6,7 +6,7 @@ import { ConstantsResponseProto020, ConstantsResponseProto021 } from '@taquito/r
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
   const parisnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsParisCZ) ? test : test.skip;
-  const betanet = (networkType == NetworkType.TESTNET && protocol === Protocols.PtBetaaEZ) ? test : test.skip;
+  const quebecnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsQuebecn) ? test : test.skip;
   const weeklynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
   describe('Test fetching constants for all protocols on Mainnet', () => {
     const rpcUrl = 'https://mainnet.ecadinfra.com/';
@@ -304,7 +304,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
       });
     });
 
-    betanet(`should successfully fetch all constants for Betanet
+    quebecnet(`should successfully fetch all constants for Quebecnet
       using ${rpc}`, async () => {
      Tezos.setRpcProvider(rpc);
      const constants: ConstantsResponseProto021 = await Tezos.rpc.getConstants();
@@ -385,8 +385,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
          vdf_revelation_tip_weight: 1,
        },
        min_proposal_quorum: 500,
-       edge_of_staking_over_delegation: 2,
-       global_limit_of_staking_over_baking: 5,
+       edge_of_staking_over_delegation: 3,
+       global_limit_of_staking_over_baking: 9,
        liquidity_baking_toggle_ema_threshold: 100000,
        max_operations_time_to_live: 187,
        minimal_block_delay: new BigNumber(4),
@@ -443,7 +443,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
        smart_rollup_riscv_pvm_enable: true,
        smart_rollup_stake_amount: '32000000',
        smart_rollup_timeout_period_in_blocks: 781,
-       testnet_dictator: 'tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8',
+       testnet_dictator: 'tz1e1TX7KghsqWUBXWmBTAAtPK3W6JTbNc82',
        vdf_difficulty: new BigNumber(10000000),
        zk_rollup_enable: true,
        zk_rollup_max_ticket_payload_size: 2048,

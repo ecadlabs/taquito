@@ -1,19 +1,15 @@
 import { CONFIGS } from '../../config';
 import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@taquito/core';
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test staking pseudo operations using: ${rpc}`, () => {
     beforeAll(async () => {
       await setup(true);
       try {
-        // There is no baker accept staking in betanet and weeklylnet hence tests will fail
-        // Currently TF is a baker that allows staking on parisnet.
-        if (rpc.includes('paris')) {
-          knownBaker = 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc' // TF
-        }
+
         const delegateOp = await Tezos.contract.setDelegate({
-          delegate: knownBaker,
+          delegate: 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb', // is a delegate receiving stake on qenanet, parisnet and ghostnet
           source: await Tezos.signer.publicKeyHash()
         });
         await delegateOp.confirmation();

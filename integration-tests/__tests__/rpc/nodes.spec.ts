@@ -19,8 +19,8 @@ CONFIGS().forEach(
     knownViewContract,
   }) => {
     const Tezos = lib;
-    const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-    const betanet = protocol === Protocols.PtBetaaEZ ? test : test.skip;
+    const unrestrictedRPCNode = rpc.includes("teztnets.com") ? test : test.skip;
+    const quebecnet = protocol === Protocols.PsQuebecn ? test : test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -66,7 +66,7 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        betanet(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+        quebecnet(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
           const balance = await rpcClient.getSpendable(knownBaker);
           expect(balance).toBeDefined();
         });
@@ -76,7 +76,7 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        betanet(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
+        quebecnet(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
           const balance = await rpcClient.getSpendableAndFrozenBonds(knownBaker);
           expect(balance).toBeDefined();
         });
@@ -501,8 +501,8 @@ CONFIGS().forEach(
             expect(launchCycle).toEqual(1054);
           } else if (rpc.includes('parisnet')) {
             expect(launchCycle).toEqual(6);
-          } else if (rpc.includes('mondaynet') || rpc.includes('weeklynet')) {
-            expect(launchCycle).toEqual(3);
+          } else if (rpc.includes('quebecnet') || rpc.includes('weeklynet')) {
+            expect(launchCycle).toEqual(5);
           }
         })
 

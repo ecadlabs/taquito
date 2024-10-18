@@ -7,7 +7,7 @@ CONFIGS().forEach(({ setup, rpc, lib }) => {
   let signerAlice = new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq')
 
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
-    let Tezos = lib
+    const Tezos = lib
     beforeAll(async () => {
       setup(true)
       if (rpc.includes('paris')) {
