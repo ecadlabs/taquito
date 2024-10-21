@@ -80,7 +80,7 @@ export default ({
         Prefix
       } = await import('@taquito/utils');
       const { BeaconWallet } = await import('@taquito/beacon-wallet');
-      const { SigningType } = await import('@airgap/beacon-sdk');
+      const { SigningType, BeaconEvent } = await import('@airgap/beacon-sdk');
       const { InMemorySigner, importKey, Path, ECDSA, Ed25519, generateSecretKey } = await import('@taquito/signer');
       const { LedgerSigner, DerivationType } = await import('@taquito/ledger-signer');
       const { Tzip16Module, tzip16, MichelsonStorageView } = await import('@taquito/tzip16')
@@ -95,6 +95,7 @@ export default ({
         // solve localStorage is not defined Error when building server
         // can use localStorage on the browser, not on the server
         wallet = new BeaconWallet({ name:"exampleWallet", network: { type: 'ghostnet'}, enableMetrics: true, });
+        wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, account => console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, account));
       }
       const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
       setDependencies({
@@ -124,6 +125,7 @@ export default ({
         stringToBytes,
         num2PaddedHex,
         SigningType,
+        BeaconEvent,
         MichelsonStorageView,
         Tzip12Module,
         tzip12,
@@ -184,6 +186,7 @@ export default ({
           stringToBytes: dependencies?.stringToBytes,
           num2PaddedHex: dependencies?.num2PaddedHex,
           SigningType: dependencies?.SigningType,
+          BeaconEvent: dependencies?.BeaconEvent,
           MichelsonStorageView: dependencies?.MichelsonStorageView,
           Tzip12Module: dependencies?.Tzip12Module,
           tzip12: dependencies?.tzip12,
