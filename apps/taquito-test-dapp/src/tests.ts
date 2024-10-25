@@ -13,6 +13,7 @@ import { SigningType, type RequestSignPayloadInput } from "@airgap/beacon-types"
 import { get } from "svelte/store";
 import type { TestSettings, TestResult } from "./types";
 import store from "./store";
+import { WalletConnect2 } from "@taquito/wallet-connect-2";
 import contractToOriginate from "./contractToOriginate";
 import localStore from "./store";
 
@@ -51,7 +52,7 @@ const sendTezToEtherlink = async (
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -66,7 +67,7 @@ const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -81,7 +82,7 @@ const setDelegate = async (delegate: string, Tezos: TezosToolkit): Promise<TestR
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -96,7 +97,7 @@ const stake = async (amount: number, Tezos: TezosToolkit): Promise<TestResult> =
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -111,7 +112,7 @@ const unstake = async (amount: number, Tezos: TezosToolkit): Promise<TestResult>
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -126,7 +127,7 @@ const finalizeUnstake = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -141,7 +142,7 @@ const sendInt = async (
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -159,7 +160,7 @@ const sendComplexParam = async (
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -171,7 +172,7 @@ const callFail = async (
     const op = await contract.methodsObject.fail(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   } catch (error) {
     console.log(error);
     if (
@@ -184,7 +185,7 @@ const callFail = async (
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -197,7 +198,7 @@ const callFaiWithInt = async (
     const op = await contract.methodsObject.fail_with_int(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   } catch (error) {
     console.log(error);
     if (
@@ -210,7 +211,7 @@ const callFaiWithInt = async (
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -223,7 +224,7 @@ const callFaiWithPair = async (
     const op = await contract.methodsObject.fail_with_pair(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   } catch (error) {
     console.log(error);
     if (
@@ -243,7 +244,7 @@ const callFaiWithPair = async (
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -261,7 +262,7 @@ const originateSuccess = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -295,7 +296,7 @@ const batchApiTest = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -341,7 +342,7 @@ const batchApiContractCallsTest = async (
     }
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -479,7 +480,7 @@ const setTransactionLimits = async (
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -519,7 +520,7 @@ const tryConfirmationObservable = async (
     return { success: true, opHash, confirmationObsOutput: entries as any };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -616,13 +617,13 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
     console.error(error);
   }
 
-  return { success: false, opHash: "" };
+  return { success: false, opHash: "", error };
 };
 
 const saplingShielded = async (
   contract: ContractAbstraction<Wallet>
 ): Promise<TestResult> => {
-  return { success: false, opHash: "" };
+  return { success: false, opHash: "", error };
 };
 
 export const list = [

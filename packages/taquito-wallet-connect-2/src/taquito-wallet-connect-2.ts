@@ -337,7 +337,10 @@ export class WalletConnect2 implements WalletProvider {
       this.getSession();
       throw new ActiveAccountUnspecified();
     }
-    return this.getSession().self.publicKey;
+    if (!this.getSession().sessionProperties) {
+      throw new InvalidSession('Session properties are not defined');
+    }
+    return this.getSession().sessionProperties!.publicKey;
   }
 
   /**

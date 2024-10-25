@@ -1,13 +1,13 @@
-import { NetworkType } from '@airgap/beacon-types';
+import { NetworkType as NetworkTypeBeacon } from "@airgap/beacon-sdk";
+import { NetworkType as NetworkTypeWc2 } from "@taquito/wallet-connect-2";
 
-export type SupportedNetworks = NetworkType.PARISNET | NetworkType.OXFORDNET | NetworkType.GHOSTNET | NetworkType.MAINNET | NetworkType.CUSTOM;
+export type SupportedNetworks = NetworkTypeBeacon.MAINNET | NetworkTypeBeacon.GHOSTNET | NetworkTypeBeacon.PARISNET | NetworkTypeWc2.MAINNET | NetworkTypeWc2.GHOSTNET | NetworkTypeWc2.PARISNET | NetworkTypeBeacon.CUSTOM;
 
 const rpcUrls: Record<SupportedNetworks, string> = {
-  [NetworkType.MAINNET]: "https://mainnet.ecadinfra.com",
-  [NetworkType.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
-  [NetworkType.OXFORDNET]: "https://oxfordnet.ecadinfra.com/",
-  [NetworkType.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
-  [NetworkType.CUSTOM]: "https://ghostnet.ecadinfra.com/",
+  [NetworkTypeBeacon.MAINNET]: "https://mainnet.ecadinfra.com",
+  [NetworkTypeBeacon.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
+  [NetworkTypeBeacon.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
+  [NetworkTypeBeacon.CUSTOM]: "https://ghostnet.ecadinfra.com/",
 };
 
 export const getRpcUrl = (networkType: SupportedNetworks): string => {
@@ -16,22 +16,23 @@ export const getRpcUrl = (networkType: SupportedNetworks): string => {
 
 export const getTzKtUrl = (networkType: SupportedNetworks): string | undefined => {
   switch (networkType) {
-    case NetworkType.MAINNET:
+    case NetworkTypeBeacon.MAINNET:
+    case NetworkTypeWc2.MAINNET:
       return "https://tzkt.io";
-    case NetworkType.GHOSTNET:
+    case NetworkTypeBeacon.GHOSTNET:
+    case NetworkTypeWc2.GHOSTNET:
       return "https://ghostnet.tzkt.io";
-    case NetworkType.OXFORDNET:
-      return "https://oxfordnet.tzkt.io";
-    case NetworkType.PARISNET:
+    case NetworkTypeBeacon.PARISNET:
+    case NetworkTypeWc2.PARISNET:
       return "https://parisnet.tzkt.io";
-    case NetworkType.CUSTOM:
+    case NetworkTypeBeacon.CUSTOM:
       return undefined;
   }
 }
 
 export const defaultMatrixNode = "beacon-node-1.sky.papers.tech";
 
-export const defaultNetworkType = NetworkType.GHOSTNET;
+export const defaultNetworkType = NetworkTypeBeacon.GHOSTNET;
 
 // new protocol updated rpc url in example/data/test-dapp-contract.ts and npm -w example run example:deploy-dapp
 export const contractAddress = {

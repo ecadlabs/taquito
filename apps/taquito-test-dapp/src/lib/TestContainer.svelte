@@ -5,14 +5,26 @@
   import { shortenHash } from "../utils";
   import { NetworkType } from "@airgap/beacon-types";
   import { getTzKtUrl } from "../config";
+  import { BeaconWallet } from "@taquito/beacon-wallet";
 
   let test: TestSettings | undefined;
   let executionTime = 0;
   let loading = false;
   let success: boolean | undefined;
   let opHash = "";
-  let input = { text: "", fee: 400, storageLimit: 400, gasLimit: 1320, amount: 0, address: "", delegate: "", stake: 0, unstake: 0 };
+  let input = {
+    text: "",
+    fee: 400,
+    storageLimit: 400,
+    gasLimit: 1320,
+    amount: 0,
+    address: "",
+    delegate: "",
+    stake: 0,
+    unstake: 0,
+  };
   let testResult: { id: string; title: string; body: any };
+  let error: Error | undefined;
 
   const run = async () => {
     success = undefined;
@@ -70,7 +82,8 @@
           };
         }
       } else {
-        throw "Error";
+        error = result.error;
+        throw result.error;
       }
     } catch (error) {
       console.log(error);
@@ -82,7 +95,9 @@
   };
 
   const switchAccount = async () => {
-    await $store.wallet.clearActiveAccount();
+    if ($store.wallet instanceof BeaconWallet) {
+      await $store.wallet.clearActiveAccount();
+    }
     store.updateUserAddress(undefined);
     store.updateUserBalance(undefined);
     store.updateWallet(undefined);
@@ -306,21 +321,21 @@
             bind:value={input.text}
           />
         </div>
-        {:else if test.inputRequired && test.inputType === "delegate"}
+      {:else if test.inputRequired && test.inputType === "delegate"}
         <div class="test-input set-delegate">
           <label for="delegate-address">
             <span>Delegate address</span>
             <input type="delegate" id="delegate-address" bind:value={input.delegate} />
           </label>
         </div>
-        {:else if test.inputRequired && test.inputType === "stake"}
+      {:else if test.inputRequired && test.inputType === "stake"}
         <div class="test-input stake">
           <label for="stake-amount">
             <span>Stake amount</span>
             <input type="stake" id="stake-amount" bind:value={input.stake} />
           </label>
         </div>
-        {:else if test.inputRequired && test.inputType === "unstake"}
+      {:else if test.inputRequired && test.inputType === "unstake"}
         <div class="test-input unstake">
           <label for="unstake-amount">
             <span>Unstake amount</span>
@@ -392,6 +407,15 @@
           <h4>
             Test failed <span class="material-icons-outlined"> sentiment_very_dissatisfied </span>
           </h4>
+          {#if error}
+            <div style="word-break:break-word; color:#b92a2a">
+              {#if error instanceof Error}
+                {error}
+              {:else}
+                {JSON.stringify(error)}
+              {/if}
+            </div>
+          {/if}
         </div>
       {/if}
       <div class="test-run">

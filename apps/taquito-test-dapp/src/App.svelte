@@ -4,7 +4,7 @@
   import { NetworkType } from "@airgap/beacon-types";
   import Select from "svelte-select";
   import { getRpcUrl } from "./config";
-  import store from "./store";
+  import store, { SDK } from "./store";
   import Layout from "./Layout.svelte";
   import TestContainer from "./lib/TestContainer.svelte";
 
@@ -13,7 +13,6 @@
   let browser = "";
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
-    { value: "oxfordnet", label: "Oxfordnet", group: "current testnets" },
     { value: "parisnet", label: "Parisnet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
@@ -39,9 +38,6 @@
         break;
       case "ghostnet":
         store.updateNetworkType(NetworkType.GHOSTNET);
-        break;
-      case "oxfordnet":
-        store.updateNetworkType(NetworkType.OXFORDNET);
         break;
       case "parisnet":
         store.updateNetworkType(NetworkType.PARISNET);
@@ -129,6 +125,18 @@
           margin: 10px 0px;
         }
 
+        .sdk {
+          border: 1px solid;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 20px;
+          grid-row-gap: 10px;
+          align-items: center;
+          width: 100%;
+        }
+
         button {
           width: 100%;
           justify-content: center;
@@ -175,15 +183,32 @@
           <div>(use Chrome for a better experience)</div>
         {/if}
         <div class="options">
-          <button
-            on:click={() => {
-              const wallet = document.getElementById("wallet-button");
-              wallet?.click();
-            }}
-          >
-            <span class="material-icons-outlined"> account_balance_wallet </span>
-            &nbsp; Connect your wallet
-          </button>
+          <div class="sdk">
+            <span><strong>Connect using beacon sdk</strong></span>
+            <button
+              on:click={() => {
+                const wallet = document.getElementById("wallet-button");
+                store.updateSdk(SDK.BEACON);
+                wallet.click();
+              }}
+            >
+              <span class="material-icons-outlined"> account_balance_wallet </span>
+              &nbsp; Connect your wallet
+            </button>
+          </div>
+          <div class="sdk">
+            <span><strong>Connect using Wallet Connect 2</strong></span>
+            <button
+              on:click={() => {
+                const walletConnect2 = document.getElementById("wallet-button");
+                store.updateSdk(SDK.WC2);
+                walletConnect2.click();
+              }}
+            >
+              <span class="material-icons-outlined"> account_balance_wallet </span>
+              &nbsp; Connect your wallet
+            </button>
+          </div>
           <button>
             <span class="material-icons-outlined"> usb </span>
             &nbsp; Connect your Nano ledger

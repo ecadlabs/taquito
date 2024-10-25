@@ -80,6 +80,8 @@ Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), an
 | [@taquito/contracts-library](packages/taquito-contracts-library) | Provides functionality specify static data related to contracts                                      |
 | [@taquito/ledger-signer](packages/taquito-ledger-signer)         | Provides functionality for ledger signer provider                                                    |
 | [@taquito/timelock](packages/taquito-timelock)                   | Provides functionality to create and open timelocks                                                  |
+| [@taquito/wallet-connect](packages/taquito-wallet-connect)       | WalletConnect2 class can be injected into the `TezosToolkit` to work with the wallet API.            |
+
 
 ## API Documentation
 
