@@ -35,7 +35,7 @@ import {
   OperationParams,
   PermissionScopeMethods,
   PermissionScopeParam,
-  SigningType,
+  TezosAccount,
 } from './types';
 import {
   ActiveAccountUnspecified,
@@ -49,6 +49,7 @@ import {
   InvalidSessionKey,
   MissingRequiredScope,
   NotConnected,
+  PublicKeyRetrievalError,
 } from './errors';
 
 export { SignClientTypes, PairingTypes };
@@ -219,7 +220,7 @@ export class WalletConnect2 implements WalletProvider {
     const network = this.getActiveNetwork();
     const account = await this.getPKH();
     this.validateNetworkAndAccount(network, account);
-    const { transactionHash } = await this.signClient.request<{ transactionHash: string }>({
+    const { operationHash } = await this.signClient.request<{ operationHash: string }>({
       topic: session.topic,
       chainId: `${TEZOS_PLACEHOLDER}:${network}`,
       request: {
@@ -230,12 +231,14 @@ export class WalletConnect2 implements WalletProvider {
         },
       },
     });
-    return transactionHash;
+    return operationHash;
   }
 
-  // TODO need unit and test-dapp test
+  /**
+   * @description Once the session is establish, send payload to be signed by the wallet.
+   * @error MissingRequiredScope is thrown if permission to sign payload was not granted
+   */
   async sign(bytes: string, watermark?: Uint8Array): Promise<string> {
-    console.log(bytes, watermark);
     const session = this.getSession();
     if (!this.getPermittedMethods().includes(PermissionScopeMethods.TEZOS_SIGN)) {
       throw new MissingRequiredScope(PermissionScopeMethods.TEZOS_SIGN);
@@ -248,49 +251,17 @@ export class WalletConnect2 implements WalletProvider {
       expression =
         Array.from(watermark, (byte) => byte.toString(16).padStart(2, '0')).join('') + expression;
     }
-    const signature = await this.signClient.request<string>({
+    const { signature } = await this.signClient.request<{ signature: string }>({
       topic: session.topic,
       chainId: `${TEZOS_PLACEHOLDER}:${network}`,
       request: {
         method: PermissionScopeMethods.TEZOS_SIGN,
         params: {
-          expression,
-          signingType: SigningType.RAW,
+          account: await this.getPKH(),
+          payload: expression,
         },
       },
     });
-    return signature;
-  }
-
-  /**
-   * @description Once the session is establish, send payload to be approved and signed by the wallet.
-   * @error MissingRequiredScope is thrown if permission to sign payload was not granted
-   */
-  async signPayload(params: {
-    signingType?: SigningType;
-    payload: string;
-    sourceAddress?: string;
-  }) {
-    const session = this.getSession();
-    if (!this.getPermittedMethods().includes(PermissionScopeMethods.TEZOS_SIGN)) {
-      throw new MissingRequiredScope(PermissionScopeMethods.TEZOS_SIGN);
-    }
-    const network = this.getActiveNetwork();
-    const account = await this.getPKH();
-    this.validateNetworkAndAccount(network, account);
-    const signature = await this.signClient.request<string>({
-      topic: session.topic,
-      chainId: `${TEZOS_PLACEHOLDER}:${network}`,
-      request: {
-        method: PermissionScopeMethods.TEZOS_SIGN,
-        params: {
-          account: params.sourceAddress ?? account,
-          expression: params.payload,
-          signingType: params.signingType,
-        },
-      },
-    });
-    console.log(signature);
     return signature;
   }
 
@@ -331,16 +302,30 @@ export class WalletConnect2 implements WalletProvider {
   /**
    * @description Access the public key of the active account
    * @error ActiveAccountUnspecified thrown when there are multiple Tezos account in the session and none is set as the active one
+   * @error MissingRequiredScope is thrown if permission to get accounts was not granted
+   * @error PublicKeyRetrievalError is thrown if the public key is not found
    */
   async getPK() {
-    if (!this.activeAccount) {
-      this.getSession();
-      throw new ActiveAccountUnspecified();
+    const session = this.getSession();
+    if (!this.getPermittedMethods().includes(PermissionScopeMethods.TEZOS_GET_ACCOUNTS)) {
+      throw new MissingRequiredScope(PermissionScopeMethods.TEZOS_GET_ACCOUNTS);
     }
-    if (!this.getSession().sessionProperties) {
-      throw new InvalidSession('Session properties are not defined');
+    const network = this.getActiveNetwork();
+    const account = await this.getPKH();
+    const accounts = await this.signClient.request<TezosAccount[]>({
+      topic: session.topic,
+      chainId: `${TEZOS_PLACEHOLDER}:${network}`,
+      request: {
+        method: PermissionScopeMethods.TEZOS_GET_ACCOUNTS,
+        params: {},
+      },
+    });
+
+    const selectedAccount = accounts.find((acc) => acc.address === account);
+    if (!selectedAccount) {
+      throw new PublicKeyRetrievalError();
     }
-    return this.getSession().sessionProperties!.publicKey;
+    return selectedAccount.pubkey;
   }
 
   /**

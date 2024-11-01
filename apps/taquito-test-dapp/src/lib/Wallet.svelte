@@ -55,15 +55,18 @@
     });
     wallet.signClient.on("session_ping", ({ id, topic }) => {
       console.log("session_ping in test dapp", id, topic);
+      store.addEvent("session_ping");
     });
     wallet.signClient.on("session_delete", ({ topic }) => {
-      console.log("EVEN: session_delete", topic);
+      console.log("EVENT: session_delete", topic);
+      store.addEvent("session_delete");
       if (!wallet.isActiveSession()) {
         resetApp();
       }
     });
     wallet.signClient.on("session_update", async ({ topic }) => {
-      console.log("EVEN: session_update", topic);
+      console.log("EVENT: session_update", topic);
+      store.addEvent("session_update");
       const allAccounts = wallet.getAccounts();
       await updateStore(wallet, allAccounts);
     });
@@ -75,7 +78,7 @@
       permissionScope: {
         networks: [$store.networkType as NetworkTypeWc2],
         events: [],
-        methods: [PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN],
+        methods: [PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN, PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
       },
       pairingTopic,
       registryUrl: "https://www.tezos.help/wcdata/"
