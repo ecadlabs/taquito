@@ -13,7 +13,7 @@ The first step is to instantiate `WalletConnect2` by passing your dapp details a
 import { WalletConnect2 } from "@taquito/wallet-connect-2";
 
 const walletConnect = await WalletConnect2.init({
-  projectId: "YOUR_PROJECT_ID", // Your Project ID gives you access to WalletConnect Cloud
+  projectId: "YOUR_PROJECT_ID", // Your Project ID gives you access to Reown Cloud
   metadata: {
     name: "YOUR_DAPP_NAME",
     description: "YOUR_DAPP_DESCRIPTION",
@@ -22,7 +22,7 @@ const walletConnect = await WalletConnect2.init({
   },
 });
 ```
-`YOUR_PROJECT_ID` can be obtained from [WalletConnect Cloud](https://cloud.walletconnect.com/sign-in)
+`YOUR_PROJECT_ID` can be obtained from [Reown Cloud](https://cloud.reown.com)
 
 The second step is to establish a connection to a wallet using the `requestPermissions` method:
 
@@ -33,10 +33,11 @@ await walletConnect.requestPermissions({
   permissionScope: {
     networks: [NetworkType.GHOSTNET],
     methods: [
-      PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN
+      PermissionScopeMethods.TEZOS_SEND, 
+      PermissionScopeMethods.TEZOS_SIGN, 
+      PermissionScopeMethods.TEZOS_GET_ACCOUNTS
     ],
-  },
-  // registryUrl: "https://www.tezos.help/wcdata/"
+  }
 });
 ```
 
@@ -80,7 +81,6 @@ WalletConnect2.init({
           networks: [NetworkType.GHOSTNET],
           methods: [PermissionScopeMethods.TEZOS_SEND],
         },
-        // registryUrl: 'https://www.tezos.help/wcdata/',
       })
       .then(() => {
         Tezos.setWalletProvider(walletConnect);
@@ -99,7 +99,7 @@ WalletConnect2.init({
 
 ## Sign payload with `WalletConnect2`
 
-The `signPayload` method of `WalletConnect2` can be called to sign a payload. The response will be a string representing the signature. The permission `PermissionScopeMethods.TEZOS_SIGN` must have been granted, or the error `MissingRequiredScope` will be thrown.
+The `sign` method of `WalletConnect2` can be called to sign a payload. The response will be a string representing the signature. The permission `PermissionScopeMethods.TEZOS_SIGN` must have been granted, or the error `MissingRequiredScope` will be thrown.
 
 ## Events handling
 

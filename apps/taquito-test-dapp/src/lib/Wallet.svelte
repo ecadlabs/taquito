@@ -80,8 +80,7 @@
         events: [],
         methods: [PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN, PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
       },
-      pairingTopic,
-      registryUrl: "https://www.tezos.help/wcdata/"
+      pairingTopic
     });
     const allAccounts = wallet.getAccounts();
     await updateStore(wallet, allAccounts);

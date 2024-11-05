@@ -58,6 +58,13 @@ export * from './types';
 
 const TEZOS_PLACEHOLDER = 'tezos';
 
+/**
+ * @description The `WalletConnect2` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
+ * This package enables dapps built with Taquito to connect to wallets via the WalletConnect/Reown protocol.
+ * 
+ * @note Currently, a QR code is displayed to establish a connection with a wallet. As more Tezos wallets integrate with WalletConnect,
+ * we plan showing a list of available wallets alongside the QR code.
+ */
 export class WalletConnect2 implements WalletProvider {
   public signClient: Client;
   private session: SessionTypes.Struct | undefined;
@@ -298,7 +305,6 @@ export class WalletConnect2 implements WalletProvider {
     return this.activeAccount;
   }
 
-  // TODO need test-dapp test
   /**
    * @description Access the public key of the active account
    * @error ActiveAccountUnspecified thrown when there are multiple Tezos account in the session and none is set as the active one
