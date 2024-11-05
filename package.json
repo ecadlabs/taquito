@@ -58,7 +58,7 @@
       "^@taquito/tzip12$": "<rootDir>/packages/taquito-tzip12/src/taquito-tzip12.ts",
       "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts",
       "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
-      "^@taquito/wallet-connect-2$": "<rootDir>/packages/taquito-wallet-connect-2/src/wallet-connect-2.ts"
+      "^@taquito/wallet-connect-2$": "<rootDir>/packages/taquito-wallet-connect-2/src/taquito-wallet-connect-2.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

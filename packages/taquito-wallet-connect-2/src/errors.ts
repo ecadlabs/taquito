@@ -147,3 +147,11 @@ export class InvalidSession extends Error {
     super(message);
   }
 }
+
+export class PublicKeyRetrievalError extends Error {
+  name = 'PublicKeyRetrievalError';
+
+  constructor() {
+    super(`Unable to retrieve public key`);
+  }
+}
