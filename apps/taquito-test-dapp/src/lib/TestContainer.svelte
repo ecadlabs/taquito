@@ -80,6 +80,14 @@
             title: "Confirmations through observable",
             body: result.confirmationObsOutput,
           };
+        } else if (test.id === "show-public-key") {
+          testResult = {
+            id: test.id,
+            title: "Public Key",
+            body: {
+              output: result.output
+            }
+          }
         }
       } else {
         error = result.error;

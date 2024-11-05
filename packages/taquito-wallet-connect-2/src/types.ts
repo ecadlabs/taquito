@@ -47,6 +47,12 @@ export enum SigningType {
   MICHELINE = 'micheline',
 }
 
+export interface TezosAccount {
+  algo: string;
+  address: string;
+  pubkey: string;
+}
+
 type WalletDefinedFields = 'source' | 'gas_limit' | 'storage_limit' | 'fee';
 interface WalletOptionalFields {
   gas_limit?: string;

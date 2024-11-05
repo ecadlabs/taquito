@@ -296,28 +296,48 @@ describe('Wallet connect 2 tests', () => {
   });
 
   describe('test public key', () => {
-    it('should return public key when session namespace only have one', async () => {
-      mockSignClient.connect.mockReturnValue({ approval: async () => sessionExample });
-
-      await walletConnect.requestPermissions({
-        permissionScope: {
-          methods: [PermissionScopeMethods.TEZOS_SEND],
-          networks: [NetworkType.GHOSTNET],
+    it('should throw an error when no active account is set and session namespace has multiple accounts', async () => {
+      mockSignClient.connect.mockReturnValue({
+        approval: async () => {
+          return {
+            ...sessionExample,
+            namespaces: {
+              tezos: {
+                accounts: [
+                  'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+                  'tezos:ghostnet:tz2NBV8BNmMfR5VEscEvyT5y8knp37uPMctn',
+                ],
+                methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
+                events: [],
+              },
+            },
+            requiredNamespaces: {
+              tezos: {
+                methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
+                chains: ['tezos:ghostnet'],
+                events: [],
+              },
+            },
+          };
         },
       });
-
-      expect(await walletConnect.getPK()).toEqual(
-        '01b5630403234ba9745073c9ad081c7b812786b2bcfa8cfe1ff28d800b989f29'
-      );
-    });
-
-    it('should throw an error when no active account is set and session namespace has multiple accounts', async () => {
-      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
-
+      const mockRequestResponse = [
+        {
+          pubkey: 'sppk7aJNCPedN4NSP3h9mRNTecJMJugFBhrdTxn3jNGpTW22MGFAsvS',
+          algo: 'secp256k1',
+          address: 'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+        },
+        {
+          pubkey: 'sppk7aJNCgterggr4mRNTecJMJugFBhrdTxn3jNGpTW22MGFAsvS',
+          algo: 'secp256k1',
+          address: 'tz2NBV8BNmMfR5VEscEvyT5y8knp37uPMctn',
+        },
+      ];
+      mockSignClient.request.mockResolvedValue(mockRequestResponse);
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.TEZOS_SIGN],
-          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+          methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
+          networks: [NetworkType.GHOSTNET],
         },
       });
 
@@ -326,49 +346,115 @@ describe('Wallet connect 2 tests', () => {
       );
     });
 
-    it('should set the active account successfully', async () => {
-      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
-
-      await walletConnect.requestPermissions({
-        permissionScope: {
-          methods: [PermissionScopeMethods.TEZOS_SIGN],
-          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+    it('should return public key of active account when session namespace has multiple accounts', async () => {
+      mockSignClient.connect.mockReturnValue({
+        approval: async () => {
+          return {
+            ...sessionExample,
+            namespaces: {
+              tezos: {
+                accounts: [
+                  'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+                  'tezos:ghostnet:tz2NBV8BNmMfR5VEscEvyT5y8knp37uPMctn',
+                ],
+                methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
+                events: [],
+              },
+            },
+            requiredNamespaces: {
+              tezos: {
+                methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
+                chains: ['tezos:ghostnet'],
+                events: [],
+              },
+            },
+          };
         },
       });
-
-      walletConnect.setActiveAccount('tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh');
-      expect(await walletConnect.getPK()).toEqual(
-        '72dfcd018c5a636c311a0214c19f24e1e52a0f38082e31e3971af9b0296f4767'
-      );
-    });
-
-    it('should fail to set the active account when it is not part of the session namespace', async () => {
-      mockSignClient.connect.mockReturnValue({ approval: async () => sessionMultipleChains });
-
-      await walletConnect.requestPermissions({
-        permissionScope: {
-          methods: [PermissionScopeMethods.TEZOS_SIGN],
-          networks: [NetworkType.GHOSTNET, NetworkType.PARISNET],
+      const mockRequestResponse = [
+        {
+          pubkey: 'sppk7aJNCPedN4NSP3h9mRNTecJMJugFBhrdTxn3jNGpTW22MGFAsvS',
+          algo: 'secp256k1',
+          address: 'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
         },
-      });
-
-      expect(() => walletConnect.setActiveAccount('test')).toThrow('Invalid pkh "test"');
-    });
-
-    it('should delete active account when calling disconnect', async () => {
+        {
+          pubkey: 'sppk7aJNCgterggr4mRNTecJMJugFBhrdTxn3jNGpTW22MGFAsvS',
+          algo: 'secp256k1',
+          address: 'tz2NBV8BNmMfR5VEscEvyT5y8knp37uPMctn',
+        },
+      ];
+      mockSignClient.request.mockResolvedValue(mockRequestResponse);
       await walletConnect.requestPermissions({
         permissionScope: {
-          methods: [PermissionScopeMethods.TEZOS_SEND],
+          methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
           networks: [NetworkType.GHOSTNET],
         },
       });
 
-      expect(await walletConnect.getPK()).toEqual(
-        '01b5630403234ba9745073c9ad081c7b812786b2bcfa8cfe1ff28d800b989f29'
-      );
-      await walletConnect.disconnect();
-      expect(mockSignClient.disconnect).toHaveBeenCalledTimes(1);
-      await expect(walletConnect.getPK()).rejects.toThrow('Not connected, no active session');
+      walletConnect.setActiveAccount('tz2NBV8BNmMfR5VEscEvyT5y8knp37uPMctn');
+
+      const pk = await walletConnect.getPK();
+
+      expect(mockSignClient.request).toHaveBeenCalledWith({
+        topic: sessionExample.topic,
+        chainId: `tezos:ghostnet`,
+        request: {
+          method: PermissionScopeMethods.TEZOS_GET_ACCOUNTS,
+          params: {},
+        },
+      });
+
+      expect(pk).toEqual('sppk7aJNCgterggr4mRNTecJMJugFBhrdTxn3jNGpTW22MGFAsvS');
+    });
+
+    it('should throw an error if no accounts match the active account', async () => {
+      mockSignClient.connect.mockReturnValue({
+        approval: async () => {
+          return {
+            ...sessionExample,
+            namespaces: {
+              tezos: {
+                accounts: [
+                  'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+                  'tezos:ghostnet:tz2NBV8BNmMfR5VEscEvyT5y8knp37uPMctn',
+                ],
+                methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
+                events: [],
+              },
+            },
+            requiredNamespaces: {
+              tezos: {
+                methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
+                chains: ['tezos:ghostnet'],
+                events: [],
+              },
+            },
+          };
+        },
+      });
+      const mockRequestResponse = [
+        {
+          pubkey: 'sppk7aJNCPedN4NSP3h9mRNTecJMJugFBhrdTxn3jNGpTW22MGFAsvS',
+          algo: 'secp256k1',
+          address: 'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+        },
+        {
+          pubkey: 'sppk7aJNCgterggr4mRNTecJMJugFBhrdTxn3jNGpTW22MGFAsvS',
+          algo: 'secp256k1',
+          address: 'tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
+        },
+      ];
+      mockSignClient.request.mockResolvedValue(mockRequestResponse);
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
+          networks: [NetworkType.GHOSTNET],
+        },
+      });
+
+      walletConnect.setActiveAccount('tz2NBV8BNmMfR5VEscEvyT5y8knp37uPMctn');
+
+      await expect(walletConnect.getPK()).rejects.toThrow('Unable to retrieve public key');
     });
   });
 
@@ -746,7 +832,7 @@ describe('Wallet connect 2 tests', () => {
   describe('test sendOperations', () => {
     it('should send transaction operation successfully', async () => {
       const mockRequestResponse = {
-        transactionHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf',
+        operationHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf',
       };
       mockSignClient.request.mockResolvedValue(mockRequestResponse);
       await walletConnect.requestPermissions({
@@ -778,12 +864,12 @@ describe('Wallet connect 2 tests', () => {
         },
       });
 
-      expect(opHash).toEqual(mockRequestResponse.transactionHash);
+      expect(opHash).toEqual(mockRequestResponse.operationHash);
     });
 
     it('should send transaction operation with defined limits successfully', async () => {
       const mockRequestResponse = {
-        transactionHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf',
+        operationHash: 'onoNdgS5qcpuxyQVUEerSGCZQdyA3aGbC3nKoQmHJGic5AH9kQf',
       };
       mockSignClient.request.mockResolvedValue(mockRequestResponse);
       await walletConnect.requestPermissions({
@@ -824,7 +910,7 @@ describe('Wallet connect 2 tests', () => {
         },
       });
 
-      expect(opHash).toEqual(mockRequestResponse.transactionHash);
+      expect(opHash).toEqual(mockRequestResponse.operationHash);
     });
 
     it('should fail to send transaction operation if permission is not granted', async () => {
@@ -920,7 +1006,7 @@ describe('Wallet connect 2 tests', () => {
     });
   });
 
-  describe('test sign payload', () => {
+  describe('test sign', () => {
     it('should sign payload successfully', async () => {
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
@@ -944,66 +1030,10 @@ describe('Wallet connect 2 tests', () => {
         },
       });
 
-      const mockedSignature =
-        'edsigtpDN7L5LfzvYWM22fvYA4dPVr9wXaYje7z4nmBrT6ZxkGnHS6u3UuvD9TQv3BmNRSUgnMH1dKsAaLWhfuXXj63myo2m3De';
-      mockSignClient.request.mockResolvedValue(mockedSignature);
-      await walletConnect.requestPermissions({
-        permissionScope: {
-          methods: [PermissionScopeMethods.TEZOS_SIGN],
-          networks: [NetworkType.GHOSTNET],
-        },
-      });
-
-      const params = {
-        signingType: SigningType.MICHELINE,
-        payload:
-          '05010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
-        sourceAddress: 'tz1hWt34L3dnwrpBeG9RWJPQVTgTTAmH1b1p',
+      const mockedSignature = {
+        signature:
+          'edsigtpDN7L5LfzvYWM22fvYA4dPVr9wXaYje7z4nmBrT6ZxkGnHS6u3UuvD9TQv3BmNRSUgnMH1dKsAaLWhfuXXj63myo2m3De',
       };
-
-      const sig = await walletConnect.signPayload(params);
-
-      expect(mockSignClient.request).toHaveBeenCalledWith({
-        topic: sessionExample.topic,
-        chainId: `tezos:ghostnet`,
-        request: {
-          method: PermissionScopeMethods.TEZOS_SIGN,
-          params: {
-            account: 'tz1hWt34L3dnwrpBeG9RWJPQVTgTTAmH1b1p',
-            expression: params.payload,
-            signingType: params.signingType,
-          },
-        },
-      });
-
-      expect(sig).toEqual(mockedSignature);
-    });
-
-    it('should sign payload successfully when params.sourceAddress is undefined', async () => {
-      mockSignClient.connect.mockReturnValue({
-        approval: async () => {
-          return {
-            ...sessionExample,
-            namespaces: {
-              tezos: {
-                accounts: ['tezos:ghostnet:tz1hWt34L3dnwrpBeG9RWJPQVTgTTAmH1b1p'],
-                methods: [PermissionScopeMethods.TEZOS_SIGN],
-                events: [],
-              },
-            },
-            requiredNamespaces: {
-              tezos: {
-                methods: [PermissionScopeMethods.TEZOS_SIGN],
-                chains: ['tezos:ghostnet'],
-                events: [],
-              },
-            },
-          };
-        },
-      });
-
-      const mockedSignature =
-        'edsigtpDN7L5LfzvYWM22fvYA4dPVr9wXaYje7z4nmBrT6ZxkGnHS6u3UuvD9TQv3BmNRSUgnMH1dKsAaLWhfuXXj63myo2m3De';
       mockSignClient.request.mockResolvedValue(mockedSignature);
       await walletConnect.requestPermissions({
         permissionScope: {
@@ -1018,7 +1048,7 @@ describe('Wallet connect 2 tests', () => {
           '05010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
       };
 
-      const sig = await walletConnect.signPayload(params);
+      const sig = await walletConnect.sign(params.payload);
 
       expect(mockSignClient.request).toHaveBeenCalledWith({
         topic: sessionExample.topic,
@@ -1026,14 +1056,13 @@ describe('Wallet connect 2 tests', () => {
         request: {
           method: PermissionScopeMethods.TEZOS_SIGN,
           params: {
-            account: 'tz1hWt34L3dnwrpBeG9RWJPQVTgTTAmH1b1p',
-            expression: params.payload,
-            signingType: params.signingType,
+            account: 'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+            payload: params.payload,
           },
         },
       });
 
-      expect(sig).toEqual(mockedSignature);
+      expect(sig).toEqual(mockedSignature.signature);
     });
 
     it('should fail to sign payload if permission is not granted', async () => {
@@ -1072,14 +1101,12 @@ describe('Wallet connect 2 tests', () => {
           '05010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
       };
 
-      await expect(walletConnect.signPayload(params)).rejects.toThrow(
+      await expect(walletConnect.sign(params.payload)).rejects.toThrow(
         'Required permission scope were not granted for "tezos_sign"'
       );
     });
-  });
 
-  describe('test sign', () => {
-    it('should sign successfully', async () => {
+    it('should sign successfully and add watermark', async () => {
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -1102,8 +1129,10 @@ describe('Wallet connect 2 tests', () => {
         },
       });
 
-      const mockedSignature =
-        'edsigtpDN7L5LfzvYWM22fvYA4dPVr9wXaYje7z4nmBrT6ZxkGnHS6u3UuvD9TQv3BmNRSUgnMH1dKsAaLWhfuXXj63myo2m3De';
+      const mockedSignature = {
+        signature:
+          'edsigtpDN7L5LfzvYWM22fvYA4dPVr9wXaYje7z4nmBrT6ZxkGnHS6u3UuvD9TQv3BmNRSUgnMH1dKsAaLWhfuXXj63myo2m3De',
+      };
       mockSignClient.request.mockResolvedValue(mockedSignature);
       await walletConnect.requestPermissions({
         permissionScope: {
@@ -1123,52 +1152,14 @@ describe('Wallet connect 2 tests', () => {
         request: {
           method: PermissionScopeMethods.TEZOS_SIGN,
           params: {
-            expression:
+            payload:
               '05010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
-            signingType: SigningType.RAW,
+            account: 'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
           },
         },
       });
 
-      expect(sig).toEqual(mockedSignature);
-    });
-
-    it('should fail to sign payload if permission is not granted', async () => {
-      mockSignClient.connect.mockReturnValue({
-        approval: async () => {
-          return {
-            ...sessionExample,
-            namespaces: {
-              tezos: {
-                accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
-                methods: [PermissionScopeMethods.TEZOS_SEND],
-                events: [],
-              },
-            },
-            requiredNamespaces: {
-              tezos: {
-                methods: [PermissionScopeMethods.TEZOS_SEND],
-                chains: ['tezos:ghostnet'],
-                events: [],
-              },
-            },
-          };
-        },
-      });
-
-      await walletConnect.requestPermissions({
-        permissionScope: {
-          methods: [PermissionScopeMethods.TEZOS_SEND],
-          networks: [NetworkType.GHOSTNET],
-        },
-      });
-
-      await expect(
-        walletConnect.sign(
-          '010031363454657a6f73205369676e6564204d6573736167653a207461717569746f2d746573742d646170702e6e65746c6966792e6170702f20323032322d31322d31335432333a30353a30372e3938375a2074657374',
-          new Uint8Array([5])
-        )
-      ).rejects.toThrow('Required permission scope were not granted for "tezos_sign"');
+      expect(sig).toEqual(mockedSignature.signature);
     });
   });
 

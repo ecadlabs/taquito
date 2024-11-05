@@ -7,7 +7,7 @@ import {
   UnitValue
 } from "@taquito/taquito";
 import type { ContractProvider } from "@taquito/taquito";
-import type { BeaconWallet } from "@taquito/beacon-wallet";
+import { BeaconWallet } from "@taquito/beacon-wallet";
 import { stringToBytes, verifySignature } from "@taquito/utils";
 import { SigningType, type RequestSignPayloadInput } from "@airgap/beacon-types";
 import { get } from "svelte/store";
@@ -55,6 +55,16 @@ const sendTezToEtherlink = async (
     return { success: false, opHash: "", error };
   }
 };
+
+const showPublicKey = async (Tezos: TezosToolkit): Promise<TestResult> => {
+  try {
+    const publicKey = await Tezos.wallet.pk();
+    return { success: true, opHash: "", output: publicKey };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "", output: JSON.stringify(error) };
+  }
+}
 
 const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
   let opHash = "";
@@ -348,19 +358,30 @@ const batchApiContractCallsTest = async (
 
 const signPayload = async (
   input: string,
-  wallet: BeaconWallet
+  wallet: BeaconWallet | WalletConnect2
 ): Promise<TestResult> => {
   const userAddress = await wallet.getPKH();
   const { payload, formattedInput } = preparePayloadToSign(input, userAddress);
   try {
-    const signedPayload = await wallet.client.requestSignPayload(payload);
-    return {
-      success: true,
-      opHash: "",
-      output: signedPayload.signature,
-      sigDetails: { input, formattedInput, bytes: payload.payload }
-    };
-  } catch (error) {
+    if (wallet instanceof BeaconWallet) {
+      const signedPayload = await wallet.client.requestSignPayload(payload);
+      return {
+        success: true,
+        opHash: "",
+        output: signedPayload.signature,
+        sigDetails: { input, formattedInput, bytes: payload.payload }
+      };
+    } else {
+      const signature = await wallet.sign(payload.payload);
+      return {
+        success: true,
+        opHash: "",
+        output: signature,
+        sigDetails: { input, formattedInput, bytes: payload.payload }
+      };
+    }
+  }
+  catch (error) {
     console.log(error);
     return { success: false, opHash: "", output: JSON.stringify(error) };
   }
@@ -368,29 +389,42 @@ const signPayload = async (
 
 const signPayloadAndSend = async (
   input: string,
-  wallet: BeaconWallet,
-  contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
+  wallet: BeaconWallet | WalletConnect2,
+  contract: ContractAbstraction<Wallet>
 ): Promise<TestResult> => {
   if (!input) throw "No input provided";
 
   const userAddress = await wallet.getPKH();
   const { payload, formattedInput } = preparePayloadToSign(input, userAddress);
   try {
-    const signedPayload = await wallet.client.requestSignPayload(payload);
-    // gets user's public key
-    const activeAccount = await wallet.client.getActiveAccount();
-    const publicKey = activeAccount.publicKey;
-    // sends transaction to contract
-    const op = await contract.methodsObject
-      .check_signature({ 0: publicKey, 1: signedPayload.signature, 2: payload.payload })
-      .send();
-    await op.confirmation();
-    return {
-      success: true,
-      opHash: op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"],
-      output: signedPayload.signature,
-      sigDetails: { input, formattedInput, bytes: payload.payload }
-    };
+    if (wallet instanceof BeaconWallet) {
+      const signedPayload = await wallet.client.requestSignPayload(payload);
+      // gets user's public key
+      const activeAccount = await wallet.client.getActiveAccount();
+      const publicKey = activeAccount.publicKey;
+      // sends transaction to contract
+      const op = await contract.methodsObject
+        .check_signature({ 0: publicKey, 1: signedPayload.signature, 2: payload.payload })
+        .send();
+      await op.confirmation();
+      return {
+        success: true,
+        opHash: op.opHash,
+        output: signedPayload.signature,
+        sigDetails: { input, formattedInput, bytes: payload.payload }
+      };
+    } else {
+      const signature = await wallet.sign(payload.payload);
+      const publicKey = await wallet.getPK();
+      const op = await contract.methodsObject.check_signature({ 0: publicKey, 1: signature, 2: payload.payload }).send();
+      await op.confirmation();
+      return {
+        success: true,
+        opHash: op.opHash,
+        output: signature,
+        sigDetails: { input, formattedInput, bytes: payload.payload }
+      }
+    }
   } catch (error) {
     return { success: false, opHash: "", output: JSON.stringify(error) };
   }
@@ -656,6 +690,17 @@ export const init = (
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>,
   wallet: BeaconWallet | undefined
 ): TestSettings[] => [
+    {
+      id: "show-public-key",
+      name: "Show public key",
+      description: "This test shows your public key.",
+      documentation: '',
+      keyword: 'publicKey',
+      run: () => showPublicKey(Tezos),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
     {
       id: "send-tez",
       name: "Send tez",
