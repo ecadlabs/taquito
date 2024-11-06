@@ -13,7 +13,7 @@ The first step is to instantiate `WalletConnect2` by passing your dapp details a
 import { WalletConnect2 } from "@taquito/wallet-connect-2";
 
 const walletConnect = await WalletConnect2.init({
-  projectId: "YOUR_PROJECT_ID", // Your Project ID gives you access to Reown Cloud
+  projectId: "YOUR_PROJECT_ID", // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
   metadata: {
     name: "YOUR_DAPP_NAME",
     description: "YOUR_DAPP_DESCRIPTION",
@@ -22,7 +22,6 @@ const walletConnect = await WalletConnect2.init({
   },
 });
 ```
-`YOUR_PROJECT_ID` can be obtained from [Reown Cloud](https://cloud.reown.com)
 
 The second step is to establish a connection to a wallet using the `requestPermissions` method:
 
@@ -33,8 +32,8 @@ await walletConnect.requestPermissions({
   permissionScope: {
     networks: [NetworkType.GHOSTNET],
     methods: [
-      PermissionScopeMethods.TEZOS_SEND, 
-      PermissionScopeMethods.TEZOS_SIGN, 
+      PermissionScopeMethods.TEZOS_SEND,
+      PermissionScopeMethods.TEZOS_SIGN,
       PermissionScopeMethods.TEZOS_GET_ACCOUNTS
     ],
   }
@@ -66,7 +65,7 @@ Tezos.setRpcProvider('https://ghostnet.ecadinfra.com/');
 
 WalletConnect2.init({
   logger: 'debug',
-  projectId: '861613623da99d7285aaad8279a87ee9',
+  projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',  // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
   metadata: {
     name: 'Taquito website',
     description: 'Taquito website with WalletConnect2',
@@ -81,6 +80,8 @@ WalletConnect2.init({
           networks: [NetworkType.GHOSTNET],
           methods: [PermissionScopeMethods.TEZOS_SEND],
         },
+        registryUrl: `https://explorer-api.walletconnect.com/v3/wallets?projectId=ba97fd7d1e89eae02f7c330e14ce1f36`,   // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
+
       })
       .then(() => {
         Tezos.setWalletProvider(walletConnect);

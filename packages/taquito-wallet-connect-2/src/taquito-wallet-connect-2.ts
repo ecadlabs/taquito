@@ -61,7 +61,6 @@ const TEZOS_PLACEHOLDER = 'tezos';
 /**
  * @description The `WalletConnect2` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
  * This package enables dapps built with Taquito to connect to wallets via the WalletConnect/Reown protocol.
- * 
  * @note Currently, a QR code is displayed to establish a connection with a wallet. As more Tezos wallets integrate with WalletConnect,
  * we plan showing a list of available wallets alongside the QR code.
  */
@@ -109,7 +108,7 @@ export class WalletConnect2 implements WalletProvider {
    * @example
    * ```
    * await WalletConnect2.init({
-   *  projectId: "YOUR_PROJECT_ID",
+   *  projectId: "YOUR_PROJECT_ID", // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
    *  metadata: {
    *    name: "YOUR_DAPP_NAME",
    *    description: "YOUR_DAPP_DESCRIPTION",

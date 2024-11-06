@@ -1,6 +1,6 @@
 # Taquito Wallet Connect 2 / Reown package
 
-_Documentation can be found [here](https://taquito.io/docs/wallet_connect_2)_  
+_Documentation can be found [here](https://taquito.io/docs/wallet_connect_2)_
 
 ## General Information
 
@@ -24,7 +24,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { WalletConnect2 } from '@taquito/wallet-connect-2';
 
 const wallet = await WalletConnect2.init({
-    projectId: "861613623da99d7285aaad8279a87ee9", // Your Project ID gives you access to WalletConnect Cloud.
+  projectId: "YOUR_PROJECT_ID", // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
     metadata: {
         name: "Taquito Test Dapp",
         description: "Test Taquito with WalletConnect2",
@@ -38,8 +38,8 @@ await wallet.requestPermissions({
         networks: [NetworkType.GHOSTNET],
         events: [],
         methods: [
-            PermissionScopeMethods.TEZOS_SEND, 
-            PermissionScopeMethods.TEZOS_SIGN, 
+            PermissionScopeMethods.TEZOS_SEND,
+            PermissionScopeMethods.TEZOS_SIGN,
             PermissionScopeMethods.TEZOS_GET_ACCOUNTS
         ],
     }

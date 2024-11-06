@@ -43,7 +43,7 @@
         rpcUrl: getRpcUrl(config.networkType),
       },
       walletConnectOptions: {
-        projectId: "ba97fd7d1e89eae02f7c330e14ce1f36",
+        projectId: "ba97fd7d1e89eae02f7c330e14ce1f36", // Project ID can be obtained from Reown Cloud (https://cloud.reown.com).
       },
       enableMetrics: $store.enableMetrics,
     });
@@ -54,7 +54,7 @@
   const createNewWalletConnect2 = async () => {
     const wallet = await WalletConnect2.init({
       logger: "debug",
-      projectId: "861613623da99d7285aaad8279a87ee9", // Your Project ID gives you access to WalletConnect Cloud.
+      projectId: "ba97fd7d1e89eae02f7c330e14ce1f36", // Project ID can be obtained from Reown Cloud (https://cloud.reown.com).
       metadata: {
         name: "Taquito Test Dapp",
         description: "Test Taquito with WalletConnect2",
@@ -89,6 +89,7 @@
         events: [],
         methods: [PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN, PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
       },
+      registryUrl: `https://explorer-api.walletconnect.com/v3/wallets?projectId=ba97fd7d1e89eae02f7c330e14ce1f36`, // Project ID can be obtained from Reown Cloud (https://cloud.reown.com).
       pairingTopic
     });
     const allAccounts = wallet.getAccounts();
