@@ -5,12 +5,12 @@
   import { BeaconWallet } from "@taquito/beacon-wallet";
   import store, { SDK } from "../store";
   import { formatTokenAmount, shortenHash } from "../utils";
-  import { defaultMatrixNode, getRpcUrl } from "../config";
+  import { defaultMatrixNode, getRpcUrl, type SupportedNetworks } from "../config";
   import type { TezosAccountAddress } from "../types";
   import { WalletConnect2, PermissionScopeMethods, NetworkType as NetworkTypeWc2 } from "@taquito/wallet-connect-2";
   import { Modals, closeModal, openModal } from "svelte-modals";
   import ModalActivePairing from "./ModalActivePairing.svelte";
-  import type { NetworkType as  NetworkTypeBeacon } from "@airgap/beacon-sdk";
+  import  { type NetworkType as  NetworkTypeBeacon, BeaconEvent } from "@airgap/beacon-sdk";
 
   let showDialog = false;
   let connectedWallet = "";
@@ -34,12 +34,21 @@
     );
   };
 
-  const createNewBeaconWallet = () => {
-    return new BeaconWallet({
+  const createNewBeaconWallet = (config: { networkType: SupportedNetworks }) => {
+    const wallet = new BeaconWallet({
       name: "Taquito Test Dapp",
       matrixNodes: [defaultMatrixNode] as any,
-      preferredNetwork: $store.networkType as NetworkTypeBeacon,
+      network: {
+        type: config.networkType,
+        rpcUrl: getRpcUrl(config.networkType),
+      },
+      walletConnectOptions: {
+        projectId: "ba97fd7d1e89eae02f7c330e14ce1f36",
+      },
+      enableMetrics: $store.enableMetrics,
     });
+    wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, () => {});
+    return wallet;
   };
 
   const createNewWalletConnect2 = async () => {
@@ -96,7 +105,7 @@
   const connectWallet = async () => {
     if (!$store.wallet) {
       if ($store.sdk === SDK.BEACON) {
-        const newWallet = createNewBeaconWallet();
+        const newWallet = createNewBeaconWallet({networkType: $store.networkType});
         await newWallet.requestPermissions({
           network: {
             type: $store.networkType as NetworkTypeBeacon,
