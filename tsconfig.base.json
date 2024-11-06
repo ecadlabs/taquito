@@ -72,8 +72,8 @@
       "@taquito/utils": [
         "taquito-utils/src/taquito-utils.ts"
       ],
-      "@taquito/wallet-connect-2": [
-        "taquito-wallet-connect-2/src/taquito-wallet-connect-2.ts"
+      "@taquito/wallet-connect": [
+        "taquito-wallet-connect/src/taquito-wallet-connect.ts"
       ]
     }
   }

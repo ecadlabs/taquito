@@ -13,7 +13,7 @@ import { SigningType, type RequestSignPayloadInput } from "@airgap/beacon-types"
 import { get } from "svelte/store";
 import type { TestSettings, TestResult } from "./types";
 import store from "./store";
-import { WalletConnect2 } from "@taquito/wallet-connect-2";
+import { WalletConnect } from "@taquito/wallet-connect";
 import contractToOriginate from "./contractToOriginate";
 import localStore from "./store";
 
@@ -358,7 +358,7 @@ const batchApiContractCallsTest = async (
 
 const signPayload = async (
   input: string,
-  wallet: BeaconWallet | WalletConnect2
+  wallet: BeaconWallet | WalletConnect
 ): Promise<TestResult> => {
   const userAddress = await wallet.getPKH();
   const { payload, formattedInput } = preparePayloadToSign(input, userAddress);
@@ -389,7 +389,7 @@ const signPayload = async (
 
 const signPayloadAndSend = async (
   input: string,
-  wallet: BeaconWallet | WalletConnect2,
+  wallet: BeaconWallet | WalletConnect,
   contract: ContractAbstraction<Wallet>
 ): Promise<TestResult> => {
   if (!input) throw "No input provided";
@@ -455,7 +455,7 @@ const signFailingNoop = async (
 
 const verifySignatureWithTaquito = async (
   input: string,
-  wallet: BeaconWallet | WalletConnect2,
+  wallet: BeaconWallet | WalletConnect,
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
 ): Promise<TestResult> => {
   if (!input) throw "No input provided";

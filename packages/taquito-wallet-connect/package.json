@@ -1,15 +1,15 @@
 {
-  "name": "@taquito/wallet-connect-2",
+  "name": "@taquito/wallet-connect",
   "version": "20.1.0",
-  "description": "Wallet connect 2 provider",
+  "description": "Walletconnect/reown provider",
   "keywords": [
     "tezos",
     "blockchain",
     "websocket"
   ],
-  "main": "dist/taquito-wallet-connect-2.umd.js",
-  "module": "dist/taquito-wallet-connect-2.es6.js",
-  "typings": "dist/types/taquito-wallet-connect-2.d.ts",
+  "main": "dist/taquito-wallet-connect.umd.js",
+  "module": "dist/taquito-wallet-connect.es6.js",
+  "typings": "dist/types/taquito-wallet-connect.d.ts",
   "files": [
     "signature.json",
     "dist"
@@ -68,7 +68,6 @@
   "dependencies": {
     "@taquito/taquito": "^20.0.1",
     "@walletconnect/legacy-modal": "^2.0.0",
-    "@walletconnect/modal": "^2.6.2",
     "@walletconnect/sign-client": "^2.16.2",
     "@walletconnect/types": "^2.16.2",
     "@walletconnect/utils": "^2.16.2"

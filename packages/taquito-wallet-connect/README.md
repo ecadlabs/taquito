@@ -1,10 +1,10 @@
-# Taquito Wallet Connect 2 / Reown package
+# Taquito Wallet Connect / Reown package
 
-_Documentation can be found [here](https://taquito.io/docs/wallet_connect_2)_
+_Documentation can be found [here](https://taquito.io/docs/wallet_connect)_
 
 ## General Information
 
-`@taquito/wallet-connect-2` is an npm package that provides developers a way to connect a dapp built with Taquito to a wallet giving the freedom to the users of the dapp to choose the wallet via the WalletConnect/Reown protocol. The `WalletConnect2` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
+`@taquito/wallet-connect` is an npm package that provides developers a way to connect a dapp built with Taquito to a wallet giving the freedom to the users of the dapp to choose the wallet via the WalletConnect/Reown protocol. The `WalletConnect` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
 Note: Currently, a QR code is displayed to establish a connection with a wallet. As more Tezos wallets integrate with WalletConnect, we plan showing a list of available wallets alongside the QR code.
 
 ## Install
@@ -12,7 +12,7 @@ Note: Currently, a QR code is displayed to establish a connection with a wallet.
 Install the package as follows
 
 ```
-npm install @taquito/wallet-connect-2
+npm install @taquito/wallet-connect
 ```
 
 ## Usage
@@ -21,13 +21,13 @@ Create a wallet instance with defined option parameters and set the wallet provi
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
-import { WalletConnect2 } from '@taquito/wallet-connect-2';
+import { WalletConnect } from '@taquito/wallet-connect';
 
-const wallet = await WalletConnect2.init({
+const wallet = await WalletConnect.init({
   projectId: "YOUR_PROJECT_ID", // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
     metadata: {
         name: "Taquito Test Dapp",
-        description: "Test Taquito with WalletConnect2",
+        description: "Test Taquito with WalletConnect",
         icons: [],
         url: "",
     },

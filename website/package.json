@@ -40,7 +40,7 @@
     "@taquito/tzip12": "file:../packages/taquito-tzip12",
     "@taquito/tzip16": "file:../packages/taquito-tzip16",
     "@taquito/utils": "file:../packages/taquito-utils",
-    "@taquito/wallet-connect-2": "file:../packages/taquito-wallet-connect-2",
+    "@taquito/wallet-connect": "file:../packages/taquito-wallet-connect",
     "abort-controller": "^3.0.0",
     "algoliasearch": "^4.23.2",
     "axios": "^0.28.0",

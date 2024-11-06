@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
 
-const libraryName = 'taquito-wallet-connect-2';
+const libraryName = 'taquito-wallet-connect';
 
 export default {
   input: `src/${libraryName}.ts`,

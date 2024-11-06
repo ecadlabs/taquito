@@ -88,7 +88,7 @@ export default ({
       const { Schema, ParameterSchema, Token } = await import("@taquito/michelson-encoder");
       const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
       const { RpcClient } = await import('@taquito/rpc');
-      const { WalletConnect2, PermissionScopeMethods, NetworkType } = await import('@taquito/wallet-connect-2');
+      const { WalletConnect, PermissionScopeMethods, NetworkType } = await import('@taquito/wallet-connect');
       const TransportWebHID = (await import("@ledgerhq/hw-transport-webhid")).default;
 
       let wallet;
@@ -143,7 +143,7 @@ export default ({
         emitMicheline,
         RpcReadAdapter,
         RpcClient,
-        WalletConnect2,
+        WalletConnect,
         PermissionScopeMethods,
         NetworkType,
         Ed25519,
@@ -209,7 +209,7 @@ export default ({
           RpcClient: dependencies?.RpcClient,
           InMemorySpendingKey: dependencies?.InMemorySpendingKey,
           InMemoryViewingKey: dependencies?.InMemoryViewingKey,
-          WalletConnect2: dependencies?.WalletConnect2,
+          WalletConnect: dependencies?.WalletConnect,
           PermissionScopeMethods: dependencies?.PermissionScopeMethods,
           NetworkType: dependencies?.NetworkType,
           Ed25519: dependencies?.Ed25519,

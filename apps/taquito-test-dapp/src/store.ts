@@ -4,7 +4,7 @@ import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { defaultMatrixNode, defaultNetworkType, type SupportedNetworks } from "./config";
 import type { TestSettings } from "./types";
 import type { NetworkType as NetworkTypeBeacon } from "@airgap/beacon-sdk";
-import type { WalletConnect2, NetworkType as NetworkTypeWc2 } from "@taquito/wallet-connect-2";
+import type { WalletConnect, NetworkType as NetworkTypeWc2 } from "@taquito/wallet-connect";
 
 export enum SDK {
   BEACON,
@@ -17,7 +17,7 @@ interface State {
   userAddress: string | undefined;
   availableAccounts: string[] | undefined;
   userBalance: number | undefined;
-  wallet: BeaconWallet | WalletConnect2 | undefined;
+  wallet: BeaconWallet | WalletConnect | undefined;
   disableDefaultEvents: boolean;
   enableMetrics: boolean;
   networkType: SupportedNetworks;
@@ -76,7 +76,7 @@ const state = {
       ...store,
       Tezos
     })),
-  updateWallet: (wallet: BeaconWallet | WalletConnect2 | undefined) =>
+  updateWallet: (wallet: BeaconWallet | WalletConnect | undefined) =>
     store.update(store => ({
       ...store,
       wallet

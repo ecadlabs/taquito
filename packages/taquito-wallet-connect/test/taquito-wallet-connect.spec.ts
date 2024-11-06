@@ -5,15 +5,15 @@ import {
   PermissionScopeMethods,
   SigningType,
   TransferParams,
-  WalletConnect2,
-} from '../src/taquito-wallet-connect-2';
+  WalletConnect,
+} from '../src/taquito-wallet-connect';
 import { existingPairings, fakeCode, sessionExample, sessionMultipleChains } from './data';
 
-describe('Wallet connect 2 tests', () => {
+describe('Wallet connect tests', () => {
   let sessionDeletedEvent: (eventParams: { topic: string }) => void;
   let sessionExpiredEvent: (eventParams: { topic: string }) => void;
   let sessionUpdatedEvent: (eventParams: { topic: string; params: any }) => void;
-  let walletConnect: WalletConnect2;
+  let walletConnect: WalletConnect;
   let mockSignClient: {
     on: any;
     connect: jest.Mock<any, any>;
@@ -57,11 +57,11 @@ describe('Wallet connect 2 tests', () => {
       request: jest.fn(),
     };
     mockSignClient.connect.mockReturnValue({ approval: async () => sessionExample });
-    walletConnect = new WalletConnect2(mockSignClient as any);
+    walletConnect = new WalletConnect(mockSignClient as any);
   });
 
-  it('verify that WalletConnect2 is instantiable', async () => {
-    expect(new WalletConnect2(mockSignClient as any)).toBeInstanceOf(WalletConnect2);
+  it('verify that WalletConnect is instantiable', async () => {
+    expect(new WalletConnect(mockSignClient as any)).toBeInstanceOf(WalletConnect);
   });
 
   it('should establish a connection successfully', async () => {
@@ -460,8 +460,6 @@ describe('Wallet connect 2 tests', () => {
 
   describe('test validation of incoming proposal namespaces', () => {
     it('should fail to establish a connection if the proposal namespace does not have any accounts', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#21-session-namespaces-must-not-have-accounts-empty
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -488,8 +486,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should fail to establish a connection if the proposal namespace addresses are not CAIP-10 compliant', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#22-session-namespaces-addresses-must-be-caip-10-compliant
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -518,8 +514,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should fail to establish a connection if the received namespace is missing a requested method', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#23-session-namespaces-must-approve-all-methods
-
       await expect(
         walletConnect.requestPermissions({
           permissionScope: {
@@ -561,8 +555,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should fail to establish a connection if the received namespace is missing account in a requested chain', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#24-session-namespaces-must-contain-at-least-one-account-in-requested-chains
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -591,8 +583,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should fail to establish a connection if the received namespace is missing account in requested chains', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#24-session-namespaces-must-contain-at-least-one-account-in-requested-chains
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -621,8 +611,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should establish a connection successfully if the received namespace contains multiple accounts for one chain', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#25-session-namespaces-may-contain-multiple-accounts-for-one-chain
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -660,8 +648,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should establish a connection successfully even if the received namespace extend methods and events', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#26-session-namespaces-may-extend-methods-and-events-of-proposal-namespaces
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -696,8 +682,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should fail to establish a connection if an account in the received namespace do not contain the namespace prefix', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#27-all-accounts-in-the-namespace-must-contain-the-namespace-prefix
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -729,8 +713,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should establish a connection successfully even if the received namespace contain an account from a chain not defined in Proposal Namespaces', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#28-session-namespaces-may-contain-accounts-from-chains-not-defined-in-proposal-namespaces
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -768,8 +750,6 @@ describe('Wallet connect 2 tests', () => {
     });
 
     it('should fail to establish a connection if received namespace does not contain tezos', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#29-session-namespaces-must-have-at-least-the-same-namespaces-as-the-proposal-namespaces
-
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {
@@ -797,9 +777,7 @@ describe('Wallet connect 2 tests', () => {
       );
     });
 
-    it('should fail to establish a connection if received namespace is mising requested events', async () => {
-      // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#211-session-namespaces-must-approve-all-events
-
+    it('should fail to establish a connection if received namespace is missing requested events', async () => {
       mockSignClient.connect.mockReturnValue({
         approval: async () => {
           return {

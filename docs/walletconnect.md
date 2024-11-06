@@ -1,18 +1,18 @@
 ---
-title: Wallet Connect 2
+title: WalletConnect
 author: Roxane Letourneau
 ---
 
-The `@taquito/wallet-connect-2` package provides a `WalletConnect2` class which implements the `WalletProvider` interface. The package is intended to be used by dapp developers. Similarly to `BeaconWallet`, an instance of `WalletConnect2` can be injected into the `TezosToolkit` to work with the wallet API.
+The `@taquito/wallet-connect` package provides a `WalletConnect` class which implements the `WalletProvider` interface. The package is intended to be used by dapp developers. Similarly to `BeaconWallet`, an instance of `WalletConnect` can be injected into the `TezosToolkit` to work with the wallet API.
 
-## Instantiate `WalletConnect2` and connect to a wallet
+## Instantiate `WalletConnect` and connect to a wallet
 
-The first step is to instantiate `WalletConnect2` by passing your dapp details as a parameter of the `init` method as follows:
+The first step is to instantiate `WalletConnect` by passing your dapp details as a parameter of the `init` method as follows:
 
 ```ts
-import { WalletConnect2 } from "@taquito/wallet-connect-2";
+import { WalletConnect } from "@taquito/wallet-connect";
 
-const walletConnect = await WalletConnect2.init({
+const walletConnect = await WalletConnect.init({
   projectId: "YOUR_PROJECT_ID", // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
   metadata: {
     name: "YOUR_DAPP_NAME",
@@ -26,7 +26,7 @@ const walletConnect = await WalletConnect2.init({
 The second step is to establish a connection to a wallet using the `requestPermissions` method:
 
 ```ts
-import { NetworkType, PermissionScopeMethods } from "@taquito/wallet-connect-2";
+import { NetworkType, PermissionScopeMethods } from "@taquito/wallet-connect";
 
 await walletConnect.requestPermissions({
   permissionScope: {
@@ -48,13 +48,13 @@ The parameter of the `requestPermissions` method also has an optional `registryU
 
 If no connection can be established with a wallet, the error `ConnectionFailed` will be thrown.
 
-Suppose there is a need to restore a session in the dapp rather than using the `requestPermissions` method, which would establish a new session. In that case, it is possible to configure the `WalletConnect2` class with an existing session using the `configureWithExistingSessionKey` method. The session will be immediately restored without a prompt in the wallet to accept/decline it. The list of existing sessions can be retrieved with the `getAllExistingSessionKeys` method. An `InvalidSessionKey` error will be thrown if the provided session key doesn't exist.
+Suppose there is a need to restore a session in the dapp rather than using the `requestPermissions` method, which would establish a new session. In that case, it is possible to configure the `WalletConnect` class with an existing session using the `configureWithExistingSessionKey` method. The session will be immediately restored without a prompt in the wallet to accept/decline it. The list of existing sessions can be retrieved with the `getAllExistingSessionKeys` method. An `InvalidSessionKey` error will be thrown if the provided session key doesn't exist.
 
-## Send Tezos operation with `WalletConnect2` and `TezosToolkit`
+## Send Tezos operation with `WalletConnect` and `TezosToolkit`
 
-Once an instance of `WalletConnect2` is created and a session is established, it can be injected into the `TezosToolkit` using its `setWalletProvider` method. Methods of the wallet API can be invoked to send operations to the blockchain. Those operations will be signed and injected by the wallet. The permission `PermissionScopeMethods.TEZOS_SEND` must have been granted, or the error `MissingRequiredScope` will be thrown.
+Once an instance of `WalletConnect` is created and a session is established, it can be injected into the `TezosToolkit` using its `setWalletProvider` method. Methods of the wallet API can be invoked to send operations to the blockchain. Those operations will be signed and injected by the wallet. The permission `PermissionScopeMethods.TEZOS_SEND` must have been granted, or the error `MissingRequiredScope` will be thrown.
 
-Wallet connect 2 allows granting permission for multiple accounts in a session. The `setActiveAccount` must be called to set the active account that will be used to prepare the operation. It should be called every time the active account is updated in the dapp. It is possible to retrieve a list of all connected accounts using the `getAccounts` method. The `getPKH` method will return the public key hash of the active account. Note that if only one account is present in the session, it will be set as the active one by default.
+Wallet connect allows granting permission for multiple accounts in a session. The `setActiveAccount` must be called to set the active account that will be used to prepare the operation. It should be called every time the active account is updated in the dapp. It is possible to retrieve a list of all connected accounts using the `getAccounts` method. The `getPKH` method will return the public key hash of the active account. Note that if only one account is present in the session, it will be set as the active one by default.
 
 In the same order of ideas, `setActiveNetwork` must be called to specify the active network. The `getNetworks` method retrieves the list of available networks in the session.
 
@@ -63,12 +63,12 @@ Here is a complete example of using wallet connect to perform a transfer operati
 ```js live noInline noConfig
 Tezos.setRpcProvider('https://ghostnet.ecadinfra.com/');
 
-WalletConnect2.init({
+WalletConnect.init({
   logger: 'debug',
   projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',  // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
   metadata: {
     name: 'Taquito website',
-    description: 'Taquito website with WalletConnect2',
+    description: 'Taquito website with WalletConnect',
     url: 'https://tezostaquito.io/',
     icons: [],
   },
@@ -98,13 +98,13 @@ WalletConnect2.init({
   .catch((err) => console.log(err));
 ```
 
-## Sign payload with `WalletConnect2`
+## Sign payload with `WalletConnect`
 
-The `sign` method of `WalletConnect2` can be called to sign a payload. The response will be a string representing the signature. The permission `PermissionScopeMethods.TEZOS_SIGN` must have been granted, or the error `MissingRequiredScope` will be thrown.
+The `sign` method of `WalletConnect` can be called to sign a payload. The response will be a string representing the signature. The permission `PermissionScopeMethods.TEZOS_SIGN` must have been granted, or the error `MissingRequiredScope` will be thrown.
 
 ## Events handling
 
-Wallet connect 2 allows listening to specific events. Taquito has listeners on the events `session_delete`, `session_expire`, and `session_update` and will update his internal session member accordingly if one of these events is emitted. The dapp should also handle those events as follow:
+Wallet connect allows listening to specific events. Taquito has listeners on the events `session_delete`, `session_expire`, and `session_update` and will update his internal session member accordingly if one of these events is emitted. The dapp should also handle those events as follow:
 
 ```ts
 walletConnect.signClient.on("session_delete", ({ topic }) => {

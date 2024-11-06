@@ -1,12 +1,11 @@
 /**
  * @packageDocumentation
- * @module @taquito/wallet-connect-2
+ * @module @taquito/wallet-connect
  */
 
 import Client from '@walletconnect/sign-client';
 import { SignClientTypes, SessionTypes, PairingTypes } from '@walletconnect/types';
 import QRCodeModal from '@walletconnect/legacy-modal';
-// import { WalletConnectModal } from '@walletconnect/modal';
 
 import {
   createOriginationOperation,
@@ -59,23 +58,19 @@ export * from './types';
 const TEZOS_PLACEHOLDER = 'tezos';
 
 /**
- * @description The `WalletConnect2` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
+ * @description The `WalletConnect` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
  * This package enables dapps built with Taquito to connect to wallets via the WalletConnect/Reown protocol.
  * @note Currently, a QR code is displayed to establish a connection with a wallet. As more Tezos wallets integrate with WalletConnect,
  * we plan showing a list of available wallets alongside the QR code.
  */
-export class WalletConnect2 implements WalletProvider {
+export class WalletConnect implements WalletProvider {
   public signClient: Client;
   private session: SessionTypes.Struct | undefined;
   private activeAccount: string | undefined;
   private activeNetwork: string | undefined;
-  // private WalletConnectModal: WalletConnectModal;
 
   constructor(signClient: Client) {
-    // constructor(signClient: Client, WalletConnectModal: WalletConnectModal) {
-
     this.signClient = signClient;
-    // this.WalletConnectModal = WalletConnectModal;
 
     this.signClient.on('session_delete', ({ topic }) => {
       if (this.session?.topic === topic) {
@@ -102,12 +97,12 @@ export class WalletConnect2 implements WalletProvider {
   }
 
   /**
-   * @description Initialize a WalletConnect2 provider
-   * (Initialize a wallect connect 2 client with persisted storage and a network connection)
+   * @description Initialize a WalletConnect provider
+   * (Initialize a WalletConnect client with persisted storage and a network connection)
    *
    * @example
    * ```
-   * await WalletConnect2.init({
+   * await WalletConnect.init({
    *  projectId: "YOUR_PROJECT_ID", // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
    *  metadata: {
    *    name: "YOUR_DAPP_NAME",
@@ -119,13 +114,8 @@ export class WalletConnect2 implements WalletProvider {
    * ```
    */
   static async init(initParams: SignClientTypes.Options) {
-    // if (!initParams.projectId) {
-    //   throw new Error('projectId is required');
-    // }
     const client = await Client.init(initParams);
-    // const walletConnectModal = new WalletConnectModal({ projectId: initParams.projectId });
-    return new WalletConnect2(client);
-    // return new WalletConnect2(client, walletConnectModal);
+    return new WalletConnect(client);
   }
 
   /**
@@ -141,7 +131,7 @@ export class WalletConnect2 implements WalletProvider {
     pairingTopic?: string;
     registryUrl?: string;
   }) {
-    // TODO when Tezos wallets will officially support wallet connect 2, we need to provide a default value for registryUrl
+    // TODO when Tezos wallets will officially support wallet connect, we need to provide a default value for registryUrl
     try {
       const { uri, approval } = await this.signClient.connect({
         requiredNamespaces: {
@@ -158,8 +148,6 @@ export class WalletConnect2 implements WalletProvider {
 
       if (uri) {
         QRCodeModal.open(uri, () => {}, { registryUrl: connectParams.registryUrl });
-        // this.WalletConnectModal.openModal({ uri, chains: [TEZOS_PLACEHOLDER] });
-        // this.session = await approval();
       }
       this.session = await approval();
     } catch (error) {
@@ -398,12 +386,8 @@ export class WalletConnect2 implements WalletProvider {
     this.signClient.ping({ topic: this.getSession().topic });
   }
 
-  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#non-controller-side-validation-of-incoming-proposal-namespaces-dapp
+  // https://docs.reown.com/api/sign/wallet-usage#namespaces
   // TODO: add validations related to Namespaces extensions and related unit tests:
-  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#210-extensions-may-be-merged-into-namespace
-  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#212-session-namespaces-extensions-may-extend-methods-and-events-of-proposal-namespaces-extensions
-  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#213-session-namespaces-extensions-may-contain-accounts-from-chains-not-defined-in-proposal-namespaces-extensions
-  // https://docs.walletconnect.com/2.0/specs/clients/sign/session-namespaces#214-session-namespaces-may-add-extensions-not-defined-in-proposal-namespaces-extensions
   private validateReceivedNamespace(
     scope: PermissionScopeParam,
     receivedNamespaces: Record<string, SessionTypes.Namespace>

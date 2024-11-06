@@ -197,12 +197,12 @@
             </button>
           </div>
           <div class="sdk">
-            <span><strong>Connect using Wallet Connect 2</strong></span>
+            <span><strong>Connect using Wallet Connect</strong></span>
             <button
               on:click={() => {
-                const walletConnect2 = document.getElementById("wallet-button");
+                const walletConnect = document.getElementById("wallet-button");
                 store.updateSdk(SDK.WC2);
-                walletConnect2.click();
+                walletConnect.click();
               }}
             >
               <span class="material-icons-outlined"> account_balance_wallet </span>

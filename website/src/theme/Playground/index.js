@@ -69,7 +69,7 @@ let console = {
   }
 };
 
-// Needed for the wallet connect 2 live code example
+// Needed for the wallet connect live code example
 // https://cloud.walletconnect.com/sign-in
 const MY_PROJECT_ID = 'ba97fd7d1e89eae02f7c330e14ce1f36'
 
