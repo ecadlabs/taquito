@@ -455,7 +455,7 @@ const signFailingNoop = async (
 
 const verifySignatureWithTaquito = async (
   input: string,
-  wallet: BeaconWallet,
+  wallet: BeaconWallet | WalletConnect2,
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
 ): Promise<TestResult> => {
   if (!input) throw "No input provided";
@@ -463,26 +463,47 @@ const verifySignatureWithTaquito = async (
   const userAddress = await wallet.getPKH();
   const { payload, formattedInput } = preparePayloadToSign(input, userAddress);
   try {
-    const signedPayload = await wallet.client.requestSignPayload(payload);
-    // gets user's public key
-    const activeAccount = await wallet.client.getActiveAccount();
-    const publicKey = activeAccount.publicKey;
-    // verifies signature
-    const isSignatureCorrect = verifySignature(
-      payload.payload,
-      publicKey,
-      signedPayload.signature
-    );
-    if (isSignatureCorrect) {
-      return {
-        success: true,
-        opHash: "",
-        output: signedPayload.signature,
-        sigDetails: { input, formattedInput, bytes: payload.payload }
-      };
+    if(wallet instanceof BeaconWallet) {
+      const signedPayload = await wallet.client.requestSignPayload(payload);
+      // gets user's public key
+      const activeAccount = await wallet.client.getActiveAccount();
+      const publicKey = activeAccount.publicKey;
+      // verifies signature
+      const isSignatureCorrect = verifySignature(
+        payload.payload,
+        publicKey,
+        signedPayload.signature
+      );
+      if (isSignatureCorrect) {
+        return {
+          success: true,
+          opHash: "",
+          output: signedPayload.signature,
+          sigDetails: { input, formattedInput, bytes: payload.payload }
+        };
+      } else {
+        throw "Forged signature is incorrect";
+      }
     } else {
-      throw "Forged signature is incorrect";
+      const signature = await wallet.sign(payload.payload);
+      const publicKey = await wallet.getPK();
+      const isSignatureCorrect = verifySignature(
+        payload.payload,
+        publicKey,
+        signature
+      );
+      if (isSignatureCorrect) {
+        return {
+          success: true,
+          opHash: "",
+          output: signature,
+          sigDetails: { input, formattedInput, bytes: payload.payload }
+        };
+      } else {
+        throw "Forged signature is incorrect";
+      }
     }
+
   } catch (error) {
     return { success: false, opHash: "", output: JSON.stringify(error) };
   }
