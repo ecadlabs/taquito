@@ -1,7 +1,7 @@
 {
   "name": "@taquito/wallet-connect",
   "version": "20.1.0",
-  "description": "Walletconnect/reown provider",
+  "description": "Walletconnect provider",
   "keywords": [
     "tezos",
     "blockchain",

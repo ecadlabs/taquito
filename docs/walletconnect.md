@@ -1,7 +1,11 @@
 ---
-title: WalletConnect
+title: WalletConnect (BETA)
 author: Roxane Letourneau
 ---
+
+:::info
+This feature is a work in progress, and might be refined in the near future. We encourage Taquito users to try this feature and reach out to us if you have any issues or concerns.
+:::
 
 The `@taquito/wallet-connect` package provides a `WalletConnect` class which implements the `WalletProvider` interface. The package is intended to be used by dapp developers. Similarly to `BeaconWallet`, an instance of `WalletConnect` can be injected into the `TezosToolkit` to work with the wallet API.
 
