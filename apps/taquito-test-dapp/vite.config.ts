@@ -3,11 +3,12 @@ import path from "path";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 // https://vitejs.dev/config/
-export default ({ command, mode }) => {
+export default ({ command }) => {
   const isBuild = command === "build";
   return defineConfig({
     plugins: [svelte()],
     define: {
+      global: "globalThis"
     },
     build: {
       target: "es6",

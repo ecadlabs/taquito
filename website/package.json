@@ -40,6 +40,7 @@
     "@taquito/tzip12": "file:../packages/taquito-tzip12",
     "@taquito/tzip16": "file:../packages/taquito-tzip16",
     "@taquito/utils": "file:../packages/taquito-utils",
+    "@taquito/wallet-connect": "file:../packages/taquito-wallet-connect",
     "abort-controller": "^3.0.0",
     "algoliasearch": "^4.23.2",
     "axios": "^0.28.0",
@@ -62,7 +63,7 @@
     "react-icons": "^4.11.0",
     "react-slick": "^0.30.2",
     "react-use-mailchimp-signup": "^2.0.2",
-    "sass": "^1.78.0",
+    "sass": "^1.80.1",
     "sass-loader": "^13.3.2",
     "stream-browserify": "^3.0.0",
     "url-loader": "^4.1.1"
@@ -70,6 +71,7 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.4.3",
     "@tsconfig/docusaurus": "^2.0.2",
+    "lokijs": "^1.5.12",
     "typescript": "^5.2.2"
   },
   "browserslist": {
