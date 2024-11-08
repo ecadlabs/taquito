@@ -7,12 +7,13 @@ import {
   UnitValue
 } from "@taquito/taquito";
 import type { ContractProvider } from "@taquito/taquito";
-import type { BeaconWallet } from "@taquito/beacon-wallet";
+import { BeaconWallet } from "@taquito/beacon-wallet";
 import { stringToBytes, verifySignature } from "@taquito/utils";
 import { SigningType, type RequestSignPayloadInput } from "@airgap/beacon-types";
 import { get } from "svelte/store";
 import type { TestSettings, TestResult } from "./types";
 import store from "./store";
+import { WalletConnect } from "@taquito/wallet-connect";
 import contractToOriginate from "./contractToOriginate";
 import localStore from "./store";
 
@@ -51,9 +52,19 @@ const sendTezToEtherlink = async (
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
+
+const showPublicKey = async (Tezos: TezosToolkit): Promise<TestResult> => {
+  try {
+    const publicKey = await Tezos.wallet.pk();
+    return { success: true, opHash: "", output: publicKey };
+  } catch (error) {
+    console.log(error);
+    return { success: false, opHash: "", output: JSON.stringify(error) };
+  }
+}
 
 const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
   let opHash = "";
@@ -66,7 +77,7 @@ const sendTez = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -81,7 +92,7 @@ const setDelegate = async (delegate: string, Tezos: TezosToolkit): Promise<TestR
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -96,7 +107,7 @@ const stake = async (amount: number, Tezos: TezosToolkit): Promise<TestResult> =
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -111,7 +122,7 @@ const unstake = async (amount: number, Tezos: TezosToolkit): Promise<TestResult>
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -126,7 +137,7 @@ const finalizeUnstake = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -141,7 +152,7 @@ const sendInt = async (
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -159,7 +170,7 @@ const sendComplexParam = async (
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -171,7 +182,7 @@ const callFail = async (
     const op = await contract.methodsObject.fail(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   } catch (error) {
     console.log(error);
     if (
@@ -184,7 +195,7 @@ const callFail = async (
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -197,7 +208,7 @@ const callFaiWithInt = async (
     const op = await contract.methodsObject.fail_with_int(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   } catch (error) {
     console.log(error);
     if (
@@ -210,7 +221,7 @@ const callFaiWithInt = async (
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -223,7 +234,7 @@ const callFaiWithPair = async (
     const op = await contract.methodsObject.fail_with_pair(UnitValue).send();
     opHash = op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"];
     await op.confirmation();
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   } catch (error) {
     console.log(error);
     if (
@@ -243,7 +254,7 @@ const callFaiWithPair = async (
     ) {
       return { success: true, opHash };
     } else {
-      return { success: false, opHash: "" };
+      return { success: false, opHash: "", error };
     }
   }
 };
@@ -261,7 +272,7 @@ const originateSuccess = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -295,7 +306,7 @@ const batchApiTest = async (Tezos: TezosToolkit): Promise<TestResult> => {
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -341,25 +352,36 @@ const batchApiContractCallsTest = async (
     }
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
 const signPayload = async (
   input: string,
-  wallet: BeaconWallet
+  wallet: BeaconWallet | WalletConnect
 ): Promise<TestResult> => {
   const userAddress = await wallet.getPKH();
   const { payload, formattedInput } = preparePayloadToSign(input, userAddress);
   try {
-    const signedPayload = await wallet.client.requestSignPayload(payload);
-    return {
-      success: true,
-      opHash: "",
-      output: signedPayload.signature,
-      sigDetails: { input, formattedInput, bytes: payload.payload }
-    };
-  } catch (error) {
+    if (wallet instanceof BeaconWallet) {
+      const signedPayload = await wallet.client.requestSignPayload(payload);
+      return {
+        success: true,
+        opHash: "",
+        output: signedPayload.signature,
+        sigDetails: { input, formattedInput, bytes: payload.payload }
+      };
+    } else {
+      const signature = await wallet.sign(payload.payload);
+      return {
+        success: true,
+        opHash: "",
+        output: signature,
+        sigDetails: { input, formattedInput, bytes: payload.payload }
+      };
+    }
+  }
+  catch (error) {
     console.log(error);
     return { success: false, opHash: "", output: JSON.stringify(error) };
   }
@@ -367,29 +389,42 @@ const signPayload = async (
 
 const signPayloadAndSend = async (
   input: string,
-  wallet: BeaconWallet,
-  contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
+  wallet: BeaconWallet | WalletConnect,
+  contract: ContractAbstraction<Wallet>
 ): Promise<TestResult> => {
   if (!input) throw "No input provided";
 
   const userAddress = await wallet.getPKH();
   const { payload, formattedInput } = preparePayloadToSign(input, userAddress);
   try {
-    const signedPayload = await wallet.client.requestSignPayload(payload);
-    // gets user's public key
-    const activeAccount = await wallet.client.getActiveAccount();
-    const publicKey = activeAccount.publicKey;
-    // sends transaction to contract
-    const op = await contract.methodsObject
-      .check_signature({ 0: publicKey, 1: signedPayload.signature, 2: payload.payload })
-      .send();
-    await op.confirmation();
-    return {
-      success: true,
-      opHash: op.hasOwnProperty("opHash") ? op["opHash"] : op["hash"],
-      output: signedPayload.signature,
-      sigDetails: { input, formattedInput, bytes: payload.payload }
-    };
+    if (wallet instanceof BeaconWallet) {
+      const signedPayload = await wallet.client.requestSignPayload(payload);
+      // gets user's public key
+      const activeAccount = await wallet.client.getActiveAccount();
+      const publicKey = activeAccount.publicKey;
+      // sends transaction to contract
+      const op = await contract.methodsObject
+        .check_signature({ 0: publicKey, 1: signedPayload.signature, 2: payload.payload })
+        .send();
+      await op.confirmation();
+      return {
+        success: true,
+        opHash: op.opHash,
+        output: signedPayload.signature,
+        sigDetails: { input, formattedInput, bytes: payload.payload }
+      };
+    } else {
+      const signature = await wallet.sign(payload.payload);
+      const publicKey = await wallet.getPK();
+      const op = await contract.methodsObject.check_signature({ 0: publicKey, 1: signature, 2: payload.payload }).send();
+      await op.confirmation();
+      return {
+        success: true,
+        opHash: op.opHash,
+        output: signature,
+        sigDetails: { input, formattedInput, bytes: payload.payload }
+      }
+    }
   } catch (error) {
     return { success: false, opHash: "", output: JSON.stringify(error) };
   }
@@ -420,7 +455,7 @@ const signFailingNoop = async (
 
 const verifySignatureWithTaquito = async (
   input: string,
-  wallet: BeaconWallet,
+  wallet: BeaconWallet | WalletConnect,
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>
 ): Promise<TestResult> => {
   if (!input) throw "No input provided";
@@ -428,26 +463,47 @@ const verifySignatureWithTaquito = async (
   const userAddress = await wallet.getPKH();
   const { payload, formattedInput } = preparePayloadToSign(input, userAddress);
   try {
-    const signedPayload = await wallet.client.requestSignPayload(payload);
-    // gets user's public key
-    const activeAccount = await wallet.client.getActiveAccount();
-    const publicKey = activeAccount.publicKey;
-    // verifies signature
-    const isSignatureCorrect = verifySignature(
-      payload.payload,
-      publicKey,
-      signedPayload.signature
-    );
-    if (isSignatureCorrect) {
-      return {
-        success: true,
-        opHash: "",
-        output: signedPayload.signature,
-        sigDetails: { input, formattedInput, bytes: payload.payload }
-      };
+    if(wallet instanceof BeaconWallet) {
+      const signedPayload = await wallet.client.requestSignPayload(payload);
+      // gets user's public key
+      const activeAccount = await wallet.client.getActiveAccount();
+      const publicKey = activeAccount.publicKey;
+      // verifies signature
+      const isSignatureCorrect = verifySignature(
+        payload.payload,
+        publicKey,
+        signedPayload.signature
+      );
+      if (isSignatureCorrect) {
+        return {
+          success: true,
+          opHash: "",
+          output: signedPayload.signature,
+          sigDetails: { input, formattedInput, bytes: payload.payload }
+        };
+      } else {
+        throw "Forged signature is incorrect";
+      }
     } else {
-      throw "Forged signature is incorrect";
+      const signature = await wallet.sign(payload.payload);
+      const publicKey = await wallet.getPK();
+      const isSignatureCorrect = verifySignature(
+        payload.payload,
+        publicKey,
+        signature
+      );
+      if (isSignatureCorrect) {
+        return {
+          success: true,
+          opHash: "",
+          output: signature,
+          sigDetails: { input, formattedInput, bytes: payload.payload }
+        };
+      } else {
+        throw "Forged signature is incorrect";
+      }
     }
+
   } catch (error) {
     return { success: false, opHash: "", output: JSON.stringify(error) };
   }
@@ -479,7 +535,7 @@ const setTransactionLimits = async (
     return { success: true, opHash };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -519,7 +575,7 @@ const tryConfirmationObservable = async (
     return { success: true, opHash, confirmationObsOutput: entries as any };
   } catch (error) {
     console.log(error);
-    return { success: false, opHash: "" };
+    return { success: false, opHash: "", error };
   }
 };
 
@@ -616,13 +672,13 @@ const permit = async (Tezos: TezosToolkit, wallet: BeaconWallet) => {
     console.error(error);
   }
 
-  return { success: false, opHash: "" };
+  return { success: false, opHash: "", error };
 };
 
 const saplingShielded = async (
   contract: ContractAbstraction<Wallet>
 ): Promise<TestResult> => {
-  return { success: false, opHash: "" };
+  return { success: false, opHash: "", error };
 };
 
 export const list = [
@@ -655,6 +711,17 @@ export const init = (
   contract: ContractAbstraction<Wallet> | ContractAbstraction<ContractProvider>,
   wallet: BeaconWallet | undefined
 ): TestSettings[] => [
+    {
+      id: "show-public-key",
+      name: "Show public key",
+      description: "This test shows your public key.",
+      documentation: '',
+      keyword: 'publicKey',
+      run: () => showPublicKey(Tezos),
+      showExecutionTime: false,
+      inputRequired: false,
+      lastResult: { option: "none", val: false }
+    },
     {
       id: "send-tez",
       name: "Send tez",

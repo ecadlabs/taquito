@@ -21,7 +21,7 @@ Taquito is used by **over 80% of DApps** in the Tezos ecosystem. It is easy to u
 
 ## Why should I use Taquito?
 
-Taquito provides convenient abstractions for a multitude of common operations, including wallet interactions (with [WalletConnect2](https://docs.walletconnect.com/2.0) in the works), batching operations, calling into contracts, querying the blockchain, and more. Taquito will isolate your code from subtle - and some not-so-subtle - changes made to the underlying Tezos protocol.
+Taquito provides convenient abstractions for a multitude of common operations, including wallet interactions (with [WalletConnect/Reown](https://reown.com/) in the works), batching operations, calling into contracts, querying the blockchain, and more. Taquito will isolate your code from subtle - and some not-so-subtle - changes made to the underlying Tezos protocol.
 
 ...Not to mention our thriving, helpful, and welcoming community!
 
@@ -80,6 +80,8 @@ Taquito is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo), an
 | [@taquito/contracts-library](packages/taquito-contracts-library) | Provides functionality specify static data related to contracts                                      |
 | [@taquito/ledger-signer](packages/taquito-ledger-signer)         | Provides functionality for ledger signer provider                                                    |
 | [@taquito/timelock](packages/taquito-timelock)                   | Provides functionality to create and open timelocks                                                  |
+| [@taquito/wallet-connect](packages/taquito-wallet-connect)       | WalletConnect class can be injected into the `TezosToolkit` to work with the wallet API.            |
+
 
 ## API Documentation
 
