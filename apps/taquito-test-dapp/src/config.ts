@@ -39,5 +39,5 @@ export const contractAddress = {
   ghostnet: "KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5",
   oxfordnet: "KT1GYx1KDhMQt2GJEztRh8EyYxJUPM6fnAMM",
   parisnet: "KT1E43cQefjM8fq7B5pEJFJoGbRmuNibDoBC",
-  quebecnet: "KT1Su29zJqmZkp7wdb1LYD3CNG8yeZqPm8A5"
+  quebecnet: "KT1JZ3H8zMn6GXoftLpRzGUwRD4fP7mmxKqW"
 };
