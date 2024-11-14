@@ -46,6 +46,9 @@ jobs:
           - testnet: parisnet
             testnet_uppercase: PARISNET
             rpc_url: https://parisnet.ecadinfra.com
+          - testnet: qenanet
+            testnet_uppercase: QENANET
+            rpc_url: https://rpc.qenanet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -64,19 +67,19 @@ jobs:
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-  integration-tests-testnet-quebecA-secret-key:
+  integration-tests-qena-secret-key:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
       matrix:
         include:
-          - testnet: betanet
-            testnet_uppercase: BETANET
+          - testnet: qenanet
+            testnet_uppercase: QENANET
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/hydrogen
+          node-version: lts/iron
       - run: npm ci
       - run: npm run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -85,6 +88,7 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
-      - run: npm -w integration-tests run test:betanet-secret-key
+      - run: npm -w integration-tests run test:qenanet-secret-key
         env:
+          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
           RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true

@@ -8,7 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
-import { knownContractsPtBetaaEZ } from './known-contracts-PtBetaaEZ';
+import { knownContractsPsQ3NAxQC } from './known-contracts-PsQ3NAxQC';
 
 const nodeCrypto = require('crypto');
 
@@ -117,7 +117,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
+    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'QENANET' ? 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -141,14 +141,17 @@ const parisnetEphemeral: Config =
 const parisnetSecretKey: Config =
   { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
 
-const betanetSecretKey: Config =
+const qenanetEphemeral: Config =
   defaultConfig({
-    networkName: 'BETANET',
-    protocol: Protocols.PtBetaaEZ,
-    defaultRpc: 'https://rpc.betanet-2024-08-29.teztnets.com',
-    knownContracts: knownContractsPtBetaaEZ,
-    signerConfig: defaultSecretKey
+    networkName: 'QENANET',
+    protocol: Protocols.PsQ3NAxQC,
+    defaultRpc: 'https://rpc.qenanet.teztnets.com',
+    knownContracts: knownContractsPsQ3NAxQC,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/qenanet')
   })
+
+const qenanetSecretKey: Config =
+  { ...qenanetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.qenanet.teztnets.com' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -166,7 +169,7 @@ const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2024-09-18.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2024-11-13.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
@@ -182,14 +185,16 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(parisnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_BETANET_WITH_SECRET_KEY']) {
-  providers.push(betanetSecretKey);
+} else if (process.env['RUN_QENANET_WITH_SECRET_KEY']) {
+  providers.push(qenanetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['PARISNET']) {
   providers.push(parisnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
+} else if (process.env['QENANET']) {
+  providers.push(qenanetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
