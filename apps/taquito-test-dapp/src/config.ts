@@ -1,12 +1,13 @@
 import { NetworkType as NetworkTypeBeacon } from "@airgap/beacon-sdk";
 import { NetworkType as NetworkTypeWc } from "@taquito/wallet-connect";
 
-export type SupportedNetworks = NetworkTypeBeacon.MAINNET | NetworkTypeBeacon.GHOSTNET | NetworkTypeBeacon.PARISNET | NetworkTypeWc.MAINNET | NetworkTypeWc.GHOSTNET | NetworkTypeWc.PARISNET | NetworkTypeBeacon.CUSTOM;
+export type SupportedNetworks = NetworkTypeBeacon.MAINNET | NetworkTypeBeacon.GHOSTNET | NetworkTypeBeacon.PARISNET | NetworkTypeWc.MAINNET | NetworkTypeWc.GHOSTNET | NetworkTypeWc.PARISNET | NetworkTypeBeacon.CUSTOM // | NetworkTypeBeacon.QENANET | NetworkTypeWc.QENANET;
 
 const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkTypeBeacon.MAINNET]: "https://mainnet.ecadinfra.com",
   [NetworkTypeBeacon.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
   [NetworkTypeBeacon.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
+  // [NetworkTypeBeacon.QENANET]: "https://rpc.qenacnet.teztnets.com/",
   [NetworkTypeBeacon.CUSTOM]: "https://ghostnet.ecadinfra.com/",
 };
 
@@ -25,6 +26,9 @@ export const getTzKtUrl = (networkType: SupportedNetworks): string | undefined =
     case NetworkTypeBeacon.PARISNET:
     case NetworkTypeWc.PARISNET:
       return "https://parisnet.tzkt.io";
+    // case NetworkTypeBeacon.QENANET:
+    // case NetworkTypeWc.QENANET:
+    //       return "https://qenanet.tzkt.io";
     case NetworkTypeBeacon.CUSTOM:
       return undefined;
   }

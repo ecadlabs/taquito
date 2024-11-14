@@ -22,7 +22,7 @@ export enum NetworkType {
   WEEKLYNET = 'weeklynet',
   OXFORDNET = 'oxfordnet',
   PARISNET = 'parisnet',
-  // QUEBECNET = 'quebecnet',
+  // QENANET = 'qenanet',
 }
 
 export interface PermissionScopeParam {
