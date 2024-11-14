@@ -4,6 +4,7 @@ export interface TestResult {
   output?: string;
   sigDetails?: { input: string; formattedInput: string; bytes: string };
   confirmationObsOutput?: { level: number; currentConfirmation: number }[];
+  error?: Error;
 }
 
 export interface TestSettings {

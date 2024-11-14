@@ -3,12 +3,21 @@ import type { TezosToolkit } from "@taquito/taquito";
 import type { BeaconWallet } from "@taquito/beacon-wallet";
 import { defaultMatrixNode, defaultNetworkType, type SupportedNetworks } from "./config";
 import type { TestSettings } from "./types";
+import type { NetworkType as NetworkTypeBeacon } from "@airgap/beacon-sdk";
+import type { WalletConnect, NetworkType as NetworkTypeWc2 } from "@taquito/wallet-connect";
+
+export enum SDK {
+  BEACON,
+  WC2
+}
 
 interface State {
+  sdk: SDK | undefined;
   Tezos: TezosToolkit | undefined;
   userAddress: string | undefined;
+  availableAccounts: string[] | undefined;
   userBalance: number | undefined;
-  wallet: BeaconWallet | undefined;
+  wallet: BeaconWallet | WalletConnect | undefined;
   disableDefaultEvents: boolean;
   enableMetrics: boolean;
   networkType: SupportedNetworks;
@@ -21,8 +30,10 @@ interface State {
 }
 
 const initialState: State = {
+  sdk: undefined,
   Tezos: undefined,
   userAddress: undefined,
+  availableAccounts: undefined,
   userBalance: undefined,
   wallet: undefined,
   matrixNode: defaultMatrixNode,
@@ -40,10 +51,20 @@ const store = writable(initialState);
 
 const state = {
   subscribe: store.subscribe,
+  updateSdk: (sdk: SDK) =>
+    store.update(store => ({
+      ...store,
+      sdk
+    })),
   updateUserAddress: (address: string | undefined) =>
     store.update(store => ({
       ...store,
       userAddress: address
+    })),
+  updateAvailableAccounts: (addresses: string[]) =>
+    store.update(store => ({
+      ...store,
+      availableAccounts: addresses
     })),
   updateUserBalance: (balance: number | undefined) =>
     store.update(store => ({
@@ -55,7 +76,7 @@ const state = {
       ...store,
       Tezos
     })),
-  updateWallet: (wallet: BeaconWallet | undefined) =>
+  updateWallet: (wallet: BeaconWallet | WalletConnect | undefined) =>
     store.update(store => ({
       ...store,
       wallet
