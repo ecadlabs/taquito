@@ -406,7 +406,7 @@ export enum Protocol {
   ProxfordY = 'ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH',
   PtParisBx = 'PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ',
   PsParisCZ = 'PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi',
-  PtBetaaEZ = 'PtBetaaEZxGcn9JDpkpAZ6E92Kh7bQb5FDoTCeYhmkfcwNehZcT',
+  PsQ3NAxQC = 'PsQ3NAxQC3pXSizDrKEkPHsarkKD78T58X9CXBfYaiXAi2rsvsD',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
@@ -442,7 +442,7 @@ const protoLevel: Record<ProtocolID, number> = {
   ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH: 19,
   PtParisBxoLz5gzMmn3d9WBQNoPSZakgnkMC2VNuQ3KXfUtUQeZ: 20,
   PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi: 20,
-  PtBetaaEZxGcn9JDpkpAZ6E92Kh7bQb5FDoTCeYhmkfcwNehZcT: 21,
+  PsQ3NAxQC3pXSizDrKEkPHsarkKD78T58X9CXBfYaiXAi2rsvsD: 21,
   ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 22,
 };
 
