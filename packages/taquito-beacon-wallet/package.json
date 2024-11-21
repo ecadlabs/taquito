@@ -67,9 +67,11 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^4.2.2",
+    "@airgap/beacon-dapp": "^4.3.1",
+    "@airgap/beacon-ui": "^4.3.1",
     "@taquito/core": "^20.1.0",
-    "@taquito/taquito": "^20.1.0"
+    "@taquito/taquito": "^20.1.0",
+    "@testing-library/react": "^16.0.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
