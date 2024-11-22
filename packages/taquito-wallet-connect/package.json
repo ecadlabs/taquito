@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@taquito/taquito": "^20.2.0-beta.0",
-    "@walletconnect/legacy-modal": "^2.0.0",
+    "@walletconnect/modal": "^2.7.0",
     "@walletconnect/sign-client": "^2.16.2",
     "@walletconnect/types": "^2.16.2",
     "@walletconnect/utils": "^2.16.2"
