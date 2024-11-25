@@ -9,6 +9,15 @@ import {
 } from '../src/taquito-wallet-connect';
 import { existingPairings, fakeCode, sessionExample, sessionMultipleChains } from './data';
 
+jest.mock('@walletconnect/modal', () => {
+  return {
+    WalletConnectModal: {
+      openModal: jest.fn(),
+      closeModal: jest.fn(),
+    },
+  };
+});
+
 describe('Wallet connect tests', () => {
   let sessionDeletedEvent: (eventParams: { topic: string }) => void;
   let sessionExpiredEvent: (eventParams: { topic: string }) => void;
