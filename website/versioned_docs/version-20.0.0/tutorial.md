@@ -98,7 +98,7 @@ Now, open the file `index.ts` and replace the code with the following:
 ```ts
 import { TezosToolkit } from "@taquito/taquito";
 
-var tezosToolkit = new TezosToolkit("https://ghostnet.ecadinfra.com");
+var tezosToolkit = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
 
 tezosToolkit.tz.getBalance("tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L").then(balance => {
     console.log(balance.toNumber());
@@ -198,7 +198,7 @@ import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 
 async function main() {
-    var tezosToolkit = new TezosToolkit("https://ghostnet.ecadinfra.com");
+    var tezosToolkit = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
 
     // WARNING: DO NOT DO THIS IN PRODUCTION, KEEP YOUR SECRETS SAFE
     const signer = await InMemorySigner.fromSecretKey('spsk29SxqYRjnreqGzsYiAUEqxyhDwD8j2J57pJjaGgGtReZVD2UiD');
@@ -246,8 +246,8 @@ For the purpose of this section, I have created a new address and funded it on t
     docker run --pull always -it --entrypoint sh docker.io/tezos/tezos:latest
 
     # now you are inside the docker container
-    octez-client -E https://ghostnet.ecadinfra.com gen keys mysamplekey -s secp256k1
-    octez-client -E https://ghostnet.ecadinfra.com show address mysamplekey -S
+    octez-client -E https://ghostnet.tezos.ecadinfra.com gen keys mysamplekey -s secp256k1
+    octez-client -E https://ghostnet.tezos.ecadinfra.com show address mysamplekey -S
   ```
   The new address you just created has a balance of zero. For the testnet, You can go to [ghostnet faucet](https://faucet.ghostnet.teztnets.xyz/) and send some ꜩ to it for free. On mainnet, you need to buy actual Tez on an exchange.
 </details>
@@ -272,7 +272,7 @@ Open the file `index.ts` and change the `main` function to the following:
 
 ```ts
 async function main() {
-    var tezosToolkit = new TezosToolkit("https://ghostnet.ecadinfra.com");
+    var tezosToolkit = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
 
     const signer = await InMemorySigner.fromSecretKey('spsk29SxqYRjnreqGzsYiAUEqxyhDwD8j2J57pJjaGgGtReZVD2UiD');
     tezosToolkit.setProvider({ signer });
@@ -431,7 +431,7 @@ import { BeaconWallet } from "@taquito/beacon-wallet";
 
 const App = () => {
   const [Tezos] = useState<TezosToolkit>(
-    new TezosToolkit("https://ghostnet.ecadinfra.com")
+    new TezosToolkit("https://ghostnet.tezos.ecadinfra.com")
   );
   const [wallet, setWallet] = useState<BeaconWallet | undefined>(undefined);
   const [userAddress, setUserAddress] = useState<string | undefined>(undefined);
@@ -485,7 +485,7 @@ const ConnectButton = ({
       await wallet!.requestPermissions({
         network: {
           type: NetworkType.GHOSTNET,
-          rpcUrl: "https://ghostnet.ecadinfra.com",
+          rpcUrl: "https://ghostnet.tezos.ecadinfra.com",
         },
       });
       const userAddress = await wallet!.getPKH();

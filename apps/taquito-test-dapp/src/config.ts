@@ -4,10 +4,10 @@ import { NetworkType as NetworkTypeWc } from "@taquito/wallet-connect";
 export type SupportedNetworks = NetworkTypeBeacon.MAINNET | NetworkTypeBeacon.GHOSTNET | NetworkTypeBeacon.PARISNET | NetworkTypeWc.MAINNET | NetworkTypeWc.GHOSTNET | NetworkTypeWc.PARISNET | NetworkTypeBeacon.CUSTOM;
 
 const rpcUrls: Record<SupportedNetworks, string> = {
-  [NetworkTypeBeacon.MAINNET]: "https://mainnet.ecadinfra.com",
-  [NetworkTypeBeacon.GHOSTNET]: "https://ghostnet.ecadinfra.com/",
+  [NetworkTypeBeacon.MAINNET]: "https://mainnet.tezos.ecadinfra.com",
+  [NetworkTypeBeacon.GHOSTNET]: "https://ghostnet.tezos.ecadinfra.com/",
   [NetworkTypeBeacon.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
-  [NetworkTypeBeacon.CUSTOM]: "https://ghostnet.ecadinfra.com/",
+  [NetworkTypeBeacon.CUSTOM]: "https://ghostnet.tezos.ecadinfra.com/",
 };
 
 export const getRpcUrl = (networkType: SupportedNetworks): string => {

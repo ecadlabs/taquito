@@ -903,7 +903,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.contract
   .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
@@ -933,7 +933,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.wallet
   .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')

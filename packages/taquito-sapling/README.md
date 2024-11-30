@@ -24,7 +24,7 @@ The returned balance is in mutez.
 import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 
-const tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
+const tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com/');
 
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 
@@ -50,7 +50,7 @@ A shielded transaction allows sending tokens from a Tezos account (tz1, tz2, tz3
 import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 
-const tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
+const tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com/');
 // set up your signer on the TezosToolkit as usual
 const saplingContract = await tezos.contract.at('KT1UYwMR6Q6LZnwQEi77DSBrAjKT1tEJb245');
 

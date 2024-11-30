@@ -6,7 +6,7 @@ import { fa2TokenFactory } from '../integration-tests/data/fa2-token-factory';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const nodeCrypto = require('crypto');
 
-const provider = 'https://ghostnet.ecadinfra.com';
+const provider = 'https://ghostnet.tezos.ecadinfra.com';
 
 async function createAddress() {
   const tezos = new TezosToolkit(provider)
