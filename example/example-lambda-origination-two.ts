@@ -3,7 +3,7 @@ import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { fa2Contract } from '../integration-tests/data/fa2_contract';
 
 async function example() {
-  const provider = 'https://ghostnet.ecadinfra.com';
+  const provider = 'https://ghostnet.tezos.ecadinfra.com';
     const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
     const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider(signer);
