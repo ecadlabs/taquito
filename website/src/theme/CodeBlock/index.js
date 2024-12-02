@@ -98,7 +98,7 @@ export default ({
         wallet = new BeaconWallet({ name:"exampleWallet", network: { type: 'ghostnet'}, enableMetrics: true, });
         wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, account => console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, account));
       }
-      const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
+      const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com/');
       setDependencies({
         Tezos,
         wallet,

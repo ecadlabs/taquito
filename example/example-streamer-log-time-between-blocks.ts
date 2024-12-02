@@ -5,7 +5,7 @@ import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
 // When a new block is seen, the time between the new block and the precedent is logged with the block level
 // If a block is missed when polling, 'Missed block: `level`' is logged.
 
-const provider = 'https://ghostnet.ecadinfra.com';
+const provider = 'https://ghostnet.tezos.ecadinfra.com';
 const pollingIntervalMilliseconds = 5000;
 let date: Date;
 let level: number;

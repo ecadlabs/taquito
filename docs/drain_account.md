@@ -22,7 +22,7 @@ In the following example, we have not revealed the account that we want to empty
 :::
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 // import { getRevealFee } from "@taquito/taquito";
 
 Tezos.signer
@@ -87,7 +87,7 @@ The contract we originate is a `manager contract.` It has a `do` method taking a
 In the example, we estimate the transfer operation before doing it. The associated fees are deducted from the manager's address when draining the account. Thus, for the operation to be successful, the manager's address for that account must contain funds to cover the gas.
 
 ```js live noInline
-// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 function transferImplicit(key, mutez) {
   return [
