@@ -3,6 +3,15 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v20.1.1
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.3.1 #3087
+
+### ECAD Infra Tezos RPC addresses update
+Updated network addresses for mainnet, ghostnet, parisnet, and quebecnet from Old format: https://${network_name}.ecadinfra.com to New format: https://${network_name}.tezos.ecadinfra.com #3090
+
 # Taquito v20.1.0
 
 **Breaking changes:**
