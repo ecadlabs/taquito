@@ -48,7 +48,6 @@ import {
   TicketTokenParams,
   AllTicketBalances,
   PendingOperationsQueryArguments,
-  PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
@@ -201,9 +200,9 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   /**
-   * @param address address from which we want to retrieve the balance
+   * @param address address from which we want to retrieve the spendable balance
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * @description Access the spendable balance of a contract, excluding frozen bonds
+   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'spendable' RPC.
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-balance
    */
   async getBalance(
@@ -219,6 +218,77 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getBalance(address, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param address address from which we want to retrieve the balance
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'balance' RPC.
+   */
+  async getSpendable(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_SPENDABLE, [
+      block,
+      address,
+    ]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getSpendable(address, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param address address from which we want to retrieve balance and frozen bonds
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds to the contract's full balance from which staked funds and unstake requests have been excluded. Identical to the 'spendable_and_frozen_bonds' RPC.
+   */
+  async getBalanceAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_BALANCE_AND_FROZEN_BONDS,
+      [block, address]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getBalanceAndFrozenBonds(address, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param address address from which we want to retrieve spendable and frozen bonds
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description The sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds to the contract's full balance from which staked funds and unstake requests have been excluded. Identical to the 'balance_and_frozen_bonds' RPC.
+   */
+  async getSpendableAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    this.validateAddress(address);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_SPENDABLE_AND_FROZEN_BONDS,
+      [block, address]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getSpendableAndFrozenBonds(address, { block });
       this.put(key, response);
       return response;
     }
@@ -641,8 +711,8 @@ export class RpcClientCache implements RpcClientInterface {
    * @param options contains generic configuration for rpc calls to specified block (default to head) and version.
    * @description All the information about a block
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id
-   * @example getBlock() will default to `/main/chains/block/head?version=0` which shows { kind: endorsement }
-   * @example getBlock({ block: 'head~2', version: 1 }) will return an offset of 2 from head blocks and shows { kind: attestation }
+   * @example getBlock() will default to `/main/chains/block/head?version=1`
+   * @example getBlock({ block: 'head~2') will return an offset of 2 from head blocks
    * @example getBlock({ block: 'BL8fTiWcSxWCjiMVnDkbh6EuhqVPZzgWheJ2dqwrxYRm9AephXh~2' }) will return an offset of 2 blocks from given block hash..
    */
   async getBlock({ block }: RPCOptions = defaultRPCOptions): Promise<BlockResponse> {
@@ -1272,12 +1342,12 @@ export class RpcClientCache implements RpcClientInterface {
 
   /**
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
-   * @param args has 5 optional properties. We support version 1 & 2
+   * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined }
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
-  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
+  ): Promise<PendingOperationsV2> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
       RPCMethodName.GET_PENDING_OPERATIONS,

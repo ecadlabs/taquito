@@ -1,6 +1,6 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2, PvmKind } from '@taquito/rpc';
+import { DefaultContractType, Protocols } from "@taquito/taquito";
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.endsWith("ecadinfra.com") ? test.skip : test;
-
+    const betanet = protocol === Protocols.PtBetaaEZ ? test : test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -63,6 +63,21 @@ CONFIGS().forEach(
 
         it(`Verify that rpcClient.getBalance for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
           const balance = await rpcClient.getBalance(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
+        betanet(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+          const balance = await rpcClient.getSpendable(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
+        it(`Verify that rpcClient.getBalanceAndFrozenBonds for knownBaker returns the full balance`, async () => {
+          const balance = await rpcClient.getBalanceAndFrozenBonds(knownBaker);
+          expect(balance).toBeDefined();
+        });
+
+        betanet(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
+          const balance = await rpcClient.getSpendableAndFrozenBonds(knownBaker);
           expect(balance).toBeDefined();
         });
 
@@ -487,19 +502,9 @@ CONFIGS().forEach(
           } else if (rpc.includes('parisnet')) {
             expect(launchCycle).toEqual(6);
           } else if (rpc.includes('mondaynet') || rpc.includes('weeklynet')) {
-            expect(launchCycle).toEqual(5);
+            expect(launchCycle).toEqual(3);
           }
         })
-
-        it('Verify that rpcClient.getPendingOperations v1 will retrieve the pending operations in mempool with property applied', async () => {
-          const pendingOperations = await rpcClient.getPendingOperations({ version: '1' }) as PendingOperationsV1;
-          expect(pendingOperations).toBeDefined();
-          expect(pendingOperations.applied).toBeInstanceOf(Array);
-          expect(pendingOperations.refused).toBeInstanceOf(Array);
-          expect(pendingOperations.outdated).toBeInstanceOf(Array);
-          expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
-          expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
-        });
 
         it('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;

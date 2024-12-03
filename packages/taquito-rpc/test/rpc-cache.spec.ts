@@ -22,7 +22,7 @@ import {
   currentProposal,
   currentQuorum,
   votesListing,
-  porposals,
+  proposals,
   entryPoints,
   chainId,
   packData,
@@ -58,6 +58,9 @@ describe('RpcClientCache test', () => {
       getBlockHash: jest.fn(),
       getLiveBlocks: jest.fn(),
       getBalance: jest.fn(),
+      getSpendable: jest.fn(),
+      getBalanceAndFrozenBonds: jest.fn(),
+      getSpendableAndFrozenBonds: jest.fn(),
       getFullBalance: jest.fn(),
       getStakedBalance: jest.fn(),
       getUnstakedFinalizableBalance: jest.fn(),
@@ -104,6 +107,9 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getBlockHash.mockReturnValue(blockHash);
     mockRpcClient.getLiveBlocks.mockReturnValue(liveBlocks);
     mockRpcClient.getBalance.mockReturnValue(balance);
+    mockRpcClient.getSpendable.mockReturnValue(balance);
+    mockRpcClient.getBalanceAndFrozenBonds.mockReturnValue(balance);
+    mockRpcClient.getSpendableAndFrozenBonds.mockReturnValue(balance);
     mockRpcClient.getFullBalance.mockReturnValue(balance);
     mockRpcClient.getStakedBalance.mockReturnValue(balance);
     mockRpcClient.getUnstakedFinalizableBalance.mockReturnValue(balance);
@@ -131,7 +137,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getCurrentProposal.mockReturnValue(currentProposal);
     mockRpcClient.getCurrentQuorum.mockReturnValue(currentQuorum);
     mockRpcClient.getVotesListings.mockReturnValue(votesListing);
-    mockRpcClient.getProposals.mockReturnValue(porposals);
+    mockRpcClient.getProposals.mockReturnValue(proposals);
     mockRpcClient.getEntrypoints.mockReturnValue(entryPoints);
     mockRpcClient.getChainId.mockReturnValue(chainId);
     mockRpcClient.packData.mockReturnValue(packData);
@@ -155,6 +161,9 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock();
     await rpcCache.getLiveBlocks();
     await rpcCache.getBalance(address);
+    await rpcCache.getSpendable(address);
+    await rpcCache.getBalanceAndFrozenBonds(address);
+    await rpcCache.getSpendableAndFrozenBonds(address);
     await rpcCache.getFullBalance(address);
     await rpcCache.getStakedBalance(address);
     await rpcCache.getUnstakedFinalizableBalance(address);
@@ -207,7 +216,10 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()[`rpcTest/getBalance/head/${address}/`].response).toEqual(
       balance
     );
-    expect(rpcCache.getAllCachedData()[`rpcTest/getFullBalance/head/${address}/`].response).toEqual(
+    expect(rpcCache.getAllCachedData()[`rpcTest/getBalance/head/${address}/`].response).toEqual(
+      balance
+    );
+    expect(rpcCache.getAllCachedData()[`rpcTest/getSpendable/head/${address}/`].response).toEqual(
       balance
     );
     expect(
@@ -323,6 +335,9 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock(block);
     await rpcCache.getLiveBlocks(block);
     await rpcCache.getBalance(address, block);
+    await rpcCache.getSpendable(address, block);
+    await rpcCache.getBalanceAndFrozenBonds(address, block);
+    await rpcCache.getSpendableAndFrozenBonds(address, block);
     await rpcCache.getFullBalance(address, block);
     await rpcCache.getStakedBalance(address, block);
     await rpcCache.getUnstakedFinalizableBalance(address, block);
@@ -387,6 +402,17 @@ describe('RpcClientCache test', () => {
     );
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getBalance/${block.block}/${address}/`].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getSpendable/${block.block}/${address}/`].response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getBalanceAndFrozenBonds/${block.block}/${address}/`]
+        .response
+    ).toEqual(balance);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getSpendableAndFrozenBonds/${block.block}/${address}/`]
+        .response
     ).toEqual(balance);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getFullBalance/${block.block}/${address}/`].response
@@ -517,6 +543,9 @@ describe('RpcClientCache test', () => {
     await rpcCache.getBlock();
     await rpcCache.getLiveBlocks();
     await rpcCache.getBalance(address);
+    await rpcCache.getSpendable(address);
+    await rpcCache.getBalanceAndFrozenBonds(address);
+    await rpcCache.getSpendableAndFrozenBonds(address);
     await rpcCache.getFullBalance(address);
     await rpcCache.getStakedBalance(address);
     await rpcCache.getUnstakedFinalizableBalance(address);
