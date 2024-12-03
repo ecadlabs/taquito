@@ -177,7 +177,7 @@ values={[
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
-// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 let magicByte = '0x80'
 let magicString = 'tezos signed offchain message'
@@ -205,7 +205,7 @@ InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGR
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
-// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 let magicByte = '0x80'
 let magicString = 'tezos signed offchain message'

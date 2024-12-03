@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const quebecnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsQuebecn) ? test : test.skip;
   const weeklynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
   describe('Test fetching constants for all protocols on Mainnet', () => {
-    const rpcUrl = 'https://mainnet.ecadinfra.com/';
+    const rpcUrl = 'https://mainnet.tezos.ecadinfra.com/';
     Tezos.setRpcProvider(rpcUrl);
     it(`should successfully fetch Proto20(Paris) constants at head`, async () => {
       const constants: ConstantsResponseProto020 = await Tezos.rpc.getConstants();

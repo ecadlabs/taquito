@@ -1,7 +1,7 @@
 import { Parser, emitMicheline } from '@taquito/michel-codec'
 import { TezosToolkit } from '@taquito/taquito';
 
-const provider = 'https://mainnet.ecadinfra.com/';
+const provider = 'https://mainnet.tezos.ecadinfra.com/';
 
 const example = async () => {
 

@@ -148,7 +148,7 @@ Let's originate the contract with initial storage values `level` of 0, a stub ch
 // import { stringToBytes } from '@taquito/utils';
 // import { timelockCode, timelockStorage } from './timelock-flip-contract';
 
-// const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 const originate = await Tezos.contract.originate({ code: timelockCode, init: timelockStorage });
 await originate.confirmation()
