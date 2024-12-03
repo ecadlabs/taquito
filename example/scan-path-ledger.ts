@@ -11,7 +11,7 @@ async function example() {
 
     const transport = await TransportNodeHid.create();
     let index = 0;
-    const tezos = new TezosToolkit('https://ghostnet.ecadinfra.com')
+    const tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
     while (index < 8) {
         const ledgerSigner = new LedgerSigner(transport, `44'/1729'/${index}'/0'`, false, DerivationType.ED25519);
         tezos.setProvider({ signer: ledgerSigner });
