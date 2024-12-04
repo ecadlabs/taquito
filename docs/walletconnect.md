@@ -65,7 +65,7 @@ In the same order of ideas, `setActiveNetwork` must be called to specify the act
 Here is a complete example of using wallet connect to perform a transfer operation:
 
 ```js live noInline noConfig
-Tezos.setRpcProvider('https://ghostnet.ecadinfra.com/');
+Tezos.setRpcProvider('https://ghostnet.tezos.ecadinfra.com/');
 
 WalletConnect.init({
   logger: 'debug',

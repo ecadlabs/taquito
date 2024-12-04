@@ -42,7 +42,7 @@ To start, let's import the Tezos Toolkit from Taquito and create a new instance 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://ghostnet.ecadinfra.com/');
+const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com/');
 ```
 
 This object exposes different methods we are going to use to set up our wallet. TZIP-10 has become the official standard of communication and interaction between wallets and dapps, so let's start with the `@taquito/beacon-wallet` package that implements this standard!
@@ -547,7 +547,7 @@ Now, we have everything we need to originate a new contract!
 Before doing so, we have to choose the network we want to originate it to:
 
 ```js
-Tezos.setProvider({ rpc: 'https://ghostnet.ecadinfra.com/' });
+Tezos.setProvider({ rpc: 'https://ghostnet.tezos.ecadinfra.com/' });
 ```
 
 Then, we can start the process. The Tezos singleton has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that has the initial storage. After passing this argument, you call the `send()` method to originate the contract.
