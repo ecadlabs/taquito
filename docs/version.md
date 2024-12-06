@@ -3,6 +3,37 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v20.1.1
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.3.1 #3087
+
+### ECAD Infra Tezos RPC addresses update
+Updated network addresses for mainnet, ghostnet, parisnet, and quebecnet from Old format: https://${network_name}.ecadinfra.com to New format: https://${network_name}.tezos.ecadinfra.com #3090
+
+- Mappings
+Below are the mappings for the updated RPC addresses for all current networks:
+
+Old Address | New Address
+-- | --
+https://mainnet.ecadinfra.com | https://mainnet.tezos.ecadinfra.com
+https://ghostnet.ecadinfra.com | https://ghostnet.tezos.ecadinfra.com
+https://parisnet.ecadinfra.com | https://parisnet.tezos.ecadinfra.com
+https://quebecnet.ecadinfra.com | https://quebecnet.tezos.ecadinfra.com
+
+- Action Required
+Update all scripts, configurations, and codebases using the old RPC addresses to point to the new format.
+Validate that your systems and services using these RPC endpoints continue to function as expected after the update.
+
+- Deprecation Notice
+The old addresses are considered deprecated, but will remain active until further notice. Users are strongly encouraged to transition to the new format as soon as possible to avoid potential disruptions in the future.
+
+- Reference
+For more information, visit [ECAD Infra's website](https://www.ecadinfra.com/).
+--------
+Please ensure your systems are updated promptly to avoid any disruptions. If you have any questions or encounter issues, feel free to contact the ECAD Infra team or open a new issue in this repository.
+
 # Taquito v20.1.0
 
 **Breaking changes:**
