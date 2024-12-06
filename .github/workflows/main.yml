@@ -45,7 +45,7 @@ jobs:
         include:
           - testnet: parisnet
             testnet_uppercase: PARISNET
-            rpc_url: https://parisnet.ecadinfra.com
+            rpc_url: https://rpc.pariscnet.teztnets.com/
           - testnet: quebecnet
             testnet_uppercase: QUEBECNET
             rpc_url: https://rpc.quebecnet.teztnets.com/
@@ -90,5 +90,4 @@ jobs:
           version: 1.32.2
       - run: npm -w integration-tests run test:quebecnet-secret-key
         env:
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
           RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
