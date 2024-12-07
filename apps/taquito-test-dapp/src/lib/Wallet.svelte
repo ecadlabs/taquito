@@ -89,7 +89,6 @@
         events: [],
         methods: [PermissionScopeMethods.TEZOS_SEND, PermissionScopeMethods.TEZOS_SIGN, PermissionScopeMethods.TEZOS_GET_ACCOUNTS],
       },
-      registryUrl: `https://explorer-api.walletconnect.com/v3/wallets?projectId=ba97fd7d1e89eae02f7c330e14ce1f36`, // Project ID can be obtained from Reown(Walletconnect) Cloud (https://cloud.reown.com).
       pairingTopic
     });
     const allAccounts = wallet.getAccounts();
