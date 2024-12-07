@@ -19,8 +19,6 @@ const sourceFilter = (x: OperationContent, filter: SourceFilter) => {
   switch (x.kind) {
     case 'attestation':
       return 'metadata' in x && x.metadata.delegate === filter.source;
-    case 'endorsement':
-      return 'metadata' in x && x.metadata.delegate === filter.source;
     case 'activate_account':
       return 'metadata' in x && x.pkh === filter.source;
     default:

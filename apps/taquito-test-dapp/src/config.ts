@@ -7,6 +7,7 @@ const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkTypeBeacon.MAINNET]: "https://mainnet.tezos.ecadinfra.com",
   [NetworkTypeBeacon.GHOSTNET]: "https://ghostnet.tezos.ecadinfra.com/",
   [NetworkTypeBeacon.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
+    // [NetworkTypeWc.QUEBECNET]: "https://rpc.quebeccnet.teztnets.com/",
   [NetworkTypeBeacon.CUSTOM]: "https://ghostnet.tezos.ecadinfra.com/",
 };
 
@@ -25,6 +26,9 @@ export const getTzKtUrl = (networkType: SupportedNetworks): string | undefined =
     case NetworkTypeBeacon.PARISNET:
     case NetworkTypeWc.PARISNET:
       return "https://parisnet.tzkt.io";
+    // case NetworkTypeBeacon.QUEBECNET:
+    // case NetworkTypeWc.QUEBECNET:
+    //     return "https://quebecnet.tzkt.io";
     case NetworkTypeBeacon.CUSTOM:
       return undefined;
   }
@@ -40,4 +44,5 @@ export const contractAddress = {
   ghostnet: "KT1QKmcNBcfzVTXG2kBcE6XqXtEuYYUzMcT5",
   oxfordnet: "KT1GYx1KDhMQt2GJEztRh8EyYxJUPM6fnAMM",
   parisnet: "KT1E43cQefjM8fq7B5pEJFJoGbRmuNibDoBC",
+  quebecnet: "KT1JZ3H8zMn6GXoftLpRzGUwRD4fP7mmxKqW"
 };

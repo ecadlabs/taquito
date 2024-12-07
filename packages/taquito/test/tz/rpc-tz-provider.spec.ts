@@ -25,6 +25,24 @@ describe('RpcTzProvider test', () => {
     });
   });
 
+  describe('getSpendable', () => {
+    it('calls get spendable from the rpc client', async () => {
+      const mockRpcClient = {
+        getSpendable: jest.fn(),
+      };
+
+      mockRpcClient.getSpendable.mockResolvedValue(new BigNumber('10000'));
+
+      const provider = new RpcTzProvider(new Context(mockRpcClient as any));
+      const result = await provider.getSpendable('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
+      expect(result).toBeInstanceOf(BigNumber);
+      expect(result.toString()).toStrictEqual('10000');
+      expect(mockRpcClient.getSpendable.mock.calls[0][0]).toEqual(
+        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
+      );
+    });
+  });
+
   describe('getDelegate', () => {
     it('calls get delegate from the rpc client', async () => {
       const mockRpcClient = {
