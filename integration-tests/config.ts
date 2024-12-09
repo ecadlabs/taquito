@@ -117,7 +117,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'QUEBECNET' ? 'tz3Q1fwk1vh3zm5LqyUV9e2wZBdaEXcovh2r' : 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb'),
+    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'QUEBECNET' ? 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD' : 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb'),
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -180,7 +180,7 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(parisnetSecretKey);
+  providers.push(quebecnetSecretKey);
 } else if (process.env['RUN_PARISNET_WITH_SECRET_KEY']) {
   providers.push(parisnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
@@ -198,7 +198,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(parisnetEphemeral);
+  providers.push(quebecnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {

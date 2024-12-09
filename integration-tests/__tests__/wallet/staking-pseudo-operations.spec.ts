@@ -8,13 +8,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup(true);
       try{
         const address = await Tezos.signer.publicKeyHash()
-        if(await Tezos.rpc.getDelegate(address) !== address){
-          const delegateOp = await Tezos.contract.setDelegate({
-            delegate: 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb', // is a delegate receiving stake on parisnet and ghostnet
-            source: address
-          });
+        if(!await Tezos.rpc.getDelegate(address)){
+          const delegateOp = await Tezos.contract.registerDelegate({});
           await delegateOp.confirmation();
-        };
+        }
       }catch(e){console.log}
     });
 
