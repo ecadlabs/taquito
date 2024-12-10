@@ -1,30 +1,37 @@
 import { CONFIGS } from "../../../config";
+import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@taquito/core';
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Staking pseudo operations: ${rpc}`, () => {
-
     beforeAll(async () => {
       await setup(true);
-      // There is no baker accept staking in betanet and weeklylnet hence tests will fail
-      // Currently TF is a baker that allows staking on parisnet.
-      if (rpc.includes('pariscnet')) {
-        knownBaker = 'tz3Q67aMz7gSMiQRcW729sXSfuMtkyAHYfqc' // TF
-      }
-      const delegateOp = await Tezos.contract.setDelegate({
-        delegate: knownBaker,
-        source: await Tezos.signer.publicKeyHash()
-      });
-      await delegateOp.confirmation();
+      try{
+        const address = await Tezos.signer.publicKeyHash()
+        if(!await Tezos.rpc.getDelegate(address)){
+          const delegateOp = await Tezos.contract.registerDelegate({});
+          await delegateOp.confirmation();
+        }
+      }catch(e){console.log}
     });
 
-    it('should throw an error when the destination specified is not the same as source', async () => {
+    it('should throw error when param is against pseudo operation', async () => {
       expect(async () => {
-        const op = await Tezos.contract.stake({
-          amount: 0.1,
-          to: knownBaker
-        });
-      }).rejects.toThrow();
+        const op = await Tezos.contract.stake({ amount: 1, to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' });
+        await op.confirmation()
+      }).rejects.toThrow(InvalidStakingAddressError);
+      expect(async () => {
+        const op = await Tezos.contract.unstake({ amount: 1, to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' });
+        await op.confirmation()
+      }).rejects.toThrow(InvalidStakingAddressError);
+      expect(async () => {
+        const op = await Tezos.contract.finalizeUnstake({ to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' });
+        await op.confirmation()
+      }).rejects.toThrow(InvalidStakingAddressError);
+      expect(async () => {
+        const op = await Tezos.contract.finalizeUnstake({ amount: 1 });
+        await op.confirmation()
+      }).rejects.toThrow(InvalidFinalizeUnstakeAmountError);
     });
 
     it('should be able to stake funds to a designated delegate', async () => {

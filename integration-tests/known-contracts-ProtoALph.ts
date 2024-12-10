@@ -1,8 +1,8 @@
 import { KnownContracts } from './known-contracts';
 export const knownContractsProtoALph: KnownContracts = {
-  contract: "KT1XXrWDuK77kQWX55zjD347Wh6bwgmJDfJ8",
-  bigMapContract: "KT1NSDEhMTWoX2Vie98NCtQV4fVYoPfqfAN3",
-  tzip12BigMapOffChainContract: "KT1X4c8BCVSDE7dtf5jPRtpYtYcaSFknwzN5",
-  saplingContract: "KT1JKC49zUSCXJGKT2p1bHVWmg47rAgF53ff",
-  onChainViewContractAddress: "KT1FVjUZeH5KM8tMwYvrVCMC3QFyDRUBFNLk",
+  contract: "KT1PHkuybhU9w8B73s3YPvkuDJsZuJKuePbV",
+  bigMapContract: "KT1M3GSXaKnANpy1grobebsCLUqPvJqb3aKS",
+  tzip12BigMapOffChainContract: "KT19ewBtGsd2E2A2yjphtQENg9Ywq7wE2Z96",
+  saplingContract: "KT1HDHqUHX8UfR17cFUaBeHD5qyWVheKFa74",
+  onChainViewContractAddress: "KT1XBhceZT7r2ZCvC58pPCrRm4PyZRJGQbSn",
 };
