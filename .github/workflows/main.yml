@@ -48,7 +48,7 @@ jobs:
             rpc_url: https://rpc.pariscnet.teztnets.com/
           - testnet: quebecnet
             testnet_uppercase: QUEBECNET
-            rpc_url: https://rpc.quebecnet.teztnets.com/
+            rpc_url: http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
