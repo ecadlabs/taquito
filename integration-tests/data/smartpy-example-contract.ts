@@ -1,4 +1,4 @@
-// This contract code has storage,parameter,code but the Tezos RPC expects parmeter,code,storage
+// This contract code has storage,parameter,code but the Tezos RPC expects parameter,code,storage
 export const smartpySample = [{"prim":"storage","args":[
  {"prim":"nat"}]
 },
