@@ -105,6 +105,8 @@
     "tcli",
     "testbox",
     "testchain",
+    "tezbox",
+    "tezboxnet",
     "tezbridge",
     "tezos",
     "Thanos",

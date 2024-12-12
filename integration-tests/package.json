@@ -10,6 +10,7 @@
     "test:weeklynet-secret-key": "RUN_WEEKLYNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:ghostnet": "GHOSTNET=true jest",
     "test:ghostnet-secret-key": "RUN_GHOSTNET_WITH_SECRET_KEY=true jest --runInBand",
+    "sandbox:parisnet": "docker run -d -p 0.0.0.0:8732:8732 -v $(pwd)/sandbox-override-parameters.hjson:/tezbox/configuration/protocols/PsParisC/sandbox-parameters.hjson --name sandbox ghcr.io/tez-capital/tezbox:tezos-v21.0 parisbox",
     "originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
     "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest"
   },

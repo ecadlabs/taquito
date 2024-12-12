@@ -269,19 +269,13 @@ export class PrepareProvider extends Provider implements PreparationProvider {
             ...this.getFee(op, pkh, headCounter),
           };
         case OpKind.BALLOT:
-          if (currentVotingPeriod === undefined) {
-            throw new RPCResponseError(`Failed to get the current voting period index`);
-          }
-          return {
-            ...op,
-            period: currentVotingPeriod?.voting_period.index,
-          };
         case OpKind.PROPOSALS:
           if (currentVotingPeriod === undefined) {
             throw new RPCResponseError(`Failed to get the current voting period index`);
           }
           return {
             ...op,
+            ...this.getSource(op, pkh, source),
             period: currentVotingPeriod?.voting_period.index,
           };
         default:
