@@ -145,7 +145,7 @@ const quebecnetEphemeral: Config =
   defaultConfig({
     networkName: 'QUEBECNET',
     protocol: Protocols.PsQuebecn,
-    defaultRpc: 'http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com/',
+    defaultRpc: 'http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com:8732/',
     knownContracts: knownContractsPsQuebecn,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecnet')
   })

@@ -7,7 +7,7 @@ const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkTypeBeacon.MAINNET]: "https://mainnet.tezos.ecadinfra.com",
   [NetworkTypeBeacon.GHOSTNET]: "https://ghostnet.tezos.ecadinfra.com/",
   [NetworkTypeBeacon.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
-    // [NetworkTypeWc.QUEBECNET]: "http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com/",
+    // [NetworkTypeWc.QUEBECNET]: "http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com:8732/",
   [NetworkTypeBeacon.CUSTOM]: "https://ghostnet.tezos.ecadinfra.com/",
 };
 
