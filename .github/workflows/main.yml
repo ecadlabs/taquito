@@ -83,7 +83,7 @@ jobs:
       - run: npm run build
       - run: npm -w integration-tests run test __tests__/tezbox/sandbox-proposal-and-ballot-operation.spec.ts
         env:
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:8732
+          TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://0.0.0.0:8732
       - run: npm -w integration-tests run test __tests__/tezbox/sandbox-drain-delegate-operation.spec
         env:
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://localhost:8732
+          TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://0.0.0.0:8732
