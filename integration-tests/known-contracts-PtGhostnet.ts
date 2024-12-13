@@ -5,4 +5,5 @@ export const knownContractsPtGhostnet: KnownContracts = {
   tzip12BigMapOffChainContract: "KT1JQQipASBXEvdWxRjUPjmTY6z4o8UWmZtA",
   saplingContract: "KT1F8BoKHeFTPDsTwSQmThwjSBjAjYgGgAGy",
   onChainViewContractAddress: "KT1LdBJDGN9svUfootxSGksoC7d78gNuzVXV",
-}
+  ticketContract: "KT1Cb91wY3JdGtdM9JVJvGkzCVtCu4jH5ubf",
+};

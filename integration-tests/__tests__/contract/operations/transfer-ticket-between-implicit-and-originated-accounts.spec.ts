@@ -1,9 +1,9 @@
 import { CONFIGS } from "../../../config";
 import { DefaultContractType, TezosToolkit } from "@taquito/taquito";
-import { ticketsSendTz, ticketsBagTz, ticketsBlackholeTz } from "../../../data/code_with_ticket_transfer";
+import { ticketsBagTz, ticketsBlackholeTz } from "../../../data/code_with_ticket_transfer";
 import { RpcClient, TicketTokenParams } from '@taquito/rpc';
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
   const Tezos1 = lib;
   const client = new RpcClient(rpc);
 
@@ -25,9 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         tezos2Pkh = await Tezos2.signer.publicKeyHash();
 
         // ticketSend contract has one default entrypoint which accepts an address to issue tickets to
-        const ticketSendOrigination = await Tezos1.contract.originate({ code: ticketsSendTz, storage: null });
-        await ticketSendOrigination.confirmation();
-        ticketSendContract = await ticketSendOrigination.contract();
+        ticketSendContract = await Tezos1.contract.at(knownTicketContract)
 
         // ticketBag contract has two entrypoints, one is "save" to receive tickets and the other is "send" to send tickets out
         const ticketBagOrigination = await Tezos1.contract.originate({ code: ticketsBagTz, storage: [] });
@@ -46,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     });
 
     it('will send 3 tickets from an originated to an implicit account', async () => {
-      const ticketSendToImplicitOp = await ticketSendContract.methods.default(tezos1Pkh, '3').send();
+      const ticketSendToImplicitOp = await ticketSendContract.methodsObject.default({ 0: tezos1Pkh, 1: '3' }).send();
       await ticketSendToImplicitOp.confirmation();
       expect(ticketSendToImplicitOp.status).toEqual('applied');
 
@@ -92,7 +90,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     });
 
     it('will send 1 ticket from an origianted to another originated account to dispose', async () => {
-      const ticketSendOriginatedOp = await ticketBagContract.methods.send(ticketBlackholeContract.address).send();
+      const ticketSendOriginatedOp = await ticketBagContract.methodsObject.send(ticketBlackholeContract.address).send();
       await ticketSendOriginatedOp.confirmation();
       expect(ticketSendOriginatedOp.status).toEqual('applied');
 

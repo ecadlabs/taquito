@@ -4,5 +4,6 @@ export const knownContractsPtNairobi: KnownContracts = {
   bigMapContract: "",
   tzip12BigMapOffChainContract: "",
   saplingContract: "",
-  onChainViewContractAddress: ""
+  onChainViewContractAddress: "",
+  ticketContract: "",
 };

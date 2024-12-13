@@ -35,7 +35,7 @@ CONFIGS().forEach(
         await ticketOp.confirmation();
         ticketContract = await ticketOp.contract();
         // contract call to issue tickets
-        const ticketCallOp = await ticketContract.methods.auto_call(1).send();
+        const ticketCallOp = await ticketContract.methodsObject.auto_call(1).send();
         await ticketCallOp.confirmation();
       } catch (e) {
         console.log('Failed to originate ticket contract', JSON.stringify(e));

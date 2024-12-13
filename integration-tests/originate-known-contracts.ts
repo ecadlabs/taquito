@@ -1,5 +1,5 @@
 import { CONFIGS } from './config';
-import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito/taquito';
+import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit, UnitValue } from '@taquito/taquito';
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { stringToBytes } from '@taquito/utils';
@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import { codeViewsTopLevel } from './data/contract_views_top_level';
 import { knownBigMapContract } from './data/knownBigMapContract';
 import { knownContract } from './data/knownContract';
+import { ticketsSendTz } from './data/code_with_ticket_transfer';
 import * as fs from 'fs/promises';
 
 const MUTEZ_UNIT = new BigNumber(1000000);
@@ -172,6 +173,12 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     await originateKnownContract('onChainViewContractAddress', tezos, {
       code: codeViewsTopLevel,
       storage: 2
+    });
+
+    // knownTicketContract
+    await originateKnownContract('ticketContract', tezos, {
+      code: ticketsSendTz,
+      storage: UnitValue,
     });
 
     await appendOutput('};');

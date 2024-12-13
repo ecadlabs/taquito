@@ -3,7 +3,7 @@ import { DefaultContractType, TezosToolkit } from '@taquito/taquito';
 import { ticketsSendTz } from '../../data/code_with_ticket_transfer';
 import { RpcClient, TicketTokenParams } from '@taquito/rpc';
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
   const Tezos = lib;
   const client = new RpcClient(rpc);
 
@@ -28,10 +28,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const fundSender = await Tezos.contract.transfer({ to: senderPkh, amount: 5 });
         await fundSender.confirmation();
 
-        const ticketSendOrigination = await Tezos.contract.originate({ code: ticketsSendTz, storage: null });
-        await ticketSendOrigination.confirmation();
 
-        ticketSendContract = await ticketSendOrigination.contract();
+        ticketSendContract = await Tezos.contract.at(knownTicketContract);
         ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
 
         // Send 3 tickets from the originated contract to sender
