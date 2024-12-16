@@ -35,7 +35,12 @@ import {
 import { PreparationProvider, PreparedOperation } from './interface';
 import { REVEAL_STORAGE_LIMIT, Protocols, getRevealFee, getRevealGasLimit } from '../constants';
 import { RPCResponseError } from '../errors';
-import { PublicKeyNotFoundError, InvalidOperationKindError, DeprecationError } from '@taquito/core';
+import {
+  PublicKeyNotFoundError,
+  InvalidOperationKindError,
+  DeprecationError,
+  InvalidAmountError,
+} from '@taquito/core';
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -276,7 +281,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           return {
             ...op,
             ...this.getSource(op, pkh, source),
-            period: currentVotingPeriod?.voting_period.index,
+            period: currentVotingPeriod.voting_period.index,
           };
         default:
           throw new InvalidOperationKindError((op as RPCOperation).kind);
@@ -779,6 +784,9 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     gasLimit,
     ...rest
   }: IncreasePaidStorageParams): Promise<PreparedOperation> {
+    if (rest.amount <= 0) {
+      throw new InvalidAmountError(rest.amount.toString(), 'amount must be greater than 0');
+    }
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -843,7 +851,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops,
       headCounter,
       pkh,
-      undefined,
+      params.source,
       currentVotingPeriod
     );
 
@@ -890,7 +898,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops,
       headCounter,
       pkh,
-      undefined,
+      params.source,
       currentVotingPeriod
     );
 
