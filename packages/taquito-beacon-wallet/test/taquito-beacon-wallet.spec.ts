@@ -10,6 +10,27 @@ global.localStorage = new LocalStorageMock();
 global.indexedDB = indexedDB;
 global.window = { addEventListener: jest.fn() } as any;
 
+jest.mock('@airgap/beacon-ui', () => {
+  return {
+    AlertButton: jest.fn(),
+    closeToast: jest.fn(),
+    getColorMode: jest.fn(),
+    setColorMode: jest.fn(),
+    setDesktopList: jest.fn(),
+    setExtensionList: jest.fn(),
+    setWebList: jest.fn(),
+    setiOSList: jest.fn(),
+    getiOSList: jest.fn(),
+    getDesktopList: jest.fn(),
+    getExtensionList: jest.fn(),
+    getWebList: jest.fn(),
+    isBrowser: jest.fn(),
+    isDesktop: jest.fn(),
+    isMobileOS: jest.fn(),
+    isIOS: jest.fn(),
+    currentOS: jest.fn(),
+  };
+});
 // thanks to IsaccoSordo's contribution of https://github.com/ecadlabs/taquito/pull/3015
 jest.mock('@airgap/beacon-transport-postmessage', () => {
   jest.useFakeTimers();
