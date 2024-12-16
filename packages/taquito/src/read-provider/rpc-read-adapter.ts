@@ -17,13 +17,23 @@ export class RpcReadAdapter implements TzReadProvider {
   constructor(private rpc: RpcClientInterface) {}
 
   /**
-   * @description Access the spendable balance of a contract, excluding frozen bonds.
-   * @param address address from which we want to retrieve the balance
+   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'spendable' RPC.
+   * @param address address from which we want to retrieve the spendable balance
    * @param block from which we want to retrieve the balance
    * @returns the balance in mutez
    */
   async getBalance(address: string, block: BlockIdentifier): Promise<BigNumber> {
     return this.rpc.getBalance(address, { block: String(block) });
+  }
+
+  /**
+   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'balance' RPC.
+   * @param address address from which we want to retrieve the spendable balance
+   * @param block from which we want to retrieve the balance
+   * @returns the balance in mutez
+   */
+  async getSpendable(address: string, block: BlockIdentifier): Promise<BigNumber> {
+    return this.rpc.getSpendable(address, { block: String(block) });
   }
 
   /**

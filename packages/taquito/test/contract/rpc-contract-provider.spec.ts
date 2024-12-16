@@ -58,6 +58,7 @@ describe('RpcContractProvider test', () => {
     getCounter: jest.Mock<any, any>;
     getProtocolConstants: jest.Mock<any, any>;
     getBalance: jest.Mock<any, any>;
+    getSpendable: jest.Mock<any, any>;
     isAccountRevealed: jest.Mock<any, any>;
     getChainId: jest.Mock<any, any>;
   };
@@ -124,6 +125,7 @@ describe('RpcContractProvider test', () => {
       getCounter: jest.fn(),
       getProtocolConstants: jest.fn(),
       getBalance: jest.fn(),
+      getSpendable: jest.fn(),
       isAccountRevealed: jest.fn(),
       getChainId: jest.fn(),
     };
