@@ -2388,8 +2388,9 @@ export type LastRemovedCommitmentHashes = {
 };
 
 export interface PendingOperationsQueryArguments {
-  version?: '2' | 2;
+  version?: 1 | 2 | '1' | '2';
   validated?: boolean;
+  applied?: boolean;
   refused?: boolean;
   outdated?: boolean;
   branchRefused?: boolean;
@@ -2405,6 +2406,15 @@ type FailedProcessedOperation = Pick<
 > & {
   error: TezosGenericOperationError[];
 };
+// TODO: Remove once mainnet migrated into quebec protocol it's not supported anymore
+export interface PendingOperationsV1 {
+  applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
+  refused: FailedProcessedOperation[];
+  outdated: FailedProcessedOperation[];
+  branch_refused: FailedProcessedOperation[];
+  branch_delayed: FailedProcessedOperation[];
+  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
+}
 
 export interface PendingOperationsV2 {
   validated: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];

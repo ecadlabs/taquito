@@ -8,7 +8,7 @@ author: Roxane Letourneau
 1. The RPC nodes' integration tests are disabled by default.
 Remove `./rpc-nodes.spec.ts` from `"testPathIgnorePatterns"` in the package.json.
 
- **parisnet**: `npm run test:quebecnet-secret-key integration-tests/__tests__/rpc/nodes.spec.ts`
+ **quebecnet**: `npm run test:quebecnet-secret-key integration-tests/__tests__/rpc/nodes.spec.ts`
 
 **When all endpoints are accessible for a node, you will obtain:**
 

@@ -25,6 +25,7 @@ import {
   OperationContentsAndResultSmartRollupExecuteOutboxMessage,
   RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
+  PendingOperationsV1,
   PendingOperationsV2,
   OperationContentsAndResultSmartRollupCement,
   OperationContentsAndResultSmartRollupPublish,
@@ -4242,7 +4243,8 @@ describe('RpcClient test', () => {
   describe('getPendingOperations', () => {
     it('should query the correct url and return pending operations in mempool', async () => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
-      const response: PendingOperationsV2 = await client.getPendingOperations();
+      const response: PendingOperationsV1 | PendingOperationsV2 =
+        await client.getPendingOperations();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',

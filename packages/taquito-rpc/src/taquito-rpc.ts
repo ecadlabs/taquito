@@ -64,6 +64,7 @@ import {
   TicketTokenParams,
   AllTicketBalances,
   PendingOperationsQueryArguments,
+  PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
@@ -1279,7 +1280,7 @@ export class RpcClient implements RpcClientInterface {
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
-  ): Promise<PendingOperationsV2> {
+  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
     return this.httpBackend.createRequest<PendingOperationsV2>({
       url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
       method: 'GET',
