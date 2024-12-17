@@ -81,9 +81,6 @@ jobs:
         run: npm -w integration-tests run sandbox:${{ matrix.testnet }}
       - run: npm ci
       - run: npm run build
-      - run: npm -w integration-tests run test __tests__/tezbox/sandbox-proposal-and-ballot-operation.spec.ts
-        env:
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://0.0.0.0:8732
-      - run: npm -w integration-tests run test __tests__/tezbox/sandbox-drain-delegate-operation.spec
+      - run: npm -w integration-tests run test __tests__/tezbox/
         env:
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://0.0.0.0:8732

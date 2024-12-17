@@ -115,7 +115,7 @@ CONFIGS().forEach(async ({ rpc, protocol }) => {
       expect(localForged).toEqual(rpcForged);
     })
 
-    it('should toPreapply a prepared a ballot operation accepted by rpc in proposal period in exploration period', async () => {
+    tezboxnet('should toPreapply a prepared a ballot operation accepted by rpc in proposal period in exploration period', async () => {
       // if it's still proposal period make the test sleep to get into exploration period to preapply ballot operation
       await sleepUntil('exploration')
 
