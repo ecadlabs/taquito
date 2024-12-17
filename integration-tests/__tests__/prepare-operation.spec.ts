@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, setup, createAddress, knownTicketContract }) => {
   let prepared: PreparedOperation
   let method: any, args: any
 
-  describe(`Test Preparation of operations using the PrepareProvider`, () => {
+  describe(`Test Preparation of operations using PrepareProvider`, () => {
     beforeAll(async () => {
       await setup(true);
       pkh = await Tezos.signer.publicKeyHash();

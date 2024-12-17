@@ -1,6 +1,7 @@
 import { CONFIGS, isSandbox, sleep } from '../../config';
 import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
+import { LocalForger } from '@taquito/local-forging';
 import { OperationContentsAndResultBallot, OperationContentsAndResultProposals, VotingPeriodBlockResult, OperationContentsProposals } from '@taquito/rpc';
 
 CONFIGS().forEach(async ({ rpc, protocol }) => {
@@ -8,12 +9,22 @@ CONFIGS().forEach(async ({ rpc, protocol }) => {
   const baker1 = new TezosToolkit(rpc);
   const baker2 = new TezosToolkit(rpc);
   const baker3 = new TezosToolkit(rpc);
+  let localForger = new LocalForger();
   const proposal = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK';
   const ballot = 'yay';
+  let prepared: any;
   let blockTime: number
   let currentPeriod: VotingPeriodBlockResult;
 
-  describe(`Test Proposal and Ballot operation in ${protocol.substring(0, 8)} with tezbox`, () => {
+  async function sleepUntil(period: string): Promise<void> {
+    currentPeriod = await baker1.rpc.getCurrentPeriod();
+    while (currentPeriod.voting_period.kind !== period) {
+      await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
+      currentPeriod = await baker1.rpc.getCurrentPeriod()
+    }
+  }
+
+  describe(`Test Preparation of proposals and ballot ops using PrepareProvider in ${protocol.substring(0, 8)} with tezbox`, () => {
     beforeAll(async () => {
       // tezbox provision of 3 bakers, ref https://github.com/tez-capital/tezbox/blob/main/configuration/bakers.hjson
       baker1.setSignerProvider(new InMemorySigner('edsk4ArLQgBTLWG5FJmnGnT689VKoqhXwmDPBuGx3z4cvwU9MmrPZZ'));
@@ -25,27 +36,44 @@ CONFIGS().forEach(async ({ rpc, protocol }) => {
       blockTime = constants.minimal_block_delay!.toNumber();
     });
 
-    tezboxnet('Should be able to prepare proposal accepted by preapply endpoint', async () => {
-      // check if it's in proposal period to start proposal test
-      currentPeriod = await baker1.rpc.getCurrentPeriod();
-      while (currentPeriod.voting_period.kind !== 'proposal') {
-        await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
-        currentPeriod = await baker1.rpc.getCurrentPeriod()
-      }
+    tezboxnet('should prepare a proposals operation correctly in proposal period', async () => {
+      await sleepUntil('proposal')
 
-      const proposalPrepared = await baker1.prepare.proposals({ proposals: [proposal] });
-      const proposalPreapplied = await baker1.rpc.preapplyOperations(await baker1.prepare.toPreapply(proposalPrepared));
-
-      expect(proposalPreapplied).toBeInstanceOf(Array);
-      expect(proposalPreapplied[0].contents).toBeInstanceOf(Array);
-      expect(proposalPreapplied[0].contents[0].kind).toBe('proposals');
-      expect((proposalPreapplied[0].contents[0] as OperationContentsAndResultProposals).source).toBe(await baker1.signer.publicKeyHash());
-      expect((proposalPreapplied[0].contents[0] as OperationContentsAndResultProposals).period).toBe((proposalPrepared.opOb.contents[0] as OperationContentsProposals).period);
-      expect((proposalPreapplied[0].contents[0] as OperationContentsAndResultProposals).proposals).toBeInstanceOf(Array);
-      expect((proposalPreapplied[0].contents[0] as OperationContentsAndResultProposals).proposals[0]).toEqual(proposal);
+      prepared = await baker1.prepare.proposals({ proposals: [proposal] });
+      expect(prepared).toBeDefined();
+      expect(prepared.counter).toBeDefined();
+      expect(prepared.opOb).toBeDefined();
+      expect(prepared.opOb.branch).toBeDefined();
+      expect(prepared.opOb.contents).toBeDefined();
+      expect(prepared.opOb.contents[0].kind).toEqual('proposals');
     });
 
-    tezboxnet('Should be able to inject proposal operation in proposal period', async () => {
+    tezboxnet('should toForge a prepared proposals operation accepted by both forgers', async () => {
+      const toForge = await baker1.prepare.toForge(prepared);
+      const localForged = await localForger.forge(toForge);
+      const rpcForged = await baker1.rpc.forgeOperations(toForge);
+      expect(localForged).toEqual(rpcForged);
+    })
+
+    tezboxnet('should toPreapply a prepared a proposals operation accepted by rpc in proposal period', async () => {
+      await sleepUntil('proposal')
+
+      const toPreapply = await baker1.rpc.preapplyOperations(await baker1.prepare.toPreapply(prepared));
+      expect(toPreapply).toBeInstanceOf(Array);
+      expect(toPreapply[0].contents).toBeInstanceOf(Array);
+      const content = toPreapply[0].contents[0] as OperationContentsAndResultProposals;
+      expect(content).toBeInstanceOf(Object);
+      expect(content.kind).toEqual('proposals');
+      expect((toPreapply[0].contents[0] as OperationContentsAndResultProposals).source).toBe(await baker1.signer.publicKeyHash());
+      expect((toPreapply[0].contents[0] as OperationContentsAndResultProposals).period).toBe((prepared.opOb.contents[0] as OperationContentsProposals).period);
+      expect((toPreapply[0].contents[0] as OperationContentsAndResultProposals).proposals).toBeInstanceOf(Array);
+      expect((toPreapply[0].contents[0] as OperationContentsAndResultProposals).proposals[0]).toEqual(proposal);
+
+    })
+
+    tezboxnet('Should be able to inject proposals operation in proposal period', async () => {
+      await sleepUntil('proposal')
+
       const proposalsOp = await baker1.contract.proposals({
         proposals: [proposal]
       });
@@ -67,25 +95,44 @@ CONFIGS().forEach(async ({ rpc, protocol }) => {
       expect(baker3Op.includedInBlock).toBeDefined();
     });
 
-    tezboxnet('Should be able to prepare ballot operations accepted by preapply endpoint', async () => {
-      // if it's still proposal period make the test sleep to get into exploration period to inject ballot operation
-      while (currentPeriod.voting_period.kind !== 'exploration') {
-        await sleep(((currentPeriod.remaining + 1) * blockTime) * 1000)
-        currentPeriod = await baker1.rpc.getCurrentPeriod()
-      }
+    tezboxnet('should prepare a ballot operation correctly in exploration period', async () => {
+      // if it's still proposal period make the test sleep to get into exploration period to prepare ballot operation
+      await sleepUntil('exploration')
 
-      const ballotPrepared = await baker1.prepare.ballot({ proposal, ballot });
-      const preappliedBallot = await baker1.rpc.preapplyOperations(await baker1.prepare.toPreapply(ballotPrepared));
-
-      expect(preappliedBallot).toBeInstanceOf(Array);
-      expect(preappliedBallot[0].contents).toBeInstanceOf(Array);
-      expect(preappliedBallot[0].contents[0].kind).toEqual('ballot');
-      expect((preappliedBallot[0].contents[0] as OperationContentsAndResultBallot).source).toEqual(await baker1.signer.publicKeyHash());
-      expect((preappliedBallot[0].contents[0] as OperationContentsAndResultBallot).proposal).toEqual(proposal);
-      expect((preappliedBallot[0].contents[0] as OperationContentsAndResultBallot).ballot).toEqual(ballot);
+      prepared = await baker1.prepare.ballot({ proposal, ballot });
+      expect(prepared).toBeDefined();
+      expect(prepared.counter).toBeDefined();
+      expect(prepared.opOb).toBeDefined();
+      expect(prepared.opOb.branch).toBeDefined();
+      expect(prepared.opOb.contents).toBeDefined();
+      expect(prepared.opOb.contents[0].kind).toEqual('ballot');
     });
 
+    tezboxnet('Should be able to forge ballot operations accepted by both forgers', async () => {
+      const toForge = await baker1.prepare.toForge(prepared);
+      const localForged = await localForger.forge(toForge);
+      const rpcForged = await baker1.rpc.forgeOperations(toForge);
+      expect(localForged).toEqual(rpcForged);
+    })
+
+    it('should toPreapply a prepared a ballot operation accepted by rpc in proposal period in exploration period', async () => {
+      // if it's still proposal period make the test sleep to get into exploration period to preapply ballot operation
+      await sleepUntil('exploration')
+
+      const toPreapply = await baker1.rpc.preapplyOperations(await baker1.prepare.toPreapply(prepared));
+      expect(toPreapply).toBeInstanceOf(Array);
+      expect(toPreapply[0].contents).toBeInstanceOf(Array);
+      const content = toPreapply[0].contents[0] as OperationContentsAndResultBallot;
+      expect(content).toBeInstanceOf(Object);
+      expect(content.kind).toEqual('ballot');
+      expect((toPreapply[0].contents[0] as OperationContentsAndResultBallot).source).toEqual(await baker1.signer.publicKeyHash());
+      expect((toPreapply[0].contents[0] as OperationContentsAndResultBallot).proposal).toEqual(proposal);
+      expect((toPreapply[0].contents[0] as OperationContentsAndResultBallot).ballot).toEqual(ballot);
+    })
     tezboxnet('Should be able to inject ballot operation in exploration period', async () => {
+      // if it's still proposal period make the test sleep to get into exploration period to inject ballot operation
+      await sleepUntil('exploration')
+
       const explorationBallotOp = await baker1.contract.ballot({
         proposal,
         ballot
