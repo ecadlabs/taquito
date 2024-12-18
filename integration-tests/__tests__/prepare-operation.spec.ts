@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, setup, createAddress, knownTicketContract }) => {
       expect(localForged).toEqual(rpcForged);
     });
 
-    it('should toPreapply a prepared a reveal operation accepted by rpc', async () => {
+    it('should toPreapply a prepared reveal operation accepted by rpc', async () => {
       const toPreapply = await Tezos.rpc.preapplyOperations(await Tezos.prepare.toPreapply(prepared));
       expect(toPreapply).toBeInstanceOf(Array);
       expect(toPreapply[0].contents).toBeInstanceOf(Array);
@@ -332,7 +332,7 @@ CONFIGS().forEach(({ lib, setup, createAddress, knownTicketContract }) => {
       expect(prepared.opOb.protocol).toBeDefined();
     })
 
-    it('should toForge a prepared smartRollupOriginate operation accepted accepted by both forgers', async () => {
+    it('should toForge a prepared smartRollupOriginate operation accepted by both forgers', async () => {
       const toForge = await Tezos.prepare.toForge(prepared);
       const localForged = await localForger.forge(toForge);
       const rpcForged = await Tezos.rpc.forgeOperations(toForge);
