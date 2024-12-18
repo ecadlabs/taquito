@@ -3,11 +3,11 @@ import { OpKind, TezosToolkit } from "@taquito/taquito";
 import { InMemorySigner } from "@taquito/signer";
 import { verifySignature } from "@taquito/utils";
 
-CONFIGS().forEach(({ setup, rpc }) => {
+CONFIGS().forEach(({ lib, setup, rpc }) => {
   let signerAlice = new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq')
 
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
-    let Tezos: TezosToolkit;
+    let Tezos = lib;
     beforeAll(async () => {
       setup(true)
       if (rpc.includes('paris')) {

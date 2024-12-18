@@ -67,6 +67,8 @@ export type RPCOpWithFee =
   | RPCSmartRollupOutboxMessageOperation;
 
 export type RPCOpWithSource =
+  | RPCBallotOperation
+  | RPCProposalsOperation
   | RPCTransferOperation
   | RPCOriginationOperation
   | RPCDelegateOperation

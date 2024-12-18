@@ -3,7 +3,7 @@
 
 The `taquito/integration-tests` directory contains the integration test suite for Taquito. These tests are executed against live Tezos testnets, ensuring a comprehensive evaluation of various Taquito use cases.
 
-The tests may also be run using Flextesa. This is useful for testing new features not in current test nets and for testing features around governance that benefit from shortened block processing times. As well Flextesa tests offer a secondary confirmation of the test net results.
+The tests may also be run using tezbox. This is useful for testing new features not in current testnets and for testing features around governance that benefit from shortened block processing times. As well tezbox tests offer a secondary confirmation of the testnet results.
 
 Internally Taquito is tested with tests running in parallel. This is achieved using an application that generates new keys and funds them as needed per test.
 The application is not publicly available. External users, therefore, must run the Taquito Integration Tests in sequence, one test at a time.
@@ -100,13 +100,23 @@ If running the test with a configured secret key, ensure that the account balanc
 To review the graphical report of the test run, open the index.html file in ~/taquito/integration-tests/jest-stare after each test run.
 
 
-## Taquito Integration Tests with Flextesa
+## Taquito Integration Tests with Tezbox
 
-:::warning
-Due to the discontinuation of Flextesa support from Protocol Oxford onwards, we unfortunately will not be testing against sandboxes anymore.
-
-The only sandbox tests we're running points to the latest Nairobibox to specifically test for the `ballot` and `drain_delegate` operation.
-:::
+First, run this command to spin up the sandbox provided by [tezbox](https://github.com/tez-capital/tezbox)
+This command will override the protocol parameters to 10 `blocks_per_cycle` and 1 second `minimal_block_delay`
+```
+npm run sandbox:parisnet
+```
+Then you can run the tests under tezbox subfolder that requires to wait cycles like proposals, ballot and drain_delegate
+```
+TEZOS_RPC_PARISNET=http://localhost:8732 npm run test __tests__/tezbox/
+```
+Or if you'd like to run the entire `__tests__` folder run these commands
+```
+source sandbox-env.sh
+npm run originate-known-contracts
+npm run test:parisnet-secret-key
+```
 
 ## The Keygen API
 
