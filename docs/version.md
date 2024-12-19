@@ -3,6 +3,16 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v20.1.2
+## Summary
+
+### Node.js add support of v18
+There is a [node.js confirmed HTTP bug](https://github.com/nodejs/node/issues/47228) from v19 that occasionally causes HTTP requests to fail with a socket hang-up error.
+We decided to support node.js v18 again until this issue is resolved in the future node.js release #3098
+
+### Documentation
+Fixing typo #3094
+
 # Taquito v20.1.1
 ## Summary
 

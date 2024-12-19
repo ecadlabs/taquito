@@ -17,8 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - 'lts/iron'
-          - '22'
+          - 'lts/Hydrogen'
+          - 'lts/Iron'
+          - 'lts/Jod'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -53,7 +54,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/iron
+          node-version: lts/Hydrogen
       - run: npm ci
       - run: npm run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
