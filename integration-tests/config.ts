@@ -145,7 +145,7 @@ const quebecnetEphemeral: Config =
   defaultConfig({
     networkName: 'QUEBECNET',
     protocol: Protocols.PsQuebecn,
-    defaultRpc: 'http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com:8732/',
+    defaultRpc: 'http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPsQuebecn,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecnet')
   })
@@ -169,7 +169,7 @@ const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2024-12-04.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2024-12-18.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
