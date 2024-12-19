@@ -1783,6 +1783,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto021 &
   ConstantsResponseProto020 &
   ConstantsResponseProto019 &
   ConstantsResponseProto017 &
@@ -1827,6 +1828,8 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export type ConstantsResponseProto021 = ConstantsResponseProto020;
 
 export interface ConstantsResponseProto020
   extends Omit<
@@ -2385,14 +2388,16 @@ export type LastRemovedCommitmentHashes = {
 };
 
 export interface PendingOperationsQueryArguments {
-  version?: '1' | '2';
+  version?: 1 | 2 | '1' | '2';
   validated?: boolean;
   applied?: boolean;
   refused?: boolean;
   outdated?: boolean;
   branchRefused?: boolean;
   branchDelayed?: boolean;
-  validationPass?: '0' | '1' | '2' | '3';
+  validationPass?: '0' | '1' | '2' | '3' | 0 | 1 | 2 | 3;
+  source?: string;
+  operationHash?: string;
 }
 
 type FailedProcessedOperation = Pick<
@@ -2401,7 +2406,7 @@ type FailedProcessedOperation = Pick<
 > & {
   error: TezosGenericOperationError[];
 };
-
+// TODO: Remove once mainnet migrated into quebec protocol it's not supported anymore
 export interface PendingOperationsV1 {
   applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
   refused: FailedProcessedOperation[];

@@ -42,6 +42,7 @@ describe('RPCEstimateProvider test signer', () => {
   let mockRpcClient: {
     getScript: jest.Mock<any, any>;
     getBalance: jest.Mock<any, any>;
+    getSpendable: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
@@ -74,6 +75,7 @@ describe('RPCEstimateProvider test signer', () => {
       runOperation: jest.fn(),
       simulateOperation: jest.fn(),
       getBalance: jest.fn(),
+      getSpendable: jest.fn(),
       getBlock: jest.fn(),
       getScript: jest.fn(),
       getManagerKey: jest.fn(),
@@ -1124,6 +1126,7 @@ describe('RPCEstimateProvider test wallet', () => {
   let mockRpcClient: {
     getScript: jest.Mock<any, any>;
     getBalance: jest.Mock<any, any>;
+    getSpendable: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
@@ -1152,6 +1155,7 @@ describe('RPCEstimateProvider test wallet', () => {
       runOperation: jest.fn(),
       simulateOperation: jest.fn(),
       getBalance: jest.fn(),
+      getSpendable: jest.fn(),
       getBlock: jest.fn(),
       getScript: jest.fn(),
       getManagerKey: jest.fn(),
