@@ -1,13 +1,13 @@
 import { NetworkType as NetworkTypeBeacon } from "@airgap/beacon-sdk";
 import { NetworkType as NetworkTypeWc } from "@taquito/wallet-connect";
 
-export type SupportedNetworks = NetworkTypeBeacon.MAINNET | NetworkTypeBeacon.GHOSTNET | NetworkTypeBeacon.PARISNET | NetworkTypeWc.MAINNET | NetworkTypeWc.GHOSTNET | NetworkTypeWc.PARISNET | NetworkTypeBeacon.CUSTOM;
+export type SupportedNetworks = NetworkTypeBeacon.MAINNET | NetworkTypeBeacon.GHOSTNET | NetworkTypeBeacon.PARISNET | NetworkTypeBeacon.QUEBECNET | NetworkTypeWc.MAINNET | NetworkTypeWc.GHOSTNET | NetworkTypeWc.PARISNET | NetworkTypeWc.QUEBECNET | NetworkTypeBeacon.CUSTOM;
 
 const rpcUrls: Record<SupportedNetworks, string> = {
   [NetworkTypeBeacon.MAINNET]: "https://mainnet.tezos.ecadinfra.com",
   [NetworkTypeBeacon.GHOSTNET]: "https://ghostnet.tezos.ecadinfra.com/",
   [NetworkTypeBeacon.PARISNET]: "https://rpc.pariscnet.teztnets.com/",
-    // [NetworkTypeWc.QUEBECNET]: "http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com:8732/",
+  [NetworkTypeBeacon.QUEBECNET]: "https://rpc.quebecnet.teztnets.com",
   [NetworkTypeBeacon.CUSTOM]: "https://ghostnet.tezos.ecadinfra.com/",
 };
 
@@ -26,9 +26,9 @@ export const getTzKtUrl = (networkType: SupportedNetworks): string | undefined =
     case NetworkTypeBeacon.PARISNET:
     case NetworkTypeWc.PARISNET:
       return "https://parisnet.tzkt.io";
-    // case NetworkTypeBeacon.QUEBECNET:
-    // case NetworkTypeWc.QUEBECNET:
-    //     return "https://quebecnet.tzkt.io";
+    case NetworkTypeBeacon.QUEBECNET:
+    case NetworkTypeWc.QUEBECNET:
+        return "https://quebecnet.tzkt.io";
     case NetworkTypeBeacon.CUSTOM:
       return undefined;
   }
