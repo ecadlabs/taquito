@@ -19,7 +19,7 @@ CONFIGS().forEach(
     knownViewContract,
   }) => {
     const Tezos = lib;
-    const unrestrictedRPCNode = rpc.includes("teztnets.com") ? test : test.skip;
+    const unrestrictedRPCNode = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? test : test.skip;
     const parisnet = protocol === Protocols.PsParisCZ ? test : test.skip;
     const quebecnet = protocol === Protocols.PsQuebecn ? test : test.skip;
     let ticketContract: DefaultContractType;
