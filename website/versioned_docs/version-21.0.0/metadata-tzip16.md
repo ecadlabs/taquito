@@ -356,7 +356,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 Tezos.addExtension(new Tzip16Module());
@@ -375,7 +375,7 @@ Tezos.contract
   })
   .then((result) => {
     console.log(`Result of the view someJson: ${result}`);
-    console.log(`Transform result to char: ${bytes2Char(result)}`);
+    console.log(`Transform result to char: ${bytesToString(result)}`);
   })
   .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
@@ -385,7 +385,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 Tezos.addExtension(new Tzip16Module());
@@ -404,7 +404,7 @@ Tezos.wallet
   })
   .then((result) => {
     console.log(`Result of the view someJson: ${result}`);
-    console.log(`Transform result to char: ${bytes2Char(result)}`);
+    console.log(`Transform result to char: ${bytesToString(result)}`);
   })
   .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
