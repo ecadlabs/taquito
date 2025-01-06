@@ -1,6 +1,7 @@
 name: Bundle Webpack
 
 on:
+  pull_request:
   push:
     branches:
       - master
