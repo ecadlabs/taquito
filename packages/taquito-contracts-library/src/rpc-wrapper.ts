@@ -94,6 +94,24 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<BalanceResponse> {
     return this.rpc.getBalance(address, { block });
   }
+  async getSpendable(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getSpendable(address, { block });
+  }
+  async getBalanceAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getBalanceAndFrozenBonds(address, { block });
+  }
+  async getSpendableAndFrozenBonds(
+    address: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<BalanceResponse> {
+    return this.rpc.getSpendableAndFrozenBonds(address, { block });
+  }
   async getFullBalance(
     address: string,
     { block }: RPCOptions = defaultRPCOptions

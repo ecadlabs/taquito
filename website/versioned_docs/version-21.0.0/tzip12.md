@@ -144,7 +144,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 Tezos.addExtension(new Tzip16Module());
@@ -161,10 +161,10 @@ Tezos.contract.at(contractAddress, tzip16)
   return views['token_metadata']().executeView(tokenId)
 }).then (result => {
   console.log('Result of the view token_metadata:');
-  console.log(`name: ${bytes2Char((Object.values(result)[1]).get('name'))}`);
-  console.log(`decimals: ${bytes2Char((Object.values(result)[1]).get('decimals'))}`);
-  console.log(`symbol: ${bytes2Char((Object.values(result)[1]).get('symbol'))}`);
-  console.log(`extra: ${bytes2Char((Object.values(result)[1]).get('extra'))}`);
+  console.log(`name: ${bytesToString((Object.values(result)[1]).get('name'))}`);
+  console.log(`decimals: ${bytesToString((Object.values(result)[1]).get('decimals'))}`);
+  console.log(`symbol: ${bytesToString((Object.values(result)[1]).get('symbol'))}`);
+  console.log(`extra: ${bytesToString((Object.values(result)[1]).get('extra'))}`);
 })
 .catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
@@ -173,7 +173,7 @@ Tezos.contract.at(contractAddress, tzip16)
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// import { Tzip16Module, tzip16, bytes2Char } from "@taquito/tzip16";
+// import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 Tezos.addExtension(new Tzip16Module());
@@ -190,10 +190,10 @@ Tezos.wallet.at(contractAddress, tzip16)
   return views['token_metadata']().executeView(tokenId)
 }).then (result => {
   console.log('Result of the view token_metadata:');
-  console.log(`name: ${bytes2Char((Object.values(result)[1]).get('name'))}`);
-  console.log(`decimals: ${bytes2Char((Object.values(result)[1]).get('decimals'))}`);
-  console.log(`symbol: ${bytes2Char((Object.values(result)[1]).get('symbol'))}`);
-  console.log(`extra: ${bytes2Char((Object.values(result)[1]).get('extra'))}`);
+  console.log(`name: ${bytesToString((Object.values(result)[1]).get('name'))}`);
+  console.log(`decimals: ${bytesToString((Object.values(result)[1]).get('decimals'))}`);
+  console.log(`symbol: ${bytesToString((Object.values(result)[1]).get('symbol'))}`);
+  console.log(`extra: ${bytesToString((Object.values(result)[1]).get('extra'))}`);
 })
 .catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
