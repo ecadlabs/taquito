@@ -1,6 +1,6 @@
 {
   "name": "@taquito/contracts-library",
-  "version": "20.1.2",
+  "version": "21.0.0",
   "description": "Can be used as an extension on the TezosToolkit to provide contracts data",
   "keywords": [
     "tezos"
@@ -67,10 +67,10 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^20.1.2",
-    "@taquito/rpc": "^20.1.2",
-    "@taquito/taquito": "^20.1.2",
-    "@taquito/utils": "^20.1.2",
+    "@taquito/core": "^21.0.0",
+    "@taquito/rpc": "^21.0.0",
+    "@taquito/taquito": "^21.0.0",
+    "@taquito/utils": "^21.0.0",
     "bignumber.js": "^9.1.2"
   },
   "devDependencies": {

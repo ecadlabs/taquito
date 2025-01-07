@@ -20,6 +20,7 @@ describe('RpcReadAdapter test', () => {
   let readProvider: RpcReadAdapter;
   let mockRpcClient: {
     getBalance: jest.Mock<any, any>;
+    getSpendable: jest.Mock<any, any>;
     getDelegate: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
@@ -41,6 +42,7 @@ describe('RpcReadAdapter test', () => {
   beforeEach(() => {
     mockRpcClient = {
       getBalance: jest.fn(),
+      getSpendable: jest.fn(),
       getDelegate: jest.fn(),
       getProtocols: jest.fn(),
       getConstants: jest.fn(),
@@ -83,6 +85,19 @@ describe('RpcReadAdapter test', () => {
         'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
       );
       expect(mockRpcClient.getBalance.mock.calls[0][1]).toEqual({ block: `${block}` });
+    });
+
+    it(`should get the spendable given a pkh at block: ${block}`, async () => {
+      mockRpcClient.getSpendable.mockResolvedValue(new BigNumber('10000'));
+
+      const result = await readProvider.getSpendable('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', block);
+      expect(result).toBeInstanceOf(BigNumber);
+      expect(result.toString()).toStrictEqual('10000');
+
+      expect(mockRpcClient.getSpendable.mock.calls[0][0]).toEqual(
+        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
+      );
+      expect(mockRpcClient.getSpendable.mock.calls[0][1]).toEqual({ block: `${block}` });
     });
 
     it(`should get the delegate given a pkh at block: ${block}`, async () => {

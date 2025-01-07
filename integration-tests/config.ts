@@ -8,7 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
-import { knownContractsPtNairobi } from './known-contracts-PtNairobi';
+import { knownContractsPsQuebecn } from './known-contracts-PsQuebecn';
 
 const nodeCrypto = require('crypto');
 
@@ -117,7 +117,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'WEEKLYNET' ? 'tz1ck3EJwzFpbLVmXVuEn5Ptwzc6Aj14mHSH' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'),
+    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'QUEBECNET' ? 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD' : 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb'),
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -141,14 +141,17 @@ const parisnetEphemeral: Config =
 const parisnetSecretKey: Config =
   { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
 
-const nairobinetSecretKey: Config =
+const quebecnetEphemeral: Config =
   defaultConfig({
-    networkName: 'NAIROBINET',
-    protocol: Protocols.PtNairobi,
-    defaultRpc: 'http://ecad-nairobinet-full:8732',
-    knownContracts: knownContractsPtNairobi,
-    signerConfig: defaultSecretKey
+    networkName: 'QUEBECNET',
+    protocol: Protocols.PsQuebecn,
+    defaultRpc: 'http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com/',
+    knownContracts: knownContractsPsQuebecn,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecnet')
   })
+
+  const quebecnetSecretKey: Config =
+  { ...quebecnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.quebeccnet.teztnets.com/' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -160,13 +163,13 @@ const ghostnetEphemeral: Config =
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://ghostnet.ecadinfra.com' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2024-11-27.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2024-12-18.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
@@ -177,23 +180,25 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(parisnetSecretKey);
+  providers.push(quebecnetSecretKey);
 } else if (process.env['RUN_PARISNET_WITH_SECRET_KEY']) {
   providers.push(parisnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_NAIROBINET_WITH_SECRET_KEY']) {
-  providers.push(nairobinetSecretKey);
+} else if (process.env['RUN_QUEBECNET_WITH_SECRET_KEY']) {
+  providers.push(quebecnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['PARISNET']) {
   providers.push(parisnetEphemeral);
 } else if (process.env['GHOSTNET']) {
-  providers.push(ghostnetEphemeral);
+  providers.push(quebecnetEphemeral);
+} else if (process.env['QUEBECNET']) {
+  providers.push(quebecnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(parisnetEphemeral);
+  providers.push(quebecnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
