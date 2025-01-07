@@ -8,7 +8,7 @@ CONFIGS().forEach(({ rpc, protocol, setup, lib }) => {
   describe(`Test forging pseudo entrypoints: ${rpc}`, () => {
     let contract: DefaultContractType
     // for every new protocol need to check https://tezos.gitlab.io/shell/p2p_api.html#alpha-entrypoint-determined-from-data-8-bit-tag for the latest entrypoints and corresponding tag
-    let parisEntrypoint = { 0: 'default', 1: 'root', 2: 'do', 3: 'set_delegate', 4: 'remove_delegate', 5: 'deposit', 6: 'stake', 7: 'unstake', 8: 'finalize_unstake', 9: 'set_delegate_parameters' }
+    let quebecEntrypoint = { 0: 'default', 1: 'root', 2: 'do', 3: 'set_delegate', 4: 'remove_delegate', 5: 'deposit', 6: 'stake', 7: 'unstake', 8: 'finalize_unstake', 9: 'set_delegate_parameters' }
 
     beforeAll(async () => {
       await setup();
@@ -23,7 +23,7 @@ CONFIGS().forEach(({ rpc, protocol, setup, lib }) => {
       } catch(e) {console.log(e)}
     })
 
-    Object.values(parisEntrypoint).forEach(name => {
+    Object.values(quebecEntrypoint).forEach(name => {
       it(`Verify that local forge will return same result as for rpc forge for entrypoints name ${name}`, async () => {
         const localForger = new LocalForger(protocol as unknown as ProtocolsHash);
         const methodObject = await contract.methodsObject[name](UnitValue)

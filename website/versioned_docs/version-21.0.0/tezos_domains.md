@@ -16,7 +16,7 @@ If you have an address and you want to find the domain tied to it, the storage o
 
 ```typescript
 import { TezosToolkit } from "@taquito/taquito";
-import { bytes2Char } from "@taquito/utils";
+import { bytesToString } from "@taquito/utils";
 
 const domainContractAddress = "KT1GBZmSxmnKJXGMdMLbugPfLyUPmuLSMwKS";
 
@@ -27,7 +27,7 @@ const fetchTezosDomainFromAddress = async (address: string): Promise<string> => 
     const storage: any = await contract.storage();
     const domain = await storage.store.reverse_records.get(address);
     if (domain) {
-      return bytes2Char(domain.name);
+      return bytesToString(domain.name);
     } else {
       return address;
     }
@@ -37,7 +37,7 @@ const fetchTezosDomainFromAddress = async (address: string): Promise<string> => 
 
 2 things to remember when you are looking for a Tezos domain in the storage of the contract:
 - the `reverse_records` bigmap is nested inside the `store` property
-- the domain name is stored as bytes, so you can use the `bytes2Char` function from `@taquito/utils` to decode it as a string.
+- the domain name is stored as bytes, so you can use the `bytesToString` function from `@taquito/utils` to decode it as a string.
 
 If we call the `fetchTezosDomainFromAddress` function with `tz1aauXT4uM8ZB3ouu5JrAenEMQdqfvDUSNH`, it will return `taquito.tez`.
 
@@ -47,7 +47,7 @@ It is also possible to look up a domain name to find the address it references. 
 
 ```typescript
 import { TezosToolkit } from "@taquito/taquito";
-import { char2Bytes } from "@taquito/utils";
+import { stringToBytes } from "@taquito/utils";
 
 const contractAddress = "KT1GBZmSxmnKJXGMdMLbugPfLyUPmuLSMwKS";
 
@@ -56,7 +56,7 @@ const fetchAddressFromTezosDomain = async (domainName: string): Promise<string> 
     const Tezos = new TezosToolkit("https://mainnet.tezos.ecadinfra.com");
     const contract = await Tezos.wallet.at(contractAddress);
     const storage: any = await contract.storage();
-    const domain = await storage.store.records.get(char2Bytes(domainName));
+    const domain = await storage.store.records.get(stringToBytes(domainName));
     if (domain) {
       return domain.address; // address that the domain points to 
       // return domain.owner; // address that owns the domainName
@@ -76,7 +76,7 @@ To find the expiry date, you can check the `expiry_map` bigmap under the `store`
 
 ```typescript
 import { TezosToolkit } from "@taquito/taquito";
-import { char2Bytes } from "@taquito/utils";
+import { stringToBytes } from "@taquito/utils";
 
 const contractAddress = "KT1GBZmSxmnKJXGMdMLbugPfLyUPmuLSMwKS";
 
@@ -85,7 +85,7 @@ const fetchExpiryDate = async (domainName: string): Promise<string> => {
     const Tezos = new TezosToolkit("https://mainnet.tezos.ecadinfra.com");
     const contract = await Tezos.wallet.at(contractAddress);
     const storage: any = await contract.storage();
-    const expiryDate = await storage.store.expiry_map.get(char2Bytes(domainName));
+    const expiryDate = await storage.store.expiry_map.get(stringToBytes(domainName));
     if (expiryDate) {
       return expiryDate;
     } else {

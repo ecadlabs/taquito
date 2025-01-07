@@ -68,7 +68,9 @@ const applyEventFilter = (filter?: EventFilter) =>
             const internalOpResults = tx.metadata.internal_operation_results;
             if (internalOpResults) {
               for (const event of internalOpResults) {
-                if (eventFilter(event, filter?.address, filter?.tag, filter?.excludeFailedOperations)) {
+                if (
+                  eventFilter(event, filter?.address, filter?.tag, filter?.excludeFailedOperations)
+                ) {
                   sub.next({
                     opHash: op.hash,
                     blockHash: block.hash,
@@ -92,7 +94,10 @@ export class PollingSubscribeProvider implements SubscribeProvider {
 
   private newBlock$: Observable<BlockResponse>;
 
-  constructor(private context: Context, config: Partial<PollingSubscribeProviderConfig> = {}) {
+  constructor(
+    private context: Context,
+    config: Partial<PollingSubscribeProviderConfig> = {}
+  ) {
     this._config$ = new BehaviorSubject({
       ...defaultConfigStreamer,
       ...config,
@@ -131,8 +136,6 @@ export class PollingSubscribeProvider implements SubscribeProvider {
         const constants = await this.context.readProvider.getProtocolConstants('head');
         const blockTime = constants.minimal_block_delay
           ? constants.minimal_block_delay.multipliedBy(1000)
-          : constants.time_between_blocks
-          ? constants.time_between_blocks[0].multipliedBy(1000)
           : new BigNumber(defaultIntervalTestnetsMainnet);
         const confirmationPollingInterval = blockTime.dividedBy(3);
 

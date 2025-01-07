@@ -46,6 +46,10 @@ jobs:
         include:
           - testnet: parisnet
             testnet_uppercase: PARISNET
+            rpc_url: https://rpc.pariscnet.teztnets.com/
+          - testnet: quebecnet
+            testnet_uppercase: QUEBECNET
+            rpc_url: https://rpc.quebecnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -59,29 +63,8 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
-      - run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
+      - id: run-tests
+        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
           # Ternary operator workaround
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && format('https://{0}.ecadinfra.com', matrix.testnet) || null }}
-
-  integration-tests-tezbox:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    strategy:
-      matrix:
-        include:
-          - testnet: parisnet
-            testnet_uppercase: PARISNET
-            flextesa_docker_image:
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/hydrogen
-      - name: Provision Tezbox ${{ matrix.testnet }} container
-        run: npm -w integration-tests run sandbox:${{ matrix.testnet }}
-      - run: npm ci
-      - run: npm run build
-      - run: npm -w integration-tests run test __tests__/tezbox/
-        env:
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: http://0.0.0.0:8732
+          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}

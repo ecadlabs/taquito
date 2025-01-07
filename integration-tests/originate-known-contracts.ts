@@ -9,7 +9,7 @@ import { knownBigMapContract } from './data/knownBigMapContract';
 import { knownContract } from './data/knownContract';
 import { ticketsSendTz } from './data/code_with_ticket_transfer';
 import * as fs from 'fs/promises';
-
+// before running the test with secret key make sure tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD is funded
 const MUTEZ_UNIT = new BigNumber(1000000);
 
 CONFIGS().forEach(({ lib, setup, protocol }) => {

@@ -4,7 +4,6 @@ import { OpKind, RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
 import {
   LazyStorageDiffBigMap,
-  OperationContentsAndResultEndorsement,
   OperationContentsAndResultAttestationWithDal,
   OperationContentsAndResultOrigination,
   OperationResultTransaction,
@@ -38,6 +37,8 @@ import {
   SmartRollupRefutationOptions,
   RPCSimulateOperationParam,
   OperationContentsAndResultDalPublishCommitment,
+  OperationContentsAndResultAttestation,
+  OperationContentsAndResultEndorsement,
 } from '../src/types';
 import {
   blockIthacanetResponse,
@@ -125,6 +126,48 @@ describe('RpcClient test', () => {
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
         url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/balance`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getSpendable', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getSpendable(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/spendable`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getBalanceAndFrozenBonds', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getBalanceAndFrozenBonds(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/balance_and_frozen_bonds`,
+      });
+      expect(balance).toBeInstanceOf(BigNumber);
+      expect(balance.toString()).toEqual('10000');
+    });
+  });
+
+  describe('getSpendableAndFrozenBonds', () => {
+    it('should query the right url and return a string', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve('10000'));
+      const balance = await client.getSpendableAndFrozenBonds(contractAddress);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/spendable_and_frozen_bonds`,
       });
       expect(balance).toBeInstanceOf(BigNumber);
       expect(balance.toString()).toEqual('10000');
@@ -1555,9 +1598,9 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head',
       });
-      const endorsement = response.operations[0][0]
-        .contents[0] as OperationContentsAndResultEndorsement;
-      expect(endorsement.metadata.balance_updates![0].kind).toEqual('contract');
+      const attestation = response.operations[0][0]
+        .contents[0] as OperationContentsAndResultAttestation;
+      expect(attestation.metadata.balance_updates![0].kind).toEqual('contract');
     });
   });
 
@@ -3154,11 +3197,11 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head',
       });
-      const endorsementWithSlot = response.operations[0][0]
+      const AttestationWithDal = response.operations[0][0]
         .contents[0] as OperationContentsAndResultAttestationWithDal;
-      expect(endorsementWithSlot.kind).toEqual('attestation_with_dal');
-      expect(endorsementWithSlot.slot).toEqual(19);
-      expect(endorsementWithSlot.dal_attestation).toEqual('0');
+      expect(AttestationWithDal.kind).toEqual('attestation_with_dal');
+      expect(AttestationWithDal.slot).toEqual(19);
+      expect(AttestationWithDal.dal_attestation).toEqual('0');
     });
 
     it('should query the right url and property for operation, proto 20, dal_publish_commitment', async () => {
@@ -3250,14 +3293,14 @@ describe('RpcClient test', () => {
         method: 'GET',
         url: 'root/chains/test/blocks/head',
       });
-      const endorsementWithSlot = response.operations[0][0]
+      const dalPublishCommitment = response.operations[0][0]
         .contents[0] as OperationContentsAndResultDalPublishCommitment;
-      expect(endorsementWithSlot.kind).toEqual('dal_publish_commitment');
-      expect(endorsementWithSlot.slot_header.slot_index).toEqual(0);
-      expect(endorsementWithSlot.slot_header.commitment).toEqual(
+      expect(dalPublishCommitment.kind).toEqual('dal_publish_commitment');
+      expect(dalPublishCommitment.slot_header.slot_index).toEqual(0);
+      expect(dalPublishCommitment.slot_header.commitment).toEqual(
         'sh1vHbHrPSt7eWqYJmM9EUk5scjbvR5PKBckJxmmDJzYHHBkca8Lz4hxXX6zpW5wbhJhswJd4v'
       );
-      expect(endorsementWithSlot.slot_header.commitment_proof).toEqual(
+      expect(dalPublishCommitment.slot_header.commitment_proof).toEqual(
         '90c6576ad09e11b14eb464cdd214fe061ba8e8e5a3175e29fe7ff40526f90c2f2f4e02fe9fe03f7adb0fe286d7828b970eb1979f0f65ca3637a51d5456b442377d20397eb1b02544c2e435d79e156881443179fe16b32ad9e9501622a647c2ce'
       );
     });
