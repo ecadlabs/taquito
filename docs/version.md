@@ -3,6 +3,37 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v21.0.0
+## Summary
+
+### Quebec Protocol Support
+
+### New Features
+`@taquito/rpc` - Added `getSpendable`, `getBalanceAndFrozenBonds` and `getSpendableAndFrozenBonds` rpc endpoint #3023
+
+### Improvement
+`@taquito/rpc` - Updated `getPendingOperations` with param `source` and `operationHash` #3034
+`@taquito/rpc` - Added Quebec protocol constant, `ConstantsResponseProto021`, to `ConstantsResponse` #3037
+`@taquito/rpc` - Removed endorsement compatibility (still kept rpc types and readProvider for user querying old blocks) #3036
+
+### Documentation
+Updated documentation with Quebec support #3068
+Fixed maps_bigmaps live code example bugs #3068
+
+### Internals
+Updated dependencies #3068
+Updated Taquito test dapp with Quebec support #3068
+
+# Taquito v20.1.2
+## Summary
+
+### Node.js add support of v18
+There is a [node.js confirmed HTTP bug](https://github.com/nodejs/node/issues/47228) from v19 that occasionally causes HTTP requests to fail with a socket hang-up error.
+We decided to support node.js v18 again until this issue is resolved in the future node.js release #3098
+
+### Documentation
+Fixing typo #3094
+
 # Taquito v20.1.1
 ## Summary
 

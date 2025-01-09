@@ -46,10 +46,18 @@ importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-const option = { name: "nameOfWallet", network: { type: 'ghostnet' }}
-const wallet = new BeaconWallet(option)
-await wallet.requestPermissions()
-Tezos.setWalletProvider(wallet)
+const option = { name: "nameOfWallet", network: { type: 'ghostnet' }, enableMetrics: true};
+const wallet = new BeaconWallet(option);
+
+await wallet.client.subscribeToEvent(
+  BeaconEvent.ACTIVE_ACCOUNT_SET,
+  async (account) => {
+    // An active account has been set, update the dApp UI
+    console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, account);
+  },
+
+await wallet.requestPermissions();
+Tezos.setWalletProvider(wallet);
 ```
 
   </TabItem>

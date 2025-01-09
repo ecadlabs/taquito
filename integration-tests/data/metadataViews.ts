@@ -349,7 +349,7 @@ export const metadataViewsExample2 = {
 						},
 						code: [ { prim: 'CAR', args: [], annots: [] } ],
 						annotations: [
-							{ name: '%arg_zero', description: 'This is obvioulsy ignored.' },
+							{ name: '%arg_zero', description: 'This is obviously ignored.' },
 							{ name: '%arg_one', description: 'This is also ignored, but different.' },
 							{ name: '%arg_one_result', description: 'This is %arg_one on the resulting side.' },
 							{

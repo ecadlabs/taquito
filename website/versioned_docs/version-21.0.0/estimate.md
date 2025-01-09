@@ -7,6 +7,10 @@ import TabItem from '@theme/TabItem';
 
 Taquito's estimate method can be used to estimate fees, gas, and storage associated with an operation.
 
+:::note
+Our estimation of `fee`, `gasLimit` and `storageLimit` is based on the RPC call response to `simulate_operation` plus a small buffer. The context and volume at the time of `simulate_operation` might differ from `preapply/operations` and `injection/operation`, potentially causing errors like `fees_too_low`, `storage_exhausted.operation` and `gas_exhausted.operation`.
+:::
+
 ## The `Estimate` object
 
 The `Estimate` object has the following properties:

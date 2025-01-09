@@ -818,7 +818,7 @@ Tezos.contract
         //When called on a bigMap, the get method returns a promise
         return myStorage['thebigmap'].get({
           0: '10', //nat
-          1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
+          1: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', //address
         });
       })
       .then((valueBigMap) => {
@@ -851,7 +851,7 @@ Tezos.wallet
         //When called on a bigMap, the get method returns a promise
         return myStorage['thebigmap'].get({
           0: '10', //nat
-          1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
+          1: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', //address
         });
       })
       .then((valueBigMap) => {
@@ -915,9 +915,9 @@ Tezos.contract
     console.log('Fetching the big map values...\n');
     return storage['0'].getMultipleValues([
       'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
-      'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
+      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
       'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-      'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+      'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
     ]);
   })
   .then((values) => {
@@ -945,9 +945,9 @@ Tezos.wallet
     console.log('Fetching the big map values...\n');
     return storage['0'].getMultipleValues([
       'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
-      'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY',
+      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
       'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-      'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+      'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
     ]);
   })
   .then((values) => {
