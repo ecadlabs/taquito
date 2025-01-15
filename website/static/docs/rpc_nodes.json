@@ -1,0 +1,91 @@
+{
+  "providers": [
+    {
+      "name": "ECAD Infra",
+      "website": "https://www.ecadinfra.com/",
+      "status_page": ""
+    },
+    {
+      "name": "SmartPy",
+      "website": "https://smartpy.io",
+      "status_page": ""
+    },
+    {
+      "name": "Tezos Foundation",
+      "website": "https://tezos.foundation",
+      "status_page": ""
+    },
+    {
+      "name": "TzKT",
+      "website": "https://tzkt.io",
+      "status_page": ""
+    }
+  ],
+  "rpc_endpoints": [
+    {
+      "net": "mainnet",
+      "url": "https://mainnet.tezos.ecadinfra.com",
+      "provider": "ECAD Infra"
+    },
+    {
+      "net": "ghostnet",
+      "url": "https://ghostnet.tezos.ecadinfra.com",
+      "provider": "ECAD Infra"
+    },
+    {
+      "net": "mainnet",
+      "url": "https://mainnet.smartpy.io",
+      "provider": "SmartPy"
+    },
+    {
+      "net": "ghostnet",
+      "url": "https://ghostnet.smartpy.io",
+      "provider": "SmartPy"
+    },
+    {
+      "net": "mainnet",
+      "url": "https://rpc.tzbeta.net/",
+      "provider": "Tezos Foundation"
+    },
+    {
+      "net": "ghostnet",
+      "url": "https://rpc.ghostnet.teztnets.com/",
+      "provider": "Tezos Foundation"
+    },
+    {
+      "net": "parisnet",
+      "url": "https://rpc.pariscnet.teztnets.com/",
+      "provider": "Tezos Foundation"
+    },
+    {
+      "net": "quebecnet",
+      "url": "https://rpc.quebecnet.teztnets.com/",
+      "provider": "Tezos Foundation"
+    },
+    {
+      "net": "mainnet",
+      "url": "https://rpc.tzkt.io/mainnet/",
+      "provider": "TzKT"
+    },
+    {
+      "net": "ghostnet",
+      "url": "https://rpc.tzkt.io/ghostnet",
+      "provider": "TzKT"
+    },
+    {
+      "net": "parisnet",
+      "url": "https://rpc.tzkt.io/parisnet",
+      "provider": "TzKT"
+    },
+    {
+      "net": "quebecnet",
+      "url": "https://rpc.tzkt.io/quebecnet",
+      "provider": "TzKT"
+    },
+    {
+      "net": "mainnet",
+      "url": "https://api.mainnet.tzkt.io/",
+      "provider": "TzKT"
+    }
+  ]
+}
