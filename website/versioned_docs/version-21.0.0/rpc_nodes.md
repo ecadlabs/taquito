@@ -23,19 +23,20 @@ values={[
 
 | Provider         | Net          | URL                                      | Header                                                                          |
 |------------------|--------------|------------------------------------------|---------------------------------------------------------------------------------|
-| ECAD Infra       | Mainnet      | https://mainnet.tezos.ecadinfra.com      | [Check](https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/header)     |
-| ECAD Infra       | Ghostnet     | https://ghostnet.tezos.ecadinfra.com     | [Check](https://ghostnet.tezos.ecadinfra.com/chains/main/blocks/head/header)    |
-| SmartPy          | Mainnet      | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header)              |
-| SmartPy          | Ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header)             |
-| Tezos Foundation | Mainnet      | https://rpc.tzbeta.net/                  | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)                  |
-| Tezos Foundation | Ghostnet     | https://rpc.ghostnet.teztnets.com/       | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header)       |
-| Tezos Foundation | Parisnet     | https://rpc.pariscnet.teztnets.com/      | [Check](https://rpc.pariscnet.teztnets.com/chains/main/blocks/head/header)      |
-| Tezos Foundation | Quebecnet    | https://rpc.quebecnet.teztnets.com/      | [Check](https://rpc.quebecnet.teztnets.com/chains/main/blocks/head/header)      |
-| TzKT             | Mainnet      | https://rpc.tzkt.io/mainnet/             | [Check](https://rpc.tzkt.io/mainnet/chains/main/blocks/head/header)             |
-| TzKT             | Ghostnet     | https://rpc.tzkt.io/ghostnet             | [Check](https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/header)            |
-| TzKT             | Parisnet     | https://rpc.tzkt.io/parisnet             | [Check](https://rpc.tzkt.io/parisnet/chains/main/blocks/head/header)            |
-| TzKT             | Quebecnet    | https://rpc.tzkt.io/quebecnet            | [Check](https://rpc.tzkt.io/quebecnet/chains/main/blocks/head/header)           |
+| ECAD Infra       | mainnet      | https://mainnet.tezos.ecadinfra.com      | [Check](https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
+| ECAD Infra       | ghostnet     | https://ghostnet.tezos.ecadinfra.com     | [Check](https://ghostnet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
+| SmartPy          | mainnet      | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header) |
+| SmartPy          | ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header) |
+| Tezos Foundation | mainnet      | https://rpc.tzbeta.net                   | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header) |
+| Tezos Foundation | ghostnet     | https://rpc.ghostnet.teztnets.com        | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header) |
+| Tezos Foundation | parisnet     | https://rpc.pariscnet.teztnets.com       | [Check](https://rpc.pariscnet.teztnets.com/chains/main/blocks/head/header) |
+| Tezos Foundation | quebecnet    | https://rpc.quebecnet.teztnets.com       | [Check](https://rpc.quebecnet.teztnets.com/chains/main/blocks/head/header) |
+| TzKT             | mainnet      | https://rpc.tzkt.io/mainnet              | [Check](https://rpc.tzkt.io/mainnet/chains/main/blocks/head/header) |
+| TzKT             | ghostnet     | https://rpc.tzkt.io/ghostnet             | [Check](https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/header) |
+| TzKT             | parisnet     | https://rpc.tzkt.io/parisnet             | [Check](https://rpc.tzkt.io/parisnet/chains/main/blocks/head/header) |
+| TzKT             | quebecnet    | https://rpc.tzkt.io/quebecnet            | [Check](https://rpc.tzkt.io/quebecnet/chains/main/blocks/head/header) |
 
+<!-- when updating this table make sure to update the website/static/docs/rpc_nodes.json first and rerun example/convert-rpc-json-to-md.ts to replace the output table above -->
 *- You can also find a machine readable list in [rpc_nodes.json](https://taquito.io/docs/rpc_nodes.json).*
 
 *- If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
