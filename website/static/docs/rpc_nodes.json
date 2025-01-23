@@ -57,11 +57,6 @@
       "provider": "tezosfoundation"
     },
     {
-      "net": "parisnet",
-      "url": "https://rpc.pariscnet.teztnets.com",
-      "provider": "tezosfoundation"
-    },
-    {
       "net": "quebecnet",
       "url": "https://rpc.quebecnet.teztnets.com",
       "provider": "tezosfoundation"
@@ -74,11 +69,6 @@
     {
       "net": "ghostnet",
       "url": "https://rpc.tzkt.io/ghostnet",
-      "provider": "tzkt"
-    },
-    {
-      "net": "parisnet",
-      "url": "https://rpc.tzkt.io/parisnet",
       "provider": "tzkt"
     },
     {

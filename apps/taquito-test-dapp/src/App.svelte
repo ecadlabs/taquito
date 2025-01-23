@@ -13,7 +13,6 @@
   let browser = "";
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
-    { value: "parisnet", label: "Parisnet", group: "current testnets" },
     { value: "quebecnet", label: "Quebecnet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
@@ -39,9 +38,6 @@
         break;
       case "ghostnet":
         store.updateNetworkType(NetworkType.GHOSTNET);
-        break;
-      case "parisnet":
-        store.updateNetworkType(NetworkType.PARISNET);
         break;
       case "quebecnet":
         store.updateNetworkType(NetworkType.QUEBECNET);

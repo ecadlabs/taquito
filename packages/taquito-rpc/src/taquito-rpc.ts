@@ -1276,7 +1276,7 @@ export class RpcClient implements RpcClientInterface {
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
    * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined, source: undefined, operationHash: undefined }
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/paris-mempool-openapi-rc.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/quebec-mempool-openapi.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}

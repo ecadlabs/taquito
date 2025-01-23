@@ -3,6 +3,12 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v21.0.1
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.3.2 #3107
+
 # Taquito v21.0.0
 ## Summary
 
