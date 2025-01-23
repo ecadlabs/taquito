@@ -44,7 +44,7 @@ const Tezos = new TezosToolkit('rpcUrl');
 
 // The constructor of the `MetadataProvider` class takes a `Map<string, Handler>` as a parameter.
 const customHandler = new Map<string, Handler>([
-  ['ipfs', new IpfsHttpHandler('gateway.ipfs.io')], // Constructor of IpfsHttpHandler takes an optional gateway
+  ['ipfs', new IpfsHttpHandler('dweb.link')], // Constructor of IpfsHttpHandler takes an optional gateway
   ['http', 'customHttpHandler'], // Custom HTTP(S) handler
   ['https', 'customHttpHandler'],
   ['tezos-storage', new TezosStorageHandler()],

@@ -44,9 +44,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - testnet: parisnet
-            testnet_uppercase: PARISNET
-            rpc_url: https://rpc.pariscnet.teztnets.com/
           - testnet: quebecnet
             testnet_uppercase: QUEBECNET
             rpc_url: https://rpc.quebecnet.teztnets.com/

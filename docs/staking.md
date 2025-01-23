@@ -16,7 +16,7 @@ Staking changes this by allowing any user to participate in the "Proof of Stake"
 
 Users can control their staked funds using the `stake`, `unstake`, and `finalize_unstake` operations. These are implemented as pseudo-entrypoints, and the parameters are passed to a transfer operation with the same destination as the sender.
 
-To accept staked funds, a delegate needs to have opted in to staking. This is done by `set_delegate_parameters`. This part is not supported by Taquito, as it is not a dApp operation. More information [here](https://tezos.gitlab.io/paris/adaptive_issuance.html#staking-policy-configuration).
+To accept staked funds, a delegate needs to have opted in to staking. This is done by `set_delegate_parameters`. This part is not supported by Taquito, as it is not a dApp operation. More information [here](https://tezos.gitlab.io/quebec/adaptive_issuance.html#staking-policy-configuration).
 
 # Staking Funds
 To stake your funds, you need to call the `stake` operation.
@@ -133,7 +133,7 @@ const op = await Tezos.wallet.finalizeUnstake().send();
 # Additional Info and Some Notes
 
 ## Cycle
-A cycle is 24576 blocks in Paris protocol (will be 30720 in Quebec), and 10 seconds per block in Paris (will be 8 in Quebec). This means a cycle is about 2.8 days (and will stay the same after Quebec). This might change with the activation of newer protocols.
+A cycle is 30720 blocks in Quebec protocol, and 8 seconds per block in Quebec. This means a cycle is about 2.8 days. This might change with the activation of newer protocols.
 
 ## Overstaking
 A delegate can set the maximum amount of staking they can accept, as a multiply of their own balance. If a delegate's limit is exceeded, the exceeding stake is automatically considered as delegation for the delegate's baking and voting power calculation, but it does remain slashable. That means it's your responsibility to make sure you're not overstaking. Remember that overstaking can even happen after you have staked successfully, because your delegate changes their own balance, or their staking parameter.

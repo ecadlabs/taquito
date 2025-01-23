@@ -7,7 +7,6 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsPsParisCZ } from './known-contracts-PsParisCZ';
 import { knownContractsPsQuebecn } from './known-contracts-PsQuebecn';
 
 const nodeCrypto = require('crypto');
@@ -32,7 +31,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, parisnet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, quebecnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -129,18 +128,6 @@ const defaultConfig = ({
   }
 }
 
-const parisnetEphemeral: Config =
-  defaultConfig({
-    networkName: 'PARISNET',
-    protocol: Protocols.PsParisCZ,
-    defaultRpc: 'https://rpc.pariscnet.teztnets.com/',
-    knownContracts: knownContractsPsParisCZ,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/pariscnet')
-  });
-
-const parisnetSecretKey: Config =
-  { ...parisnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.pariscnet.teztnets.com/' } };
-
 const quebecnetEphemeral: Config =
   defaultConfig({
     networkName: 'QUEBECNET',
@@ -156,7 +143,7 @@ const quebecnetEphemeral: Config =
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
-    protocol: Protocols.PsParisCZ,
+    protocol: Protocols.PsQuebecn,
     defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
@@ -181,16 +168,12 @@ const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(quebecnetSecretKey);
-} else if (process.env['RUN_PARISNET_WITH_SECRET_KEY']) {
-  providers.push(parisnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_QUEBECNET_WITH_SECRET_KEY']) {
   providers.push(quebecnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
-} else if (process.env['PARISNET']) {
-  providers.push(parisnetEphemeral);
 } else if (process.env['GHOSTNET']) {
   providers.push(quebecnetEphemeral);
 } else if (process.env['QUEBECNET']) {
