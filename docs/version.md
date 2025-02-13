@@ -3,6 +3,20 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v21.0.2
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.3.3 #3110
+
+### Internals
+Cleaned up paris references after mainnet migration #3107
+Updated @ledgerhq/hw-transport-webhid to v6.30.0 #3110
+Updated ci script actions/upload-artifact to v4 #3110
+
+### Documentation
+Updated documentation of tzip12.md and metadata-tzip16.md #3107
+
 # Taquito v21.0.1
 ## Summary
 
