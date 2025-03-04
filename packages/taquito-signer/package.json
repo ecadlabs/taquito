@@ -77,7 +77,7 @@
     "@taquito/utils": "^21.0.2",
     "@types/bn.js": "^5.1.5",
     "bip39": "3.1.0",
-    "elliptic": "^6.6.0",
+    "elliptic": "^6.6.1",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
   },
