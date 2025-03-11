@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "@airgap/sapling-wasm": "0.0.9",
+    "@scure/bip39": "^1.5.4",
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/random": "^1.0.2",
     "@taquito/core": "^21.0.2",
@@ -73,7 +74,6 @@
     "@taquito/taquito": "^21.0.2",
     "@taquito/utils": "^21.0.2",
     "bignumber.js": "^9.1.2",
-    "bip39": "3.1.0",
     "blakejs": "^1.2.1",
     "node-fetch": "^2.7.0",
     "pbkdf2": "^3.1.2",

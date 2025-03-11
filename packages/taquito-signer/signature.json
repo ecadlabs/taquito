@@ -113,18 +113,11 @@
           "name": "@taquito/signer",
           "version": "8.0.4-beta.0",
           "description": "Provide signing functionality to be with taquito",
-          "keywords": [
-            "tezos",
-            "blockchain",
-            "signer"
-          ],
+          "keywords": ["tezos", "blockchain", "signer"],
           "main": "dist/taquito-signer.umd.js",
           "module": "dist/taquito-signer.es5.js",
           "typings": "dist/types/taquito-signer.d.ts",
-          "files": [
-            "dist",
-            "signature.json"
-          ],
+          "files": ["dist", "signature.json"],
           "publishConfig": {
             "access": "public"
           },
@@ -148,10 +141,7 @@
             "start": "rollup -c rollup.config.ts -w"
           },
           "lint-staged": {
-            "{src,test}/**/*.ts": [
-              "prettier --write",
-              "tslint --fix"
-            ]
+            "{src,test}/**/*.ts": ["prettier --write", "tslint --fix"]
           },
           "jest": {
             "transform": {
@@ -159,27 +149,18 @@
             },
             "testEnvironment": "node",
             "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-            "moduleFileExtensions": [
-              "ts",
-              "tsx",
-              "js"
-            ],
+            "moduleFileExtensions": ["ts", "tsx", "js"],
             "moduleNameMapper": {
               "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
             },
-            "coveragePathIgnorePatterns": [
-              "/node_modules/",
-              "/test/"
-            ],
-            "collectCoverageFrom": [
-              "src/**/*.{js,ts}"
-            ]
+            "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+            "collectCoverageFrom": ["src/**/*.{js,ts}"]
           },
           "dependencies": {
+            "@scure/bip39": "^1.5.4",
             "@taquito/taquito": "^8.0.4-beta.0",
             "@taquito/utils": "^8.0.4-beta.0",
             "bignumber.js": "^9.0.1",
-            "bip39": "^3.0.2",
             "elliptic": "^6.5.3",
             "libsodium-wrappers": "^0.7.8",
             "pbkdf2": "^3.1.1",
