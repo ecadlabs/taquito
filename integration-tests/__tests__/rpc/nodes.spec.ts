@@ -1,6 +1,6 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType, Protocols } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2 } from '@taquito/rpc';
+import { DefaultContractType } from "@taquito/taquito";
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
@@ -20,7 +20,6 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? test : test.skip;
-    const quebecnet = protocol === Protocols.PsQuebecn ? test : test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -66,7 +65,7 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        quebecnet(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+        it(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
           const balance = await rpcClient.getSpendable(knownBaker);
           expect(balance).toBeDefined();
         });
@@ -76,7 +75,7 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        quebecnet(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
+        it(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
           const balance = await rpcClient.getSpendableAndFrozenBonds(knownBaker);
           expect(balance).toBeDefined();
         });
@@ -501,6 +500,8 @@ CONFIGS().forEach(
             expect(launchCycle).toEqual(1054);
           } else if (rpc.includes('quebecnet') || rpc.includes('weeklynet')) {
             expect(launchCycle).toEqual(5);
+          } else {
+            expect(launchCycle).toEqual(0);
           }
         })
 

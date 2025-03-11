@@ -7,6 +7,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
   const quebecnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsQuebecn) ? test : test.skip;
   const weeklynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
+  const rionet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsRiotuma) ? test : test.skip;
+
   describe('Test fetching constants for all protocols on Mainnet', () => {
     const rpcUrl = 'https://mainnet.tezos.ecadinfra.com/';
     Tezos.setRpcProvider(rpcUrl);
@@ -157,6 +159,154 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   });
 
   describe(`Fetch constants for testnet`, () => {
+    rionet(`should successfully fetch all constants for Rionet
+      using ${rpc}`, async () => {
+     Tezos.setRpcProvider(rpc);
+     const constants: ConstantsResponseProto021 = await Tezos.rpc.getConstants();
+     expect(constants).toEqual({
+       adaptive_issuance_activation_vote_enable: true,
+       adaptive_issuance_force_activation: false,
+       adaptive_issuance_launch_ema_threshold: 0,
+       adaptive_rewards_params: {
+         center_dz: {
+           denominator: "2",
+           numerator: "1",
+         },
+         growth_rate: {
+           denominator: "100",
+           numerator: "1",
+         },
+         issuance_ratio_final_max: {
+           denominator: "10",
+           numerator: "1",
+         },
+         issuance_ratio_final_min: {
+           denominator: "400",
+           numerator: "1",
+         },
+         issuance_ratio_initial_max: {
+           denominator: "200",
+           numerator: "11",
+         },
+         issuance_ratio_initial_min: {
+           denominator: "200",
+           numerator: "9"
+         },
+         max_bonus: "50000000000000",
+         radius_dz: {
+           denominator: "50",
+           numerator: "1",
+         },
+         initial_period: 10,
+         transition_period: 50
+       },
+       autostaking_enable: true,
+       proof_of_work_nonce_size: 8,
+       nonce_length: 32,
+       max_anon_ops_per_block: 132,
+       max_operation_data_length: 32768,
+       max_proposals_per_delegate: 20,
+       max_micheline_node_count: 50000,
+       max_micheline_bytes_limit: 50000,
+       max_allowed_global_constants_depth: 10000,
+       cache_layout_size: 3,
+       michelson_maximum_type_size: 2001,
+       smart_rollup_max_wrapped_proof_binary_size: 30000,
+       smart_rollup_max_number_of_messages_per_level: '1000000',
+       blocks_per_commitment: 25,
+       blocks_per_cycle: 210,
+       blocks_preservation_cycles: 1,
+       nonce_revelation_threshold: 50,
+       ns_enable: true,
+       cycles_per_voting_period: 1,
+       hard_gas_limit_per_operation: new BigNumber(1040000),
+       hard_gas_limit_per_block: new BigNumber(3328000),
+       proof_of_work_threshold: new BigNumber(-1),
+       minimal_stake: new BigNumber(6000000000),
+       origination_size: 257,
+       cost_per_byte: new BigNumber(250),
+       hard_storage_limit_per_operation: new BigNumber(60000),
+       percentage_of_frozen_deposits_slashed_per_double_attestation: 5000,
+       percentage_of_frozen_deposits_slashed_per_double_baking: 700,
+       minimal_frozen_stake: '600000000',
+       limit_of_delegation_over_baking: 9,
+       liquidity_baking_subsidy: new BigNumber(5000000),
+       issuance_weights: {
+         attesting_reward_weight: 10240,
+         baking_reward_bonus_weight: 5120,
+         baking_reward_fixed_portion_weight: 5120,
+         base_total_issued_per_minute: "85007812",
+         seed_nonce_revelation_tip_weight: 1,
+         vdf_revelation_tip_weight: 1,
+       },
+       min_proposal_quorum: 500,
+       edge_of_staking_over_delegation: 3,
+       global_limit_of_staking_over_baking: 9,
+       liquidity_baking_toggle_ema_threshold: 100000,
+       max_operations_time_to_live: 187,
+       minimal_block_delay: new BigNumber(4),
+       delay_increment_per_round: new BigNumber(4),
+       delegate_parameters_activation_delay: 3,
+       direct_ticket_spending_enable: false,
+       consensus_committee_size: 7000,
+       consensus_threshold: 4667,
+       consensus_rights_delay: 2,
+       minimal_participation_ratio: {
+         numerator: 2,
+         denominator: 3
+       },
+       max_slashing_period: 2,
+       max_slashing_per_block: 10000,
+       max_slashing_threshold: 2334,
+       cache_script_size: 100000000,
+       cache_stake_distribution_cycles: 8,
+       cache_sampler_state_cycles: 8,
+       dal_parametric: {
+         attestation_lag: 8,
+         attestation_threshold: 66,
+         feature_enable: true,
+         incentives_enable: false,
+         number_of_shards: 512,
+         number_of_slots: 32,
+         page_size: 3967,
+         redundancy_factor: 8,
+         slot_size: 126944,
+       },
+       quorum_max: 7000,
+       quorum_min: 2000,
+       smart_rollup_arith_pvm_enable: true,
+       smart_rollup_challenge_window_in_blocks: 62,
+       smart_rollup_commitment_period_in_blocks: 31,
+       smart_rollup_max_active_outbox_levels: 31500,
+       smart_rollup_max_lookahead_in_blocks: 46875,
+       smart_rollup_max_outbox_messages_per_level: 100,
+       smart_rollup_max_number_of_cemented_commitments: 5,
+       smart_rollup_max_number_of_parallel_games: 32,
+       smart_rollup_message_size_limit: 4096,
+       smart_rollup_number_of_sections_in_dissection: 32,
+       smart_rollup_origination_size: 6314,
+       smart_rollup_private_enable: true,
+       smart_rollup_reveal_activation_level: {
+         dal_attested_slots_validity_lag: 241920,
+         dal_page: 1,
+         dal_parameters: 1,
+         metadata: 0,
+         raw_data: {
+           Blake2B: 0,
+         },
+       },
+       smart_rollup_riscv_pvm_enable: true,
+       smart_rollup_stake_amount: '32000000',
+       smart_rollup_timeout_period_in_blocks: 781,
+       testnet_dictator: 'tz1e1TX7KghsqWUBXWmBTAAtPK3W6JTbNc82',
+       vdf_difficulty: new BigNumber(10000000),
+       zk_rollup_enable: true,
+       zk_rollup_max_ticket_payload_size: 2048,
+       zk_rollup_min_pending_to_process: 10,
+       zk_rollup_origination_size: 4000,
+     });
+   });
+
     quebecnet(`should successfully fetch all constants for Quebecnet
       using ${rpc}`, async () => {
      Tezos.setRpcProvider(rpc);
