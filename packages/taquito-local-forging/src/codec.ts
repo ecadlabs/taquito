@@ -55,12 +55,14 @@ export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
     return prefixDecoder(Prefix.TZ2)(val);
   } else if (prefix[0] === 0x02) {
     return prefixDecoder(Prefix.TZ3)(val);
+  } else if (prefix[0] === 0x03) {
+    return prefixDecoder(Prefix.TZ4)(val);
   }
 };
 
 export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
   if (!boolDecoder(val)) {
-    return undefined;
+    return;
   }
   const publicKeyHashes = [];
   val.consume(4);
@@ -252,6 +254,8 @@ export const publicKeyEncoder = (val: string) => {
       return '01' + prefixEncoder(Prefix.SPPK)(val);
     case Prefix.P2PK:
       return '02' + prefixEncoder(Prefix.P2PK)(val);
+    // case Prefix.BLPK:
+    //   return '03' + prefixEncoder(Prefix.BLPK)(val);
     default:
       throw new InvalidPublicKeyError(
         val,
@@ -311,6 +315,8 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
       return prefixDecoder(Prefix.SPPK)(val);
     case 0x02:
       return prefixDecoder(Prefix.P2PK)(val);
+    // case 0x03:
+    //   return prefixDecoder(Prefix.BLPK)(val);
     default:
       throw new InvalidPublicKeyError(
         val.toString(),
@@ -520,6 +526,17 @@ export const depositsLimitDecoder = (value: Uint8ArrayConsumer) => {
     return zarithDecoder(value);
   }
 };
+
+// export const proofEncoder = (val: string) => {
+//   return !val ? '00' : `ff${paddedBytesEncoder(val)}`;
+// }
+
+// export const proofDecoder = (value: Uint8ArrayConsumer) => {
+//   const prefix = value.consume(1);
+//   if (Buffer.from(prefix).toString('hex') !== '00') {
+//     return paddedBytesDecoder(value);
+//   }
+// }
 
 export const paddedBytesEncoder = (val: string, paddingLength = 8) => {
   return `${pad(val.length / 2, paddingLength)}${val}`;

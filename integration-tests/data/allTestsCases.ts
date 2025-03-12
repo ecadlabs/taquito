@@ -49,6 +49,44 @@ interface TestCase {
   expected?: object;
 }
 
+export const rioCases: TestCase[] = [
+  {
+    name: 'Delegation',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.DELEGATION,
+          delegate: 'tz4EmMVfqF7NxZsJaofqPDR9xdmXSDWcKAM7',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+        },
+      ],
+    },
+  },
+  // {
+  //   name: `Update Consensus Key operation`,
+  //   operation: {
+  //     branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+  //     contents: [
+  //       {
+  //         kind: OpKind.UPDATE_CONSENSUS_KEY,
+  //         counter: '1125537',
+  //         source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+  //         fee: '0',
+  //         gas_limit: '693333',
+  //         storage_limit: '60000',
+  //         pk: 'p2pk666o5KaJXbahSMYRGYTSuBMjfbLNZ8H7UaDYyKkq8Uv7CwwSBkK',
+  //         // proof: 'BLsigASWx9GkMxUpQMGvCrHrhkcsTZ5V9pmDrXSHvkiurrX6Bf5RQcMPbDMDgqWj4GokRekK42FyG76ccMUyFYWcJEmnCd8s6Kek9gtUGkXjPkLEhu8dbFFn5LWyQ4FoMCK3QrxXn6M6LD'
+  //       },
+  //     ],
+  //   },
+  // },
+]
+
 export const commonCases: TestCase[] = [
   {
     name: 'Delegation',
