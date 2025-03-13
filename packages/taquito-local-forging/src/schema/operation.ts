@@ -131,6 +131,7 @@ export const UpdateConsensusKeySchema = {
   gas_limit: CODEC.ZARITH,
   storage_limit: CODEC.ZARITH,
   pk: CODEC.PUBLIC_KEY,
+  proof: CODEC.SIGNATURE_PROOF,
 };
 
 export const DrainDelegateSchema = {

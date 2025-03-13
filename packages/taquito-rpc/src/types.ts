@@ -453,6 +453,7 @@ export interface OperationContentsUpdateConsensusKey {
   gas_limit: string;
   storage_limit: string;
   pk: string;
+  proof?: string;
 }
 
 export interface OperationContentsDrainDelegate {
@@ -958,6 +959,7 @@ export interface OperationContentsAndResultUpdateConsensusKey {
   gas_limit: string;
   storage_limit: string;
   pk: string;
+  proof?: string;
   metadata: OperationContentsAndResultMetadataUpdateConsensusKey;
 }
 

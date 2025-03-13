@@ -62,6 +62,8 @@ export class LocalForger implements Forger {
           continue;
         } else if (content.kind === 'smart_rollup_originate' && diff[0] === 'whitelist') {
           continue;
+        } else if (content.kind === 'update_consensus_key' && diff[0] === 'proof') {
+          continue;
         } else {
           throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);
         }

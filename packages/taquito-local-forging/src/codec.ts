@@ -31,7 +31,12 @@ import {
 } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad, toHexString } from './utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidContractAddressError,
+  InvalidSignatureError,
+  ProhibitedActionError,
+} from '@taquito/core';
 
 // https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
 
@@ -254,8 +259,8 @@ export const publicKeyEncoder = (val: string) => {
       return '01' + prefixEncoder(Prefix.SPPK)(val);
     case Prefix.P2PK:
       return '02' + prefixEncoder(Prefix.P2PK)(val);
-    // case Prefix.BLPK:
-    //   return '03' + prefixEncoder(Prefix.BLPK)(val);
+    case Prefix.BLPK:
+      return '03' + prefixEncoder(Prefix.BLPK)(val);
     default:
       throw new InvalidPublicKeyError(
         val,
@@ -315,8 +320,8 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
       return prefixDecoder(Prefix.SPPK)(val);
     case 0x02:
       return prefixDecoder(Prefix.P2PK)(val);
-    // case 0x03:
-    //   return prefixDecoder(Prefix.BLPK)(val);
+    case 0x03:
+      return prefixDecoder(Prefix.BLPK)(val);
     default:
       throw new InvalidPublicKeyError(
         val.toString(),
@@ -527,16 +532,49 @@ export const depositsLimitDecoder = (value: Uint8ArrayConsumer) => {
   }
 };
 
-// export const proofEncoder = (val: string) => {
-//   return !val ? '00' : `ff${paddedBytesEncoder(val)}`;
-// }
+const signatureV1Encoder = (val: string) => {
+  const signaturePrefix = val.substring(0, 5);
+  switch (signaturePrefix) {
+    case Prefix.EDSIG:
+      return paddedBytesEncoder(prefixEncoder(Prefix.EDSIG)(val));
+    case Prefix.SPSIG:
+      return paddedBytesEncoder(prefixEncoder(Prefix.SPSIG)(val));
+    case Prefix.P2SIG:
+      return paddedBytesEncoder(prefixEncoder(Prefix.P2SIG)(val));
+    case Prefix.BLSIG:
+      return paddedBytesEncoder(prefixEncoder(Prefix.BLSIG)(val));
+    default:
+      throw new InvalidSignatureError(
+        val,
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one of the following '${Prefix.EDSIG}', '${Prefix.SPSIG}', '${Prefix.P2SIG}' or '${Prefix.BLSIG}'.`
+      );
+  }
+};
 
-// export const proofDecoder = (value: Uint8ArrayConsumer) => {
-//   const prefix = value.consume(1);
-//   if (Buffer.from(prefix).toString('hex') !== '00') {
-//     return paddedBytesDecoder(value);
-//   }
-// }
+const signatureV1Decoder = (val: Uint8ArrayConsumer) => {
+  val.consume(4);
+  if (val.length().toString() === '96') {
+    return prefixDecoder(Prefix.BLSIG)(val);
+  } else {
+    throw new ProhibitedActionError('currently we only support decoding of BLSIG signatures');
+  }
+};
+
+export const signatureProofEncoder = (val: string) => {
+  if (val) {
+    return boolEncoder(true) + signatureV1Encoder(val);
+  } else {
+    return boolEncoder(false);
+  }
+};
+
+export const signatureProofDecoder = (value: Uint8ArrayConsumer) => {
+  const hasProof = boolDecoder(value);
+  if (hasProof) {
+    return signatureV1Decoder(value);
+  }
+};
 
 export const paddedBytesEncoder = (val: string, paddingLength = 8) => {
   return `${pad(val.length / 2, paddingLength)}${val}`;
