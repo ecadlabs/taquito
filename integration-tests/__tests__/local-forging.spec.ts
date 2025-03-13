@@ -2,6 +2,7 @@ import { CONFIGS } from "../config";
 import { commonCases, rioCases } from '../data/allTestsCases';
 import { LocalForger, ProtocolsHash } from '@taquito/local-forging'
 import { TezosToolkit } from "@taquito/taquito";
+import { ProhibitedActionError } from '@taquito/core';
 
 CONFIGS().forEach(({ rpc, protocol }) => {
   const Tezos = new TezosToolkit(rpc);
@@ -14,8 +15,11 @@ CONFIGS().forEach(({ rpc, protocol }) => {
         const result = await localForger.forge(operation);
         const rpcResult = await Tezos.rpc.forgeOperations(operation);
         expect(result).toEqual(rpcResult);
-        expect(await localForger.parse(result)).toEqual(expected || operation);
-
+        if (name.includes('edsig(tz1)') || name.includes('spsig(tz2)') || name.includes('p2sig(tz3)')) {
+          expect(async () =>{await localForger.parse(result)}).rejects.toThrow(ProhibitedActionError)
+        } else {
+          expect(await localForger.parse(result)).toEqual(expected || operation);
+        }
       });
     });
 
