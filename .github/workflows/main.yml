@@ -19,7 +19,7 @@ jobs:
         node:
           - 'lts/Hydrogen'
           - 'lts/Iron'
-          - 'lts/Jod'
+          - '22.13.1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
