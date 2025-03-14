@@ -61,7 +61,7 @@
     "react-dom": "^17.0.2",
     "react-ga": "^3.3.1",
     "react-icons": "^4.11.0",
-    "react-slick": "^0.30.2",
+    "react-slick": "^0.30.3",
     "react-use-mailchimp-signup": "^2.0.2",
     "sass": "^1.81.0",
     "sass-loader": "^13.3.2",
@@ -86,5 +86,5 @@
       "last 1 safari version"
     ]
   },
-  "version": "21.0.2"
+  "version": "21.0.3"
 }
