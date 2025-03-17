@@ -162,7 +162,7 @@ export class WalletConnect implements WalletProvider {
   /**
    * @description Access all existing active pairings
    */
-  getAvailablePairing() {
+  getAvailablePairing(): PairingTypes.Struct[] {
     return this.signClient.pairing.getAll({ active: true });
   }
 

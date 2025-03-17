@@ -13,7 +13,7 @@
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
     "events": "^3.3.0",
-    "lerna": "^8.1.9",
+    "lerna": "^8.1.7",
     "prettier-plugin-svelte": "^3.2.6",
     "sass": "^1.84.0",
     "svelte": "^4.2.19",
@@ -32,7 +32,7 @@
     "@taquito/utils": "^21.0.3",
     "@taquito/wallet-connect": "^21.0.3",
     "buffer": "^6.0.3",
-    "svelte-modals": "^2.0.0-beta.2",
+    "svelte-modals": "^1.2.0",
     "svelte-select": "^5.8.3",
     "vite-compatible-readable-stream": "^3.6.1"
   },
