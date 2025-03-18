@@ -1,4 +1,4 @@
-import { NetworkType as NetworkTypeBeacon } from "@airgap/beacon-sdk";
+import { NetworkType as NetworkTypeBeacon } from "@airgap/beacon-types";
 import { NetworkType as NetworkTypeWc } from "@taquito/wallet-connect";
 
 export type SupportedNetworks = NetworkTypeBeacon.MAINNET | NetworkTypeBeacon.GHOSTNET  | NetworkTypeBeacon.QUEBECNET | NetworkTypeWc.MAINNET | NetworkTypeWc.GHOSTNET | NetworkTypeWc.QUEBECNET | NetworkTypeBeacon.CUSTOM;

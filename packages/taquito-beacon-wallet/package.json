@@ -67,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^4.4.0",
+    "@airgap/beacon-dapp": "^4.4.0-beta.3",
     "@taquito/core": "^21.0.3",
     "@taquito/taquito": "^21.0.3",
     "@testing-library/react": "^16.0.1"
@@ -102,7 +102,9 @@
     "ts-toolbelt": "^9.6.0",
     "typescript": "5.5.4",
     "webpack": "^5.94.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "crypto-browserify": "^3.12.1",
+    "util": "^0.12.5"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }
