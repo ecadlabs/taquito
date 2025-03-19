@@ -102,7 +102,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(576);
       expect(estimate.totalCost).toEqual(576);
       expect(estimate.usingBaseFeeMutez).toEqual(576);
-      expect(estimate.consumedMilligas).toEqual(3455798);
+      expect(estimate.consumedMilligas).toEqual(3455884);
     });
 
     it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
@@ -119,7 +119,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(847);
       expect(estimate.totalCost).toEqual(134347);
       expect(estimate.usingBaseFeeMutez).toEqual(847);
-      expect(estimate.consumedMilligas).toEqual(5570327);
+      expect(estimate.consumedMilligas).toEqual(5570413);
     });
 
     it('Verify .estimate.transfer for internal origination', async () => {
@@ -132,7 +132,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(423);
       expect(estimate.totalCost).toEqual(84673);
       expect(estimate.usingBaseFeeMutez).toEqual(423);
-      expect(estimate.consumedMilligas).toEqual(1866422);
+      expect(estimate.consumedMilligas).toEqual(1866508);
     });
 
     it('Verify .estimate.transfer for multiple internal originations', async () => {
@@ -145,7 +145,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(541);
       expect(estimate.totalCost).toEqual(164041);
       expect(estimate.usingBaseFeeMutez).toEqual(541);
-      expect(estimate.consumedMilligas).toEqual(2391575);
+      expect(estimate.consumedMilligas).toEqual(2391661);
       // Do the actual operation
       const op2 = await contract.methods.do(originate2()).send();
       await op2.confirmation();

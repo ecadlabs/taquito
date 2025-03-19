@@ -47,6 +47,9 @@ jobs:
           - testnet: quebecnet
             testnet_uppercase: QUEBECNET
             rpc_url: https://rpc.quebecnet.teztnets.com/
+          - testnet: rionet
+            testnet_uppercase: RIONET
+            rpc_url: https://rpc.rionet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
