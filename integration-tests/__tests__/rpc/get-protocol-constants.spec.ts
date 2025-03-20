@@ -1,7 +1,7 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS, NetworkType } from '../../config';
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseProto020, ConstantsResponseProto021, ConstantsResponseProto022 } from '@taquito/rpc';
+import { ConstantsResponseProto021, ConstantsResponseProto022 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
     const rpcUrl = 'https://mainnet.tezos.ecadinfra.com/';
     Tezos.setRpcProvider(rpcUrl);
     it(`should successfully fetch Proto21(Quebec) constants at head`, async () => {
-      const constants: ConstantsResponseProto020 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto021 = await Tezos.rpc.getConstants();
       expect(constants).toEqual({
         adaptive_issuance_activation_vote_enable: true,
         adaptive_issuance_force_activation: false,
