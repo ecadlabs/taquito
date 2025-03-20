@@ -6,9 +6,13 @@ import {
   ProtocolsHash,
   Uint8ArrayConsumer,
 } from '../src/taquito-local-forging';
-import { commonCases } from '../../../integration-tests/data/allTestsCases';
+import { commonCases, rioCases } from '../../../integration-tests/data/allTestsCases';
 import { InvalidOperationSchemaError, UnsupportedOperationError } from '../src/errors';
-import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
+import {
+  InvalidBlockHashError,
+  InvalidOperationKindError,
+  ProhibitedActionError,
+} from '@taquito/core';
 import { schemaDecoder, SeedNonceRevelationSchema } from '../src/schema/operation';
 import { ProtoInferiorTo } from '../src/protocols';
 
@@ -18,6 +22,23 @@ describe('Forge and parse operations default protocol', () => {
     it(`Common test: ${name}`, async () => {
       const result = await localForger.forge(operation);
       expect(await localForger.parse(result)).toEqual(expected || operation);
+    });
+  });
+
+  rioCases.forEach(({ name, operation, expected }) => {
+    it(`Common test: ${name}`, async () => {
+      const result = await localForger.forge(operation);
+      if (
+        name.includes('edsig(tz1)') ||
+        name.includes('spsig(tz2)') ||
+        name.includes('p2sig(tz3)')
+      ) {
+        expect(async () => {
+          await localForger.parse(result);
+        }).rejects.toThrow(ProhibitedActionError);
+      } else {
+        expect(await localForger.parse(result)).toEqual(expected || operation);
+      }
     });
   });
 
