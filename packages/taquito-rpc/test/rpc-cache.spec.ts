@@ -34,6 +34,7 @@ import {
   ticketBalancesResponse,
   pendingOperationsResponse,
   aiLaunchCycle,
+  protocolActivations,
 } from './data/rpc-responses';
 
 /**
@@ -96,6 +97,7 @@ describe('RpcClientCache test', () => {
       getCurrentPeriod: jest.fn(),
       getSuccessorPeriod: jest.fn(),
       getProtocols: jest.fn(),
+      getProtocolActivations: jest.fn(),
       getTicketBalance: jest.fn(),
       getAllTicketBalances: jest.fn(),
       getAdaptiveIssuanceLaunchCycle: jest.fn(),
@@ -144,6 +146,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getCurrentPeriod.mockReturnValue(currentPeriod);
     mockRpcClient.getSuccessorPeriod.mockReturnValue(successorPeriod);
     mockRpcClient.getProtocols.mockReturnValue(protocols);
+    mockRpcClient.getProtocolActivations.mockReturnValue(protocolActivations);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
     mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
     mockRpcClient.getAdaptiveIssuanceLaunchCycle.mockReturnValue(aiLaunchCycle);
@@ -201,6 +204,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
     await rpcCache.getProtocols();
+    await rpcCache.getProtocolActivations();
     await rpcCache.getTicketBalance(contractAddress, {
       ticketer: contractAddress,
       content_type: { prim: 'string' },
@@ -311,6 +315,9 @@ describe('RpcClientCache test', () => {
       successorPeriod
     );
     expect(rpcCache.getAllCachedData()['rpcTest/getProtocols/head/'].response).toEqual(protocols);
+    expect(
+      rpcCache.getAllCachedData()['rpcTest/getProtocolActivations//'].response
+    ).toEqual(protocolActivations);
     expect(
       rpcCache.getAllCachedData()[
         `rpcTest/getTicketBalance/head/${contractAddress}/${JSON.stringify(ticketToken)}/`
@@ -466,7 +473,6 @@ describe('RpcClientCache test', () => {
         `rpcTest/getBigMapExpr/${block.block}/72/expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp/`
       ].response
     ).toEqual(bigmapValue);
-    console.log(`rpcTest/getAllDelegates/${block.block}/{}`);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAllDelegates/${block.block}/{}/`].response
     ).toEqual([delegate]);
@@ -583,6 +589,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
     await rpcCache.getProtocols();
+    await rpcCache.getProtocolActivations();
     await rpcCache.getTicketBalance(contractAddress, ticketToken);
     await rpcCache.getAllTicketBalances(contractAddress);
     await rpcCache.getAdaptiveIssuanceLaunchCycle();

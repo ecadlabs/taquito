@@ -37,4 +37,5 @@ export enum OpKind {
   SMART_ROLLUP_REFUTE = 'smart_rollup_refute',
   SMART_ROLLUP_TIMEOUT = 'smart_rollup_timeout',
   DAL_PUBLISH_COMMITMENT = 'dal_publish_commitment',
+  DAL_ENTRAPMENT_EVIDENCE = 'dal_entrapment_evidence',
 }

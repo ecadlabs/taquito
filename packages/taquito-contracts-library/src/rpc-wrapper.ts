@@ -51,6 +51,7 @@ import {
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -350,6 +351,9 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   }
   async getProtocols({ block }: RPCOptions = defaultRPCOptions): Promise<ProtocolsResponse> {
     return this.rpc.getProtocols({ block });
+  }
+  async getProtocolActivations(protocol: string = ''): Promise<ProtocolActivationsResponse> {
+    return this.rpc.getProtocolActivations(protocol);
   }
   async getStorageUsedSpace(
     contract: string,

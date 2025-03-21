@@ -46,6 +46,12 @@ describe('encodeAddress', () => {
     );
   });
 
+  it('Should encode address properly (tz4)', () => {
+    expect(encodeAddress('00036997fe0428e78606b9be47eda6104bb293301e12')).toEqual(
+      'tz4JdacdPe8oKt7Yd65GdsryyNjGD5qpLMnf'
+    );
+  });
+
   it('Should encode address properly (KT1)', () => {
     expect(encodeAddress('01f9b689a478253793bd92357c5e08e5ebcd8db47600')).toEqual(
       'KT1XM8VUFBiM9AC5czWU15fEeE9nmuEYWt3Y'

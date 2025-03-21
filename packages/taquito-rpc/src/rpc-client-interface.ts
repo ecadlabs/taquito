@@ -51,6 +51,7 @@ import {
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
 } from './types';
 
 export interface RPCOptions {
@@ -129,6 +130,7 @@ export interface RpcClientInterface {
   getSaplingDiffById(id: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
+  getProtocolActivations(protocol?: string): Promise<ProtocolActivationsResponse>;
   getStorageUsedSpace(contract: string, options?: RPCOptions): Promise<string>;
   getStoragePaidSpace(contract: string, options?: RPCOptions): Promise<string>;
   getTicketBalance(
@@ -179,6 +181,7 @@ export enum RPCMethodName {
   GET_NORMALIZED_SCRIPT = 'getNormalizedScript',
   GET_PROPOSALS = 'getProposals',
   GET_PROTOCOLS = 'getProtocols',
+  GET_PROTOCOL_ACTIVATIONS = 'getProtocolActivations',
   GET_SAPLING_DIFF_BY_CONTRACT = 'getSaplingDiffByContract',
   GET_SAPLING_DIFF_BY_ID = 'getSaplingDiffById',
   GET_SCRIPT = 'getScript',
