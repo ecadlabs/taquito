@@ -20,6 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? test : test.skip;
+    const rionet = rpc.includes('rionet') ? test : test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -468,6 +469,16 @@ CONFIGS().forEach(
         it('Verify that rpcClient.getProtocols will list past and present Tezos protocols', async () => {
           const protocols = await rpcClient.getProtocols();
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
+        });
+
+        rionet('Verify that rpcClient.getProtocolActivations will list all protocol activations info', async () => {
+          const protocolActivations = await rpcClient.getProtocolActivations();
+          expect(protocolActivations).toBeInstanceOf(Array);
+        });
+
+        rionet('Verify that rpcClient.getProtocolActivations will list a protocol activations info', async () => {
+          const protocolActivations = await rpcClient.getProtocolActivations(protocol);
+          expect(protocolActivations).toBeInstanceOf(Object);
         });
 
         it('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async () => {

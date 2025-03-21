@@ -53,6 +53,7 @@ import {
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
 } from '../types';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
@@ -60,6 +61,7 @@ import {
   validateAddress,
   ValidationResult,
   invalidDetail,
+  validateProtocol,
 } from '@taquito/utils';
 
 interface CachedDataInterface {
@@ -95,7 +97,7 @@ export class RpcClientCache implements RpcClientInterface {
   constructor(
     private rpcClient: RpcClientInterface,
     private ttl = defaultTtl
-  ) {}
+  ) { }
 
   getAllCachedData() {
     return this._cache;
@@ -1215,6 +1217,30 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getProtocols({ block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description get current and next protocol
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-protocols
+   */
+  async getProtocolActivations(protocol: string = ''): Promise<ProtocolActivationsResponse> {
+    if (protocol) {
+      const protocolValidation = validateProtocol(protocol);
+      if (protocolValidation !== ValidationResult.VALID) {
+        throw new Error(`Invalid protocol hash "${protocol}" ${invalidDetail(protocolValidation)}`);
+      }
+    }
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_PROTOCOL_ACTIVATIONS, [
+      protocol,
+    ]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getProtocolActivations(protocol);
       this.put(key, response);
       return response;
     }

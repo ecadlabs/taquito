@@ -575,6 +575,34 @@ export const protocols = {
   next_protocol: 'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx',
 };
 
+export const protocolActivations = [
+  {
+    protocol: "PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg",
+    proto_level: 1,
+    activation_block: {
+      block_hash: "BMDT4DMHyKLsHVyjZgqPUnPBcmU9nQgKS2aNp6Hn7h8CdBrJRN9",
+      level: 1
+    }
+  },
+  {
+    protocol: "PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7",
+    proto_level: 2,
+    activation_block: {
+      block_hash: "BLzhYA4xhakKnhB3GLsz7AiFYBkfYQr5wNuk9rWYnsutxfD1d4q",
+      level: 2700
+    }
+  }
+]
+
+export const protocolActivation = {
+  protocol: "PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7",
+  proto_level: 2,
+  activation_block: {
+    block_hash: "BLzhYA4xhakKnhB3GLsz7AiFYBkfYQr5wNuk9rWYnsutxfD1d4q",
+    level: 2700
+  }
+};
+
 export const delegatesIthacanetResponse = {
   full_balance: '1198951292321',
   current_frozen_deposits: '120167343864',

@@ -62,6 +62,8 @@ import {
   smartRollupTimeoutResponse,
   aiLaunchCycle,
   unstakeRequestsResponse,
+  protocolActivations,
+  protocolActivation,
 } from './data/rpc-responses';
 
 /**
@@ -534,7 +536,6 @@ describe('RpcClient test', () => {
     it('should parse the response properly, proto22', async () => {
       httpBackend.createRequest.mockResolvedValue(delegatesRionetResponse);
       const response = await client.getDelegates(contractAddress);
-      console.log(Object.keys(response).includes('frozen_balance_by_cycle'));
 
       expect(response).toEqual({
         deactivated: false,
@@ -3990,6 +3991,28 @@ describe('RpcClient test', () => {
         'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
       );
       expect(protocols.protocol).toEqual('PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx');
+    });
+  });
+
+  describe('getProtocolActivations', () => {
+    it('should query the right url and return a list of ProtocolActivations', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(protocolActivations));
+      const response = await client.getProtocolActivations();
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/protocols/`,
+      });
+      expect(response).toEqual(protocolActivations);
+    });
+    it('should query the right url and return a ProtocolActivation', async () => {
+      const protocol = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(protocolActivation));
+      const response = await client.getProtocolActivations(protocol);
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/protocols/${protocol}`,
+      });
+      expect(response).toEqual(protocolActivation);
     });
   });
 

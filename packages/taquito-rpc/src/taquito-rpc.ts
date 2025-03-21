@@ -69,12 +69,14 @@ import {
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
   validateAddress,
   validateContractAddress,
   ValidationResult,
+  validateProtocol,
   invalidDetail,
 } from '@taquito/utils';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
@@ -113,7 +115,7 @@ export class RpcClient implements RpcClientInterface {
     protected url: string,
     protected chain: string = defaultChain,
     protected httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -345,24 +347,24 @@ export class RpcClient implements RpcClientInterface {
     return response === null
       ? null
       : {
-          finalizable: response.finalizable.map(({ amount, ...rest }) => {
+        finalizable: response.finalizable.map(({ amount, ...rest }) => {
+          const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
+          return {
+            ...rest,
+            amount: castedToBigNumber.amount,
+          };
+        }),
+        unfinalizable: {
+          delegate: response.unfinalizable.delegate,
+          requests: response.unfinalizable.requests.map(({ amount, cycle }) => {
             const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
             return {
-              ...rest,
+              cycle,
               amount: castedToBigNumber.amount,
             };
           }),
-          unfinalizable: {
-            delegate: response.unfinalizable.delegate,
-            requests: response.unfinalizable.requests.map(({ amount, cycle }) => {
-              const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
-              return {
-                cycle,
-                amount: castedToBigNumber.amount,
-              };
-            }),
-          },
-        };
+        },
+      };
   }
 
   /**
@@ -1181,6 +1183,24 @@ export class RpcClient implements RpcClientInterface {
   async getProtocols({ block }: { block: string } = defaultRPCOptions): Promise<ProtocolsResponse> {
     return this.httpBackend.createRequest<ProtocolsResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/protocols`),
+      method: 'GET',
+    });
+  }
+
+  /**
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description get current and next protocol
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-protocols
+   */
+  async getProtocolActivations(protocol: string = ''): Promise<ProtocolActivationsResponse> {
+    if (protocol) {
+      const protocolValidation = validateProtocol(protocol);
+      if (protocolValidation !== ValidationResult.VALID) {
+        throw new Error(`Invalid protocol hash "${protocol}" ${invalidDetail(protocolValidation)}`);
+      }
+    }
+    return this.httpBackend.createRequest<ProtocolActivationsResponse>({
+      url: this.createURL(`/chains/${this.chain}/protocols/${protocol}`),
       method: 'GET',
     });
   }
