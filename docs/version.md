@@ -3,6 +3,15 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v21.0.4
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.5.0 #3133
+
+### Internals
+Configured webpack polyfill of taquito-beacon-wallet-vanilla #3133
+
 # Taquito v21.0.3
 ## Summary
 
