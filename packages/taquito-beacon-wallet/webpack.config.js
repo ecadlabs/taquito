@@ -22,7 +22,9 @@ module.exports = {
     modules: ['node_modules'],
     fallback: {
       fs: false,
-      stream: require.resolve("stream-browserify")
+      stream: require.resolve("stream-browserify"),
+      util: require.resolve("util"),
+      crypto: require.resolve("crypto-browserify")
     }
   },
   output: {
