@@ -1,6 +1,6 @@
 {
   "name": "pack-test-tool",
-  "version": "21.0.3",
+  "version": "21.0.4",
   "description": "Generate pack test data via Tezos RPC",
   "main": "pack-test-tool.js",
   "private": true,
@@ -8,7 +8,7 @@
   "author": "Eugene Zagidullin <eugene@ecadlabs.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@taquito/rpc": "^21.0.3",
+    "@taquito/rpc": "^21.0.4",
     "yargs": "^17.7.2"
   }
 }
