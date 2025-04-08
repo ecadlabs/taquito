@@ -5,7 +5,7 @@
 
 import Client from '@walletconnect/sign-client';
 import { SignClientTypes, SessionTypes, PairingTypes } from '@walletconnect/types';
-import QRCodeModal from '@walletconnect/legacy-modal';
+import { WalletConnectModal } from '@walletconnect/modal';
 
 import {
   createOriginationOperation,
@@ -56,7 +56,8 @@ export * from './errors';
 export * from './types';
 
 const TEZOS_PLACEHOLDER = 'tezos';
-
+const MAINNET_CHAINID = 'mainnet';
+const GHOSTNET_CHAINID = 'ghostnet';
 /**
  * @description The `WalletConnect` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
  * This package enables dapps built with Taquito to connect to wallets via the WalletConnect/Reown protocol.
@@ -68,9 +69,11 @@ export class WalletConnect implements WalletProvider {
   private session: SessionTypes.Struct | undefined;
   private activeAccount: string | undefined;
   private activeNetwork: string | undefined;
+  private walletConnectModal: WalletConnectModal;
 
-  constructor(signClient: Client) {
+  constructor(signClient: Client, WalletConnectModal: WalletConnectModal) {
     this.signClient = signClient;
+    this.walletConnectModal = WalletConnectModal;
 
     this.signClient.on('session_delete', ({ topic }) => {
       if (this.session?.topic === topic) {
@@ -114,8 +117,15 @@ export class WalletConnect implements WalletProvider {
    * ```
    */
   static async init(initParams: SignClientTypes.Options) {
+    if (!initParams.projectId) {
+      throw new Error('projectId is required');
+    }
     const client = await Client.init(initParams);
-    return new WalletConnect(client);
+    const walletConnectModal = new WalletConnectModal({
+      projectId: initParams.projectId,
+      chains: [MAINNET_CHAINID, GHOSTNET_CHAINID],
+    });
+    return new WalletConnect(client, walletConnectModal);
   }
 
   /**
@@ -147,13 +157,19 @@ export class WalletConnect implements WalletProvider {
       });
 
       if (uri) {
-        QRCodeModal.open(uri, () => {}, { registryUrl: connectParams.registryUrl });
+        this.walletConnectModal.openModal({
+          uri,
+          chains: [
+            `${TEZOS_PLACEHOLDER}:${MAINNET_CHAINID}`,
+            `${TEZOS_PLACEHOLDER}:${GHOSTNET_CHAINID}`,
+          ],
+        });
       }
       this.session = await approval();
     } catch (error) {
       throw new ConnectionFailed(error);
     } finally {
-      QRCodeModal.close();
+      this.walletConnectModal.closeModal();
     }
     this.validateReceivedNamespace(connectParams.permissionScope, this.session.namespaces);
     this.setDefaultAccountAndNetwork();
@@ -162,7 +178,7 @@ export class WalletConnect implements WalletProvider {
   /**
    * @description Access all existing active pairings
    */
-  getAvailablePairing() {
+  getAvailablePairing(): PairingTypes.Struct[] {
     return this.signClient.pairing.getAll({ active: true });
   }
 

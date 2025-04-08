@@ -85,7 +85,7 @@
     "@taquito/rpc": "^21.0.4",
     "@taquito/utils": "^21.0.4",
     "bignumber.js": "^9.1.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@babel/types": "7.25.2",

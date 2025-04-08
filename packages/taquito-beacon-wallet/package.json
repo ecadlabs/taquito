@@ -70,7 +70,6 @@
     "@airgap/beacon-dapp": "4.5.0",
     "@taquito/core": "^21.0.4",
     "@taquito/taquito": "^21.0.4",
-    "@testing-library/react": "^16.0.1",
     "crypto-browserify": "^3.12.1",
     "util": "^0.12.5"
   },
