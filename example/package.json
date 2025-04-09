@@ -1,7 +1,7 @@
 {
   "name": "@taquito/example",
   "private": true,
-  "version": "22.0.0-beta.0",
+  "version": "21.0.4",
   "scripts": {
     "example": "node -r ts-node/register --preserve-symlinks example-node.ts",
     "example:activation": "node -r ts-node/register --preserve-symlinks example-activate.ts",
@@ -42,16 +42,16 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^6.29.5",
-    "@taquito/ledger-signer": "^22.0.0-beta.0",
-    "@taquito/local-forging": "^22.0.0-beta.0",
-    "@taquito/michel-codec": "^22.0.0-beta.0",
-    "@taquito/michelson-encoder": "^22.0.0-beta.0",
-    "@taquito/rpc": "^22.0.0-beta.0",
-    "@taquito/sapling": "^22.0.0-beta.0",
-    "@taquito/signer": "^22.0.0-beta.0",
-    "@taquito/taquito": "^22.0.0-beta.0",
-    "@taquito/tzip16": "^22.0.0-beta.0",
-    "@taquito/utils": "^22.0.0-beta.0",
+    "@taquito/ledger-signer": "^21.0.4",
+    "@taquito/local-forging": "^21.0.4",
+    "@taquito/michel-codec": "^21.0.4",
+    "@taquito/michelson-encoder": "^21.0.4",
+    "@taquito/rpc": "^21.0.4",
+    "@taquito/sapling": "^21.0.4",
+    "@taquito/signer": "^21.0.4",
+    "@taquito/taquito": "^21.0.4",
+    "@taquito/tzip16": "^21.0.4",
+    "@taquito/utils": "^21.0.4",
     "bignumber.js": "^9.1.2"
   },
   "devDependencies": {
