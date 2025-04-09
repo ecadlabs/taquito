@@ -1,3 +1,33 @@
+/**
+ * @deprecated default reveal gasLimit please use getRevealGasLimit(address) instead, removing hardcoded gasLimit of delegation, origination and transfer
+ */
+export const DEFAULT_GAS_LIMIT = {
+  DELEGATION: 10600,
+  ORIGINATION: 10600,
+  TRANSFER: 10600,
+  REVEAL_TZ1: 1000,
+  REVEAL_TZ2: 1000,
+  REVEAL_TZ3: 2000,
+  REVEAL_TZ4: 2000,
+};
+/**
+ * @deprecated default reveal fee please use getRevealFee(address) instead, removing hardcoded fee of delegation, origination and transfer
+ */
+export const DEFAULT_FEE = {
+  DELEGATION: 1257,
+  ORIGINATION: 10000,
+  TRANSFER: 10000,
+  REVEAL: 374,
+};
+/**
+ * @deprecated default reveal storageLimit please use REVEAL_STORAGE_LIMIT instead, removing hardcoded storageLimit of delegation, origination and transfer
+ */
+export const DEFAULT_STORAGE_LIMIT = {
+  DELEGATION: 0,
+  ORIGINATION: 257,
+  TRANSFER: 257,
+  REVEAL: 0,
+};
 // value is based on octez-client reveal operation gasLimit of each address type in Rio Protocol
 const REVEAL_GAS_LIMIT = {
   TZ1: 169,
