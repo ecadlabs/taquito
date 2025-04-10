@@ -4,7 +4,7 @@ import {
   OperationContentsTransferTicket,
   OpKind,
 } from '@taquito/rpc';
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { Context } from '../context';
 import { Operation } from '../operations';
 import {

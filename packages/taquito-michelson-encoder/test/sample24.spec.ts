@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { script24, storage24 } from '../data/sample24';
 import { Schema } from '../src/schema/storage';
 import { expectMichelsonMap } from './utils';

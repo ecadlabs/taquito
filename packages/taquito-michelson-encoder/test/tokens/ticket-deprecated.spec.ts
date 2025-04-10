@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { ParameterSchema, UnitValue } from '../../src/taquito-michelson-encoder';
 import { createToken } from '../../src/tokens/createToken';
 import {

@@ -3,7 +3,7 @@ import {
   OperationContentsAndResultReveal,
   OperationContentsReveal,
 } from '@taquito/rpc';
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult } from './errors';
 import { Operation } from './operations';

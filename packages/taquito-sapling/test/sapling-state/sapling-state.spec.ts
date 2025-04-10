@@ -1,6 +1,6 @@
 import { SaplingState } from '../../src/sapling-state/sapling-state';
 import { sapling_state_diff, witnessString, stateTree } from '../data/sapling_test_data';
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 let state: SaplingState;
 

@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { Encoder } from '../taquito-local-forging';
@@ -157,8 +157,8 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
     binary.length <= 6
       ? 6
       : (binary.length - 6) % 7
-      ? binary.length + 7 - ((binary.length - 6) % 7)
-      : binary.length;
+        ? binary.length + 7 - ((binary.length - 6) % 7)
+        : binary.length;
 
   const splitted = binary.padStart(pad, '0').match(/\d{6,7}/g);
 
