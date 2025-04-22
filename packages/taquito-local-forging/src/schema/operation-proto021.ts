@@ -1,6 +1,6 @@
-import { Decoder } from '../decoder';
+import { Decoder } from '../decoder-proto021';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
-import { CODEC, kindMapping, kindMappingReverse } from '../constants';
+import { CODEC, kindMapping, kindMappingReverse } from '../constants-proto021';
 import { InvalidOperationKindError } from '@taquito/core';
 import {
   OperationDecodingError,
@@ -131,7 +131,6 @@ export const UpdateConsensusKeySchema = {
   gas_limit: CODEC.ZARITH,
   storage_limit: CODEC.ZARITH,
   pk: CODEC.PUBLIC_KEY,
-  proof: CODEC.SIGNATURE_PROOF,
 };
 
 export const DrainDelegateSchema = {

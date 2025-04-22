@@ -5,13 +5,16 @@
 
 import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
+import { CODEC as CODECPROTO021 } from './constants-proto021';
 import { decoders } from './decoder';
+import { decodersProto021 } from './decoder-proto021';
 import { encoders } from './encoder';
+import { encodersProto021 } from './encoder-proto021';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { validateBlock, ValidationResult, invalidDetail } from '@taquito/utils';
 import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
-import { ProtocolsHash } from './protocols';
+import { ProtocolsHash, ProtoInferiorTo } from './protocols';
 import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
@@ -24,16 +27,35 @@ export { ProtocolsHash } from './protocols';
 
 const PROTOCOL_CURRENT = ProtocolsHash.PsRiotuma;
 
-export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
-  return {
-    encoder: encoders[codec],
-    decoder: (hex: string) => {
-      const consumer = Uint8ArrayConsumer.fromHexString(hex);
-      return decoders[codec](consumer) as any;
-    },
-  };
+export function getCodec(codec: CODEC | CODECPROTO021, _proto: ProtocolsHash) {
+  // use encodersProto021 & decodersProto021 if it's quebec or prior
+  if (_proto === ProtocolsHash.PsQuebecn || ProtoInferiorTo(_proto, ProtocolsHash.PsQuebecn)) {
+    return {
+      encoder: encodersProto021[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decodersProto021[codec](consumer) as any;
+      },
+    };
+  } else {
+    return {
+      encoder: encoders[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decoders[codec](consumer) as any;
+      },
+    };
+  }
+  // TODO: Remove above if else once mainnet migrated into rio protocol and uncommon the return block below
+  // return {
+  //   encoder: encoders[codec],
+  //   decoder: (hex: string) => {
+  //     const consumer = Uint8ArrayConsumer.fromHexString(hex);
+  //     return decoders[codec](consumer) as any;
+  //   },
+  // };
 }
-//
+
 export class LocalForger implements Forger {
   constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
 
@@ -61,6 +83,8 @@ export class LocalForger implements Forger {
         } else if (content.kind === 'set_deposits_limit' && diff[0] === 'limit') {
           continue;
         } else if (content.kind === 'smart_rollup_originate' && diff[0] === 'whitelist') {
+          continue;
+        } else if (content.kind === 'update_consensus_key' && diff[0] === 'proof') {
           continue;
         } else {
           throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);
