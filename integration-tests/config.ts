@@ -134,7 +134,7 @@ const rionetEphemeral: Config =
   defaultConfig({
     networkName: 'RIONET',
     protocol: Protocols.PsRiotuma,
-    defaultRpc: 'https://rpc.rionet.teztnets.com',
+    defaultRpc: 'http://ecad-tezos-rionet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPsRiotuma,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/rionet')
   })

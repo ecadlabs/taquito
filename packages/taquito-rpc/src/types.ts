@@ -2498,6 +2498,17 @@ export type ProtocolsResponse = {
   next_protocol: string;
 };
 
+export type ProtocolActivationsResponse = ProtocolActivation[] | ProtocolActivation;
+
+export type ProtocolActivation = {
+  protocol: string;
+  proto_level: number;
+  activation_block: {
+    block_hash: string;
+    level: number;
+  };
+};
+
 export type Next =
   | {
       next: number;

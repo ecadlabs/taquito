@@ -1,5 +1,5 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType } from "@taquito/taquito";
+import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -20,6 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? test : test.skip;
+    const rionetAndAlpha = protocol === Protocols.PsRiotuma || protocol === Protocols.ProtoALpha ? test: test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -468,6 +469,16 @@ CONFIGS().forEach(
         it('Verify that rpcClient.getProtocols will list past and present Tezos protocols', async () => {
           const protocols = await rpcClient.getProtocols();
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
+        });
+
+        rionetAndAlpha('Verify that rpcClient.getProtocolActivations will list all protocol activations info', async () => {
+          const protocolActivations = await rpcClient.getProtocolActivations();
+          expect(protocolActivations).toBeInstanceOf(Array);
+        });
+
+        rionetAndAlpha('Verify that rpcClient.getProtocolActivations will list a protocol activations info', async () => {
+          const protocolActivations = await rpcClient.getProtocolActivations(protocol);
+          expect(protocolActivations).toBeInstanceOf(Object);
         });
 
         it('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async () => {
