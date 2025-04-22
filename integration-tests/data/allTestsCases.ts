@@ -48,6 +48,25 @@ interface TestCase {
   operation: ForgeParams;
   expected?: object;
 }
+export const rioCases: TestCase[] = [
+  {
+    name: 'Delegation with tz4 delegate',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.DELEGATION,
+          delegate: 'tz4EmMVfqF7NxZsJaofqPDR9xdmXSDWcKAM7',
+          counter: '1',
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+        },
+      ],
+    },
+  },
+]
 
 export const commonCases: TestCase[] = [
   {

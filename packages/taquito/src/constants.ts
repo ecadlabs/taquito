@@ -28,25 +28,25 @@ export const DEFAULT_STORAGE_LIMIT = {
   TRANSFER: 257,
   REVEAL: 0,
 };
-// value is based on octez-client reveal operation gasLimit of each address type
+// value is based on octez-client reveal operation gasLimit of each address type in Rio Protocol
 const REVEAL_GAS_LIMIT = {
   TZ1: 169,
   TZ2: 155,
   TZ3: 445,
   TZ4: 1674,
 };
-// value is based on octez-client reveal operation fee of each address type
+// value is based on octez-client reveal operation fee of each address type in Rio Protocol
 const REVEAL_FEE = {
   TZ1: 276,
   TZ2: 276,
   TZ3: 305,
   TZ4: 477,
 };
-// value is based on octez-client reveal operation storageLimit of all address type
+// value is based on octez-client reveal operation storageLimit of all address type in Rio Protocol
 export const REVEAL_STORAGE_LIMIT = 0;
-// protocol constants
+// protocol constants in Rio Protocol
 export const ORIGINATION_SIZE = 257;
-// protocol constants
+// protocol constants in Rio Protocol
 export const COST_PER_BYTE = 250;
 
 export enum Protocols {

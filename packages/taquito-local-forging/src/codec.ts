@@ -55,12 +55,14 @@ export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
     return prefixDecoder(Prefix.TZ2)(val);
   } else if (prefix[0] === 0x02) {
     return prefixDecoder(Prefix.TZ3)(val);
+  } else if (prefix[0] === 0x03) {
+    return prefixDecoder(Prefix.TZ4)(val);
   }
 };
 
 export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
   if (!boolDecoder(val)) {
-    return undefined;
+    return;
   }
   const publicKeyHashes = [];
   val.consume(4);
