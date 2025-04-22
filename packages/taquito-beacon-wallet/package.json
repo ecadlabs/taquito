@@ -67,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "4.5.0",
+    "@airgap/beacon-dapp": "4.5.1",
     "@taquito/core": "^21.0.4",
     "@taquito/taquito": "^21.0.4",
     "crypto-browserify": "^3.12.1",
