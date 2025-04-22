@@ -1726,7 +1726,7 @@ export const commonCases: TestCase[] = [
     }
   },
   {
-    name: 'Dal Publish Commitment operation1',
+    name: 'Dal Publish Commitment operation',
     operation: {
       branch: 'BMT5yA3UH3CJkaYJBq33Q1BNZU6NL4zZNBhCHKwxygSm59P1x9M',
       contents: [

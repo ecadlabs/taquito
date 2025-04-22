@@ -190,13 +190,9 @@ export type InlinedAttestationKindEnum = OpKind.ATTESTATION;
 
 export type InlinedEndorsementKindEnum = OpKind.ENDORSEMENT;
 
-export interface InlinedAttestationContents {
-  kind: InlinedAttestationKindEnum;
-  slot?: number;
-  round?: number;
-  block_payload_hash?: string;
-  level: number;
-}
+export type InlinedAttestationContents =
+  | OperationContentsAttestation
+  | OperationContentsAttestationWithDal;
 
 export interface InlinedEndorsementContents {
   kind: InlinedEndorsementKindEnum;
@@ -579,6 +575,13 @@ export interface OperationContentsDalPublishCommitment {
   };
 }
 
+export interface OperationContentsDalEntrapmentEvidence {
+  kind: OpKind.DAL_ENTRAPMENT_EVIDENCE;
+  attestation: InlinedAttestation;
+  slot_index: number;
+  shard_with_proof: { shard: (number | string[])[]; proof: string };
+}
+
 export type OperationContents =
   | OperationContentsAttestation
   | OperationContentsPreattestation
@@ -615,6 +618,7 @@ export type OperationContents =
   | OperationContentsSmartRollupRefute
   | OperationContentsSmartRollupRecoverBond
   | OperationContentsSmartRollupTimeout
+  | OperationContentsDalEntrapmentEvidence
   | OperationContentsDalPublishCommitment;
 
 export interface OperationContentsAndResultMetadataExtended1 {
@@ -754,6 +758,10 @@ export interface OperationContentsAndResultMetadataDalPublishCommitment {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultDalPublishCommitment;
   internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataDalEntrapmentEvidence {
+  balance_updates?: OperationMetadataBalanceUpdates[];
 }
 
 export interface OperationContentsAndResultAttestation {
@@ -1102,6 +1110,14 @@ export interface OperationContentsAndResultDalPublishCommitment {
   metadata: OperationContentsAndResultMetadataDalPublishCommitment;
 }
 
+export interface OperationContentsAndResultDalEntrapmentEvidence {
+  kind: OpKind.DAL_ENTRAPMENT_EVIDENCE;
+  attestation: InlinedAttestation;
+  slot_index: number;
+  shard_with_proof: { shard: (number | string[])[]; proof: string };
+  metadata: OperationContentsAndResultMetadataDalEntrapmentEvidence;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultAttestation
   | OperationContentsAndResultPreattestation
@@ -1137,7 +1153,8 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupRecoverBond
   | OperationContentsAndResultSmartRollupTimeout
-  | OperationContentsAndResultDalPublishCommitment;
+  | OperationContentsAndResultDalPublishCommitment
+  | OperationContentsAndResultDalEntrapmentEvidence;
 
 export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultTransaction
