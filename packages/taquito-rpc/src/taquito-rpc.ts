@@ -584,11 +584,12 @@ export class RpcClient implements RpcClientInterface {
       'staking_denominator',
     ]);
 
-    return {
-      ...response,
-      ...castedResponse,
-      frozen_balance_by_cycle: response.frozen_balance_by_cycle
-        ? response.frozen_balance_by_cycle.map(({ deposit, deposits, fees, rewards, ...rest }) => {
+    if (response.frozen_balance_by_cycle) {
+      return {
+        ...response,
+        ...castedResponse,
+        frozen_balance_by_cycle: response.frozen_balance_by_cycle.map(
+          ({ deposit, deposits, fees, rewards, ...rest }) => {
             const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
               'deposit',
               'deposits',
@@ -602,9 +603,15 @@ export class RpcClient implements RpcClientInterface {
               fees: castedToBigNumber.fees,
               rewards: castedToBigNumber.rewards,
             };
-          })
-        : undefined,
-    };
+          }
+        ),
+      };
+    } else {
+      return {
+        ...response,
+        ...castedResponse,
+      };
+    }
   }
 
   /**

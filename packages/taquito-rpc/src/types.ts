@@ -54,21 +54,70 @@ export interface Inode {
 }
 
 export interface DelegatesResponse {
+  deactivated: boolean;
+  is_forbidden?: boolean;
+  participation?: {
+    expected_cycle_activity: number;
+    minimal_cycle_activity: number;
+    missed_slots: number;
+    missed_levels: number;
+    remaining_allowed_missed_slots: number;
+    expected_attesting_rewards: string;
+  };
+  dal_participation?: {
+    expected_assigned_shards_per_slot: number;
+    delegate_attested_dal_slots: number;
+    delegate_attestable_dal_slots: number;
+    expected_dal_rewards: string;
+    sufficient_dal_participationa: true;
+    denounced: true;
+  };
+  grace_period: number;
+  active_staking_parameters?: StakingParameters;
+  pending_staking_parameters?: {
+    cycle: number;
+    parameters: StakingParameters;
+  }[];
+  baking_power?: string;
+  total_staked?: string;
+  total_delegated?: string;
+  min_delegated_in_current_cycle?: MinDelegatedInCurrentCycle;
+  own_full_balance?: string;
+  own_staked?: string;
+  own_delegated?: string;
+  external_staked?: string;
+  external_delegated?: string;
+  total_unstaked_per_cycle?: { cycle: number; deposit: string }[];
+  denunciations?: {
+    operation_hash: string;
+    rewarded: string;
+    misbehaviour: {
+      level: number;
+      round: number;
+      kind: 'attestation' | 'block' | 'preattestation';
+    };
+  }[];
+  estimated_shared_pending_slashed_amount?: string;
+  staking_denominator?: BigNumber;
+  current_voting_power?: BigNumber;
+  voting_power?: BigNumber;
+  voting_info?: VotingInfoResponse;
+  consensus_key?: {
+    active: { pkh: string; pk: string };
+    pendings?: { cycle: number; pkh: string; pk: string }[];
+  };
+  stakers?: { staker: string; frozen_deposits: string }[];
+  delegators?: string[];
   full_balance?: BigNumber;
   current_frozen_deposits?: BigNumber;
   frozen_deposits?: BigNumber;
-  staking_balance: BigNumber;
-  delegated_contracts: string[];
-  delegated_balance: BigNumber;
-  min_delegated_in_current_cycle?: MinDelegatedInCurrentCycle;
-  deactivated: boolean;
+  staking_balance?: BigNumber;
+  delegated_contracts?: string[];
+  delegated_balance?: BigNumber;
   total_delegated_stake?: BigNumber;
-  staking_denominator?: BigNumber;
   active_consensus_key?: string;
-  grace_period: number;
   pending_denunciations?: boolean;
   frozen_deposits_limit?: BigNumber;
-  voting_power?: BigNumber;
   current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
@@ -77,6 +126,11 @@ export interface DelegatesResponse {
   frozen_balance?: BigNumber;
   frozen_balance_by_cycle?: Frozenbalancebycycle[];
 }
+
+export type StakingParameters = {
+  limit_of_staking_over_baking_millionth: number;
+  edge_of_baking_over_staking_billionth: number;
+};
 
 export type MinDelegatedInCurrentCycle = {
   amount: string;
