@@ -1783,6 +1783,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto022 &
   ConstantsResponseProto021 &
   ConstantsResponseProto020 &
   ConstantsResponseProto019 &
@@ -1828,6 +1829,57 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto022
+  extends Omit<
+    ConstantsResponseProto021,
+    | 'adaptive_issuance_activation_vote_enable'
+    | 'adaptive_issuance_force_activation'
+    | 'adaptive_issuance_launch_ema_threshold'
+    | 'autostaking_enable'
+    | 'consensus_threshold'
+    | 'issuance_weights'
+    | 'dal_parametric'
+    | 'max_slashing_period'
+    | 'max_slashing_threshold'
+    | 'ns_enable'
+    | 'percentage_of_frozen_deposits_slashed_per_double_attestation'
+  > {
+  aggregate_attestation: boolean;
+  all_bakers_attest_activation_level: null | number;
+  allow_tz4_delegate_enable: boolean;
+  consensus_key_activation_delay: number;
+  consensus_threshold_size: number;
+  dal_parametric: {
+    attestation_lag: number;
+    attestation_threshold: number;
+    feature_enable: boolean;
+    incentives_enable: boolean;
+    minimal_participation_ratio: Ratio;
+    number_of_shards: number;
+    number_of_slots: number;
+    page_size: number;
+    redundancy_factor: number;
+    rewards_ratio: Ratio;
+    slot_size: number;
+    traps_fraction: Ratio;
+  };
+  denunciation_period: number;
+  issuance_modification_delay: number;
+  issuance_weights: {
+    attesting_reward_weight: number;
+    baking_reward_bonus_weight: number;
+    baking_reward_fixed_portion_weight: number;
+    base_total_issued_per_minute: string;
+    dal_rewards_weight: number;
+    seed_nonce_revelation_tip_weight: number;
+    vdf_revelation_tip_weight: number;
+  };
+  max_slashing_threshold: Ratio;
+  slashing_delay: number;
+  tolerated_inactivity_period: number;
+  unstake_finalization_delay: number;
+}
 
 export type ConstantsResponseProto021 = ConstantsResponseProto020;
 
