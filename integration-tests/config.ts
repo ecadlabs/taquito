@@ -8,6 +8,8 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsQuebecn } from './known-contracts-PsQuebecn';
+import { knownContractsPsRiotuma } from './known-contracts-PsRiotuma';
+
 
 const nodeCrypto = require('crypto');
 
@@ -31,7 +33,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, quebecnet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, rionet, quebecnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -116,7 +118,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (networkName === 'QUEBECNET' ? 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD' : 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb'),
+    knownBaker: process.env[`TEZOS_BAKER`] || 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -127,6 +129,18 @@ const defaultConfig = ({
     networkType: networkType
   }
 }
+
+const rionetEphemeral: Config =
+  defaultConfig({
+    networkName: 'RIONET',
+    protocol: Protocols.PsRiotuma,
+    defaultRpc: 'https://rpc.rionet.teztnets.com',
+    knownContracts: knownContractsPsRiotuma,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/rionet')
+  })
+
+  const rionetSecretKey: Config =
+  { ...rionetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.rionet.teztnets.com' } };
 
 const quebecnetEphemeral: Config =
   defaultConfig({
@@ -167,21 +181,25 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(quebecnetSecretKey);
+  providers.push(quebecnetSecretKey, rionetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_QUEBECNET_WITH_SECRET_KEY']) {
   providers.push(quebecnetSecretKey);
+} else if (process.env['RUN_RIONET_WITH_SECRET_KEY']) {
+  providers.push(rionetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(quebecnetEphemeral);
 } else if (process.env['QUEBECNET']) {
   providers.push(quebecnetEphemeral);
+} else if (process.env['RIONET']) {
+  providers.push(rionetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(quebecnetEphemeral);
+  providers.push(quebecnetEphemeral, rionetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
