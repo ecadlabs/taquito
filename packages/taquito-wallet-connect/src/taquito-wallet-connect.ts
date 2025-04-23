@@ -56,8 +56,7 @@ export * from './errors';
 export * from './types';
 
 const TEZOS_PLACEHOLDER = 'tezos';
-const MAINNET_CHAINID = 'mainnet';
-const GHOSTNET_CHAINID = 'ghostnet';
+
 /**
  * @description The `WalletConnect` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
  * This package enables dapps built with Taquito to connect to wallets via the WalletConnect/Reown protocol.
@@ -123,7 +122,6 @@ export class WalletConnect implements WalletProvider {
     const client = await Client.init(initParams);
     const walletConnectModal = new WalletConnectModal({
       projectId: initParams.projectId,
-      chains: [MAINNET_CHAINID, GHOSTNET_CHAINID],
     });
     return new WalletConnect(client, walletConnectModal);
   }
@@ -143,12 +141,13 @@ export class WalletConnect implements WalletProvider {
   }) {
     // TODO when Tezos wallets will officially support wallet connect, we need to provide a default value for registryUrl
     try {
+      const chains = connectParams.permissionScope.networks.map(
+        (network) => `${TEZOS_PLACEHOLDER}:${network}`
+      );
       const { uri, approval } = await this.signClient.connect({
         requiredNamespaces: {
           [TEZOS_PLACEHOLDER]: {
-            chains: connectParams.permissionScope.networks.map(
-              (network) => `${TEZOS_PLACEHOLDER}:${network}`
-            ),
+            chains,
             methods: connectParams.permissionScope.methods,
             events: connectParams.permissionScope.events ?? [],
           },
@@ -159,10 +158,7 @@ export class WalletConnect implements WalletProvider {
       if (uri) {
         this.walletConnectModal.openModal({
           uri,
-          chains: [
-            `${TEZOS_PLACEHOLDER}:${MAINNET_CHAINID}`,
-            `${TEZOS_PLACEHOLDER}:${GHOSTNET_CHAINID}`,
-          ],
+          chains,
         });
       }
       this.session = await approval();
