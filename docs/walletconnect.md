@@ -84,7 +84,6 @@ WalletConnect.init({
           networks: [NetworkType.GHOSTNET],
           methods: [PermissionScopeMethods.TEZOS_SEND],
         },
-        registryUrl: `https://explorer-api.walletconnect.com/v3/wallets?projectId=ba97fd7d1e89eae02f7c330e14ce1f36`,   // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
 
       })
       .then(() => {
