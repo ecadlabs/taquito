@@ -5,7 +5,7 @@
 
 import Client from '@walletconnect/sign-client';
 import { SignClientTypes, SessionTypes, PairingTypes } from '@walletconnect/types';
-import QRCodeModal from '@walletconnect/legacy-modal';
+import { WalletConnectModal } from '@walletconnect/modal';
 
 import {
   createOriginationOperation,
@@ -68,9 +68,11 @@ export class WalletConnect implements WalletProvider {
   private session: SessionTypes.Struct | undefined;
   private activeAccount: string | undefined;
   private activeNetwork: string | undefined;
+  private walletConnectModal: WalletConnectModal;
 
-  constructor(signClient: Client) {
+  constructor(signClient: Client, WalletConnectModal: WalletConnectModal) {
     this.signClient = signClient;
+    this.walletConnectModal = WalletConnectModal;
 
     this.signClient.on('session_delete', ({ topic }) => {
       if (this.session?.topic === topic) {
@@ -114,8 +116,14 @@ export class WalletConnect implements WalletProvider {
    * ```
    */
   static async init(initParams: SignClientTypes.Options) {
+    if (!initParams.projectId) {
+      throw new Error('projectId is required');
+    }
     const client = await Client.init(initParams);
-    return new WalletConnect(client);
+    const walletConnectModal = new WalletConnectModal({
+      projectId: initParams.projectId,
+    });
+    return new WalletConnect(client, walletConnectModal);
   }
 
   /**
@@ -133,12 +141,13 @@ export class WalletConnect implements WalletProvider {
   }) {
     // TODO when Tezos wallets will officially support wallet connect, we need to provide a default value for registryUrl
     try {
+      const chains = connectParams.permissionScope.networks.map(
+        (network) => `${TEZOS_PLACEHOLDER}:${network}`
+      );
       const { uri, approval } = await this.signClient.connect({
         requiredNamespaces: {
           [TEZOS_PLACEHOLDER]: {
-            chains: connectParams.permissionScope.networks.map(
-              (network) => `${TEZOS_PLACEHOLDER}:${network}`
-            ),
+            chains,
             methods: connectParams.permissionScope.methods,
             events: connectParams.permissionScope.events ?? [],
           },
@@ -147,13 +156,16 @@ export class WalletConnect implements WalletProvider {
       });
 
       if (uri) {
-        QRCodeModal.open(uri, () => {}, { registryUrl: connectParams.registryUrl });
+        this.walletConnectModal.openModal({
+          uri,
+          chains,
+        });
       }
       this.session = await approval();
     } catch (error) {
       throw new ConnectionFailed(error);
     } finally {
-      QRCodeModal.close();
+      this.walletConnectModal.closeModal();
     }
     this.validateReceivedNamespace(connectParams.permissionScope, this.session.namespaces);
     this.setDefaultAccountAndNetwork();
@@ -162,7 +174,7 @@ export class WalletConnect implements WalletProvider {
   /**
    * @description Access all existing active pairings
    */
-  getAvailablePairing() {
+  getAvailablePairing(): PairingTypes.Struct[] {
     return this.signClient.pairing.getAll({ active: true });
   }
 

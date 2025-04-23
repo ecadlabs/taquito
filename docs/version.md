@@ -3,6 +3,16 @@ title: Versions
 author: Jev Bjorsell
 ---
 
+# Taquito v21.0.5
+## Summary
+
+### Beacon version Update
+`@taquito/beacon-wallet` - updated Beacon version to v4.5.0 #3143
+
+### Internals
+`@taquito/wallet-connect`- updated modal from @walletconnect/legacy-modal to @walletconnect/modal #3136
+website - updated firebase to fix website build issues #3141
+
 # Taquito v21.0.4
 ## Summary
 
