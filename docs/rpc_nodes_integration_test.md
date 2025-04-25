@@ -123,7 +123,7 @@ author: Roxane Letourneau
     ✓ Verify that rpcClient.getStoragePaidSpace will retrieve the paid space of a contract storage (13 ms)
     ✓ Verify that rpcClient.ticketBalance will retrieve the specified ticket owned by the given contract (23 ms)
     ✓ Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract (18 ms)
-    ✓ Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com/ (15 ms)
+    ✓ Verify that rpcClient.getAdaptiveIssuanceLaunchCycle will retrieve launch cycle 6 for http://localhost:20000 (15 ms)
     ✓ Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated (136 ms)
     ○ skipped Verify that rpcClient.getProtocolActivations will list all protocol activations info
     ○ skipped Verify that rpcClient.getProtocolActivations will list a protocol activations info
