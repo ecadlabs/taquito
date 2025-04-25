@@ -45,7 +45,6 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperationsV1,
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
@@ -385,9 +384,7 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   }: RPCOptions = defaultRPCOptions): Promise<AILaunchCycleResponse> {
     return this.rpc.getAdaptiveIssuanceLaunchCycle({ block });
   }
-  async getPendingOperations(
-    args: PendingOperationsQueryArguments
-  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
+  async getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
   }
 }
