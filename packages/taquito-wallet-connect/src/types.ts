@@ -23,6 +23,7 @@ export enum NetworkType {
   OXFORDNET = 'oxfordnet',
   PARISNET = 'parisnet',
   QUEBECNET = 'quebecnet',
+  RIONET = 'rionet',
 }
 
 export interface PermissionScopeParam {

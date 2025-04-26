@@ -17,7 +17,7 @@ The constructor of the `Tzip12Module` takes an optional `MetadataProvider` as a 
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-import { Tzip12Module } from '@taquito/tzip12';
+import { Tzip12Module, tzip12 } from '@taquito/tzip12';
 
 const Tezos = new TezosToolkit('rpcUrl');
 Tezos.addExtension(new Tzip12Module());
@@ -38,6 +38,7 @@ Thus, all methods of the `ContractAbstraction`, `Tzip12ContractAbstraction` and 
 
 ```js
 import { compose } from '@taquito/taquito';
+import { tzip16 } from "@taquito/tzip16";
 
 const contract = await Tezos.contract.at('contractAddress', compose(tzip16, tzip12));
 

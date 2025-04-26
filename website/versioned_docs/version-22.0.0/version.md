@@ -2,6 +2,286 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v22.0.0
+## Summary
+
+### Rio Protocol Support
+
+### New Features
+`@taquito/local-forging` - Update `localForger` to `forge` and `parse` a tz4 address as `delegate` for `delegation` operation #3113
+`@taquito/local-forging` - Update `localForger` to `forge` and `parse` a tz4 `pk` and `proof` for `update_consensus_key` operation #3113
+`@taquito/utils` - Updated `b58decode`, `encodePubKey`, `encodeAddress`, and `encodeKeyHash` to encode and decode tz4 public keys and addresses #3113
+`@taquito/rpc` - Added a new RPC endpoint `getProtocolActivations`
+`@taquito/rpc` - Updated type `ConstantsResponse` with new interface `ConstantsResponseProto022` #3115
+`@taquito/rpc` - Updated `DelegatesResponse` with multiple new properties and obsolete old ones #3112
+`@taquito/rpc` - Added new types `OperationContentsDalEntrapmentEvidence`, `OperationContentsAndResultDalEntrapmentEvidence` and `OperationContentsAndResultMetadataDalEntrapmentEvidence` for new anonymous operation `dal_entrapment_evidence` #3116
+
+### Breaking Changes
+`@taquito/utils` - Deprecated `b58decodeL2Address` and `encodeL2Address` util functions, please use `b58decode` and `encodeAddress` instead #3130
+
+# Taquito v21.0.5
+## Summary
+
+### Beacon version Update
+`@taquito/beacon-wallet` - updated Beacon version to v4.5.0 #3143
+
+### Internals
+`@taquito/wallet-connect`- updated modal from @walletconnect/legacy-modal to @walletconnect/modal #3136
+website - updated firebase to fix website build issues #3141
+
+# Taquito v21.0.4
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.5.0 #3133
+
+### Internals
+Configured webpack polyfill of taquito-beacon-wallet-vanilla #3133
+
+# Taquito v21.0.3
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.4.0 #3117
+
+### Internals
+Updated dependencies #3117
+
+# Taquito v21.0.2
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.3.3 #3110
+
+### Internals
+Cleaned up paris references after mainnet migration #3107
+Updated @ledgerhq/hw-transport-webhid to v6.30.0 #3110
+Updated ci script actions/upload-artifact to v4 #3110
+
+### Documentation
+Updated documentation of tzip12.md and metadata-tzip16.md #3107
+
+# Taquito v21.0.1
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.3.2 #3107
+
+# Taquito v21.0.0
+## Summary
+
+### Quebec Protocol Support
+
+### New Features
+`@taquito/rpc` - Added `getSpendable`, `getBalanceAndFrozenBonds` and `getSpendableAndFrozenBonds` rpc endpoint #3023
+
+### Improvement
+`@taquito/rpc` - Updated `getPendingOperations` with param `source` and `operationHash` #3034
+`@taquito/rpc` - Added Quebec protocol constant, `ConstantsResponseProto021`, to `ConstantsResponse` #3037
+`@taquito/rpc` - Removed endorsement compatibility (still kept rpc types and readProvider for user querying old blocks) #3036
+
+### Documentation
+Updated documentation with Quebec support #3068
+Fixed maps_bigmaps live code example bugs #3068
+
+### Internals
+Updated dependencies #3068
+Updated Taquito test dapp with Quebec support #3068
+
+# Taquito v20.1.2
+## Summary
+
+### Node.js add support of v18
+There is a [node.js confirmed HTTP bug](https://github.com/nodejs/node/issues/47228) from v19 that occasionally causes HTTP requests to fail with a socket hang-up error.
+We decided to support node.js v18 again until this issue is resolved in the future node.js release #3098
+
+### Documentation
+Fixing typo #3094
+
+# Taquito v20.1.1
+## Summary
+
+### Beacon version Update
+Updated Beacon version to v4.3.1 #3087
+
+### ECAD Infra Tezos RPC addresses update
+Updated network addresses for mainnet, ghostnet, parisnet, and quebecnet from Old format: https://${network_name}.ecadinfra.com to New format: https://${network_name}.tezos.ecadinfra.com #3090
+
+- Mappings
+Below are the mappings for the updated RPC addresses for all current networks:
+
+Old Address | New Address
+-- | --
+https://mainnet.ecadinfra.com | https://mainnet.tezos.ecadinfra.com
+https://ghostnet.ecadinfra.com | https://ghostnet.tezos.ecadinfra.com
+https://parisnet.ecadinfra.com | https://parisnet.tezos.ecadinfra.com
+https://quebecnet.ecadinfra.com | https://quebecnet.tezos.ecadinfra.com
+
+- Action Required
+Update all scripts, configurations, and codebases using the old RPC addresses to point to the new format.
+Validate that your systems and services using these RPC endpoints continue to function as expected after the update.
+
+- Deprecation Notice
+The old addresses are considered deprecated, but will remain active until further notice. Users are strongly encouraged to transition to the new format as soon as possible to avoid potential disruptions in the future.
+
+- Reference
+For more information, visit [ECAD Infra's website](https://www.ecadinfra.com/).
+--------
+Please ensure your systems are updated promptly to avoid any disruptions. If you have any questions or encounter issues, feel free to contact the ECAD Infra team or open a new issue in this repository.
+
+# Taquito v20.1.0
+
+**Breaking changes:**
+* We removed `account` public property on `BeaconWallet` class. If you'd like to get the info, please use `subscribeToEvent` with `BeaconEvent.ACTIVE_ACCOUNT_SET`
+* We migrated `Node.js` support from LTS18 to LTS20 and above
+
+## Summary
+### New features
+* `@taquito/taquito` - Supported operation `transferTicket` in walletAPI PR #3003
+
+### Improvement
+* `@taquito/taquito` - Exported SmartRollupExecuteOutboxMessageParams PR #3031
+* `@taquito/beacon-wallet` - reverted `subscribeToEvent` of `ACTIVE_ACCOUNT_SET` in the package to ensure users will get a console warning, if they didn't subscribe events themselves PR #2987
+* `@taquito/rpc` - Updated rpc type `FrozenStaker`  with `Baker_edge` PR #2987
+* `@taquito/rpc` - Updated rpc type `METADATA_BALANCE_UPDATES_CATEGORY` and`OperationMetadataBalanceUpdates` to have backwards compatible PR #2987
+
+### Documentation
+* Updated `michelson_encoder` documentation with section `#flattening-nested-tokens-pairunion` PR #3002
+* Updated `signing` documentation with section `#generating-a-tzip-32-message-signature` PR #2879
+
+### Testing
+* @taquito/beacon-wallet - Added broadcast-channel mock for @airgap/beacon-transport-postmessage in unit test
+* Removed flextesa tests from CI workflow PR #3001
+* Fixed tzip16 test with new public IPFS gateway domain PR #3033
+* Updated staking and failing_noop integration tests to be robust PR #3033
+
+### Internals
+* `@taquito/http-utils` Configured the `fetch` call to be `keepalive=false` to fix socket hangup errors after node19 PR #2986
+* Updated denpendencies PR #3018 #3038 #3043 #3052
+* Removed taquito-test-dapp parisnet label on staking operations PR #3033
+* Removed Netlify references after migrating to Cloudflare PR #3012
+
+# Taquito v20.0.0
+## Summary
+
+### Paris(B) Protocol Support
+Paris(B) Protocol has new Adaptive Issuance features, including staking pseudo-operations and rpc endpoints.
+
+⚠️ Warning ⚠️
+Adaptive Issuance, Staking, and Adaptive slashing will be in effect roughly two weeks (5 cycles) after the proposal is activated on Mainnet. The new AI features will not be usable until then.
+
+### ⚠️ Breaking Changes ⚠️
+
+### Beacon Migration
+As of Beacon version 4.2.0, Beacon has migrated from using `dAppClient.getActiveAccount()` to using an event subscription method `BeaconEvent.ACTIVE_ACCOUNT_SET` for handling active account changes.
+
+**IF YOU ARE STILL USING THE `eventHandlers` PROPERTY WHEN INITIALIZING A DAPP CLIENT, PLEASE UPDATE YOUR CODE.**
+
+```
+const wallet = new BeaconWallet(options);
+await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
+    // your logic to update your state
+    console.log(data.address);
+    console.log(data.network.type);
+});
+await wallet.requestPermissions();
+```
+### Michelson-encoder
+We fixed a bug in `@taquito/Michelson-encoder` when there are nested `pair` and `or` without having `annots` consistently; the indexing key will have unexpected behaviour as below. This is an API behaviour-breaking change; if your dApp depends on the old behaviour or changing is too much effort, you can configure your `TezosToolkit` with `Tezos.setFieldNumberingStrategy('Legacy')` to keep the previous behaviour. But please note that this option might be removed in a future release.
+
+Previous behaviour - inner object's field numbers depend on the object's location in its parent, and start with '2'
+```
+{
+  '0': 'firstValue',
+  '1': 'secondValue,
+  '2': {
+   '2': 'thirdValue',
+   '3': 'fourthValue'
+  }
+}
+```
+New behaviour - inner object's field number will start with '0'
+```
+{
+  '0': 'firstValue',
+  '1': 'secondValue,
+  '2': {
+   '0': 'thirdValue',
+   '1': 'fourthValue'
+  }
+}
+```
+
+### New Features
+- `@taquito/taquito` - Added staking pseudo operations (stake, unstake, finalize_unstake) to the Contract API. This includes support for `prepareProvider`, `estimationProvider`, and `rpcContractProvider` #2886
+- `@taquito/taquito` - Added staking related pseudo operations (stake, unstake, finalize_unstake) to the Wallet API #2921
+- `@taquito/rpc` - Added various RPC endpoints related to Adaptive Issuance (Staking) #2676 #2678
+- `@taquito/rpc` - Updated return types for several RPC endpoints related to the Paris protocol update #2887
+- `@taquito/rpc` - Removed `getEndorsingRights` RPC endpoint along with its related type definition and tests #2884
+- `@taquito/rpc` - Updated RPC types for `AttestationWithDal` and `EndorsementWithDal` #2880
+- `@taquito/rpc` - Updated RPC response types to support DAL types #2882
+- `@taquito/rpc` - Updated RPC response type for the new manager op `dal_publish_commitment` #2881
+- `@taquito/rpc` - Added a new RPC endpoint called `getAllDelegates` #2976
+- `@taquito/local-forging` - Added local forging support for `AttestationWithDal` operation #2880
+- `@taquito/local-forging` - Added local forging support for the new manager operation `dal_publish_commitment` #2881
+- `@taquito/michel-codec` - Updated Michelson type definitions and validators to include the new Paris protocol ticket literals [PR#2940](https://github.com/ecadlabs/taquito/pull/2940)
+
+### Internals
+- Updated protocol constants integration test for Paris protocol #2869
+- Configured keygen and integration test configs for Paris protocol #2888
+- Added forger integration test for protocol migrations #2850
+- Updated `@taquito/beacon-wallet` to use event subscription instead of `getActiveAccount()` #2958
+- Updated some website dependencies [PR#2961](https://github.com/ecadlabs/taquito/pull/2961)
+- Updated Beacon wallet dependency to the latest version `v4.2.2` (includes Paris protocol definitions) [PR#2956](https://github.com/ecadlabs/taquito/pull/2956)
+- Fixed nested `pair` and `or` indexing bug #2927
+- Added a test-dapp case to transfer ghostnet tez to etherlink address #2944
+- Updated the Paris protocol hash to reflect the latest Octez fix [PR](https://github.com/ecadlabs/taquito/pull/2974)
+
+### Documentation
+- Updated documentation for new Adaptive Issuance related features [PR#2928](https://github.com/ecadlabs/taquito/pull/2928)
+- Added Tezos Foundation public testnet nodes to rpc_nodes on website #2933
+
+
+### `@taquito/taquito` - Added staking pseudo operations (stake, unstake, finalize_unstake) to the Contract API
+
+```javascript
+const op = await Tezos.contract.stake({
+  amount: 100
+});
+await op.confirmation();
+```
+
+### `@taquito/taquito` - Added staking pseudo operations (stake, unstake, finalize_unstake) to the Wallet API
+
+```javascript
+const op = await Tezos.wallet.stake({
+  amount: 100,
+  mutez: false
+}).send();
+await op.confirmation();
+```
+
+# Taquito v19.2.0
+
+**Breaking Changes**: (if applicable)
+
+## Summary
+
+### New Features
+- `@taquito/timelock`- A new package for Timelocks have been introduced #2843. Users will now be able to create Chests, unlock Chests, and utilize Chests. For more information, please refer to this [document](https://taquito.io/docs/next/timelock)
+- `@taquito/beacon-wallet` - the `beacon-wallet` package is now bundled in a `.zip` file for [PR#2860](https://github.com/ecadlabs/taquito/pull/2860)
+
+### Documentation
+- UX improvements to search funtionality on the Taquito website #2858
+- Simplify tutorial for building dApps [PR#2852](https://github.com/ecadlabs/taquito/pull/2852)
+- Updated several documentation blobs on the Taquito website [PR#2860](https://github.com/ecadlabs/taquito/pull/2860)
+- Fixed several live code examples in the Taquito website [PR#2877](https://github.com/ecadlabs/taquito/pull/2877)
+- Changed Taquito documentation website domain from `tezostaquito.io` to `taquito.io` [PR#2876](https://github.com/ecadlabs/taquito/pull/2876)
+
+### Internals
+- Re-added Flextesa test scripts run `drain_delegate` and `ballot` operations' integration test against a Nairobi sandbox #2851
+- Updated Airgap's Beacon package to version 4.2.1. For more information on the release, click [here](https://github.com/airgap-it/beacon-sdk/releases/tag/v4.2.1) [PR#2874](https://github.com/ecadlabs/taquito/pull/2874)
+- Changed website build command for CloudFlare [PR#2804](https://github.com/ecadlabs/taquito/pull/2804)
 
 # Taquito v19.1.0
 
@@ -1294,7 +1574,7 @@ The `RPCRunOperationParam` parameter has new optional properties: `self`, `unpar
 
 Added support to forge and unforge the new operation kinds `transfer_ticket`, `tx_rollup_origination` and `tx_rollup_submit_batch` related to TORU. We plan to add support for the remaining operations in a subsequent release.
 
-## `@taquito/michelson-encoder` - Added support for the the new type`tx_rollup_l2_address`
+## `@taquito/michelson-encoder` - Added support for the new type`tx_rollup_l2_address`
 
 We created a new class `TxRollupL2AddressToken` in the michelson-encoder to support the new Michelson type `tx_rollup_l2_address`. This type is used to identify accounts on transaction rollups' ledgers. Those accounts are prefixed with `tz4`.
 The `TxRollupL2AddressToken` class allows users of Taquito to pass `tz4` addresses in storage or smart contract entry points using the Taquito JS abstraction.

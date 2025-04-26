@@ -30,7 +30,7 @@ await op.confirmation();
 - `kernel` is passed as a hexadecimal string examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/active/smart_rollups.html)
 - `parametersType` is a MichelsonV1Expression to define the type.
 
-For more information in regards to Smart Rollup Origination please refer to the this [link](https://tezos.gitlab.io/active/smart_rollups.html#origination)
+For more information in regards to Smart Rollup Origination please refer to this [link](https://tezos.gitlab.io/active/smart_rollups.html#origination)
 
 
 ## `smart_rollup_add_messages`
@@ -76,7 +76,7 @@ You may obtain the serialized output proof and commitment hash through an RPC ca
 `<smart-rollup-node-base-url>/global/block/head/helpers/proofs/outbox/${outboxMessageLevel}/messages?index=${outboxMessageIndex}`
 Where:
 * `outboxMessageLevel` is the Tezos level of the outbox message;
-* `outboxMessageIndex` is the index (number) of the the outbox message.
+* `outboxMessageIndex` is the index (number) of the outbox message.
 
 The outbox message can only be executed when the corresponding commitment is cemented.
 

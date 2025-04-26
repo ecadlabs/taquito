@@ -52,7 +52,6 @@ export enum CODEC {
   BURN_LIMIT = 'burn_limit',
   OP_INCREASE_PAID_STORAGE = 'increase_paid_storage',
   OP_UPDATE_CONSENSUS_KEY = 'update_consensus_key',
-  SIGNATURE_PROOF = 'signature_proof',
   OP_DRAIN_DELEGATE = 'drain_delegate',
   DEPOSITS_LIMIT = 'deposits_limit',
   OP_SET_DEPOSITS_LIMIT = 'set_deposits_limit',

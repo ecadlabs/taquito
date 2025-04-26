@@ -41,7 +41,8 @@
         "set_delegate",
         "smart_rollups",
         "proposal_and_ballot",
-        "failing_noop"
+        "failing_noop",
+        "staking"
       ]
     },
     {
@@ -66,6 +67,7 @@
       "collapsible": false,
       "items": [
         "beaconwallet-singleton",
+        "walletconnect",
         "wallets",
         "transaction_limits"
       ]
@@ -125,7 +127,9 @@
       "items": [
         "rpc_package",
         "michelson_encoder",
+        "michel_codec",
         "contracts-library",
+        "timelock",
         "taquito_utils",
         {
           "type": "category",

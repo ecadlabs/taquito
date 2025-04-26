@@ -64,17 +64,18 @@ import {
   TicketTokenParams,
   AllTicketBalances,
   PendingOperationsQueryArguments,
-  PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
   validateAddress,
   validateContractAddress,
   ValidationResult,
+  validateProtocol,
   invalidDetail,
 } from '@taquito/utils';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
@@ -584,11 +585,12 @@ export class RpcClient implements RpcClientInterface {
       'staking_denominator',
     ]);
 
-    return {
-      ...response,
-      ...castedResponse,
-      frozen_balance_by_cycle: response.frozen_balance_by_cycle
-        ? response.frozen_balance_by_cycle.map(({ deposit, deposits, fees, rewards, ...rest }) => {
+    if (response.frozen_balance_by_cycle) {
+      return {
+        ...response,
+        ...castedResponse,
+        frozen_balance_by_cycle: response.frozen_balance_by_cycle.map(
+          ({ deposit, deposits, fees, rewards, ...rest }) => {
             const castedToBigNumber: any = castToBigNumber({ deposit, deposits, fees, rewards }, [
               'deposit',
               'deposits',
@@ -602,9 +604,15 @@ export class RpcClient implements RpcClientInterface {
               fees: castedToBigNumber.fees,
               rewards: castedToBigNumber.rewards,
             };
-          })
-        : undefined,
-    };
+          }
+        ),
+      };
+    } else {
+      return {
+        ...response,
+        ...castedResponse,
+      };
+    }
   }
 
   /**
@@ -1179,6 +1187,24 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description get current and next protocol
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-protocols
+   */
+  async getProtocolActivations(protocol: string = ''): Promise<ProtocolActivationsResponse> {
+    if (protocol) {
+      const protocolValidation = validateProtocol(protocol);
+      if (protocolValidation !== ValidationResult.VALID) {
+        throw new Error(`Invalid protocol hash "${protocol}" ${invalidDetail(protocolValidation)}`);
+      }
+    }
+    return this.httpBackend.createRequest<ProtocolActivationsResponse>({
+      url: this.createURL(`/chains/${this.chain}/protocols/${protocol}`),
+      method: 'GET',
+    });
+  }
+
+  /**
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the used storage space of the contract
@@ -1276,11 +1302,11 @@ export class RpcClient implements RpcClientInterface {
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
    * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined, source: undefined, operationHash: undefined }
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/quebec-mempool-openapi.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/rio-mempool-openapi.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
-  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
+  ): Promise<PendingOperationsV2> {
     return this.httpBackend.createRequest<PendingOperationsV2>({
       url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
       method: 'GET',
