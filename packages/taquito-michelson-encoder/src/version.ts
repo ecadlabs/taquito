@@ -1,6 +1,6 @@
 
 // IMPORTANT: THIS FILE IS AUTO GENERATED! DO NOT MANUALLY EDIT OR CHECKIN!
 export const VERSION = {
-    "commitHash": "6936d6bc71e6a805f6d5568b60b1a0f6595a375d",
-    "version": "22.0.0-RC.0"
+    "commitHash": "6a2c52b9e48b299dfc856149c1fa3388e77180ad",
+    "version": "22.0.0"
 };
