@@ -106,12 +106,7 @@
     if (!$store.wallet) {
       if ($store.sdk === SDK.BEACON) {
         const newWallet = createNewBeaconWallet({networkType: $store.networkType});
-        await newWallet.requestPermissions({
-          network: {
-            type: $store.networkType as NetworkTypeBeacon,
-            rpcUrl: getRpcUrl($store.networkType),
-          },
-        });
+        await newWallet.requestPermissions();
 
         const peers = await newWallet.client.getPeers();
         connectedWallet = peers[0].name;

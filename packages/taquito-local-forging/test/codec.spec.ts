@@ -169,10 +169,20 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       )
     );
     expect(p2pk).toEqual('p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV');
+
+    const blpk = publicKeyDecoder(
+      Uint8ArrayConsumer.fromHexString(
+        '03b4cd752babac8e5252b93afbc881ebc43d60339e1627e26d49e83018cedef6ddf5079b4db27c62d4d55d6eb0f3b12874'
+      )
+    );
+    expect(blpk).toEqual(
+      'BLpk1yKS9X6vrUiAZiZYfnjiDPkEf215W6rMX6c9gZ7FSFkkH63ZjAuU7VKvZfiBWaoCWtwWY8dQ'
+    );
+
     expect(() =>
       publicKeyDecoder(
         Uint8ArrayConsumer.fromHexString(
-          '035c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+          '045c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
     ).toThrow(InvalidPublicKeyError);
@@ -180,7 +190,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() =>
       publicKeyDecoder(
         Uint8ArrayConsumer.fromHexString(
-          '035c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+          '045c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
     ).toThrow(

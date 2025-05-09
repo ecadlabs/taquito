@@ -45,12 +45,12 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperationsV1,
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -351,6 +351,9 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   async getProtocols({ block }: RPCOptions = defaultRPCOptions): Promise<ProtocolsResponse> {
     return this.rpc.getProtocols({ block });
   }
+  async getProtocolActivations(protocol: string = ''): Promise<ProtocolActivationsResponse> {
+    return this.rpc.getProtocolActivations(protocol);
+  }
   async getStorageUsedSpace(
     contract: string,
     { block }: RPCOptions = defaultRPCOptions
@@ -381,9 +384,7 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   }: RPCOptions = defaultRPCOptions): Promise<AILaunchCycleResponse> {
     return this.rpc.getAdaptiveIssuanceLaunchCycle({ block });
   }
-  async getPendingOperations(
-    args: PendingOperationsQueryArguments
-  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
+  async getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
   }
 }

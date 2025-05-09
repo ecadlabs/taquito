@@ -45,12 +45,12 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperationsV1,
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
 } from './types';
 
 export interface RPCOptions {
@@ -129,6 +129,7 @@ export interface RpcClientInterface {
   getSaplingDiffById(id: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
+  getProtocolActivations(protocol?: string): Promise<ProtocolActivationsResponse>;
   getStorageUsedSpace(contract: string, options?: RPCOptions): Promise<string>;
   getStoragePaidSpace(contract: string, options?: RPCOptions): Promise<string>;
   getTicketBalance(
@@ -138,9 +139,7 @@ export interface RpcClientInterface {
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
   getAdaptiveIssuanceLaunchCycle(options?: RPCOptions): Promise<AILaunchCycleResponse>;
-  getPendingOperations(
-    args: PendingOperationsQueryArguments
-  ): Promise<PendingOperationsV1 | PendingOperationsV2>;
+  getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2>;
 }
 
 export enum RPCMethodName {
@@ -180,6 +179,7 @@ export enum RPCMethodName {
   GET_PROPOSALS = 'getProposals',
   GET_PROTOCOLS = 'getProtocols',
   GET_SAPLING_DIFF_BY_CONTRACT = 'getSaplingDiffByContract',
+  GET_PROTOCOL_ACTIVATIONS = 'getProtocolActivations',
   GET_SAPLING_DIFF_BY_ID = 'getSaplingDiffById',
   GET_SCRIPT = 'getScript',
   GET_STORAGE = 'getStorage',

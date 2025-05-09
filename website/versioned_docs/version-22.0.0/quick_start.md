@@ -53,7 +53,7 @@ Alternatively, you can use a `WalletProvider` to interact with a wallet. Please 
 
 ## Examples
 
-### Get the current Tezos balance for an address
+### Get the current Tezos spendable balance for an address
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
