@@ -3,7 +3,9 @@
   "compilerOptions": {
     "declarationDir": "dist/types",
     "outDir": "dist/lib",
-    "jsx": "react"
+    "jsx": "react",
+    "allowJs": true,
+    "module": "commonjs"
   },
   "include": ["src"]
 }

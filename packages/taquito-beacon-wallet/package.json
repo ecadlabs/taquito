@@ -46,17 +46,29 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": "ts-jest",
+      ".(js|jsx)": "ts-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js"
+      "js",
+      "jsx",
+      "json"
     ],
     "moduleNameMapper": {
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@airgap|@stablelib))"
+    ],
+    "globals": {
+      "ts-jest": {
+        "useESM": true,
+        "allowJs": true
+      }
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -67,7 +79,7 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "4.5.1",
+    "@airgap/beacon-dapp": "4.5.2",
     "@taquito/core": "^22.0.0",
     "@taquito/taquito": "^22.0.0",
     "crypto-browserify": "^3.12.1",
