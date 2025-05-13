@@ -1,7 +1,7 @@
 import { InMemoryViewingKey } from './in-memory-viewing-key';
 import * as sapling from '@airgap/sapling-wasm';
 import { Prefix, prefix, b58cencode } from '@taquito/utils';
-import * as bip39 from 'bip39';
+import * as bip39 from '@scure/bip39';
 import {
   ParametersSpendProof,
   ParametersSpendSig,
@@ -37,8 +37,8 @@ export class InMemorySpendingKey {
     // no password passed here. password provided only changes from sask -> MMXj
     const fullSeed = await bip39.mnemonicToSeed(mnemonic);
 
-    const first32: Buffer = fullSeed.slice(0, 32);
-    const second32: Buffer = fullSeed.slice(32);
+    const first32 = fullSeed.slice(0, 32);
+    const second32 = fullSeed.slice(32);
     // reduce seed bytes must be 32 bytes reflecting both halves
     const seed = Buffer.from(first32.map((byte, index) => byte ^ second32[index]));
 

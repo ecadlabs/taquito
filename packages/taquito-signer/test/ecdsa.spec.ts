@@ -1,5 +1,5 @@
 import { ECDSA, Hard } from '../src/derivation-tools';
-import * as Bip39 from 'bip39';
+import * as bip39 from '@scure/bip39';
 
 interface TestKeyData {
   path: number[];
@@ -265,7 +265,7 @@ describe('ECDSA', () => {
     describe(curve.curve, () => {
       for (const chain of curve.chain) {
         describe(chain.seed || 'mnemonic', () => {
-          const seed = chain.seed || Bip39.mnemonicToSeedSync(chain.mnemonic || '', '');
+          const seed = chain.seed || bip39.mnemonicToSeedSync(chain.mnemonic || '', '');
           const root = ECDSA.PrivateKey.fromSeed(seed, curve.curve);
           for (const keyData of chain.keys) {
             it(JSON.stringify(keyData.path.map((x) => x >>> 0)), () => {

@@ -1,5 +1,5 @@
 import { Ed25519, Hard } from '../src/derivation-tools';
-import * as Bip39 from 'bip39';
+import * as bip39 from '@scure/bip39';
 import { InvalidSeedLengthError } from '../src/errors';
 
 interface TestKeyData {
@@ -128,7 +128,7 @@ const badSeed =
 describe('Ed25519', () => {
   for (const d of testData) {
     describe(d.seed || 'mnemonic', () => {
-      const seed = d.seed || Bip39.mnemonicToSeedSync(d.mnemonic || '');
+      const seed = d.seed || bip39.mnemonicToSeedSync(d.mnemonic || '');
       const root = Ed25519.PrivateKey.fromSeed(seed);
       for (const keyData of d.keys) {
         it(JSON.stringify(keyData.path.map((x) => x >>> 0)), () => {
