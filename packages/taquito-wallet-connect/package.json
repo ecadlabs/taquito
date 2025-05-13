@@ -1,6 +1,6 @@
 {
   "name": "@taquito/wallet-connect",
-  "version": "21.0.2",
+  "version": "21.0.5",
   "description": "Walletconnect provider",
   "keywords": [
     "tezos",
@@ -66,8 +66,8 @@
     ]
   },
   "dependencies": {
-    "@taquito/taquito": "^21.0.2",
-    "@walletconnect/legacy-modal": "^2.0.0",
+    "@taquito/taquito": "^21.0.5",
+    "@walletconnect/modal": "^2.7.0",
     "@walletconnect/sign-client": "^2.16.2",
     "@walletconnect/types": "^2.16.2",
     "@walletconnect/utils": "^2.16.2"

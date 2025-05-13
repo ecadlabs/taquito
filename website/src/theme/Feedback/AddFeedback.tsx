@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, Timestamp } from "@firebase/firestore";
 import React from "react";
 import { BiHappyBeaming, BiMeh, BiSad } from "react-icons/bi";
 import ReactGA from "react-ga";

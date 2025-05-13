@@ -44,9 +44,11 @@ Taquito currently supports the following versions of Node.js®:
 | v16 LTS/Gallium  |    ❌      |
 | v18 LTS/Hydrogen |    ✅      |
 | v20 LTS/Iron     |    ✅      |
-| v22              |    ✅      |
+| v22 LTS/Jod      |    ✅      |
 
 Other versions may work, but the above are officially supported. YMMV!
+
+For example, we found node v22.14.0 and above in a linux machine when `npm ci` / `npm install` may run into issue with `libusb.h: No such file or directory` which can be resolved by manually install these dependencies. `sudo apt install -y libusb-1.0-0-dev libudev-dev pkg-config`
 
 ## Community Support Channels
 

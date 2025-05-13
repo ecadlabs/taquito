@@ -9,11 +9,24 @@ import {
 } from '../src/taquito-wallet-connect';
 import { existingPairings, fakeCode, sessionExample, sessionMultipleChains } from './data';
 
+jest.mock('@walletconnect/modal', () => {
+  return {
+    WalletConnectModal: {
+      openModal: jest.fn(),
+      closeModal: jest.fn(),
+    },
+  };
+});
+
 describe('Wallet connect tests', () => {
   let sessionDeletedEvent: (eventParams: { topic: string }) => void;
   let sessionExpiredEvent: (eventParams: { topic: string }) => void;
   let sessionUpdatedEvent: (eventParams: { topic: string; params: any }) => void;
   let walletConnect: WalletConnect;
+  let mockModalClient: {
+    openModal: jest.Mock<any, any>;
+    closeModal: jest.Mock<any, any>;
+  };
   let mockSignClient: {
     on: any;
     connect: jest.Mock<any, any>;
@@ -32,6 +45,10 @@ describe('Wallet connect tests', () => {
   };
 
   beforeEach(() => {
+    mockModalClient = {
+      openModal: jest.fn(),
+      closeModal: jest.fn(),
+    };
     mockSignClient = {
       on: (eventName: string, eventFct: any) => {
         if (eventName === 'session_delete') {
@@ -57,11 +74,13 @@ describe('Wallet connect tests', () => {
       request: jest.fn(),
     };
     mockSignClient.connect.mockReturnValue({ approval: async () => sessionExample });
-    walletConnect = new WalletConnect(mockSignClient as any);
+    walletConnect = new WalletConnect(mockSignClient as any, mockModalClient as any);
   });
 
   it('verify that WalletConnect is instantiable', async () => {
-    expect(new WalletConnect(mockSignClient as any)).toBeInstanceOf(WalletConnect);
+    expect(new WalletConnect(mockSignClient as any, mockModalClient as any)).toBeInstanceOf(
+      WalletConnect
+    );
   });
 
   it('should establish a connection successfully', async () => {
