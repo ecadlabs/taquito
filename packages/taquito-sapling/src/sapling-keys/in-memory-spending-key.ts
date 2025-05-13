@@ -40,9 +40,7 @@ export class InMemorySpendingKey {
     const first32 = fullSeed.slice(0, 32);
     const second32 = fullSeed.slice(32);
     // reduce seed bytes must be 32 bytes reflecting both halves
-    const seed = Buffer.from(
-      first32.map((byte, index) => byte ^ second32[index])
-    );
+    const seed = Buffer.from(first32.map((byte, index) => byte ^ second32[index]));
 
     const spendingKeyArr = new Uint8Array(
       await sapling.getExtendedSpendingKey(seed, derivationPath)
@@ -60,12 +58,8 @@ export class InMemorySpendingKey {
   async getSaplingViewingKeyProvider() {
     let viewingKey: Buffer;
     if (!this.#saplingViewingKey) {
-      viewingKey = await sapling.getExtendedFullViewingKeyFromSpendingKey(
-        this.#spendingKeyBuf
-      );
-      this.#saplingViewingKey = new InMemoryViewingKey(
-        viewingKey.toString('hex')
-      );
+      viewingKey = await sapling.getExtendedFullViewingKeyFromSpendingKey(this.#spendingKeyBuf);
+      this.#saplingViewingKey = new InMemoryViewingKey(viewingKey.toString('hex'));
     }
 
     return this.#saplingViewingKey;
@@ -86,17 +80,16 @@ export class InMemorySpendingKey {
   async prepareSpendDescription(
     parametersSpendProof: ParametersSpendProof
   ): Promise<Omit<SaplingSpendDescription, 'signature'>> {
-    const spendDescription =
-      await sapling.prepareSpendDescriptionWithSpendingKey(
-        parametersSpendProof.saplingContext,
-        this.#spendingKeyBuf,
-        parametersSpendProof.address,
-        parametersSpendProof.randomCommitmentTrapdoor,
-        parametersSpendProof.publicKeyReRandomization,
-        parametersSpendProof.amount,
-        parametersSpendProof.root,
-        parametersSpendProof.witness
-      );
+    const spendDescription = await sapling.prepareSpendDescriptionWithSpendingKey(
+      parametersSpendProof.saplingContext,
+      this.#spendingKeyBuf,
+      parametersSpendProof.address,
+      parametersSpendProof.randomCommitmentTrapdoor,
+      parametersSpendProof.publicKeyReRandomization,
+      parametersSpendProof.amount,
+      parametersSpendProof.root,
+      parametersSpendProof.witness
+    );
     return {
       commitmentValue: spendDescription.cv,
       nullifier: spendDescription.nf,
@@ -121,8 +114,7 @@ export class InMemorySpendingKey {
         cv: parametersSpendSig.unsignedSpendDescription.commitmentValue,
         rt: parametersSpendSig.unsignedSpendDescription.rtAnchor,
         nf: parametersSpendSig.unsignedSpendDescription.nullifier,
-        rk: parametersSpendSig.unsignedSpendDescription
-          .publicKeyReRandomization,
+        rk: parametersSpendSig.unsignedSpendDescription.publicKeyReRandomization,
         proof: parametersSpendSig.unsignedSpendDescription.proof,
       },
       this.#spendingKeyBuf,
@@ -142,9 +134,7 @@ export class InMemorySpendingKey {
    * @description Return a proof authorizing key from the configured spending key
    */
   async getProvingKey() {
-    const provingKey = await sapling.getProofAuthorizingKey(
-      this.#spendingKeyBuf
-    );
+    const provingKey = await sapling.getProofAuthorizingKey(this.#spendingKeyBuf);
     return provingKey.toString('hex');
   }
 }

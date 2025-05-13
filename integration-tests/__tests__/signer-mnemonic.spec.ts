@@ -64,9 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
         await send3.confirmation();
       } catch (e) {
-        console.log(
-          `Error when trying to fund account: \n ${JSON.stringify(e)}`
-        );
+        console.log(`Error when trying to fund account: \n ${JSON.stringify(e)}`);
       }
     });
 

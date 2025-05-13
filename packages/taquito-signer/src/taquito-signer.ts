@@ -99,21 +99,13 @@ export class InMemorySigner {
 
     if (encrypted) {
       if (!passphrase) {
-        throw new InvalidPassphraseError(
-          'No passphrase provided to decrypt encrypted key'
-        );
+        throw new InvalidPassphraseError('No passphrase provided to decrypt encrypted key');
       }
 
       decrypt = (constructedKey: Uint8Array) => {
         const salt = toBuffer(constructedKey.slice(0, 8));
         const encryptedSk = constructedKey.slice(8);
-        const encryptionKey = pbkdf2.pbkdf2Sync(
-          passphrase,
-          salt,
-          32768,
-          32,
-          'sha512'
-        );
+        const encryptionKey = pbkdf2.pbkdf2Sync(passphrase, salt, 32768, 32, 'sha512');
 
         return openSecretBox(
           new Uint8Array(encryptionKey),

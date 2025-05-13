@@ -1,8 +1,4 @@
-import {
-  ContractAbstraction,
-  ContractProvider,
-  RpcReadAdapter,
-} from '@taquito/taquito';
+import { ContractAbstraction, ContractProvider, RpcReadAdapter } from '@taquito/taquito';
 import { CONFIGS } from '../../config';
 import { InMemorySpendingKey, SaplingToolkit } from '@taquito/sapling';
 import BigNumber from 'bignumber.js';
@@ -57,8 +53,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         { contractAddress: saplingContract.address, memoSize },
         new RpcReadAdapter(Tezos.rpc)
       );
-      const aliceTxViewer =
-        await aliceSaplingToolkit.getSaplingTransactionViewer();
+      const aliceTxViewer = await aliceSaplingToolkit.getSaplingTransactionViewer();
       const aliceInitialBalance = await aliceTxViewer.getBalance();
 
       expect(aliceInitialBalance).toEqual(new BigNumber(0));
@@ -71,11 +66,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         { contractAddress: saplingContract.address, memoSize },
         new RpcReadAdapter(Tezos.rpc)
       );
-      const aliceInMemoryViewingKey =
-        await aliceInMemorySpendingKey.getSaplingViewingKeyProvider();
+      const aliceInMemoryViewingKey = await aliceInMemorySpendingKey.getSaplingViewingKeyProvider();
       // Fetch a payment address (zet) for Alice
-      alicePaymentAddress = (await aliceInMemoryViewingKey.getAddress())
-        .address;
+      alicePaymentAddress = (await aliceInMemoryViewingKey.getAddress()).address;
 
       const shieldedTx = await aliceSaplingToolkit.prepareShieldedTransaction([
         {
@@ -103,15 +96,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         { contractAddress: saplingContract.address, memoSize },
         new RpcReadAdapter(Tezos.rpc)
       );
-      const aliceTxViewer =
-        await aliceSaplingToolkit.getSaplingTransactionViewer();
+      const aliceTxViewer = await aliceSaplingToolkit.getSaplingTransactionViewer();
       const aliceBalance = await aliceTxViewer.getBalance();
 
       // The returned balance is in MUTEZ
       expect(aliceBalance).toEqual(new BigNumber(3000000));
 
-      const inputsAlice =
-        await aliceTxViewer.getIncomingAndOutgoingTransactions();
+      const inputsAlice = await aliceTxViewer.getIncomingAndOutgoingTransactions();
       expect(inputsAlice).toEqual({
         incoming: [
           {
@@ -128,8 +119,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     it('Verify that Alice can do a shielded transaction to Bob', async () => {
       const amountToBob = 2;
       // Bob needs to give a payment address (zet) to Alice
-      const bobInMemoryViewingKey =
-        await bobInmemorySpendingKey.getSaplingViewingKeyProvider();
+      const bobInMemoryViewingKey = await bobInmemorySpendingKey.getSaplingViewingKeyProvider();
       bobPaymentAddress = (await bobInMemoryViewingKey.getAddress()).address;
 
       const aliceSaplingToolkit = new SaplingToolkit(
@@ -160,15 +150,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         { contractAddress: saplingContract.address, memoSize },
         new RpcReadAdapter(Tezos.rpc)
       );
-      const aliceTxViewer =
-        await aliceSaplingToolkit.getSaplingTransactionViewer();
+      const aliceTxViewer = await aliceSaplingToolkit.getSaplingTransactionViewer();
       const aliceBalance = await aliceTxViewer.getBalance();
 
       // The returned balance is in MUTEZ
       expect(aliceBalance).toEqual(new BigNumber(1000000));
 
-      const inputsAlice =
-        await aliceTxViewer.getIncomingAndOutgoingTransactions();
+      const inputsAlice = await aliceTxViewer.getIncomingAndOutgoingTransactions();
       expect(inputsAlice).toEqual({
         incoming: [
           {
@@ -242,11 +230,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         new RpcReadAdapter(Tezos.rpc)
       );
       const tezosInitialBalance = await Tezos.tz.getBalance(tezosAddress1);
-      const unshieldedTx =
-        await aliceSaplingToolkit.prepareUnshieldedTransaction({
-          to: tezosAddress1,
-          amount,
-        });
+      const unshieldedTx = await aliceSaplingToolkit.prepareUnshieldedTransaction({
+        to: tezosAddress1,
+        amount,
+      });
 
       // Inject the sapling transaction using the ContractAbstraction by calling the default entrypoint
       const op = await saplingContract.methods.default([unshieldedTx]).send();
@@ -257,9 +244,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
 
       const tezosUpdatedBalance = await Tezos.tz.getBalance(tezosAddress1);
-      expect(tezosUpdatedBalance).toEqual(
-        tezosInitialBalance.plus(new BigNumber(1000000))
-      );
+      expect(tezosUpdatedBalance).toEqual(tezosInitialBalance.plus(new BigNumber(1000000)));
     });
 
     it("Verify that Alice's balance in the sapling pool is updated after the unshielded tx", async () => {
@@ -268,14 +253,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         { contractAddress: saplingContract.address, memoSize },
         new RpcReadAdapter(Tezos.rpc)
       );
-      const aliceTxViewer =
-        await aliceSaplingToolkit.getSaplingTransactionViewer();
+      const aliceTxViewer = await aliceSaplingToolkit.getSaplingTransactionViewer();
       const aliceBalance = await aliceTxViewer.getBalance();
 
       expect(aliceBalance).toEqual(new BigNumber(0));
 
-      const inputsAlice =
-        await aliceTxViewer.getIncomingAndOutgoingTransactions();
+      const inputsAlice = await aliceTxViewer.getIncomingAndOutgoingTransactions();
       expect(inputsAlice).toEqual({
         incoming: [
           {

@@ -1,8 +1,4 @@
-import {
-  ContractAbstraction,
-  ContractProvider,
-  RpcReadAdapter,
-} from '@taquito/taquito';
+import { ContractAbstraction, ContractProvider, RpcReadAdapter } from '@taquito/taquito';
 import { CONFIGS } from '../../config';
 import {
   InMemorySpendingKey,
@@ -56,8 +52,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const mnemonic1: string = bip39.generateMnemonic(wordlist);
       inMemorySpendingKey1 = await InMemorySpendingKey.fromMnemonic(mnemonic1);
-      inMemoryViewingKey1 =
-        await inMemorySpendingKey1.getSaplingViewingKeyProvider();
+      inMemoryViewingKey1 = await inMemorySpendingKey1.getSaplingViewingKeyProvider();
       saplingToolkit1 = new SaplingToolkit(
         { saplingSigner: inMemorySpendingKey1 },
         { contractAddress: saplingContract.address, memoSize },
@@ -68,8 +63,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const mnemonic2: string = bip39.generateMnemonic(wordlist);
       inMemorySpendingKey2 = await InMemorySpendingKey.fromMnemonic(mnemonic2);
-      inMemoryViewingKey2 =
-        await inMemorySpendingKey2.getSaplingViewingKeyProvider();
+      inMemoryViewingKey2 = await inMemorySpendingKey2.getSaplingViewingKeyProvider();
       saplingToolkit2 = new SaplingToolkit(
         { saplingSigner: inMemorySpendingKey2 },
         { contractAddress: saplingContract.address, memoSize },
@@ -83,8 +77,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       inMemorySpendingKey3 = new InMemorySpendingKey(
         'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L'
       );
-      inMemoryViewingKey3 =
-        await inMemorySpendingKey3.getSaplingViewingKeyProvider();
+      inMemoryViewingKey3 = await inMemorySpendingKey3.getSaplingViewingKeyProvider();
       saplingToolkit3 = new SaplingToolkit(
         { saplingSigner: inMemorySpendingKey3 },
         { contractAddress: saplingContract.address, memoSize },
@@ -115,9 +108,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         },
       ]);
 
-      const op = await saplingContract.methods
-        .default([shieldedTx])
-        .send({ amount: 6 });
+      const op = await saplingContract.methods.default([shieldedTx]).send({ amount: 6 });
       await op.confirmation();
       expect(op.status).toEqual('applied');
       expect(op.hash).toBeDefined();
