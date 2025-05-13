@@ -157,7 +157,7 @@
             "collectCoverageFrom": ["src/**/*.{js,ts}"]
           },
           "dependencies": {
-            "@scure/bip39": "^1.5.4",
+            "@scure/bip39": "^1.6.0",
             "@taquito/taquito": "^8.0.4-beta.0",
             "@taquito/utils": "^8.0.4-beta.0",
             "bignumber.js": "^9.0.1",

@@ -66,7 +66,7 @@
   },
   "dependencies": {
     "@airgap/sapling-wasm": "0.0.9",
-    "@scure/bip39": "^1.5.4",
+    "@scure/bip39": "^1.6.0",
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/random": "^1.0.2",
     "@taquito/core": "^21.0.5",

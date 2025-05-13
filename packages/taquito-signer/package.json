@@ -66,7 +66,7 @@
     ]
   },
   "dependencies": {
-    "@scure/bip39": "^1.5.4",
+    "@scure/bip39": "^1.6.0",
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.3",
     "@stablelib/hmac": "^1.0.1",
