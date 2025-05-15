@@ -24,7 +24,7 @@ const client = new RpcClient(' https://ghostnet.tezos.ecadinfra.com/', 'NetXLH1u
 The `RpcClient` constructor takes the URL of the node you want to use and the chain ID.
 
 ```js
-/* Fetching the balance of an account
+/* Fetching the spendable balance of an account
  * using the client set up above */
 
 const balance = await client.getBalance('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
@@ -113,4 +113,4 @@ const view = await client.runView({
 
 ## Full documentation
 
-You can find the full documentation at the following address: [https://taquito.io/typedoc/classes/\_taquito_rpc.rpcclient.html](https://taquito.io/typedoc/classes/_taquito_rpc.rpcclient.html)
+You can find the full documentation at the following address: [https://taquito.io/typedoc/classes/_taquito_rpc.RpcClient](https://taquito.io/typedoc/classes/_taquito_rpc.RpcClient)

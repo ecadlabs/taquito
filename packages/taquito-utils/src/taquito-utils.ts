@@ -89,6 +89,7 @@ export function b58decode(payload: string) {
     [prefix.tz1.toString()]: '0000',
     [prefix.tz2.toString()]: '0001',
     [prefix.tz3.toString()]: '0002',
+    [prefix.tz4.toString()]: '0003',
   };
 
   const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
@@ -107,6 +108,7 @@ export function b58decode(payload: string) {
  * @description b58 decode a string without predefined prefix
  * @param value
  * @returns string of bytes
+ * @deprecated use b58decode instead
  */
 export function b58decodeL2Address(payload: string) {
   const buf = bs58check.decode(payload);
@@ -128,6 +130,7 @@ export function encodePubKey(value: string) {
       '0000': prefix.tz1,
       '0001': prefix.tz2,
       '0002': prefix.tz3,
+      '0003': prefix.tz4,
     };
 
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
@@ -151,6 +154,7 @@ export function encodeAddress(value: string) {
       '0000': prefix.tz1,
       '0001': prefix.tz2,
       '0002': prefix.tz3,
+      '0003': prefix.tz4,
     };
 
     return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
@@ -162,6 +166,7 @@ export function encodeAddress(value: string) {
  * @description Base58 encode an address without predefined prefix
  * @param value Address to base58 encode (tz4) hex dec
  * @returns return address
+ * @deprecated use encodeAddress instead
  */
 export function encodeL2Address(value: string) {
   return b58cencode(value, prefix.tz4);
@@ -196,6 +201,7 @@ export function encodeKeyHash(value: string) {
       '00': new Uint8Array([6, 161, 159]),
       '01': new Uint8Array([6, 161, 161]),
       '02': new Uint8Array([6, 161, 164]),
+      '03': new Uint8Array([6, 161, 167]),
     };
 
     return b58cencode(value.substring(2), pref[value.substring(0, 2)]);

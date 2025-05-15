@@ -48,11 +48,11 @@ import {
   TicketTokenParams,
   AllTicketBalances,
   PendingOperationsQueryArguments,
-  PendingOperationsV1,
   PendingOperationsV2,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
 } from '../types';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 import {
@@ -60,6 +60,7 @@ import {
   validateAddress,
   ValidationResult,
   invalidDetail,
+  validateProtocol,
 } from '@taquito/utils';
 
 interface CachedDataInterface {
@@ -1221,6 +1222,32 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   /**
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description get current and next protocol
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-protocols
+   */
+  async getProtocolActivations(protocol: string = ''): Promise<ProtocolActivationsResponse> {
+    if (protocol) {
+      const protocolValidation = validateProtocol(protocol);
+      if (protocolValidation !== ValidationResult.VALID) {
+        throw new Error(`Invalid protocol hash "${protocol}" ${invalidDetail(protocolValidation)}`);
+      }
+    }
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_PROTOCOL_ACTIVATIONS,
+      [protocol]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getProtocolActivations(protocol);
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
    * @param contract address of the contract we want to retrieve storage information of
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Access the used storage space of the contract
@@ -1348,7 +1375,7 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
-  ): Promise<PendingOperationsV1 | PendingOperationsV2> {
+  ): Promise<PendingOperationsV2> {
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
       RPCMethodName.GET_PENDING_OPERATIONS,

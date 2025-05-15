@@ -175,7 +175,7 @@ export const timelockCode = [
                           "prim": "nat"
                         },
                         {
-                          "int": "10"
+                          "int": "20" // increase from 10 to 20 blocks due to minimal_block_delay is 4s
                         }
                       ]
                     },
@@ -588,7 +588,7 @@ export const timelockExpected = [
                           "prim": "nat"
                         },
                         {
-                          "int": "10"
+                          "int": "20" // increase from 10 to 20 blocks due to minimal_block_delay is 4s
                         }
                       ]
                     },
