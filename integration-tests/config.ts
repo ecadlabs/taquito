@@ -7,7 +7,6 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsPsQuebecn } from './known-contracts-PsQuebecn';
 import { knownContractsPsRiotuma } from './known-contracts-PsRiotuma';
 
 
@@ -33,7 +32,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, rionet, quebecnet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, rionet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -118,7 +117,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+    knownBaker: process.env[`TEZOS_BAKER`] || 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb', // Germán - TT
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -142,18 +141,6 @@ const rionetEphemeral: Config =
   const rionetSecretKey: Config =
   { ...rionetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.rionet.teztnets.com' } };
 
-const quebecnetEphemeral: Config =
-  defaultConfig({
-    networkName: 'QUEBECNET',
-    protocol: Protocols.PsQuebecn,
-    defaultRpc: 'http://ecad-tezos-quebecnet-rolling-1.i.ecadinfra.com/',
-    knownContracts: knownContractsPsQuebecn,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/quebecnet')
-  })
-
-  const quebecnetSecretKey: Config =
-  { ...quebecnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.quebeccnet.teztnets.com/' } };
-
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
@@ -170,7 +157,7 @@ const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2025-04-16.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2025-05-14.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
@@ -181,25 +168,21 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(quebecnetSecretKey, rionetSecretKey);
+  providers.push(rionetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_QUEBECNET_WITH_SECRET_KEY']) {
-  providers.push(quebecnetSecretKey);
 } else if (process.env['RUN_RIONET_WITH_SECRET_KEY']) {
   providers.push(rionetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['GHOSTNET']) {
-  providers.push(quebecnetEphemeral);
-} else if (process.env['QUEBECNET']) {
-  providers.push(quebecnetEphemeral);
+  providers.push(ghostnetEphemeral);
 } else if (process.env['RIONET']) {
   providers.push(rionetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(quebecnetEphemeral, rionetEphemeral);
+  providers.push(rionetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {

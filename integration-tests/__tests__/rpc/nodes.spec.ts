@@ -509,8 +509,6 @@ CONFIGS().forEach(
           const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
           if (rpc.includes('ghostnet')) {
             expect(launchCycle).toEqual(1054);
-          } else if (rpc.includes('quebecnet') || rpc.includes('weeklynet')) {
-            expect(launchCycle).toEqual(5);
           } else {
             expect(launchCycle).toEqual(0);
           }
