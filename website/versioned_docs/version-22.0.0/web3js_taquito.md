@@ -53,7 +53,7 @@ const balance = await web3.eth.getBalance('account_address');
 const balance = await Tezos.tz.getBalance('account_address');
 ```
 
-Both Web3js and Taquito use the `getBalance` method with the account address to fetch its balance from the network.
+Both Web3js and Taquito use the `getBalance` method with the account address to fetch its spendable balance from the network.
 
 ## Transfer tokens
 

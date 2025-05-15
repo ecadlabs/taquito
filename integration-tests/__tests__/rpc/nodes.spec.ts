@@ -1,6 +1,6 @@
 import { CONFIGS } from '../../config';
 import { DefaultContractType, Protocols } from "@taquito/taquito";
-import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV1, PendingOperationsV2 } from '@taquito/rpc';
+import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
@@ -20,7 +20,7 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? test : test.skip;
-    const quebecnet = protocol === Protocols.PsQuebecn ? test : test.skip;
+    const rionetAndAlpha = protocol === Protocols.PsRiotuma || protocol === Protocols.ProtoALpha ? test: test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -66,7 +66,7 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        quebecnet(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
+        it(`Verify that rpcClient.getSpendable for knownBaker returns the spendable balance excluding frozen bonds`, async () => {
           const balance = await rpcClient.getSpendable(knownBaker);
           expect(balance).toBeDefined();
         });
@@ -76,7 +76,7 @@ CONFIGS().forEach(
           expect(balance).toBeDefined();
         });
 
-        quebecnet(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
+        it(`Verify that rpcClient.getSpendableAndFrozenBonds for knownBaker returns the full balance`, async () => {
           const balance = await rpcClient.getSpendableAndFrozenBonds(knownBaker);
           expect(balance).toBeDefined();
         });
@@ -471,6 +471,16 @@ CONFIGS().forEach(
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
         });
 
+        rionetAndAlpha('Verify that rpcClient.getProtocolActivations will list all protocol activations info', async () => {
+          const protocolActivations = await rpcClient.getProtocolActivations();
+          expect(protocolActivations).toBeInstanceOf(Array);
+        });
+
+        rionetAndAlpha('Verify that rpcClient.getProtocolActivations will list a protocol activations info', async () => {
+          const protocolActivations = await rpcClient.getProtocolActivations(protocol);
+          expect(protocolActivations).toBeInstanceOf(Object);
+        });
+
         it('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async () => {
           const usedSpace = await rpcClient.getStorageUsedSpace(knownContract);
           expect(usedSpace).toBeDefined();
@@ -499,8 +509,8 @@ CONFIGS().forEach(
           const launchCycle = await rpcClient.getAdaptiveIssuanceLaunchCycle();
           if (rpc.includes('ghostnet')) {
             expect(launchCycle).toEqual(1054);
-          } else if (rpc.includes('quebecnet') || rpc.includes('weeklynet')) {
-            expect(launchCycle).toEqual(5);
+          } else {
+            expect(launchCycle).toEqual(0);
           }
         })
 

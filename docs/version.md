@@ -2,6 +2,32 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v22.0.0
+## Summary
+
+### Rio Protocol Support
+
+### New Features
+`@taquito/local-forging` - Update `localForger` to `forge` and `parse` a tz4 address as `delegate` for `delegation` operation #3113
+`@taquito/local-forging` - Update `localForger` to `forge` and `parse` a tz4 `pk` and `proof` for `update_consensus_key` operation #3113
+`@taquito/utils` - Updated `b58decode`, `encodePubKey`, `encodeAddress`, and `encodeKeyHash` to encode and decode tz4 public keys and addresses #3113
+`@taquito/rpc` - Added a new RPC endpoint `getProtocolActivations`
+`@taquito/rpc` - Updated type `ConstantsResponse` with new interface `ConstantsResponseProto022` #3115
+`@taquito/rpc` - Updated `DelegatesResponse` with multiple new properties and obsolete old ones #3112
+`@taquito/rpc` - Added new types `OperationContentsDalEntrapmentEvidence`, `OperationContentsAndResultDalEntrapmentEvidence` and `OperationContentsAndResultMetadataDalEntrapmentEvidence` for new anonymous operation `dal_entrapment_evidence` #3116
+
+### Breaking Changes
+`@taquito/utils` - Deprecated `b58decodeL2Address` and `encodeL2Address` util functions, please use `b58decode` and `encodeAddress` instead #3130
+
+# Taquito v21.0.5
+## Summary
+
+### Beacon version Update
+`@taquito/beacon-wallet` - updated Beacon version to v4.5.0 #3143
+
+### Internals
+`@taquito/wallet-connect`- updated modal from @walletconnect/legacy-modal to @walletconnect/modal #3136
+website - updated firebase to fix website build issues #3141
 
 # Taquito v21.0.4
 ## Summary

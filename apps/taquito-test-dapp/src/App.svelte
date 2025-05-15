@@ -13,7 +13,7 @@
   let browser = "";
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
-    { value: "quebecnet", label: "Quebecnet", group: "current testnets" },
+    { value: "rionet", label: "Rionet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
     { value: "weeklynet", label: "Weeklynet", group: "other testnets" },
@@ -39,8 +39,8 @@
       case "ghostnet":
         store.updateNetworkType(NetworkType.GHOSTNET);
         break;
-      case "quebecnet":
-        store.updateNetworkType(NetworkType.QUEBECNET);
+      case "rionet":
+        store.updateNetworkType(NetworkType.RIONET);
         break;
       case "custom":
         //TODO: input custom RPC URL

@@ -37,7 +37,7 @@ Depending on the current Tezos upgrade cycle, multiple testnet networks may be c
 
 
 ```
-QUEBECNET=true npm run test
+RIONET=true npm run test
 ```
 
 ## Configuration
@@ -52,7 +52,7 @@ If different testnets are configured in the `config.ts` file, you can run tests 
 
 
 ```
-npm run test:quebecnet contract-with-bigmap-init.spec.ts
+npm run test:rionet contract-with-bigmap-init.spec.ts
 ```
 
 
@@ -60,7 +60,7 @@ Or for a specific test within a test file:
 
 
 ```
-npm run test:quebecnet -- -t "Verify contract.originate for a contract and call deposit method with unit param"
+npm run test:rionet -- -t "Verify contract.originate for a contract and call deposit method with unit param"
 ```
 
 
@@ -70,7 +70,7 @@ npm run test:quebecnet -- -t "Verify contract.originate for a contract and call 
 To run tests against a node that is not pre-configured in Taquito, use:
 
 
-`export TEZOS_RPC_QUEBECNET='http://localhost:8732'`.
+`export TEZOS_RPC_RIONET='http://localhost:8732'`.
 
 ## Using a Secret Key Instead of the Keygen API
 
@@ -79,7 +79,7 @@ By default, the integration tests use an ephemeral key managed by the Keygen API
 
 
 ```
-npm run test:quebecnet-secret-key contract-with-bigmap-init.spec.ts
+npm run test:rionet-secret-key contract-with-bigmap-init.spec.ts
 ```
 
 

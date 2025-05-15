@@ -23,23 +23,27 @@ values={[
 
 | Provider         | Net          | URL                                      | Header                                                                          |
 |------------------|--------------|------------------------------------------|---------------------------------------------------------------------------------|
-| ECAD Labs        | Mainnet      | https://mainnet.tezos.ecadinfra.com            | [Check](https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/header)           |
-| ECAD Labs        | Ghostnet     | https://ghostnet.tezos.ecadinfra.com           | [Check](https://ghostnet.tezos.ecadinfra.com/chains/main/blocks/head/header)          |
-| ECAD Labs        | Oxfordnet    | https://oxfordnet.ecadinfra.com          | [Check](https://oxfordnet.ecadinfra.com/chains/main/blocks/head/header)         |
-| SmartPy          | Mainnet      | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header)              |
-| SmartPy          | Ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header)             |
-| Tezos Foundation | Mainnet      | https://rpc.tzbeta.net/                  | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header)                  |
-| Marigold         | Mainnet      | https://mainnet.tezos.marigold.dev/      | [Check](https://mainnet.tezos.marigold.dev/chains/main/blocks/head/header)      |
-| Marigold         | Ghostnet     | https://ghostnet.tezos.marigold.dev/     | [Check](https://ghostnet.tezos.marigold.dev/chains/main/blocks/head/header)     |
-| Marigold         | Oxfordnet    | https://oxfordnet.tezos.marigold.dev/    | [Check](https://oxfordnet.tezos.marigold.dev/chains/main/blocks/head/header)    |
+| ECAD Infra       | mainnet      | https://mainnet.tezos.ecadinfra.com      | [Check](https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
+| ECAD Infra       | ghostnet     | https://ghostnet.tezos.ecadinfra.com     | [Check](https://ghostnet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
+| SmartPy          | mainnet      | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header) |
+| SmartPy          | ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header) |
+| Tezos Foundation | mainnet      | https://rpc.tzbeta.net                   | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header) |
+| Tezos Foundation | ghostnet     | https://rpc.ghostnet.teztnets.com        | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header) |
+| Tezos Foundation | rionet       | https://rpc.rionet.teztnets.com          | [Check](https://rpc.rionet.teztnets.com/chains/main/blocks/head/header) |
+| TzKT             | mainnet      | https://rpc.tzkt.io/mainnet              | [Check](https://rpc.tzkt.io/mainnet/chains/main/blocks/head/header) |
+| TzKT             | ghostnet     | https://rpc.tzkt.io/ghostnet             | [Check](https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/header) |
+| TzKT             | rionet       | https://rpc.tzkt.io/rionet               | [Check](https://rpc.tzkt.io/rionet/chains/main/blocks/head/header) |
 
-*If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
+<!-- when updating this table make sure to update the website/static/docs/rpc_nodes.json first and rerun example/convert-rpc-json-to-md.ts to replace the output table above -->
+*- You can also find a machine readable list in [rpc_nodes.json](https://taquito.io/docs/rpc_nodes.json).*
+
+*- If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito).*
+
 </TabItem>
   <TabItem value="commercialNodes">
 
 | Provider         |  Details                                    |
 |------------------|---------------------------------------------|
-| TzPro            |  https://tzpro.io/                          |
 | MIDL.dev         |  https://midl.dev/tezos-rpc/                |
 | Exaion           |  https://node.exaion.com                    |
 

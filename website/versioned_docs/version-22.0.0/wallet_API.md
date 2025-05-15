@@ -64,18 +64,14 @@ const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://taquito.io/img/favicon.svg',
   network: { type: 'ghostnet' },
-  eventHandlers: {
-    PERMISSION_REQUEST_SUCCESS: {
-      handler: async (data) => {
-        console.log('permission data:', data);
-      },
-    },
-  },
+  enableMetrics: true,
 };
 const wallet = new BeaconWallet(options);
 ```
 
 The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp and the network you want it to point to. In this case, we choose to point it to `ghostnet`. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
+
+The `enableMetrics` property is an optional parameter that allows you to enable or disable the collection of metrics. It also allows the user to report bugs via a link in the wallet pop-up.
 
 > Note: Previous versions of Beacon used to have a `preferredNetwork` property instead of `network`. This property has been removed in the latest version of Beacon, and you must now use the `network` property.
 
@@ -92,7 +88,7 @@ Please check out the section [Subscribing to events](#subscribing-to-events) to 
 
 In previous versions of Beacon, you were able to set the `network` property when doing `requestPermissions()`. This behavior was removed from Beacon, and you must now set the network when instantiating the wallet.
 
-You can choose among `mainnet`, `oxfordnet`, `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+You can choose among `mainnet`, `rionet`, `quebecnet`, `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
 ```js
 const userAddress = await wallet.getPKH();
@@ -116,7 +112,7 @@ Make sure you have the Beacon browser extension installed (the extension offers 
 
 ```js live noInline wallet
 // import { BeaconWallet } from '@taquito/beacon-wallet';
-// const options = { name: 'exampleWallet' };
+// const options = { name: 'exampleWallet', enableMetrics: true };
 // const wallet = new BeaconWallet(options);
 
 wallet
@@ -179,7 +175,7 @@ const wallet = new TempleWallet('MyAwesomeDapp');
 The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
 
 ```js
-await wallet.connect('mainnet' | 'oxfordnet' | 'ghostnet' | 'mondaynet' | 'sandbox');
+await wallet.connect('mainnet' | 'rionet', 'quebecnet' | 'ghostnet' | 'mondaynet' | 'sandbox');
 ```
 
 (Temple used to be called Thanos and some Taquito code still uses the name Thanos.)

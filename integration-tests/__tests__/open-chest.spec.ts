@@ -4,7 +4,7 @@ import { Chest, Timelock, ChestKey } from '@taquito/timelock';
 import { stringToBytes } from '@taquito/utils';
 import { timelockCode, timelockStorage } from '../data/timelock-flip-contract';
 
-// please read the following link to understand the game
+// please read the following link to understand the game (with guessing blocks increase from 10 to 20)
 // https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/contracts/timelock_flip.tz
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {

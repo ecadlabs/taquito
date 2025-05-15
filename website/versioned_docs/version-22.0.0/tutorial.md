@@ -105,7 +105,7 @@ tezosToolkit.tz.getBalance("tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L").then(balance 
 });
 ```
 
-Running `npx ts-node index.ts` should now show the balance of the specified address. This balance is in units of Mutez (micro Tez). Tez is the currency of Tezos, its code is `XTZ`, and the symbol is `ꜩ`. 1 Tez is 1,000,000 Mutez.
+Running `npx ts-node index.ts` should now show the spendable balance of the specified address. This balance is in units of Mutez (micro Tez). Tez is the currency of Tezos, its code is `XTZ`, and the symbol is `ꜩ`. 1 Tez is 1,000,000 Mutez.
 
 Congratulations! You have just interacted with the Tezos blockchain using Taquito. In the next section, we will establish a high-level understanding of the blockchain, Tezos, dApps, and Taquito. If you are already familiar with these concepts, you can skip to [Sending a Transfer operation to the blockchain using Taquito](#sending-operations).
 
@@ -239,7 +239,7 @@ For the purpose of this section, I have created a new address and funded it on t
 
 <details>
   <summary>How to create my own public/private key pair?</summary>
-  
+
   Most users can simply use a wallet to create addresses. This is useful for dApps that run inside a browser. If you are running a dApp as a desktop, mobile, or server process, you can create your own key pair. Here is how you can do it:
 
   ```bash
@@ -409,7 +409,7 @@ git commit -m "initial commit"
 In the next step, we add Taquito and Beacon SDK to the React app, and create a minimal UI to connect to the wallet and transfer ꜩ.
 
 ```bash
-npm i @taquito/taquito @taquito/beacon-wallet
+npm i @taquito/taquito @taquito/beacon-wallet @airgap/beacon-dapp
 ```
 
 Open the file `index.html` and make the following changes:
@@ -501,6 +501,7 @@ const ConnectButton = ({
         name: "My dApp",
         preferredNetwork: NetworkType.GHOSTNET,
         disableDefaultEvents: false,
+        enableMetrics: true,
       });
       Tezos.setWalletProvider(wallet);
       setWallet(wallet);
@@ -601,50 +602,19 @@ export default Transfer;
 The libraries Taquito and Beacon SDK are designed to run in a Node.js environment. However, we are running them in a browser. This causes some issues. For example, the Beacon SDK uses the Node.js `buffer`, `stream`, and `util` modules. These modules are not available in the browser. Fortunately, there are browser-compatible versions of these modules. We can use these versions instead of the Node.js versions. To do this, we need to install the following packages:
 
 ```bash
-npm i buffer stream-browserify util
+npm i -D vite-plugin-node-polyfills
 ```
 
-Now we need to tell Vite to use these packages instead of the Node.js versions. To do this, open the file `vite.config.ts` and add the following code:
+Now we need to tell Vite to use this plugin. To do this, open the file `vite.config.ts` and add the following code:
 
-```tsx
+```ts
 import { defineConfig } from 'vite'
-import react from "@vitejs/plugin-react";
+import react from '@vitejs/plugin-react'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
-  define: {
-    global: {},
-  },
-  build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
-  plugins: [react()],
-  resolve: {
-    alias: {
-      buffer: "buffer",
-      stream: "stream-browserify",
-      util: "util",
-    },
-  },
+  plugins: [react(), nodePolyfills()],
 });
-```
-
-Also, create a file named `src/polyfills.ts` and add the following code:
-
-```tsx
-import { Buffer } from "buffer";
-
-globalThis.Buffer = Buffer;
-```
-Also, make the following modification to the file `index.html`:
-
-```diff
-    <div id="root"></div>
-+    <script type="module" src="/src/polyfills.ts"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-
 ```
 
 ### Running the dApp
