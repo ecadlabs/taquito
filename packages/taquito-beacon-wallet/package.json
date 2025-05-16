@@ -1,6 +1,7 @@
 {
   "name": "@taquito/beacon-wallet",
   "version": "22.0.0",
+  "version": "22.0.0",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
