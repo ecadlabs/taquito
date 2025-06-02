@@ -13,7 +13,7 @@ async function example() {
       delay: (error, retryCount) => {
         console.log("attempt " + retryCount);
         console.log("Retrying ...");
-        return timer(3); // delay of 3ms (likely should be 3000ms = 3s)
+        return timer(3);
       }
     })
   }));
