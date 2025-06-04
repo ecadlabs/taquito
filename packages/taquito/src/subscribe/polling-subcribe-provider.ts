@@ -8,8 +8,9 @@ import {
   concatMap,
   distinctUntilKeyChanged,
   first,
-  map,
-  share,
+  pluck,
+  publish,
+  refCount,
   retry,
   switchMap,
 } from 'rxjs/operators';
@@ -102,7 +103,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
       ...config,
     });
     this.timer$ = this._config$.pipe(
-      map((x) => x?.pollingIntervalMilliseconds),
+      pluck('pollingIntervalMilliseconds'),
       switchMap((pollingIntervalMilliseconds) => {
         if (!pollingIntervalMilliseconds) {
           return from(this.getConfirmationPollingInterval()).pipe(
@@ -118,11 +119,8 @@ export class PollingSubscribeProvider implements SubscribeProvider {
     this.newBlock$ = this.timer$.pipe(
       switchMap(() => getLastBlock(this.context)),
       distinctUntilKeyChanged('hash'),
-      share({
-        resetOnError: false,
-        resetOnComplete: false,
-        resetOnRefCountZero: false,
-      })
+      publish(),
+      refCount()
     );
   }
 
@@ -162,7 +160,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
 
   subscribe(_filter: 'head'): Subscription<string> {
     return new ObservableSubscription(
-      this.newBlock$.pipe(map((x) => x?.hash)),
+      this.newBlock$.pipe(pluck('hash')),
       this.config.shouldObservableSubscriptionRetry,
       this.config.observableSubscriptionRetryFunction
     );
