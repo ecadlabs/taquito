@@ -121,7 +121,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
       share({
         resetOnError: false,
         resetOnComplete: false,
-        resetOnRefCountZero: false,
+        resetOnRefCountZero: true,
       })
     );
   }

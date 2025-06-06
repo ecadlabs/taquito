@@ -29,7 +29,7 @@ jobs:
       - run: npm run build
       - run: npm run lint
       - run: npm run build-docs
-      - run: npm run test
+      - run: npm run test -- --runInBand
       - name: Codecov
         uses: codecov/codecov-action@v3.1.1
         with:
