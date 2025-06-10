@@ -1,5 +1,6 @@
 import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
-import { delay, retryWhen, tap, scan } from 'rxjs/operators';
+import { retry } from 'rxjs/operators';
+import { timer } from 'rxjs';
 
 async function example() {
   // This example will intentionally fail after two attempts as the RPC URL is invalid.
@@ -7,30 +8,24 @@ async function example() {
   const tezos = new TezosToolkit(provider);
   tezos.setStreamProvider(tezos.getFactory(PollingSubscribeProvider)({
     shouldObservableSubscriptionRetry: true, observableSubscriptionRetryFunction:
-      retryWhen(error =>
-        error.pipe(
-          scan((acc, error) => {
-            if (acc > 2) throw error;
-            console.log("attempt " + acc);
-            return acc + 1;
-          }, 1),
-          delay(3),
-          tap(() => console.log("Retrying ..."))
-        )
-      ) as any
+    retry({
+      count: 2,
+      delay: (error, retryCount) => {
+        console.log("attempt " + retryCount);
+        console.log("Retrying ...");
+        return timer(3);
+      }
+    })
   }));
 
   const bakerAttestationFilter = {
     and: [{ source: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m' }, { kind: 'attestation' }]
   }
-
   const bakerDelegation = {
     and: [{ destination: 'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m' }, { kind: 'delegation' }]
   }
-
   tezos.stream.subscribeOperation({
     or: [bakerAttestationFilter, bakerDelegation]
   })
 }
-
 example();
