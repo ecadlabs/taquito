@@ -48,7 +48,7 @@ export const createNewPollingBasedHeadObservable = (
       connector: () => new ReplaySubject(1),
       resetOnError: false,
       resetOnComplete: false,
-      resetOnRefCountZero: false,
+      resetOnRefCountZero: true,
     })
   );
 };
