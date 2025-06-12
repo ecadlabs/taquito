@@ -8,6 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsRiotuma } from './known-contracts-PsRiotuma';
+import { knownContractsPtSEouLov } from './known-contracts-PtSEouLov';
 
 
 const nodeCrypto = require('crypto');
@@ -138,8 +139,17 @@ const rionetEphemeral: Config =
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/rionet')
   })
 
-  const rionetSecretKey: Config =
+const rionetSecretKey: Config =
   { ...rionetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.rionet.teztnets.com' } };
+
+const nextnetSecretKey: Config =
+  defaultConfig({
+    networkName: 'NEXTNET',
+    protocol: Protocols.PtSEouLov,
+    defaultRpc: 'https://rpc.nextnet-20250610.teztnets.com',
+    knownContracts: knownContractsPtSEouLov,
+    signerConfig: defaultSecretKey
+  })
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -157,7 +167,7 @@ const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2025-05-14.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2025-06-04.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
@@ -173,6 +183,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_RIONET_WITH_SECRET_KEY']) {
   providers.push(rionetSecretKey);
+} else if (process.env['RUN_NEXTNET_WITH_SECRET_KEY']) {
+  providers.push(nextnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['GHOSTNET']) {
