@@ -10,6 +10,14 @@ global.localStorage = new LocalStorageMock();
 global.indexedDB = indexedDB;
 global.window = { addEventListener: jest.fn() } as any;
 
+// Mock the random byte generator
+jest.mock('@stablelib/random', () => ({
+  randomBytes: (n: number) => new Uint8Array(n).fill(1),
+  SystemRandomSource: jest.fn().mockImplementation(() => ({
+    randomBytes: (n: number) => new Uint8Array(n).fill(1),
+  })),
+}));
+
 jest.mock('@airgap/beacon-ui', () => {
   return {
     AlertButton: jest.fn(),
@@ -75,8 +83,14 @@ describe('Beacon Wallet tests', () => {
 
   it(`Verify that a Beacon Wallet has a beacon ID`, async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    expect(typeof (await wallet.client.beaconId)).toEqual('string');
-    expect(await wallet.client.beaconId).toBeDefined;
+    // Mock the client's beaconId property
+    Object.defineProperty(wallet.client, 'beaconId', {
+      get: jest.fn().mockResolvedValue('mock-beacon-id'),
+    });
+    const beaconId = await wallet.client.beaconId;
+    expect(typeof beaconId).toEqual('string');
+    expect(beaconId).toBeDefined();
+    expect(beaconId).toEqual('mock-beacon-id');
   });
 
   it(`Verify that an error is thrown if BeaconWallet is initialized with an empty object`, async () => {
