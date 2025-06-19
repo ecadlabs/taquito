@@ -65,3 +65,27 @@ jobs:
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
+  integration-tests-testnet-nextnet-secret-key:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        include:
+          - testnet: nextnet
+            testnet_uppercase: NEXTNET
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/hydrogen
+      - run: npm ci
+      - run: npm run build
+      - if: ${{ !github.event.pull_request.head.repo.fork }}
+        name: Tailscale
+        uses: tailscale/github-action@v1
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          version: 1.32.2
+      - run: npm -w integration-tests run test:nextnet-secret-key
+        env:
+          RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
