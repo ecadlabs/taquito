@@ -1754,16 +1754,16 @@ export interface InternalOperationResult {
   amount?: string;
   destination?: string;
   parameters?: TransactionOperationParameter;
-  public_key?: string;
+  result: InternalOperationResultEnum;
   balance?: string;
   delegate?: string;
   script?: ScriptedContracts;
-  value?: MichelsonV1Expression;
-  limit?: string;
-  result: InternalOperationResultEnum;
   type?: MichelsonV1Expression;
   tag?: string;
   payload?: MichelsonV1Expression;
+  public_key?: string;
+  value?: MichelsonV1Expression;
+  limit?: string;
 }
 
 export interface SuccessfulManagerOperationResult {
@@ -1781,42 +1781,79 @@ export interface SuccessfulManagerOperationResult {
 
 export type MetadataBalanceUpdatesKindEnum =
   | 'contract'
-  | 'freezer'
   | 'accumulator'
+  | 'freezer'
+  | 'minted'
   | 'burned'
   | 'commitment'
-  | 'minted'
   | 'staking';
 
 export enum METADATA_BALANCE_UPDATES_CATEGORY {
+  ACTIVATION = 'activation',
+  ATTESTATION = 'attestation',
+  ATTESTATIONS_AGGREGATE = 'attestations_aggregate',
+  ATTESTATION_WITH_DAL = 'attestation_with_dal',
+  ATTESTING_REWARDS = 'attesting rewards',
   BAKING_BONUSES = 'baking bonuses',
   BAKING_REWARDS = 'baking rewards',
+  BALLOT = 'ballot',
   BLOCK_FEES = 'block fees',
   BONDS = 'bonds',
   BOOTSTRAP = 'bootstrap',
   BURNED = 'burned',
   COMMITMENT = 'commitment',
+  DAL_ATTESTING_REWARDS = 'dal attesting rewards',
+  DAL_ENTRAPMENT_EVIDENCE = 'dal_entrapment_evidence',
+  DAL_PUBLISH_COMMITMENT = 'dal_publish_commitment',
   DELEGATE_DENOMINATOR = 'delegate_denominator',
+  DELEGATION = 'delegation',
   DELEGATOR_NUMERATOR = 'delegator_numerator',
   DEPOSITS = 'deposits',
-  ENDORSING_REWARDS = 'endorsing rewards',
+  DOUBLE_ATTESTATION_EVIDENCE = 'double_attestation_evidence',
+  DOUBLE_BAKING_EVIDENCE = 'double_baking_evidence',
+  DOUBLE_ENDORSEMENT_EVIDENCE = 'double_endorsement_evidence',
+  DOUBLE_PREATTESTATION_EVIDENCE = 'double_preattestation_evidence',
+  DOUBLE_PREENDORSEMENT_EVIDENCE = 'double_preendorsement_evidence',
+  DRAIN_DELEGATE = 'drain_delegate',
+  ENDORSEMENT = 'endorsement',
+  ENDORSEMENT_WITH_DAL = 'endorsement_with_dal',
+  EVENT = 'event',
+  FAILING_NOOP = 'failing_noop',
+  INCREASE_PAID_STORAGE = 'increase_paid_storage',
   INVOICE = 'invoice',
-  LOST_ENDORSING_REWARDS = 'lost endorsing rewards',
   LOST_ATTESTING_REWARDS = 'lost attesting rewards',
+  LOST_DAL_ATTESTING_REWARDS = 'lost dal attesting rewards',
   MINTED = 'minted',
   NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
+  ORIGINATION = 'origination',
+  PREATTESTATION = 'preattestation',
+  PREATTESTATIONS_AGGREGATE = 'preattestations_aggregate',
+  PREENDORSEMENT = 'preendorsement',
+  PROPOSALS = 'proposals',
   PUNISHMENTS = 'punishments',
+  REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
+  REVEAL = 'reveal',
+  SEED_NONCE_REVELATION = 'seed_nonce_revelation',
+  SET_DEPOSITS_LIMIT = 'set_deposits_limit',
+  SMART_ROLLUP_ADD_MESSAGES = 'smart_rollup_add_messages',
+  SMART_ROLLUP_CEMENT = 'smart_rollup_cement',
+  SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'smart_rollup_execute_outbox_message',
+  SMART_ROLLUP_ORIGINATE = 'smart_rollup_originate',
+  SMART_ROLLUP_PUBLISH = 'smart_rollup_publish',
+  SMART_ROLLUP_RECOVER_BOND = 'smart_rollup_recover_bond',
   SMART_ROLLUP_REFUTATION_PUNISHMENTS = 'smart_rollup_refutation_punishments',
   SMART_ROLLUP_REFUTATION_REWARDS = 'smart_rollup_refutation_rewards',
+  SMART_ROLLUP_REFUTE = 'smart_rollup_refute',
+  SMART_ROLLUP_TIMEOUT = 'smart_rollup_timeout',
   STORAGE_FEES = 'storage fees',
   SUBSIDY = 'subsidy',
+  TICKET_UPDATES = 'ticket_updates',
+  TRANSACTION = 'transaction',
+  TRANSFER_TICKET = 'transfer_ticket',
   UNSTAKED_DEPOSITS = 'unstaked_deposits',
-  DOUBLE_SIGNING_EVIDENCE_REWARDS = 'double signing evidence rewards',
-  FEES = 'fees',
-  LEGACY_DEPOSITS = 'legacy_deposits',
-  LEGACY_FEES = 'legacy_fees',
-  LEGACY_REWARDS = 'legacy_rewards',
-  REWARDS = 'rewards',
+  UPDATE_COMPANION_KEY = 'update_companion_key',
+  UPDATE_CONSENSUS_KEY = 'update_consensus_key',
+  VDF_REVELATION = 'vdf_revelation',
 }
 
 export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
