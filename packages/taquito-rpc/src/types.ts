@@ -453,6 +453,17 @@ export interface OperationContentsUpdateConsensusKey {
   proof?: string;
 }
 
+export interface OperationContentsUpdateCompanionKey {
+  kind: OpKind.UPDATE_COMPANION_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  proof?: string;
+}
+
 export interface OperationContentsDrainDelegate {
   kind: OpKind.DRAIN_DELEGATE;
   consensus_key: string;
@@ -737,6 +748,12 @@ export interface OperationContentsAndResultMetadataIncreasePaidStorage {
 }
 
 export interface OperationContentsAndResultMetadataUpdateConsensusKey {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultUpdateConsensusKey;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataUpdateCompanionKey {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultUpdateConsensusKey;
   internal_operation_results?: InternalOperationResult[];
@@ -1038,6 +1055,17 @@ export interface OperationContentsAndResultUpdateConsensusKey {
   metadata: OperationContentsAndResultMetadataUpdateConsensusKey;
 }
 
+export interface OperationContentsAndResultUpdateCompanionKey {
+  kind: OpKind.UPDATE_COMPANION_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  proof?: string;
+  metadata: OperationContentsAndResultMetadataUpdateCompanionKey;
+}
 export interface OperationContentsAndResultDrainDelegate {
   kind: OpKind.DRAIN_DELEGATE;
   consensus_key: string;

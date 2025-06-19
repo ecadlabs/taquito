@@ -40,4 +40,5 @@ export enum OpKind {
   DAL_ENTRAPMENT_EVIDENCE = 'dal_entrapment_evidence',
   PREATTESTATIONS_AGGREGATE = 'preattestations_aggregate',
   ATTESTATIONS_AGGREGATE = 'attestations_aggregate',
+  UPDATE_COMPANION_KEY = 'update_companion_key',
 }
