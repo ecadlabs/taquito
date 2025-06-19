@@ -582,6 +582,29 @@ export interface OperationContentsDalEntrapmentEvidence {
   shard_with_proof: { shard: (number | string[])[]; proof: string };
 }
 
+export interface OperationContentsPreattestationsAggregate {
+  kind: OpKind.PREATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: number[];
+}
+
+export interface OperationContentsAttestationsAggregate {
+  kind: OpKind.ATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: {
+    slot: number;
+    dal_attestation?: string;
+  }[];
+}
+
 export type OperationContents =
   | OperationContentsAttestation
   | OperationContentsPreattestation
