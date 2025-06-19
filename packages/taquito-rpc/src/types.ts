@@ -191,8 +191,11 @@ export type InlinedAttestationKindEnum = OpKind.ATTESTATION;
 export type InlinedEndorsementKindEnum = OpKind.ENDORSEMENT;
 
 export type InlinedAttestationContents =
+  | OperationContentsPreattestation
   | OperationContentsAttestation
-  | OperationContentsAttestationWithDal;
+  | OperationContentsAttestationWithDal
+  | OperationContentsPreattestationsAggregate
+  | OperationContentsAttestationsAggregate;
 
 export interface InlinedEndorsementContents {
   kind: InlinedEndorsementKindEnum;
@@ -617,6 +620,13 @@ export interface OperationContentsAttestationsAggregate {
   }[];
 }
 
+export interface OperationContentsDoubleConsensusOperationEvidence {
+  kind: OpKind.DOUBLE_CONSENSUS_OPERATION_EVIDENCE;
+  slot: number;
+  op1: InlinedAttestation;
+  op2: InlinedAttestation;
+}
+
 export type OperationContents =
   | OperationContentsAttestation
   | OperationContentsPreattestation
@@ -820,6 +830,16 @@ export interface OperationContentsAndResultMetadataDalPublishCommitment {
 
 export interface OperationContentsAndResultMetadataDalEntrapmentEvidence {
   balance_updates?: OperationMetadataBalanceUpdates[];
+}
+
+export interface OperationContentsAndResultMetadataDoubleConsensusOperationEvidence {
+  punished_delegate: string;
+  rewarded_delegate: string;
+  misbehaviour: {
+    level: number;
+    round: number;
+    kind: 'attestation' | 'block' | 'preattestation';
+  };
 }
 
 export interface OperationContentsAndResultAttestation {
@@ -1211,6 +1231,14 @@ export interface OperationContentsAndResultDalEntrapmentEvidence {
   slot_index: number;
   shard_with_proof: { shard: (number | string[])[]; proof: string };
   metadata: OperationContentsAndResultMetadataDalEntrapmentEvidence;
+}
+
+export interface OperationContentsAndResultDoubleConsensusOperationEvidence {
+  kind: OpKind.DOUBLE_CONSENSUS_OPERATION_EVIDENCE;
+  slot: number;
+  op1: InlinedAttestation;
+  op2: InlinedAttestation;
+  metadata: OperationContentsAndResultMetadataDoubleConsensusOperationEvidence;
 }
 
 export type OperationContentsAndResult =
