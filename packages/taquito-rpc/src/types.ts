@@ -593,6 +593,7 @@ export interface OperationContentsDalPublishCommitment {
 export interface OperationContentsDalEntrapmentEvidence {
   kind: OpKind.DAL_ENTRAPMENT_EVIDENCE;
   attestation: InlinedAttestation;
+  consensus_slot: number;
   slot_index: number;
   shard_with_proof: { shard: (number | string[])[]; proof: string };
 }
@@ -842,6 +843,16 @@ export interface OperationContentsAndResultMetadataDoubleConsensusOperationEvide
   };
 }
 
+export interface OperationContentsAndResultMetadataDoubleBaking {
+  punished_delegate: string;
+  rewarded_delegate: string;
+  misbehaviour: {
+    level: number;
+    round: number;
+    kind: 'attestation' | 'block' | 'preattestation';
+  };
+}
+
 export interface OperationContentsAndResultAttestation {
   kind: OpKind.ATTESTATION;
   block_payload_hash?: string;
@@ -964,7 +975,7 @@ export interface OperationContentsAndResultDoubleBaking {
   kind: OpKind.DOUBLE_BAKING_EVIDENCE;
   bh1: BlockFullHeader;
   bh2: BlockFullHeader;
-  metadata: OperationContentsAndResultMetadata;
+  metadata: OperationContentsAndResultMetadataDoubleBaking;
 }
 
 export interface OperationContentsAndResultActivateAccount {
@@ -1228,6 +1239,7 @@ export interface OperationContentsAndResultDalPublishCommitment {
 export interface OperationContentsAndResultDalEntrapmentEvidence {
   kind: OpKind.DAL_ENTRAPMENT_EVIDENCE;
   attestation: InlinedAttestation;
+  consensus_slot: number;
   slot_index: number;
   shard_with_proof: { shard: (number | string[])[]; proof: string };
   metadata: OperationContentsAndResultMetadataDalEntrapmentEvidence;
