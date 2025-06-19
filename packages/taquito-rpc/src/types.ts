@@ -380,6 +380,7 @@ export interface OperationContentsReveal {
   gas_limit: string;
   storage_limit: string;
   public_key: string;
+  proof?: string;
 }
 
 export interface OperationContentsTransaction {
@@ -959,6 +960,7 @@ export interface OperationContentsAndResultReveal {
   gas_limit: string;
   storage_limit: string;
   public_key: string;
+  proof?: string;
   metadata: OperationContentsAndResultMetadataReveal;
 }
 
@@ -1518,6 +1520,7 @@ export interface OperationResultUpdateConsensusKey {
   status: OperationResultStatusEnum;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
+  kind?: boolean;
 }
 
 export interface OperationResultDelegation {
