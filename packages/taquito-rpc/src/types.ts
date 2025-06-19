@@ -658,6 +658,15 @@ export interface OperationContentsAndResultMetadataExtended0 {
   consensus_key?: string;
 }
 
+export interface OperationContentsAndResultMetadataAttestationsAggregate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  committee: {
+    delegate: string;
+    consensus_pkh: string;
+  }[];
+  consensus_power: number;
+}
+
 export interface OperationContentsAndResultMetadataPreattestation {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
@@ -665,6 +674,14 @@ export interface OperationContentsAndResultMetadataPreattestation {
   consensus_key?: string;
 }
 
+export interface OperationContentsAndResultMetadataPreattestationsAggregate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  committee: {
+    delegate: string;
+    consensus_pkh: string;
+  }[];
+  consensus_power: number;
+}
 export interface OperationContentsAndResultMetadataPreEndorsement {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
@@ -796,6 +813,20 @@ export interface OperationContentsAndResultAttestation {
   metadata: OperationContentsAndResultMetadataExtended1;
 }
 
+export interface OperationContentsAndResultAttestationsAggregate {
+  kind: OpKind.ATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: {
+    slot: number;
+    dal_attestation?: string;
+  }[];
+  metadata: OperationContentsAndResultMetadataAttestationsAggregate;
+}
+
 export interface OperationContentsAndResultEndorsement {
   kind: OpKind.ENDORSEMENT;
   block_payload_hash?: string;
@@ -812,6 +843,17 @@ export interface OperationContentsAndResultPreattestation {
   round: number;
   block_payload_hash: string;
   metadata: OperationContentsAndResultMetadataPreattestation;
+}
+
+export interface OperationContentsAndResultPreattestationsAggregate {
+  kind: OpKind.PREATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: number[];
+  metadata: OperationContentsAndResultMetadataPreattestationsAggregate;
 }
 
 export interface OperationContentsAndResultPreEndorsement {
