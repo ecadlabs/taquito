@@ -4,11 +4,20 @@
  */
 
 let fetch = globalThis?.fetch;
+let createAgent: ((url: string) => object) | undefined = undefined;
 // Will only use browser fetch if we are in a browser environment,
 // default to the more stable node-fetch otherwise
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
 if (isNode) {
   fetch = require('node-fetch');
+  if (Number(process.versions.node.split('.')[0]) >= 20) {
+    // we need agent with keepalive false for node 20 and above
+    createAgent = (url: string) => {
+      return url.startsWith('https')
+        ? new require("https").Agent({ keepAlive: false })
+        : new require("http").Agent({ keepAlive: false });
+    };
+  }
 }
 
 import { STATUS_CODE } from './status_code';
@@ -96,6 +105,7 @@ export class HttpBackend {
         headers,
         body: JSON.stringify(data),
         signal: controller.signal,
+        agent: isNode ? createAgent?(urlWithQuery): undefined
       });
 
       if (typeof response === 'undefined') {
