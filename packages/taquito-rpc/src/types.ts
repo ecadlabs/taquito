@@ -665,7 +665,11 @@ export type OperationContents =
   | OperationContentsSmartRollupRecoverBond
   | OperationContentsSmartRollupTimeout
   | OperationContentsDalEntrapmentEvidence
-  | OperationContentsDalPublishCommitment;
+  | OperationContentsDalPublishCommitment
+  | OperationContentsDoubleConsensusOperationEvidence
+  | OperationContentsUpdateCompanionKey
+  | OperationContentsPreattestationsAggregate
+  | OperationContentsAttestationsAggregate;
 
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -1289,7 +1293,11 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupRecoverBond
   | OperationContentsAndResultSmartRollupTimeout
   | OperationContentsAndResultDalPublishCommitment
-  | OperationContentsAndResultDalEntrapmentEvidence;
+  | OperationContentsAndResultDalEntrapmentEvidence
+  | OperationContentsAndResultDoubleConsensusOperationEvidence
+  | OperationContentsAndResultUpdateCompanionKey
+  | OperationContentsAndResultPreattestationsAggregate
+  | OperationContentsAndResultAttestationsAggregate;
 
 export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultTransaction
@@ -1304,7 +1312,8 @@ export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultSmartRollupAddMessages
   | OperationContentsAndResultSmartRollupOriginate
   | OperationContentsAndResultSmartRollupExecuteOutboxMessage
-  | OperationContentsAndResultDalPublishCommitment;
+  | OperationContentsAndResultDalPublishCommitment
+  | OperationContentsAndResultUpdateCompanionKey;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
