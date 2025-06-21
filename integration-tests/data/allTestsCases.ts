@@ -196,6 +196,146 @@ export const seoulCases: TestCase[] = [
       ],
     },
   },
+  {
+    name: `Update Companion Key operation with proof edsig(tz1)`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          counter: '1125537',
+          source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+          fee: '0',
+          gas_limit: '693333',
+          storage_limit: '60000',
+          pk: 'edpkuXKmpnwWUTVo55d3N7fR9Hr8JgYKPnwDfLkS9wnyfEJpYRaCSi',
+          proof: 'edsigtYFkwJo6uVY5J1KnjnMFsj3Y1MKD9vqmtX2sF2u6yyg6fLJWn6Cy1CcbwJAkmEq5Zxvh49uYkMtHHGbeBm8LqBJg2uYjqG'
+        },
+      ],
+    },
+  },
+  {
+    name: `Update Companion Key operation with proof spsig(tz2)`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          counter: '1125537',
+          source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+          fee: '0',
+          gas_limit: '693333',
+          storage_limit: '60000',
+          pk: 'sppk7d82njyoaywbKC8tupUsk5V2fnAAjPgKNpMtXdYw9wUTEdJshp7',
+          proof: 'spsig1QVVCiQ6aN2zmut2wKTg4zWLoP9ia4qUY2hBo21odA7P25gqfieFWJMyntaJWmyrd6v3mgjKF5n4d2wcaB3LxkLmd1MoJQ',
+        },
+      ],
+    },
+  },
+  {
+    name: `Update Companion Key operation with proof p2sig(tz3)`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          counter: '1125537',
+          source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+          fee: '0',
+          gas_limit: '693333',
+          storage_limit: '60000',
+          pk: 'p2pk666o5KaJXbahSMYRGYTSuBMjfbLNZ8H7UaDYyKkq8Uv7CwwSBkK',
+          proof: 'p2sigN4XTiSicEot77bsR9BvpnDtSm4KDm2YyRew4isqiqxhN6fJpQeYFu8acN8NSDJCxPrqgpqyML3M7ubfBicRfqNz7oGhnX',
+        },
+      ],
+    },
+  },
+  {
+    name: `Update Companion Key operation tz1`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          counter: '1125537',
+          source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+          fee: '0',
+          gas_limit: '693333',
+          storage_limit: '60000',
+          pk: 'edpkuXKmpnwWUTVo55d3N7fR9Hr8JgYKPnwDfLkS9wnyfEJpYRaCSi',
+        },
+      ],
+    },
+  },
+  {
+    name: `Update Companion Key operation tz2`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          counter: '1125537',
+          source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+          fee: '0',
+          gas_limit: '693333',
+          storage_limit: '60000',
+          pk: 'sppk7d82njyoaywbKC8tupUsk5V2fnAAjPgKNpMtXdYw9wUTEdJshp7',
+        },
+      ],
+    },
+  },
+  {
+    name: `Update Companion Key operation tz3`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          counter: '1125537',
+          source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+          fee: '0',
+          gas_limit: '693333',
+          storage_limit: '60000',
+          pk: 'p2pk666o5KaJXbahSMYRGYTSuBMjfbLNZ8H7UaDYyKkq8Uv7CwwSBkK',
+        },
+      ],
+    },
+  },
+  {
+    name: `Update Companion Key operation with proof BLsig(tz4)`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          counter: '1125537',
+          source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+          fee: '0',
+          gas_limit: '693333',
+          storage_limit: '60000',
+          pk: 'BLpk1yKS9X6vrUiAZiZYfnjiDPkEf215W6rMX6c9gZ7FSFkkH63ZjAuU7VKvZfiBWaoCWtwWY8dQ',
+          proof: 'BLsigASWx9GkMxUpQMGvCrHrhkcsTZ5V9pmDrXSHvkiurrX6Bf5RQcMPbDMDgqWj4GokRekK42FyG76ccMUyFYWcJEmnCd8s6Kek9gtUGkXjPkLEhu8dbFFn5LWyQ4FoMCK3QrxXn6M6LD'
+        },
+      ],
+    },
+  },
+  {
+    name: `Update Companion Key operation without proof BLsig(tz4)`,
+    operation: {
+      branch: 'BMV9bffK5yjWCJgUJBsoTRifb4SsAYbkCVwVkKbJHffJYn7ePBL',
+      contents: [
+        {
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          counter: '1125537',
+          source: 'tz1PLXg3sxQ1YGRkWqxdACck6AnZpnnuVNZY',
+          fee: '0',
+          gas_limit: '693333',
+          storage_limit: '60000',
+          pk: 'BLpk1yKS9X6vrUiAZiZYfnjiDPkEf215W6rMX6c9gZ7FSFkkH63ZjAuU7VKvZfiBWaoCWtwWY8dQ',
+        },
+      ],
+    },
+  },
 ]
 
 export const commonCases: TestCase[] = [
