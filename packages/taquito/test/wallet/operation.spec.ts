@@ -46,7 +46,7 @@ describe('WalletOperation', () => {
         const confirmation = op.confirmationObservable(1);
         flush();
 
-        expectObservable(confirmation).toBe('--a', {
+        expectObservable(confirmation).toBe('----a', {
           a: {
             block: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
             expectedConfirmation: 1,
@@ -73,7 +73,7 @@ describe('WalletOperation', () => {
         const confirmation = op.confirmationObservable(2);
         flush();
 
-        expectObservable(confirmation).toBe('--a', {
+        expectObservable(confirmation).toBe('----a', {
           a: {
             block: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
             expectedConfirmation: 2,
@@ -87,7 +87,7 @@ describe('WalletOperation', () => {
     it('should emit 2 confirmations given that operation is included in the first block and a new head is applied on top', async () => {
       testScheduler = new TestScheduler((actual, expected) => {
         // TODO: expectObservable() only receives the last value of the observable, investigate why
-        expect(actual[0]).toMatchObject(expected[1]);
+        expect(actual[1]).toMatchObject(expected[1]);
       });
 
       testScheduler.run((helpers) => {
@@ -106,7 +106,7 @@ describe('WalletOperation', () => {
         const confirmation = op.confirmationObservable(2);
         flush();
 
-        expectObservable(confirmation).toBe('--a--(b|)', {
+        expectObservable(confirmation).toBe('----a--(b|)', {
           a: {
             block: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
             expectedConfirmation: 2,
