@@ -86,6 +86,8 @@ export class LocalForger implements Forger {
           continue;
         } else if (content.kind === 'update_consensus_key' && diff[0] === 'proof') {
           continue;
+        } else if (content.kind === 'update_companion_key' && diff[0] === 'proof') {
+          continue;
         } else if (content.kind === 'reveal' && diff[0] === 'proof') {
           continue;
         } else {

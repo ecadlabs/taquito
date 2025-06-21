@@ -28,7 +28,7 @@ import {
   slotHeaderDecoder,
 } from './codec-proto022';
 import { CODEC } from './constants-proto022';
-import { scriptDecoder } from './michelson/codec';
+import { scriptDecoder } from './michelson/codec-proto022';
 import {
   ActivationSchema,
   BallotSchema,

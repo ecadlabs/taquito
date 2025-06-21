@@ -1,8 +1,8 @@
 import { BigNumber } from 'bignumber.js';
-import { Decoder } from '../decoder';
+import { Decoder } from '../decoder-proto022';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
-import { Encoder } from '../encoder';
-import { opMappingReverse, opMapping } from '../constants';
+import { Encoder } from '../encoder-proto022';
+import { opMappingReverse, opMapping } from '../constants-proto022';
 import { pad } from '../utils';
 import { UnexpectedMichelsonValueError } from '../errors';
 import { InvalidHexStringError } from '@taquito/core';

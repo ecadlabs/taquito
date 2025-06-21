@@ -21,14 +21,14 @@ import {
   InvalidDalCommitmentError,
 } from './errors';
 import BigNumber from 'bignumber.js';
-import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
+import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants-proto022';
 import {
   extractRequiredLen,
   valueDecoder,
   valueEncoder,
   MichelsonValue,
   stripLengthPrefixFromBytes,
-} from './michelson/codec';
+} from './michelson/codec-proto022';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad, toHexString } from './utils';
 import {

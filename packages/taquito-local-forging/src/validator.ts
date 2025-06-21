@@ -15,6 +15,7 @@ import {
   TransferTicketSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
+  UpdateCompanionKeySchema,
   DrainDelegateSchema,
   SetDepositsLimitSchema,
   SmartRollupOriginateSchema,
@@ -39,6 +40,7 @@ type OperationKind =
   | OpKind.TRANSFER_TICKET
   | OpKind.INCREASE_PAID_STORAGE
   | OpKind.UPDATE_CONSENSUS_KEY
+  | OpKind.UPDATE_COMPANION_KEY
   | OpKind.DRAIN_DELEGATE
   | OpKind.SET_DEPOSITS_LIMIT
   | OpKind.SMART_ROLLUP_ORIGINATE
@@ -61,6 +63,7 @@ const OperationKindMapping = {
   transfer_ticket: TransferTicketSchema,
   increase_paid_storage: IncreasePaidStorageSchema,
   update_consensus_key: UpdateConsensusKeySchema,
+  update_companion_key: UpdateCompanionKeySchema,
   drain_delegate: DrainDelegateSchema,
   set_deposits_limit: SetDepositsLimitSchema,
   smart_rollup_originate: SmartRollupOriginateSchema,
