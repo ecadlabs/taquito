@@ -8,6 +8,7 @@ import {
   example9,
   example10,
 } from './code_with_sapling';
+import { isImplicitAccountCode, isImplicitAccountStorage } from './code_with_is_implicit_account';
 import { ticketCode, ticketStorage } from './code_with_ticket';
 import { genericCode, genericStorage } from './generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './token_bigmap';
@@ -336,6 +337,27 @@ export const seoulCases: TestCase[] = [
       ],
     },
   },
+  {
+    name: 'Origination of a contract that contains the instructions IS_IMPLICIT_ACCOUNT',
+    operation: {
+      branch: "BMFfghLG5oS4vRgqNvEvhjLKNQZdK8sW4ezyWLAWXoHhtfHPAzE",
+      contents: [
+        {
+          kind: OpKind.ORIGINATION,
+          source: "tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD",
+          fee: "337",
+          counter: "1318",
+          gas_limit: "666",
+          storage_limit: "319",
+          balance: "0",
+          script: {
+            code: isImplicitAccountCode,
+            storage: isImplicitAccountStorage,
+          }
+        }
+      ]
+    },
+  }
 ]
 
 export const commonCases: TestCase[] = [
