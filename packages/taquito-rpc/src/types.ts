@@ -106,6 +106,10 @@ export interface DelegatesResponse {
     active: { pkh: string; pk: string };
     pendings?: { cycle: number; pkh: string; pk: string }[];
   };
+  companion_key?: {
+    active: { pkh: string; pk: string } | null;
+    pendings?: { cycle: number; pkh: string; pk: string }[];
+  };
   stakers?: { staker: string; frozen_deposits: string }[];
   delegators?: string[];
   full_balance?: BigNumber;
