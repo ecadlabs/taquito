@@ -2038,6 +2038,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto023 &
   ConstantsResponseProto022 &
   ConstantsResponseProto021 &
   ConstantsResponseProto020 &
@@ -2084,6 +2085,8 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export type ConstantsResponseProto023 = ConstantsResponseProto022;
 
 export interface ConstantsResponseProto022
   extends Omit<
