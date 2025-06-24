@@ -10,12 +10,12 @@ let createAgent: ((url: string) => object) | undefined = undefined;
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
 if (isNode) {
   fetch = require('node-fetch');
-  if (Number(process.versions.node.split('.')[0]) >= 20) {
-    // we need agent with keepalive false for node 20 and above
+  if (Number(process.versions.node.split('.')[0]) >= 19) {
+    // we need agent with keepalive false for node 19 and above
     createAgent = (url: string) => {
       return url.startsWith('https')
-        ? new require("https").Agent({ keepAlive: false })
-        : new require("http").Agent({ keepAlive: false });
+        ? new (require("https").Agent)({ keepAlive: false }) as import('https').Agent
+        : new (require("http").Agent)({ keepAlive: false }) as import('http').Agent;
     };
   }
 }
@@ -105,7 +105,7 @@ export class HttpBackend {
         headers,
         body: JSON.stringify(data),
         signal: controller.signal,
-        agent: isNode && createAgent ? createAgent(urlWithQuery) : undefined,
+        ...(isNode && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
       });
 
       if (typeof response === 'undefined') {
