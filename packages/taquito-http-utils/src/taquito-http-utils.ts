@@ -4,7 +4,7 @@
  */
 
 let fetch = globalThis?.fetch;
-let createAgent: ((url: string) => object) | undefined = undefined;
+let createAgent: ((url: string) => Promise<import('https').Agent | import('http').Agent>) | undefined = undefined;
 // Will only use browser fetch if we are in a browser environment,
 // default to the more stable node-fetch otherwise
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
@@ -12,10 +12,11 @@ if (isNode) {
   fetch = require('node-fetch');
   if (Number(process.versions.node.split('.')[0]) >= 19) {
     // we need agent with keepalive false for node 19 and above
-    const { Agent: HttpsAgent } = require('https') as { Agent: typeof import('https').Agent };
-    const { Agent: HttpAgent } = require('http') as { Agent: typeof import('http').Agent };
     
-    createAgent = (url: string) => {
+    createAgent = async (url: string) => {
+      const { Agent: HttpsAgent } = await import('https');
+      const { Agent: HttpAgent } = await import('http');
+
       return url.startsWith('https')
         ? new HttpsAgent({ keepAlive: false })
         : new HttpAgent({ keepAlive: false });
@@ -108,7 +109,7 @@ export class HttpBackend {
         headers,
         body: JSON.stringify(data),
         signal: controller.signal,
-        ...(isNode && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
+        ...(isNode && createAgent ? { agent: await createAgent(urlWithQuery) } : {}),
       });
 
       if (typeof response === 'undefined') {
