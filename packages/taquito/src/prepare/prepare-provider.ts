@@ -558,6 +558,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     fee,
     storageLimit,
     gasLimit,
+    to,
     ...rest
   }: FinalizeUnstakeParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
@@ -566,7 +567,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const op = await createTransferOperation({
       ...rest,
-      to: pkh,
+      to: to ? to : pkh,
       amount: 0,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
       parameter: {

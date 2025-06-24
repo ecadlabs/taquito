@@ -469,6 +469,40 @@ describe('PrepareProvider test', () => {
     it('should return a prepared finalize_unstake pseudo operation without a reveal op', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
+      const prepared = await prepareProvider.finalizeUnstake({
+        to: 'tz1NFvwejbSCLBBuzCrZQgod3GkaMQJ9HoMf',
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'transaction',
+              fee: '0',
+              gas_limit: '1040000',
+              storage_limit: '60000',
+              amount: '0',
+              destination: 'tz1NFvwejbSCLBBuzCrZQgod3GkaMQJ9HoMf',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '1',
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should return a prepared finalize_unstake pseudo operation without a reveal op with different source and destination', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
       const prepared = await prepareProvider.finalizeUnstake({});
 
       expect(prepared).toEqual({
