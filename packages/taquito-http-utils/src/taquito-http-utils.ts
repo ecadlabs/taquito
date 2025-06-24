@@ -12,10 +12,13 @@ if (isNode) {
   fetch = require('node-fetch');
   if (Number(process.versions.node.split('.')[0]) >= 19) {
     // we need agent with keepalive false for node 19 and above
+    const { Agent: HttpsAgent } = require('https') as { Agent: typeof import('https').Agent };
+    const { Agent: HttpAgent } = require('http') as { Agent: typeof import('http').Agent };
+    
     createAgent = (url: string) => {
       return url.startsWith('https')
-        ? new (require("https").Agent)({ keepAlive: false }) as import('https').Agent
-        : new (require("http").Agent)({ keepAlive: false }) as import('http').Agent;
+        ? new HttpsAgent({ keepAlive: false })
+        : new HttpAgent({ keepAlive: false });
     };
   }
 }
