@@ -1,0 +1,3 @@
+parameter address;
+storage (option key_hash);
+code { CAR; IS_IMPLICIT_ACCOUNT; NIL operation; PAIR }

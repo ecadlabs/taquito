@@ -81,7 +81,8 @@ type MichelsonNoArgInstructionID =
   | 'OPEN_CHEST'
   | 'MIN_BLOCK_TIME'
   | 'BYTES'
-  | 'NAT';
+  | 'NAT'
+  | 'IS_IMPLICIT_ACCOUNT';
 
 type MichelsonRegularInstructionID =
   | 'CONTRACT'
