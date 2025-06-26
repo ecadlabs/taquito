@@ -8,8 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPsRiotuma } from './known-contracts-PsRiotuma';
-import { knownContractsPtSEouLov } from './known-contracts-PtSEouLov';
-
+import { knownContractsPtSeouLou } from './known-contracts-PtSeouLou';
 
 const nodeCrypto = require('crypto');
 
@@ -145,9 +144,9 @@ const rionetSecretKey: Config =
 const nextnetSecretKey: Config =
   defaultConfig({
     networkName: 'NEXTNET',
-    protocol: Protocols.PtSEouLov,
-    defaultRpc: 'https://rpc.nextnet-20250610.teztnets.com',
-    knownContracts: knownContractsPtSEouLov,
+    protocol: Protocols.PtSeouLou,
+    defaultRpc: 'https://rpc.nextnet-20250626.teztnets.com',
+    knownContracts: knownContractsPtSeouLou,
     signerConfig: defaultSecretKey
   })
 

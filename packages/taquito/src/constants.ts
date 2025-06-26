@@ -72,7 +72,7 @@ export enum Protocols {
   PsParisCZ = 'PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi',
   PsQuebecn = 'PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg',
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
-  PtSEouLov = 'PtSEouLov7Fp6XoqXUBqd7XzggUpUarSMcSUsR5MarqspqiuQBY',
+  PtSeouLou = 'PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -95,7 +95,7 @@ export const protocols = {
   '020': [Protocols.PtParisBx, Protocols.PsParisCZ],
   '021': [Protocols.PsQuebecn],
   '022': [Protocols.PsRiotuma],
-  '023': [Protocols.PtSEouLov],
+  '023': [Protocols.PtSeouLou],
   '024': [Protocols.ProtoALpha],
 };
 
@@ -120,7 +120,7 @@ export enum ChainIds {
   PARISCNET = 'NetXXWAHLEvre9b',
   QUEBECNET = 'NetXuTeGinLEqxp',
   RIONET = 'NetXPdgaoabtBth',
-  SEOULNET = 'NetXYxC4sqSqWtQ',
+  SEOULNET = 'NetXQxxuRar4toQ',
 }
 
 // A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption (3.5 fails occasionally with gas exhausted; 4 fails occasionally with fee too low)

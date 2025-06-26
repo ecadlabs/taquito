@@ -4,7 +4,7 @@ import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, networkType, protocol }) => {
   const rionet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsRiotuma) ? test : test.skip;
-  const seoulnetAndAlpha = protocol === Protocols.PtSEouLov || protocol === Protocols.ProtoALpha ? test: test.skip;
+  const seoulnetAndAlpha = protocol === Protocols.PtSeouLou || protocol === Protocols.ProtoALpha ? test: test.skip;
 
   const Tezos = lib;
   let thirdParty: TezosToolkit

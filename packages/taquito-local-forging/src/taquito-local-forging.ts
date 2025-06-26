@@ -25,7 +25,7 @@ export * from './interface';
 export { VERSION } from './version';
 export { ProtocolsHash } from './protocols';
 
-const PROTOCOL_CURRENT = ProtocolsHash.PtSEouLov;
+const PROTOCOL_CURRENT = ProtocolsHash.PtSeouLou;
 
 export function getCodec(codec: CODEC | CODECPROTO022, _proto: ProtocolsHash) {
   // use encodersProto022 & decodersProto022 if it's rio or prior

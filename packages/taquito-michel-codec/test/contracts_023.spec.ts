@@ -16,13 +16,13 @@ const contracts: {
   opcodes: ['is_implicit_account__instruction.tz'],
 };
 
-describe('PtSEouLov', () => {
+describe('PtSeouLou', () => {
   for (const [group, list] of Object.entries(contracts)) {
     describe(group, () => {
       for (const contract of list) {
         it(contract, () => {
           const options: ContractOptions = {
-            protocol: Protocol.PtSEouLov,
+            protocol: Protocol.PtSeouLou,
           };
 
           const filename = path.resolve(__dirname, 'contracts_023', group, contract);

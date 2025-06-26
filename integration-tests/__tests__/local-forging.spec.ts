@@ -8,7 +8,7 @@ import { TezosToolkit, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ rpc, protocol }) => {
   const Tezos = new TezosToolkit(rpc);
-  const seoulnetAndAlpha = protocol === Protocols.PtSEouLov || protocol === Protocols.ProtoALpha ? test : test.skip;
+  const seoulnetAndAlpha = protocol === Protocols.PtSeouLou || protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test local forger: ${rpc}`, () => {
     // Seoul protocols
