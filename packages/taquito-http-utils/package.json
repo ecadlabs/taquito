@@ -12,6 +12,10 @@
     "signature.json",
     "dist"
   ],
+  "browser": {
+    "http": false,
+    "https": false
+  },
   "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
   "repository": {
     "type": "git",

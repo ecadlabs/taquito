@@ -13,7 +13,8 @@ export default {
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
+  // Exclude nodejs http and https modules
+  external: [ "http", "https" ],
   watch: {
     include: 'src/**',
   },
