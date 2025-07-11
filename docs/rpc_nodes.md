@@ -44,7 +44,6 @@ values={[
 
 | Provider         |  Details                                    |
 |------------------|---------------------------------------------|
-| MIDL.dev         |  https://midl.dev/tezos-rpc/                |
 | Exaion           |  https://node.exaion.com                    |
 
 *If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
