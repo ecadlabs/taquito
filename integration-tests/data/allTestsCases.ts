@@ -48,6 +48,78 @@ interface TestCase {
   operation: ForgeParams;
   expected?: object;
 }
+
+export const seoulCases: TestCase[] = [
+  {
+    name: 'Reveal tz1',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.REVEAL,
+          counter: '1',
+          source: 'tz1WRxrFJDYNJYMJiqLAeS2QCg9SwXJt4QYD',
+          public_key: 'edpkuh8bYRPTrSCUUKmPSGg9WtVQiqHpEE4buEk7jynbenvQdaHTTD',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Reveal tz2',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.REVEAL,
+          counter: '1',
+          source: 'tz2JKWBpoLTR7Yxe3Vgpqpk9Ch8HSBeYBEdF',
+          public_key: 'sppk7ccMwYw4ZoJL3QUFnt4GfWYn9R15fwNHP47AyivsLurGtEkDHKw',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Reveal tz3',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.REVEAL,
+          counter: '1',
+          source: 'tz3YchCjUWXRvZKnU6xZoFeJeEkWQTrhvVYi',
+          public_key: 'p2pk678THitX2ewSXAA4KPJVFAMbfQZkp8XyjEh1RN4ynXbA9sbf1i9',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Reveal tz4',
+    operation: {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.REVEAL,
+          counter: '1',
+          source: 'tz4AcP8x8Kgjmzw6rYX3wQLi1XQKPpKjUtxT',
+          public_key: 'BLpk1tvZGs6Yj8eSQ4L1kXi1534BR8ghHk3peZQMFrKsn6migfuWPR5vq4QgZLH1ueMFAUxdmefD',
+          fee: '10000',
+          gas_limit: '10',
+          storage_limit: '10'
+        },
+      ],
+    },
+  },
+]
+
 export const rioCases: TestCase[] = [
   {
     name: 'Delegation with tz4 delegate',

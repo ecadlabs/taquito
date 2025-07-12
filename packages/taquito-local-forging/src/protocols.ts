@@ -20,6 +20,7 @@ export enum ProtocolsHash {
   PsParisCZ = 'PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi',
   PsQuebecn = 'PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg',
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
+  PtSEouLov = 'PtSEouLov7Fp6XoqXUBqd7XzggUpUarSMcSUsR5MarqspqiuQBY',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -45,6 +46,7 @@ const protoLevel: Record<ProtocolsHash, number> = {
   PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi: 20,
   PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg: 21,
   PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7: 22,
+  PtSEouLov7Fp6XoqXUBqd7XzggUpUarSMcSUsR5MarqspqiuQBY: 23,
   ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 23,
 };
 
