@@ -30,9 +30,11 @@ values={[
 | Tezos Foundation | mainnet      | https://rpc.tzbeta.net                   | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header) |
 | Tezos Foundation | ghostnet     | https://rpc.ghostnet.teztnets.com        | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header) |
 | Tezos Foundation | rionet       | https://rpc.rionet.teztnets.com          | [Check](https://rpc.rionet.teztnets.com/chains/main/blocks/head/header) |
+| Tezos Foundation | seoulnet     | https://rpc.seoulnet.teztnets.com        | [Check](https://rpc.seoulnet.teztnets.com/chains/main/blocks/head/header) |
 | TzKT             | mainnet      | https://rpc.tzkt.io/mainnet              | [Check](https://rpc.tzkt.io/mainnet/chains/main/blocks/head/header) |
 | TzKT             | ghostnet     | https://rpc.tzkt.io/ghostnet             | [Check](https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/header) |
 | TzKT             | rionet       | https://rpc.tzkt.io/rionet               | [Check](https://rpc.tzkt.io/rionet/chains/main/blocks/head/header) |
+| TzKT             | seoulnet     | https://rpc.tzkt.io/seoulnet             | [Check](https://rpc.tzkt.io/seoulnet/chains/main/blocks/head/header) |
 
 <!-- when updating this table make sure to update the website/static/docs/rpc_nodes.json first and rerun example/convert-rpc-json-to-md.ts to replace the output table above -->
 *- You can also find a machine readable list in [rpc_nodes.json](https://taquito.io/docs/rpc_nodes.json).*
@@ -44,7 +46,6 @@ values={[
 
 | Provider         |  Details                                    |
 |------------------|---------------------------------------------|
-| MIDL.dev         |  https://midl.dev/tezos-rpc/                |
 | Exaion           |  https://node.exaion.com                    |
 
 *If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
