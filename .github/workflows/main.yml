@@ -47,6 +47,9 @@ jobs:
           - testnet: rionet
             testnet_uppercase: RIONET
             rpc_url: https://rpc.rionet.teztnets.com/
+          # - testnet: seoulnet
+          #   testnet_uppercase: SEOULNET
+          #   rpc_url: https://rpc.seoulnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -65,14 +68,14 @@ jobs:
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-  integration-tests-testnet-nextnet-secret-key:
+  integration-tests-testnet-seoulnet-secret-key:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
       matrix:
         include:
-          - testnet: nextnet
-            testnet_uppercase: NEXTNET
+          - testnet: seoulnet
+            testnet_uppercase: SEOULNET
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -86,6 +89,6 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
-      - run: npm -w integration-tests run test:nextnet-secret-key
+      - run: npm -w integration-tests run test:seoulnet-secret-key
         env:
           RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true

@@ -213,7 +213,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         cache_sampler_state_cycles: 5,
         dal_parametric: {
           feature_enable: true,
-          incentives_enable: false,
+          incentives_enable: true,
           number_of_slots: 32,
           attestation_lag: 8,
           attestation_threshold: 66,

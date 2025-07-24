@@ -117,7 +117,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb', // Germán - TT
+    knownBaker: process.env[`TEZOS_BAKER`] || protocol === Protocols.PtSeouLou ? 'tz1NNT9EERmcKekRq2vdv6e8TL3WQpY8AXSF' : 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb', // Germán - TT
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -139,16 +139,19 @@ const rionetEphemeral: Config =
   })
 
 const rionetSecretKey: Config =
-  { ...rionetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.rionet.teztnets.com' } };
+  { ...rionetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://rpc.rionet.teztnets.com' } };
 
-const nextnetSecretKey: Config =
+  const seoulnetEphemeral: Config =
   defaultConfig({
-    networkName: 'NEXTNET',
+    networkName: 'SEOULNET',
     protocol: Protocols.PtSeouLou,
-    defaultRpc: 'https://rpc.nextnet-20250626.teztnets.com',
+    defaultRpc: 'https://rpc.seoulnet.teztnets.com',
     knownContracts: knownContractsPtSeouLou,
-    signerConfig: defaultSecretKey
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/seoulnet')
   })
+
+const seoulnetSecretKey: Config =
+  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://rpc.seoulnet.teztnets.com' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -160,7 +163,7 @@ const ghostnetEphemeral: Config =
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://ghostnet.ecadinfra.com' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://ghostnet.ecadinfra.com' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
@@ -182,14 +185,16 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_RIONET_WITH_SECRET_KEY']) {
   providers.push(rionetSecretKey);
-} else if (process.env['RUN_NEXTNET_WITH_SECRET_KEY']) {
-  providers.push(nextnetSecretKey);
+} else if (process.env['RUN_SEOULNET_WITH_SECRET_KEY']) {
+  providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['RIONET']) {
   providers.push(rionetEphemeral);
+} else if (process.env['SEOULNET']) {
+  providers.push(seoulnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
