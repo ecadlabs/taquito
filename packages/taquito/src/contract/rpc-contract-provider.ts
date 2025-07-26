@@ -495,9 +495,6 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     if (!params.to) {
       params.to = params.source;
     }
-    if (params.to && params.to !== params.source) {
-      throw new InvalidStakingAddressError(params.to);
-    }
 
     if (!params.amount) {
       params.amount = 0;

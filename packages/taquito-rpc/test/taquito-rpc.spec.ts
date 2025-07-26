@@ -3663,7 +3663,7 @@ describe('RpcClient test', () => {
 
       const balanceUpdate =
         'metadata' in response.contents[0]
-          ? (response.contents[0]['metadata'][
+          ? ((response.contents[0] as any)['metadata'][
               'balance_updates'
             ] as OperationMetadataBalanceUpdates[])
           : [];
@@ -3721,7 +3721,7 @@ describe('RpcClient test', () => {
 
       const balanceUpdate =
         'metadata' in response.contents[0]
-          ? (response.contents[0]['metadata'][
+          ? ((response.contents[0] as any)['metadata'][
               'balance_updates'
             ] as OperationMetadataBalanceUpdates[])
           : [];

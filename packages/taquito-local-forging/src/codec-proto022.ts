@@ -21,19 +21,20 @@ import {
   InvalidDalCommitmentError,
 } from './errors';
 import BigNumber from 'bignumber.js';
-import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
+import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants-proto022';
 import {
   extractRequiredLen,
   valueDecoder,
   valueEncoder,
   MichelsonValue,
   stripLengthPrefixFromBytes,
-} from './michelson/codec';
+} from './michelson/codec-proto022';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { pad, toHexString } from './utils';
 import {
   InvalidAddressError,
   InvalidContractAddressError,
+  InvalidSignatureError,
   ProhibitedActionError,
 } from '@taquito/core';
 
@@ -533,10 +534,21 @@ export const depositsLimitDecoder = (value: Uint8ArrayConsumer) => {
 
 const signatureV1Encoder = (val: string) => {
   const signaturePrefix = val.substring(0, 5);
-  if (signaturePrefix === Prefix.BLSIG) {
-    return paddedBytesEncoder(prefixEncoder(Prefix.BLSIG)(val));
-  } else {
-    throw new ProhibitedActionError('currently we only support encoding of BLSIG signatures');
+  switch (signaturePrefix) {
+    case Prefix.EDSIG:
+      return paddedBytesEncoder(prefixEncoder(Prefix.EDSIG)(val));
+    case Prefix.SPSIG:
+      return paddedBytesEncoder(prefixEncoder(Prefix.SPSIG)(val));
+    case Prefix.P2SIG:
+      return paddedBytesEncoder(prefixEncoder(Prefix.P2SIG)(val));
+    case Prefix.BLSIG:
+      return paddedBytesEncoder(prefixEncoder(Prefix.BLSIG)(val));
+    default:
+      throw new InvalidSignatureError(
+        val,
+        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
+          ` expecting one of the following '${Prefix.EDSIG}', '${Prefix.SPSIG}', '${Prefix.P2SIG}' or '${Prefix.BLSIG}'.`
+      );
   }
 };
 

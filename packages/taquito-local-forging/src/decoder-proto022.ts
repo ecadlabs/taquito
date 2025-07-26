@@ -26,9 +26,9 @@ import {
   valueParameterDecoder,
   zarithDecoder,
   slotHeaderDecoder,
-} from './codec';
-import { CODEC } from './constants';
-import { scriptDecoder } from './michelson/codec';
+} from './codec-proto022';
+import { CODEC } from './constants-proto022';
+import { scriptDecoder } from './michelson/codec-proto022';
 import {
   ActivationSchema,
   BallotSchema,
@@ -37,7 +37,6 @@ import {
   AttestationWithDalSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
-  UpdateCompanionKeySchema,
   DrainDelegateSchema,
   ManagerOperationSchema,
   operationDecoder,
@@ -55,7 +54,7 @@ import {
   SmartRollupExecuteOutboxMessageSchema,
   DalPublishCommitmentSchema,
   FailingNoopSchema,
-} from './schema/operation';
+} from './schema/operation-proto022';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { toHexString } from './utils';
 
@@ -123,8 +122,6 @@ decoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(IncreasePaidStorageSchema)(val);
 decoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(UpdateConsensusKeySchema)(val);
-decoders[CODEC.OP_UPDATE_COMPANION_KEY] = (val: Uint8ArrayConsumer) =>
-  schemaDecoder(decoders)(UpdateCompanionKeySchema)(val);
 decoders[CODEC.OP_DRAIN_DELEGATE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(DrainDelegateSchema)(val);
 decoders[CODEC.OP_SMART_ROLLUP_ORIGINATE] = (val: Uint8ArrayConsumer) =>

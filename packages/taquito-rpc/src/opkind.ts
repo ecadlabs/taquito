@@ -38,4 +38,8 @@ export enum OpKind {
   SMART_ROLLUP_TIMEOUT = 'smart_rollup_timeout',
   DAL_PUBLISH_COMMITMENT = 'dal_publish_commitment',
   DAL_ENTRAPMENT_EVIDENCE = 'dal_entrapment_evidence',
+  PREATTESTATIONS_AGGREGATE = 'preattestations_aggregate',
+  ATTESTATIONS_AGGREGATE = 'attestations_aggregate',
+  UPDATE_COMPANION_KEY = 'update_companion_key',
+  DOUBLE_CONSENSUS_OPERATION_EVIDENCE = 'double_consensus_operation_evidence',
 }
