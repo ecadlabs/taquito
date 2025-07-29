@@ -1,10 +1,11 @@
 import { Protocols, TezosToolkit, TezosOperationError } from "@taquito/taquito";
+import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
 import { CONFIGS, NetworkType } from "../../../config";
 import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, networkType, protocol }) => {
   const rionet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsRiotuma) ? test : test.skip;
-  const seoulnetAndAlpha = protocol === Protocols.PtSeouLou || protocol === Protocols.ProtoALpha ? test: test.skip;
+  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test: test.skip;
 
   const Tezos = lib;
   let thirdParty: TezosToolkit

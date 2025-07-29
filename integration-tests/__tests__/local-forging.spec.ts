@@ -4,11 +4,11 @@ import { CONFIGS } from "../config";
 import { commonCases, seoulCases } from '../data/allTestsCases';
 import { LocalForger, ProtocolsHash } from '@taquito/local-forging'
 import { TezosToolkit, Protocols } from "@taquito/taquito";
-
+import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
 
 CONFIGS().forEach(({ rpc, protocol }) => {
   const Tezos = new TezosToolkit(rpc);
-  const seoulnetAndAlpha = protocol === Protocols.PtSeouLou || protocol === Protocols.ProtoALpha ? test : test.skip;
+  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
 
   describe(`Test local forger: ${rpc}`, () => {
     // Seoul protocols

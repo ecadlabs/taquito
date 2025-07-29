@@ -652,10 +652,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -710,10 +710,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -795,10 +795,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -841,10 +841,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -925,10 +925,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -977,10 +977,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -1060,10 +1060,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
