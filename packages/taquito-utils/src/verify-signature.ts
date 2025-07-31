@@ -1,28 +1,22 @@
-import { verify } from '@stablelib/ed25519';
-import { hash } from '@stablelib/blake2b';
+import { verify as verifyEd25519 } from '@stablelib/ed25519';
+import { hash as blake2b } from '@stablelib/blake2b';
 import {
-  b58cdecode,
+  b58DecodeAndCheckPrefix,
   buf2hex,
   hex2buf,
-  invalidDetail,
   mergebuf,
   Prefix,
-  prefix,
-  validatePublicKey,
-  validateSignature,
-  ValidationResult,
 } from './taquito-utils';
 import elliptic from 'elliptic';
-import toBuffer from 'typedarray-to-buffer';
-import { InvalidPublicKeyError, InvalidMessageError, InvalidSignatureError } from '@taquito/core';
+import { InvalidMessageError } from '@taquito/core';
+import { bls12_381 } from '@noble/curves/bls12-381';
 
-type PkPrefix = Prefix.EDPK | Prefix.SPPK | Prefix.P2PK | Prefix.BLPK;
-type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
+export const BLS12_381_DST = "BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_";
 
 /**
  * @description Verify signature of a payload
  *
- * @param messageBytes The forged message including the magic byte (11 for block,
+ * @param message The forged message including the magic byte (11 for block,
  *        12 for preattestation, 13 for attestation, 3 for generic, 5 for the PACK format of michelson)
  * @param publicKey The public key to verify the signature against
  * @param signature The signature to verify
@@ -39,103 +33,78 @@ type SigPrefix = Prefix.EDSIG | Prefix.SPSIG | Prefix.P2SIG | Prefix.SIG;
  *
  */
 export function verifySignature(
-  messageBytes: string,
+  message: string | Uint8Array,
   publicKey: string,
   signature: string,
   watermark?: Uint8Array
 ): boolean {
-  const pkPrefix = validatePkAndExtractPrefix(publicKey);
-  const sigPrefix = validateSigAndExtractPrefix(signature);
+  const [pk, pre] = b58DecodeAndCheckPrefix(publicKey, [Prefix.P256PublicKey, Prefix.Secp256k1PublicKey, Prefix.Ed25519PublicKey, Prefix.BLS12_381PublicKey]);
+  const [sig,] = b58DecodeAndCheckPrefix(signature, [Prefix.P256Signature, Prefix.Secp256k1Signature, Prefix.Ed25519Signature, Prefix.BLS12_381Signature]);
 
-  const decodedPublicKey = b58cdecode(publicKey, prefix[pkPrefix]);
-  const decodedSig = b58cdecode(signature, prefix[sigPrefix]);
-  let messageBuf = hex2buf(validateMessageNotEmpty(messageBytes));
-  if (typeof watermark !== 'undefined') {
-    messageBuf = mergebuf(watermark, messageBuf);
-  }
-  const bytesHash = hash(messageBuf, 32);
-
-  if (pkPrefix === Prefix.EDPK) {
-    return verifyEdSignature(decodedSig, bytesHash, decodedPublicKey);
-  } else if (pkPrefix === Prefix.SPPK) {
-    return verifySpSignature(decodedSig, bytesHash, decodedPublicKey);
-  } else if (pkPrefix === Prefix.P2PK) {
-    return verifyP2Signature(decodedSig, bytesHash, decodedPublicKey);
+  let msg: Uint8Array;
+  if (typeof message === 'string') {
+    msg = hex2buf(message);
   } else {
-    return false;
+    msg = message;
+  }
+
+  if (msg.length === 0) {
+    throw new InvalidMessageError(buf2hex(msg), `can't be empty`);
+  }
+
+  if (typeof watermark !== 'undefined') {
+    msg = mergebuf(watermark, msg);
+  }
+
+  switch (pre) {
+    case Prefix.P256PublicKey:
+      return verifyP2Signature(sig, msg, pk);
+    case Prefix.Secp256k1PublicKey:
+      return verifySpSignature(sig, msg, pk);
+    case Prefix.Ed25519PublicKey:
+      return verifyEdSignature(sig, msg, pk);
+    default:
+      return verifyBLSSignature(sig, msg, pk);
   }
 }
 
-function validateMessageNotEmpty(message: string) {
-  if (message === '') {
-    throw new InvalidMessageError(message, `can't be empty`);
-  }
-  return message;
-}
-
-export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
-  if (publicKey === '') {
-    throw new InvalidPublicKeyError(publicKey, `can't be empty`);
-  }
-  const pkPrefix = publicKey.substring(0, 4);
-  const publicKeyValidation = validatePublicKey(publicKey);
-  if (publicKeyValidation !== ValidationResult.VALID) {
-    throw new InvalidPublicKeyError(publicKey, invalidDetail(publicKeyValidation));
-  }
-  return pkPrefix as PkPrefix;
-}
-
-function validateSigAndExtractPrefix(signature: string): SigPrefix {
-  const signaturePrefix = signature.startsWith('sig')
-    ? signature.substring(0, 3)
-    : signature.substring(0, 5);
-  const validation = validateSignature(signature);
-  if (validation !== ValidationResult.VALID) {
-    throw new InvalidSignatureError(signature, invalidDetail(validation));
-  }
-  return signaturePrefix as SigPrefix;
-}
-
-function verifyEdSignature(
-  decodedSig: Uint8Array,
-  bytesHash: Uint8Array,
-  decodedPublicKey: Uint8Array
-) {
+function verifyEdSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
+  const hash = blake2b(msg, 32);
   try {
-    return verify(decodedPublicKey, bytesHash, decodedSig);
-  } catch (e) {
+    return verifyEd25519(publicKey, hash, sig);
+  } catch {
     return false;
   }
 }
 
-function verifySpSignature(
-  decodedSig: Uint8Array,
-  bytesHash: Uint8Array,
-  decodedPublicKey: Uint8Array
-) {
-  const key = new elliptic.ec('secp256k1').keyFromPublic(decodedPublicKey);
-  return verifySpOrP2Sig(decodedSig, bytesHash, key);
+function verifySpSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
+  const key = new elliptic.ec('secp256k1').keyFromPublic(publicKey);
+  return verifySpOrP2Sig(sig, msg, key);
 }
 
-function verifyP2Signature(
-  decodedSig: Uint8Array,
-  bytesHash: Uint8Array,
-  decodedPublicKey: Uint8Array
-) {
-  const key = new elliptic.ec('p256').keyFromPublic(decodedPublicKey);
-  return verifySpOrP2Sig(decodedSig, bytesHash, key);
+function verifyP2Signature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
+  const key = new elliptic.ec('p256').keyFromPublic(publicKey);
+  return verifySpOrP2Sig(sig, msg, key);
 }
 
-function verifySpOrP2Sig(decodedSig: Uint8Array, bytesHash: Uint8Array, key: elliptic.ec.KeyPair) {
-  const hexSig = buf2hex(toBuffer(decodedSig));
-  const match = hexSig.match(/([a-f\d]{64})/gi);
-  if (match) {
-    try {
-      const [r, s] = match;
-      return key.verify(bytesHash, { r, s });
-    } catch (e) {
-      return false;
-    }
+function verifySpOrP2Sig(sig: Uint8Array, msg: Uint8Array, key: elliptic.ec.KeyPair): boolean {
+  const r = sig.slice(0, 32);
+  const s = sig.slice(32);
+  const hash = blake2b(msg, 32);
+  try {
+    return key.verify(hash, { r, s });
+  } catch {
+    return false;
   }
-  return false;
+}
+
+const bls = bls12_381.longSignatures; // AKA MinPK
+
+function verifyBLSSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
+  try {
+    const point = bls.hash(msg, BLS12_381_DST);
+    return bls.verify(sig, point, publicKey);
+  } catch {
+    return false;
+  }
 }

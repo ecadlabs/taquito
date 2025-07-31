@@ -15,7 +15,7 @@ import {
 } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
 import { Tz1 } from './ed-key';
-import { Tz2, ECKey, Tz3 } from './ec-key';
+import { Tz2, Tz3 } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
@@ -27,6 +27,18 @@ export { VERSION } from './version';
 export * from './derivation-tools';
 export * from './helpers';
 export { InvalidPassphraseError } from './errors';
+
+export interface SignResult {
+  signature: string;
+  prefixedSignature: string;
+}
+
+export interface SigningKey {
+  sign(message: Uint8Array): Promise<SignResult>;
+  publicKey(): Promise<string>;
+  publicKeyHash(): Promise<string>;
+  secretKey(): Promise<string>;
+}
 
 export interface FromMnemonicParams {
   mnemonic: string;
@@ -42,7 +54,7 @@ export interface FromMnemonicParams {
  * @throws {@link InvalidMnemonicError}
  */
 export class InMemorySigner {
-  private _key!: Tz1 | ECKey;
+  private _key!: SigningKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
     if (!Bip39.validateMnemonic(mnemonic)) {
@@ -129,10 +141,8 @@ export class InMemorySigner {
         break;
       default:
         throw new InvalidKeyError(
-          `${invalidDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting one of the following '${
-            Prefix.EDESK
-          }', '${Prefix.EDSK}', '${Prefix.SPSK}', '${Prefix.SPESK}', '${Prefix.P2SK}' or '${
-            Prefix.P2ESK
+          `${invalidDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting one of the following '${Prefix.Ed25519EncryptedSeed
+          }', '${Prefix.EDSK}', '${Prefix.Secp256k1SecretKey}', '${Prefix.Secp256k1EncryptedSecretKey}', '${Prefix.P256SecretKey}' or '${Prefix.P256EncryptedSecretKey
           }'.`
         );
     }
@@ -143,7 +153,7 @@ export class InMemorySigner {
    * @param bytes Bytes to sign
    * @param watermark Watermark to append to the bytes
    */
-  async sign(bytes: string, watermark?: Uint8Array) {
+  sign(bytes: string, watermark?: Uint8Array): Promise<SignResult> {
     let bb = hex2buf(bytes);
     if (typeof watermark !== 'undefined') {
       bb = mergebuf(watermark, bb);
@@ -157,21 +167,21 @@ export class InMemorySigner {
   /**
    * @returns Encoded public key
    */
-  async publicKey(): Promise<string> {
+  publicKey(): Promise<string> {
     return this._key.publicKey();
   }
 
   /**
    * @returns Encoded public key hash
    */
-  async publicKeyHash(): Promise<string> {
+  publicKeyHash(): Promise<string> {
     return this._key.publicKeyHash();
   }
 
   /**
    * @returns Encoded private key
    */
-  async secretKey(): Promise<string> {
+  secretKey(): Promise<string> {
     return this._key.secretKey();
   }
 }

@@ -110,12 +110,12 @@ export class KeyToken extends ComparableToken {
     const keyPrefix1 = this.getPrefix(key1);
     const keyPrefix2 = this.getPrefix(key2);
 
-    if (keyPrefix1 === Prefix.EDPK && keyPrefix2 !== Prefix.EDPK) {
+    if (keyPrefix1 === Prefix.Ed25519PublicKey && keyPrefix2 !== Prefix.Ed25519PublicKey) {
       return -1;
-    } else if (keyPrefix1 === Prefix.SPPK && keyPrefix2 !== Prefix.SPPK) {
-      return keyPrefix2 === Prefix.EDPK ? 1 : -1;
-    } else if (keyPrefix1 === Prefix.P2PK) {
-      if (keyPrefix2 !== Prefix.P2PK) {
+    } else if (keyPrefix1 === Prefix.Secp256k1PublicKey && keyPrefix2 !== Prefix.Secp256k1PublicKey) {
+      return keyPrefix2 === Prefix.Ed25519PublicKey ? 1 : -1;
+    } else if (keyPrefix1 === Prefix.P256PublicKey) {
+      if (keyPrefix2 !== Prefix.P256PublicKey) {
         return 1;
       }
 
@@ -132,7 +132,7 @@ export class KeyToken extends ComparableToken {
   }
 
   private getP256PublicKeyComparableBytes(p2pk: string) {
-    return b58cdecode(p2pk, prefix[Prefix.P2PK]).slice(1);
+    return b58cdecode(p2pk, prefix[Prefix.P256PublicKey]).slice(1);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

@@ -1,4 +1,4 @@
-import { prefix, prefixLength, Prefix } from './constants';
+import { prefix, payloadLength, Prefix } from './constants';
 import bs58check from 'bs58check';
 
 export enum ValidationResult {
@@ -54,20 +54,20 @@ function validatePrefixedValue(value: string, prefixes: Prefix[]) {
   }
 
   decoded = decoded.slice(prefix[prefixKey].length);
-  if (decoded.length !== prefixLength[prefixKey]) {
+  if (decoded.length !== payloadLength[prefixKey]) {
     return ValidationResult.INVALID_LENGTH;
   }
 
   return ValidationResult.VALID;
 }
 
-const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3, Prefix.TZ4];
-const contractPrefix = [Prefix.KT1];
-const signaturePrefix = [Prefix.EDSIG, Prefix.P2SIG, Prefix.SPSIG, Prefix.SIG];
-const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK, Prefix.BLPK];
-const operationPrefix = [Prefix.O];
-const protocolPrefix = [Prefix.P];
-const blockPrefix = [Prefix.B];
+const implicitPrefix = [Prefix.Ed25519PublicKeyHash, Prefix.Secp256k1PublicKeyHash, Prefix.P256PublicKeyHash, Prefix.BLS12_381PublicKeyHash];
+const contractPrefix = [Prefix.ContractHash];
+const signaturePrefix = [Prefix.Ed25519Signature, Prefix.P256Signature, Prefix.Secp256k1Signature, Prefix.GenericSignature];
+const pkPrefix = [Prefix.Ed25519PublicKey, Prefix.Secp256k1PublicKey, Prefix.P256PublicKey, Prefix.BLS12_381PublicKey];
+const operationPrefix = [Prefix.OperationHash];
+const protocolPrefix = [Prefix.ProtocolHash];
+const blockPrefix = [Prefix.BlockHash];
 const smartRollupPrefix = [Prefix.SR1];
 
 /**
@@ -105,7 +105,7 @@ export function validateAddress(value: string): ValidationResult {
  * ```
  */
 export function validateChain(value: string): ValidationResult {
-  return validatePrefixedValue(value, [Prefix.NET]);
+  return validatePrefixedValue(value, [Prefix.ChainID]);
 }
 
 /**
