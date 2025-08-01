@@ -6,16 +6,12 @@ import {
   TokenValidationError,
 } from './token';
 import {
+  b58DecodeAddress,
   encodeKey,
   validatePublicKey,
   ValidationResult,
-  Prefix,
-  b58cdecode,
-  prefix,
 } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
-
-const publicKeyPrefixLength = 4;
 
 /**
  *  @category Error
@@ -107,32 +103,9 @@ export class KeyToken extends ComparableToken {
   }
 
   compare(key1: string, key2: string): number {
-    const keyPrefix1 = this.getPrefix(key1);
-    const keyPrefix2 = this.getPrefix(key2);
-
-    if (keyPrefix1 === Prefix.Ed25519PublicKey && keyPrefix2 !== Prefix.Ed25519PublicKey) {
-      return -1;
-    } else if (keyPrefix1 === Prefix.Secp256k1PublicKey && keyPrefix2 !== Prefix.Secp256k1PublicKey) {
-      return keyPrefix2 === Prefix.Ed25519PublicKey ? 1 : -1;
-    } else if (keyPrefix1 === Prefix.P256PublicKey) {
-      if (keyPrefix2 !== Prefix.P256PublicKey) {
-        return 1;
-      }
-
-      const keyBytes1 = this.getP256PublicKeyComparableBytes(key1);
-      const keyBytes2 = this.getP256PublicKeyComparableBytes(key2);
-      return Buffer.compare(keyBytes1, keyBytes2);
-    }
-
-    return super.compare(key1, key2);
-  }
-
-  private getPrefix(val: string) {
-    return val.substring(0, publicKeyPrefixLength);
-  }
-
-  private getP256PublicKeyComparableBytes(p2pk: string) {
-    return b58cdecode(p2pk, prefix[Prefix.P256PublicKey]).slice(1);
+    const k1 = b58DecodeAddress(key1, 'array');
+    const k2 = b58DecodeAddress(key2, 'array');
+    return k1 < k2 ? -1 : k1 > k2 ? 1 : 0;
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

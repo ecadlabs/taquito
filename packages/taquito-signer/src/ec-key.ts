@@ -1,11 +1,11 @@
 import { hash as blake2b } from '@stablelib/blake2b';
 import {
   Prefix,
-  b58EncodeWithPrefix,
   b58DecodeAndCheckPrefix,
+  b58Encode,
 } from '@taquito/utils';
 import elliptic from 'elliptic';
-import { SigningKey, SignResult } from './taquito-signer';
+import { SigningKey, SignResult } from './signer';
 
 type Curve = 'p256' | 'secp256k1';
 
@@ -96,8 +96,9 @@ export class ECKey implements SigningKey {
     signature.set(sig.s.toArray(), 32)
 
     return Promise.resolve({
-      signature: b58EncodeWithPrefix(signature, Prefix.GenericSignature),
-      prefixedSignature: b58EncodeWithPrefix(signature, pref[this.#curve].sig),
+      rawSignature: signature,
+      signature: b58Encode(signature, Prefix.GenericSignature),
+      prefixedSignature: b58Encode(signature, pref[this.#curve].sig),
     });
   }
 
@@ -105,30 +106,20 @@ export class ECKey implements SigningKey {
    * @returns Encoded public key
    */
   publicKey(): Promise<string> {
-    return Promise.resolve(b58EncodeWithPrefix(this.#publicKey, pref[this.#curve].pk));
+    return Promise.resolve(b58Encode(this.#publicKey, pref[this.#curve].pk));
   }
 
   /**
    * @returns Encoded public key hash
    */
   publicKeyHash(): Promise<string> {
-    return Promise.resolve(b58EncodeWithPrefix(blake2b(new Uint8Array(this.#publicKey), 20), pref[this.#curve].pkh));
+    return Promise.resolve(b58Encode(blake2b(new Uint8Array(this.#publicKey), 20), pref[this.#curve].pkh));
   }
 
   /**
    * @returns Encoded private key
    */
   secretKey(): Promise<string> {
-    return Promise.resolve(b58EncodeWithPrefix(this.#key, pref[this.#curve].sk));
+    return Promise.resolve(b58Encode(this.#key, pref[this.#curve].sk));
   }
 }
-
-/**
- * @description Tz3 key class using the p256 curve
- */
-export const Tz3 = ECKey.bind(null, 'p256');
-
-/**
- * @description Tz2 key class using the secp256k1 curve
- */
-export const Tz2 = ECKey.bind(null, 'secp256k1');

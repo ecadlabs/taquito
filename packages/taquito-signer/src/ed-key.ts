@@ -3,14 +3,14 @@ import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
 import {
   Prefix,
   b58DecodeAndCheckPrefix,
-  b58EncodeWithPrefix,
+  b58Encode,
 } from '@taquito/utils';
-import { SigningKey, SignResult } from './taquito-signer';
+import { SigningKey, SignResult } from './signer';
 
 /**
  * @description Provide signing logic for ed25519 curve based key (tz1)
  */
-export class Tz1 implements SigningKey {
+export class EdKey implements SigningKey {
   #seed: Uint8Array;
   #secretKey: Uint8Array;
   #publicKey: Uint8Array;
@@ -59,8 +59,9 @@ export class Tz1 implements SigningKey {
     const signature = sign(this.#secretKey, hash);
 
     return Promise.resolve({
-      signature: b58EncodeWithPrefix(signature, Prefix.GenericSignature),
-      prefixedSignature: b58EncodeWithPrefix(signature, Prefix.Ed25519Signature),
+      rawSignature: signature,
+      signature: b58Encode(signature, Prefix.GenericSignature),
+      prefixedSignature: b58Encode(signature, Prefix.Ed25519Signature),
     });
   }
 
@@ -68,20 +69,20 @@ export class Tz1 implements SigningKey {
    * @returns Encoded public key
    */
   publicKey(): Promise<string> {
-    return Promise.resolve(b58EncodeWithPrefix(this.#publicKey, Prefix.Ed25519PublicKey));
+    return Promise.resolve(b58Encode(this.#publicKey, Prefix.Ed25519PublicKey));
   }
 
   /**
    * @returns Encoded public key hash
    */
   publicKeyHash(): Promise<string> {
-    return Promise.resolve(b58EncodeWithPrefix(blake2b(new Uint8Array(this.#publicKey), 20), Prefix.Ed25519PublicKeyHash));
+    return Promise.resolve(b58Encode(blake2b(new Uint8Array(this.#publicKey), 20), Prefix.Ed25519PublicKeyHash));
   }
 
   /**
    * @returns Encoded private key
    */
   secretKey(): Promise<string> {
-    return Promise.resolve(b58EncodeWithPrefix(this.#seed, Prefix.Ed25519Seed));
+    return Promise.resolve(b58Encode(this.#seed, Prefix.Ed25519Seed));
   }
 }

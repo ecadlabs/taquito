@@ -5,7 +5,7 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from '../token';
-import { b58decodeAddress, encodeAddress, validateAddress, ValidationResult } from '@taquito/utils';
+import { b58DecodeAddress, encodeAddress, validateAddress, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
 /**
@@ -35,7 +35,7 @@ export class AddressToken extends ComparableToken {
   }
 
   public ToBigMapKey(val: any) {
-    const decoded = b58decodeAddress(val);
+    const decoded = b58DecodeAddress(val);
     return {
       key: { bytes: decoded },
       type: { prim: 'bytes' },

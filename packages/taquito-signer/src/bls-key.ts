@@ -1,7 +1,7 @@
-import { b58DecodeAndCheckPrefix, b58EncodeWithPrefix, BLS12_381_DST, Prefix } from "@taquito/utils";
-import { SigningKey, SignResult } from "./taquito-signer";
+import { b58DecodeAndCheckPrefix, BLS12_381_DST, Prefix, b58Encode } from "@taquito/utils";
 import { bls12_381 } from '@noble/curves/bls12-381';
 import { hash } from "@stablelib/blake2b";
+import { SigningKey, SignResult } from "./signer";
 
 const bls = bls12_381.longSignatures; // AKA MinPK
 
@@ -23,31 +23,36 @@ export class BLSKey implements SigningKey {
     }
 
     this.#key = keyData
-    this.#publicKey = bls.getPublicKey(keyData).toBytes();
+    this.#publicKey = bls.getPublicKey(this.sk()).toBytes();
+  }
+
+  private sk(): Uint8Array {
+    return new Uint8Array(this.#key).reverse();
   }
 
   sign(message: Uint8Array): Promise<SignResult> {
     const point = bls.hash(message, BLS12_381_DST);
-    const sig = bls.sign(point, this.#key).toBytes();
+    const sig = bls.sign(point, this.sk()).toBytes();
 
     return Promise.resolve({
-      signature: b58EncodeWithPrefix(sig, Prefix.GenericSignature),
-      prefixedSignature: b58EncodeWithPrefix(sig, Prefix.BLS12_381Signature),
+      rawSignature: sig,
+      signature: b58Encode(sig, Prefix.GenericSignature),
+      prefixedSignature: b58Encode(sig, Prefix.BLS12_381Signature),
     });
   }
 
   publicKey(): Promise<string> {
-    const res = b58EncodeWithPrefix(this.#publicKey, Prefix.BLS12_381PublicKey);
+    const res = b58Encode(this.#publicKey, Prefix.BLS12_381PublicKey);
     return Promise.resolve(res);
   }
 
   publicKeyHash(): Promise<string> {
-    const res = b58EncodeWithPrefix(hash(this.#publicKey, 20), Prefix.BLS12_381PublicKeyHash);
+    const res = b58Encode(hash(this.#publicKey, 20), Prefix.BLS12_381PublicKeyHash);
     return Promise.resolve(res);
   }
 
   secretKey(): Promise<string> {
-    const res = b58EncodeWithPrefix(this.#key, Prefix.BLS12_381SecretKey);
+    const res = b58Encode(this.#key, Prefix.BLS12_381SecretKey);
     return Promise.resolve(res);
   }
 }

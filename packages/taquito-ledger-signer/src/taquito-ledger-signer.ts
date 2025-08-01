@@ -5,7 +5,7 @@
 
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
-import { b58cencode, invalidDetail, prefix, Prefix, ValidationResult } from '@taquito/utils';
+import { b58Encode, Prefix } from '@taquito/utils';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -94,7 +94,7 @@ export class LedgerSigner implements Signer {
     if (!path.startsWith(`44'/1729'`)) {
       throw new InvalidDerivationPathError(
         path,
-        `${invalidDetail(ValidationResult.NO_PREFIX_MATCHED)} expecting prefix "44'/1729'".`
+        `expecting prefix "44'/1729'".`
       );
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
@@ -122,8 +122,8 @@ export class LedgerSigner implements Signer {
     const compressedPublicKey = compressPublicKey(rawPublicKey, this.derivationType);
 
     const prefixes = this.getPrefixes();
-    const publicKey = b58cencode(compressedPublicKey, prefixes.prefPk);
-    const publicKeyHash = b58cencode(hash(compressedPublicKey, 20), prefixes.prefPkh);
+    const publicKey = b58Encode(compressedPublicKey, prefixes.prefPk);
+    const publicKeyHash = b58Encode(hash(compressedPublicKey, 20), prefixes.prefPkh);
 
     this._publicKey = publicKey;
     this._publicKeyHash = publicKeyHash;
@@ -182,8 +182,8 @@ export class LedgerSigner implements Signer {
 
     return {
       bytes,
-      sig: b58cencode(signature, prefix[Prefix.SIG]),
-      prefixSig: b58cencode(signature, this.getPrefixes().prefSig),
+      sig: b58Encode(signature, Prefix.GenericSignature),
+      prefixSig: b58Encode(signature, this.getPrefixes().prefSig),
       sbytes: bytes + signature,
     };
   }
@@ -217,21 +217,21 @@ export class LedgerSigner implements Signer {
       this.derivationType === DerivationType.BIP32_ED25519
     ) {
       return {
-        prefPk: prefix[Prefix.EDPK],
-        prefPkh: prefix[Prefix.TZ1],
-        prefSig: prefix[Prefix.EDSIG],
+        prefPk: Prefix.Ed25519PublicKey,
+        prefPkh: Prefix.Ed25519PublicKeyHash,
+        prefSig: Prefix.Ed25519Signature,
       };
     } else if (this.derivationType === DerivationType.SECP256K1) {
       return {
-        prefPk: prefix[Prefix.SPPK],
-        prefPkh: prefix[Prefix.TZ2],
-        prefSig: prefix[Prefix.SPSIG],
+        prefPk: Prefix.Secp256k1PublicKey,
+        prefPkh: Prefix.Secp256k1PublicKeyHash,
+        prefSig: Prefix.Secp256k1Signature,
       };
     } else {
       return {
-        prefPk: prefix[Prefix.P2PK],
-        prefPkh: prefix[Prefix.TZ3],
-        prefSig: prefix[Prefix.P2SIG],
+        prefPk: Prefix.P256PublicKey,
+        prefPkh: Prefix.P256PublicKeyHash,
+        prefSig: Prefix.P256Signature,
       };
     }
   }

@@ -8,7 +8,7 @@ import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { validateBlock, ValidationResult, invalidDetail } from '@taquito/utils';
+import { validateBlock, ValidationResult } from '@taquito/utils';
 import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash } from './protocols';
@@ -35,14 +35,14 @@ export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
 }
 
 export class LocalForger implements Forger {
-  constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
+  constructor(public readonly protocolHash = PROTOCOL_CURRENT) { }
 
   private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 
   forge(params: ForgeParams): Promise<string> {
     const branchValidation = validateBlock(params.branch);
     if (branchValidation !== ValidationResult.VALID) {
-      throw new InvalidBlockHashError(params.branch, invalidDetail(branchValidation));
+      throw new InvalidBlockHashError(params.branch, branchValidation);
     }
 
     for (const content of params.contents) {

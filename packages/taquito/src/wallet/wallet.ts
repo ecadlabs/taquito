@@ -32,7 +32,6 @@ import {
   validateAddress,
   validateContractAddress,
   ValidationResult,
-  invalidDetail,
 } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
 
@@ -53,7 +52,7 @@ export class WalletOperationBatch {
   constructor(
     private walletProvider: WalletProvider,
     private context: Context
-  ) {}
+  ) { }
 
   /**
    * @description Add a transaction operation to the batch
@@ -62,7 +61,7 @@ export class WalletOperationBatch {
   withTransfer(params: WalletTransferParams) {
     const toValidation = validateAddress(params.to);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.to, toValidation);
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -87,7 +86,7 @@ export class WalletOperationBatch {
   withDelegation(params: WalletDelegateParams) {
     const delegateValidation = validateAddress(params.delegate ?? '');
     if (params.delegate && delegateValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate, invalidDetail(delegateValidation));
+      throw new InvalidAddressError(params.delegate, delegateValidation);
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -111,7 +110,7 @@ export class WalletOperationBatch {
   withIncreasePaidStorage(params: WalletIncreasePaidStorageParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
     return this;
@@ -124,7 +123,7 @@ export class WalletOperationBatch {
   withTransferTicket(params: WalletTransferTicketParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
@@ -194,7 +193,7 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  constructor(private context: Context) {}
+  constructor(private context: Context) { }
 
   private get walletProvider() {
     return this.context.walletProvider;
@@ -262,7 +261,7 @@ export class Wallet {
   setDelegate(params: WalletDelegateParams) {
     const delegateValidation = validateAddress(params.delegate ?? '');
     if (params.delegate && delegateValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate, invalidDetail(delegateValidation));
+      throw new InvalidAddressError(params.delegate, delegateValidation);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
@@ -327,7 +326,7 @@ export class Wallet {
   transfer(params: WalletTransferParams) {
     const toValidation = validateAddress(params.to);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.to, toValidation);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
@@ -346,7 +345,7 @@ export class Wallet {
   transferTicket(params: WalletTransferTicketParams) {
     const toValidation = validateAddress(params.destination);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.destination, toValidation);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferTicketParamsToWalletParams(
@@ -445,7 +444,7 @@ export class Wallet {
   increasePaidStorage(params: WalletIncreasePaidStorageParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapIncreasePaidStorageWalletParams(
@@ -484,7 +483,7 @@ export class Wallet {
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidContractAddressError(address, addressValidation);
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;

@@ -1,4 +1,4 @@
-import { b58cencode, bytesToString, Prefix, prefix } from '@taquito/utils';
+import { b58Encode, bytesToString, Prefix } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { Input } from '../types';
 
@@ -16,7 +16,7 @@ export function readableFormat(saplingTransactionProperties: Omit<Input, 'positi
   return {
     value: convertValueToBigNumber(saplingTransactionProperties.value),
     memo: memoHexToUtf8(Buffer.from(saplingTransactionProperties.memo).toString('hex')),
-    paymentAddress: b58cencode(saplingTransactionProperties.paymentAddress, prefix[Prefix.ZET1]),
+    paymentAddress: b58Encode(saplingTransactionProperties.paymentAddress, Prefix.SaplingAddress),
   };
 }
 
