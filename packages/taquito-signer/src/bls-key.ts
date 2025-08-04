@@ -1,11 +1,12 @@
 import { b58DecodeAndCheckPrefix, BLS12_381_DST, Prefix, b58Encode } from "@taquito/utils";
 import { bls12_381 } from '@noble/curves/bls12-381';
 import { hash } from "@stablelib/blake2b";
-import { SigningKey, SignResult } from "./signer";
+import { SigningKeyWithProofOfPossession, SignResult } from "./signer";
 
 const bls = bls12_381.longSignatures; // AKA MinPK
+const POP_DST = "BLS_POP_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_";
 
-export class BLSKey implements SigningKey {
+export class BLSKey implements SigningKeyWithProofOfPossession {
   #key: Uint8Array;
   #publicKey: Uint8Array;
 
@@ -30,15 +31,22 @@ export class BLSKey implements SigningKey {
     return new Uint8Array(this.#key).reverse();
   }
 
-  sign(message: Uint8Array): Promise<SignResult> {
-    const point = bls.hash(message, BLS12_381_DST);
+  private signDst(message: Uint8Array, dst: string): Promise<SignResult> {
+    const point = bls.hash(message, dst);
     const sig = bls.sign(point, this.sk()).toBytes();
-
     return Promise.resolve({
       rawSignature: sig,
-      signature: b58Encode(sig, Prefix.GenericSignature),
-      prefixedSignature: b58Encode(sig, Prefix.BLS12_381Signature),
+      sig: b58Encode(sig, Prefix.GenericSignature),
+      prefixSig: b58Encode(sig, Prefix.BLS12_381Signature),
     });
+  }
+
+  sign(message: Uint8Array): Promise<SignResult> {
+    return this.signDst(message, BLS12_381_DST);
+  }
+
+  provePossession(): Promise<SignResult> {
+    return this.signDst(this.#publicKey, POP_DST);
   }
 
   publicKey(): Promise<string> {

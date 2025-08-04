@@ -19,7 +19,7 @@ import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import { InvalidKeyError } from '@taquito/core';
-import { SigningKey } from './signer';
+import { SigningKey, SignResult as RawSignResult, isPOP } from './signer';
 import { BLSKey } from './bls-key';
 
 export * from './import-key';
@@ -27,6 +27,7 @@ export { VERSION } from './version';
 export * from './derivation-tools';
 export * from './helpers';
 export { InvalidPassphraseError } from './errors';
+export { SignResult as RawSignResult } from './signer';
 
 export interface FromMnemonicParams {
   mnemonic: string;
@@ -186,13 +187,25 @@ export class InMemorySigner {
   async sign(message: string | Uint8Array, watermark?: Uint8Array): Promise<SignResult> {
     const msg = (typeof message == 'string') ? hex2buf(message) : message;
     const watermarkMsg = watermark !== undefined ? mergebuf(watermark, msg) : msg;
-    const { rawSignature, signature, prefixedSignature } = await this.#key.sign(watermarkMsg);
+    const { rawSignature, sig: signature, prefixSig: prefixedSignature } = await this.#key.sign(watermarkMsg);
     return {
       bytes: buf2hex(msg),
       sig: signature,
       prefixSig: prefixedSignature,
       sbytes: buf2hex(mergebuf(msg, rawSignature)),
     }
+  }
+
+  async provePossession(): Promise<RawSignResult | null> {
+    if (isPOP(this.#key)) {
+      return this.#key.provePossession();
+    } else {
+      return null;
+    }
+  }
+
+  get canProvePossession(): boolean {
+    return isPOP(this.#key)
   }
 
   /**

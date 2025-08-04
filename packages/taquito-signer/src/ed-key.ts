@@ -57,8 +57,8 @@ export class EdKey implements SigningKey {
 
     return Promise.resolve({
       rawSignature: signature,
-      signature: b58Encode(signature, Prefix.GenericSignature),
-      prefixedSignature: b58Encode(signature, Prefix.Ed25519Signature),
+      sig: b58Encode(signature, Prefix.GenericSignature),
+      prefixSig: b58Encode(signature, Prefix.Ed25519Signature),
     });
   }
 

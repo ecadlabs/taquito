@@ -99,8 +99,8 @@ export class ECKey implements SigningKey {
 
     return Promise.resolve({
       rawSignature: signature,
-      signature: b58Encode(signature, Prefix.GenericSignature),
-      prefixedSignature: b58Encode(signature, pref[this.#curve].sig),
+      sig: b58Encode(signature, Prefix.GenericSignature),
+      prefixSig: b58Encode(signature, pref[this.#curve].sig),
     });
   }
 

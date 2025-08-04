@@ -200,18 +200,19 @@ describe('inmemory-signer', () => {
   });
 
   it('Tz4', async () => {
-    const signer = new InMemorySigner('BLsk1dWM5vXGbwaoAYBeyFnuoDm7RN6Mmwh1p5Dif1vMi2wB5xAfMr');
+    const signer = new InMemorySigner('BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh');
     expect(await signer.publicKey()).toEqual(
-      'BLpk1uKQo8nxkNuBeGcUtgrJMrY2KhsVwCSQyE6zEJeP2JP6Z4KinsoBScDNT24ttpYgE4U5FKFY'
+      'BLpk1oWB1ZbeKePu8FiRMpktQoZw1rPs67qu6zbnYxiCcJDyZih8PXUiGnLyMWR6Fay9cDNyCzj9'
     );
-    expect(await signer.publicKeyHash()).toEqual('tz4JCged8RmhxSJSGcrEaXkD5RNjzfyqVy5f');
+    expect(await signer.publicKeyHash()).toEqual('tz4JmbuiJGyC2thisABCS59PnGr749dsP4WY');
     expect(await signer.secretKey()).toEqual(
-      'BLsk1dWM5vXGbwaoAYBeyFnuoDm7RN6Mmwh1p5Dif1vMi2wB5xAfMr'
+      'BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh'
     );
-
     expect((await signer.sign(new Uint8Array([1, 2, 3, 4]))).prefixSig).toEqual(
-      'BLsigACYSJ9K6iPSAz7gdw7V4b1mKxrCFE6Wz57x1T8M876KrvbLHYhicWQSbUktK7QiorNwR82urWipA6i2AJBSf6rHnY66cvQUnAvLGDuHcHum2RDf8do3tK6jxvF4efA1hb2b4t8eyK'
+      'BLsigAMExDCYjNtvjLUqvLiEQJro6VrJFZ7yr7eNY4YCAVTYVerMnrNtk7cY8ve8D4HfJ55YtK93sQNFTcXTYGt8c6HutFneTz31aR198QkbBfZpHmvJV4zGQTHKroNFDRWLw3c3eJXyAu'
     );
+    expect(signer.canProvePossession).toEqual(true);
+    expect((await signer.provePossession())?.prefixSig).toEqual('BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij');
   });
 
   it('Should instantiate tz1 from mnemonic from in memory signer', async () => {
