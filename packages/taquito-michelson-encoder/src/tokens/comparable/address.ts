@@ -5,7 +5,7 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from '../token';
-import { b58DecodeAddress, encodeAddress, validateAddress, ValidationResult } from '@taquito/utils';
+import { b58DecodeAddress, compareArrays, encodeAddress, splitAddress, validateAddress, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
 /**
@@ -45,7 +45,14 @@ export class AddressToken extends ComparableToken {
   /**
    * @throws {@link AddressValidationError}
    */
-  private validate(value: any) {
+  private validate(value: unknown) {
+    if (typeof value !== 'string') {
+      throw new AddressValidationError(
+        value,
+        this,
+        'Type error'
+      );
+    }
     if (validateAddress(value) !== ValidationResult.VALID) {
       throw new AddressValidationError(
         value,
@@ -129,19 +136,22 @@ export class AddressToken extends ComparableToken {
 
     return encodeAddress(bytes);
   }
-  compare(address1: string, address2: string) {
-    const isImplicit = (address: string) => {
-      return address.startsWith('tz');
-    };
-    const implicit1 = isImplicit(address1);
-    const implicit2 = isImplicit(address2);
 
-    if (implicit1 && !implicit2) {
-      return -1;
-    } else if (implicit2 && !implicit1) {
-      return 1;
+  compare(address1: string, address2: string) {
+    const [addr1, endpoint1] = splitAddress(address1);
+    const [addr2, endpoint2] = splitAddress(address2);
+    const ep1 = endpoint1 || '';
+    const ep2 = endpoint2 || '';
+
+    const bytes1 = b58DecodeAddress(addr1, 'array');
+    const bytes2 = b58DecodeAddress(addr2, 'array');
+
+    const res = compareArrays(bytes1, bytes2);
+    if (res === 0) {
+      return ep1 < ep2 ? -1 : ep1 > ep2 ? 1 : 0;
+    } else {
+      return res;
     }
-    return super.compare(address1, address2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

@@ -87,13 +87,15 @@ export class ECKey implements SigningKey {
    * @param bytesHash Blake2b hash of the bytes to sign
    */
   sign(bytes: Uint8Array): Promise<SignResult> {
-    const hash = blake2b(bytes, 32)
+    const hash = blake2b(bytes, 32);
     const key = new elliptic.ec(this.#curve).keyFromPrivate(this.#key);
     const sig = key.sign(hash, { canonical: true });
 
     const signature = new Uint8Array(64);
-    signature.set(sig.r.toArray())
-    signature.set(sig.s.toArray(), 32)
+    const r = sig.r.toArray();
+    const s = sig.s.toArray();
+    signature.set(r, 32 - r.length);
+    signature.set(s, 64 - s.length);
 
     return Promise.resolve({
       rawSignature: signature,

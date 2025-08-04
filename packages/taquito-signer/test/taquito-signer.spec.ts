@@ -1,6 +1,6 @@
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
-import { InvalidDerivationPathError } from '@taquito/core';
+import { InvalidDerivationPathError, InvalidKeyError } from '@taquito/core';
 
 describe('inmemory-signer', () => {
   const mnemonic = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
@@ -58,25 +58,25 @@ describe('inmemory-signer', () => {
   it('Invalid key', () => {
     expect(function () {
       new InMemorySigner('test');
-    }).toThrow(`unsupported prefix`);
+    }).toThrow(InvalidKeyError);
   });
 
   it('(tz1) Invalid key unable to decode', () => {
     expect(function () {
       new InMemorySigner('edsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
-    }).toThrow('Invalid checksum');
+    }).toThrow(InvalidKeyError);
   });
 
   it('(tz2) Invalid key unable to decode', () => {
     expect(function () {
       new InMemorySigner('spsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
-    }).toThrow('Invalid checksum');
+    }).toThrow(InvalidKeyError);
   });
 
   it('(tz3) Invalid key unable to decode', () => {
     expect(function () {
       new InMemorySigner('p2sk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
-    }).toThrow('Invalid checksum');
+    }).toThrow(InvalidKeyError);
   });
 
   it('Tz1 64 bytes', async () => {
@@ -181,7 +181,7 @@ describe('inmemory-signer', () => {
     );
   });
 
-  it('Tz3 Encrypted with bytes producing signature that needs padding', async () => {
+  it('Tz3 with bytes producing signature that needs padding', async () => {
     const signer = new InMemorySigner('p2sk2ke47zhFz3znRZj39TW5KKS9VgfU1Hax7KeErgnShNe9oQFQUP');
     expect(await signer.publicKeyHash()).toEqual('tz3bBDnPj3Bvek1DeJtsTvicBUPEoTpm2ySt');
     expect(await signer.secretKey()).toEqual(
@@ -196,6 +196,21 @@ describe('inmemory-signer', () => {
       ).prefixSig
     ).toEqual(
       'p2sigMMsHbzzKh6Eg3cDxfLURiUpTMkyjyPWd7RFtBUH7ZyGBzBqMZH9xZc16akQWZNKkCMHnf1vYjjckPEfru456ikHaFWXFD'
+    );
+  });
+
+  it('Tz4', async () => {
+    const signer = new InMemorySigner('BLsk1dWM5vXGbwaoAYBeyFnuoDm7RN6Mmwh1p5Dif1vMi2wB5xAfMr');
+    expect(await signer.publicKey()).toEqual(
+      'BLpk1uKQo8nxkNuBeGcUtgrJMrY2KhsVwCSQyE6zEJeP2JP6Z4KinsoBScDNT24ttpYgE4U5FKFY'
+    );
+    expect(await signer.publicKeyHash()).toEqual('tz4JCged8RmhxSJSGcrEaXkD5RNjzfyqVy5f');
+    expect(await signer.secretKey()).toEqual(
+      'BLsk1dWM5vXGbwaoAYBeyFnuoDm7RN6Mmwh1p5Dif1vMi2wB5xAfMr'
+    );
+
+    expect((await signer.sign(new Uint8Array([1, 2, 3, 4]))).prefixSig).toEqual(
+      'BLsigACYSJ9K6iPSAz7gdw7V4b1mKxrCFE6Wz57x1T8M876KrvbLHYhicWQSbUktK7QiorNwR82urWipA6i2AJBSf6rHnY66cvQUnAvLGDuHcHum2RDf8do3tK6jxvF4efA1hb2b4t8eyK'
     );
   });
 

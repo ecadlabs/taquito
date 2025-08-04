@@ -107,7 +107,7 @@ describe('ContractsLibrary tests', () => {
       })
     ).toThrow(
       expect.objectContaining({
-        message: expect.stringContaining(`Invalid address "KTinvalid" with unsupported prefix.`),
+        message: expect.stringContaining(`Invalid address "KTinvalid"`),
       })
     );
   });

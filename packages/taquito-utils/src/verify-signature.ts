@@ -6,9 +6,11 @@ import {
   hex2buf,
   mergebuf,
   Prefix,
+  publicKeyPrefixes,
+  signaturePrefixes,
 } from './taquito-utils';
 import elliptic from 'elliptic';
-import { InvalidMessageError } from '@taquito/core';
+import { InvalidMessageError, InvalidPublicKeyError, InvalidSignatureError, ParameterValidationError } from '@taquito/core';
 import { bls12_381 } from '@noble/curves/bls12-381';
 
 export const BLS12_381_DST = "BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_";
@@ -38,8 +40,30 @@ export function verifySignature(
   signature: string,
   watermark?: Uint8Array
 ): boolean {
-  const [pk, pre] = b58DecodeAndCheckPrefix(publicKey, [Prefix.P256PublicKey, Prefix.Secp256k1PublicKey, Prefix.Ed25519PublicKey, Prefix.BLS12_381PublicKey]);
-  const [sig,] = b58DecodeAndCheckPrefix(signature, [Prefix.P256Signature, Prefix.Secp256k1Signature, Prefix.Ed25519Signature, Prefix.BLS12_381Signature]);
+  const [pk, pre] = (() => {
+    try {
+      return b58DecodeAndCheckPrefix(publicKey, publicKeyPrefixes);
+    } catch (err: unknown) {
+      if (err instanceof ParameterValidationError) {
+        throw new InvalidPublicKeyError(publicKey, err.result);
+      } else {
+        throw err;
+      }
+    }
+  })();
+
+  const sig = (() => {
+    try {
+      const [sig] = b58DecodeAndCheckPrefix(signature, signaturePrefixes);
+      return sig;
+    } catch (err: unknown) {
+      if (err instanceof ParameterValidationError) {
+        throw new InvalidSignatureError(signature, err.result);
+      } else {
+        throw err;
+      }
+    }
+  })();
 
   let msg: Uint8Array;
   if (typeof message === 'string') {

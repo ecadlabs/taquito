@@ -5,6 +5,7 @@
 export enum ValidationResult {
   VALID,
   NO_PREFIX_MATCHED,
+  PREFIX_NOT_ALLOWED,
   INVALID_CHECKSUM,
   INVALID_LENGTH,
   INVALID_ENCODING,
@@ -19,6 +20,7 @@ export class TaquitoError extends Error { }
 
 const resultDesc: { [key in ValidationResult]?: string } = {
   [ValidationResult.NO_PREFIX_MATCHED]: 'unsupported Base58 prefix',
+  [ValidationResult.PREFIX_NOT_ALLOWED]: 'Base58 prefix not allowed in this context',
   [ValidationResult.INVALID_CHECKSUM]: 'invalid checksum',
   [ValidationResult.INVALID_LENGTH]: 'invalid length',
   [ValidationResult.INVALID_ENCODING]: 'invalid Base58 encoding',
@@ -223,10 +225,11 @@ export class InvalidKeyError extends ParameterValidationError {
  */
 export class InvalidPublicKeyError extends ParameterValidationError {
   constructor(
-    public readonly publicKey: string,
+    public readonly publicKey?: string,
     errorDetail?: string | ValidationResult
   ) {
-    super(`Invalid public key "${publicKey}"`, errorDetail);
+    const msg = publicKey !== undefined ? `Invalid public key "${publicKey}"` : `Invalid public key`;
+    super(msg, errorDetail);
     this.name = this.constructor.name;
   }
 }

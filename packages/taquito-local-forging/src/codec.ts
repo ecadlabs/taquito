@@ -34,6 +34,7 @@ import { pad, toHexString } from './utils';
 import {
   InvalidAddressError,
   InvalidContractAddressError,
+  InvalidKeyHashError,
   InvalidSignatureError,
   ParameterValidationError,
   ProhibitedActionError,
@@ -220,7 +221,11 @@ export const delegateDecoder = (val: Uint8ArrayConsumer) => {
 };
 
 export const publicKeyHashEncoder = (val: string) => {
-  return b58DecodePublicKeyHash(val);
+  try {
+    return b58DecodePublicKeyHash(val);
+  } catch (err: unknown) {
+    throw new InvalidKeyHashError(val, err instanceof ParameterValidationError ? err.result : undefined);
+  }
 };
 
 export const publicKeyHashesEncoder = (val?: string[]) => {
@@ -237,7 +242,11 @@ export const publicKeyHashesEncoder = (val?: string[]) => {
 };
 
 export const publicKeyEncoder = (val: string) => {
-  return b58DecodePublicKey(val);
+  try {
+    return b58DecodePublicKey(val);
+  } catch (err: unknown) {
+    throw new InvalidPublicKeyError(val, err instanceof ParameterValidationError ? err.result : undefined);
+  }
 };
 
 export const addressEncoder = (val: string): string => {
@@ -271,7 +280,7 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
       return prefixDecoder(Prefix.BLS12_381PublicKey)(val);
     default:
       throw new InvalidPublicKeyError(
-        val.toString(),
+        undefined,
         ValidationResult.NO_PREFIX_MATCHED
       );
   }

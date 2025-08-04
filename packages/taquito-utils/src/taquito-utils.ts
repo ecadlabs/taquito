@@ -13,7 +13,6 @@ import { Buffer } from 'buffer';
 import { Prefix, prefix, payloadLength } from './constants';
 import { hash as blake2b } from '@stablelib/blake2b';
 import bs58check from 'bs58check';
-import { ValueConversionError } from './errors';
 import BigNumber from 'bignumber.js';
 import { InvalidAddressError, InvalidHexStringError, InvalidKeyError, InvalidPublicKeyError, ParameterValidationError } from '@taquito/core';
 import { ValidationResult } from './validators';
@@ -61,6 +60,39 @@ export function encodeOpHash(value: string) {
 //   return bs58check.encode(n);
 // }
 
+export const addressPrefixes = [
+  Prefix.P256PublicKeyHash,
+  Prefix.Secp256k1PublicKeyHash,
+  Prefix.Ed25519PublicKeyHash,
+  Prefix.BLS12_381PublicKeyHash,
+  Prefix.ContractHash,
+  Prefix.SmartRollupHash,
+  Prefix.ZkRollupHash,
+] as const;
+
+export const publicKeyHashPrefixes = [
+  Prefix.P256PublicKeyHash,
+  Prefix.Secp256k1PublicKeyHash,
+  Prefix.Ed25519PublicKeyHash,
+  Prefix.BLS12_381PublicKeyHash
+] as const;
+
+
+export const publicKeyPrefixes = [
+  Prefix.P256PublicKey,
+  Prefix.Secp256k1PublicKey,
+  Prefix.Ed25519PublicKey,
+  Prefix.BLS12_381PublicKey
+] as const;
+
+export const signaturePrefixes = [
+  Prefix.GenericSignature,
+  Prefix.P256Signature,
+  Prefix.Secp256k1Signature,
+  Prefix.Ed25519Signature,
+  Prefix.BLS12_381Signature
+] as const;
+
 /**
  *
  * @description Decode a Base58 contract ID and return its binary representation
@@ -70,21 +102,37 @@ export function encodeOpHash(value: string) {
 export function b58DecodeAddress(value: string, fmt?: 'hex'): string;
 export function b58DecodeAddress(value: string, fmt: 'array'): Uint8Array;
 export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Array | string {
-  const [data, pre] = b58DecodeAndCheckPrefix(value, [Prefix.ContractHash, Prefix.P256PublicKeyHash, Prefix.Secp256k1PublicKeyHash, Prefix.Ed25519PublicKeyHash, Prefix.BLS12_381PublicKeyHash]);
+  const i = value.indexOf('%');
+  if (i >= 0) {
+    value = value.slice(0, i);
+  }
+  const [data, pre] = b58DecodeAndCheckPrefix(value, addressPrefixes);
   const buf = new Uint8Array(22);
-  if (pre === Prefix.ContractHash) {
-    buf[0] = 1;
+  if (pre === Prefix.ContractHash || pre === Prefix.SmartRollupHash || pre === Prefix.ZkRollupHash) {
+    let tag: number;
+    switch (pre) {
+      case Prefix.ContractHash:
+        tag = 1;
+        break;
+      case Prefix.SmartRollupHash:
+        tag = 3;
+        break;
+      case Prefix.ZkRollupHash:
+        tag = 4;
+        break;
+    }
+    buf[0] = tag;
     buf.set(data, 1);
   } else {
     let tag: number;
     switch (pre) {
-      case Prefix.P256PublicKeyHash:
+      case Prefix.Ed25519PublicKeyHash:
         tag = 0;
         break;
       case Prefix.Secp256k1PublicKeyHash:
         tag = 1;
         break;
-      case Prefix.Ed25519PublicKeyHash:
+      case Prefix.P256PublicKeyHash:
         tag = 2;
         break;
       case Prefix.BLS12_381PublicKeyHash:
@@ -114,17 +162,17 @@ export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Arr
 export function b58DecodePublicKeyHash(value: string, fmt?: 'hex'): string;
 export function b58DecodePublicKeyHash(value: string, fmt: 'array'): Uint8Array;
 export function b58DecodePublicKeyHash(value: string, fmt?: 'hex' | 'array'): Uint8Array | string {
-  const [data, pre] = b58DecodeAndCheckPrefix(value, [Prefix.P256PublicKeyHash, Prefix.Secp256k1PublicKeyHash, Prefix.Ed25519PublicKeyHash, Prefix.BLS12_381PublicKeyHash]);
+  const [data, pre] = b58DecodeAndCheckPrefix(value, publicKeyHashPrefixes);
   const buf = new Uint8Array(21);
   let tag: number;
   switch (pre) {
-    case Prefix.P256PublicKeyHash:
+    case Prefix.Ed25519PublicKeyHash:
       tag = 0;
       break;
     case Prefix.Secp256k1PublicKeyHash:
       tag = 1;
       break;
-    case Prefix.Ed25519PublicKeyHash:
+    case Prefix.P256PublicKeyHash:
       tag = 2;
       break;
     case Prefix.BLS12_381PublicKeyHash:
@@ -151,16 +199,16 @@ export function b58DecodePublicKeyHash(value: string, fmt?: 'hex' | 'array'): Ui
 export function b58DecodePublicKey(value: string, fmt?: 'hex'): string;
 export function b58DecodePublicKey(value: string, fmt: 'array'): Uint8Array;
 export function b58DecodePublicKey(value: string, fmt?: 'hex' | 'array'): Uint8Array | string {
-  const [data, pre] = b58DecodeAndCheckPrefix(value, [Prefix.P256PublicKey, Prefix.Secp256k1PublicKey, Prefix.Ed25519PublicKey, Prefix.BLS12_381PublicKey]);
+  const [data, pre] = b58DecodeAndCheckPrefix(value, publicKeyPrefixes);
   let tag: number;
   switch (pre) {
-    case Prefix.P256PublicKey:
+    case Prefix.Ed25519PublicKey:
       tag = 0;
       break;
     case Prefix.Secp256k1PublicKey:
       tag = 1;
       break;
-    case Prefix.Ed25519PublicKey:
+    case Prefix.P256PublicKey:
       tag = 2;
       break;
     case Prefix.BLS12_381PublicKey:
@@ -263,13 +311,13 @@ export function encodeKey(value: string | Uint8Array): string {
   let pre: Prefix;
   switch (buf[0]) {
     case 0:
-      pre = Prefix.P256PublicKey;
+      pre = Prefix.Ed25519PublicKey;
       break;
     case 1:
       pre = Prefix.Secp256k1PublicKey;
       break;
     case 2:
-      pre = Prefix.Ed25519PublicKey;
+      pre = Prefix.P256PublicKey;
       break;
     case 3:
       pre = Prefix.BLS12_381PublicKey;
@@ -297,13 +345,13 @@ export function encodeKeyHash(value: string | Uint8Array): string {
   let pre: Prefix;
   switch (buf[0]) {
     case 0:
-      pre = Prefix.P256PublicKeyHash;
+      pre = Prefix.Ed25519PublicKeyHash;
       break;
     case 1:
       pre = Prefix.Secp256k1PublicKeyHash;
       break;
     case 2:
-      pre = Prefix.Ed25519PublicKeyHash;
+      pre = Prefix.P256PublicKeyHash;
       break;
     case 3:
       pre = Prefix.BLS12_381PublicKeyHash;
@@ -321,28 +369,32 @@ export function encodeKeyHash(value: string | Uint8Array): string {
  * @param hex Hex string to convert
  * @throws {@link ValueConversionError}
  */
-export const hex2buf = (hex: string): Uint8Array => {
+export function hex2buf(hex: string): Uint8Array {
+  hex = hex.startsWith('0x') ? hex.slice(2) : hex;
   if (hex.length % 2 !== 0) {
     throw new InvalidHexStringError(hex, `Expecting even number of characters`);
   }
-  const hexDigits = stripHexPrefix(hex);
-  if (!hexDigits.match(/^([\da-f]{2})*$/gi)) {
+  if (!hex.match(/^([\da-f]{2})*$/gi)) {
     throw new InvalidHexStringError(
       hex,
       `Only characters 0-9, a-f and A-F are expected. Optionally, it can be prefixed with '0x'`
     );
   }
-  const out = new Uint8Array(hexDigits.length / 2);
+  const res = new Uint8Array(hex.length / 2);
   let j = 0;
-  for (let i = 0; i < hexDigits.length; i += 2) {
-    const v = parseInt(hexDigits.slice(i, i + 2), 16);
-    if (Number.isNaN(v)) {
-      throw new ValueConversionError(hex, 'Uint8Array');
+  for (let i = 0; i < hex.length; i += 2) {
+    const ss = hex.slice(i, i + 2);
+    const x = parseInt(ss, 16);
+    if (Number.isNaN(x)) {
+      throw new InvalidHexStringError(
+        hex,
+        `Only characters 0-9, a-f and A-F are expected. Optionally, it can be prefixed with '0x'`
+      );
     }
-    out[j++] = v;
+    res[j++] = x;
   }
-  return out;
-};
+  return res;
+}
 
 /**
  *
@@ -414,15 +466,10 @@ export const mic2arr = function me2(s: any): any {
  *
  * @param buffer Uint8Array to convert
  */
-export const buf2hex = (buffer: Uint8Array): string => {
-  const hexParts: string[] = [];
-  buffer.forEach((byte) => {
-    const hex = byte.toString(16);
-    const paddedHex = `00${hex}`.slice(-2);
-    hexParts.push(paddedHex);
-  });
-  return hexParts.join('');
-};
+
+export function buf2hex(bytes: ArrayLike<number>): string {
+  return Array.from(bytes).map((x) => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16)).join('');
+}
 
 /**
  *
@@ -580,7 +627,10 @@ export function stripHexPrefix(hex: string): string {
  * @param src Base58 string
  * @returns Payload and prefix
  */
-export function b58DecodeAndCheckPrefix<T extends Prefix[]>(src: string, allowed?: T): [Uint8Array, T[number]] {
+export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string, allowed?: T): [Uint8Array, T[number]];
+export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string, allowed: T, payloadOnly: false): [Uint8Array, T[number]];
+export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string, allowed: T, payloadOnly: true): Uint8Array;
+export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string, allowed?: T, payloadOnly?: boolean): [Uint8Array, T[number]] | Uint8Array {
   const buf = (() => {
     try {
       return bs58check.decode(src);
@@ -601,14 +651,15 @@ export function b58DecodeAndCheckPrefix<T extends Prefix[]>(src: string, allowed
   for (key in Prefix) {
     const p = Prefix[key];
     const pre = prefix[p];
-    if (buf.length >= pre.length && buf.slice(0, pre.length).every((v, i) => v == pre[i])) {
-      if (buf.length !== pre.length + payloadLength[p]) {
-        throw new ParameterValidationError(ValidationResult.INVALID_LENGTH);
-      }
+    if (buf.length === pre.length + payloadLength[p] && buf.slice(0, pre.length).every((v, i) => v == pre[i])) {
       if (allowed !== undefined && allowed.indexOf(p) < 0) {
-        throw new ParameterValidationError(ValidationResult.NO_PREFIX_MATCHED);
+        throw new ParameterValidationError(ValidationResult.PREFIX_NOT_ALLOWED);
       }
-      return [buf.slice(pre.length), p]
+      if (payloadOnly) {
+        return buf.slice(pre.length);
+      } else {
+        return [buf.slice(pre.length), p]
+      }
     }
   }
   throw new ParameterValidationError(ValidationResult.NO_PREFIX_MATCHED);
@@ -628,4 +679,21 @@ export function b58Encode(value: string | Uint8Array, pre: Prefix): string {
   n.set(p);
   n.set(data, p.length);
   return bs58check.encode(n);
+}
+
+export function splitAddress(addr: string): [string, string | null] {
+  const i = addr.indexOf('%');
+  if (i >= 0) {
+    return [addr.slice(0, i), addr.slice(i)];
+  } else {
+    return [addr, null];
+  }
+}
+
+export function compareArrays(a: ArrayLike<number>, b: ArrayLike<number>): number {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  const aa = i < a.length ? a[i] : 0;
+  const bb = i < b.length ? b[i] : 0;
+  return aa < bb ? -1 : aa > bb ? 1 : 0;
 }

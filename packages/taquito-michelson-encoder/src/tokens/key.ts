@@ -6,7 +6,8 @@ import {
   TokenValidationError,
 } from './token';
 import {
-  b58DecodeAddress,
+  b58DecodePublicKey,
+  compareArrays,
   encodeKey,
   validatePublicKey,
   ValidationResult,
@@ -103,9 +104,9 @@ export class KeyToken extends ComparableToken {
   }
 
   compare(key1: string, key2: string): number {
-    const k1 = b58DecodeAddress(key1, 'array');
-    const k2 = b58DecodeAddress(key2, 'array');
-    return k1 < k2 ? -1 : k1 > k2 ? 1 : 0;
+    const bytes1 = b58DecodePublicKey(key1, 'array');
+    const bytes2 = b58DecodePublicKey(key2, 'array');
+    return compareArrays(bytes1, bytes2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

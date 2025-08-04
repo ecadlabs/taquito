@@ -6,8 +6,8 @@
 import BigNumber from 'bignumber.js';
 import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
 import {
-  b58DecodeAddress,
   b58DecodeAndCheckPrefix,
+  b58DecodePublicKeyHash,
   format,
   Prefix,
   validateKeyHash,
@@ -260,7 +260,7 @@ export class SaplingToolkit {
   }
 
   private async createBoundData(destination: string) {
-    const bytes = b58DecodeAddress(destination, 'hex');
+    const bytes = b58DecodePublicKeyHash(destination, 'hex');
     const packedDestination = await this.#packer.packData({
       data: { bytes },
       type: { prim: 'bytes' },

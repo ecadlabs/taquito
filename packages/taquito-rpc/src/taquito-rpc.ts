@@ -1199,7 +1199,7 @@ export class RpcClient implements RpcClientInterface {
       }
     }
     return this.httpBackend.createRequest<ProtocolActivationsResponse>({
-      url: this.createURL(`/ chains / ${this.chain} /protocols/${protocol} `),
+      url: this.createURL(`/chains/${this.chain}/protocols/${protocol}`),
       method: 'GET',
     });
   }
@@ -1215,9 +1215,7 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>({
-      url: this.createURL(
-        `/ chains / ${this.chain} /blocks/${block} /context/contracts / ${contract} /storage/used_space`
-      ),
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/used_space`),
       method: 'GET',
     });
   }
@@ -1233,9 +1231,7 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>({
-      url: this.createURL(
-        `/ chains / ${this.chain} /blocks/${block} /context/contracts / ${contract} /storage/paid_space`
-      ),
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/paid_space`),
       method: 'GET',
     });
   }
@@ -1255,9 +1251,7 @@ export class RpcClient implements RpcClientInterface {
   ): Promise<string> {
     return this.httpBackend.createRequest<string>(
       {
-        url: this.createURL(
-          `/ chains / ${this.chain} /blocks/${block} /context/contracts / ${contract}/ticket_balance`
-        ),
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/ticket_balance`),
         method: 'POST',
       },
       ticket
@@ -1275,9 +1269,7 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<AllTicketBalances> {
     return this.httpBackend.createRequest<AllTicketBalances>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
-      ),
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`),
       method: 'GET',
     });
   }
@@ -1291,9 +1283,7 @@ export class RpcClient implements RpcClientInterface {
     block,
   }: { block: string } = defaultRPCOptions): Promise<AILaunchCycleResponse> {
     return this.httpBackend.createRequest<AILaunchCycleResponse>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`
-      ),
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`),
       method: 'GET',
     });
   }

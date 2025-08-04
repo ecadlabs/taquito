@@ -8,7 +8,7 @@ import { ParameterValidationError } from '@taquito/core';
 export function decryptKey(spendingKey: string, password?: string) {
   const [keyArr, pre] = (() => {
     try {
-      return b58DecodeAndCheckPrefix(spendingKey);
+      return b58DecodeAndCheckPrefix(spendingKey, [Prefix.SaplingSpendingKey, Prefix.EncryptedSaplingSpendingKey]);
     } catch (err: unknown) {
       if (err instanceof ParameterValidationError) {
         throw new InvalidSpendingKey(spendingKey, 'invalid spending key');
@@ -17,12 +17,12 @@ export function decryptKey(spendingKey: string, password?: string) {
       }
     }
   })()
-  // exit first if no password and key is encrypted
-  if (!password && pre !== Prefix.SaplingSpendingKey) {
-    throw new InvalidSpendingKey(spendingKey, 'no password provided to decrypt');
-  }
 
-  if (password && pre === Prefix.SaplingSpendingKey) {
+  if (pre === Prefix.EncryptedSaplingSpendingKey) {
+    if (!password) {
+      throw new InvalidSpendingKey(spendingKey, 'no password provided to decrypt');
+    }
+
     const salt = toBuffer(keyArr.slice(0, 8));
     const encryptedSk = toBuffer(keyArr.slice(8));
 
@@ -35,7 +35,6 @@ export function decryptKey(spendingKey: string, password?: string) {
     if (!decrypted) {
       throw new InvalidSpendingKey(spendingKey, 'incorrect password or unable to decrypt');
     }
-
     return toBuffer(decrypted);
   } else {
     return toBuffer(keyArr);

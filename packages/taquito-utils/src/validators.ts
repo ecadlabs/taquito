@@ -1,5 +1,5 @@
 import { Prefix } from './constants';
-import { b58DecodeAndCheckPrefix, ValidationResult } from './taquito-utils';
+import { b58DecodeAndCheckPrefix, splitAddress, ValidationResult } from './taquito-utils';
 import { ParameterValidationError } from '@taquito/core';
 
 export { ValidationResult } from '@taquito/core';
@@ -67,7 +67,8 @@ const smartRollupPrefix = [Prefix.SmartRollupHash];
  * ```
  */
 export function validateAddress(value: string): ValidationResult {
-  return validatePrefixedValue(value, [...implicitPrefix, ...contractPrefix, ...smartRollupPrefix]);
+  const [addr] = splitAddress(value);
+  return validatePrefixedValue(addr, [...implicitPrefix, ...contractPrefix, ...smartRollupPrefix]);
 }
 
 /**

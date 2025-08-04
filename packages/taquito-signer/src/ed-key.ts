@@ -11,7 +11,6 @@ import { SigningKey, SignResult } from './signer';
  * @description Provide signing logic for ed25519 curve based key (tz1)
  */
 export class EdKey implements SigningKey {
-  #seed: Uint8Array;
   #secretKey: Uint8Array;
   #publicKey: Uint8Array;
 
@@ -31,9 +30,8 @@ export class EdKey implements SigningKey {
     const [, prefix] = tmp;
 
     if (prefix === Prefix.Ed25519SecretKey) {
-      this.#seed = keyData.slice(32);
       this.#secretKey = keyData;
-      this.#publicKey = keyData.slice(0, 32);
+      this.#publicKey = keyData.slice(32);
     } else {
       if (prefix === Prefix.Ed25519EncryptedSeed) {
         if (decrypt !== undefined) {
@@ -43,7 +41,6 @@ export class EdKey implements SigningKey {
         }
       }
       const { publicKey, secretKey } = generateKeyPairFromSeed(keyData);
-      this.#seed = keyData;
       this.#publicKey = publicKey;
       this.#secretKey = secretKey;
     }
@@ -76,13 +73,13 @@ export class EdKey implements SigningKey {
    * @returns Encoded public key hash
    */
   publicKeyHash(): Promise<string> {
-    return Promise.resolve(b58Encode(blake2b(new Uint8Array(this.#publicKey), 20), Prefix.Ed25519PublicKeyHash));
+    return Promise.resolve(b58Encode(blake2b(this.#publicKey, 20), Prefix.Ed25519PublicKeyHash));
   }
 
   /**
    * @returns Encoded private key
    */
   secretKey(): Promise<string> {
-    return Promise.resolve(b58Encode(this.#seed, Prefix.Ed25519Seed));
+    return Promise.resolve(b58Encode(this.#secretKey, Prefix.Ed25519SecretKey));
   }
 }
