@@ -1,4 +1,4 @@
-name: Test dapp deploy
+name: taquito.io pages deploy
 
 on:
   push:
@@ -10,8 +10,8 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 jobs:
-  publish-test-dapp:
-    name: Publish TestDapp to Cloudflare Pages
+  publish-website:
+    name: Publish taquito.io to Cloudflare Pages
     permissions:
       contents: read
       deployments: write
@@ -40,5 +40,5 @@ jobs:
       - uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
         with:
-          header: Test Dapp Preview
+          header: taquito.io Preview
           message: 'A new deploy preview is available on Cloudflare Pages at ${{ steps.cloudflare_publish.outputs.URL }}'
