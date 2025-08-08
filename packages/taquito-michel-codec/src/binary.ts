@@ -197,6 +197,7 @@ const primitives: PrimID[] = [
   'BYTES',
   'NAT',
   'Ticket',
+  'IS_IMPLICIT_ACCOUNT',
 ];
 
 const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =
@@ -264,7 +265,7 @@ class Reader {
     private buffer: number[] | Uint8Array,
     private idx: number = 0,
     private cap: number = buffer.length
-  ) { }
+  ) {}
 
   /** Remaining length */
   get length(): number {
@@ -578,8 +579,8 @@ function writeExpr(expr: Expr, wr: Writer, tf: WriteTransformFunc): void {
   const tag =
     (e.args?.length || 0) < 3
       ? Tag.Prim0 +
-      (e.args?.length || 0) * 2 +
-      (e.annots === undefined || e.annots.length === 0 ? 0 : 1)
+        (e.args?.length || 0) * 2 +
+        (e.annots === undefined || e.annots.length === 0 ? 0 : 1)
       : Tag.Prim;
 
   wr.writeUint8(tag);

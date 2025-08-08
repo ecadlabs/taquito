@@ -14,6 +14,7 @@
   let availableNetworks = [
     { value: "ghostnet", label: "Ghostnet", group: "current testnets" },
     { value: "rionet", label: "Rionet", group: "current testnets" },
+    // { value: "seoulnet", label: "Seoulnet", group: "current testnets" },
     { value: "mainnet", label: "Mainnet", group: "mainnet" },
     { value: "dailynet", label: "Dailynet", group: "other testnets" },
     { value: "weeklynet", label: "Weeklynet", group: "other testnets" },
@@ -42,6 +43,9 @@
       case "rionet":
         store.updateNetworkType(NetworkType.RIONET);
         break;
+      // case "seoulnet":
+      //   store.updateNetworkType(NetworkType.SEOULNET);
+      //   break;
       case "custom":
         //TODO: input custom RPC URL
         showCustomNetworkInput = true;
