@@ -20,3 +20,4 @@ integration-tests/jest-stare
 **/saplingSpendParams*
 apps/**/node_modules
 .nx
+.ansible
