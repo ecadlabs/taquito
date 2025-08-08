@@ -696,9 +696,9 @@ export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
 /**
  *
  * @description Add the prefix to a hex string or Uint8Array and Base58 encode it
- *
  * @param value Value to Base58 encode
  * @param pre prefix ID to append to the encoded string
+ * @example b58Encode('e96b9f8b19af9c7ffa0c0480e1977b295850961f', PrefixV2.Ed25519PublicKeyHash) // returns 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'
  */
 export function b58Encode(value: string | Uint8Array, pre: PrefixV2): string {
   const data = typeof value === 'string' ? hex2buf(value) : value;
