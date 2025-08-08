@@ -14,7 +14,14 @@ import { Prefix, prefix, payloadLength } from './constants';
 import { hash as blake2b } from '@stablelib/blake2b';
 import bs58check from 'bs58check';
 import BigNumber from 'bignumber.js';
-import { InvalidAddressError, InvalidHexStringError, InvalidKeyError, InvalidPublicKeyError, ParameterValidationError } from '@taquito/core';
+import toBuffer from 'typedarray-to-buffer';
+import {
+  InvalidAddressError,
+  InvalidHexStringError,
+  InvalidKeyError,
+  InvalidPublicKeyError,
+  ParameterValidationError,
+} from '@taquito/core';
 import { ValidationResult } from './validators';
 export * from './validators';
 export { VERSION } from './version';
@@ -57,7 +64,7 @@ export function encodeOpHash(value: string) {
 //   const n = new Uint8Array(prefix.length + payloadAr.length);
 //   n.set(prefix);
 //   n.set(payloadAr, prefix.length);
-//   return bs58check.encode(n);
+//   return bs58check.encode(toBuffer(n));
 // }
 
 export const addressPrefixes = [
@@ -74,15 +81,14 @@ export const publicKeyHashPrefixes = [
   Prefix.P256PublicKeyHash,
   Prefix.Secp256k1PublicKeyHash,
   Prefix.Ed25519PublicKeyHash,
-  Prefix.BLS12_381PublicKeyHash
+  Prefix.BLS12_381PublicKeyHash,
 ] as const;
-
 
 export const publicKeyPrefixes = [
   Prefix.P256PublicKey,
   Prefix.Secp256k1PublicKey,
   Prefix.Ed25519PublicKey,
-  Prefix.BLS12_381PublicKey
+  Prefix.BLS12_381PublicKey,
 ] as const;
 
 export const signaturePrefixes = [
@@ -90,7 +96,7 @@ export const signaturePrefixes = [
   Prefix.P256Signature,
   Prefix.Secp256k1Signature,
   Prefix.Ed25519Signature,
-  Prefix.BLS12_381Signature
+  Prefix.BLS12_381Signature,
 ] as const;
 
 /**
@@ -108,7 +114,11 @@ export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Arr
   }
   const [data, pre] = b58DecodeAndCheckPrefix(value, addressPrefixes);
   const buf = new Uint8Array(22);
-  if (pre === Prefix.ContractHash || pre === Prefix.SmartRollupHash || pre === Prefix.ZkRollupHash) {
+  if (
+    pre === Prefix.ContractHash ||
+    pre === Prefix.SmartRollupHash ||
+    pre === Prefix.ZkRollupHash
+  ) {
     let tag: number;
     switch (pre) {
       case Prefix.ContractHash:
@@ -266,7 +276,7 @@ export function encodePubKey(value: string) {
  * @param value Address to parse (tz1, tz2, tz3 or KT1).
  */
 export function encodeAddress(value: string | Uint8Array): string {
-  let buf: Uint8Array
+  let buf: Uint8Array;
   if (typeof value === 'string') {
     buf = hex2buf(value);
   } else {
@@ -301,7 +311,7 @@ export function encodeL2Address(value: string) {
  * @param value Binary key data
  */
 export function encodeKey(value: string | Uint8Array): string {
-  let buf: Uint8Array
+  let buf: Uint8Array;
   if (typeof value === 'string') {
     buf = hex2buf(value);
   } else {
@@ -335,7 +345,7 @@ export function encodeKey(value: string | Uint8Array): string {
  * @param value Key hash to parse
  */
 export function encodeKeyHash(value: string | Uint8Array): string {
-  let buf: Uint8Array
+  let buf: Uint8Array;
   if (typeof value === 'string') {
     buf = hex2buf(value);
   } else {
@@ -468,7 +478,9 @@ export const mic2arr = function me2(s: any): any {
  */
 
 export function buf2hex(bytes: ArrayLike<number>): string {
-  return Array.from(bytes).map((x) => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16)).join('');
+  return Array.from(bytes)
+    .map((x) => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16))
+    .join('');
 }
 
 /**
@@ -621,25 +633,38 @@ export function stripHexPrefix(hex: string): string {
 }
 
 /**
- * 
  * @description Decodes Base58 string, looks for known prefix and strips it
- * 
  * @param src Base58 string
  * @returns Payload and prefix
  */
-export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string, allowed?: T): [Uint8Array, T[number]];
-export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string, allowed: T, payloadOnly: false): [Uint8Array, T[number]];
-export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string, allowed: T, payloadOnly: true): Uint8Array;
-export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string, allowed?: T, payloadOnly?: boolean): [Uint8Array, T[number]] | Uint8Array {
+export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
+  src: string,
+  allowed?: T
+): [Uint8Array, T[number]];
+export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
+  src: string,
+  allowed: T,
+  payloadOnly: false
+): [Uint8Array, T[number]];
+export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
+  src: string,
+  allowed: T,
+  payloadOnly: true
+): Uint8Array;
+export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
+  src: string,
+  allowed?: T,
+  payloadOnly?: boolean
+): [Uint8Array, T[number]] | Uint8Array {
   const buf = (() => {
     try {
       return bs58check.decode(src);
     } catch (err: unknown) {
       if (err instanceof Error) {
         if (err.message.includes('checksum')) {
-          throw new ParameterValidationError(ValidationResult.INVALID_CHECKSUM)
+          throw new ParameterValidationError(ValidationResult.INVALID_CHECKSUM);
         } else {
-          throw new ParameterValidationError(ValidationResult.INVALID_ENCODING)
+          throw new ParameterValidationError(ValidationResult.INVALID_ENCODING);
         }
       } else {
         throw err;
@@ -651,14 +676,17 @@ export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(src: string
   for (key in Prefix) {
     const p = Prefix[key];
     const pre = prefix[p];
-    if (buf.length === pre.length + payloadLength[p] && buf.slice(0, pre.length).every((v, i) => v == pre[i])) {
+    if (
+      buf.length === pre.length + payloadLength[p] &&
+      buf.slice(0, pre.length).every((v, i) => v == pre[i])
+    ) {
       if (allowed !== undefined && allowed.indexOf(p) < 0) {
         throw new ParameterValidationError(ValidationResult.PREFIX_NOT_ALLOWED);
       }
       if (payloadOnly) {
         return buf.slice(pre.length);
       } else {
-        return [buf.slice(pre.length), p]
+        return [buf.slice(pre.length), p];
       }
     }
   }
@@ -678,7 +706,7 @@ export function b58Encode(value: string | Uint8Array, pre: Prefix): string {
   const n = new Uint8Array(p.length + data.length);
   n.set(p);
   n.set(data, p.length);
-  return bs58check.encode(n);
+  return bs58check.encode(toBuffer(n));
 }
 
 export function splitAddress(addr: string): [string, string | null] {
