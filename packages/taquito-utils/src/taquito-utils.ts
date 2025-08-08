@@ -10,7 +10,7 @@
  */
 
 import { Buffer } from 'buffer';
-import { Prefix, prefix, payloadLength } from './constants';
+import { PrefixV2, prefixV2, payloadLength } from './constants';
 import { hash as blake2b } from '@stablelib/blake2b';
 import bs58check from 'bs58check';
 import BigNumber from 'bignumber.js';
@@ -25,11 +25,12 @@ import {
 import { ValidationResult } from './validators';
 export * from './validators';
 export { VERSION } from './version';
-export { Prefix, payloadLength } from './constants';
+export { PrefixV2, payloadLength } from './constants';
 export { verifySignature } from './verify-signature';
 export * from './errors';
 export { format } from './format';
 export { BLS12_381_DST } from './verify-signature';
+export { prefix, Prefix, prefixLength } from './constants';
 
 /**
  *
@@ -39,7 +40,7 @@ export { BLS12_381_DST } from './verify-signature';
  */
 export function encodeExpr(value: string): string {
   const blakeHash = blake2b(hex2buf(value), 32);
-  return b58Encode(blakeHash, Prefix.ScriptExpr);
+  return b58Encode(blakeHash, PrefixV2.ScriptExpr);
 }
 
 /**
@@ -49,54 +50,53 @@ export function encodeExpr(value: string): string {
  */
 export function encodeOpHash(value: string) {
   const blakeHash = blake2b(hex2buf(value), 32);
-  return b58Encode(blakeHash, Prefix.OperationHash);
+  return b58Encode(blakeHash, PrefixV2.OperationHash);
 }
 
-// /**
-//  *
-//  * @description Base58 encode a string or a Uint8Array and append a prefix to it
-//  *
-//  * @param value Value to base58 encode
-//  * @param prefix prefix to append to the encoded string
-//  */
-// export function b58cencode(value: string | Uint8Array, prefix: Uint8Array): string {
-//   const payloadAr = typeof value === 'string' ? hex2buf(value) : value;
-//   const n = new Uint8Array(prefix.length + payloadAr.length);
-//   n.set(prefix);
-//   n.set(payloadAr, prefix.length);
-//   return bs58check.encode(toBuffer(n));
-// }
+/**
+ * @deprecated use b58Encode instead
+ * @description Base58 encode a string or a Uint8Array and append a prefix to it (will be removed in the next minor release)
+ * @param value Value to base58 encode
+ * @param prefix prefix to append to the encoded string
+ */
+export function b58cencode(value: string | Uint8Array, prefix: Uint8Array): string {
+  const payloadAr = typeof value === 'string' ? hex2buf(value) : value;
+  const n = new Uint8Array(prefix.length + payloadAr.length);
+  n.set(prefix);
+  n.set(payloadAr, prefix.length);
+  return bs58check.encode(toBuffer(n));
+}
 
 export const addressPrefixes = [
-  Prefix.P256PublicKeyHash,
-  Prefix.Secp256k1PublicKeyHash,
-  Prefix.Ed25519PublicKeyHash,
-  Prefix.BLS12_381PublicKeyHash,
-  Prefix.ContractHash,
-  Prefix.SmartRollupHash,
-  Prefix.ZkRollupHash,
+  PrefixV2.P256PublicKeyHash,
+  PrefixV2.Secp256k1PublicKeyHash,
+  PrefixV2.Ed25519PublicKeyHash,
+  PrefixV2.BLS12_381PublicKeyHash,
+  PrefixV2.ContractHash,
+  PrefixV2.SmartRollupHash,
+  PrefixV2.ZkRollupHash,
 ] as const;
 
 export const publicKeyHashPrefixes = [
-  Prefix.P256PublicKeyHash,
-  Prefix.Secp256k1PublicKeyHash,
-  Prefix.Ed25519PublicKeyHash,
-  Prefix.BLS12_381PublicKeyHash,
+  PrefixV2.P256PublicKeyHash,
+  PrefixV2.Secp256k1PublicKeyHash,
+  PrefixV2.Ed25519PublicKeyHash,
+  PrefixV2.BLS12_381PublicKeyHash,
 ] as const;
 
 export const publicKeyPrefixes = [
-  Prefix.P256PublicKey,
-  Prefix.Secp256k1PublicKey,
-  Prefix.Ed25519PublicKey,
-  Prefix.BLS12_381PublicKey,
+  PrefixV2.P256PublicKey,
+  PrefixV2.Secp256k1PublicKey,
+  PrefixV2.Ed25519PublicKey,
+  PrefixV2.BLS12_381PublicKey,
 ] as const;
 
 export const signaturePrefixes = [
-  Prefix.GenericSignature,
-  Prefix.P256Signature,
-  Prefix.Secp256k1Signature,
-  Prefix.Ed25519Signature,
-  Prefix.BLS12_381Signature,
+  PrefixV2.GenericSignature,
+  PrefixV2.P256Signature,
+  PrefixV2.Secp256k1Signature,
+  PrefixV2.Ed25519Signature,
+  PrefixV2.BLS12_381Signature,
 ] as const;
 
 /**
@@ -115,19 +115,19 @@ export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Arr
   const [data, pre] = b58DecodeAndCheckPrefix(value, addressPrefixes);
   const buf = new Uint8Array(22);
   if (
-    pre === Prefix.ContractHash ||
-    pre === Prefix.SmartRollupHash ||
-    pre === Prefix.ZkRollupHash
+    pre === PrefixV2.ContractHash ||
+    pre === PrefixV2.SmartRollupHash ||
+    pre === PrefixV2.ZkRollupHash
   ) {
     let tag: number;
     switch (pre) {
-      case Prefix.ContractHash:
+      case PrefixV2.ContractHash:
         tag = 1;
         break;
-      case Prefix.SmartRollupHash:
+      case PrefixV2.SmartRollupHash:
         tag = 3;
         break;
-      case Prefix.ZkRollupHash:
+      case PrefixV2.ZkRollupHash:
         tag = 4;
         break;
     }
@@ -136,16 +136,16 @@ export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Arr
   } else {
     let tag: number;
     switch (pre) {
-      case Prefix.Ed25519PublicKeyHash:
+      case PrefixV2.Ed25519PublicKeyHash:
         tag = 0;
         break;
-      case Prefix.Secp256k1PublicKeyHash:
+      case PrefixV2.Secp256k1PublicKeyHash:
         tag = 1;
         break;
-      case Prefix.P256PublicKeyHash:
+      case PrefixV2.P256PublicKeyHash:
         tag = 2;
         break;
-      case Prefix.BLS12_381PublicKeyHash:
+      case PrefixV2.BLS12_381PublicKeyHash:
         tag = 3;
         break;
       default:
@@ -176,16 +176,16 @@ export function b58DecodePublicKeyHash(value: string, fmt?: 'hex' | 'array'): Ui
   const buf = new Uint8Array(21);
   let tag: number;
   switch (pre) {
-    case Prefix.Ed25519PublicKeyHash:
+    case PrefixV2.Ed25519PublicKeyHash:
       tag = 0;
       break;
-    case Prefix.Secp256k1PublicKeyHash:
+    case PrefixV2.Secp256k1PublicKeyHash:
       tag = 1;
       break;
-    case Prefix.P256PublicKeyHash:
+    case PrefixV2.P256PublicKeyHash:
       tag = 2;
       break;
-    case Prefix.BLS12_381PublicKeyHash:
+    case PrefixV2.BLS12_381PublicKeyHash:
       tag = 3;
       break;
     default:
@@ -212,16 +212,16 @@ export function b58DecodePublicKey(value: string, fmt?: 'hex' | 'array'): Uint8A
   const [data, pre] = b58DecodeAndCheckPrefix(value, publicKeyPrefixes);
   let tag: number;
   switch (pre) {
-    case Prefix.Ed25519PublicKey:
+    case PrefixV2.Ed25519PublicKey:
       tag = 0;
       break;
-    case Prefix.Secp256k1PublicKey:
+    case PrefixV2.Secp256k1PublicKey:
       tag = 1;
       break;
-    case Prefix.P256PublicKey:
+    case PrefixV2.P256PublicKey:
       tag = 2;
       break;
-    case Prefix.BLS12_381PublicKey:
+    case PrefixV2.BLS12_381PublicKey:
       tag = 3;
       break;
     default:
@@ -248,7 +248,7 @@ export function b58DecodeL2Address(value: string, fmt?: 'hex'): string;
 export function b58DecodeL2Address(value: string, fmt: 'array'): Uint8Array;
 export function b58DecodeL2Address(value: string, fmt?: 'hex' | 'array'): Uint8Array | string {
   const [buf, pre] = b58DecodeAndCheckPrefix(value);
-  if (pre !== Prefix.BLS12_381PublicKeyHash) {
+  if (pre !== PrefixV2.BLS12_381PublicKeyHash) {
     throw new InvalidKeyError(ValidationResult.NO_PREFIX_MATCHED);
   }
   if (fmt !== undefined && fmt === 'array') {
@@ -287,7 +287,7 @@ export function encodeAddress(value: string | Uint8Array): string {
     case 0: // implicit
       return encodeKeyHash(buf.slice(1));
     case 1: // contract hash
-      return b58Encode(buf.slice(1, 21), Prefix.ContractHash);
+      return b58Encode(buf.slice(1, 21), PrefixV2.ContractHash);
     default:
       throw new Error('invalid address format');
   }
@@ -301,7 +301,7 @@ export function encodeAddress(value: string | Uint8Array): string {
  * @deprecated use encodeAddress instead
  */
 export function encodeL2Address(value: string) {
-  return b58Encode(value, Prefix.BLS12_381PublicKeyHash);
+  return b58Encode(value, PrefixV2.BLS12_381PublicKeyHash);
 }
 
 /**
@@ -318,19 +318,19 @@ export function encodeKey(value: string | Uint8Array): string {
     buf = value;
   }
 
-  let pre: Prefix;
+  let pre: PrefixV2;
   switch (buf[0]) {
     case 0:
-      pre = Prefix.Ed25519PublicKey;
+      pre = PrefixV2.Ed25519PublicKey;
       break;
     case 1:
-      pre = Prefix.Secp256k1PublicKey;
+      pre = PrefixV2.Secp256k1PublicKey;
       break;
     case 2:
-      pre = Prefix.P256PublicKey;
+      pre = PrefixV2.P256PublicKey;
       break;
     case 3:
-      pre = Prefix.BLS12_381PublicKey;
+      pre = PrefixV2.BLS12_381PublicKey;
       break;
     default:
       throw new Error('invalid address format');
@@ -352,19 +352,19 @@ export function encodeKeyHash(value: string | Uint8Array): string {
     buf = value;
   }
 
-  let pre: Prefix;
+  let pre: PrefixV2;
   switch (buf[0]) {
     case 0:
-      pre = Prefix.Ed25519PublicKeyHash;
+      pre = PrefixV2.Ed25519PublicKeyHash;
       break;
     case 1:
-      pre = Prefix.Secp256k1PublicKeyHash;
+      pre = PrefixV2.Secp256k1PublicKeyHash;
       break;
     case 2:
-      pre = Prefix.P256PublicKeyHash;
+      pre = PrefixV2.P256PublicKeyHash;
       break;
     case 3:
-      pre = Prefix.BLS12_381PublicKeyHash;
+      pre = PrefixV2.BLS12_381PublicKeyHash;
       break;
     default:
       throw new Error('invalid address format');
@@ -492,19 +492,19 @@ export function buf2hex(bytes: ArrayLike<number>): string {
  */
 export function getPkhfromPk(publicKey: string): string {
   const [key, pre] = b58DecodeAndCheckPrefix(publicKey);
-  let pkhPre: Prefix;
+  let pkhPre: PrefixV2;
   switch (pre) {
-    case Prefix.P256PublicKey:
-      pkhPre = Prefix.P256PublicKeyHash;
+    case PrefixV2.P256PublicKey:
+      pkhPre = PrefixV2.P256PublicKeyHash;
       break;
-    case Prefix.Secp256k1PublicKey:
-      pkhPre = Prefix.Secp256k1PublicKeyHash;
+    case PrefixV2.Secp256k1PublicKey:
+      pkhPre = PrefixV2.Secp256k1PublicKeyHash;
       break;
-    case Prefix.Ed25519PublicKey:
-      pkhPre = Prefix.Ed25519PublicKeyHash;
+    case PrefixV2.Ed25519PublicKey:
+      pkhPre = PrefixV2.Ed25519PublicKeyHash;
       break;
-    case Prefix.BLS12_381PublicKey:
-      pkhPre = Prefix.BLS12_381PublicKeyHash;
+    case PrefixV2.BLS12_381PublicKey:
+      pkhPre = PrefixV2.BLS12_381PublicKeyHash;
       break;
     default:
       throw new InvalidPublicKeyError(publicKey, ValidationResult.NO_PREFIX_MATCHED);
@@ -637,21 +637,21 @@ export function stripHexPrefix(hex: string): string {
  * @param src Base58 string
  * @returns Payload and prefix
  */
-export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
+export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
   src: string,
   allowed?: T
 ): [Uint8Array, T[number]];
-export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
+export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
   src: string,
   allowed: T,
   payloadOnly: false
 ): [Uint8Array, T[number]];
-export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
+export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
   src: string,
   allowed: T,
   payloadOnly: true
 ): Uint8Array;
-export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
+export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
   src: string,
   allowed?: T,
   payloadOnly?: boolean
@@ -672,10 +672,10 @@ export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
     }
   })();
 
-  let key: keyof typeof Prefix;
-  for (key in Prefix) {
-    const p = Prefix[key];
-    const pre = prefix[p];
+  let key: keyof typeof PrefixV2;
+  for (key in PrefixV2) {
+    const p = PrefixV2[key];
+    const pre = prefixV2[p];
     if (
       buf.length === pre.length + payloadLength[p] &&
       buf.slice(0, pre.length).every((v, i) => v == pre[i])
@@ -700,9 +700,9 @@ export function b58DecodeAndCheckPrefix<T extends readonly Prefix[]>(
  * @param value Value to Base58 encode
  * @param pre prefix ID to append to the encoded string
  */
-export function b58Encode(value: string | Uint8Array, pre: Prefix): string {
+export function b58Encode(value: string | Uint8Array, pre: PrefixV2): string {
   const data = typeof value === 'string' ? hex2buf(value) : value;
-  const p = prefix[pre];
+  const p = prefixV2[pre];
   const n = new Uint8Array(p.length + data.length);
   n.set(p);
   n.set(data, p.length);

@@ -1,29 +1,32 @@
-import { b58DecodeAndCheckPrefix, BLS12_381_DST, Prefix, b58Encode } from "@taquito/utils";
+import { b58DecodeAndCheckPrefix, BLS12_381_DST, PrefixV2, b58Encode } from '@taquito/utils';
 import { bls12_381 } from '@noble/curves/bls12-381';
-import { hash } from "@stablelib/blake2b";
-import { SigningKeyWithProofOfPossession, SignResult } from "./signer";
+import { hash } from '@stablelib/blake2b';
+import { SigningKeyWithProofOfPossession, SignResult } from './signer';
 
 const bls = bls12_381.longSignatures; // AKA MinPK
-const POP_DST = "BLS_POP_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_";
+const POP_DST = 'BLS_POP_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_';
 
 export class BLSKey implements SigningKeyWithProofOfPossession {
   #key: Uint8Array;
   #publicKey: Uint8Array;
 
   constructor(key: string, decrypt?: (k: Uint8Array) => Uint8Array) {
-    const tmp = b58DecodeAndCheckPrefix(key, [Prefix.BLS12_381EncryptedSecretKey, Prefix.BLS12_381SecretKey]);
+    const tmp = b58DecodeAndCheckPrefix(key, [
+      PrefixV2.BLS12_381EncryptedSecretKey,
+      PrefixV2.BLS12_381SecretKey,
+    ]);
     let [keyData] = tmp;
     const [, prefix] = tmp;
 
-    if (prefix === Prefix.BLS12_381EncryptedSecretKey) {
+    if (prefix === PrefixV2.BLS12_381EncryptedSecretKey) {
       if (decrypt !== undefined) {
-        keyData = decrypt(keyData)
+        keyData = decrypt(keyData);
       } else {
-        throw new Error('decryption function is not provided')
+        throw new Error('decryption function is not provided');
       }
     }
 
-    this.#key = keyData
+    this.#key = keyData;
     this.#publicKey = bls.getPublicKey(this.sk()).toBytes();
   }
 
@@ -36,8 +39,8 @@ export class BLSKey implements SigningKeyWithProofOfPossession {
     const sig = bls.sign(point, this.sk()).toBytes();
     return Promise.resolve({
       rawSignature: sig,
-      sig: b58Encode(sig, Prefix.GenericSignature),
-      prefixSig: b58Encode(sig, Prefix.BLS12_381Signature),
+      sig: b58Encode(sig, PrefixV2.GenericSignature),
+      prefixSig: b58Encode(sig, PrefixV2.BLS12_381Signature),
     });
   }
 
@@ -50,17 +53,17 @@ export class BLSKey implements SigningKeyWithProofOfPossession {
   }
 
   publicKey(): Promise<string> {
-    const res = b58Encode(this.#publicKey, Prefix.BLS12_381PublicKey);
+    const res = b58Encode(this.#publicKey, PrefixV2.BLS12_381PublicKey);
     return Promise.resolve(res);
   }
 
   publicKeyHash(): Promise<string> {
-    const res = b58Encode(hash(this.#publicKey, 20), Prefix.BLS12_381PublicKeyHash);
+    const res = b58Encode(hash(this.#publicKey, 20), PrefixV2.BLS12_381PublicKeyHash);
     return Promise.resolve(res);
   }
 
   secretKey(): Promise<string> {
-    const res = b58Encode(this.#key, Prefix.BLS12_381SecretKey);
+    const res = b58Encode(this.#key, PrefixV2.BLS12_381SecretKey);
     return Promise.resolve(res);
   }
 }

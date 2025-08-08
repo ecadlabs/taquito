@@ -1,6 +1,6 @@
 import { InMemoryViewingKey } from './in-memory-viewing-key';
 import * as sapling from '@airgap/sapling-wasm';
-import { b58Encode, Prefix } from '@taquito/utils';
+import { b58Encode, PrefixV2 } from '@taquito/utils';
 import * as bip39 from 'bip39';
 import {
   ParametersSpendProof,
@@ -46,7 +46,7 @@ export class InMemorySpendingKey {
       await sapling.getExtendedSpendingKey(seed, derivationPath)
     );
 
-    const spendingKey = b58Encode(spendingKeyArr, Prefix.SaplingSpendingKey);
+    const spendingKey = b58Encode(spendingKeyArr, PrefixV2.SaplingSpendingKey);
 
     return new InMemorySpendingKey(spendingKey);
   }

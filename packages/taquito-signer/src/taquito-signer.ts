@@ -6,7 +6,7 @@ import { openSecretBox } from '@stablelib/nacl';
 import {
   hex2buf,
   mergebuf,
-  Prefix,
+  PrefixV2,
   buf2hex,
   b58DecodeAndCheckPrefix,
   b58Encode,
@@ -43,15 +43,16 @@ export interface SignResult {
   sbytes: string;
 }
 
-type KeyPrefix = Prefix.Ed25519EncryptedSeed |
-  Prefix.Ed25519Seed |
-  Prefix.Ed25519SecretKey |
-  Prefix.Secp256k1EncryptedSecretKey |
-  Prefix.Secp256k1SecretKey |
-  Prefix.P256EncryptedSecretKey |
-  Prefix.P256SecretKey |
-  Prefix.BLS12_381EncryptedSecretKey |
-  Prefix.BLS12_381SecretKey;
+type KeyPrefix =
+  | PrefixV2.Ed25519EncryptedSeed
+  | PrefixV2.Ed25519Seed
+  | PrefixV2.Ed25519SecretKey
+  | PrefixV2.Secp256k1EncryptedSecretKey
+  | PrefixV2.Secp256k1SecretKey
+  | PrefixV2.P256EncryptedSecretKey
+  | PrefixV2.P256SecretKey
+  | PrefixV2.BLS12_381EncryptedSecretKey
+  | PrefixV2.BLS12_381SecretKey;
 
 /**
  * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
@@ -67,7 +68,7 @@ export class InMemorySigner {
       throw new InvalidMnemonicError(mnemonic);
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
-    const key = b58Encode(seed.subarray(0, 32), Prefix.Ed25519Seed);
+    const key = b58Encode(seed.subarray(0, 32), PrefixV2.Ed25519Seed);
     return new InMemorySigner(key);
   }
 
@@ -111,30 +112,32 @@ export class InMemorySigner {
    */
   constructor(key: string, passphrase?: string) {
     const keyPrefixes: KeyPrefix[] = [
-      Prefix.Ed25519EncryptedSeed,
-      Prefix.Ed25519Seed,
-      Prefix.Ed25519SecretKey,
-      Prefix.Secp256k1EncryptedSecretKey,
-      Prefix.Secp256k1SecretKey,
-      Prefix.P256EncryptedSecretKey,
-      Prefix.P256SecretKey,
-      Prefix.BLS12_381EncryptedSecretKey,
-      Prefix.BLS12_381SecretKey,
+      PrefixV2.Ed25519EncryptedSeed,
+      PrefixV2.Ed25519Seed,
+      PrefixV2.Ed25519SecretKey,
+      PrefixV2.Secp256k1EncryptedSecretKey,
+      PrefixV2.Secp256k1SecretKey,
+      PrefixV2.P256EncryptedSecretKey,
+      PrefixV2.P256SecretKey,
+      PrefixV2.BLS12_381EncryptedSecretKey,
+      PrefixV2.BLS12_381SecretKey,
     ];
     const pre = (() => {
       try {
         const [, pre] = b58DecodeAndCheckPrefix(key, keyPrefixes);
         return pre;
       } catch {
-        throw new InvalidKeyError(`Invalid private key, expecting one of the following prefixes '${keyPrefixes}'.`
+        throw new InvalidKeyError(
+          `Invalid private key, expecting one of the following prefixes '${keyPrefixes}'.`
         );
       }
     })();
 
-    const encrypted = pre === Prefix.Ed25519EncryptedSeed ||
-      pre === Prefix.Secp256k1EncryptedSecretKey ||
-      pre === Prefix.P256EncryptedSecretKey ||
-      pre === Prefix.BLS12_381EncryptedSecretKey;
+    const encrypted =
+      pre === PrefixV2.Ed25519EncryptedSeed ||
+      pre === PrefixV2.Secp256k1EncryptedSecretKey ||
+      pre === PrefixV2.P256EncryptedSecretKey ||
+      pre === PrefixV2.BLS12_381EncryptedSecretKey;
 
     let decrypt: ((k: Uint8Array) => Uint8Array) | undefined;
     if (encrypted) {
@@ -152,28 +155,28 @@ export class InMemorySigner {
           new Uint8Array(encryptedSk)
         );
         if (!res) {
-          throw new Error('can\'t decrypt secret key');
+          throw new Error("can't decrypt secret key");
         }
         return res;
       };
     }
 
     switch (pre) {
-      case Prefix.Ed25519EncryptedSeed:
-      case Prefix.Ed25519Seed:
-      case Prefix.Ed25519SecretKey:
+      case PrefixV2.Ed25519EncryptedSeed:
+      case PrefixV2.Ed25519Seed:
+      case PrefixV2.Ed25519SecretKey:
         this.#key = new EdKey(key, decrypt);
         break;
 
-      case Prefix.Secp256k1EncryptedSecretKey:
-      case Prefix.Secp256k1SecretKey:
-      case Prefix.P256EncryptedSecretKey:
-      case Prefix.P256SecretKey:
+      case PrefixV2.Secp256k1EncryptedSecretKey:
+      case PrefixV2.Secp256k1SecretKey:
+      case PrefixV2.P256EncryptedSecretKey:
+      case PrefixV2.P256SecretKey:
         this.#key = new ECKey(key, decrypt);
         break;
 
-      case Prefix.BLS12_381EncryptedSecretKey:
-      case Prefix.BLS12_381SecretKey:
+      case PrefixV2.BLS12_381EncryptedSecretKey:
+      case PrefixV2.BLS12_381SecretKey:
         this.#key = new BLSKey(key, decrypt);
         break;
     }
@@ -185,15 +188,19 @@ export class InMemorySigner {
    * @param watermark Watermark to append to the bytes
    */
   async sign(message: string | Uint8Array, watermark?: Uint8Array): Promise<SignResult> {
-    const msg = (typeof message == 'string') ? hex2buf(message) : message;
+    const msg = typeof message == 'string' ? hex2buf(message) : message;
     const watermarkMsg = watermark !== undefined ? mergebuf(watermark, msg) : msg;
-    const { rawSignature, sig: signature, prefixSig: prefixedSignature } = await this.#key.sign(watermarkMsg);
+    const {
+      rawSignature,
+      sig: signature,
+      prefixSig: prefixedSignature,
+    } = await this.#key.sign(watermarkMsg);
     return {
       bytes: buf2hex(msg),
       sig: signature,
       prefixSig: prefixedSignature,
       sbytes: buf2hex(mergebuf(msg, rawSignature)),
-    }
+    };
   }
 
   async provePossession(): Promise<RawSignResult | null> {
@@ -205,7 +212,7 @@ export class InMemorySigner {
   }
 
   get canProvePossession(): boolean {
-    return isPOP(this.#key)
+    return isPOP(this.#key);
   }
 
   /**

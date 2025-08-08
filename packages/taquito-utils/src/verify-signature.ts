@@ -5,15 +5,20 @@ import {
   buf2hex,
   hex2buf,
   mergebuf,
-  Prefix,
+  PrefixV2,
   publicKeyPrefixes,
   signaturePrefixes,
 } from './taquito-utils';
 import elliptic from 'elliptic';
-import { InvalidMessageError, InvalidPublicKeyError, InvalidSignatureError, ParameterValidationError } from '@taquito/core';
+import {
+  InvalidMessageError,
+  InvalidPublicKeyError,
+  InvalidSignatureError,
+  ParameterValidationError,
+} from '@taquito/core';
 import { bls12_381 } from '@noble/curves/bls12-381';
 
-export const BLS12_381_DST = "BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_";
+export const BLS12_381_DST = 'BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_';
 
 /**
  * @description Verify signature of a payload
@@ -81,11 +86,11 @@ export function verifySignature(
   }
 
   switch (pre) {
-    case Prefix.P256PublicKey:
+    case PrefixV2.P256PublicKey:
       return verifyP2Signature(sig, msg, pk);
-    case Prefix.Secp256k1PublicKey:
+    case PrefixV2.Secp256k1PublicKey:
       return verifySpSignature(sig, msg, pk);
-    case Prefix.Ed25519PublicKey:
+    case PrefixV2.Ed25519PublicKey:
       return verifyEdSignature(sig, msg, pk);
     default:
       return verifyBLSSignature(sig, msg, pk);

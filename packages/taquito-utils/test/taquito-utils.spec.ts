@@ -7,7 +7,7 @@ import {
   encodeKeyHash,
   encodeKey,
   encodeAddress,
-  Prefix,
+  PrefixV2,
   num2PaddedHex,
   hex2Bytes,
   encodeL2Address,
@@ -118,7 +118,11 @@ describe('sapling keys', () => {
   it('Should decode sapling spending key properly', () => {
     const unencrypted =
       'sask27SLmU9herddHgyAQTRqgaynMbZiakq4miFsY5gLtC292bDcXEWUty3DtLHvJKJU7r9nnVuoS53faH59JD4tuE1vC37LJESiyuZ2MhHNRaVQdNPkRWvxeaJC2E3aoiEG1BD21xwqREZyVxpVbpmKRu5vJGjNgSb8SswDDYhNeEA2GN5VqSeXiDkbdo8b1AXgD2waf2CyMMw5oqZKqJi3PEFcS4iCLs9urX6Amf1v8hTSN';
-    expect(Buffer.from(b58DecodeAndCheckPrefix(unencrypted, [Prefix.SaplingSpendingKey], true)).toString('hex')).toEqual(
+    expect(
+      Buffer.from(
+        b58DecodeAndCheckPrefix(unencrypted, [PrefixV2.SaplingSpendingKey], true)
+      ).toString('hex')
+    ).toEqual(
       '000000000000000000418929d10a0a36cc86426cc6cd39fc2e751f27fd40ce83ef959871955c2d3519123cffd9649ee0277a8a50a9c5c3dada024d63690914d891c155d7cbb6770f020df618fca563b1d6ce2f66f40578718bfbd17df02067755b64615d70f791ed09cf897d1cf6d11326ccac9371f143444a08296eed4803aa6a58e48acd9b1aa627c8030ed002ecc1327f5de7fe979a9e54165e6ab28a01db1d5fdcd91efb526fcf'
     );
   });
@@ -126,7 +130,11 @@ describe('sapling keys', () => {
   it('Should decode encrypted sapling spending key properly', () => {
     const encrypted =
       'MMXjMby7gbNyK5LcAAWkN7TGGKjwWQZ66ksJt6EFdQ3hzRa4LgqDZh9z1uXxD5CUShTg72cb8MpqX2VCMjNQ6EyfEakbbeMxBRsXePzN3TuYoysvgtpAce5cCF5X9ThiVkMHNkaS4qbJbMGGDCQ4hwvZiC1HWNaR44GdfLpuVLsk1ZPVgFg6N3wacgqUG3KomNrrP86sYbWuNCHt4Dnvo12HbrT443qmp13rPiwzGD1upu9zEK1dAwbMZCt4wSAuwUHo4dsudgtUuFN41h';
-    expect(Buffer.from(b58DecodeAndCheckPrefix(encrypted, [Prefix.EncryptedSaplingSpendingKey], true)).toString('hex')).toEqual(
+    expect(
+      Buffer.from(
+        b58DecodeAndCheckPrefix(encrypted, [PrefixV2.EncryptedSaplingSpendingKey], true)
+      ).toString('hex')
+    ).toEqual(
       '7854d16453dfb5859d581910682a8dfd467810296ccb9df44e68b6893a762f642df2def7caa09f60d07a14c049882d390b75bcde0013979a4aa68b811d71c7ef078d5a7402811eff0423245d2b4a81330012c8b3b2832fe56eecf4bf582624fb80a9b35bb60e47fe1d0e5ced756538f97056ac9a8534101dd679beba7f4b97bbf14d42af6afef0086d2177586d3396e8a12890e4dbb0c637e55a0825b0609265829507f1ccd7af8ba2a3899096e494840045bcd87ec447ac1aa9b8d8cd3b557d0a'
     );
   });
@@ -134,7 +142,7 @@ describe('sapling keys', () => {
   it('Should encode sapling spending key properly', () => {
     const unencrypted =
       '000000000000000000418929d10a0a36cc86426cc6cd39fc2e751f27fd40ce83ef959871955c2d3519123cffd9649ee0277a8a50a9c5c3dada024d63690914d891c155d7cbb6770f020df618fca563b1d6ce2f66f40578718bfbd17df02067755b64615d70f791ed09cf897d1cf6d11326ccac9371f143444a08296eed4803aa6a58e48acd9b1aa627c8030ed002ecc1327f5de7fe979a9e54165e6ab28a01db1d5fdcd91efb526fcf';
-    expect(b58Encode(unencrypted, Prefix.SaplingSpendingKey)).toEqual(
+    expect(b58Encode(unencrypted, PrefixV2.SaplingSpendingKey)).toEqual(
       'sask27SLmU9herddHgyAQTRqgaynMbZiakq4miFsY5gLtC292bDcXEWUty3DtLHvJKJU7r9nnVuoS53faH59JD4tuE1vC37LJESiyuZ2MhHNRaVQdNPkRWvxeaJC2E3aoiEG1BD21xwqREZyVxpVbpmKRu5vJGjNgSb8SswDDYhNeEA2GN5VqSeXiDkbdo8b1AXgD2waf2CyMMw5oqZKqJi3PEFcS4iCLs9urX6Amf1v8hTSN'
     );
   });

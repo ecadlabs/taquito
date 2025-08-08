@@ -10,7 +10,7 @@ import {
   verifySignature,
   validateKeyHash,
   ValidationResult,
-  Prefix,
+  PrefixV2,
   b58DecodeAndCheckPrefix,
   getPkhfromPk,
   b58Encode,
@@ -38,7 +38,6 @@ interface PublicKeyResponse {
 interface SignResponse {
   signature: string;
 }
-
 
 export interface RemoteSignerOptions {
   headers?: { [key: string]: string };
@@ -114,7 +113,12 @@ export class RemoteSigner implements Signer {
 
       const [decoded] = (() => {
         try {
-          return b58DecodeAndCheckPrefix(signature, [Prefix.GenericSignature, Prefix.Secp256k1Signature, Prefix.Ed25519Signature, Prefix.P256Signature]);
+          return b58DecodeAndCheckPrefix(signature, [
+            PrefixV2.GenericSignature,
+            PrefixV2.Secp256k1Signature,
+            PrefixV2.Ed25519Signature,
+            PrefixV2.P256Signature,
+          ]);
         } catch (err: unknown) {
           if (err instanceof ParameterValidationError) {
             throw new InvalidSignatureError(signature, err.result);
@@ -133,7 +137,7 @@ export class RemoteSigner implements Signer {
 
       return {
         bytes,
-        sig: b58Encode(decoded, Prefix.GenericSignature),
+        sig: b58Encode(decoded, PrefixV2.GenericSignature),
         prefixSig: signature,
         sbytes: bytes + buf2hex(toBuffer(decoded)),
       };

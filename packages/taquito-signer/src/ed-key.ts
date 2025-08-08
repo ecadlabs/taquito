@@ -1,10 +1,6 @@
 import { hash as blake2b } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
-import {
-  Prefix,
-  b58DecodeAndCheckPrefix,
-  b58Encode,
-} from '@taquito/utils';
+import { PrefixV2, b58DecodeAndCheckPrefix, b58Encode } from '@taquito/utils';
 import { SigningKey, SignResult } from './signer';
 
 /**
@@ -21,23 +17,24 @@ export class EdKey implements SigningKey {
    * @param decrypt Decrypt function
    * @throws {@link InvalidKeyError}
    */
-  constructor(
-    key: string,
-    decrypt?: (k: Uint8Array) => Uint8Array
-  ) {
-    const tmp = b58DecodeAndCheckPrefix(key, [Prefix.Ed25519SecretKey, Prefix.Ed25519EncryptedSeed, Prefix.Ed25519Seed]);
+  constructor(key: string, decrypt?: (k: Uint8Array) => Uint8Array) {
+    const tmp = b58DecodeAndCheckPrefix(key, [
+      PrefixV2.Ed25519SecretKey,
+      PrefixV2.Ed25519EncryptedSeed,
+      PrefixV2.Ed25519Seed,
+    ]);
     let [keyData] = tmp;
     const [, prefix] = tmp;
 
-    if (prefix === Prefix.Ed25519SecretKey) {
+    if (prefix === PrefixV2.Ed25519SecretKey) {
       this.#secretKey = keyData;
       this.#publicKey = keyData.slice(32);
     } else {
-      if (prefix === Prefix.Ed25519EncryptedSeed) {
+      if (prefix === PrefixV2.Ed25519EncryptedSeed) {
         if (decrypt !== undefined) {
-          keyData = decrypt(keyData)
+          keyData = decrypt(keyData);
         } else {
-          throw new Error('decryption function is not provided')
+          throw new Error('decryption function is not provided');
         }
       }
       const { publicKey, secretKey } = generateKeyPairFromSeed(keyData);
@@ -52,13 +49,13 @@ export class EdKey implements SigningKey {
    * @param bytesHash Blake2b hash of the bytes to sign
    */
   async sign(bytes: Uint8Array): Promise<SignResult> {
-    const hash = blake2b(bytes, 32)
+    const hash = blake2b(bytes, 32);
     const signature = sign(this.#secretKey, hash);
 
     return Promise.resolve({
       rawSignature: signature,
-      sig: b58Encode(signature, Prefix.GenericSignature),
-      prefixSig: b58Encode(signature, Prefix.Ed25519Signature),
+      sig: b58Encode(signature, PrefixV2.GenericSignature),
+      prefixSig: b58Encode(signature, PrefixV2.Ed25519Signature),
     });
   }
 
@@ -66,20 +63,20 @@ export class EdKey implements SigningKey {
    * @returns Encoded public key
    */
   publicKey(): Promise<string> {
-    return Promise.resolve(b58Encode(this.#publicKey, Prefix.Ed25519PublicKey));
+    return Promise.resolve(b58Encode(this.#publicKey, PrefixV2.Ed25519PublicKey));
   }
 
   /**
    * @returns Encoded public key hash
    */
   publicKeyHash(): Promise<string> {
-    return Promise.resolve(b58Encode(blake2b(this.#publicKey, 20), Prefix.Ed25519PublicKeyHash));
+    return Promise.resolve(b58Encode(blake2b(this.#publicKey, 20), PrefixV2.Ed25519PublicKeyHash));
   }
 
   /**
    * @returns Encoded private key
    */
   secretKey(): Promise<string> {
-    return Promise.resolve(b58Encode(this.#secretKey, Prefix.Ed25519SecretKey));
+    return Promise.resolve(b58Encode(this.#secretKey, PrefixV2.Ed25519SecretKey));
   }
 }

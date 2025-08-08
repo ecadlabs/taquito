@@ -218,18 +218,18 @@ console.log(b58decode('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'));
 **Base58 decode a string and remove the prefix from it**
 
 ```ts
-import { b58cdecode, prefix, Prefix } from '@taquito/utils';
+import { b58cdecode, PrefixV2 } from '@taquito/utils';
 
-console.log(b58cdecode('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', prefix[Prefix.TZ1]));
+console.log(b58cdecode('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', PrefixV2.Ed25519PublicKeyHash));
 // output: <Buffer e9 6b 9f 8b 19 af 9c 7f fa 0c 04 80 e1 97 7b 29 58 50 96 1f>
 ```
 
 **Base58 encode a string or a Uint8Array and append a prefix to it**
 
 ```ts
-import { b58cencode } from '@taquito/utils';
+import { b58Encode } from '@taquito/utils';
 
-console.log(b58cdecode('e96b9f8b19af9c7ffa0c0480e1977b295850961f', prefix[Prefix.TZ1]));
+console.log(b58Encode('e96b9f8b19af9c7ffa0c0480e1977b295850961f', PrefixV2.Ed25519PublicKeyHash));
 // output: tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM
 ```
 

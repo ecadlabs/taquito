@@ -1,9 +1,5 @@
 import { hash as blake2b } from '@stablelib/blake2b';
-import {
-  Prefix,
-  b58DecodeAndCheckPrefix,
-  b58Encode,
-} from '@taquito/utils';
+import { PrefixV2, b58DecodeAndCheckPrefix, b58Encode } from '@taquito/utils';
 import elliptic from 'elliptic';
 import { SigningKey, SignResult } from './signer';
 
@@ -11,25 +7,25 @@ type Curve = 'p256' | 'secp256k1';
 
 type CurvePrefix = {
   [curve in Curve]: {
-    pk: Prefix;
-    sk: Prefix;
-    pkh: Prefix;
-    sig: Prefix;
-  }
-}
+    pk: PrefixV2;
+    sk: PrefixV2;
+    pkh: PrefixV2;
+    sig: PrefixV2;
+  };
+};
 
 const pref: CurvePrefix = {
   p256: {
-    pk: Prefix.P256PublicKey,
-    sk: Prefix.P256SecretKey,
-    pkh: Prefix.P256PublicKeyHash,
-    sig: Prefix.P256Signature,
+    pk: PrefixV2.P256PublicKey,
+    sk: PrefixV2.P256SecretKey,
+    pkh: PrefixV2.P256PublicKeyHash,
+    sig: PrefixV2.P256Signature,
   },
   secp256k1: {
-    pk: Prefix.Secp256k1PublicKey,
-    sk: Prefix.Secp256k1SecretKey,
-    pkh: Prefix.Secp256k1PublicKeyHash,
-    sig: Prefix.Secp256k1Signature,
+    pk: PrefixV2.Secp256k1PublicKey,
+    sk: PrefixV2.Secp256k1SecretKey,
+    pkh: PrefixV2.Secp256k1PublicKeyHash,
+    sig: PrefixV2.Secp256k1Signature,
   },
 };
 
@@ -47,29 +43,31 @@ export class ECKey implements SigningKey {
    * @param decrypt Decrypt function
    * @throws {@link InvalidKeyError}
    */
-  constructor(
-    key: string,
-    decrypt?: (k: Uint8Array) => Uint8Array
-  ) {
-    const tmp = b58DecodeAndCheckPrefix(key, [Prefix.Secp256k1EncryptedSecretKey, Prefix.P256EncryptedSecretKey, Prefix.Secp256k1SecretKey, Prefix.P256SecretKey]);
+  constructor(key: string, decrypt?: (k: Uint8Array) => Uint8Array) {
+    const tmp = b58DecodeAndCheckPrefix(key, [
+      PrefixV2.Secp256k1EncryptedSecretKey,
+      PrefixV2.P256EncryptedSecretKey,
+      PrefixV2.Secp256k1SecretKey,
+      PrefixV2.P256SecretKey,
+    ]);
     [this.#key] = tmp;
     const [, prefix] = tmp;
 
     switch (prefix) {
-      case Prefix.Secp256k1EncryptedSecretKey:
-      case Prefix.P256EncryptedSecretKey:
+      case PrefixV2.Secp256k1EncryptedSecretKey:
+      case PrefixV2.P256EncryptedSecretKey:
         if (decrypt !== undefined) {
           this.#key = decrypt(this.#key);
         } else {
           throw new Error('decryption function is not provided');
         }
-        if (prefix === Prefix.Secp256k1EncryptedSecretKey) {
+        if (prefix === PrefixV2.Secp256k1EncryptedSecretKey) {
           this.#curve = 'secp256k1';
         } else {
           this.#curve = 'p256';
         }
         break;
-      case Prefix.Secp256k1SecretKey:
+      case PrefixV2.Secp256k1SecretKey:
         this.#curve = 'secp256k1';
         break;
       default:
@@ -99,7 +97,7 @@ export class ECKey implements SigningKey {
 
     return Promise.resolve({
       rawSignature: signature,
-      sig: b58Encode(signature, Prefix.GenericSignature),
+      sig: b58Encode(signature, PrefixV2.GenericSignature),
       prefixSig: b58Encode(signature, pref[this.#curve].sig),
     });
   }
@@ -115,7 +113,9 @@ export class ECKey implements SigningKey {
    * @returns Encoded public key hash
    */
   publicKeyHash(): Promise<string> {
-    return Promise.resolve(b58Encode(blake2b(new Uint8Array(this.#publicKey), 20), pref[this.#curve].pkh));
+    return Promise.resolve(
+      b58Encode(blake2b(new Uint8Array(this.#publicKey), 20), pref[this.#curve].pkh)
+    );
   }
 
   /**

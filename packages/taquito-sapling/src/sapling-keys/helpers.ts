@@ -2,13 +2,16 @@ import { InvalidSpendingKey } from '../errors';
 import toBuffer from 'typedarray-to-buffer';
 import { openSecretBox } from '@stablelib/nacl';
 import pbkdf2 from 'pbkdf2';
-import { Prefix, b58DecodeAndCheckPrefix } from '@taquito/utils';
+import { PrefixV2, b58DecodeAndCheckPrefix } from '@taquito/utils';
 import { ParameterValidationError } from '@taquito/core';
 
 export function decryptKey(spendingKey: string, password?: string) {
   const [keyArr, pre] = (() => {
     try {
-      return b58DecodeAndCheckPrefix(spendingKey, [Prefix.SaplingSpendingKey, Prefix.EncryptedSaplingSpendingKey]);
+      return b58DecodeAndCheckPrefix(spendingKey, [
+        PrefixV2.SaplingSpendingKey,
+        PrefixV2.EncryptedSaplingSpendingKey,
+      ]);
     } catch (err: unknown) {
       if (err instanceof ParameterValidationError) {
         throw new InvalidSpendingKey(spendingKey, 'invalid spending key');
@@ -16,9 +19,9 @@ export function decryptKey(spendingKey: string, password?: string) {
         throw err;
       }
     }
-  })()
+  })();
 
-  if (pre === Prefix.EncryptedSaplingSpendingKey) {
+  if (pre === PrefixV2.EncryptedSaplingSpendingKey) {
     if (!password) {
       throw new InvalidSpendingKey(spendingKey, 'no password provided to decrypt');
     }

@@ -1,4 +1,4 @@
-import { b58Encode, Prefix } from '@taquito/utils';
+import { b58Encode, PrefixV2 } from '@taquito/utils';
 import * as sapling from '@airgap/sapling-wasm';
 import { InMemorySpendingKey } from './in-memory-spending-key';
 
@@ -66,7 +66,7 @@ export class InMemoryViewingKey {
       addressIndex
     );
     return {
-      address: b58Encode(raw, Prefix.SaplingAddress),
+      address: b58Encode(raw, PrefixV2.SaplingAddress),
       addressIndex: index.readInt32LE(),
     };
   }

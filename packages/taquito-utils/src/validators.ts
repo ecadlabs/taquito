@@ -1,11 +1,11 @@
-import { Prefix } from './constants';
+import { PrefixV2 } from './constants';
 import { b58DecodeAndCheckPrefix, splitAddress, ValidationResult } from './taquito-utils';
 import { ParameterValidationError } from '@taquito/core';
 
 export { ValidationResult } from '@taquito/core';
 
-export function isValidPrefixedValue(value: string, prefixes?: Prefix[]): boolean {
-  return validatePrefixedValue(value, prefixes) === ValidationResult.VALID
+export function isValidPrefixedValue(value: string, prefixes?: PrefixV2[]): boolean {
+  return validatePrefixedValue(value, prefixes) === ValidationResult.VALID;
 }
 /**
  * @description This function is called by the validation functions ([[validateAddress]], [[validateChain]], [[validateContractAddress]], [[validateKeyHash]], [[validateSignature]], [[validatePublicKey]]).
@@ -17,39 +17,41 @@ export function isValidPrefixedValue(value: string, prefixes?: Prefix[]): boolea
  * @param value Value to validate
  * @param prefixes prefix the value should have
  */
-function validatePrefixedValue(value: string, prefixes?: Prefix[]): ValidationResult {
+function validatePrefixedValue(value: string, prefixes?: PrefixV2[]): ValidationResult {
   try {
-    b58DecodeAndCheckPrefix(value, prefixes)
+    b58DecodeAndCheckPrefix(value, prefixes);
   } catch (err: unknown) {
     if (err instanceof ParameterValidationError && err.result !== undefined) {
       return err.result;
     }
-    return ValidationResult.OTHER
+    return ValidationResult.OTHER;
   }
   return ValidationResult.VALID;
 }
 
 const implicitPrefix = [
-  Prefix.Ed25519PublicKeyHash,
-  Prefix.Secp256k1PublicKeyHash,
-  Prefix.P256PublicKeyHash,
-  Prefix.BLS12_381PublicKeyHash
+  PrefixV2.Ed25519PublicKeyHash,
+  PrefixV2.Secp256k1PublicKeyHash,
+  PrefixV2.P256PublicKeyHash,
+  PrefixV2.BLS12_381PublicKeyHash,
 ];
-const contractPrefix = [Prefix.ContractHash];
+const contractPrefix = [PrefixV2.ContractHash];
 const signaturePrefix = [
-  Prefix.Ed25519Signature,
-  Prefix.P256Signature,
-  Prefix.Secp256k1Signature,
-  Prefix.GenericSignature];
+  PrefixV2.Ed25519Signature,
+  PrefixV2.P256Signature,
+  PrefixV2.Secp256k1Signature,
+  PrefixV2.GenericSignature,
+];
 const pkPrefix = [
-  Prefix.Ed25519PublicKey,
-  Prefix.Secp256k1PublicKey,
-  Prefix.P256PublicKey,
-  Prefix.BLS12_381PublicKey];
-const operationPrefix = [Prefix.OperationHash];
-const protocolPrefix = [Prefix.ProtocolHash];
-const blockPrefix = [Prefix.BlockHash];
-const smartRollupPrefix = [Prefix.SmartRollupHash];
+  PrefixV2.Ed25519PublicKey,
+  PrefixV2.Secp256k1PublicKey,
+  PrefixV2.P256PublicKey,
+  PrefixV2.BLS12_381PublicKey,
+];
+const operationPrefix = [PrefixV2.OperationHash];
+const protocolPrefix = [PrefixV2.ProtocolHash];
+const blockPrefix = [PrefixV2.BlockHash];
+const smartRollupPrefix = [PrefixV2.SmartRollupHash];
 
 /**
  * @description Used to check if an address or a contract address is valid.
@@ -87,7 +89,7 @@ export function validateAddress(value: string): ValidationResult {
  * ```
  */
 export function validateChain(value: string): ValidationResult {
-  return validatePrefixedValue(value, [Prefix.ChainID]);
+  return validatePrefixedValue(value, [PrefixV2.ChainID]);
 }
 
 /**
@@ -229,7 +231,7 @@ export function validateBlock(value: string): ValidationResult {
  *
  */
 export function validateSpendingKey(value: string): ValidationResult {
-  return validatePrefixedValue(value, [Prefix.SaplingSpendingKey]);
+  return validatePrefixedValue(value, [PrefixV2.SaplingSpendingKey]);
 }
 
 export function validateSmartRollupAddress(value: string): ValidationResult {

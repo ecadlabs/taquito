@@ -9,7 +9,7 @@ import {
   b58DecodeAndCheckPrefix,
   b58DecodePublicKeyHash,
   format,
-  Prefix,
+  PrefixV2,
   validateKeyHash,
   ValidationResult,
 } from '@taquito/utils';
@@ -277,12 +277,9 @@ export class SaplingToolkit {
 
   private validateDestinationSaplingAddress(to: string) {
     try {
-      b58DecodeAndCheckPrefix(to, [Prefix.SaplingAddress])
+      b58DecodeAndCheckPrefix(to, [PrefixV2.SaplingAddress]);
     } catch {
-      throw new InvalidAddressError(
-        to,
-        `expecting prefix ${Prefix.SaplingAddress}.`
-      );
+      throw new InvalidAddressError(to, `expecting prefix ${PrefixV2.SaplingAddress}.`);
     }
   }
 

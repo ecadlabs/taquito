@@ -5,7 +5,7 @@
 
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
-import { b58Encode, Prefix } from '@taquito/utils';
+import { b58Encode, PrefixV2 } from '@taquito/utils';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -92,10 +92,7 @@ export class LedgerSigner implements Signer {
   ) {
     this.transport.setScrambleKey('XTZ');
     if (!path.startsWith(`44'/1729'`)) {
-      throw new InvalidDerivationPathError(
-        path,
-        `expecting prefix "44'/1729'".`
-      );
+      throw new InvalidDerivationPathError(path, `expecting prefix "44'/1729'".`);
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
       throw new InvalidDerivationTypeError(derivationType.toString());
@@ -182,7 +179,7 @@ export class LedgerSigner implements Signer {
 
     return {
       bytes,
-      sig: b58Encode(signature, Prefix.GenericSignature),
+      sig: b58Encode(signature, PrefixV2.GenericSignature),
       prefixSig: b58Encode(signature, this.getPrefixes().prefSig),
       sbytes: bytes + signature,
     };
@@ -217,21 +214,21 @@ export class LedgerSigner implements Signer {
       this.derivationType === DerivationType.BIP32_ED25519
     ) {
       return {
-        prefPk: Prefix.Ed25519PublicKey,
-        prefPkh: Prefix.Ed25519PublicKeyHash,
-        prefSig: Prefix.Ed25519Signature,
+        prefPk: PrefixV2.Ed25519PublicKey,
+        prefPkh: PrefixV2.Ed25519PublicKeyHash,
+        prefSig: PrefixV2.Ed25519Signature,
       };
     } else if (this.derivationType === DerivationType.SECP256K1) {
       return {
-        prefPk: Prefix.Secp256k1PublicKey,
-        prefPkh: Prefix.Secp256k1PublicKeyHash,
-        prefSig: Prefix.Secp256k1Signature,
+        prefPk: PrefixV2.Secp256k1PublicKey,
+        prefPkh: PrefixV2.Secp256k1PublicKeyHash,
+        prefSig: PrefixV2.Secp256k1Signature,
       };
     } else {
       return {
-        prefPk: Prefix.P256PublicKey,
-        prefPkh: Prefix.P256PublicKeyHash,
-        prefSig: Prefix.P256Signature,
+        prefPk: PrefixV2.P256PublicKey,
+        prefPkh: PrefixV2.P256PublicKeyHash,
+        prefSig: PrefixV2.P256Signature,
       };
     }
   }

@@ -12,10 +12,10 @@ You can find a full list of available utility functions in Taquito [here](https:
 To use the functions, simply import the function you need as such:
 
 ```js
-import { getPkhfromPk, b58cencode, b58cdecode } from '@taquito/utils';
+import { getPkhfromPk, b58Encode, b58cdecode } from '@taquito/utils';
 
 const publicKeyHash = getPkhfromPk('replace_with_publickey');
-const encoded = b58cencode('replace_with_publickey');
+const encoded = b58Encode('replace_with_publickey');
 ```
 
 ## Using Validation Functions from `@taquito/utils`

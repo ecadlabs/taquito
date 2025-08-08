@@ -17,7 +17,7 @@ import {
   SaplingTransactionParams,
 } from '../types';
 import { SaplingDiffResponse } from '@taquito/rpc';
-import { b58DecodeAndCheckPrefix, Prefix } from '@taquito/utils';
+import { b58DecodeAndCheckPrefix, PrefixV2 } from '@taquito/utils';
 import { TzReadProvider } from '@taquito/taquito';
 import { convertValueToBigNumber } from '../sapling-tx-viewer/helpers';
 import { SaplingState } from '../sapling-state/sapling-state';
@@ -73,7 +73,9 @@ export class SaplingTransactionBuilder {
         const inputs: SaplingTransactionInput[] = [];
 
         for (const i in saplingTransactionParams) {
-          const [address] = b58DecodeAndCheckPrefix(saplingTransactionParams[i].to, [Prefix.SaplingAddress]);
+          const [address] = b58DecodeAndCheckPrefix(saplingTransactionParams[i].to, [
+            PrefixV2.SaplingAddress,
+          ]);
           outputs.push(
             await this.prepareSaplingOutputDescription({
               saplingContext,
@@ -127,7 +129,9 @@ export class SaplingTransactionBuilder {
 
         for (const i in saplingTransactionParams) {
           sumAmountOutput = sumAmountOutput.plus(new BigNumber(saplingTransactionParams[i].amount));
-          const [address] = b58DecodeAndCheckPrefix(saplingTransactionParams[i].to, [Prefix.SaplingAddress]);
+          const [address] = b58DecodeAndCheckPrefix(saplingTransactionParams[i].to, [
+            PrefixV2.SaplingAddress,
+          ]);
           outputs.push(
             await this.prepareSaplingOutputDescription({
               saplingContext,
@@ -142,7 +146,7 @@ export class SaplingTransactionBuilder {
 
         if (chosenInputs.sumSelectedInputs.isGreaterThan(sumAmountOutput)) {
           const payBackAddress = (await saplingViewer.getAddress()).address;
-          const [address] = b58DecodeAndCheckPrefix(payBackAddress, [Prefix.SaplingAddress]);
+          const [address] = b58DecodeAndCheckPrefix(payBackAddress, [PrefixV2.SaplingAddress]);
           const { payBackOutput, payBackAmount } = await this.createPaybackOutput(
             {
               saplingContext,
@@ -211,15 +215,15 @@ export class SaplingTransactionBuilder {
     );
     const outgoingCipherKey = parametersOutputDescription.outgoingViewingKey
       ? blake.blake2b(
-        Buffer.concat([
-          commitmentValue,
-          commitment,
-          ephemeralPublicKey,
-          parametersOutputDescription.outgoingViewingKey,
-        ]),
-        Buffer.from(OCK_KEY),
-        32
-      )
+          Buffer.concat([
+            commitmentValue,
+            commitment,
+            ephemeralPublicKey,
+            parametersOutputDescription.outgoingViewingKey,
+          ]),
+          Buffer.from(OCK_KEY),
+          32
+        )
       : this.#saplingWrapper.getRandomBytes(32);
     const ciphertext = await this.encryptCiphertext({
       address: parametersOutputDescription.address,
@@ -265,23 +269,23 @@ export class SaplingTransactionBuilder {
 
       const unsignedSpendDescription = this.#inMemoryProvingKey
         ? await this.#inMemoryProvingKey.prepareSpendDescription({
-          saplingContext,
-          address: inputsToSpend[i].paymentAddress,
-          randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
-          publicKeyReRandomization,
-          amount,
-          root: stateDiff.root,
-          witness,
-        })
+            saplingContext,
+            address: inputsToSpend[i].paymentAddress,
+            randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
+            publicKeyReRandomization,
+            amount,
+            root: stateDiff.root,
+            witness,
+          })
         : await this.#inMemorySpendingKey.prepareSpendDescription({
-          saplingContext,
-          address: inputsToSpend[i].paymentAddress,
-          randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
-          publicKeyReRandomization,
-          amount,
-          root: stateDiff.root,
-          witness,
-        });
+            saplingContext,
+            address: inputsToSpend[i].paymentAddress,
+            randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
+            publicKeyReRandomization,
+            amount,
+            root: stateDiff.root,
+            witness,
+          });
 
       const unsignedSpendDescriptionBytes =
         this.#saplingForger.forgeUnsignedTxInput(unsignedSpendDescription);
