@@ -1,7 +1,7 @@
 # Taquito Utils package
 *TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_utils.html)*
 
-`@taquito/utils` is an npm package that provides developers with utility functionality for Taquito. 
+`@taquito/utils` is an npm package that provides developers with utility functionality for Taquito.
 
 ## Install
 
@@ -21,7 +21,10 @@ The `ValidationResult` returned by these functions is an enum that can take the 
 0 = NO_PREFIX_MATCHED,
 1 = INVALID_CHECKSUM,
 2 = INVALID_LENGTH,
-3 = VALID
+3 = VALID,
+4 = PREFIX_NOT_ALLOWED,
+5 = INVALID_ENCODING,
+6 = OTHER,
 ```
 
 **Address validation (tz1, tz2, tz3, KT1)**
@@ -186,7 +189,7 @@ console.log(encodeKeyHash('01106d79a502c4135b10e61e92f4c5a72ca740fb87'));
 **Base58 encode a public key according to its prefix**
 
 ```ts
-import { encodeKey } from '@taquito/utils'; 
+import { encodeKey } from '@taquito/utils';
 
 console.log(encodeKey('0060842d4ba23a9940ef5dcf4404fdaa430cfaaccb5029fad06cb5ea894e4562ae'));
 // output: edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh
@@ -194,7 +197,7 @@ console.log(encodeKey('0060842d4ba23a9940ef5dcf4404fdaa430cfaaccb5029fad06cb5ea8
 
 **Base58 encode an address using a predefined prefix**
 ```ts
-import { encodeAddress } from '@taquito/utils'; 
+import { encodeAddress } from '@taquito/utils';
 
 console.log(encodeAddress('0000e96b9f8b19af9c7ffa0c0480e1977b295850961f'));
 // output: tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM
@@ -206,7 +209,7 @@ console.log(encodeAddress('01f9b689a478253793bd92357c5e08e5ebcd8db47600'));
 **Base58 decode a string with a predefined prefix**
 
 ```ts
-import { b58decode } from '@taquito/utils'; 
+import { b58decode } from '@taquito/utils';
 
 console.log(b58decode('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'));
 // output: 0000e96b9f8b19af9c7ffa0c0480e1977b295850961f
@@ -215,7 +218,7 @@ console.log(b58decode('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'));
 **Base58 decode a string and remove the prefix from it**
 
 ```ts
-import { b58cdecode, prefix, Prefix } from '@taquito/utils'; 
+import { b58cdecode, prefix, Prefix } from '@taquito/utils';
 
 console.log(b58cdecode('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', prefix[Prefix.TZ1]));
 // output: <Buffer e9 6b 9f 8b 19 af 9c 7f fa 0c 04 80 e1 97 7b 29 58 50 96 1f>
@@ -245,7 +248,7 @@ console.log(encodeOpHash(opBytesSigned));
 Hash a string using the BLAKE2b algorithm, base58 encode the hash obtained and append the prefix 'expr' to it.
 
 ```ts
-import { encodeExpr } from '@taquito/utils'; 
+import { encodeExpr } from '@taquito/utils';
 
 console.log(encodeExpr('050a000000160000b2e19a9e74440d86c59f13dab8a18ff873e889ea'));
 
@@ -255,7 +258,7 @@ console.log(encodeExpr('050a000000160000b2e19a9e74440d86c59f13dab8a18ff873e889ea
 **Obtain the public key hash given a public key**
 
 ```ts
-import { getPkhfromPk } from '@taquito/utils'; 
+import { getPkhfromPk } from '@taquito/utils';
 
 const publicKey = 'sppk7czKu6So3zDWjhBPBv9wgCrBAfbEFoKYzEaKUsjhNr5Ug6E4Sn1';
 console.log(getPkhfromPk(publicKey));

@@ -3,28 +3,28 @@
 // ==========================================================================================
 
 export enum ValidationResult {
-  VALID,
   NO_PREFIX_MATCHED,
-  PREFIX_NOT_ALLOWED,
   INVALID_CHECKSUM,
   INVALID_LENGTH,
+  VALID,
+  PREFIX_NOT_ALLOWED,
   INVALID_ENCODING,
   OTHER,
 }
+
+const resultDesc: { [key in ValidationResult]?: string } = {
+  [ValidationResult.NO_PREFIX_MATCHED]: 'unsupported Base58 prefix',
+  [ValidationResult.INVALID_CHECKSUM]: 'invalid checksum',
+  [ValidationResult.INVALID_LENGTH]: 'invalid length',
+  [ValidationResult.PREFIX_NOT_ALLOWED]: 'Base58 prefix not allowed in this context',
+  [ValidationResult.INVALID_ENCODING]: 'invalid Base58 encoding',
+};
 
 /**
  *  @category Error
  *  @description Parent error class all taquito errors to extend from
  */
-export class TaquitoError extends Error { }
-
-const resultDesc: { [key in ValidationResult]?: string } = {
-  [ValidationResult.NO_PREFIX_MATCHED]: 'unsupported Base58 prefix',
-  [ValidationResult.PREFIX_NOT_ALLOWED]: 'Base58 prefix not allowed in this context',
-  [ValidationResult.INVALID_CHECKSUM]: 'invalid checksum',
-  [ValidationResult.INVALID_LENGTH]: 'invalid length',
-  [ValidationResult.INVALID_ENCODING]: 'invalid Base58 encoding',
-};
+export class TaquitoError extends Error {}
 
 /**
  *  @category Error
@@ -37,7 +37,11 @@ export class ParameterValidationError extends TaquitoError {
   constructor(validationResult?: ValidationResult);
   constructor(message?: string, errorDetail?: string | ValidationResult);
   constructor(message?: string, validationResult?: ValidationResult, errorDetail?: string);
-  constructor(message?: string | ValidationResult, validationResult?: string | ValidationResult, errorDetail?: string) {
+  constructor(
+    message?: string | ValidationResult,
+    validationResult?: string | ValidationResult,
+    errorDetail?: string
+  ) {
     let detail: string | undefined;
     let result: ValidationResult | undefined;
     let msg: string | undefined;
@@ -51,7 +55,7 @@ export class ParameterValidationError extends TaquitoError {
           } else {
             result = validationResult;
             if (errorDetail !== undefined) {
-              detail = errorDetail
+              detail = errorDetail;
             } else {
               detail = resultDesc[validationResult];
             }
@@ -75,31 +79,31 @@ export class ParameterValidationError extends TaquitoError {
  *  @category Error
  *  @description Error returned by RPC node
  */
-export class RpcError extends TaquitoError { }
+export class RpcError extends TaquitoError {}
 
 /**
  *  @category Error
  *  @description Error that indicates TezosToolKit has not been configured appropriately
  */
-export class TezosToolkitConfigError extends TaquitoError { }
+export class TezosToolkitConfigError extends TaquitoError {}
 
 /**
  *  @category Error
  *  @description Error that indicates a requested action is not supported by Taquito
  */
-export class UnsupportedActionError extends TaquitoError { }
+export class UnsupportedActionError extends TaquitoError {}
 
 /**
  *  @category Error
  *  @description Error during a network operation
  */
-export class NetworkError extends TaquitoError { }
+export class NetworkError extends TaquitoError {}
 
 /**
  *  @category Error
  *  @description Error that indicates user attempts an action without necessary permissions
  */
-export class PermissionDeniedError extends TaquitoError { }
+export class PermissionDeniedError extends TaquitoError {}
 
 // ==========================================================================================
 // common error classes for Taquito
@@ -109,21 +113,33 @@ export class PermissionDeniedError extends TaquitoError { }
  *  @description Error that indicates an invalid originated or implicit address being passed or used
  */
 export class InvalidAddressError extends ParameterValidationError {
-  constructor(public readonly address: string, errorDetail?: string | ValidationResult) {
+  constructor(
+    public readonly address: string,
+    errorDetail?: string | ValidationResult
+  ) {
     super(`Invalid address "${address}"`, errorDetail);
     this.name = this.constructor.name;
   }
 }
 
 export class InvalidStakingAddressError extends ParameterValidationError {
-  constructor(public readonly address: string, errorDetail?: string | ValidationResult) {
-    super(`Invalid staking address "${address}", you can only set destination as your own address`, errorDetail);
+  constructor(
+    public readonly address: string,
+    errorDetail?: string | ValidationResult
+  ) {
+    super(
+      `Invalid staking address "${address}", you can only set destination as your own address`,
+      errorDetail
+    );
     this.name = this.constructor.name;
   }
 }
 
 export class InvalidFinalizeUnstakeAmountError extends ParameterValidationError {
-  constructor(public readonly address: string, errorDetail?: string | ValidationResult) {
+  constructor(
+    public readonly address: string,
+    errorDetail?: string | ValidationResult
+  ) {
     super(`The amount can only be 0 when finalizing an unstake`, errorDetail);
     this.name = this.constructor.name;
   }
@@ -134,7 +150,10 @@ export class InvalidFinalizeUnstakeAmountError extends ParameterValidationError 
  *  @description Error that indicates an invalid block hash being passed or used
  */
 export class InvalidBlockHashError extends ParameterValidationError {
-  constructor(public readonly blockHash: string, errorDetail?: string | ValidationResult) {
+  constructor(
+    public readonly blockHash: string,
+    errorDetail?: string | ValidationResult
+  ) {
     super(`Invalid block hash "${blockHash}"`, errorDetail);
     this.name = this.constructor.name;
   }
@@ -145,7 +164,10 @@ export class InvalidBlockHashError extends ParameterValidationError {
  * @description Error that indicates an invalid amount of tez being passed as a parameter
  */
 export class InvalidAmountError extends ParameterValidationError {
-  constructor(public readonly amount: string, errorDetail?: string | ValidationResult) {
+  constructor(
+    public readonly amount: string,
+    errorDetail?: string | ValidationResult
+  ) {
     super(`Invalid amount "${amount}"`, errorDetail);
     this.name = this.constructor.name;
   }
@@ -156,7 +178,10 @@ export class InvalidAmountError extends ParameterValidationError {
  *  @description Error that indicates an invalid derivation path being passed or used
  */
 export class InvalidDerivationPathError extends ParameterValidationError {
-  constructor(public readonly derivationPath: string, errorDetail?: string | ValidationResult) {
+  constructor(
+    public readonly derivationPath: string,
+    errorDetail?: string | ValidationResult
+  ) {
     super(`Invalid derivation path "${derivationPath}"`, errorDetail);
     this.name = this.constructor.name;
   }
@@ -167,7 +192,10 @@ export class InvalidDerivationPathError extends ParameterValidationError {
  *  @description Error that indicates an invalid hex string have been passed or used
  */
 export class InvalidHexStringError extends ParameterValidationError {
-  constructor(public readonly hexString: string, errorDetail?: string | ValidationResult) {
+  constructor(
+    public readonly hexString: string,
+    errorDetail?: string | ValidationResult
+  ) {
     super(`Invalid hex string "${hexString}"`, errorDetail);
     this.name = this.constructor.name;
   }
@@ -178,7 +206,10 @@ export class InvalidHexStringError extends ParameterValidationError {
  *  @description Error that indicates an invalid message being passed or used
  */
 export class InvalidMessageError extends ParameterValidationError {
-  constructor(public readonly msg: string, errorDetail?: string | ValidationResult) {
+  constructor(
+    public readonly msg: string,
+    errorDetail?: string | ValidationResult
+  ) {
     super(`Invalid message "${msg}"`, errorDetail);
     this.name = this.constructor.name;
   }
@@ -198,11 +229,9 @@ export class InvalidViewParameterError extends ParameterValidationError {
   ) {
     const message = `Invalid view arguments ${JSON.stringify(
       args
-    )
-      } received for name "${viewName}" expecting one of the following signatures ${JSON.stringify(
-        sigs
-      )
-      }.`;
+    )} received for name "${viewName}" expecting one of the following signatures ${JSON.stringify(
+      sigs
+    )}.`;
     super(message, errorDetail);
     this.name = this.constructor.name;
   }
@@ -228,7 +257,8 @@ export class InvalidPublicKeyError extends ParameterValidationError {
     public readonly publicKey?: string,
     errorDetail?: string | ValidationResult
   ) {
-    const msg = publicKey !== undefined ? `Invalid public key "${publicKey}"` : `Invalid public key`;
+    const msg =
+      publicKey !== undefined ? `Invalid public key "${publicKey}"` : `Invalid public key`;
     super(msg, errorDetail);
     this.name = this.constructor.name;
   }
@@ -353,4 +383,3 @@ export class PublicKeyNotFoundError extends TaquitoError {
     this.name = this.constructor.name;
   }
 }
-
