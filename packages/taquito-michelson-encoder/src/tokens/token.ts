@@ -65,7 +65,7 @@ export abstract class Token {
     protected idx: number,
     protected fac: TokenFactory,
     protected parentTokenType?: 'Or' | 'Pair' | 'Other'
-  ) {}
+  ) { }
 
   protected typeWithoutAnnotations() {
     const handleMichelsonExpression = (val: MichelsonV1Expression): MichelsonV1Expression => {
@@ -156,10 +156,6 @@ export abstract class ComparableToken extends Token {
   abstract ToKey(val: string | MichelsonV1Expression): any;
 
   compare(o1: string, o2: string): number {
-    if (o1 === o2) {
-      return 0;
-    }
-
-    return o1 < o2 ? -1 : 1;
+    return o1 < o2 ? -1 : o1 > o2 ? 1 : 0;
   }
 }

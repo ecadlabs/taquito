@@ -1,5 +1,5 @@
 import { CONFIGS } from '../../../config';
-import { b58cencode, Prefix, prefix } from '@taquito/utils';
+import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
 const crypto = require('crypto');
 
@@ -20,7 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 const keyBytes = Buffer.alloc(32);
                 crypto.randomFillSync(keyBytes)
 
-                const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.SPSK]);
+                const key = b58Encode(new Uint8Array(keyBytes), PrefixV2.Secp256k1SecretKey);
                 const pkh = await new InMemorySigner(key).publicKeyHash();
                 dests.push({ key, pkh });
             }

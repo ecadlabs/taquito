@@ -10,23 +10,27 @@
  */
 
 import { Buffer } from 'buffer';
-import { Prefix, prefix, prefixLength } from './constants';
-import { validatePkAndExtractPrefix } from './verify-signature';
-import { hash } from '@stablelib/blake2b';
-import blake from 'blakejs';
+import { PrefixV2, prefixV2, payloadLength } from './constants';
+import { hash as blake2b } from '@stablelib/blake2b';
 import bs58check from 'bs58check';
-import { ValueConversionError } from './errors';
 import BigNumber from 'bignumber.js';
-import { InvalidHexStringError } from '@taquito/core';
+import toBuffer from 'typedarray-to-buffer';
+import {
+  InvalidAddressError,
+  InvalidHexStringError,
+  InvalidKeyError,
+  InvalidPublicKeyError,
+  ParameterValidationError,
+} from '@taquito/core';
+import { ValidationResult } from './validators';
 export * from './validators';
 export { VERSION } from './version';
-
-export { prefix, Prefix, prefixLength } from './constants';
-
-export { verifySignature, validatePkAndExtractPrefix } from './verify-signature';
+export { PrefixV2, payloadLength } from './constants';
+export { verifySignature } from './verify-signature';
 export * from './errors';
-
 export { format } from './format';
+export { BLS12_381_DST } from './verify-signature';
+export { prefix, Prefix, prefixLength } from './constants';
 
 /**
  *
@@ -34,9 +38,9 @@ export { format } from './format';
  *
  * @param value Value in hex
  */
-export function encodeExpr(value: string) {
-  const blakeHash = blake.blake2b(hex2buf(value), undefined, 32);
-  return b58cencode(blakeHash, prefix['expr']);
+export function encodeExpr(value: string): string {
+  const blakeHash = blake2b(hex2buf(value), 32);
+  return b58Encode(blakeHash, PrefixV2.ScriptExpr);
 }
 
 /**
@@ -45,76 +49,213 @@ export function encodeExpr(value: string) {
  * @param value Value in hex of a signed operation
  */
 export function encodeOpHash(value: string) {
-  const blakeHash = blake.blake2b(hex2buf(value), undefined, 32);
-  return b58cencode(blakeHash, prefix.o);
+  const blakeHash = blake2b(hex2buf(value), 32);
+  return b58Encode(blakeHash, PrefixV2.OperationHash);
 }
 
 /**
- *
- * @description Base58 encode a string or a Uint8Array and append a prefix to it
- *
+ * @deprecated use b58Encode instead
+ * @description Base58 encode a string or a Uint8Array and append a prefix to it (will be removed in the next minor release)
  * @param value Value to base58 encode
  * @param prefix prefix to append to the encoded string
  */
-export function b58cencode(value: string | Uint8Array, prefix: Uint8Array) {
-  const payloadAr = typeof value === 'string' ? Uint8Array.from(Buffer.from(value, 'hex')) : value;
-
+export function b58cencode(value: string | Uint8Array, prefix: Uint8Array): string {
+  const payloadAr = typeof value === 'string' ? hex2buf(value) : value;
   const n = new Uint8Array(prefix.length + payloadAr.length);
   n.set(prefix);
   n.set(payloadAr, prefix.length);
-
-  return bs58check.encode(Buffer.from(n.buffer));
+  return bs58check.encode(toBuffer(n));
 }
 
-/**
- *
- * @description Base58 decode a string and remove the prefix from it
- *
- * @param value Value to base58 decode
- * @param prefix prefix to remove from the decoded string
- */
-export const b58cdecode = (enc: string, prefixArg: Uint8Array): Uint8Array =>
-  bs58check.decode(enc).slice(prefixArg.length);
+export const addressPrefixes = [
+  PrefixV2.P256PublicKeyHash,
+  PrefixV2.Secp256k1PublicKeyHash,
+  PrefixV2.Ed25519PublicKeyHash,
+  PrefixV2.BLS12_381PublicKeyHash,
+  PrefixV2.ContractHash,
+  PrefixV2.SmartRollupHash,
+  PrefixV2.ZkRollupHash,
+] as const;
+
+export const publicKeyHashPrefixes = [
+  PrefixV2.P256PublicKeyHash,
+  PrefixV2.Secp256k1PublicKeyHash,
+  PrefixV2.Ed25519PublicKeyHash,
+  PrefixV2.BLS12_381PublicKeyHash,
+] as const;
+
+export const publicKeyPrefixes = [
+  PrefixV2.P256PublicKey,
+  PrefixV2.Secp256k1PublicKey,
+  PrefixV2.Ed25519PublicKey,
+  PrefixV2.BLS12_381PublicKey,
+] as const;
+
+export const signaturePrefixes = [
+  PrefixV2.GenericSignature,
+  PrefixV2.P256Signature,
+  PrefixV2.Secp256k1Signature,
+  PrefixV2.Ed25519Signature,
+  PrefixV2.BLS12_381Signature,
+] as const;
 
 /**
  *
- * @description Base58 decode a string with predefined prefix
+ * @description Decode a Base58 contract ID and return its binary representation
  *
- * @param value Value to base58 decode
+ * @param value Value to decode
  */
-export function b58decode(payload: string) {
-  const buf = bs58check.decode(payload);
-
-  const prefixMap = {
-    [prefix.tz1.toString()]: '0000',
-    [prefix.tz2.toString()]: '0001',
-    [prefix.tz3.toString()]: '0002',
-    [prefix.tz4.toString()]: '0003',
-  };
-
-  const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
-  if (pref) {
-    // tz addresses
-    const hex = buf2hex(buf.slice(3));
-    return pref + hex;
+export function b58DecodeAddress(value: string, fmt?: 'hex'): string;
+export function b58DecodeAddress(value: string, fmt: 'array'): Uint8Array;
+export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Array | string {
+  const i = value.indexOf('%');
+  if (i >= 0) {
+    value = value.slice(0, i);
+  }
+  const [data, pre] = b58DecodeAndCheckPrefix(value, addressPrefixes);
+  const buf = new Uint8Array(22);
+  if (
+    pre === PrefixV2.ContractHash ||
+    pre === PrefixV2.SmartRollupHash ||
+    pre === PrefixV2.ZkRollupHash
+  ) {
+    let tag: number;
+    switch (pre) {
+      case PrefixV2.ContractHash:
+        tag = 1;
+        break;
+      case PrefixV2.SmartRollupHash:
+        tag = 3;
+        break;
+      case PrefixV2.ZkRollupHash:
+        tag = 4;
+        break;
+    }
+    buf[0] = tag;
+    buf.set(data, 1);
   } else {
-    // other (kt addresses)
-    return '01' + buf2hex(buf.slice(3, 42)) + '00';
+    let tag: number;
+    switch (pre) {
+      case PrefixV2.Ed25519PublicKeyHash:
+        tag = 0;
+        break;
+      case PrefixV2.Secp256k1PublicKeyHash:
+        tag = 1;
+        break;
+      case PrefixV2.P256PublicKeyHash:
+        tag = 2;
+        break;
+      case PrefixV2.BLS12_381PublicKeyHash:
+        tag = 3;
+        break;
+      default:
+        throw new InvalidAddressError(value, ValidationResult.NO_PREFIX_MATCHED);
+    }
+    buf[0] = 0;
+    buf[1] = tag;
+    buf.set(data, 2);
+  }
+  if (fmt !== undefined && fmt === 'array') {
+    return buf;
+  } else {
+    return buf2hex(buf);
   }
 }
 
 /**
  *
- * @description b58 decode a string without predefined prefix
+ * @description Decode a Base58 public key hash and return its binary representation
+ *
+ * @param value Value to decode
+ */
+
+export function b58DecodePublicKeyHash(value: string, fmt?: 'hex'): string;
+export function b58DecodePublicKeyHash(value: string, fmt: 'array'): Uint8Array;
+export function b58DecodePublicKeyHash(value: string, fmt?: 'hex' | 'array'): Uint8Array | string {
+  const [data, pre] = b58DecodeAndCheckPrefix(value, publicKeyHashPrefixes);
+  const buf = new Uint8Array(21);
+  let tag: number;
+  switch (pre) {
+    case PrefixV2.Ed25519PublicKeyHash:
+      tag = 0;
+      break;
+    case PrefixV2.Secp256k1PublicKeyHash:
+      tag = 1;
+      break;
+    case PrefixV2.P256PublicKeyHash:
+      tag = 2;
+      break;
+    case PrefixV2.BLS12_381PublicKeyHash:
+      tag = 3;
+      break;
+    default:
+      throw new InvalidAddressError(value, ValidationResult.NO_PREFIX_MATCHED);
+  }
+  buf[0] = tag;
+  buf.set(data, 1);
+  if (fmt !== undefined && fmt === 'array') {
+    return buf;
+  } else {
+    return buf2hex(buf);
+  }
+}
+
+/**
+ *
+ * @description Decode a Base58 public key and return its binary representation
+ *
+ * @param value Value to decode
+ */
+export function b58DecodePublicKey(value: string, fmt?: 'hex'): string;
+export function b58DecodePublicKey(value: string, fmt: 'array'): Uint8Array;
+export function b58DecodePublicKey(value: string, fmt?: 'hex' | 'array'): Uint8Array | string {
+  const [data, pre] = b58DecodeAndCheckPrefix(value, publicKeyPrefixes);
+  let tag: number;
+  switch (pre) {
+    case PrefixV2.Ed25519PublicKey:
+      tag = 0;
+      break;
+    case PrefixV2.Secp256k1PublicKey:
+      tag = 1;
+      break;
+    case PrefixV2.P256PublicKey:
+      tag = 2;
+      break;
+    case PrefixV2.BLS12_381PublicKey:
+      tag = 3;
+      break;
+    default:
+      throw new InvalidKeyError(ValidationResult.NO_PREFIX_MATCHED);
+  }
+  const buf = new Uint8Array(data.length + 1);
+  buf[0] = tag;
+  buf.set(data, 1);
+  if (fmt !== undefined && fmt === 'array') {
+    return buf;
+  } else {
+    return buf2hex(buf);
+  }
+}
+
+/**
+ *
+ * @description Decode a Base58 string and assert tz4 type
  * @param value
  * @returns string of bytes
  * @deprecated use b58decode instead
  */
-export function b58decodeL2Address(payload: string) {
-  const buf = bs58check.decode(payload);
-
-  // tz4 address currently
-  return buf2hex(buf.slice(3, 42));
+export function b58DecodeL2Address(value: string, fmt?: 'hex'): string;
+export function b58DecodeL2Address(value: string, fmt: 'array'): Uint8Array;
+export function b58DecodeL2Address(value: string, fmt?: 'hex' | 'array'): Uint8Array | string {
+  const [buf, pre] = b58DecodeAndCheckPrefix(value);
+  if (pre !== PrefixV2.BLS12_381PublicKeyHash) {
+    throw new InvalidKeyError(ValidationResult.NO_PREFIX_MATCHED);
+  }
+  if (fmt !== undefined && fmt === 'array') {
+    return buf;
+  } else {
+    return buf2hex(buf);
+  }
 }
 
 /**
@@ -125,42 +266,33 @@ export function b58decodeL2Address(payload: string) {
  * @deprecated use encodeAddress instead, same functionality with a more descriptive name
  */
 export function encodePubKey(value: string) {
-  if (value.substring(0, 2) === '00') {
-    const pref: { [key: string]: Uint8Array } = {
-      '0000': prefix.tz1,
-      '0001': prefix.tz2,
-      '0002': prefix.tz3,
-      '0003': prefix.tz4,
-    };
-
-    return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
-  }
-  return b58cencode(value.substring(2, 42), prefix.KT);
+  return encodeAddress(value);
 }
 
 /**
  *
- * @description Base58 encode an address using predefined prefix (tz1, tz2, tz3, or KT1 without annotation)
+ * @description Parse binary Contract ID and return Base58 representation
  *
- * @param value Address to base58 encode (tz1, tz2, tz3 or KT1). Supports value with or without '0x' prefix
+ * @param value Address to parse (tz1, tz2, tz3 or KT1).
  */
-export function encodeAddress(value: string) {
-  if (value.substring(0, 2) === '0x') {
-    value = value.slice(2);
+export function encodeAddress(value: string | Uint8Array): string {
+  let buf: Uint8Array;
+  if (typeof value === 'string') {
+    buf = hex2buf(value);
+  } else {
+    buf = value;
   }
 
-  if (value.substring(0, 2) === '00') {
-    const pref: { [key: string]: Uint8Array } = {
-      '0000': prefix.tz1,
-      '0001': prefix.tz2,
-      '0002': prefix.tz3,
-      '0003': prefix.tz4,
-    };
-
-    return b58cencode(value.substring(4), pref[value.substring(0, 4)]);
+  switch (buf[0]) {
+    case 0: // implicit
+      return encodeKeyHash(buf.slice(1));
+    case 1: // contract hash
+      return b58Encode(buf.slice(1, 21), PrefixV2.ContractHash);
+    default:
+      throw new Error('invalid address format');
   }
-  return b58cencode(value.substring(2, 42), prefix.KT);
 }
+
 /**
  *
  * @description Base58 encode an address without predefined prefix
@@ -169,43 +301,75 @@ export function encodeAddress(value: string) {
  * @deprecated use encodeAddress instead
  */
 export function encodeL2Address(value: string) {
-  return b58cencode(value, prefix.tz4);
-}
-/**
- *
- * @description Base58 encode a key according to its prefix
- *
- * @param value Key to base58 encode
- */
-export function encodeKey(value: string) {
-  if (value[0] === '0') {
-    const pref: { [key: string]: Uint8Array } = {
-      '00': new Uint8Array([13, 15, 37, 217]),
-      '01': new Uint8Array([3, 254, 226, 86]),
-      '02': new Uint8Array([3, 178, 139, 127]),
-    };
-
-    return b58cencode(value.substring(2), pref[value.substring(0, 2)]);
-  }
+  return b58Encode(value, PrefixV2.BLS12_381PublicKeyHash);
 }
 
 /**
  *
- * @description Base58 encode a key hash according to its prefix
+ * @description Parse binary public key and return Base58 representation
  *
- * @param value Key hash to base58 encode
+ * @param value Binary key data
  */
-export function encodeKeyHash(value: string) {
-  if (value[0] === '0') {
-    const pref: { [key: string]: Uint8Array } = {
-      '00': new Uint8Array([6, 161, 159]),
-      '01': new Uint8Array([6, 161, 161]),
-      '02': new Uint8Array([6, 161, 164]),
-      '03': new Uint8Array([6, 161, 167]),
-    };
-
-    return b58cencode(value.substring(2), pref[value.substring(0, 2)]);
+export function encodeKey(value: string | Uint8Array): string {
+  let buf: Uint8Array;
+  if (typeof value === 'string') {
+    buf = hex2buf(value);
+  } else {
+    buf = value;
   }
+
+  let pre: PrefixV2;
+  switch (buf[0]) {
+    case 0:
+      pre = PrefixV2.Ed25519PublicKey;
+      break;
+    case 1:
+      pre = PrefixV2.Secp256k1PublicKey;
+      break;
+    case 2:
+      pre = PrefixV2.P256PublicKey;
+      break;
+    case 3:
+      pre = PrefixV2.BLS12_381PublicKey;
+      break;
+    default:
+      throw new Error('invalid address format');
+  }
+  return b58Encode(buf.slice(1), pre);
+}
+
+/**
+ *
+ * @description Parse binary public key hash and return Base58 representation
+ *
+ * @param value Key hash to parse
+ */
+export function encodeKeyHash(value: string | Uint8Array): string {
+  let buf: Uint8Array;
+  if (typeof value === 'string') {
+    buf = hex2buf(value);
+  } else {
+    buf = value;
+  }
+
+  let pre: PrefixV2;
+  switch (buf[0]) {
+    case 0:
+      pre = PrefixV2.Ed25519PublicKeyHash;
+      break;
+    case 1:
+      pre = PrefixV2.Secp256k1PublicKeyHash;
+      break;
+    case 2:
+      pre = PrefixV2.P256PublicKeyHash;
+      break;
+    case 3:
+      pre = PrefixV2.BLS12_381PublicKeyHash;
+      break;
+    default:
+      throw new Error('invalid address format');
+  }
+  return b58Encode(buf.slice(1, 21), pre);
 }
 
 /**
@@ -215,28 +379,32 @@ export function encodeKeyHash(value: string) {
  * @param hex Hex string to convert
  * @throws {@link ValueConversionError}
  */
-export const hex2buf = (hex: string): Uint8Array => {
+export function hex2buf(hex: string): Uint8Array {
+  hex = hex.startsWith('0x') ? hex.slice(2) : hex;
   if (hex.length % 2 !== 0) {
-    throw new InvalidHexStringError(hex, `: Expecting even number of characters`);
+    throw new InvalidHexStringError(hex, `Expecting even number of characters`);
   }
-  const hexDigits = stripHexPrefix(hex);
-  if (!hexDigits.match(/^([\da-f]{2})*$/gi)) {
+  if (!hex.match(/^([\da-f]{2})*$/gi)) {
     throw new InvalidHexStringError(
       hex,
-      `: Only characters 0-9, a-f and A-F are expected. Optionally, it can be prefixed with '0x'`
+      `Only characters 0-9, a-f and A-F are expected. Optionally, it can be prefixed with '0x'`
     );
   }
-  const out = new Uint8Array(hexDigits.length / 2);
+  const res = new Uint8Array(hex.length / 2);
   let j = 0;
-  for (let i = 0; i < hexDigits.length; i += 2) {
-    const v = parseInt(hexDigits.slice(i, i + 2), 16);
-    if (Number.isNaN(v)) {
-      throw new ValueConversionError(hex, 'Uint8Array');
+  for (let i = 0; i < hex.length; i += 2) {
+    const ss = hex.slice(i, i + 2);
+    const x = parseInt(ss, 16);
+    if (Number.isNaN(x)) {
+      throw new InvalidHexStringError(
+        hex,
+        `Only characters 0-9, a-f and A-F are expected. Optionally, it can be prefixed with '0x'`
+      );
     }
-    out[j++] = v;
+    res[j++] = x;
   }
-  return out;
-};
+  return res;
+}
 
 /**
  *
@@ -308,53 +476,42 @@ export const mic2arr = function me2(s: any): any {
  *
  * @param buffer Uint8Array to convert
  */
-export const buf2hex = (buffer: Uint8Array): string => {
-  const hexParts: string[] = [];
-  buffer.forEach((byte) => {
-    const hex = byte.toString(16);
-    const paddedHex = `00${hex}`.slice(-2);
-    hexParts.push(paddedHex);
-  });
-  return hexParts.join('');
-};
+
+export function buf2hex(bytes: ArrayLike<number>): string {
+  return Array.from(bytes)
+    .map((x) => ((x >> 4) & 0xf).toString(16) + (x & 0xf).toString(16))
+    .join('');
+}
 
 /**
  *
  *  @description Gets Tezos address (PKH) from Public Key
  *
- *  @param publicKey Public Key
+ *  @param publicKey Base58 Public Key
  *  @returns A string of the Tezos address (PKH) that was derived from the given Public Key
  */
-export const getPkhfromPk = (publicKey: string): string => {
-  let encodingPrefix;
-  let prefixLen;
-
-  const keyPrefix = validatePkAndExtractPrefix(publicKey);
-  const decoded = b58cdecode(publicKey, prefix[keyPrefix]);
-
-  switch (keyPrefix) {
-    case Prefix.EDPK:
-      encodingPrefix = prefix[Prefix.TZ1];
-      prefixLen = prefixLength[Prefix.TZ1];
+export function getPkhfromPk(publicKey: string): string {
+  const [key, pre] = b58DecodeAndCheckPrefix(publicKey);
+  let pkhPre: PrefixV2;
+  switch (pre) {
+    case PrefixV2.P256PublicKey:
+      pkhPre = PrefixV2.P256PublicKeyHash;
       break;
-    case Prefix.SPPK:
-      encodingPrefix = prefix[Prefix.TZ2];
-      prefixLen = prefixLength[Prefix.TZ2];
+    case PrefixV2.Secp256k1PublicKey:
+      pkhPre = PrefixV2.Secp256k1PublicKeyHash;
       break;
-    case Prefix.P2PK:
-      encodingPrefix = prefix[Prefix.TZ3];
-      prefixLen = prefixLength[Prefix.TZ3];
+    case PrefixV2.Ed25519PublicKey:
+      pkhPre = PrefixV2.Ed25519PublicKeyHash;
       break;
-    case Prefix.BLPK:
-      encodingPrefix = prefix[Prefix.TZ4];
-      prefixLen = prefixLength[Prefix.TZ4];
+    case PrefixV2.BLS12_381PublicKey:
+      pkhPre = PrefixV2.BLS12_381PublicKeyHash;
+      break;
+    default:
+      throw new InvalidPublicKeyError(publicKey, ValidationResult.NO_PREFIX_MATCHED);
   }
-
-  const hashed = hash(decoded, prefixLen);
-  const result = b58cencode(hashed, encodingPrefix);
-
-  return result;
-};
+  const hashed = blake2b(key, 20);
+  return b58Encode(hashed, pkhPre);
+}
 
 /**
  *
@@ -409,7 +566,7 @@ export function hex2Bytes(hex: string): Buffer {
   if (!hexDigits.match(/^(0x)?([\da-f]{2})*$/gi)) {
     throw new InvalidHexStringError(
       hex,
-      `: Expecting even number of characters: 0-9, a-z, A-Z, optionally prefixed with 0x`
+      `Expecting even number of characters: 0-9, a-z, A-Z, optionally prefixed with 0x`
     );
   }
   return Buffer.from(hexDigits, 'hex');
@@ -473,4 +630,98 @@ function padHexWithZero(hex: string, targetLength: number): string {
  */
 export function stripHexPrefix(hex: string): string {
   return hex.startsWith('0x') ? hex.slice(2) : hex;
+}
+
+/**
+ * @description Decodes Base58 string, looks for known prefix and strips it
+ * @param src Base58 string
+ * @returns Payload and prefix
+ */
+export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
+  src: string,
+  allowed?: T
+): [Uint8Array, T[number]];
+export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
+  src: string,
+  allowed: T,
+  payloadOnly: false
+): [Uint8Array, T[number]];
+export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
+  src: string,
+  allowed: T,
+  payloadOnly: true
+): Uint8Array;
+export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
+  src: string,
+  allowed?: T,
+  payloadOnly?: boolean
+): [Uint8Array, T[number]] | Uint8Array {
+  const buf = (() => {
+    try {
+      return bs58check.decode(src);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.message.includes('checksum')) {
+          throw new ParameterValidationError(ValidationResult.INVALID_CHECKSUM);
+        } else {
+          throw new ParameterValidationError(ValidationResult.INVALID_ENCODING);
+        }
+      } else {
+        throw err;
+      }
+    }
+  })();
+
+  let key: keyof typeof PrefixV2;
+  for (key in PrefixV2) {
+    const p = PrefixV2[key];
+    const pre = prefixV2[p];
+    if (
+      buf.length === pre.length + payloadLength[p] &&
+      buf.slice(0, pre.length).every((v, i) => v == pre[i])
+    ) {
+      if (allowed !== undefined && allowed.indexOf(p) < 0) {
+        throw new ParameterValidationError(ValidationResult.PREFIX_NOT_ALLOWED);
+      }
+      if (payloadOnly) {
+        return buf.slice(pre.length);
+      } else {
+        return [buf.slice(pre.length), p];
+      }
+    }
+  }
+  throw new ParameterValidationError(ValidationResult.NO_PREFIX_MATCHED);
+}
+
+/**
+ *
+ * @description Add the prefix to a hex string or Uint8Array and Base58 encode it
+ * @param value Value to Base58 encode
+ * @param pre prefix ID to append to the encoded string
+ * @example b58Encode('e96b9f8b19af9c7ffa0c0480e1977b295850961f', PrefixV2.Ed25519PublicKeyHash) // returns 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'
+ */
+export function b58Encode(value: string | Uint8Array, pre: PrefixV2): string {
+  const data = typeof value === 'string' ? hex2buf(value) : value;
+  const p = prefixV2[pre];
+  const n = new Uint8Array(p.length + data.length);
+  n.set(p);
+  n.set(data, p.length);
+  return bs58check.encode(toBuffer(n));
+}
+
+export function splitAddress(addr: string): [string, string | null] {
+  const i = addr.indexOf('%');
+  if (i >= 0) {
+    return [addr.slice(0, i), addr.slice(i)];
+  } else {
+    return [addr, null];
+  }
+}
+
+export function compareArrays(a: ArrayLike<number>, b: ArrayLike<number>): number {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  const aa = i < a.length ? a[i] : 0;
+  const bb = i < b.length ? b[i] : 0;
+  return aa < bb ? -1 : aa > bb ? 1 : 0;
 }

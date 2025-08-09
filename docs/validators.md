@@ -9,7 +9,10 @@ Taquito provides functions that allow us to see if an address, a chain, a key ha
 0 = NO_PREFIX_MATCHED,
 1 = INVALID_CHECKSUM,
 2 = INVALID_LENGTH,
-3 = VALID
+3 = VALID,
+4 = PREFIX_NOT_ALLOWED,
+5 = INVALID_ENCODING,
+6 = OTHER,
 ```
 
 ### Validate an address
