@@ -25,12 +25,12 @@ import {
 import { ValidationResult } from './validators';
 export * from './validators';
 export { VERSION } from './version';
+export { prefix, Prefix, prefixLength } from './constants'; // (deprecated will be removed in the next minor release)
 export { PrefixV2, payloadLength } from './constants';
-export { verifySignature } from './verify-signature';
+export { validatePkAndExtractPrefix } from './verify-signature'; // (deprecated will be removed in the next minor release)
+export { verifySignature, BLS12_381_DST } from './verify-signature';
 export * from './errors';
 export { format } from './format';
-export { BLS12_381_DST } from './verify-signature';
-export { prefix, Prefix, prefixLength } from './constants';
 
 /**
  *
@@ -54,8 +54,8 @@ export function encodeOpHash(value: string) {
 }
 
 /**
- * @deprecated use b58Encode instead
- * @description Base58 encode a string or a Uint8Array and append a prefix to it (will be removed in the next minor release)
+ * @deprecated use b58Encode instead, this function will be removed in the next minor release
+ * @description Base58 encode a string or a Uint8Array and append a prefix to it
  * @param value Value to base58 encode
  * @param prefix prefix to append to the encoded string
  */
@@ -636,6 +636,8 @@ export function stripHexPrefix(hex: string): string {
  * @description Decodes Base58 string, looks for known prefix and strips it
  * @param src Base58 string
  * @returns Payload and prefix
+ * @example b58DecodeAndCheckPrefix('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', [PrefixV2.Ed25519PublicKeyHash]) // returns [Uint8Array, PrefixV2.Ed25519PublicKeyHash]
+ * @example b58DecodeAndCheckPrefix('edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t', [PrefixV2.Ed25519PublicKey]) // returns [Uint8Array, PrefixV2.Ed25519PublicKey]
  */
 export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
   src: string,
