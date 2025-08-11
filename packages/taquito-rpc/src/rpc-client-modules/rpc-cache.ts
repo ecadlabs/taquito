@@ -59,8 +59,8 @@ import {
   validateContractAddress,
   validateAddress,
   ValidationResult,
-  invalidDetail,
   validateProtocol,
+  InvalidProtocolHashError,
 } from '@taquito/utils';
 
 interface CachedDataInterface {
@@ -96,7 +96,7 @@ export class RpcClientCache implements RpcClientInterface {
   constructor(
     private rpcClient: RpcClientInterface,
     private ttl = defaultTtl
-  ) {}
+  ) { }
 
   getAllCachedData() {
     return this._cache;
@@ -154,14 +154,14 @@ export class RpcClientCache implements RpcClientInterface {
   private validateAddress(address: string) {
     const addressValidation = validateAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidAddressError(address, addressValidation);
     }
   }
 
   private validateContract(address: string) {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidContractAddressError(address, addressValidation);
     }
   }
 
@@ -1230,7 +1230,7 @@ export class RpcClientCache implements RpcClientInterface {
     if (protocol) {
       const protocolValidation = validateProtocol(protocol);
       if (protocolValidation !== ValidationResult.VALID) {
-        throw new Error(`Invalid protocol hash "${protocol}" ${invalidDetail(protocolValidation)}`);
+        throw new InvalidProtocolHashError(protocol, protocolValidation);
       }
     }
     const key = this.formatCacheKey(

@@ -5,7 +5,7 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from '../token';
-import { encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
+import { b58DecodePublicKeyHash, compareArrays, encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
 /**
@@ -103,6 +103,13 @@ export class KeyHashToken extends ComparableToken {
       key: { string: val },
       type: { prim: KeyHashToken.prim },
     };
+  }
+
+  compare(pkh1: string, pkh2: string): number {
+    // binary type tag actually reflects the expected prefix order
+    const h1 = b58DecodePublicKeyHash(pkh1, 'array');
+    const h2 = b58DecodePublicKeyHash(pkh2, 'array');
+    return compareArrays(h1, h2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

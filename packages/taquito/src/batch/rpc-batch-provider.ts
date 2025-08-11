@@ -30,7 +30,7 @@ import {
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import { validateAddress, validateKeyHash, ValidationResult, invalidDetail } from '@taquito/utils';
+import { validateAddress, validateKeyHash, ValidationResult } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import {
   InvalidAddressError,
@@ -77,7 +77,7 @@ export class OperationBatch extends Provider {
       throw new InvalidAmountError(params.amount.toString());
     }
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.to, toValidation);
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -92,7 +92,7 @@ export class OperationBatch extends Provider {
   withTransferTicket(params: TransferTicketParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
@@ -121,11 +121,11 @@ export class OperationBatch extends Provider {
   withDelegation(params: DelegateParams) {
     const sourceValidation = validateAddress(params.source);
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
     const delegateValidation = validateAddress(params.delegate ?? '');
     if (params.delegate && delegateValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate, invalidDetail(delegateValidation));
+      throw new InvalidAddressError(params.delegate, delegateValidation);
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -141,7 +141,7 @@ export class OperationBatch extends Provider {
   withActivation({ pkh, secret }: ActivationParams) {
     const pkhValidation = validateKeyHash(pkh);
     if (pkhValidation !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(pkh, invalidDetail(pkhValidation));
+      throw new InvalidKeyHashError(pkh, pkhValidation);
     }
     this.operations.push({ kind: OpKind.ACTIVATION, pkh, secret });
     return this;
@@ -341,7 +341,7 @@ export class RPCBatchProvider {
   constructor(
     private context: Context,
     private estimator: EstimationProvider
-  ) {}
+  ) { }
 
   /***
    *

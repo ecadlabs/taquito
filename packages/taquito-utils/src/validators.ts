@@ -1,19 +1,11 @@
-import { prefix, prefixLength, Prefix } from './constants';
-import bs58check from 'bs58check';
+import { PrefixV2 } from './constants';
+import { b58DecodeAndCheckPrefix, splitAddress, ValidationResult } from './taquito-utils';
+import { ParameterValidationError } from '@taquito/core';
 
-export enum ValidationResult {
-  NO_PREFIX_MATCHED,
-  INVALID_CHECKSUM,
-  INVALID_LENGTH,
-  VALID,
-}
+export { ValidationResult } from '@taquito/core';
 
-export function isValidPrefix(value: unknown): value is Prefix {
-  if (typeof value !== 'string') {
-    return false;
-  }
-
-  return value in prefix;
+export function isValidPrefixedValue(value: string, prefixes?: PrefixV2[]): boolean {
+  return validatePrefixedValue(value, prefixes) === ValidationResult.VALID;
 }
 /**
  * @description This function is called by the validation functions ([[validateAddress]], [[validateChain]], [[validateContractAddress]], [[validateKeyHash]], [[validateSignature]], [[validatePublicKey]]).
@@ -25,50 +17,41 @@ export function isValidPrefix(value: unknown): value is Prefix {
  * @param value Value to validate
  * @param prefixes prefix the value should have
  */
-function validatePrefixedValue(value: string, prefixes: Prefix[]) {
-  const match = new RegExp(`^(${prefixes.join('|')})`).exec(value);
-  if (!match || match.length === 0) {
-    return ValidationResult.NO_PREFIX_MATCHED;
+function validatePrefixedValue(value: string, prefixes?: PrefixV2[]): ValidationResult {
+  try {
+    b58DecodeAndCheckPrefix(value, prefixes);
+  } catch (err: unknown) {
+    if (err instanceof ParameterValidationError && err.result !== undefined) {
+      return err.result;
+    }
+    return ValidationResult.OTHER;
   }
-
-  const prefixKey = match[0];
-
-  if (!isValidPrefix(prefixKey)) {
-    return ValidationResult.NO_PREFIX_MATCHED;
-  }
-
-  // Check whether annotation exist before starting validation
-  if (value.includes('%')) {
-    value = value.split('%')[0];
-  }
-
-  const kt1Regex = /^(KT1\w{33})$/;
-  if (!kt1Regex.test(value) && prefixKey === 'KT1') {
-    return ValidationResult.INVALID_CHECKSUM;
-  }
-
-  // decodeUnsafe return undefined if decoding fail
-  let decoded = bs58check.decodeUnsafe(value);
-  if (!decoded) {
-    return ValidationResult.INVALID_CHECKSUM;
-  }
-
-  decoded = decoded.slice(prefix[prefixKey].length);
-  if (decoded.length !== prefixLength[prefixKey]) {
-    return ValidationResult.INVALID_LENGTH;
-  }
-
   return ValidationResult.VALID;
 }
 
-const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3, Prefix.TZ4];
-const contractPrefix = [Prefix.KT1];
-const signaturePrefix = [Prefix.EDSIG, Prefix.P2SIG, Prefix.SPSIG, Prefix.SIG];
-const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK, Prefix.BLPK];
-const operationPrefix = [Prefix.O];
-const protocolPrefix = [Prefix.P];
-const blockPrefix = [Prefix.B];
-const smartRollupPrefix = [Prefix.SR1];
+const implicitPrefix = [
+  PrefixV2.Ed25519PublicKeyHash,
+  PrefixV2.Secp256k1PublicKeyHash,
+  PrefixV2.P256PublicKeyHash,
+  PrefixV2.BLS12_381PublicKeyHash,
+];
+const contractPrefix = [PrefixV2.ContractHash];
+const signaturePrefix = [
+  PrefixV2.Ed25519Signature,
+  PrefixV2.P256Signature,
+  PrefixV2.Secp256k1Signature,
+  PrefixV2.GenericSignature,
+];
+const pkPrefix = [
+  PrefixV2.Ed25519PublicKey,
+  PrefixV2.Secp256k1PublicKey,
+  PrefixV2.P256PublicKey,
+  PrefixV2.BLS12_381PublicKey,
+];
+const operationPrefix = [PrefixV2.OperationHash];
+const protocolPrefix = [PrefixV2.ProtocolHash];
+const blockPrefix = [PrefixV2.BlockHash];
+const smartRollupPrefix = [PrefixV2.SmartRollupHash];
 
 /**
  * @description Used to check if an address or a contract address is valid.
@@ -86,7 +69,8 @@ const smartRollupPrefix = [Prefix.SR1];
  * ```
  */
 export function validateAddress(value: string): ValidationResult {
-  return validatePrefixedValue(value, [...implicitPrefix, ...contractPrefix, ...smartRollupPrefix]);
+  const [addr] = splitAddress(value);
+  return validatePrefixedValue(addr, [...implicitPrefix, ...contractPrefix, ...smartRollupPrefix]);
 }
 
 /**
@@ -105,7 +89,7 @@ export function validateAddress(value: string): ValidationResult {
  * ```
  */
 export function validateChain(value: string): ValidationResult {
-  return validatePrefixedValue(value, [Prefix.NET]);
+  return validatePrefixedValue(value, [PrefixV2.ChainID]);
 }
 
 /**
@@ -242,14 +226,9 @@ export function validateBlock(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a spending key is valid.
- * @returns 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
- *
+ * @deprecated this function will be removed in the next minor release
+ * @description generates a readable error string from a validation result
  */
-export function validateSpendingKey(value: any): ValidationResult {
-  return validatePrefixedValue(value, [Prefix.SASK]);
-}
-
 export function invalidDetail(validation: ValidationResult): string {
   switch (validation) {
     case ValidationResult.NO_PREFIX_MATCHED:
@@ -261,6 +240,15 @@ export function invalidDetail(validation: ValidationResult): string {
     default:
       return '';
   }
+}
+
+/**
+ * @description Used to check if a spending key is valid.
+ * @returns 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ *
+ */
+export function validateSpendingKey(value: string): ValidationResult {
+  return validatePrefixedValue(value, [PrefixV2.SaplingSpendingKey]);
 }
 
 export function validateSmartRollupAddress(value: string): ValidationResult {

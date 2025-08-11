@@ -193,13 +193,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
           '045c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
-    ).toThrow(
-      expect.objectContaining({
-        message: expect.stringContaining(
-          `Invalid public key "[object Object]" with unsupported prefix`
-        ),
-      })
-    );
+    ).toThrow(InvalidPublicKeyError);
   });
 
   test('Verify that ballotEncoder functions correctly and returns InvalidBallotValueError on unknown case ', () => {
