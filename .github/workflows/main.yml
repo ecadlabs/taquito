@@ -47,9 +47,9 @@ jobs:
           - testnet: rionet
             testnet_uppercase: RIONET
             rpc_url: https://rpc.rionet.teztnets.com/
-          # - testnet: seoulnet
-          #   testnet_uppercase: SEOULNET
-          #   rpc_url: https://rpc.seoulnet.teztnets.com/
+          - testnet: seoulnet
+            testnet_uppercase: SEOULNET
+            rpc_url: https://rpc.seoulnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
