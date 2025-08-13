@@ -95,14 +95,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     it('Verify .estimate.transfer for internal transfer to allocated implicit', async () => {
       const tx = contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(3456);
+      expect(estimate.gasLimit).toEqual(3457);
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(597);
       expect(estimate.burnFeeMutez).toEqual(0);
       expect(estimate.minimalFeeMutez).toEqual(577);
       expect(estimate.totalCost).toEqual(577);
       expect(estimate.usingBaseFeeMutez).toEqual(577);
-      expect(estimate.consumedMilligas).toEqual(3455970);
+      expect(estimate.consumedMilligas).toEqual(3456056);
     });
 
     it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
@@ -119,7 +119,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(848);
       expect(estimate.totalCost).toEqual(134348);
       expect(estimate.usingBaseFeeMutez).toEqual(848);
-      expect(estimate.consumedMilligas).toEqual(5570499);
+      expect(estimate.consumedMilligas).toEqual(5570585);
     });
 
     it('Verify .estimate.transfer for internal origination', async () => {
@@ -132,7 +132,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(424);
       expect(estimate.totalCost).toEqual(84674);
       expect(estimate.usingBaseFeeMutez).toEqual(424);
-      expect(estimate.consumedMilligas).toEqual(1866594);
+      expect(estimate.consumedMilligas).toEqual(1866680);
     });
 
     it('Verify .estimate.transfer for multiple internal originations', async () => {
@@ -145,7 +145,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(542);
       expect(estimate.totalCost).toEqual(164042);
       expect(estimate.usingBaseFeeMutez).toEqual(542);
-      expect(estimate.consumedMilligas).toEqual(2391747);
+      expect(estimate.consumedMilligas).toEqual(2391833);
       // Do the actual operation
       const op2 = await contract.methodsObject.do(originate2()).send();
       await op2.confirmation();
