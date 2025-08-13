@@ -28,25 +28,25 @@ export const DEFAULT_STORAGE_LIMIT = {
   TRANSFER: 257,
   REVEAL: 0,
 };
-// value is based on octez-client reveal operation gasLimit of each address type in Rio Protocol
+// value is based on octez-client reveal operation gasLimit of each address type in Seoul Protocol
 const REVEAL_GAS_LIMIT = {
-  TZ1: 169,
-  TZ2: 155,
-  TZ3: 445,
-  TZ4: 1674,
+  TZ1: 171,
+  TZ2: 157,
+  TZ3: 447,
+  TZ4: 3252,
 };
-// value is based on octez-client reveal operation fee of each address type in Rio Protocol
+// value is based on octez-client reveal operation fee of each address type in Seoul Protocol
 const REVEAL_FEE = {
-  TZ1: 276,
-  TZ2: 276,
-  TZ3: 305,
-  TZ4: 477,
+  TZ1: 278,
+  TZ2: 277,
+  TZ3: 306,
+  TZ4: 736,
 };
-// value is based on octez-client reveal operation storageLimit of all address type in Rio Protocol
+// value is based on octez-client reveal operation storageLimit of all address type in Seoul Protocol
 export const REVEAL_STORAGE_LIMIT = 0;
-// protocol constants in Rio Protocol
+// protocol constants in Seoul Protocol
 export const ORIGINATION_SIZE = 257;
-// protocol constants in Rio Protocol
+// protocol constants in Seoul Protocol
 export const COST_PER_BYTE = 250;
 
 export enum Protocols {
@@ -72,6 +72,7 @@ export enum Protocols {
   PsParisCZ = 'PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi',
   PsQuebecn = 'PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg',
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
+  PtSeouLou = 'PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -94,7 +95,8 @@ export const protocols = {
   '020': [Protocols.PtParisBx, Protocols.PsParisCZ],
   '021': [Protocols.PsQuebecn],
   '022': [Protocols.PsRiotuma],
-  '023': [Protocols.ProtoALpha],
+  '023': [Protocols.PtSeouLou],
+  '024': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {
@@ -118,6 +120,7 @@ export enum ChainIds {
   PARISCNET = 'NetXXWAHLEvre9b',
   QUEBECNET = 'NetXuTeGinLEqxp',
   RIONET = 'NetXPdgaoabtBth',
+  SEOULNET = 'NetXd56aBs1aeW3',
 }
 
 // A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption (3.5 fails occasionally with gas exhausted; 4 fails occasionally with fee too low)

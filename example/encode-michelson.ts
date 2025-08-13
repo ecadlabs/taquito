@@ -10,6 +10,7 @@ const example = async () => {
                         0x0501000000026869) }
             10000000)
       (Pair 2 333))`;
+      const ex3 = `{parameter address; storage (option key_hash); code { CAR; IS_IMPLICIT_ACCOUNT; NIL operation; PAIR }}`
 
     const p = new Parser()
 
@@ -20,6 +21,10 @@ const example = async () => {
     console.log('Example 2')
     const exp2 = p.parseMichelineExpression(ex2)
     console.log(JSON.stringify(exp2))
+
+    console.log('Example 3 with IS_IMPLICIT_ACCOUNT instruction')
+    const exp3 = p.parseMichelineExpression(ex3)
+    console.log(JSON.stringify(exp3))
 
   } catch (ex) {
     console.log(ex)
