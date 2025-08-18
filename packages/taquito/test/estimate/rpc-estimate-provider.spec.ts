@@ -25,6 +25,7 @@ import {
   stakeNoReveal,
   unstakeNoReveal,
   finalizeUnstakeNoReveal,
+  finalizeUnstakeNoRevealDiffSourceDestination,
 } from '../contract/helper';
 import { OpKind, PvmKind } from '@taquito/rpc';
 import { TransferTicketParams } from '../../src/operations/types';
@@ -210,6 +211,16 @@ describe('RPCEstimateProvider test signer', () => {
       const estimate = await estimateProvider.finalizeUnstake({});
 
       expect(estimate.gasLimit).toEqual(1629);
+    });
+
+    it('should return estimates for finalize_unstake pseudo-operation with different source and destination', async () => {
+      mockRpcClient.simulateOperation.mockResolvedValue(
+        finalizeUnstakeNoRevealDiffSourceDestination
+      );
+
+      const estimate = await estimateProvider.finalizeUnstake({});
+
+      expect(estimate.gasLimit).toEqual(1815);
     });
   });
 

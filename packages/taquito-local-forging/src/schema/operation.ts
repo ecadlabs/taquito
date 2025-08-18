@@ -25,6 +25,7 @@ export const RevealSchema = {
   gas_limit: CODEC.ZARITH,
   storage_limit: CODEC.ZARITH,
   public_key: CODEC.PUBLIC_KEY,
+  proof: CODEC.SIGNATURE_PROOF,
 };
 
 export const DelegationSchema = {
@@ -125,6 +126,16 @@ export const IncreasePaidStorageSchema = {
 };
 
 export const UpdateConsensusKeySchema = {
+  source: CODEC.PKH,
+  fee: CODEC.ZARITH,
+  counter: CODEC.ZARITH,
+  gas_limit: CODEC.ZARITH,
+  storage_limit: CODEC.ZARITH,
+  pk: CODEC.PUBLIC_KEY,
+  proof: CODEC.SIGNATURE_PROOF,
+};
+
+export const UpdateCompanionKeySchema = {
   source: CODEC.PKH,
   fee: CODEC.ZARITH,
   counter: CODEC.ZARITH,

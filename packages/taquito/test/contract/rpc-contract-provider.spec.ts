@@ -652,10 +652,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -710,10 +710,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -795,10 +795,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -841,10 +841,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -925,10 +925,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -977,10 +977,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -1036,6 +1036,52 @@ describe('RpcContractProvider test', () => {
               },
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce finalize_unstake pseudo operation with different source and destination', async () => {
+      const result = await rpcContractProvider.finalizeUnstake({
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+        to: 'tz1NFvwejbSCLBBuzCrZQgod3GkaMQJ9HoMf',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '334',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '633',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '10000',
+              gas_limit: '10600',
+              storage_limit: '300',
+              amount: '0',
+              destination: 'tz1NFvwejbSCLBBuzCrZQgod3GkaMQJ9HoMf',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
             },
           ],
           protocol: 'test_proto',

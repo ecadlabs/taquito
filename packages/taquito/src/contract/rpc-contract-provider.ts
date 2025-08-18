@@ -494,9 +494,6 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     if (!params.to) {
       params.to = params.source;
     }
-    if (params.to && params.to !== params.source) {
-      throw new InvalidStakingAddressError(params.to);
-    }
 
     if (!params.amount) {
       params.amount = 0;
@@ -560,8 +557,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Reveal the current address. Will throw an error if the address is already revealed.
-   *
+   * @description Reveal the public key of the current address. Will throw an error if the address is already revealed.
+   * @remarks Reveal tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An operation handle with the result from the rpc node
    *
    * @param RevealParams operation parameter
@@ -722,7 +719,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   /**
    *
    * @description Updates the consensus key of the baker to public_key starting from the current cycle plus PRESERVED_CYCLES + 1
-   *
+   * @remarks updateConsensusKey to a tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An operation handle with the result from the rpc node
    *
    * @param UpdateConsensusKeyParams

@@ -9,6 +9,7 @@ import {
   b58DecodePublicKeyHash,
   b58DecodePublicKey,
   b58DecodeAddress,
+  signaturePrefixes,
 } from '@taquito/utils';
 import {
   OversizedEntryPointError,
@@ -35,9 +36,9 @@ import {
   InvalidAddressError,
   InvalidContractAddressError,
   InvalidKeyHashError,
-  InvalidSignatureError,
   ParameterValidationError,
   ProhibitedActionError,
+  InvalidSignatureError,
 } from '@taquito/core';
 
 // https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
@@ -477,13 +478,12 @@ export const depositsLimitDecoder = (value: Uint8ArrayConsumer) => {
 
 const signatureV1Encoder = (val: string) => {
   try {
-    const [data] = b58DecodeAndCheckPrefix(val, [
-      PrefixV2.Ed25519Signature,
-      PrefixV2.Secp256k1Signature,
-      PrefixV2.P256Signature,
-      PrefixV2.BLS12_381Signature,
-    ]);
-    return paddedBytesEncoder(buf2hex(data));
+    const [data, pre] = b58DecodeAndCheckPrefix(val, signaturePrefixes);
+    if (pre === PrefixV2.BLS12_381Signature) {
+      return paddedBytesEncoder(buf2hex(data));
+    } else {
+      throw new ProhibitedActionError('we only support encoding of BLSIG signatures from protocol Seoul');
+    }
   } catch (err: unknown) {
     if (err instanceof ParameterValidationError) {
       throw new InvalidSignatureError(val, err.result);
@@ -498,7 +498,7 @@ const signatureV1Decoder = (val: Uint8ArrayConsumer) => {
   if (val.length().toString() === '96') {
     return prefixDecoder(PrefixV2.BLS12_381Signature)(val);
   } else {
-    throw new ProhibitedActionError('currently we only support decoding of BLSIG signatures');
+    throw new ProhibitedActionError('we only support decoding of BLSIG signatures');
   }
 };
 

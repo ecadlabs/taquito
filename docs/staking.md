@@ -16,7 +16,7 @@ Staking changes this by allowing any user to participate in the "Proof of Stake"
 
 Users can control their staked funds using the `stake`, `unstake`, and `finalize_unstake` operations. These are implemented as pseudo-entrypoints, and the parameters are passed to a transfer operation with the same destination as the sender.
 
-To accept staked funds, a delegate needs to have opted in to staking. This is done by `set_delegate_parameters`. This part is not supported by Taquito, as it is not a dApp operation. More information [here](https://octez.tezos.com/docs/rio/staking.html#staking-policy-configuration).
+To accept staked funds, a delegate needs to have opted in to staking. This is done by `set_delegate_parameters`. This part is not supported by Taquito, as it is not a dApp operation. More information [here](https://octez.tezos.com/docs/seoul/staking.html#staking-policy-configuration).
 
 # Staking Funds
 To stake your funds, you need to call the `stake` operation.
@@ -133,7 +133,7 @@ const op = await Tezos.wallet.finalizeUnstake().send();
 # Additional Info and Some Notes
 
 ## Cycle
-A cycle is 10800 blocks in Rio protocol, and 8 seconds per block in Rio. This means a cycle is about 2 days. This might change with the activation of newer protocols.
+A cycle is 10800 blocks in Seoul protocol, and 8 seconds per block in Seoul. This means a cycle is about 1 day. This might change with the activation of newer protocols.
 
 ## Overstaking
 A delegate can set the maximum amount of staking they can accept, as a multiply of their own balance. If a delegate's limit is exceeded, the exceeding stake is automatically considered as delegation for the delegate's baking and voting power calculation, but it does remain slashable. That means it's your responsibility to make sure you're not overstaking. Remember that overstaking can even happen after you have staked successfully, because your delegate changes their own balance, or their staking parameter.
@@ -146,7 +146,7 @@ When you change your delegate, your funds will be automatically unstaked. You wi
 The `stake` and `unstake` operations will automatically finalize all currently finalizable funds.
 
 ## Adaptive Issuance
-A concept related to staking is adaptive issuance. Adaptive issuance is a mechanism that adjusts the block reward based on the total amount of staked tez. In short, the reward will be adjusted to keep the staked funds about 50% of the total supply. To read more about the mechanism, you can check [this document](https://tezos.gitlab.io/rio/adaptive_issuance.html#adaptive-issuance).
+A concept related to staking is adaptive issuance. Adaptive issuance is a mechanism that adjusts the block reward based on the total amount of staked tez. In short, the reward will be adjusted to keep the staked funds about 50% of the total supply. To read more about the mechanism, you can check [this document](https://tezos.gitlab.io/seoul/adaptive_issuance.html#adaptive-issuance).
 
 ## Staking Rewards
 In delegation, rewards were given to the baker, and it was the baker's responsibility to distribute the rewards to the delegators. In staking, the rewards are given directly to the staker. However, rewards are not given immediately, but are distributed through staked (frozen) balance, and the user can spend the reward along with their initial stake when they `unstake` and `finalize_unstake`.

@@ -418,9 +418,6 @@ export class Wallet {
           if (!params.to) {
             params.to = source;
           }
-          if (params.to !== source) {
-            throw new InvalidStakingAddressError(params.to);
-          }
           if (!params.amount) {
             params.amount = 0;
           }

@@ -106,6 +106,10 @@ export interface DelegatesResponse {
     active: { pkh: string; pk: string };
     pendings?: { cycle: number; pkh: string; pk: string }[];
   };
+  companion_key?: {
+    active: { pkh: string; pk: string } | null;
+    pendings?: { cycle: number; pkh: string; pk: string }[];
+  };
   stakers?: { staker: string; frozen_deposits: string }[];
   delegators?: string[];
   full_balance?: BigNumber;
@@ -191,8 +195,11 @@ export type InlinedAttestationKindEnum = OpKind.ATTESTATION;
 export type InlinedEndorsementKindEnum = OpKind.ENDORSEMENT;
 
 export type InlinedAttestationContents =
+  | OperationContentsPreattestation
   | OperationContentsAttestation
-  | OperationContentsAttestationWithDal;
+  | OperationContentsAttestationWithDal
+  | OperationContentsPreattestationsAggregate
+  | OperationContentsAttestationsAggregate;
 
 export interface InlinedEndorsementContents {
   kind: InlinedEndorsementKindEnum;
@@ -380,6 +387,7 @@ export interface OperationContentsReveal {
   gas_limit: string;
   storage_limit: string;
   public_key: string;
+  proof?: string;
 }
 
 export interface OperationContentsTransaction {
@@ -443,6 +451,17 @@ export interface OperationContentsTransferTicket {
 
 export interface OperationContentsUpdateConsensusKey {
   kind: OpKind.UPDATE_CONSENSUS_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  proof?: string;
+}
+
+export interface OperationContentsUpdateCompanionKey {
+  kind: OpKind.UPDATE_COMPANION_KEY;
   source: string;
   fee: string;
   counter: string;
@@ -578,8 +597,39 @@ export interface OperationContentsDalPublishCommitment {
 export interface OperationContentsDalEntrapmentEvidence {
   kind: OpKind.DAL_ENTRAPMENT_EVIDENCE;
   attestation: InlinedAttestation;
+  consensus_slot: number;
   slot_index: number;
   shard_with_proof: { shard: (number | string[])[]; proof: string };
+}
+
+export interface OperationContentsPreattestationsAggregate {
+  kind: OpKind.PREATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: number[];
+}
+
+export interface OperationContentsAttestationsAggregate {
+  kind: OpKind.ATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: {
+    slot: number;
+    dal_attestation?: string;
+  }[];
+}
+
+export interface OperationContentsDoubleConsensusOperationEvidence {
+  kind: OpKind.DOUBLE_CONSENSUS_OPERATION_EVIDENCE;
+  slot: number;
+  op1: InlinedAttestation;
+  op2: InlinedAttestation;
 }
 
 export type OperationContents =
@@ -619,7 +669,11 @@ export type OperationContents =
   | OperationContentsSmartRollupRecoverBond
   | OperationContentsSmartRollupTimeout
   | OperationContentsDalEntrapmentEvidence
-  | OperationContentsDalPublishCommitment;
+  | OperationContentsDalPublishCommitment
+  | OperationContentsDoubleConsensusOperationEvidence
+  | OperationContentsUpdateCompanionKey
+  | OperationContentsPreattestationsAggregate
+  | OperationContentsAttestationsAggregate;
 
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -635,6 +689,15 @@ export interface OperationContentsAndResultMetadataExtended0 {
   consensus_key?: string;
 }
 
+export interface OperationContentsAndResultMetadataAttestationsAggregate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  committee: {
+    delegate: string;
+    consensus_pkh: string;
+  }[];
+  consensus_power: number;
+}
+
 export interface OperationContentsAndResultMetadataPreattestation {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
@@ -642,6 +705,14 @@ export interface OperationContentsAndResultMetadataPreattestation {
   consensus_key?: string;
 }
 
+export interface OperationContentsAndResultMetadataPreattestationsAggregate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  committee: {
+    delegate: string;
+    consensus_pkh: string;
+  }[];
+  consensus_power: number;
+}
 export interface OperationContentsAndResultMetadataPreEndorsement {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
@@ -696,6 +767,12 @@ export interface OperationContentsAndResultMetadataIncreasePaidStorage {
 }
 
 export interface OperationContentsAndResultMetadataUpdateConsensusKey {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultUpdateConsensusKey;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataUpdateCompanionKey {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultUpdateConsensusKey;
   internal_operation_results?: InternalOperationResult[];
@@ -764,6 +841,26 @@ export interface OperationContentsAndResultMetadataDalEntrapmentEvidence {
   balance_updates?: OperationMetadataBalanceUpdates[];
 }
 
+export interface OperationContentsAndResultMetadataDoubleConsensusOperationEvidence {
+  punished_delegate: string;
+  rewarded_delegate: string;
+  misbehaviour: {
+    level: number;
+    round: number;
+    kind: 'attestation' | 'block' | 'preattestation';
+  };
+}
+
+export interface OperationContentsAndResultMetadataDoubleBaking {
+  punished_delegate: string;
+  rewarded_delegate: string;
+  misbehaviour: {
+    level: number;
+    round: number;
+    kind: 'attestation' | 'block' | 'preattestation';
+  };
+}
+
 export interface OperationContentsAndResultAttestation {
   kind: OpKind.ATTESTATION;
   block_payload_hash?: string;
@@ -771,6 +868,20 @@ export interface OperationContentsAndResultAttestation {
   round?: number;
   slot?: number;
   metadata: OperationContentsAndResultMetadataExtended1;
+}
+
+export interface OperationContentsAndResultAttestationsAggregate {
+  kind: OpKind.ATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: {
+    slot: number;
+    dal_attestation?: string;
+  }[];
+  metadata: OperationContentsAndResultMetadataAttestationsAggregate;
 }
 
 export interface OperationContentsAndResultEndorsement {
@@ -789,6 +900,17 @@ export interface OperationContentsAndResultPreattestation {
   round: number;
   block_payload_hash: string;
   metadata: OperationContentsAndResultMetadataPreattestation;
+}
+
+export interface OperationContentsAndResultPreattestationsAggregate {
+  kind: OpKind.PREATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: number[];
+  metadata: OperationContentsAndResultMetadataPreattestationsAggregate;
 }
 
 export interface OperationContentsAndResultPreEndorsement {
@@ -861,7 +983,7 @@ export interface OperationContentsAndResultDoubleBaking {
   kind: OpKind.DOUBLE_BAKING_EVIDENCE;
   bh1: BlockFullHeader;
   bh2: BlockFullHeader;
-  metadata: OperationContentsAndResultMetadata;
+  metadata: OperationContentsAndResultMetadataDoubleBaking;
 }
 
 export interface OperationContentsAndResultActivateAccount {
@@ -894,6 +1016,7 @@ export interface OperationContentsAndResultReveal {
   gas_limit: string;
   storage_limit: string;
   public_key: string;
+  proof?: string;
   metadata: OperationContentsAndResultMetadataReveal;
 }
 
@@ -971,6 +1094,17 @@ export interface OperationContentsAndResultUpdateConsensusKey {
   metadata: OperationContentsAndResultMetadataUpdateConsensusKey;
 }
 
+export interface OperationContentsAndResultUpdateCompanionKey {
+  kind: OpKind.UPDATE_COMPANION_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  proof?: string;
+  metadata: OperationContentsAndResultMetadataUpdateCompanionKey;
+}
 export interface OperationContentsAndResultDrainDelegate {
   kind: OpKind.DRAIN_DELEGATE;
   consensus_key: string;
@@ -1113,9 +1247,18 @@ export interface OperationContentsAndResultDalPublishCommitment {
 export interface OperationContentsAndResultDalEntrapmentEvidence {
   kind: OpKind.DAL_ENTRAPMENT_EVIDENCE;
   attestation: InlinedAttestation;
+  consensus_slot: number;
   slot_index: number;
   shard_with_proof: { shard: (number | string[])[]; proof: string };
   metadata: OperationContentsAndResultMetadataDalEntrapmentEvidence;
+}
+
+export interface OperationContentsAndResultDoubleConsensusOperationEvidence {
+  kind: OpKind.DOUBLE_CONSENSUS_OPERATION_EVIDENCE;
+  slot: number;
+  op1: InlinedAttestation;
+  op2: InlinedAttestation;
+  metadata: OperationContentsAndResultMetadataDoubleConsensusOperationEvidence;
 }
 
 export type OperationContentsAndResult =
@@ -1154,7 +1297,11 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupRecoverBond
   | OperationContentsAndResultSmartRollupTimeout
   | OperationContentsAndResultDalPublishCommitment
-  | OperationContentsAndResultDalEntrapmentEvidence;
+  | OperationContentsAndResultDalEntrapmentEvidence
+  | OperationContentsAndResultDoubleConsensusOperationEvidence
+  | OperationContentsAndResultUpdateCompanionKey
+  | OperationContentsAndResultPreattestationsAggregate
+  | OperationContentsAndResultAttestationsAggregate;
 
 export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultTransaction
@@ -1169,7 +1316,8 @@ export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultSmartRollupAddMessages
   | OperationContentsAndResultSmartRollupOriginate
   | OperationContentsAndResultSmartRollupExecuteOutboxMessage
-  | OperationContentsAndResultDalPublishCommitment;
+  | OperationContentsAndResultDalPublishCommitment
+  | OperationContentsAndResultUpdateCompanionKey;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1453,6 +1601,7 @@ export interface OperationResultUpdateConsensusKey {
   status: OperationResultStatusEnum;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
+  kind?: boolean;
 }
 
 export interface OperationResultDelegation {
@@ -1658,16 +1807,16 @@ export interface InternalOperationResult {
   amount?: string;
   destination?: string;
   parameters?: TransactionOperationParameter;
-  public_key?: string;
+  result: InternalOperationResultEnum;
   balance?: string;
   delegate?: string;
   script?: ScriptedContracts;
-  value?: MichelsonV1Expression;
-  limit?: string;
-  result: InternalOperationResultEnum;
   type?: MichelsonV1Expression;
   tag?: string;
   payload?: MichelsonV1Expression;
+  public_key?: string;
+  value?: MichelsonV1Expression;
+  limit?: string;
 }
 
 export interface SuccessfulManagerOperationResult {
@@ -1685,42 +1834,79 @@ export interface SuccessfulManagerOperationResult {
 
 export type MetadataBalanceUpdatesKindEnum =
   | 'contract'
-  | 'freezer'
   | 'accumulator'
+  | 'freezer'
+  | 'minted'
   | 'burned'
   | 'commitment'
-  | 'minted'
   | 'staking';
 
 export enum METADATA_BALANCE_UPDATES_CATEGORY {
+  ACTIVATION = 'activation',
+  ATTESTATION = 'attestation',
+  ATTESTATIONS_AGGREGATE = 'attestations_aggregate',
+  ATTESTATION_WITH_DAL = 'attestation_with_dal',
+  ATTESTING_REWARDS = 'attesting rewards',
   BAKING_BONUSES = 'baking bonuses',
   BAKING_REWARDS = 'baking rewards',
+  BALLOT = 'ballot',
   BLOCK_FEES = 'block fees',
   BONDS = 'bonds',
   BOOTSTRAP = 'bootstrap',
   BURNED = 'burned',
   COMMITMENT = 'commitment',
+  DAL_ATTESTING_REWARDS = 'dal attesting rewards',
+  DAL_ENTRAPMENT_EVIDENCE = 'dal_entrapment_evidence',
+  DAL_PUBLISH_COMMITMENT = 'dal_publish_commitment',
   DELEGATE_DENOMINATOR = 'delegate_denominator',
+  DELEGATION = 'delegation',
   DELEGATOR_NUMERATOR = 'delegator_numerator',
   DEPOSITS = 'deposits',
-  ENDORSING_REWARDS = 'endorsing rewards',
+  DOUBLE_ATTESTATION_EVIDENCE = 'double_attestation_evidence',
+  DOUBLE_BAKING_EVIDENCE = 'double_baking_evidence',
+  DOUBLE_ENDORSEMENT_EVIDENCE = 'double_endorsement_evidence',
+  DOUBLE_PREATTESTATION_EVIDENCE = 'double_preattestation_evidence',
+  DOUBLE_PREENDORSEMENT_EVIDENCE = 'double_preendorsement_evidence',
+  DRAIN_DELEGATE = 'drain_delegate',
+  ENDORSEMENT = 'endorsement',
+  ENDORSEMENT_WITH_DAL = 'endorsement_with_dal',
+  EVENT = 'event',
+  FAILING_NOOP = 'failing_noop',
+  INCREASE_PAID_STORAGE = 'increase_paid_storage',
   INVOICE = 'invoice',
-  LOST_ENDORSING_REWARDS = 'lost endorsing rewards',
   LOST_ATTESTING_REWARDS = 'lost attesting rewards',
+  LOST_DAL_ATTESTING_REWARDS = 'lost dal attesting rewards',
   MINTED = 'minted',
   NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
+  ORIGINATION = 'origination',
+  PREATTESTATION = 'preattestation',
+  PREATTESTATIONS_AGGREGATE = 'preattestations_aggregate',
+  PREENDORSEMENT = 'preendorsement',
+  PROPOSALS = 'proposals',
   PUNISHMENTS = 'punishments',
+  REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
+  REVEAL = 'reveal',
+  SEED_NONCE_REVELATION = 'seed_nonce_revelation',
+  SET_DEPOSITS_LIMIT = 'set_deposits_limit',
+  SMART_ROLLUP_ADD_MESSAGES = 'smart_rollup_add_messages',
+  SMART_ROLLUP_CEMENT = 'smart_rollup_cement',
+  SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'smart_rollup_execute_outbox_message',
+  SMART_ROLLUP_ORIGINATE = 'smart_rollup_originate',
+  SMART_ROLLUP_PUBLISH = 'smart_rollup_publish',
+  SMART_ROLLUP_RECOVER_BOND = 'smart_rollup_recover_bond',
   SMART_ROLLUP_REFUTATION_PUNISHMENTS = 'smart_rollup_refutation_punishments',
   SMART_ROLLUP_REFUTATION_REWARDS = 'smart_rollup_refutation_rewards',
+  SMART_ROLLUP_REFUTE = 'smart_rollup_refute',
+  SMART_ROLLUP_TIMEOUT = 'smart_rollup_timeout',
   STORAGE_FEES = 'storage fees',
   SUBSIDY = 'subsidy',
+  TICKET_UPDATES = 'ticket_updates',
+  TRANSACTION = 'transaction',
+  TRANSFER_TICKET = 'transfer_ticket',
   UNSTAKED_DEPOSITS = 'unstaked_deposits',
-  DOUBLE_SIGNING_EVIDENCE_REWARDS = 'double signing evidence rewards',
-  FEES = 'fees',
-  LEGACY_DEPOSITS = 'legacy_deposits',
-  LEGACY_FEES = 'legacy_fees',
-  LEGACY_REWARDS = 'legacy_rewards',
-  REWARDS = 'rewards',
+  UPDATE_COMPANION_KEY = 'update_companion_key',
+  UPDATE_CONSENSUS_KEY = 'update_consensus_key',
+  VDF_REVELATION = 'vdf_revelation',
 }
 
 export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
@@ -1856,6 +2042,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto023 &
   ConstantsResponseProto022 &
   ConstantsResponseProto021 &
   ConstantsResponseProto020 &
@@ -1902,6 +2089,8 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export type ConstantsResponseProto023 = ConstantsResponseProto022;
 
 export interface ConstantsResponseProto022
   extends Omit<
