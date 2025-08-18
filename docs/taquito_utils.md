@@ -12,10 +12,11 @@ You can find a full list of available utility functions in Taquito [here](https:
 To use the functions, simply import the function you need as such:
 
 ```js
-import { getPkhfromPk, b58Encode, b58cdecode } from '@taquito/utils';
+import { getPkhfromPk, b58Encode, b58DecodeAndCheckPrefix } from '@taquito/utils';
 
 const publicKeyHash = getPkhfromPk('replace_with_publickey');
-const encoded = b58Encode('replace_with_publickey');
+const encoded = b58Encode('replace_with_value_to_encode');
+const [buffer, prefix] = b58DecodeAndCheckPrefix('replace_with_b58_encoded_expression', [PrefixV2.'replace_with_prefix_name']) 
 ```
 
 ## Using Validation Functions from `@taquito/utils`
