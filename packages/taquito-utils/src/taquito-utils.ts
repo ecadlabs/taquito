@@ -29,7 +29,7 @@ export { VERSION } from './version';
 export { prefix, Prefix, prefixLength } from './constants'; // (deprecated will be removed in the next minor release)
 export { PrefixV2, payloadLength } from './constants';
 export { validatePkAndExtractPrefix } from './verify-signature'; // (deprecated will be removed in the next minor release)
-export { verifySignature, BLS12_381_DST } from './verify-signature';
+export { verifySignature, BLS12_381_DST, POP_DST } from './verify-signature';
 export * from './errors';
 export { format } from './format';
 

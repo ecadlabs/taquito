@@ -1,10 +1,15 @@
-import { b58DecodeAndCheckPrefix, BLS12_381_DST, PrefixV2, b58Encode } from '@taquito/utils';
+import {
+  b58DecodeAndCheckPrefix,
+  BLS12_381_DST,
+  POP_DST,
+  PrefixV2,
+  b58Encode,
+} from '@taquito/utils';
 import { bls12_381 } from '@noble/curves/bls12-381';
 import { hash } from '@stablelib/blake2b';
 import { SigningKeyWithProofOfPossession, SignResult } from './signer';
 
 const bls = bls12_381.longSignatures; // AKA MinPK
-const POP_DST = 'BLS_POP_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_';
 
 export class BLSKey implements SigningKeyWithProofOfPossession {
   #key: Uint8Array;

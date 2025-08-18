@@ -22,12 +22,15 @@ import {
 import { bls12_381 } from '@noble/curves/bls12-381';
 
 export const BLS12_381_DST = 'BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_';
+export const POP_DST = 'BLS_POP_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_';
 
 /**
  * @description Verify signature of a payload
  * @param message The forged message including the magic byte (11 for block, 12 for preattestation, 13 for attestation, 3 for generic, 5 for the PACK format of michelson) in string or Uint8Array
  * @param publicKey The public key to verify the signature against
  * @param signature The signature to verify
+ * @param watermark Optional if not included in the message
+ * @param pop Optional if verifying proof of possession signature
  * @returns A boolean indicating if the signature matches
  * @throws {@link InvalidPublicKeyError} | {@link InvalidSignatureError} | {@link InvalidMessageError}
  * @example
@@ -44,7 +47,8 @@ export function verifySignature(
   message: string | Uint8Array,
   publicKey: string,
   signature: string,
-  watermark?: Uint8Array
+  watermark?: Uint8Array,
+  pop?: boolean
 ): boolean {
   const [pk, pre] = (() => {
     try {
@@ -86,15 +90,19 @@ export function verifySignature(
     msg = mergebuf(watermark, msg);
   }
 
-  switch (pre) {
-    case PrefixV2.P256PublicKey:
-      return verifyP2Signature(sig, msg, pk);
-    case PrefixV2.Secp256k1PublicKey:
-      return verifySpSignature(sig, msg, pk);
-    case PrefixV2.Ed25519PublicKey:
-      return verifyEdSignature(sig, msg, pk);
-    default:
-      return verifyBLSSignature(sig, msg, pk);
+  if (pop) {
+    return verifyBLSPopSignature(sig, msg, pk);
+  } else {
+    switch (pre) {
+      case PrefixV2.P256PublicKey:
+        return verifyP2Signature(sig, msg, pk);
+      case PrefixV2.Secp256k1PublicKey:
+        return verifySpSignature(sig, msg, pk);
+      case PrefixV2.Ed25519PublicKey:
+        return verifyEdSignature(sig, msg, pk);
+      default:
+        return verifyBLSSignature(sig, msg, pk);
+    }
   }
 }
 
@@ -155,6 +163,15 @@ const bls = bls12_381.longSignatures; // AKA MinPK
 function verifyBLSSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
   try {
     const point = bls.hash(msg, BLS12_381_DST);
+    return bls.verify(sig, point, publicKey);
+  } catch {
+    return false;
+  }
+}
+
+function verifyBLSPopSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
+  try {
+    const point = bls.hash(msg, POP_DST);
     return bls.verify(sig, point, publicKey);
   } catch {
     return false;
