@@ -70,7 +70,7 @@ function validatePrefixedValue(value: string, prefixes?: PrefixV2[]): Validation
  * ```
  */
 export function validateAddress(value: string): ValidationResult {
-  const [addr] = splitAddress(value);
+  const [addr] = splitAddress(value ?? '');
   return validatePrefixedValue(addr, addressPrefixes);
 }
 
