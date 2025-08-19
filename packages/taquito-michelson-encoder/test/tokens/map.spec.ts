@@ -500,13 +500,6 @@ describe('Map token', () => {
         {
           prim: 'Elt',
           args: [
-            { string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' },
-            { int: '99' },
-          ],
-        },
-        {
-          prim: 'Elt',
-          args: [
             { string: 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi' },
             { int: '70' },
           ],
@@ -516,6 +509,13 @@ describe('Map token', () => {
           args: [
             { string: 'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' },
             { int: '60' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' },
+            { int: '99' },
           ],
         },
       ]);
@@ -568,13 +568,6 @@ describe('Map token', () => {
         {
           prim: 'Elt',
           args: [
-            { string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' },
-            { int: '17' },
-          ],
-        },
-        {
-          prim: 'Elt',
-          args: [
             { string: 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi' },
             { int: '90' },
           ],
@@ -584,6 +577,13 @@ describe('Map token', () => {
           args: [
             { string: 'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV' },
             { int: '23' },
+          ],
+        },
+        {
+          prim: 'Elt',
+          args: [
+            { string: 'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT' },
+            { int: '17' },
           ],
         },
       ]);

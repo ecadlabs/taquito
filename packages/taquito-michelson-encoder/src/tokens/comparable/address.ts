@@ -5,7 +5,14 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from '../token';
-import { b58DecodeAddress, compareArrays, encodeAddress, splitAddress, validateAddress, ValidationResult } from '@taquito/utils';
+import {
+  b58DecodeAddress,
+  compareArrays,
+  encodeAddress,
+  splitAddress,
+  validateAddress,
+  ValidationResult,
+} from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
 /**
@@ -47,11 +54,7 @@ export class AddressToken extends ComparableToken {
    */
   private validate(value: unknown) {
     if (typeof value !== 'string') {
-      throw new AddressValidationError(
-        value,
-        this,
-        'Type error'
-      );
+      throw new AddressValidationError(value, this, 'Type error');
     }
     if (validateAddress(value) !== ValidationResult.VALID) {
       throw new AddressValidationError(
@@ -143,6 +146,7 @@ export class AddressToken extends ComparableToken {
     const ep1 = endpoint1 || '';
     const ep2 = endpoint2 || '';
 
+    // binary type tag actually reflects the expected prefix order
     const bytes1 = b58DecodeAddress(addr1, 'array');
     const bytes2 = b58DecodeAddress(addr2, 'array');
 
