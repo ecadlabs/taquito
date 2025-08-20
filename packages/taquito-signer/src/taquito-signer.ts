@@ -61,6 +61,7 @@ export class InMemorySigner implements Signer {
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58Encode(seed.subarray(0, 32), PrefixV2.Ed25519Seed);
+    const key = b58Encode(seed.subarray(0, 32), PrefixV2.Ed25519Seed);
     return new InMemorySigner(key);
   }
 

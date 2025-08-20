@@ -186,13 +186,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
     const bigMapValue = block
       ? await this.context.readProvider.getBigMapValue(
-          { id: id.toString(), expr: encodedExpr },
-          block
-        )
+        { id: id.toString(), expr: encodedExpr },
+        block
+      )
       : await this.context.readProvider.getBigMapValue(
-          { id: id.toString(), expr: encodedExpr },
-          'head'
-        );
+        { id: id.toString(), expr: encodedExpr },
+        'head'
+      );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
