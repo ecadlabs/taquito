@@ -23,7 +23,13 @@ import {
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { validateAddress, ValidationResult } from '@taquito/utils';
+import {
+  b58DecodeAndCheckPrefix,
+  PrefixV2,
+  publicKeyHashPrefixes,
+  validateAddress,
+  ValidationResult,
+} from '@taquito/utils';
 import { RevealEstimateError } from './errors';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
 import { Provider } from '../provider';
@@ -444,7 +450,6 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees to reveal the current account
-   * @remarks Reveal tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
    *
    * @param Estimate
@@ -455,6 +460,15 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       throw new RevealEstimateError();
     }
     if (await this.isAccountRevealRequired(publicKeyHash)) {
+      const [, pkhPrefix] = b58DecodeAndCheckPrefix(publicKeyHash, publicKeyHashPrefixes);
+      if (pkhPrefix === PrefixV2.BLS12_381PublicKeyHash) {
+        if (params && params.proof) {
+          b58DecodeAndCheckPrefix(params.proof, [PrefixV2.BLS12_381Signature]); // validate proof to be a bls signature
+        } else {
+          const { prefixSig } = await this.signer.provePossession!();
+          params = { ...params, proof: prefixSig };
+        }
+      }
       const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
       const preparedOperation = params
         ? await this.prepare.reveal(params)
@@ -464,6 +478,9 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         preparedOperation,
         protocolConstants
       );
+      if (pkhPrefix === PrefixV2.BLS12_381PublicKeyHash) {
+        estimateProperties[0].opSize *= 2; // tz4 fee estimates runs low by 130 comparing to octez-client which will rarely be accepted by rpc, bump up opSize by 1.8 times is to get what octez-client is but using 2 times to have some buffer
+      }
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
   }

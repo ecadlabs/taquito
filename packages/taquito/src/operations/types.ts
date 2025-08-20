@@ -247,12 +247,14 @@ export interface RPCRevealOperation {
   source?: string;
   gas_limit: number;
   storage_limit: number;
+  proof?: string;
 }
 
 export interface RevealParams {
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
+  proof?: string;
 }
 
 /**

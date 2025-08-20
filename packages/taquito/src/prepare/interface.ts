@@ -36,7 +36,6 @@ export interface PreparationProvider {
   /**
    *
    * @description Method to prepare a reveal operation
-   * @remarks Reveal tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @param params reveal operation parameters
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object

@@ -24,6 +24,9 @@ import {
   validateAddress,
   validateContractAddress,
   ValidationResult,
+  b58DecodeAndCheckPrefix,
+  publicKeyHashPrefixes,
+  PrefixV2,
 } from '@taquito/utils';
 import {
   InvalidAddressError,
@@ -177,13 +180,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
     const bigMapValue = block
       ? await this.context.readProvider.getBigMapValue(
-        { id: id.toString(), expr: encodedExpr },
-        block
-      )
+          { id: id.toString(), expr: encodedExpr },
+          block
+        )
       : await this.context.readProvider.getBigMapValue(
-        { id: id.toString(), expr: encodedExpr },
-        'head'
-      );
+          { id: id.toString(), expr: encodedExpr },
+          'head'
+        );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
@@ -558,13 +561,21 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   /**
    *
    * @description Reveal the public key of the current address. Will throw an error if the address is already revealed.
-   * @remarks Reveal tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An operation handle with the result from the rpc node
    *
    * @param RevealParams operation parameter
    */
   async reveal(params: RevealParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
+    const [, pkhPrefix] = b58DecodeAndCheckPrefix(publicKeyHash, publicKeyHashPrefixes);
+    if (pkhPrefix === PrefixV2.BLS12_381PublicKeyHash) {
+      if (params.proof) {
+        b58DecodeAndCheckPrefix(params.proof, [PrefixV2.BLS12_381Signature]); // validate proof to be a bls signature
+      } else {
+        const { prefixSig } = await this.signer.provePossession!();
+        params.proof = prefixSig;
+      }
+    }
     const estimateReveal = await this.estimator.reveal(params);
     if (estimateReveal) {
       const estimated = await this.estimate(params, async () => estimateReveal);

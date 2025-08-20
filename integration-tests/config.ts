@@ -61,7 +61,7 @@ export enum SignerType {
 interface ConfigWithSetup extends Config {
   lib: TezosToolkit;
   setup: (preferFreshKey?: boolean) => Promise<void>;
-  createAddress: () => Promise<TezosToolkit>;
+  createAddress: (prefix?: PrefixV2) => Promise<TezosToolkit>;
 }
 /**
  * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -323,7 +323,7 @@ export const CONFIGS = () => {
               }
             }
           },
-          createAddress: async () => {
+          createAddress: async (prefix: PrefixV2 = PrefixV2.P256SecretKey) => {
             const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
             setupForger(tezos, forger);
             configurePollingInterval(tezos, pollingIntervalMilliseconds);
@@ -331,7 +331,7 @@ export const CONFIGS = () => {
             const keyBytes = Buffer.alloc(32);
             nodeCrypto.randomFillSync(keyBytes);
 
-            const key = b58Encode(new Uint8Array(keyBytes), PrefixV2.P256SecretKey);
+            const key = b58Encode(new Uint8Array(keyBytes), prefix);
             await importKey(tezos, key);
 
             return tezos;

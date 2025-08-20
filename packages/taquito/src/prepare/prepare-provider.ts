@@ -65,6 +65,7 @@ import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
 import BigNumber from 'bignumber.js';
 import { BlockIdentifier } from '../read-provider/interface';
+import { b58DecodeAndCheckPrefix, PrefixV2, publicKeyHashPrefixes } from '@taquito/utils';
 
 interface Limits {
   fee?: number;
@@ -169,12 +170,17 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         if (!publicKey) {
           throw new PublicKeyNotFoundError(pkh);
         }
+        const [, pkhPrefix] = b58DecodeAndCheckPrefix(pkh, publicKeyHashPrefixes);
         ops.unshift(
           await createRevealOperation(
             {
               fee: getRevealFee(pkh),
               storageLimit: REVEAL_STORAGE_LIMIT,
               gasLimit: getRevealGasLimit(pkh),
+              proof:
+                pkhPrefix === PrefixV2.BLS12_381PublicKeyHash
+                  ? (await this.signer.provePossession!()).prefixSig
+                  : undefined,
             },
             publicKeyHash,
             publicKey
@@ -324,18 +330,26 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   /**
    *
    * @description Method to prepare a reveal operation
-   * @remarks Reveal tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async reveal({ fee, gasLimit, storageLimit }: RevealParams): Promise<PreparedOperation> {
+  async reveal({ fee, gasLimit, storageLimit, proof }: RevealParams): Promise<PreparedOperation> {
     const { pkh, publicKey } = await this.getKeys();
 
     if (!publicKey) {
       throw new PublicKeyNotFoundError(pkh);
     }
 
+    const [, pkhPrefix] = b58DecodeAndCheckPrefix(pkh, publicKeyHashPrefixes);
+    if (pkhPrefix === PrefixV2.BLS12_381PublicKeyHash) {
+      if (proof) {
+        b58DecodeAndCheckPrefix(proof, [PrefixV2.BLS12_381Signature]); // validate proof to be a bls signature
+      } else {
+        const { prefixSig } = await this.signer.provePossession!();
+        proof = prefixSig;
+      }
+    }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
@@ -345,6 +359,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         fee: mergedEstimates.fee,
         gasLimit: mergedEstimates.gasLimit,
         storageLimit: mergedEstimates.storageLimit,
+        proof,
       },
       pkh,
       publicKey
@@ -1162,12 +1177,17 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       if (!publicKey) {
         throw new PublicKeyNotFoundError(pkh);
       }
+      const [, pkhPrefix] = b58DecodeAndCheckPrefix(pkh, publicKeyHashPrefixes);
       ops.unshift(
         await createRevealOperation(
           {
             fee: getRevealFee(pkh),
             storageLimit: REVEAL_STORAGE_LIMIT,
             gasLimit: getRevealGasLimit(pkh),
+            proof:
+              pkhPrefix === PrefixV2.BLS12_381PublicKeyHash
+                ? (await this.signer.provePossession!()).prefixSig
+                : undefined,
           },
           pkh,
           publicKey

@@ -204,7 +204,6 @@ export interface ContractProvider extends StorageProvider {
   /**
    *
    * @description Reveal the current address. Will throw an error if the address is already revealed.
-   * @remarks Reveal tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An operation handle with the result from the rpc node
    *
    * @param Reveal operation parameter

@@ -1,7 +1,8 @@
 import { hash as blake2b } from '@stablelib/blake2b';
 import { PrefixV2, b58DecodeAndCheckPrefix, b58Encode } from '@taquito/utils';
 import elliptic from 'elliptic';
-import { SigningKey, SignResult } from './signer';
+import { SigningKey } from './key-interface';
+import { RawSignResult } from '@taquito/taquito';
 
 type Curve = 'p256' | 'secp256k1';
 
@@ -84,7 +85,7 @@ export class ECKey implements SigningKey {
    * @param bytes Bytes to sign
    * @param bytesHash Blake2b hash of the bytes to sign
    */
-  sign(bytes: Uint8Array): Promise<SignResult> {
+  sign(bytes: Uint8Array): Promise<RawSignResult> {
     const hash = blake2b(bytes, 32);
     const key = new elliptic.ec(this.#curve).keyFromPrivate(this.#key);
     const sig = key.sign(hash, { canonical: true });

@@ -164,7 +164,7 @@ export const createRegisterDelegateOperation = async (
 };
 
 export const createRevealOperation = async (
-  { fee, gasLimit, storageLimit }: RevealParams,
+  { fee, gasLimit, storageLimit, proof }: RevealParams,
   source: string,
   publicKey: string
 ) => {
@@ -175,6 +175,7 @@ export const createRevealOperation = async (
     source,
     gas_limit: gasLimit ?? getRevealGasLimit(source),
     storage_limit: storageLimit,
+    proof,
   } as RPCRevealOperation;
 };
 
