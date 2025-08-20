@@ -46,6 +46,7 @@ interface Config {
   knownTzip1216Contract: string;
   knownSaplingContract: string;
   knownViewContract: string;
+  knownTicketContract: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | SecretKeyConfig;
   networkType: NetworkType;
@@ -123,6 +124,7 @@ const defaultConfig = ({
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
     knownSaplingContract: process.env[`TEZOS_${networkName}_SAPLINGCONTRACT_ADDRESS`] || knownContracts.saplingContract,
     knownViewContract: process.env[`TEZOS_${networkName}_ON_CHAIN_VIEW_CONTRACT`] || knownContracts.onChainViewContractAddress,
+    knownTicketContract: process.env[`TEZOS_${networkName}_TICKET_CONTRACT`] || knownContracts.ticketContract,
     protocol: protocol,
     signerConfig: signerConfig,
     networkType: networkType
@@ -180,7 +182,7 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(rionetSecretKey);
+  providers.push(rionetSecretKey, seoulnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_RIONET_WITH_SECRET_KEY']) {
@@ -198,7 +200,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(rionetEphemeral);
+  providers.push(rionetEphemeral, seoulnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
@@ -288,6 +290,7 @@ export const CONFIGS = () => {
         knownTzip1216Contract,
         knownSaplingContract,
         knownViewContract,
+        knownTicketContract,
         signerConfig,
         networkType
       }) => {
@@ -310,6 +313,7 @@ export const CONFIGS = () => {
           knownTzip1216Contract,
           knownSaplingContract,
           knownViewContract,
+          knownTicketContract,
           signerConfig,
           networkType,
           setup: async (preferFreshKey: boolean = false) => {
