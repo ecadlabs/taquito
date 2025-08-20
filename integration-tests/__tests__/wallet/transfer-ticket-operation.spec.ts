@@ -28,9 +28,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
         const fundSender = await Tezos.contract.transfer({ to: senderPkh, amount: 5 });
         await fundSender.confirmation();
 
-        const ticketSendOrigination = await Tezos.contract.originate({ code: ticketsSendTz, storage: null });
-        await ticketSendOrigination.confirmation();
-
         ticketSendContract = await Tezos.contract.at(knownTicketContract);
         ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
 
