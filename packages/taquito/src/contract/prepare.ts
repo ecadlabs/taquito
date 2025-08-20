@@ -25,6 +25,8 @@ import {
   RPCProposalsOperation,
   UpdateConsensusKeyParams,
   RPCUpdateConsensusKeyOperation,
+  UpdateCompanionKeyParams,
+  RPCUpdateCompanionKeyOperation,
   SmartRollupAddMessagesParams,
   RPCSmartRollupAddMessagesOperation,
   SmartRollupOriginateParams,
@@ -289,6 +291,25 @@ export const createUpdateConsensusKeyOperation = async ({
     pk,
     proof,
   } as RPCUpdateConsensusKeyOperation;
+};
+
+export const createUpdateCompanionKeyOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  pk,
+  proof,
+}: UpdateCompanionKeyParams) => {
+  return {
+    kind: OpKind.UPDATE_COMPANION_KEY,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    pk,
+    proof,
+  } as RPCUpdateCompanionKeyOperation;
 };
 
 export const createSmartRollupAddMessagesOperation = async ({

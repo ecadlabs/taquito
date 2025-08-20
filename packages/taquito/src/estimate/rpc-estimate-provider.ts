@@ -14,6 +14,7 @@ import {
   TransferTicketParams,
   IncreasePaidStorageParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
@@ -577,6 +578,31 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.updateConsensusKey(params);
+
+    const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
+    if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      estimateProperties.shift();
+      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
+    }
+    return Estimate.createEstimateInstanceFromProperties(estimateProperties);
+  }
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an Update Companion Key operation
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   * @param Estimate
+   */
+  async updateCompanionKey(params: UpdateCompanionKeyParams) {
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix !== PrefixV2.BLS12_381PublicKey) {
+      throw new ProhibitedActionError('companion key must be a bls account');
+    }
+    if (!params.proof) {
+      throw new InvalidProofError('Proof is required to set a bls account as companion key ');
+    }
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const preparedOperation = await this.prepare.updateCompanionKey(params);
 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {

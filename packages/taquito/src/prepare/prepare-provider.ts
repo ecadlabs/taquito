@@ -16,6 +16,7 @@ import {
   TransferParams,
   OriginateParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
   BallotParams,
@@ -53,6 +54,7 @@ import {
   createRegisterGlobalConstantOperation,
   createOriginationOperation,
   createUpdateConsensusKeyOperation,
+  createUpdateCompanionKeyOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
   createBallotOperation,
@@ -263,6 +265,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         case OpKind.DELEGATION:
         case OpKind.REGISTER_GLOBAL_CONSTANT:
         case OpKind.UPDATE_CONSENSUS_KEY:
+        case OpKind.UPDATE_COMPANION_KEY:
         case OpKind.SMART_ROLLUP_ADD_MESSAGES:
         case OpKind.SMART_ROLLUP_ORIGINATE:
         case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
@@ -791,6 +794,55 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createUpdateConsensusKeyOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    this.#counters = {};
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare an update_companion_key operation
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  async updateCompanionKey(
+    { fee, storageLimit, gasLimit, ...rest }: UpdateCompanionKeyParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
+
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(rest.pk, publicKeyPrefixes);
+    if (pkPrefix !== PrefixV2.BLS12_381PublicKey) {
+      throw new ProhibitedActionError('companion key must be a bls account');
+    }
+    if (!rest.proof) {
+      throw new InvalidProofError('Proof is required to set a bls account as companion key ');
+    }
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+
+    const op = await createUpdateCompanionKeyOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });

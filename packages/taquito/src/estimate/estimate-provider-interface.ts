@@ -11,6 +11,7 @@ import {
   TransferTicketParams,
   IncreasePaidStorageParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
@@ -146,6 +147,15 @@ export interface EstimationProvider {
    * @param Estimate
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an Update Companion Key operation
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  updateCompanionKey(params: UpdateCompanionKeyParams): Promise<Estimate>;
 
   /**
    *
