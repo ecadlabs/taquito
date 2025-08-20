@@ -4,19 +4,17 @@
  */
 import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import {
-  b58cdecode,
-  b58cencode,
   buf2hex,
   hex2buf,
-  isValidPrefix,
   mergebuf,
-  prefix,
   verifySignature,
   validateKeyHash,
   ValidationResult,
-  invalidDetail,
+  PrefixV2,
+  b58DecodeAndCheckPrefix,
+  getPkhfromPk,
+  b58Encode,
 } from '@taquito/utils';
-import { hash } from '@stablelib/blake2b';
 import toBuffer from 'typedarray-to-buffer';
 import {
   BadSigningDataError,
@@ -30,6 +28,7 @@ import {
   InvalidKeyHashError,
   ProhibitedActionError,
   PublicKeyNotFoundError,
+  ParameterValidationError,
 } from '@taquito/core';
 
 interface PublicKeyResponse {
@@ -40,34 +39,11 @@ interface SignResponse {
   signature: string;
 }
 
-type curves = 'ed' | 'p2' | 'sp';
-
 export interface RemoteSignerOptions {
   headers?: { [key: string]: string };
 }
 
 export { VERSION } from './version';
-
-const pref = {
-  ed: {
-    pk: prefix['edpk'],
-    sk: prefix['edsk'],
-    pkh: prefix.tz1,
-    sig: prefix.edsig,
-  },
-  p2: {
-    pk: prefix['p2pk'],
-    sk: prefix['p2sk'],
-    pkh: prefix.tz3,
-    sig: prefix.p2sig,
-  },
-  sp: {
-    pk: prefix['sppk'],
-    sk: prefix['spsk'],
-    pkh: prefix.tz2,
-    sig: prefix.spsig,
-  },
-};
 
 export class RemoteSigner implements Signer {
   constructor(
@@ -78,7 +54,7 @@ export class RemoteSigner implements Signer {
   ) {
     const pkhValidation = validateKeyHash(this.pkh);
     if (pkhValidation !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(this.pkh, invalidDetail(pkhValidation));
+      throw new InvalidKeyHashError(this.pkh, pkhValidation);
     }
   }
 
@@ -134,18 +110,23 @@ export class RemoteSigner implements Signer {
         },
         watermarkedBytes
       );
-      const pref = signature.startsWith('sig')
-        ? signature.substring(0, 3)
-        : signature.substring(0, 5);
 
-      if (!isValidPrefix(pref)) {
-        throw new InvalidSignatureError(
-          signature,
-          invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` from a remote signer.`
-        );
-      }
-
-      const decoded = b58cdecode(signature, prefix[pref]);
+      const [decoded] = (() => {
+        try {
+          return b58DecodeAndCheckPrefix(signature, [
+            PrefixV2.GenericSignature,
+            PrefixV2.Secp256k1Signature,
+            PrefixV2.Ed25519Signature,
+            PrefixV2.P256Signature,
+          ]);
+        } catch (err: unknown) {
+          if (err instanceof ParameterValidationError) {
+            throw new InvalidSignatureError(signature, err.result);
+          } else {
+            throw err;
+          }
+        }
+      })();
 
       const pk = await this.publicKey();
       await this.verifyPublicKey(pk);
@@ -156,7 +137,7 @@ export class RemoteSigner implements Signer {
 
       return {
         bytes,
-        sig: b58cencode(decoded, prefix.sig),
+        sig: b58Encode(decoded, PrefixV2.GenericSignature),
         prefixSig: signature,
         sbytes: bytes + buf2hex(toBuffer(decoded)),
       };
@@ -175,12 +156,9 @@ export class RemoteSigner implements Signer {
   }
 
   async verifyPublicKey(publicKey: string) {
-    const curve = publicKey.substring(0, 2) as curves;
-    const _publicKey = b58cdecode(publicKey, pref[curve].pk);
-
-    const publicKeyHash = b58cencode(hash(_publicKey, 20), pref[curve].pkh);
-    if (publicKeyHash !== this.pkh) {
-      throw new PublicKeyVerificationError(publicKey, publicKeyHash, this.pkh);
+    const pkh = getPkhfromPk(publicKey);
+    if (this.pkh !== pkh) {
+      throw new PublicKeyVerificationError(publicKey, pkh, this.pkh);
     }
   }
 }

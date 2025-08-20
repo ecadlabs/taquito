@@ -19,6 +19,13 @@ export default ({ command }) => {
     server: {
       port: 3030
     },
+    optimizeDeps: {
+      include: ['@noble/curves'],
+      esbuildOptions: {
+        target: 'esnext'
+      }
+
+    },
     resolve: {
       alias: {
         // dedupe @airgap/beacon-sdk
