@@ -6,16 +6,18 @@ import {
   TokenValidationError,
 } from './token';
 import {
+  // b58DecodePublicKey,
+  // compareArrays,
   encodeKey,
   validatePublicKey,
   ValidationResult,
-  Prefix,
   b58cdecode,
   prefix,
+  Prefix, // TODO: will be removed once compare function is sorted
 } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
-const publicKeyPrefixLength = 4;
+const publicKeyPrefixLength = 4; // TODO: will be removed once compare function is sorted
 
 /**
  *  @category Error
@@ -23,7 +25,11 @@ const publicKeyPrefixLength = 4;
  */
 export class KeyValidationError extends TokenValidationError {
   name = 'KeyValidationError';
-  constructor(public value: any, public token: KeyToken, message: string) {
+  constructor(
+    public value: any,
+    public token: KeyToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -107,6 +113,11 @@ export class KeyToken extends ComparableToken {
   }
 
   compare(key1: string, key2: string): number {
+    //   const bytes1 = b58DecodePublicKey(key1, 'array');
+    //   const bytes2 = b58DecodePublicKey(key2, 'array');
+    //   return compareArrays(bytes1, bytes2);
+
+    // TODO: rolled back to previous compare logic for now until figured out proto.023-PtSeouLo.michelson_v1.unordered_map_literal rpc error hence currently doesn't support comparing BLS12_381PublicKey
     const keyPrefix1 = this.getPrefix(key1);
     const keyPrefix2 = this.getPrefix(key2);
 
@@ -127,10 +138,12 @@ export class KeyToken extends ComparableToken {
     return super.compare(key1, key2);
   }
 
+  // TODO: will be removed once compare function is sorted
   private getPrefix(val: string) {
     return val.substring(0, publicKeyPrefixLength);
   }
 
+  // TODO: will be removed once compare function is sorted
   private getP256PublicKeyComparableBytes(p2pk: string) {
     return b58cdecode(p2pk, prefix[Prefix.P2PK]).slice(1);
   }

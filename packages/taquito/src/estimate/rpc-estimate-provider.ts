@@ -23,7 +23,7 @@ import {
 } from '../operations/types';
 import { Estimate, EstimateProperties } from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { validateAddress, ValidationResult, invalidDetail } from '@taquito/utils';
+import { validateAddress, ValidationResult } from '@taquito/utils';
 import { RevealEstimateError } from './errors';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
 import { Provider } from '../provider';
@@ -181,11 +181,11 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   async transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams) {
     const toValidation = validateAddress(rest.to);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.to, invalidDetail(toValidation));
+      throw new InvalidAddressError(rest.to, toValidation);
     }
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(rest.source, sourceValidation);
     }
     if (rest.amount < 0) {
       throw new InvalidAmountError(rest.amount.toString());
@@ -217,7 +217,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   async stake({ fee, storageLimit, gasLimit, ...rest }: StakeParams) {
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(rest.source, sourceValidation);
     }
 
     if (!rest.to) {
@@ -257,7 +257,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   async unstake({ fee, storageLimit, gasLimit, ...rest }: UnstakeParams) {
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(rest.source, sourceValidation);
     }
 
     if (!rest.to) {
@@ -297,7 +297,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   async finalizeUnstake({ fee, storageLimit, gasLimit, ...rest }: FinalizeUnstakeParams) {
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(rest.source, sourceValidation);
     }
 
     if (!rest.to) {
@@ -338,11 +338,11 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   async transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams) {
     const destinationValidation = validateAddress(rest.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(rest.destination, destinationValidation);
     }
     const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(rest.source, sourceValidation);
     }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.transferTicket({
@@ -372,11 +372,11 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
     const sourceValidation = validateAddress(rest.source);
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(rest.source, sourceValidation);
     }
     const delegateValidation = validateAddress(rest.delegate ?? '');
     if (rest.delegate && delegateValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(rest.delegate, invalidDetail(delegateValidation));
+      throw new InvalidAddressError(rest.delegate, delegateValidation);
     }
 
     const preparedOperation = await this.prepare.delegation({

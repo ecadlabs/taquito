@@ -257,8 +257,8 @@ describe('SaplingToolkit', () => {
           memo: 'Taquito',
         },
       ])
-    ).rejects.toThrowError(
-      `Invalid address "tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z" with unsupported prefix expecting prefix zet1.`
+    ).rejects.toThrow(
+      `Invalid address "tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z"`
     );
   });
 
@@ -271,7 +271,7 @@ describe('SaplingToolkit', () => {
           memo: 'Taquitoooo',
         },
       ])
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       `Invalid memo "Taquitoooo" with length 10 expecting length to be less than 8`
     );
   });
@@ -501,8 +501,8 @@ describe('SaplingToolkit', () => {
         to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',
         amount: 8,
       })
-    ).rejects.toThrowError(
-      `Invalid public key hash "zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y" with unsupported prefix`
+    ).rejects.toThrow(
+      `Invalid public key hash "zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y"`
     );
   });
 
@@ -512,7 +512,7 @@ describe('SaplingToolkit', () => {
         to: 'tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh',
         amount: 10,
       })
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       'Unable to spend "10000000" mutez while the balance is only 8000000 mutez.'
     );
   });
@@ -632,8 +632,8 @@ describe('SaplingToolkit', () => {
           amount: 8,
         },
       ])
-    ).rejects.toThrowError(
-      `Invalid address "tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh" with unsupported prefix expecting prefix zet1`
+    ).rejects.toThrow(
+      `Invalid address "tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh"`
     );
   });
 
@@ -646,7 +646,7 @@ describe('SaplingToolkit', () => {
           memo: 'test1234566789',
         },
       ])
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       `Invalid memo "test1234566789" with length 14 expecting length to be less than 8`
     );
   });
@@ -660,7 +660,7 @@ describe('SaplingToolkit', () => {
           memo: 'test',
         },
       ])
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       'Unable to spend "10000000" mutez while the balance is only 8000000 mutez.'
     );
   });

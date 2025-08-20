@@ -62,6 +62,7 @@
     ]
   },
   "dependencies": {
+    "@noble/curves": "^1.9.6",
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.3",
     "@taquito/core": "^23.0.0-beta.0",

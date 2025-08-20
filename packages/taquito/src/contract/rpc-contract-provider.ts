@@ -21,7 +21,6 @@ import {
 } from '@taquito/rpc';
 import {
   encodeExpr,
-  invalidDetail,
   validateAddress,
   validateContractAddress,
   ValidationResult,
@@ -102,7 +101,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
     const contractValidation = validateContractAddress(contract);
     if (contractValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(contract, invalidDetail(contractValidation));
+      throw new InvalidContractAddressError(contract, contractValidation);
     }
     const script = await this.context.readProvider.getScript(contract, 'head');
     if (!schema) {
@@ -134,7 +133,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
     const contractValidation = validateContractAddress(contract);
     if (contractValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(contract, invalidDetail(contractValidation));
+      throw new InvalidContractAddressError(contract, contractValidation);
     }
     if (!schema) {
       schema = (await this.rpc.getContract(contract)).script;
@@ -178,13 +177,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
     const bigMapValue = block
       ? await this.context.readProvider.getBigMapValue(
-          { id: id.toString(), expr: encodedExpr },
-          block
-        )
+        { id: id.toString(), expr: encodedExpr },
+        block
+      )
       : await this.context.readProvider.getBigMapValue(
-          { id: id.toString(), expr: encodedExpr },
-          'head'
-        );
+        { id: id.toString(), expr: encodedExpr },
+        'head'
+      );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
@@ -315,11 +314,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   async setDelegate(params: DelegateParams) {
     const sourceValidation = validateAddress(params.source);
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
     const delegateValidation = validateAddress(params.delegate ?? '');
     if (params.delegate && delegateValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate, invalidDetail(delegateValidation));
+      throw new InvalidAddressError(params.delegate, delegateValidation);
     }
 
     // Since babylon delegation source cannot smart contract
@@ -378,11 +377,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   async transfer(params: TransferParams) {
     const toValidation = validateAddress(params.to);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.to, toValidation);
     }
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
     if (params.amount < 0) {
       throw new InvalidAmountError(params.amount.toString());
@@ -411,7 +410,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   async stake(params: StakeParams) {
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
 
     if (!params.to) {
@@ -451,7 +450,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   async unstake(params: UnstakeParams) {
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
 
     if (!params.to) {
@@ -489,7 +488,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   async finalizeUnstake(params: FinalizeUnstakeParams) {
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
 
     if (!params.to) {
@@ -531,11 +530,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   async transferTicket(params: TransferTicketParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -678,7 +677,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     const publicKeyHash = await this.signer.publicKeyHash();
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
     const source = params.source ?? publicKeyHash;
 
@@ -704,7 +703,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     const publicKeyHash = await this.signer.publicKeyHash();
     const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
     const source = params.source ?? publicKeyHash;
 
@@ -884,7 +883,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidContractAddressError(address, addressValidation);
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;

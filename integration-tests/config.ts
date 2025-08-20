@@ -1,7 +1,7 @@
 import { CompositeForger, RpcForger, TezosToolkit, Protocols, TaquitoLocalForger, PollingSubscribeProvider } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
-import { b58cencode, Prefix, prefix } from '@taquito/utils';
+import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
@@ -331,7 +331,7 @@ export const CONFIGS = () => {
             const keyBytes = Buffer.alloc(32);
             nodeCrypto.randomFillSync(keyBytes);
 
-            const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
+            const key = b58Encode(new Uint8Array(keyBytes), PrefixV2.P256SecretKey);
             await importKey(tezos, key);
 
             return tezos;

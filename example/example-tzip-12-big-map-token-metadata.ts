@@ -1,6 +1,6 @@
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { importKey, InMemorySigner } from '@taquito/signer';
-import { b58cencode, stringToBytes, Prefix, prefix } from '@taquito/utils';
+import { b58Encode, stringToBytes, PrefixV2 } from '@taquito/utils';
 import { fa2TokenFactory } from '../integration-tests/data/fa2-token-factory';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -14,21 +14,21 @@ async function createAddress() {
   const keyBytes = Buffer.alloc(32);
   nodeCrypto.randomFillSync(keyBytes)
 
-  const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
+  const key = b58Encode(new Uint8Array(keyBytes), PrefixV2.P256SecretKey);
   await importKey(tezos, key);
 
   return tezos;
 }
 
 async function example() {
-	
+
     const signer = new InMemorySigner('edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca');
     const tezos = new TezosToolkit(provider);
     tezos.setSignerProvider(signer);
-  
+
   try {
     console.log('Deploying Tzip12BigMapsTokenMetadata contract...');
-    
+
     const LocalTez1 = await createAddress();
 			const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
 			const LocalTez2 = await createAddress();

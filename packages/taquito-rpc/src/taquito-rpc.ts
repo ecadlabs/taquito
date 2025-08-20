@@ -76,7 +76,7 @@ import {
   validateContractAddress,
   ValidationResult,
   validateProtocol,
-  invalidDetail,
+  InvalidProtocolHashError,
 } from '@taquito/utils';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
@@ -114,7 +114,7 @@ export class RpcClient implements RpcClientInterface {
     protected url: string,
     protected chain: string = defaultChain,
     protected httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+  ) { }
 
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -130,14 +130,14 @@ export class RpcClient implements RpcClientInterface {
   private validateAddress(address: string) {
     const addressValidation = validateAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidAddressError(address, addressValidation);
     }
   }
 
   private validateContract(address: string) {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidContractAddressError(address, addressValidation);
     }
   }
 
@@ -346,24 +346,24 @@ export class RpcClient implements RpcClientInterface {
     return response === null
       ? null
       : {
-          finalizable: response.finalizable.map(({ amount, ...rest }) => {
+        finalizable: response.finalizable.map(({ amount, ...rest }) => {
+          const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
+          return {
+            ...rest,
+            amount: castedToBigNumber.amount,
+          };
+        }),
+        unfinalizable: {
+          delegate: response.unfinalizable.delegate,
+          requests: response.unfinalizable.requests.map(({ amount, cycle }) => {
             const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
             return {
-              ...rest,
+              cycle,
               amount: castedToBigNumber.amount,
             };
           }),
-          unfinalizable: {
-            delegate: response.unfinalizable.delegate,
-            requests: response.unfinalizable.requests.map(({ amount, cycle }) => {
-              const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
-              return {
-                cycle,
-                amount: castedToBigNumber.amount,
-              };
-            }),
-          },
-        };
+        },
+      };
   }
 
   /**
@@ -1195,7 +1195,7 @@ export class RpcClient implements RpcClientInterface {
     if (protocol) {
       const protocolValidation = validateProtocol(protocol);
       if (protocolValidation !== ValidationResult.VALID) {
-        throw new Error(`Invalid protocol hash "${protocol}" ${invalidDetail(protocolValidation)}`);
+        throw new InvalidProtocolHashError(protocol, protocolValidation);
       }
     }
     return this.httpBackend.createRequest<ProtocolActivationsResponse>({
@@ -1215,9 +1215,7 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/used_space`
-      ),
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/used_space`),
       method: 'GET',
     });
   }
@@ -1233,9 +1231,7 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/paid_space`
-      ),
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/paid_space`),
       method: 'GET',
     });
   }
@@ -1255,9 +1251,7 @@ export class RpcClient implements RpcClientInterface {
   ): Promise<string> {
     return this.httpBackend.createRequest<string>(
       {
-        url: this.createURL(
-          `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/ticket_balance`
-        ),
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/ticket_balance`),
         method: 'POST',
       },
       ticket
@@ -1275,9 +1269,7 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<AllTicketBalances> {
     return this.httpBackend.createRequest<AllTicketBalances>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
-      ),
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`),
       method: 'GET',
     });
   }
@@ -1291,9 +1283,7 @@ export class RpcClient implements RpcClientInterface {
     block,
   }: { block: string } = defaultRPCOptions): Promise<AILaunchCycleResponse> {
     return this.httpBackend.createRequest<AILaunchCycleResponse>({
-      url: this.createURL(
-        `/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`
-      ),
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`),
       method: 'GET',
     });
   }
