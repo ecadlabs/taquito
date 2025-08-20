@@ -35,7 +35,13 @@ import {
 import { PreparationProvider, PreparedOperation } from './interface';
 import { REVEAL_STORAGE_LIMIT, Protocols, getRevealFee, getRevealGasLimit } from '../constants';
 import { RPCResponseError } from '../errors';
-import { PublicKeyNotFoundError, InvalidOperationKindError, DeprecationError } from '@taquito/core';
+import {
+  PublicKeyNotFoundError,
+  InvalidOperationKindError,
+  DeprecationError,
+  InvalidProofError,
+  ProhibitedActionError,
+} from '@taquito/core';
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -65,7 +71,12 @@ import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
 import BigNumber from 'bignumber.js';
 import { BlockIdentifier } from '../read-provider/interface';
-import { b58DecodeAndCheckPrefix, PrefixV2, publicKeyHashPrefixes } from '@taquito/utils';
+import {
+  b58DecodeAndCheckPrefix,
+  PrefixV2,
+  publicKeyHashPrefixes,
+  publicKeyPrefixes,
+} from '@taquito/utils';
 
 interface Limits {
   fee?: number;
@@ -348,6 +359,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       } else {
         const { prefixSig } = await this.signer.provePossession!();
         proof = prefixSig;
+      }
+    } else {
+      if (proof) {
+        throw new ProhibitedActionError('Proof field is only allowed to reveal a bls account ');
       }
     }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -750,7 +765,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   /**
    *
    * @description Method to prepare an update_consensus_key operation
-   * @remarks updateConsensusKey to a tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @param operation RPCOperation object or RPCOperation array
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
@@ -761,6 +775,18 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   ): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(rest.pk, publicKeyPrefixes);
+    if (pkPrefix === PrefixV2.BLS12_381PublicKey) {
+      if (!rest.proof) {
+        throw new InvalidProofError('Proof is required to set a bls account as consensus key ');
+      }
+    } else {
+      if (rest.proof) {
+        throw new ProhibitedActionError(
+          'Proof field is only allowed for a bls account as consensus key'
+        );
+      }
+    }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 

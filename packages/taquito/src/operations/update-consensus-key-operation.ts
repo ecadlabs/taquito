@@ -3,6 +3,7 @@ import {
   OperationContentsAndResultUpdateConsensusKey,
   OperationContentsUpdateConsensusKey,
 } from '@taquito/rpc';
+import { ProhibitedActionError } from '@taquito/core';
 import { Context } from '../context';
 import { Operation } from './operations';
 import {
@@ -63,6 +64,14 @@ export class UpdateConsensusKeyOperation
 
   get pk() {
     return this.params.pk;
+  }
+
+  get proof() {
+    if (this.params.proof) {
+      return this.params.proof;
+    } else {
+      throw new ProhibitedActionError('Only updating consensus key to a BLS account has proof');
+    }
   }
 
   get consumedMilliGas() {

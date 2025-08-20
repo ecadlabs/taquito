@@ -512,6 +512,7 @@ export interface UpdateConsensusKeyParams {
   gasLimit?: number;
   storageLimit?: number;
   pk: string;
+  proof?: string;
 }
 
 export interface RPCUpdateConsensusKeyOperation {
@@ -521,6 +522,7 @@ export interface RPCUpdateConsensusKeyOperation {
   gas_limit: number;
   storage_limit: number;
   pk: string;
+  proof?: string;
 }
 
 export interface SmartRollupAddMessagesParams {

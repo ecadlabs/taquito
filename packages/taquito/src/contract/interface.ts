@@ -281,7 +281,6 @@ export interface ContractProvider extends StorageProvider {
   /**
    *
    * @description Update consensus key
-   * @remarks updateConsensusKey to a tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An operation handle with the result from the RPC node
    *
    * @param UpdateConsensusKeyParams UpdateConsensusKey operation parameter

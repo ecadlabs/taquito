@@ -27,13 +27,16 @@ import {
   b58DecodeAndCheckPrefix,
   publicKeyHashPrefixes,
   PrefixV2,
+  publicKeyPrefixes,
 } from '@taquito/utils';
 import {
   InvalidAddressError,
+  InvalidProofError,
   InvalidContractAddressError,
   InvalidAmountError,
   InvalidFinalizeUnstakeAmountError,
   InvalidStakingAddressError,
+  ProhibitedActionError,
 } from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -575,6 +578,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
         const { prefixSig } = await this.signer.provePossession!();
         params.proof = prefixSig;
       }
+    } else {
+      if (params.proof) {
+        throw new ProhibitedActionError('Proof field is only allowed to reveal a bls account ');
+      }
     }
     const estimateReveal = await this.estimator.reveal(params);
     if (estimateReveal) {
@@ -730,13 +737,24 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   /**
    *
    * @description Updates the consensus key of the baker to public_key starting from the current cycle plus PRESERVED_CYCLES + 1
-   * @remarks updateConsensusKey to a tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An operation handle with the result from the rpc node
    *
    * @param UpdateConsensusKeyParams
    */
   async updateConsensusKey(params: UpdateConsensusKeyParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix === PrefixV2.BLS12_381PublicKey) {
+      if (!params.proof) {
+        throw new InvalidProofError('Proof is required to set a bls account as consensus key ');
+      }
+    } else {
+      if (params.proof) {
+        throw new ProhibitedActionError(
+          'Proof field is only allowed for a bls account as consensus key'
+        );
+      }
+    }
     const estimate = await this.estimate(
       params,
       this.estimator.updateConsensusKey.bind(this.estimator)

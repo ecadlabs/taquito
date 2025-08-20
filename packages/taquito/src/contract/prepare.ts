@@ -278,6 +278,7 @@ export const createUpdateConsensusKeyOperation = async ({
   gasLimit,
   storageLimit,
   pk,
+  proof,
 }: UpdateConsensusKeyParams) => {
   return {
     kind: OpKind.UPDATE_CONSENSUS_KEY,
@@ -286,6 +287,7 @@ export const createUpdateConsensusKeyOperation = async ({
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     pk,
+    proof,
   } as RPCUpdateConsensusKeyOperation;
 };
 

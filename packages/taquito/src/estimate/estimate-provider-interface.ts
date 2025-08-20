@@ -141,7 +141,6 @@ export interface EstimationProvider {
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees for an Update Consensus Key operation
-   * @remarks updateConsensusKey to a tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
    * @param Estimate

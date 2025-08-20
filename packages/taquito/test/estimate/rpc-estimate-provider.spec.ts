@@ -1213,7 +1213,7 @@ describe('RPCEstimateProvider test wallet', () => {
       cost_per_byte: new BigNumber(1000),
     });
 
-    mockWalletProvider.getPKH.mockResolvedValue('test_wallet_pub_key_hash');
+    mockWalletProvider.getPKH.mockResolvedValue('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
     const context = new Context(mockRpcClient as any);
     context.forger = mockForger;
     context.walletProvider = mockWalletProvider as any;

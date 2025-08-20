@@ -27,6 +27,7 @@ import {
   b58DecodeAndCheckPrefix,
   PrefixV2,
   publicKeyHashPrefixes,
+  publicKeyPrefixes,
   validateAddress,
   ValidationResult,
 } from '@taquito/utils';
@@ -35,7 +36,13 @@ import { ContractMethod, ContractMethodObject, ContractProvider } from '../contr
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
-import { InvalidAddressError, InvalidAmountError, InvalidStakingAddressError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidProofError,
+  InvalidAmountError,
+  InvalidStakingAddressError,
+  ProhibitedActionError,
+} from '@taquito/core';
 
 // stub signature that won't be verified by tezos rpc simulate_operation
 const STUB_SIGNATURE =
@@ -468,6 +475,10 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
           const { prefixSig } = await this.signer.provePossession!();
           params = { ...params, proof: prefixSig };
         }
+      } else {
+        if (params && params.proof) {
+          throw new ProhibitedActionError('Proof field is only allowed to reveal a bls account ');
+        }
       }
       const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
       const preparedOperation = params
@@ -548,11 +559,22 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees for an Update Consensus Key operation
-   * @remarks updateConsensusKey to a tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    * @param Estimate
    */
   async updateConsensusKey(params: UpdateConsensusKeyParams) {
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix === PrefixV2.BLS12_381PublicKey) {
+      if (!params.proof) {
+        throw new InvalidProofError('Proof is required to set a bls account as consensus key ');
+      }
+    } else {
+      if (params.proof) {
+        throw new ProhibitedActionError(
+          'Proof field is only allowed for a bls account as consensus key'
+        );
+      }
+    }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.updateConsensusKey(params);
 
