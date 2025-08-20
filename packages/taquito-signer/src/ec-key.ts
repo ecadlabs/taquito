@@ -21,16 +21,8 @@ const pref: CurvePrefix = {
     sk: PrefixV2.P256SecretKey,
     pkh: PrefixV2.P256PublicKeyHash,
     sig: PrefixV2.P256Signature,
-    pk: PrefixV2.P256PublicKey,
-    sk: PrefixV2.P256SecretKey,
-    pkh: PrefixV2.P256PublicKeyHash,
-    sig: PrefixV2.P256Signature,
   },
   secp256k1: {
-    pk: PrefixV2.Secp256k1PublicKey,
-    sk: PrefixV2.Secp256k1SecretKey,
-    pkh: PrefixV2.Secp256k1PublicKeyHash,
-    sig: PrefixV2.Secp256k1Signature,
     pk: PrefixV2.Secp256k1PublicKey,
     sk: PrefixV2.Secp256k1SecretKey,
     pkh: PrefixV2.Secp256k1PublicKeyHash,
@@ -41,10 +33,6 @@ const pref: CurvePrefix = {
 /**
  * @description Provide signing logic for elliptic curve based key (tz2, tz3)
  */
-export class ECKey implements SigningKey {
-  #key: Uint8Array;
-  #publicKey: Uint8Array;
-  #curve: Curve;
 export class ECKey implements SigningKey {
   #key: Uint8Array;
   #publicKey: Uint8Array;
