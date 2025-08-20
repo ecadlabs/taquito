@@ -12,6 +12,8 @@ CONFIGS().forEach(({ setup, rpc, lib }) => {
       setup(true)
       if (rpc.includes('rio')) {
         Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/rionet' })
+      } else if (rpc.includes('seoul')) {
+        Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/seoulnet' })
       } else if (rpc.includes('ghost')) {
         Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/ghostnet' })
       }

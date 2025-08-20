@@ -37,6 +37,7 @@ import {
   AttestationWithDalSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
+  UpdateCompanionKeySchema,
   DrainDelegateSchema,
   ManagerOperationSchema,
   operationEncoder,
@@ -112,6 +113,8 @@ encoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: any) =>
   schemaEncoder(encoders)(IncreasePaidStorageSchema)(val);
 encoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: any) =>
   schemaEncoder(encoders)(UpdateConsensusKeySchema)(val);
+encoders[CODEC.OP_UPDATE_COMPANION_KEY] = (val: any) =>
+  schemaEncoder(encoders)(UpdateCompanionKeySchema)(val);
 encoders[CODEC.OP_DRAIN_DELEGATE] = (val: any) => schemaEncoder(encoders)(DrainDelegateSchema)(val);
 encoders[CODEC.OP_SMART_ROLLUP_ORIGINATE] = (val: any) =>
   schemaEncoder(encoders)(SmartRollupOriginateSchema)(val);

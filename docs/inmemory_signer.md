@@ -72,17 +72,17 @@ InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNF
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
-When required, Taquito offers the `b58cencode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
+When required, Taquito offers the `b58Encode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
 
 ```js live noInline
-// import { b58cencode, prefix, Prefix } from '@taquito/utils';
+// import { b58Encode, PrefixV2 } from '@taquito/utils';
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-const b58encodedSecret = b58cencode(
+const b58encodedSecret = b58Encode(
   '7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d',
-  prefix[Prefix.P2SK]
+  PrefixV2.P256SecretKey
 );
 console.log(
   `The secret is encoded in base58 and the prefix "p2sk" is added to it: ${b58encodedSecret}.`
