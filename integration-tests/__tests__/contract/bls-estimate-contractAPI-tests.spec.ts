@@ -49,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
     seoulnetAndAlpha('verify that estimate.transfer to unrevealed account fee and gas is sufficient', async () => {
       const estimated = await Bls1.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1 })
 
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(654) // taquito 643
+      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(654)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(3674)
 
       const transferOp = await Bls1.contract.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1 })
@@ -82,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
 
     seoulnetAndAlpha('verify that estimate.setDelegate fee and gas is sufficient', async () => {
       const estimated = await Bls1.estimate.setDelegate({ delegate: knownBaker, source: await Bls1.signer.publicKeyHash() })
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(450) // taquito *2.5 665
+      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(450)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1674)
 
       const setDelegateOp = await Bls1.contract.setDelegate({ delegate: knownBaker, source: await Bls1.signer.publicKeyHash() })
