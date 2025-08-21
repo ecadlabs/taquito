@@ -18,8 +18,9 @@ import pbkdf2 from 'pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
-import { InvalidKeyError } from '@taquito/core';
-import { SigningKey, SignResult as RawSignResult, isPOP } from './signer';
+import { InvalidKeyError, ProhibitedActionError } from '@taquito/core';
+import { SigningKey, isPOP } from './key-interface';
+import { SignResult, RawSignResult, Signer } from '@taquito/taquito';
 import { BLSKey } from './bls-key';
 
 export * from './import-key';
@@ -27,20 +28,11 @@ export { VERSION } from './version';
 export * from './derivation-tools';
 export * from './helpers';
 export { InvalidPassphraseError } from './errors';
-export { SignResult as RawSignResult } from './signer';
-
 export interface FromMnemonicParams {
   mnemonic: string;
   password?: string;
   derivationPath?: string;
   curve?: Curves;
-}
-
-export interface SignResult {
-  bytes: string;
-  sig: string;
-  prefixSig: string;
-  sbytes: string;
 }
 
 type KeyPrefix =
@@ -60,7 +52,7 @@ type KeyPrefix =
  * @warn If running in production and dealing with tokens that have real value, it is strongly recommended to use a HSM backed signer so that private key material is not stored in memory or on disk
  * @throws {@link InvalidMnemonicError}
  */
-export class InMemorySigner {
+export class InMemorySigner implements Signer {
   #key!: SigningKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
@@ -199,15 +191,21 @@ export class InMemorySigner {
       bytes: buf2hex(msg),
       sig: signature,
       prefixSig: prefixedSignature,
-      sbytes: buf2hex(mergebuf(msg, rawSignature)),
+      sbytes: buf2hex(
+        mergebuf(
+          msg,
+          // bls only Signature_prefix ff03 ref:https://octez.tezos.com/docs/shell/p2p_api.html#signature-prefix-tag-255 & https://octez.tezos.com/docs/shell/p2p_api.html#bls-prefix-tag-3
+          isPOP(this.#key) ? mergebuf(new Uint8Array([255, 3]), rawSignature) : rawSignature
+        )
+      ),
     };
   }
 
-  async provePossession(): Promise<RawSignResult | null> {
+  async provePossession(): Promise<RawSignResult> {
     if (isPOP(this.#key)) {
       return this.#key.provePossession();
     } else {
-      return null;
+      throw new ProhibitedActionError('Only BLS keys can prove possession');
     }
   }
 

@@ -11,6 +11,7 @@ import {
   TransferParams,
   TransferTicketParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   ActivationParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
@@ -36,7 +37,6 @@ export interface PreparationProvider {
   /**
    *
    * @description Method to prepare a reveal operation
-   * @remarks Reveal tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @param params reveal operation parameters
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
@@ -81,12 +81,19 @@ export interface PreparationProvider {
 
   /**
    * @description Method to prepare an update_consensus_key operation
-   * @remarks updateConsensusKey to a tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @param params updateConsensusKey operation parameters
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<PreparedOperation>;
+
+  /**
+   * @description Method to prepare an update_companion_key operation
+   * @param params updateCompanionKey operation parameters
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  updateCompanionKey(params: UpdateCompanionKeyParams): Promise<PreparedOperation>;
 
   /**
    *

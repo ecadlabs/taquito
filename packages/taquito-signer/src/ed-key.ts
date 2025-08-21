@@ -1,7 +1,8 @@
 import { hash as blake2b } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
 import { PrefixV2, b58DecodeAndCheckPrefix, b58Encode } from '@taquito/utils';
-import { SigningKey, SignResult } from './signer';
+import { SigningKey } from './key-interface';
+import { RawSignResult } from '@taquito/taquito';
 
 /**
  * @description Provide signing logic for ed25519 curve based key (tz1)
@@ -48,7 +49,7 @@ export class EdKey implements SigningKey {
    * @param bytes Bytes to sign
    * @param bytesHash Blake2b hash of the bytes to sign
    */
-  async sign(bytes: Uint8Array): Promise<SignResult> {
+  async sign(bytes: Uint8Array): Promise<RawSignResult> {
     const hash = blake2b(bytes, 32);
     const signature = sign(this.#secretKey, hash);
 

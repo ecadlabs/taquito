@@ -19,6 +19,7 @@ import {
   TransferTicketNoReveal,
   TransferTicketWithReveal,
   updateConsensusKeyNoReveal,
+  updateCompanionKeyNoReveal,
   smartRollupAddMessagesNoReveal,
   smartRollupOriginateWithReveal,
   smartRollupExecuteOutboxMessageNoReveal,
@@ -1213,7 +1214,7 @@ describe('RPCEstimateProvider test wallet', () => {
       cost_per_byte: new BigNumber(1000),
     });
 
-    mockWalletProvider.getPKH.mockResolvedValue('test_wallet_pub_key_hash');
+    mockWalletProvider.getPKH.mockResolvedValue('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
     const context = new Context(mockRpcClient as any);
     context.forger = mockForger;
     context.walletProvider = mockWalletProvider as any;
@@ -1484,6 +1485,21 @@ describe('RPCEstimateProvider test wallet', () => {
       mockRpcClient.simulateOperation.mockResolvedValue(updateConsensusKeyNoReveal);
       const estimate = await estimateProvider.updateConsensusKey({
         pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+      });
+
+      expect(estimate.gasLimit).toEqual(1100);
+      expect(estimate.storageLimit).toEqual(0);
+      expect(estimate.suggestedFeeMutez).toEqual(297);
+    });
+  });
+
+  describe('updateCompanionKey', () => {
+    it('should return estimate for updateCompanionKey operation', async () => {
+      mockRpcClient.simulateOperation.mockResolvedValue(updateCompanionKeyNoReveal);
+      const estimate = await estimateProvider.updateCompanionKey({
+        pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+        proof:
+          'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
       });
 
       expect(estimate.gasLimit).toEqual(1100);

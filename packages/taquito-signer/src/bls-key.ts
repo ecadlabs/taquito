@@ -7,7 +7,8 @@ import {
 } from '@taquito/utils';
 import { bls12_381 } from '@noble/curves/bls12-381';
 import { hash } from '@stablelib/blake2b';
-import { SigningKeyWithProofOfPossession, SignResult } from './signer';
+import { SigningKeyWithProofOfPossession } from './key-interface';
+import { RawSignResult } from '@taquito/taquito';
 
 const bls = bls12_381.longSignatures; // AKA MinPK
 
@@ -39,7 +40,7 @@ export class BLSKey implements SigningKeyWithProofOfPossession {
     return new Uint8Array(this.#key).reverse();
   }
 
-  private signDst(message: Uint8Array, dst: string): Promise<SignResult> {
+  private signDst(message: Uint8Array, dst: string): Promise<RawSignResult> {
     const point = bls.hash(message, dst);
     const sig = bls.sign(point, this.sk()).toBytes();
     return Promise.resolve({
@@ -49,11 +50,11 @@ export class BLSKey implements SigningKeyWithProofOfPossession {
     });
   }
 
-  sign(message: Uint8Array): Promise<SignResult> {
+  sign(message: Uint8Array): Promise<RawSignResult> {
     return this.signDst(message, BLS12_381_DST);
   }
 
-  provePossession(): Promise<SignResult> {
+  provePossession(): Promise<RawSignResult> {
     return this.signDst(this.#publicKey, POP_DST);
   }
 

@@ -1,7 +1,7 @@
 import {
   OperationContentsAndResult,
-  OperationContentsAndResultUpdateConsensusKey,
-  OperationContentsUpdateConsensusKey,
+  OperationContentsAndResultUpdateCompanionKey,
+  OperationContentsUpdateCompanionKey,
 } from '@taquito/rpc';
 import { ProhibitedActionError } from '@taquito/core';
 import { Context } from '../context';
@@ -15,16 +15,16 @@ import {
 
 /**
  *
- * @description UpdateConsensusKeyOperation provides utility to fetch properties for Operation of kind UpdateConsensusKey
+ * @description UpdateCompanionKeyOperation provides utility to fetch properties for Operation of kind UpdateCompanionKey
  *
  */
-export class UpdateConsensusKeyOperation
+export class UpdateCompanionKeyOperation
   extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
 {
   constructor(
     hash: string,
-    private readonly params: OperationContentsUpdateConsensusKey,
+    private readonly params: OperationContentsUpdateCompanionKey,
     public readonly source: string,
     raw: ForgedBytes,
     results: OperationContentsAndResult[],
@@ -34,15 +34,15 @@ export class UpdateConsensusKeyOperation
   }
 
   get operationResults() {
-    const updateConsensusKeyOp =
+    const updateCompanionKeyOp =
       Array.isArray(this.results) &&
       (this.results.find(
-        (op) => op.kind === 'update_consensus_key'
-      ) as OperationContentsAndResultUpdateConsensusKey);
+        (op) => op.kind === 'update_companion_key'
+      ) as OperationContentsAndResultUpdateCompanionKey);
     const result =
-      updateConsensusKeyOp &&
-      updateConsensusKeyOp.metadata &&
-      updateConsensusKeyOp.metadata.operation_result;
+      updateCompanionKeyOp &&
+      updateCompanionKeyOp.metadata &&
+      updateCompanionKeyOp.metadata.operation_result;
     return result ? result : undefined;
   }
 
@@ -70,7 +70,7 @@ export class UpdateConsensusKeyOperation
     if (this.params.proof) {
       return this.params.proof;
     } else {
-      throw new ProhibitedActionError('Only updating consensus key to a BLS account has proof');
+      throw new ProhibitedActionError('Only updating companion key to a BLS account has proof');
     }
   }
 

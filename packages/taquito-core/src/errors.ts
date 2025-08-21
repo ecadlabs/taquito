@@ -122,6 +122,16 @@ export class InvalidAddressError extends ParameterValidationError {
   }
 }
 
+export class InvalidProofError extends ParameterValidationError {
+  constructor(
+    public readonly proof: string,
+    errorDetail?: string | ValidationResult
+  ) {
+    super(`Invalid proof "${proof}"`, errorDetail);
+    this.name = this.constructor.name;
+  }
+}
+
 export class InvalidStakingAddressError extends ParameterValidationError {
   constructor(
     public readonly address: string,
