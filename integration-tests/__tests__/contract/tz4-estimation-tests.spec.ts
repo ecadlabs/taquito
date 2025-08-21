@@ -9,7 +9,7 @@ import { PrefixV2 } from '@taquito/utils';
 import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test;
+  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
 
   const Tezos = lib;
   let pkh: string;
