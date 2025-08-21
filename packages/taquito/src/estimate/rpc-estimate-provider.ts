@@ -199,7 +199,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (
       (preparedOperation.opOb.contents[0] as OperationContentsOrigination).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 times will get octez-client has
+      estimateProperties[0].opSize *= 1.2; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -239,7 +239,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (
       (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -284,7 +284,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (
       (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -329,7 +329,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (
       (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -375,7 +375,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (
       (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -416,7 +416,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         'tz4'
       )
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -456,7 +456,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (
       (preparedOperation.opOb.contents[0] as OperationContentsDelegation).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -473,6 +473,13 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     const estimateProperties = await this.calculateEstimates(preparedOperations, protocolConstants);
 
+    preparedOperations.opOb.contents.forEach((content) => {
+      if (content.kind !== 'reveal') {
+        if ((content as any).source.startsWith('tz4')) {
+          estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
+        }
+      }
+    });
     return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
   }
 
@@ -506,7 +513,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (
       (preparedOperation.opOb.contents[0] as OperationContentsDelegation).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -549,7 +556,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       if (
         (preparedOperation.opOb.contents[0] as OperationContentsReveal).source.startsWith('tz4')
       ) {
-        estimateProperties[0].opSize *= 1.8; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.8 times will get octez-client has been made 1.9 times with some buffer
+        estimateProperties[0].opSize *= 1.8; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.8 to be like octez-client
       }
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
@@ -588,7 +595,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         preparedOperation.opOb.contents[0] as OperationContentsRegisterGlobalConstant
       ).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -624,7 +631,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         preparedOperation.opOb.contents[0] as OperationContentsIncreasePaidStorage
       ).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -661,7 +668,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         'tz4'
       )
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -693,7 +700,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         'tz4'
       )
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -721,7 +728,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         preparedOperation.opOb.contents[0] as OperationContentsSmartRollupAddMessages
       ).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -747,14 +754,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         preparedOperation.opOb.contents[0] as OperationContentsSmartRollupOriginate
       ).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
-    }
-    if (
-      (
-        preparedOperation.opOb.contents[0] as OperationContentsSmartRollupOriginate
-      ).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -802,7 +802,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     if (
       (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
     ) {
-      estimateProperties[0].opSize *= 1.2; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 times will get octez-client has
+      estimateProperties[0].opSize *= 1.1; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.1 to be like octez-client
       estimateProperties[0].milligasLimit += 100000; // add 100 units for safety
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
