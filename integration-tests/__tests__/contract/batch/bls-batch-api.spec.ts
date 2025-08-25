@@ -4,6 +4,8 @@ import { ligoSample, ligoSampleMichelson } from "../../../data/ligo-simple-contr
 import { OpKind, Protocols } from "@taquito/taquito";
 import { TezosToolkit } from '@taquito/taquito';
 import { PrefixV2 } from '@taquito/utils';
+// import { MANAGER_LAMBDA } from "@taquito/taquito";
+// import { managerCode } from "../../../data/manager_code";
 
 CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
   const Tezos = lib;
@@ -108,7 +110,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
       expect(op.status).toEqual('applied')
     })
 
-    // TODO: need to optimize for bls keys fee for originating managerCode smart contract
+    // TODO: TezosOperationError: {"prim":"Unit"} only to bls source
     // seoulnetAndAlpha('Verify batch transfer with chained contract calls', async () => {
     //   const op = await Bls.contract.originate({
     //     balance: "3",
@@ -129,7 +131,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
     //   expect(batchOp.status).toEqual('applied')
     // });
 
-    // TODO: need to optimize for bls keys fee for originating managerCode smart contract
+    // TODO: TezosOperationError: {"prim":"Unit"} only to bls source
     // seoulnetAndAlpha('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
     //   const op = await Bls.contract.originate({
     //     balance: "1",

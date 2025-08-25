@@ -193,7 +193,7 @@ describe('RPCEstimateProvider test signer', () => {
         amount: 2,
       });
 
-      expect(estimate.gasLimit).toEqual(3730);
+      expect(estimate.gasLimit).toEqual(3630);
     });
 
     it('should return estimates for unstake pseudo-operation', async () => {
@@ -203,7 +203,7 @@ describe('RPCEstimateProvider test signer', () => {
         amount: 2,
       });
 
-      expect(estimate.gasLimit).toEqual(4350);
+      expect(estimate.gasLimit).toEqual(4250);
     });
 
     it('should return estimates for finalize_unstake pseudo-operation', async () => {
@@ -211,7 +211,7 @@ describe('RPCEstimateProvider test signer', () => {
 
       const estimate = await estimateProvider.finalizeUnstake({});
 
-      expect(estimate.gasLimit).toEqual(1629);
+      expect(estimate.gasLimit).toEqual(1529);
     });
 
     it('should return estimates for finalize_unstake pseudo-operation with different source and destination', async () => {
@@ -221,7 +221,7 @@ describe('RPCEstimateProvider test signer', () => {
 
       const estimate = await estimateProvider.finalizeUnstake({});
 
-      expect(estimate.gasLimit).toEqual(1815);
+      expect(estimate.gasLimit).toEqual(1715);
     });
   });
 
@@ -238,7 +238,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 40928,
         storageLimit: 654,
-        suggestedFeeMutez: 4413,
+        suggestedFeeMutez: 4412,
       });
     });
 
@@ -253,7 +253,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 40928,
         storageLimit: 654,
-        suggestedFeeMutez: 4575,
+        suggestedFeeMutez: 4574,
       });
     });
 
@@ -269,7 +269,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 36875,
         storageLimit: 534,
-        suggestedFeeMutez: 3996,
+        suggestedFeeMutez: 3995,
       });
     });
 
@@ -285,7 +285,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 10000,
         storageLimit: 0,
-        suggestedFeeMutez: 1172,
+        suggestedFeeMutez: 1171,
       });
     });
 
@@ -301,7 +301,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 17932,
         storageLimit: 591,
-        suggestedFeeMutez: 2262,
+        suggestedFeeMutez: 2261,
       });
     });
 
@@ -317,7 +317,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 26260,
         storageLimit: 0,
-        suggestedFeeMutez: 2875,
+        suggestedFeeMutez: 2874,
       });
     });
 
@@ -333,7 +333,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 10207,
         storageLimit: 0,
-        suggestedFeeMutez: 1197,
+        suggestedFeeMutez: 1196,
       });
     });
 
@@ -349,7 +349,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 10207,
         storageLimit: 277,
-        suggestedFeeMutez: 1197,
+        suggestedFeeMutez: 1196,
       });
     });
 
@@ -769,19 +769,20 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate[1]).toMatchObject({
         gasLimit: 1330,
         storageLimit: 93,
-        suggestedFeeMutez: 350,
+        suggestedFeeMutez: 349,
       });
-      expect(estimate[2].suggestedFeeMutez).toEqual(317);
-      expect(estimate[3].suggestedFeeMutez).toEqual(317);
+      expect(estimate[2].suggestedFeeMutez).toEqual(316);
+      expect(estimate[3].suggestedFeeMutez).toEqual(316);
+
       expect(estimate[2]).toMatchObject({
         gasLimit: 1000,
         storageLimit: 0,
-        suggestedFeeMutez: 317,
+        suggestedFeeMutez: 316,
       });
       expect(estimate[3]).toMatchObject({
         gasLimit: 1000,
         storageLimit: 0,
-        suggestedFeeMutez: 317,
+        suggestedFeeMutez: 316,
       });
     });
 
@@ -954,7 +955,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 1330,
         storageLimit: 93,
-        suggestedFeeMutez: 320,
+        suggestedFeeMutez: 319,
       });
     });
 
@@ -970,7 +971,7 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate).toMatchObject({
         gasLimit: 1330,
         storageLimit: 93,
-        suggestedFeeMutez: 158,
+        suggestedFeeMutez: 157,
       });
     });
 
@@ -1274,7 +1275,7 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(estimate).toMatchObject({
         gasLimit: 40928,
         storageLimit: 654,
-        suggestedFeeMutez: 4575,
+        suggestedFeeMutez: 4574,
       });
     });
 
@@ -1313,7 +1314,7 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(estimate).toMatchObject({
         gasLimit: 10000,
         storageLimit: 0,
-        suggestedFeeMutez: 1334,
+        suggestedFeeMutez: 1333,
       });
     });
 
@@ -1349,7 +1350,7 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(estimate).toMatchObject({
         gasLimit: 10000,
         storageLimit: 0,
-        suggestedFeeMutez: 1334,
+        suggestedFeeMutez: 1333,
       });
     });
 
@@ -1449,7 +1450,7 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(estimate).toMatchObject({
         gasLimit: 1330,
         storageLimit: 93,
-        suggestedFeeMutez: 320,
+        suggestedFeeMutez: 319,
       });
     });
 
@@ -1489,7 +1490,7 @@ describe('RPCEstimateProvider test wallet', () => {
 
       expect(estimate.gasLimit).toEqual(1100);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(297);
+      expect(estimate.suggestedFeeMutez).toEqual(296);
     });
   });
 
@@ -1504,7 +1505,7 @@ describe('RPCEstimateProvider test wallet', () => {
 
       expect(estimate.gasLimit).toEqual(1100);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(297);
+      expect(estimate.suggestedFeeMutez).toEqual(296);
     });
   });
 
@@ -1519,7 +1520,7 @@ describe('RPCEstimateProvider test wallet', () => {
 
       expect(estimate.gasLimit).toEqual(1103);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(298);
+      expect(estimate.suggestedFeeMutez).toEqual(297);
     });
 
     it('should return an error if account is unrevealed', async () => {
@@ -1558,13 +1559,12 @@ describe('RPCEstimateProvider test wallet', () => {
       });
       expect(estimate.gasLimit).toEqual(3849);
       expect(estimate.storageLimit).toEqual(6572);
-      expect(estimate.suggestedFeeMutez).toEqual(734);
-
+      expect(estimate.suggestedFeeMutez).toEqual(733);
       expect(estimate).toMatchObject({
         gasLimit: 3849,
         storageLimit: 6572,
-        suggestedFeeMutez: 734,
-        minimalFeeMutez: 714,
+        suggestedFeeMutez: 733,
+        minimalFeeMutez: 713,
       });
     });
   });
@@ -1582,7 +1582,7 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(estimate).toMatchObject({
         gasLimit: 6385,
         storageLimit: 36,
-        suggestedFeeMutez: 826,
+        suggestedFeeMutez: 825,
       });
     });
 

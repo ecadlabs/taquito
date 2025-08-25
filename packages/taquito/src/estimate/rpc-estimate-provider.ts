@@ -2,17 +2,7 @@ import {
   PreapplyResponse,
   ConstantsResponse,
   RPCSimulateOperationParam,
-  OperationContentsTransaction,
-  OperationContentsReveal,
-  OperationContentsOrigination,
-  OperationContentsDelegation,
-  OperationContentsIncreasePaidStorage,
-  OperationContentsRegisterGlobalConstant,
-  OperationContentsUpdateConsensusKey,
-  OperationContentsUpdateCompanionKey,
-  OperationContentsTransferTicket,
-  OperationContentsSmartRollupOriginate,
-  OperationContentsSmartRollupAddMessages,
+  OperationContentsAndResultWithFee,
 } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
 import { flattenErrors, flattenOperationResult, TezosOperationError } from '../operations/errors';
@@ -46,6 +36,7 @@ import {
   publicKeyPrefixes,
   validateAddress,
   ValidationResult,
+  payloadLength as sigSize,
 } from '@taquito/utils';
 import { RevealEstimateError } from './errors';
 import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
@@ -65,7 +56,8 @@ const STUB_SIGNATURE =
   'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
 export class RPCEstimateProvider extends Provider implements EstimationProvider {
-  private readonly OP_SIZE_REVEAL = 324; // injecting size tz1=320, tz2=322, tz3=322, tz4=420(not supported)
+  private readonly REVEAL_LENGTH = 324; // injecting size tz1=320, tz2=322, tz3=322
+  private readonly REVEAL_LENGTH_TZ4 = 622; // injecting size tz4=620
   private readonly MILLIGAS_BUFFER = 100 * 1000; // 100 buffer depends on operation kind
   private readonly STORAGE_BUFFER = 20; // according to octez-client
 
@@ -167,11 +159,21 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
           : op.opOb.contents.length;
     }
 
-    return opResponse.contents.map((x) => {
+    return opResponse.contents.map((x: any) => {
+      const content: OperationContentsAndResultWithFee = x;
+      content.source = content.source || '';
+      let revealSize, eachOpSize;
+      if (content.source.startsWith(PrefixV2.BLS12_381PublicKeyHash)) {
+        revealSize = this.REVEAL_LENGTH_TZ4 / 2;
+        eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.BLS12_381Signature]) / numberOfOps;
+      } else {
+        revealSize = this.REVEAL_LENGTH / 2;
+        eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.Ed25519Signature]) / numberOfOps;
+      }
       return this.getEstimationPropertiesFromOperationContent(
         x,
         // diff between estimated and injecting OP_SIZE is 124-126, we added buffer to use 130
-        x.kind === 'reveal' ? this.OP_SIZE_REVEAL / 2 : (opbytes.length + 130) / 2 / numberOfOps,
+        x.kind === 'reveal' ? revealSize : eachOpSize,
         cost_per_byte,
         origination_size ?? 257 // protocol constants
       );
@@ -193,14 +195,15 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsOrigination).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.3); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.3 to be like octez-client
-    }
+
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
   /**
@@ -233,13 +236,13 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -279,12 +282,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -324,12 +327,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -370,12 +373,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -409,14 +412,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsTransferTicket).source.startsWith(
-        'tz4'
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
       )
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -451,12 +452,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsDelegation).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -473,13 +474,6 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     const estimateProperties = await this.calculateEstimates(preparedOperations, protocolConstants);
 
-    preparedOperations.opOb.contents.forEach((content) => {
-      if (content.kind !== 'reveal') {
-        if ((content as any).source.startsWith('tz4')) {
-          estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
-        }
-      }
-    });
     return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
   }
 
@@ -508,12 +502,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsDelegation).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -553,11 +547,6 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         preparedOperation,
         protocolConstants
       );
-      if (
-        (preparedOperation.opOb.contents[0] as OperationContentsReveal).source.startsWith('tz4')
-      ) {
-        estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.8); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.8 to be like octez-client
-      }
       return Estimate.createEstimateInstanceFromProperties(estimateProperties);
     }
   }
@@ -588,14 +577,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (
-        preparedOperation.opOb.contents[0] as OperationContentsRegisterGlobalConstant
-      ).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -624,14 +611,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (
-        preparedOperation.opOb.contents[0] as OperationContentsIncreasePaidStorage
-      ).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -661,14 +646,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsUpdateConsensusKey).source.startsWith(
-        'tz4'
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
       )
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -693,14 +676,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsUpdateCompanionKey).source.startsWith(
-        'tz4'
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
       )
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -721,14 +702,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (
-        preparedOperation.opOb.contents[0] as OperationContentsSmartRollupAddMessages
-      ).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -747,14 +726,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (
-        preparedOperation.opOb.contents[0] as OperationContentsSmartRollupOriginate
-      ).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize = Math.ceil(estimateProperties[0].opSize * 1.2); // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.2 to be like octez-client
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }
@@ -797,13 +774,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      estimateProperties[0].opSize -= this.OP_SIZE_REVEAL / 2;
-    }
-    if (
-      (preparedOperation.opOb.contents[0] as OperationContentsTransaction).source.startsWith('tz4')
-    ) {
-      estimateProperties[0].opSize *= 1.3; // tz4 fee estimates runs low comparing to octez-client which rarely get accepted by rpc, bump up opSize by 1.3 to be like octez-client
-      estimateProperties[0].milligasLimit += 100000; // add 100 units for safety
+      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
+        PrefixV2.BLS12_381PublicKeyHash
+      )
+        ? this.REVEAL_LENGTH_TZ4 / 2
+        : this.REVEAL_LENGTH / 2;
+      estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
   }

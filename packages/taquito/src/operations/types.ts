@@ -82,12 +82,10 @@ export type RPCOpWithSource =
   | RPCSmartRollupOriginateOperation
   | RPCSmartRollupOutboxMessageOperation;
 
-export const isOpWithGasBuffer = <
-  T extends { kind: OpKind; parameters?: TransactionOperationParameter },
->(
+export const isOpWithGasBuffer = <T extends { kind: OpKind; destination?: string }>(
   op: T
 ): boolean => {
-  if (op.kind === OpKind.TRANSACTION && op.parameters) {
+  if (op.kind === OpKind.TRANSACTION && op.destination?.startsWith('KT1')) {
     return true;
   } else {
     return (
