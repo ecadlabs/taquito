@@ -4,10 +4,10 @@ import { ligoSample, ligoSampleMichelson } from "../../../data/ligo-simple-contr
 import { OpKind, Protocols } from "@taquito/taquito";
 import { TezosToolkit } from '@taquito/taquito';
 import { PrefixV2 } from '@taquito/utils';
-// import { MANAGER_LAMBDA } from "@taquito/taquito";
-// import { managerCode } from "../../../data/manager_code";
+import { MANAGER_LAMBDA } from "@taquito/taquito";
+import { managerCode } from "../../../data/manager_code";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => {
   const Tezos = lib;
   let Bls: TezosToolkit
   const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
@@ -111,46 +111,46 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
     })
 
     // TODO: TezosOperationError: {"prim":"Unit"} only to bls source
-    // seoulnetAndAlpha('Verify batch transfer with chained contract calls', async () => {
-    //   const op = await Bls.contract.originate({
-    //     balance: "3",
-    //     fee: 1100, // taquito estimate too low
-    //     code: managerCode,
-    //     init: { "string": await Tezos.signer.publicKeyHash() },
-    //   })
-    //   await op.confirmation();
-    //   const contract = await op.contract();
-    //   expect(op.status).toEqual('applied')
-    //   const batch = Bls.contract.batch()
-    //     .withTransfer({ to: contract.address, amount: 1 })
-    //     .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
-    //     .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-    //     .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
-    //   const batchOp = await batch.send();
-    //   await batchOp.confirmation();
-    //   expect(batchOp.status).toEqual('applied')
-    // });
+    seoulnetAndAlpha('Verify batch transfer with chained contract calls', async () => {
+      const op = await Bls.contract.originate({
+        balance: "3",
+        fee: 1100, // taquito estimate too low
+        code: managerCode,
+        init: { "string": await Bls.signer.publicKeyHash() },
+      })
+      await op.confirmation();
+      const contract = await op.contract();
+      expect(op.status).toEqual('applied')
+      const batch = Bls.contract.batch()
+        .withTransfer({ to: contract.address, amount: 1 })
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
+      const batchOp = await batch.send();
+      await batchOp.confirmation();
+      expect(batchOp.status).toEqual('applied')
+    });
 
     // TODO: TezosOperationError: {"prim":"Unit"} only to bls source
-    // seoulnetAndAlpha('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
-    //   const op = await Bls.contract.originate({
-    //     balance: "1",
-    //     fee: 1100, // taquito estimate too low
-    //     code: managerCode,
-    //     init: { "string": await Tezos.signer.publicKeyHash() },
-    //   })
-    //   await op.confirmation();
-    //   const contract = await op.contract();
-    //   expect(op.status).toEqual('applied')
-    //   const batch = Bls.contract.batch()
-    //     .withTransfer({ to: contract.address, amount: 1 })
-    //     .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
-    //     .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-    //     .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
-    //   const batchOp = await batch.send();
-    //   await batchOp.confirmation();
-    //   expect(batchOp.status).toEqual('applied')
-    // });
+    seoulnetAndAlpha('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
+      const op = await Bls.contract.originate({
+        balance: "1",
+        fee: 1100, // taquito estimate too low
+        code: managerCode,
+        init: { "string": await Bls.signer.publicKeyHash() },
+      })
+      await op.confirmation();
+      const contract = await op.contract();
+      expect(op.status).toEqual('applied')
+      const batch = Bls.contract.batch()
+        .withTransfer({ to: contract.address, amount: 1 })
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
+      const batchOp = await batch.send();
+      await batchOp.confirmation();
+      expect(batchOp.status).toEqual('applied')
+    });
 
     seoulnetAndAlpha('Verify simple batch transfers with origination from code in Michelson format', async () => {
       const batch = Bls.contract.batch()

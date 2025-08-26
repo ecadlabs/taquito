@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       await setup(true)
       try {
         Tz4 = await createAddress(PrefixV2.BLS12_381SecretKey)
-        const fundOp = await Tezos.contract.transfer({ to: await Tz4.signer.publicKeyHash(), amount: 9 })
+        const fundOp = await Tezos.contract.transfer({ to: await Tz4.signer.publicKeyHash(), amount: 8.5 })
         await fundOp.confirmation()
         expect(fundOp.status).toBe('applied')
       } catch (e) {

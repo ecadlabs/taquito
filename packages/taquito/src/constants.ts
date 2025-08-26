@@ -124,7 +124,7 @@ export enum ChainIds {
 }
 
 export const getRevealGasLimit = (address: string) =>
-  Math.round((getRevealGasLimitInternal(address) * 12) / 10);
+  Math.round((getRevealGasLimitInternal(address) * 37) / 10);
 
 const getRevealGasLimitInternal = (address: string) => {
   switch (address.substring(0, 3)) {
@@ -153,7 +153,7 @@ export const getRevealFeeInternal = (address: string) => {
     case 'tz3':
       return REVEAL_FEE.TZ3;
     case 'tz4':
-      return REVEAL_FEE.TZ4;
+      return REVEAL_FEE.TZ4 * 1.6;
     default:
       throw new Error(`Cannot estimate reveal fee for ${address}`);
   }
