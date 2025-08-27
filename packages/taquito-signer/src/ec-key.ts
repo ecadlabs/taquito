@@ -1,7 +1,9 @@
 import { hash as blake2b } from '@stablelib/blake2b';
 import { PrefixV2, b58DecodeAndCheckPrefix, b58Encode } from '@taquito/utils';
 import elliptic from 'elliptic';
-import { SigningKey, SignResult } from './signer';
+import KeyPair from 'elliptic/lib/elliptic/ec/key';
+import { PublicKey, SigningKey, SignResult } from './signer';
+import { InvalidCurveError } from './errors';
 
 type Curve = 'p256' | 'secp256k1';
 
@@ -11,6 +13,7 @@ type CurvePrefix = {
     sk: PrefixV2;
     pkh: PrefixV2;
     sig: PrefixV2;
+    tag: number;
   };
 };
 
@@ -20,23 +23,38 @@ const pref: CurvePrefix = {
     sk: PrefixV2.P256SecretKey,
     pkh: PrefixV2.P256PublicKeyHash,
     sig: PrefixV2.P256Signature,
+    tag: 2,
   },
   secp256k1: {
     pk: PrefixV2.Secp256k1PublicKey,
     sk: PrefixV2.Secp256k1SecretKey,
     pkh: PrefixV2.Secp256k1PublicKeyHash,
     sig: PrefixV2.Secp256k1Signature,
+    tag: 1,
   },
 };
+
+class ECKeyBase {
+  constructor(public readonly keyPair: elliptic.ec.KeyPair) { }
+
+  curve(): Curve {
+    switch (this.keyPair.ec.curve) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      case (elliptic.curves as any).secp256k1.curve:
+        return 'secp256k1';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      case (elliptic.curves as any).p256.curve:
+        return 'p256';
+      default:
+        throw new InvalidCurveError('unknown curve');
+    }
+  }
+}
 
 /**
  * @description Provide signing logic for elliptic curve based key (tz2, tz3)
  */
-export class ECKey implements SigningKey {
-  #key: Uint8Array;
-  #publicKey: Uint8Array;
-  #curve: Curve;
-
+export class ECKey extends ECKeyBase implements SigningKey {
   /**
    *
    * @param key Encoded private key
@@ -44,39 +62,30 @@ export class ECKey implements SigningKey {
    * @throws {@link InvalidKeyError}
    */
   constructor(key: string, decrypt?: (k: Uint8Array) => Uint8Array) {
-    const tmp = b58DecodeAndCheckPrefix(key, [
+    const [keyData, prefix] = b58DecodeAndCheckPrefix(key, [
       PrefixV2.Secp256k1EncryptedSecretKey,
       PrefixV2.P256EncryptedSecretKey,
       PrefixV2.Secp256k1SecretKey,
       PrefixV2.P256SecretKey,
     ]);
-    [this.#key] = tmp;
-    const [, prefix] = tmp;
 
-    switch (prefix) {
-      case PrefixV2.Secp256k1EncryptedSecretKey:
-      case PrefixV2.P256EncryptedSecretKey:
-        if (decrypt !== undefined) {
-          this.#key = decrypt(this.#key);
-        } else {
-          throw new Error('decryption function is not provided');
-        }
-        if (prefix === PrefixV2.Secp256k1EncryptedSecretKey) {
-          this.#curve = 'secp256k1';
-        } else {
-          this.#curve = 'p256';
-        }
-        break;
-      case PrefixV2.Secp256k1SecretKey:
-        this.#curve = 'secp256k1';
-        break;
-      default:
-        this.#curve = 'p256';
-        break;
-    }
+    const [decKey, curve] = ((): [Uint8Array, Curve] => {
+      switch (prefix) {
+        case PrefixV2.Secp256k1EncryptedSecretKey:
+        case PrefixV2.P256EncryptedSecretKey:
+          if (decrypt === undefined) {
+            throw new Error('decryption function is not provided');
+          } else {
+            return [decrypt(keyData), prefix === PrefixV2.Secp256k1EncryptedSecretKey ? 'secp256k1' : 'p256'];
+          }
+        case PrefixV2.Secp256k1SecretKey:
+          return [keyData, 'secp256k1'];
+        default:
+          return [keyData, 'p256'];
+      }
+    })();
 
-    const keyPair = new elliptic.ec(this.#curve).keyFromPrivate(this.#key);
-    this.#publicKey = new Uint8Array(keyPair.getPublic(true, 'array')); // compress
+    super(new elliptic.ec(curve).keyFromPrivate(decKey));
   }
 
   /**
@@ -84,10 +93,9 @@ export class ECKey implements SigningKey {
    * @param bytes Bytes to sign
    * @param bytesHash Blake2b hash of the bytes to sign
    */
-  sign(bytes: Uint8Array): Promise<SignResult> {
+  sign(bytes: Uint8Array): SignResult {
     const hash = blake2b(bytes, 32);
-    const key = new elliptic.ec(this.#curve).keyFromPrivate(this.#key);
-    const sig = key.sign(hash, { canonical: true });
+    const sig = this.keyPair.sign(hash, { canonical: true });
 
     const signature = new Uint8Array(64);
     const r = sig.r.toArray();
@@ -95,33 +103,83 @@ export class ECKey implements SigningKey {
     signature.set(r, 32 - r.length);
     signature.set(s, 64 - s.length);
 
-    return Promise.resolve({
+    return {
       rawSignature: signature,
       sig: b58Encode(signature, PrefixV2.GenericSignature),
-      prefixSig: b58Encode(signature, pref[this.#curve].sig),
-    });
+      prefixSig: b58Encode(signature, pref[this.curve()].sig),
+    };
   }
 
   /**
    * @returns Encoded public key
    */
-  publicKey(): Promise<string> {
-    return Promise.resolve(b58Encode(this.#publicKey, pref[this.#curve].pk));
-  }
-
-  /**
-   * @returns Encoded public key hash
-   */
-  publicKeyHash(): Promise<string> {
-    return Promise.resolve(
-      b58Encode(blake2b(new Uint8Array(this.#publicKey), 20), pref[this.#curve].pkh)
-    );
+  publicKey(): PublicKey {
+    return new ECPublicKey(this.keyPair.ec.keyFromPublic(this.keyPair));
   }
 
   /**
    * @returns Encoded private key
    */
-  secretKey(): Promise<string> {
-    return Promise.resolve(b58Encode(this.#key, pref[this.#curve].sk));
+  secretKey(): string {
+    return b58Encode(new Uint8Array(this.keyPair.getPrivate().toArray()), pref[this.curve()].sk);
+  }
+}
+
+function isKeyPair(src: unknown): src is elliptic.ec.KeyPair {
+  return src instanceof KeyPair;
+}
+
+export class ECPublicKey extends ECKeyBase implements PublicKey {
+  constructor(src: string);
+  constructor(src: elliptic.ec.KeyPair);
+  constructor(src: Uint8Array, curve: Curve);
+  constructor(src: string | Uint8Array | elliptic.ec.KeyPair, curve?: Curve) {
+    const key = (() => {
+      if (isKeyPair(src)) {
+        return src;
+      } else {
+        const [key, crv] = ((): [Uint8Array, Curve] => {
+          if (typeof src === 'string') {
+            const [key, pre] = b58DecodeAndCheckPrefix(src, [
+              PrefixV2.Secp256k1PublicKey,
+              PrefixV2.P256PublicKey,
+            ]);
+            return [key, pre === PrefixV2.Secp256k1PublicKey ? 'secp256k1' : 'p256'];
+          } else if (curve !== undefined) {
+            return [src, curve];
+          } else {
+            throw new InvalidCurveError('missing curve type');
+          }
+        })();
+        return new elliptic.ec(crv).keyFromPublic(key);
+      }
+    })();
+    super(key);
+  }
+
+  compare(_other: PublicKey): number {
+    throw new Error("Method not implemented.");
+  }
+
+  hash(): string {
+    const key = this.bytes();
+    return b58Encode(blake2b(key, 20), pref[this.curve()].pkh)
+  }
+
+  bytes(compress: boolean = true): Uint8Array {
+    return new Uint8Array(this.keyPair.getPublic(compress, 'array'))
+  }
+
+  toProtocol(): Uint8Array {
+    const key = this.bytes();
+    const res = new Uint8Array(key.length + 1);
+    res[0] = pref[this.curve()].tag;
+    res.set(key, 1);
+    return res;
+  }
+
+  toString(): string {
+    const key = this.bytes();
+    return b58Encode(key, pref[this.curve()].pk)
   }
 }

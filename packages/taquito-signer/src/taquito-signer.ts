@@ -12,22 +12,22 @@ import {
   b58Encode,
 } from '@taquito/utils';
 import toBuffer from 'typedarray-to-buffer';
-import { EdKey } from './ed-key';
-import { ECKey } from './ec-key';
+import { EdKey, EdPublicKey } from './ed-key';
+import { ECKey, ECPublicKey } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import { InvalidKeyError } from '@taquito/core';
-import { SigningKey, SignResult as RawSignResult, isPOP } from './signer';
-import { BLSKey } from './bls-key';
+import { SigningKey, SignResult as RawSignResult, isPOP, PublicKey } from './signer';
+import { BLSKey, BLSPublicKey } from './bls-key';
 
 export * from './import-key';
 export { VERSION } from './version';
 export * from './derivation-tools';
 export * from './helpers';
 export { InvalidPassphraseError } from './errors';
-export { SignResult as RawSignResult } from './signer';
+export { SignResult as RawSignResult, PublicKey } from './signer';
 
 export interface FromMnemonicParams {
   mnemonic: string;
@@ -219,20 +219,41 @@ export class InMemorySigner {
    * @returns Encoded public key
    */
   publicKey(): Promise<string> {
-    return this.#key.publicKey();
+    return Promise.resolve(String(this.#key.publicKey()));
   }
 
   /**
    * @returns Encoded public key hash
    */
   publicKeyHash(): Promise<string> {
-    return this.#key.publicKeyHash();
+    return Promise.resolve(this.#key.publicKey().hash());
   }
 
   /**
    * @returns Encoded private key
    */
   secretKey(): Promise<string> {
-    return this.#key.secretKey();
+    return Promise.resolve(this.#key.secretKey());
+  }
+}
+
+
+export function publicKeyFromString(src: string): PublicKey {
+  const [keyData, pre] = b58DecodeAndCheckPrefix(src, [
+    PrefixV2.Ed25519PublicKey,
+    PrefixV2.Secp256k1PublicKey,
+    PrefixV2.P256PublicKey,
+    PrefixV2.BLS12_381PublicKey,
+  ]);
+
+  switch (pre) {
+    case PrefixV2.Ed25519PublicKey:
+      return new EdPublicKey(keyData);
+    case PrefixV2.Secp256k1PublicKey:
+      return new ECPublicKey(keyData, 'secp256k1');
+    case PrefixV2.P256PublicKey:
+      return new ECPublicKey(keyData, 'p256');
+    case PrefixV2.BLS12_381PublicKey:
+      return new BLSPublicKey(keyData);
   }
 }

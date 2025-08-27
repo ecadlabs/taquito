@@ -5,17 +5,23 @@ export interface SignResult {
 }
 
 export interface SigningKey {
-    sign(message: Uint8Array): Promise<SignResult>;
-    publicKey(): Promise<string>;
-    publicKeyHash(): Promise<string>;
-    secretKey(): Promise<string>;
-    provePossession?: () => Promise<SignResult>;
+    sign(message: Uint8Array): SignResult;
+    publicKey(): PublicKey;
+    secretKey(): string;
+    provePossession?: () => SignResult;
 }
 
 export interface SigningKeyWithProofOfPossession extends SigningKey {
-    provePossession(): Promise<SignResult>;
+    provePossession(): SignResult;
 }
 
 export function isPOP(k: SigningKey): k is SigningKeyWithProofOfPossession {
     return 'provePossession' in k
+}
+
+export interface PublicKey {
+    compare(other: PublicKey): number;
+    hash(): string;
+    bytes(compress?: boolean): Uint8Array;
+    toProtocol(): Uint8Array;
 }

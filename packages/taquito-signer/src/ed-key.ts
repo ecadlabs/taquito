@@ -1,14 +1,13 @@
 import { hash as blake2b } from '@stablelib/blake2b';
-import { generateKeyPairFromSeed, sign } from '@stablelib/ed25519';
+import { generateKeyPairFromSeed, KeyPair, sign } from '@stablelib/ed25519';
 import { PrefixV2, b58DecodeAndCheckPrefix, b58Encode } from '@taquito/utils';
-import { SigningKey, SignResult } from './signer';
+import { SigningKey, SignResult, PublicKey } from './signer';
 
 /**
  * @description Provide signing logic for ed25519 curve based key (tz1)
  */
 export class EdKey implements SigningKey {
-  #secretKey: Uint8Array;
-  #publicKey: Uint8Array;
+  #keyPair: KeyPair;
 
   /**
    *
@@ -27,8 +26,10 @@ export class EdKey implements SigningKey {
     const [, prefix] = tmp;
 
     if (prefix === PrefixV2.Ed25519SecretKey) {
-      this.#secretKey = keyData;
-      this.#publicKey = keyData.slice(32);
+      this.#keyPair = {
+        secretKey: keyData,
+        publicKey: keyData.slice(32),
+      };
     } else {
       if (prefix === PrefixV2.Ed25519EncryptedSeed) {
         if (decrypt !== undefined) {
@@ -37,9 +38,7 @@ export class EdKey implements SigningKey {
           throw new Error('decryption function is not provided');
         }
       }
-      const { publicKey, secretKey } = generateKeyPairFromSeed(keyData);
-      this.#publicKey = publicKey;
-      this.#secretKey = secretKey;
+      this.#keyPair = generateKeyPairFromSeed(keyData);
     }
   }
 
@@ -48,35 +47,64 @@ export class EdKey implements SigningKey {
    * @param bytes Bytes to sign
    * @param bytesHash Blake2b hash of the bytes to sign
    */
-  async sign(bytes: Uint8Array): Promise<SignResult> {
+  sign(bytes: Uint8Array): SignResult {
     const hash = blake2b(bytes, 32);
-    const signature = sign(this.#secretKey, hash);
+    const signature = sign(this.#keyPair.secretKey, hash);
 
-    return Promise.resolve({
+    return {
       rawSignature: signature,
       sig: b58Encode(signature, PrefixV2.GenericSignature),
       prefixSig: b58Encode(signature, PrefixV2.Ed25519Signature),
-    });
+    };
   }
 
   /**
    * @returns Encoded public key
    */
-  publicKey(): Promise<string> {
-    return Promise.resolve(b58Encode(this.#publicKey, PrefixV2.Ed25519PublicKey));
-  }
-
-  /**
-   * @returns Encoded public key hash
-   */
-  publicKeyHash(): Promise<string> {
-    return Promise.resolve(b58Encode(blake2b(this.#publicKey, 20), PrefixV2.Ed25519PublicKeyHash));
+  publicKey(): PublicKey {
+    return new EdPublicKey(this.#keyPair.publicKey);
   }
 
   /**
    * @returns Encoded private key
    */
-  secretKey(): Promise<string> {
-    return Promise.resolve(b58Encode(this.#secretKey, PrefixV2.Ed25519SecretKey));
+  secretKey(): string {
+    return b58Encode(this.#keyPair.secretKey, PrefixV2.Ed25519SecretKey);
+  }
+}
+
+export class EdPublicKey implements PublicKey {
+  #key: Uint8Array
+
+  constructor(src: string | Uint8Array) {
+    if (typeof src === 'string') {
+      const [key, _] = b58DecodeAndCheckPrefix(src, [PrefixV2.Ed25519PublicKey]);
+      this.#key = key;
+    } else {
+      this.#key = src;
+    }
+  }
+
+  compare(_other: PublicKey): number {
+    throw new Error('Method not implemented.');
+  }
+
+  hash(): string {
+    return b58Encode(blake2b(this.#key, 20), PrefixV2.Ed25519PublicKeyHash)
+  }
+
+  bytes(): Uint8Array {
+    return this.#key;
+  }
+
+  toProtocol(): Uint8Array {
+    const res = new Uint8Array(this.#key.length + 1);
+    res[0] = 0;
+    res.set(this.#key, 1);
+    return res;
+  }
+
+  toString(): string {
+    return b58Encode(this.#key, PrefixV2.Ed25519PublicKey)
   }
 }
