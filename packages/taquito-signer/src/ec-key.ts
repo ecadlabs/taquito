@@ -1,5 +1,5 @@
 import { hash as blake2b } from '@stablelib/blake2b';
-import { PrefixV2, b58DecodeAndCheckPrefix, b58Encode } from '@taquito/utils';
+import { InvalidPublicKeyError, PrefixV2, b58DecodeAndCheckPrefix, b58Encode, compareArrays } from '@taquito/utils';
 import elliptic from 'elliptic';
 import KeyPair from 'elliptic/lib/elliptic/ec/key';
 import { PublicKey, SigningKey, SignResult } from './signer';
@@ -157,8 +157,13 @@ export class ECPublicKey extends ECKeyBase implements PublicKey {
     super(key);
   }
 
-  compare(_other: PublicKey): number {
-    throw new Error("Method not implemented.");
+  compare(other: PublicKey): number {
+    if (other instanceof ECPublicKey) {
+      const compress = this.curve() === 'secp256k1';
+      return compareArrays(this.bytes(compress), other.bytes(compress));
+    } else {
+      throw new InvalidPublicKeyError("ECDSA key expected");
+    }
   }
 
   hash(): string {

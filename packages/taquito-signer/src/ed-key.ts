@@ -1,6 +1,6 @@
 import { hash as blake2b } from '@stablelib/blake2b';
 import { generateKeyPairFromSeed, KeyPair, sign } from '@stablelib/ed25519';
-import { PrefixV2, b58DecodeAndCheckPrefix, b58Encode } from '@taquito/utils';
+import { InvalidPublicKeyError, PrefixV2, b58DecodeAndCheckPrefix, b58Encode, compareArrays } from '@taquito/utils';
 import { SigningKey, SignResult, PublicKey } from './signer';
 
 /**
@@ -85,8 +85,12 @@ export class EdPublicKey implements PublicKey {
     }
   }
 
-  compare(_other: PublicKey): number {
-    throw new Error('Method not implemented.');
+  compare(other: PublicKey): number {
+    if (other instanceof EdPublicKey) {
+      return compareArrays(this.bytes(), other.bytes());
+    } else {
+      throw new InvalidPublicKeyError("EdDSA key expected");
+    }
   }
 
   hash(): string {

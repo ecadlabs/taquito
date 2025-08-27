@@ -1,4 +1,4 @@
-import { b58DecodeAndCheckPrefix, BLS12_381_DST, PrefixV2, b58Encode } from '@taquito/utils';
+import { b58DecodeAndCheckPrefix, BLS12_381_DST, PrefixV2, b58Encode, compareArrays, InvalidPublicKeyError } from '@taquito/utils';
 import { bls12_381 } from '@noble/curves/bls12-381';
 import { hash } from '@stablelib/blake2b';
 import { PublicKey, SigningKeyWithProofOfPossession, SignResult } from './signer';
@@ -73,8 +73,12 @@ export class BLSPublicKey implements PublicKey {
     }
   }
 
-  compare(_other: PublicKey): number {
-    throw new Error('Method not implemented.');
+  compare(other: PublicKey): number {
+    if (other instanceof BLSPublicKey) {
+      return compareArrays(this.bytes(), other.bytes());
+    } else {
+      throw new InvalidPublicKeyError("BLS key expected");
+    }
   }
 
   hash(): string {
