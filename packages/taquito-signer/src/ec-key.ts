@@ -159,8 +159,14 @@ export class ECPublicKey extends ECKeyBase implements PublicKey {
 
   compare(other: PublicKey): number {
     if (other instanceof ECPublicKey) {
-      const compress = this.curve() === 'secp256k1';
-      return compareArrays(this.bytes(compress), other.bytes(compress));
+      if (this.curve() === other.curve()) {
+        const compress = this.curve() === 'secp256k1';
+        return compareArrays(this.bytes(compress), other.bytes(compress));
+      } else if (this.curve() === 'secp256k1') {
+        return -1;
+      } else {
+        return 1;
+      }
     } else {
       throw new InvalidPublicKeyError("ECDSA key expected");
     }
