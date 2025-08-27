@@ -153,7 +153,7 @@ export const getRevealFeeInternal = (address: string) => {
     case 'tz3':
       return REVEAL_FEE.TZ3;
     case 'tz4':
-      return REVEAL_FEE.TZ4 * 1.6;
+      return REVEAL_FEE.TZ4 * 1.7;
     default:
       throw new Error(`Cannot estimate reveal fee for ${address}`);
   }

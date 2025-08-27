@@ -110,11 +110,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       expect(op.status).toEqual('applied')
     })
 
-    // TODO: TezosOperationError: {"prim":"Unit"} only to bls source
     seoulnetAndAlpha('Verify batch transfer with chained contract calls', async () => {
       const op = await Bls.contract.originate({
         balance: "3",
-        fee: 1100, // taquito estimate too low
         code: managerCode,
         init: { "string": await Bls.signer.publicKeyHash() },
       })
@@ -131,11 +129,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       expect(batchOp.status).toEqual('applied')
     });
 
-    // TODO: TezosOperationError: {"prim":"Unit"} only to bls source
     seoulnetAndAlpha('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
       const op = await Bls.contract.originate({
         balance: "1",
-        fee: 1100, // taquito estimate too low
         code: managerCode,
         init: { "string": await Bls.signer.publicKeyHash() },
       })

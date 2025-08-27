@@ -150,10 +150,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.totalCost).toEqual(164039);
       expect(estimate.usingBaseFeeMutez).toEqual(539);
       expect(estimate.consumedMilligas).toEqual(2391919);
-      // TODO: uncomment when we optimize gas estimation for bls
       // Do the actual operation
-      // const op2 = await contract.methodsObject.do(originate2()).send();
-      // await op2.confirmation();
+      const op2 = await contract.methodsObject.do(originate2()).send();
+      await op2.confirmation();
     });
 
     seoulnetAndAlpha('should throw error when trying to estimate transfer with negative amount in param', async () => {

@@ -46,7 +46,6 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
       const pk = await Bls2.signer.publicKey()
       const op = await Bls2.contract.reveal({ proof })
       await op.confirmation();
-      console.log('op', op.operationResults)
 
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
